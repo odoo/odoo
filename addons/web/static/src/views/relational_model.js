@@ -29,8 +29,8 @@ class RequestBatcherORM extends ORM {
      * @param {string[]} fields
      * @returns {Promise<any>}
      */
-    async read(resModel, resIds, fields) {
-        const key = JSON.stringify([resModel, fields]);
+    async read(resModel, resIds, fields, context) {
+        const key = JSON.stringify([resModel, fields, context]);
         let batch = this.readBatches[key];
         if (!batch) {
             batch = {
@@ -49,7 +49,7 @@ class RequestBatcherORM extends ORM {
             batch.scheduled = true;
             await Promise.resolve();
             delete this.readBatches[key];
-            const allRecords = await super.read(resModel, batch.resIds, fields);
+            const allRecords = await super.read(resModel, batch.resIds, fields, context);
             batch.deferred.resolve(allRecords);
         }
 
@@ -113,6 +113,18 @@ export class Record extends DataPoint {
         this.data = { ...this._values };
     }
 
+    get evalContext() {
+        const evalContext = {};
+        for (const fieldName in this.data) {
+            if (isX2Many(this.fields[fieldName])) {
+                evalContext[fieldName] = this.data[fieldName].records.map((r) => r.resId);
+            } else {
+                evalContext[fieldName] = this.data[fieldName];
+            }
+        }
+        return evalContext;
+    }
+
     async load() {
         if (!this.fieldNames.length) {
             return;
@@ -140,12 +152,6 @@ export class Record extends DataPoint {
             const field = this.activeFields[fieldName];
             const { invisible, relatedFields = {}, relation, views = {}, viewMode } = field;
 
-            if (invisible) {
-                // FIXME: we'll maybe have to create a datapoint anyway, for instance when we'll
-                // implement the edition
-                continue;
-            }
-
             const fields = {
                 id: { name: "id", type: "integer", readonly: true },
                 ...relatedFields,
@@ -159,7 +165,9 @@ export class Record extends DataPoint {
                 viewMode,
             });
             this.data[fieldName] = list;
-            proms.push(list.load());
+            if (!invisible) {
+                proms.push(list.load());
+            }
         }
         return Promise.all(proms);
     }
@@ -521,6 +529,7 @@ export class StaticList extends DataPoint {
         this.offset = 0;
         this.views = params.views || {};
         this.viewMode = params.viewMode;
+        this.orderedBy = params.orderedBy || {}; // rename orderBy + get back from state
     }
 
     async load() {

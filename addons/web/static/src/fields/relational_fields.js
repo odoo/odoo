@@ -1,7 +1,9 @@
 /** @odoo-module **/
 import { registry } from "@web/core/registry";
-import { KanbanRenderer } from "../views/kanban/kanban_renderer";
-import { ListRenderer } from "../views/list/list_renderer";
+import { useService } from "@web/core/utils/hooks";
+import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
+import { ListRenderer } from "@web/views/list/list_renderer";
+import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 
 const { Component } = owl;
 const fieldRegistry = registry.category("fields");
@@ -44,6 +46,7 @@ fieldRegistry.add("kanban.many2many_tags", FieldKanbanMany2ManyTags);
 
 export class FieldX2Many extends Component {
     setup() {
+        this.dialogService = useService("dialog");
         const fieldInfo = this.props.record.activeFields[this.props.name];
         if (fieldInfo.views && fieldInfo.viewMode in fieldInfo.views) {
             const subViewInfo = fieldInfo.views[fieldInfo.viewMode];
@@ -60,7 +63,13 @@ export class FieldX2Many extends Component {
     }
 
     openRecord(record) {
-        console.log("FieldX2M openRecord", record);
+        this.dialogService.add(FormViewDialog, {
+            arch: this.props.value.views.form.arch, // FIXME: might not be there
+            fields: this.props.value.views.form.fields, // FIXME: might not be there
+            record,
+            readonly: this.props.readonly,
+            title: this.props.record.activeFields[this.props.name].string,
+        });
     }
 }
 FieldX2Many.useSubView = true;

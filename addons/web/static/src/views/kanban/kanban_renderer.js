@@ -141,8 +141,7 @@ export class KanbanRenderer extends Component {
     }
 
     openRecord(record) {
-        const resIds = this.props.list.records.map((datapoint) => datapoint.resId);
-        this.action.switchView("form", { resId: record.resId, resIds });
+        this.props.openRecord(record);
     }
 
     onGroupClick(group, ev) {

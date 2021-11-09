@@ -245,9 +245,14 @@ export class ViewCompiler {
             `t-attf-class`,
             "{{props.readonly ? 'o_form_readonly' : 'o_form_editable'}}"
         );
+        let hasSheet = false;
         for (let child of node.childNodes) {
+            hasSheet = hasSheet || (child.tagName && child.tagName.toUpperCase() === "SHEET");
             const toAppend = this.compileNode(child, params);
             this.append(form, toAppend);
+        }
+        if (!hasSheet) {
+            form.setAttribute("class", "o_form_nosheet");
         }
         return form;
     }
@@ -296,7 +301,8 @@ export class ViewCompiler {
 
     compileGroup(node, params) {
         let group;
-        if (!params.isInGroup) {
+        const isOuterGroup = [...node.children].some((c) => c.tagName === "group");
+        if (isOuterGroup) {
             group = this.document.createElement("div");
             group.setAttribute("class", "o_group");
 
@@ -310,7 +316,6 @@ export class ViewCompiler {
             const colSize = Math.max(1, Math.round(12 / nbCols));
 
             params = Object.create(params);
-            params.isInGroup = true;
             for (let child of node.childNodes) {
                 if (child.tag === "newline") {
                     this.append(group, this.document.createElement("br"));
@@ -528,6 +533,7 @@ export class ViewCompiler {
             if (string) {
                 label.textContent = string;
             }
+            label.classList.add("o_form_label");
             this.pushLabel(forAttr, label);
             return label;
         }
@@ -753,7 +759,7 @@ export const useViewCompiler = (ViewCompiler, templateKey, fields, xmlDoc) => {
         component,
         {
             evalDomain(record, expr) {
-                return new Domain(expr).contains(record.data);
+                return new Domain(expr).contains(record.evalContext);
             },
             getWidget(widgetName) {
                 class ToImplement extends Component {}

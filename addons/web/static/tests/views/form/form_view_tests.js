@@ -494,14 +494,12 @@ QUnit.module("Views", (hooks) => {
         await testUtils.nextTick();
     });
 
-    QUnit.skip("placeholder attribute on input", async function (assert) {
-        assert.expect(1);
-
+    QUnit.test("placeholder attribute on input", async function (assert) {
         const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch: '<form string="Partners">' + '<input placeholder="chimay"/>' + "</form>",
+            arch: '<form><input placeholder="chimay"/></form>',
             resId: 2,
         });
 
@@ -566,36 +564,31 @@ QUnit.module("Views", (hooks) => {
         assert.hasClass(form.$('input[name="int_field"]'), "text-danger");
     });
 
-    QUnit.skip("only necessary fields are fetched with correct context", async function (assert) {
+    QUnit.test("only necessary fields are fetched with correct context", async function (assert) {
         assert.expect(2);
 
-        const form = await makeView({
+        await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch: '<form string="Partners">' + '<field name="foo"/>' + "</form>",
+            arch: '<form><field name="foo"/></form>',
             resId: 1,
-            mockRPC: function (route, args) {
-                // NOTE: actually, the current web client always request the __last_update
-                // field, not sure why.  Maybe this test should be modified.
+            mockRPC(route, args) {
                 assert.deepEqual(
                     args.args[1],
                     ["foo", "display_name"],
                     "should only fetch requested fields"
                 );
-                assert.deepEqual(
-                    args.kwargs.context,
-                    { bin_size: true },
+                assert.strictEqual(
+                    args.kwargs.context.bin_size,
+                    true,
                     "bin_size should always be in the context"
                 );
-                return this._super(route, args);
             },
         });
     });
 
-    QUnit.skip("group rendering", async function (assert) {
-        assert.expect(1);
-
+    QUnit.test("group rendering", async function (assert) {
         const form = await makeView({
             type: "form",
             resModel: "partner",
@@ -614,35 +607,33 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(form, "table.o_inner_group");
     });
 
-    QUnit.skip("group containing both a field and a group", async function (assert) {
+    QUnit.test("group containing both a field and a group", async function (assert) {
         // The purpose of this test is to check that classnames defined in a
         // field widget and those added by the form renderer are correctly
         // combined. For instance, the renderer adds className 'o_group_col_x'
         // on outer group's children (an outer group being a group that contains
         // at least a group).
-        assert.expect(4);
-
         const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                "<group>" +
-                '<field name="foo"/>' +
-                "<group>" +
-                '<field name="int_field"/>' +
-                "</group>" +
-                "</group>" +
-                "</form>",
+            arch: `
+                <form>
+                    <group>
+                        <field name="foo"/>
+                        <group>
+                            <field name="int_field"/>
+                        </group>
+                    </group>
+                </form>`,
             resId: 1,
         });
 
         assert.containsOnce(form, ".o_group .o_field_widget[name=foo]");
         assert.containsOnce(form, ".o_group .o_inner_group .o_field_widget[name=int_field]");
 
-        assert.hasClass(form.$(".o_field_widget[name=foo]"), "o_field_char");
-        assert.hasClass(form.$(".o_field_widget[name=foo]"), "o_group_col_6");
+        assert.hasClass(form.el.querySelector(".o_field_widget[name=foo]"), "o_field_char");
+        assert.hasClass(form.el.querySelector(".o_field_widget[name=foo]"), "o_group_col_6");
     });
 
     QUnit.skip("Form and subview with _view_ref contexts", async function (assert) {
@@ -887,29 +878,27 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skip("empty notebook", async function (assert) {
-        assert.expect(2);
-
-        const form = await createView({
+    QUnit.test("empty notebook", async function (assert) {
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch: `
-                <form string="Partners">
+                <form>
                     <sheet>
                         <notebook/>
                     </sheet>
                 </form>`,
-            serverData,
-            resModel: "partner",
             resId: 1,
-            type: "form",
         });
 
         // Does not change when switching state
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
 
         assert.containsNone(form, ":scope .o_notebook .nav");
 
         // Does not change when coming back to initial state
-        await testUtils.form.clickSave(form);
+        await click(form.el.querySelector(".o_form_button_save"));
 
         assert.containsNone(form, ":scope .o_notebook .nav");
     });
@@ -2926,27 +2915,24 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(nameGetCount, 0, "should have done no name_get");
     });
 
-    QUnit.skip("form view properly change its title", async function (assert) {
-        assert.expect(2);
-
+    QUnit.test("form view properly change its title", async function (assert) {
         const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch: '<form string="Partners">' + '<field name="foo"/>' + "</form>",
+            arch: '<form><field name="foo"/></form>',
             resId: 1,
         });
 
         assert.strictEqual(
-            form.$(".o_control_panel .breadcrumb").text(),
+            form.el.querySelector(".o_control_panel .breadcrumb").innerText,
             "first record",
             "should have the display name of the record as  title"
         );
-
-        await testUtils.form.clickCreate(form);
+        await click(form.el.querySelector(".o_form_button_create"));
         assert.strictEqual(
-            form.$(".o_control_panel .breadcrumb").text(),
-            _t("New"),
+            form.el.querySelector(".o_control_panel .breadcrumb").innerText,
+            "New",
             "should have the display name of the record as title"
         );
     });
@@ -3022,7 +3008,7 @@ QUnit.module("Views", (hooks) => {
             type: "form",
             resModel: "partner",
             serverData,
-            arch: '<form string="Partners">' + '<field name="foo"/>' + "</form>",
+            arch: '<form><field name="foo"/></form>',
             resId: 1,
             viewOptions: { hasActionMenus: true },
         });
@@ -3052,7 +3038,7 @@ QUnit.module("Views", (hooks) => {
             type: "form",
             resModel: "partner",
             serverData,
-            arch: '<form string="Partners">' + '<field name="foo"/>' + "</form>",
+            arch: '<form><field name="foo"/></form>',
             resId: 1,
             viewOptions: { hasActionMenus: true, context: { hey: "hoy" } },
             mockRPC: function (route, args) {
@@ -3275,14 +3261,12 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.skip("missing widgets do not crash", async function (assert) {
-        assert.expect(1);
-
-        this.data.partner.fields.foo.type = "new field type without widget";
+        serverData.models.partner.fields.foo.type = "new field type without widget";
         const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch: '<form string="Partners">' + '<field name="foo"/>' + "</form>",
+            arch: '<form><field name="foo"/></form>',
             resId: 1,
         });
         assert.containsOnce(form, ".o_field_widget");
@@ -6808,7 +6792,7 @@ QUnit.module("Views", (hooks) => {
             type: "form",
             resModel: "partner",
             serverData,
-            arch: '<form string="Partners">' + '<field name="foo"/>' + "</form>",
+            arch: '<form><field name="foo"/></form>',
             resId: 1,
             context: {
                 bin_size: false,
@@ -9704,7 +9688,7 @@ QUnit.module("Views", (hooks) => {
             type: "form",
             resModel: "partner",
             serverData,
-            arch: '<form string="Partners">' + '<field name="foo"/>' + "</form>",
+            arch: '<form><field name="foo"/></form>',
             viewOptions: {
                 ids: [1, 2],
                 index: 0,
