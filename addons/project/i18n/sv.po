@@ -15,6 +15,7 @@
 # STefan Rundgren <stefanrundgren@cellglas.com>, 2021
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2021
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2021
+# Fredrik Arvas <fredrik.arvas@vertel.se>, 2021
 # Simon S, 2021
 # Kim Asplund <kim.asplund@gmail.com>, 2021
 # 
@@ -1053,7 +1054,7 @@ msgstr "E-postmall"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__email_cc
 msgid "Email cc"
-msgstr ""
+msgstr "E-post cc"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1180,7 +1181,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Get customer feedback"
-msgstr ""
+msgstr "Få kundfeedback"
 
 #. module: project
 #. openerp-web
@@ -1267,6 +1268,11 @@ msgid ""
 "\n"
 "Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks."
 msgstr ""
+"Hur får man feedback från kunderna?\n"
+"- Betyg vid byte av etapp: ett e-postmeddelande skickas när en aktivitet flyttas till en annan etapp.\n"
+"- Periodiskt betyg: e-post skickas regelbundet.\n"
+"\n"
+"Glöm inte att ställa in e-postmallarna för de etapper som ni vill få kundernas feedback på."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -1338,6 +1344,9 @@ msgid ""
 "stage', then an email will be sent to the customer when the task reaches "
 "this step."
 msgstr ""
+"Om den är inställd och om projektets betygsinställning är 'Betyg vid byte av"
+" etapp' skickas ett e-postmeddelande till kunden när aktiviteten når denna "
+"etapp."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__active
@@ -1977,13 +1986,13 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__periodic
 msgid "Periodical Rating"
-msgstr ""
+msgstr "Periodiskt betyg"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_popover
 msgid "Placeholder"
-msgstr ""
+msgstr "Platshållare"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__planned_hours
@@ -2162,12 +2171,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__rating_ids
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Rating"
-msgstr ""
+msgstr "Betyg"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_avg
 msgid "Rating Average"
-msgstr ""
+msgstr "Betyg Medeltal"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__rating_template_id
@@ -2182,17 +2191,17 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_feedback
 msgid "Rating Last Feedback"
-msgstr ""
+msgstr "Betyg Senaste Feedback"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_image
 msgid "Rating Last Image"
-msgstr ""
+msgstr "Betyg Senaste Bild"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_value
 msgid "Rating Last Value"
-msgstr ""
+msgstr "Betyg Senaste Värde"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_request_deadline
@@ -2207,7 +2216,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_count
 msgid "Rating count"
-msgstr ""
+msgstr "Betyg Antal"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__portal_show_rating
@@ -2217,7 +2226,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__stage
 msgid "Rating when changing stage"
-msgstr ""
+msgstr "Betyg vid byte av etapp"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_ids
@@ -2277,7 +2286,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__rating_last_feedback
 msgid "Reason of the rating"
-msgstr ""
+msgstr "Orsaken till betyget"
 
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
@@ -2467,12 +2476,12 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Specifications"
-msgstr ""
+msgstr "Specifikationer"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Split your tasks to organize your work into sub-milestones"
-msgstr ""
+msgstr "Dela upp era aktiviteter för att organisera ert arbete i delmål."
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
