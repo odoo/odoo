@@ -167,6 +167,9 @@ class ResCompany(models.Model):
         help="Account that will be set on lines created in cash basis journal entry and used to keep track of the "
              "tax base amount.")
 
+    # Storno Accounting
+    account_storno = fields.Boolean(string="Storno accounting", readonly=False)
+
     @api.constrains('account_opening_move_id', 'fiscalyear_last_day', 'fiscalyear_last_month')
     def _check_fiscalyear_last_day(self):
         # if the user explicitly chooses the 29th of February we allow it:

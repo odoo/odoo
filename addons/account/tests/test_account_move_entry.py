@@ -53,6 +53,18 @@ class TestAccountMove(AccountTestInvoicingCommon):
                 }),
             ]
         })
+        cls.entry_line_vals_1 = {
+            'name': 'Line 1',
+            'account_id': cls.company_data['default_account_revenue'].id,
+            'debit': 500.0,
+            'credit': 0.0,
+        }
+        cls.entry_line_vals_2 = {
+            'name': 'Line 2',
+            'account_id': cls.company_data['default_account_expense'].id,
+            'debit': 0.0,
+            'credit': 500.0,
+        }
 
     def test_custom_currency_on_account_1(self):
         custom_account = self.company_data['default_account_revenue'].copy()
@@ -510,3 +522,38 @@ class TestAccountMove(AccountTestInvoicingCommon):
         move.action_post()
 
         self.assertEqual(move.state, 'posted')
+
+    def test_entry_reverse_storno(self):
+        # Test creating journal entries and reverting them
+        # while in Storno accounting
+        self.env.company.account_storno = True
+
+        move = self.env['account.move'].create({
+            'move_type': 'entry',
+            'date': fields.Date.from_string('2021-01-01'),
+            'line_ids': [
+                (0, None, self.entry_line_vals_1),
+                (0, None, self.entry_line_vals_2),
+            ]
+        })
+        move.action_post()
+
+        move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=move.ids).create({
+            'date': fields.Date.from_string('2021-02-01'),
+            'refund_method': 'refund',
+            'journal_id': move.journal_id.id,
+        })
+        reversal = move_reversal.reverse_moves()
+        reversed_move = self.env['account.move'].browse(reversal['res_id'])
+
+        self.assertRecordValues(reversed_move.line_ids, [
+            {
+                **self.entry_line_vals_1,
+                'debit': -500.0,
+                'credit': 0.0,
+            }, {
+                **self.entry_line_vals_2,
+                'debit': 0.0,
+                'credit': -500.0,
+            }
+        ])

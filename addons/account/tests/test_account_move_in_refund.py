@@ -1010,3 +1010,66 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
             **self.move_vals,
             'currency_id': self.currency_data['currency'].id,
         })
+
+    def test_in_refund_create_storno(self):
+        # Test creating an account_move refund (credit note)
+        # with multiple lines while in Storno accounting
+        self.env.company.account_storno = True
+
+        move = self.env['account.move'].create({
+            'move_type': 'in_refund',
+            'partner_id': self.partner_a.id,
+            'invoice_date': fields.Date.from_string('2019-01-01'),
+            'currency_id': self.currency_data['currency'].id,
+            'invoice_payment_term_id': self.pay_terms_a.id,
+            'invoice_line_ids': [
+                (0, None, self.product_line_vals_1),
+                (0, None, self.product_line_vals_2),
+            ]
+        })
+
+        self.assertInvoiceValues(move, [
+            {
+                **self.product_line_vals_1,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': -800.0,
+                'balance': -400.0,
+                'debit': -400.0,
+                'credit': 0.0,
+            },
+            {
+                **self.product_line_vals_2,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': -160.0,
+                'balance': -80.0,
+                'debit': -80.0,
+                'credit': 0.0,
+            },
+            {
+                **self.tax_line_vals_1,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': -144.0,
+                'balance': -72.0,
+                'debit': -72.0,
+                'credit': 0.0,
+            },
+            {
+                **self.tax_line_vals_2,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': -24.0,
+                'balance': -12.0,
+                'debit': -12.0,
+                'credit': 0.0,
+            },
+            {
+                **self.term_line_vals_1,
+                'currency_id': self.currency_data['currency'].id,
+                'amount_currency': 1128.0,
+                'balance': 564.0,
+                'debit': 0.0,
+                'credit': -564.0,
+            },
+        ], {
+             **self.move_vals,
+             'currency_id': self.currency_data['currency'].id,
+        })
