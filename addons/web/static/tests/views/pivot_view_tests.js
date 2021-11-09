@@ -5335,4 +5335,60 @@ QUnit.module("Views", (hooks) => {
         // No separator should be displayed in the menu "Measures"
         assert.containsNone(pivot, ".o_cp_bottom_left .dropdown-menu div.dropdown-divider");
     });
+
+    QUnit.test(
+        "comparison with two groupbys: rows from reference period should be displayed",
+        async function (assert) {
+            assert.expect(3);
+
+            serverData.models.partner.records = [
+                { id: 1, date: "2021-10-10", product_id: 1, customer: 1 },
+                { id: 2, date: "2020-10-10", product_id: 2, customer: 1 },
+            ];
+            serverData.models.product.records = [
+                { id: 1, display_name: "A" },
+                { id: 2, display_name: "B" },
+            ];
+            serverData.models.customer.records = [{ id: 1, display_name: "P" }];
+
+            const pivot = await makeView({
+                type: "pivot",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <pivot>
+                    <field name="customer" type="row"/>
+                    <field name="product_id" type="row"/>
+                </pivot>
+            `,
+                searchViewArch: `
+                <search>
+                    <filter name='date' date='date'/>
+                </search>
+            `,
+            });
+
+            // compare 2021 to 2020
+            await toggleFilterMenu(pivot);
+            await toggleMenuItem(pivot, "Date");
+            await toggleMenuItemOption(pivot, "Date", "2021");
+            await toggleComparisonMenu(pivot);
+            await toggleMenuItem(pivot, 0);
+
+            assert.deepEqual(
+                [...pivot.el.querySelectorAll("th")].slice(0, 6).map((el) => el.innerText),
+                ["", "Total", "Count", "2020", "2021", "Variation"],
+                "The col headers should be as expected"
+            );
+
+            assert.deepEqual(
+                [...pivot.el.querySelectorAll("th")].slice(6).map((el) => el.innerText),
+                ["Total", "P", "B", "A"],
+                "The row headers should be as expected"
+            );
+
+            const values = ["1", "1", "0%", "1", "1", "0%", "1", "0", "-100%", "0", "1", "100%"];
+            assert.strictEqual(getCurrentValues(pivot), values.join());
+        }
+    );
 });
