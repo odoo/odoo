@@ -84,7 +84,10 @@ class PaymentTransaction(models.Model):
         )
 
         # Handle the payment request response
-        _logger.info("payment request response:\n%s", pprint.pformat(response_content))
+        _logger.info(
+            "payment request response for transaction with reference %s:\n%s",
+            self.reference, pprint.pformat(response_content)
+        )
         self._handle_feedback_data('adyen', response_content)
 
     def _send_refund_request(self, amount_to_refund=None, create_refund_transaction=True):
@@ -127,7 +130,10 @@ class PaymentTransaction(models.Model):
             payload=data,
             method='POST'
         )
-        _logger.info("refund request response:\n%s", pprint.pformat(response_content))
+        _logger.info(
+            "refund request response for transaction with reference %s:\n%s",
+            self.reference, pprint.pformat(response_content)
+        )
 
         # Handle the refund request response
         psp_reference = response_content.get('pspReference')
@@ -232,21 +238,30 @@ class PaymentTransaction(models.Model):
             if self.operation == 'refund':
                 self.env.ref('payment.cron_post_process_payment_tx')._trigger()
         elif payment_state in RESULT_CODES_MAPPING['cancel']:
-            _logger.warning("The transaction with reference %s was cancelled (reason: %s)",
-                            self.reference, refusal_reason)
+            _logger.warning(
+                "the transaction with reference %s was cancelled. reason: %s",
+                self.reference, refusal_reason
+            )
             self._set_canceled()
         elif payment_state in RESULT_CODES_MAPPING['error']:
-            _logger.warning("An error occurred on transaction with reference %s (reason: %s)",
-                            self.reference, refusal_reason)
+            _logger.warning(
+                "the transaction with reference %s underwent an error. reason: %s",
+                self.reference, refusal_reason
+            )
             self._set_error(
                 _("An error occurred during the processing of your payment. Please try again.")
             )
         elif payment_state in RESULT_CODES_MAPPING['refused']:
-            _logger.warning("The transaction with reference %s was refused (reason: %s)",
-                            self.reference, refusal_reason)
+            _logger.warning(
+                "the transaction with reference %s was refused. reason: %s",
+                self.reference, refusal_reason
+            )
             self._set_error(_("Your payment was refused. Please try again."))
         else:  # Classify unsupported payment state as `error` tx state
-            _logger.warning("received data with invalid payment state: %s", payment_state)
+            _logger.warning(
+                "received data for transaction with reference %s with invalid payment state: %s",
+                self.reference, payment_state
+            )
             self._set_error(
                 "Adyen: " + _("Received data with invalid payment state: %s", payment_state)
             )
@@ -274,5 +289,11 @@ class PaymentTransaction(models.Model):
             'tokenize': False,
         })
         _logger.info(
-            "created token with id %s for partner with id %s", token.id, self.partner_id.id
+            "created token with id %(token_id)s for partner with id %(partner_id)s from "
+            "transaction with reference %(ref)s",
+            {
+                'token_id': token.id,
+                'partner_id': self.partner_id.id,
+                'ref': self.reference,
+            },
         )

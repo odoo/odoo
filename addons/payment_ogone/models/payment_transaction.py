@@ -135,8 +135,8 @@ class PaymentTransaction(models.Model):
         data['SHASIGN'] = self.acquirer_id._ogone_generate_signature(data, incoming=False)
 
         _logger.info(
-            "making payment request:\n%s",
-            pprint.pformat({k: v for k, v in data.items() if k != 'PSWD'})
+            "payment request response for transaction with reference %s:\n%s",
+            self.reference, pprint.pformat({k: v for k, v in data.items() if k != 'PSWD'})
         )  # Log the payment request data without the password
         response_content = self.acquirer_id._ogone_make_request(data)
         try:
@@ -146,11 +146,14 @@ class PaymentTransaction(models.Model):
 
         # Handle the feedback data
         _logger.info(
-            "received payment request response as an etree:\n%s",
-            etree.tostring(tree, pretty_print=True, encoding='utf-8')
+            "payment request response (as an etree) for transaction with reference %s:\n%s",
+            self.reference, etree.tostring(tree, pretty_print=True, encoding='utf-8')
         )
         feedback_data = {'ORDERID': tree.get('orderID'), 'tree': tree}
-        _logger.info("entering _handle_feedback_data with data:\n%s", pprint.pformat(feedback_data))
+        _logger.info(
+            "handling feedback data from Ogone for transaction with reference %s with data:\n%s",
+            self.reference, pprint.pformat(feedback_data)
+        )
         self._handle_feedback_data('ogone', feedback_data)
 
     @api.model
@@ -202,7 +205,10 @@ class PaymentTransaction(models.Model):
         elif payment_status in const.PAYMENT_STATUS_MAPPING['cancel']:
             self._set_canceled()
         else:  # Classify unknown payment statuses as `error` tx state
-            _logger.info("received data with invalid payment status: %s", payment_status)
+            _logger.info(
+                "received data with invalid payment status (%s) for transaction with reference %s",
+                payment_status, self.reference
+            )
             self._set_error(
                 "Ogone: " + _("Received data with invalid payment status: %s", payment_status)
             )
@@ -226,5 +232,11 @@ class PaymentTransaction(models.Model):
             'tokenize': False,
         })
         _logger.info(
-            "created token with id %s for partner with id %s", token.id, self.partner_id.id
+            "created token with id %(token_id)s for partner with id %(partner_id)s from "
+            "transaction with reference %(ref)s",
+            {
+                'token_id': token.id,
+                'partner_id': self.partner_id.id,
+                'ref': self.reference,
+            },
         )

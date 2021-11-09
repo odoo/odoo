@@ -168,7 +168,10 @@ class PaymentTransaction(models.Model):
         payment_intent = self._stripe_create_payment_intent()
         feedback_data = {'reference': self.reference}
         StripeController._include_payment_intent_in_feedback_data(payment_intent, feedback_data)
-        _logger.info("entering _handle_feedback_data with data:\n%s", pprint.pformat(feedback_data))
+        _logger.info(
+            "payment request response for transaction with reference %s:\n%s",
+            self.reference, pprint.pformat(feedback_data)
+        )
         self._handle_feedback_data('stripe', feedback_data)
 
     def _stripe_create_payment_intent(self):
@@ -273,7 +276,10 @@ class PaymentTransaction(models.Model):
         elif intent_status in INTENT_STATUS_MAPPING['cancel']:
             self._set_canceled()
         else:  # Classify unknown intent statuses as `error` tx state
-            _logger.warning("received data with invalid intent status: %s", intent_status)
+            _logger.warning(
+                "received invalid payment status (%s) for transaction with reference %s",
+                intent_status, self.reference
+            )
             self._set_error(
                 "Stripe: " + _("Received data with invalid intent status: %s", intent_status)
             )
@@ -315,5 +321,11 @@ class PaymentTransaction(models.Model):
             'tokenize': False,
         })
         _logger.info(
-            "created token with id %s for partner with id %s", token.id, self.partner_id.id
+            "created token with id %(token_id)s for partner with id %(partner_id)s from "
+            "transaction with reference %(ref)s",
+            {
+                'token_id': token.id,
+                'partner_id': self.partner_id.id,
+                'ref': self.reference,
+            },
         )

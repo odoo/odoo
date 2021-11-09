@@ -476,8 +476,9 @@ class PaymentTransaction(models.Model):
         # Complete generic processing values with acquirer-specific values
         processing_values.update(self._get_specific_processing_values(processing_values))
         _logger.info(
-            "generic and acquirer-specific processing values for transaction with id %s:\n%s",
-            self.id, pprint.pformat(processing_values)
+            "generic and acquirer-specific processing values for transaction with reference "
+            "%(ref)s:\n%(values)s",
+            {'ref': self.reference, 'values': pprint.pformat(processing_values)},
         )
 
         # Render the html form for the redirect flow if available
@@ -488,8 +489,9 @@ class PaymentTransaction(models.Model):
             if redirect_form_view:  # Some acquirer don't need a redirect form
                 rendering_values = self._get_specific_rendering_values(processing_values)
                 _logger.info(
-                    "acquirer-specific rendering values for transaction with id %s:\n%s",
-                    self.id, pprint.pformat(rendering_values)
+                    "acquirer-specific rendering values for transaction with reference "
+                    "%(ref)s:\n%(values)s",
+                    {'ref': self.reference, 'values': pprint.pformat(rendering_values)},
                 )
                 redirect_form_html = redirect_form_view._render(rendering_values, engine='ir.qweb')
                 processing_values.update(redirect_form_html=redirect_form_html)
@@ -735,20 +737,21 @@ class PaymentTransaction(models.Model):
         txs_to_process, txs_already_processed, txs_wrong_state = _classify_by_state(self)
         for tx in txs_already_processed:
             _logger.info(
-                "tried to write tx state with same value (ref: %s, state: %s)",
-                tx.reference, tx.state
+                "tried to write on transaction with reference %s with the same value for the "
+                "state: %s",
+                tx.reference, tx.state,
             )
         for tx in txs_wrong_state:
-            logging_values = {
-                'reference': tx.reference,
-                'tx_state': tx.state,
-                'target_state': target_state,
-                'allowed_states': allowed_states,
-            }
             _logger.warning(
-                "tried to write tx state with illegal value (ref: %(reference)s, previous state "
-                "%(tx_state)s, target state: %(target_state)s, expected previous state to be in: "
-                "%(allowed_states)s)", logging_values
+                "tried to write on transaction with reference %(ref)s with illegal value for the "
+                "state (previous state: %(tx_state)s, target state: %(target_state)s, expected "
+                "previous state to be in: %(allowed_states)s)",
+                {
+                    'ref': tx.reference,
+                    'tx_state': tx.state,
+                    'target_state': target_state,
+                    'allowed_states': allowed_states,
+                },
             )
         txs_to_process.write({
             'state': target_state,
@@ -781,19 +784,21 @@ class PaymentTransaction(models.Model):
 
             valid_callback_hash = self._generate_callback_hash(model_sudo.id, res_id, method)
             if not consteq(ustr(valid_callback_hash), callback_hash):
-                _logger.warning("invalid callback signature for transaction with id %s", tx.id)
+                _logger.warning(
+                    "invalid callback signature for transaction with reference %s", tx.reference
+                )
                 continue  # Ignore tampered callbacks
 
             record = self.env[model_sudo.model].browse(res_id).exists()
             if not record:
-                logging_values = {
-                    'model': model_sudo.model,
-                    'record_id': res_id,
-                    'tx_id': tx.id,
-                }
                 _logger.warning(
-                    "invalid callback record %(model)s.%(record_id)s for transaction with id "
-                    "%(tx_id)s", logging_values
+                    "invalid callback record %(model)s.%(record_id)s for transaction with "
+                    "reference %(ref)s",
+                    {
+                        'model': model_sudo.model,
+                        'record_id': res_id,
+                        'ref': tx.reference,
+                    }
                 )
                 continue  # Ignore invalidated callbacks
 
@@ -838,8 +843,8 @@ class PaymentTransaction(models.Model):
             'landing_route': self.landing_route,
         }
         _logger.debug(
-            "post-processing values for acquirer with id %s:\n%s",
-            self.acquirer_id.id, pprint.pformat(post_processing_values)
+            "post-processing values of transaction with reference %s for acquirer with id %s:\n%s",
+            self.reference, self.acquirer_id.id, pprint.pformat(post_processing_values)
         )  # DEBUG level because this can get spammy with transactions in non-final states
         return post_processing_values
 
@@ -879,8 +884,8 @@ class PaymentTransaction(models.Model):
                 self.env.cr.rollback()  # Rollback and try later
             except Exception as e:
                 _logger.exception(
-                    "encountered an error while post-processing transaction with id %s:\n%s",
-                    tx.id, e
+                    "encountered an error while post-processing transaction with reference %s:\n%s",
+                    tx.reference, e
                 )
                 self.env.cr.rollback()
 
