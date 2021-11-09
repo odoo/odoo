@@ -102,7 +102,7 @@ class TestPartnerLeadPortal(TestCrmCommon):
             company_id=self.env.ref("base.main_company").id,
             grade_id=self.grade.id,
             user_id=self.user_sales_manager.id,
-            notification_type='inbox',
+            notification_type='email',
             groups='base.group_portal',
         )
 
