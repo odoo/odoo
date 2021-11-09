@@ -116,7 +116,7 @@ class SaleOrder(models.Model):
         discount = 0
 
         if order.pricelist_id.discount_policy == 'without_discount':
-            # This part is pretty much a copy-paste of the method '_onchange_discount' of
+            # This part is pretty much a copy-paste of the method '_compute_discount' of
             # 'sale.order.line'.
             price, rule_id = order.pricelist_id.with_context(product_context).get_product_price_rule(product, qty or 1.0, order.partner_id)
             pu, currency = request.env['sale.order.line'].with_context(product_context)._get_real_price_currency(product, rule_id, qty, product.uom_id, order.pricelist_id.id)
