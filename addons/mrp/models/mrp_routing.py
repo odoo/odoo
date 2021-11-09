@@ -18,7 +18,7 @@ class MrpRoutingWorkcenter(models.Model):
         help="Gives the sequence order when displaying a list of routing Work Centers.")
     bom_id = fields.Many2one(
         'mrp.bom', 'Bill of Material',
-        index=True, ondelete='cascade', required=True,
+        index=True, ondelete='cascade', required=True, check_company=True,
         help="The Bill of Material this operation is linked to")
     company_id = fields.Many2one('res.company', 'Company', related='bom_id.company_id')
     worksheet_type = fields.Selection([
