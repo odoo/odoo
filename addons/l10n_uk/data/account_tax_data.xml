@@ -826,6 +826,40 @@
             }),
         ]"/>
     </record>
+
+    <record id="PT2I" model="account.tax.template">
+        <field name="description">Exempt import</field>
+        <field name="chart_template_id" ref="l10n_uk"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="name">Exempt imports (0%)</field>
+        <field name="tax_scope">consu</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="tax_group_id" ref="tax_group_0"/>
+		<field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('account_tax_report_line_exd_vat_box7')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('account_tax_report_line_exd_vat_box7')],
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+
     <!-- = = = = = = = -->
     <!-- Export taxes  -->
     <!-- = = = = = = = -->
@@ -834,7 +868,7 @@
         <field name="description">VAT 0% export</field>
         <field name="chart_template_id" ref="l10n_uk"/>
         <field name="type_tax_use">sale</field>
-        <field name="name">Zero rated exports (0%)</field>
+        <field name="name">Exports (0%)</field>
         <field name="amount_type">percent</field>
         <field name="amount">0</field>
         <field name="tax_group_id" ref="tax_group_0"/>
@@ -888,7 +922,7 @@
     <!-- = = = = = -->
 
     <record id="PT11RCDS" model="account.tax.template">
-        <field name="description">VAT 20% reverse charge</field>
+        <field name="description">VAT 20% reverse charge deemed supply</field>
         <field name="chart_template_id" ref="l10n_uk"/>
         <field name="type_tax_use">purchase</field>
         <field name="name">Standard rated purchases reverse charge deemed supply (20%)</field>
@@ -936,7 +970,7 @@
     </record>
 
     <record id="PT5RCDS" model="account.tax.template">
-        <field name="description">VAT 5% reverse charge</field>
+        <field name="description">VAT 5% reverse charge deemed supply</field>
         <field name="chart_template_id" ref="l10n_uk"/>
         <field name="type_tax_use">purchase</field>
         <field name="name">Reduced rated purchases reverse charge deemed supply (5%)</field>
@@ -988,7 +1022,7 @@
     -->
 
     <record id="PT0RCDS" model="account.tax.template">
-        <field name="description">VAT 0% reverse charge</field>
+        <field name="description">VAT 0% reverse charge deemed supply</field>
         <field name="chart_template_id" ref="l10n_uk"/>
         <field name="type_tax_use">purchase</field>
         <field name="name">Zero rated purchases reverse charge deemed supply (0%)</field>
