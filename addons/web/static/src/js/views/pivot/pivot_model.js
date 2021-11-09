@@ -723,7 +723,11 @@ var PivotModel = AbstractModel.extend({
         values.slice(0, values.length - 1).forEach(function (value) {
             tree = tree.directSubTrees.get(value);
         });
-        tree.directSubTrees.set(values[values.length - 1], {
+        const value = values[values.length - 1];
+        if (tree.directSubTrees.has(value)) {
+            return;
+        }
+        tree.directSubTrees.set(value, {
             root: {
                 labels: labels,
                 values: values,
