@@ -187,6 +187,139 @@ QUnit.test("Rendering with multiple anchors and scrolls", async (assert) => {
     assert.ok(isVisible(scrollableParent.querySelector("#anchor3")));
 });
 
+QUnit.test("clicking anchor when no scrollable", async (assert) => {
+    assert.expect(3);
+    const scrollableParent = document.createElement("div");
+    scrollableParent.style.overflow = "auto";
+    scrollableParent.style.height = "150px";
+    scrollableParent.style.width = "400px";
+    target.append(scrollableParent);
+
+    class MyComponent extends Component {}
+    MyComponent.template = tags.xml/* xml */ `
+        <div class="o_content">
+            <a href="#scrollToHere"  class="btn btn-primary">scroll to ...</a>
+            <div class="active-container">
+                <p>There is no scrollable with only the height of this element</p>
+            </div>
+            <div class="inactive-container" style="max-height: 0">
+                <h2>There should be no scrollable if this element has 0 height</h2>
+                <p>
+                    Aliquam convallis sollicitudin purus. Praesent aliquam, enim at fermentum mollis,
+                    ligula massa adipiscing nisl, ac euismod nibh nisl eu lectus. Fusce vulputate sem
+                    at sapien. Vivamus leo. Aliquam euismod libero eu enim. Nulla nec felis sed leo
+                    placerat imperdiet. Aenean suscipit nulla in justo. Suspendisse cursus rutrum
+                    augue. Nulla tincidunt tincidunt mi. Curabitur iaculis, lorem vel rhoncus faucibus,
+                    felis magna fermentum augue, et ultricies lacus lorem varius purus. Curabitur eu amet.
+                </p>
+                <div id="scrollToHere">should try to scroll here only if scrollable!</div>
+            </div>
+        </div>
+    `;
+    comp = await mount(MyComponent, { env, target: scrollableParent });
+    assert.strictEqual(scrollableParent.scrollTop, 0);
+    await click(scrollableParent, ".btn.btn-primary");
+    assert.ok(scrollableParent.scrollTop === 0, "no scroll happened");
+    scrollableParent.querySelector(".inactive-container").style.maxHeight = "unset";
+    await click(scrollableParent, ".btn.btn-primary");
+    assert.ok(scrollableParent.scrollTop !== 0, "a scroll happened");
+});
+
+QUnit.test("clicking anchor when multi levels scrollables", async (assert) => {
+    assert.expect(4);
+    const scrollableParent = document.createElement("div");
+    scrollableParent.style.overflow = "auto";
+    scrollableParent.style.height = "150px";
+    scrollableParent.style.width = "400px";
+    target.append(scrollableParent);
+
+    class MyComponent extends Component {}
+    MyComponent.template = tags.xml/* xml */ `
+        <div class="o_content scrollable-1">
+            <a href="#scroll1"  class="btn1 btn btn-primary">go to level 2 anchor</a>
+            <div>
+                <p>This is some content</p>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus.
+                    Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed,
+                    dolor. Cras elementum ultrices diam. Maecenas
+                </p>
+            </div>
+            <div class="scrollable-2" style="background: green; overflow: auto; height: 100px;">
+                <h2>This is level 1 of scrollable</h2>
+                <p>
+                    Aliquam convallis sollicitudin purus. Praesent aliquam, enim at fermentum mollis,
+                    ligula massa adipiscing nisl, ac euismod nibh nisl eu lectus. Fusce vulputate sem
+                    at sapien. Vivamus leo. Aliquam euismod libero eu enim. Nulla nec felis sed leo
+                    placerat imperdiet. Aenean suscipit nulla in justo. Suspendisse cursus rutrum
+                    augue. Nulla tincidunt tincidunt mi. Curabitur iaculis, lorem vel rhoncus faucibus,
+                    felis magna fermentum augue, et ultricies lacus lorem varius purus. Curabitur eu amet.
+                </p>
+                <div style="background: lime;">
+                    <h2>This is level 2 of scrollable</h2>
+                    <p>
+                        Aliquam convallis sollicitudin purus. Praesent aliquam, enim at fermentum mollis,
+                        ligula massa adipiscing nisl, ac euismod nibh nisl eu lectus. Fusce vulputate sem
+                        at sapien. Vivamus leo. Aliquam euismod libero eu enim. Nulla nec felis sed leo
+                        placerat imperdiet. Aenean suscipit nulla in justo. Suspendisse cursus rutrum
+                        augue. Nulla tincidunt tincidunt mi. Curabitur iaculis, lorem vel rhoncus faucibus,
+                        felis magna fermentum augue, et ultricies lacus lorem varius purus. Curabitur eu amet.
+                    </p>
+                    <div id="scroll1" style="background: orange;">this element is contained in a scrollable metaverse!</div>
+                        <a href="#scroll2"  class="btn2 btn btn-primary">go to level 1 anchor</a>
+                        <p>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus.
+                            Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed,
+                            dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper
+                            congue, euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est
+                            eleifend mi, non fermentum diam nisl sit amet erat. Duis semper. Duis arcu
+                            massa, scelerisque vitae, consequat in, pretium a, enim. Pellentesque congue. Ut
+                            in risus volutpat libero pharetra tempor. Cras vestibulum bibendum augue. Praesent
+                            egestas leo in pede. Praesent blandit odio eu enim. 
+                        </p>
+                </div>
+            </div>
+            <div id="scroll2" style="background: orange;">this is an anchor at level 1!</div>
+            <p>
+                    Aliquam convallis sollicitudin purus. Praesent aliquam, enim at fermentum mollis,
+                    ligula massa adipiscing nisl, ac euismod nibh nisl eu lectus. Fusce vulputate sem
+                    at sapien. Vivamus leo. Aliquam euismod libero eu enim. Nulla nec felis sed leo
+                    at sapien. Vivamus leo. Aliquam euismod libero eu enim. Nulla nec felis sed leo
+                    placerat imperdiet. Aenean suscipit nulla in justo. Suspendisse cursus rutrum
+                    augue. Nulla tincidunt tincidunt mi. Curabitur iaculis, lorem vel rhoncus faucibus,
+                    felis magna fermentum augue, et ultricies lacus lorem varius purus. Curabitur eu amet.
+                </p>
+        </div>
+    `;
+    comp = await mount(MyComponent, { env, target: scrollableParent });
+
+    const border = (el) => {
+        // Returns the state of the element in relation to the borders
+        const element = el.getBoundingClientRect();
+        const scrollable = scrollableParent.getBoundingClientRect();
+        return {
+            top: parseInt(element.top - scrollable.top) < 10,
+            bottom: parseInt(scrollable.bottom - element.bottom) < 10,
+        };
+    };
+
+    assert.strictEqual(scrollableParent.scrollTop, 0);
+    await click(scrollableParent, ".btn1");
+    assert.ok(
+        border(scrollableParent.querySelector("#scroll1")).top,
+        "the element must be near the top border"
+    );
+    assert.ok(
+        border(scrollableParent.querySelector("#scroll1")).top,
+        "the scrollable inside level 1 must be near the top border"
+    );
+    await click(scrollableParent, ".btn2");
+    assert.ok(
+        border(scrollableParent.querySelector("#scroll2")).top,
+        "the element must be near the top border"
+    );
+});
+
 QUnit.test("Simple scroll to HTML elements", async (assert) => {
     assert.expect(6);
     const scrollableParent = document.createElement("div");
