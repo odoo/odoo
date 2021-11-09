@@ -1304,9 +1304,16 @@ const Wysiwyg = Widget.extend({
      * Handle custom keyboard shortcuts.
      */
     _handleShortcuts: function (e) {
-        // Open the link modal / tool when CTRL+K is pressed.
+        // Open the link tool when CTRL+K is pressed.
         if (e && e.key === 'k' && (e.ctrlKey || e.metaKey)) {
             e.preventDefault();
+            const targetEl = this.odooEditor.document.getSelection().baseNode; // FIXME this is undefined on Firefox after clicking on an image and hitting CTRL-K
+            // Link tool is different if the selection is an image or a text.
+            if (targetEl instanceof HTMLElement
+                    && (targetEl.tagName === 'IMG' || targetEl.querySelectorAll('img').length === 1)) {
+                core.bus.trigger('activate_image_link_tool');
+                return;
+            }
             this.toggleLinkTools();
         }
         // Override selectAll (CTRL+A) to restrict it to the editable zone / current snippet and prevent traceback.
