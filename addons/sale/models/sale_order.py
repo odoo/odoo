@@ -150,7 +150,9 @@ class SaleOrder(models.Model):
             return [('id', 'not in', order_ids)]
         return ['&', ('order_line.invoice_lines.move_id.move_type', 'in', ('out_invoice', 'out_refund')), ('order_line.invoice_lines.move_id', operator, value)]
 
-    name = fields.Char(string='Order Reference', required=True, copy=False, readonly=True, states={'draft': [('readonly', False)]}, index=True, default=lambda self: _('New'))
+    name = fields.Char(
+        string='Order Reference', required=True, copy=False, readonly=True,
+        states={'draft': [('readonly', False)]}, index=True, default=lambda self: _('New'))
     origin = fields.Char(string='Source Document', help="Reference of the document that generated this sales order request.")
     client_order_ref = fields.Char(string='Customer Reference', copy=False)
     reference = fields.Char(string='Payment Ref.', copy=False,
@@ -352,7 +354,7 @@ class SaleOrder(models.Model):
             tax_totals = account_move._get_tax_totals(order.partner_id, tax_lines_data, order.amount_total, order.amount_untaxed, order.currency_id)
             order.tax_totals_json = json.dumps(tax_totals)
 
-    # YTI TODO: Convert into compute method, however this introduce 
+    # YTI TODO: Convert into compute method, however this introduces
     # a behavior change that breaks the test test_reservation_method_w_sale
     # Note: This should be the case
     @api.onchange('expected_date')
@@ -488,7 +490,6 @@ class SaleOrder(models.Model):
 
             if partner.sale_warn == 'block':
                 self.update({'partner_id': False, 'partner_invoice_id': False, 'partner_shipping_id': False, 'pricelist_id': False})
-
             return {
                 'warning': {
                     'title': _("Warning for %s", partner.name),

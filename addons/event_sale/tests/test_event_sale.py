@@ -242,12 +242,10 @@ class TestEventSale(TestEventSaleCommon):
             'product_id': event_product.product_variant_id.id,
             'product_uom_qty': 1,
             'product_uom': event_product.uom_id.id,
-            'price_unit': event_product.list_price,
             'order_id': so.id,
             'event_id': event.id,
             'event_ticket_id': event_ticket.id,
         })
-        sol.product_id_change()
         self.assertEqual(so.amount_total, 660.0, "Ticket is $1000 but the event product is on a pricelist 10 -> 6. So, $600 + a 10% tax.")
 
     @users('user_salesman')

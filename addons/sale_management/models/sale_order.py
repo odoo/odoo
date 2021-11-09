@@ -177,16 +177,16 @@ class SaleOrderLine(models.Model):
 
     sale_order_option_ids = fields.One2many('sale.order.option', 'line_id', 'Optional Products Lines')
 
-    # Take the description on the order template if the product is present in it
-    @api.onchange('product_id')
-    def product_id_change(self):
-        domain = super(SaleOrderLine, self).product_id_change()
-        if self.product_id and self.order_id.sale_order_template_id:
-            for line in self.order_id.sale_order_template_id.sale_order_template_line_ids:
-                if line.product_id == self.product_id:
-                    self.name = line.with_context(lang=self.order_id.partner_id.lang).name + self._get_sale_order_line_multiline_description_variants()
-                    break
-        return domain
+    @api.depends('product_id')
+    def _compute_name(self):
+        # Take the description on the order template if the product is present in it
+        super()._compute_name()
+        for line in self:
+            if line.product_id and line.order_id.sale_order_template_id:
+                for line in line.order_id.sale_order_template_id.sale_order_template_line_ids:
+                    if line.product_id == line.product_id:
+                        line.name = line.with_context(lang=line.order_id.partner_id.lang).name + line._get_sale_order_line_multiline_description_variants()
+                        break
 
 
 class SaleOrderOption(models.Model):

@@ -283,7 +283,6 @@ class TestSaleOrder(TestSaleCommon):
 
         # Trigger onchange to reset discount, unit price, subtotal, ...
         for line in self.sale_order.order_line:
-            line.product_id_change()
             line._onchange_discount()
 
         for line in self.sale_order.order_line:

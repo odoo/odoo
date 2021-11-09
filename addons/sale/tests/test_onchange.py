@@ -151,13 +151,12 @@ class TestOnchangeProductId(TransactionCase):
             'pricelist_id': christmas_pricelist.id,
         })
 
-        order_line = self.env['sale.order.line'].new({
+        order_line = self.env['sale.order.line'].create({
             'order_id': so.id,
             'product_id': computer_case.id,
         })
 
         # force compute uom and prices
-        order_line.product_id_change()
         order_line._onchange_discount()
         self.assertEqual(order_line.price_subtotal, 90, "Christmas discount pricelist rule not applied")
         self.assertEqual(order_line.discount, 10, "Christmas discount not equalt to 10%")
@@ -207,13 +206,11 @@ class TestOnchangeProductId(TransactionCase):
             'pricelist_id': second_pricelist.id,
         })
 
-        order_line = self.env['sale.order.line'].new({
+        order_line = self.env['sale.order.line'].create({
             'order_id': so.id,
             'product_id': computer_case.id,
         })
 
-        # force compute uom and prices
-        order_line.product_id_change()
         order_line._onchange_discount()
         self.assertEqual(order_line.price_subtotal, 81, "Second pricelist rule not applied")
         self.assertEqual(order_line.discount, 19, "Second discount not applied")
@@ -270,7 +267,6 @@ class TestOnchangeProductId(TransactionCase):
         })
 
         # force compute uom and prices
-        order_line.product_id_change()
         self.assertEqual(order_line.price_unit, 180, "First pricelist rule not applied")
         order_line.product_uom = new_uom
         self.assertEqual(order_line.price_unit, 1800, "First pricelist rule not applied")
