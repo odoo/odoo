@@ -31,7 +31,7 @@ class SipsController(http.Controller):
 
         :param dict post: The feedback data to process
         """
-        _logger.info("beginning Sips DPN _handle_feedback_data with data %s", pprint.pformat(post))
+        _logger.info("handling redirection from SIPS with data:\n%s", pprint.pformat(post))
         try:
             if self._sips_validate_data(post):
                 request.env['payment.transaction'].sudo()._handle_feedback_data('sips', post)
@@ -42,12 +42,12 @@ class SipsController(http.Controller):
     @http.route(_notify_url, type='http', auth='public', methods=['POST'], csrf=False)
     def sips_ipn(self, **post):
         """ Sips IPN. """
-        _logger.info("beginning Sips IPN _handle_feedback_data with data %s", pprint.pformat(post))
+        _logger.info("notification received from SIPS with data:\n%s", pprint.pformat(post))
         if not post:
             # SIPS sometimes sends empty notifications, the reason why is unclear but they tend to
             # pollute logs and do not provide any meaningful information; log as a warning instead
             # of a traceback.
-            _logger.warning("received empty notification; skip.")
+            _logger.warning("unable to handle the data; skipping to acknowledge the notification")
         else:
             try:
                 if self._sips_validate_data(post):
@@ -61,8 +61,15 @@ class SipsController(http.Controller):
         acquirer_sudo = tx_sudo.acquirer_id
         security = acquirer_sudo._sips_generate_shasign(post['Data'])
         if security == post['Seal']:
-            _logger.debug('validated data')
+            _logger.debug(
+                "authenticity of notification data verified for transaction with reference %s",
+                tx_sudo.reference
+            )
             return True
         else:
-            _logger.warning('data are tampered')
+            _logger.warning(
+                "unable to verify the authenticity of notification data for transaction with "
+                "reference %s",
+                tx_sudo.reference,
+            )
             return False

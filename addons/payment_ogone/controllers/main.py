@@ -42,7 +42,7 @@ class OgoneController(http.Controller):
         self._verify_signature(feedback_data, data)
 
         # Handle the feedback data
-        _logger.info("entering _handle_feedback_data with data:\n%s", pprint.pformat(data))
+        _logger.info("handling redirection from Ogone with data:\n%s", pprint.pformat(data))
         request.env['payment.transaction'].sudo()._handle_feedback_data('ogone', data)
         return request.redirect('/payment/status')
 

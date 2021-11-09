@@ -19,14 +19,14 @@ class AlipayController(http.Controller):
     @http.route(_return_url, type='http', auth="public", methods=['GET'])
     def alipay_return_from_redirect(self, **data):
         """ Alipay return """
-        _logger.info("received Alipay return data:\n%s", pprint.pformat(data))
+        _logger.info("handling redirection from Alipay with data:\n%s", pprint.pformat(data))
         request.env['payment.transaction'].sudo()._handle_feedback_data('alipay', data)
         return request.redirect('/payment/status')
 
     @http.route(_notify_url, type='http', auth='public', methods=['POST'], csrf=False)
     def alipay_notify(self, **post):
         """ Alipay Notify """
-        _logger.info("received Alipay notification data:\n%s", pprint.pformat(post))
+        _logger.info("notification received from Alipay with data:\n%s", pprint.pformat(post))
         self._alipay_validate_notification(**post)
         request.env['payment.transaction'].sudo()._handle_feedback_data('alipay', post)
         return 'success'  # Return 'success' to stop receiving notifications for this tx

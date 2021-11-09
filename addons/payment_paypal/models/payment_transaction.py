@@ -120,7 +120,10 @@ class PaymentTransaction(models.Model):
         elif payment_status in PAYMENT_STATUS_MAPPING['cancel']:
             self._set_canceled()
         else:
-            _logger.info("received data with invalid payment status: %s", payment_status)
+            _logger.info(
+                "received data with invalid payment status (%s) for transaction with reference %s",
+                payment_status, self.reference
+            )
             self._set_error(
                 "PayPal: " + _("Received data with invalid payment status: %s", payment_status)
             )

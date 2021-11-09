@@ -52,7 +52,10 @@ class AuthorizeController(http.Controller):
         response_content = tx_sudo._authorize_create_transaction_request(opaque_data)
 
         # Handle the payment request response
-        _logger.info("make payment response:\n%s", pprint.pformat(response_content))
+        _logger.info(
+            "payment request response for transaction with reference %s:\n%s",
+            reference, pprint.pformat(response_content)
+        )
         # As the API has no redirection flow, we always know the reference of the transaction.
         # Still, we prefer to simulate the matching of the transaction by crafting dummy feedback
         # data in order to go through the centralized `_handle_feedback_data` method.

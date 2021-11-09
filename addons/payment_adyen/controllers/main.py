@@ -143,7 +143,10 @@ class AdyenController(http.Controller):
         )
 
         # Handle the payment request response
-        _logger.info("payment request response:\n%s", pprint.pformat(response_content))
+        _logger.info(
+            "payment request response for transaction with reference %s:\n%s",
+            reference, pprint.pformat(response_content)
+        )
         request.env['payment.transaction'].sudo()._handle_feedback_data(
             'adyen', dict(response_content, merchantReference=reference),  # Match the transaction
         )
@@ -172,7 +175,10 @@ class AdyenController(http.Controller):
         )
 
         # Handle the payment details request response
-        _logger.info("payment details request response:\n%s", pprint.pformat(response_content))
+        _logger.info(
+            "payment details request response for transaction with reference %s:\n%s",
+            reference, pprint.pformat(response_content)
+        )
         request.env['payment.transaction'].sudo()._handle_feedback_data(
             'adyen', dict(response_content, merchantReference=reference),  # Match the transaction
         )
@@ -206,7 +212,10 @@ class AdyenController(http.Controller):
         tx_sudo.operation = 'online_redirect'
 
         # Query and process the result of the additional actions that have been performed
-        _logger.info("handling redirection from Adyen with data:\n%s", pprint.pformat(data))
+        _logger.info(
+            "handling redirection from Adyen for transaction with reference %s with data:\n%s",
+            tx_sudo.reference, pprint.pformat(data)
+        )
         self.adyen_payment_details(
             tx_sudo.acquirer_id.id,
             data['merchantReference'],
@@ -238,9 +247,11 @@ class AdyenController(http.Controller):
             received_signature = notification_data.get('additionalData', {}).get('hmacSignature')
             PaymentTransaction = request.env['payment.transaction']
             try:
-                acquirer_sudo = PaymentTransaction.sudo()._get_tx_from_feedback_data(
+                tx_sudo = PaymentTransaction.sudo()._get_tx_from_feedback_data(
                     'adyen', notification_data
-                ).acquirer_id  # Find the acquirer based on the transaction
+                )
+                acquirer_sudo = tx_sudo.acquirer_id  # Find the acquirer based on the transaction
+
                 if not self._verify_notification_signature(
                     received_signature, notification_data, acquirer_sudo.adyen_hmac_key
                 ):
@@ -248,7 +259,11 @@ class AdyenController(http.Controller):
 
                 # Check whether the event of the notification succeeded and reshape the notification
                 # data for parsing
-                _logger.info("notification received:\n%s", pprint.pformat(notification_data))
+                _logger.info(
+                    "notification received from Adyen for transaction with reference %s with "
+                    "data:\n%s",
+                    tx_sudo.reference, pprint.pformat(notification_data)
+                )
                 success = notification_data['success'] == 'true'
                 event_code = notification_data['eventCode']
                 if event_code == 'AUTHORISATION' and success:

@@ -18,6 +18,6 @@ class BuckarooController(http.Controller):
 
         :param dict data: The feedback data
         """
-        _logger.info("received notification data:\n%s", pprint.pformat(data))
+        _logger.info("handling redirection from Buckaroo with data:\n%s", pprint.pformat(data))
         request.env['payment.transaction'].sudo()._handle_feedback_data('buckaroo', data)
         return request.redirect('/payment/status')

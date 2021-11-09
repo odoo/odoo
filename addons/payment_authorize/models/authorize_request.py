@@ -109,8 +109,12 @@ class AuthorizeAPI:
 
         if not response.get('customerProfileId'):
             _logger.warning(
-                'Unable to create customer payment profile, data missing from transaction. Transaction_id: %s - Partner_id: %s',
-                transaction_id, partner,
+                "unable to create customer payment profile, data missing from transaction with "
+                "id %(tx_id)s, partner id: %(partner_id)s",
+                {
+                    'tx_id': transaction_id,
+                    'partner_id': partner,
+                },
             )
             return False
 

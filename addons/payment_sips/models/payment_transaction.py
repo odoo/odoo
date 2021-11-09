@@ -157,7 +157,13 @@ class PaymentTransaction(models.Model):
             status = "error"
             self._set_error(_("Unrecognized response received from the payment provider."))
         _logger.info(
-            "ref: %s, got response [%s], set as '%s'.", self.reference, response_code, status
+            "received data with response %(response)s for transaction with reference %(ref)s, set "
+            "status as '%(status)s'",
+            {
+                'response': response_code,
+                'ref': self.reference,
+                'status': status,
+            },
         )
 
     def _sips_data_to_object(self, data):

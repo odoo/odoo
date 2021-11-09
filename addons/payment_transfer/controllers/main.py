@@ -14,6 +14,6 @@ class TransferController(http.Controller):
 
     @http.route(_accept_url, type='http', auth='public', methods=['POST'], csrf=False)
     def transfer_form_feedback(self, **post):
-        _logger.info("beginning _handle_feedback_data with post data %s", pprint.pformat(post))
+        _logger.info("handling redirection from Transfer with data:\n%s", pprint.pformat(post))
         request.env['payment.transaction'].sudo()._handle_feedback_data('transfer', post)
         return request.redirect('/payment/status')

@@ -66,7 +66,8 @@ class PaymentTransaction(models.Model):
             return
 
         _logger.info(
-            "validated transfer payment for tx with reference %s: set as pending", self.reference
+            "validated transfer payment for transaction with reference %s: set as pending",
+            self.reference
         )
         self._set_pending()
 

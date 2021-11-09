@@ -115,7 +115,7 @@ class StripeController(http.Controller):
                     # Handle the feedback data crafted with Stripe API objects as a regular feedback
                     request.env['payment.transaction'].sudo()._handle_feedback_data('stripe', data)
         except ValidationError:  # Acknowledge the notification to avoid getting spammed
-            _logger.exception("unable to handle the event data; skipping to acknowledge")
+            _logger.exception("unable to handle the data; skipping to acknowledge the notification")
         return ''
 
     @staticmethod

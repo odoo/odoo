@@ -140,5 +140,8 @@ class PaymentTransaction(models.Model):
         elif status_code in STATUS_CODES_MAPPING['error']:
             self._set_error(_("An error occurred during processing of your payment (code %s). Please try again.", status_code))
         else:
-            _logger.warning("Buckaroo: received unknown status code: %s", status_code)
+            _logger.warning(
+                "received data with invalid payment status (%s) for transaction with reference %s",
+                status_code, self.reference
+            )
             self._set_error("Buckaroo: " + _("Unknown status code: %s", status_code))

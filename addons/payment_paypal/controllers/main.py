@@ -23,7 +23,7 @@ class PaypalController(http.Controller):
         The "PDT notification" is actually POST data sent along the user redirection.
         The route also allows the GET method in case the user clicks on "go back to merchant site".
         """
-        _logger.info("beginning DPN with post data:\n%s", pprint.pformat(data))
+        _logger.info("handling redirection from Ogone with data:\n%s", pprint.pformat(data))
         try:
             self._validate_data_authenticity(**data)
         except ValidationError:
@@ -38,12 +38,12 @@ class PaypalController(http.Controller):
     @http.route(_notify_url, type='http', auth='public', methods=['GET', 'POST'], csrf=False)
     def paypal_ipn(self, **data):
         """ Route used by the IPN. """
-        _logger.info("beginning IPN with post data:\n%s", pprint.pformat(data))
+        _logger.info("notification received from Ogone with data:\n%s", pprint.pformat(data))
         try:
             self._validate_data_authenticity(**data)
             request.env['payment.transaction'].sudo()._handle_feedback_data('paypal', data)
         except ValidationError:  # Acknowledge the notification to avoid getting spammed
-            _logger.exception("unable to handle the IPN data; skipping to acknowledge the notif")
+            _logger.exception("unable to handle the data; skipping to acknowledge the notification")
         return ''
 
     def _validate_data_authenticity(self, **data):

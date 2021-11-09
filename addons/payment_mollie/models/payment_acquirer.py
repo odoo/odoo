@@ -75,6 +75,6 @@ class PaymentAcquirer(models.Model):
             response = requests.request(method, url, json=data, headers=headers, timeout=60)
             response.raise_for_status()
         except requests.exceptions.RequestException:
-            _logger.exception("Unable to communicate with Mollie: %s", url)
+            _logger.exception("unable to communicate with Mollie: %s", url)
             raise ValidationError("Mollie: " + _("Could not establish the connection to the API."))
         return response.json()
