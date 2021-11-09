@@ -242,6 +242,13 @@ class MrpWorkorder(models.Model):
         # Removes references to workorder to avoid Validation Error
         (self.mapped('move_raw_ids') | self.mapped('move_finished_ids')).write({'workorder_id': False})
         self.mapped('leave_id').unlink()
+        previous_wos = self.env['mrp.workorder'].search([
+            ('next_work_order_id', 'in', self.ids),
+            ('id', 'not in', self.ids)
+        ])
+        for pw in previous_wos:
+            while pw.next_work_order_id and pw.next_work_order_id in self:
+                pw.next_work_order_id = pw.next_work_order_id.next_work_order_id
         return super(MrpWorkorder, self).unlink()
 
     def _get_real_uom_qty(self, qty, to_production_uom=False):
