@@ -154,18 +154,17 @@
         <menuitem id="menu_timesheets_reports"
             name="Reporting"
             parent="timesheet_menu_root"
-            groups="hr_timesheet.group_timesheet_manager"
             sequence="99"/>
 
         <menuitem id="menu_timesheets_reports_timesheet"
             name="Timesheets"
             parent="menu_timesheets_reports"
-            groups="hr_timesheet.group_timesheet_manager"
             sequence="10"/>
 
         <menuitem id="menu_hr_activity_analysis"
             parent="menu_timesheets_reports_timesheet"
             action="act_hr_timesheet_report"
+            groups="hr_timesheet.group_hr_timesheet_approver"
             name="By Employee"
             sequence="10"/>
 

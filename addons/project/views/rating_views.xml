@@ -151,7 +151,7 @@
         <field name="name">Ratings</field>
         <field name="res_model">rating.rating</field>
         <field name="view_mode">kanban,tree,graph,pivot,form</field>
-        <field name="domain">[('consumed','=',True), ('parent_res_model','=','project.project')]</field>
+        <field name="domain">[('consumed','=',True), ('parent_res_model','=','project.project'), ('parent_res_id', '=', active_id)]</field>
         <field name="search_view_id" ref="rating_rating_view_search_project"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_empty_folder">

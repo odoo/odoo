@@ -14,6 +14,7 @@ class ReportProjectTaskBurndownChart(models.Model):
     _auto = False
     _order = 'date'
 
+    task_id = fields.Many2one('project.task', readonly=True)
     project_id = fields.Many2one('project.project', readonly=True)
     display_project_id = fields.Many2one('project.project', readonly=True)
     stage_id = fields.Many2one('project.task.type', readonly=True)
