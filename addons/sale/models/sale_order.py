@@ -189,18 +189,18 @@ class SaleOrder(models.Model):
         'res.partner', string='Invoice Address',
         readonly=False, required=True, pre_compute=True,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
-        compute='_compute_order_info_from_partner', store=True,
+        compute='_compute_partner_invoice_id', store=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
     partner_shipping_id = fields.Many2one(
         'res.partner', string='Delivery Address', readonly=False, required=True,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
-        compute='_compute_order_info_from_partner', store=True, pre_compute=True,
+        compute='_compute_partner_shipping_id', store=True, pre_compute=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
 
     pricelist_id = fields.Many2one(
         'product.pricelist', string='Pricelist', check_company=True,  # Unrequired company
         required=False, readonly=False, store=True,
-        compute='_compute_order_info_from_partner', pre_compute=True,
+        compute='_compute_pricelist_id', pre_compute=True,
         states={'sale': [('readonly', True)], 'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", tracking=1,
         help="If you change the pricelist, only newly added lines will be affected.")
@@ -225,7 +225,7 @@ class SaleOrder(models.Model):
 
     note = fields.Html(
         'Terms and conditions', default=_default_note,
-        compute='_compute_order_info_from_partner', store=True, readonly=False)
+        compute='_compute_note', store=True, readonly=False)
     terms_type = fields.Selection(related='company_id.terms_type')
 
     amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, compute='_amount_all', tracking=5)
@@ -236,7 +236,7 @@ class SaleOrder(models.Model):
 
     payment_term_id = fields.Many2one(
         'account.payment.term', string='Payment Terms', check_company=True,  # Unrequired company
-        compute='_compute_order_info_from_partner', store=True, readonly=False,
+        compute='_compute_payment_term_id', store=True, readonly=False,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
     fiscal_position_id = fields.Many2one(
         'account.fiscal.position', string='Fiscal Position',
@@ -412,6 +412,9 @@ class SaleOrder(models.Model):
         """
         cache = {}
         for order in self:
+            if not order.partner_id:
+                order.fiscal_position_id = False
+                continue
             key = (order.company_id, order.partner_id, order.partner_shipping_id)
             if key not in cache:
                 cache[key] = self.env['account.fiscal.position'].with_company(
@@ -420,43 +423,39 @@ class SaleOrder(models.Model):
             order.fiscal_position_id = cache[key]
 
     @api.depends('partner_id')
-    def _compute_order_info_from_partner(self):
-        """
-        Update the following fields when the partner is changed:
-        - Pricelist
-        - Payment terms
-        - Invoice address
-        - Delivery address
-        - Sales Team
-        - User
-        - Note
-        """
+    def _compute_partner_invoice_id(self):
         for order in self:
-            if not order.partner_id:
-                order.update({
-                    'partner_invoice_id': False,
-                    'partner_shipping_id': False,
-                    'fiscal_position_id': False,
-                })
-                continue
+            order.partner_invoice_id = order.partner_id.address_get(['invoice'])['invoice'] if order.partner_id else False
 
+    @api.depends('partner_id')
+    def _compute_partner_shipping_id(self):
+        for order in self:
+            order.partner_shipping_id = order.partner_id.address_get(['delivery'])['delivery'] if order.partner_id else False
+
+    @api.depends('partner_id')
+    def _compute_pricelist_id(self):
+        for order in self.filtered(lambda o: o.partner_id):
             order = order.with_company(order.company_id)
+            order.pricelist_id = order.partner_id.property_product_pricelist
 
-            addr = order.partner_id.address_get(['delivery', 'invoice'])
-            values = {
-                'pricelist_id': order.partner_id.property_product_pricelist and order.partner_id.property_product_pricelist.id or False,
-                'payment_term_id': order.partner_id.property_payment_term_id and order.partner_id.property_payment_term_id.id or False,
-                'partner_invoice_id': addr['invoice'],
-                'partner_shipping_id': addr['delivery'],
-            }
+    @api.depends('partner_id')
+    def _compute_note(self):
+        use_invoice_terms = self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms')
+        if not use_invoice_terms:
+            return
+        for order in self:
+            order = order.with_company(order.company_id)
+            if order.terms_type == 'html' and self.env.company.invoice_terms_html:
+                baseurl = html_keep_url(order.get_base_url() + '/terms')
+                order.note = _('Terms & Conditions: %s', baseurl)
+            elif not is_html_empty(self.env.company.invoice_terms):
+                order.note = order.with_context(lang=order.partner_id.lang).env.company.invoice_terms
 
-            if self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms'):
-                if order.terms_type == 'html' and self.env.company.invoice_terms_html:
-                    baseurl = html_keep_url(order.get_base_url() + '/terms')
-                    values['note'] = _('Terms & Conditions: %s', baseurl)
-                elif not is_html_empty(self.env.company.invoice_terms):
-                    values['note'] = order.with_context(lang=order.partner_id.lang).env.company.invoice_terms
-            order.update(values)
+    @api.depends('partner_id')
+    def _compute_payment_term_id(self):
+        for order in self:
+            order = order.with_company(order.company_id)
+            order.payment_term_id = order.partner_id.property_payment_term_id
 
     @api.depends('partner_id')
     def _compute_user_id(self):
