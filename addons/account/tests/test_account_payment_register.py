@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.exceptions import UserError
-from odoo.tests import tagged
+from odoo.tests import tagged, Form
 
 
 @tagged('post_install', '-at_install')
@@ -20,6 +20,22 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
 
         cls.payment_debit_account_id = cls.company_data['default_journal_bank'].company_id.account_journal_payment_debit_account_id.copy()
         cls.payment_credit_account_id = cls.company_data['default_journal_bank'].company_id.account_journal_payment_credit_account_id.copy()
+
+        cls.partner_bank_account = cls.env['res.partner.bank'].create({
+            'acc_number': "0123456789",
+            'partner_id': cls.partner_a.id,
+            'acc_type': 'bank',
+        })
+        cls.comp_bank_account1 = cls.env['res.partner.bank'].create({
+            'acc_number': "985632147",
+            'partner_id': cls.env.company.partner_id.id,
+            'acc_type': 'bank',
+        })
+        cls.comp_bank_account2 = cls.env['res.partner.bank'].create({
+            'acc_number': "741258963",
+            'partner_id': cls.env.company.partner_id.id,
+            'acc_type': 'bank',
+        })
 
         # Customer invoices sharing the same batch.
         cls.out_invoice_1 = cls.env['account.move'].create({
@@ -389,6 +405,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
         payments = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=active_ids).create({
             'group_payment': True,
         })._create_payments()
+
         self.assertRecordValues(payments, [
             {
                 'ref': 'BILL/2017/01/0001 BILL/2017/01/0002 RBILL/2017/01/0001',
@@ -416,23 +433,23 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
 
     def test_register_payment_multiple_batch_grouped_with_credit_note(self):
         ''' Do not batch payments if multiple partner_bank_id '''
-        test_bank = self.env['res.bank'].create({'name': 'test'})
         bank1 = self.env['res.partner.bank'].create({
             'acc_number': 'BE43798822936101',
             'partner_id': self.partner_a.id,
-            'bank_id': test_bank.id,
         })
         bank2 = self.env['res.partner.bank'].create({
             'acc_number': 'BE85812541345906',
             'partner_id': self.partner_a.id,
-            'bank_id': test_bank.id,
         })
+
         self.in_invoice_1.partner_bank_id = bank1
         self.in_invoice_2.partner_bank_id = bank2
+
         active_ids = (self.in_invoice_1 + self.in_invoice_2 + self.in_refund_1).ids
         payments = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=active_ids).create({
             'group_payment': True,
         })._create_payments()
+
         self.assertRecordValues(payments, [
             {
                 'ref': 'BILL/2017/01/0001',
@@ -497,13 +514,11 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
                 'reconciled': False,
             },
         ])
-        self.in_invoice_1.partner_bank_id = None
-        self.in_invoice_2.partner_bank_id = None
 
     def test_register_payment_multi_batches_grouped(self):
         ''' Choose to pay multiple batches, one with two customer invoices (1000 + 2000)
-         and one with a vendor bill of 600, by grouping payments.
-         '''
+        and one with a vendor bill of 600, by grouping payments.
+        '''
         active_ids = (self.in_invoice_1 + self.in_invoice_2 + self.in_invoice_3).ids
         payments = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=active_ids).create({
             'group_payment': True,
@@ -632,6 +647,27 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
                 'reconciled': True,
             },
         ])
+
+    def test_register_payment_custom_bank_account(self):
+        """ Ensure the user is able to select a custom bank account when registering a payment and this bank account
+        lands correctly on the generated payment.
+        """
+        self.out_invoice_1.partner_bank_id = self.comp_bank_account1
+
+        ctx = {'active_model': 'account.move', 'active_ids': self.out_invoice_1.ids}
+        wizard_form = Form(self.env['account.payment.register'].with_context(**ctx))
+        wizard = wizard_form.save()
+
+        # The bank account set on the invoice must be the default suggested value.
+        self.assertRecordValues(wizard, [{'partner_bank_id': self.comp_bank_account1.id}])
+
+        wizard_form = Form(wizard)
+        wizard_form.partner_bank_id = self.comp_bank_account2
+        wizard = wizard_form.save()
+        payments = wizard._create_payments()
+
+        # The user should be able to set a custom bank account.
+        self.assertRecordValues(payments, [{'partner_bank_id': self.comp_bank_account2.id}])
 
     def test_register_payment_constraints(self):
         # Test to register a payment for a draft journal entry.
