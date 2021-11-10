@@ -282,9 +282,6 @@ class SaleOrderLine(models.Model):
         'Delivered Quantity', copy=False,
         compute='_compute_qty_delivered', store=True, readonly=False,
         digits='Product Unit of Measure')
-    qty_delivered_manual = fields.Float(
-        'Delivered Manually', copy=False, digits='Product Unit of Measure',
-        compute='_compute_qty_delivered_manual', store=True, readonly=False)
     qty_to_invoice = fields.Float(
         compute='_get_to_invoice_qty', string='To Invoice Quantity', store=True,
         digits='Product Unit of Measure')
@@ -349,7 +346,11 @@ class SaleOrderLine(models.Model):
             else:  # service and consu
                 line.qty_delivered_method = 'manual'
 
-    @api.depends('qty_delivered_method', 'qty_delivered_manual', 'analytic_line_ids.so_line', 'analytic_line_ids.unit_amount', 'analytic_line_ids.product_uom_id')
+    @api.depends(
+        'qty_delivered_method',
+        'analytic_line_ids.so_line',
+        'analytic_line_ids.unit_amount',
+        'analytic_line_ids.product_uom_id')
     def _compute_qty_delivered(self):
         """ This method compute the delivered quantity of the SO lines: it covers the case provide by sale module, aka
             expense/vendor bills (sum of unit_amount of AAL), and manual case.
@@ -362,10 +363,6 @@ class SaleOrderLine(models.Model):
         mapping = lines_by_analytic._get_delivered_quantity_by_analytic([('amount', '<=', 0.0)])
         for so_line in lines_by_analytic:
             so_line.qty_delivered = mapping.get(so_line.id or so_line._origin.id, 0.0)
-        # compute for manual lines
-        for line in self:
-            if line.qty_delivered_method == 'manual':
-                line.qty_delivered = line.qty_delivered_manual or 0.0
 
     def _get_delivered_quantity_by_analytic(self, additional_domain):
         """ Compute and write the delivered quantity of current SO lines, based on their related
@@ -405,17 +402,6 @@ class SaleOrderLine(models.Model):
             result[so_line_id] += qty
 
         return result
-
-    @api.depends('qty_delivered', 'qty_delivered_method')
-    def _compute_qty_delivered_manual(self):
-        """ When writing on qty_delivered, if the value should be
-            modified manually (`qty_delivered_method` = 'manual' only),
-            then we put the value in `qty_delivered_manual`.
-            Otherwise, `qty_delivered_manual` should be False since the
-            delivered qty is automatically computed by other mecanisms.
-        """
-        for line in self:
-            line.qty_delivered_manual = line.qty_delivered if line.qty_delivered_method == 'manual' else 0.0
 
     @api.depends('product_id', 'product_uom_qty', 'product_uom')
     def _compute_product_packaging_id(self):
