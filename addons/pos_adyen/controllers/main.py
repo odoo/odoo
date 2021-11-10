@@ -27,6 +27,10 @@ class PosAdyenController(http.Controller):
             if data['SaleToPOIResponse'].get('DiagnosisResponse'):
                 payment_method.adyen_latest_diagnosis = data['SaleToPOIResponse']['MessageHeader']['ServiceID']
             else:
-                payment_method.adyen_latest_response = json.dumps(data)
+                TransactionID = json.dumps(data)['SaleToPOIResponse']['PaymentResponse']['SaleData']['SaleTransactionID'].get('TransactionID')
+                payment_identifier = TransactionID[:-4] + terminal_identifier
+                if type(payment_method.adyen_latest_response) is not dict:
+                    payment_method.adyen_latest_response = {}
+                payment_method.adyen_latest_response[payment_identifier] = json.dumps(data)
         else:
             _logger.error('received a message for a terminal not registered in Odoo: %s', terminal_identifier)

@@ -28,7 +28,7 @@ var PaymentAdyen = PaymentInterface.extend({
     _reset_state: function () {
         this.was_cancelled = false;
         this.last_diagnosis_service_id = false;
-        this.remaining_polls = 21; // Give 21 * 5,5 secondes for the customer to pay
+        this.remaining_polls = 9; // Give 21 * 5,5 secondes for the customer to pay
         clearTimeout(this.polling);
     },
 
