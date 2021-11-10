@@ -2424,22 +2424,27 @@ var SnippetsMenu = Widget.extend({
                     }
 
                     self.getEditableArea().find('.oe_drop_zone').droppable('destroy').remove();
+
+                    let $toInsertParent;
+                    let prev;
+                    let next;
+                    if (dropped) {
+                        prev = $toInsert.first()[0].previousSibling;
+                        next = $toInsert.last()[0].nextSibling;
+
+                        $toInsertParent = $toInsert.parent();
+                        $toInsert.detach();
+                    }
+
                     self.options.wysiwyg.odooEditor.observerActive('dragAndDropCreateSnippet');
 
                     if (dropped) {
-                        var prev = $toInsert.first()[0].previousSibling;
-                        var next = $toInsert.last()[0].nextSibling;
-
                         if (prev) {
-                            $toInsert.detach();
                             $toInsert.insertAfter(prev);
                         } else if (next) {
-                            $toInsert.detach();
                             $toInsert.insertBefore(next);
                         } else {
-                            var $parent = $toInsert.parent();
-                            $toInsert.detach();
-                            $parent.prepend($toInsert);
+                            $toInsertParent.prepend($toInsert);
                         }
 
                         var $target = $toInsert;
