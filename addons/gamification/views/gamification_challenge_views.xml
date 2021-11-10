@@ -1,9 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="challenge_list_view" model="ir.ui.view">
         <field name="name">Challenges List</field>
         <field name="model">gamification.challenge</field>
         <field name="arch" type="xml">
-            <tree string="Goal definitions" decoration-info="state == 'draft'" decoration-muted="state == 'done'">
+            <tree string="Challenges" decoration-info="state == 'draft'" decoration-muted="state == 'done'">
                 <field name="name"/>
                 <field name="period"/>
                 <field name="manager_id"/>
@@ -12,26 +13,11 @@
         </field>
     </record>
 
-    <record id="goals_from_challenge_act" model="ir.actions.act_window">
-        <field name="res_model">gamification.goal</field>
-        <field name="name">Related Goals</field>
-        <field name="view_mode">kanban,tree,form</field>
-        <field name="context">{'search_default_group_by_definition': True, 'search_default_inprogress': True, 'search_default_challenge_id': active_id, 'default_challenge_id': active_id}</field>
-        <field name="help" type="html">
-          <p class="o_view_nocontent_empty_folder">
-                No goal found
-          </p><p>
-            There is no goal associated to this challenge matching your search.
-            Make sure that your challenge is active and assigned to at least one user.
-          </p>
-        </field>
-    </record>
-
     <record id="challenge_form_view" model="ir.ui.view">
         <field name="name">Challenge Form</field>
         <field name="model">gamification.challenge</field>
         <field name="arch" type="xml">
-            <form string="Goal definitions">
+            <form string="Challenge">
                 <header>
                     <button string="Start Challenge" type="object" name="action_start" states="draft" class="oe_highlight"/>
                     <button string="Refresh Challenge" type="object" name="action_check" states="inprogress"/>
@@ -194,19 +180,6 @@
         <field name="act_window_id" ref="challenge_list_action"/>
         <field name="view_id" ref="challenge_form_view"/>
     </record>
-
-    <!-- Line -->
-    <record id="challenge_line_list_view" model="ir.ui.view">
-        <field name="name">Challenge line list</field>
-        <field name="model">gamification.challenge.line</field>
-        <field name="arch" type="xml">
-            <tree string="Challenge Lines" >
-                <field name="definition_id"/>
-                <field name="target_goal" string="Target"/>
-            </tree>
-        </field>
-    </record>
-
 
     <record id="challenge_search_view" model="ir.ui.view">
         <field name="name">Challenge Search</field>
