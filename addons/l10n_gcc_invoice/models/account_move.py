@@ -11,7 +11,11 @@ class AccountMove(models.Model):
 
     def _get_name_invoice_report(self):
         self.ensure_one()
+<<<<<<< HEAD
         if self.company_id.country_id in self.env.ref('base.gulf_cooperation_council').country_ids:
+=======
+        if self.company_id.country_id.code == 'SA':
+>>>>>>> 58d07890ba7... temp
             return 'l10n_gcc_invoice.arabic_english_invoice'
         return super()._get_name_invoice_report()
 

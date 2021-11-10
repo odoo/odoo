@@ -273,7 +273,11 @@
                                         <span class="text-nowrap" t-field="line.discount"/>
                                     </td>
                                     <td class="text-right">
+<<<<<<< HEAD
                                         <span t-out="', '.join(map(lambda x: (x.description or x.name), line.tax_ids))"
+=======
+                                        <span t-esc="', '.join(map(lambda x: (x.description or x.name), line.tax_ids))"
+>>>>>>> 58d07890ba7... temp
                                               id="line_tax_ids"/>
                                     </td>
                                     <td class="text-right o_price_total">
@@ -305,7 +309,11 @@
                                     <td colspan="99">
                                         <strong class="mr16">Subtotal/الإجمالي الفرعي</strong>
                                         <span
+<<<<<<< HEAD
                                                 t-out="current_subtotal"
+=======
+                                                t-esc="current_subtotal"
+>>>>>>> 58d07890ba7... temp
                                                 t-options='{"widget": "monetary", "display_currency": o.currency_id}'
                                         />
                                     </td>
@@ -331,10 +339,33 @@
                                         <span t-field="o.amount_untaxed"/>
                                     </td>
                                 </tr>
+<<<<<<< HEAD
                                 <t t-set="tax_totals" t-value="json.loads(o.tax_totals_json)"/>
                                 <t t-foreach="tax_totals['subtotals']" t-as="subtotal">
                                     <t t-set="subtotal_to_show" t-value="subtotal['name']"/>
                                     <t t-call="account.tax_groups_totals"/>
+=======
+                                <t t-foreach="o.amount_by_group" t-as="amount_by_group">
+                                    <tr style="">
+                                        <t t-if="len(o.line_ids.filtered(lambda line: line.tax_line_id)) in [0, 1] and o.amount_untaxed == amount_by_group[2]">
+                                            <td><span class="text-nowrap" t-esc="amount_by_group[0]"/></td>
+                                            <td class="text-right o_price_total">
+                                                <span class="text-nowrap" t-esc="amount_by_group[3]" />
+                                            </td>
+                                        </t>
+                                        <t t-else="">
+                                            <td>
+                                                <span t-esc="amount_by_group[0]"/>
+                                                <span class="text-nowrap"> on
+                                                    <t t-esc="amount_by_group[4]"/>
+                                                </span>
+                                            </td>
+                                            <td class="text-right o_price_total">
+                                                <span class="text-nowrap" t-esc="amount_by_group[3]"/>
+                                            </td>
+                                        </t>
+                                    </tr>
+>>>>>>> 58d07890ba7... temp
                                 </t>
                                 <tr class="border-black o_total">
                                     <td>
@@ -360,12 +391,20 @@
                                                             Paid on/دفعت في:
                                                         </div>
                                                         <div class="col-5 pl-0 oe_form_field oe_payment_label">
+<<<<<<< HEAD
                                                             <t t-out="payment_vals['date']"/>
+=======
+                                                            <t t-esc="payment_vals['date']"/>
+>>>>>>> 58d07890ba7... temp
                                                         </div>
                                                     </i>
                                                 </td>
                                                 <td class="text-right">
+<<<<<<< HEAD
                                                     <span t-out="payment_vals['amount']"
+=======
+                                                    <span t-esc="payment_vals['amount']"
+>>>>>>> 58d07890ba7... temp
                                                           t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                                                 </td>
                                             </tr>
@@ -503,7 +542,11 @@
                          t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'
                     />
                     <p t-if="company.partner_id.vat">
+<<<<<<< HEAD
                         <t t-out="o.company_id.account_fiscal_country_id.vat_label or 'Tax ID'"/>:
+=======
+                        <t t-esc="o.company_id.country_id.vat_label or 'Tax ID'"/>:
+>>>>>>> 58d07890ba7... temp
                         <span t-field="company.partner_id.vat"/>
                     </p>
                 </div>
@@ -520,13 +563,21 @@
                 <t t-set="address">
                     <address t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' class="mb-0"/>
                     <p t-if="o.partner_id.vat">
+<<<<<<< HEAD
                         <t t-out="o.company_id.account_fiscal_country_id.vat_label or 'Tax ID'"/>:
+=======
+                        <t t-esc="o.company_id.country_id.vat_label or 'Tax ID'"/>:
+>>>>>>> 58d07890ba7... temp
                         <span t-field="o.partner_id.vat"/>
                     </p>
                 </t>
                 <t t-call="web.address_layout"/>
             </div>
+<<<<<<< HEAD
             <t t-out="0"/>
+=======
+            <t t-raw="0"/>
+>>>>>>> 58d07890ba7... temp
         </div>
 
         <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
@@ -543,7 +594,11 @@
                         <span t-field="company.website"/>
                     </li>
                     <li t-if="company.vat" class="list-inline-item d-inline"><t
+<<<<<<< HEAD
                             t-out="company.country_id.vat_label or 'Tax ID'"/>:
+=======
+                            t-esc="company.country_id.vat_label or 'Tax ID'"/>:
+>>>>>>> 58d07890ba7... temp
                         <span t-field="company.vat"/>
                     </li>
                 </ul>
