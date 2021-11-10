@@ -13,5 +13,13 @@
         </field>
     </record>
 
+    <!-- ACTIONS -->
+    <record id="action_current_rank_users" model="ir.actions.act_window">
+        <field name="name">Users</field>
+        <field name="res_model">res.users</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('rank_id', '=', active_id)]</field>
+    </record>
+
 </data>
 </odoo>

@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <!-- ACTIONS -->
-        <record id="action_current_rank_users" model="ir.actions.act_window">
-            <field name="name">Users</field>
-            <field name="res_model">res.users</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('rank_id', '=', active_id)]</field>
-        </record>
 
         <!-- Ranks views -->
         <record id="gamification_karma_ranks_action" model="ir.actions.act_window">
