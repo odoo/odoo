@@ -128,6 +128,20 @@ class TestDigest(mail_test.MailCommon):
 
         self.assertEqual(digest.periodicity, 'weekly')
 
+        # no logs for employee -> should tone down periodicity
+        digest.flush()
+        with self.mock_mail_gateway():
+            digest.action_send()
+
+        self.assertEqual(digest.periodicity, 'monthly')
+
+        # no logs for employee -> should tone down periodicity
+        digest.flush()
+        with self.mock_mail_gateway():
+            digest.action_send()
+
+        self.assertEqual(digest.periodicity, 'quarterly')
+
     @users('admin')
     def test_digest_tone_down_wlogs(self):
         digest = self.env['digest.digest'].browse(self.test_digest.ids)
@@ -137,12 +151,34 @@ class TestDigest(mail_test.MailCommon):
         self.assertEqual(digest.periodicity, 'daily')
 
         # logs for employee -> should not tone down
-        self.env['res.users.log'].with_user(SUPERUSER_ID).create({'create_uid': self.user_employee.id})
+        logs = self.env['res.users.log'].with_user(SUPERUSER_ID).create({'create_uid': self.user_employee.id})
         digest.flush()
         with self.mock_mail_gateway():
             digest.action_send()
 
-        self.assertEqual(digest.periodicity, 'daily')
+        logs.unlink()
+        logs = self.env['res.users.log'].with_user(SUPERUSER_ID).create({
+            'create_uid': self.user_employee.id,
+            'create_date': fields.Datetime.now() - relativedelta(days=20),
+        })
+
+        # logs for employee are more than 3 days old -> should tone down
+        digest.flush()
+        with self.mock_mail_gateway():
+            digest.action_send()
+        self.assertEqual(digest.periodicity, 'weekly')
+
+        # logs for employee are more than 2 weeks old -> should tone down
+        digest.flush()
+        with self.mock_mail_gateway():
+            digest.action_send()
+        self.assertEqual(digest.periodicity, 'monthly')
+
+        # logs for employee are less than 1 month old -> should not tone down
+        digest.flush()
+        with self.mock_mail_gateway():
+            digest.action_send()
+        self.assertEqual(digest.periodicity, 'monthly')
 
 
 @tagged('-at_install', 'post_install')
