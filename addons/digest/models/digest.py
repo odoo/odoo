@@ -121,7 +121,7 @@ class Digest(models.Model):
                     lang=user.lang
                 )._action_send_to_user(user, tips_count=1)
             if digest in to_slowdown:
-                digest.write({'periodicity': 'weekly'})
+                digest.write({'periodicity': self._get_next_periodicity()[0]})
             digest.next_run_date = digest._get_next_run_date()
 
     def _action_send_to_user(self, user, tips_count=1, consum_tips=True):
@@ -276,7 +276,11 @@ class Digest(models.Model):
         """
         preferences = []
         if self._context.get('digest_slowdown'):
-            preferences.append(_("We have noticed you did not connect these last few days so we've automatically switched your preference to weekly Digests."))
+            _dummy, new_perioridicy_str = self._get_next_periodicity()
+            preferences.append(
+                _("We have noticed you did not connect these last few days. We have automatically switched your preference to %(new_perioridicy_str)s Digests.",
+                  new_perioridicy_str=new_perioridicy_str)
+            )
         elif self.periodicity == 'daily' and user.has_group('base.group_erp_manager'):
             preferences.append(Markup('<p>%s<br /><a href="%s" target="_blank" style="color:#875A7B; font-weight: bold;">%s</a></p>') % (
                 _('Prefer a broader overview ?'),
@@ -338,16 +342,33 @@ class Digest(models.Model):
         return margin
 
     def _check_daily_logs(self):
-        three_days_ago = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) - relativedelta(days=3)
+        """ Badly named method that checks user logs and slowdown the sending
+        of digest emails based on recipients being away. """
+        today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
         to_slowdown = self.env['digest.digest']
-        for digest in self.filtered(lambda digest: digest.periodicity == 'daily'):
+        for digest in self:
+            if digest.periodicity == 'daily':  # 3 days ago
+                limit_dt = today - relativedelta(days=3)
+            elif digest.periodicity == 'weekly':  # 2 weeks ago
+                limit_dt = today - relativedelta(days=14)
+            elif digest.periodicity == 'monthly':  # 1 month ago
+                limit_dt = today - relativedelta(months=1)
+            elif digest.periodicity == 'quarterly':  # 3 month ago
+                limit_dt = today - relativedelta(months=3)
             users_logs = self.env['res.users.log'].sudo().search_count([
                 ('create_uid', 'in', digest.user_ids.ids),
-                ('create_date', '>=', three_days_ago)
+                ('create_date', '>=', limit_dt)
             ])
             if not users_logs:
                 to_slowdown += digest
         return to_slowdown
+
+    def _get_next_periodicity(self):
+        if self.periodicity == 'weekly':
+            return 'monthly', _('monthly')
+        if self.periodicity == 'monthly':
+            return 'quarterly', _('quarterly')
+        return 'weekly', _('weekly')
 
     def _format_currency_amount(self, amount, currency_id):
         pre = currency_id.position == 'before'
