@@ -20,9 +20,9 @@ const { makeLegacyDialogMappingTestEnv } = require('@web/../tests/helpers/legacy
 const cpHelpers = require('@web/../tests/search/helpers');
 var createView = testUtils.createView;
 
-QUnit.module('fields', {}, function () {
+QUnit.module('Legacy fields', {}, function () {
 
-QUnit.module('relational_fields', {
+QUnit.module('Legacy relational_fields', {
     beforeEach: function () {
         this.data = {
             partner: {

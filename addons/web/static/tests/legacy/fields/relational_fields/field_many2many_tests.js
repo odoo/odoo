@@ -7,9 +7,9 @@ var testUtils = require('web.test_utils');
 const cpHelpers = require('@web/../tests/search/helpers');
 var createView = testUtils.createView;
 
-QUnit.module('fields', {}, function () {
+QUnit.module('Legacy fields', {}, function () {
 
-    QUnit.module('relational_fields', {
+    QUnit.module('Legacy relational_fields', {
         beforeEach: function () {
             this.data = {
                 partner: {
@@ -115,7 +115,7 @@ QUnit.module('fields', {}, function () {
             };
         },
     }, function () {
-        QUnit.module('FieldMany2Many');
+        QUnit.module('Legacy FieldMany2Many');
 
         QUnit.test('many2many kanban: edition', async function (assert) {
             assert.expect(33);

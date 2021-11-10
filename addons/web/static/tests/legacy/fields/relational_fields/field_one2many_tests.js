@@ -25,9 +25,9 @@ const fieldRegistryOwl = require('web.field_registry_owl');
 
 const { onMounted, onWillUnmount, xml } = owl;
 
-QUnit.module('fields', {}, function () {
+QUnit.module('Legacy fields', {}, function () {
 
-    QUnit.module('relational_fields', {
+    QUnit.module('Legacy relational_fields', {
         beforeEach: function () {
             this.data = {
                 partner: {
@@ -171,7 +171,7 @@ QUnit.module('fields', {}, function () {
             };
         },
     }, function () {
-        QUnit.module('FieldOne2Many');
+        QUnit.module('Legacy FieldOne2Many');
 
         QUnit.test('New record with a o2m also with 2 new records, ordered, and resequenced', async function (assert) {
             assert.expect(2);

@@ -156,7 +156,7 @@ QUnit.module('fields', {}, function () {
             };
         },
     }, function () {
-        QUnit.module('FieldMany2One');
+        QUnit.module('Legacy FieldMany2One');
 
         QUnit.test('many2ones in form views', async function (assert) {
             assert.expect(5);
