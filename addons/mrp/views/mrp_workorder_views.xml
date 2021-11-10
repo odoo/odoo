@@ -7,6 +7,7 @@
             <search>
                 <field name="production_id"/>
                 <field name="workcenter_id"/>
+                <field name="product_id"/>
                 <filter string="Ready" name="ready" domain="[('state','=','ready')]"/>
                 <filter string="Waiting" name="waiting" domain="[('state','=','waiting')]"/>
                 <filter string="Pending" name="pending" domain="[('state','=','pending')]"/>
@@ -236,6 +237,7 @@
                 <field name="name" string="Work Order"/>
                 <field name="workcenter_id"/>
                 <field name="production_id"/>
+                <field name="product_id"/>
                 <filter string="In Progress" name="progress" domain="[('state', '=', 'progress')]"/>
                 <filter string="Ready" name="ready" domain="[('state', '=', 'ready')]"/>
                 <filter string="Waiting" name="waiting" domain="[('state', '=', 'waiting')]"/>
