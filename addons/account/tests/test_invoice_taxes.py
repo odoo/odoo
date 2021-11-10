@@ -667,3 +667,47 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
             (50, self.percent_tax_3_incl),
         ], currency_id=self.currency_data['currency'], invoice_payment_term_id=self.pay_terms_a)
         invoice.action_post()
+
+    def test_tax_calculation_multi_currency(self):
+        self.env['res.currency.rate'].create({
+            'name': '2018-01-01',
+            'rate': 0.273748,
+            'currency_id': self.currency_data['currency'].id,
+            'company_id': self.env.company.id,
+        })
+        self.currency_data['currency'].rounding = 0.01
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'currency_id': self.currency_data['currency'].id,
+            'invoice_date': '2018-01-01',
+            'date': '2018-01-01',
+            'invoice_line_ids': [(0, 0, {
+                'name': 'xxxx',
+                'quantity': 1,
+                'price_unit': 155.32,
+                'tax_ids': [(6, 0, self.percent_tax_1.ids)],
+            })]
+        })
+
+        self.assertRecordValues(invoice.line_ids.filtered('tax_line_id'), [{
+            'tax_base_amount': 567.38,      # 155.32 * 1 / (1 / 0.273748)
+            'balance': -119.16,             # tax_base_amount * 0.21
+        }])
+
+        self.assertRecordValues(invoice.line_ids.filtered(lambda l: not l.name), [{
+            'balance': 686.54
+        }])
+
+        with Form(invoice) as invoice_form:
+            invoice_form.currency_id = self.currency_data['currency']
+
+        self.assertRecordValues(invoice.line_ids.filtered('tax_line_id'), [{
+            'tax_base_amount': 567.38,
+            'balance': -119.16,
+        }])
+
+        self.assertRecordValues(invoice.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable'), [{
+            'balance': 686.54
+        }])
