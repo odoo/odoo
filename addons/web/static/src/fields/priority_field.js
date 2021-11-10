@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { standardFieldProps } from "../standard_field_props";
+import { standardFieldProps } from "./standard_field_props";
 
 const { Component } = owl;
 const { useState } = owl.hooks;

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.Many2ManyTagsField" owl="1">
+        <div class="o_field_many2manytags">
+            <t t-foreach="data" t-as="tag" t-key="tag.id">
+                <div class="badge badge-pill" t-attf-class="o_tag_color_{{ tag.data.color }}">
+                    <t t-esc="tag.data.display_name" />
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>
