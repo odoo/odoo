@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.exceptions import UserError
-from odoo.tests import tagged
+from odoo.tests import tagged, Form
 
 
 @tagged('post_install', '-at_install')
@@ -20,6 +20,22 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
 
         cls.payment_debit_account_id = cls.company_data['default_journal_bank'].company_id.account_journal_payment_debit_account_id.copy()
         cls.payment_credit_account_id = cls.company_data['default_journal_bank'].company_id.account_journal_payment_credit_account_id.copy()
+
+        cls.partner_bank_account = cls.env['res.partner.bank'].create({
+            'acc_number': "0123456789",
+            'partner_id': cls.partner_a.id,
+            'acc_type': 'bank',
+        })
+        cls.comp_bank_account1 = cls.env['res.partner.bank'].create({
+            'acc_number': "985632147",
+            'partner_id': cls.env.company.partner_id.id,
+            'acc_type': 'bank',
+        })
+        cls.comp_bank_account2 = cls.env['res.partner.bank'].create({
+            'acc_number': "741258963",
+            'partner_id': cls.env.company.partner_id.id,
+            'acc_type': 'bank',
+        })
 
         # Customer invoices sharing the same batch.
         cls.out_invoice_1 = cls.env['account.move'].create({
@@ -505,6 +521,27 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
                 'reconciled': True,
             },
         ])
+
+    def test_register_payment_custom_bank_account(self):
+        """ Ensure the user is able to select a custom bank account when registering a payment and this bank account
+        lands correctly on the generated payment.
+        """
+        self.out_invoice_1.partner_bank_id = self.comp_bank_account1
+
+        ctx = {'active_model': 'account.move', 'active_ids': self.out_invoice_1.ids}
+        wizard_form = Form(self.env['account.payment.register'].with_context(**ctx))
+        wizard = wizard_form.save()
+
+        # The bank account set on the invoice must be the default suggested value.
+        self.assertRecordValues(wizard, [{'partner_bank_id': self.comp_bank_account1.id}])
+
+        wizard_form = Form(wizard)
+        wizard_form.partner_bank_id = self.comp_bank_account2
+        wizard = wizard_form.save()
+        payments = wizard._create_payments()
+
+        # The user should be able to set a custom bank account.
+        self.assertRecordValues(payments, [{'partner_bank_id': self.comp_bank_account2.id}])
 
     def test_register_payment_constraints(self):
         # Test to register a payment for a draft journal entry.
