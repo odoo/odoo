@@ -44,7 +44,6 @@ import { generateLegacyLoadViewsResult } from "@web/legacy/legacy_load_views";
  */
 
 export const viewService = {
-    name: "view",
     dependencies: ["orm"],
     start(env, { orm }) {
         let cache = {};
@@ -61,10 +60,10 @@ export const viewService = {
          * fields of the corresponding model, and optionally the filters.
          *
          * @param {LoadViewsParams} params
-         * @param {LoadViewsOptions} options
+         * @param {LoadViewsOptions} [options={}]
          * @returns {Promise<ViewDescriptions>}
          */
-        async function loadViews(params, options) {
+        async function loadViews(params, options = {}) {
             const loadViewsOptions = {
                 action_id: options.actionId || false,
                 load_filters: options.loadIrFilters || false,

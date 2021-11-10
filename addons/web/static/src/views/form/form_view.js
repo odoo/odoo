@@ -19,7 +19,7 @@ const { Component, useState } = owl;
 
 // -----------------------------------------------------------------------------
 
-class FormArchParser extends XMLParser {
+export class FormArchParser extends XMLParser {
     parse(arch, fields) {
         const xmlDoc = this.parseXML(arch);
         const activeActions = getActiveActions(xmlDoc);
