@@ -720,7 +720,7 @@
                     </group>
                      <notebook>
                         <page name="expenses" string="Expense">
-                        <field name="expense_line_ids" nolabel="1" widget="many2many" domain="[('state', '=', 'draft'), ('employee_id', '=', employee_id), ('company_id', '=', company_id)]" options="{'reload_on_button': True}" context="{'form_view_ref' : 'hr_expense.hr_expense_view_form_without_header', 'default_company_id': company_id, 'default_employee_id': employee_id}">
+                        <field name="expense_line_ids" nolabel="1" widget="many2many" domain="[('state', '=', 'draft'), ('employee_id', '=', employee_id), ('company_id', '=', company_id)]" options="{'reload_on_button': True}" context="{'form_view_ref' : 'hr_expense.hr_expense_view_form_without_header', 'default_company_id': company_id, 'default_employee_id': employee_id}" attrs="{'readonly': [('state', '!=', 'draft')]}">
                             <tree decoration-danger="is_refused" editable="bottom">
                                 <field name="date" optional="show"/>
                                 <field name="product_id"/>
