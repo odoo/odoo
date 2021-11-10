@@ -27,6 +27,7 @@ import datetime
 import dateutil
 import fnmatch
 import functools
+import inspect
 import itertools
 import io
 import logging
@@ -172,6 +173,9 @@ class MetaModel(api.Meta):
 
     def __init__(self, name, bases, attrs):
         super().__init__(name, bases, attrs)
+
+        if '__init__' in attrs and len(inspect.signature(attrs['__init__']).parameters) != 4:
+            _logger.warning("The method %s.__init__ doesn't match the new signature in module %s", name, attrs.get('__module__'))
 
         if not attrs.get('_register', True):
             return
@@ -5183,19 +5187,16 @@ Fields:
     #  - the global cache is only an index to "resolve" a record 'id'.
     #
 
-    @classmethod
-    def _browse(cls, env, ids, prefetch_ids):
+    def __init__(self, env, ids, prefetch_ids):
         """ Create a recordset instance.
 
         :param env: an environment
         :param ids: a tuple of record ids
         :param prefetch_ids: a collection of record ids (for prefetching)
         """
-        records = object.__new__(cls)
-        records.env = env
-        records._ids = ids
-        records._prefetch_ids = prefetch_ids
-        return records
+        self.env = env
+        self._ids = ids
+        self._prefetch_ids = prefetch_ids
 
     def browse(self, ids=None):
         """ browse([ids]) -> records
@@ -5209,7 +5210,7 @@ Fields:
             res.partner(7, 18, 12)
 
         :param ids: id(s)
-        :type ids: int or list(int) or None
+        :type ids: int or iterable(int) or None
         :return: recordset
         """
         if not ids:
@@ -5218,7 +5219,7 @@ Fields:
             ids = (ids,)
         else:
             ids = tuple(ids)
-        return self._browse(self.env, ids, ids)
+        return self.__class__(self.env, ids, ids)
 
     #
     # Internal properties, for manipulating the instance's implementation
@@ -5263,7 +5264,7 @@ Fields:
             delays while re-fetching from the database.
             The returned recordset has the same prefetch object as ``self``.
         """
-        return self._browse(env, self._ids, self._prefetch_ids)
+        return self.__class__(env, self._ids, self._prefetch_ids)
 
     def sudo(self, flag=True):
         """ sudo([flag=True])
@@ -5389,7 +5390,7 @@ Fields:
         """
         if prefetch_ids is None:
             prefetch_ids = self._ids
-        return self._browse(self.env, self._ids, prefetch_ids)
+        return self.__class__(self.env, self._ids, prefetch_ids)
 
     def _update_cache(self, values, validate=True):
         """ Update the cache of ``self`` with ``values``.
@@ -5769,7 +5770,7 @@ Fields:
         """ Return the actual records corresponding to ``self``. """
         ids = tuple(origin_ids(self._ids))
         prefetch_ids = IterableGenerator(origin_ids, self._prefetch_ids)
-        return self._browse(self.env, ids, prefetch_ids)
+        return self.__class__(self.env, ids, prefetch_ids)
 
     #
     # "Dunder" methods
@@ -5789,10 +5790,10 @@ Fields:
         if len(self._ids) > PREFETCH_MAX and self._prefetch_ids is self._ids:
             for ids in self.env.cr.split_for_in_conditions(self._ids):
                 for id_ in ids:
-                    yield self._browse(self.env, (id_,), ids)
+                    yield self.__class__(self.env, (id_,), ids)
         else:
-            for id in self._ids:
-                yield self._browse(self.env, (id,), self._prefetch_ids)
+            for id_ in self._ids:
+                yield self.__class__(self.env, (id_,), self._prefetch_ids)
 
     def __contains__(self, item):
         """ Test whether ``item`` (record or field name) is an element of ``self``.

@@ -534,7 +534,7 @@ class Environment(Mapping):
 
     def __getitem__(self, model_name):
         """ Return an empty recordset from the given model. """
-        return self.registry[model_name]._browse(self, (), ())
+        return self.registry[model_name](self, (), ())
 
     def __iter__(self):
         """ Return an iterator on model names. """

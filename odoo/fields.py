@@ -1223,7 +1223,7 @@ class Field(MetaField('DummyField', (object,), {})):
             # many records as possible. If not done this way, scenarios such as
             # [rec.line_ids.mapped('name') for rec in recs] would generate one
             # query per record in `recs`!
-            remaining = records._browse(records.env, records[len(vals):]._ids, records._prefetch_ids)
+            remaining = records.__class__(records.env, records._ids[len(vals):], records._prefetch_ids)
             self.__get__(first(remaining), type(remaining))
             vals += records.env.cache.get_until_miss(remaining, self)
 
@@ -2842,13 +2842,13 @@ class Many2one(_Relational):
         # use registry to avoid creating a recordset for the model
         ids = () if value is None else (value,)
         prefetch_ids = IterableGenerator(prefetch_many2one_ids, record, self)
-        return record.pool[self.comodel_name]._browse(record.env, ids, prefetch_ids)
+        return record.pool[self.comodel_name](record.env, ids, prefetch_ids)
 
     def convert_to_record_multi(self, values, records):
         # return the ids as a recordset without duplicates
         prefetch_ids = IterableGenerator(prefetch_many2one_ids, records, self)
         ids = tuple(unique(id_ for id_ in values if id_ is not None))
-        return records.pool[self.comodel_name]._browse(records.env, ids, prefetch_ids)
+        return records.pool[self.comodel_name](records.env, ids, prefetch_ids)
 
     def convert_to_read(self, value, record, use_name_get=True):
         if use_name_get and value:
@@ -3244,7 +3244,7 @@ class _RelationalMulti(_Relational):
         # use registry to avoid creating a recordset for the model
         prefetch_ids = IterableGenerator(prefetch_x2many_ids, record, self)
         Comodel = record.pool[self.comodel_name]
-        corecords = Comodel._browse(record.env, value, prefetch_ids)
+        corecords = Comodel(record.env, value, prefetch_ids)
         if (
             Comodel._active_name
             and self.context.get('active_test', record.env.context.get('active_test', True))
@@ -3257,7 +3257,7 @@ class _RelationalMulti(_Relational):
         prefetch_ids = IterableGenerator(prefetch_x2many_ids, records, self)
         Comodel = records.pool[self.comodel_name]
         ids = tuple(unique(id_ for ids in values for id_ in ids))
-        corecords = Comodel._browse(records.env, ids, prefetch_ids)
+        corecords = Comodel(records.env, ids, prefetch_ids)
         if (
             Comodel._active_name
             and self.context.get('active_test', records.env.context.get('active_test', True))
