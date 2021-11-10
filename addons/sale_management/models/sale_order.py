@@ -51,8 +51,8 @@ class SaleOrder(models.Model):
         return super(SaleOrder, self).copy(default=default)
 
     @api.depends('partner_id')
-    def _compute_order_info_from_partner(self):
-        super(SaleOrder, self)._compute_order_info_from_partner()
+    def _compute_note(self):
+        super(SaleOrder, self)._compute_note()
         for order in self:
             template = order.sale_order_template_id.with_context(lang=order.partner_id.lang)
             order.note = template.note if not is_html_empty(template.note) else order.note

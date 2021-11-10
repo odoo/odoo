@@ -11,7 +11,7 @@ from odoo.tools import float_compare
 from .common import TestSaleCommon
 
 
-@tagged('post_install', '-at_install')
+@tagged('post_install', '-at_install', 'sale_order')
 class TestSaleOrder(TestSaleCommon):
 
     @classmethod
