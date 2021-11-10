@@ -84,6 +84,7 @@
                     <field name="is_company" invisible="1"/>
                     <field name="type" invisible="1"/>
                     <field name="avatar_128" invisible="1"/>
+                    <field name="user_id" invisible="1"/>
                     <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "avatar_128"}'/>
                     <div class="oe_title">
                         <field name="company_type" options="{'horizontal': true}" widget="radio" groups="base.group_no_one"/>
@@ -94,7 +95,7 @@
                         <field name="parent_id"
                             widget="res_partner_many2one"
                             placeholder="Company Name..."
-                            domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'show_vat': True}"
+                            domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'show_vat': True, 'default_user_id': user_id}"
                             attrs="{'invisible': [('is_company','=', True)]}"/>
                     </div>
                     <group>
