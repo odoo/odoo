@@ -5115,7 +5115,7 @@ msgstr "Редагувати"
 #: model:ir.model.fields,help:account.field_account_move__amount_by_group
 #: model:ir.model.fields,help:account.field_account_payment__amount_by_group
 msgid "Edit Tax amounts if you encounter rounding issues."
-msgstr ""
+msgstr "Змініть суми податку, якщо у вас виникли проблеми з округленням."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__is_email
@@ -5199,7 +5199,7 @@ msgstr "Записи не з того ж місця, що і рахунок: %s 
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Entries doesn't belong to the same company: %s != %s"
-msgstr ""
+msgstr "Записи не належать одній компанії: %s != %s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_validate_account_move__force_post
@@ -5207,6 +5207,8 @@ msgid ""
 "Entries in the future are set to be auto-posted by default. Check this "
 "checkbox to post them now."
 msgstr ""
+"За замовчуванням налаштовано автоматичне розміщення записів у майбутньому. "
+"Установіть прапорець, щоб опублікувати їх зараз."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -5351,6 +5353,8 @@ msgid ""
 "Factor to apply on the account move lines generated from this distribution "
 "line"
 msgstr ""
+"Коефіцієнт, який застосовується до рядків переміщення рахунку, згенерованих "
+"з цього рядка розподілу"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__factor_percent
@@ -5359,6 +5363,8 @@ msgid ""
 "Factor to apply on the account move lines generated from this distribution "
 "line, in percents"
 msgstr ""
+"Коефіцієнт, який застосовується до рядків переміщення рахунку, згенерованих "
+"з цього рядка розподілу, у відсотках"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
@@ -5381,7 +5387,7 @@ msgstr "Області"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Fill in the details of the line."
-msgstr ""
+msgstr "Заповніть у деталях рядка."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__general_account_id
@@ -6114,6 +6120,9 @@ msgid ""
 "related information at the time of the creation of the move and that the "
 "move needs to be checked again."
 msgstr ""
+"Якщо позначено, це означає, що користувач не був впевнений у всій пов’язаній"
+" інформації на момент створення переміщення, і що переміщення потрібно "
+"перевірити ще раз."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__auto_post
@@ -6640,6 +6649,7 @@ msgid ""
 "Invoice and credit note distribution should each contain exactly one line "
 "for the base."
 msgstr ""
+"Розсилка рахунків-фактур і сторно має містити рівно один рядок для бази."
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -6647,6 +6657,7 @@ msgstr ""
 msgid ""
 "Invoice and credit note distribution should have the same number of lines."
 msgstr ""
+"Розсилка рахунків-фактур і сторно повинна мати однакову кількість рядків."
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -6655,6 +6666,8 @@ msgid ""
 "Invoice and credit note distribution should match (same percentages, in the "
 "same order)."
 msgstr ""
+"Розподіл рахунка-фактури та сторно має збігатися (однакові відсотки, у тому "
+"самому порядку)."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_line_ids

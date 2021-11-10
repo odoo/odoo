@@ -511,11 +511,13 @@ class SaleOrder(models.Model):
         return result
 
     def _compute_field_value(self, field):
+        if field.name == 'invoice_status' and not self.env.context.get('mail_activity_automation_skip'):
+            filtered_self = self.filtered(lambda so: so.user_id and so._origin.invoice_status != 'upselling')
         super()._compute_field_value(field)
         if field.name != 'invoice_status' or self.env.context.get('mail_activity_automation_skip'):
             return
 
-        filtered_self = self.filtered(lambda so: so.user_id and so.invoice_status == 'upselling')
+        filtered_self = filtered_self.filtered(lambda so: so.invoice_status == 'upselling')
         if not filtered_self:
             return
 
@@ -1226,7 +1228,7 @@ class SaleOrderLine(models.Model):
             else:
                 line.qty_to_invoice = 0
 
-    @api.depends('invoice_lines.move_id.state', 'invoice_lines.quantity', 'untaxed_amount_to_invoice')
+    @api.depends('invoice_lines.move_id.state', 'invoice_lines.quantity')
     def _get_invoice_qty(self):
         """
         Compute the quantity invoiced. If case of a refund, the quantity invoiced is decreased. Note
@@ -1241,8 +1243,7 @@ class SaleOrderLine(models.Model):
                     if invoice_line.move_id.move_type == 'out_invoice':
                         qty_invoiced += invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom)
                     elif invoice_line.move_id.move_type == 'out_refund':
-                        if not line.is_downpayment or line.untaxed_amount_to_invoice == 0 :
-                            qty_invoiced -= invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom)
+                        qty_invoiced -= invoice_line.product_uom_id._compute_quantity(invoice_line.quantity, line.product_uom)
             line.qty_invoiced = qty_invoiced
 
     @api.depends('price_unit', 'discount')
