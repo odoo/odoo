@@ -37,6 +37,14 @@
 
     <t t-name="web.FieldX2Many" owl="1">
         <div t-attf-class="o_field_x2many o_field_x2many_{{viewType}}">
+            <div class="o_x2m_control_panel">
+                <div class="o_cp_buttons" role="toolbar" aria-label="Control panel buttons" t-ref="buttons">
+                    <!-- <t t-slot="buttons"/> -->
+                </div>
+                <div class="o_cp_pager" role="search">
+                    <Pager t-if="props.value.resIds.length > props.value.limit" t-props="pagerProps"/>
+                </div>
+            </div>
             <t t-if="Renderer" t-component="Renderer" t-props="rendererProps"/>
         </div>
     </t>

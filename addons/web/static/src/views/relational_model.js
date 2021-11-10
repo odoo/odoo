@@ -260,7 +260,7 @@ class DynamicList extends DataPoint {
         this.orderedBy = params.orderedBy || {}; // rename orderBy + get back from state
         this.offset = 0;
         this.count = 0;
-        this.limit = state.limit || 80;
+        this.limit = state.limit || 80; // FIXME: get this limit in params
     }
 
     exportState() {
@@ -521,35 +521,113 @@ export class Group extends DataPoint {
     }
 }
 export class StaticList extends DataPoint {
-    constructor(model, params) {
+    constructor(model, params, state = {}) {
         super(...arguments);
 
         this.resIds = params.resIds || [];
         this.records = [];
+        this._cache = {};
         this.offset = 0;
         this.views = params.views || {};
         this.viewMode = params.viewMode;
         this.orderedBy = params.orderedBy || {}; // rename orderBy + get back from state
+        this.limit = state.limit || 80; // FIXME: get this limit in params
+        this.offset = 0;
+    }
+
+    exportState() {
+        return {
+            limit: this.limit,
+        };
+    }
+
+    get count() {
+        return this.resIds.length;
     }
 
     async load() {
         if (!this.resIds.length) {
             return [];
         }
+        const orderFieldName = this.orderedBy.fieldName;
+        const hasSeveralPages = this.limit < this.resIds.length;
+        if (hasSeveralPages && orderFieldName) {
+            // there several pages in the x2many and it is ordered, so we must know the value
+            // for the sorted field for all records and sort the resIds w.r.t. to those values
+            // before fetching the activeFields for the resIds of the current page.
+            // 1) populate values for already fetched records
+            let recordValues = {};
+            for (const resId in this._cache) {
+                recordValues[resId] = this._cache[resId].data[orderFieldName];
+            }
+            // 2) fetch values for non loaded records
+            const resIds = this.resIds.filter((resId) => !(resId in this._cache));
+            if (resIds.length) {
+                const records = await this.model.orm.read(this.resModel, resIds, [orderFieldName]);
+                for (const record of records) {
+                    recordValues[record.id] = record[orderFieldName];
+                }
+            }
+            // 3) sort resIds
+            this.resIds.sort((id1, id2) => {
+                let v1 = recordValues[id1];
+                let v2 = recordValues[id2];
+                if (this.fields[orderFieldName].type === "many2one") {
+                    v1 = v1[1];
+                    v2 = v2[1];
+                }
+                if (v1 <= v2) {
+                    return this.orderedBy.asc ? -1 : 1;
+                } else {
+                    return this.orderedBy.asc ? 1 : -1;
+                }
+            });
+        }
+        const resIdsInCurrentPage = this.resIds.slice(this.offset, this.offset + this.limit);
         this.records = await Promise.all(
-            this.resIds.map(async (resId) => {
-                const record = this.model.createDataPoint("record", {
-                    resModel: this.resModel,
-                    resId,
-                    fields: this.fields,
-                    activeFields: this.activeFields,
-                    viewMode: this.viewMode,
-                    views: this.views,
-                });
-                await record.load();
+            resIdsInCurrentPage.map(async (resId) => {
+                let record = this._cache[resId];
+                if (!record) {
+                    record = this.model.createDataPoint("record", {
+                        resModel: this.resModel,
+                        resId,
+                        fields: this.fields,
+                        activeFields: this.activeFields,
+                        viewMode: this.viewMode,
+                        views: this.views,
+                    });
+                    this._cache[resId] = record;
+                    await record.load();
+                }
                 return record;
             })
         );
+        if (!hasSeveralPages && orderFieldName) {
+            this.records.sort((r1, r2) => {
+                let v1 = r1.data[orderFieldName];
+                let v2 = r2.data[orderFieldName];
+                if (this.fields[orderFieldName].type === "many2one") {
+                    v1 = v1[1];
+                    v2 = v2[1];
+                }
+                if (v1 <= v2) {
+                    return this.orderedBy.asc ? -1 : 1;
+                } else {
+                    return this.orderedBy.asc ? 1 : -1;
+                }
+            });
+        }
+    }
+
+    async sortBy(fieldName) {
+        if (this.orderedBy.fieldName === fieldName) {
+            this.orderedBy.asc = !this.orderedBy.asc;
+        } else {
+            this.orderedBy = { fieldName, asc: true };
+        }
+
+        await this.load();
+        this.model.notify();
     }
 }
 

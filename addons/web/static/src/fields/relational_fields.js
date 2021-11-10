@@ -4,6 +4,7 @@ import { useService } from "@web/core/utils/hooks";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
+import { Pager } from "@web/core/pager/pager";
 
 const { Component } = owl;
 const fieldRegistry = registry.category("fields");
@@ -62,6 +63,22 @@ export class FieldX2Many extends Component {
         }
     }
 
+    get pagerProps() {
+        const list = this.props.value;
+        return {
+            offset: list.offset,
+            limit: list.limit,
+            total: list.count,
+            onUpdate: async ({ offset, limit }) => {
+                list.offset = offset;
+                list.limit = limit;
+                await list.load();
+                this.render();
+            },
+            withAccessKey: false,
+        };
+    }
+
     openRecord(record) {
         this.dialogService.add(FormViewDialog, {
             archInfo: this.props.value.views.form, // FIXME: might not be there
@@ -72,8 +89,8 @@ export class FieldX2Many extends Component {
     }
 }
 FieldX2Many.useSubView = true;
-
 FieldX2Many.template = "web.FieldX2Many";
+FieldX2Many.components = { Pager };
 
 fieldRegistry.add("one2many", FieldX2Many);
 fieldRegistry.add("many2many", FieldX2Many);
