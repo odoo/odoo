@@ -933,9 +933,13 @@ class MassMailing(models.Model):
 
         mails_sudo = self.env['mail.mail'].sudo()
         for mailing in self:
-            user = mailing.user_id
-            mailing = mailing.with_context(lang=user.lang or self._context.get('lang'))
+            if mailing.user_id:
+                mailing = mailing.with_user(mailing.user_id).with_context(
+                    lang=mailing.user_id.lang or self._context.get('lang')
+                )
             mailing_type = mailing._get_pretty_mailing_type()
+            mail_user = mailing.user_id or self.env.user
+            mail_company = mail_user.company_id
 
             link_trackers = self.env['link.tracker'].search(
                 [('mass_mailing_id', '=', mailing.id)]
@@ -953,8 +957,8 @@ class MassMailing(models.Model):
                 'digest.digest_mail_main',
                 {
                     'body': tools.html_sanitize(link_trackers_body),
-                    'company': user.company_id,
-                    'user': user,
+                    'company': mail_company,
+                    'user': mail_user,
                     'display_mobile_banner': True,
                     ** mailing._prepare_statistics_email_values()
                 },
@@ -966,15 +970,17 @@ class MassMailing(models.Model):
             )
 
             mail_values = {
+                'auto_delete': True,
+                'author_id': mail_user.partner_id.id,
+                'email_from': mail_user.email_formatted,
+                'email_to': mail_user.email_formatted,
+                'body_html': full_mail,
+                'reply_to': mail_company.email_formatted or mail_user.email_formatted,
+                'state': 'outgoing',
                 'subject': _('24H Stats of %(mailing_type)s "%(mailing_name)s"',
                              mailing_type=mailing._get_pretty_mailing_type(),
                              mailing_name=mailing.subject
                             ),
-                'email_from': user.email_formatted,
-                'email_to': user.email_formatted,
-                'body_html': full_mail,
-                'auto_delete': True,
-                'state': 'outgoing',
             }
             mails_sudo += self.env['mail.mail'].sudo().create(mail_values)
         return mails_sudo

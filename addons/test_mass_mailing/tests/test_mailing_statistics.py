@@ -8,7 +8,7 @@ from odoo.addons.test_mass_mailing.data.mail_test_data import MAIL_TEMPLATE
 from odoo.addons.test_mass_mailing.tests.common import TestMassMailCommon
 from odoo.tests.common import users
 from odoo.tests import tagged
-from odoo.tools import formataddr, mute_logger
+from odoo.tools import mute_logger
 
 
 @tagged('digest')
@@ -59,10 +59,10 @@ class TestMailingStatistics(TestMassMailCommon):
         self.assertEqual(len(self._new_mails), 1, "Mailing: a mail should have been created for statistics")
         mail = self._new_mails[0]
         # test email values
-        self.assertEqual(mail.author_id, self.user_marketing.partner_id)
+        self.assertEqual(mail.author_id, self.user_marketing_2.partner_id)
         self.assertEqual(mail.email_from, self.user_marketing_2.email_formatted)
         self.assertEqual(mail.email_to, self.user_marketing_2.email_formatted)
-        self.assertEqual(mail.reply_to, formataddr((self.company_admin.name, '%s@%s' % (self.alias_catchall, self.alias_domain))))
+        self.assertEqual(mail.reply_to, self.company_admin.partner_id.email_formatted)
         self.assertEqual(mail.state, 'outgoing')
         # test body content: KPIs
         body_html = html.fromstring(mail.body_html)
@@ -93,7 +93,7 @@ class TestMailingStatistics(TestMassMailCommon):
         mail = self._new_mails[0]
         # test email values
         self.assertEqual(mail.author_id, self.user_marketing.partner_id)
-        self.assertFalse(mail.email_from)
-        self.assertFalse(mail.email_to)
-        self.assertEqual(mail.reply_to, formataddr((self.company_admin.name, '%s@%s' % (self.alias_catchall, self.alias_domain))))
+        self.assertEqual(mail.email_from, self.user_marketing.email_formatted)
+        self.assertEqual(mail.email_to, self.user_marketing.email_formatted)
+        self.assertEqual(mail.reply_to, self.company_admin.partner_id.email_formatted)
         self.assertEqual(mail.state, 'outgoing')

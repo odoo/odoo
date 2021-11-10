@@ -7,7 +7,7 @@ from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.test_mail_full.tests.test_mass_sms import TestMassSMSCommon
 from odoo.tests.common import users
 from odoo.tests import tagged
-from odoo.tools import formataddr, mute_logger
+from odoo.tools import mute_logger
 
 
 @tagged('digest', 'mass_mailing')
@@ -53,10 +53,10 @@ class TestMailingStatistics(TestMassSMSCommon):
         self.assertEqual(len(self._new_mails), 1, "Mailing: a mail should have been created for statistics")
         mail = self._new_mails[0]
         # test email values
-        self.assertEqual(mail.author_id, self.user_marketing.partner_id)
+        self.assertEqual(mail.author_id, self.user_marketing_2.partner_id)
         self.assertEqual(mail.email_from, self.user_marketing_2.email_formatted)
         self.assertEqual(mail.email_to, self.user_marketing_2.email_formatted)
-        self.assertEqual(mail.reply_to, formataddr((self.company_admin.name, '%s@%s' % (self.alias_catchall, self.alias_domain))))
+        self.assertEqual(mail.reply_to, self.company_admin.partner_id.email_formatted)
         self.assertEqual(mail.state, 'outgoing')
         # test body content: KPIs
         body_html = html.fromstring(mail.body_html)
