@@ -27,11 +27,17 @@
                 <sheet>
                     <!-- action buttons -->
                     <div class="oe_button_box" name="button_box">
+                        <button type="object"
+                                name="action_view_users"
+                                class="oe_stat_button"
+                                icon="fa-users">
+                            <field name="user_count" string="Participants" widget="statinfo"/>
+                        </button>
                         <button type="action"
-                            name="%(goals_from_challenge_act)d"
-                            class="oe_stat_button"
-                            icon="fa-gift"
-                            attrs="{'invisible': [('state','=','draft')]}">
+                                name="%(goals_from_challenge_act)d"
+                                class="oe_stat_button"
+                                icon="fa-gift"
+                                attrs="{'invisible': [('state','=','draft')]}">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_text">Related</span>
                                 <span class="o_stat_text">Goals</span>
@@ -46,7 +52,6 @@
                         <label for="user_domain" string="Assign Challenge to"/>
                         <div>
                             <field name="user_domain" widget="domain" options="{'model': 'res.users'}" />
-                            <field name="user_ids" widget="many2many_tags" />
                         </div>
                     </div>
                     <group>
@@ -127,7 +132,6 @@
         <field name="arch" type="xml">
             <kanban string="Challenges" class="oe_background_grey">
                 <field name="line_ids"/>
-                <field name="user_ids"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_card o_kanban_gamification oe_kanban_global_click">
@@ -135,15 +139,16 @@
                                <strong>
                                    <h4 class="o_kanban_record_title"><field name="name"/></h4>
                                    <div class="o_kanban_record_subtitle">
-                                       <a type="action" name="%(goals_from_challenge_act)d" style="margin-right: 10px" tabindex="-1">
-                                           <span t-if="record.line_ids.raw_value.length gt 1"><t t-esc="record.line_ids.raw_value.length"/> Goals</span>
-                                           <span t-if="record.line_ids.raw_value.length lt 2"><t t-esc="record.line_ids.raw_value.length"/> Goal</span>
-                                       </a>
+                                        <a type="action" name="%(goals_from_challenge_act)d"
+                                           style="margin-right: 10px" tabindex="-1">
+                                            <span><t t-esc="record.line_ids.raw_value.length"/> Goals</span>
+                                        </a><br />
+                                        <a type="object" name="action_view_users"
+                                           style="margin-right: 10px" tabindex="-1">
+                                            <span><field name="user_count"/> Participants</span>
+                                        </a>
                                    </div>
                                </strong>
-                                <t t-foreach="record.user_ids.raw_value.slice(0,11)" t-as="member">
-                                    <img class="o_kanban_badge_avatars" t-att-src="kanban_image('res.users', 'avatar_128', member)" t-att-data-member_id="member" alt="Member"/>
-                                </t>
                             </div>
                         </div>
                     </t>
