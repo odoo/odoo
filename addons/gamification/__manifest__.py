@@ -31,6 +31,7 @@ Both goals and badges are flexibles and can be adapted to a large range of modul
         'views/gamification_goal_definition_views.xml',
         'views/gamification_challenge_views.xml',
         'views/gamification_challenge_line_views.xml',
+        'views/gamification_menus.xml',
         'data/cron.xml',
         'security/gamification_security.xml',
         'security/ir.model.access.csv',
