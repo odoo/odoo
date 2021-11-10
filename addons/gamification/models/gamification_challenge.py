@@ -60,6 +60,7 @@ class Challenge(models.Model):
     _inherit = 'mail.thread'
     _order = 'end_date, start_date, name, id'
 
+    # description
     name = fields.Char("Challenge Name", required=True, translate=True)
     description = fields.Text("Description", translate=True)
     state = fields.Selection([
@@ -71,10 +72,11 @@ class Challenge(models.Model):
     manager_id = fields.Many2one(
         'res.users', default=lambda self: self.env.uid,
         string="Responsible", help="The user responsible for the challenge.",)
-
+    # members
     user_ids = fields.Many2many('res.users', 'gamification_challenge_users_rel', string="Users", help="List of users participating to the challenge")
     user_domain = fields.Char("User domain", help="Alternative to a list of users")
-
+    user_count = fields.Integer('# Users', compute='_compute_user_count')
+    # periodicity
     period = fields.Selection([
             ('once', "Non recurring"),
             ('daily', "Daily"),
@@ -128,6 +130,26 @@ class Challenge(models.Model):
         ('other', 'Settings / Gamification Tools'),
     ], string="Appears in", required=True, default='hr',
        help="Define the visibility of the challenge through menus")
+
+    @api.depends('user_ids')
+    def _compute_user_count(self):
+        mapped_data = {}
+        if self.ids:
+            query = """
+                SELECT gamification_challenge_id, count(res_users_id)
+                  FROM gamification_challenge_users_rel rel
+             LEFT JOIN res_users users
+                    ON users.id=rel.res_users_id AND users.active = TRUE
+                 WHERE gamification_challenge_id IN %s
+              GROUP BY gamification_challenge_id
+            """
+            self.env.cr.execute(query, [tuple(self.ids)])
+            mapped_data = dict(
+                (challenge_id, user_count)
+                for challenge_id, user_count in self.env.cr.fetchall()
+            )
+        for challenge in self:
+            challenge.user_count = mapped_data.get(challenge.id, 0)
 
     REPORT_OFFSETS = {
         'daily': timedelta(days=1),
@@ -314,6 +336,12 @@ class Challenge(models.Model):
         for challenge in self:
             challenge.report_progress()
         return True
+
+    def action_view_users(self):
+        """ Redirect to the participants (users) list. """
+        action = self.env["ir.actions.actions"]._for_xml_id("base.action_res_users")
+        action['domain'] = [('id', 'in', self.user_ids.ids)]
+        return action
 
     ##### Automatic actions #####
 
@@ -769,27 +797,3 @@ class Challenge(models.Model):
             'badge_id': badge.id,
             'challenge_id': self.id
         })._send_badge()
-
-
-class ChallengeLine(models.Model):
-    """Gamification challenge line
-
-    Predefined goal for 'gamification_challenge'
-    These are generic list of goals with only the target goal defined
-    Should only be created for the gamification.challenge object
-    """
-    _name = 'gamification.challenge.line'
-    _description = 'Gamification generic goal for challenge'
-    _order = "sequence, id"
-
-    challenge_id = fields.Many2one('gamification.challenge', string='Challenge', required=True, ondelete="cascade")
-    definition_id = fields.Many2one('gamification.goal.definition', string='Goal Definition', required=True, ondelete="cascade")
-
-    sequence = fields.Integer('Sequence', help='Sequence number for ordering', default=1)
-    target_goal = fields.Float('Target Value to Reach', required=True)
-
-    name = fields.Char("Name", related='definition_id.name', readonly=False)
-    condition = fields.Selection(string="Condition", related='definition_id.condition', readonly=True)
-    definition_suffix = fields.Char("Unit", related='definition_id.suffix', readonly=True)
-    definition_monetary = fields.Boolean("Monetary", related='definition_id.monetary', readonly=True)
-    definition_full_suffix = fields.Char("Suffix", related='definition_id.full_suffix', readonly=True)
