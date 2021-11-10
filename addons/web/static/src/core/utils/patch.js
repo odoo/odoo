@@ -80,11 +80,17 @@ export function patch(obj, patchName, patchValue, options = {}) {
                     let prevSuper;
                     if (this) {
                         prevSuper = this._super;
-                        this._super = _superFn.bind(this);
+                        Object.defineProperty(this, "_super", {
+                            value: _superFn.bind(this),
+                            configurable: true,
+                        });
                     }
                     const result = patchFn.call(this, ...args);
                     if (this) {
-                        this._super = prevSuper;
+                        Object.defineProperty(this, "_super", {
+                            value: prevSuper,
+                            configurable: true,
+                        });
                     }
                     return result;
                 },
