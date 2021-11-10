@@ -49,6 +49,18 @@
         </field>
     </record>
 
+    <record id="lunch_product_view_tree_order" model="ir.ui.view">
+        <field name="name">lunch.product.tree.order</field>
+        <field name="inherit_id" ref="lunch_product_view_tree"/>
+        <field name="model">lunch.product</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="js_class">lunch_list</attribute>
+            </xpath>
+        </field>
+    </record>
+
     <record id="lunch_product_view_form" model="ir.ui.view">
         <field name="name">lunch.product.form</field>
         <field name="model">lunch.product</field>
@@ -293,7 +305,11 @@
         <field name="name">Order Your Lunch</field>
         <field name="res_model">lunch.product</field>
         <field name="view_mode">kanban,tree</field>
-        <field name="view_id" ref="view_lunch_product_kanban_order"/>
+        <field name="view_ids" eval="[
+            (5, 0, 0),
+            (0, 0, {'view_mode': 'kanban', 'view_id': ref('view_lunch_product_kanban_order')}),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('lunch_product_view_tree_order')})
+        ]"/>
         <field name="search_view_id" ref="lunch_product_view_search"/>
         <field name="context">{'search_default_available_today': 1}</field>
         <field name="domain">[]</field>
