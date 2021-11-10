@@ -3,7 +3,7 @@
 
 from odoo import api, models, Command
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
-from odoo.tools import mute_logger
+from odoo.tools import mute_logger, unique
 from odoo.exceptions import AccessError
 
 
@@ -381,6 +381,56 @@ class TestAPI(SavepointCaseWithUserDemo):
         partner1.read(['child_ids', 'company_type'])
         self.assertIn('company_type', partner1._cache)
         self.assertNotIn('company_type', partner2._cache)
+
+    def test_60_reversed(self):
+        records = self.partners
+        self.assertGreater(len(records), 1)
+
+        # check order
+        self.assertEqual(list(reversed(records)), list(reversed(list(records))))
+
+        first = next(iter(records))
+        last = next(reversed(records))
+        self.assertEqual(first, records[0])
+        self.assertEqual(last, records[-1])
+
+        # check prefetching
+        prefetch_ids = records.ids
+        reversed_ids = [record.id for record in reversed(records)]
+
+        self.assertEqual(list(first._prefetch_ids), prefetch_ids)
+        self.assertEqual(list(last._prefetch_ids), reversed_ids)
+
+        self.assertEqual(list(reversed(first._prefetch_ids)), reversed_ids)
+        self.assertEqual(list(reversed(last._prefetch_ids)), prefetch_ids)
+
+        # check prefetching across many2one field
+        prefetch_ids = records.state_id.ids
+        reversed_ids = list(unique(
+            record.state_id.id
+            for record in reversed(records)
+            if record.state_id
+        ))
+
+        self.assertEqual(list(first.state_id._prefetch_ids), prefetch_ids)
+        self.assertEqual(list(last.state_id._prefetch_ids), reversed_ids)
+
+        self.assertEqual(list(reversed(first.state_id._prefetch_ids)), reversed_ids)
+        self.assertEqual(list(reversed(last.state_id._prefetch_ids)), prefetch_ids)
+
+        # check prefetching across x2many field
+        prefetch_ids = records.child_ids.ids
+        reversed_ids = list(unique(
+            child.id
+            for record in reversed(records)
+            for child in record.child_ids
+        ))
+
+        self.assertEqual(list(first.child_ids._prefetch_ids), prefetch_ids)
+        self.assertEqual(list(last.child_ids._prefetch_ids), reversed_ids)
+
+        self.assertEqual(list(reversed(first.child_ids._prefetch_ids)), reversed_ids)
+        self.assertEqual(list(reversed(last.child_ids._prefetch_ids)), prefetch_ids)
 
     @mute_logger('odoo.models')
     def test_70_one(self):

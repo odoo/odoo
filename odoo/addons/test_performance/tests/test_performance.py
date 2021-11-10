@@ -66,6 +66,21 @@ class TestPerformance(SavepointCaseWithUserDemo):
             for record in records:
                 record.value_pc
 
+    @users('__system__', 'demo')
+    @warmup
+    def test_reversed_read_base(self):
+        records = self.env['test_performance.base'].search([])
+        self.assertEqual(len(records), 5)
+        with self.assertQueryCount(__system__=5, demo=5):
+            # without cache
+            for record in reversed(records):
+                record.partner_id
+
+        with self.assertQueryCount(__system__=5, demo=5):
+            # without cache
+            for record in reversed(records):
+                record.value_ctx
+
     @warmup
     def test_read_base_depends_context(self):
         """ Compute in batch even when in cache in another context. """
