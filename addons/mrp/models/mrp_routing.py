@@ -93,7 +93,7 @@ class MrpRoutingWorkcenter(models.Model):
         if 'bom_id' in self.env.context:
             bom_id = self.env.context.get('bom_id')
             for operation in self:
-                operation.copy({'name': _("%s (copy)", operation.name), 'bom_id': bom_id})
+                operation.copy({'bom_id': bom_id})
             return {
                 'view_mode': 'form',
                 'res_model': 'mrp.bom',

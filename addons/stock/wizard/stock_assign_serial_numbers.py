@@ -26,7 +26,7 @@ class StockAssignSerialNumbers(models.TransientModel):
     def _check_next_serial_count(self):
         for wizard in self:
             if wizard.next_serial_count < 1:
-                raise ValidationError(_("The number of Serial Numbers to generate must greater than zero."))
+                raise ValidationError(_("The number of Serial Numbers to generate must be greater than zero."))
 
     def generate_serial_numbers(self):
         self.ensure_one()
