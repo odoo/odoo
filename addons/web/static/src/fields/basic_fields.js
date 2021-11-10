@@ -18,6 +18,18 @@ FieldChar.template = "web.FieldChar";
 fieldRegistry.add("char", FieldChar);
 
 // -----------------------------------------------------------------------------
+// FieldText
+// -----------------------------------------------------------------------------
+
+export class FieldText extends Component {
+    onChange(ev) {
+        this.props.record.update(this.props.name, ev.target.value);
+    }
+}
+FieldText.template = "web.FieldText";
+fieldRegistry.add("text", FieldText);
+
+// -----------------------------------------------------------------------------
 // FieldBoolean
 // -----------------------------------------------------------------------------
 

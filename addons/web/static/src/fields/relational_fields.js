@@ -64,8 +64,7 @@ export class FieldX2Many extends Component {
 
     openRecord(record) {
         this.dialogService.add(FormViewDialog, {
-            arch: this.props.value.views.form.arch, // FIXME: might not be there
-            fields: this.props.value.views.form.fields, // FIXME: might not be there
+            archInfo: this.props.value.views.form, // FIXME: might not be there
             record,
             readonly: this.props.readonly,
             title: this.props.record.activeFields[this.props.name].string,

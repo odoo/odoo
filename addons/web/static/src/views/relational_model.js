@@ -159,7 +159,7 @@ export class Record extends DataPoint {
             const list = this.model.createDataPoint("list", {
                 resModel: relation,
                 fields,
-                activeFields: relatedFields,
+                activeFields: (views[viewMode] && views[viewMode].activeFields) || {},
                 resIds: this.data[fieldName] || [],
                 views,
                 viewMode,

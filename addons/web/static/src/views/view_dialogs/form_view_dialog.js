@@ -2,18 +2,13 @@
 
 import { Dialog } from "@web/core/dialog/dialog";
 import { FormRenderer } from "@web/views/form/form_renderer";
-import { FormArchParser } from "@web/views/form/form_view";
 import { sprintf } from "@web/core/utils/strings";
 
 export class FormViewDialog extends Dialog {
     setup() {
         super.setup();
-        this.archInfo = new FormArchParser().parse(this.props.arch, this.props.fields);
+        this.archInfo = this.props.archInfo;
         this.title = sprintf(this.env._t("Open: %s"), this.props.title);
-        // FIXME: probably not at the right place (also necessary for main form views)
-        if (!this.archInfo.fields.display_name) {
-            this.archInfo.fields.display_name = { name: "display_name", type: "char" };
-        }
     }
 
     async willStart() {
