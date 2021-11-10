@@ -501,7 +501,7 @@ class SaleOrderLine(models.Model):
                 related_program_lines |= line.order_id.order_line.filtered(lambda l: l.product_id.id == related_program.discount_line_product_id.id) - line
         return super(SaleOrderLine, self | related_program_lines).unlink()
 
-    @api.depends('order_id.fiscal_position_id', 'tax_id.price_include', 'product_id.taxes_id.price_include')
+    @api.depends('product_id')
     def _compute_tax_id(self):
         reward_lines = self.filtered('is_reward_line')
         super(SaleOrderLine, self - reward_lines)._compute_tax_id()

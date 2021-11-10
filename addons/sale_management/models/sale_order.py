@@ -50,7 +50,7 @@ class SaleOrder(models.Model):
             default['validity_date'] = fields.Date.context_today(self) + timedelta(self.sale_order_template_id.number_of_days)
         return super(SaleOrder, self).copy(default=default)
 
-    @api.depends('partner_id')
+    @api.depends('partner_id', 'sale_order_template_id')
     def _compute_note(self):
         super(SaleOrder, self)._compute_note()
         for order in self:
