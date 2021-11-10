@@ -5,7 +5,8 @@ import { Domain } from "@web/core/domain";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { url } from "@web/core/utils/urls";
-import { FieldColorPicker, fileTypeMagicWordMap } from "@web/fields/basic_fields";
+import { ColorPickerField } from "@web/fields/color_picker_field";
+import { fileTypeMagicWordMap } from "@web/fields/image_field";
 import { Field } from "@web/fields/field";
 import { useViewCompiler } from "@web/views/helpers/view_compiler";
 import { isRelational } from "@web/views/helpers/view_utils";
@@ -17,7 +18,7 @@ import { ViewButton } from "@web/views/view_button/view_button";
 const { Component, hooks } = owl;
 const { useExternalListener, useState } = hooks;
 
-const { RECORD_COLORS } = FieldColorPicker;
+const { RECORD_COLORS } = ColorPickerField;
 
 const GLOBAL_CLICK_CANCEL_SELECTORS = [".dropdown", ".oe_kanban_action"];
 const isBinSize = (value) => /^\d+(\.\d*)? [^0-9]+$/.test(value);
