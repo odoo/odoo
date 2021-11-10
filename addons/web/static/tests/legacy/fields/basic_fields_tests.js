@@ -34,9 +34,9 @@ const EN_FLAG_URL = '/base/static/img/country_flags/gb.png';
 
 let target;
 
-QUnit.module('fields', {}, function () {
+QUnit.module('Legacy fields', {}, function () {
 
-QUnit.module('basic_fields', {
+QUnit.module('Legacy basic_fields', {
     beforeEach: function () {
         this.data = {
             partner: {
