@@ -28,7 +28,7 @@ var PaymentAdyen = PaymentInterface.extend({
     _reset_state: function () {
         this.was_cancelled = false;
         this.last_diagnosis_service_id = false;
-        this.remaining_polls = 9; // Give 21 * 5,5 secondes for the customer to pay
+        this.remaining_polls = 9;
         clearTimeout(this.polling);
     },
 
@@ -211,6 +211,7 @@ var PaymentAdyen = PaymentInterface.extend({
                 self.remaining_polls--;
             }
 
+            // Need check if payment_identifier match
             if (notification && notification.SaleToPOIResponse.MessageHeader.ServiceID == self.most_recent_service_id) {
                 var response = notification.SaleToPOIResponse.PaymentResponse.Response;
                 var additional_response = new URLSearchParams(response.AdditionalResponse);
