@@ -367,18 +367,21 @@ class AccountPayment(models.Model):
             else:
                 payment.amount_signed = payment.amount
 
-    @api.depends('partner_id', 'destination_journal_id', 'is_internal_transfer')
+    @api.depends('partner_id', 'company_id', 'payment_type', 'destination_journal_id', 'is_internal_transfer')
     def _compute_partner_bank_id(self):
         ''' The default partner_bank_id will be the first available on the partner. '''
         for pay in self:
-            if pay.is_internal_transfer:
-                pay.partner_bank_id = self.destination_journal_id.bank_account_id
+            if pay.payment_type == 'inbound':
+                bank_partner = pay.company_id.partner_id
             else:
-                available_partner_bank_accounts = pay.partner_id.bank_ids.filtered(lambda x: x.company_id in (False, pay.company_id))
-                if available_partner_bank_accounts:
+                bank_partner = pay.partner_id
+
+            available_partner_bank_accounts = bank_partner.bank_ids.filtered(lambda x: x.company_id in (False, pay.company_id))
+            if available_partner_bank_accounts:
+                if pay.partner_bank_id not in available_partner_bank_accounts:
                     pay.partner_bank_id = available_partner_bank_accounts[0]._origin
-                else:
-                    pay.partner_bank_id = False
+            else:
+                pay.partner_bank_id = False
 
     @api.depends('partner_id', 'destination_account_id', 'journal_id')
     def _compute_is_internal_transfer(self):
