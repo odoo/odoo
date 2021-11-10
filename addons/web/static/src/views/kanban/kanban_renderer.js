@@ -6,10 +6,12 @@ import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { url } from "@web/core/utils/urls";
 import { ColorPickerField } from "@web/fields/color_picker_field";
-import { fileTypeMagicWordMap } from "@web/fields/image_field";
 import { Field } from "@web/fields/field";
+import { fileTypeMagicWordMap } from "@web/fields/image_field";
+import { session } from "@web/session";
 import { useViewCompiler } from "@web/views/helpers/view_compiler";
 import { isRelational } from "@web/views/helpers/view_utils";
+import { KanbanAnimatedNumber } from "@web/views/kanban/kanban_animated_number";
 import { KanbanCompiler } from "@web/views/kanban/kanban_compiler";
 import { useSortable } from "@web/views/kanban/kanban_sortable";
 import { View } from "@web/views/view";
@@ -17,7 +19,6 @@ import { ViewButton } from "@web/views/view_button/view_button";
 
 const { Component, hooks } = owl;
 const { useExternalListener, useState } = hooks;
-
 const { RECORD_COLORS } = ColorPickerField;
 
 const GLOBAL_CLICK_CANCEL_SELECTORS = [".dropdown", ".oe_kanban_action"];
@@ -30,7 +31,8 @@ export class KanbanRenderer extends Component {
         this.className = className;
         this.cardTemplate = useViewCompiler(KanbanCompiler, arch, fields, xmlDoc);
         this.state = useState({
-            quickCreate: [],
+            newColumn: "",
+            quickCreate: {},
         });
         this.action = useService("action");
         this.dialog = useService("dialog");
@@ -41,7 +43,7 @@ export class KanbanRenderer extends Component {
         useExternalListener(window, "click", this.onWindowClick);
         // Sortable
         let dataRecordId;
-        let dataListId;
+        let dataGroupId;
         useSortable({
             activate: () => this.recordsDraggable,
             listSelector: ".o_kanban_group",
@@ -56,7 +58,7 @@ export class KanbanRenderer extends Component {
                 group.classList.remove("o_kanban_hover");
             },
             onStart(group, item) {
-                dataListId = group.dataset.id;
+                dataGroupId = group.dataset.id;
                 dataRecordId = item.dataset.id;
                 item.classList.add("o_currently_dragged", "ui-sortable-helper");
             },
@@ -67,11 +69,7 @@ export class KanbanRenderer extends Component {
                 const groupEl = parent.closest(".o_kanban_group");
                 const refId = previous ? previous.dataset.id : null;
                 const groupId = groupEl.dataset.id;
-                const group = this.props.list.groups.find((g) => g.id === groupId);
-                await this.props.list.moveRecord(dataRecordId, dataListId, refId, groupId);
-                if (group.isFolded) {
-                    await group.toggle();
-                }
+                await this.props.list.moveRecord(dataRecordId, dataGroupId, refId, groupId);
             },
         });
         useSortable({
@@ -81,21 +79,13 @@ export class KanbanRenderer extends Component {
             handle: ".o_column_title",
             cursor: "move",
             onStart(group, item) {
-                dataListId = Number(item.dataset.id);
+                dataGroupId = item.dataset.id;
             },
-            onDrop: ({ previous }) => {
-                const refId = Number(previous.dataset.id);
-                this.props.list.resequence(dataListId, refId);
+            onDrop: async ({ previous }) => {
+                const refId = previous ? previous.dataset.id : null;
+                await this.props.list.resequence(dataGroupId, refId);
             },
         });
-    }
-
-    get context() {
-        return this.props.context;
-    }
-
-    get progress() {
-        return this.props.list.model.progress;
     }
 
     get recordsDraggable() {
@@ -104,6 +94,15 @@ export class KanbanRenderer extends Component {
 
     get columnsDraggable() {
         return this.props.list.isGrouped && this.props.list.groupByField.type === "many2one";
+    }
+
+    createColumn() {
+        const columnName = this.state.newColumn.trim();
+        if (columnName.length) {
+            this.props.list.createGroup(columnName);
+        }
+        this.state.newColumn = "";
+        this.state.quickCreateGroup = false;
     }
 
     quickCreate(group) {
@@ -137,8 +136,7 @@ export class KanbanRenderer extends Component {
     }
 
     deleteGroup(group) {
-        // TODO
-        console.warn("TODO: Delete group", group.id);
+        this.props.list.deleteGroup(group);
     }
 
     openRecord(record) {
@@ -251,63 +249,67 @@ export class KanbanRenderer extends Component {
         return activeActions.groupEdit && isRelational(groupByField) && group.value;
     }
 
-    getGroupClasses({ activeProgressValue, count, isFolded, progress }) {
+    getGroupClasses(group) {
         const classes = [];
-        if (!count) {
+        if (!group.count) {
             classes.push("o_kanban_no_records");
         }
-        if (isFolded) {
+        if (group.isFolded) {
             classes.push("o_column_folded");
         }
-        if (progress) {
+        if (group.progressValues.length) {
             classes.push("o_kanban_has_progressbar");
-            if (!isFolded && activeProgressValue) {
-                const progressValue = progress.find((d) => d.value === activeProgressValue);
+            if (!group.isFolded && group.hasActiveProgressValue) {
+                const progressValue = group.progressValues.find(
+                    (d) => d.value === group.activeProgressValue
+                );
                 classes.push("o_kanban_group_show", `o_kanban_group_show_${progressValue.color}`);
             }
         }
         return classes.join(" ");
     }
 
-    getGroupUnloadedCount({ activeProgressValue, count, list, progress }) {
-        if (activeProgressValue) {
-            const progressValue = progress.find((d) => d.value === activeProgressValue);
-            return progressValue.count - list.records.length;
-        } else {
-            return count - list.records.length;
+    getGroupUnloadedCount(group) {
+        if (group.isDirty) {
+            return 0;
         }
+        let total = group.count;
+        if (group.hasActiveProgressValue) {
+            const progressValue = group.progressValues.find(
+                (d) => d.value === group.activeProgressValue
+            );
+            total = progressValue.count;
+        }
+        return total - group.list.records.length;
     }
 
-    getRecordProgressColor({ activeProgressValue }) {
-        if (!activeProgressValue) {
+    getRecordProgressColor(record, fieldName, group) {
+        if (!group) {
             return "";
         }
-        const colorClass = this.progress.colors[activeProgressValue];
-        return `oe_kanban_card_${colorClass || "muted"}`;
+        const value = record.data[fieldName];
+        const { color } = group.progressValues.find((p) => p.value === value);
+        return `oe_kanban_card_${color}`;
     }
 
-    getProgressSumField(group) {
-        let string = "";
-        let value = 0;
-        const { sumField } = this.progress;
+    getGroupAggregate(group) {
+        let value = group.count;
+        let currency = false;
+        let title = this.env._t("Count");
+        const { sumField } = this.props.list.model.progressAttributes;
         if (sumField) {
-            const field = group.fields[sumField];
-            if (field) {
-                string = field.string;
-                if (group.activeProgressValue) {
-                    value = 0;
-                    for (const record of group.list.records) {
-                        value += record.data[sumField];
-                    }
-                } else {
-                    value = group.aggregates[sumField];
-                }
+            const { currency_field, name } = sumField;
+            title = sumField.string;
+            if (group.activeProgressValue) {
+                value = group.list.records.reduce((acc, r) => acc + r.data[name], 0);
+            } else {
+                value = group.aggregates[name];
             }
-        } else {
-            string = this.env._t("Count");
-            value = group.count;
+            if (value && currency_field) {
+                currency = session.currencies[session.company_currency_id];
+            }
         }
-        return { string, value };
+        return { value: value || 0, currency, title };
     }
 
     getColumnTitle(group) {
@@ -318,6 +320,12 @@ export class KanbanRenderer extends Component {
         group.list.loadMore();
     }
 
+    onAddColumnKeydown(ev) {
+        if (ev.key === "Enter") {
+            this.createColumn();
+        }
+    }
+
     onCardClicked(record, ev) {
         if (ev.target.closest(GLOBAL_CLICK_CANCEL_SELECTORS.join(","))) {
             return;
@@ -326,13 +334,13 @@ export class KanbanRenderer extends Component {
     }
 
     onWindowKeydown(ev) {
-        if (this.state.quickCreateGroup && ev.key === "Escape") {
+        if (ev.key === "Escape") {
             this.state.quickCreateGroup = false;
         }
     }
 
     onWindowClick(ev) {
-        if (this.state.quickCreateGroup && !ev.target.closest(".o_column_quick_create")) {
+        if (!ev.target.closest(".o_column_quick_create")) {
             this.state.quickCreateGroup = false;
         }
     }
@@ -406,4 +414,4 @@ export class KanbanRenderer extends Component {
 }
 
 KanbanRenderer.template = "web.KanbanRenderer";
-KanbanRenderer.components = { Field, View, ViewButton };
+KanbanRenderer.components = { Field, View, ViewButton, KanbanAnimatedNumber };
