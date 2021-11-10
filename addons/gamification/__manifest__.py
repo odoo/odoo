@@ -32,12 +32,12 @@ Both goals and badges are flexibles and can be adapted to a large range of modul
         'views/gamification_challenge_views.xml',
         'views/gamification_challenge_line_views.xml',
         'views/gamification_menus.xml',
-        'data/cron.xml',
         'security/gamification_security.xml',
         'security/ir.model.access.csv',
-        'data/mail_template_data.xml',
-        'data/goal_base.xml',
-        'data/badge.xml',
+        'data/ir_cron_data.xml',
+        'data/mail_template_data.xml',  # keep before to populate challenge reports
+        'data/gamification_badge_data.xml',
+        'data/gamification_challenge_data.xml',
         'data/gamification_karma_rank_data.xml',
     ],
     'demo': [
