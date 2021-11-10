@@ -23,7 +23,6 @@ import time
 import traceback
 import types
 import unicodedata
-import zipfile
 from collections import OrderedDict
 from collections.abc import Iterable, Mapping, MutableMapping, MutableSet
 from contextlib import contextmanager
@@ -1175,18 +1174,18 @@ class Callbacks:
         self.data.clear()
 
 
-class IterableGenerator:
-    """ An iterable object based on a generator function, which is called each
-        time the object is iterated over.
-    """
-    __slots__ = ['func', 'args']
+class ReversedIterable:
+    """ An iterable implementing the reversal of another iterable. """
+    __slots__ = ['iterable']
 
-    def __init__(self, func, *args):
-        self.func = func
-        self.args = args
+    def __init__(self, iterable):
+        self.iterable = iterable
 
     def __iter__(self):
-        return self.func(*self.args)
+        return reversed(self.iterable)
+
+    def __reversed__(self):
+        return iter(self.iterable)
 
 
 def groupby(iterable, key=None):

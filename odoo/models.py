@@ -55,7 +55,7 @@ from . import tools
 from .exceptions import AccessError, MissingError, ValidationError, UserError
 from .osv.query import Query
 from .tools import frozendict, lazy_classproperty, ormcache, \
-                   LastOrderedSet, OrderedSet, IterableGenerator, \
+                   LastOrderedSet, OrderedSet, ReversedIterable, \
                    groupby, discardattr, partition
 from .tools.config import config
 from .tools.func import frame_codeinfo
@@ -255,6 +255,20 @@ def origin_ids(ids):
         Actual ids are returned as is, and ids without origin are not returned.
     """
     return ((id_ or id_.origin) for id_ in ids if (id_ or getattr(id_, "origin", None)))
+
+
+class OriginIds:
+    """ A reversible iterable returning the origin ids of a collection of ``ids``. """
+    __slots__ = ['ids']
+
+    def __init__(self, ids):
+        self.ids = ids
+
+    def __iter__(self):
+        return origin_ids(self.ids)
+
+    def __reversed__(self):
+        return origin_ids(reversed(self.ids))
 
 
 def expand_ids(id0, ids):
@@ -5192,7 +5206,7 @@ Fields:
 
         :param env: an environment
         :param ids: a tuple of record ids
-        :param prefetch_ids: a collection of record ids (for prefetching)
+        :param prefetch_ids: a reversible iterable of record ids (for prefetching)
         """
         self.env = env
         self._ids = ids
@@ -5769,7 +5783,7 @@ Fields:
     def _origin(self):
         """ Return the actual records corresponding to ``self``. """
         ids = tuple(origin_ids(self._ids))
-        prefetch_ids = IterableGenerator(origin_ids, self._prefetch_ids)
+        prefetch_ids = OriginIds(self._prefetch_ids)
         return self.__class__(self.env, ids, prefetch_ids)
 
     #
@@ -5794,6 +5808,17 @@ Fields:
         else:
             for id_ in self._ids:
                 yield self.__class__(self.env, (id_,), self._prefetch_ids)
+
+    def __reversed__(self):
+        """ Return an reversed iterator over ``self``. """
+        if len(self._ids) > PREFETCH_MAX and self._prefetch_ids is self._ids:
+            for ids in self.env.cr.split_for_in_conditions(reversed(self._ids)):
+                for id_ in ids:
+                    yield self.__class__(self.env, (id_,), ids)
+        elif self._ids:
+            prefetch_ids = ReversedIterable(self._prefetch_ids)
+            for id_ in reversed(self._ids):
+                yield self.__class__(self.env, (id_,), prefetch_ids)
 
     def __contains__(self, item):
         """ Test whether ``item`` (record or field name) is an element of ``self``.
@@ -6654,7 +6679,7 @@ Fields:
 
 
 collections.Set.register(BaseModel)
-# not exactly true as BaseModel doesn't have __reversed__, index or count
+# not exactly true as BaseModel doesn't have index or count
 collections.Sequence.register(BaseModel)
 
 class RecordCache(MutableMapping):
