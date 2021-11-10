@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from collections import defaultdict
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
@@ -29,10 +30,18 @@ class AccountPaymentRegister(models.TransientModel):
         comodel_name='account.journal',
         compute='_compute_available_journal_ids'
     )
-    partner_bank_id = fields.Many2one('res.partner.bank', string="Recipient Bank Account",
-        readonly=False, store=True,
+    available_partner_bank_ids = fields.Many2many(
+        comodel_name='res.partner.bank',
+        compute='_compute_available_partner_bank_ids',
+    )
+    partner_bank_id = fields.Many2one(
+        comodel_name='res.partner.bank',
+        string="Recipient Bank Account",
+        readonly=False,
+        store=True,
         compute='_compute_partner_bank_id',
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id), ('partner_id', '=', partner_id)]")
+        domain="[('id', 'in', available_partner_bank_ids)]",
+    )
     company_currency_id = fields.Many2one('res.currency', string="Company Currency",
         related='company_id.currency_id')
 
@@ -126,18 +135,23 @@ class AccountPaymentRegister(models.TransientModel):
         will be grouped together.
         :return: A python dictionary.
         '''
-        res = {
+        move = line.move_id
+        partner_bank_account = self.env['res.partner.bank']
+
+        if move.is_invoice(include_receipts=True):
+            partner_bank_account = move.partner_bank_id._origin
+
+        return {
             'partner_id': line.partner_id.id,
             'account_id': line.account_id.id,
             'currency_id': (line.currency_id or line.company_currency_id).id,
+            'partner_bank_id': partner_bank_account.id,
             'partner_type': 'customer' if line.account_internal_type == 'receivable' else 'supplier',
         }
 
-        return res
-
     def _get_batches(self):
         ''' Group the account.move.line linked to the wizard together.
-        Lines are groupes if they share 'partner_id','account_id','currency_id' & 'partner_type' and if
+        Lines are grouped if they share 'partner_id','account_id','currency_id' & 'partner_type' and if
         0 or 1 partner_bank_id can be determined for the group.
         :return: A list of batches, each one containing:
             * payment_values:   A dictionary of payment values.
@@ -152,69 +166,21 @@ class AccountPaymentRegister(models.TransientModel):
         if not lines:
             raise UserError(_("You can't open the register payment wizard without at least one receivable/payable line."))
 
-        # Lines are grouped first on 'partner_id','account_id','currency_id' & 'partner_type' and
-        # then on 'partner_bank_id' & 'payment_type'. 'batches' data structure :
-        # {common_pay_val_key:{
-        #         part_bank_pay_type_key : lines,
-        #         part_bank_pay_type_key : lines,
-        #  }}
-        batches = {}
-
+        batches = defaultdict(lambda: {'lines': self.env['account.move.line']})
         for line in lines:
             batch_key = self._get_line_batch_key(line)
-            common_pay_val_key = frozendict(batch_key)
-            part_bank_pay_type_key = frozendict(
-                payment_type='inbound' if line.balance > 0.0 else 'outbound',
-                partner_bank_id=line.move_id.partner_bank_id.id,
-            )
-            batches.setdefault(common_pay_val_key, {})
-            batches[common_pay_val_key].setdefault(part_bank_pay_type_key, self.env['account.move.line'])
-            batches[common_pay_val_key][part_bank_pay_type_key] += line
+            serialized_key = '-'.join(str(v) for v in batch_key.values())
+            vals = batches[serialized_key]
+            vals['payment_values'] = batch_key
+            vals['lines'] += line
 
-        res = []
+        # Compute 'payment_type'.
+        for vals in batches.values():
+            lines = vals['lines']
+            balance = sum(lines.mapped('balance'))
+            vals['payment_values']['payment_type'] = 'inbound' if balance > 0.0 else 'outbound'
 
-        for common_pay_val_key, common_params_group in batches.items():
-            # Group all lines with same 'partner_id','account_id','currency_id' & 'partner_type' in one batch if:
-            # - the resulting batch payment is outbound and there is max 1 partner_bank_id for all outbound lines
-            # or
-            # - the resulting batch payment is inbound and there is max 1 partner_bank_id for all inbound lines
-            all_batch_aml = self.env['account.move.line'].browse(
-                id
-                for lines in common_params_group.values()
-                for id in lines.ids
-            )
-            total = sum(all_batch_aml.mapped('balance'))
-            if float_compare(total, 0.0, precision_digits=line.move_id.currency_id.decimal_places) > 0.0:
-                if_grouped_payment_type = 'inbound'
-            else:
-                if_grouped_payment_type = 'outbound'
-            partner_bank_id_candidates = {
-                key['partner_bank_id']
-                for key in common_params_group
-                if key['partner_bank_id'] and key['payment_type'] == if_grouped_payment_type
-            }
-            if len(partner_bank_id_candidates) < 2:
-                # condition is met, grouping in 1 batch
-                partner_bank_id = partner_bank_id_candidates and partner_bank_id_candidates.pop() or None
-                payment_values = dict(common_pay_val_key)
-                payment_values['partner_bank_id'] = partner_bank_id
-                payment_values['payment_type'] = if_grouped_payment_type
-                res.append({
-                    'payment_values': payment_values,
-                    'lines': all_batch_aml,
-                })
-            else:
-                # no grouping
-                for part_bank_pay_type_key, lines in common_params_group.items():
-                    payment_values = dict(common_pay_val_key)
-                    payment_values['payment_type'] = part_bank_pay_type_key['payment_type']
-                    payment_values['partner_bank_id'] = part_bank_pay_type_key['partner_bank_id']
-                    res.append({
-                        'payment_values': payment_values,
-                        'lines': lines,
-                    })
-
-        return res
+        return list(batches.values())
 
     @api.model
     def _get_wizard_values_from_batch(self, batch_result):
@@ -268,6 +234,7 @@ class AccountPaymentRegister(models.TransientModel):
                     'partner_id': False,
                     'partner_type': False,
                     'payment_type': wizard_values_from_batch['payment_type'],
+                    'partner_bank_id': False,
                     'source_currency_id': False,
                     'source_amount': False,
                     'source_amount_currency': False,
@@ -345,13 +312,23 @@ class AccountPaymentRegister(models.TransientModel):
         for wizard in self:
             wizard.currency_id = wizard.journal_id.currency_id or wizard.source_currency_id or wizard.company_id.currency_id
 
-    @api.depends('partner_id')
-    def _compute_partner_bank_id(self):
-        ''' The default partner_bank_id will be the first available on the partner. '''
+    @api.depends('company_id', 'can_edit_wizard')
+    def _compute_available_partner_bank_ids(self):
         for wizard in self:
-            available_partner_bank_accounts = wizard.partner_id.bank_ids.filtered(lambda x: x.company_id in (False, wizard.company_id))
-            if available_partner_bank_accounts:
-                wizard.partner_bank_id = available_partner_bank_accounts[0]._origin
+            if wizard.can_edit_wizard:
+                batches = wizard._get_batches()
+                bank_partners = batches[0]['lines'].move_id.bank_partner_id
+                wizard.available_partner_bank_ids = bank_partners.bank_ids\
+                    .filtered(lambda x: x.company_id in (False, wizard.company_id))._origin
+            else:
+                wizard.available_partner_bank_ids = False
+
+    @api.depends('available_partner_bank_ids')
+    def _compute_partner_bank_id(self):
+        for wizard in self:
+            if wizard.can_edit_wizard:
+                batches = wizard._get_batches()
+                wizard.partner_bank_id = self.env['res.partner.bank'].browse(batches[0]['payment_values']['partner_bank_id'])
             else:
                 wizard.partner_bank_id = False
 
