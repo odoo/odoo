@@ -48,24 +48,15 @@ def after_commit(func):
 
 @contextmanager
 def microsoft_calendar_token(user):
-    try:
-        yield user._get_microsoft_calendar_token()
-    except requests.HTTPError as e:
-        if e.response.status_code == 401:  # Invalid token.
-            # The transaction should be rolledback, but the user's tokens
-            # should be reset. The user will be asked to authenticate again next time.
-            # Rollback manually first to avoid concurrent access errors/deadlocks.
-            user.env.cr.rollback()
-            with user.pool.cursor() as cr:
-                env = user.env(cr=cr)
-                user.with_env(env)._set_microsoft_auth_tokens(False, False, 0)
-        raise e
+    yield user._get_microsoft_calendar_token()
+
 
 class MicrosoftSync(models.AbstractModel):
     _name = 'microsoft.calendar.sync'
     _description = "Synchronize a record with Microsoft Calendar"
 
     microsoft_id = fields.Char('Microsoft Calendar Id', copy=False)
+    # This field helps to known when a microsoft event need to be resynced
     need_sync_m = fields.Boolean(default=True, copy=False)
     active = fields.Boolean(default=True)
 
@@ -82,13 +73,16 @@ class MicrosoftSync(models.AbstractModel):
             fields_to_sync = [x for x in vals.keys() if x in synced_fields]
 
         result = super().write(vals)
+        need_delete = 'active' in vals.keys() and not vals.get('active')
         for record in self.filtered('need_sync_m'):
-            if record.microsoft_id and fields_to_sync:
+            if need_delete and record.microsoft_id:
+                # We need to delete the event. Cancel is not sufficant. Errors may occurs
+                record._microsoft_delete(microsoft_service, record.microsoft_id, timeout=3)
+            elif record.microsoft_id and fields_to_sync:
                 values = record._microsoft_values(fields_to_sync)
                 if not values:
                     continue
                 record._microsoft_patch(microsoft_service, record.microsoft_id, values, timeout=3)
-
         return result
 
     @api.model_create_multi
@@ -104,16 +98,18 @@ class MicrosoftSync(models.AbstractModel):
         return records
 
     def unlink(self):
-        """We can't delete an event that is also in Microsoft Calendar. Otherwise we would
-        have no clue that the event must must deleted from Microsoft Calendar at the next sync.
-        """
         synced = self.filtered('microsoft_id')
-        if self.env.context.get('archive_on_error') and self._active_name:
-            synced.write({self._active_name: False})
-            self = self - synced
-        elif synced:
-            raise UserError(_("You cannot delete a record synchronized with Outlook Calendar, archive it instead."))
+        microsoft_service = MicrosoftCalendarService(self.env['microsoft.service'])
+        for ev in synced:
+            ev._microsoft_delete(microsoft_service, ev.microsoft_id)
         return super().unlink()
+
+    def _write_from_microsoft(self, microsoft_event, vals):
+        self.write(vals)
+
+    @api.model
+    def _create_from_microsoft(self, microsoft_event, vals_list):
+        return self.create(vals_list)
 
     @api.model
     @ormcache_context('microsoft_ids', keys=('active_test',))
@@ -143,7 +139,7 @@ class MicrosoftSync(models.AbstractModel):
             else:
                 for value in values:
                     record._microsoft_insert(microsoft_service, value)
-        for record in updated_records:
+        for record in updated_records.filtered('need_sync_m'):
             values = record._microsoft_values(self._get_microsoft_synced_fields())
             if not values:
                 continue
@@ -181,8 +177,10 @@ class MicrosoftSync(models.AbstractModel):
             new_recurrence_odoo.base_event_id = new_recurrence_odoo.calendar_event_ids[0] if new_recurrence_odoo.calendar_event_ids else False
             new_recurrence |= new_recurrence_odoo
 
+        microsoft_ids = [x.seriesMasterId for x in recurrents]
+        recurrences = self.env['calendar.recurrence'].search([('microsoft_id', 'in', microsoft_ids)])
         for recurrent_master_id in set([x.seriesMasterId for x in recurrents]):
-            recurrence_id = self.env['calendar.recurrence'].search([('microsoft_id', '=', recurrent_master_id)])
+            recurrence_id = recurrences.filtered(lambda ev: ev.microsoft_id == recurrent_master_id)
             to_update = recurrents.filter(lambda e: e.seriesMasterId == recurrent_master_id)
             for recurrent_event in to_update:
                 if recurrent_event.type == 'occurrence':
@@ -194,7 +192,7 @@ class MicrosoftSync(models.AbstractModel):
                     continue
                 value.pop('start')
                 value.pop('stop')
-                existing_event.write(value)
+                existing_event._write_from_microsoft(recurrent_event, value)
             new_recurrence |= recurrence_id
         return new_recurrence
 
@@ -257,12 +255,9 @@ class MicrosoftSync(models.AbstractModel):
             dict(self._microsoft_to_odoo_values(e, default_reminders, default_values), need_sync_m=False)
             for e in (new - new_recurrent)
         ]
-        new_odoo = self.with_context(dont_notify=True).create(odoo_values)
+        new_odoo = self.with_context(dont_notify=True)._create_from_microsoft(new, odoo_values)
 
-        synced_recurrent_records = self.with_context(dont_notify=True)._sync_recurrence_microsoft2odoo(new_recurrent)
-        if not self._context.get("dont_notify"):
-            new_odoo._notify_attendees()
-            synced_recurrent_records._notify_attendees()
+        synced_recurrent_records = self._sync_recurrence_microsoft2odoo(new_recurrent)
 
         cancelled = existing.cancelled()
         cancelled_odoo = self.browse(cancelled.odoo_ids(self.env))
@@ -285,7 +280,7 @@ class MicrosoftSync(models.AbstractModel):
             updated = parse(mevent.lastModifiedDateTime or str(odoo_record_updated))
             if updated >= odoo_record_updated:
                 vals = dict(odoo_record._microsoft_to_odoo_values(mevent, default_reminders), need_sync_m=False)
-                odoo_record.write(vals)
+                odoo_record._write_from_microsoft(mevent, vals)
                 if odoo_record._name == 'calendar.recurrence':
                     odoo_record._update_microsoft_recurrence(mevent, microsoft_events)
                     synced_recurrent_records |= odoo_record
@@ -318,6 +313,17 @@ class MicrosoftSync(models.AbstractModel):
                 microsoft_id = microsoft_service.insert(values, token=token, timeout=timeout)
                 self.write({
                     'microsoft_id': microsoft_id,
+                    'need_sync_m': False,
+                })
+
+    def _microsoft_attendee_answer(self, microsoft_service: MicrosoftCalendarService, microsoft_id, answer, params, timeout=TIMEOUT):
+        if not answer:
+            return
+        with microsoft_calendar_token(self.env.user.sudo()) as token:
+            if token:
+                self._ensure_attendees_have_email()
+                microsoft_service.answer(microsoft_id, answer, params, token=token, timeout=timeout)
+                self.write({
                     'need_sync_m': False,
                 })
 
@@ -364,15 +370,5 @@ class MicrosoftSync(models.AbstractModel):
     def _get_microsoft_synced_fields(self):
         """Return a set of field names. Changing one of these fields
         marks the record to be re-synchronized.
-        """
-        raise NotImplementedError()
-
-    def _notify_attendees(self):
-        """ Notify calendar event partners.
-        This is called when creating new calendar events in _sync_microsoft2odoo.
-        At the initialization of a synced calendar, Odoo requests all events for a specific
-        MicrosoftCalendar. Among those there will probably be lots of events that will never triggers a notification
-        (e.g. single events that occured in the past). Processing all these events through the notification procedure
-        of calendar.event.create is a possible performance bottleneck. This method aimed at alleviating that.
         """
         raise NotImplementedError()
