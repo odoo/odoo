@@ -51,16 +51,6 @@ class TestMassSMSCommon(TestMailFullCommon):
             for partner in partners
         ]
 
-        cls.mailing = cls.env['mailing.mailing'].with_user(cls.user_marketing).create({
-            'name': 'Xmas Spam',
-            'subject': 'Xmas Spam',
-            'mailing_model_id': cls.env['ir.model']._get('mail.test.sms').id,
-            'mailing_type': 'sms',
-            'mailing_domain': '%s' % repr([('name', 'ilike', 'MassSMSTest')]),
-            'sms_template_id': cls.sms_template.id,
-            'sms_allow_unsubscribe': False,
-        })
-
 
 @tagged('mass_mailing')
 class TestMassSMSInternals(TestMassSMSCommon):
@@ -114,6 +104,7 @@ class TestMassSMSInternals(TestMassSMSCommon):
             mailing, self.records,
         )
 
+    @users('user_marketing')
     def test_mass_sms_internals_errors(self):
         # same customer, specific different number on record -> should be valid
         new_record_1 = self.env['mail.test.sms'].create({
@@ -141,7 +132,7 @@ class TestMassSMSInternals(TestMassSMSCommon):
             'customer_id': False,
             'phone_nbr': '0456110011',
         })
-        self.env['phone.blacklist'].create({'number': '0456110011'})
+        self.env['phone.blacklist'].sudo().create({'number': '0456110011'})
         # new customer, number already on record -> should be ignored
         country_be_id = self.env.ref('base.be').id
         nr2_partner = self.env['res.partner'].create({
@@ -156,81 +147,87 @@ class TestMassSMSInternals(TestMassSMSCommon):
         })
         records_numbers = self.records_numbers + ['+32456999999']
 
+        mailing = self.env['mailing.mailing'].browse(self.mailing_sms.ids)
+        mailing.write({'sms_force_send': False})  # force outgoing sms, not sent
         with self.with_user('user_marketing'):
             with self.mockSMSGateway():
-                self.mailing.action_send_sms()
+                mailing.action_send_sms()
 
         self.assertSMSTraces(
             [{'partner': record.customer_id, 'number': records_numbers[i],
-              'content': 'Dear %s this is a mass SMS.' % record.display_name}
+              'content': 'Dear %s this is a mass SMS' % record.display_name}
              for i, record in enumerate(self.records | new_record_1)],
-            self.mailing, self.records | new_record_1,
+            mailing, self.records | new_record_1,
         )
         # duplicates
         self.assertSMSTraces(
             [{'partner': new_record_2.customer_id, 'number': self.records_numbers[0],
-              'content': 'Dear %s this is a mass SMS.' % new_record_2.display_name, 'trace_status': 'cancel',
+              'content': 'Dear %s this is a mass SMS' % new_record_2.display_name, 'trace_status': 'cancel',
               'failure_type': 'sms_duplicate'}],
-            self.mailing, new_record_2,
+            mailing, new_record_2,
         )
         # blacklist
         self.assertSMSTraces(
             [{'partner': self.env['res.partner'], 'number': phone_validation.phone_format(bl_record_1.phone_nbr, 'BE', '32', force_format='E164'),
-              'content': 'Dear %s this is a mass SMS.' % bl_record_1.display_name, 'trace_status': 'cancel',
+              'content': 'Dear %s this is a mass SMS' % bl_record_1.display_name, 'trace_status': 'cancel',
               'failure_type': 'sms_blacklist'}],
-            self.mailing, bl_record_1,
+            mailing, bl_record_1,
         )
         # missing number
         self.assertSMSTraces(
             [{'partner': self.env['res.partner'], 'number': False,
-              'content': 'Dear %s this is a mass SMS.' % void_record.display_name, 'trace_status': 'cancel',
+              'content': 'Dear %s this is a mass SMS' % void_record.display_name, 'trace_status': 'cancel',
               'failure_type': 'sms_number_missing'}],
-            self.mailing, void_record,
+            mailing, void_record,
         )
         # wrong values
         self.assertSMSTraces(
             [{'partner': self.env['res.partner'], 'number': record.phone_nbr,
-              'content': 'Dear %s this is a mass SMS.' % record.display_name, 'trace_status': 'cancel',
+              'content': 'Dear %s this is a mass SMS' % record.display_name, 'trace_status': 'cancel',
               'failure_type': 'sms_number_format'}
              for record in falsy_record_1 + falsy_record_2],
-            self.mailing, falsy_record_1 + falsy_record_2,
+            mailing, falsy_record_1 + falsy_record_2,
         )
 
+    @users('user_marketing')
     def test_mass_sms_internals_done_ids(self):
+        mailing = self.env['mailing.mailing'].browse(self.mailing_sms.ids)
+        mailing.write({'sms_force_send': False})  # check with outgoing traces, not already sent
+
         with self.with_user('user_marketing'):
             with self.mockSMSGateway():
-                self.mailing.action_send_sms(res_ids=self.records[:5].ids)
+                mailing.action_send_sms(res_ids=self.records[:5].ids)
 
-        traces = self.env['mailing.trace'].search([('mass_mailing_id', 'in', self.mailing.ids)])
+        traces = self.env['mailing.trace'].search([('mass_mailing_id', 'in', mailing.ids)])
         self.assertEqual(len(traces), 5)
         # new traces generated
         self.assertSMSTraces(
             [{'partner': record.customer_id, 'number': self.records_numbers[i],
-              'content': 'Dear %s this is a mass SMS.' % record.display_name}
+              'content': 'Dear %s this is a mass SMS' % record.display_name}
              for i, record in enumerate(self.records[:5])],
-            self.mailing, self.records[:5],
+            mailing, self.records[:5],
         )
 
         with self.with_user('user_marketing'):
             with self.mockSMSGateway():
-                self.mailing.action_send_sms(res_ids=self.records.ids)
+                mailing.action_send_sms(res_ids=self.records.ids)
 
         # delete old traces (for testing purpose: ease check by deleting old ones)
         traces.unlink()
         # new failed traces generated for duplicates
         self.assertSMSTraces(
             [{'partner': record.customer_id, 'number': self.records_numbers[i],
-              'content': 'Dear %s this is a mass SMS.' % record.display_name, 'trace_status': 'cancel',
+              'content': 'Dear %s this is a mass SMS' % record.display_name, 'trace_status': 'cancel',
               'failure_type': 'sms_duplicate'}
              for i, record in enumerate(self.records[:5])],
-            self.mailing, self.records[:5],
+            mailing, self.records[:5],
         )
         # new traces generated
         self.assertSMSTraces(
             [{'partner': record.customer_id, 'number': self.records_numbers[i+5],
-              'content': 'Dear %s this is a mass SMS.' % record.display_name}
+              'content': 'Dear %s this is a mass SMS' % record.display_name}
              for i, record in enumerate(self.records[5:])],
-            self.mailing, self.records[5:],
+            mailing, self.records[5:],
         )
 
     @mute_logger('odoo.addons.mail.models.mail_render_mixin')
@@ -268,7 +265,7 @@ class TestMassSMS(TestMassSMSCommon):
 
     @users('user_marketing')
     def test_mass_sms_links(self):
-        mailing = self.env['mailing.mailing'].browse(self.mailing.ids)
+        mailing = self.env['mailing.mailing'].browse(self.mailing_sms.ids)
         mailing.write({
             'body_plaintext': 'Dear {{ object.display_name }} this is a mass SMS with two links http://www.odoo.com/smstest and http://www.odoo.com/smstest/{{ object.name }}',
             'sms_template_id': False,
@@ -305,7 +302,7 @@ class TestMassSMS(TestMassSMSCommon):
         })
 
         records = self.env['mail.test.sms.partner'].create([
-            {'name': 'SMSTest on %s' % partner.name,
+            {'name': 'MassSMSTest on %s' % partner.name,
              'customer_id': partner.id,
             } for partner in self.partners
         ])
@@ -365,7 +362,7 @@ class TestMassSMS(TestMassSMSCommon):
         })
 
         self.env['mail.test.sms.partner.2many'].create([
-            {'name': 'SMSTest on %s' % partner.name,
+            {'name': 'MassSMSTest on %s' % partner.name,
              'customer_ids': [(4, partner.id)],
             } for partner in self.partners
         ])
