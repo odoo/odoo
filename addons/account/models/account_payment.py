@@ -324,11 +324,16 @@ class AccountPayment(models.Model):
             payment.show_partner_bank_account = payment.payment_method_code in self._get_method_codes_using_bank_account()
             payment.require_partner_bank_account = payment.state == 'draft' and payment.payment_method_code in self._get_method_codes_needing_bank_account()
 
-    @api.depends('partner_id')
+    @api.depends('partner_id', 'company_id', 'payment_type')
     def _compute_partner_bank_id(self):
         ''' The default partner_bank_id will be the first available on the partner. '''
         for pay in self:
-            available_partner_bank_accounts = pay.partner_id.bank_ids.filtered(lambda x: x.company_id in (False, pay.company_id))
+            if pay.payment_type == 'inbound':
+                bank_partner = pay.company_id.partner_id
+            else:
+                bank_partner = pay.partner_id
+
+            available_partner_bank_accounts = bank_partner.bank_ids.filtered(lambda x: x.company_id in (False, pay.company_id))
             if available_partner_bank_accounts:
                 if pay.partner_bank_id not in available_partner_bank_accounts:
                     pay.partner_bank_id = available_partner_bank_accounts[0]._origin
