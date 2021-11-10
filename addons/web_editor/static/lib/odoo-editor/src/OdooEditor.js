@@ -2025,6 +2025,7 @@ export class OdooEditor extends EventTarget {
             const splitAroundUrl = text.split(URL_REGEX);
             const linkAttributes = this.options.defaultLinkAttributes || {};
 
+            this.historyPauseSteps();
             for (let i = 0; i < splitAroundUrl.length; i++) {
                 // Even indexes will always be plain text, and odd indexes will always be URL.
                 if (i % 2) {
@@ -2054,6 +2055,8 @@ export class OdooEditor extends EventTarget {
                     }
                 }
             }
+            this.historyUnpauseSteps();
+            this.historyStep();
         }
     }
     /**
