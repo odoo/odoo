@@ -15,3 +15,4 @@ from . import test_crm_lead_smart_calendar
 from . import test_crm_ui
 from . import test_crm_pls
 from . import test_performances
+from . import test_res_partner

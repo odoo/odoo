@@ -168,8 +168,12 @@ class Partner(models.Model):
                                "Anywhere else, time values are computed according to the time offset of your web client.")
 
     tz_offset = fields.Char(compute='_compute_tz_offset', string='Timezone offset', invisible=True)
-    user_id = fields.Many2one('res.users', string='Salesperson',
-      help='The internal user in charge of this contact.')
+    user_id = fields.Many2one(
+        'res.users', string='Salesperson',
+        compute='_compute_user_id',
+        precompute=True,  # avoid queries post-create
+        readonly=False, store=True,
+        help='The internal user in charge of this contact.')
     vat = fields.Char(string='Tax ID', index=True, help="The Tax Identification Number. Complete it if the contact is subjected to government taxes. Used in some legal statements.")
     same_vat_partner_id = fields.Many2one('res.partner', string='Partner with same Tax ID', compute='_compute_same_vat_partner_id', store=False)
     same_company_registry_partner_id = fields.Many2one('res.partner', string='Partner with same Company Registry', compute='_compute_same_vat_partner_id', store=False)
@@ -303,6 +307,12 @@ class Partner(models.Model):
     def _compute_tz_offset(self):
         for partner in self:
             partner.tz_offset = datetime.datetime.now(pytz.timezone(partner.tz or 'GMT')).strftime('%z')
+
+    @api.depends('parent_id')
+    def _compute_user_id(self):
+        """ Synchronize sales rep with parent if partner is a person """
+        for partner in self.filtered(lambda partner: not partner.user_id and partner.company_type == 'person' and partner.parent_id.user_id):
+            partner.user_id = partner.parent_id.user_id
 
     @api.depends('user_ids.share', 'user_ids.active')
     def _compute_partner_share(self):

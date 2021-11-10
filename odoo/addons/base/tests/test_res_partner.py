@@ -157,3 +157,23 @@ class TestPartner(TransactionCase):
         self.assertFalse(self.env.ref('base.public_user').active)
         self.assertFalse(self.env.ref('base.public_partner').active)
         self.assertTrue(self.env.ref('base.public_partner').is_public)
+
+    def test_onchange_parent_sync_user(self):
+        company_1 = self.env['res.company'].create({'name': 'company_1'})
+        test_user = self.env['res.users'].create({
+            'name': 'This user',
+            'login': 'thisu',
+            'email': 'this.user@example.com',
+            'company_id': company_1.id,
+            'company_ids': [company_1.id],
+        })
+        test_parent_partner = self.env['res.partner'].create({
+            'company_type': 'company',
+            'name': 'Micheline',
+            'user_id': test_user.id,
+        })
+        with Form(self.env['res.partner']) as partner_form:
+            partner_form.parent_id = test_parent_partner
+            partner_form.company_type = 'person'
+            partner_form.name = 'Philip'
+            self.assertEqual(partner_form.user_id, test_parent_partner.user_id)
