@@ -71,12 +71,12 @@ class TestPerformance(SavepointCaseWithUserDemo):
     def test_reversed_read_base(self):
         records = self.env['test_performance.base'].search([])
         self.assertEqual(len(records), 5)
-        with self.assertQueryCount(__system__=5, demo=5):
+        with self.assertQueryCount(__system__=1, demo=1):
             # without cache
             for record in reversed(records):
                 record.partner_id
 
-        with self.assertQueryCount(__system__=5, demo=5):
+        with self.assertQueryCount(__system__=1, demo=1):
             # without cache
             for record in reversed(records):
                 record.value_ctx
