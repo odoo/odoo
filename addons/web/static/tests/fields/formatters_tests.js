@@ -6,7 +6,7 @@ import {
     formatFloatFactor,
     formatFloatTime,
     formatInteger,
-    formatMany2one,
+    formatMany2x,
     formatMonetary,
     formatPercentage,
 } from "@web/fields/formatters";
@@ -23,7 +23,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.test("formatFloat", function (assert) {
         assert.strictEqual(formatFloat(false), "");
-        assert.strictEqual(formatFloat(null), '0.00');
+        assert.strictEqual(formatFloat(null), "0.00");
         assert.strictEqual(formatFloat(1000000), "1,000,000.00");
 
         let options = { grouping: [3, 2, -1], decimalPoint: "?", thousandsSep: "€" };
@@ -191,22 +191,22 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(formatInteger(6000, options), "60€00");
     });
 
-    QUnit.test("formatMany2one", function (assert) {
-        assert.strictEqual(formatMany2one(null), "");
-        assert.strictEqual(formatMany2one([1, "A M2O value"]), "A M2O value");
+    QUnit.test("formatMany2x", function (assert) {
+        assert.strictEqual(formatMany2x(null), "");
+        assert.strictEqual(formatMany2x([1, "A M2O value"]), "A M2O value");
 
         let value = {
             data: { display_name: "A M2O value" },
         };
-        assert.strictEqual(formatMany2one(value), "A M2O value");
+        assert.strictEqual(formatMany2x(value), "A M2O value");
 
         value = [1, "A M2O value"];
-        assert.strictEqual(formatMany2one(value, { escape: true }), "A%20M2O%20value");
+        assert.strictEqual(formatMany2x(value, { escape: true }), "A%20M2O%20value");
 
         value = {
             data: { display_name: "A M2O value" },
         };
-        assert.strictEqual(formatMany2one(value, { escape: true }), "A%20M2O%20value");
+        assert.strictEqual(formatMany2x(value, { escape: true }), "A%20M2O%20value");
     });
 
     QUnit.test("formatMonetary", function (assert) {

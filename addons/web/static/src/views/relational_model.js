@@ -268,6 +268,21 @@ class DynamicList extends DataPoint {
             limit: this.limit,
         };
     }
+
+    async _resequence(list, targetId, insertAfter = 0) {
+        if (targetId) {
+            const target = list.find((r) => r.id === targetId);
+            const index = insertAfter ? list.findIndex((r) => r.id === insertAfter) : 0;
+            list = list.filter((r) => r.id !== targetId);
+            list.splice(index, 0, target);
+        }
+        const model = this.resModel;
+        const ids = list.map((r) => r.resId);
+        // FIMME: can't go though orm, so no context given
+        await this.model.rpc("/web/dataset/resequence", { model, ids });
+        this.model.notify();
+        return list;
+    }
 }
 
 export class DynamicRecordList extends DynamicList {
@@ -282,18 +297,8 @@ export class DynamicRecordList extends DynamicList {
         this.records = await this._loadRecords();
     }
 
-    async resequence(targetId, insertAfter = 0) {
-        if (targetId) {
-            const target = this.records.find((r) => r.id === targetId);
-            const index = insertAfter ? this.records.findIndex((r) => r.id === insertAfter) : 0;
-            this.records = this.records.filter((r) => r.id !== targetId);
-            this.records.splice(index, 0, target);
-        }
-        const model = this.resModel;
-        const ids = this.records.map((r) => r.resId);
-        // FIMME: can't go though orm, so no context given
-        await this.model.rpc("/web/dataset/resequence", { model, ids });
-        this.model.notify();
+    async resequence() {
+        this.records = await this._resequence(this.records, ...arguments);
     }
 
     async sortBy(fieldName) {
@@ -390,11 +395,16 @@ export class DynamicGroupList extends DynamicList {
 
     async load() {
         this.groups = await this._loadGroups();
+        await Promise.all(this.groups.map((group) => group.load()));
     }
 
-    // -------------------------------------------------------------------------
+    async resequence() {
+        this.groups = await this._resequence(this.groups, ...arguments);
+    }
+
+    // ------------------------------------------------------------------------
     // Protected
-    // -------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
 
     async _loadGroups() {
         const { groups, length } = await this.model.orm.webReadGroup(
@@ -464,9 +474,7 @@ export class DynamicGroupList extends DynamicList {
 
                 const previousGroup = this.groups.find((g) => g.value === groupParams.value);
                 const state = previousGroup ? previousGroup.exportState() : {};
-                const group = this.model.createDataPoint("group", groupParams, state);
-                await group.load();
-                return group;
+                return this.model.createDataPoint("group", groupParams, state);
             })
         );
     }

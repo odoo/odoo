@@ -66,28 +66,33 @@
                                     <i class="fa fa-arrows-h" role="img" aria-label="Unfold" title="Unfold" />
                                 </span>
                             </div>
-                            <div t-if="!group.isFolded and group.progress" class="o_kanban_counter">
+                            <div t-if="!group.isFolded and group.progressValues.length" class="o_kanban_counter">
                                 <div class="o_kanban_counter_progress progress">
-                                    <t t-foreach="group.progress" t-as="progressData" t-key="progressData.color">
-                                        <div t-if="progressData.count"
+                                    <t t-foreach="group.progressValues" t-as="progressData" t-key="progressData.color">
+                                        <div t-if="progressData.count or progressData.color === 'muted'"
                                             role="progressbar"
                                             class="progress-bar o_bar_has_records"
                                             t-att-class="{ 'progress-bar-animated progress-bar-striped': group.activeProgressValue === progressData.value }"
                                             t-attf-class="bg-{{ progressData.color }}"
-                                            t-attf-style="width: {{ progressData.count / progressData.total * 100 }}%;"
+                                            t-attf-style="width: {{ progressData.count / group.count * 100 }}%;"
                                             aria-valuemin="0"
-                                            t-att-aria-valuemax="progressData.total"
+                                            t-att-aria-valuemax="group.count"
                                             t-att-aria-valuenow="progressData.count"
                                             t-attf-data-tooltip="{{ progressData.count }} {{ progressData.string }}"
                                             data-tooltip-delay="0"
-                                            t-on-click="props.list.filterProgressValue(group, progressData.value)"
+                                            t-on-click="group.filterProgressValue(progressData.value)"
                                         />
                                     </t>
                                 </div>
-                                <t t-set="sumField" t-value="getProgressSumField(group)" />
-                                <div class="o_kanban_counter_side" t-att-title="sumField.string">
-                                    <b t-esc="sumField.value" />
-                                </div>
+                                <t t-set="aggregate" t-value="getGroupAggregate(group)" />
+                                <KanbanAnimatedNumber
+                                    class="o_kanban_counter_side"
+                                    value="aggregate.value"
+                                    title="aggregate.title"
+                                    duration="1000"
+                                    currency="aggregate.currency"
+                                    animationClass="aggregate.value > 999 ? 'o_kanban_grow' : 'o_kanban_grow_huge'"
+                                />
                             </div>
                         </div>
                         <t t-if="!group.isFolded">
@@ -97,7 +102,7 @@
                             <t t-foreach="group.list.records" t-as="record" t-key="record.id">
                                 <t t-call="{{ cardTemplate }}" />
                             </t>
-                            <t t-set="unloadedCount" t-value="getGroupUnloadedCount(group)" />
+                            <t t-set="unloadedCount" t-value="!group.isDirty and getGroupUnloadedCount(group)" />
                             <div t-if="unloadedCount" class="o_kanban_load_more">
                                 <a href="#" t-on-click="loadMore(group)">
                                     Load more... (<t t-esc="unloadedCount" /> remaining)
@@ -121,11 +126,15 @@
                                     class="form-control o_input"
                                     placeholder="Column title"
                                     autofocus=""
+                                    t-model="state.newColumn"
                                     t-on-focus="() => state.quickCreateGroupInputFocus = true"
                                     t-on-blur="() => state.quickCreateGroupInputFocus = false"
+                                    t-on-keydown="onAddColumnKeydown"
                                 />
                                 <span class="input-group-append">
-                                    <button class="btn btn-primary o_kanban_add" type="button">Add</button>
+                                    <button class="btn btn-primary o_kanban_add" type="button" t-on-click="createColumn">
+                                        Add
+                                    </button>
                                 </span>
                             </div>
                             <span t-if="state.quickCreateGroupInputFocus" class="o_discard_msg text-muted float-right">
@@ -147,16 +156,6 @@
                 <div t-foreach="[,,,,,,]" t-as="i" t-key="i_index" class="o_kanban_record o_kanban_ghost" />
             </t>
         </div>
-    </t>
-
-    <t t-name="web.KanbanColorPicker" owl="1">
-        <ul class="oe_kanban_colorpicker">
-            <t t-foreach="colors" t-as="color" t-key="color">
-                <li role="menuitem" t-on-click="selectColor(record, color_index)" t-att-title="color" t-att-aria-label="color">
-                    <a href="#" t-attf-class="oe_kanban_color_{{ color_index }}" />
-                </li>
-            </t>
-        </ul>
     </t>
 
 </templates>

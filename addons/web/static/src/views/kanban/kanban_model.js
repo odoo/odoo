@@ -2,115 +2,184 @@
 
 import { Domain } from "@web/core/domain";
 import { isRelational } from "@web/views/helpers/view_utils";
-import { DynamicGroupList, DynamicRecordList, RelationalModel } from "@web/views/relational_model";
+import {
+    DynamicGroupList,
+    DynamicRecordList,
+    Group,
+    RelationalModel,
+} from "@web/views/relational_model";
 
-const FALSE_SYMBOL = Symbol.for("false");
+class KanbanGroup extends Group {
+    constructor(model, params, state = {}) {
+        super(...arguments);
+
+        this.activeProgressValue = state.activeProgressValue || null;
+        this.isDirty = false;
+        this.progressValues = [];
+    }
+
+    get hasActiveProgressValue() {
+        return this.activeProgressValue !== null;
+    }
+
+    exportState() {
+        return {
+            ...super.exportState(),
+            activeProgressValue: this.activeProgressValue,
+        };
+    }
+
+    async filterProgressValue(value) {
+        const { fieldName } = this.model.progressAttributes;
+        const domains = [this.domain, this.groupDomain];
+        this.activeProgressValue = this.activeProgressValue === value ? null : value;
+        if (this.hasActiveProgressValue) {
+            domains.push([[fieldName, "=", this.activeProgressValue]]);
+        }
+        this.list.domain = Domain.and(domains).toList();
+
+        await this.list.load();
+        this.model.notify();
+    }
+}
 
 class KanbanDynamicGroupList extends DynamicGroupList {
     /**
      * @override
      */
     async load() {
-        const promises = [super.load()];
-        if (this.model.progress && this.groupBy && this.groupBy.length) {
-            promises.push(this._fetchProgressData(this));
-        }
-        const [, progressData] = await Promise.all(promises);
-
-        if (progressData) {
-            this._populateProgressData(progressData);
-        }
+        await this._fetchProgressData(super.load());
     }
 
-    async _fetchProgressData() {
-        return this.model.orm.call(this.resModel, "read_progress_bar", [], {
+    async moveRecord(dataRecordId, dataGroupId, refId, newGroupId) {
+        const oldGroup = this.groups.find((g) => g.id === dataGroupId);
+        const newGroup = this.groups.find((g) => g.id === newGroupId);
+
+        if (!oldGroup || !newGroup) {
+            return; // Groups have been re-rendered, old ids are ignored
+        }
+
+        const record = oldGroup.list.records.find((r) => r.id === dataRecordId);
+
+        // Quick update: moves the record at the right position and notifies components
+        oldGroup.list.records = oldGroup.list.records.filter((r) => r !== record);
+        oldGroup.list.count--;
+        oldGroup.isDirty = true;
+        if (!newGroup.list.isFolded) {
+            const index = refId ? newGroup.list.records.findIndex((r) => r.id === refId) + 1 : 0;
+            newGroup.list.records.splice(index, 0, record);
+        }
+        newGroup.list.count++;
+        newGroup.isDirty = true;
+        newGroup.isFolded = false;
+        this.model.notify();
+
+        // move from one group to another
+        if (dataGroupId !== newGroupId) {
+            const value = isRelational(this.groupByField) ? [newGroup.value] : newGroup.value;
+            await record.update(this.groupByField.name, value);
+            await record.save();
+            await this._fetchProgressData(this._reloadGroups());
+            await Promise.all([oldGroup.list.load(), newGroup.list.load()]);
+        }
+        await newGroup.list.resequence();
+    }
+
+    async createGroup(value) {
+        const [id, displayName] = await this.model.orm.call(
+            this.groupByField.relation,
+            "name_create",
+            [value],
+            { context: this.context }
+        );
+        const group = this.model.createDataPoint("group", {
+            count: 0,
+            value: id,
+            displayName,
+            aggregates: {},
+            fields: this.fields,
+            activeFields: this.activeFields,
+            resModel: this.resModel,
+            domain: this.domain,
+            groupBy: this.groupBy.slice(1),
+            context: this.context,
+            orderedBy: this.orderedBy,
+        });
+        group.isFolded = false;
+        group.progressValues.push({
+            count: 0,
+            value: false,
+            string: this.model.env._t("Other"),
+            color: "muted",
+        });
+        this.groups.push(group);
+        this.model.notify();
+    }
+
+    async deleteGroup(group) {
+        await this.model.orm.unlink(this.groupByField.relation, [group.value], this.context);
+        this.groups = this.groups.filter((g) => g.id !== group.id);
+    }
+
+    // ------------------------------------------------------------------------
+    // Protected
+    // ------------------------------------------------------------------------
+
+    async _fetchProgressData(loadPromise) {
+        if (!this.model.progressAttributes) {
+            return loadPromise;
+        }
+        const { colors, fieldName, help, sumField } = this.model.progressAttributes;
+        const progressPromise = this.model.orm.call(this.resModel, "read_progress_bar", [], {
             domain: this.domain,
             group_by: this.groupBy[0],
             progress_bar: {
-                colors: this.model.progress.colors,
-                field: this.model.progress.fieldName,
-                help: this.model.progress.help,
-                sum_field: this.model.progress.sumField,
+                colors,
+                field: fieldName,
+                help,
+                sum_field: sumField && sumField.name,
             },
             context: this.context,
         });
-    }
+        const [progressData] = await Promise.all([progressPromise, loadPromise]);
 
-    _populateProgressData(progressData) {
-        const { fieldName, colors } = this.model.progress;
         const progressField = this.fields[fieldName];
         const colorEntries = Object.entries(colors);
         const selection = Object.fromEntries(progressField.selection || []);
 
-        let mutedEntry = colorEntries.find((e) => e[1] === "muted");
-        if (!mutedEntry) {
-            mutedEntry = [FALSE_SYMBOL, "muted"];
-            colorEntries.push(mutedEntry);
-            selection[FALSE_SYMBOL] = this.model.env._t("Other");
+        if (!colorEntries.some((e) => e[1] === "muted")) {
+            colorEntries.push([false, "muted"]);
         }
 
         for (const group of this.groups) {
-            const total = group.count;
-            const values = progressData[group.displayName || group.value] || {
-                [FALSE_SYMBOL]: total,
-            };
-            const count = Object.values(values).reduce((acc, x) => acc + x, 0) || total;
-
-            group.progress = [];
-
+            const groupKey = group.displayName || group.value;
+            const counts = progressData[groupKey] || { false: group.count };
+            const remaining = group.count - Object.values(counts).reduce((acc, c) => acc + c, 0);
             for (const [key, color] of colorEntries) {
-                group.progress.push({
-                    count: key in values ? values[key] : total - count,
-                    total,
+                const count = key === false ? remaining : counts[key];
+                group.progressValues.push({
+                    count: count || 0,
                     value: key,
-                    string: key in selection ? selection[key] : key,
+                    string: selection[key] || this.model.env._t("Other"),
                     color,
                 });
             }
         }
     }
 
-    async filterProgressValue(group, value) {
-        const { fieldName } = this.model.progress;
-        group.activeProgressValue = group.activeProgressValue === value ? null : value;
-        let progressBarDomain;
-        if (group.activeProgressValue) {
-            const val = group.activeProgressValue;
-            progressBarDomain = [[fieldName, "=", val === FALSE_SYMBOL ? false : val]];
+    async _reloadGroups() {
+        const oldGroups = this.groups;
+        const promises = [];
+        this.groups = await this._loadGroups();
+        for (const group of this.groups) {
+            const previous = oldGroups.find((g) => g.value === group.value);
+            if (previous) {
+                group.list.records = previous.list.records;
+            } else {
+                promises.push(group.list.load());
+            }
         }
-        group.list.domain = Domain.and([
-            group.domain,
-            group.groupDomain,
-            progressBarDomain,
-        ]).toList();
-
-        await group.load();
-        this.model.notify();
-    }
-
-    async moveRecord(dataRecordId, dataListId, refId, newListId) {
-        const { list } = this.groups.find((g) => g.id === dataListId);
-        const { list: newList, value: newValue } = this.groups.find((g) => g.id === newListId);
-        const record = list.records.find((r) => r.id === dataRecordId);
-
-        // Quick update: moves the record at the right position and notifies components
-        list.records = list.records.filter((r) => r !== record);
-        list.count--;
-        if (!newList.isFolded) {
-            const index = refId ? newList.records.findIndex((r) => r.id === refId) + 1 : 0;
-            newList.records.splice(index, 0, record);
-        }
-        newList.count++;
-        this.model.notify();
-
-        // move from one group to another
-        if (dataListId !== newListId) {
-            const value = isRelational(this.groupByField) ? [newValue] : newValue;
-            await record.update(this.groupByField.name, value);
-            await record.save();
-            await this.load();
-        }
-        await newList.resequence();
+        await Promise.all(promises);
     }
 }
 
@@ -132,7 +201,7 @@ export class KanbanModel extends RelationalModel {
     setup(params = {}) {
         super.setup(...arguments);
 
-        this.progress = params.progress;
+        this.progressAttributes = params.progressAttributes;
         this.defaultGroupBy = params.defaultGroupBy || false;
     }
 
@@ -152,3 +221,4 @@ export class KanbanModel extends RelationalModel {
 
 KanbanModel.DynamicGroupList = KanbanDynamicGroupList;
 KanbanModel.DynamicRecordList = KanbanDynamicRecordList;
+KanbanModel.Group = KanbanGroup;

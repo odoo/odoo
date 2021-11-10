@@ -23,6 +23,8 @@ const TRANSPILED_EXPRESSIONS = [
     { regex: /\bwidget\.(\w+)\b/g, value: "props.$1" },
     // `record.prop` => `record.data.prop`
     { regex: /\brecord\.(\w+)\b/g, value: "record.data.$1" },
+    // `context.prop` => `props.context.prop`
+    { regex: /\bcontext\.([\w.]+)\b/g, value: "props.context.$1" },
     // `prop.raw_value` => `prop`
     { regex: /(\w+)\.(raw_)?value\b/g, value: "$1" },
     // `#{expr}` => `{{expr}}`
@@ -133,20 +135,23 @@ export class KanbanArchParser extends XMLParser {
         const togglerClass = [];
         const menuClass = [];
         const transfers = [];
-        let progressBarInfo = false;
+        let progressAttributes = false;
         let dropdownInserted = false;
         dropdown.setAttribute("t-component", "Dropdown");
 
         // Progressbar
         for (const el of xmlDoc.getElementsByTagName("progressbar")) {
             const attrs = extractAttributes(el, ["field", "colors", "sum_field", "help"]);
-            progressBarInfo = {
+            progressAttributes = {
                 fieldName: attrs.field,
                 colors: JSON.parse(attrs.colors),
-                sumField: attrs.sum_field || false,
+                sumField: fields[attrs.sum_field] || false,
                 help: attrs.help,
             };
-            kanbanBox.setAttribute("t-att-class", "getRecordProgressColor(groupOrRecord)");
+            kanbanBox.setAttribute(
+                "t-att-class",
+                `getRecordProgressColor(record, '${attrs.field}', groupOrRecord.group)`
+            );
         }
 
         // Dropdown element
@@ -239,7 +244,7 @@ export class KanbanArchParser extends XMLParser {
             quickCreate,
             recordsDraggable,
             limit: limit ? parseInt(limit, 10) : 40,
-            progress: progressBarInfo,
+            progressAttributes,
             xmlDoc: applyDefaultAttributes(kanbanBox),
             fields: activeFields,
             tooltips,
@@ -257,7 +262,7 @@ class KanbanView extends owl.Component {
         const { fields: activeFields, limit, defaultGroupBy } = this.archInfo;
         this.model = useModel(KanbanModel, {
             activeFields,
-            progress: this.archInfo.progress,
+            progressAttributes: this.archInfo.progressAttributes,
             fields,
             resModel,
             limit,
