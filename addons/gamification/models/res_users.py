@@ -184,7 +184,7 @@ WHERE sub.user_id IN %%s""" % {
         if template:
             for u in self:
                 if u.rank_id.karma_min > 0:
-                    template.send_mail(u.id, force_send=False, notif_layout='mail.mail_notification_light')
+                    template.send_mail(u.id, force_send=False, email_layout_xmlid='mail.mail_notification_light')
 
     def _recompute_rank(self):
         """

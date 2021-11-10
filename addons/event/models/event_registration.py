@@ -237,7 +237,7 @@ class EventRegistration(models.Model):
             default_use_template=bool(template),
             default_template_id=template.id,
             default_composition_mode='comment',
-            custom_layout="mail.mail_notification_light",
+            default_email_layout_xmlid="mail.mail_notification_light",
         )
         return {
             'name': _('Compose Email'),

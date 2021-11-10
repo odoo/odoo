@@ -1890,10 +1890,10 @@ class MailThread(models.AbstractModel):
             active_ids=res_ids,
             active_model=kwargs.get('model', self._name),
             default_composition_mode=kwargs['composition_mode'],
+            default_email_layout_xmlid=email_layout_xmlid,
             default_model=kwargs.get('model', self._name),
             default_res_id=res_id,
             default_template_id=template_id,
-            custom_layout=email_layout_xmlid,
         ).create(kwargs)
         # Simulate the onchange (like trigger in form the view) only
         # when having a template in single-email mode
