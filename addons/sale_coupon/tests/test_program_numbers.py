@@ -6,7 +6,7 @@ from odoo.exceptions import UserError
 from odoo.tests import tagged
 
 
-@tagged('post_install', '-at_install')
+@tagged('post_install', '-at_install', 'program_numbers')
 class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
 
     def setUp(self):
@@ -188,6 +188,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 1, "We should not get the reduction line since we dont have 320$ tax excluded (cabinet is 320$ tax included)")
         sol1.tax_id.price_include = False
+        sol1._compute_tax_id()
         order.recompute_coupon_lines()
         self.assertEqual(len(order.order_line.ids), 2, "We should now get the reduction line since we have 320$ tax included (cabinet is 320$ tax included)")
         # Name                 | Qty | price_unit |  Tax     |  HTVA   |   TVAC  |  TVA  |
@@ -389,6 +390,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         self.assertEqual(len(order.order_line.ids), 12, "Order should contains 5 regular product lines, 3 free product lines and 4 discount lines (one for every tax)")
 
         # -- This is a test inside the test
+        order.order_line._compute_tax_id()
         self.assertEqual(order.amount_total, 1711, "Recomputing tax on sale order lines should not change total amount")
         self.assertEqual(order.amount_untaxed, 1435.46, "Recomputing tax on sale order lines should not change untaxed amount")
         self.assertEqual(len(order.order_line.ids), 12, "Recomputing tax on sale order lines should not change number of order line")

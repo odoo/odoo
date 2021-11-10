@@ -120,8 +120,7 @@ class TestSaleOrder(TestSaleCommon):
         # Change the pricelist
         self.sale_order.write({'pricelist_id': self.pricelist_discount_incl.id})
         # Trigger manually the computation for discount, unit price, subtotal, ...
-        self.sale_order.order_line._compute_price_unit()
-        self.sale_order.order_line._compute_discount()
+        self.sale_order.update_prices()
 
         # Check that pricelist of the SO has been applied on the sale order lines or not
         for line in self.sale_order.order_line:
@@ -144,8 +143,7 @@ class TestSaleOrder(TestSaleCommon):
         # Change the pricelist
         self.sale_order.write({'pricelist_id': self.pricelist_discount_excl.id})
         # Trigger manually the computation for discount, unit price, subtotal, ...
-        self.sale_order.order_line._compute_price_unit()
-        self.sale_order.order_line._compute_discount()
+        self.sale_order.update_prices()
 
         # Check pricelist of the SO apply or not on order lines where pricelist contains formula that add 15% on the cost price
         for line in self.sale_order.order_line:
