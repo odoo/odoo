@@ -34,9 +34,9 @@ const FR_FLAG_URL = '/base/static/img/country_flags/fr.png';
 const EN_FLAG_URL = '/base/static/img/country_flags/gb.png';
 
 
-QUnit.module('fields', {}, function () {
+QUnit.module('Legacy fields', {}, function () {
 
-QUnit.module('basic_fields', {
+QUnit.module('Legacy basic_fields', {
     beforeEach: function () {
         this.data = {
             partner: {
