@@ -42,7 +42,6 @@ import { registry } from "@web/core/registry";
  */
 
 export const viewService = {
-    name: "view",
     dependencies: ["orm"],
     start(env, { orm }) {
         let cache = {};
@@ -59,10 +58,10 @@ export const viewService = {
          * fields of the corresponding model, and optionally the filters.
          *
          * @param {LoadViewsParams} params
-         * @param {LoadViewsOptions} options
+         * @param {LoadViewsOptions} [options={}]
          * @returns {Promise<ViewDescriptions>}
          */
-        async function loadViews(params, options) {
+        async function loadViews(params, options = {}) {
             const key = JSON.stringify([params.resModel, params.views, params.context, options]);
             if (!cache[key]) {
                 cache[key] = orm
