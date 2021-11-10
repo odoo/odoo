@@ -19,7 +19,7 @@ const { Component, useState } = owl;
 
 // -----------------------------------------------------------------------------
 
-export class FormArchParser extends XMLParser {
+class FormArchParser extends XMLParser {
     parse(arch, fields) {
         const xmlDoc = this.parseXML(arch);
         const activeActions = getActiveActions(xmlDoc);
@@ -49,7 +49,11 @@ export class FormArchParser extends XMLParser {
                             }
                         }
                         const archInfo = new Parser().parse(subView.arch, subView.fields);
-                        fieldInfo.views[viewType] = archInfo;
+                        fieldInfo.views[viewType] = {
+                            ...archInfo,
+                            activeFields: archInfo.fields,
+                            fields: subView.fields,
+                        };
                     }
                 }
                 if (!fieldInfo.invisible && ["one2many", "many2many"].includes(field.type)) {
@@ -84,7 +88,6 @@ class FormView extends Component {
         this.router = useService("router");
         this.archInfo = new FormArchParser().parse(this.props.arch, this.props.fields);
         const activeFields = this.archInfo.fields;
-        // FIXME: probably not at the right place (also necessary for x2m form views)
         if (!activeFields.display_name) {
             activeFields.display_name = { name: "display_name", type: "char" };
         }

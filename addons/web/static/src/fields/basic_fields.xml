@@ -3,7 +3,12 @@
 
     <t t-name="web.FieldChar" owl="1">
         <span t-if="props.readonly" t-esc="props.value" />
-        <input t-else="" t-on-change="onChange" t-att-value="props.value" />
+        <input t-else="" class="o_input" t-on-change="onChange" t-att-value="props.value" />
+    </t>
+
+    <t t-name="web.FieldText" owl="1">
+        <span t-if="props.readonly" t-esc="props.value" />
+        <textarea t-else="" class="o_input" t-on-change="onChange" t-att-value="props.value" />
     </t>
 
     <t t-name="web.FieldBoolean" owl="1">
