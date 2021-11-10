@@ -500,7 +500,11 @@
                     </group>
                      <notebook>
                         <page name="expenses" string="Expense">
-                        <field name="expense_line_ids" nolabel="1" widget="many2many" domain="[('state', '=', 'draft'), ('employee_id', '=', employee_id), ('company_id', '=', company_id)]" options="{'reload_on_button': True}" context="{'form_view_ref' : 'hr_expense.hr_expense_view_form_without_header', 'default_company_id': company_id}">
+                        <field name="expense_line_ids" nolabel="1" widget="many2many"
+                          domain="[('state', '=', 'draft'), ('employee_id', '=', employee_id), ('company_id', '=', company_id)]"
+                          options="{'reload_on_button': True}"
+                          attrs="{'readonly': [('state', '!=', 'draft')]}"
+                          context="{'form_view_ref' : 'hr_expense.hr_expense_view_form_without_header', 'default_company_id': company_id}">
                             <tree decoration-danger="is_refused">
                                 <field name="date"/>
                                 <field name="name"/>
