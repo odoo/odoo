@@ -230,7 +230,7 @@ class TestProjectBilling(TestCommonSaleTimesheet):
 
         self.assertFalse(line1.project_id, "Sale line 1 should be linked to the 'non billable' project")
         self.assertEqual(line2.project_id, self.project_non_billable, "Sale line 3 should be linked to the 'non billable' project")
-        self.assertEqual(line1.price_unit, 13, "The unit price of SOL 1 should be 15")
+        self.assertEqual(line1.price_unit, 15.0, "The unit price of SOL 1 should be 15.0")
         self.assertEqual(line1.product_uom_qty, 3, "The ordered qty of SOL 1 should be 3")
         self.assertEqual(line2.product_uom_qty, 2, "The ordered qty of SOL 2 should be 2")
 
