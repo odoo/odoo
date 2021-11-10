@@ -764,7 +764,7 @@ class Project(models.Model):
                 'show': self.rating_active and self.rating_count > 0,
                 'sequence': 15,
             })
-        if self.user_has_groups('project.group_project_manager'):
+        if self.user_has_groups('project.group_project_user'):
             buttons.append({
                 'icon': 'area-chart',
                 'text': _lt('Burndown Chart'),
