@@ -218,6 +218,10 @@ class SaleOrderLine(models.Model):
         if self.product_id.project_template_id:
             values['name'] = "%s - %s" % (values['name'], self.product_id.project_template_id.name)
             project = self.product_id.project_template_id.copy(values)
+            vals_list = []
+            for task in self.product_id.task_template_ids:
+                vals_list.append({**task.copy_data()[0], 'stage_id': task.stage_id.id})
+            project.tasks = self.env['project.task'].create(vals_list)
             project.tasks.write({
                 'sale_line_id': self.id,
                 'partner_id': self.order_id.partner_id.id,

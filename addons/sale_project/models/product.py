@@ -28,6 +28,8 @@ class ProductTemplate(models.Model):
         'project.project', 'Project Template', company_dependent=True, copy=True,
         domain="[('company_id', '=', current_company_id)]",
         help='Select a billable project to be the skeleton of the new created project when selling the current product. Its stages and tasks will be duplicated.')
+    task_template_ids = fields.Many2many('project.task', 'project_task_template_rel', string="Task Template", copy=True,
+        domain="[('company_id', '=', current_company_id)]")
 
     @api.depends('service_tracking', 'type')
     def _compute_product_tooltip(self):

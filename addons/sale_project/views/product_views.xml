@@ -12,6 +12,7 @@
             <field name="product_tooltip" position="after">
                 <field name="project_id" context="{'default_allow_billable': True}" attrs="{'invisible':[('service_tracking','!=','task_global_project')], 'required':[('service_tracking','==','task_global_project')]}"/>
                 <field name="project_template_id" context="{'active_test': False, 'default_allow_billable': True}" attrs="{'invisible':[('service_tracking','not in',['task_in_project', 'project_only'])]}"/>
+                <field name="task_template_ids" widget="many2many_tags" context="{'default_project_id': project_template_id}" attrs="{'invisible':['|', ('service_tracking','not in',['task_in_project']), ('project_template_id', '=', False)]}" domain="[('project_id', '=', project_template_id)]"/>
             </field>
         </field>
     </record>
