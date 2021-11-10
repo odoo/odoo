@@ -1424,7 +1424,8 @@ class Import(models.TransientModel):
                 for field in split_fields:
                     if field != target_field:  # if not on the last hierarchy level, retarget the model
                         target_model = self.env[target_model][field]._name
-                field_type = self.env[target_model].fields_get().get(target_field, {}).get('type', '')
+                field = self.env[target_model]._fields.get(target_field)
+                field_type = field.type if field else ''
 
                 # merge data if necessary
                 if field_type == 'char':
