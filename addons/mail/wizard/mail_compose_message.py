@@ -49,6 +49,11 @@ class MailComposer(models.TransientModel):
                 - active_ids: record IDs
                 - default_model or active_model
         """
+        # backward compatibility of context before addition of
+        # email_layout_xmlid field: to remove in 15.1+
+        if self._context.get('custom_layout') and 'default_email_layout_xmlid' not in self._context:
+            self = self.with_context(default_email_layout_xmlid=self._context['custom_layout'])
+
         result = super(MailComposer, self).default_get(fields)
 
         # author
@@ -94,6 +99,7 @@ class MailComposer(models.TransientModel):
     attachment_ids = fields.Many2many(
         'ir.attachment', 'mail_compose_message_ir_attachments_rel',
         'wizard_id', 'attachment_id', 'Attachments')
+    email_layout_xmlid = fields.Char('Email Notification Layout', copy=False)
     layout = fields.Char('Layout', copy=False)  # xml id of layout
     add_sign = fields.Boolean(default=True)
     # origin
@@ -241,7 +247,6 @@ class MailComposer(models.TransientModel):
     def _action_send_mail(self, auto_commit=False):
         """ Process the wizard content and proceed with sending the related
             email(s), rendering any template patterns on the fly if needed. """
-        notif_layout = self._context.get('custom_layout')
         # Several custom layouts make use of the model description at rendering, e.g. in the
         # 'View <document>' button. Some models are used for different business concepts, such as
         # 'purchase.order' which is used for a RFQ and and PO. To avoid confusion, we must use a
@@ -249,6 +254,7 @@ class MailComposer(models.TransientModel):
         # Therefore, we can set the description in the context from the beginning to avoid falling
         # back on the regular display_name retrieved in '_notify_prepare_template_context'.
         model_description = self._context.get('model_description')
+
         for wizard in self:
             # Duplicate attachments linked to the email.template.
             # Indeed, basic mail.compose.message wizard duplicates attachments in mass
@@ -304,7 +310,7 @@ class MailComposer(models.TransientModel):
                         post_params = dict(
                             message_type=wizard.message_type,
                             subtype_id=subtype_id,
-                            email_layout_xmlid=notif_layout,
+                            email_layout_xmlid=wizard.email_layout_xmlid,
                             add_sign=not bool(wizard.template_id),
                             mail_auto_delete=wizard.template_id.auto_delete if wizard.template_id else self._context.get('mail_auto_delete', True),
                             model_description=model_description)

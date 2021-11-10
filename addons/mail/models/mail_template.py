@@ -236,7 +236,8 @@ class MailTemplate(models.Model):
         records.check_access_rights('read')
         records.check_access_rule('read')
 
-    def send_mail(self, res_id, force_send=False, raise_exception=False, email_values=None, notif_layout=False):
+    def send_mail(self, res_id, force_send=False, raise_exception=False, email_values=None,
+                  email_layout_xmlid=False):
         """ Generates a new mail.mail. Template is rendered on record given by
         res_id and model coming from template.
 
@@ -245,7 +246,7 @@ class MailTemplate(models.Model):
             queue (recommended);
         :param dict email_values: update generated mail with those values to further
             customize the mail;
-        :param str notif_layout: optional notification layout to encapsulate the
+        :param str email_layout_xmlid: optional notification layout to encapsulate the
             generated email;
         :returns: id of the mail.mail that was created """
 
@@ -266,11 +267,15 @@ class MailTemplate(models.Model):
         if 'email_from' in values and not values.get('email_from'):
             values.pop('email_from')
         # encapsulate body
-        if notif_layout and values['body_html']:
+        if email_layout_xmlid and values['body_html']:
             try:
-                template = self.env.ref(notif_layout, raise_if_not_found=True)
+                template = self.env.ref(email_layout_xmlid, raise_if_not_found=True)
             except ValueError:
-                _logger.warning('QWeb template %s not found when sending template %s. Sending without layouting.' % (notif_layout, self.name))
+                _logger.warning(
+                    'QWeb template %s not found when sending template %s. Sending without layout.',
+                    email_layout_xmlid,
+                    self.name
+                )
             else:
                 record = self.env[self.model].browse(res_id)
                 model = self.env['ir.model']._get(record._name)

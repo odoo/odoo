@@ -292,7 +292,7 @@ class Repair(models.Model):
             'default_use_template': bool(template_id),
             'default_template_id': template_id,
             'default_composition_mode': 'comment',
-            'custom_layout': 'mail.mail_notification_light',
+            'default_email_layout_xmlid': 'mail.mail_notification_light',
         }
         return {
             'type': 'ir.actions.act_window',
