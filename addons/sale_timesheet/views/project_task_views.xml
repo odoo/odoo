@@ -105,13 +105,6 @@
                 <field name="sale_order_id" invisible="1"/>
                 <field name="pricing_type" invisible="1"/>
             </xpath>
-            <xpath expr="//div[hasclass('o_kanban_manage_reporting')]" position="inside">
-                <div role="menuitem" t-if="record.rating_active.raw_value" groups="project.group_project_manager">
-                   <a name="action_view_all_rating" type="object">
-                    Customer Ratings
-                    </a>
-                </div> 
-            </xpath>
             <xpath expr="//div[hasclass('o_kanban_manage_view')]" position="inside">
                 <div t-if="record.allow_billable.raw_value and record.sale_order_id.raw_value and record.pricing_type.raw_value != 'task_rate'"
                     role="menuitem"

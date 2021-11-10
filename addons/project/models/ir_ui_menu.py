@@ -11,4 +11,6 @@ class IrUiMenu(models.Model):
         res = super()._load_menus_blacklist()
         if self.env.user.has_group('project.group_project_stages'):
             res.append(self.env.ref('project.menu_projects').id)
+        if self.user_has_groups('project.group_project_user, !project.group_project_manager'):
+            res.append(self.env.ref('project.rating_rating_menu_project').id)
         return res

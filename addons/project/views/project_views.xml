@@ -708,15 +708,20 @@
                                                     <a name="action_view_tasks" type="object">Tasks</a>
                                                 </div>
                                             </div>
-                                            <div class="col-6 o_kanban_card_manage_section o_kanban_manage_reporting" groups="project.group_project_manager">
-                                                <div role="menuitem" class="o_kanban_card_manage_title">
+                                            <div class="col-6 o_kanban_card_manage_section o_kanban_manage_reporting">
+                                                <div role="menuitem" class="o_kanban_card_manage_title" groups="project.group_project_manager,project.group_project_rating">
                                                     <span>Reporting</span>
                                                 </div>
-                                                <div role="menuitem">
+                                                <div role="menuitem" groups="project.group_project_manager">
                                                     <a name="action_view_tasks_analysis" type="object">Tasks Analysis</a>
                                                 </div>
-                                                <div role="menuitem" name="project_burndown_menu">
+                                                <div role="menuitem" name="project_burndown_menu" groups="project.group_project_manager">
                                                     <a name="%(action_project_task_burndown_chart_report)d" type="action">Burndown Chart</a>
+                                                </div>
+                                                <div role="menuitem" t-if="record.rating_active.raw_value">
+                                                   <a name="action_view_all_rating" type="object">
+                                                    Customer Ratings
+                                                    </a>
                                                 </div>
                                             </div>
                                         </div>
@@ -1469,7 +1474,6 @@
 
         <!-- Reporting menus -->
         <menuitem id="menu_project_report" name="Reporting"
-            groups="project.group_project_manager"
             parent="menu_main_pm" sequence="99"/>
 
         <menuitem id="menu_project_report_task_analysis"

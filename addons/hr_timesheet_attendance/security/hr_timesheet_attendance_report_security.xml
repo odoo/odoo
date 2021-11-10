@@ -5,4 +5,18 @@
         <field name="model_id" ref="model_hr_timesheet_attendance_report"/>
         <field name="domain_force"> ['|', ('company_id', 'in', company_ids), ('company_id', '=', False)]</field>
     </record>
+
+    <record id="hr_timesheet_attendance_report_rule_user" model="ir.rule">
+        <field name="name">Timesheet attendance Report: User</field>
+        <field name="model_id" ref="model_hr_timesheet_attendance_report"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('hr_attendance.group_hr_attendance_user'))]"/>
+    </record>
+
+    <record id="hr_timesheet_attendance_report_rule_manager" model="ir.rule">
+        <field name="name">Timesheet attendance Report: Administrator</field>
+        <field name="model_id" ref="model_hr_timesheet_attendance_report"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('hr_attendance.group_hr_attendance_manager')), (4, ref('hr_timesheet.group_hr_timesheet_approver'))]"/>
+    </record>
 </odoo>
