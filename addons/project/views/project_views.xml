@@ -353,7 +353,7 @@
                                 <field name="last_update_status" readonly="1" widget="status_with_color" options="{'color_field': 'last_update_color', 'no_quick_edit': 1}"/>
                             </div>
                         </button>
-                        <button name="%(action_project_task_burndown_chart_report)d" type="action" class="oe_stat_button" icon="fa-area-chart" groups="project.group_project_manager">
+                        <button name="%(action_project_task_burndown_chart_report)d" type="action" class="oe_stat_button" icon="fa-area-chart" groups="project.group_project_user">
                             <span class="o_stat_text">
                                 Burndown Chart
                             </span>
@@ -409,7 +409,6 @@
                                     <div name="alias_def" colspan="2" attrs="{'invisible': [('alias_domain', '=', False)]}">
                                         <!-- Always display the whole alias in edit mode. It depends in read only -->
                                         <field name="alias_enabled" invisible="1"/>
-                                        <span class="oe_read_only" attrs="{'invisible': [('alias_name', '!=', False)]}">Create tasks by sending an email to </span>
                                         <span class="font-weight-bold oe_read_only" attrs="{'invisible': [('alias_name', '=', False)]}">Create tasks by sending an email to </span>
                                         <span class="font-weight-bold oe_edit_only">Create tasks by sending an email to </span>
                                             <field name="alias_value" class="oe_read_only d-inline" readonly="1" widget="email" attrs="{'invisible':  [('alias_name', '=', False)]}" />
@@ -704,14 +703,14 @@
                                                     <a name="action_view_tasks" type="object">Tasks</a>
                                                 </div>
                                             </div>
-                                            <div class="col-6 o_kanban_card_manage_section o_kanban_manage_reporting" groups="project.group_project_manager">
-                                                <div role="menuitem" class="o_kanban_card_manage_title">
+                                            <div class="col-6 o_kanban_card_manage_section o_kanban_manage_reporting">
+                                                <div role="menuitem" class="o_kanban_card_manage_title" groups="project.group_project_user">
                                                     <span>Reporting</span>
                                                 </div>
-                                                <div role="menuitem">
+                                                <div role="menuitem" groups="project.group_project_user">
                                                     <a name="action_view_tasks_analysis" type="object">Tasks Analysis</a>
                                                 </div>
-                                                <div role="menuitem" name="project_burndown_menu">
+                                                <div role="menuitem" name="project_burndown_menu" groups="project.group_project_user">
                                                     <a name="%(action_project_task_burndown_chart_report)d" type="action">Burndown Chart</a>
                                                 </div>
                                             </div>
@@ -1458,7 +1457,6 @@
 
         <!-- Reporting menus -->
         <menuitem id="menu_project_report" name="Reporting"
-            groups="project.group_project_manager"
             parent="menu_main_pm" sequence="99"/>
 
         <menuitem id="menu_project_report_task_analysis"
@@ -1495,7 +1493,7 @@
                     <field name="id"/>
                 </xpath>
                 <xpath expr="//div[hasclass('o_kanban_manage_view')]" position="inside">
-                    <div role="menuitem" groups="project.group_project_manager">
+                    <div role="menuitem" groups="project.group_project_user">
                         <a name="%(project.project_update_all_action)d" type="action" t-attf-context="{'active_id': #{record.id.raw_value}}">Project Updates</a>
                     </div>
                 </xpath>
