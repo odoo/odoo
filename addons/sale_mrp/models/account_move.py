@@ -26,7 +26,7 @@ class AccountMoveLine(models.Model):
                     prod_moves = moves.filtered(lambda m: m.product_id == product)
                     prod_qty_invoiced = factor * qty_invoiced
                     prod_qty_to_invoice = factor * qty_to_invoice
-                    average_price_unit += factor * product._compute_average_price(prod_qty_invoiced, prod_qty_to_invoice, prod_moves)
+                    average_price_unit += factor * product.with_context(force_company=self.company_id.id)._compute_average_price(prod_qty_invoiced, prod_qty_to_invoice, prod_moves)
                 price_unit = average_price_unit / bom.product_qty or price_unit
                 price_unit = self.product_id.uom_id._compute_price(price_unit, self.product_uom_id)
         return price_unit
