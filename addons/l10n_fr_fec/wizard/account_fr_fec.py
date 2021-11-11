@@ -9,6 +9,7 @@ import io
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import float_is_zero, pycompat
+from odoo.tools.misc import get_lang
 
 
 class AccountFrFec(models.TransientModel):
@@ -304,7 +305,7 @@ class AccountFrFec(models.TransientModel):
         sql_query = '''
         SELECT
             replace(replace(aj.code, '|', '/'), '\t', '') AS JournalCode,
-            replace(replace(aj.name, '|', '/'), '\t', '') AS JournalLib,
+            replace(replace(COALESCE(aj__name.value, aj.name), '|', '/'), '\t', '') AS JournalLib,
             replace(replace(am.name, '|', '/'), '\t', '') AS EcritureNum,
             TO_CHAR(am.date, 'YYYYMMDD') AS EcritureDate,
             aa.code AS CompteNum,
@@ -346,6 +347,11 @@ class AccountFrFec(models.TransientModel):
             LEFT JOIN account_move am ON am.id=aml.move_id
             LEFT JOIN res_partner rp ON rp.id=aml.partner_id
             JOIN account_journal aj ON aj.id = am.journal_id
+            LEFT JOIN ir_translation aj__name ON aj__name.res_id = aj.id
+                                             AND aj__name.type = 'model'
+                                             AND aj__name.name = 'account.journal,name'
+                                             AND aj__name.lang = %s
+                                             AND aj__name.value != ''
             JOIN account_account aa ON aa.id = aml.account_id
             LEFT JOIN account_account_type aat ON aa.user_type_id = aat.id
             LEFT JOIN res_currency rc ON rc.id = aml.currency_id
@@ -369,8 +375,9 @@ class AccountFrFec(models.TransientModel):
             am.name,
             aml.id
         '''
+        lang = self.env.user.lang or get_lang(self.env).code
         self._cr.execute(
-            sql_query, (self.date_from, self.date_to, company.id))
+            sql_query, (lang, self.date_from, self.date_to, company.id))
 
         for row in self._cr.fetchall():
             rows_to_write.append(list(row))
