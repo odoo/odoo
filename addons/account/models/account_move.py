@@ -1845,7 +1845,7 @@ class AccountMove(models.Model):
             # A section / note must not have an account_id set.
             if not line._cache.get('account_id') and not line.display_type and not line._origin:
                 line.account_id = line._get_computed_account() or self.journal_id.default_account_id
-            if line.product_id and not line._cache.get('name'):
+            if line.product_id and not line.name:
                 line.name = line._get_computed_name()
 
             # Compute the account before the partner_id
