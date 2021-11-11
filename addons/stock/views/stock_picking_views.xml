@@ -229,6 +229,7 @@
                 <field name="picking_type_code" invisible="1"/>
                 <field name="hide_picking_type" invisible="1"/>
                 <field name="show_operations" invisible="1" readonly="1"/>
+                <field name="show_allocation" invisible="1"/>
                 <field name="show_reserved" invisible="1" readonly="1"/>
                 <field name="move_line_exist" invisible="1"/>
                 <field name="has_packages" invisible="1"/>
@@ -272,7 +273,7 @@
                         <button name="action_view_reception_report" string="Allocation" type="object"
                             context="{'default_picking_ids': [id]}"
                             class="oe_stat_button" icon="fa-list"
-                            attrs="{'invisible': ['|', ('picking_type_code', '=', 'outgoing'), ('picking_type_code', '=', False)]}"
+                            attrs="{'invisible': [('show_allocation', '=', False)]}"
                             groups="stock.group_reception_report"/>
                         <!-- Use the following button to avoid onchange on one2many -->
                         <button name="action_picking_move_tree"
@@ -377,7 +378,7 @@
                                     <field name="display_assign_serial" invisible="1"/>
                                     <field name="product_id" required="1" context="{'default_detailed_type': 'product'}" attrs="{'readonly': ['|', '&amp;', ('state', '!=', 'draft'), ('additional', '=', False), ('move_lines_count', '&gt;', 0)]}"/>
                                     <field name="description_picking" string="Description" optional="hide"/>
-                                    <field name="date" invisible="1"/>
+                                    <field name="date" optional="hide"/>
                                     <field name="date_deadline" optional="hide"/>
                                     <field name="is_initial_demand_editable" invisible="1"/>
                                     <field name="is_quantity_done_editable" invisible="1"/>

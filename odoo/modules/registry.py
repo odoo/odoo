@@ -101,6 +101,7 @@ class Registry(Mapping):
             registry._init = False
             registry.ready = True
             registry.registry_invalidated = bool(update_module)
+            registry.new = registry.init = registry.registries = None
 
         _logger.info("Registry loaded in %.3fs", time.time() - t0)
         return registry

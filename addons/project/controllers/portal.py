@@ -159,12 +159,7 @@ class ProjectCustomerPortal(CustomerPortal):
         values['task_url'] = 'project/%s/task' % project_id
         return request.render("project.portal_my_project", values)
 
-    @http.route("/my/project/<int:project_id>/project_sharing", type="http", auth="user", methods=['GET'])
-    def render_project_backend_view(self, project_id):
-        project = request.env['project.project'].sudo().browse(project_id)
-        if not project.exists() or not project.with_user(request.env.user)._check_project_sharing_access():
-            return request.not_found()
-
+    def _prepare_project_sharing_session_info(self, project):
         session_info = request.env['ir.http'].session_info()
         user_context = request.session.get_context() if request.session.uid else {}
         mods = conf.server_wide_modules or []
@@ -190,11 +185,20 @@ class ProjectCustomerPortal(CustomerPortal):
                     },
                 },
             },
+            # FIXME: See if we prefer to give only the currency that the portal user just need to see the correct information in project sharing
+            currencies=request.env['ir.http'].get_currencies(),
         )
+        return session_info
+
+    @http.route("/my/project/<int:project_id>/project_sharing", type="http", auth="user", methods=['GET'])
+    def render_project_backend_view(self, project_id):
+        project = request.env['project.project'].sudo().browse(project_id)
+        if not project.exists() or not project.with_user(request.env.user)._check_project_sharing_access():
+            return request.not_found()
 
         return request.render(
             'project.project_sharing_embed',
-            {'session_info': session_info},
+            {'session_info': self._prepare_project_sharing_session_info(project)},
         )
 
     @http.route('/my/project/<int:project_id>/task/<int:task_id>', type='http', auth='public', website=True)
@@ -206,9 +210,9 @@ class ProjectCustomerPortal(CustomerPortal):
         Task = request.env['project.task']
         if access_token:
             Task = Task.sudo()
-        task = Task.search([('project_id', '=', project_id), ('id', '=', task_id)], limit=1)
-        task.sudo().attachment_ids.generate_access_token()
-        values = self._task_get_page_view_values(task, access_token, project=project_sudo, **kw)
+        task_sudo = Task.search([('project_id', '=', project_id), ('id', '=', task_id)], limit=1).sudo()
+        task_sudo.attachment_ids.generate_access_token()
+        values = self._task_get_page_view_values(task_sudo, access_token, project=project_sudo, **kw)
         values['project'] = project_sudo
         return request.render("project.portal_my_task", values)
 

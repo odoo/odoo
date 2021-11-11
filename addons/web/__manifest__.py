@@ -325,10 +325,13 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/scss/bootstrap_overridden_frontend.scss',
         ],
         'web._assets_common_styles': [
+            'web/static/src/legacy/scss/tempusdominus_overridden.scss',
+            'web/static/lib/tempusdominus/tempusdominus.scss',
             'web/static/lib/jquery.ui/jquery-ui.css',
             'web/static/lib/fontawesome/css/font-awesome.css',
             'web/static/lib/select2/select2.css',
             'web/static/lib/select2-bootstrap-css/select2-bootstrap.css',
+            'web/static/lib/daterangepicker/daterangepicker.css',
             'web/static/fonts/fonts.scss',
             'web/static/src/legacy/scss/ui.scss',
             'web/static/src/legacy/scss/ui_extra.scss',
@@ -347,7 +350,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/scss/web.zoomodoo.scss',
             'web/static/src/legacy/scss/color_picker.scss',
             'web/static/src/legacy/scss/fontawesome_overridden.scss',
-            'web/static/lib/tempusdominus/tempusdominus.scss',
         ],
         'web._assets_common_scripts': [
             'web/static/lib/underscore/underscore.js',
@@ -448,7 +450,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/tests/legacy/helpers/test_utils_file.js'
         ],
         'web.tests_assets': [
-            'web/static/lib/daterangepicker/daterangepicker.css',
             'web/static/lib/qunit/qunit-2.9.1.css',
             'web/static/lib/qunit/qunit-2.9.1.js',
             'web/static/tests/legacy/helpers/**/*',

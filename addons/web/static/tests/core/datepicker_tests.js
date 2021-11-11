@@ -127,7 +127,7 @@ QUnit.module("Components", () => {
         assert.verifySteps(["datetime-changed"]);
     });
 
-    QUnit.test("pick a date with locale", async function (assert) {
+    QUnit.test("pick a date with locale (locale given in props)", async function (assert) {
         assert.expect(5);
 
         const picker = await mountPicker(DatePicker, {
@@ -135,6 +135,39 @@ QUnit.module("Components", () => {
                 date: DateTime.fromFormat("09/01/1997", "dd/MM/yyyy", { zone: "utc" }),
                 format: "dd MMM, yyyy",
                 locale: useFRLocale(),
+            },
+            onDateChange: (ev) => {
+                assert.step("datetime-changed");
+                assert.strictEqual(
+                    ev.detail.date.toFormat("dd/MM/yyyy"),
+                    "01/09/1997",
+                    "Event should transmit the correct date"
+                );
+            },
+        });
+        const input = picker.el.querySelector(".o_datepicker_input");
+
+        assert.strictEqual(input.value, "09 janv., 1997");
+
+        await click(input);
+        await click(document.querySelector(".datepicker .picker-switch")); // month picker
+        await click(document.querySelectorAll(".datepicker .month")[8]); // september
+        await click(document.querySelector(".datepicker .day")); // first day
+
+        assert.strictEqual(input.value, "01 sept., 1997");
+        assert.verifySteps(["datetime-changed"]);
+    });
+
+    QUnit.test("pick a date with locale (locale from date props)", async function (assert) {
+        assert.expect(5);
+
+        const picker = await mountPicker(DatePicker, {
+            props: {
+                date: DateTime.fromFormat("09/01/1997", "dd/MM/yyyy", {
+                    zone: "utc",
+                    locale: useFRLocale(),
+                }),
+                format: "dd MMM, yyyy",
             },
             onDateChange: (ev) => {
                 assert.step("datetime-changed");

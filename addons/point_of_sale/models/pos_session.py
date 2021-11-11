@@ -348,12 +348,12 @@ class PosSession(models.Model):
                 return self._close_session_action(balance)
 
             if self.move_id.line_ids:
-                self.move_id._post()
+                self.move_id.sudo().with_company(self.company_id)._post()
                 # Set the uninvoiced orders' state to 'done'
                 self.env['pos.order'].search([('session_id', '=', self.id), ('state', '=', 'paid')]).write({'state': 'done'})
             else:
-                self.move_id.unlink()
-            self._reconcile_account_move_lines(data)
+                self.move_id.sudo().unlink()
+            self.sudo().with_company(self.company_id)._reconcile_account_move_lines(data)
         else:
             statement = self.cash_register_id
             if not self.config_id.cash_control:

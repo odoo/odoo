@@ -429,6 +429,17 @@ class AccountMove(models.Model):
         self.env['account.edi.document'].create(edi_document_vals_list)
         self.edi_document_ids._process_documents_no_web_services()
 
+    def _is_ready_to_be_sent(self):
+        # OVERRIDE
+        # Prevent a mail to be sent to the customer if the EDI document is not sent.
+        res = super()._is_ready_to_be_sent()
+
+        if not res:
+            return False
+
+        edi_documents_to_send = self.edi_document_ids.filtered(lambda x: x.state == 'to_send')
+        return not bool(edi_documents_to_send)
+
     def _post(self, soft=True):
         # OVERRIDE
         # Set the electronic document to be posted and post immediately for synchronous formats.
@@ -585,16 +596,20 @@ class AccountMoveLine(models.Model):
         '''
         self.ensure_one()
 
+        if self.discount == 100.0:
+            gross_price_subtotal = self.currency_id.round(self.price_unit * self.quantity)
+        else:
+            gross_price_subtotal = self.currency_id.round(self.price_subtotal / (1 - self.discount / 100.0))
+
         res = {
             'line': self,
-            'price_unit_after_discount': self.price_unit * (1 - (self.discount / 100.0)),
-            'price_subtotal_before_discount': self.currency_id.round(self.price_unit * self.quantity),
+            'price_unit_after_discount': self.currency_id.round(self.price_unit * (1 - (self.discount / 100.0))),
+            'price_subtotal_before_discount': gross_price_subtotal,
             'price_subtotal_unit': self.currency_id.round(self.price_subtotal / self.quantity) if self.quantity else 0.0,
             'price_total_unit': self.currency_id.round(self.price_total / self.quantity) if self.quantity else 0.0,
+            'price_discount': gross_price_subtotal - self.price_subtotal,
+            'gross_price_total_unit': self.currency_id.round(gross_price_subtotal / self.quantity) if self.quantity else 0.0,
         }
-
-        res['price_discount'] = res['price_subtotal_before_discount'] - self.price_subtotal
-
         return res
 
     def reconcile(self):

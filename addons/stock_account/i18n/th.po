@@ -3,19 +3,19 @@
 # 	* stock_account
 # 
 # Translators:
-# Martin Trigaux, 2020
-# Seksan Poltree <seksan.poltree@gmail.com>, 2020
-# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2020
-# Pornvibool Tippayawat <pornvibool.t@gmail.com>, 2020
-# Odoo Thaidev <odoothaidev@gmail.com>, 2020
+# Martin Trigaux, 2021
+# Seksan Poltree <seksan.poltree@gmail.com>, 2021
+# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2021
+# Pornvibool Tippayawat <pornvibool.t@gmail.com>, 2021
+# Odoo Thaidev <odoothaidev@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-02 14:11+0000\n"
-"PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Odoo Thaidev <odoothaidev@gmail.com>, 2020\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"PO-Revision-Date: 2021-09-14 12:26+0000\n"
+"Last-Translator: Odoo Thaidev <odoothaidev@gmail.com>, 2021\n"
 "Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,6 +58,21 @@ msgid "<b>Set other input/output accounts on specific </b>"
 msgstr ""
 
 #. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
+msgid "<span>Product</span>"
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
+msgid "<span>Quantity</span>"
+msgstr "<span>จำนวน</span>"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
+msgid "<span>SN/LN</span>"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model,name:stock_account.model_account_chart_template
 msgid "Account Chart Template"
 msgstr "แม่แบบแผนภูมิลูกค้าองค์กร"
@@ -73,13 +88,13 @@ msgid "Account Stock Properties"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_inventory__accounting_date
+#: model:ir.model.fields,field_description:stock_account.field_stock_quant__accounting_date
+#: model:ir.model.fields,field_description:stock_account.field_stock_request_count__accounting_date
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__date
 msgid "Accounting Date"
 msgstr "วันที่ลงบัญชี"
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_form_inherit
 #: model_terms:ir.ui.view,arch_db:stock_account.view_move_form_inherit
 msgid "Accounting Entries"
 msgstr "รายการบัญชี"
@@ -116,6 +131,11 @@ msgstr ""
 msgid ""
 "Affect landed costs on reception operations and split them among products to"
 " update their cost price."
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_move__analytic_account_line_id
+msgid "Analytic Account Line"
 msgstr ""
 
 #. module: stock_account
@@ -203,6 +223,11 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_picking__country_code
+msgid "Country Code"
+msgstr "รหัสประเทศ"
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__create_uid
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__create_uid
 msgid "Created by"
@@ -239,7 +264,7 @@ msgid "Date"
 msgstr "วันที่"
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_stock_inventory__accounting_date
+#: model:ir.model.fields,help:stock_account.field_stock_quant__accounting_date
 msgid ""
 "Date at which the accounting entries will be created in case of automated "
 "inventory valuation. If empty, the inventory date will be used."
@@ -256,27 +281,20 @@ msgid "Description"
 msgstr "รายละเอียด"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_account_chart_template__display_name
-#: model:ir.model.fields,field_description:stock_account.field_account_move__display_name
-#: model:ir.model.fields,field_description:stock_account.field_account_move_line__display_name
-#: model:ir.model.fields,field_description:stock_account.field_product_category__display_name
-#: model:ir.model.fields,field_description:stock_account.field_product_product__display_name
-#: model:ir.model.fields,field_description:stock_account.field_product_template__display_name
-#: model:ir.model.fields,field_description:stock_account.field_report_stock_report_product_product_replenishment__display_name
-#: model:ir.model.fields,field_description:stock_account.field_res_config_settings__display_name
-#: model:ir.model.fields,field_description:stock_account.field_stock_inventory__display_name
-#: model:ir.model.fields,field_description:stock_account.field_stock_location__display_name
-#: model:ir.model.fields,field_description:stock_account.field_stock_move__display_name
-#: model:ir.model.fields,field_description:stock_account.field_stock_move_line__display_name
-#: model:ir.model.fields,field_description:stock_account.field_stock_picking__display_name
-#: model:ir.model.fields,field_description:stock_account.field_stock_quant__display_name
-#: model:ir.model.fields,field_description:stock_account.field_stock_quantity_history__display_name
-#: model:ir.model.fields,field_description:stock_account.field_stock_return_picking__display_name
-#: model:ir.model.fields,field_description:stock_account.field_stock_return_picking_line__display_name
+#: model:ir.model.fields,field_description:stock_account.field_res_config_settings__group_lot_on_invoice
+msgid "Display Lots & Serial Numbers on Invoices"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__display_name
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__display_name
 msgid "Display Name"
 msgstr "ชื่อที่ใช้แสดง"
+
+#. module: stock_account
+#: model:res.groups,name:stock_account.group_lot_on_invoice
+msgid "Display Serial & Lot Number on Invoices"
+msgstr ""
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
@@ -303,37 +321,10 @@ msgid "Group by..."
 msgstr "จัดกลุ่มโดย…"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_inventory__has_account_moves
-msgid "Has Account Moves"
-msgstr ""
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_account_chart_template__id
-#: model:ir.model.fields,field_description:stock_account.field_account_move__id
-#: model:ir.model.fields,field_description:stock_account.field_account_move_line__id
-#: model:ir.model.fields,field_description:stock_account.field_product_category__id
-#: model:ir.model.fields,field_description:stock_account.field_product_product__id
-#: model:ir.model.fields,field_description:stock_account.field_product_template__id
-#: model:ir.model.fields,field_description:stock_account.field_report_stock_report_product_product_replenishment__id
-#: model:ir.model.fields,field_description:stock_account.field_res_config_settings__id
-#: model:ir.model.fields,field_description:stock_account.field_stock_inventory__id
-#: model:ir.model.fields,field_description:stock_account.field_stock_location__id
-#: model:ir.model.fields,field_description:stock_account.field_stock_move__id
-#: model:ir.model.fields,field_description:stock_account.field_stock_move_line__id
-#: model:ir.model.fields,field_description:stock_account.field_stock_picking__id
-#: model:ir.model.fields,field_description:stock_account.field_stock_quant__id
-#: model:ir.model.fields,field_description:stock_account.field_stock_quantity_history__id
-#: model:ir.model.fields,field_description:stock_account.field_stock_return_picking__id
-#: model:ir.model.fields,field_description:stock_account.field_stock_return_picking_line__id
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__id
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__id
 msgid "ID"
 msgstr "รหัส"
-
-#. module: stock_account
-#: model:ir.model,name:stock_account.model_stock_inventory
-msgid "Inventory"
-msgstr "สินค้าคงคลัง"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location
@@ -349,7 +340,7 @@ msgstr "ตำแหน่งสินค้าคงคลัง"
 #: model:ir.model.fields,field_description:stock_account.field_product_template__valuation
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__property_valuation
 #: model:ir.ui.menu,name:stock_account.menu_valuation
-#: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
+#: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form_stock
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 #, python-format
 msgid "Inventory Valuation"
@@ -382,23 +373,6 @@ msgid "Landed Costs"
 msgstr "Landed Costs"
 
 #. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_account_chart_template____last_update
-#: model:ir.model.fields,field_description:stock_account.field_account_move____last_update
-#: model:ir.model.fields,field_description:stock_account.field_account_move_line____last_update
-#: model:ir.model.fields,field_description:stock_account.field_product_category____last_update
-#: model:ir.model.fields,field_description:stock_account.field_product_product____last_update
-#: model:ir.model.fields,field_description:stock_account.field_product_template____last_update
-#: model:ir.model.fields,field_description:stock_account.field_report_stock_report_product_product_replenishment____last_update
-#: model:ir.model.fields,field_description:stock_account.field_res_config_settings____last_update
-#: model:ir.model.fields,field_description:stock_account.field_stock_inventory____last_update
-#: model:ir.model.fields,field_description:stock_account.field_stock_location____last_update
-#: model:ir.model.fields,field_description:stock_account.field_stock_move____last_update
-#: model:ir.model.fields,field_description:stock_account.field_stock_move_line____last_update
-#: model:ir.model.fields,field_description:stock_account.field_stock_picking____last_update
-#: model:ir.model.fields,field_description:stock_account.field_stock_quant____last_update
-#: model:ir.model.fields,field_description:stock_account.field_stock_quantity_history____last_update
-#: model:ir.model.fields,field_description:stock_account.field_stock_return_picking____last_update
-#: model:ir.model.fields,field_description:stock_account.field_stock_return_picking_line____last_update
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer____last_update
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation____last_update
 msgid "Last Modified on"
@@ -419,6 +393,11 @@ msgstr "อัพเดทครั้งสุดท้ายเมื่อ"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__stock_valuation_layer_id
 msgid "Linked To"
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
+msgid "Lots &amp; Serial numbers will appear on the invoice"
 msgstr ""
 
 #. module: stock_account
@@ -468,14 +447,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_form
 msgid "Other Info"
 msgstr "ข้อมูลอื่น ๆ"
-
-#. module: stock_account
-#: code:addons/stock_account/models/product.py:0
-#, python-format
-msgid ""
-"Please define an expense account for this product: \"%s\" (id:%d) - or for "
-"its category: \"%s\"."
-msgstr ""
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_product
@@ -632,6 +603,11 @@ msgid "Stock Replenishment Report"
 msgstr ""
 
 #. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_request_count
+msgid "Stock Request an Inventory Count"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.stock_valuation_layer_action
 msgid "Stock Valuation"
 msgstr ""
@@ -665,6 +641,13 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_account_move_line__is_anglo_saxon_line
 msgid "Technical field used to retrieve the anglo-saxon lines."
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_picking__country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
 msgstr ""
 
 #. module: stock_account
@@ -861,6 +844,14 @@ msgstr ""
 msgid ""
 "You don't have any input valuation account defined on your product category."
 " You must define one before processing this operation."
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/models/product.py:0
+#, python-format
+msgid ""
+"You don't have any stock input account defined on your product category. You"
+" must define one before processing this operation."
 msgstr ""
 
 #. module: stock_account

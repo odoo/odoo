@@ -10,6 +10,31 @@ from odoo.addons.project.controllers.portal import CustomerPortal
 
 class ProjectCustomerPortal(CustomerPortal):
 
+    def _prepare_project_sharing_session_info(self, project):
+        session_info = super()._prepare_project_sharing_session_info(project)
+
+        company = project.company_id
+        timesheet_encode_uom = company.timesheet_encode_uom_id
+        project_time_mode_uom = company.project_time_mode_id
+        session_info['user_companies']['allowed_companies'][company.id].update(
+            timesheet_uom_id=timesheet_encode_uom.id,
+            timesheet_uom_factor=project_time_mode_uom._compute_quantity(
+                1.0,
+                timesheet_encode_uom,
+                round=False
+            ),
+        )
+        session_info['uom_ids'] = {
+            uom.id:
+                {
+                    'id': uom.id,
+                    'name': uom.name,
+                    'rounding': uom.rounding,
+                    'timesheet_widget': uom.timesheet_widget,
+                } for uom in [timesheet_encode_uom, project_time_mode_uom]
+        }
+        return session_info
+
     def _task_get_page_view_values(self, task, access_token, **kwargs):
         values = super(ProjectCustomerPortal, self)._task_get_page_view_values(task, access_token, **kwargs)
         domain = request.env['account.analytic.line']._timesheet_get_portal_domain()

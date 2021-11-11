@@ -146,13 +146,13 @@ export class DatePicker extends Component {
         if (typeof commandOrParams === "object") {
             const format = luxonFormatToMomentFormat(this.props.format || this.defaultFormat);
             const params = { ...commandOrParams, format };
+            if (!params.locale && commandOrParams.date) {
+                params.locale = commandOrParams.date.locale;
+            }
             for (const prop in params) {
                 if (params[prop] instanceof DateTime) {
                     const luxonDate = params[prop];
                     const momentDate = luxonDateToMomentDate(luxonDate);
-                    if (momentDate.locale() !== luxonDate.locale) {
-                        momentDate.locale(params.locale);
-                    }
                     params[prop] = momentDate;
                 }
             }

@@ -56,7 +56,7 @@
                 <filter name="filter_date_from" date="date_from"/>
                 <separator/>
                 <filter name="active_time_off" string="Active Time Off"
-                    domain="[('holiday_status_id.active', '=', True)]" help="Active Time Off"/>
+                    domain="[('holiday_status_id.active', '=', True), '|', ('employee_id', '!=', False), '&amp;', ('employee_id', '=', False), ('state', '!=', 'validate')]" help="Active Time Off"/>
                 <filter name="archive" string="Archived Time Off"
                     domain="[('holiday_status_id.active', '=', False)]" help="Archived Time Off"/>
                 <filter invisible="1" string="Late Activities" name="activities_overdue"

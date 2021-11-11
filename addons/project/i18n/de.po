@@ -7,6 +7,7 @@
 # Martin Trigaux, 2021
 # Felix Schubert <felix.schubert@go-erp.com>, 2021
 # Robert Förster <hello@suppliot.eu>, 2021
+# Ahmed Aly <ahmed.aly@datenpol.at>, 2021
 # Friederike Fasterling-Nesselbosch, 2021
 # 
 msgid ""
@@ -215,7 +216,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_day__25
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_day__25
 msgid "25"
-msgstr ""
+msgstr "25"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_day__26
@@ -676,6 +677,8 @@ msgid ""
 "Add columns to organize your tasks into <b>stages</b> <i>e.g. New - In "
 "Progress - Done</i>."
 msgstr ""
+"Fügen Sie Spalten hinzu um Ihre Aufgaben in verschiedenen <b>Phasen</b> zu "
+"organisieren <i>z.B. Neu-In Bearbeitung-Abgeschlossen</i>."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -1490,7 +1493,7 @@ msgstr "Tage"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__delay_endings_days
 msgid "Days to Deadline"
-msgstr ""
+msgstr "Tage bis zur Frist"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -1524,10 +1527,9 @@ msgid ""
 "                You will use these stages in order to track the progress in\n"
 "                solving a task or an issue."
 msgstr ""
-"Definieren Sie die Schritte, die in einem Projekt von der \n"
-"Erstellung bis zum Abschluß einer Aufgabe oder eines Falls\n"
-"durchlaufen werden. Sie benutzen diese Schritte, um den \n"
-"Fortschritt einer Aufgabe oder eines Falls zu verfolgen."
+"Definieren Sie die Projektphasen von der Erstellung einer Aufgabe bis zum "
+"Abschluss. Mithilfe der Phasen können Sie den Fortschritt Ihres Projekts im "
+"Detail verfolgen."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
@@ -2018,7 +2020,7 @@ msgstr "glückliches Gesicht"
 #: model:ir.model.fields,field_description:project.field_project_task__has_message
 #: model:ir.model.fields,field_description:project.field_project_update__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "Hat eine Nachricht"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__priority__2
@@ -2039,6 +2041,11 @@ msgid ""
 "\n"
 "Don't forget to set up the email templates on the stages for which you want to get customer feedback."
 msgstr ""
+"Wie erhalten Sie Kunden-Feedback?\n"
+"-Bewertung bei Wechsel zur nächsten Phase: Eine E-Mail wird gesendet, wenn eine Aufgabe in eine andere Phase gezogen wird.\n"
+"- Regelmäßige Bewertung: Es wird regelmäßig eine E-Mail versendet.\n"
+"\n"
+"Vergessen Sie nicht, die E-Mail-Vorlagen für die Phasen einzurichten, für die Sie Kundenfeedback erhalten möchten."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -4400,7 +4407,7 @@ msgstr "Geänderte Aufgabenstufe"
 #: model:ir.actions.act_window,name:project.open_task_type_form_domain
 #: model:ir.ui.menu,name:project.menu_project_config_project
 msgid "Task Stages"
-msgstr ""
+msgstr "Aufgabenphasen"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form
@@ -4515,7 +4522,7 @@ msgstr "Aufgabenverwaltung"
 #: model:ir.model.fields,field_description:project.field_project_project__type_ids
 #: model_terms:ir.ui.view,arch_db:project.task_type_search
 msgid "Tasks Stages"
-msgstr "Aufgabenstufen"
+msgstr "Aufgabenphasen"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__recurring_count
@@ -4705,6 +4712,8 @@ msgid ""
 "This will archive the stages and all the tasks they contain from the "
 "following projects:"
 msgstr ""
+"Damit werden die Phasen und alle darin enthaltenen Aufgaben aus den "
+"folgenden Projekten archiviert:"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__thu
@@ -4732,7 +4741,7 @@ msgstr ""
 #: model:digest.tip,name:project.digest_tip_project_0
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
 msgid "Tip: Customize tasks and stages according to the project"
-msgstr ""
+msgstr "Tipp: Passen Sie Aufgaben und Phasen je nach Projekt an"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -5179,6 +5188,8 @@ msgid ""
 "You cannot delete stages containing tasks. You can either archive them or "
 "first delete all of their tasks."
 msgstr ""
+"Sie können keine Phasen löschen, die Aufgaben enthalten. Archivieren Sie die"
+" Phasen stattdessen oder löschen Sie zunächst alle enthaltenen Aufgaben."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
@@ -5186,6 +5197,8 @@ msgid ""
 "You cannot delete stages containing tasks. You should first delete all of "
 "their tasks."
 msgstr ""
+"Sie können keine Phasen löschen, die Aufgaben enthalten. Löschen Sie "
+"zunächst die Aufgaben."
 
 #. module: project
 #: code:addons/project/models/project.py:0

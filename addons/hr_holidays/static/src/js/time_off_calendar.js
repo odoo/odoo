@@ -134,7 +134,6 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
                     res_model: "hr.leave.allocation",
                     view_id: ids,
                     context: {
-                        'default_employee_ids': self.context.employee_id,
                         'default_state': 'confirm',
                     },
                     title: _t("New Allocation"),
