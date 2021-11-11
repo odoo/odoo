@@ -178,7 +178,7 @@ class WebsiteForm(http.Controller):
 
         # Add metadata if enabled
         environ = request.httprequest.headers.environ
-        if(request.website.website_form_enable_metadata):
+        if(hasattr(request, 'website') and request.website.website_form_enable_metadata):
             data['meta'] += "%s : %s\n%s : %s\n%s : %s\n%s : %s\n" % (
                 "IP"                , environ.get("REMOTE_ADDR"),
                 "USER_AGENT"        , environ.get("HTTP_USER_AGENT"),
