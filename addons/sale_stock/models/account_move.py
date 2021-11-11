@@ -110,7 +110,6 @@ class AccountMoveLine(models.Model):
         self.ensure_one()
         return not self.is_anglo_saxon_line and super(AccountMoveLine, self)._sale_can_be_reinvoice()
 
-
     def _stock_account_get_anglo_saxon_price_unit(self):
         self.ensure_one()
         price_unit = super(AccountMoveLine, self)._stock_account_get_anglo_saxon_price_unit()
@@ -119,9 +118,8 @@ class AccountMoveLine(models.Model):
         if so_line:
             qty_to_invoice = self.product_uom_id._compute_quantity(self.quantity, self.product_id.uom_id)
             qty_invoiced = sum([x.product_uom_id._compute_quantity(x.quantity, x.product_id.uom_id) for x in so_line.invoice_lines if x.move_id.state == 'posted'])
-            average_price_unit = self.product_id._compute_average_price(qty_invoiced, qty_to_invoice, so_line.move_ids)
+            average_price_unit = self.product_id.with_company(self.company_id)._compute_average_price(qty_invoiced, qty_to_invoice, so_line.move_ids)
             if average_price_unit:
-                  price_unit = self.product_id.uom_id._compute_price(average_price_unit, self.product_uom_id)
+                price_unit = self.product_id.uom_id.with_company(self.company_id)._compute_price(average_price_unit, self.product_uom_id)
 
         return price_unit
-
