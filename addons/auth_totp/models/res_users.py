@@ -144,6 +144,7 @@ class Users(models.Model):
     def _revoke_all_devices(self):
         self.totp_trusted_device_ids._remove()
 
+    @api.model
     def change_password(self, old_passwd, new_passwd):
         self.env.user._revoke_all_devices()
         return super().change_password(old_passwd, new_passwd)
