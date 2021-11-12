@@ -422,7 +422,6 @@ function factory(dependencies) {
                 usePushToTalk: settings.use_push_to_talk,
                 pushToTalkKey: settings.push_to_talk_key,
                 voiceActiveDuration: settings.voice_active_duration,
-                volumeSettings: settings.volume_settings && insert(settings.volume_settings.map(volumeSetting => this.messaging.models['mail.volume_setting'].convertData(volumeSetting))),
             });
         }
 
@@ -731,7 +730,9 @@ function factory(dependencies) {
                     notificationTitle = author.nameOrDisplayName;
                 }
             }
-            const notificationContent = htmlToTextContentInline(message.body).substr(0, PREVIEW_MSG_MAX_SIZE);
+            const notificationContent = owl.utils.escape(
+                htmlToTextContentInline(message.body).substr(0, PREVIEW_MSG_MAX_SIZE)
+            );
             this.env.services['bus_service'].sendNotification({
                 message: notificationContent,
                 title: notificationTitle,

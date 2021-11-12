@@ -42,6 +42,7 @@ const LinkTools = Link.extend({
         // Keep track of each selected custom color and colorpicker.
         this.customColors = {};
         this.colorpickers = {};
+        this.colorpickersPromises = {};
     },
     /**
      * @override
@@ -60,7 +61,7 @@ const LinkTools = Link.extend({
         if (!this.el) {
             return this._super(...arguments);
         }
-        this.$link.removeClass('oe_edited_link');
+        $(this.options.wysiwyg.odooEditor.document).find('.oe_edited_link').removeClass('oe_edited_link');
         const $contents = this.$link.contents();
         if (!this.$link.attr('href') && !this.colorCombinationClass) {
             $contents.unwrap();
@@ -68,7 +69,6 @@ const LinkTools = Link.extend({
         this.$button.removeClass('active');
         this.options.wysiwyg.odooEditor.observerActive();
         this.applyLinkToDom(this._getData());
-        setSelection(this.$link[0], 0, this.$link[0], 1);
         this.options.wysiwyg.odooEditor.historyStep();
         this._super(...arguments);
     },
@@ -228,6 +228,7 @@ const LinkTools = Link.extend({
         }[cssProperty];
 
         let colorpicker = this.colorpickers[cssProperty];
+        await this.colorpickersPromises[cssProperty];
         if (!colorpicker) {
             colorpicker = new ColorPaletteWidget(this, {
                 excluded: ['transparent_grayscale'],
@@ -240,7 +241,8 @@ const LinkTools = Link.extend({
                 'background-color': '.link-custom-color-fill .dropdown-menu',
                 'border-color': '.link-custom-color-border .o_we_so_color_palette .dropdown-menu',
             }[cssProperty]);
-            await colorpicker.appendTo($(target));
+            this.colorpickersPromises[cssProperty] = colorpicker.appendTo($(target));
+            await this.colorpickersPromises[cssProperty];
             colorpicker.on('custom_color_picked color_picked color_hover color_leave', this, (ev) => {
                 // Reset color styles in link content to make sure new color is not hidden.
                 // Only done when applied to avoid losing state during preview.

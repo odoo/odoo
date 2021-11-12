@@ -27,12 +27,12 @@ msgstr "自動發送活動信件"
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_registration
 msgid "Event Registration"
-msgstr "活動登記"
+msgstr "活動報名"
 
 #. module: event_sms
 #: model:sms.template,name:event_sms.sms_template_data_event_registration
 msgid "Event: Registration"
-msgstr "活動：登記"
+msgstr "活動：報名"
 
 #. module: event_sms
 #: model:sms.template,name:event_sms.sms_template_data_event_reminder
@@ -42,12 +42,12 @@ msgstr "活動：提醒"
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_type_mail
 msgid "Mail Scheduling on Event Category"
-msgstr "根據活動分類的信件調度"
+msgstr "根據活動分類的信件規劃"
 
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_mail_registration
 msgid "Registration Mail Scheduler"
-msgstr "登記信件調度"
+msgstr "登記信件規劃"
 
 #. module: event_sms
 #: model:ir.model.fields.selection,name:event_sms.selection__event_mail__notification_type__sms
@@ -74,6 +74,9 @@ msgid ""
 "object.event_id.name }} event is starting {{ object.get_date_range_str() }}."
 " We confirm your registration and hope to meet you there."
 msgstr ""
+"{{ object.event_id.organizer_id.name or object.event_id.company_id.name or "
+"user.env.company.name }}: 我們很高興地提醒您，{{ object.event_id.name }} 活動正在開始{{ "
+"object.get_date_range_str() }}。我們確認您的報名，並希望在那裡見到您。"
 
 #. module: event_sms
 #: model:sms.template,body:event_sms.sms_template_data_event_registration
@@ -82,3 +85,5 @@ msgid ""
 "user.env.company.name }}: We are happy to confirm your registration for the "
 "{{ object.event_id.name }} event."
 msgstr ""
+"{{ object.event_id.organizer_id.name or object.event_id.company_id.name or "
+"user.env.company.name }}: 我們很高興確認您報名 {{ object.event_id.name }} 活動。"

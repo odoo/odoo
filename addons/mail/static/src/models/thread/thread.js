@@ -2440,6 +2440,7 @@ function factory(dependencies) {
          */
         suggestedRecipientInfoList: one2many('mail.suggested_recipient_info', {
             inverse: 'thread',
+            isCausal: true,
         }),
         /**
          * Determines the last content of the last composer related to this

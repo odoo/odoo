@@ -104,10 +104,8 @@
       @include border-top-radius(0);
     }
 
-    .o_dropdown_menu_group_entry {
-      > .dropdown-item {
-        padding-left: $o-dropdown-hpadding * 1.5;
-      }
+    .o_dropdown_menu_group_entry.dropdown-item {
+      padding-left: $o-dropdown-hpadding * 1.5;
 
       + .dropdown-item:not(.o_dropdown_menu_group_entry) {
         margin-top: .8em;

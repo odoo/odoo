@@ -395,7 +395,7 @@ class PurchaseOrderLine(models.Model):
         if not moves_to_update:
             moves_to_update = self.move_dest_ids.filtered(lambda m: m.state not in ('done', 'cancel'))
         for move in moves_to_update:
-            move.date_deadline = new_date + relativedelta(days=move.company_id.po_lead)
+            move.date_deadline = new_date
 
     def _create_or_update_picking(self):
         for line in self:
@@ -489,7 +489,7 @@ class PurchaseOrderLine(models.Model):
     def _check_orderpoint_picking_type(self):
         warehouse_loc = self.order_id.picking_type_id.warehouse_id.view_location_id
         dest_loc = self.move_dest_ids.location_id or self.orderpoint_id.location_id
-        if warehouse_loc and dest_loc and not warehouse_loc.parent_path in dest_loc[0].parent_path:
+        if warehouse_loc and dest_loc and dest_loc.warehouse_id and not warehouse_loc.parent_path in dest_loc[0].parent_path:
             raise UserError(_('For the product %s, the warehouse of the operation type (%s) is inconsistent with the location (%s) of the reordering rule (%s). Change the operation type or cancel the request for quotation.',
                               self.product_id.display_name, self.order_id.picking_type_id.display_name, self.orderpoint_id.location_id.display_name, self.orderpoint_id.display_name))
 
@@ -504,7 +504,7 @@ class PurchaseOrderLine(models.Model):
             'name': (self.name or '')[:2000],
             'product_id': self.product_id.id,
             'date': date_planned,
-            'date_deadline': date_planned + relativedelta(days=self.order_id.company_id.po_lead),
+            'date_deadline': date_planned,
             'location_id': self.order_id.partner_id.property_stock_supplier.id,
             'location_dest_id': (self.orderpoint_id and not (self.move_ids | self.move_dest_ids)) and self.orderpoint_id.location_id.id or self.order_id._get_destination_location(),
             'picking_id': picking.id,

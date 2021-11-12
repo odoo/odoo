@@ -162,6 +162,7 @@ export class OdooEditor extends EventTarget {
                     }
                 },
                 isHintBlacklisted: () => false,
+                filterMutationRecords: (records) => records,
                 _t: string => string,
             },
             options,
@@ -422,8 +423,9 @@ export class OdooEditor extends EventTarget {
         this._observerUnactiveLabels.add(label);
         if (this.observer) {
             clearTimeout(this.observerTimeout);
-            this.observer.disconnect();
             this.observerFlush();
+            this.dispatchEvent(new Event('observerUnactive'));
+            this.observer.disconnect();
         }
     }
     observerFlush() {
@@ -454,6 +456,7 @@ export class OdooEditor extends EventTarget {
             characterData: true,
             characterDataOldValue: true,
         });
+        this.dispatchEvent(new Event('observerActive'));
     }
 
     observerApply(records) {
@@ -552,6 +555,9 @@ export class OdooEditor extends EventTarget {
             if (record.type === 'attributes') {
                 // Skip the attributes change on the dom.
                 if (record.target === this.editable) continue;
+                if (record.attributeName === 'contenteditable') {
+                    continue;
+                }
 
                 attributeCache.set(record.target, attributeCache.get(record.target) || {});
                 if (
@@ -567,7 +573,7 @@ export class OdooEditor extends EventTarget {
             }
             filteredRecords.push(record);
         }
-        return filteredRecords;
+        return this.options.filterMutationRecords(filteredRecords);
     }
 
     // History
@@ -632,7 +638,7 @@ export class OdooEditor extends EventTarget {
     }
 
     // One step completed: apply to vDOM, setup next history step
-    historyStep(skipRollback = false) {
+    historyStep(skipRollback = false, { stepId } = {}) {
         if (!this._historyStepsActive) {
             return;
         }
@@ -649,7 +655,7 @@ export class OdooEditor extends EventTarget {
             return false;
         }
 
-        currentStep.id = this._generateId();
+        currentStep.id = stepId || this._generateId();
         const previousStep = peek(this._historySteps);
         currentStep.clientId = this._collabClientId;
         currentStep.previousStepId = previousStep.id;
@@ -747,10 +753,10 @@ export class OdooEditor extends EventTarget {
             // Consider the position consumed.
             this._historyStepsStates.set(this._historySteps[pos].id, 'consumed');
             this.historyRevert(this._historySteps[pos]);
-            this.historyStep(true);
             // Consider the last position of the history as an undo.
-            const undoStep = this._historySteps[this._historySteps.length - 1];
-            this._historyStepsStates.set(undoStep.id, 'undo');
+            const stepId = this._generateId();
+            this._historyStepsStates.set(stepId, 'undo');
+            this.historyStep(true, { stepId });
             this.dispatchEvent(new Event('historyUndo'));
         }
     }
@@ -765,9 +771,9 @@ export class OdooEditor extends EventTarget {
             this._historyStepsStates.set(this._historySteps[pos].id, 'consumed');
             this.historyRevert(this._historySteps[pos]);
             this.historySetSelection(this._historySteps[pos]);
-            this.historyStep(true);
-            const lastStep = this._historySteps[this._historySteps.length - 1];
-            this._historyStepsStates.set(lastStep.id, 'redo');
+            const stepId = this._generateId();
+            this._historyStepsStates.set(stepId, 'redo');
+            this.historyStep(true, { stepId });
             this.dispatchEvent(new Event('historyRedo'));
         }
     }
@@ -1500,6 +1506,7 @@ export class OdooEditor extends EventTarget {
         }
     }
     _activateContenteditable() {
+        this.observerUnactive('_activateContenteditable');
         this.editable.setAttribute('contenteditable', this.options.isRootEditable);
 
         for (const node of this.options.getContentEditableAreas()) {
@@ -1507,8 +1514,10 @@ export class OdooEditor extends EventTarget {
                 node.setAttribute('contenteditable', true);
             }
         }
+        this.observerActive('_activateContenteditable');
     }
     _stopContenteditable() {
+        this.observerUnactive('_stopContenteditable');
         if (this.options.isRootEditable) {
             this.editable.setAttribute('contenteditable', !this.options.isRootEditable);
         }
@@ -1517,6 +1526,7 @@ export class OdooEditor extends EventTarget {
                 node.setAttribute('contenteditable', false);
             }
         }
+        this.observerActive('_stopContenteditable');
     }
 
     // HISTORY
@@ -1627,8 +1637,8 @@ export class OdooEditor extends EventTarget {
         const mainCommands = [
             {
                 groupName: 'Basic blocks',
-                title: 'Heading 1',
-                description: 'Big section heading.',
+                title: this.options._t('Heading 1'),
+                description: this.options._t('Big section heading.'),
                 fontawesome: 'fa-header',
                 callback: () => {
                     this.execCommand('setTag', 'H1');
@@ -1636,8 +1646,8 @@ export class OdooEditor extends EventTarget {
             },
             {
                 groupName: 'Basic blocks',
-                title: 'Heading 2',
-                description: 'Medium section heading.',
+                title: this.options._t('Heading 2'),
+                description: this.options._t('Medium section heading.'),
                 fontawesome: 'fa-header',
                 callback: () => {
                     this.execCommand('setTag', 'H2');
@@ -1645,8 +1655,8 @@ export class OdooEditor extends EventTarget {
             },
             {
                 groupName: 'Basic blocks',
-                title: 'Heading 3',
-                description: 'Small section heading.',
+                title: this.options._t('Heading 3'),
+                description: this.options._t('Small section heading.'),
                 fontawesome: 'fa-header',
                 callback: () => {
                     this.execCommand('setTag', 'H3');
@@ -1654,8 +1664,8 @@ export class OdooEditor extends EventTarget {
             },
             {
                 groupName: 'Basic blocks',
-                title: 'Text',
-                description: 'Paragraph block.',
+                title: this.options._t('Text'),
+                description: this.options._t('Paragraph block.'),
                 fontawesome: 'fa-paragraph',
                 callback: () => {
                     this.execCommand('setTag', 'P');
@@ -1663,8 +1673,8 @@ export class OdooEditor extends EventTarget {
             },
             {
                 groupName: 'Basic blocks',
-                title: 'Bulleted list',
-                description: 'Create a simple bulleted list.',
+                title: this.options._t('Bulleted list'),
+                description: this.options._t('Create a simple bulleted list.'),
                 fontawesome: 'fa-list-ul',
                 callback: () => {
                     this.execCommand('toggleList', 'UL');
@@ -1672,8 +1682,8 @@ export class OdooEditor extends EventTarget {
             },
             {
                 groupName: 'Basic blocks',
-                title: 'Numbered list',
-                description: 'Create a list with numbering.',
+                title: this.options._t('Numbered list'),
+                description: this.options._t('Create a list with numbering.'),
                 fontawesome: 'fa-list-ol',
                 callback: () => {
                     this.execCommand('toggleList', 'OL');
@@ -1681,8 +1691,8 @@ export class OdooEditor extends EventTarget {
             },
             {
                 groupName: 'Basic blocks',
-                title: 'Checklist',
-                description: 'Track tasks with a checklist.',
+                title: this.options._t('Checklist'),
+                description: this.options._t('Track tasks with a checklist.'),
                 fontawesome: 'fa-check-square-o',
                 callback: () => {
                     this.execCommand('toggleList', 'CL');
@@ -1690,8 +1700,8 @@ export class OdooEditor extends EventTarget {
             },
             {
                 groupName: 'Basic blocks',
-                title: 'Separator',
-                description: 'Insert an horizontal rule separator.',
+                title: this.options._t('Separator'),
+                description: this.options._t('Insert an horizontal rule separator.'),
                 fontawesome: 'fa-minus',
                 callback: () => {
                     this.execCommand('insertHorizontalRule');
@@ -1699,20 +1709,14 @@ export class OdooEditor extends EventTarget {
             },
             {
                 groupName: 'Basic blocks',
-                title: 'Table',
-                description: 'Insert a table.',
+                title: this.options._t('Table'),
+                description: this.options._t('Insert a table.'),
                 fontawesome: 'fa-table',
                 callback: () => {
                     this.commandbarTablePicker.show();
                 },
             },
         ];
-        // Translate the command title and description if a translate function
-        // is provided.
-        for (const command of mainCommands) {
-            command.title = this.options._t(command.title);
-            command.description = this.options._t(command.description);
-        }
         this.commandBar = new Powerbox({
             editable: this.editable,
             document: this.document,
@@ -1886,14 +1890,18 @@ export class OdooEditor extends EventTarget {
                 listDropdownButton.closest('button').classList.toggle('active', block.tagName === 'LI');
             }
         }
-        if (!activeLabel) {
-            // If no element from the text style dropdown was marked as active,
-            // mark the paragraph one as active and use its label.
-            const firstButtonEl = this.toolbar.querySelector('#paragraph');
-            firstButtonEl.classList.add('active');
-            activeLabel = firstButtonEl.textContent;
+
+        const styleSection = this.toolbar.querySelector('#style');
+        if (styleSection) {
+            if (!activeLabel) {
+                // If no element from the text style dropdown was marked as active,
+                // mark the paragraph one as active and use its label.
+                const firstButtonEl = styleSection.querySelector('#paragraph');
+                firstButtonEl.classList.add('active');
+                activeLabel = firstButtonEl.textContent;
+            }
+            styleSection.querySelector('button span').textContent = activeLabel;
         }
-        this.toolbar.querySelector('#style button span').textContent = activeLabel;
 
         const linkNode = getInSelection(this.document, 'a');
         const linkButton = this.toolbar.querySelector('#createLink');
@@ -2315,7 +2323,7 @@ export class OdooEditor extends EventTarget {
 
         const block = this.options.getPowerboxElement();
         if (block) {
-            this._makeHint(block, 'Type "/" for commands', true);
+            this._makeHint(block, this.options._t('Type "/" for commands'), true);
         }
 
         // placeholder hint

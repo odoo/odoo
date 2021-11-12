@@ -99,7 +99,9 @@ const ReceptionReport = clientAction.extend({
                 nodeToAssign = iframe.querySelectorAll('.o_report_reception_assign:not(.o_assign_all)');
             } else { // Local assign all
                 nodeToAssign = el.closest('thead').nextElementSibling.querySelectorAll('.o_report_reception_assign:not(.o_assign_all)');
-                el.closest('thead').nextElementSibling.querySelectorAll('.o_print_label_all').forEach(button => button.removeAttribute('disabled'));
+                const thead = el.closest('thead');
+                thead.querySelector('.o_print_label_all').removeAttribute('disabled');
+                thead.nextElementSibling.querySelectorAll('.o_print_label_all').forEach(button => button.removeAttribute('disabled'));
             }
         }
         nodeToAssign.forEach(node => {
@@ -156,16 +158,10 @@ const ReceptionReport = clientAction.extend({
      * Print the corresponding source label
      */
     _onClickPrintLabel: function (ev) {
-        // unfortunately, due to different reports needed for different models, we will handle
-        // pickings here and others models will have to be extended/printed separately until better
-        // technique to merge into continuous pdf to written
-        return this._printLabel(ev, 'stock.report_reception_report_label', 'stock.picking');
-    },
-
-    _printLabel: function (ev, report_file, sourceModel) {
         const el = ev.currentTarget;
         const modelIds = [];
         const productQtys = [];
+        const report_file = 'stock.report_reception_report_label';
         let nodeToPrint = [];
 
         if (el.name === 'print_label') { // One line print
@@ -179,10 +175,8 @@ const ReceptionReport = clientAction.extend({
         }
 
         nodeToPrint.forEach(node => {
-            if (node.getAttribute('source-model') === sourceModel) {
-                modelIds.push(parseInt(node.getAttribute('source-id')));
-                productQtys.push(Math.ceil(node.getAttribute('qty')) || '1');
-            }
+            modelIds.push(parseInt(node.getAttribute('move-id')));
+            productQtys.push(Math.ceil(node.getAttribute('qty')) || '1');
         });
 
         if (!modelIds.length) { // Nothing to print for this model.

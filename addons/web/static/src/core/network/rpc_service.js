@@ -29,11 +29,8 @@ export function makeErrorFromResponse(reponse) {
     // Odoo returns error like this, in a error field instead of properly
     // using http error codes...
     const { code, data: errorData, message, type: subType } = reponse;
-    const { context: data_context, name: data_name } = errorData || {};
-    const { exception_class } = data_context || {};
-    const exception_class_name = exception_class || data_name;
     const error = new RPCError();
-    error.exceptionName = exception_class_name;
+    error.exceptionName = errorData.name;
     error.subType = subType;
     error.data = errorData;
     error.message = message;

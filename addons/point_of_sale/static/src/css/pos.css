@@ -385,7 +385,27 @@ td {
 .pos .status-buttons {
     display: flex;
     justify-content: flex-end;
-    flex: 1;
+    height: 100%;
+    color: white;
+}
+
+.pos .status-buttons > div {
+    display: flex;
+    align-items: center;
+    padding: 0 10px; /*$dropdown-item-padding-x * .5*/
+}
+
+.pos .status-buttons i.fa {
+    font-size: large;
+}
+
+.pos .status-buttons .avatar, .pos .status-buttons i.fa-sign-out {
+    vertical-align: middle;
+}
+
+.pos .status-buttons .avatar {
+    width: 25px;
+    border-radius: 50%;
 }
 
 .pos .order-button{
@@ -464,34 +484,15 @@ td {
     -webkit-flex: 1;
     flex: 1;
 }
-.pos .orders {
-    display: -webkit-flex;
-    display: flex;
-    vertical-align: top;
-    margin-left: 0px;
-    overflow: hidden;
-}
 
 /*  c) The session buttons */
 
-.pos .pos-rightheader .header-button{
-    float: right;
-    height: 48px;
-    padding-left: 16px;
-    padding-right: 16px;
-    border-right: 1px solid #875A7B;
-    border-left: 1px solid #875A7B;
-    color: #DDD;
-    line-height: 48px;
-    text-align: center;
+.pos .pos-rightheader .header-button {
     cursor: pointer;
 
     -webkit-transition-property: background;
     -webkit-transition-duration: 0.2s;
     -webkit-transition-timing-function: ease-out;
-}
-.pos .pos-rightheader .header-button:last-child{
-    border-left:  1px solid #875A7B;
 }
 .pos .pos-rightheader .header-button:active{
     background: rgba(0,0,0,0.2);
@@ -501,22 +502,12 @@ td {
 /*  c) The notifications indicator */
 
 .pos .oe_status{
-    float:right;
-    color: rgba(255,255,255,0.4);
-    padding: 14px;
-    line-height: 20px;
-    font-size: 20px;
-    vertical-align:middle;
-    font-style: italic;
     cursor:pointer;
 }
 .pos .oe_status.oe_inactive{
     cursor: default;
 }
 .pos .oe_status .oe_icon{
-    display:inline-block;
-    cursor:pointer;
-    width:20px; height:16px;
     color: white;
 }
 .pos .oe_status .oe_red,
@@ -547,8 +538,6 @@ td {
 /*  ********* The leftpane contains the order, numpad and paypad ********* */
 
 .pos .switchpane {
-    height: 100px;
-    flex-shrink: 0;
     display: flex;
 }
 
@@ -615,6 +604,9 @@ td {
     flex-flow: row wrap;
     padding: 8px 16px 0px 11px;
     margin-bottom: -6px;
+}
+.pos .popup-control-buttons .control-buttons {
+    flex-direction: column;
 }
 .pos .control-button {
     -webkit-flex-grow: 1;
@@ -700,9 +692,10 @@ td {
     flex-grow: 1;
 }
 .pos .actionpad .button {
+    --btn-height-size: 54px;
     position: relative;
     display: block;
-    height: 54px;
+    height: var(--btn-height-size);
     width: 100%;
     font-weight: bold;
     vertical-align: middle;
@@ -734,12 +727,17 @@ td {
     border-bottom-left-radius: 4px;
 }
 .pos .actionpad .button.pay {
-    height: 162px;
+    height: calc(var(--btn-height-size) * 3);
+}
+@media screen and (max-width: 768px) {
+    .pos .actionpad .button.pay {
+        height: calc(var(--btn-height-size) * 2);
+    }
 }
 .pos .actionpad .button.pay .pay-circle {
     display: block;
     font-size: 32px;
-    line-height: 54px;
+    line-height: var(--btn-height-size);
     padding-top: 6px;
     background: rgb(86, 86, 86);
     color: white;
@@ -853,6 +851,7 @@ td {
 /*  ********* The right pane contains the screens and headers ********* */
 
 .pos .rightpane {
+    width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -878,7 +877,8 @@ td {
     background: #d3d3d3;
     text-align: center;
     display: flex;
-    flex-flow: row wrap;
+    overflow-x: auto;
+    overflow-y: hidden;
 }
 
 .pos .green-border-bottom {
@@ -892,11 +892,17 @@ td {
 /*  ********* The product list  ********* */
 
 .pos .product-list {
-    padding: 10px;
-    text-align: left;
-    -webkit-transform: translate3d(0,0,0);
+    padding: 10px 5px;
     display: flex;
     flex-wrap: wrap;
+    gap: 2px;
+}
+@media screen and (max-width: 768px) {
+    .pos .product-list {
+        padding: 0px;
+        gap: 0px;
+        justify-content: space-between;
+    }
 }
 
 .pos .product-list-scroller{
@@ -951,7 +957,6 @@ td {
 @media screen and (max-width: 768px) {
     .pos .breadcrumb-button.breadcrumb-home {
         width: auto;
-        font-size: 13px;
         margin-left: 3px;
     }
 }
@@ -1053,7 +1058,6 @@ td {
     padding: 0px;
     background: #cecece;
     display: flex;
-    flex-flow: row wrap;
     flex: 1;
 }
 
@@ -1135,11 +1139,7 @@ td {
 
 .pos .product {
     position:relative;
-    vertical-align: top;
-    display: inline-block;
     line-height: 100px;
-    font-size: 11px;
-    margin: 8px !important;
     width: 122px;
     height:115px;
     background:#fff;
@@ -1165,9 +1165,6 @@ td {
 }
 
 @media screen and (max-width: 768px) {
-    .pos .product-list {
-        padding: 0px;
-    }
     .pos .product {
         width: 32%;
         height: auto;
@@ -1255,7 +1252,6 @@ td {
 
 .pos .screen {
     position:absolute;
-    text-align: center;
     top:0px;
     bottom:0px;
     width:100%;
@@ -1663,27 +1659,6 @@ td {
       .payment-status-container {
           font-size: 22px;
       }
-      .payment-screen .payment-buttons {
-          display: flex;
-          flex-wrap: wrap;
-          flex-direction: column;
-      }
-      .payment-screen .payment-controls {
-          display: flex;
-          flex-wrap: wrap;
-      }
-      .payment-screen .payment-buttons .button {
-          flex-basis: 30%;
-          flex-grow: 1;
-          border: 1px solid rgba(0,0,0,0.2);
-          border-radius: 0px;
-          line-height: normal;
-          padding-top: 28px;
-          padding-bottom: 28px;
-      }
-      .payment-screen .payment-buttons .button .fa {
-          display: none;
-      }
 }
 
 /* c) The receipt screen */
@@ -1855,7 +1830,6 @@ td {
 }
 .pos .clientlist-screen .client-details{
     padding: 16px;
-    border-bottom: solid 5px rgb(110,200,155);
 }
 .pos .clientlist-screen .client-picture{
     height: 64px;
@@ -1953,11 +1927,6 @@ td {
 .pos .clientlist-screen .client-detail > .empty{
     opacity: 0.3;
 }
-
-.pos .clientlist-screen .button.new-customer {
-    min-width: 30px;
-}
-
 .pos .searchbox-client {
     padding: 3px 13px;
     margin-top: 12px;
@@ -2876,59 +2845,6 @@ td {
 
 /* Order Management */
 
-.order-row {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-    background-color:  rgb(230,230,230);
-}
-
-.order-list .order-row:hover {
-    color: white;
-    background-color:  rgb(110,200,155);
-    font-weight: bold;
-}
-
-.order-row.highlight {
-    color: white;
-    background-color:  rgb(110,200,155);
-    font-weight: bold;
-}
-
-.order-row.lighter {
-    background-color: #f5f5f5;
-    cursor: pointer;
-}
-
-.order-row .header {
-    font-size: medium;
-    font-weight: bolder;
-    flex-grow: 1;
-    flex-basis: 0;
-    text-align: left;
-    padding: 10px 10px;
-    background-color: #cecece;
-    border-bottom: solid 1px;
-    border-top: solid 1px
-}
-
-.order-row .header.total {
-    text-align: right;
-}
-
-.order-row .item {
-    font-size: medium;
-    flex-grow: 1;
-    flex-basis: 0;
-    text-align: left;
-    padding: 10px 10px;
-    border-bottom: solid rgb(150,150,150) 1px;
-}
-
-.order-row .item.total {
-    text-align: right;
-}
-
 .item .page-controls {
     display: flex;
     flex-direction: row;
@@ -3097,56 +3013,71 @@ td {
 
 /* TICKET SCREEN */
 
-.ticket-screen {
+.pos .orders {
+    overflow-y: auto;
     font-size: medium;
 }
 
-.ticket-screen .orders {
+.pos .orders .header-row{
     display: flex;
-    flex-flow: column nowrap;
-    overflow: hidden;
-    overflow-y: hidden;
-    overflow-y: auto;
-}
-
-.ticket-screen .orders .header-row{
-    display: flex;
-    flex-flow: row nowrap;
-    flex: 1;
-    justify-content: space-evenly;
     background: #868686;
     color: white;
 }
 
-.ticket-screen .orders .order-row {
-    display: flex;
-    flex-flow: row nowrap;
-    flex: 1;
-    justify-content: space-evenly;
+@media screen and (min-width: 768px) {
+    .pos .orders .order-row {
+        display: flex;
+        cursor: pointer;
+    }
+
+    .pos .orders .order-row:nth-child(odd) {
+        background: #DDD;
+    }
+
+    .pos .orders .order-row:nth-child(even) {
+        background: white;
+    }
+}
+@media screen and (max-width: 768px) {
+    .pos .orders .order-row {
+        margin: 5px;
+        border: 1px solid #C9CCD2; /* $border-color */
+        background: white; /* $o-view-background-color */
+    }
 }
 
-.ticket-screen .orders .order-row.highlight {
+.pos .orders .order-row:hover, .pos .orders .order-row.highlight {
     color: white;
     background-color:  rgb(110,200,155);
 }
 
-.ticket-screen .orders .col {
+.pos .orders .col {
     display: flex;
+    justify-content: space-between;
     flex: 1;
     padding: 10px;
-    text-align: start;
 }
 
-.ticket-screen .orders .col.start {
-    justify-content: flex-start;
+@media screen and (min-width: 768px) {
+    .pos .orders .col.end {
+        justify-content: flex-end;
+    }
 }
 
-.ticket-screen .orders .col.center {
-    justify-content: center;
-}
+@media screen and (max-width: 768px) {
+    .pos .orders .order-row > .col > div:first-child {
+        font-weight: bold;
+    }
 
-.ticket-screen .orders .col.end {
-    justify-content: flex-end;
+    .ticket-screen .order-row .delete-button {
+        margin-top: 5px;
+        justify-content: center;
+        background: #d23f3a /* o-text-color('danger') */ ;
+        color: white;
+    }
+    .ticket-screen .order-row .delete-button .fa-trash {
+        margin-right: 5px;
+    }
 }
 
 .ticket-screen .orders .col.very-narrow {
@@ -3159,19 +3090,6 @@ td {
 
 .ticket-screen .orders .col.wide {
     flex: 1.5;
-}
-
-.ticket-screen .order-row:nth-child(odd) {
-    background: #DDD;
-}
-
-.ticket-screen .order-row:nth-child(even) {
-    background: white;
-}
-
-.ticket-screen .order-row:hover {
-    background: rgb(110,200,155);
-    color: white;
 }
 
 .ticket-screen .empty-order-list {
@@ -3188,29 +3106,21 @@ td {
     font-size: 64px;
 }
 
-.ticket-screen .pointer {
-    cursor: pointer;
-}
-
 .ticket-screen .controls {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 0px 20px;
-    border-bottom: dashed 1px rgb(215,215,215);
+    margin: 0px 10px;
     flex: 0 0 80px;
 }
 
 .ticket-screen .controls button {
+    min-width: 45px;
     font-size: medium;
     padding: 12px;
-    margin-right: 20px;
+    margin-right: 10px;
+    background: #fff;
     font-weight: bold;
-}
-
-.ticket-screen .controls button.discard {
-    background: rgb(230, 230, 230);
-    border: solid 1px rgb(209, 209, 209);
 }
 
 .ticket-screen .controls button.highlight {
@@ -3235,8 +3145,8 @@ td {
 }
 
 .ticket-screen .pos-search-bar .search input {
+    width: 0;
     height: 40px;
-    font-size: medium;
     color: #63717f;
     padding-left: 40px;
     border: solid 1px rgb(209, 209, 209);
@@ -3253,6 +3163,10 @@ td {
     border-bottom-left-radius: 5px;
 }
 
+.ticket-screen .pos-search-bar .fa {
+    font-size: medium;
+}
+
 .ticket-screen .pos-search-bar .search input:focus {
     outline: none;
 }
@@ -3260,7 +3174,7 @@ td {
 .ticket-screen .pos-search-bar .search .search-icon {
     position: absolute;
     left: 15px;
-    top: 12px;
+    top: 14px;
     z-index: 1;
     color: #4f5b66;
 }
@@ -3303,7 +3217,7 @@ td {
 .ticket-screen .pos-search-bar .filter .down-icon {
     position: absolute;
     right: 13px;
-    top: 10px;
+    top: 12px;
 }
 
 .ticket-screen .pos-search-bar .filter {
@@ -3311,7 +3225,7 @@ td {
     background: white;
     padding-top: 1px;
     padding-bottom: 1px;
-    padding-left: 20px;
+    padding-left: 15px;
     padding-right: 40px;
     border: solid 1px rgb(209, 209, 209);
     border-left: none;
@@ -3319,7 +3233,6 @@ td {
     display: flex;
     align-items: center;
     max-width: 150px;
-    font-size: medium;
 }
 
 .ticket-screen .pos-search-bar .filter:hover {
@@ -3433,19 +3346,21 @@ td {
 
 /* Product Screen Search Bar */
 
-.search-bar-portal {
+.search-bar-portal,
+.search-bar-portal .search-box {
     display: flex;
+    flex: 1;
 }
 
 .search-bar-portal .search-box {
     font-size: medium;
     position: relative;
-    display: flex;
     align-items: center;
     margin: 0 15px;
 }
 
 .search-bar-portal .search-box input {
+    flex: 1;
     font-size: medium;
     height: 30px;
     border: none;
@@ -3532,14 +3447,6 @@ td {
     display: flex;
 }
 
-.receipt-screen .default-view .actions .send-email .email-icon {
-    padding: 1rem;
-    border: solid 1px rgb(209, 209, 209);
-    border-right: none;
-    border-top-left-radius: 3px;
-    border-bottom-left-radius: 3px;
-}
-
 .receipt-screen .default-view .actions .send-email .input-email {
     display: flex;
     flex: 1;
@@ -3586,14 +3493,14 @@ td {
 }
 
 .receipt-screen .notice .send-mail-info {
-    position: absolute;
-    right: 1.5rem;
+    width: 100%;
+    text-align: right;
     font-style: italic;
 }
 
 @media screen and (max-width: 768px) {
     .receipt-screen .default-view {
-        flex-direction: column-reverse;
+        flex-direction: column;
         overflow: auto;
     }
     .receipt-screen .default-view .actions {
@@ -3627,8 +3534,19 @@ td {
     font-size: 17px;
 }
 
-.pos .pos-topheader .oe_status:hover {
+.pos .pos-topheader .status-buttons > div:hover {
     background: rgb(104,69,95);
+}
+
+@media screen and (max-width: 768px) {
+
+    .pos .search-bar-portal .search-box .icon .fa-search {
+        color: #f0f0f0;
+    }
+
+    .ticket-screen .pos-search-bar .search input {
+        padding-left: 10px;
+    }
 }
 
 /** CashMovePopup **/

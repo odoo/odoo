@@ -38,8 +38,8 @@ class AccountAnalyticLine(models.Model):
     # When user edit Sale Order Item(so_line) for timesheet make is_so_line_edited field true
     @api.onchange('so_line')
     def _onchange_so_line(self):
-        if not self.is_so_line_edited:
-            self.is_so_line_edited = True
+        # TODO: [XBO] remove me in master
+        return
 
     @api.depends('so_line.product_id', 'project_id', 'amount')
     def _compute_timesheet_invoice_type(self):

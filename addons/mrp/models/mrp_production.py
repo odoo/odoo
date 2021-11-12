@@ -296,7 +296,7 @@ class MrpProduction(models.Model):
         # Force to prefetch more than 1000 by 1000
         all_raw_moves._fields['forecast_availability'].compute_value(all_raw_moves)
         for production in productions:
-            if any(float_compare(move.forecast_availability, 0 if move.state == 'draft' else move.product_qty, move.product_id.uom_id.rounding) == -1 for move in production.move_raw_ids):
+            if any(float_compare(move.forecast_availability, 0 if move.state == 'draft' else move.product_qty, precision_rounding=move.product_id.uom_id.rounding) == -1 for move in production.move_raw_ids):
                 production.components_availability = _('Not Available')
                 production.components_availability_state = 'late'
             else:
@@ -1758,6 +1758,7 @@ class MrpProduction(models.Model):
             'default_production_id': self.id,
             'default_expected_qty': self.product_qty,
             'default_next_serial_number': next_serial,
+            'default_next_serial_count': self.product_qty - self.qty_produced,
         }
         return action
 
