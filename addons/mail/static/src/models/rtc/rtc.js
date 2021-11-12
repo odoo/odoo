@@ -912,6 +912,9 @@ function factory(dependencies) {
             for (const [token, peerConnection] of Object.entries(this._peerConnections)) {
                 await this._updateRemoteTrack(peerConnection, 'video', { token });
             }
+            if (!this.currentRtcSession) {
+                return;
+            }
             this.currentRtcSession.updateAndBroadcast({
                 isScreenSharingOn: !!this.sendDisplay,
                 isCameraOn: !!this.sendUserVideo,
