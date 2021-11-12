@@ -63,6 +63,7 @@ X2ManyField.useSubView = true;
 X2ManyField.components = { Pager };
 X2ManyField.props = {
     ...standardFieldProps,
+    viewMode: { type: Array, optional: true }, // check this
 };
 X2ManyField.template = "web.X2ManyField";
 

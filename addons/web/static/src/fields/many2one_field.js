@@ -14,6 +14,7 @@ export class Many2OneField extends Component {
 
 Many2OneField.props = {
     ...standardFieldProps,
+    placeholder: { type: String, optional: true },
 };
 Many2OneField.template = "web.Many2OneField";
 

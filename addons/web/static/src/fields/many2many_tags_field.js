@@ -17,6 +17,7 @@ Many2ManyTagsField.fieldsToFetch = {
 };
 Many2ManyTagsField.props = {
     ...standardFieldProps,
+    placeholder: { type: String, optional: true },
 };
 Many2ManyTagsField.template = "web.Many2ManyTagsField";
 
