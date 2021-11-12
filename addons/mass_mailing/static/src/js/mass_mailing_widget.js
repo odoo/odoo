@@ -389,7 +389,8 @@ var MassMailingFieldHtml = FieldHtml.extend({
         var $themes = $snippetsSideBar.find("#email_designer_themes").children();
         var $snippets = $snippetsSideBar.find(".oe_snippet");
         var selectorToKeep = '.o_we_external_history_buttons, .email_designer_top_actions';
-        $snippetsSideBar.find(`.o_we_website_top_actions>*:not(${selectorToKeep})`).hide();
+        // Overide `d-flex` class which style is `!important`
+        $snippetsSideBar.find(`.o_we_website_top_actions > *:not(${selectorToKeep})`).attr('style', 'display: none!important');
         var $snippets_menu = $snippetsSideBar.find("#snippets_menu");
         var $selectTemplateBtn = $snippets_menu.find('.o_we_select_template');
 
