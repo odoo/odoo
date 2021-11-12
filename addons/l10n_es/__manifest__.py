@@ -2,13 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # List of contributors:
-# Jordi Esteve <jesteve@zikzakmedia.com>
 # Ignacio Ibeas <ignacio@acysos.com>
 # Dpto. Consultoría Grupo Opentia <consultoria@opentia.es>
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>
-# Carlos Liébana <carlos.liebana@factorlibre.com>
 # Hugo Santos <hugo.santos@factorlibre.com>
-# Albert Cabedo <albert@gafic.com>
 # Olivier Colson <oco@odoo.com>
 # Roberto Lizana <robertolizana@trey.es>
 
