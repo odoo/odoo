@@ -376,10 +376,18 @@ class AccountMove(models.Model):
         """
         tax_lock_date = self.company_id.tax_lock_date
         today = fields.Date.today()
-        if invoice_date and tax_lock_date and has_tax and invoice_date <= tax_lock_date:
+        lock_violated = invoice_date and tax_lock_date and has_tax and invoice_date <= tax_lock_date
+        if lock_violated:
             invoice_date = tax_lock_date + timedelta(days=1)
 
         if self.is_sale_document(include_receipts=True):
+            if lock_violated:
+                raise UserError(_(
+                    'The operation is refused as it would impact an already issued tax statement.\n'
+                    'Please change the journal entry date or the tax lock date set in the settings'
+                    ' (%(tax_lock_date)s) to proceed.',
+                    tax_lock_date=format_date(self.env, tax_lock_date),
+                ))
             return invoice_date
         elif self.is_purchase_document(include_receipts=True):
             highest_name = self.highest_name or self._get_last_sequence(relaxed=True)
@@ -1672,7 +1680,12 @@ class AccountMove(models.Model):
     @api.depends('date', 'line_ids.debit', 'line_ids.credit', 'line_ids.tax_line_id', 'line_ids.tax_ids', 'line_ids.tax_tag_ids')
     def _compute_tax_lock_date_message(self):
         for move in self:
-            if move._affect_tax_report() and move.company_id.tax_lock_date and move.date and move.date <= move.company_id.tax_lock_date:
+            if (
+                move.is_purchase_document()
+                and move._affect_tax_report()
+                and move.company_id.tax_lock_date
+                and move.date and move.date <= move.company_id.tax_lock_date
+            ):
                 move.tax_lock_date_message = _(
                     "The accounting date is set prior to the tax lock date which is set on %s. "
                     "Hence, the accounting date will be changed to the next available date when posting.",
