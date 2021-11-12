@@ -676,9 +676,9 @@ class AccountMove(models.Model):
                     **taxes_map_entry['grouping_dict'],
                 })
 
-            if tax_line and in_draft_mode:
-                tax_line._onchange_amount_currency()
-                tax_line._onchange_balance()
+            if in_draft_mode:
+                taxes_map_entry['tax_line']._onchange_amount_currency()
+                taxes_map_entry['tax_line']._onchange_balance()
 
     def _tax_tags_need_inversion(self, move, is_refund, tax_type):
         """ Tells whether the tax tags need to be inverted for a given move.
