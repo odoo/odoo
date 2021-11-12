@@ -460,7 +460,7 @@ function bootstrapToTable($editable) {
             //    by sharing the available space between them.
             const $flexColumns = $bootstrapColumns.filter((i, column) => !/\d/.test(column.className.match(reColMatch)[0] || '0'));
             const colTotalSize = $bootstrapColumns.toArray().map(child => _getColumnSize(child)).reduce((a, b) => a + b);
-            const colSize = Math.round((12 - colTotalSize) / $flexColumns.length);
+            const colSize = Math.max(1, Math.round((12 - colTotalSize) / $flexColumns.length));
             for (const flexColumn of $flexColumns) {
                 flexColumn.classList.remove(flexColumn.className.match(reColMatch)[0].trim());
                 flexColumn.classList.add(`col-${colSize}`);
