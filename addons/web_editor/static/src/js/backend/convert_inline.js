@@ -478,13 +478,13 @@ function bootstrapToTable($editable) {
                 if (gridIndex + columnSize < 12) {
                     $currentCol = grid[gridIndex];
                     _applyColspanToGridElement($currentCol, columnSize);
-                    gridIndex += columnSize;
                     if (columnIndex === $bootstrapColumns.length - 1) {
                         // We handled all the columns but there is still space
                         // in the row. Insert the columns and fill the row.
                         grid[gridIndex].attr('colspan', 12 - gridIndex);
                         $currentRow.append(...grid.filter(td => td.attr('colspan')));
                     }
+                    gridIndex += columnSize;
                 } else if (gridIndex + columnSize === 12) {
                     // Finish the row.
                     $currentCol = grid[gridIndex];
