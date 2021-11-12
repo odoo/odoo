@@ -65,9 +65,12 @@ class AccountAccount(models.Model):
         help="Account Type is used for information purpose, to generate country-specific legal reports, and set the rules to close a fiscal year and generate opening entries.")
     internal_type = fields.Selection(related='user_type_id.type', string="Internal Type", store=True, readonly=True)
     internal_group = fields.Selection(related='user_type_id.internal_group', string="Internal Group", store=True, readonly=True)
-    #has_unreconciled_entries = fields.Boolean(compute='_compute_has_unreconciled_entries',
-    #    help="The account has at least one unreconciled debit and credit since last time the invoices & payments matching was performed.")
-    reconcile = fields.Boolean(string='Allow Reconciliation', default=False, tracking=True,
+    reconcile = fields.Boolean(
+        string='Allow Reconciliation',
+        compute='_compute_reconcile',
+        readonly=False,
+        store=True,
+        tracking=True,
         help="Check this box if this account allows invoices & payments matching of journal items.")
     tax_ids = fields.Many2many('account.tax', 'account_account_tax_default_rel',
         'account_id', 'tax_id', string='Default Taxes',
@@ -137,8 +140,8 @@ class AccountAccount(models.Model):
         self.env['account.payment.method.line'].flush(['payment_method_id', 'payment_account_id'])
 
         self._cr.execute('''
-            SELECT 
-                account.id, 
+            SELECT
+                account.id,
                 journal.id
             FROM account_journal journal
             JOIN res_company company ON company.id = journal.company_id
@@ -147,11 +150,11 @@ class AccountAccount(models.Model):
             AND journal.currency_id != company.currency_id
             AND account.currency_id != journal.currency_id
             AND account.id IN %(accounts)s
-            
+
             UNION ALL
-            
-            SELECT 
-                account.id, 
+
+            SELECT
+                account.id,
                 journal.id
             FROM account_journal journal
             JOIN res_company company ON company.id = journal.company_id
@@ -163,11 +166,11 @@ class AccountAccount(models.Model):
             AND account.currency_id != journal.currency_id
             AND apm.payment_type = 'inbound'
             AND account.id IN %(accounts)s
-            
+
             UNION ALL
-            
-            SELECT 
-                account.id, 
+
+            SELECT
+                account.id,
                 journal.id
             FROM account_journal journal
             JOIN res_company company ON company.id = journal.company_id
@@ -257,6 +260,11 @@ class AccountAccount(models.Model):
                 journal_names=journals.mapped('display_name'),
                 journal_ids=journals.ids
             ))
+
+    @api.depends('internal_type')
+    def _compute_reconcile(self):
+        for record in self:
+            record.reconcile = record.internal_type in ('receivable', 'payable')
 
     @api.depends('code')
     def _compute_account_root(self):
