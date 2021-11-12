@@ -424,6 +424,9 @@ function bootstrapToTable($editable) {
             $table.append(child);
         }
         $table.removeClass('container container-fluid o_fake_table');
+        if (!$table[0].className) {
+            $table.removeAttr('class');
+        }
         $container.before($table);
         $container.remove();
 
@@ -440,6 +443,9 @@ function bootstrapToTable($editable) {
                 $row.attr(attr.name, attr.value);
             }
             $row.removeClass('row');
+            if (!$row[0].className) {
+                $row.removeAttr('class');
+            }
             for (const child of [...bootstrapRow.childNodes]) {
                 $row.append(child);
             }
@@ -515,6 +521,9 @@ function bootstrapToTable($editable) {
                     }
                     const colMatch = bootstrapColumn.className.match(reColMatch);
                     $currentCol.removeClass(colMatch[0]);
+                    if (!$currentCol[0].className) {
+                        $currentCol.removeAttr('class');
+                    }
                     for (const child of [...bootstrapColumn.childNodes]) {
                         $currentCol.append(child);
                     }
