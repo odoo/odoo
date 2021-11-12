@@ -275,6 +275,8 @@ class Lead(models.Model):
                 'email_from': partner.email,
                 'phone': partner.phone,
                 'mobile': partner.mobile,
+                'user_id': partner.user_id.id or self.env.user.id,
+                'team_id': partner.team_id.id,
                 'zip': partner.zip,
                 'function': partner.function,
                 'website': partner.website,
@@ -301,7 +303,7 @@ class Lead(models.Model):
     @api.onchange('user_id')
     def _onchange_user_id(self):
         """ When changing the user, also set a team_id or restrict team id to the ones user_id is member of. """
-        if self.user_id.sale_team_id:
+        if self.user_id.sale_team_id and not self.partner_id.team_id:
             values = self._onchange_user_values(self.user_id.id)
             self.update(values)
 
