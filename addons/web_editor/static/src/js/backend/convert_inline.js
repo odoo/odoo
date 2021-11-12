@@ -512,6 +512,14 @@ function bootstrapToTable($editable) {
                     $currentCol = grid[0];
                     _applyColspanToGridElement($currentCol, columnSize);
                     gridIndex = columnSize;
+                    if (columnIndex === $bootstrapColumns.length - 1 && gridIndex < 12) {
+                        // We handled all the columns but there is still space
+                        // in the row. Insert the columns and fill the row.
+                        grid[gridIndex].attr('colspan', 12 - gridIndex);
+                        $currentRow.append(...grid.filter(td => td.attr('colspan')));
+                        // Adapt width to colspan.
+                        _applyColspanToGridElement(grid[gridIndex], 12 - gridIndex);
+                    }
                 }
                 if ($currentCol) {
                     for (const attr of bootstrapColumn.attributes) {
