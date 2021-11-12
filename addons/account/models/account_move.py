@@ -767,7 +767,12 @@ class AccountMove(models.Model):
                 })
 
             if in_draft_mode:
+<<<<<<< HEAD
                 taxes_map_entry['tax_line'].update(taxes_map_entry['tax_line']._get_fields_onchange_balance(force_computation=True))
+=======
+                taxes_map_entry['tax_line']._onchange_amount_currency()
+                taxes_map_entry['tax_line']._onchange_balance()
+>>>>>>> 71266641e36... temp
 
     def _tax_tags_need_inversion(self, move, is_refund, tax_type):
         """ Tells whether the tax tags need to be inverted for a given move.
