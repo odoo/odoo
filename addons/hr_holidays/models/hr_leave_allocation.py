@@ -237,7 +237,13 @@ class HolidaysAllocation(models.Model):
     def _compute_can_approve(self):
         for allocation in self:
             try:
+<<<<<<< HEAD
                 if allocation.state == 'confirm' and allocation.validation_type != 'no':
+=======
+                if allocation.state == 'confirm' and allocation.holiday_status_id.allocation_type == "fixed_allocation" and allocation.validation_type == 'both':
+                    allocation._check_approval_update('validate1')
+                else:
+>>>>>>> 0545897e8e5... temp
                     allocation._check_approval_update('validate')
             except (AccessError, UserError):
                 allocation.can_approve = False
