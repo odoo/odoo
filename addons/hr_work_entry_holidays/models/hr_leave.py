@@ -186,6 +186,10 @@ class HrLeave(models.Model):
         self.env['hr.work.entry'].create(vals_list)
         return res
 
+    def unlink(self):
+        self.action_refuse()
+        return super().unlink()
+
     def _get_number_of_days(self, date_from, date_to, employee_id):
         """ If an employee is currently working full time but asks for time off next month
             where he has a new contract working only 3 days/week. This should be taken into
