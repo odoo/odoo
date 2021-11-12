@@ -89,25 +89,34 @@ class HolidaysRequest(models.Model):
             lt = self.env['hr.leave.type'].browse(defaults.get('holiday_status_id'))
             defaults['state'] = 'confirm'
 
+        if 'date_from' and 'date_to' in fields_list:
+            now = fields.Datetime.now()
+            if 'date_from' not in defaults:
+                defaults['date_from'] = now.replace(hour=0, minute=0, second=0)
+            if 'date_to' not in defaults:
+                defaults['date_to'] = now.replace(hour=23, minute=59, second=59)
+            if (not self._context.get('leave_compute_date_from_to') and defaults['date_from'].time() == time(0, 0, 0) and
+                    defaults['date_to'].time() == time(23, 59, 59)):
+                employee = self.env['hr.employee'].browse(defaults['employee_id']) if defaults.get('employee_id') else self.env.user.employee_id
+
+                date_from = defaults['date_from'].date()
+                date_to = defaults['date_to'].date()
+
+                attendance_from, attendance_to = self._get_attendances(employee, date_from, date_to)
+
+                defaults['date_from'] = self._get_start_or_end_from_attendance(attendance_from.hour_from, date_from, employee)
+                defaults['date_to'] = self._get_start_or_end_from_attendance(attendance_to.hour_to, date_to, employee)
+
+        defaults = self._default_get_request_parameters(defaults)
+
         return defaults
 
     def _default_get_request_parameters(self, values):
         new_values = dict(values)
-        global_from, global_to = False, False
-        # TDE FIXME: consider a mapping on several days that is not the standard
-        # calendar widget 7-19 in user's TZ is some custom input
         if values.get('date_from'):
-            user_tz = self.env.user.tz or 'UTC'
-            localized_dt = timezone('UTC').localize(values['date_from']).astimezone(timezone(user_tz))
-            global_from = localized_dt.time().hour == 7 and localized_dt.time().minute == 0
-            new_values['request_date_from'] = localized_dt.date()
+            new_values['request_date_from'] = values['date_from'].date()
         if values.get('date_to'):
-            user_tz = self.env.user.tz or 'UTC'
-            localized_dt = timezone('UTC').localize(values['date_to']).astimezone(timezone(user_tz))
-            global_to = localized_dt.time().hour == 19 and localized_dt.time().minute == 0
-            new_values['request_date_to'] = localized_dt.date()
-        if global_from and global_to:
-            new_values['request_unit_custom'] = True
+            new_values['request_date_to'] = values['date_to'].date()
         return new_values
 
     active = fields.Boolean(default=True)
@@ -275,7 +284,6 @@ class HolidaysRequest(models.Model):
     # request type
     request_unit_half = fields.Boolean('Half Day', compute='_compute_request_unit_half', store=True, readonly=False)
     request_unit_hours = fields.Boolean('Custom Hours', compute='_compute_request_unit_hours', store=True, readonly=False)
-    request_unit_custom = fields.Boolean('Days-long custom hours', compute='_compute_request_unit_custom', store=True, readonly=False)
     # view
     is_hatched = fields.Boolean('Hatched', compute='_compute_is_hatched')
     is_striked = fields.Boolean('Striked', compute='_compute_is_hatched')
@@ -391,7 +399,7 @@ class HolidaysRequest(models.Model):
                 leave.holiday_allocation_id = False
 
     @api.depends('request_date_from_period', 'request_hour_from', 'request_hour_to', 'request_date_from', 'request_date_to',
-                'request_unit_half', 'request_unit_hours', 'request_unit_custom', 'employee_id')
+                 'request_unit_half', 'request_unit_hours', 'employee_id')
     def _compute_date_from_to(self):
         for holiday in self:
             if holiday.request_date_from and holiday.request_date_to and holiday.request_date_from > holiday.request_date_to:
@@ -403,85 +411,40 @@ class HolidaysRequest(models.Model):
             else:
                 if holiday.request_unit_half or holiday.request_unit_hours:
                     holiday.request_date_to = holiday.request_date_from
-                resource_calendar_id = holiday.employee_id.resource_calendar_id or self.env.company.resource_calendar_id
-                domain = [('calendar_id', '=', resource_calendar_id.id), ('display_type', '=', False)]
-                attendances = self.env['resource.calendar.attendance'].read_group(domain, ['ids:array_agg(id)', 'hour_from:min(hour_from)', 'hour_to:max(hour_to)', 'week_type', 'dayofweek', 'day_period'], ['week_type', 'dayofweek', 'day_period'], lazy=False)
 
-                # Must be sorted by dayofweek ASC and day_period DESC
-                attendances = sorted([DummyAttendance(group['hour_from'], group['hour_to'], group['dayofweek'], group['day_period'], group['week_type']) for group in attendances], key=lambda att: (att.dayofweek, att.day_period != 'morning'))
-
-                default_value = DummyAttendance(0, 0, 0, 'morning', False)
-
-                if resource_calendar_id.two_weeks_calendar:
-                    # find week type of start_date
-                    start_week_type = self.env['resource.calendar.attendance'].get_week_type(holiday.request_date_from)
-                    attendance_actual_week = [att for att in attendances if att.week_type is False or int(att.week_type) == start_week_type]
-                    attendance_actual_next_week = [att for att in attendances if att.week_type is False or int(att.week_type) != start_week_type]
-                    # First, add days of actual week coming after date_from
-                    attendance_filtred = [att for att in attendance_actual_week if int(att.dayofweek) >= holiday.request_date_from.weekday()]
-                    # Second, add days of the other type of week
-                    attendance_filtred += list(attendance_actual_next_week)
-                    # Third, add days of actual week (to consider days that we have remove first because they coming before date_from)
-                    attendance_filtred += list(attendance_actual_week)
-                    end_week_type = self.env['resource.calendar.attendance'].get_week_type(holiday.request_date_to)
-                    attendance_actual_week = [att for att in attendances if att.week_type is False or int(att.week_type) == end_week_type]
-                    attendance_actual_next_week = [att for att in attendances if att.week_type is False or int(att.week_type) != end_week_type]
-                    attendance_filtred_reversed = list(reversed([att for att in attendance_actual_week if int(att.dayofweek) <= holiday.request_date_to.weekday()]))
-                    attendance_filtred_reversed += list(reversed(attendance_actual_next_week))
-                    attendance_filtred_reversed += list(reversed(attendance_actual_week))
-
-                    # find first attendance coming after first_day
-                    attendance_from = attendance_filtred[0]
-                    # find last attendance coming before last_day
-                    attendance_to = attendance_filtred_reversed[0]
-                else:
-                    # find first attendance coming after first_day
-                    attendance_from = next((att for att in attendances if int(att.dayofweek) >= holiday.request_date_from.weekday()), attendances[0] if attendances else default_value)
-                    # find last attendance coming before last_day
-                    attendance_to = next((att for att in reversed(attendances) if int(att.dayofweek) <= holiday.request_date_to.weekday()), attendances[-1] if attendances else default_value)
+                attendance_from, attendance_to = holiday._get_attendances(holiday.employee_id, holiday.request_date_from, holiday.request_date_to)
 
                 compensated_request_date_from = holiday.request_date_from
                 compensated_request_date_to = holiday.request_date_to
 
                 if holiday.request_unit_half:
                     if holiday.request_date_from_period == 'am':
-                        hour_from = float_to_time(attendance_from.hour_from)
-                        hour_to = float_to_time(attendance_from.hour_to)
+                        hour_from = attendance_from.hour_from
+                        hour_to = attendance_from.hour_to
                     else:
-                        hour_from = float_to_time(attendance_to.hour_from)
-                        hour_to = float_to_time(attendance_to.hour_to)
+                        hour_from = attendance_to.hour_from
+                        hour_to = attendance_to.hour_to
                 elif holiday.request_unit_hours:
-                    hour_from = float_to_time(float(holiday.request_hour_from))
-                    hour_to = float_to_time(float(holiday.request_hour_to))
-                elif holiday.request_unit_custom:
-                    hour_from = holiday.date_from.time()
-                    hour_to = holiday.date_to.time()
-                    compensated_request_date_from = holiday._adjust_date_based_on_tz(holiday.request_date_from, hour_from)
-                    compensated_request_date_to = holiday._adjust_date_based_on_tz(holiday.request_date_to, hour_to)
+                    hour_from = holiday.request_hour_from
+                    hour_to = holiday.request_hour_to
                 else:
-                    hour_from = float_to_time(attendance_from.hour_from)
-                    hour_to = float_to_time(attendance_to.hour_to)
+                    hour_from = attendance_from.hour_from
+                    hour_to = attendance_to.hour_to
 
-                holiday.date_from = timezone(holiday.tz).localize(datetime.combine(compensated_request_date_from, hour_from)).astimezone(UTC).replace(tzinfo=None)
-                holiday.date_to = timezone(holiday.tz).localize(datetime.combine(compensated_request_date_to, hour_to)).astimezone(UTC).replace(tzinfo=None)
+                holiday.date_from = self._get_start_or_end_from_attendance(hour_from, compensated_request_date_from, holiday.employee_id or holiday)
+                holiday.date_to = self._get_start_or_end_from_attendance(hour_to, compensated_request_date_to, holiday.employee_id or holiday)
 
-    @api.depends('holiday_status_id', 'request_unit_hours', 'request_unit_custom')
+    @api.depends('holiday_status_id', 'request_unit_hours')
     def _compute_request_unit_half(self):
         for holiday in self:
-            if holiday.holiday_status_id or holiday.request_unit_hours or holiday.request_unit_custom:
+            if holiday.holiday_status_id or holiday.request_unit_hours:
                 holiday.request_unit_half = False
 
-    @api.depends('holiday_status_id', 'request_unit_half', 'request_unit_custom')
+    @api.depends('holiday_status_id', 'request_unit_half')
     def _compute_request_unit_hours(self):
         for holiday in self:
-            if holiday.holiday_status_id or holiday.request_unit_half or holiday.request_unit_custom:
+            if holiday.holiday_status_id or holiday.request_unit_half:
                 holiday.request_unit_hours = False
-
-    @api.depends('holiday_status_id', 'request_unit_half', 'request_unit_hours')
-    def _compute_request_unit_custom(self):
-        for holiday in self:
-            if holiday.holiday_status_id or holiday.request_unit_half or holiday.request_unit_hours:
-                holiday.request_unit_custom = False
 
     @api.depends('employee_ids')
     def _compute_from_employee_ids(self):
@@ -577,13 +540,11 @@ class HolidaysRequest(models.Model):
         for leave in self:
             leave.tz_mismatch = leave.tz != self.env.user.tz
 
-    @api.depends('request_unit_custom', 'employee_id', 'holiday_type', 'department_id.company_id.resource_calendar_id.tz', 'mode_company_id.resource_calendar_id.tz')
+    @api.depends('employee_id', 'holiday_type', 'department_id.company_id.resource_calendar_id.tz', 'mode_company_id.resource_calendar_id.tz')
     def _compute_tz(self):
         for leave in self:
             tz = False
-            if leave.request_unit_custom:
-                tz = 'UTC' # custom -> already in UTC
-            elif leave.holiday_type == 'employee':
+            if leave.holiday_type == 'employee':
                 tz = leave.employee_id.tz
             elif leave.holiday_type == 'department':
                 tz = leave.department_id.company_id.resource_calendar_id.tz
@@ -780,16 +741,22 @@ class HolidaysRequest(models.Model):
             if holiday.state in ['cancel', 'refuse', 'validate1', 'validate']:
                 raise ValidationError(_("This modification is not allowed in the current state."))
 
+    def _get_number_of_days_batch(self, date_from, date_to, employee_ids):
+        """ Returns a float equals to the timedelta between two dates given as string."""
+        employee = self.env['hr.employee'].browse(employee_ids)
+        # We force the company in the domain as we are more than likely in a compute_sudo
+        domain = [('company_id', 'in', self.env.company.ids + self.env.context.get('allowed_company_ids', []))]
+
+        result = employee._get_work_days_data_batch(date_from, date_to, domain=domain)
+        for employee_id in result:
+            if self.request_unit_half and result[employee_id]['hours'] > 0:
+                result[employee_id]['days'] = 0.5
+        return result
+
     def _get_number_of_days(self, date_from, date_to, employee_id):
         """ Returns a float equals to the timedelta between two dates given as string."""
         if employee_id:
-            employee = self.env['hr.employee'].browse(employee_id)
-            # We force the company in the domain as we are more than likely in a compute_sudo
-            domain = [('company_id', 'in', self.env.company.ids + self.env.context.get('allowed_company_ids', []))]
-            result = employee._get_work_days_data_batch(date_from, date_to, domain=domain)[employee.id]
-            if self.request_unit_half and result['hours'] > 0:
-                result['days'] = 0.5
-            return result
+            return self._get_number_of_days_batch(date_from, date_to, employee_id)[employee_id]
 
         today_hours = self.env.company.resource_calendar_id.get_work_hours_count(
             datetime.combine(date_from.date(), time.min),
@@ -966,6 +933,38 @@ class HolidaysRequest(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        leave_date_employees = defaultdict(list)
+        employee_ids = []
+        for values in vals_list:
+            if values.get('employee_id'):
+                employee_ids.append(values['employee_id'])
+                if values.get('date_from') and values.get('date_to'):
+                    date_from = fields.Datetime.to_datetime(values['date_from'])
+                    date_to = fields.Datetime.to_datetime(values['date_to'])
+                    if values['employee_id'] not in leave_date_employees[(date_from, date_to)]:
+                        leave_date_employees[(date_from, date_to)].append(values['employee_id'])
+        employees = self.env['hr.employee'].browse(employee_ids)
+        if self._context.get('leave_compute_date_from_to') and employees:
+            employee_leave_date_duration = defaultdict(dict)
+            for (date_from, date_to), employee_ids in leave_date_employees.items():
+                employee_leave_date_duration[(date_from, date_to)] = self._get_number_of_days_batch(date_from, date_to, employee_ids)
+            for values in vals_list:
+                employee_id = values.get('employee_id')
+                if employee_id and values.get('date_from') and values.get('date_to'):
+                    date_from = values.get('date_from')
+                    date_to = values.get('date_to')
+                    employee = employees.filtered(lambda emp: emp.id == employee_id)
+                    attendance_from, attendance_to = self._get_attendances(employee, date_from.date(), date_to.date())
+                    hour_from = max(values['date_from'].replace(tzinfo=UTC).astimezone(timezone(self.env.user.tz)).time(), float_to_time(attendance_from.hour_from))
+                    hour_to = min(values['date_to'].replace(tzinfo=UTC).astimezone(timezone(self.env.user.tz)).time(), float_to_time(attendance_to.hour_to))
+                    hour_from = hour_from.hour + hour_from.minute / 60
+                    hour_to = hour_to.hour + hour_to.minute / 60
+
+                    values['date_from'] = self._get_start_or_end_from_attendance(hour_from, date_from.date(), employee)
+                    values['date_to'] = self._get_start_or_end_from_attendance(hour_to, date_to.date(), employee)
+                    values['request_date_from'], values['request_date_to'] = values['date_from'].date(), values['date_to'].date()
+                    values['number_of_days'] = employee_leave_date_duration[(date_from, date_to)][values['employee_id']]['days']
+
         """ Override to avoid automatic logging of creation """
         if not self._context.get('leave_fast_create'):
             leave_types = self.env['hr.leave.type'].browse([values.get('holiday_status_id') for values in vals_list if values.get('holiday_status_id')])
@@ -976,7 +975,7 @@ class HolidaysRequest(models.Model):
                 leave_type_id = values.get('holiday_status_id')
                 # Handle automatic department_id
                 if not values.get('department_id'):
-                    values.update({'department_id': self.env['hr.employee'].browse(employee_id).department_id.id})
+                    values.update({'department_id': employees.filtered(lambda emp: emp.id == employee_id).department_id.id})
 
                 # Handle no_validation
                 if mapped_validation_type[leave_type_id] == 'no_validation':
@@ -1358,6 +1357,10 @@ class HolidaysRequest(models.Model):
                     leave_fast_create=True,
                     no_calendar_sync=True,
                     leave_skip_state_check=True,
+                    # date_from and date_to are computed based on the employee tz
+                    # If _compute_date_from_to is used instead, it will trigger _compute_number_of_days
+                    # and create a conflict on the number of days calculation between the different leaves
+                    leave_compute_date_from_to=True,
                 ).create(values)
 
                 leaves._validate_leave_request()
@@ -1559,3 +1562,52 @@ class HolidaysRequest(models.Model):
     @api.model
     def get_unusual_days(self, date_from, date_to=None):
         return self.env.user.employee_id.sudo(False)._get_unusual_days(date_from, date_to)
+
+    def _get_start_or_end_from_attendance(self, hour, date, employee):
+        hour = float_to_time(float(hour))
+        compensated_request_date = self._adjust_date_based_on_tz(date, hour)
+        holiday_tz = timezone(employee.tz or self.env.user.tz)
+        return holiday_tz.localize(datetime.combine(compensated_request_date, hour)).astimezone(UTC).replace(tzinfo=None)
+
+    def _get_attendances(self, employee, request_date_from, request_date_to):
+        resource_calendar_id = employee.resource_calendar_id or self.env.company.resource_calendar_id
+        domain = [('calendar_id', '=', resource_calendar_id.id), ('display_type', '=', False)]
+        attendances = self.env['resource.calendar.attendance'].read_group(domain,
+            ['ids:array_agg(id)', 'hour_from:min(hour_from)', 'hour_to:max(hour_to)',
+             'week_type', 'dayofweek', 'day_period'],
+            ['week_type', 'dayofweek', 'day_period'], lazy=False)
+
+        # Must be sorted by dayofweek ASC and day_period DESC
+        attendances = sorted([DummyAttendance(group['hour_from'], group['hour_to'], group['dayofweek'], group['day_period'], group['week_type']) for group in attendances], key=lambda att: (att.dayofweek, att.day_period != 'morning'))
+
+        default_value = DummyAttendance(0, 0, 0, 'morning', False)
+
+        if resource_calendar_id.two_weeks_calendar:
+            # find week type of start_date
+            start_week_type = self.env['resource.calendar.attendance'].get_week_type(request_date_from)
+            attendance_actual_week = [att for att in attendances if att.week_type is False or int(att.week_type) == start_week_type]
+            attendance_actual_next_week = [att for att in attendances if att.week_type is False or int(att.week_type) != start_week_type]
+            # First, add days of actual week coming after date_from
+            attendance_filtred = [att for att in attendance_actual_week if int(att.dayofweek) >= request_date_from.weekday()]
+            # Second, add days of the other type of week
+            attendance_filtred += list(attendance_actual_next_week)
+            # Third, add days of actual week (to consider days that we have remove first because they coming before date_from)
+            attendance_filtred += list(attendance_actual_week)
+            end_week_type = self.env['resource.calendar.attendance'].get_week_type(request_date_to)
+            attendance_actual_week = [att for att in attendances if att.week_type is False or int(att.week_type) == end_week_type]
+            attendance_actual_next_week = [att for att in attendances if att.week_type is False or int(att.week_type) != end_week_type]
+            attendance_filtred_reversed = list(reversed([att for att in attendance_actual_week if int(att.dayofweek) <= request_date_to.weekday()]))
+            attendance_filtred_reversed += list(reversed(attendance_actual_next_week))
+            attendance_filtred_reversed += list(reversed(attendance_actual_week))
+
+            # find first attendance coming after first_day
+            attendance_from = attendance_filtred[0]
+            # find last attendance coming before last_day
+            attendance_to = attendance_filtred_reversed[0]
+        else:
+            # find first attendance coming after first_day
+            attendance_from = next((att for att in attendances if int(att.dayofweek) >= request_date_from.weekday()), attendances[0] if attendances else default_value)
+            # find last attendance coming before last_day
+            attendance_to = next((att for att in reversed(attendances) if int(att.dayofweek) <= request_date_to.weekday()), attendances[-1] if attendances else default_value)
+
+        return (attendance_from, attendance_to)
