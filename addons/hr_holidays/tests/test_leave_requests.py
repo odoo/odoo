@@ -249,8 +249,8 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'request_hour_from': '8',  # 8:00 AM in the company's timezone
             'request_hour_to': '17',  # 5:00 PM in the company's timezone
         })
-        self.assertEqual(leave.date_from, datetime(2019, 5, 5, 20, 0, 0), "It should have been localized before saving in UTC")
-        self.assertEqual(leave.date_to, datetime(2019, 5, 6, 5, 0, 0), "It should have been localized before saving in UTC")
+        self.assertEqual(leave.date_from, datetime(2019, 5, 6, 6, 0, 0), "It should have been localized in the Employee timezone")
+        self.assertEqual(leave.date_to, datetime(2019, 5, 6, 15, 0, 0), "It should have been localized in the Employee timezone")
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_timezone_company_validated(self):
@@ -264,13 +264,15 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         leave_form.holiday_status_id = self.holidays_type_1
         leave_form.request_date_from = date(2019, 5, 6)
         leave_form.request_date_to = date(2019, 5, 6)
+        leave_form.date_from = datetime(2019, 5, 6, 0, 0, 0)
+        leave_form.date_to = datetime(2019, 5, 6, 23, 59, 59)
         leave = leave_form.save()
         leave.state = 'confirm'
         leave.action_validate()
         employee_leave = self.env['hr.leave'].search([('employee_id', '=', employee.id)])
         self.assertEqual(
-            employee_leave.request_date_from, date(2019, 5, 6),
-            "Timezone should be kept between company and employee leave"
+            employee_leave.request_date_from, date(2019, 5, 5),
+            "Timezone should be be adapted on the employee leave"
         )
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
@@ -290,8 +292,8 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'request_hour_from': '8',  # 8:00 AM in the department's timezone
             'request_hour_to': '17',  # 5:00 PM in the department's timezone
         })
-        self.assertEqual(leave.date_from, datetime(2019, 5, 5, 20, 0, 0), "It should have been localized before saving in UTC")
-        self.assertEqual(leave.date_to, datetime(2019, 5, 6, 5, 0, 0), "It should have been localized before saving in UTC")
+        self.assertEqual(leave.date_from, datetime(2019, 5, 6, 6, 0, 0), "It should have been localized in the Employee timezone")
+        self.assertEqual(leave.date_to, datetime(2019, 5, 6, 15, 0, 0), "It should have been localized in the Employee timezone")
 
     def test_number_of_hours_display(self):
         # Test that the field number_of_hours_dispay doesn't change
@@ -416,12 +418,10 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         tz = timezone(tz)
 
         # Mimic what is done by the calendar widget when clicking on a day. It
-        # will take the local datetime from 7:00 to 19:00 and then convert it
-        # to UTC before sending it. Values here are for PST (UTC -8) and
-        # represent a leave on 2019/1/1 from 7:00 to 19:00 local time.
+        # will take the local datetime from 0:00 to 23:59
         values = {
-            'date_from': tz.localize(local_date_from).astimezone(UTC).replace(tzinfo=None),
-            'date_to': tz.localize(local_date_to).astimezone(UTC).replace(tzinfo=None),  # note that this can be the next day in UTC
+            'date_from': local_date_from,
+            'date_to': local_date_to,  # note that this can be the next day in UTC
         }
         values.update(self.env['hr.leave'].with_user(self.user_employee_id)._default_get_request_parameters(values))
 
@@ -449,14 +449,14 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         # 12 13 14 15 16 17 18
         # 19 20 21 22 23 24 25
         # 26 27 28 29 30 31
-        local_date_from = datetime(2020, 1, 1, 7, 0, 0)
-        local_date_to = datetime(2020, 1, 1, 19, 0, 0)
+        local_date_from = datetime(2020, 1, 1, 0, 0, 0)
+        local_date_to = datetime(2020, 1, 1, 23, 59, 59)
         for tz in timezones_to_test:
             self._test_leave_with_tz(tz, local_date_from, local_date_to, 1)
 
         # We, Th, Fr, Mo, Tu, We => 6 days
-        local_date_from = datetime(2020, 1, 1, 7, 0, 0)
-        local_date_to = datetime(2020, 1, 8, 19, 0, 0)
+        local_date_from = datetime(2020, 1, 1, 0, 0, 0)
+        local_date_to = datetime(2020, 1, 8, 23, 59, 59)
         for tz in timezones_to_test:
             self._test_leave_with_tz(tz, local_date_from, local_date_to, 6)#TODO JUD check why this fails
 
