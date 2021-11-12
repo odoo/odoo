@@ -1089,6 +1089,8 @@ class Picking(models.Model):
                 moves_to_backorder.mapped('package_level_id').write({'picking_id':backorder_picking.id})
                 moves_to_backorder.mapped('move_line_ids').write({'picking_id': backorder_picking.id})
                 backorders |= backorder_picking
+        if backorders:
+            backorders.action_assign()
         return backorders
 
     def _log_activity_get_documents(self, orig_obj_changes, stream_field, stream, sorted_method=False, groupby_method=False):
