@@ -103,6 +103,9 @@ class PaymentPortal(portal.CustomerPortal):
         company = request.env['res.company'].sudo().browse(company_id)
         currency_id = currency_id or company.currency_id.id
 
+        # Make sure that the company passed as parameter matches the partner's company.
+        PaymentPortal.ensure_matching_companies(partner_sudo, company)
+
         # Make sure that the currency exists and is active
         currency = request.env['res.currency'].browse(currency_id).exists()
         if not currency or not currency.active:
@@ -429,3 +432,22 @@ class PaymentPortal(portal.CustomerPortal):
             return float(str_value)
         except (TypeError, ValueError, OverflowError):
             return None
+
+    @staticmethod
+    def ensure_matching_companies(partner, document_company):
+        """ Check that the partner's company is the same as the document's company.
+
+        If the partner company is not set, the check passes. If the companies don't match, a
+        `UserError` is raised.
+
+        :param recordset partner: The partner on behalf on which the payment is made, as a
+                                  `res.partner` record.
+        :param recordset document_company: The company of the document being paid, as a
+                                           `res.company` record.
+        :return: None
+        :raise UserError: If the companies don't match.
+        """
+        if partner.company_id and partner.company_id != document_company:
+            raise UserError(
+                _("Please switch to company '%s' to make this payment.", document_company.name)
+            )
