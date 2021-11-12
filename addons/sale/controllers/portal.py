@@ -186,6 +186,12 @@ class CustomerPortal(portal.CustomerPortal):
         # Payment values
         if order_sudo.has_to_be_paid():
             logged_in = not request.env.user._is_public()
+
+            # Make sure that the partner's company matches the sales order's company.
+            payment_portal.PaymentPortal.ensure_matching_companies(
+                order_sudo.partner_id, order_sudo.company_id
+            )
+
             acquirers_sudo = request.env['payment.acquirer'].sudo()._get_compatible_acquirers(
                 order_sudo.company_id.id,
                 order_sudo.partner_id.id,
