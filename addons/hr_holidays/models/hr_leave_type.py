@@ -347,13 +347,15 @@ class HolidaysType(models.Model):
             holiday_status.closest_allocation_to_expire = result.get('closest_allocation_to_expire', 0)
 
     def _compute_allocation_count(self):
-        date_from = fields.Datetime.to_string(datetime.datetime.now().replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0))
+        min_datetime = fields.Datetime.to_string(datetime.datetime.now().replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0))
+        max_datetime = fields.Datetime.to_string(datetime.datetime.now().replace(month=12, day=31, hour=23, minute=59, second=59))
         domain = [
             ('holiday_status_id', 'in', self.ids),
-            '|',
-            ('date_from', '>=', date_from),
-            ('date_from', '=', False),
+            ('date_from', '>=', min_datetime),
+            ('date_from', '<=', max_datetime),
+            ('state', 'in', ('confirm', 'validate')),
         ]
+
         grouped_res = self.env['hr.leave.allocation'].read_group(
             domain,
             ['holiday_status_id'],
@@ -364,9 +366,16 @@ class HolidaysType(models.Model):
             allocation.allocation_count = grouped_dict.get(allocation.id, 0)
 
     def _compute_group_days_leave(self):
+        min_datetime = fields.Datetime.to_string(datetime.datetime.now().replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0))
+        max_datetime = fields.Datetime.to_string(datetime.datetime.now().replace(month=12, day=31, hour=23, minute=59, second=59))
+        domain = [
+            ('holiday_status_id', 'in', self.ids),
+            ('date_from', '>=', min_datetime),
+            ('date_from', '<=', max_datetime),
+            ('state', 'in', ('validate', 'validate1', 'confirm')),
+        ]
         grouped_res = self.env['hr.leave'].read_group(
-            [('holiday_status_id', 'in', self.ids),
-             ('date_from', '>=', fields.Datetime.to_string(datetime.datetime.now().replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0)))],
+            domain,
             ['holiday_status_id'],
             ['holiday_status_id'],
         )
@@ -429,13 +438,12 @@ class HolidaysType(models.Model):
                 datetime.datetime.now().replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0))
         action['domain'] = [
             ('holiday_status_id', 'in', self.ids),
-            '|',
-            ('date_from', '>=', date_from),
-            ('date_from', '=', False),
         ]
         action['context'] = {
             'default_holiday_type': 'department',
             'default_holiday_status_id': self.ids[0],
+            'search_default_approved_state': 1,
+            'search_default_year': 1,
         }
         return action
 
@@ -444,10 +452,11 @@ class HolidaysType(models.Model):
         action = self.env["ir.actions.actions"]._for_xml_id("hr_holidays.hr_leave_action_action_approve_department")
         action['domain'] = [
             ('holiday_status_id', '=', self.ids[0]),
-            ('date_from', '>=', fields.Datetime.to_string(datetime.datetime.now().replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0)))
         ]
         action['context'] = {
             'default_holiday_status_id': self.ids[0],
+            'search_default_need_approval_approved': 1,
+            'search_default_this_year': 1,
         }
         return action
 
