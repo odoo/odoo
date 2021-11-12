@@ -581,13 +581,16 @@ class MailActivityMixin(models.AbstractModel):
     @api.depends('activity_ids.state')
     def _compute_activity_state(self):
         for record in self:
-            states = record.activity_ids.mapped('state')
+            states = record.get_activities_states()
             if 'overdue' in states:
                 record.activity_state = 'overdue'
             elif 'today' in states:
                 record.activity_state = 'today'
             elif 'planned' in states:
                 record.activity_state = 'planned'
+
+    def get_activities_states(self):
+        return self.activity_ids.mapped('state')
 
     @api.depends('activity_ids.date_deadline')
     def _compute_activity_date_deadline(self):
