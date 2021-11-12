@@ -21,19 +21,34 @@
             <form string="Time Off Type">
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button class="oe_stat_button" type="object" name="action_see_days_allocated" icon="fa-calendar" attrs="{'invisible': ['|', ('requires_allocation', '=', 'no'), ('id', '=', False)]}">
+                        <button class="oe_stat_button"
+                                type="object"
+                                name="action_see_days_allocated"
+                                icon="fa-calendar"
+                                attrs="{'invisible': ['|', ('requires_allocation', '=', 'no'), ('id', '=', False)]}"
+                                help="Count of allocations for this time off type (approved or waiting for approbation) with a validity period starting this year.">
                             <div class="o_stat_info">
                                 <field name="allocation_count"/>
                                 <span class="o_stat_text">Allocations</span>
                             </div>
                         </button>
-                        <button class="oe_stat_button" type="object" name="action_see_group_leaves" icon="fa-calendar" attrs="{'invisible': [('id', '=', False)]}">
+                        <button class="oe_stat_button"
+                                type="object"
+                                name="action_see_group_leaves"
+                                icon="fa-calendar"
+                                attrs="{'invisible': [('id', '=', False)]}"
+                                help="Count of time off requests for this time off type (approved or waiting for approbation) with a start date in the current year.">
                             <div class="o_stat_info">
                                 <field name="group_days_leave"/>
                                 <span class="o_stat_text">Time Off</span>
                             </div>
                         </button>
-                        <button class="oe_stat_button" type="object" name="action_see_accrual_plans" icon="fa-calendar" attrs="{'invisible': ['|', ('id', '=', False), ('accrual_count', '=', 0)]}">
+                        <button class="oe_stat_button"
+                                type="object"
+                                name="action_see_accrual_plans"
+                                icon="fa-calendar"
+                                attrs="{'invisible': ['|', ('id', '=', False), ('accrual_count', '=', 0)]}"
+                                help="Count of plans linked to this time off type.">
                             <div class="o_stat_info">
                                 <field name="accrual_count"/>
                                 <span class="o_stat_text">Accruals</span>

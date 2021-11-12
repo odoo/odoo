@@ -11,7 +11,6 @@
                 <field name="allocation_type"/>
                 <filter domain="[('state', '=', 'confirm')]" string="To Approve" name="second_approval"/>
                 <filter string="Approved Allocations" domain="[('state', '=', 'validate')]" name="validated"/>
-                <filter string="Accrual Allocations" domain="[('allocation_type', '=', 'accrual')]" name="accrual_allocation"/>
                 <separator/>
                 <filter name="active_types" string="Active Types" domain="[('holiday_status_id.active', '=', True)]" help="Filters only on allocations that belong to an time off type that is 'active' (active field is True)"/>
                 <separator/>
@@ -25,10 +24,8 @@
                 <separator/>
                 <filter name="year" string="Current Year"
                     domain="[
+                        ('date_from', '&gt;=', context_today().strftime('%Y-1-1')),
                         ('date_from', '&lt;=', context_today().strftime('%Y-12-31')),
-                    '|',
-                        ('date_to', '=', False),
-                        ('date_to', '&gt;=', context_today().strftime('%Y-1-1'))
                     ]"
                      help="Active Allocations"/>
                 <separator/>
@@ -44,6 +41,10 @@
                 <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                         domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
+                <separator/>
+                <filter name="approved_state" string="To Approve or Approved Allocations" invisible="1"
+                    domain="[('state', 'in', ('confirm', 'validate'))]"/>
+                <separator/>
                 <group expand="0" string="Group By">
                     <filter name="group_employee" string="Employee" context="{'group_by':'employee_id'}"/>
                     <filter name="group_type" string="Time Off Type" context="{'group_by':'holiday_status_id'}"/>
