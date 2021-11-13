@@ -35,7 +35,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__total_posts
 msgid "# Posts"
-msgstr ""
+msgstr "# Beiträge"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__total_views
@@ -59,6 +59,7 @@ msgstr ""
 #, python-format
 msgid "%d karma required to close or reopen a post."
 msgstr ""
+"%d Karma benötigt um einen Beitrag zu schließen oder wieder zu öffnen."
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:0
@@ -82,7 +83,7 @@ msgstr ""
 #: code:addons/website_forum/models/forum.py:0
 #, python-format
 msgid "%d karma required to convert your comment to an answer."
-msgstr ""
+msgstr "%d Karma benötigt um Ihren Kommentar in eine Antwort zu verwandeln."
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:0
@@ -94,7 +95,7 @@ msgstr ""
 #: code:addons/website_forum/models/forum.py:0
 #, python-format
 msgid "%d karma required to create a new question."
-msgstr ""
+msgstr "%d Karma benötigt um eine neue Frage zu erstellen."
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:0
@@ -132,7 +133,7 @@ msgstr ""
 #: code:addons/website_forum/models/forum.py:0
 #, python-format
 msgid "%d karma required to post an image or link."
-msgstr ""
+msgstr "%d Karma benötigt um ein Bild oder einen Link zu posten."
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:0
@@ -162,18 +163,18 @@ msgstr ""
 #: code:addons/website_forum/models/forum.py:0
 #, python-format
 msgid "%d karma required to upvote."
-msgstr ""
+msgstr "%d Karma benötigt für Upvote."
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:0
 #, python-format
 msgid "%d karma required to validate a post."
-msgstr ""
+msgstr "%d Karma benötigt um einen Post zu validieren."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "&amp;nbsp;and&amp;nbsp;"
-msgstr ""
+msgstr "&amp;nbsp;and&amp;nbsp;"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -231,6 +232,8 @@ msgid ""
 "<b class=\"d-block\">You have a pending post</b>\n"
 "                        Please wait for a moderator to validate your previous post to be allowed replying questions."
 msgstr ""
+"<b class=\"d-block\">Sie haben einen ausstehenden Beitrag</b>\n"
+"                       Sie müssen auf die Freigabe Ihres vorherigen Beitrages durch einen Moderator warten, bevor Sie weitere Inhalte veröffentlichen können."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
@@ -377,7 +380,7 @@ msgstr ""
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
 msgid "<b>What should I avoid in my answers?</b>"
-msgstr ""
+msgstr "<b>Was sollte ich bei meinen Antworten vermeiden?</b>"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -391,6 +394,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
 msgid "<b>Why can other people edit my questions/answers?</b>"
 msgstr ""
+"<b>Warum können andere Personen meine Fragen/Antworten bearbeiten?</b>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
@@ -432,7 +436,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<i class=\"fa fa-check fa-fw mr-1\"/>Accept"
-msgstr ""
+msgstr "<i class=\"fa fa-check fa-fw mr-1\"/>Akzeptieren"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
@@ -440,6 +444,8 @@ msgid ""
 "<i class=\"fa fa-check text-success d-block display-2\"/>\n"
 "            <b>You've Completely Caught Up!</b><br/>"
 msgstr ""
+"<i class=\"fa fa-check text-success d-block display-2\"/>\n"
+"            <b>Sie sind wieder auf dem neuesten Stand!</b><br/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
@@ -470,7 +476,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
 msgid "<i class=\"fa fa-flag fa-fw\"/> Flagged"
-msgstr ""
+msgstr "<i class=\"fa fa-flag fa-fw\"/> Gekennzeichnet"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
@@ -516,12 +522,12 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
 msgid "<i class=\"fa fa-star fa-fw\"/> Favourites"
-msgstr ""
+msgstr "<i class=\"fa fa-star fa-fw\"/>Favoriten"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
 msgid "<i class=\"fa fa-tags fa-fw\"/> Followed Tags"
-msgstr ""
+msgstr "<i class=\"fa fa-tags fa-fw\"/> Verfolgte Tags"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
@@ -549,11 +555,13 @@ msgid ""
 "<i class=\"fa fa-times\"/> Good morning to all! Please, can someone help "
 "solve my tax computation problem in Canada? Thanks!"
 msgstr ""
+"<i class=\"fa fa-times\"/> Guten Morgen allerseits! Könnte mir bitte jemand "
+"mit meinem Steuerberechnungsproblem in Kanada helfen? Danke!"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "<i class=\"fa fa-user\"/> User"
-msgstr ""
+msgstr "<i class=\"fa fa-user\"/> Benutzer"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
@@ -579,7 +587,7 @@ msgstr "<span aria-label=\"Schließen\">×</span>"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<span class=\"badge badge-info\">Closed</span>"
-msgstr ""
+msgstr "<span class=\"badge badge-info\">Abgeschlossen</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.contact
@@ -613,7 +621,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "<span class=\"mx-1 text-400 d-none d-lg-block\">|</span>"
-msgstr ""
+msgstr "<span class=\"mx-1 text-400 d-none d-lg-block\">|</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
@@ -630,12 +638,12 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "<span class=\"mx-3  mx-lg-2 text-400 d-none d-md-inline\">|</span>"
-msgstr ""
+msgstr "<span class=\"mx-3  mx-lg-2 text-400 d-none d-md-inline\">|</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
 msgid "<span class=\"navbar-text mr-1\">Go to:</span>"
-msgstr ""
+msgstr "<span class=\"navbar-text mr-1\">Gehen Sie zu:</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.tag
@@ -665,6 +673,9 @@ msgid ""
 "                            Best Answer\n"
 "                        </span>"
 msgstr ""
+"<span class=\"o_wforum_answer_correct_badge border small border-success rounded-pill font-weight-bold text-success ml-2 px-2\">\n"
+"                            Beste Antwort\n"
+"                        </span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.close_post
@@ -804,7 +815,7 @@ msgstr "Schubs erlauben"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Amazing! There are no unanswered questions left!"
-msgstr ""
+msgstr "Fantastisch! Es gibt keine unbeantworteten Fragen!"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
@@ -1024,6 +1035,8 @@ msgstr "Basisstufe"
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Be less specific in your wording for a wider search result"
 msgstr ""
+"Seien Sie weniger spezifisch in Ihrer Formulierung, um ein breiteres "
+"Suchergebnis zu erzielen"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
@@ -1353,6 +1366,8 @@ msgstr "Einen neuen Forumsbeitrag erstellen"
 #, python-format
 msgid "Create a new post in this forum by clicking on the button."
 msgstr ""
+"Erstellen Sie einen neuen Beitrag in diesem Forum, indem Sie auf den Button "
+"klicken."
 
 #. module: website_forum
 #: model_terms:ir.actions.act_window,help:website_forum.forum_tag_action
@@ -1408,12 +1423,12 @@ msgstr "Datum"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_searchbar_input_snippet_options
 msgid "Date (high to low)"
-msgstr ""
+msgstr "Datum (absteigend)"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_searchbar_input_snippet_options
 msgid "Date (low to high)"
-msgstr ""
+msgstr "Datum (aufsteigend)"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__default_order
@@ -1596,6 +1611,8 @@ msgid ""
 "Example\n"
 "                        <i class=\"fa fa-question-circle\"/>"
 msgstr ""
+"Beispiel\n"
+"                        <i class=\"fa fa-question-circle\"/>"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_3
@@ -2062,7 +2079,7 @@ msgstr "Ist die Biografie des Erstellers aus seinem Beitrag ersichtlich"
 #: code:addons/website_forum/models/forum.py:0
 #, python-format
 msgid "It is not allowed to modify someone else's vote."
-msgstr ""
+msgstr "Es ist nicht erlaubt, die Bewertung einer anderen Person zu erlauben."
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:0
@@ -2129,7 +2146,7 @@ msgstr "Letzte Änderung am"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__last_post_id
 msgid "Last Post"
-msgstr ""
+msgstr "Letzter Beitrag"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_options
@@ -2273,17 +2290,17 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "My <b>Posts</b>"
-msgstr ""
+msgstr "Meine <b>Beiträge</b>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
 msgid "My Favourites"
-msgstr ""
+msgstr "Meine Favoriten"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
 msgid "My Posts"
-msgstr ""
+msgstr "Meine Beiträge"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__user_vote
@@ -2376,7 +2393,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_all
 msgid "No forum is available yet."
-msgstr ""
+msgstr "Es ist noch kein Forum verfügbar"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
@@ -2386,7 +2403,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.tag
 msgid "No tags"
-msgstr ""
+msgstr "Keine Tags"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_votes
@@ -2406,7 +2423,7 @@ msgstr ""
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_6
 msgid "Not relevant or out dated"
-msgstr ""
+msgstr "Nicht relevant oder veraltet"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_2
@@ -2547,6 +2564,8 @@ msgid ""
 "Please wait for a moderator to validate your previous post before "
 "continuing."
 msgstr ""
+"Bitte warten Sie, bis ein Moderator Ihren vorherigen Beitrag bestätigt hat, "
+"bevor Sie fortfahren."
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_1
@@ -2593,7 +2612,7 @@ msgstr "Antwort veröffentlichen"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__child_ids
 msgid "Post Answers"
-msgstr ""
+msgstr "Antworten veröffentlichen"
 
 #. module: website_forum
 #: model:ir.actions.act_window,name:website_forum.forum_post_reasons_action
@@ -2799,7 +2818,7 @@ msgstr ""
 #: code:addons/website_forum/static/src/xml/website_forum_templates.xml:0
 #, python-format
 msgid "Questions and Answers"
-msgstr ""
+msgstr "Fragen und Antworten"
 
 #. module: website_forum
 #. openerp-web
@@ -2904,7 +2923,7 @@ msgstr "Erneut öffnen"
 #: code:addons/website_forum/controllers/main.py:0
 #, python-format
 msgid "Reply should not be empty."
-msgstr ""
+msgstr "Antwort sollte nicht leer sein."
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__self_reply
@@ -3086,7 +3105,7 @@ msgstr "Einige Benutzer"
 #. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__privacy__private
 msgid "Some users"
-msgstr ""
+msgstr "Einige Benutzer"
 
 #. module: website_forum
 #. openerp-web
@@ -3143,7 +3162,7 @@ msgstr ""
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_8
 msgid "Spam or advertising"
-msgstr ""
+msgstr "Spam oder Werbung"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__state
@@ -3249,7 +3268,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "The question has been closed"
-msgstr ""
+msgstr "Die Frage wurde geschlossen"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -3261,6 +3280,11 @@ msgid ""
 " base content. Such privileges are granted based on user karma level: you "
 "will be able to do the same once your karma gets high enough."
 msgstr ""
+"Daher können Fragen und Antworten wie Wiki-Seiten von erfahrenen Benutzern "
+"dieser Website bearbeitet werden, um die Gesamtqualität des Inhalts der "
+"Wissensdatenbank zu verbessern. Solche Privilegien werden auf der Grundlage "
+"des Karmastandes des Benutzers gewährt: Sie werden dasselbe tun können, "
+"sobald Ihr Karma hoch genug ist."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_all_oe_structure_forum_all_top
@@ -3409,7 +3433,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_list
 msgid "Total Answers"
-msgstr ""
+msgstr "Antworten gesamt"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_list
@@ -3488,7 +3512,7 @@ msgstr "Aktualisierung durch"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__write_date
 msgid "Updated on"
-msgstr ""
+msgstr "Aktualisiert am"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_upvote
@@ -3522,7 +3546,7 @@ msgstr "Aufgewertete Frage (6)"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
 msgid "Use a clear, explicit and concise title"
-msgstr ""
+msgstr "Nutzen Sie einen klaren, eindeutigen und knappen Titel"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__user_id
@@ -3574,7 +3598,7 @@ msgstr "Bewertung"
 #. module: website_forum
 #: model:ir.model.constraint,message:website_forum.constraint_forum_post_vote_vote_uniq
 msgid "Vote already exists !"
-msgstr ""
+msgstr "Bewertung existiert bereits!"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__vote_ids
@@ -3686,7 +3710,7 @@ msgstr ""
 #: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:0
 #, python-format
 msgid "You can share your question once it has been validated"
-msgstr ""
+msgstr "Sie können Ihre Frage teilen, sobald Sie validiert wurde"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:0
@@ -3707,7 +3731,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "You may now participate in our forums."
-msgstr ""
+msgstr "Sie dürfen jetzt in unseren Foren aktiv werden."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
@@ -3811,7 +3835,7 @@ msgstr "abwerten"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
 msgid "e.g. Help"
-msgstr ""
+msgstr "z.B. Hilfe"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_form
@@ -3919,7 +3943,7 @@ msgstr "Textlinks einfügen, Dateien hochladen"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "instead."
-msgstr ""
+msgstr "stattdessen."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help

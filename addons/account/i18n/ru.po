@@ -78,7 +78,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoices_count
 msgid "# Reconciled Invoices"
-msgstr ""
+msgstr "# Сверенных актов"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statements_count
@@ -349,7 +349,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
 msgid "<em>Draft Invoice</em>"
-msgstr "<em>Черновик Счёт-фактуры</em>"
+msgstr "<em>Черновик акта</em>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
@@ -662,7 +662,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
 msgid "<span class=\"o_stat_text\">Invoiced</span>"
-msgstr "<span class=\"o_stat_text\">Счёт выставлен</span>"
+msgstr "<span class=\"o_stat_text\">Акт выставлен</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -818,12 +818,12 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Invoice Date</span>"
-msgstr "<span>Дата счета</span>"
+msgstr "<span>Дата акта</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Invoice Number</span>"
-msgstr "<span>Номер счета</span>"
+msgstr "<span>Номер акта</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -833,7 +833,7 @@ msgstr "<span>Новая запись</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>New Invoice</span>"
-msgstr "<span>Новый счёт</span>"
+msgstr "<span>Новый акт</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -893,7 +893,7 @@ msgstr "<span>Цена за ед.</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Upload Invoices</span>"
-msgstr "<span>Загрузить накладную</span>"
+msgstr "<span>Загрузить акты</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -964,7 +964,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Invoice Date:</strong>"
-msgstr "<strong>Дата счёта:</strong>"
+msgstr "<strong>Дата акта:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
@@ -1268,7 +1268,7 @@ msgstr "Имя владельца счета"
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_send
 msgid "Account Invoice Send"
-msgstr "Счет-фактура отправлена"
+msgstr "Акт отправлен"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__journal_id
@@ -1846,7 +1846,7 @@ msgstr "добавить строку"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Add a line to your invoice"
-msgstr ""
+msgstr "Добавить позицию в акт"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__terms_type__html
@@ -2057,7 +2057,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template__reconcile
 msgid "Allow Invoices & payments Matching"
-msgstr "Разрешить согласование счетов-фактур и платежей"
+msgstr "Разрешить сопоставление актов и платежей"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__allow_payment_tolerance
@@ -2721,9 +2721,9 @@ msgid ""
 "account if this is a Customer Invoice or Vendor Credit Note, otherwise a "
 "Partner bank account number."
 msgstr ""
-"Номер банковского счета, на который уплачивается счет-фактура. Банковский "
-"счет компании, если это счет-фактура или сторно продавца, в противном случае"
-" - номер банковского счета партнера."
+"Номер банковского счета, на который будет платеж по акту. Банковский счет "
+"компании, если это акт заказчику или сторно от поставщика, в противном "
+"случае - номер банковского счета партнера."
 
 #. module: account
 #: model:ir.model,name:account.model_res_partner_bank
@@ -2919,7 +2919,7 @@ msgstr "На основе клиента"
 #: model:ir.model.fields.selection,name:account.selection__account_tax__tax_exigibility__on_invoice
 #: model:ir.model.fields.selection,name:account.selection__account_tax_template__tax_exigibility__on_invoice
 msgid "Based on Invoice"
-msgstr "Базируется на счету"
+msgstr "На основании акта"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__tax_exigibility
@@ -2928,9 +2928,8 @@ msgid ""
 "Based on Invoice: the tax is due as soon as the invoice is validated.\n"
 "Based on Payment: the tax is due as soon as the payment of the invoice is received."
 msgstr ""
-"На основании счета-фактуры: налог взимается, как только счет-фактуру будет "
-"подтверждено. На основании оплаты: налог взимается, как только будет "
-"получена оплата счета-фактуры."
+"На основании акта: налог взимается, как только акт будет подтвержден. На "
+"основании оплаты: налог взимается, как только будет получена оплата по акту."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__tax_exigibility__on_payment
@@ -3200,7 +3199,7 @@ msgstr "Отменено"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Cancelled Invoice"
-msgstr "Отмененный счёт-фактура"
+msgstr "Отмененный акт"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -3466,8 +3465,8 @@ msgid ""
 "Changing VAT number is not allowed once invoices have been issued for your "
 "account. Please contact us directly for this operation."
 msgstr ""
-"Изменение номера НДС не допускается, как только счета были выпущены для "
-"вашей учетной записи. Пожалуйста, свяжитесь с нами для этой операции."
+"Изменение ИНН не допускается, так как были выставлены акты для вашей учетной"
+" записи. Пожалуйста, свяжитесь с нами для этой операции."
 
 #. module: account
 #: code:addons/account/controllers/portal.py:0
@@ -3476,8 +3475,8 @@ msgid ""
 "Changing your company name is not allowed once invoices have been issued for"
 " your account. Please contact us directly for this operation."
 msgstr ""
-"Изменение названия вашей компании не разрешается после выдачи счетов-фактур "
-"для вашего счета. Свяжитесь с нами непосредственно для этой операции."
+"Изменение названия вашей компании не разрешается после выставления актов для"
+" вашей учетной записи. Свяжитесь с нами напрямую для этой операции."
 
 #. module: account
 #: code:addons/account/controllers/portal.py:0
@@ -3486,7 +3485,7 @@ msgid ""
 "Changing your name is not allowed once invoices have been issued for your "
 "account. Please contact us directly for this operation."
 msgstr ""
-"Изменение имени не допускается, как только счета были выпущены для вашей "
+"Изменение имени не допускается, так как были выставлены акты для вашей "
 "учетной записи. Пожалуйста, свяжитесь с нами для этой операции."
 
 #. module: account
@@ -3550,8 +3549,8 @@ msgid ""
 "Check this box if this account allows invoices & payments matching of "
 "journal items."
 msgstr ""
-"Установите этот флажок, если данный счёт допускает сверку позиций журнала со"
-" счетами-фактурами и оплатами."
+"Установите этот флажок, если данный счёт допускает сверку позиций журнала "
+"между актами и оплатами."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__refund_sequence
@@ -3559,8 +3558,8 @@ msgid ""
 "Check this box if you don't want to share the same sequence for invoices and"
 " credit notes made from this journal"
 msgstr ""
-"Установите этот флажок, если не хотите сквозную нумерацию счетов и кредитных"
-" авизо, относящихся к этому журналу "
+"Установите этот флажок, если не хотите сквозную нумерацию актов и кредитных "
+"авизо, относящихся к этому журналу "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__tax_negate
@@ -3575,7 +3574,7 @@ msgstr ""
 msgid ""
 "Check this if the price you use on the product and invoices includes this "
 "tax."
-msgstr "Отметьте, если цена продукта и счёта включает этот налог."
+msgstr "Отметьте, если цена продукта в актах включает этот налог."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_template__reconcile
@@ -4065,7 +4064,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_create_invoice_step
 msgid "Create Invoice"
-msgstr "Создать счёт"
+msgstr "Создать акт"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -4101,7 +4100,7 @@ msgstr "создать сторно"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_invoice_type
 msgid "Create a customer invoice"
-msgstr "Создайте счёт на оплату для клиента"
+msgstr "Создайте акт покупателю"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -4193,14 +4192,14 @@ msgstr ""
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "Create invoice/bill"
-msgstr "Создание счета-фактуры/счета"
+msgstr "Создать акт покупателю/от поставщика"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_invoice_type
 msgid ""
 "Create invoices, register payments and keep track of the discussions with "
 "your customers."
-msgstr "Создавайте счета, заносите платежи и переписывайтесь с клиентами."
+msgstr "Создавайте акты, заносите платежи и переписывайтесь с клиентами."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_invoice_type
@@ -4217,7 +4216,7 @@ msgstr "Создайте первое округление наличности"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_create_invoice_step
 msgid "Create your first invoice."
-msgstr "Создайте ваш первый счёт на оплату."
+msgstr "Создайте ваш первый акт."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__create_uid
@@ -4569,7 +4568,7 @@ msgstr "сторно клиента"
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__out_invoice
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__out_invoice
 msgid "Customer Invoice"
-msgstr "Счёт на оплату для клиента"
+msgstr "Акт покупателю"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -4578,7 +4577,7 @@ msgstr "Счёт на оплату для клиента"
 #: model_terms:ir.ui.view,arch_db:account.res_partner_view_search
 #, python-format
 msgid "Customer Invoices"
-msgstr "Счета заказчику"
+msgstr "Акты покупателю"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -4656,7 +4655,7 @@ msgstr "Настройка"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_invoice_layout_step
 msgid "Customize the look of your invoices."
-msgstr "Настройте вид ваших счетов."
+msgstr "Настройте вид ваших актов."
 
 #. module: account
 #. openerp-web
@@ -4779,10 +4778,10 @@ msgid ""
 "greater than the last day of a month, this number will instead select the "
 "last day of this month."
 msgstr ""
-"День месяца, когда необходимо выставить счет-фактуру. Если ноль или "
-"отрицательное значение, это значение будет проигнорировано, а конкретный "
-"день не будет установлено. Если этот показатель превышает последний день "
-"месяца, этот номер будет избран последним днем этого месяца."
+"День месяца, когда необходимо выставить акт. Если ноль или отрицательное "
+"значение, это значение будет проигнорировано, а конкретный день не будет "
+"установлено. Если этот показатель превышает последний день месяца, этот "
+"номер будет избран последним днем этого месяца."
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -5034,7 +5033,7 @@ msgstr "Описание"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__note
 msgid "Description on the Invoice"
-msgstr "Описание на счет-фактуре"
+msgstr "Описание в акте"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_report_line__carry_over_destination_line_id
@@ -5232,7 +5231,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__qr_code
 msgid "Display QR-code on invoices"
-msgstr ""
+msgstr "Отобразить QR-код в актах"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_currency__display_rounding_warning
@@ -5252,7 +5251,7 @@ msgstr "Способ отображения"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_template__description
 msgid "Display on Invoices"
-msgstr "Показать на счет-фактурах"
+msgstr "Показать в актах"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__preview_ready
@@ -5357,12 +5356,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #, python-format
 msgid "Draft Invoice"
-msgstr "Черновик счета"
+msgstr "Черновик акта"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Draft Invoices"
-msgstr "Черновики счетов"
+msgstr "Черновики актов"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -5988,8 +5987,7 @@ msgstr "Для процента введите коэффициент от 0-100
 msgid ""
 "Forbidden unit price, account and quantity on non-accountable invoice line"
 msgstr ""
-"Запрещена цена за единицу, счет и количество на неподходящем строке счета-"
-"фактуры"
+"Запрещена цена за единицу, счет и количество в подотчетной строке акта"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__force_post
@@ -6079,9 +6077,9 @@ msgid ""
 "vendors. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
-"По этому отчёту можно оценить общую сумму выставленных вам счетов. Можно "
-"также использовать инструмент поиска, чтобы персонализировать ваши отчеты по"
-" счетам, приспособив их под ваши требования."
+"По этому отчёту можно оценить общую сумму выставленных вам актов от "
+"поставщиков. Можно также использовать инструмент поиска, чтобы настроить "
+"отчеты по актам под свои потребности."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_invoice_report_all
@@ -6090,10 +6088,9 @@ msgid ""
 "customers. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
-"Из этого отчета вы можете получить обзор суммы, выставленной в счете вашему "
-"клиенту. Можно также использовать инструмент поиска, чтобы персонализировать"
-" ваши отчеты по выставленным счет-фактурам и таким образом сопоставить этот "
-"анализ согласно вашим потребностям."
+"Из этого отчета вы можете получить обзор суммы выставленных актов вашим "
+"покупателям. Можно также использовать инструмент поиска, чтобы настроить "
+"отчеты по актам под свои потребности."
 
 #. module: account
 #: model:ir.model,name:account.model_account_full_reconcile
@@ -6109,7 +6106,7 @@ msgstr "полный возврат"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_reversal__refund_method__modify
 msgid "Full refund and new draft invoice"
-msgstr "Полный возврат и новая черновик счета"
+msgstr "Полный возврат и новый черновик акта"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -6172,8 +6169,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Get warnings when invoicing specific customers"
-msgstr ""
-"Получайте уведомления при фактурировании счетов по определенным клиентам"
+msgstr "Получайте уведомления при выставлении актов определенным клиентам"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_default__sequence
@@ -6322,7 +6318,7 @@ msgstr "История"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "How total tax amount is computed in orders and invoices"
-msgstr "Как рассчитывается сумма налогов в заказах и счетах"
+msgstr "Как рассчитывается сумма налогов в заказах и актах"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__id
@@ -6498,7 +6494,7 @@ msgid ""
 "analytic account as the invoice line (if any)"
 msgstr ""
 "Если установлено, сумма, вычисленная этим налогом, будет назначена на тот же"
-" самый аналитический счет как и позиция счета-фактуры (если таковые имеются)"
+" самый аналитический счет как и позиция акта (если таковые имеются)"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report_line__is_carryover_used_in_balance
@@ -6561,8 +6557,8 @@ msgid ""
 "If ticked, the accounting entry or invoice receives a hash as soon as it is "
 "posted and cannot be modified anymore."
 msgstr ""
-"Если обозначено, бухгалтерская запись или счет-фактура получает хеш, как "
-"только он будет опубликован, и его больше нельзя будет изменить."
+"Если установлено, бухгалтерская запись или акт получает хеш, как только он "
+"будет опубликован, и его больше нельзя будет изменить."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -6992,22 +6988,22 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 #, python-format
 msgid "Invoice"
-msgstr "Счёт"
+msgstr "Акт"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
 msgid "Invoice #"
-msgstr "Счет на оплату #"
+msgstr "Акт #"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_account_invoice_report_all
 msgid "Invoice Analysis"
-msgstr "Анализ счетов"
+msgstr "Анализ актов"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_account__invoice_count
 msgid "Invoice Count"
-msgstr "Количество счетов"
+msgstr "Количество актов"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -7015,12 +7011,12 @@ msgstr "Количество счетов"
 #: model:mail.message.subtype,name:account.mt_invoice_created
 #, python-format
 msgid "Invoice Created"
-msgstr "Счет создан"
+msgstr "Акт создан"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_out_invoice_tree
 msgid "Invoice Currency"
-msgstr ""
+msgstr "Валюта акта"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__invoice_date
@@ -7029,7 +7025,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Invoice Date"
-msgstr "Дата счёта"
+msgstr "Дата акта"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_filter_type_domain
@@ -7055,22 +7051,22 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_invoice_layout_step
 msgid "Invoice Layout"
-msgstr "Макет счета"
+msgstr "Макет акта"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Invoice Lines"
-msgstr "Позиции счета"
+msgstr "Позиции акта"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_report_view_tree
 msgid "Invoice Number"
-msgstr "Номер счета"
+msgstr "Номер акта"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_payment
 msgid "Invoice Online Payment"
-msgstr "Выставить счет на онлайн-оплату"
+msgstr "Актировать онлайн-оплату"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_outstanding_credits_debits_widget
@@ -7096,18 +7092,18 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tour_upload_bill__preview_invoice
 msgid "Invoice Preview"
-msgstr ""
+msgstr "Предпросмотр акта"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__state
 msgid "Invoice Status"
-msgstr "Статус счета"
+msgstr "Статус акта"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__invoice_tax_id
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__invoice_tax_id
 msgid "Invoice Tax"
-msgstr "Налог по счету"
+msgstr "Налог по акту"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_totals_json
@@ -7144,22 +7140,22 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_line_ids
 #: model:ir.model.fields,field_description:account.field_account_payment__invoice_line_ids
 msgid "Invoice lines"
-msgstr "Позиции счета"
+msgstr "Позиции акта"
 
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_paid
 msgid "Invoice paid"
-msgstr "Счет оплачен"
+msgstr "Акт оплачен"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
 msgid "Invoice send & Print"
-msgstr "Отправить счет и печатать"
+msgstr "Отправить акт и печатать"
 
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_validated
 msgid "Invoice validated"
-msgstr "Счет утвержден"
+msgstr "Акт утвержден"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_date
@@ -7183,7 +7179,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Invoiced"
-msgstr "Счёт выставлен"
+msgstr "Акт выставлен"
 
 #. module: account
 #: code:addons/account/controllers/portal.py:0
@@ -7200,7 +7196,7 @@ msgstr "Счёт выставлен"
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 #, python-format
 msgid "Invoices"
-msgstr "Счета"
+msgstr "Акты"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_invoice
@@ -7217,23 +7213,23 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_pivot
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Invoices Analysis"
-msgstr "Анализ счетов"
+msgstr "Анализ актов"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_report
 msgid "Invoices Statistics"
-msgstr "Статистика по счетам"
+msgstr "Статистика по актам"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "Invoices owed to you"
-msgstr "Счета, причитающиеся вам"
+msgstr "Акты, причитающиеся вам"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Invoices to Validate"
-msgstr "Счета в подтверждение"
+msgstr "Акты на подтверждении"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_bill_ids
@@ -7244,7 +7240,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.report,name:account.account_invoices_without_payment
 msgid "Invoices without Payment"
-msgstr "Счета без оплаты"
+msgstr "Акты без оплаты"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -7265,7 +7261,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Invoicing"
-msgstr "Выставление счетов"
+msgstr "Актирование"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__payment_state__invoicing_legacy
@@ -7353,7 +7349,9 @@ msgstr "Равна нулю "
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_name
 msgid "It creates draft invoices and bills by sending an email."
-msgstr "Это создает черновики счетов через отправки электронной почты."
+msgstr ""
+"Это создает черновик актов покупателю или от поставщика через отправку "
+"электронной почты."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__is_move_sent
@@ -7759,7 +7757,7 @@ msgstr "параметр метки"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__description
 msgid "Label on Invoices"
-msgstr "Обозначение на Счет-фактурах"
+msgstr "Обозначение на актах"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__lang
@@ -7984,9 +7982,9 @@ msgid ""
 "It is set either if there's not at least an unreconciled debit and an "
 "unreconciled credit or if you click the \"Done\" button."
 msgstr ""
-"Последний раз было выполнено сопоставление счетов-фактур и платежей для "
-"данного партнера. Он устанавливается или если нет, по крайней мере, не "
-"согласован дебет и кредит или если вы нажмете кнопку \"Готово\"."
+"Последний раз было выполнено сопоставление актов и платежей для данного "
+"партнера. Он устанавливается или если нет, по крайней мере, не согласован "
+"дебет и кредит или если вы нажмете кнопку \"Готово\"."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -8008,7 +8006,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_res_partner__last_time_entries_checked
 #: model:ir.model.fields,field_description:account.field_res_users__last_time_entries_checked
 msgid "Latest Invoices & Payments Matching Date"
-msgstr "Последние Счета & Платежи, Соответствующие Дате"
+msgstr "Дата последнего сопоставления актов и платежей"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__layout
@@ -8018,7 +8016,7 @@ msgstr "Макет"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sale_activity_user_id
 msgid "Leave empty to assign the Salesperson of the invoice."
-msgstr "Оставьте поле пустым, чтобы назначить продавца счета."
+msgstr "Оставьте поле пустым, чтобы использовать продавца из акта."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_entries_accounting_ledgers
@@ -8033,7 +8031,7 @@ msgstr "Юридические примечания"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__note
 msgid "Legal mentions that have to be printed on the invoices."
-msgstr "Юридическая заметка, которая должна отображаться на счет-фактуре. "
+msgstr "Юридическая заметка, которая будет отображаться в акте. "
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -8049,7 +8047,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Let your customers pay their invoices online"
-msgstr "Пусть ваши клиенты оплачивают свои счета онлайн"
+msgstr "Позволить клиентам производить оплаты онлайн"
 
 #. module: account
 #. openerp-web
@@ -8407,7 +8405,7 @@ msgstr "Название записи сообщения"
 #: model:ir.model.fields,field_description:account.field_res_partner__invoice_warn_msg
 #: model:ir.model.fields,field_description:account.field_res_users__invoice_warn_msg
 msgid "Message for Invoice"
-msgstr "Сообщение при выставлении счета"
+msgstr "Сообщение для акта"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__message_type
@@ -8474,7 +8472,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_accountable_required_fields
 msgid "Missing required account on accountable invoice line."
-msgstr "Отсутствует необходимый счет на подотчетному строке счета-фактуры."
+msgstr "Не указан счет на подотчетной строке акта."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__model_id
@@ -8496,7 +8494,7 @@ msgstr "Изменить сумму налогов"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Monitor your product margins from invoices"
-msgstr "Следите за маржинальностью ваших продуктов по инвойсам"
+msgstr "Следите за маржинальностью ваших продуктов по актам"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__move_id
@@ -8544,7 +8542,7 @@ msgstr "Крайний срок моей активности "
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "My Invoices"
-msgstr "Мои Счета"
+msgstr "Мои акты"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template__name
@@ -8816,8 +8814,8 @@ msgid ""
 "Note that the easiest way to create a credit note is to do it directly\n"
 "                from the customer invoice."
 msgstr ""
-"Запишите, что самый легкий способ создать сторно - это делать это "
-"непосредственно со счета клиента."
+"Запишите, что самый легкий способ создать сторно - сделать это "
+"непосредственно из акта покупателю."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_refund_type
@@ -8859,7 +8857,7 @@ msgstr "Ноябрь"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Now, we'll create your first invoice."
-msgstr "Теперь давайте создадим ваш первый счёт на оплату."
+msgstr "Теперь давайте создадим ваш первый акт."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__num_journals_without_account
@@ -9436,7 +9434,7 @@ msgstr "Просроченные"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Overdue invoices, maturity date passed"
-msgstr "Просроченные счета-фактуры, дата погашения прошла"
+msgstr "Просроченные акты, дата оплаты прошла"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -9462,7 +9460,7 @@ msgstr ""
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Paid Invoices"
-msgstr "Оплаченные Счета-фактуры"
+msgstr "Оплаченные акты"
 
 #. module: account
 #. openerp-web
@@ -10149,9 +10147,7 @@ msgstr "Авансовые платежи"
 #: model:ir.model,name:account.model_account_reconcile_model
 msgid ""
 "Preset to create journal entries during a invoices and payments matching"
-msgstr ""
-"Предустановки для создания записей журнала во время согласования счетов и "
-"платежей"
+msgstr "Шаблон для создания записей журнала во время сверки актов и платежей"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -10296,8 +10292,8 @@ msgid ""
 "Programmation Error: Can't call _get_invoice_matching_query() for different "
 "rules than 'invoice_matching'"
 msgstr ""
-"Ошибка программирования: Не может call _get_invoice_matching_query () для "
-"других правил, чем `invoice_matching`"
+"Программная ошибка: Can't call _get_invoice_matching_query() for different "
+"rules than 'invoice_matching'"
 
 #. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
@@ -10529,7 +10525,7 @@ msgstr "Сверенные Записи"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoice_ids
 msgid "Reconciled Invoices"
-msgstr "согласованные счета"
+msgstr "Сопоставленные акты"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoices_type
@@ -11208,7 +11204,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Search Invoice"
-msgstr "Искать Счет-фактуру"
+msgstr "Искать акт"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -11295,9 +11291,9 @@ msgid ""
 "Select 'Cash' or 'Bank' for journals that are used in customer or vendor payments.\n"
 "Select 'General' for miscellaneous operations journals."
 msgstr ""
-"«Продажи» для журналов счетов заказчиков.\n"
-"«Закупки» для журналов счетов поставщиков.\n"
-"«Наличные» или «Банк» для журналов платежей, используемых покупателем или поставщиком.\n"
+"Выберите «Продажи» для журналов актов покупателю.\n"
+"«Закупки» для журналов актов от поставщиков.\n"
+"«Наличные» или «Банк» для журналов платежей, от покупателя или поставщику.\n"
 "«Общий» для остальных журналов."
 
 #. module: account
@@ -11308,7 +11304,7 @@ msgid ""
 "company, it will automatically take this as an analytic account)"
 msgstr ""
 "Выберите компанию, чей аналитический счёт по умолчанию будет использован "
-"(например,  при создании нового счёта-фактуры или заказа для выбираемой "
+"(например,  при создании нового акта покупателю или заказа при выборе этой "
 "компании в качестве аналитического счёта будет выбран указанный здесь счёт)"
 
 #. module: account
@@ -11319,7 +11315,7 @@ msgid ""
 "partner, it will automatically take this as an analytic account)"
 msgstr ""
 "Выберите партнёра, чей аналитический счёт по умолчанию будет использован "
-"(например,  при создании нового счёта-фактуры или заказа для выбираемого "
+"(например,  при создании нового акта покупателю или заказа при выборе этого "
 "партнёра в качестве аналитического счёта автоматически будет выбран "
 "указанный здесь счёт)"
 
@@ -11331,7 +11327,7 @@ msgid ""
 "product, it will automatically take this as an analytic account)"
 msgstr ""
 "Выберите продукт, чей аналитический счёт по умолчанию будет использован "
-"(например,  при создании нового счёта-фактуры или заказа для выбираемого "
+"(например,  при создании нового акта покупателю или заказа при выборе этого "
 "продукта в качестве аналитического счёта будет выбран указанный здесь счёт)"
 
 #. module: account
@@ -11434,7 +11430,7 @@ msgstr "Отправить email"
 #: code:addons/account/wizard/account_invoice_send.py:0
 #, python-format
 msgid "Send Invoice"
-msgstr "Отправить счет"
+msgstr "Отправить акт"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__payment_type__outbound
@@ -11463,7 +11459,7 @@ msgid ""
 "\n"
 "Only PDF and XML files will be interpreted by Odoo"
 msgstr ""
-"Отправляйте одно отдельное электронное письмо для каждого счета. \n"
+"Отправляйте одно отдельное электронное письмо для каждого акта. \n"
 "\n"
 "Допускается любое расширение файла. \n"
 "\n"
@@ -11844,7 +11840,7 @@ msgid ""
 "Specify which way will be used to round the invoice amount to the rounding "
 "precision"
 msgstr ""
-"Укажите, каким способом будут делаться округления в счетах до необходимой "
+"Укажите, каким способом будут делаться округления в актах до необходимой "
 "точности."
 
 #. module: account
@@ -11885,7 +11881,7 @@ msgstr "Состояние панели приборов учета"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_invoice_onboarding_state
 msgid "State of the account invoice onboarding panel"
-msgstr "Состояние счета-фактуры на панели приборов"
+msgstr "Состояние панели первоначальной настройки для актирования"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_setup_taxes_state
@@ -11920,7 +11916,7 @@ msgstr "Состояние шага набора отчетного период
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_onboarding_invoice_layout_state
 msgid "State of the onboarding invoice layout step"
-msgstr "Состояние этапа размещения счета-фактуры"
+msgstr "Состояние этапа макета актов на панели первоначальной настройки"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_onboarding_sale_tax_state
@@ -13298,10 +13294,10 @@ msgid ""
 "expense (Cost of Goods Sold account) is recognized at the customer invoice "
 "validation."
 msgstr ""
-"Расходы учитываются при проверке счета поставщика, за исключением "
+"Расходы учитываются при подтверждении акта от поставщика, за исключением "
 "англосаксонского бухучета с бесконечной оценке запаса, в этом случае расходы"
-" (счет стоимости продаваемого товара) признаются подтверждением счета-"
-"фактуры клиента."
+" (счет стоимости продаваемого товара) признаются подтверждением акта "
+"покупателю."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13347,8 +13343,8 @@ msgid ""
 "The following invoice(s) will not be sent by email, because the customers "
 "don't have email address."
 msgstr ""
-"Следующие счета-фактуры не будет передаваться по электронной почте, "
-"поскольку клиенты не имеют адреса электронной почты."
+"Следующие акты не будут отправлены по электронной почте, поскольку у клиента"
+" не указан адрес электронной почты."
 
 #. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
@@ -13569,7 +13565,7 @@ msgid ""
 "the invoices & payments matching was performed."
 msgstr ""
 "У партнера есть по крайней мере один невыверенный дебет и кредит с прошлого "
-"раза, когда было выполнено согласование счет-фактур и платежей."
+"раза, когда было выполнено сопоставление актов и платежей."
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -13904,7 +13900,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
 msgid "There are currently no invoices and payments for your account."
-msgstr "Сейчас для вашего счета нет счетов-фактур и платежей."
+msgstr "Для вашей учетной записи нет ни актов, ни платежей."
 
 #. module: account
 #: code:addons/account/wizard/account_validate_account_move.py:0
@@ -14010,7 +14006,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_income_categ_id
 msgid "This account will be used when validating a customer invoice."
-msgstr "Этот счет будет использовано при проверке счета-фактуры клиента."
+msgstr "Этот счет будет использован при подтверждении акта покупателю."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14206,8 +14202,8 @@ msgid ""
 "This payment term will be used instead of the default one for sales orders "
 "and customer invoices"
 msgstr ""
-"Этот платежный срок будет использовано вместо по умолчанию для заказов на "
-"продажу и счетов-фактур клиентов"
+"Эти условия оплаты будут использованы вместо по умолчанию для заказов на "
+"продажу и актов покупателю"
 
 #. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
@@ -14266,7 +14262,7 @@ msgstr "Нужна проверка"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "To Invoice"
-msgstr "Выставить счет"
+msgstr "Выставить акт"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -14325,7 +14321,7 @@ msgstr "Итого по дебету"
 #: model:ir.model.fields,field_description:account.field_res_partner__total_invoiced
 #: model:ir.model.fields,field_description:account.field_res_users__total_invoiced
 msgid "Total Invoiced"
-msgstr "Итого по счетам"
+msgstr "Итого актировано"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__debit
@@ -14560,7 +14556,7 @@ msgstr "Не оплачено"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Unpaid Invoices"
-msgstr "Неоплаченные Счета-фактуры"
+msgstr "Неоплаченные акты"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -14995,7 +14991,7 @@ msgstr "Предупреждение для %s "
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
 msgid "Warning on the Invoice"
-msgstr "Предупреждение при выставлении счета"
+msgstr "Предупреждение при выставлении акта"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -15005,7 +15001,7 @@ msgstr "Предупреждения"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_warning_account
 msgid "Warnings in Invoices"
-msgstr "Предупреждение в счетах"
+msgstr "Предупреждения в актах"
 
 #. module: account
 #: code:addons/account/models/company.py:0
@@ -15270,8 +15266,8 @@ msgid ""
 "invoice when making the payment."
 msgstr ""
 "Здесь вы можете установить стандартную коммуникацию, которая будет "
-"отображаться на счетах-фактурах клиентов, после проверки, чтобы помочь "
-"клиенту обратиться к этому конкретному счета при осуществлении платежа."
+"отображаться на актах покупателю, после проверки, чтобы помочь клиенту "
+"указать этот конкретный акт при осуществлении платежа."
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -15811,7 +15807,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_payment.xml:0
 #, python-format
 msgid "assign to invoice"
-msgstr "назначьте, чтобы выставить счет"
+msgstr "назначьте, чтобы выставить акт"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -15903,7 +15899,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "for this customer. You can allocate them to mark this invoice as paid."
 msgstr ""
-"для этого клиента. Вы можете выделить их, чтобы отметить этот счет как "
+"для этого клиента. Вы можете выделить их, чтобы отметить этот акт как "
 "оплаченный."
 
 #. module: account
@@ -15938,7 +15934,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__invoice_without_email
 msgid "invoice(s) that will not be sent"
-msgstr "счет (ы), который не будет отправлено"
+msgstr "акт(ов) не будут отправлены"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_enabled_tax_country_ids

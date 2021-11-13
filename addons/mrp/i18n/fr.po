@@ -90,7 +90,7 @@ msgstr "%i ordres de travail"
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "%s %s unbuilt in"
-msgstr ""
+msgstr "%s %s déconstruit dans"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_routing.py:0
@@ -2493,6 +2493,8 @@ msgid ""
 "Lock the manufacturing order to prevent changes to what has been consumed or"
 " produced."
 msgstr ""
+"Bloquez l'ordre de fabrication pour bloquer tout changement sur la quantité "
+"consommée ou produite. "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_productivity__loss_id
@@ -3417,7 +3419,7 @@ msgstr "Imprimer"
 #: code:addons/mrp/static/src/xml/mrp.xml:0
 #, python-format
 msgid "Print All Variants"
-msgstr ""
+msgstr "Imprimer Variantes"
 
 #. module: mrp
 #. openerp-web
@@ -3477,12 +3479,12 @@ msgstr "Fabriqué"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_assign_serial__produced_qty
 msgid "Produced Quantity"
-msgstr ""
+msgstr "Quantité Produite"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_assign_serial__serial_numbers
 msgid "Produced Serial Numbers"
-msgstr ""
+msgstr "Numéros de Séries Produits"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__operation_id
@@ -4011,7 +4013,7 @@ msgstr "Jours de sécurité pour chaque opération de production."
 #: code:addons/mrp/static/src/js/mrp_field_one2many_with_copy.js:0
 #, python-format
 msgid "Select Operations to Copy"
-msgstr ""
+msgstr "Sélectionnez les Opérations à copier"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__sequence
@@ -4540,7 +4542,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "The quantity produced of by-products must be positive."
-msgstr ""
+msgstr "La quantité produite de sous-produits doit être positive."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -4562,6 +4564,8 @@ msgid ""
 "The serial number %(number)s used for byproduct %(product_name)s has already"
 " been produced"
 msgstr ""
+"Le numéro de série%(number)s utilisé par le sous-produit %(product_name)s a "
+"déjà été produit. "
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -4675,7 +4679,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "This serial number for product %s has already been produced"
-msgstr ""
+msgstr "Le numéro de série pour le produit %s a déjà été produit."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__time_ids
@@ -4925,7 +4929,7 @@ msgstr ""
 #: model:ir.ui.menu,name:mrp.menu_mrp_unbuild
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Unbuild Orders"
-msgstr "Commandes de déconstruction"
+msgstr "Ordres de déconstruction"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -5009,6 +5013,8 @@ msgstr "Débloquer les Ordres de Fabrication"
 msgid ""
 "Unlock the manufacturing order to adjust what has been consumed or produced."
 msgstr ""
+"Débloquez l'ordre de fabrication pour modifier ce qui a été "
+"consommé/produit."
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_unlocked_by_default

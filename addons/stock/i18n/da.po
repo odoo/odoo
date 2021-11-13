@@ -8,6 +8,7 @@
 # Martin Trigaux, 2021
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2021
 # Mads Søndergaard, 2021
+# Ejner Sønniksen <ejner@vkdata.dk>, 2021
 # Mads Søndergaard, 2021
 # 
 msgid ""
@@ -179,7 +180,7 @@ msgstr "'Operationstype - %s' % object.name"
 msgid ""
 "'Picking Operations - %s - %s' % (object.partner_id.name or '', object.name)"
 msgstr ""
-"'Pluk operationer - %s - %s' % (object.partner_id.name or \", object.name)"
+"'Pluk operationer - %s - %s' % (object.partner_id.name or '', object.name)"
 
 #. module: stock
 #: code:addons/stock/models/stock_production_lot.py:0
@@ -8736,13 +8737,13 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_min_qty
 msgid ""
-"When the virtual stock equals to or goes below the Min Quantity specified "
-"for this field, Odoo generates a procurement to bring the forecasted "
-"quantity to the Max Quantity."
+"When the virtual stock goes below the Min Quantity specified for this field,"
+" Odoo generates a procurement to bring the forecasted quantity to the Max "
+"Quantity."
 msgstr ""
-"Når det virtuelle lager er lig med eller under minimums kvantieten angivet "
-"for dette felt, generere Odoo en bestilling for at bringe den forudsete "
-"kvantitet op på maksimum kvantiteten."
+"Når det virtuelle lager bliver lavere end minimumslageret for det "
+"specificerede felt, vil Odoo generere et indkøb for at bringe det beregnede "
+"antal op på maksimumslageret. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_max_qty

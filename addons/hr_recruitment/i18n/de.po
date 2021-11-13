@@ -25,7 +25,7 @@ msgstr ""
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "1 Meeting"
-msgstr ""
+msgstr "1 Meeting"
 
 #. module: hr_recruitment
 #. openerp-web
@@ -49,6 +49,8 @@ msgstr ""
 #, python-format
 msgid "<b>Drag this card</b>, to qualify him for a first interview."
 msgstr ""
+"<b>Verschieben Sie diese Karte</b>, um den Kandidaten für das erste "
+"Interview zu qualifizieren."
 
 #. module: hr_recruitment
 #. openerp-web
@@ -119,6 +121,8 @@ msgid ""
 "<span attrs=\"{'invisible':[('salary_expected_extra','=',False)]}\"> + "
 "</span>"
 msgstr ""
+"<span attrs=\"{'invisible':[('salary_expected_extra','=',False)]}\"> + "
+"</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -126,6 +130,8 @@ msgid ""
 "<span attrs=\"{'invisible':[('salary_proposed_extra','=',False)]}\"> + "
 "</span>"
 msgstr ""
+"<span attrs=\"{'invisible':[('salary_proposed_extra','=',False)]}\"> + "
+"</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -133,6 +139,8 @@ msgid ""
 "<span class=\"badge badge-pill badge-danger pull-right mr-4\" "
 "attrs=\"{'invisible': [('active', '=', True)]}\">Refused</span>"
 msgstr ""
+"<span class=\"badge badge-pill badge-danger pull-right mr-4\" "
+"attrs=\"{'invisible': [('active', '=', True)]}\">Abgelehnt</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -521,6 +529,33 @@ msgid ""
 "</table>\n"
 "        "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"    <tr>\n"
+"        <td valign=\"top\">\n"
+"            <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"                Hallo,<br/><br/>\n"
+"                Wir möchten Ihnen für Ihr Interesse und Ihre Zeit danken.<br/>\n"
+"                Für Ihre zukünftigen Vorhaben wünschen wir Ihnen alles Gute.\n"
+"                <br/><br/>\n"
+"                Viele Grüße<br/>\n"
+"                <div style=\"font-size: 11px; color: grey;\">\n"
+"                    <t t-if=\"object.user_id\">\n"
+"                        -- <br/>\n"
+"                        <strong t-out=\"object.user_id.name or ''\">Marc Demo</strong><br/>\n"
+"                        E-Mail: <t t-out=\"object.user_id.email or ''\">mark.brown23@example.com</t><br/>\n"
+"                        Telefon: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
+"                    </t>\n"
+"                    <t t-else=\"\">\n"
+"                        -- <br/>\n"
+"                        <t t-out=\"object.company_id.name or ''\">YourCompany</t><br/>\n"
+"                        Das HR Team<br/>\n"
+"                    </t>\n"
+"                </div>\n"
+"            </div>\n"
+"        </td>\n"
+"    </tr>\n"
+"</table>\n"
+"        "
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_refuse
@@ -710,7 +745,7 @@ msgstr "Bewerber/in angelegt"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__email_from
 msgid "Applicant email"
-msgstr ""
+msgstr "Bewerber-E-Mail"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,description:hr_recruitment.mt_applicant_hired
@@ -720,7 +755,7 @@ msgstr "Bewerber wurde eingestellt"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_hired_template
 msgid "Applicant hired<br/>"
-msgstr ""
+msgstr "Bewerber eingestellt<br/>"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__partner_name
@@ -730,7 +765,7 @@ msgstr "Bewerber"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__applicant_without_email
 msgid "Applicant(s) not having email"
-msgstr ""
+msgstr "Bewerber ohne E-Mail-Adresse"
 
 #. module: hr_recruitment
 #: model:mail.template,name:hr_recruitment.email_template_data_applicant_congratulations
@@ -844,7 +879,7 @@ msgstr "Archiviert"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Archived / Refused"
-msgstr ""
+msgstr "Archiviert / Abgelehnt"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__date_open
@@ -920,7 +955,7 @@ msgstr "nach Arbeitsstelle"
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_job_position
 msgid "By Job Positions"
-msgstr ""
+msgstr "Nach Stellenbezeichnung"
 
 #. module: hr_recruitment
 #: model:ir.filters,name:hr_recruitment.hr_applicant_filter_recruiter
@@ -1056,7 +1091,7 @@ msgstr "Einen Job erstellen"
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Create your first Job Position."
-msgstr ""
+msgstr "Erstellen Sie Ihre erste Stellenausschreibung."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__create_uid
@@ -1305,7 +1340,7 @@ msgstr "Betreff für Bewerbungen per E-Mail"
 #: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
 #, python-format
 msgid "Email template must be selected to send a mail"
-msgstr ""
+msgstr "E-Mail-Vorlage muss ausgewählt sein, um E-Mail zu versenden"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_employee
@@ -1326,7 +1361,7 @@ msgstr "Mitarbeiter, der mit dem Bewerber verbunden ist"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_hired_template
 msgid "Employee:"
-msgstr ""
+msgstr "Mitarbeiter:"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_digest_digest__kpi_hr_recruitment_new_colleagues
@@ -1407,7 +1442,7 @@ msgstr "E-Mail generieren"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_applicant_get_refuse_reason
 msgid "Get Refuse Reason"
-msgstr ""
+msgstr "Ablehnungsgrund erfragen"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_degree__sequence
@@ -1796,6 +1831,8 @@ msgstr ""
 #, python-format
 msgid "Let's have a look at how to <b>improve</b> your <b>hiring process</b>."
 msgstr ""
+"Lassen Sie uns herausfinden, wie Sie Ihren <b>Einstellungsprozess</b> "
+"<b>verbessern</b> können."
 
 #. module: hr_recruitment
 #. openerp-web
@@ -1809,7 +1846,7 @@ msgstr "Sehen Sie sich die Bewerber-Pipeline an."
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Let’s create this new employee now."
-msgstr ""
+msgstr "Erstellen Sie diesen neuen Mitarbeiter direkt."
 
 #. module: hr_recruitment
 #. openerp-web
@@ -1882,7 +1919,7 @@ msgstr "Mobil"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Motivations..."
-msgstr ""
+msgstr "Motivation..."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__my_activity_date_deadline
@@ -1941,7 +1978,7 @@ msgstr "Neueingestellte Mitarbeiter"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_employee_view_search
 msgid "Newly Hired"
-msgstr ""
+msgstr "Neu eingestellt"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_employee_action_from_department
@@ -2088,7 +2125,7 @@ msgstr "Personalsachbearbeiter"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__old_application_count
 msgid "Old Application"
-msgstr ""
+msgstr "Alte Bewerbung"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -2117,7 +2154,7 @@ msgstr ""
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Or talk about this applicant privately with your colleagues."
-msgstr ""
+msgstr "Oder sprechen Sie privat mit Ihren Kollegen über diesen Bewerber."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_user_id
@@ -2303,12 +2340,12 @@ msgstr "Ablehnen"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 #, python-format
 msgid "Refuse Reason"
-msgstr ""
+msgstr "Ablehnungsgrund"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_applicant_refuse_reason
 msgid "Refuse Reason of Applicant"
-msgstr ""
+msgstr "Ablehnungsgrund des Bewerbers"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_refuse_reason_action
@@ -2411,7 +2448,7 @@ msgstr "E-Mail versenden"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Send Interview Survey"
-msgstr ""
+msgstr "Interviewumfrage versenden"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
@@ -2428,6 +2465,7 @@ msgstr ""
 #, python-format
 msgid "Send your email. Followers will get a copy of the communication."
 msgstr ""
+"Versenden Sie Ihre E-Mail. Follower erhalten eine Kopie der Unterhaltung."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree__sequence
@@ -2579,7 +2617,7 @@ msgstr "Der Bewerber erhält ein besseres Angebot"
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_2
 msgid "The applicant is not interested anymore"
-msgstr ""
+msgstr "Der Bewerber ist nicht länger interessiert"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__availability
@@ -2728,6 +2766,9 @@ msgid ""
 "process. Select the form to use in the job position detail form. This relies"
 " on the Survey app."
 msgstr ""
+"Verwenden Sie während des Einstellungsverfahrens auf die jeweilige Stelle "
+"zugeschnittene Interviewformulare. Wählen Sie über die Umfrage-App das zu "
+"verwendende Formular im Detailformular für die Stelle aus."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__user_email
@@ -2760,6 +2801,7 @@ msgstr "Website-Kommunikationshistorie"
 #, python-format
 msgid "What do you want to recruit today? Choose a job title..."
 msgstr ""
+"Nach wem sind Sie heute auf der Suche? Wählen Sie eine Stellenbezeichnung..."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
@@ -2772,7 +2814,7 @@ msgstr ""
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "You must define a Contact Name for this applicant."
-msgstr ""
+msgstr "Sie müssen eine Kontaktperson für diesen Bewerber bestimmen."
 
 #. module: hr_recruitment
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_congratulations
@@ -2780,7 +2822,7 @@ msgstr ""
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_not_interested
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_refuse
 msgid "Your Job Application: {{ object.job_id.name }}"
-msgstr ""
+msgstr "Ihre Bewerbung: {{ object.job_id.name }}"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
@@ -2795,7 +2837,7 @@ msgstr "z.B. Verkaufsleiter"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "e.g. Sales Manager 2 year experience"
-msgstr ""
+msgstr "z.B. Sales Manager 2 Jahre Erfahrung"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -2805,4 +2847,4 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.actions.server,name:hr_recruitment.hr_applicant_resumes_server
 msgid "hr.applicant.resumes.server"
-msgstr ""
+msgstr "hr.applicant.resumes.server"

@@ -12,7 +12,6 @@
 # Andrzej Donczew <a.donczew@hadron.eu.com>, 2021
 # Maja Stawicka <mjstwck@wp.pl>, 2021
 # Daniel Demedziuk <daniel.demedziuk@gmail.com>, 2021
-# Martin Trigaux, 2021
 # Wojciech Warczakowski <w.warczakowski@gmail.com>, 2021
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2021
 # Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2021
@@ -30,6 +29,7 @@
 # Maksym <ms@myodoo.pl>, 2021
 # Natalia Gros <nag@odoo.com>, 2021
 # Rafał Kozak <rafal.kozak@openglobe.pl>, 2021
+# Martin Trigaux, 2021
 # 
 msgid ""
 msgstr ""
@@ -37,7 +37,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Rafał Kozak <rafal.kozak@openglobe.pl>, 2021\n"
+"Last-Translator: Martin Trigaux, 2021\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -8649,10 +8649,13 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_min_qty
 msgid ""
-"When the virtual stock equals to or goes below the Min Quantity specified "
-"for this field, Odoo generates a procurement to bring the forecasted "
-"quantity to the Max Quantity."
+"When the virtual stock goes below the Min Quantity specified for this field,"
+" Odoo generates a procurement to bring the forecasted quantity to the Max "
+"Quantity."
 msgstr ""
+"Kiedy zapas wirtualny będzie mniejszy niż Ilość minimalna z tego pola, to "
+"odoo wygeneruje zapotrzebowanie na taką ilość, aby ilość spodziewana doszła "
+"do Ilości maksymalnej."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_max_qty
