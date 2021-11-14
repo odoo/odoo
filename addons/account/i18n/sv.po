@@ -670,7 +670,7 @@ msgid ""
 "Payments/Receipts</span>"
 msgstr ""
 "<span title=\"Outstanding Payments/Receipts\">Utestående "
-"betalningar/intäkter</span>"
+"betalningar/fordringar</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -2264,7 +2264,7 @@ msgstr "Tillämpa denna skatterregion automatiskt ."
 #: model:ir.model.fields,help:account.field_account_fiscal_position__country_group_id
 #: model:ir.model.fields,help:account.field_account_fiscal_position_template__country_group_id
 msgid "Apply only if delivery country matches the group."
-msgstr ""
+msgstr "Tillämpas endast om leveranslandet matchar gruppen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__country_id
@@ -5247,7 +5247,7 @@ msgstr "februari"
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__state_ids
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template__state_ids
 msgid "Federal States"
-msgstr "Federala stater"
+msgstr "Län"
 
 #. module: account
 #. openerp-web
@@ -6169,7 +6169,7 @@ msgstr "Intäktskonto på produktmallen"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Incoming Payments"
-msgstr ""
+msgstr "Inkommande betalningar"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__payment_debit_account_id
@@ -6333,7 +6333,7 @@ msgstr "Intrastat"
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid "Invalid \"Zip Range\", please configure it properly."
-msgstr ""
+msgstr "Felaktigt \"Postnummerintervall\", vänligen konfigurera det korrekt."
 
 #. module: account
 #: code:addons/account/models/company.py:0
@@ -8459,7 +8459,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Outgoing Payments"
-msgstr ""
+msgstr "Utgående betalningar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__mail_server_id
@@ -8487,23 +8487,23 @@ msgstr ""
 #: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid "Outstanding Payments"
-msgstr ""
+msgstr "Utestående betalningar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__payment_credit_account_id
 msgid "Outstanding Payments Account"
-msgstr ""
+msgstr "Konto för utestående betalningar"
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid "Outstanding Receipts"
-msgstr ""
+msgstr "Utestående fordringar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__payment_debit_account_id
 msgid "Outstanding Receipts Account"
-msgstr ""
+msgstr "Konto för utestående fordringar"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -10569,7 +10569,7 @@ msgstr ""
 #. module: account
 #: model:res.groups,name:account.group_account_readonly
 msgid "Show Accounting Features - Readonly"
-msgstr ""
+msgstr "Visa redovisningsfunktioner - skrivskyddad"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__show_decimal_separator
@@ -10584,7 +10584,7 @@ msgstr ""
 #. module: account
 #: model:res.groups,name:account.group_account_user
 msgid "Show Full Accounting Features"
-msgstr "Visa alla redovisningsfunktioner"
+msgstr "Visa fullständiga redovisningsfunktioner"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_name_warning
@@ -11289,7 +11289,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__tax_src_id
 msgid "Tax on Product"
-msgstr ""
+msgstr "Skatt på produkt"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line_template__plus_report_line_ids
@@ -11313,7 +11313,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__tax_dest_id
 msgid "Tax to Apply"
-msgstr ""
+msgstr "Skatt att applicera"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_config_settings__show_line_subtotals_tax_selection__tax_excluded
@@ -13778,6 +13778,8 @@ msgid ""
 "You can't create a new payment without an outstanding payments/receipts "
 "account set on the %s journal."
 msgstr ""
+"Du kan inte skapa en ny betalning om det inte finns ett konto för utestående"
+" betalningar/fordringar i %s-journalen."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -14166,19 +14168,19 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Zip Range"
-msgstr ""
+msgstr "Postnummerintervall "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__zip_from
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template__zip_from
 msgid "Zip Range From"
-msgstr ""
+msgstr "Postnummerintervall från"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__zip_to
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template__zip_to
 msgid "Zip Range To"
-msgstr ""
+msgstr "Postnummerintervall till"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

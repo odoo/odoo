@@ -11,6 +11,7 @@
 # Philip Kuß <p.kuss@enno.de>, 2020
 # Kevin Harrings <kha@odoo.com>, 2021
 # Bettina Pfeifer <bettina@dygytally.de>, 2021
+# Friederike Fasterling-Nesselbosch, 2021
 # 
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-16 13:33+0000\n"
 "PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: Bettina Pfeifer <bettina@dygytally.de>, 2021\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,12 +44,14 @@ msgid ""
 "%(date_start)s at %(time_start)s To\n"
 " %(date_end)s at %(time_end)s (%(timezone)s)"
 msgstr ""
+"%(date_start)s um %(time_start)s bis\n"
+" %(date_end)s um%(time_end)s (%(timezone)s)"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "%(day)s at (%(start)s To %(end)s) (%(timezone)s)"
-msgstr ""
+msgstr "%(day)s um (%(start)s bis %(end)s) (%(timezone)s)"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_attendee.py:0
@@ -694,7 +697,7 @@ msgstr "Enddatum"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__end_type
 msgid "End Type"
-msgstr ""
+msgstr "Endtyp"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__end_date
@@ -1123,7 +1126,7 @@ msgstr "Nein, ich werde nicht teilnehmen."
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "No feedback yet"
-msgstr ""
+msgstr "Noch kein Feedback"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__alarm_type__notification
@@ -1324,7 +1327,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__rrule_type
 msgid "Rrule Type"
-msgstr ""
+msgstr "Regeltyp"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__sa
@@ -1415,7 +1418,7 @@ msgstr "Status Teilnahme"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Status:"
-msgstr ""
+msgstr "Status:"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__stop

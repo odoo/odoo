@@ -189,6 +189,8 @@ msgid ""
 "<span attrs=\"{'invisible': "
 "[('mailing_model_name','!=','mailing.list')]}\">Mailing Contact</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('mailing_model_name','!=','mailing.list"
+"')]}\">Mailing-Kontakt</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
@@ -234,7 +236,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "<span name=\"next_departure_text\">This mailing is scheduled for </span>"
-msgstr ""
+msgstr "<span name=\"next_departure_text\">Dieses Mailing ist geplant für </span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -242,11 +244,13 @@ msgid ""
 "<span name=\"scheduled_text\">emails are in queue and will be sent "
 "soon.</span>"
 msgstr ""
+"<span name=\"scheduled_text\">E-Mails befinden sich in der Warteschlange und"
+" werden bald versandt.</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "<span name=\"sent\">emails have been sent.</span>"
-msgstr ""
+msgstr "<span name=\"sent\">E-Mails wurden gesendet.</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount2
@@ -359,6 +363,7 @@ msgstr "A/B Testing zulassen"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
 msgid "Allow recipients to blacklist themselves"
 msgstr ""
+"Erlauben Sie den Empfängern, sich selbst auf eine Sperrliste zu setzen"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_res_config_settings__show_blacklist_buttons
@@ -772,7 +777,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_contacts
 msgid "Create a mailing contact"
-msgstr ""
+msgstr "Erstellen Sie einen Mailing-Kontakt"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_create_mass_mailings_from_campaign
@@ -2263,7 +2268,7 @@ msgstr "Geplantes Datum"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__schedule_date
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing_schedule_date__schedule_date
 msgid "Scheduled for"
-msgstr ""
+msgstr "Geplant für"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
@@ -2308,7 +2313,7 @@ msgstr "Senden"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__email_from
 msgid "Send From"
-msgstr ""
+msgstr "Senden von"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_form
@@ -2328,7 +2333,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.utm_campaign_view_form
 msgid "Send new Mailing"
-msgstr ""
+msgstr "Neues Mailing versenden"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_schedule_date_view_form
@@ -2370,7 +2375,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
 msgid "Sent on #{record.sent_date.value}"
-msgstr ""
+msgstr "Gesendet am #{record.sent_date.value}"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_mass_mailing_configuration
@@ -2400,7 +2405,7 @@ msgstr "Spezifizierte E-Mail"
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
 #, python-format
 msgid "Start by creating your first <b>Mailing</b>."
-msgstr ""
+msgstr "Erstellen Sie Ihr erstes <b>Mailing</b>."
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__state
@@ -2493,6 +2498,7 @@ msgstr "Testlauf Mailing"
 #, python-format
 msgid "Test this mailing by sending a copy to yourself."
 msgstr ""
+"Testen Sie dieses Mailing, indem Sie eine Kopie an sich selbst schicken."
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace_report__state__test
@@ -2906,6 +2912,8 @@ msgid ""
 "You don't need to import your mailing lists, you can easily\n"
 "                send emails<br> to any contact saved in other Odoo apps."
 msgstr ""
+"Sie brauchen Ihre Mailinglisten nicht zu importieren, Sie können einfach\n"
+"E-Mails an alle Kontakte senden, <br>die in anderen Odoo-Anwendungen gespeichert sind."
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_lists

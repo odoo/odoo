@@ -10,6 +10,8 @@
 # philku79 <philip.kuss@gmx.de>, 2020
 # Chris Egal <sodaswed@web.de>, 2020
 # Andreas Jonderko <a.jonderko@gastronovi.com>, 2020
+# Felix Schubert <felix.schubert@go-erp.com>, 2021
+# Friederike Fasterling-Nesselbosch, 2021
 # 
 msgid ""
 msgstr ""
@@ -17,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:24+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Andreas Jonderko <a.jonderko@gastronovi.com>, 2020\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -57,6 +59,8 @@ msgstr ""
 #, python-format
 msgid "An unknown error happened. Please contact the support."
 msgstr ""
+"Ein unbekannter Fehler ist aufgetreten. Bitte kontaktieren Sie das Support "
+"Team."
 
 #. module: snailmail
 #. openerp-web
@@ -88,7 +92,7 @@ msgstr ""
 #: code:addons/snailmail/static/src/components/snailmail_notification_popover/snailmail_notification_popover.js:0
 #, python-format
 msgid "Awaiting Dispatch"
-msgstr ""
+msgstr "Warten auf den Versand"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__duplex
@@ -98,7 +102,7 @@ msgstr ""
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_duplex
 msgid "Both sides"
-msgstr ""
+msgstr "Beide Seiten"
 
 #. module: snailmail
 #. openerp-web
@@ -111,7 +115,7 @@ msgstr "Guthaben kaufen"
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__credit_error
 msgid "CREDIT_ERROR"
-msgstr ""
+msgstr "CREDIT_ERROR"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_confirm_view
@@ -388,7 +392,7 @@ msgstr ""
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_list
 msgid "Letters"
-msgstr ""
+msgstr "Buchstaben"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__missing_required_fields
@@ -430,7 +434,7 @@ msgstr "Modellname"
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__no_price_available
 msgid "NO_PRICE_AVAILABLE"
-msgstr ""
+msgstr "NO_PRICE_AVAILABLE"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_notification__notification_type
@@ -474,7 +478,7 @@ msgstr ""
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_color
 msgid "Print In Color"
-msgstr ""
+msgstr "In Farbe drucken"
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_ir_qweb_field_contact
@@ -519,7 +523,7 @@ msgstr "Gesendet"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__user_id
 msgid "Sent by"
-msgstr ""
+msgstr "Gesendet von"
 
 #. module: snailmail
 #: code:addons/snailmail/wizard/snailmail_confirm.py:0
@@ -663,7 +667,7 @@ msgstr ""
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "The country of the partner is not covered by Snailmail."
-msgstr ""
+msgstr "Das Land des Partners wird von Snailmail nicht abgedeckt."
 
 #. module: snailmail
 #. openerp-web
@@ -673,6 +677,8 @@ msgid ""
 "The country to which you want to send the letter is not supported by our "
 "service."
 msgstr ""
+"Das Land, in das Sie den Brief senden möchten, wird von unserem Dienst nicht"
+" unterstützt."
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
@@ -686,6 +692,8 @@ msgstr ""
 #, python-format
 msgid "The document was correctly sent by post.<br>The tracking id is %s"
 msgstr ""
+"Das Dokument wurde erfolgreich per Post versandt.<br> Die Tracking-ID lautet"
+" %s"
 
 #. module: snailmail
 #. openerp-web
@@ -733,7 +741,7 @@ msgstr ""
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_confirm_view
 msgid "You are about to send this"
-msgstr ""
+msgstr "Sie sind im Begriff dies abzuschicken:"
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:0
@@ -742,6 +750,9 @@ msgid ""
 "You don't have an IAP account registered for this service.<br>Please go to "
 "<a href=%s target=\"new\">iap.odoo.com</a> to claim your free credits."
 msgstr ""
+"Sie haben noch kein IAP-Konto für diesen Dienst registriert. <br> Bitte "
+"beantragen Sie Ihr kostenloses Guthaben auf <a href=%s "
+"target=\"new\">iap.odoo.com</a>. "
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:0
@@ -772,7 +783,7 @@ msgstr "PLZ"
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_confirm_view
 msgid "by post. Are you sure you want to continue?"
-msgstr ""
+msgstr "per Post. Sind Sie sicher, dass Sie fortfahren möchten?"
 
 #. module: snailmail
 #. openerp-web
