@@ -44,8 +44,8 @@
 # Bettina Pfeifer <bettina@dygytally.de>, 2021
 # Martin Trigaux, 2021
 # Andreas Schmidt <schmigo@gmail.com>, 2021
-# Friederike Fasterling-Nesselbosch, 2021
 # Ahmed Aly <ahmed.aly@datenpol.at>, 2021
+# Friederike Fasterling-Nesselbosch, 2021
 # 
 msgid ""
 msgstr ""
@@ -53,7 +53,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:49+0000\n"
 "PO-Revision-Date: 2016-08-05 12:57+0000\n"
-"Last-Translator: Ahmed Aly <ahmed.aly@datenpol.at>, 2021\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -131,7 +131,7 @@ msgstr ""
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "%(attach_name)s (from %(lead_name)s)"
-msgstr ""
+msgstr "%(attach_name)s (von %(lead_name)s)"
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
@@ -236,11 +236,13 @@ msgid ""
 "<p>As you don't belong to any Sales Team, Odoo opens the first one by "
 "default.</p>"
 msgstr ""
+"<p>Da Sie keinem Verkaufsteam angehören, öffnet Odoo standardmäßig das erste"
+" Team.</p>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
 msgid "<span class=\"bg-danger\">Lost</span>"
-msgstr ""
+msgstr "<span class=\"bg-danger\">Verloren</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -249,6 +251,9 @@ msgid ""
 "title=\"By saving this change, the customer email will also be updated.\" "
 "attrs=\"{'invisible': [('partner_email_update', '=', False)]}\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" "
+"title=\"By saving this change, the customer email will also be updated.\" "
+"attrs=\"{'invisible': [('partner_email_update', '=', False)]}\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -257,6 +262,9 @@ msgid ""
 "title=\"By saving this change, the customer phone number will also be "
 "updated.\" attrs=\"{'invisible': [('partner_phone_update', '=', False)]}\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" "
+"title=\"By saving this change, the customer phone number will also be "
+"updated.\" attrs=\"{'invisible': [('partner_phone_update', '=', False)]}\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -264,6 +272,8 @@ msgid ""
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('calendar_event_count', '&lt;', 2)]}\"> Meetings</span>\n"
 "                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('calendar_event_count', '&gt;', 1)]}\"> Meeting</span>"
 msgstr ""
+"<span class=\"o_stat_text\" attrs=\"{'invisible': [('calendar_event_count', '&lt;', 2)]}\"> Meetings</span>\n"
+"                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('calendar_event_count', '&gt;', 1)]}\"> Meeting</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -271,6 +281,8 @@ msgid ""
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('duplicate_lead_count', '&lt;', 2)]}\">Similar Leads</span>\n"
 "                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('duplicate_lead_count', '&gt;', 1)]}\">Similar Lead</span>"
 msgstr ""
+"<span class=\"o_stat_text\" attrs=\"{'invisible': [('duplicate_lead_count', '&lt;', 2)]}\">Ähnliche Leads</span>\n"
+"                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('duplicate_lead_count', '&gt;', 1)]}\">Ähnlicher Lead</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_form
@@ -303,17 +315,17 @@ msgstr "<span class=\"oe_grey p-2\"> bei </span>"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "<span class=\"oe_grey\"> %</span>"
-msgstr ""
+msgstr "<span class=\"oe_grey\"> %</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
 msgid "<span class=\"oe_inline\"> (max) </span>"
-msgstr ""
+msgstr "<span class=\"oe_inline\"> (max) </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
 msgid "<span class=\"oe_inline\"> / </span>"
-msgstr ""
+msgstr "<span class=\"oe_inline\"> / </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -324,6 +336,11 @@ msgid ""
 "                                        specified otherwise.\n"
 "                                    </span>"
 msgstr ""
+"<span>Weisen Sie regelmäßig Leads basierend auf Regeln zu</span><br/>\n"
+"                                    <span attrs=\"{'invisible': [('crm_use_auto_assignment', '=', False)]}\">\n"
+"                                        Alle Sales Teams werden diese Einstellung standardmäßig verwenden\n"
+"                                       sofern nicht anders angegeben.\n"
+"                                    </span>"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_defaults
@@ -931,7 +948,7 @@ msgstr "Chance erstellen"
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_all_leads
 msgid "Create a Lead"
-msgstr ""
+msgstr "Einen Lead erstellen"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_recurring_plan_action
@@ -1839,7 +1856,7 @@ msgstr "Interessenten"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__lead_month_count
 msgid "Leads (30 days)"
-msgstr ""
+msgstr "Leads (30 Tage)"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_report_crm_lead_salesteam
@@ -1970,7 +1987,7 @@ msgstr "Liste der cc aus eingehenden E-Mails."
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_action_my_activities
 msgid "Looks like nothing is planned."
-msgstr ""
+msgstr "Sieht so aus, als gäbe es keine Termine."
 
 #. module: crm
 #. openerp-web
@@ -2289,6 +2306,8 @@ msgid ""
 "No allocated leads to %(team_name)s team because it has no capacity. Add "
 "capacity to its salespersons."
 msgstr ""
+"Dem %(team_name)sTeam werden keine Leads zugewiesen, weil es keine "
+"Kapazitäten hat. Fügen Sie den Vertriebsmitarbeitern Kapazität hinzu."
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
@@ -2302,7 +2321,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action_lead
 msgid "No data found!"
-msgstr ""
+msgstr "Keine Daten gefunden!"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action
@@ -2325,6 +2344,8 @@ msgid ""
 "No new lead allocated to %(team_name)s team because no unassigned lead "
 "matches its domain."
 msgstr ""
+"Dem Team %(team_name)s wurde kein neuer Lead zugewiesen, da kein nicht "
+"zugewiesener Lead zu seinem Bereich passt."
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
@@ -2629,7 +2650,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_email_update
 msgid "Partner Email will Update"
-msgstr ""
+msgstr "Partner-E-Mail wird aktualisiert"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_phone_update
@@ -2733,7 +2754,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__duplicate_lead_count
 msgid "Potential Duplicate Lead Count"
-msgstr ""
+msgstr "Anzahl potenzieller doppelter Leads"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_field_labels
@@ -2863,7 +2884,7 @@ msgstr "Anforderungen"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
 msgid "Reschedule"
-msgstr ""
+msgstr "Verschieben"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_user_id
@@ -2916,7 +2937,7 @@ msgstr "Verkaufsteam"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_team_member
 msgid "Sales Team Member"
-msgstr ""
+msgstr "Mitglied des Verkaufsteams"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
@@ -3204,7 +3225,7 @@ msgstr "Teams"
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_team_member_config
 msgid "Teams Members"
-msgstr ""
+msgstr "Teammitglieder"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_id
@@ -3310,6 +3331,8 @@ msgid ""
 "This can be used to automatically assign leads to sales persons based on "
 "rules"
 msgstr ""
+"Dies kann dazu verwendet werden, Leads anhand von Regeln automatisch "
+"Vertriebsmitarbeitern zuzuweisen."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -3433,6 +3456,8 @@ msgid ""
 "To prevent data loss, Leads and Opportunities can only be merged by groups "
 "of %(max_length)s."
 msgstr ""
+"Um Datenverlust zu verhindern, können Leads und Verkaufschancen nur in "
+"Gruppen bis zu %(max_length)s zusammengeschlossen werden."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -3582,6 +3607,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action
 msgid "Use this menu to have an overview of your Pipeline."
 msgstr ""
+"Nutzen Sie dieses Dashboard um eine Übersicht Ihrer Pipeline zu erhalten."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__user_login
@@ -3739,7 +3765,7 @@ msgstr "PLZ"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
 msgid "e.g. Negotiation"
-msgstr ""
+msgstr "z.B. Verhandlung"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -3750,7 +3776,7 @@ msgstr "z.B. Produktpreise"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
 msgid "e.g. Too expensive"
-msgstr ""
+msgstr "e.g. Zu teuer"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form

@@ -11,6 +11,7 @@
 # Robert Förster <hello@suppliot.eu>, 2020
 # Martin Trigaux, 2021
 # Kevin Harrings <kha@odoo.com>, 2021
+# Friederike Fasterling-Nesselbosch, 2021
 # 
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2020-08-21 13:31+0000\n"
-"Last-Translator: Kevin Harrings <kha@odoo.com>, 2021\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -74,6 +75,9 @@ msgid ""
 "'percentage')],'required': [('discount_type', '=', 'percentage')]}\" "
 "class=\"oe_inline\">%</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('discount_type', '!=', "
+"'percentage')],'required': [('discount_type', '=', 'percentage')]}\" "
+"class=\"oe_inline\">%</span>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_coupon_program_form
@@ -81,11 +85,13 @@ msgid ""
 "<span class=\"o_form_label oe_inline\"> Days</span> <span "
 "class=\"oe_grey\">if 0, infinite use</span>"
 msgstr ""
+"<span class=\"o_form_label oe_inline\">Tage</span> <span "
+"class=\"oe_grey\">falls 0, unbegrenzt</span>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "<span class=\"oe_grey\"> if 0, no limit</span>"
-msgstr ""
+msgstr "<span class=\"oe_grey\"> falls 0, keine Begrenzung</span>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
@@ -93,6 +99,8 @@ msgid ""
 "<span> Days</span>\n"
 "                    <span class=\"oe_grey\"> if 0, coupon doesn't expire</span>"
 msgstr ""
+"<span> Tage</span>\n"
+"                    <span class=\"oe_grey\"> falls 0, verfällt Kupon nicht</span>"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
@@ -299,7 +307,7 @@ msgstr "Gutschein-Programme"
 #. module: coupon
 #: model:ir.model,name:coupon.model_coupon_reward
 msgid "Coupon Reward"
-msgstr ""
+msgstr "Kupon-Belohnung"
 
 #. module: coupon
 #: model:ir.model,name:coupon.model_coupon_rule
@@ -310,7 +318,7 @@ msgstr "Coupon-Regel"
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
 msgid "Coupon Validity"
-msgstr ""
+msgstr "Kupon-Gültigkeit"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__rule_date_to
@@ -342,7 +350,7 @@ msgstr "Das Gutscheinprogramm ist nur für ausgewählte Kunden verfügbar"
 #: model:ir.cron,cron_name:coupon.expire_coupon_cron
 #: model:ir.cron,name:coupon.expire_coupon_cron
 msgid "Coupon: expire coupon based on date"
-msgstr ""
+msgstr "Kupon: Kupon basiert auf Datum"
 
 #. module: coupon
 #: model:ir.actions.act_window,name:coupon.coupon_action
@@ -356,7 +364,7 @@ msgstr "Kupons"
 #. module: coupon
 #: model_terms:ir.actions.act_window,help:coupon.coupon_program_action_coupon_program
 msgid "Create a new coupon program"
-msgstr ""
+msgstr "Ein neues Gutscheinprogramm erstellen"
 
 #. module: coupon
 #: model_terms:ir.actions.act_window,help:coupon.coupon_program_action_promo_program
@@ -524,6 +532,8 @@ msgid ""
 "Generate and share coupon codes with your customers to get discounts or free"
 " products."
 msgstr ""
+"Erstellen Sie Gutscheincodes und teilen Sie diese mit Ihren Kunden, um "
+"Rabatte oder kostenlose Produkte zu erhalten."
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__coupon_ids
@@ -543,7 +553,7 @@ msgstr ""
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "Here is your reward from"
-msgstr ""
+msgstr "Hier ist Ihre Belohnung von"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__id
@@ -704,7 +714,7 @@ msgstr "Beim Kauf eines ausgewählten Produkts wird eine Prämie verliehen"
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_reward__discount_apply_on__specific_products
 msgid "On Specific Products"
-msgstr ""
+msgstr "Auf bestimmte Produkte"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_coupon__state__reserved
@@ -875,7 +885,7 @@ msgstr "Produkt wählen"
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "Select products"
-msgstr ""
+msgstr "Produkte auswählen"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
@@ -885,7 +895,7 @@ msgstr "Prämienprodukt wählen"
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__promo_applicability__on_next_order
 msgid "Send a Coupon"
-msgstr ""
+msgstr "Einen Kupon versenden"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_view_form
@@ -908,11 +918,15 @@ msgid ""
 "Some selected customers do not have an email address and will not receive "
 "the coupon."
 msgstr ""
+"Einige ausgewählte Kunden haben keine E-Mail-Adresse und werden den Kupon "
+"nicht erhalten."
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_generate_view_form
 msgid "Specify a mail template to send the generated coupons as email."
 msgstr ""
+"Geben Sie eine E-Mail-Vorlage an, um die generierten Gutscheine als E-Mail "
+"zu versenden."
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_date_from
@@ -961,7 +975,7 @@ msgstr "Der Rabatt im Festbetrag"
 #: model:ir.model.fields,help:coupon.field_coupon_program__discount_percentage
 #: model:ir.model.fields,help:coupon.field_coupon_reward__discount_percentage
 msgid "The discount in percentage, between 1 and 100"
-msgstr ""
+msgstr "Der Rabatt in Prozent, zwischen 1 und 100"
 
 #. module: coupon
 #: code:addons/coupon/models/coupon_program.py:0
@@ -993,13 +1007,13 @@ msgstr "Dieser Gutschein wurde bereits benutzt (%s)."
 #: code:addons/coupon/models/coupon.py:0
 #, python-format
 msgid "This coupon has been cancelled (%s)."
-msgstr ""
+msgstr "Dieser Kupon wurde storniert (%s)."
 
 #. module: coupon
 #: code:addons/coupon/models/coupon.py:0
 #, python-format
 msgid "This coupon is expired (%s)."
-msgstr ""
+msgstr "Dieser Kupon ist abgelaufen (%s)."
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__total_order_count
@@ -1025,7 +1039,7 @@ msgstr "Benutze Vorlage"
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "Use this promo code before"
-msgstr ""
+msgstr "Nutzen Sie diesen Promo-Code vor"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_coupon__state__used
@@ -1062,7 +1076,7 @@ msgstr "Sie können ein Programm im aktiven Zustand nicht löschen"
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
 msgid "e.g. 10% Discount"
-msgstr ""
+msgstr "z.B. 10% Rabatt"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
@@ -1087,4 +1101,4 @@ msgstr ""
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "on your next order"
-msgstr ""
+msgstr "auf Ihre nächste Bestellung"
