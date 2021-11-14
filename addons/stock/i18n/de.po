@@ -2188,6 +2188,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_res_config_settings__stock_mail_confirmation_template_id
 msgid "Email sent to the customer once the order is done."
 msgstr ""
+"E-Mail wird an den Kunden versandt, sobald Bestellung bearbeitet wurde."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__start_empty
@@ -2910,7 +2911,7 @@ msgstr "Ungültiger rechter Domain-Operand %s"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity
 msgid "Inventoried Quantity"
-msgstr ""
+msgstr "Inventarisierte Menge"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__line_ids
@@ -3275,7 +3276,7 @@ msgstr "Verknüpfte Buchungen"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "List view of operations"
-msgstr ""
+msgstr "Listenansicht der Vorgänge"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__location_id
@@ -3675,7 +3676,7 @@ msgstr "Mehrere Lager"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "My Transfers"
-msgstr ""
+msgstr "Meine Bewegungen"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_removal__name
@@ -3788,6 +3789,8 @@ msgid ""
 "No rule has been found to replenish \"%s\" in \"%s\".\n"
 "Verify the routes configuration on the product."
 msgstr ""
+"Es wurde keine Regel gefunden, um \"%s\" in \"%s\" aufzufüllen.\n"
+"Überprüfen Sie die Routenkonfiguration des Produkts."
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:0
@@ -3884,7 +3887,7 @@ msgstr " Auf Lager"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
 msgid "On Hand Quantity"
-msgstr ""
+msgstr "Verfügbare Menge"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
@@ -5288,6 +5291,8 @@ msgid ""
 "Routes will be created automatically to resupply this warehouse from the "
 "warehouses ticked"
 msgstr ""
+"Es werden automatisch Routen erstellt, um dieses Lager aus den ausgewählten "
+"Lagern heraus zu versorgen."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__resupply_route_ids
@@ -5722,6 +5727,9 @@ msgid ""
 "Some products of the inventory adjustment are tracked. Are you sure you "
 "don't want to specify a serial or lot number for them?"
 msgstr ""
+"Einige Produkte der Bestandsregulierung werden nachverfolgt. Sind Sie "
+"sicher, dass Sie für diese Produkte keine Serien- oder Chargennummer angeben"
+" wollen?"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__origin
@@ -6835,7 +6843,7 @@ msgstr "Mengeneinheiten"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
 msgid "Unity of measure"
-msgstr ""
+msgstr "Maßeinheit"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -6847,7 +6855,7 @@ msgstr "Unbekannte Packung"
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Unknown stream."
-msgstr ""
+msgstr "Unbekannter Stream."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -6934,7 +6942,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Use your own routes"
-msgstr ""
+msgstr "Verwenden Sie Ihre eigenen Routen"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__sequence
@@ -7168,6 +7176,8 @@ msgid ""
 "When a warehouse is selected for this route, this route should be seen as "
 "the default route when products pass through this warehouse."
 msgstr ""
+"Wenn ein Lager für diese Route ausgewählt wird, sollte diese Route als "
+"Standardroute angesehen werden, wenn die Produkte dieses Lager passieren."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__one
@@ -7198,6 +7208,8 @@ msgid ""
 "When products are needed in <b>%s</b>, <br/> <b>%s</b> are created from "
 "<b>%s</b> to fulfill the need."
 msgstr ""
+"Wenn Produkte in <b>%s</b> benötigt werden, <br/> werden<b>%s</b> aus "
+"<b>%s</b> erstellt um den Bedarf zu decken."
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:0
@@ -7292,6 +7304,9 @@ msgid ""
 "type. To change this, go on the operation type and tick the box \"Create New"
 " Lots/Serial Numbers\"."
 msgstr ""
+"Mit dieser Vorgangsart können Sie keine Chargen- oder Seriennummern anlegen."
+" Um dies zu ändern, gehen Sie auf die Vorgangsart und markieren Sie das "
+"Kästchen \"Neue Chargen/Seriennummern erstellen\"."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
@@ -7389,6 +7404,8 @@ msgstr ""
 #, python-format
 msgid "You cannot archive the location %s as it is used by your warehouse %s"
 msgstr ""
+"Sie können den Ort %s nicht archivieren, da er von Ihrem Lager %s verwendet "
+"wird. "
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -7401,6 +7418,8 @@ msgstr "Sie können keine Lagerbuchung stornieren, die bereits gebucht ist."
 #, python-format
 msgid "You cannot change the Scheduled Date on a done or cancelled transfer."
 msgstr ""
+"Sie können das geplante Datum einer durchgeführten oder stornierten Bewegung"
+" nicht ändern."
 
 #. module: stock
 #: code:addons/stock/models/stock_location.py:0
@@ -7451,6 +7470,8 @@ msgid ""
 "You cannot move the same package content more than once in the same transfer"
 " or split the same package into two location."
 msgstr ""
+"Es ist nicht möglich, denselben Paketinhalt mehr als einmal in derselben "
+"Bewegung zu verschieben oder dasselbe Paket auf zwei Orte aufzuteilen."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -7484,7 +7505,7 @@ msgstr ""
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You cannot split a stock move that has been set to 'Done'."
-msgstr ""
+msgstr "Sie können eine auf 'Erledigt' gesetzte Lagerbewegung nicht teilen."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -7501,6 +7522,7 @@ msgstr ""
 #, python-format
 msgid "You cannot unreserve a stock move that has been set to 'Done'."
 msgstr ""
+"Sie können eine auf 'Erledigt' gesetzte Lagerbewegung nicht zurücknehmen."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
