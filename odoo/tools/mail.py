@@ -623,3 +623,24 @@ def encapsulate_email(old_email, new_email):
         name_part,
         new_email_split[0][1],
     ))
+
+def create_message(self, message_type, subtype, body, subject=False):
+    """
+        Helper to quick create mail.message records
+        Args:
+            message_type (string): set the type of message (email, comment, notification, user_notification supported)
+            subtype: (record): record for the mail.subtype you'd like to use. For example: self.env.ref('mail.mt_note')
+            body (string/html): text (or HTML) that you'd like to set in the body
+            subject (string): title of the message. If not provided we use the name_get() of the current record to define a title
+        Returns:
+            record: mail.message record that has just been created
+    """
+    subject = self.name_get() if not subject else subject
+    return self.env['mail.message'].create({
+        'subject': subject,
+        'model': self._name,
+        'res_id': self.id,
+        'subtype_id': subtype,
+        'body': body
+    })
+
