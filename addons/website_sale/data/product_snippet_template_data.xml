@@ -191,7 +191,7 @@
                                 <t t-call="website_sale.price_dynamic_filter_template_product_product"/>
                             </div>
                             <t t-if="is_view_active('website_sale.product_comment')">
-                                <t t-call="portal_rating.rating_widget_stars_static_compressed">
+                                <t t-call="portal_rating.rating_widget_stars_static">
                                     <t t-set="rating_avg" t-value="record.rating_avg"/>
                                     <t t-set="rating_count" t-value="record.rating_count"/>
                                 </t>
