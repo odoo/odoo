@@ -653,39 +653,41 @@ function addTables($editable) {
     }
 }
 
-const rePadding = /(\d+)/;
+const rePadding = /([\d.]+)/;
 function formatTables($editable) {
     for (const table of $editable.find('table.o_mail_snippet_general, .o_mail_snippet_general table')) {
         const $table = $(table);
-        const tablePaddingTop = +$table.css('padding-top').match(rePadding)[1];
-        const tablePaddingRight = +$table.css('padding-right').match(rePadding)[1];
-        const tablePaddingBottom = +$table.css('padding-bottom').match(rePadding)[1];
-        const tablePaddingLeft = +$table.css('padding-left').match(rePadding)[1];
+        const tablePaddingTop = parseFloat($table.css('padding-top').match(rePadding)[1]);
+        const tablePaddingRight = parseFloat($table.css('padding-right').match(rePadding)[1]);
+        const tablePaddingBottom = parseFloat($table.css('padding-bottom').match(rePadding)[1]);
+        const tablePaddingLeft = parseFloat($table.css('padding-left').match(rePadding)[1]);
+        const $rows = $table.find('tr').filter((i, tr) => $(tr).closest('table').is($table));
         const $columns = $table.find('td').filter((i, td) => $(td).closest('table').is($table));
-        let columnIndex = 0;
         for (const column of $columns) {
             const $column = $(column);
-            if ($column.css('padding')) {
-                const columnPaddingRight = +$column.css('padding-right').match(rePadding)[1];
-                const columnPaddingLeft = +$column.css('padding-left').match(rePadding)[1];
-                $column.css({
-                    'padding-right': columnPaddingRight + tablePaddingRight,
-                    'padding-left': columnPaddingLeft + tablePaddingLeft,
-                });
-                if (!columnIndex) {
-                    const columnPaddingTop = +$column.css('padding-top').match(rePadding)[1];
-                    $column.css({
-                        'padding-top': columnPaddingTop + tablePaddingTop,
-                    });
-                }
-                if (columnIndex === $columns.length - 1) {
-                    const columnPaddingBottom = +$column.css('padding-bottom').match(rePadding)[1];
-                    $column.css({
-                        'padding-bottom': columnPaddingBottom + tablePaddingBottom,
-                    });
-                }
+            const $columnsInRow = $column.closest('tr').find('td');
+            const columnIndex = $columnsInRow.toArray().findIndex(col => $(col).is($column));
+            const rowIndex = $rows.toArray().findIndex(row => $(row).is($column.closest('tr')));
+            if (!rowIndex) {
+                const match = $column.css('padding-top').match(rePadding);
+                const columnPaddingTop = match ? parseFloat(match[1]) : 0;
+                $column.css('padding-top', columnPaddingTop + tablePaddingTop);
             }
-            columnIndex += 1;
+            if (columnIndex === $columnsInRow.length - 1) {
+                const match = $column.css('padding-right').match(rePadding);
+                const columnPaddingRight = match ? parseFloat(match[1]) : 0;
+                $column.css('padding-right', columnPaddingRight + tablePaddingRight);
+            }
+            if (rowIndex === $rows.length - 1) {
+                const match = $column.css('padding-bottom').match(rePadding);
+                const columnPaddingBottom = match ? parseFloat(match[1]) : 0;
+                $column.css('padding-bottom', columnPaddingBottom + tablePaddingBottom);
+            }
+            if (!columnIndex) {
+                const match = $column.css('padding-left').match(rePadding);
+                const columnPaddingLeft = match ? parseFloat(match[1]) : 0;
+                $column.css('padding-left', columnPaddingLeft + tablePaddingLeft);
+            }
         }
         $table.css('padding', '');
     }
