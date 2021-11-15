@@ -40,8 +40,10 @@ options.registry.mailing_list_subscribe = options.Class.extend({
      */
     cleanForSave() {
         const previewClasses = ['o_disable_preview', 'o_enable_preview'];
-        this.$target[0].querySelector('.js_subscribe_btn').classList.remove(...previewClasses);
-        this.$target[0].querySelector('.js_subscribed_btn').classList.remove(...previewClasses);
+        const subscribeBtn = this.$target[0].querySelector('.js_subscribe_btn');
+        subscribeBtn && subscribeBtn.classList.remove(...previewClasses);
+        const subscribedBtn = this.$target[0].querySelector('.js_subscribed_btn');
+        subscribedBtn && subscribedBtn.classList.remove(...previewClasses);
     },
 
     //--------------------------------------------------------------------------
