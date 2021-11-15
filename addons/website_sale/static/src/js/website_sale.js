@@ -478,8 +478,16 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
      */
     _onClickAdd: function (ev) {
         ev.preventDefault();
-        this.getCartHandlerOptions(ev);
-        return this._handleAdd($(ev.currentTarget).closest('form'));
+        var def = () => {
+            this.getCartHandlerOptions(ev);
+            return this._handleAdd($(ev.currentTarget).closest('form'));
+        };
+        if ($('.js_add_cart_variants').children().length) {
+            return this._getCombinationInfo(ev).then(() => {
+                return !$(ev.target).closest('.js_product').hasClass("css_not_available") ? def() : Promise.resolve();
+            });
+        }
+        return def();
     },
     /**
      * Initializes the optional products modal
