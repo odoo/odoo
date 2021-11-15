@@ -19,7 +19,6 @@ class TestAccruedPurchaseStock(AccountTestInvoicingCommon):
             'type': 'consu',
             'uom_id': uom_unit.id,
             'uom_po_id': uom_unit.id,
-            'invoice_policy': 'delivery',
         })
 
         cls.purchase_order = cls.env['purchase.order'].with_context(tracking_disable=True).create({
