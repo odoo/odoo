@@ -401,9 +401,11 @@ class ProductTemplate(models.Model):
             if with_image:
                 data['image_url'] = '/web/image/product.template/%s/image_128' % data['id']
             if with_category and product.public_categ_ids:
-                data['category'] = _('Category: %s', product.public_categ_ids.name)
-                slugs = [slug(category) for category in product.public_categ_ids]
-                data['category_url'] = '/shop/category/%s' % ','.join(slugs)
+                if len(product.public_categ_ids) > 1:
+                    data['category'] = _('Categories: %s', ', '.join(product.public_categ_ids.mapped("name")))
+                else:
+                    data['category'] = _('Category: %s', product.public_categ_ids[0].name)
+                data['category_url'] = '/shop/category/%s' % slug(product.public_categ_ids[0])
         return results_data
 
     @api.model
