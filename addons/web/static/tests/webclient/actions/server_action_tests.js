@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
+import { session } from "@web/session";
 
 let serverData;
 
@@ -12,10 +13,13 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.module("Server actions");
 
     QUnit.test("can execute server actions from db ID", async function (assert) {
-        assert.expect(10);
+        assert.expect(13);
         const mockRPC = async (route, args) => {
             assert.step((args && args.method) || route);
             if (route === "/web/action/run") {
+                assert.strictEqual(args.context.lang, session.user_context.lang);
+                assert.strictEqual(args.context.tz, session.user_context.tz);
+                assert.strictEqual(args.context.uid, session.uid);
                 assert.strictEqual(args.action_id, 2, "should call the correct server action");
                 return Promise.resolve(1); // execute action 1
             }
