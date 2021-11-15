@@ -221,8 +221,8 @@ class Theme(models.AbstractModel):
         )
 
         # Reinitialize effets
-        self.disable_asset('website.ripple_effect_scss')
-        self.disable_asset('website.ripple_effect_js')
+        self.disable_asset('Ripple effect SCSS')
+        self.disable_asset('Ripple effect JS')
 
         # Reinitialize header templates
         self.disable_view('website.template_header_hamburger')
@@ -250,6 +250,7 @@ class Theme(models.AbstractModel):
         # Reinitialize footer scrolltop template
         self.disable_view('website.option_footer_scrolltop')
 
+    # TODO Rename name in key and search with the key in master
     @api.model
     def _toggle_asset(self, name, active):
         ThemeAsset = self.env['theme.ir.asset'].sudo().with_context(active_test=False)
@@ -259,7 +260,7 @@ class Theme(models.AbstractModel):
             obj = obj.copy_ids.filtered(lambda x: x.website_id == website)
         else:
             Asset = self.env['ir.asset'].sudo().with_context(active_test=False)
-            obj = Asset.search([('name', '=', name)])
+            obj = Asset.search([('name', '=', name)], limit=1)
             has_specific = obj.key and Asset.search_count([
                 ('key', '=', obj.key),
                 ('website_id', '=', website.id)
