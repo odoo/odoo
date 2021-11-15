@@ -61,7 +61,6 @@ QUnit.module("Fields", (hooks) => {
                         {
                             id: 2,
                             display_name: "second record",
-                            bar: true,
                             foo: "blip",
                             int_field: 0,
                             p: [],
