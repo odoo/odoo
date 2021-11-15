@@ -57,7 +57,11 @@ class AccountAccountTemplate(models.Model):
 
     name = fields.Char(required=True)
     currency_id = fields.Many2one('res.currency', string='Account Currency', help="Forces all moves for this account to have this secondary currency.")
-    code = fields.Char(size=64, required=True)
+    code = fields.Char(
+        size=64, required=True,
+        pattern=ACCOUNT_CODE_REGEX.pattern
+        help="The account code can only contain alphanumeric characters and dots.",
+    )
     account_type = fields.Selection(
         selection=[
             ("asset_receivable", "Receivable"),
@@ -103,14 +107,6 @@ class AccountAccountTemplate(models.Model):
                 name = record.code + ' ' + name
             res.append((record.id, name))
         return res
-
-    @api.constrains('code')
-    def _check_account_code(self):
-        for account in self:
-            if not re.match(ACCOUNT_CODE_REGEX, account.code):
-                raise ValidationError(_(
-                    "The account code can only contain alphanumeric characters and dots."
-                ))
 
 
 class AccountChartTemplate(models.Model):

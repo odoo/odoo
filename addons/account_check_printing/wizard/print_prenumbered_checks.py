@@ -1,22 +1,19 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import re
-from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
+from odoo import fields, models
 
 
 class PrintPreNumberedChecks(models.TransientModel):
     _name = 'print.prenumbered.checks'
     _description = 'Print Pre-numbered Checks'
 
-    next_check_number = fields.Char('Next Check Number', required=True)
-
-    @api.constrains('next_check_number')
-    def _check_next_check_number(self):
-        for check in self:
-            if check.next_check_number and not re.match(r'^[0-9]+$', check.next_check_number):
-                raise ValidationError(_('Next Check Number should only contains numbers.'))
+    next_check_number = fields.Char(
+        'Next Check Number',
+        required=True,
+        pattern=r'^[0-9]+$',
+        help="Sequence number of the next printed check. Can only contain numbers",
+    )
 
     def print_checks(self):
         check_number = int(self.next_check_number)
