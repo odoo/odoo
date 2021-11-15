@@ -2,7 +2,7 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one } from '@mail/model/model_field';
-import { insert, unlinkAll } from '@mail/model/model_field_command';
+import { clear, insert, insertAndReplace, unlinkAll } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
@@ -44,6 +44,46 @@ function factory(dependencies) {
             return data2;
         }
 
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsFailure() {
+            return ['exception', 'bounce'].includes(this.notification_status);
+        }
+
+        /**
+         * @private
+         * @returns {boolean|FieldCommand}
+         */
+        _computeIsFromCurrentUser() {
+            if (!this.messaging || !this.messaging.currentPartner || !this.message || !this.message.author) {
+                return clear();
+            }
+            return this.messaging.currentPartner === this.message.author;
+        }
+
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeNotificationGroup() {
+            if (!this.isFailure || !this.isFromCurrentUser) {
+                return clear();
+            }
+            const thread = this.message.originThread;
+            // Notifications are grouped by model and notification_type.
+            // Except for channel where they are also grouped by id because
+            // we want to open the actual channel in discuss or chat window
+            // and not its kanban/list/form view.
+            return insertAndReplace({
+                notification_type: this.notification_type,
+                res_id: thread.model === 'mail.channel' ? thread.id : null,
+                res_model: thread.model,
+                res_model_name: thread.model_name,
+            });
+        }
+
     }
 
     Notification.fields = {
@@ -52,7 +92,17 @@ function factory(dependencies) {
             readonly: true,
             required: true,
         }),
+        isFailure: attr({
+            compute: '_computeIsFailure',
+        }),
+        isFromCurrentUser: attr({
+            compute: '_computeIsFromCurrentUser',
+        }),
         message: many2one('mail.message', {
+            inverse: 'notifications',
+        }),
+        notificationGroup: many2one('mail.notification_group', {
+            compute: '_computeNotificationGroup',
             inverse: 'notifications',
         }),
         notification_status: attr(),

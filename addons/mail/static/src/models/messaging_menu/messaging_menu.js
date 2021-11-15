@@ -56,12 +56,10 @@ function factory(dependencies) {
                 channel.isPinned &&
                 channel.localMessageUnreadCounter > 0
             )).length;
-            const notificationGroupsCounter = this.messaging.notificationGroupManager
-                ? this.messaging.notificationGroupManager.groups.reduce(
-                    (total, group) => total + group.notifications.length,
-                    0
-                )
-                : 0;
+            const notificationGroupsCounter = this.messaging.models['mail.notification_group'].all().reduce(
+                (total, group) => total + group.notifications.length,
+                0
+            );
             const notificationPemissionCounter = this.messaging.isNotificationPermissionDefault ? 1 : 0;
             return inboxCounter + unreadChannelsCounter + notificationGroupsCounter + notificationPemissionCounter;
         }

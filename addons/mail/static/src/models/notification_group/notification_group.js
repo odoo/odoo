@@ -3,6 +3,7 @@
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one, one2many } from '@mail/model/model_field';
 import { clear, insert, unlink } from '@mail/model/model_field_command';
+import { OnChange } from '@mail/model/model_onchange';
 
 function factory(dependencies) {
 
@@ -91,6 +92,15 @@ function factory(dependencies) {
         }
 
         /**
+         * @private
+         */
+        _onChangeNotifications() {
+            if (this.notifications.length === 0) {
+                this.delete();
+            }
+        }
+
+        /**
          * Opens the view that displays all the records of the group.
          *
          * @private
@@ -127,13 +137,18 @@ function factory(dependencies) {
         date: attr({
             compute: '_computeDate',
         }),
-        id: attr({
+        notification_type: attr({
             readonly: true,
-            required: true,
         }),
-        notification_type: attr(),
-        notifications: one2many('mail.notification'),
-        res_model: attr(),
+        notifications: one2many('mail.notification', {
+            inverse: 'notificationGroup',
+        }),
+        res_id: attr({
+            readonly: true,
+        }),
+        res_model: attr({
+            readonly: true,
+        }),
         res_model_name: attr(),
         /**
          * States the position of the group inside the notification list.
@@ -149,7 +164,13 @@ function factory(dependencies) {
             compute: '_computeThread',
         })
     };
-    NotificationGroup.identifyingFields = ['id'];
+    NotificationGroup.identifyingFields = ['res_model', 'res_id', 'notification_type'];
+    NotificationGroup.onChanges = [
+        new OnChange({
+            dependencies: ['notifications'],
+            methodName: '_onChangeNotifications',
+        }),
+    ];
     NotificationGroup.modelName = 'mail.notification_group';
 
     return NotificationGroup;

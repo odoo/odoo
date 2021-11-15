@@ -450,9 +450,6 @@ function factory(dependencies) {
             default: "",
         }),
         email: attr(),
-        failureNotifications: one2many('mail.notification', {
-            related: 'messagesAsAuthor.failureNotifications',
-        }),
         /**
          * Whether an attempt was already made to fetch the user corresponding
          * to this partner. This prevents doing the same RPC multiple times.
@@ -476,9 +473,6 @@ function factory(dependencies) {
         }),
         memberThreads: many2many('mail.thread', {
             inverse: 'members',
-        }),
-        messagesAsAuthor: one2many('mail.message', {
-            inverse: 'author',
         }),
         model: attr({
             default: 'res.partner',
