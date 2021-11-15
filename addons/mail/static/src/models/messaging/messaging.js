@@ -375,11 +375,6 @@ function factory(dependencies) {
             isCausal: true,
             readonly: true,
         }),
-        notificationGroupManager: one2one('mail.notification_group_manager', {
-            default: insertAndReplace(),
-            isCausal: true,
-            readonly: true,
-        }),
         notificationHandler: one2one('mail.messaging_notification_handler', {
             default: insertAndReplace(),
             isCausal: true,

@@ -524,8 +524,6 @@ function factory(dependencies) {
                     message.delete();
                 }
             }
-            // deleting message might have deleted notifications, force recompute
-            this.messaging.notificationGroupManager.computeGroups();
         }
 
         /**
@@ -543,7 +541,6 @@ function factory(dependencies) {
                     message.update({ author: link(this.messaging.currentPartner) });
                 }
             }
-            this.messaging.notificationGroupManager.computeGroups();
         }
 
         /**
