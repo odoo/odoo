@@ -363,7 +363,7 @@ export class DynamicGroupList extends DynamicList {
     constructor(model, params, state = {}) {
         super(...arguments);
         this.groupLimit = params.groupLimit || LOADED_GROUP_LIMIT;
-        this.groupByInfo = params.groupByInfo;
+        this.groupByInfo = params.groupByInfo || {}; // FIXME: is this something specific to the list view?
         this.groupByField = this.fields[this.groupBy[0]];
         this.openGroupsByDefault = params.openGroupsByDefault || false;
         this.groups = state.groups || [];

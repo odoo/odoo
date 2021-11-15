@@ -246,8 +246,8 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.hasClass(kanban.el.querySelector(".o_kanban_view"), "o_kanban_ungrouped");
-        assert.hasClass(kanban.el.querySelector(".o_kanban_view"), "o_kanban_test");
+        assert.hasClass(kanban.el.querySelector(".o_kanban_renderer"), "o_kanban_ungrouped");
+        assert.hasClass(kanban.el.querySelector(".o_kanban_renderer"), "o_kanban_test");
         assert.containsN(kanban, ".o_kanban_record:not(.o_kanban_ghost)", 4);
         assert.containsN(kanban, ".o_kanban_ghost", 6);
         assert.containsOnce(kanban, ".o_kanban_record:contains(gnap)");
@@ -281,8 +281,8 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.hasClass(kanban.el.querySelector(".o_kanban_view"), "o_kanban_grouped");
-        assert.hasClass(kanban.el.querySelector(".o_kanban_view"), "o_kanban_test");
+        assert.hasClass(kanban.el.querySelector(".o_kanban_renderer"), "o_kanban_grouped");
+        assert.hasClass(kanban.el.querySelector(".o_kanban_renderer"), "o_kanban_test");
         assert.containsN(kanban, ".o_kanban_group", 2);
         assert.containsOnce(kanban, ".o_kanban_group:nth-child(1) .o_kanban_record");
         assert.containsN(kanban, ".o_kanban_group:nth-child(2) .o_kanban_record", 3);
