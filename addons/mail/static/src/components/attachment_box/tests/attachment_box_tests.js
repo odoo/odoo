@@ -25,11 +25,12 @@ QUnit.module('attachment_box_tests.js', {
         this.createAttachmentBoxComponent = async (thread, otherProps) => {
             const chatter = this.messaging.models['mail.chatter'].insert({
                 id: 1,
+                isAttachmentBoxVisibleInitially: true,
                 threadId: thread.id,
                 threadModel: thread.model,
             });
             const props = {
-                chatterLocalId: chatter.localId,
+                attachmentBoxViewLocalId: chatter.attachmentBoxView.localId,
                 ...otherProps,
             };
             await createRootMessagingComponent(this, "AttachmentBox", {
