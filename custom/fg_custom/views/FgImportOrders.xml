@@ -6,25 +6,30 @@
             <field name="model">fg.custom.import.order</field>
             <field name="arch" type="xml">
                 <form string="Import  Orders">
-                    <group name="help-import">
-                      <div>
-                        <p>Upload POS Orders.</p>
-                        <a href="/fg_custom/static/csv/pos_order_template.csv" aria-label="Download" title="Download">
-                            <i class="fa fa-download"></i> <span>Download Import Template for POS Orders</span>
-                        </a>
-                      </div>
-                    </group>
-                    <group name="import">
-                        <field name="order_file" filename="order_filename"/>
-                        <field name="order_filename" invisible="1"/>
-                    </group>
-                    <footer>
-                        <button name="import_order_button" type="object" class="oe_highlight" string="Validate and Import"/>
-                        <button name="cancel_button" type="object"  string="Cancel" class="oe_link"/>
-                    </footer>
+                <sheet>
+                        <div class="oe_title mb24">
+                                <group name="help-import">
+                                  <div>
+                                    <p>Upload POS Orders.</p>
+                                    <a href="/fg_custom/static/csv/pos_order_template.csv" aria-label="Download" title="Download">
+                                        <i class="fa fa-download"></i> <span>Download Import Template for POS Orders</span>
+                                    </a>
+                                  </div>
+                                </group>
+                                <group name="import">
+                                    <field name="order_file" filename="order_filename"/>
+                                    <field name="order_filename" invisible="1"/>
+                                </group>
+                                <footer>
+                                    <button name="import_order_button" type="object" class="oe_highlight" string="Validate and Import"/>
+                                    <button name="cancel_button" type="object"  string="Cancel" class="oe_link"/>
+                                </footer>
+                        </div>
+                </sheet>
                 </form>
             </field>
         </record>
+
 
         <record id="fg_action_view_import_order" model="ir.actions.act_window">
             <field name="name">Import POS Orders</field>
