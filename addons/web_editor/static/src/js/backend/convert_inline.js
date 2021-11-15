@@ -638,14 +638,14 @@ function addTables($editable) {
         $(snippet).remove();
 
         // If snippet doesn't have a table as child, wrap its contents in one.
-        if (!$col.children().filter('table')) {
+        if (!$col.children().filter('table').length) {
             const $tableB = _createTable();
             $tableB[0].style.width
             const $rowB = $('<tr/>');
             const $colB = $('<td/>');
             $rowB.append($colB);
             $tableB.append($rowB);
-            for (const child of [...$table[0].childNodes]) {
+            for (const child of [...$col[0].childNodes]) {
                 $colB.append(child);
             }
             $col.append($tableB);
