@@ -2079,7 +2079,7 @@ class Task(models.Model):
             action['res_id'] = self.dependent_ids.id
         else:
             action['name'] = _('Dependent Tasks')
-            action['view_mode'] = 'tree,form,kanban,calendar,pivot,graph,gantt,activity,map'
+            action['view_mode'] = 'tree,form,kanban,calendar,pivot,graph,activity'
             action['domain'] = [('depend_on_ids', '=', self.id)]
         return action
 
@@ -2088,7 +2088,7 @@ class Task(models.Model):
             'name': 'Tasks in Recurrence',
             'type': 'ir.actions.act_window',
             'res_model': 'project.task',
-            'view_mode': 'tree,form,kanban,calendar,pivot,graph,gantt,activity,map',
+            'view_mode': 'tree,form,kanban,calendar,pivot,graph,activity',
             'domain': [('recurrence_id', 'in', self.recurrence_id.ids)],
         }
 
