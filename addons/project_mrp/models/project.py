@@ -29,7 +29,7 @@ class Project(models.Model):
         self.ensure_one()
         action = self.analytic_account_id.action_view_workorder()
         if self.workorder_count > 1:
-            action['view_mode'] = 'tree,form,kanban,calendar,pivot,graph,gantt'
+            action['view_mode'] = 'tree,form,kanban,calendar,pivot,graph'
         return action
 
     # ----------------------------
