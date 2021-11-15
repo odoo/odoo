@@ -684,9 +684,9 @@ export class RelationalModel extends Model {
 
         // debug
         window.basicmodel = this;
-        console.group("Current model");
-        console.log(this);
-        console.groupEnd();
+        // console.group("Current model");
+        // console.log(this);
+        // console.groupEnd();
     }
 
     /**
