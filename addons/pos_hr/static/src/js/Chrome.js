@@ -12,10 +12,10 @@ odoo.define('pos_hr.chrome', function (require) {
                 if (this.env.pos.config.module_pos_hr) this.showTempScreen('LoginScreen');
             }
             get headerButtonIsShown() {
-                return !this.env.pos.config.module_pos_hr || this.env.pos.get('cashier').role == 'manager';
+                return !this.env.pos.config.module_pos_hr || this.env.pos.get('cashier').role != 'cashier';
             }
             showCashMoveButton() {
-                return super.showCashMoveButton() && this.env.pos.get('cashier').role == 'manager';
+                return super.showCashMoveButton() && this.env.pos.get('cashier').role != 'cashier';
             }
         };
 

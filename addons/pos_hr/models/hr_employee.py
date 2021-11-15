@@ -22,6 +22,18 @@ class HrEmployee(models.Model):
             e['pin'] = hashlib.sha1(e['pin'].encode('utf8')).hexdigest() if e['pin'] else False
         return employees_data
 
+    def get_employee_roles(self):
+        """Returns a dict mapping the employee id to its role in the POS UI (cashier, user or manager)."""
+        result = {}
+        for employee in self:
+            result[employee.id] = 'cashier'
+            if employee.user_id:
+                if employee.user_id.has_group('point_of_sale.group_pos_user'):
+                    result[employee.id] = 'user'
+                if employee.user_id.has_group('point_of_sale.group_pos_manager'):
+                    result[employee.id] = 'manager'
+        return result
+
     @api.ondelete(at_uninstall=False)
     def _unlink_except_active_pos_session(self):
         configs_with_employees = self.env['pos.config'].search([('module_pos_hr', '=', 'True')]).filtered(lambda c: c.current_session_id)

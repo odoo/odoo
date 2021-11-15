@@ -57,6 +57,15 @@ models.PosModel = models.PosModel.extend({
                         employee.pin = data.pin;
                     }
                 });
+            }).then(async () => {
+                const employee_roles = await self.rpc({
+                    model: 'hr.employee',
+                    method: 'get_employee_roles',
+                    args: [self.employees.map(employee => employee.id)],
+                });
+                for (const employee of self.employees) {
+                    employee.role = employee_roles[employee.id]
+                }
             });
         });
     },
