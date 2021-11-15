@@ -58,3 +58,34 @@ class IrAsset(models.Model):
                     most_specific_assets += asset
 
         return most_specific_assets
+
+    def write(self, vals):
+        """COW for ir.asset. This way editing websites does not impact other
+        websites. Also this way newly created websites will only
+        contain the default assets.
+        """
+        current_website_id = self.env.context.get('website_id')
+        if not current_website_id or self.env.context.get('no_cow'):
+            return super().write(vals)
+
+        for asset in self.with_context(active_test=False):
+            # No need of COW if the asset is already specific
+            if asset.website_id:
+                super(IrAsset, asset).write(vals)
+                continue
+
+            # If already a specific asset for this generic asset, write on it
+            website_specific_asset = asset.search([
+                ('key', '=', asset.key),
+                ('website_id', '=', current_website_id)
+            ], limit=1)
+            if website_specific_asset:
+                super(IrAsset, website_specific_asset).write(vals)
+                continue
+
+            copy_vals = {'website_id': current_website_id, 'key': asset.key}
+            website_specific_asset = asset.copy(copy_vals)
+
+            super(IrAsset, website_specific_asset).write(vals)
+
+        return True
