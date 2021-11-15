@@ -300,7 +300,7 @@
                                 </span>
                             </div>
                         </button>
-                        <button name="action_view_all_rating" type="object" attrs="{'invisible': ['|', '|', ('rating_active', '=', False), ('rating_percentage_satisfaction', '>=', 66.6), ('rating_percentage_satisfaction', '&lt;', 33.3)]}" class="oe_stat_button oe_read_only text-warning" icon="fa-meh-o" groups="project.group_project_rating">
+                        <button name="action_view_all_rating" type="object" attrs="{'invisible': ['|', '|', ('rating_active', '=', False), ('rating_percentage_satisfaction', '&gt;=', 66.6), ('rating_percentage_satisfaction', '&lt;', 33.3)]}" class="oe_stat_button oe_read_only text-warning" icon="fa-meh-o" groups="project.group_project_rating">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value">
                                     <field name="rating_percentage_satisfaction" nolabel="1"/>
@@ -311,7 +311,7 @@
                                 </span>
                             </div>
                         </button>
-                        <button name="action_view_all_rating" type="object" attrs="{'invisible': ['|', ('rating_active', '=', False), '|', ('rating_percentage_satisfaction', '>=', 33.3),  ('rating_percentage_satisfaction', '&lt;', 0)]}" class="oe_stat_button oe_read_only text-danger" icon="fa-frown-o" groups="project.group_project_rating">
+                        <button name="action_view_all_rating" type="object" attrs="{'invisible': ['|', ('rating_active', '=', False), '|', ('rating_percentage_satisfaction', '&gt;=', 33.3),  ('rating_percentage_satisfaction', '&lt;', 0)]}" class="oe_stat_button oe_read_only text-danger" icon="fa-frown-o" groups="project.group_project_rating">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value">
                                     <field name="rating_percentage_satisfaction" nolabel="1"/>
@@ -829,13 +829,13 @@
                                 <span class="o_stat_text text-secondary">Satisfaction</span>
                             </div>
                         </button>
-                        <button name="action_open_ratings" type="object" attrs="{'invisible': ['|', '|', ('rating_count', '=', 0), ('rating_percentage_satisfaction', '>=', 66.6), ('rating_percentage_satisfaction', '&lt;', 33.3)]}" class="oe_stat_button text-warning" icon="fa-meh-o" groups="project.group_project_rating">
+                        <button name="action_open_ratings" type="object" attrs="{'invisible': ['|', '|', ('rating_count', '=', 0), ('rating_percentage_satisfaction', '&gt;=', 66.6), ('rating_percentage_satisfaction', '&lt;', 33.3)]}" class="oe_stat_button text-warning" icon="fa-meh-o" groups="project.group_project_rating">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value"><field name="rating_percentage_satisfaction" widget="integer"/>%</span>
                                 <span class="o_stat_text text-secondary">Satisfaction</span>
                             </div>
                         </button>
-                        <button name="action_open_ratings" type="object" attrs="{'invisible': ['|', '|', ('rating_count', '=', 0), ('rating_percentage_satisfaction', '>=', 33.3),  ('rating_percentage_satisfaction', '&lt;', 0)]}" class="oe_stat_button text-danger" icon="fa-frown-o" groups="project.group_project_rating">
+                        <button name="action_open_ratings" type="object" attrs="{'invisible': ['|', '|', ('rating_count', '=', 0), ('rating_percentage_satisfaction', '&gt;=', 33.3),  ('rating_percentage_satisfaction', '&lt;', 0)]}" class="oe_stat_button text-danger" icon="fa-frown-o" groups="project.group_project_rating">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value"><field name="rating_percentage_satisfaction" widget="integer"/>%</span>
                                 <span class="o_stat_text text-secondary">Satisfaction</span>
