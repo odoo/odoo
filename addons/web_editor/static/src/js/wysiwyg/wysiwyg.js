@@ -123,7 +123,7 @@ const Wysiwyg = Widget.extend({
         const $wrapwrap = $('#wrapwrap');
         if ($wrapwrap.length) {
             $wrapwrap[0].addEventListener('scroll', this.odooEditor.multiselectionRefresh, { passive: true });
-            this.$root = $wrapwrap;
+            this.$root = this.$root || $wrapwrap;
         }
 
         if (this._peerToPeerLoading) {
