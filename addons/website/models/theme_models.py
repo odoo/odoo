@@ -221,8 +221,8 @@ class Theme(models.AbstractModel):
         )
 
         # Reinitialize effets
-        self.disable_asset('website.ripple_effect_scss')
-        self.disable_asset('website.ripple_effect_js')
+        self.disable_asset("website.ripple_effect_scss")
+        self.disable_asset("website.ripple_effect_js")
 
         # Reinitialize header templates
         self.disable_view('website.template_header_hamburger')
@@ -251,15 +251,15 @@ class Theme(models.AbstractModel):
         self.disable_view('website.option_footer_scrolltop')
 
     @api.model
-    def _toggle_asset(self, name, active):
+    def _toggle_asset(self, key, active):
         ThemeAsset = self.env['theme.ir.asset'].sudo().with_context(active_test=False)
-        obj = ThemeAsset.search([('name', '=', name)])
+        obj = ThemeAsset.search([('key', '=', key)])
         website = self.env['website'].get_current_website()
         if obj:
             obj = obj.copy_ids.filtered(lambda x: x.website_id == website)
         else:
             Asset = self.env['ir.asset'].sudo().with_context(active_test=False)
-            obj = Asset.search([('name', '=', name)])
+            obj = Asset.search([('key', '=', key)], limit=1)
             has_specific = obj.key and Asset.search_count([
                 ('key', '=', obj.key),
                 ('website_id', '=', website.id)
