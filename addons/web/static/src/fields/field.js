@@ -6,66 +6,62 @@ const { Component, tags } = owl;
 
 const fieldRegistry = registry.category("fields");
 
+export class Field extends Component {
+    setup() {
+        useEffect(() => {
+            this.el.classList.add("o_field_widget");
+            this.el.classList.add(`o_field_${this.type}`);
+            this.el.setAttribute("name", this.props.name);
+        });
+    }
+
+    get concreteFieldComponent() {
+        return Field.getTangibleField(this.props.record, this.type, this.props.name);
+    }
+    get concreteFieldProps() {
+        const field = this.props.record.fields[this.props.name];
+        return {
+            ...this.props,
+            readonly: this.props.readonly || field.readonly || false,
+            required: this.props.required || field.required || false,
+            type: field.type,
+            update: (value) => {
+                return this.props.record.update(this.props.name, value);
+            },
+            value: this.props.record.data[this.props.name] || null,
+        };
+    }
+    get type() {
+        return this.props.type || this.props.record.fields[this.props.name].type;
+    }
+}
+Field.template = tags.xml/* xml */ `
+    <t t-component="concreteFieldComponent" t-props="concreteFieldProps" t-key="props.record.id"/>
+`;
+
 class DefaultField extends Component {
     onChange(ev) {
-        this.props.record.update(this.props.name, ev.target.value);
+        this.props.update(ev.target.value);
     }
 }
 DefaultField.template = tags.xml`
     <t>
         <span t-if="props.readonly" t-esc="props.value" />
-        <input t-else="" class="o_input" t-on-change="onChange" t-att-value="props.value" />
+        <input t-else="" class="o_input" t-att-value="props.value" t-att-id="props.id" t-on-change="onChange" />
     </t>
 `;
 
-export class Field extends Component {
-    static getTangibleField(record, type, fieldName) {
-        if (record.viewMode) {
-            const specificType = `${record.viewMode}.${type}`;
-            if (fieldRegistry.contains(specificType)) {
-                return fieldRegistry.get(specificType);
-            }
+Field.getTangibleField = function (record, type, fieldName) {
+    if (record.viewMode) {
+        const specificType = `${record.viewMode}.${type}`;
+        if (fieldRegistry.contains(specificType)) {
+            return fieldRegistry.get(specificType);
         }
-        if (!fieldRegistry.contains(type)) {
-            const fields = record.fields;
-            type = fields[fieldName].type;
-        }
-        // todo: remove fallback? yep
-        return fieldRegistry.get(type, DefaultField);
     }
-
-    get concreteFieldProps() {
-        return {
-            ...this.props,
-            meta: this.fields[this.name],
-            name: this.name,
-            readonly: this.props.readonly || this.fields[this.name].readonly || false,
-            required: this.fields[this.name].required || false,
-            type: this.type,
-            update: (value) => {
-                return this.props.record.update(this.name, value);
-            },
-            value: this.props.record.data[this.name] || null,
-        };
+    if (!fieldRegistry.contains(type)) {
+        const fields = record.fields;
+        type = fields[fieldName].type;
     }
-
-    setup() {
-        const { record, type, name } = this.props;
-        this.fields = record.fields;
-        this.name = name;
-        // this.type = this.fields[name].type; // FIXME (why give it in props?)
-        this.type = type || this.fields[name].type;
-        this.FieldComponent = Field.getTangibleField(record, type, name);
-
-        useEffect(() => {
-            this.el.classList.add("o_field_widget");
-            this.el.classList.add(`o_field_${this.type}`);
-            this.el.setAttribute("name", this.name);
-            this.el.setAttribute("id", this.props.fieldId);
-        });
-    }
-}
-
-Field.template = tags.xml/* xml */ `
-    <t t-component="FieldComponent" t-props="concreteFieldProps" t-key="props.record.id"/>
-`;
+    // todo: remove fallback? yep
+    return fieldRegistry.get(type, DefaultField);
+};

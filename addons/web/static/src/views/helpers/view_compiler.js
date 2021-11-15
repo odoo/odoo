@@ -491,6 +491,10 @@ export class ViewCompiler {
             }
             const tAttClass = `${reqClass}: ${reqExpr}`;
             appendAttr(compiled, "class", tAttClass);
+
+            if (compiled.nodeName === "Field") {
+                compiled.setAttribute("required", reqExpr);
+            }
         }
     }
 

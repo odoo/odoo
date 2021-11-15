@@ -13,13 +13,19 @@ export class CharField extends Component {
         }
         return value;
     }
+    get shouldTrim() {
+        return this.props.record.fields[this.props.name].trim;
+    }
+    get maxLength() {
+        return this.props.record.fields[this.props.name].size;
+    }
 
     /**
      * @param {Event} ev
      */
     onChange(ev) {
         let value = ev.target.value;
-        if (this.props.meta.trim) {
+        if (this.shouldTrim) {
             value = value.trim();
         }
         this.props.update(value || false);
