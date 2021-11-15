@@ -907,7 +907,9 @@ const Wysiwyg = Widget.extend({
                     }
                 };
                 this.odooEditor.document.addEventListener('mousedown', _onMousedown, true);
-                this.linkTools.appendTo(this.toolbar.$el);
+                if (!this.linkTools.$el) {
+                    this.linkTools.appendTo(this.toolbar.$el);
+                }
             } else {
                 this.linkTools.destroy();
                 this.linkTools = undefined;
