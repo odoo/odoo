@@ -267,7 +267,12 @@ class SaleOrderLine(models.Model):
             # determine vendor of the order (take the first matching company and product)
             suppliers = line.product_id._select_seller(quantity=line.product_uom_qty, uom_id=line.product_uom)
             if not suppliers:
-                raise UserError(_("There is no vendor associated to the product %s. Please define a vendor for this product.") % (line.product_id.display_name,))
+                # Do not raise an error if there is no seller for the product in another company as service_to_purchase is product linked and not company linked,
+                # using it in interco operations lead to error when the company executing the service is reach through auto-validated SO/PO
+                if line.company_id == self.env.company:
+                    raise UserError(_("There is no vendor associated to the product %s. Please define a vendor for this product.") % (line.product_id.display_name,))
+                else:
+                    continue
             supplierinfo = suppliers[0]
             partner_supplier = supplierinfo.name  # yes, this field is not explicit .... it is a res.partner !
 

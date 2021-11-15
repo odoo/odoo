@@ -132,6 +132,32 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
         with self.assertRaises(UserError):
             self.sale_order_1.action_confirm()
 
+    def test_no_supplier_for_non_main_company(self):
+        """ Test confirming SO with product with no supplier in another company does not raise an Error or create a PO"""
+        # delete the suppliers
+        self.supplierinfo1.unlink()
+        # Set warehouse if stock is installed
+        if 'warehouse_id' in self.env["sale.order"]._fields:
+            self.warehouse_2 = self.env['stock.warehouse'].create({
+                'name': 'Base Warehouse',
+                'reception_steps': 'one_step',
+                'delivery_steps': 'ship_only',
+                'code': 'BWH2',
+                'company_id': self.company_data_2['company'].id})
+            self.sale_order_1.write({
+                'company_id': self.company_data_2['company'],
+                'warehouse_id': self.warehouse_2
+                 })
+        else:
+            self.sale_order_1.write({
+                'company_id': self.company_data_2['company'],
+                 })
+        # confirm the SO should raise UserError
+        self.sale_order_1.action_confirm()
+        purchase_lines_so1 = self.env['purchase.order.line'].search([('sale_line_id', 'in', self.sale_order_1.order_line.ids)])
+
+        self.assertEqual(len(purchase_lines_so1), 0, "No purchase line should have been created and no error.")
+
     def test_reconfirm_sale_order(self):
         """ Confirm SO, cancel it, then re-confirm it should not regenerate a purchase line """
         self.sale_order_1.action_confirm()
