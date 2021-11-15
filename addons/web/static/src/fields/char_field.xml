@@ -11,7 +11,7 @@
                 t-att-type="props.password ? 'password' : 'text'"
                 t-att-value="props.value or ''"
                 t-att-autocomplete="props.autocomplete or (props.password ? 'new-password' : 'off')"
-                t-att-maxlength="props.meta.size > 0 and props.meta.size"
+                t-att-maxlength="maxLength > 0 and maxLength"
                 t-att-placeholder="props.placeholder"
                 t-on-change="onChange"
             />
