@@ -10,14 +10,17 @@ const ShareWidget = publicWidget.Widget.extend({
      * @override
      */
     start: function () {
-        var urlRegex = /(\?(?:|.*&)(?:u|url|body)=)(.*?)(&|#|$)/;
-        var titleRegex = /(\?(?:|.*&)(?:title|text|subject)=)(.*?)(&|#|$)/;
-        var url = encodeURIComponent(window.location.href);
-        var title = encodeURIComponent($('title').text());
-        this.$('a').each(function () {
-            var $a = $(this);
-            $a.attr('href', function (i, href) {
-                return href.replace(urlRegex, function (match, a, b, c) {
+        const urlRegex = /(\?(?:|.*&)(?:u|url|body)=)(.*?)(&|#|$)/;
+        const titleRegex = /(\?(?:|.*&)(?:title|text|subject|description)=)(.*?)(&|#|$)/;
+        const mediaRegex = /(\?(?:|.*&)(?:media)=)(.*?)(&|#|$)/;
+        const url = encodeURIComponent(window.location.href);
+        const title = encodeURIComponent($('title').text());
+        const media = encodeURIComponent($('meta[property="og:image"]').attr('content'));
+
+        this.$('a').each((index, element) => {
+            const $a = $(element);
+            $a.attr('href', (i, href) => {
+                return href.replace(urlRegex, (match, a, b, c) => {
                     return a + url + c;
                 }).replace(titleRegex, function (match, a, b, c) {
                     if ($a.hasClass('s_share_whatsapp')) {
@@ -29,6 +32,8 @@ const ShareWidget = publicWidget.Widget.extend({
                         return a + title + url + c;
                     }
                     return a + title + c;
+                }).replace(mediaRegex, (match, a, b, c) => {
+                    return a + media + c;
                 });
             });
             if ($a.attr('target') && $a.attr('target').match(/_blank/i) && !$a.closest('.o_editable').length) {
