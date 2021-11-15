@@ -74,7 +74,7 @@ function factory(dependencies) {
          * @param {MouseEvent} ev
          */
         onClickButtonAttachments(ev) {
-            this.update({ isAttachmentBoxVisible: !this.isAttachmentBoxVisible });
+            this.update({ attachmentBoxView: this.attachmentBoxView ? clear() : insertAndReplace() });
         }
 
         /**
@@ -232,7 +232,7 @@ function factory(dependencies) {
                     this.thread.delete();
                 }
                 this.update({
-                    isAttachmentBoxVisible: this.isAttachmentBoxVisibleInitially,
+                    attachmentBoxView: this.isAttachmentBoxVisibleInitially ? insertAndReplace() : clear(),
                     thread: insert({
                         // If the thread was considered to have the activity
                         // mixin once, it will have it forever.
@@ -261,7 +261,7 @@ function factory(dependencies) {
                 });
                 const nextId = getThreadNextTemporaryId();
                 this.update({
-                    isAttachmentBoxVisible: false,
+                    attachmentBoxView: clear(),
                     thread: insert({
                         areAttachmentsLoaded: true,
                         id: nextId,
@@ -311,6 +311,10 @@ function factory(dependencies) {
     }
 
     Chatter.fields = {
+        attachmentBoxView: one2one('mail.attachment_box_view', {
+            inverse: 'chatter',
+            isCausal: true,
+        }),
         /**
          * Determines the attachment list that will be used to display the attachments.
          */
@@ -385,12 +389,6 @@ function factory(dependencies) {
         }),
         isActivityBoxVisible: attr({
             default: true,
-        }),
-        /**
-         * Determiners whether the attachment box is currently visible.
-         */
-        isAttachmentBoxVisible: attr({
-            default: false,
         }),
         /**
          * Determiners whether the attachment box is visible initially.

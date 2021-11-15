@@ -23,10 +23,10 @@
                     </t>
                 </div>
                 <div class="o_Chatter_scrollPanel" t-on-scroll="chatter.onScrollScrollPanel" t-ref="scrollPanel">
-                    <t t-if="chatter.isAttachmentBoxVisible">
+                    <t t-if="chatter.attachmentBoxView">
                         <AttachmentBox
                             class="o_Chatter_attachmentBox"
-                            chatterLocalId="chatter.localId"
+                            attachmentBoxViewLocalId="chatter.attachmentBoxView.localId"
                         />
                     </t>
                     <t t-if="chatter.thread and chatter.hasActivities and chatter.thread.activities.length > 0">
