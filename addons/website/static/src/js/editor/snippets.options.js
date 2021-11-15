@@ -428,6 +428,12 @@ options.Class.include({
     customizeWebsiteColor: async function (previewMode, widgetValue, params) {
         await this._customizeWebsite(previewMode, widgetValue, params, 'color');
     },
+    /**
+     * @see this.selectClass for parameters
+     */
+    async customizeWebsiteAssets(previewMode, widgetValue, params) {
+        await this._customizeWebsite(previewMode, widgetValue, params, 'assets');
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -474,30 +480,16 @@ options.Class.include({
     _computeWidgetState: async function (methodName, params) {
         switch (methodName) {
             case 'customizeWebsiteViews': {
-                const allXmlIDs = this._getXMLIDsFromPossibleValues(params.possibleValues);
-                const enabledXmlIDs = await this._rpc({
-                    route: '/website/theme_customize_get',
-                    params: {
-                        'xml_ids': allXmlIDs,
-                    },
-                });
-                let mostXmlIDsStr = '';
-                let mostXmlIDsNb = 0;
-                for (const xmlIDsStr of params.possibleValues) {
-                    const enableXmlIDs = xmlIDsStr.split(/\s*,\s*/);
-                    if (enableXmlIDs.length > mostXmlIDsNb
-                            && enableXmlIDs.every(xmlID => enabledXmlIDs.includes(xmlID))) {
-                        mostXmlIDsStr = xmlIDsStr;
-                        mostXmlIDsNb = enableXmlIDs.length;
-                    }
-                }
-                return mostXmlIDsStr; // Need to return the exact same string as in possibleValues
+                return this._getEnabledCustomizeValues(params.possibleValues, true);
             }
             case 'customizeWebsiteVariable': {
                 return weUtils.getCSSVariableValue(params.variable);
             }
             case 'customizeWebsiteColor': {
                 return weUtils.getCSSVariableValue(params.color);
+            }
+            case 'customizeWebsiteAssets': {
+                return this._getEnabledCustomizeValues(params.possibleValues, false);
             }
         }
         return this._super(...arguments);
@@ -513,13 +505,16 @@ options.Class.include({
 
         switch (type) {
             case 'views':
-                await this._customizeWebsiteViews(widgetValue, params);
+                await this._customizeWebsiteData(widgetValue, params, true);
                 break;
             case 'variable':
                 await this._customizeWebsiteVariable(widgetValue, params);
                 break;
             case 'color':
                 await this._customizeWebsiteColor(widgetValue, params);
+                break;
+            case 'assets':
+                await this._customizeWebsiteData(widgetValue, params, false);
                 break;
             default:
                 if (params.customCustomization) {
@@ -583,32 +578,78 @@ options.Class.include({
         }, params.nullValue);
     },
     /**
+     * TODO Remove this function in master because it only stays here for
+     * compatibility.
+     *
      * @private
      */
     _customizeWebsiteViews: async function (xmlID, params) {
-        const allXmlIDs = this._getXMLIDsFromPossibleValues(params.possibleValues);
-        const enableXmlIDs = xmlID.split(/\s*,\s*/);
-        const disableXmlIDs = allXmlIDs.filter(xmlID => !enableXmlIDs.includes(xmlID));
+        this._customizeWebsiteData(xmlID, params, true);
+    },
+    /**
+     * @private
+     */
+    async _customizeWebsiteData(value, params, isViewData) {
+        const allDataKeys = this._getDataKeysFromPossibleValues(params.possibleValues);
+        const enableDataKeys = value.split(/\s*,\s*/);
+        const disableDataKeys = allDataKeys.filter(value => !enableDataKeys.includes(value));
         const resetViewArch = !!params.resetViewArch;
 
         return this._rpc({
-            route: '/website/theme_customize',
+            route: '/website/theme_customize_data',
             params: {
-                'enable': enableXmlIDs,
-                'disable': disableXmlIDs,
+                'isViewData': isViewData,
+                'enable': enableDataKeys,
+                'disable': disableDataKeys,
                 'reset_view_arch': resetViewArch,
             },
         });
     },
     /**
+     * TODO Remove this function in master because it only stays here for
+     * compatibility.
+     *
      * @private
      */
     _getXMLIDsFromPossibleValues: function (possibleValues) {
-        const allXmlIDs = [];
-        for (const xmlIDsStr of possibleValues) {
-            allXmlIDs.push(...xmlIDsStr.split(/\s*,\s*/));
+        this._getDataKeysFromPossibleValues(possibleValues);
+    },
+    /**
+     * @private
+     */
+    _getDataKeysFromPossibleValues(possibleValues) {
+        const allDataKeys = [];
+        for (const dataKeysStr of possibleValues) {
+            allDataKeys.push(...dataKeysStr.split(/\s*,\s*/));
         }
-        return allXmlIDs.filter((v, i, arr) => arr.indexOf(v) === i);
+        return allDataKeys.filter((v, i, arr) => arr.indexOf(v) === i);
+    },
+    /**
+     * @private
+     * @param {Array} possibleValues
+     * @param {Boolean} isViewData true = "ir.ui.view", false = "ir.asset"
+     * @returns {String}
+     */
+    async _getEnabledCustomizeValues(possibleValues, isViewData) {
+        const allDataKeys = this._getDataKeysFromPossibleValues(possibleValues);
+        const enabledValues = await this._rpc({
+            route: '/website/theme_customize_data_get',
+            params: {
+                'keys': allDataKeys,
+                'isViewData': isViewData,
+            },
+        });
+        let mostValuesStr = '';
+        let mostValuesNb = 0;
+        for (const valuesStr of possibleValues) {
+            const enableValues = valuesStr.split(/\s*,\s*/);
+            if (enableValues.length > mostValuesNb
+                    && enableValues.every(value => enabledValues.includes(value))) {
+                mostValuesStr = valuesStr;
+                mostValuesNb = enableValues.length;
+            }
+        }
+        return mostValuesStr; // Need to return the exact same string as in possibleValues
     },
     /**
      * @private
