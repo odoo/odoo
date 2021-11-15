@@ -7,7 +7,8 @@ from odoo.exceptions import UserError, ValidationError
 import mimetypes
 import base64
 import logging
-
+import io
+import csv
 
 from odoo.tools import config, DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, pycompat
 logger = logging.getLogger(__name__)
@@ -57,11 +58,23 @@ class FgImportOrders(models.TransientModel):
                         "extension.") % self.order_filename
                     }}
 
+    @api.model
+    def _read_csv_and_validate2(self):
+        csv_data = base64.b64decode(self.order_file)
+        data_file = io.StringIO(csv_data.decode("utf-8"))
+
+        data_file.seek(0)
+        file_reader = []
+        csv_reader = csv.reader(data_file, delimiter=',')
+        file_reader.extend(csv_reader)
+        for f in file_reader:
+            print(f[0])
+
     def import_order_button(self):
         self.ensure_one()
-        orders = self._read_csv_and_validate()
-        if orders:
-            returnMessage = self._post_orders(orders)
+        ordersDetails = self._read_csv_and_validate()
+        if ordersDetails:
+            returnMessage = self._post_orders(ordersDetails)
             returnMessage = "Orders are successfully uploaded to POS. \n" + returnMessage
             message_id = self.env['fg.message.wizard'].create({'message': _(returnMessage)})
             return {
@@ -76,44 +89,106 @@ class FgImportOrders(models.TransientModel):
     @api.model
     def _read_csv_and_validate(self):
         jsonOrders = []
-        try:
-            orderfile = base64.b64decode(self.order_file)
-            orderfile_string = orderfile.decode('utf-8')
-            # data = json.loads(file_string)
-            orders = orderfile_string.split('\r\n')
-            notNotFound = ''
-            notNotFoundInPOS = ''
+        #try:
+        orderfile = base64.b64decode(self.order_file)
+        data_file = io.StringIO(orderfile.decode("utf-8"))
+        data_file.seek(0)
+        orders = []
+        csv_reader = csv.reader(data_file, delimiter=',')
+        orders.extend(csv_reader)
 
-            duplicateRef = '' #duplicate orders
+        notNotFound = ''
+        notNotFoundInPOS = ''
 
-            orderReferencesSesion = ''  # hold order ref for session not found
-            customerNames = ''
-            noCustomerNames=''
+        duplicateRef = '' #duplicate orders
 
-            header = True
-            # data in sheet
-            # col[0] = company
-            # col[1] = session
-            # col[2] = order ref
-            # col[3] = source
-            # col[4] = customer
-            # col[5] = customer email
-            # col[6] = item name
-            # col[7] = item code
-            # col[8] = price
-            # col[9] = discount
-            # col[10] = quantity
-            # col[11] = Total Line Amount
-            # col[12] = Total Order Amount
-            # col[13] = Amount Paid
-            # validate data
-            for row in orders:
-                hasErrors = False
-                if not header:
-                    orderLine = row.split(',')
-                    if len(orderLine) > 1:
+        orderReferencesSesion = ''  # hold order ref for session not found
+        customerNames = ''
+
+        noCustomerNames=''
+
+
+        giftCardPaymentNumber=''
+
+        header = True
+        # data in sheet
+        # col[0] = company
+        # col[1] = session
+        # col[2] = order ref
+        # col[3] = source
+        # col[4] = customer
+        # col[5] = customer email
+
+        # col[6] = phone
+        # col[7] = street
+        # col[8] = city
+        # col[9] = zip
+
+        # col[10] = item code
+        # col[11] = item desc
+        # col[12] = price
+        # col[13] = quantity
+        # col[14] = Total Order Discount
+        # col[15] = Type
+        # col[16] = Card
+        # col[17] = Amount Paid
+        # validate data
+        paymentList=[]
+        for orderLine in orders:
+            hasErrors = False
+            if not header:
+                if len(orderLine) > 1:
+
+                    orderRef = orderLine[2]
+                    orderSource = orderLine[3]
+                    sku = orderLine[10]
+                    cust = orderLine[4]
+                    print(orderSource+orderRef)
+                    if sku != 'Payment':
+                        price = float(orderLine[12])
+                        quantity = float(orderLine[13])
+                        if not orderRef or not orderSource or not sku or not cust or not price or not quantity:
+                            raise ValidationError("Please make sure required values are field in. " + orderRef)
+
+                    amount = None
+                    #check needed fields
+                    if sku == 'Payment': #default Cash
+                        type = 'Cash'
+                        amountPaid = orderLine[17]
+                        cardNumber = None
+                        if orderLine[15] == 'Gift Card':
+                            type=orderLine[15]
+                            cardNumber = orderLine[16]
+                            if not amountPaid:
+                                hasErrors = True
+                                if orderRef not in giftCardPaymentNumber:
+                                    if giftCardPaymentNumber == '':
+                                        giftCardPaymentNumber = orderRef
+                                    else:
+                                        if sku not in giftCardPaymentNumber:
+                                            giftCardPaymentNumber += ", " + orderRef
+
+                        #get payment method
+                        paymentMethod = self.env['pos.payment.method'].search([('name', '=', type),('active', '=', True)])
+                        if not paymentMethod or not amountPaid:
+                            if giftCardPaymentNumber == '':
+                                giftCardPaymentNumber = orderRef
+                            else:
+                                if sku not in giftCardPaymentNumber:
+                                    giftCardPaymentNumber += ", " + orderRef
+                        else:
+                            payment = {
+                                "orderRef": orderRef,
+                                "orderSource": orderSource,
+                                "type": type,
+                                "cardNumber": cardNumber,
+                                "amountPaid": amountPaid,
+                                "paymentMethod": paymentMethod
+                            }
+                            paymentList.append(payment)
+                    else:
                         # check items if exist
-                        sku = orderLine[7]
+
                         product_template = self.env['product.template'].search([('default_code', '=', sku)])
                         if not product_template:
                             hasErrors = True
@@ -131,8 +206,6 @@ class FgImportOrders(models.TransientModel):
                                     notNotFoundInPOS += ", " + sku
 
                         # check duplicate orders
-                        orderRef = orderLine[2]
-                        orderSource = orderLine[3]
                         orderexist = None
                         if (orderSource + ' ' +orderRef) not in duplicateRef:
                             orderexist = self.env['pos.order'].search([('x_ext_order_ref', '=', orderRef), ('x_ext_source', '=', orderSource)])
@@ -179,8 +252,12 @@ class FgImportOrders(models.TransientModel):
 
                         #check customer
                         customer_id = None
-                        cust = orderLine[4]
+
                         custEmail = orderLine[5]
+                        phone = orderLine[6]
+                        street = orderLine[7]
+                        city = orderLine[8]
+                        zip = orderLine[9]
                         customer = None
                         customer = self.env['res.partner'].search([('name', '=', cust)])
                         if cust not in customerNames:
@@ -188,7 +265,14 @@ class FgImportOrders(models.TransientModel):
                                 customer = self.env['res.partner'].search([('email', '=', custEmail)])
                                 if not customer:
                                     #create customer
-                                    customer = {"name": cust, "email": custEmail, "is_company": False}
+                                    customer = {"name": cust,
+                                                "email": custEmail,
+                                                "phone": phone,
+                                                "street": street,
+                                                "city": city,
+                                                "zip": zip,
+                                                "is_company": False
+                                                }
                                     customer = self.env['res.partner'].create(customer)
                                     # hasErrors = True
                                     # if customerNames == '':
@@ -208,13 +292,16 @@ class FgImportOrders(models.TransientModel):
 
                         #convert to json if no errors
                         if not hasErrors:
-                            itemDescription = orderLine[6]
-                            price = float(orderLine[8])
-                            quantity = float(orderLine[9])
-                            totalLineAmount = float(orderLine[10])
-                            discount = float(orderLine[11])
-                            totalOrderAmount = float(orderLine[12])
-                            amountPaid = float(orderLine[13])
+                            itemDescription = orderLine[11]
+                            discount = 0
+                            if orderLine[14]:
+                               discount = float(orderLine[14])
+
+                            taxes = product_template.taxes_id
+                            tax = ''
+                            if taxes:
+                                tax = taxes[0].id
+
                             jsonOrder = {
                                             "company": company.id,
                                             "session": session_id,
@@ -222,68 +309,74 @@ class FgImportOrders(models.TransientModel):
                                             "orderSource": orderSource,
                                             "itemDescription": itemDescription,
                                             "itemCode": sku,
-                                            "productTemplate": product_template.id,
+                                            "product": product_template,
                                             "price": price,
                                             "discount": discount,
                                             "quantity": quantity,
-                                            "totalLineAmount": totalLineAmount,
-                                            "totalOrderAmount": totalOrderAmount,
-                                            "amountPaid": amountPaid,
-                                            "priceListId": config.pricelist_id.id,
+                                            "priceList": config.pricelist_id,
                                             "fiscalPositionId": config.default_fiscal_position_id.id,
-                                            "customer": customer_id
+                                            "customerId": customer_id,
+                                            "taxes": taxes
                                          }
                             jsonOrders.append(jsonOrder)
-                header = False
-            errorMsg = ''
-            if notNotFound != '':
-                errorMsg += "Items not found: " + notNotFound
 
-            if notNotFoundInPOS != '':
-                errorMsg = "\nItems found but not available in POS: " + notNotFoundInPOS
+            header = False
+        errorMsg = ''
+        if notNotFound != '':
+            errorMsg += "Items not found: " + notNotFound
 
-            if duplicateRef != '':
-                errorMsg += "\nDuplicate orders: " + duplicateRef
+        if notNotFoundInPOS != '':
+            errorMsg = "\n\nItems found but not available in POS: " + notNotFoundInPOS
 
-
-            if orderReferencesSesion != '':
-                errorMsg += "\nError in Company and Session data for order ref: " + orderReferencesSesion
+        if duplicateRef != '':
+            errorMsg += "\n\nDuplicate orders: " + duplicateRef
 
 
-            if noCustomerNames != '':
-                errorMsg += "\nNo customer specified in order/s: " + noCustomerNames
+        if orderReferencesSesion != '':
+            errorMsg += "\n\nError in Company and Session data for order ref: " + orderReferencesSesion
 
+
+        if noCustomerNames != '':
+            errorMsg += "\n\nNo customer specified in order/s: " + noCustomerNames
+
+
+        if giftCardPaymentNumber != '':
+            errorMsg += "\n\nEither card#, paid amount or payment method is not available for order ref: " + giftCardPaymentNumber
+
+        if errorMsg != '':
+            errorMsg += '\n\nPlease correct these errors and re-upload.'
+            raise ValidationError(errorMsg)
+
+
+        else: #check orders if sorted well haha
+            orderRef = ''
+            orderSource = ''
+            orderReferences = ''
+            for order in jsonOrders:
+                # save first or new header
+                orderRefSource = order['orderSource'] + order['orderRef']
+                if orderRef == '' or orderRef != orderRefSource:
+                    if orderRefSource not in orderReferences:
+                        orderReferences +=", " +  orderRefSource
+                    else:
+                        errorMsg = "References and sources should be in order."
+                        break
+                orderRef = order['orderSource'] + order['orderRef']
             if errorMsg != '':
                 errorMsg += '\n\nPlease correct these errors and re-upload.'
                 raise ValidationError(errorMsg)
-            else: #check orders if sorted well haha
-                orderRef = ''
-                orderSource = ''
-                orderReferences = ''
-                for order in jsonOrders:
-                    # save first or new header
-                    orderRefSource = order['orderSource'] + order['orderRef']
-                    if orderRef == '' or orderRef != orderRefSource:
-                        if orderRefSource not in orderReferences:
-                            orderReferences +=", " +  orderRefSource
-                        else:
-                            errorMsg = "References and sources should be in order."
-                            break
-                    orderRef = order['orderSource'] + order['orderRef']
-                if errorMsg != '':
-                    errorMsg += '\n\nPlease correct these errors and re-upload.'
-                    raise ValidationError(errorMsg)
 
-        except ValueError:
-            raise ValidationError(ValueError)
+        #except ValueError:
+        #    raise ValidationError(ValueError)
 
-        return jsonOrders
+        ordersDetails = {"orders": jsonOrders, "paymentList": paymentList}
+        return ordersDetails
 
 
 
 
     @api.model
-    def _post_orders(self, orders):
+    def _post_orders(self, ordersDetails):
         returnMessage=''
         orderRef = '' #order ref holder
         orderId = '' #order id holder
@@ -291,31 +384,34 @@ class FgImportOrders(models.TransientModel):
         count = 1
         orderLinesCount=0;
         orderCount=0;
+        orders = ordersDetails['orders']
+        paymentList = ordersDetails['paymentList']
         for order in orders:
             #save first or new header
             if orderRef != '' and orderRef != (order['orderSource']+order['orderRef']):
                 #get the previous order
                 prevOrder = orders[count-2]
                 session = self.env['pos.session'].search([('id', '=', prevOrder['session'])])
-                savedOrder = self._post_order(prevOrder, orderLines, session)
+                paymentList = self._post_order(prevOrder, orderLines, session,paymentList)
                 orderLinesCount += len(orderLines)
                 orderCount += 1
                 orderLines = []
+            computeAmount = self._compute_amount(order)
             orderLine = [
                             0,
                             0,
                             {
-                                "product_id": order['productTemplate'],
+                                "product_id": order['product'].id,
                                 "price_unit": order['price'],
                                 "qty": order['quantity'],
-                                "price_subtotal": order['totalLineAmount'],
-                                "price_subtotal_incl": order['totalLineAmount'],
+                                "price_subtotal": computeAmount['priceSubTotal'],
+                                "price_subtotal_incl": computeAmount['priceTotalIncl'],
                                 "discount": order['discount'],
                                 "full_product_name": order['itemDescription'],
                                 "tax_ids": [
                                     [
                                         6, False,
-                                        []
+                                        [order['taxes'][0].id]
                                     ]
                                 ]
                             }
@@ -328,7 +424,7 @@ class FgImportOrders(models.TransientModel):
                 #get the previous order
 
                 session = self.env['pos.session'].search([('id', '=',  order['session'])])
-                savedOrder = self._post_order(order, orderLines, session)
+                savedOrder = self._post_order(order, orderLines, session, paymentList)
                 orderLinesCount += len(orderLines)
                 orderCount += 1
             count = count+1
@@ -345,47 +441,55 @@ class FgImportOrders(models.TransientModel):
         }
 
     @api.model
-    def _post_order(self, order, orderLines, session):
+    def _post_order(self, order, orderLines, session, paymentList):
 
         lastOrder  = self.env['pos.order'].search([('sequence_number', '!=', 0)],  order='sequence_number desc', limit=1)
-        sequence=1
+        sequence = 1
         if lastOrder:
             sequence = lastOrder.sequence_number + 1
         posReference = self._zero_pad(session.id, 5) + '-' + self._zero_pad(session.login_number, 3) + '-' + self._zero_pad(sequence, 4)
         posReference = 'Order ' + posReference
-        orderHeader = {
-            "company_id": order['company'],
-            "pos_reference":posReference,
-            "user_id": self.env.user.id,
-            "session_id": order['session'],
-            "amount_total": order['totalOrderAmount'],
-            "amount_paid": order['amountPaid'],
-            "amount_tax": 0,
-            "amount_return": 0,
-            "to_invoice": False,
-            "is_tipped": False,
-            "to_ship": False,
-            "tip_amount": 0,
-            "x_ext_order_ref": order['orderRef'],
-            "x_ext_source": order['orderSource'],
-            "x_total_so_pwd": 0,
-            "pricelist_id": order['priceListId'],
-            "fiscal_position_id": order['fiscalPositionId'],
-            "partner_id": order['customer'],
-            "sequence_number": sequence,
-            "lines": orderLines
-        }
-        savedOrder = self.env['pos.order'].create(orderHeader)
+        total = self._compute_total(orderLines)
 
-        dateNow = fields.Datetime.now()
+        amountPaid = 0
+
+        # get paymenlist
+        statementIds = []
+        dateNow = str(fields.Datetime.now())
+        paymentIndexes = []
+        paymentIndex=0
+        for payment in paymentList:
+            if (order['orderRef'] == payment['orderRef']) and (order['orderSource'] == payment['orderSource']):
+                statementId = {
+                    "name": dateNow,
+                    "payment_method_id": payment['paymentMethod'].id,
+                    "amount": payment['amountPaid'],
+                    "payment_status": "",
+                    "ticket": "",
+                    "card_type": "",
+                    "cardholder_name": "",
+                    "transaction_id": "",
+                    "x_gift_card_number": payment['cardNumber']
+                }
+                amountPaid += float(payment['amountPaid'])
+                statementIds.append([0, 0, statementId])
+                paymentIndexes.append(paymentIndex)
+            paymentIndex += 1
+
+        #remove paymentList
+        paymentIndex = 0
+        for index in paymentIndexes:
+            paymentList.pop(index-paymentIndex)
+            paymentIndex += 1
+
         orderHeader = {
             "company_id": order['company'],
             "pos_reference": posReference,
             "user_id": self.env.user.id,
             "session_id": order['session'],
-            "amount_total": order['totalOrderAmount'],
-            "amount_paid": order['amountPaid'],
-            "amount_tax": 0,
+            "amount_total": total['amountTotal'],
+            "amount_paid": amountPaid,
+            "amount_tax":  total['totalTax'],
             "amount_return": 0,
             "to_invoice": False,
             "is_tipped": False,
@@ -394,32 +498,44 @@ class FgImportOrders(models.TransientModel):
             "x_ext_order_ref": order['orderRef'],
             "x_ext_source": order['orderSource'],
             "x_total_so_pwd": 0,
-            "pricelist_id": order['priceListId'],
+            "pricelist_id": order['priceList'].id,
             "fiscal_position_id": order['fiscalPositionId'],
-            "partner_id": order['customer'],
+            "partner_id": order['customerId'],
             "sequence_number": sequence,
-            "statement_ids": [
-                [
-                    0,
-                    0,
-                    {
-                        "name": dateNow,
-                        "payment_method_id": 1,
-                        "amount": order['amountPaid'],
-                        "payment_status": "",
-                        "ticket": "",
-                        "card_type": "",
-                        "cardholder_name": "",
-                        "transaction_id": ""
-                    }
-                ]
-            ],
             "lines": orderLines
         }
+        savedOrder = self.env['pos.order'].create(orderHeader)
+
+
+        orderHeader = {
+            "company_id": order['company'],
+            "pos_reference": posReference,
+            "user_id": self.env.user.id,
+            "session_id": order['session'],
+            "amount_total": total['amountTotal'],
+            "amount_paid": amountPaid,
+            "amount_tax":  total['totalTax'],
+            "amount_return": 0,
+            "to_invoice": False,
+            "is_tipped": False,
+            "to_ship": False,
+            "tip_amount": 0,
+            "x_ext_order_ref": order['orderRef'],
+            "x_ext_source": order['orderSource'],
+            "x_total_so_pwd": 0,
+            "pricelist_id": order['priceList'].id,
+            "fiscal_position_id": order['fiscalPositionId'],
+            "partner_id": order['customerId'],
+            "sequence_number": sequence,
+            "statement_ids": statementIds,
+            "lines": orderLines
+        }
+
         # process payment
         processPayment = self.env['pos.order']._process_payment_lines(orderHeader, savedOrder, session, False)
         savedOrder.write({'state': 'paid'})
-        return savedOrder
+        print(orderHeader)
+        return paymentList
 
     @api.model
     def _zero_pad(self, num, size):
@@ -427,3 +543,28 @@ class FgImportOrders(models.TransientModel):
         while len(s) < size:
             s = "0" + s
         return s
+
+
+    @api.model
+    def _compute_amount(self, orderLine):
+        computeAmount = {}
+        if orderLine['product']:
+            price = float(orderLine['price']) * (1 - (float(orderLine['discount']) or 0.0) / 100.0)
+            priceSubTotal= priceSubTotalIncl = price * float(orderLine['quantity'])
+            taxIds =orderLine['taxes']
+            priceList = orderLine['priceList']
+            if (taxIds):
+                taxes = taxIds.compute_all(price, priceList.currency_id, float(orderLine['quantity']), product=orderLine['product'], partner=False)
+                priceSubTotal = taxes['total_excluded']
+                priceSubTotalIncl = taxes['total_included']
+            computeAmount = {"priceSubTotal": priceSubTotal, "priceTotalIncl": priceSubTotalIncl}
+        return computeAmount
+
+    @api.model
+    def _compute_total(self, orderLines):
+        totalTax = 0
+        amountTotal = 0
+        for orderLine in orderLines:
+            totalTax += orderLine[2]['price_subtotal_incl'] - orderLine[2]['price_subtotal']
+            amountTotal += orderLine[2]['price_subtotal_incl']
+        return {"amountTotal": amountTotal,"totalTax": totalTax}
