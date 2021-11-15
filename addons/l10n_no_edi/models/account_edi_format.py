@@ -69,10 +69,10 @@ class AccountEdiFormat(models.Model):
 
     def _check_move_configuration(self, invoice):
         errors = super()._check_move_configuration(invoice)
-        if self.code != 'ehf_3':
+        supplier = invoice.company_id.partner_id.commercial_partner_id
+        if self.code != 'ehf_3' or supplier.country_code != 'NO':
             return errors
 
-        supplier = invoice.company_id.partner_id.commercial_partner_id
         if supplier.country_code == 'NO' and not supplier.l10n_no_bronnoysund_number:
             errors.append(_("The supplier %r must have a Bronnoysund company registry.", supplier.display_name))
 
@@ -100,7 +100,9 @@ class AccountEdiFormat(models.Model):
             return super()._post_invoice_edi(invoices)
 
         invoice = invoices  # no batch ensure that there is only one invoice
-        attachment = self._export_ehf_3(invoice)
+        attachment = None
+        if invoice.company_id.partner_id.commercial_partner_id.country_code == 'NO':
+            attachment = self._export_ehf_3(invoice)
         return {invoice: {'attachment': attachment}}
 
     def _create_invoice_from_xml_tree(self, filename, tree):

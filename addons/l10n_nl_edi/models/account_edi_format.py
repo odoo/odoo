@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, _
+from odoo.exceptions import UserError
 
 import base64
 import markupsafe
@@ -67,7 +68,13 @@ class AccountEdiFormat(models.Model):
         self.ensure_one()
         # Create file content.
         xml_content = markupsafe.Markup("<?xml version='1.0' encoding='UTF-8'?>")
-        xml_content += self.env.ref('l10n_nl_edi.export_nlcius_invoice')._render(self._get_nlcius_values(invoice))
+        nlcius_values = self._get_nlcius_values(invoice)
+        template_to_render = 'export_nlcius_invoice' if 'bis3_endpoint' in nlcius_values['customer_vals'] else 'export_nlcius_ubl_invoice' 
+        if template_to_render == 'export_nlcius_ubl_invoice':
+            template = self.env['ir.model.data']._xmlid_to_res_id('l10n_nl_edi.' + template_to_render)
+            if not template:
+                raise UserError(_("The l10n_nl_edi.%s template is missing.", template_to_render))
+        xml_content += self.env.ref('l10n_nl_edi.' + template_to_render)._render(nlcius_values)
         vat = invoice.company_id.partner_id.commercial_partner_id.vat
         xml_name = 'nlcius-%s%s%s.xml' % (vat or '', '-' if vat else '', invoice.name.replace('/', '_'))
         return self.env['ir.attachment'].create({
