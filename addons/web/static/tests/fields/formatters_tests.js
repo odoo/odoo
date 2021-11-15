@@ -6,13 +6,14 @@ import {
     formatFloatFactor,
     formatFloatTime,
     formatInteger,
-    formatMany2x,
+    formatX2many,
+    formatMany2one,
     formatMonetary,
     formatPercentage,
 } from "@web/fields/formatters";
+import { session } from "@web/session";
 import { defaultLocalization } from "../helpers/mock_services";
 import { patchWithCleanup } from "../helpers/utils";
-import { session } from "@web/session";
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
@@ -191,22 +192,19 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(formatInteger(6000, options), "60€00");
     });
 
-    QUnit.test("formatMany2x", function (assert) {
-        assert.strictEqual(formatMany2x(null), "");
-        assert.strictEqual(formatMany2x([1, "A M2O value"]), "A M2O value");
+    QUnit.test("formatMany2one", function (assert) {
+        assert.strictEqual(formatMany2one(false), "");
+        assert.strictEqual(formatMany2one([false, "M2O value"]), "M2O value");
+        assert.strictEqual(formatMany2one([1, "M2O value"]), "M2O value");
+        assert.strictEqual(formatMany2one([1, "M2O value"], { escape: true }), "M2O%20value");
+    });
 
-        let value = {
-            data: { display_name: "A M2O value" },
-        };
-        assert.strictEqual(formatMany2x(value), "A M2O value");
-
-        value = [1, "A M2O value"];
-        assert.strictEqual(formatMany2x(value, { escape: true }), "A%20M2O%20value");
-
-        value = {
-            data: { display_name: "A M2O value" },
-        };
-        assert.strictEqual(formatMany2x(value, { escape: true }), "A%20M2O%20value");
+    QUnit.test("formatX2many", function (assert) {
+        // Results are cast as strings since they're lazy translated.
+        assert.strictEqual(String(formatX2many(false)), "No records");
+        assert.strictEqual(String(formatX2many([])), "No records");
+        assert.strictEqual(String(formatX2many([1])), "1 record");
+        assert.strictEqual(String(formatX2many([1, 3])), "2 records");
     });
 
     QUnit.test("formatMonetary", function (assert) {
