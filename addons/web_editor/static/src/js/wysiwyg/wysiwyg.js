@@ -206,16 +206,17 @@ const Wysiwyg = Widget.extend({
                 selectorEditableArea: '.o_editable',
             }, options));
             await this._insertSnippetMenu();
+
+            window.addEventListener('beforeunload', (event) => {
+                if (this.isDirty()) {
+                    event.returnValue = _t('This document is not saved!');
+                }
+            });
         }
         if (this.options.getContentEditableAreas) {
             $(this.options.getContentEditableAreas()).find('*').off('mousedown mouseup click');
         }
 
-        window.onbeforeunload = (event) => {
-            if (this.isDirty()) {
-                return _t('This document is not saved!');
-            }
-        };
         // The toolbar must be configured after the snippetMenu is loaded
         // because if snippetMenu is loaded in an iframe, binding of the color
         // buttons must use the jquery loaded in that iframe. See
