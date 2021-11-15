@@ -1942,6 +1942,121 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             (self.tax_account_1,                    -20.0,      -13.33),
         ])
 
+    def test_reconcile_cash_basis_exchange_difference_transfer_account_check_entries_4(self):
+        ''' Test the generation of the exchange difference for a tax cash basis journal entry when the tax
+        account is a reconcile one.
+        '''
+        currency_id = self.currency_data['currency'].id
+        cash_basis_transition_account = self.env['account.account'].create({
+            'code': '209.01.01',
+            'name': 'Cash Basis Transition Account',
+            'user_type_id': self.env.ref('account.data_account_type_current_liabilities').id,
+            'company_id': self.company_data['company'].id,
+            'reconcile': True,
+        })
+        self.cash_basis_tax_a_third_amount.write({
+            'cash_basis_transition_account_id': cash_basis_transition_account.id,
+        })
+
+        # Rate 1/3 in 2016.
+        cash_basis_move = self.env['account.move'].create({
+            'move_type': 'entry',
+            'date': '2016-01-01',
+            'line_ids': [
+                # Base Tax line
+                (0, 0, {
+                    'debit': 0.0,
+                    'credit': 100.0,
+                    'amount_currency': -300.0,
+                    'currency_id': currency_id,
+                    'account_id': self.company_data['default_account_revenue'].id,
+                    'tax_ids': [(6, 0, self.cash_basis_tax_a_third_amount.ids)],
+                    'tax_exigible': False,
+                }),
+
+                # Tax line
+                (0, 0, {
+                    'debit': 0.0,
+                    'credit': 33.33,
+                    'amount_currency': -100.0,
+                    'currency_id': currency_id,
+                    'account_id': cash_basis_transition_account.id,
+                    'tax_repartition_line_id': self.cash_basis_tax_a_third_amount.invoice_repartition_line_ids.filtered(lambda line: line.repartition_type == 'tax').id,
+                    'tax_exigible': False,
+                }),
+
+                # Receivable lines
+                (0, 0, {
+                    'debit': 133.33,
+                    'credit': 0.0,
+                    'amount_currency': 400.0,
+                    'currency_id': currency_id,
+                    'account_id': self.extra_receivable_account_1.id,
+                }),
+            ]
+        })
+
+        # Rate 1/2 in 2017.
+        payment_move = self.env['account.move'].create({
+            'move_type': 'entry',
+            'date': '2017-01-01',
+            'line_ids': [
+                (0, 0, {
+                    'debit': 0.0,
+                    'credit': 200.0,
+                    'amount_currency': -400.0,
+                    'currency_id': currency_id,
+                    'account_id': self.extra_receivable_account_1.id,
+                }),
+                (0, 0, {
+                    'debit': 200.0,
+                    'credit': 0.0,
+                    'amount_currency': 400.0,
+                    'currency_id': currency_id,
+                    'account_id': self.company_data['default_account_revenue'].id,
+                }),
+            ]
+        })
+
+        (cash_basis_move + payment_move).action_post()
+
+        self.assertAmountsGroupByAccount([
+            # Account                               Balance     Amount Currency
+            (cash_basis_transition_account,      -33.33,     -100.0),
+            (self.tax_account_1,                    0.0,        0.0),
+        ])
+
+        receivable_lines = (cash_basis_move + payment_move).line_ids\
+            .filtered(lambda line: line.account_id == self.extra_receivable_account_1)
+        res = receivable_lines.reconcile()
+
+        self.assertEqual(len(res.get('tax_cash_basis_moves', [])), 1)
+
+        # Tax values based on payment
+        # Invoice amount 300 (amount currency) with payment rate 2 (400 payment amount divided by 200 invoice balance)
+        #  - Base amount: 150 company currency
+        #  - Tax amount: 50 company currency
+        self.assertRecordValues(res['tax_cash_basis_moves'].line_ids, [
+            # Base amount:
+            {'debit': 150.0,    'credit': 0.0,      'amount_currency': 300.0,   'currency_id': currency_id,     'account_id': self.cash_basis_base_account.id},
+            {'debit': 0.0,      'credit': 150.0,    'amount_currency': -300.0,  'currency_id': currency_id,     'account_id': self.cash_basis_base_account.id},
+            # tax:
+            {'debit': 50.0,     'credit': 0.0,      'amount_currency': 100.0,   'currency_id': currency_id,     'account_id': cash_basis_transition_account.id},
+            {'debit': 0.0,      'credit': 50.0,     'amount_currency': -100.0,  'currency_id': currency_id,     'account_id': self.tax_account_1.id},
+        ])
+
+        exchange_diff = res['full_reconcile'].exchange_move_id
+
+        # Exchange difference
+        # 66.67 amount residual on the payment line after reconciling receivable line of the cash basis move with the payment counterpart
+        # 50.00 difference of the cash_basis_move base line and the CABA entry created by the system
+        self.assertRecordValues(exchange_diff.line_ids, [
+            {'debit': 66.67,    'credit': 0.0,      'currency_id': currency_id,     'account_id': self.extra_receivable_account_1.id},
+            {'debit': 0.0,      'credit': 66.67,    'currency_id': currency_id,     'account_id': self.company_data['company'].income_currency_exchange_account_id.id},
+            {'debit': 50.0,     'credit': 0.0,      'currency_id': currency_id,     'account_id': self.cash_basis_base_account.id},
+            {'debit': 0.0,      'credit': 50.0,     'currency_id': currency_id,     'account_id': self.cash_basis_base_account.id},
+        ])
+
     def test_reconcile_cash_basis_revert(self):
         ''' Ensure the cash basis journal entry can be reverted. '''
         self.cash_basis_transfer_account.reconcile = True
