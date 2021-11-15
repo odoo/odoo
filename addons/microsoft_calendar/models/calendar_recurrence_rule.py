@@ -17,15 +17,20 @@ class RecurrenceRule(models.Model):
     microsoft_id = fields.Char('Microsoft Calendar Recurrence Id')
 
     def _compute_rrule(self):
+        # Note: 'need_sync_m' is set to False to avoid syncing the updated recurrence with
+        # Outlook, as this update may already come from Outlook. If not, this modification will
+        # be already synced through the calendar.event.write()
         for recurrence in self:
             if recurrence.rrule != recurrence._rrule_serialize():
-                recurrence.write({'rrule': recurrence._rrule_serialize()})
+                recurrence.write({'rrule': recurrence._rrule_serialize(), 'need_sync_m': False})
 
     def _inverse_rrule(self):
+        # Note: 'need_sync_m' is set to False to avoid syncing the updated recurrence with
+        # Outlook, as this update mainly comes from Outlook (the 'rrule' field is not directly
+        # modified in Odoo but computed from other fields).
         for recurrence in self.filtered('rrule'):
             values = self._rrule_parse(recurrence.rrule, recurrence.dtstart)
-            # We avoid to trigger patch in the inverse
-            recurrence.write(values)
+            recurrence.write(dict(values, need_sync_m=False))
 
     def _apply_recurrence(self, specific_values_creation=None, no_send_edit=False):
         events = self.filtered('need_sync_m').calendar_event_ids
