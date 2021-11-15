@@ -106,6 +106,7 @@ class ResCompany(models.Model):
     @api.model
     def create_missing_dropship_rule(self):
         dropship_route = self.env.ref('stock_dropshipping.route_drop_shipping')
+        dropship_route.write({'company_id': None})
 
         company_ids = self.env['res.company'].search([])
         company_has_dropship_rule = self.env['stock.rule'].search([('route_id', '=', dropship_route.id)]).mapped('company_id')
