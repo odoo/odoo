@@ -152,7 +152,7 @@ function factory(dependencies) {
         }
 
         /**
-         * @param {String} sender id of the session that sent the notification
+         * @param {number|String} sender id of the session that sent the notification
          * @param {String} content JSON
          */
         async handleNotification(sender, content) {
@@ -171,18 +171,18 @@ function factory(dependencies) {
             switch (event) {
                 case "offer":
                     this._addLogEntry(sender, `received notification: ${event}`, { step: 'received offer' });
-                    await this._handleRtcTransactionOffer(sender, payload);
+                    await this._handleRtcTransactionOffer(rtcSession.peerToken, payload);
                     break;
                 case "answer":
                     this._addLogEntry(sender, `received notification: ${event}`, { step: 'received answer' });
-                    await this._handleRtcTransactionAnswer(sender, payload);
+                    await this._handleRtcTransactionAnswer(rtcSession.peerToken, payload);
                     break;
                 case "ice-candidate":
-                    await this._handleRtcTransactionICECandidate(sender, payload);
+                    await this._handleRtcTransactionICECandidate(rtcSession.peerToken, payload);
                     break;
                 case "disconnect":
                     this._addLogEntry(sender, `received notification: ${event}`, { step: ' peer cleanly disconnected ' });
-                    this._removePeer(sender);
+                    this._removePeer(rtcSession.peerToken);
                     break;
                 case 'trackChange':
                     this._handleTrackChange(rtcSession, payload);
@@ -566,7 +566,7 @@ function factory(dependencies) {
 
         /**
          * @private
-         * @param {String} token
+         * @param {String} fromToken
          * @param {Object} param1
          * @param {Object} param1.candidate RTCIceCandidateInit
          */
@@ -728,7 +728,7 @@ function factory(dependencies) {
          * from the receiving end.
          *
          * @private
-         * @param {Object} constraints MediaStreamTrack constraints
+         * @param {String} token
          * @param {Object} [param1]
          * @param {number} [param1.delay] in ms
          * @param {string} [param1.reason]
