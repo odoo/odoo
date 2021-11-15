@@ -159,7 +159,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.test("web client is not deadlocked when a view crashes", async function (assert) {
+    QUnit.skip("web client is not deadlocked when a view crashes", async function (assert) {
         assert.expect(3);
         const readOnFirstRecordDef = testUtils.makeTestPromise();
         const mockRPC = (route, args) => {

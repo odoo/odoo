@@ -22,7 +22,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.module("Concurrency management");
 
-    QUnit.test("drop previous actions if possible", async function (assert) {
+    QUnit.skip("drop previous actions if possible", async function (assert) {
         assert.expect(7);
         const def = testUtils.makeTestPromise();
         const mockRPC = async function (route, args) {
@@ -143,7 +143,7 @@ QUnit.module("ActionManager", (hooks) => {
         );
     });
 
-    QUnit.test(
+    QUnit.skip(
         "execute a new action while loading a lazy-loaded controller",
         async function (assert) {
             assert.expect(16);
@@ -210,7 +210,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.test("execute a new action while handling a call_button", async function (assert) {
+    QUnit.skip("execute a new action while handling a call_button", async function (assert) {
         assert.expect(17);
         const def = testUtils.makeTestPromise();
         const mockRPC = async function (route, args) {
@@ -263,7 +263,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps([]);
     });
 
-    QUnit.test(
+    QUnit.skip(
         "execute a new action while switching to another controller",
         async function (assert) {
             assert.expect(16);
@@ -339,7 +339,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.test("execute a new action while loading views", async function (assert) {
+    QUnit.skip("execute a new action while loading views", async function (assert) {
         assert.expect(11);
         const def = testUtils.makeTestPromise();
         const mockRPC = async function (route, args) {
@@ -389,7 +389,7 @@ QUnit.module("ActionManager", (hooks) => {
         ]);
     });
 
-    QUnit.test("execute a new action while loading data of default view", async function (assert) {
+    QUnit.skip("execute a new action while loading data of default view", async function (assert) {
         assert.expect(12);
         const def = testUtils.makeTestPromise();
         const mockRPC = async function (route, args) {
@@ -439,7 +439,7 @@ QUnit.module("ActionManager", (hooks) => {
         ]);
     });
 
-    QUnit.test("open a record while reloading the list view", async function (assert) {
+    QUnit.skip("open a record while reloading the list view", async function (assert) {
         assert.expect(12);
         let def;
         const mockRPC = async function (route, args) {
@@ -506,7 +506,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.test("switching when doing an action -- load_views slow", async function (assert) {
+    QUnit.skip("switching when doing an action -- load_views slow", async function (assert) {
         assert.expect(13);
         let def;
         const mockRPC = async (route, args) => {
@@ -544,7 +544,7 @@ QUnit.module("ActionManager", (hooks) => {
         ]);
     });
 
-    QUnit.test("switching when doing an action -- search_read slow", async function (assert) {
+    QUnit.skip("switching when doing an action -- search_read slow", async function (assert) {
         assert.expect(13);
         const def = testUtils.makeTestPromise();
         const defs = [null, def, null];
@@ -582,7 +582,7 @@ QUnit.module("ActionManager", (hooks) => {
         ]);
     });
 
-    QUnit.test("click multiple times to open a record", async function (assert) {
+    QUnit.skip("click multiple times to open a record", async function (assert) {
         assert.expect(5);
 
         const def = testUtils.makeTestPromise();

@@ -28,6 +28,7 @@ export class FormViewDialog extends Dialog {
                 fields: form.fields,
             };
         }
+        // FIXME: here we override the fields of the list/kanban view
         Object.assign(this.props.record.activeFields, this.archInfo.fields);
         Object.assign(this.props.record.fields, this.archInfo.fields);
         this.props.record.fieldNames = Object.keys(this.props.record.activeFields);

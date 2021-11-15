@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.KanbanRenderer" owl="1">
-        <div class="o_kanban_view" t-attf-class="o_kanban_{{ props.list.isGrouped ? '' : 'un' }}grouped {{ props.info.className or '' }}">
+        <div class="o_kanban_renderer" t-attf-class="o_kanban_{{ props.list.isGrouped ? '' : 'un' }}grouped {{ props.info.className or '' }}">
             <t t-foreach="getGroupsOrRecords()" t-as="groupOrRecord" t-key="groupOrRecord.key">
                 <t t-if="groupOrRecord.group">
                     <t t-set="group" t-value="groupOrRecord.group" />
