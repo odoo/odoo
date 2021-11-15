@@ -100,7 +100,7 @@ class Project(models.Model):
                 'icon': 'dollar',
                 'text': _('Sales Order'),
                 'action_type': 'object',
-                'action': 'action_view_so',
+                'action': 'action_view_sos',
                 'show': bool(self.sale_order_id),
                 'sequence': 1,
             })
