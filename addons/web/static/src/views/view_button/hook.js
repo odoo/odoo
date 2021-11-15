@@ -24,9 +24,10 @@ export function useViewButtons(model) {
     async function handler(ev) {
         toggleButtonsDisable(comp.el, false);
         const { clickParams, record } = ev.detail;
-        const { resModel, resIds } = model;
+        const { resIds } = model;
 
         const resId = record.resId;
+        const resModel = record.resModel || model.resModel;
 
         const valuesForEval = Object.assign({}, record.data, {
             active_id: resId,

@@ -50,6 +50,20 @@ export const getIds = (idsList) => {
     }
 };
 
+export function processButton(node, fields, viewType) {
+    // TODO if viewType ??
+    return {
+        classes: (node.getAttribute("class") || "").split(" "),
+        icon: node.getAttribute("icon") || false,
+        title: node.getAttribute("title"),
+        string: node.getAttribute("string"),
+        clickParams: {
+            name: node.getAttribute("name"),
+            type: node.getAttribute("type"),
+        },
+    };
+}
+
 export function processField(node, fields, viewType) {
     const name = node.getAttribute("name");
     const widget = node.getAttribute("widget");

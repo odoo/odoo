@@ -79,6 +79,24 @@
                 <span t-attf-class="fa {{group.isLoaded ? 'fa-caret-down' : 'fa-caret-right'}}"
                     t-attf-style="padding-left: {{2 + getGroupLevel(group) * 20}}px; padding-right: 5px"/>
                 <t t-esc="group.displayName"/> (<t t-esc="group.count"/>)
+                <div t-if="(groupByButtons[group.groupedByFieldName] and !group.isFolded)" class="o_group_buttons">
+                    <t t-foreach="groupByButtons[group.groupedByFieldName]" t-as="button" t-key="button.id">
+                        <t t-if="button.clickParams.type === 'edit'">
+                            <button t-att-title="button.title" class="btn" t-on-click="editGroupRecord(group)">
+                                <i t-attf-class="fa fa-fw {{button.icon}} o_button_icon"/>
+                            </button>
+                        </t>
+                        <t t-else="">
+                            <ViewButton
+                                classes="button.classes"
+                                clickParams="button.clickParams"
+                                icon="button.icon"
+                                record="group.record"
+                                string="button.string"
+                                title="button.title"/>
+                        </t>
+                    </t>
+                </div>
             </th>
             <td t-foreach="getAggregateColumns(group)" t-as="column" t-key="column.name" class="o_list_number">
                 <t t-esc="group.aggregates[column.name]"/>
@@ -103,11 +121,12 @@
                     <td class="o_data_cell" t-att-class="getCellClass(column)" t-on-click="openRecord(record)">
                         <t t-foreach="column.buttons" t-as="button" t-key="button.id">
                             <ViewButton
-                                classes="['btn-link']"
+                                classes="button.classes"
+                                clickParams="button.clickParams"
                                 icon="button.icon"
-                                title="button.title"
                                 record="record"
-                                clickParams="button.clickParams"/>
+                                string="button.string"
+                                title="button.title"/>
                         </t>
                     </td>
                 </t>

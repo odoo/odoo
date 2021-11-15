@@ -8,7 +8,7 @@ import { useModel } from "@web/views/helpers/model";
 import { standardViewProps } from "@web/views/helpers/standard_view_props";
 import { useSetupView } from "@web/views/helpers/view_hook";
 import { Layout } from "@web/views/layout";
-import { getActiveActions, processField } from "../helpers/view_utils";
+import { getActiveActions, processButton, processField } from "../helpers/view_utils";
 import { ListRenderer } from "./list_renderer";
 import { RelationalModel } from "../relational_model";
 import { useViewButtons } from "@web/views/view_button/hook";
@@ -16,6 +16,26 @@ import { useViewButtons } from "@web/views/view_button/hook";
 const { onWillStart } = owl.hooks;
 
 const { useSubEnv } = owl.hooks;
+
+export class GroupListArchParser extends XMLParser {
+    parse(arch, fields) {
+        const activeFields = {};
+        const buttons = [];
+        let buttonId = 0;
+        this.visitXML(arch, (node) => {
+            if (node.tagName === "button") {
+                buttons.push({
+                    ...processButton(node),
+                    id: buttonId++,
+                });
+            } else if (node.tagName === "field") {
+                const fieldInfo = processField(node, fields, "list");
+                activeFields[fieldInfo.name] = fieldInfo;
+            }
+        });
+        return { activeFields, buttons, fields };
+    }
+}
 
 export class ListArchParser extends XMLParser {
     parse(arch, fields) {
@@ -27,17 +47,19 @@ export class ListArchParser extends XMLParser {
         const activeFields = {};
         const columns = [];
         let buttonId = 0;
+        const groupBy = {
+            buttons: {},
+            fields: {},
+        };
+        const groupListArchParser = new GroupListArchParser();
         this.visitXML(arch, (node) => {
             if (node.tagName === "button") {
+                const button = processButton(node);
+                button.classes.push("btn-link");
                 columns.push({
+                    ...button,
                     type: "button",
                     id: buttonId++,
-                    icon: node.getAttribute("icon") || false,
-                    title: node.getAttribute("string") || false,
-                    clickParams: {
-                        name: node.getAttribute("name"),
-                        type: node.getAttribute("type") || "object",
-                    },
                 });
             } else if (node.tagName === "field") {
                 if (isAttr(node, "invisible").falsy(true)) {
@@ -49,6 +71,34 @@ export class ListArchParser extends XMLParser {
                         type: "field",
                     });
                 }
+            } else if (node.tagName === "groupby" && node.getAttribute("name")) {
+                const fieldName = node.getAttribute("name");
+                let { arch, fields: groupByFields } = fields[fieldName].views.groupby;
+                groupByFields = Object.assign(
+                    {
+                        id: {
+                            change_default: false,
+                            company_dependent: false,
+                            depends: [],
+                            manual: false,
+                            name: "id",
+                            readonly: true,
+                            required: false,
+                            searchable: true,
+                            sortable: true,
+                            store: true,
+                            string: "ID",
+                            type: "integer",
+                        },
+                    },
+                    groupByFields
+                );
+                const { activeFields, buttons, fields: parsedFields } = groupListArchParser.parse(
+                    arch,
+                    groupByFields
+                );
+                groupBy.buttons[fieldName] = buttons;
+                groupBy.fields[fieldName] = { activeFields, fields: parsedFields };
             }
         });
 
@@ -71,7 +121,7 @@ export class ListArchParser extends XMLParser {
             return columns;
         }
 
-        return { activeActions, fields: activeFields, columns: processColumns(columns) };
+        return { activeActions, fields: activeFields, columns: processColumns(columns), groupBy };
     }
 }
 
@@ -89,6 +139,7 @@ class ListView extends owl.Component {
             fields: this.props.fields,
             activeFields: this.archInfo.fields,
             viewMode: "list",
+            groupByInfo: this.archInfo.groupBy.fields,
         });
         useViewButtons(this.model);
 

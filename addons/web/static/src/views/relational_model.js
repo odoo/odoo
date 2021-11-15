@@ -257,7 +257,7 @@ class DynamicList extends DataPoint {
 
         this.groupBy = params.groupBy || [];
         this.domain = params.domain || [];
-        this.orderedBy = params.orderedBy || {}; // rename orderBy + get back from state
+        this.orderBy = params.orderedBy || {}; // rename orderBy + get back from state
         this.offset = 0;
         this.count = 0;
         this.limit = state.limit || 80; // FIXME: get this limit in params
@@ -283,6 +283,19 @@ class DynamicList extends DataPoint {
         this.model.notify();
         return list;
     }
+    async sortBy(fieldName) {
+        if (this.orderBy.fieldName === fieldName) {
+            this.orderBy.asc = !this.orderBy.asc;
+        } else {
+            this.orderBy = {
+                fieldName,
+                asc: true,
+            };
+        }
+
+        await this.load();
+        this.model.notify();
+    }
 }
 
 export class DynamicRecordList extends DynamicList {
@@ -301,20 +314,6 @@ export class DynamicRecordList extends DynamicList {
         this.records = await this._resequence(this.records, ...arguments);
     }
 
-    async sortBy(fieldName) {
-        if (this.orderedBy.fieldName === fieldName) {
-            this.orderedBy.asc = !this.orderedBy.asc;
-        } else {
-            this.orderedBy = {
-                fieldName,
-                asc: true,
-            };
-        }
-
-        await this.load();
-        this.model.notify();
-    }
-
     // TODO: only for Kanban
     async loadMore() {
         this.offset = this.records.length;
@@ -328,8 +327,8 @@ export class DynamicRecordList extends DynamicList {
     // -------------------------------------------------------------------------
 
     async _loadRecords() {
-        const order = this.orderedBy.fieldName
-            ? `${this.orderedBy.fieldName} ${this.orderedBy.asc ? "ASC" : "DESC"}`
+        const order = this.orderBy.fieldName
+            ? `${this.orderBy.fieldName} ${this.orderBy.asc ? "ASC" : "DESC"}`
             : "";
         const { records, length } = await this.model.orm.webSearchRead(
             this.resModel,
@@ -363,13 +362,12 @@ export class DynamicRecordList extends DynamicList {
 export class DynamicGroupList extends DynamicList {
     constructor(model, params, state = {}) {
         super(...arguments);
-
-        this.groupBy = params.groupBy;
         this.groupLimit = params.groupLimit || LOADED_GROUP_LIMIT;
+        this.groupByInfo = params.groupByInfo;
         this.groupByField = this.fields[this.groupBy[0]];
         this.openGroupsByDefault = params.openGroupsByDefault || false;
         this.groups = state.groups || [];
-
+        this.activeFields = params.activeFields;
         this.type = "group-list";
         this.isGrouped = true;
     }
@@ -413,6 +411,7 @@ export class DynamicGroupList extends DynamicList {
             this.fieldNames,
             this.groupBy,
             {
+                orderby: this.orderby,
                 limit: this.groupLimit,
                 lazy: true,
             }
@@ -427,7 +426,8 @@ export class DynamicGroupList extends DynamicList {
             domain: this.domain,
             groupBy: this.groupBy.slice(1),
             context: this.context,
-            orderedBy: this.orderedBy,
+            orderedBy: this.orderBy,
+            groupByInfo: this.groupByInfo,
         };
         return Promise.all(
             groups.map(async (data) => {
@@ -435,6 +435,7 @@ export class DynamicGroupList extends DynamicList {
                     ...commonGroupParams,
                     aggregates: {},
                     isFolded: !this.openGroupsByDefault,
+                    groupedByFieldName: groupedByField.name,
                 };
                 for (const key in data) {
                     const value = data[key];
@@ -446,6 +447,15 @@ export class DynamicGroupList extends DynamicList {
                             if (["many2one", "many2many"].includes(groupedByField.type)) {
                                 if (!groupParams.value) {
                                     groupParams.displayName = this.model.env._t("Undefined");
+                                }
+                                if (this.groupByInfo[groupedByField.name]) {
+                                    groupParams.recordParam = {
+                                        resModel: groupedByField.relation,
+                                        resId: groupParams.value,
+                                        activeFields: this.groupByInfo[groupedByField.name]
+                                            .activeFields,
+                                        fields: this.groupByInfo[groupedByField.name].fields,
+                                    };
                                 }
                             }
                             break;
@@ -489,6 +499,9 @@ export class Group extends DataPoint {
         this.aggregates = params.aggregates;
         this.groupDomain = params.groupDomain;
         this.count = params.count;
+        this.groupedByFieldName = params.groupedByFieldName;
+        this.groupByInfo = params.groupByInfo;
+        this.recordParam = params.recordParam;
         if ("isFolded" in state) {
             this.isFolded = state.isFolded;
         } else if ("isFolded" in params) {
@@ -505,6 +518,7 @@ export class Group extends DataPoint {
             resModel: params.resModel,
             activeFields: params.activeFields,
             fields: params.fields,
+            groupByInfo: params.groupByInfo,
         };
         this.list = this.model.createDataPoint("list", listParams, state.listState);
     }
@@ -519,6 +533,10 @@ export class Group extends DataPoint {
     async load() {
         if (!this.isFolded) {
             await this.list.load();
+            if (this.recordParam) {
+                this.record = new Record(this.model, this.recordParam);
+                await this.record.load();
+            }
         }
     }
 
@@ -538,7 +556,7 @@ export class StaticList extends DataPoint {
         this.offset = 0;
         this.views = params.views || {};
         this.viewMode = params.viewMode;
-        this.orderedBy = params.orderedBy || {}; // rename orderBy + get back from state
+        this.orderBy = params.orderedBy || {}; // rename orderBy + get back from state
         this.limit = state.limit || 80; // FIXME: get this limit in params
         this.offset = 0;
     }
@@ -557,7 +575,7 @@ export class StaticList extends DataPoint {
         if (!this.resIds.length) {
             return [];
         }
-        const orderFieldName = this.orderedBy.fieldName;
+        const orderFieldName = this.orderBy.fieldName;
         const hasSeveralPages = this.limit < this.resIds.length;
         if (hasSeveralPages && orderFieldName) {
             // there several pages in the x2many and it is ordered, so we must know the value
@@ -585,9 +603,9 @@ export class StaticList extends DataPoint {
                     v2 = v2[1];
                 }
                 if (v1 <= v2) {
-                    return this.orderedBy.asc ? -1 : 1;
+                    return this.orderBy.asc ? -1 : 1;
                 } else {
-                    return this.orderedBy.asc ? 1 : -1;
+                    return this.orderBy.asc ? 1 : -1;
                 }
             });
         }
@@ -619,19 +637,19 @@ export class StaticList extends DataPoint {
                     v2 = v2[1];
                 }
                 if (v1 <= v2) {
-                    return this.orderedBy.asc ? -1 : 1;
+                    return this.orderBy.asc ? -1 : 1;
                 } else {
-                    return this.orderedBy.asc ? 1 : -1;
+                    return this.orderBy.asc ? 1 : -1;
                 }
             });
         }
     }
 
     async sortBy(fieldName) {
-        if (this.orderedBy.fieldName === fieldName) {
-            this.orderedBy.asc = !this.orderedBy.asc;
+        if (this.orderBy.fieldName === fieldName) {
+            this.orderBy.asc = !this.orderBy.asc;
         } else {
-            this.orderedBy = { fieldName, asc: true };
+            this.orderBy = { fieldName, asc: true };
         }
 
         await this.load();
@@ -651,6 +669,7 @@ export class RelationalModel extends Model {
             fields: params.fields || {},
             viewMode: params.viewMode || null,
             resModel: params.resModel,
+            groupByInfo: params.groupByInfo,
         };
         if (this.rootType === "record") {
             this.rootParams.resId = params.resId;
