@@ -788,7 +788,8 @@ function normalizeRem($editable) {
         const remMatch = node.getAttribute('style').match(/[\d\.]+\s*rem/g);
         for (const rem of remMatch || []) {
             const remValue = parseFloat(rem.replace(/[^\d\.]/g, ''));
-            node.setAttribute('style', node.getAttribute('style').replace(rem, remValue * rootFontSize + 'px'));
+            const pxValue = Math.round(remValue * rootFontSize * 10) / 10;
+            node.setAttribute('style', node.getAttribute('style').replace(rem, pxValue + 'px'));
         }
     }
 }
