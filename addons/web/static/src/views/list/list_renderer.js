@@ -30,6 +30,7 @@ export class ListRenderer extends Component {
         this.activeActions = this.props.info.activeActions;
         this.cellClassByColumn = {};
         this.selection = [];
+        this.groupByButtons = this.props.info.groupBy.buttons;
         this.state = useState({
             columns: this.allColumns.filter(
                 (col) => !col.optional || this.optionalActiveFields[col.name]
@@ -39,6 +40,18 @@ export class ListRenderer extends Component {
 
     willUpdateProps() {
         this.selection = [];
+    }
+
+    editGroupRecord(group) {
+        const { resId, resModel } = group.record;
+        this.env.services.action.doAction({
+            res_model: resModel,
+            res_id: resId,
+            type: "ir.actions.act_window",
+            views: [[false, "form"]],
+            view_mode: "form",
+            flags: { action_buttons: true, headless: true },
+        });
     }
 
     createKeyOptionalFields() {
@@ -163,7 +176,7 @@ export class ListRenderer extends Component {
         if (field.sortable) {
             classNames.push("o_column_sortable");
         }
-        const orderBy = this.props.list.orderedBy;
+        const orderBy = this.props.list.orderBy;
         if (orderBy.fieldName === column.name) {
             classNames.push(orderBy.asc ? "o-sort-up" : "o-sort-down");
         }
