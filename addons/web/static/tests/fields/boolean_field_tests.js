@@ -60,10 +60,10 @@ QUnit.module("Fields", (hooks) => {
             ".o_field_boolean input:checked",
             "checkbox should be checked"
         );
-        assert.containsNone(
+        assert.containsOnce(
             form.el,
             ".o_field_boolean input:disabled",
-            "checkbox should not be disabled"
+            "checkbox should be disabled"
         );
 
         // switch to edit mode and check the result
@@ -282,7 +282,7 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             arch: `
                 <form>
-                    <field name="bar" readonly="1" />
+                        <field name="bar" readonly="1"/>
                 </form>
             `,
         });

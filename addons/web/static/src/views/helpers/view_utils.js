@@ -76,7 +76,8 @@ export function processField(node, fields, viewType) {
         onChange: archParseBoolean(node.getAttribute("on_change")),
         options: evaluateExpr(node.getAttribute("options") || "{}"),
         invisible: modifiers.invisible === true, // || modifiers.column_invisible === true;
-        FieldComponent: Field.getTangibleField({ fields, viewType }, widget, name),
+        readonly: modifiers.readonly == true,
+        FieldComponent: Field.getEffectiveFieldComponent({ fields, viewType }, widget, name),
         attrs: {},
     };
     for (const attribute of node.attributes) {

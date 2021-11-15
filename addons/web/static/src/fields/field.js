@@ -15,30 +15,40 @@ export class Field extends Component {
         });
     }
 
-    get concreteFieldComponent() {
-        return Field.getTangibleField(this.props.record, this.type, this.props.name);
+    get effectiveFieldComponent() {
+        return Field.getEffectiveFieldComponent(this.props.record, this.type, this.props.name);
     }
-    get concreteFieldProps() {
-        const field = this.props.record.fields[this.props.name];
-        return {
-            ...this.props,
-            attrs: this.props.record.activeFields[this.props.name].attrs || {},
-            options: this.props.record.activeFields[this.props.name].options || {},
-            readonly: this.props.readonly || field.readonly || false,
-            required: this.props.required || field.required || false,
-            type: field.type,
-            update: (value) => {
-                return this.props.record.update(this.props.name, value);
-            },
-            value: this.props.record.data[this.props.name] || null,
-        };
-    }
+
     get type() {
         return this.props.type || this.props.record.fields[this.props.name].type;
     }
+
+    get effectiveFieldComponentProps() {
+        const record = this.props.record;
+        const field = record.fields[this.props.name];
+        const activeField = record.activeFields[this.props.name];
+        const readonyFromModifiers = activeField.readonly;
+        const readonlyFromViewMode = this.props.readonly;
+        return {
+            attrs: activeField.attrs || {},
+            options: activeField.options || {},
+            required: this.props.required || field.required || false,
+            update: async (value) => {
+                await record.update(this.props.name, value);
+                // We save only if we're on view mode readonly and no readonly field modifier
+                if (readonlyFromViewMode && !readonyFromModifiers) {
+                    return record.save();
+                }
+            },
+            value: this.props.record.data[this.props.name] || null,
+            ...this.props,
+            type: field.type,
+            readonly: readonlyFromViewMode || readonyFromModifiers || false,
+        };
+    }
 }
 Field.template = tags.xml/* xml */ `
-    <t t-component="concreteFieldComponent" t-props="concreteFieldProps" t-key="props.record.id"/>
+    <t t-component="effectiveFieldComponent" t-props="effectiveFieldComponentProps" t-key="props.record.id"/>
 `;
 
 class DefaultField extends Component {
@@ -53,7 +63,7 @@ DefaultField.template = tags.xml`
     </t>
 `;
 
-Field.getTangibleField = function (record, type, fieldName) {
+Field.getEffectiveFieldComponent = function (record, type, fieldName) {
     if (record.viewMode) {
         const specificType = `${record.viewMode}.${type}`;
         if (fieldRegistry.contains(specificType)) {

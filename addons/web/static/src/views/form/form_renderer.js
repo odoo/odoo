@@ -13,8 +13,8 @@ const { xml } = tags;
 export class FormRenderer extends Component {
     setup() {
         const { arch, fields, xmlDoc } = this.props.info;
+        this.state = useState({}); // Used by Form Compiler
         this.templateId = useViewCompiler(FormCompiler, arch, fields, xmlDoc);
-        this.state = useState({});
         useSubEnv({ model: this.props.record.model });
     }
 

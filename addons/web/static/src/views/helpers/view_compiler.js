@@ -465,18 +465,8 @@ export class ViewCompiler {
             }
             const tAttClass = `${roClass}: ${readonlyExpr}`;
             appendAttr(compiled, "class", tAttClass);
-
-            if (compiled.nodeName === "Field") {
-                const defaultMode = compiled.getAttribute("mode");
-                const name = node.getAttribute("name");
-                const widget = node.getAttribute("widget");
-                const fieldReadonlyExpr = `isFieldReadonly(record,"${name}","${widget}",props.readonly)`;
-                compiled.setAttribute(
-                    "readonly",
-                    `${readonlyExpr} or ${defaultMode} === 'readonly' or ${fieldReadonlyExpr}`
-                );
-            }
         }
+        compiled.setAttribute("readonly", "props.readonly"); // handled by form renderer
     }
 
     handleRequired(node, compiled) {
@@ -774,18 +764,11 @@ export const useViewCompiler = (ViewCompiler, templateKey, fields, xmlDoc) => {
                 return ToImplement;
             },
             isFieldEmpty(record, fieldName, widgetName) {
-                const cls = Field.getTangibleField(record, widgetName, fieldName);
+                const cls = Field.getEffectiveFieldComponent(record, widgetName, fieldName);
                 if ("isEmpty" in cls) {
                     return cls.isEmpty(record, fieldName);
                 }
                 return !record.data[fieldName];
-            },
-            isFieldReadonly(record, fieldName, widgetName, defaultValue) {
-                const cls = Field.getTangibleField(record, widgetName, fieldName);
-                if ("isReadonly" in cls) {
-                    return cls.isReadonly(defaultValue, record, fieldName);
-                }
-                return defaultValue;
             },
         },
         ViewCompiler.specialFunctions

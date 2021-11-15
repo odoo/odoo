@@ -23,7 +23,7 @@ function getFieldFromRegistry(registry, { fieldType, viewType, fieldName, fields
 }
 
 class Field extends Component {
-    static getTangibleField({ record, type, name }) {
+    static getEffectiveFieldComponent({ record, type, name }) {
         const FieldClass = getFieldFromRegistry(fieldRegistry, {
             fieldName: name,
             fieldType: type,
@@ -35,7 +35,7 @@ class Field extends Component {
 
     setup() {
         const { record, type, name } = this.props;
-        this.FieldComponent = Field.getTangibleField({ record, type, name }).FieldClass;
+        this.FieldComponent = Field.getTangibleFieldComponent({ record, type, name }).FieldClass;
     }
 }
 
@@ -44,8 +44,8 @@ Field.template = xml/* xml */ `
 `;
 
 class FieldSupportsLegacy extends Field {
-    static getTangibleField({ record, type, fieldName }) {
-        let { FieldClass } = super.getTangibleField(...arguments);
+    static getEffectiveFieldComponent({ record, type, fieldName }) {
+        let { FieldClass } = super.getEffectiveFieldComponent(...arguments);
         if (!FieldClass) {
             FieldClass = getFieldFromRegistry(owlFieldRegistry, {
                 fieldName,
@@ -77,7 +77,11 @@ class FieldSupportsLegacy extends Field {
         if (!this.FieldComponent) {
             this.env = Component.env;
             const { record, type, name } = this.props;
-            const { FieldClass, isOwlLegacy, isLegacy } = FieldSupportsLegacy.getTangibleField({
+            const {
+                FieldClass,
+                isOwlLegacy,
+                isLegacy,
+            } = FieldSupportsLegacy.getEffectiveFieldComponent({
                 record,
                 type,
                 name,

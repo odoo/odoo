@@ -33,9 +33,6 @@ Object.assign(BooleanField, {
     isEmpty() {
         return false;
     },
-    isReadonly() {
-        return false;
-    },
 });
 
 registry.category("fields").add("boolean", BooleanField);

@@ -356,7 +356,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/scss/keyboard.scss',
             'web/static/src/legacy/scss/name_and_signature.scss',
             'web/static/src/legacy/scss/web.zoomodoo.scss',
-            'web/static/src/legacy/scss/color_picker.scss',
             'web/static/src/legacy/scss/fontawesome_overridden.scss',
         ],
         'web._assets_common_scripts': [

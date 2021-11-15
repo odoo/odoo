@@ -1,0 +1,61 @@
+.o_field_widget.o_field_color_picker  {
+
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+
+    // to compensate on the 2px margin used to space the elements relative to each other
+    // we keep the top one cause the widget is a bit to high anyway
+    margin-left: -2px;
+    margin-right: -2px;
+    margin-bottom: -2px;
+
+    > div {
+        display: inline-block;
+        border: 1px solid white;
+        box-shadow: 0 0 0 1px gray('300');
+        margin: 2px;
+
+        > a {
+            display: block;
+
+            &::after {
+                content: "";
+                display: block;
+                width: 20px;
+                height: 15px;
+            }
+        }
+    }
+}
+
+// Set all the colors but the "no-color" one
+@for $size from 2 through length($o-colors) {
+    .o_field_color_picker_color_#{$size - 1} {
+        border-left-color: nth($o-colors, $size);
+        &:after {
+            background-color: nth($o-colors, $size);
+        }
+    }
+}
+
+// Set the "no-color", a red bar on white background
+.o_field_color_picker_color_0 {
+    position: relative;
+    &::before {
+        content: "";
+        @include o-position-absolute(-2px, $left: 10px);
+        display: block;
+        width: 1px;
+        height: 20px;
+        transform: rotate(45deg);
+        background-color: red;
+    }
+    &::after {
+        background-color: white;
+    }
+}
+
+.o_color_picker_disabled {
+    cursor: not-allowed;
+}
