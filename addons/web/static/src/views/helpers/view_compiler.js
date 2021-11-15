@@ -701,10 +701,13 @@ export class ViewCompiler {
         const button = this.document.createElement("ViewButton");
         // PROPS
         if ("string" in node.attributes) {
-            button.setAttribute("title", `"${node.getAttribute("string")}"`);
+            button.setAttribute("string", `"${node.getAttribute("string")}"`);
         }
         if ("size" in node.attributes) {
             button.setAttribute("size", `"${node.getAttribute("size")}"`);
+        }
+        if ("title" in node.attributes) {
+            button.setAttribute("title", `"${node.getAttribute("title")}"`);
         }
         if ("icon" in node.attributes) {
             button.setAttribute("icon", `"${node.getAttribute("icon")}"`);
