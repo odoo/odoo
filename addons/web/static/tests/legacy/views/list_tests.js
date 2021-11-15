@@ -2267,7 +2267,7 @@ QUnit.module('Views', {
         // select a record
         await testUtils.dom.click(list.$('.o_data_row:first .o_list_record_selector input'));
         assert.containsOnce(list.$('.o_cp_buttons'), '.o_list_selection_box');
-        const lastElement = list.$('.o_cp_buttons .o_list_buttons').children(":last")[0];
+        const lastElement = list.$('.o_cp_buttons .o_legacy_list_buttons').children(":last")[0];
         assert.strictEqual(lastElement, list.$('.o_cp_buttons .o_list_selection_box')[0],
             "last element should selection box");
         assert.strictEqual(list.$('.o_list_selection_box').text().trim(), '1 selected');
@@ -2865,7 +2865,7 @@ QUnit.module('Views', {
             View: ListView,
         });
 
-        assert.strictEqual(list.$('table').width(), list.$('.o_list_view').width(),
+        assert.strictEqual(list.$('table').width(), list.$('.o_legacy_list_view').width(),
             "Table should not be stretched by its content");
 
         list.destroy();
@@ -2913,7 +2913,7 @@ QUnit.module('Views', {
             View: ListView,
         });
 
-        assert.strictEqual(list.$('table').width(), list.$('.o_list_view').width());
+        assert.strictEqual(list.$('table').width(), list.$('.o_legacy_list_view').width());
         const largeCells = list.$('.o_data_cell.large');
         assert.strictEqual(largeCells[0].offsetWidth, largeCells[1].offsetWidth);
         assert.strictEqual(largeCells[1].offsetWidth, largeCells[2].offsetWidth);
@@ -4371,7 +4371,7 @@ QUnit.module('Views', {
             }
         });
 
-        assert.containsNone(list, '.o_list_buttons', "should not have any buttons");
+        assert.containsNone(list, '.o_legacy_list_buttons', "should not have any buttons");
         list.destroy();
     });
 
@@ -4521,7 +4521,7 @@ QUnit.module('Views', {
         });
 
         assert.containsNone(list, '.o_view_nocontent');
-        await testUtils.dom.click(list.$('.o_list_view'));
+        await testUtils.dom.click(list.$('.o_legacy_list_view'));
         assert.doesNotHaveClass(list.$('.o_list_button_add'), 'o_catch_attention');
 
         await list.reload({ domain: [['id', '<', 0]] });
@@ -5440,7 +5440,7 @@ QUnit.module('Views', {
 
         await testUtils.dom.click(list.$buttons.find('.o_list_button_add'));
         await testUtils.fields.editInput(list.$('tr.o_selected_row input[name="foo"]'), 'new value');
-        await testUtils.dom.click(list.$('.o_list_view'));
+        await testUtils.dom.click(list.$('.o_legacy_list_view'));
 
         assert.strictEqual(createCount, 1, "should have created a record");
 
@@ -8413,9 +8413,9 @@ QUnit.module('Views', {
 
         await testUtils.fields.many2one.clickOpenDropdown("m2m");
         await testUtils.fields.many2one.clickItem("m2m", "Search More");
-        assert.containsOnce(document.body, '.modal .o_list_view', "should have open the modal");
+        assert.containsOnce(document.body, '.modal .o_legacy_list_view', "should have open the modal");
 
-        await testUtils.dom.click($('.modal .o_list_view .o_data_row:first'));
+        await testUtils.dom.click($('.modal .o_legacy_list_view .o_data_row:first'));
 
         assert.containsOnce(document.body, ".modal [role='alert']", "should have open the confirmation modal");
         assert.containsN(document.body, ".modal .o_field_many2manytags .badge", 3);
@@ -8812,7 +8812,7 @@ QUnit.module('Views', {
         assert.containsN(list, '.o_data_row', 4);
 
         // select all records
-        await testUtils.dom.click(list.$('.o_list_view thead .o_list_record_selector input'));
+        await testUtils.dom.click(list.$('.o_legacy_list_view thead .o_list_record_selector input'));
 
         // edit last cell of last line
         await testUtils.dom.click(list.$('.o_data_row:last .o_data_cell:last'));
@@ -9418,7 +9418,7 @@ QUnit.module('Views', {
             },
         });
 
-        assert.containsN(list, '.o_list_view .o_data_row', 4,
+        assert.containsN(list, '.o_legacy_list_view .o_data_row', 4,
             "list view should contain 4 records");
 
         // reload with a domain (this request is blocked)
@@ -9426,7 +9426,7 @@ QUnit.module('Views', {
         list.reload({domain: [['foo', '=', 'yop']]});
         await testUtils.nextTick();
 
-        assert.containsN(list, '.o_list_view .o_data_row', 4,
+        assert.containsN(list, '.o_legacy_list_view .o_data_row', 4,
             "list view should still contain 4 records (search_read being blocked)");
 
         // reload without the domain
@@ -9434,14 +9434,14 @@ QUnit.module('Views', {
         list.reload({domain: []});
         await testUtils.nextTick();
 
-        assert.containsN(list, '.o_list_view .o_data_row', 4,
+        assert.containsN(list, '.o_legacy_list_view .o_data_row', 4,
             "list view should still contain 4 records");
 
         // unblock the RPC
         prom.resolve();
         await testUtils.nextTick();
 
-        assert.containsN(list, '.o_list_view .o_data_row', 4,
+        assert.containsN(list, '.o_legacy_list_view .o_data_row', 4,
             "list view should still contain 4 records");
 
         list.destroy();
@@ -10036,7 +10036,7 @@ QUnit.module('Views', {
         const webClient = await createWebClient({serverData, mockRPC});
         await doAction(webClient, 11);
 
-        assert.containsOnce(webClient, '.o_list_view');
+        assert.containsOnce(webClient, '.o_legacy_list_view');
         assert.strictEqual($(webClient.el).find('.o_pager_counter').text().trim(), '1-3 / 4');
         assert.containsN(webClient, '.o_group_header', 3); // page 1
 
@@ -11392,7 +11392,7 @@ QUnit.module('Views', {
         const optionalFieldsToggler = list.el.querySelector('table').lastElementChild;
         assert.ok(optionalFieldsToggler.classList.contains('o_optional_columns_dropdown_toggle'),
             'The optional fields toggler is the second last element');
-        const optionalFieldsDropdown = list.el.querySelector('.o_list_view').lastElementChild;
+        const optionalFieldsDropdown = list.el.querySelector('.o_legacy_list_view').lastElementChild;
         assert.ok(optionalFieldsDropdown.classList.contains('o_optional_columns'),
             'The optional fields dropdown is the last element');
 
@@ -11460,7 +11460,7 @@ QUnit.module('Views', {
         const optionalFieldsToggler = list.el.querySelector('table').lastElementChild;
         assert.ok(optionalFieldsToggler.classList.contains('o_optional_columns_dropdown_toggle'),
             'The optional fields toggler is the last element');
-        const optionalFieldsDropdown = list.el.querySelector('.o_list_view').lastElementChild;
+        const optionalFieldsDropdown = list.el.querySelector('.o_legacy_list_view').lastElementChild;
         assert.ok(optionalFieldsDropdown.classList.contains('o_optional_columns'),
             'The optional fields is the last element');
 
@@ -11652,7 +11652,7 @@ QUnit.module('Views', {
             res_id: 1,
         });
 
-        const listWidth = form.el.querySelector('.o_list_view').offsetWidth;
+        const listWidth = form.el.querySelector('.o_legacy_list_view').offsetWidth;
 
         await testUtils.dom.click(form.el.querySelector('.o_optional_columns_dropdown_toggle'));
         assert.strictEqual(form.el.querySelector('.o_optional_columns').offsetLeft, listWidth,
@@ -11698,7 +11698,7 @@ QUnit.module('Views', {
 
         await doAction(webClient, 2);
 
-        assert.containsOnce(webClient, '.o_list_view',
+        assert.containsOnce(webClient, '.o_legacy_list_view',
             "should have rendered a list view");
 
         assert.containsN(webClient, 'th', 3, "should display 3 th (selector + 2 fields)");
@@ -11718,9 +11718,9 @@ QUnit.module('Views', {
             view_type: 'kanban',
         });
 
-        assert.containsNone(webClient, '.o_list_view',
+        assert.containsNone(webClient, '.o_legacy_list_view',
             "should not display the list view anymore");
-        assert.containsOnce(webClient, '.o_kanban_view',
+        assert.containsOnce(webClient, '.o_legacy_kanban_view',
             "should have switched to the kanban view");
 
         // switch back to list view
@@ -11729,9 +11729,9 @@ QUnit.module('Views', {
             view_type: 'list',
         });
 
-        assert.containsNone(webClient, '.o_kanban_view',
+        assert.containsNone(webClient, '.o_legacy_kanban_view',
             "should not display the kanban view anymoe");
-        assert.containsOnce(webClient, '.o_list_view',
+        assert.containsOnce(webClient, '.o_legacy_list_view',
             "should display the list view");
 
         assert.containsN(webClient, 'th', 4, "should display 4 th");
@@ -11753,16 +11753,16 @@ QUnit.module('Views', {
 
         await doAction(webClient, 1);
 
-        assert.containsNone(webClient, '.o_list_view',
+        assert.containsNone(webClient, '.o_legacy_list_view',
             "should not display the list view anymore");
-        assert.containsOnce(webClient, '.o_kanban_view',
+        assert.containsOnce(webClient, '.o_legacy_kanban_view',
             "should have switched to the kanban view");
 
         await doAction(webClient, 2);
 
-        assert.containsNone(webClient, '.o_kanban_view',
+        assert.containsNone(webClient, '.o_legacy_kanban_view',
             "should not havethe kanban view anymoe");
-        assert.containsOnce(webClient, '.o_list_view',
+        assert.containsOnce(webClient, '.o_legacy_list_view',
             "should display the list view");
 
         assert.containsN(webClient, 'th', 3, "should display 3 th");
@@ -12043,11 +12043,11 @@ QUnit.module('Views', {
 
         const th = form.el.getElementsByTagName('th')[0];
         const resizeHandle = th.getElementsByClassName('o_resize')[0];
-        const listInitialWidth = form.el.querySelector('.o_list_view').offsetWidth;
+        const listInitialWidth = form.el.querySelector('.o_legacy_list_view').offsetWidth;
 
         await testUtils.dom.dragAndDrop(resizeHandle, form.el.getElementsByTagName('th')[1], { position: "right" });
 
-        assert.strictEqual(form.el.querySelector('.o_list_view').offsetWidth, listInitialWidth,
+        assert.strictEqual(form.el.querySelector('.o_legacy_list_view').offsetWidth, listInitialWidth,
             "resizing the column should not impact the width of list");
 
         form.destroy();

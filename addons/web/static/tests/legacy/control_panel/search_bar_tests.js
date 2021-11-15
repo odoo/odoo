@@ -73,7 +73,7 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
             );
         });
 
-        QUnit.test("navigation with facets", async function (assert) {
+        QUnit.skip("navigation with facets", async function (assert) {
             assert.expect(4);
 
             patchWithCleanup(browser, { setTimeout: (fn) => fn() });
@@ -98,7 +98,7 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
             assert.strictEqual(document.activeElement, webClient.el.querySelector('.o_searchview input.o_searchview_input'));
         });
 
-        QUnit.test('search date and datetime fields. Support of timezones', async function (assert) {
+        QUnit.skip('search date and datetime fields. Support of timezones', async function (assert) {
             assert.expect(4);
 
             let searchReadCount = 0;
@@ -219,7 +219,7 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
             searchBar.destroy();
         });
 
-        QUnit.test('select an autocomplete field', async function (assert) {
+        QUnit.skip('select an autocomplete field', async function (assert) {
             assert.expect(3);
 
             let searchReadCount = 0;
@@ -251,7 +251,7 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
                 "a", "There should be a field facet with label 'a'");
         });
 
-        QUnit.test('select an autocomplete field with `context` key', async function (assert) {
+        QUnit.skip('select an autocomplete field with `context` key', async function (assert) {
             assert.expect(9);
 
             let searchReadCount = 0;
@@ -456,7 +456,7 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
 
         });
 
-        QUnit.test('select autocompleted many2one', async function (assert) {
+        QUnit.skip('select autocompleted many2one', async function (assert) {
             assert.expect(5);
 
             serverData.views['partner,false,search'] = `
@@ -496,7 +496,7 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
 
         });
 
-        QUnit.test('"null" as autocomplete value', async function (assert) {
+        QUnit.skip('"null" as autocomplete value', async function (assert) {
             assert.expect(4);
 
             const webClient = await createWebClient({
@@ -525,7 +525,7 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
 
         });
 
-        QUnit.test('autocompletion with a boolean field', async function (assert) {
+        QUnit.skip('autocompletion with a boolean field', async function (assert) {
             assert.expect(11);
 
             serverData.views['partner,false,search'] = `
@@ -570,7 +570,7 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
             ]);
         });
 
-        QUnit.test('autocompletion with a selection field', async function (assert) {
+        QUnit.skip('autocompletion with a selection field', async function (assert) {
             assert.expect(5);
 
             serverData.views['partner,false,search'] = `
@@ -589,7 +589,7 @@ QUnit.module("Search Bar (legacy)", (hooks) => {
             assert.doesNotHaveClass(webClient.el.querySelector('.o_searchview_autocomplete li:last-child'), 'o_indent');
         });
 
-        QUnit.test("reference fields are supported in search view", async function (assert) {
+        QUnit.skip("reference fields are supported in search view", async function (assert) {
             assert.expect(7);
 
             const partnerModel = serverData.models.partner;
