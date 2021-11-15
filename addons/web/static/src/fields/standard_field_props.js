@@ -6,8 +6,6 @@ export const standardFieldProps = {
     meta: Object,
     name: String,
     readonly: Boolean,
-    readonlyFromModifier: Boolean,
-    readonlyFromView: Boolean,
     required: Boolean,
     record: Object,
     type: String,

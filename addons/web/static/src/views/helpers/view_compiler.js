@@ -468,9 +468,12 @@ export class ViewCompiler {
 
             if (compiled.nodeName === "Field") {
                 const defaultMode = compiled.getAttribute("mode");
+                const name = node.getAttribute("name");
+                const widget = node.getAttribute("widget");
+                const fieldReadonlyExpr = `isFieldReadonly(record,"${name}","${widget}",props.readonly)`;
                 compiled.setAttribute(
                     "readonly",
-                    `${readonlyExpr} or ${defaultMode} === 'readonly'`
+                    `${readonlyExpr} or ${defaultMode} === 'readonly' or ${fieldReadonlyExpr}`
                 );
             }
         }
@@ -548,7 +551,6 @@ export class ViewCompiler {
 
         field.setAttribute("name", `"${fieldName}"`);
         field.setAttribute("record", `record`);
-        field.setAttribute("readonlyFromView", `props.readonly`);
 
         if ("mode" in node.attributes) {
             const viewModes = node.getAttribute("mode").split(",");
@@ -770,6 +772,13 @@ export const useViewCompiler = (ViewCompiler, templateKey, fields, xmlDoc) => {
                     return cls.isEmpty(record, fieldName);
                 }
                 return !record.data[fieldName];
+            },
+            isFieldReadonly(record, fieldName, widgetName, defaultValue) {
+                const cls = Field.getTangibleField(record, widgetName, fieldName);
+                if ("isReadonly" in cls) {
+                    return cls.isReadonly(defaultValue, record, fieldName);
+                }
+                return defaultValue;
             },
         },
         ViewCompiler.specialFunctions

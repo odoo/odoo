@@ -35,15 +35,11 @@ export class Field extends Component {
     }
 
     get concreteFieldProps() {
-        const readonlyFromModifier =
-            this.props.readonly || this.fields[this.name].readonly || false;
         return {
             ...this.props,
             meta: this.fields[this.name],
             name: this.name,
-            readonly: this.props.readonlyFromView || readonlyFromModifier,
-            readonlyFromModifier,
-            readonlyFromView: "readonlyFromView" in this.props ? this.props.readonlyFromView : true,
+            readonly: this.props.readonly || this.fields[this.name].readonly || false,
             required: this.fields[this.name].required || false,
             type: this.type,
             update: (value) => {
@@ -71,4 +67,5 @@ export class Field extends Component {
 }
 
 Field.template = tags.xml/* xml */ `
-    <t t-component="FieldComponent" t-props="concreteFieldProps" t-key="props.record.id"/>`;
+    <t t-component="FieldComponent" t-props="concreteFieldProps" t-key="props.record.id"/>
+`;
