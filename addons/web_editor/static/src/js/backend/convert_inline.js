@@ -606,6 +606,8 @@ function listGroupToTable($editable) {
                 $row.append($col);
                 $table.append($row);
                 $(child).remove();
+            } else if (child.nodeName === 'LI') {
+                $table.append(...child.childNodes);
             } else {
                 $table.append(child);
             }
