@@ -26,11 +26,10 @@
     "summary": "Based on Code Backend Theme V15 by Cybrosys Techno Solutions",
     "category": "Theme/Backend",
     "version": "15.0.1.0.0",
-    'author': 'BITS',
+    'author': '1FG',
     'company': 'Food Group Philippines',
-    'maintainer': 'BITS',
-    'website': "https://www.pilmico.com",
-    "depends": ['base', 'web', 'mail'],
+    'maintainer': '1FG',
+    "depends": ['base', 'web', 'mail','point_of_sale'],
     "data": [
         'views/icons.xml',
         'views/layout.xml',
@@ -38,13 +37,18 @@
     'assets': {
         'web.assets_frontend': [
             'code_backend_theme/static/src/scss/login.scss',
+            'code_backend_theme/static/src/css/pos.css',
         ],
+         'point_of_sale.assets': [
+            'code_backend_theme/static/src/css/pos.css',
+            ],
         'web.assets_backend': [
             'code_backend_theme/static/src/scss/theme_accent.scss',
             'code_backend_theme/static/src/scss/navigation_bar.scss',
             'code_backend_theme/static/src/scss/datetimepicker.scss',
             'code_backend_theme/static/src/scss/theme.scss',
             'code_backend_theme/static/src/scss/sidebar.scss',
+            'code_backend_theme/static/src/css/pos.css',
             ('replace', '/web/static/src/views/graph/colors.js', '/code_backend_theme/static/src/js/fields/colors.js'),
             ('replace', '/web/static/src/views/graph/graph_renderer.js', '/code_backend_theme/static/src/js/fields/graph_renderer.js'),
             ('replace', '/web/static/src/views/graph/graph_model.js', '/code_backend_theme/static/src/js/fields/graph_model.js'),
@@ -58,10 +62,6 @@
             'code_backend_theme/static/src/xml/top_bar.xml',
         ],
     },
-    'images': [
-        'static/description/banner.png',
-        'static/description/theme_screenshot.png',
-    ],
     'license': 'LGPL-3',
     'pre_init_hook': 'test_pre_init_hook',
     'post_init_hook': 'test_post_init_hook',
