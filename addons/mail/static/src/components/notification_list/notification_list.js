@@ -82,8 +82,7 @@ export class NotificationList extends Component {
             });
         let notifications = threadNeedactionNotifications.concat(threadNotifications);
         if (this.props.filter === 'all') {
-            const notificationGroups = this.messaging.notificationGroupManager.groups;
-            notifications = Object.values(notificationGroups)
+            notifications = Object.values(this.messaging.models['mail.notification_group'].all())
                 .sort((group1, group2) => group1.sequence - group2.sequence)
                 .map(notificationGroup => {
                     return {

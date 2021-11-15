@@ -224,7 +224,6 @@ function factory(dependencies) {
                     message.update({ author: link(this.messaging.currentPartner) });
                 }
             }));
-            this.messaging.notificationGroupManager.computeGroups();
         }
 
         /**

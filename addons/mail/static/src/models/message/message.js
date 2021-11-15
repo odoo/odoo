@@ -389,9 +389,7 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeFailureNotifications() {
-            return replace(this.notifications.filter(notifications =>
-                ['exception', 'bounce'].includes(notifications.notification_status)
-            ));
+            return replace(this.notifications.filter(notifications => notifications.isFailure));
         }
 
         /**
@@ -570,9 +568,7 @@ function factory(dependencies) {
         attachments: many2many('mail.attachment', {
             inverse: 'messages',
         }),
-        author: many2one('mail.partner', {
-            inverse: 'messagesAsAuthor',
-        }),
+        author: many2one('mail.partner'),
         /**
          * This value is meant to be returned by the server
          * (and has been sanitized before stored into db).
