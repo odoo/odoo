@@ -2390,11 +2390,11 @@ class AccountMove(models.Model):
                 values['total_amount_currency'] += sign * line.amount_currency
                 values['total_residual_currency'] += sign * line.amount_residual_currency
 
-            elif line.tax_line_id.tax_exigibility == 'on_payment':
+            elif line.tax_line_id.tax_exigibility == 'on_payment' and not line.reconciled:
                 values['to_process_lines'].append(('tax', line))
                 currencies.add(line.currency_id)
 
-            elif 'on_payment' in line.tax_ids.mapped('tax_exigibility'):
+            elif 'on_payment' in line.tax_ids.mapped('tax_exigibility') and not line.reconciled:
                 values['to_process_lines'].append(('base', line))
                 currencies.add(line.currency_id)
 
