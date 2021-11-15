@@ -8,11 +8,6 @@ from odoo.exceptions import ValidationError
 class AccountMove(models.Model):
     _inherit = "account.move"
 
-    @api.depends('amount_total')
-    def _compute_amount_total_words(self):
-        for invoice in self:
-            invoice.amount_total_words = invoice.currency_id.amount_to_text(invoice.amount_total)
-
     amount_total_words = fields.Char("Total (In Words)", compute="_compute_amount_total_words")
     l10n_in_gst_treatment = fields.Selection([
             ('regular', 'Registered Business - Regular'),
@@ -22,7 +17,7 @@ class AccountMove(models.Model):
             ('overseas', 'Overseas'),
             ('special_economic_zone', 'Special Economic Zone'),
             ('deemed_export', 'Deemed Export')
-        ], string="GST Treatment", readonly=True, states={'draft': [('readonly', False)]})
+        ], string="GST Treatment", compute="_compute_l10n_in_gst_treatment", store=True, readonly=False)
     l10n_in_state_id = fields.Many2one('res.country.state', string="Location of supply")
     l10n_in_company_country_code = fields.Char(related='company_id.country_id.code', string="Country code")
     l10n_in_gstin = fields.Char(string="GSTIN")
@@ -32,12 +27,15 @@ class AccountMove(models.Model):
     l10n_in_shipping_port_code_id = fields.Many2one('l10n_in.port.code', 'Port code', states={'draft': [('readonly', False)]})
     l10n_in_reseller_partner_id = fields.Many2one('res.partner', 'Reseller', domain=[('vat', '!=', False)], help="Only Registered Reseller", readonly=True, states={'draft': [('readonly', False)]})
 
-    @api.onchange('partner_id')
-    def _onchange_partner_id(self):
-        """Use journal type to define document type because not miss state in any entry including POS entry"""
-        if self.l10n_in_company_country_code == 'IN':
-            self.l10n_in_gst_treatment = self.partner_id.l10n_in_gst_treatment
-        return super()._onchange_partner_id()
+    @api.depends('amount_total')
+    def _compute_amount_total_words(self):
+        for invoice in self:
+            invoice.amount_total_words = invoice.currency_id.amount_to_text(invoice.amount_total)
+
+    @api.depends('partner_id')
+    def _compute_l10n_in_gst_treatment(self):
+        for record in self:
+            record.l10n_in_gst_treatment = record.partner_id.l10n_in_gst_treatment
 
     @api.model
     def _l10n_in_get_indian_state(self, partner):
