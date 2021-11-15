@@ -1,7 +1,9 @@
 /** @odoo-module **/
 
-import { useDragVisibleDropZone } from '@mail/component_hooks/use_drag_visible_dropzone/use_drag_visible_dropzone';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model/use_component_to_model';
+import { useDragVisibleDropZone } from '@mail/component_hooks/use_drag_visible_dropzone/use_drag_visible_dropzone';
+import { useRefToModel } from '@mail/component_hooks/use_ref_to_model/use_ref_to_model';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
@@ -11,14 +13,16 @@ export class AttachmentBox extends Component {
     /**
      * @override
      */
-    constructor(...args) {
-        super(...args);
+    setup() {
+        super.setup();
         this.isDropZoneVisible = useDragVisibleDropZone();
         /**
          * Reference of the file uploader.
          * Useful to programmatically prompts the browser file uploader.
          */
         this._fileUploaderRef = useRef('fileUploader');
+        useComponentToModel({ fieldName: 'component', modelName: 'mail.attachment_box_view', propNameAsRecordLocalId: 'attachmentBoxViewLocalId' });
+        useRefToModel({ fieldName: 'fileUploaderRef', modelName: 'mail.attachment_box_view', propNameAsRecordLocalId: 'attachmentBoxViewLocalId', refName: 'fileUploader' });
     }
 
     //--------------------------------------------------------------------------
@@ -26,43 +30,15 @@ export class AttachmentBox extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {mail.chatter|undefined}
+     * @returns {mail.attachement_box_view|undefined}
      */
-    get chatter() {
-        return this.messaging && this.messaging.models['mail.chatter'].get(this.props.chatterLocalId);
+    get attachmentBoxView() {
+        return this.messaging && this.messaging.models['mail.attachment_box_view'].get(this.props.attachmentBoxViewLocalId);
     }
 
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onAttachmentCreated(ev) {
-        // FIXME Could be changed by spying attachments count (task-2252858)
-        this.trigger('o-attachments-changed');
-    }
-
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onAttachmentRemoved(ev) {
-        // FIXME Could be changed by spying attachments count (task-2252858)
-        this.trigger('o-attachments-changed');
-    }
-
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onClickAdd(ev) {
-        ev.preventDefault();
-        ev.stopPropagation();
-        this._fileUploaderRef.comp.openBrowserFileUploader();
-    }
 
     /**
      * @private
@@ -80,7 +56,7 @@ export class AttachmentBox extends Component {
 
 Object.assign(AttachmentBox, {
     props: {
-        chatterLocalId: String,
+        attachmentBoxViewLocalId: String,
     },
     template: 'mail.AttachmentBox',
 });

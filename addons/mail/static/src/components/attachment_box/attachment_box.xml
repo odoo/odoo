@@ -3,7 +3,7 @@
 
     <t t-name="mail.AttachmentBox" owl="1">
         <div class="o_AttachmentBox">
-            <t t-if="chatter">
+            <t t-if="attachmentBoxView">
                 <div class="o_AttachmentBox_title">
                     <hr class="o_AttachmentBox_dashedLine"/>
                     <span class="o_AttachmentBox_titleText">
@@ -19,21 +19,21 @@
                             t-ref="dropzone"
                         />
                     </t>
-                    <t t-if="chatter.attachmentList">
+                    <t t-if="attachmentBoxView.chatter.attachmentList">
                         <AttachmentList
                             class="o_attachmentBox_attachmentList"
-                            attachmentListLocalId="chatter.attachmentList.localId"
-                            t-on-o-attachment-removed="_onAttachmentRemoved"
+                            attachmentListLocalId="attachmentBoxView.chatter.attachmentList.localId"
+                            t-on-o-attachment-removed="attachmentBoxView.onAttachmentRemoved"
                         />
                     </t>
-                    <button class="o_AttachmentBox_buttonAdd btn btn-link" type="button" t-on-click="_onClickAdd">
+                    <button class="o_AttachmentBox_buttonAdd btn btn-link" type="button" t-on-click="attachmentBoxView.onClickAddAttachment">
                         <i class="fa fa-plus-square"/>
                         Add attachments
                     </button>
                 </div>
                 <FileUploader
-                    threadLocalId="chatter.thread.localId"
-                    t-on-o-attachment-created="_onAttachmentCreated"
+                    threadLocalId="attachmentBoxView.chatter.thread.localId"
+                    t-on-o-attachment-created="attachmentBoxView.onAttachmentCreated"
                     t-ref="fileUploader"
                 />
             </t>
