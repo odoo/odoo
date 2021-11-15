@@ -693,7 +693,7 @@ function formatTables($editable) {
     }
     // Ensure a tbody in every table and cancel its default style.
     for (const table of $editable.find('table:not(:has(tbody))')) {
-        $(table).contents().wrap('<tbody style="vertical-align: top"/>');
+        $(table).contents().wrap('<tbody style="vertical-align: top;"/>');
     }
     // Children will only take 100% height if the parent has a height property.
     for (const node of $editable.find('*').filter((i, n) => (
@@ -701,7 +701,15 @@ function formatTables($editable) {
             !n.parentElement.style.getPropertyValue('height') ||
             n.parentElement.style.getPropertyValue('height').includes('%'))
     ))) {
-        node.parentElement.style.setProperty('height', '0');
+        let parent = node.parentElement;
+        let height = parent.style.getPropertyValue('height');
+        while (parent && height && height.includes('%')) {
+            parent = parent.parentElement;
+            height = parent.style.getPropertyValue('height');
+        }
+        if (parent) {
+            parent.style.setProperty('height', '0');
+        }
     }
 }
 
