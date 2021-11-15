@@ -31,7 +31,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.module('Actions in target="new"');
 
-    QUnit.test('can execute act_window actions in target="new"', async function (assert) {
+    QUnit.skip('can execute act_window actions in target="new"', async function (assert) {
         assert.expect(8);
         const mockRPC = async (route, args) => {
             assert.step((args && args.method) || route);
@@ -77,7 +77,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps(["Close Action"]);
     });
 
-    QUnit.test("footer buttons are moved to the dialog footer", async function (assert) {
+    QUnit.skip("footer buttons are moved to the dialog footer", async function (assert) {
         assert.expect(3);
         serverData.views["partner,false,form"] = `
       <form>
@@ -105,7 +105,7 @@ QUnit.module("ActionManager", (hooks) => {
         );
     });
 
-    QUnit.test("Button with `close` attribute closes dialog", async function (assert) {
+    QUnit.skip("Button with `close` attribute closes dialog", async function (assert) {
         assert.expect(19);
         serverData.views = {
             "partner,false,form": `
@@ -203,7 +203,7 @@ QUnit.module("ActionManager", (hooks) => {
         delete core.action_registry.map.test;
     });
 
-    QUnit.test(
+    QUnit.skip(
         'footer buttons are updated when having another action in target "new"',
         async function (assert) {
             serverData.views["partner,false,form"] =
@@ -228,7 +228,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.test(
+    QUnit.skip(
         'buttons of client action in target="new" and transition to MVC action',
         async function (assert) {
             const ClientAction = AbstractAction.extend({
@@ -254,7 +254,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.test(
+    QUnit.skip(
         'button with confirm attribute in act_window action in target="new"',
         async function (assert) {
             serverData.actions[999] = {
@@ -300,7 +300,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.test('actions in target="new" do not update page title', async function (assert) {
+    QUnit.skip('actions in target="new" do not update page title', async function (assert) {
         const mockedTitleService = {
             start() {
                 return {
@@ -455,7 +455,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.module('Actions in target="inline"');
 
-    QUnit.test(
+    QUnit.skip(
         'form views for actions in target="inline" open in edit mode',
         async function (assert) {
             const mockRPC = async (route, args) => {
@@ -477,7 +477,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.test("breadcrumbs and actions with target inline", async function (assert) {
+    QUnit.skip("breadcrumbs and actions with target inline", async function (assert) {
         serverData.actions[4].views = [[false, "form"]];
         serverData.actions[4].target = "inline";
         const webClient = await createWebClient({ serverData });
@@ -508,7 +508,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.test('fullscreen on action change: back to a "current" action', async function (assert) {
+    QUnit.skip('fullscreen on action change: back to a "current" action', async function (assert) {
         serverData.actions[1].target = "fullscreen";
         serverData.views[
             "partner,false,form"
@@ -527,7 +527,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(target, ".o_main_navbar");
     });
 
-    QUnit.test('fullscreen on action change: all "fullscreen" actions', async function (assert) {
+    QUnit.skip('fullscreen on action change: all "fullscreen" actions', async function (assert) {
         serverData.actions[6].target = "fullscreen";
         serverData.views[
             "partner,false,form"
@@ -545,7 +545,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsNone(target, ".o_main_navbar");
     });
 
-    QUnit.test(
+    QUnit.skip(
         'fullscreen on action change: back to another "current" action',
         async function (assert) {
             serverData.menus = {

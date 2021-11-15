@@ -200,7 +200,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps(["/web/webclient/load_menus"]);
     });
 
-    QUnit.test("properly load act window actions", async function (assert) {
+    QUnit.skip("properly load act window actions", async function (assert) {
         assert.expect(7);
         const mockRPC = async function (route, args) {
             assert.step((args && args.method) || route);
@@ -292,7 +292,7 @@ QUnit.module("ActionManager", (hooks) => {
         ]);
     });
 
-    QUnit.test("load requested view for act window actions", async function (assert) {
+    QUnit.skip("load requested view for act window actions", async function (assert) {
         assert.expect(7);
         const mockRPC = async function (route, args) {
             assert.step((args && args.method) || route);
@@ -314,7 +314,7 @@ QUnit.module("ActionManager", (hooks) => {
         ]);
     });
 
-    QUnit.test(
+    QUnit.skip(
         "lazy load multi record view if mono record one is requested",
         async function (assert) {
             assert.expect(12);
@@ -352,7 +352,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.test("lazy load multi record view with previous action", async function (assert) {
+    QUnit.skip("lazy load multi record view with previous action", async function (assert) {
         assert.expect(6);
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 4);
@@ -419,7 +419,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.test("change the viewType of the current action", async function (assert) {
+    QUnit.skip("change the viewType of the current action", async function (assert) {
         assert.expect(14);
         const mockRPC = async function (route, args) {
             assert.step((args && args.method) || route);
@@ -470,7 +470,7 @@ QUnit.module("ActionManager", (hooks) => {
         ]);
     });
 
-    QUnit.test("change the id of the current action", async function (assert) {
+    QUnit.skip("change the id of the current action", async function (assert) {
         assert.expect(12);
         const mockRPC = async function (route, args) {
             assert.step((args && args.method) || route);
@@ -519,7 +519,7 @@ QUnit.module("ActionManager", (hooks) => {
         ]);
     });
 
-    QUnit.test("should push the correct state at the right time", async function (assert) {
+    QUnit.skip("should push the correct state at the right time", async function (assert) {
         // formerly "should not push a loaded state"
         assert.expect(7);
         const pushState = browser.history.pushState;
@@ -680,7 +680,7 @@ QUnit.module("ActionManager", (hooks) => {
         delete core.action_registry.map.ClientAction;
     });
 
-    QUnit.test("load a window action without id (in a multi-record view)", async function (assert) {
+    QUnit.skip("load a window action without id (in a multi-record view)", async function (assert) {
         assert.expect(14);
         patchWithCleanup(browser.sessionStorage, {
             getItem(k) {
@@ -726,7 +726,7 @@ QUnit.module("ActionManager", (hooks) => {
         ]);
     });
 
-    QUnit.test("load state supports being given menu_id alone", async function (assert) {
+    QUnit.skip("load state supports being given menu_id alone", async function (assert) {
         assert.expect(7);
         serverData.menus[666] = {
             id: 666,
@@ -778,7 +778,7 @@ QUnit.module("ActionManager", (hooks) => {
         );
     });
 
-    QUnit.test("load state supports #home as initial state", async function (assert) {
+    QUnit.skip("load state supports #home as initial state", async function (assert) {
         assert.expect(7);
         serverData.menus = {
             root: { id: "root", children: [1], name: "root", appID: "root" },
@@ -804,7 +804,7 @@ QUnit.module("ActionManager", (hooks) => {
         ]);
     });
 
-    QUnit.test("load state: in a form view, remove the id from the state", async function (assert) {
+    QUnit.skip("load state: in a form view, remove the id from the state", async function (assert) {
         assert.expect(13);
         serverData.actions[999] = {
             id: 999,
@@ -910,7 +910,7 @@ QUnit.module("ActionManager", (hooks) => {
         });
     });
 
-    QUnit.test(
+    QUnit.skip(
         "url form view type switch from list or kanban doesn't timeout",
         async function (assert) {
             assert.expect(3);

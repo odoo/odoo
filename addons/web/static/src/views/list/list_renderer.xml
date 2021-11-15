@@ -2,56 +2,54 @@
 <templates xml:space="preserve">
 
     <t t-name="web.ListRenderer" owl="1">
-        <div class="o_list_view">
-            <div class="table-responsive">
-                <table t-attf-class="o_list_table table table-sm table-hover table-striped {{props.list.isGrouped ? 'o_list_table_grouped' : 'o_list_table_ungrouped'}}">
-                    <thead>
-                        <tr>
-                            <th t-if="props.hasSelectors" class="o_list_record_selector">
-                                <CheckBox value="selectAll" t-on-change="toggleSelection"/>
+        <div class="o_list_renderer table-responsive">
+            <table t-attf-class="o_list_table table table-sm table-hover table-striped {{props.list.isGrouped ? 'o_list_table_grouped' : 'o_list_table_ungrouped'}}">
+                <thead>
+                    <tr>
+                        <th t-if="props.hasSelectors" class="o_list_record_selector">
+                            <CheckBox value="selectAll" t-on-change="toggleSelection"/>
+                        </th>
+                        <t t-foreach="state.columns" t-as="column" t-key="column.name">
+                            <th t-if="column.type === 'field'" t-att-class="getColumnClass(column)" t-on-click="onClickSortColumn(column.name)">
+                                <t t-esc="column.string"/>
                             </th>
-                            <t t-foreach="state.columns" t-as="column" t-key="column.name">
-                                <th t-if="column.type === 'field'" t-att-class="getColumnClass(column)" t-on-click="onClickSortColumn(column.name)">
-                                  <t t-esc="column.string"/>
-                                </th>
-                                <th t-else=""></th>
-                            </t>
-                        </tr>
-                    </thead>
-                    <tbody class="ui-sortable">
-                        <t t-call="web.ListRenderer.Rows">
-                            <t t-set="list" t-value="props.list"/>
+                            <th t-else=""></th>
                         </t>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td t-if="props.hasSelectors"/>
-                            <t t-foreach="state.columns" t-as="column" t-key="column.name">
-                                <t t-set="aggregate" t-value="aggregates[column.name]"/>
-                                <td t-if="aggregate" class="o_list_number" t-att-data-tooltip="aggregate.help">
-                                    <t t-esc="aggregate.value"/>
-                                </td>
-                                <td t-else=""/>
-                            </t>
-                        </tr>
-                    </tfoot>
-                    <Dropdown class="o_optional_columns_dropdown"
-                              position="'bottom-end'"
-                              t-on-dropdown-item-selected="toggleOptionalField" >
-                        <t t-set-slot="toggler">
-                            <i class="fa fa-ellipsis-v"/>
+                    </tr>
+                </thead>
+                <tbody class="ui-sortable">
+                    <t t-call="web.ListRenderer.Rows">
+                        <t t-set="list" t-value="props.list"/>
+                    </t>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td t-if="props.hasSelectors"/>
+                        <t t-foreach="state.columns" t-as="column" t-key="column.name">
+                            <t t-set="aggregate" t-value="aggregates[column.name]"/>
+                            <td t-if="aggregate" class="o_list_number" t-att-data-tooltip="aggregate.help">
+                                <t t-esc="aggregate.value"/>
+                            </td>
+                            <td t-else=""/>
                         </t>
-                        <t t-foreach="getOptionalFields" t-as="field" t-key="field_index">
-                            <CheckBoxDropdownItem
-                            parentClosingMode="'none'"
-                            payload="field"
-                            value="field.value">
-                                <t t-esc="field.string"/> <t t-if="env.debug" t-esc="' (' + field.name + ')'" />
-                            </CheckBoxDropdownItem>
-                        </t>
-                    </Dropdown>
-                </table>
-            </div>
+                    </tr>
+                </tfoot>
+                <Dropdown class="o_optional_columns_dropdown"
+                            position="'bottom-end'"
+                            t-on-dropdown-item-selected="toggleOptionalField" >
+                    <t t-set-slot="toggler">
+                        <i class="fa fa-ellipsis-v"/>
+                    </t>
+                    <t t-foreach="getOptionalFields" t-as="field" t-key="field_index">
+                        <CheckBoxDropdownItem
+                        parentClosingMode="'none'"
+                        payload="field"
+                        value="field.value">
+                            <t t-esc="field.string"/> <t t-if="env.debug" t-esc="' (' + field.name + ')'" />
+                        </CheckBoxDropdownItem>
+                    </t>
+                </Dropdown>
+            </table>
         </div>
     </t>
 

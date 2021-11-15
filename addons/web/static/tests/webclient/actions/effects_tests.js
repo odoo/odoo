@@ -26,7 +26,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.module("Effects");
 
-    QUnit.test("rainbowman integrated to webClient", async function (assert) {
+    QUnit.skip("rainbowman integrated to webClient", async function (assert) {
         assert.expect(10);
         patchWithCleanup(session, { show_effect: true });
         clearRegistryWithCleanup(mainComponentRegistry);
@@ -56,7 +56,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(target, ".o_list_view");
     });
 
-    QUnit.test("on close with effect from server", async function (assert) {
+    QUnit.skip("on close with effect from server", async function (assert) {
         assert.expect(1);
         patchWithCleanup(session, { show_effect: true });
         const mockRPC = async (route) => {
@@ -78,7 +78,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(target, ".o_reward");
     });
 
-    QUnit.test("on close with effect in xml", async function (assert) {
+    QUnit.skip("on close with effect in xml", async function (assert) {
         assert.expect(2);
         serverData.views["partner,false,form"] = `
             <form>

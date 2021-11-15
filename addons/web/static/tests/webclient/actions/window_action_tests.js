@@ -39,7 +39,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.module("Window Actions");
 
-    QUnit.test("can execute act_window actions from db ID", async function (assert) {
+    QUnit.skip("can execute act_window actions from db ID", async function (assert) {
         assert.expect(7);
         const mockRPC = async (route, args) => {
             assert.step((args && args.method) || route);
@@ -60,7 +60,7 @@ QUnit.module("ActionManager", (hooks) => {
         ]);
     });
 
-    QUnit.test("sidebar is present in list view", async function (assert) {
+    QUnit.skip("sidebar is present in list view", async function (assert) {
         assert.expect(4);
         serverData.models.partner.toolbar = {
             print: [{ name: "Print that record" }],
@@ -86,7 +86,7 @@ QUnit.module("ActionManager", (hooks) => {
         );
     });
 
-    QUnit.test("can switch between views", async function (assert) {
+    QUnit.skip("can switch between views", async function (assert) {
         assert.expect(19);
         const mockRPC = async (route, args) => {
             assert.step((args && args.method) || route);
@@ -131,7 +131,7 @@ QUnit.module("ActionManager", (hooks) => {
         ]);
     });
 
-    QUnit.test("switching into a view with mode=edit lands in edit mode", async function (assert) {
+    QUnit.skip("switching into a view with mode=edit lands in edit mode", async function (assert) {
         serverData.views["partner,1,kanban"] = `
     <kanban on_create="quick_create" default_group_by="m2o">
       <templates>
@@ -188,7 +188,7 @@ QUnit.module("ActionManager", (hooks) => {
         ]);
     });
 
-    QUnit.test(
+    QUnit.skip(
         "orderedBy in context is not propagated when executing another action",
         async function (assert) {
             assert.expect(6);
@@ -242,7 +242,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.test("breadcrumbs are updated when switching between views", async function (assert) {
+    QUnit.skip("breadcrumbs are updated when switching between views", async function (assert) {
         assert.expect(15);
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
@@ -337,7 +337,7 @@ QUnit.module("ActionManager", (hooks) => {
         );
     });
 
-    QUnit.test("switch buttons are updated when switching between views", async function (assert) {
+    QUnit.skip("switch buttons are updated when switching between views", async function (assert) {
         assert.expect(13);
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
@@ -423,7 +423,7 @@ QUnit.module("ActionManager", (hooks) => {
             "list should be the active view"
         );
     });
-    QUnit.test("pager is updated when switching between views", async function (assert) {
+    QUnit.skip("pager is updated when switching between views", async function (assert) {
         assert.expect(10);
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 4);
@@ -516,7 +516,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsN(target, ".o_data_row", 5);
     });
 
-    QUnit.test("there is no flickering when switching between views", async function (assert) {
+    QUnit.skip("there is no flickering when switching between views", async function (assert) {
         assert.expect(20);
         let def;
         const mockRPC = async (route, args) => {
@@ -592,7 +592,7 @@ QUnit.module("ActionManager", (hooks) => {
         );
     });
 
-    QUnit.test("breadcrumbs are updated when display_name changes", async function (assert) {
+    QUnit.skip("breadcrumbs are updated when display_name changes", async function (assert) {
         assert.expect(4);
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
@@ -630,7 +630,7 @@ QUnit.module("ActionManager", (hooks) => {
         );
     });
 
-    QUnit.test('reverse breadcrumb works on accesskey "b"', async function (assert) {
+    QUnit.skip('reverse breadcrumb works on accesskey "b"', async function (assert) {
         assert.expect(4);
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
@@ -657,7 +657,7 @@ QUnit.module("ActionManager", (hooks) => {
         );
     });
 
-    QUnit.test("reload previous controller when discarding a new record", async function (assert) {
+    QUnit.skip("reload previous controller when discarding a new record", async function (assert) {
         assert.expect(9);
         const mockRPC = async (route, args) => {
             assert.step((args && args.method) || route);
@@ -686,7 +686,7 @@ QUnit.module("ActionManager", (hooks) => {
         ]);
     });
 
-    QUnit.test("requests for execute_action of type object are handled", async function (assert) {
+    QUnit.skip("requests for execute_action of type object are handled", async function (assert) {
         assert.expect(11);
         patchWithCleanup(session.user_context, { some_key: 2 });
         const mockRPC = async (route, args) => {
@@ -745,7 +745,7 @@ QUnit.module("ActionManager", (hooks) => {
         ]);
     });
 
-    QUnit.test(
+    QUnit.skip(
         "requests for execute_action of type object: disable buttons (2)",
         async function (assert) {
             assert.expect(6);
@@ -800,7 +800,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.test(
+    QUnit.skip(
         "requests for execute_action of type object raises error: re-enables buttons",
         async function (assert) {
             assert.expect(3);
@@ -821,7 +821,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.test(
+    QUnit.skip(
         "requests for execute_action of type object raises error in modal: re-enables buttons",
         async function (assert) {
             assert.expect(5);
@@ -851,7 +851,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.test("requests for execute_action of type action are handled", async function (assert) {
+    QUnit.skip("requests for execute_action of type action are handled", async function (assert) {
         assert.expect(12);
         const mockRPC = async (route, args) => {
             assert.step((args && args.method) || route);
@@ -893,7 +893,7 @@ QUnit.module("ActionManager", (hooks) => {
         ]);
     });
 
-    QUnit.test("execute smart button and back", async function (assert) {
+    QUnit.skip("execute smart button and back", async function (assert) {
         assert.expect(8);
         const mockRPC = async (route, args) => {
             if (args.method === "read") {
@@ -916,7 +916,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsN(target, ".o_form_buttons_view button:not([disabled])", 2);
     });
 
-    QUnit.test("execute smart button and fails", async function (assert) {
+    QUnit.skip("execute smart button and fails", async function (assert) {
         assert.expect(12);
         const mockRPC = async (route, args) => {
             assert.step(route);
@@ -943,7 +943,7 @@ QUnit.module("ActionManager", (hooks) => {
         ]);
     });
 
-    QUnit.test(
+    QUnit.skip(
         "requests for execute_action of type object: disable buttons",
         async function (assert) {
             assert.expect(2);
@@ -983,7 +983,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.test("action with html help returned by a call_button", async function (assert) {
+    QUnit.skipWOWL("action with html help returned by a call_button", async function (assert) {
         assert.expect(1);
         const mockRPC = async (route, args) => {
             if (route === "/web/dataset/call_button") {
@@ -1011,7 +1011,7 @@ QUnit.module("ActionManager", (hooks) => {
         );
     });
 
-    QUnit.test("can open different records from a multi record view", async function (assert) {
+    QUnit.skip("can open different records from a multi record view", async function (assert) {
         assert.expect(12);
         const mockRPC = async (route, args) => {
             assert.step((args && args.method) || route);
@@ -1157,7 +1157,7 @@ QUnit.module("ActionManager", (hooks) => {
         );
     });
 
-    QUnit.test("can open a many2one external window", async function (assert) {
+    QUnit.skip("can open a many2one external window", async function (assert) {
         assert.expect(9);
         serverData.models.partner.records[0].bar = 2;
         serverData.views["partner,false,search"] = `
@@ -1200,7 +1200,7 @@ QUnit.module("ActionManager", (hooks) => {
         ]);
     });
 
-    QUnit.test('save when leaving a "dirty" view', async function (assert) {
+    QUnit.skip('save when leaving a "dirty" view', async function (assert) {
         assert.expect(4);
         const mockRPC = async (route, { args, method, model }) => {
             if (model === "partner" && method === "write") {
@@ -1223,7 +1223,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(target, ".o_kanban_view", "should be in kanban view");
     });
 
-    QUnit.test("limit set in action is passed to each created controller", async function (assert) {
+    QUnit.skip("limit set in action is passed to each created controller", async function (assert) {
         assert.expect(2);
         serverData.actions[3].limit = 2;
         const webClient = await createWebClient({ serverData });
@@ -1235,7 +1235,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 2);
     });
 
-    QUnit.test("go back to a previous action using the breadcrumbs", async function (assert) {
+    QUnit.skip("go back to a previous action using the breadcrumbs", async function (assert) {
         assert.expect(10);
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
@@ -1309,7 +1309,7 @@ QUnit.module("ActionManager", (hooks) => {
         );
     });
 
-    QUnit.test(
+    QUnit.skip(
         "form views are restored in readonly when coming back in breadcrumbs",
         async function (assert) {
             assert.expect(2);
@@ -1351,7 +1351,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.test("honor group_by specified in actions context", async function (assert) {
+    QUnit.skip("honor group_by specified in actions context", async function (assert) {
         assert.expect(5);
         serverData.actions[3].context = "{'group_by': 'bar'}";
         serverData.views["partner,false,search"] = `
@@ -1390,7 +1390,7 @@ QUnit.module("ActionManager", (hooks) => {
         );
     });
 
-    QUnit.test("switch request to unknown view type", async function (assert) {
+    QUnit.skip("switch request to unknown view type", async function (assert) {
         assert.expect(8);
         serverData.actions[33] = {
             id: 33,
@@ -1421,7 +1421,7 @@ QUnit.module("ActionManager", (hooks) => {
         ]);
     });
 
-    QUnit.test("flags field of ir.actions.act_window is used", async function (assert) {
+    QUnit.skip("flags field of ir.actions.act_window is used", async function (assert) {
         // more info about flags field : https://github.com/odoo/odoo/commit/c9b133813b250e89f1f61816b0eabfb9bee2009d
         assert.expect(7);
         serverData.actions[44] = {
@@ -1454,7 +1454,7 @@ QUnit.module("ActionManager", (hooks) => {
         ]);
     });
 
-    QUnit.test("save current search", async function (assert) {
+    QUnit.skip("save current search", async function (assert) {
         assert.expect(4);
         testUtils.mock.patch(ListController, {
             getOwnedQueryParams: function () {
@@ -1513,7 +1513,7 @@ QUnit.module("ActionManager", (hooks) => {
         testUtils.mock.unpatch(ListController);
     });
 
-    QUnit.test(
+    QUnit.skip(
         "list with default_order and favorite filter with no orderedBy",
         async function (assert) {
             assert.expect(5);
@@ -1663,7 +1663,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(target, ".o_kanban_view");
     });
 
-    QUnit.test("execute action from dirty, new record, and come back", async function (assert) {
+    QUnit.skip("execute action from dirty, new record, and come back", async function (assert) {
         assert.expect(18);
         serverData.models.partner.fields.bar.default = 1;
         serverData.views["partner,false,form"] = `
@@ -1727,7 +1727,7 @@ QUnit.module("ActionManager", (hooks) => {
         ]);
     });
 
-    QUnit.test("execute a contextual action from a form view", async function (assert) {
+    QUnit.skip("execute a contextual action from a form view", async function (assert) {
         assert.expect(4);
         const contextualAction = serverData.actions[8];
         contextualAction.context = "{}"; // need a context to evaluate
@@ -1758,7 +1758,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(target, ".o_list_view");
     });
 
-    QUnit.test(
+    QUnit.skip(
         "go back to action with form view as main view, and res_id",
         async function (assert) {
             assert.expect(7);
@@ -1808,7 +1808,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.test("open a record, come back, and create a new record", async function (assert) {
+    QUnit.skip("open a record, come back, and create a new record", async function (assert) {
         assert.expect(7);
         const webClient = await createWebClient({ serverData });
         // execute an action and open a record
@@ -1830,7 +1830,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.hasClass(target.querySelector(".o_form_view"), "o_form_editable");
     });
 
-    QUnit.test(
+    QUnit.skip(
         "open form view, use the pager, execute action, and come back",
         async function (assert) {
             assert.expect(8);
@@ -1867,7 +1867,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.test(
+    QUnit.skip(
         "create a new record in a form view, execute action, and come back",
         async function (assert) {
             assert.expect(8);
@@ -1931,7 +1931,7 @@ QUnit.module("ActionManager", (hooks) => {
         delete legacyViewRegistry.map.test_jsClass;
     });
 
-    QUnit.test(
+    QUnit.skip(
         "on_close should be called only once with right parameters in js_class form view",
         async function (assert) {
             assert.expect(4);
@@ -1982,7 +1982,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.test(
+    QUnit.skip(
         "execute action without modal closes bootstrap tooltips anyway",
         async function (assert) {
             assert.expect(12);
@@ -2028,7 +2028,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.test("search view should keep focus during do_search", async function (assert) {
+    QUnit.skip("search view should keep focus during do_search", async function (assert) {
         assert.expect(5);
         // One should be able to type something in the search view, press on enter to
         // make the facet and trigger the search, then do this process
@@ -2059,7 +2059,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps(["search_read |,foo,ilike,m,foo,ilike,o"]);
     });
 
-    QUnit.test(
+    QUnit.skip(
         "Call twice clearUncommittedChanges in a row does not save twice",
         async function (assert) {
             assert.expect(5);
@@ -2090,7 +2090,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.test(
+    QUnit.skip(
         "executing a window action with onchange warning does not hide it",
         async function (assert) {
             assert.expect(2);
@@ -2133,7 +2133,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.test(
+    QUnit.skip(
         "do not call clearUncommittedChanges() when target=new and dialog is opened",
         async function (assert) {
             assert.expect(2);
@@ -2153,7 +2153,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.test("do not pushState when target=new and dialog is opened", async function (assert) {
+    QUnit.skip("do not pushState when target=new and dialog is opened", async function (assert) {
         assert.expect(2);
         const TestCustoFormController = FormView.prototype.config.Controller.extend({
             _onButtonClicked() {
@@ -2196,7 +2196,7 @@ QUnit.module("ActionManager", (hooks) => {
         );
     });
 
-    QUnit.test("do not restore after action button clicked", async function (assert) {
+    QUnit.skip("do not restore after action button clicked", async function (assert) {
         assert.expect(5);
         const mockRPC = async (route, args) => {
             if (route === "/web/dataset/call_button" && args.method === "do_something") {
@@ -2277,7 +2277,7 @@ QUnit.module("ActionManager", (hooks) => {
         ]);
     });
 
-    QUnit.test("doAction supports being passed globalState prop", async function (assert) {
+    QUnit.skip("doAction supports being passed globalState prop", async function (assert) {
         assert.expect(1);
         const searchModel = JSON.stringify({
             nextGroupId: 2,
@@ -2310,7 +2310,7 @@ QUnit.module("ActionManager", (hooks) => {
         });
     });
 
-    QUnit.test("window action in target new fails (onchange)", async (assert) => {
+    QUnit.skip("window action in target new fails (onchange)", async (assert) => {
         assert.expect(3);
 
         /*
@@ -2379,7 +2379,7 @@ QUnit.module("ActionManager", (hooks) => {
         );
     });
 
-    QUnit.test("action and get_views rpcs are cached", async function (assert) {
+    QUnit.skip("action and get_views rpcs are cached", async function (assert) {
         const mockRPC = async (route, args) => {
             assert.step(args.method || route);
         };

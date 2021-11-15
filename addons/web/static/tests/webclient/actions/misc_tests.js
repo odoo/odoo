@@ -374,7 +374,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.test('action with "no_breadcrumbs" set to true', async function (assert) {
+    QUnit.skip('action with "no_breadcrumbs" set to true', async function (assert) {
         assert.expect(2);
         serverData.actions[4].context = { no_breadcrumbs: true };
         const webClient = await createWebClient({ serverData });
@@ -385,7 +385,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsNone(target, ".o_control_panel .breadcrumb-item");
     });
 
-    QUnit.test("document's title is updated when an action is executed", async function (assert) {
+    QUnit.skip("document's title is updated when an action is executed", async function (assert) {
         assert.expect(8);
         const defaultTitle = { zopenerp: "Odoo" };
         const webClient = await createWebClient({ serverData });
@@ -504,7 +504,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.strictEqual(target.querySelector(".o_content").scrollTop, 100);
     });
 
-    QUnit.test(
+    QUnit.skip(
         'executing an action with target != "new" closes all dialogs',
         async function (assert) {
             assert.expect(4);
@@ -529,7 +529,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.test(
+    QUnit.skip(
         'executing an action with target "new" does not close dialogs',
         async function (assert) {
             assert.expect(4);
@@ -554,7 +554,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.test("bootstrap tooltip in dialog action auto destroy", async (assert) => {
+    QUnit.skip("bootstrap tooltip in dialog action auto destroy", async (assert) => {
         assert.expect(2);
 
         const mockRPC = (route, args) => {
@@ -591,7 +591,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsNone(document.body, ".tooltip");
     });
 
-    QUnit.test("bootstrap tooltip destroyed on click", async (assert) => {
+    QUnit.skip("bootstrap tooltip destroyed on click", async (assert) => {
         assert.expect(2);
 
         const mockRPC = (route, args) => {

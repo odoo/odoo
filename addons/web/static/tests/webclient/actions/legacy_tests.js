@@ -38,7 +38,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.module("Legacy tests (to eventually drop)");
 
-    QUnit.test("display warning as notification", async function (assert) {
+    QUnit.skip("display warning as notification", async function (assert) {
         // this test can be removed as soon as the legacy layer is dropped
         assert.expect(5);
         let list;
@@ -64,7 +64,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.strictEqual($(".o_notification_content").text(), "This is a warning...");
     });
 
-    QUnit.test("display warning as modal", async function (assert) {
+    QUnit.skip("display warning as modal", async function (assert) {
         // this test can be removed as soon as the legacy layer is dropped
         assert.expect(5);
         let list;
@@ -175,7 +175,7 @@ QUnit.module("ActionManager", (hooks) => {
         delete core.action_registry.map.customLegacy;
     });
 
-    QUnit.test("willUnmount is called down the legacy layers", async (assert) => {
+    QUnit.skip("willUnmount is called down the legacy layers", async (assert) => {
         assert.expect(7);
 
         let mountCount = 0;
@@ -225,7 +225,7 @@ QUnit.module("ActionManager", (hooks) => {
         delete core.action_registry.map.customLegacy;
     });
 
-    QUnit.test("Checks the availability of all views in the action", async (assert) => {
+    QUnit.skip("Checks the availability of all views in the action", async (assert) => {
         assert.expect(2);
         patchWithCleanup(ListView.prototype, {
             init(viewInfo, params) {
@@ -417,7 +417,7 @@ QUnit.module("ActionManager", (hooks) => {
         delete SystrayMenu.Items.FakeSystrayItemWidget;
     });
 
-    QUnit.test("usercontext always added to legacy actions", async (assert) => {
+    QUnit.skip("usercontext always added to legacy actions", async (assert) => {
         assert.expect(8);
         core.action_registry.add("testClientAction", AbstractAction);
         registerCleanup(() => delete core.action_registry.map.testClientAction);

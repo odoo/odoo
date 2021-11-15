@@ -175,7 +175,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(target, ".modal .test_client_action");
     });
 
-    QUnit.test("properly push state", async function (assert) {
+    QUnit.skip("properly push state", async function (assert) {
         assert.expect(3);
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 4);
@@ -200,7 +200,7 @@ QUnit.module("ActionManager", (hooks) => {
         });
     });
 
-    QUnit.test("push state after action is loaded, not before", async function (assert) {
+    QUnit.skip("push state after action is loaded, not before", async function (assert) {
         assert.expect(2);
         const def = testUtils.makeTestPromise();
         const mockRPC = async function (route) {
