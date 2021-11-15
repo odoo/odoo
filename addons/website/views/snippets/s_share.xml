@@ -10,13 +10,13 @@
         <a href="https://twitter.com/intent/tweet?text={title}&amp;url={url}" t-attf-class="s_share_twitter #{_link_classes}" target="_blank">
             <i t-attf-class="fa fa-twitter #{not _link_classes and 'rounded shadow-sm'}"/>
         </a>
-        <a href="http://www.linkedin.com/sharing/share-offsite/?url={url}" t-attf-class="s_share_linkedin #{_link_classes}" target="_blank">
+        <a href="https://www.linkedin.com/sharing/share-offsite/?url={url}" t-attf-class="s_share_linkedin #{_link_classes}" target="_blank">
             <i t-attf-class="fa fa-linkedin #{not _link_classes and 'rounded shadow-sm'}"/>
         </a>
         <a href="https://wa.me/?text={title}" t-attf-class="s_share_whatsapp #{_link_classes}" target="_blank">
             <i t-attf-class="fa fa-whatsapp #{not _link_classes and 'rounded shadow-sm'}"/>
         </a>
-        <a href="http://pinterest.com/pin/create/button/?url={url}&amp;description={title}" t-attf-class="s_share_pinterest #{_link_classes}" target="_blank">
+        <a href="https://pinterest.com/pin/create/button/?url={url}&amp;media={media}&amp;description={title}" t-attf-class="s_share_pinterest #{_link_classes}" target="_blank">
             <i t-attf-class="fa fa-pinterest #{not _link_classes and 'rounded shadow-sm'}"/>
         </a>
         <a href="mailto:?body={url}&amp;subject={title}" t-attf-class="s_share_email #{_link_classes}">
