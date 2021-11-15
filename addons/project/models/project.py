@@ -1703,6 +1703,7 @@ class Task(models.Model):
             self = self.with_context(ctx).sudo()
         tasks = super(Task, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
         tasks._populate_missing_personal_stages()
+        self._task_message_auto_subscribe_notify({task: task.user_ids - self.env.user for task in tasks})
         if is_portal_user:
             # since we use sudo to create tasks, we need to check
             # if the portal user could really create the tasks based on the ir rule.
@@ -1770,6 +1771,9 @@ class Task(models.Model):
         if portal_can_write:
             tasks = tasks.sudo()
 
+        # Track user_ids to send assignment notifications
+        old_user_ids = {t: t.user_ids for t in self}
+
         # X2Many Field Tracking
         # Extract to a separate function if necessary
         x2m_tracked_fields = {'user_ids', 'depend_on_ids'}
@@ -1805,6 +1809,8 @@ class Task(models.Model):
                             old_value, new_value, field, {'type': 'char', 'string': field_desc}, 100, self._name)))
                 if tracking_value_ids:
                     task._message_log(tracking_value_ids=tracking_value_ids)
+
+        self._task_message_auto_subscribe_notify({task: task.user_ids - old_user_ids[task] - self.env.user for task in self})
 
         if 'user_ids' in vals:
             tasks._populate_missing_personal_stages()
@@ -1859,6 +1865,51 @@ class Task(models.Model):
     # ---------------------------------------------------
     # Mail gateway
     # ---------------------------------------------------
+
+    @api.model
+    def _task_message_auto_subscribe_notify(self, users_per_task):
+        # Utility method to send assignation notification upon writing/creation.
+        template_id = self.env['ir.model.data']._xmlid_to_res_id('project.project_message_user_assigned', raise_if_not_found=False)
+        if not template_id:
+            return
+        view = self.env['ir.ui.view'].browse(template_id)
+        task_model_description = self.env['ir.model']._get(self._name).display_name
+        for task, users in users_per_task.items():
+            if not users:
+                continue
+            values = {
+                'object': task,
+                'model_description': task_model_description,
+                'access_link': task._notify_get_action_link('view'),
+            }
+            for user in users:
+                values.update(assignee_name=user.sudo().name)
+                assignation_msg = view._render(values, engine='ir.qweb', minimal_qcontext=True)
+                assignation_msg = self.env['mail.render.mixin']._replace_local_links(assignation_msg)
+                task.message_notify(
+                    subject=_('You have been assigned to %s', task.display_name),
+                    body=assignation_msg,
+                    partner_ids=user.partner_id.ids,
+                    record_name=task.display_name,
+                    email_layout_xmlid='mail.mail_notification_light',
+                    model_description=task_model_description,
+                )
+
+    def _message_auto_subscribe_followers(self, updated_values, default_subtype_ids):
+        # Since the changes to user_ids becoming a m2m, the default implementation of this function
+        #  could not work anymore, override the function to keep the functionality.
+        new_followers = []
+        # Normalize input to tuple of ids
+        value = self._fields['user_ids'].convert_to_cache(updated_values.get('user_ids', []), self.env['project.task'], validate=False)
+        users = self.env['res.users'].browse(value)
+        for user in users:
+            try:
+                if user.partner_id:
+                    # The you have been assigned notification is handled separately
+                    new_followers.append((user.partner_id.id, default_subtype_ids, False))
+            except Exception:
+                pass
+        return new_followers
 
     def _mail_track(self, tracked_fields, initial_values):
         result = super()._mail_track(tracked_fields, initial_values)
