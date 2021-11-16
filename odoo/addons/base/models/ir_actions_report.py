@@ -802,7 +802,7 @@ class IrActionsReport(models.Model):
             # bypassed
             raise UserError(_("Unable to find Wkhtmltopdf on this system. The PDF can not be created."))
 
-        html = self_sudo.with_context(context)._render_qweb_html(res_ids, data=data)[0]
+        html = self.with_context(context)._render_qweb_html(res_ids, data=data)[0]
 
         # Ensure the current document is utf-8 encoded.
         html = html.decode('utf-8')
