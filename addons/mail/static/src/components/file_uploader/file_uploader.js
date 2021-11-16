@@ -2,6 +2,8 @@
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { replace } from '@mail/model/model_field_command';
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model/use_component_to_model';
+import { useRefToModel } from '@mail/component_hooks/use_ref_to_model/use_ref_to_model';
 
 import core from 'web.core';
 
@@ -21,10 +23,13 @@ export class FileUploader extends Component {
     /**
      * @override
      */
-    constructor(...args) {
-        super(...args);
+    setup() {
+        super.setup();
         this._fileInputRef = useRef('fileInput');
         this._fileUploadId = _.uniqueId('o_FileUploader_fileupload');
+
+        useComponentToModel({ fieldName: 'component', modelName: 'mail.file_uploader_view', propNameAsRecordLocalId: 'fileUploaderViewLocalId' });
+        useRefToModel({ fieldName: 'fileUploaderRef', modelName: 'mail.file_uploader_view', propNameAsRecordLocalId: 'fileUploaderViewLocalId', refName: 'fileUploader' });
     }
 
     //--------------------------------------------------------------------------
@@ -43,7 +48,7 @@ export class FileUploader extends Component {
         await this._performUpload({
             composer: this.composerView && this.composerView.composer,
             files,
-            thread: this.thread,
+            thread: this.fileUploaderView.thread,
         });
         this._fileInputRef.el.value = '';
     }
@@ -52,8 +57,8 @@ export class FileUploader extends Component {
         this._fileInputRef.el.click();
     }
 
-    get thread() {
-        return this.messaging.models['mail.thread'].get(this.props.threadLocalId);
+    get fileUploaderView() {
+        return this.messaging.models['mail.file_uploader_view'].get(this.props.fileUploaderViewLocalId);
     }
 
     //--------------------------------------------------------------------------
@@ -177,7 +182,7 @@ Object.assign(FileUploader, {
             type: String,
             optional: true,
         },
-        threadLocalId: {
+        fileUploaderViewLocalId: {
             type: String,
             optional: true,
         },

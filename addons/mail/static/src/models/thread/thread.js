@@ -2071,6 +2071,11 @@ function factory(dependencies) {
         fetchMessagesUrl: attr({
             compute: '_computeFetchMessagesUrl',
         }),
+        fileUploaderView: one2one('mail.file_uploader_view', {
+            default: insertAndReplace(),
+            inverse: 'thread',
+            isCausal: true,
+        }),
         followersPartner: many2many('mail.partner', {
             related: 'followers.partner',
         }),
