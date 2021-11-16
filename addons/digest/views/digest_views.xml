@@ -22,7 +22,7 @@
                     <button type="object" name="action_subscribe" string="Subscribe"
                         class="oe_highlight"
                         attrs="{'invisible': ['|',('is_subscribed', '=', True), ('state','=','deactivated')]}"/>
-                    <button type="object" name="action_unsubcribe" string="Unsubscribe me"
+                    <button type="object" name="action_unsubscribe" string="Unsubscribe me"
                         class="oe_highlight"
                         attrs="{'invisible': ['|',('is_subscribed', '=', False), ('state','=','deactivated')]}"/>
                     <button type="object" name="action_deactivate" string="Deactivate for everyone"

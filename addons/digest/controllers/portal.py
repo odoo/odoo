@@ -23,7 +23,7 @@ class DigestController(Controller):
             digest_sudo._action_unsubscribe_users(request.env['res.users'].sudo().browse(int(user_id)))
         # old route was given without any token or user_id but only for auth users
         elif digest_sudo and not token and not user_id and not request.env.user.share:
-            digest_sudo.action_unsubcribe()
+            digest_sudo.action_unsubscribe()
         else:
             raise NotFound()
 

@@ -94,7 +94,7 @@ class Digest(models.Model):
         computation and avoid ACLs issues. """
         self.sudo().user_ids |= users
 
-    def action_unsubcribe(self):
+    def action_unsubscribe(self):
         if self.env.user.has_group('base.group_user') and self.env.user in self.user_ids:
             self._action_unsubscribe_users(self.env.user)
 
