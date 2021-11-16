@@ -30,7 +30,7 @@ class ResUsersSettingsVolumes(models.Model):
                 'id': volume_setting.guest_id.id,
                 'name': volume_setting.guest_id.name,
             })] if volume_setting.guest_id else [('clear',)],
-            'partner_id': [('insert-and-replace', {
+            'partner': [('insert-and-replace', {
                 'id': volume_setting.partner_id.id,
                 'name': volume_setting.partner_id.name,
             })] if volume_setting.partner_id else [('clear',)]
