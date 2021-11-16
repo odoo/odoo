@@ -2,16 +2,14 @@
 #----------------------------------------------------------
 # OpenERP HTTP layer
 #----------------------------------------------------------
-import ast
 import cgi
 import collections
 import contextlib
-import copy
-import datetime
 import functools
 import hashlib
 import hmac
 import inspect
+import json
 import logging
 import mimetypes
 import os
@@ -23,14 +21,12 @@ import threading
 import time
 import traceback
 import warnings
+from datetime import datetime
 from os.path import join as opj
 from zlib import adler32
 
 import babel.core
-from datetime import datetime, date
-import passlib.utils
 import psycopg2
-import json
 import werkzeug.datastructures
 import werkzeug.exceptions
 import werkzeug.local
@@ -53,7 +49,7 @@ from .service.server import memory_info
 from .service import security, model as service_model
 from .tools.func import lazy_property
 from .tools import profiler
-from .tools import ustr, consteq, frozendict, pycompat, unique, date_utils
+from .tools import ustr, frozendict, unique, date_utils
 from .tools.mimetypes import guess_mimetype
 from .tools.misc import str2bool
 from .tools._vendor import sessions
@@ -427,7 +423,7 @@ class WebRequest(object):
         secret = self.env['ir.config_parameter'].sudo().get_param('database.secret')
         assert secret, "CSRF protection requires a configured database secret"
         hm_expected = hmac.new(secret.encode('ascii'), msg.encode('utf-8'), hashlib.sha1).hexdigest()
-        return consteq(hm, hm_expected)
+        return hmac.compare_digest(hm, hm_expected)
 
 def route(route=None, **kw):
     """Decorator marking the decorated method as being a handler for
@@ -1654,7 +1650,7 @@ def send_file(filepath_or_fp, mimetype=None, as_attachment=False, filename=None,
     if isinstance(mtime, str):
         try:
             server_format = odoo.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT
-            mtime = datetime.datetime.strptime(mtime.split('.')[0], server_format)
+            mtime = datetime.strptime(mtime.split('.')[0], server_format)
         except Exception:
             mtime = None
     if mtime is not None:

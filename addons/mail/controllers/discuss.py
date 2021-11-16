@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import hmac
 import json
 from collections import defaultdict
 from datetime import datetime, timedelta
@@ -9,7 +9,7 @@ from psycopg2.errorcodes import UNIQUE_VIOLATION
 
 from odoo import http
 from odoo.http import request
-from odoo.tools import consteq, file_open
+from odoo.tools import file_open
 from odoo.tools.misc import get_lang
 from odoo.tools.translate import _
 from werkzeug.exceptions import NotFound
@@ -38,7 +38,7 @@ class DiscussController(http.Controller):
     @http.route('/chat/<int:channel_id>/<string:invitation_token>', methods=['GET'], type='http', auth='public')
     def discuss_channel_invitation(self, channel_id, invitation_token, **kwargs):
         channel_sudo = request.env['mail.channel'].browse(channel_id).sudo().exists()
-        if not channel_sudo or not channel_sudo.uuid or not consteq(channel_sudo.uuid, invitation_token):
+        if not channel_sudo or not channel_sudo.uuid or not hmac.compare_digest(channel_sudo.uuid, invitation_token):
             raise NotFound()
         return self._response_discuss_channel_invitation(channel_sudo=channel_sudo)
 
@@ -272,7 +272,7 @@ class DiscussController(http.Controller):
             if not message_sudo.is_current_user_or_guest_author:
                 raise NotFound()
         else:
-            if not access_token or not attachment_sudo.access_token or not consteq(access_token, attachment_sudo.access_token):
+            if not access_token or not attachment_sudo.access_token or not hmac.compare_digest(access_token, attachment_sudo.access_token):
                 raise NotFound()
             if attachment_sudo.res_model != 'mail.compose.message' or attachment_sudo.res_id != 0:
                 raise NotFound()
@@ -341,7 +341,7 @@ class DiscussController(http.Controller):
     @http.route('/mail/channel/add_guest_as_member', methods=['POST'], type='json', auth='public')
     def mail_channel_add_guest_as_member(self, channel_id, channel_uuid, **kwargs):
         channel_sudo = request.env['mail.channel'].browse(int(channel_id)).sudo().exists()
-        if not channel_sudo or not channel_sudo.uuid or not consteq(channel_sudo.uuid, channel_uuid):
+        if not channel_sudo or not channel_sudo.uuid or not hmac.compare_digest(channel_sudo.uuid, channel_uuid):
             raise NotFound()
         if channel_sudo.channel_type == 'chat':
             raise NotFound()

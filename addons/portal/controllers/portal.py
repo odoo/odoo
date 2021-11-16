@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
-import functools
+import hmac
 import json
 import logging
 import math
@@ -13,7 +13,6 @@ from werkzeug import urls
 from odoo import fields as odoo_fields, http, tools, _, SUPERUSER_ID
 from odoo.exceptions import ValidationError, AccessError, MissingError, UserError, AccessDenied
 from odoo.http import content_disposition, Controller, request, route
-from odoo.tools import consteq
 
 # --------------------------------------------------
 # Misc tools
@@ -393,7 +392,7 @@ class CustomerPortal(Controller):
             document.check_access_rights('read')
             document.check_access_rule('read')
         except AccessError:
-            if not access_token or not document_sudo.access_token or not consteq(document_sudo.access_token, access_token):
+            if not access_token or not document_sudo.access_token or not hmac.compare_digest(document_sudo.access_token, access_token):
                 raise
         return document_sudo
 

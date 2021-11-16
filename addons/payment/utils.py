@@ -1,8 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import hmac
 
 from odoo import fields
 from odoo.http import request
-from odoo.tools import consteq, float_round, ustr
+from odoo.tools import float_round, ustr
 from odoo.tools.misc import hmac as hmac_tool
 
 
@@ -37,7 +38,7 @@ def check_access_token(access_token, *values):
     :rtype: bool
     """
     authentic_token = generate_access_token(*values)
-    return access_token and consteq(ustr(access_token), authentic_token)
+    return access_token and hmac.compare_digest(ustr(access_token), authentic_token)
 
 
 # Transaction values formatting

@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import hmac
 import logging
 import pprint
 import re
@@ -11,7 +11,7 @@ from dateutil import relativedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.tools import consteq, format_amount, ustr
+from odoo.tools import format_amount, ustr
 from odoo.tools.misc import hmac as hmac_tool
 
 from odoo.addons.payment import utils as payment_utils
@@ -783,7 +783,7 @@ class PaymentTransaction(models.Model):
                 continue  # Skip transactions with unset (or not properly defined) callbacks
 
             valid_callback_hash = self._generate_callback_hash(model_sudo.id, res_id, method)
-            if not consteq(ustr(valid_callback_hash), callback_hash):
+            if not hmac.compare_digest(ustr(valid_callback_hash), callback_hash):
                 _logger.warning(
                     "invalid callback signature for transaction with reference %s", tx.reference
                 )

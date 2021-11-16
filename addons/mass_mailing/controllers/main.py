@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
+import hmac
 
 import werkzeug
 
 from odoo import _, exceptions, http, tools
 from odoo.http import request
-from odoo.tools import consteq
 from werkzeug.exceptions import BadRequest
 
 
@@ -16,7 +16,7 @@ class MassMailController(http.Controller):
         if not (mailing_id and res_id and email and token):
             return False
         mailing = request.env['mailing.mailing'].sudo().browse(mailing_id)
-        return consteq(mailing._unsubscribe_token(res_id, email), token)
+        return hmac.compare_digest(mailing._unsubscribe_token(res_id, email), token)
 
     def _log_blacklist_action(self, blacklist_entry, mailing_id, description):
         mailing = request.env['mailing.mailing'].sudo().browse(mailing_id)
@@ -95,7 +95,7 @@ class MassMailController(http.Controller):
     @http.route('/mail/track/<int:mail_id>/<string:token>/blank.gif', type='http', auth='public')
     def track_mail_open(self, mail_id, token, **post):
         """ Email tracking. """
-        if not consteq(token, tools.hmac(request.env(su=True), 'mass_mailing-mail_mail-open', mail_id)):
+        if not hmac.compare_digest(token, tools.hmac(request.env(su=True), 'mass_mailing-mail_mail-open', mail_id)):
             raise BadRequest()
 
         request.env['mailing.trace'].sudo().set_opened(domain=[('mail_mail_id_int', 'in', [mail_id])])

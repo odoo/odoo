@@ -4,12 +4,11 @@
 #----------------------------------------------------------
 import base64
 import hashlib
+import hmac
 import logging
 import mimetypes
 import os
 import re
-import sys
-import traceback
 
 import werkzeug
 import werkzeug.exceptions
@@ -20,7 +19,7 @@ import odoo
 from odoo import api, http, models, tools, SUPERUSER_ID
 from odoo.exceptions import AccessDenied, AccessError, MissingError
 from odoo.http import request, content_disposition, Response
-from odoo.tools import consteq, pycompat
+from odoo.tools import pycompat
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.modules.module import get_resource_path, get_module_path
 
@@ -314,9 +313,9 @@ class IrHttp(models.AbstractModel):
         try:
             if model == 'ir.attachment':
                 record_sudo = record.sudo()
-                if access_token and not consteq(record_sudo.access_token or '', access_token):
+                if access_token and not hmac.compare_digest(record_sudo.access_token or '', access_token):
                     return None, 403
-                elif (access_token and consteq(record_sudo.access_token or '', access_token)):
+                elif (access_token and hmac.compare_digest(record_sudo.access_token or '', access_token)):
                     record = record_sudo
                 elif record_sudo.public:
                     record = record_sudo

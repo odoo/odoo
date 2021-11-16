@@ -33,7 +33,6 @@ from operator import itemgetter
 import babel
 import babel.dates
 import markupsafe
-import passlib.utils
 import pytz
 from lxml import etree
 
@@ -1466,13 +1465,6 @@ def format_duration(value):
         return '-%02d:%02d' % (hours, minutes)
     return '%02d:%02d' % (hours, minutes)
 
-
-def _consteq(str1, str2):
-    """ Constant-time string comparison. Suitable to compare bytestrings of fixed,
-        known length only, because length difference is optimized. """
-    return len(str1) == len(str2) and sum(ord(x)^ord(y) for x, y in zip(str1, str2)) == 0
-
-consteq = getattr(passlib.utils, 'consteq', _consteq)
 
 # forbid globals entirely: str/unicode, int/long, float, bool, tuple, list, dict, None
 class Unpickler(pickle_.Unpickler, object):
