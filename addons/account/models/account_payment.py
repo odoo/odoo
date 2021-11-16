@@ -202,6 +202,18 @@ class AccountPayment(models.Model):
             self.journal_id.outbound_payment_method_line_ids.payment_account_id,
         )
 
+    def _prepare_payment_display_name(self):
+        '''
+        Hook method for inherit
+        When you want to set a new name for payment, you can extend this method
+        '''
+        return {
+            'outbound-customer': _("Customer Reimbursement"),
+            'inbound-customer': _("Customer Payment"),
+            'outbound-supplier': _("Vendor Payment"),
+            'inbound-supplier': _("Vendor Reimbursement"),
+        }
+
     def _prepare_move_line_default_vals(self, write_off_line_vals=None):
         ''' Prepare the dictionary to create the default account.move.lines for the current payment.
         :param write_off_line_vals: Optional dictionary to create a write-off account.move.line easily containing:
@@ -257,12 +269,7 @@ class AccountPayment(models.Model):
 
         # Compute a default label to set on the journal items.
 
-        payment_display_name = {
-            'outbound-customer': _("Customer Reimbursement"),
-            'inbound-customer': _("Customer Payment"),
-            'outbound-supplier': _("Vendor Payment"),
-            'inbound-supplier': _("Vendor Reimbursement"),
-        }
+        payment_display_name = self._prepare_payment_display_name()
 
         default_line_name = self.env['account.move.line']._get_default_line_name(
             _("Internal Transfer") if self.is_internal_transfer else payment_display_name['%s-%s' % (self.payment_type, self.partner_type)],
