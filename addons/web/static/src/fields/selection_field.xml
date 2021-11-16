@@ -3,10 +3,10 @@
 
     <t t-name="web.SelectionField" owl="1">
         <t t-if="props.readonly">
-            <span class="o-selection-field" t-esc="string" />
+            <span t-esc="string" />
         </t>
         <t t-else="">
-            <select class="o-selection-field" t-on-change="onChange" t-att-value="value">
+            <select class="o_input" t-on-change="onChange" t-att-value="value">
                 <t t-set="options" t-value="selection" />
                 <t t-if="!props.required">
                     <option value="" t-esc="props.placeholder" />
