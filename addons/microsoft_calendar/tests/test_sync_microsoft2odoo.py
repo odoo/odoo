@@ -8,11 +8,19 @@ from datetime import datetime, date
 from odoo.tests.common import TransactionCase
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
+<<<<<<< HEAD
+=======
+
+>>>>>>> 815faca2946... temp
 
 class TestSyncMicrosoft2Odoo(TransactionCase):
 
     @property
+<<<<<<< HEAD
     @freeze_time("2020-06-03")
+=======
+    @freeze_time('2020-06-03')
+>>>>>>> 815faca2946... temp
     def now(self):
         return pytz.utc.localize(datetime.now()).isoformat()
 
@@ -30,12 +38,20 @@ class TestSyncMicrosoft2Odoo(TransactionCase):
 
         self.datetime_future = pytz.utc.localize(datetime.now() + relativedelta(days=1)).isoformat()
 
+<<<<<<< HEAD
     @freeze_time("2020-06-03")
+=======
+    @freeze_time('2020-06-03')
+>>>>>>> 815faca2946... temp
     def sync(self, events):
 
         self.env['calendar.event']._sync_microsoft2odoo(events)
 
+<<<<<<< HEAD
     @freeze_time("2020-06-03")
+=======
+    @freeze_time('2020-06-03')
+>>>>>>> 815faca2946... temp
     def test_new_microsoft_recurrence(self):
 
         recurrence = self.env['calendar.recurrence'].search([('microsoft_id', '=', self.recurrence_id)])
@@ -52,7 +68,11 @@ class TestSyncMicrosoft2Odoo(TransactionCase):
         self.assertEqual(events[2].start, datetime(2020, 5, 5, 14, 30))
         self.assertEqual(events[2].stop, datetime(2020, 5, 5, 16, 00))
 
+<<<<<<< HEAD
     @freeze_time("2020-06-03")
+=======
+    @freeze_time('2020-06-03')
+>>>>>>> 815faca2946... temp
     def test_microsoft_recurrence_delete_one_event(self):
         values = [
             {'@odata.type': '#microsoft.graph.event', '@odata.etag': 'W/"ZS2uEVAVyU6BMZ3m6cHmtgAADIaZKQ=="', 'createdDateTime': '2020-05-06T07:03:49.1444085Z', 'lastModifiedDateTime': self.datetime_future, 'changeKey': 'ZS2uEVAVyU6BMZ3m6cHmtgAADIaZKQ==', 'categories': [], 'originalStartTimeZone': 'Romance Standard Time', 'originalEndTimeZone': 'Romance Standard Time', 'iCalUId': '040000008200E00074C5B7101A82E00800000000874F057E7423D601000000000000000010000000C6918C4B44D2D84586351FEC8B1B7F8C', 'reminderMinutesBeforeStart': 15, 'isReminderOn': True, 'hasAttachments': False, 'subject': 'My recurrent event', 'bodyPreview': '', 'importance': 'normal', 'sensitivity': 'normal', 'isAllDay': False, 'isCancelled': False, 'isOrganizer': True, 'IsRoomRequested': False, 'AutoRoomBookingStatus': 'None', 'responseRequested': True, 'seriesMasterId': None, 'showAs': 'busy', 'type': 'seriesMaster', 'webLink': 'https://outlook.live.com/owa/?itemid=AQ8PojGtrADQATM3ZmYAZS0yY2MAMC00MDg1LTAwAi0wMAoARgAAA0By7X03vaNKv1GnWYTbFYAHAGUtrhFQFclOgTGd5unB5rYAAAIBDQAAAGUtrhFQFclOgTGd5unB5rYAAAALLLTEAAAA&exvsurl=1&path=/calendar/item', 'onlineMeetingUrl': None, 'isOnlineMeeting': False, 'onlineMeetingProvider': 'unknown', 'AllowNewTimeProposals': True, 'IsDraft': False, 'id': 'AQ8PojGtrADQATM3ZmYAZS0yY2MAMC00MDg1LTAwAi0wMAoARgAAA0By7X03vaNKv1GnWYTbFYAHAGUtrhFQFclOgTGd5unB5rYAAAIBDQAAAGUtrhFQFclOgTGd5unB5rYAAAALLLTEAAAA', 'responseStatus': {'response': 'organizer', 'time': '0001-01-01T00:00:00Z'}, 'body': {'contentType': 'html', 'content': ''}, 'start': {'dateTime': '2020-05-03T14:30:00.0000000', 'timeZone': 'UTC'}, 'end': {'dateTime': '2020-05-03T16:00:00.0000000', 'timeZone': 'UTC'}, 'location': {'displayName': '', 'locationType': 'default', 'uniqueIdType': 'unknown', 'address': {}, 'coordinates': {}}, 'locations': [], 'recurrence': {'pattern': {'type': 'daily', 'interval': 1, 'month': 0, 'dayOfMonth': 0, 'firstDayOfWeek': 'sunday', 'index': 'first'}, 'range': {'type': 'endDate', 'startDate': '2020-05-03', 'endDate': '2020-05-05', 'recurrenceTimeZone': 'Romance Standard Time', 'numberOfOccurrences': 0}}, 'attendees': [], 'organizer': {'emailAddress': {'name': 'outlook_7BA43549E5FD4413@outlook.com', 'address': 'outlook_7BA43549E5FD4413@outlook.com'}}},
@@ -69,7 +89,11 @@ class TestSyncMicrosoft2Odoo(TransactionCase):
         self.assertEqual(recurrence.base_event_id, events[0])
         self.assertEqual(events.mapped('name'), ['My recurrent event', 'My recurrent event'])
 
+<<<<<<< HEAD
     @freeze_time("2020-06-03")
+=======
+    @freeze_time('2020-06-03')
+>>>>>>> 815faca2946... temp
     def test_microsoft_recurrence_change_name_one_event(self):
         values = [
             {'@odata.type': '#microsoft.graph.event', '@odata.etag': 'W/"ZS2uEVAVyU6BMZ3m6cHmtgAADIaZKQ=="', 'createdDateTime': '2020-05-06T07:03:49.1444085Z', 'lastModifiedDateTime': self.datetime_future, 'changeKey': 'ZS2uEVAVyU6BMZ3m6cHmtgAADIaZKQ==', 'categories': [], 'originalStartTimeZone': 'Romance Standard Time', 'originalEndTimeZone': 'Romance Standard Time', 'iCalUId': '040000008200E00074C5B7101A82E00800000000874F057E7423D601000000000000000010000000C6918C4B44D2D84586351FEC8B1B7F8C', 'reminderMinutesBeforeStart': 15, 'isReminderOn': True, 'hasAttachments': False, 'subject': 'My recurrent event', 'bodyPreview': '', 'importance': 'normal', 'sensitivity': 'normal', 'isAllDay': False, 'isCancelled': False, 'isOrganizer': True, 'IsRoomRequested': False, 'AutoRoomBookingStatus': 'None', 'responseRequested': True, 'seriesMasterId': None, 'showAs': 'busy', 'type': 'seriesMaster', 'webLink': 'https://outlook.live.com/owa/?itemid=AQ8PojGtrADQATM3ZmYAZS0yY2MAMC00MDg1LTAwAi0wMAoARgAAA0By7X03vaNKv1GnWYTbFYAHAGUtrhFQFclOgTGd5unB5rYAAAIBDQAAAGUtrhFQFclOgTGd5unB5rYAAAALLLTEAAAA&exvsurl=1&path=/calendar/item', 'onlineMeetingUrl': None, 'isOnlineMeeting': False, 'onlineMeetingProvider': 'unknown', 'AllowNewTimeProposals': True, 'IsDraft': False, 'id': 'AQ8PojGtrADQATM3ZmYAZS0yY2MAMC00MDg1LTAwAi0wMAoARgAAA0By7X03vaNKv1GnWYTbFYAHAGUtrhFQFclOgTGd5unB5rYAAAIBDQAAAGUtrhFQFclOgTGd5unB5rYAAAALLLTEAAAA', 'responseStatus': {'response': 'organizer', 'time': '0001-01-01T00:00:00Z'}, 'body': {'contentType': 'html', 'content': ''}, 'start': {'dateTime': '2020-05-03T14:30:00.0000000', 'timeZone': 'UTC'}, 'end': {'dateTime': '2020-05-03T16:00:00.0000000', 'timeZone': 'UTC'}, 'location': {'displayName': '', 'locationType': 'default', 'uniqueIdType': 'unknown', 'address': {}, 'coordinates': {}}, 'locations': [], 'recurrence': {'pattern': {'type': 'daily', 'interval': 1, 'month': 0, 'dayOfMonth': 0, 'firstDayOfWeek': 'sunday', 'index': 'first'}, 'range': {'type': 'endDate', 'startDate': '2020-05-03', 'endDate': '2020-05-05', 'recurrenceTimeZone': 'Romance Standard Time', 'numberOfOccurrences': 0}}, 'attendees': [], 'organizer': {'emailAddress': {'name': 'outlook_7BA43549E5FD4413@outlook.com', 'address': 'outlook_7BA43549E5FD4413@outlook.com'}}},
@@ -87,7 +111,11 @@ class TestSyncMicrosoft2Odoo(TransactionCase):
         self.assertEqual(recurrence.base_event_id, events[0])
         self.assertEqual(events.mapped('name'), ['My recurrent event', 'My recurrent event 2', 'My recurrent event'])
 
+<<<<<<< HEAD
     @freeze_time("2020-06-03")
+=======
+    @freeze_time('2020-06-03')
+>>>>>>> 815faca2946... temp
     def test_microsoft_recurrence_change_name_all_event(self):
         values = [
             {'@odata.type': '#microsoft.graph.event', '@odata.etag': 'W/"ZS2uEVAVyU6BMZ3m6cHmtgAADIaZKQ=="', 'createdDateTime': '2020-05-06T07:03:49.1444085Z', 'lastModifiedDateTime': self.datetime_future, 'changeKey': 'ZS2uEVAVyU6BMZ3m6cHmtgAADIaZKQ==', 'categories': [], 'originalStartTimeZone': 'Romance Standard Time', 'originalEndTimeZone': 'Romance Standard Time', 'iCalUId': '040000008200E00074C5B7101A82E00800000000874F057E7423D601000000000000000010000000C6918C4B44D2D84586351FEC8B1B7F8C', 'reminderMinutesBeforeStart': 15, 'isReminderOn': True, 'hasAttachments': False, 'subject': 'My recurrent event 2', 'bodyPreview': '', 'importance': 'normal', 'sensitivity': 'normal', 'isAllDay': False, 'isCancelled': False, 'isOrganizer': True, 'IsRoomRequested': False, 'AutoRoomBookingStatus': 'None', 'responseRequested': True, 'seriesMasterId': None, 'showAs': 'busy', 'type': 'seriesMaster', 'webLink': 'https://outlook.live.com/owa/?itemid=AQ8PojGtrADQATM3ZmYAZS0yY2MAMC00MDg1LTAwAi0wMAoARgAAA0By7X03vaNKv1GnWYTbFYAHAGUtrhFQFclOgTGd5unB5rYAAAIBDQAAAGUtrhFQFclOgTGd5unB5rYAAAALLLTEAAAA&exvsurl=1&path=/calendar/item', 'onlineMeetingUrl': None, 'isOnlineMeeting': False, 'onlineMeetingProvider': 'unknown', 'AllowNewTimeProposals': True, 'IsDraft': False, 'id': 'AQ8PojGtrADQATM3ZmYAZS0yY2MAMC00MDg1LTAwAi0wMAoARgAAA0By7X03vaNKv1GnWYTbFYAHAGUtrhFQFclOgTGd5unB5rYAAAIBDQAAAGUtrhFQFclOgTGd5unB5rYAAAALLLTEAAAA', 'responseStatus': {'response': 'organizer', 'time': '0001-01-01T00:00:00Z'}, 'body': {'contentType': 'html', 'content': ''}, 'start': {'dateTime': '2020-05-03T14:30:00.0000000', 'timeZone': 'UTC'}, 'end': {'dateTime': '2020-05-03T16:00:00.0000000', 'timeZone': 'UTC'}, 'location': {'displayName': '', 'locationType': 'default', 'uniqueIdType': 'unknown', 'address': {}, 'coordinates': {}}, 'locations': [], 'recurrence': {'pattern': {'type': 'daily', 'interval': 1, 'month': 0, 'dayOfMonth': 0, 'firstDayOfWeek': 'sunday', 'index': 'first'}, 'range': {'type': 'endDate', 'startDate': '2020-05-03', 'endDate': '2020-05-05', 'recurrenceTimeZone': 'Romance Standard Time', 'numberOfOccurrences': 0}}, 'attendees': [], 'organizer': {'emailAddress': {'name': 'outlook_7BA43549E5FD4413@outlook.com', 'address': 'outlook_7BA43549E5FD4413@outlook.com'}}},
@@ -105,7 +133,11 @@ class TestSyncMicrosoft2Odoo(TransactionCase):
         self.assertEqual(recurrence.base_event_id, events[0])
         self.assertEqual(events.mapped('name'), ['My recurrent event 2', 'My recurrent event 2', 'My recurrent event 2'])
 
+<<<<<<< HEAD
     @freeze_time("2020-06-03")
+=======
+    @freeze_time('2020-06-03')
+>>>>>>> 815faca2946... temp
     def test_microsoft_recurrence_change_date_one_event(self):
         values = [
             {'@odata.type': '#microsoft.graph.event', '@odata.etag': 'W/"ZS2uEVAVyU6BMZ3m6cHmtgAADIaZPA=="', 'createdDateTime': '2020-05-06T07:03:49.1444085Z', 'lastModifiedDateTime': self.datetime_future, 'changeKey': 'ZS2uEVAVyU6BMZ3m6cHmtgAADIaZPA==', 'categories': [], 'originalStartTimeZone': 'Romance Standard Time', 'originalEndTimeZone': 'Romance Standard Time', 'iCalUId': '040000008200E00074C5B7101A82E00800000000874F057E7423D601000000000000000010000000C6918C4B44D2D84586351FEC8B1B7F8C', 'reminderMinutesBeforeStart': 15, 'isReminderOn': True, 'hasAttachments': False, 'subject': 'My recurrent event', 'bodyPreview': '', 'importance': 'normal', 'sensitivity': 'normal', 'isAllDay': False, 'isCancelled': False, 'isOrganizer': True, 'IsRoomRequested': False, 'AutoRoomBookingStatus': 'None', 'responseRequested': True, 'seriesMasterId': None, 'showAs': 'busy', 'type': 'seriesMaster', 'webLink': 'https://outlook.live.com/owa/?itemid=AQ8PojGtrADQATM3ZmYAZS0yY2MAMC00MDg1LTAwAi0wMAoARgAAA0By7X03vaNKv1GnWYTbFYAHAGUtrhFQFclOgTGd5unB5rYAAAIBDQAAAGUtrhFQFclOgTGd5unB5rYAAAALLLTEAAAA&exvsurl=1&path=/calendar/item', 'onlineMeetingUrl': None, 'isOnlineMeeting': False, 'onlineMeetingProvider': 'unknown', 'AllowNewTimeProposals': True, 'IsDraft': False, 'id': 'AQ8PojGtrADQATM3ZmYAZS0yY2MAMC00MDg1LTAwAi0wMAoARgAAA0By7X03vaNKv1GnWYTbFYAHAGUtrhFQFclOgTGd5unB5rYAAAIBDQAAAGUtrhFQFclOgTGd5unB5rYAAAALLLTEAAAA', 'responseStatus': {'response': 'organizer', 'time': '0001-01-01T00:00:00Z'}, 'body': {'contentType': 'html', 'content': ''}, 'start': {'dateTime': '2020-05-03T14:30:00.0000000', 'timeZone': 'UTC'}, 'end': {'dateTime': '2020-05-03T16:00:00.0000000', 'timeZone': 'UTC'}, 'location': {'displayName': '', 'locationType': 'default', 'uniqueIdType': 'unknown', 'address': {}, 'coordinates': {}}, 'locations': [], 'recurrence': {'pattern': {'type': 'daily', 'interval': 1, 'month': 0, 'dayOfMonth': 0, 'firstDayOfWeek': 'sunday', 'index': 'first'}, 'range': {'type': 'endDate', 'startDate': '2020-05-03', 'endDate': '2020-05-05', 'recurrenceTimeZone': 'Romance Standard Time', 'numberOfOccurrences': 0}}, 'attendees': [], 'organizer': {'emailAddress': {'name': 'outlook_7BA43549E5FD4413@outlook.com', 'address': 'outlook_7BA43549E5FD4413@outlook.com'}}},
@@ -133,7 +165,11 @@ class TestSyncMicrosoft2Odoo(TransactionCase):
         self.assertEqual(special_event.start, datetime(2020, 5, 4, 14, 30))
         self.assertEqual(special_event.stop, datetime(2020, 5, 4, 17, 00))
 
+<<<<<<< HEAD
     @freeze_time("2020-06-03")
+=======
+    @freeze_time('2020-06-03')
+>>>>>>> 815faca2946... temp
     def test_microsoft_recurrence_delete_first_event(self):
         values = [
             {'@odata.type': '#microsoft.graph.event', '@odata.etag': 'W/"ZS2uEVAVyU6BMZ3m6cHmtgAADI/Bnw=="', 'createdDateTime': '2020-05-06T07:03:49.1444085Z', 'lastModifiedDateTime': self.datetime_future, 'changeKey': 'ZS2uEVAVyU6BMZ3m6cHmtgAADI/Bnw==', 'categories': [], 'originalStartTimeZone': 'Romance Standard Time', 'originalEndTimeZone': 'Romance Standard Time', 'iCalUId': '040000008200E00074C5B7101A82E00800000000874F057E7423D601000000000000000010000000C6918C4B44D2D84586351FEC8B1B7F8C', 'reminderMinutesBeforeStart': 15, 'isReminderOn': True, 'hasAttachments': False, 'subject': 'My recurrent event', 'bodyPreview': '', 'importance': 'normal', 'sensitivity': 'normal', 'isAllDay': False, 'isCancelled': False, 'isOrganizer': True, 'IsRoomRequested': False, 'AutoRoomBookingStatus': 'None', 'responseRequested': True, 'seriesMasterId': None, 'showAs': 'busy', 'type': 'seriesMaster', 'webLink': 'https://outlook.live.com/owa/?itemid=AQ8PojGtrADQATM3ZmYAZS0yY2MAMC00MDg1LTAwAi0wMAoARgAAA0By7X03vaNKv1GnWYTbFYAHAGUtrhFQFclOgTGd5unB5rYAAAIBDQAAAGUtrhFQFclOgTGd5unB5rYAAAALLLTEAAAA&exvsurl=1&path=/calendar/item', 'onlineMeetingUrl': None, 'isOnlineMeeting': False, 'onlineMeetingProvider': 'unknown', 'AllowNewTimeProposals': True, 'IsDraft': False, 'id': 'AQ8PojGtrADQATM3ZmYAZS0yY2MAMC00MDg1LTAwAi0wMAoARgAAA0By7X03vaNKv1GnWYTbFYAHAGUtrhFQFclOgTGd5unB5rYAAAIBDQAAAGUtrhFQFclOgTGd5unB5rYAAAALLLTEAAAA', 'responseStatus': {'response': 'organizer', 'time': '0001-01-01T00:00:00Z'}, 'body': {'contentType': 'html', 'content': ''}, 'start': {'dateTime': '2020-05-03T14:30:00.0000000', 'timeZone': 'UTC'}, 'end': {'dateTime': '2020-05-03T16:00:00.0000000', 'timeZone': 'UTC'}, 'location': {'displayName': '', 'locationType': 'default', 'uniqueIdType': 'unknown', 'address': {}, 'coordinates': {}}, 'locations': [], 'recurrence': {'pattern': {'type': 'daily', 'interval': 1, 'month': 0, 'dayOfMonth': 0, 'firstDayOfWeek': 'sunday', 'index': 'first'}, 'range': {'type': 'endDate', 'startDate': '2020-05-03', 'endDate': '2020-05-05', 'recurrenceTimeZone': 'Romance Standard Time', 'numberOfOccurrences': 0}}, 'attendees': [], 'organizer': {'emailAddress': {'name': 'outlook_7BA43549E5FD4413@outlook.com', 'address': 'outlook_7BA43549E5FD4413@outlook.com'}}},
@@ -186,7 +222,11 @@ class TestSyncMicrosoft2Odoo(TransactionCase):
         self.assertEqual(events[2].start, datetime(2020, 5, 5, 14, 30))
         self.assertEqual(events[2].stop, datetime(2020, 5, 5, 16, 30))
 
+<<<<<<< HEAD
     @freeze_time("2020-06-03")
+=======
+    @freeze_time('2020-06-03')
+>>>>>>> 815faca2946... temp
     def test_microsoft_recurrence_split_recurrence(self):
         values = [
             {'@odata.type': '#microsoft.graph.event', '@odata.etag': 'W/"ZS2uEVAVyU6BMZ3m6cHmtgAADI/Dig=="', 'createdDateTime': '2020-05-06T07:03:49.1444085Z', 'lastModifiedDateTime': self.datetime_future, 'changeKey': 'ZS2uEVAVyU6BMZ3m6cHmtgAADI/Dig==', 'categories': [], 'originalStartTimeZone': 'Romance Standard Time', 'originalEndTimeZone': 'Romance Standard Time', 'iCalUId': '040000008200E00074C5B7101A82E00800000000874F057E7423D601000000000000000010000000C6918C4B44D2D84586351FEC8B1B7F8C', 'reminderMinutesBeforeStart': 15, 'isReminderOn': True, 'hasAttachments': False, 'subject': 'My recurrent event', 'bodyPreview': '', 'importance': 'normal', 'sensitivity': 'normal', 'isAllDay': False, 'isCancelled': False, 'isOrganizer': True, 'IsRoomRequested': False, 'AutoRoomBookingStatus': 'None', 'responseRequested': True, 'seriesMasterId': None, 'showAs': 'busy', 'type': 'seriesMaster', 'webLink': 'https://outlook.live.com/owa/?itemid=AQ8PojGtrADQATM3ZmYAZS0yY2MAMC00MDg1LTAwAi0wMAoARgAAA0By7X03vaNKv1GnWYTbFYAHAGUtrhFQFclOgTGd5unB5rYAAAIBDQAAAGUtrhFQFclOgTGd5unB5rYAAAALLLTEAAAA&exvsurl=1&path=/calendar/item', 'onlineMeetingUrl': None, 'isOnlineMeeting': False, 'onlineMeetingProvider': 'unknown', 'AllowNewTimeProposals': True, 'IsDraft': False, 'id': 'AQ8PojGtrADQATM3ZmYAZS0yY2MAMC00MDg1LTAwAi0wMAoARgAAA0By7X03vaNKv1GnWYTbFYAHAGUtrhFQFclOgTGd5unB5rYAAAIBDQAAAGUtrhFQFclOgTGd5unB5rYAAAALLLTEAAAA', 'responseStatus': {'response': 'organizer', 'time': '0001-01-01T00:00:00Z'}, 'body': {'contentType': 'html', 'content': ''}, 'start': {'dateTime': '2020-05-03T14:30:00.0000000', 'timeZone': 'UTC'}, 'end': {'dateTime': '2020-05-03T16:30:00.0000000', 'timeZone': 'UTC'}, 'location': {'displayName': '', 'locationType': 'default', 'uniqueIdType': 'unknown', 'address': {}, 'coordinates': {}}, 'locations': [], 'recurrence': {'pattern': {'type': 'daily', 'interval': 1, 'month': 0, 'dayOfMonth': 0, 'firstDayOfWeek': 'sunday', 'index': 'first'}, 'range': {'type': 'endDate', 'startDate': '2020-05-03', 'endDate': '2020-05-03', 'recurrenceTimeZone': 'Romance Standard Time', 'numberOfOccurrences': 0}}, 'attendees': [], 'organizer': {'emailAddress': {'name': 'outlook_7BA43549E5FD4413@outlook.com', 'address': 'outlook_7BA43549E5FD4413@outlook.com'}}},
@@ -220,7 +260,11 @@ class TestSyncMicrosoft2Odoo(TransactionCase):
         self.assertEqual(events_2[2].start, datetime(2020, 5, 6, 14, 30))
         self.assertEqual(events_2[2].stop, datetime(2020, 5, 6, 17, 00))
 
+<<<<<<< HEAD
     @freeze_time("2020-06-03")
+=======
+    @freeze_time('2020-06-03')
+>>>>>>> 815faca2946... temp
     def test_microsoft_recurrence_delete(self):
         recurrence_id = self.env['calendar.recurrence'].search([('microsoft_id', '=', self.recurrence_id)])
         event_ids = self.env['calendar.event'].search([('recurrence_id', '=', recurrence_id.id)], order='start asc').ids
@@ -233,7 +277,11 @@ class TestSyncMicrosoft2Odoo(TransactionCase):
         self.assertFalse(recurrence, "It should remove recurrence")
         self.assertFalse(events, "It should remove all events")
 
+<<<<<<< HEAD
     @freeze_time("2020-06-03")
+=======
+    @freeze_time('2020-06-03')
+>>>>>>> 815faca2946... temp
     def test_attendees_must_have_email(self):
         """
         Synching with a partner without mail raises a ValidationError because Microsoft don't accept attendees without one.
@@ -251,7 +299,11 @@ class TestSyncMicrosoft2Odoo(TransactionCase):
         with self.assertRaises(ValidationError):
             event._sync_odoo2microsoft(MicrosoftCal)
 
+<<<<<<< HEAD
     @freeze_time("2020-06-03")
+=======
+    @freeze_time('2020-06-03')
+>>>>>>> 815faca2946... temp
     def test_cancel_occurence_of_recurrent_event(self):
         """ The user is invited to a recurrent event. When synced, all events are present, there are three occurrences:
             - 07/15/2021, 15:00-15:30
