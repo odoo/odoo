@@ -512,6 +512,16 @@ class MailThread(models.AbstractModel):
         # we have to flush() again in case we triggered some recomputations
         self.flush()
 
+    def _track_set_log_message(self, message):
+        """ Link tracking to a message logged as body, in addition to subtype
+        description (if set) and tracking values that make the core content of
+        tracking message. """
+        if not self._track_get_fields():
+            return
+        body_values = self.env.cr.precommit.data.setdefault(f'mail.tracking.message.{self._name}', {})
+        for id_ in self.ids:
+            body_values[id_] = message
+
     @tools.ormcache('self.env.uid', 'self.env.su')
     def _track_get_fields(self):
         """ Return the set of tracked fields names for the current model. """
@@ -558,6 +568,8 @@ class MailThread(models.AbstractModel):
             except MissingError:
                 continue
 
+        # find content to log as body
+        bodies = self.env.cr.precommit.data.pop(f'mail.tracking.message.{self._name}', {})
         for record in self:
             changes, tracking_value_ids = tracking.get(record.id, (None, None))
             if not changes:
@@ -572,9 +584,16 @@ class MailThread(models.AbstractModel):
                 if not subtype.exists():
                     _logger.debug('subtype "%s" not found' % subtype.name)
                     continue
-                record.message_post(subtype_id=subtype.id, tracking_value_ids=tracking_value_ids)
+                record.message_post(
+                    body=bodies.get(record.id) or '',
+                    subtype_id=subtype.id,
+                    tracking_value_ids=tracking_value_ids
+                )
             elif tracking_value_ids:
-                record._message_log(tracking_value_ids=tracking_value_ids)
+                record._message_log(
+                    body=bodies.get(record.id) or '',
+                    tracking_value_ids=tracking_value_ids
+                )
 
         return tracking
 
