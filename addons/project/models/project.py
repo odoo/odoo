@@ -1457,7 +1457,7 @@ class Task(models.Model):
         """ Returns the set of tracked field names for the current model.
         Those fields are the ones tracked in the parent task when using task dependencies.
 
-        See :meth:`mail.models.MailThread._get_tracked_fields`"""
+        See :meth:`mail.models.MailThread._track_get_fields`"""
         fields = {name for name, field in self._fields.items() if getattr(field, 'task_dependency_tracking', None)}
         return fields and set(self.fields_get(fields))
 
