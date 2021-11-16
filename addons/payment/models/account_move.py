@@ -26,10 +26,10 @@ class AccountMove(models.Model):
         return self.with_context(active_test=False).transaction_ids._get_last()
 
     def payment_action_capture(self):
-        self.authorized_transaction_ids._send_capture_request()
+        self.authorized_transaction_ids.action_capture()
 
     def payment_action_void(self):
-        self.authorized_transaction_ids._send_void_request()
+        self.authorized_transaction_ids.action_void()
 
     def action_view_payment_transactions(self):
         action = self.env['ir.actions.act_window']._for_xml_id('payment.action_payment_transaction')
