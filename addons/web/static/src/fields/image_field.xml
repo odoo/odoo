@@ -1,8 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
+    <t t-name="web.ImageUploader" owl="1">
+        <div class="o_form_image_controls">
+            <t t-if="state.isUploading">
+                <span class="o_form_binary_progress">Uploading...</span>
+            </t>
+            <t t-else="">
+                <button
+                    class="fa fa-pencil fa-lg float-left o_select_file_button"
+                    data-tooltip="Edit"
+                    aria-label="Edit"
+                    t-on-click="onSelectFileButtonClick"
+                />
+                <button
+                    class="fa fa-trash-o fa-lg float-right o_clear_file_button"
+                    data-tooltip="Clear"
+                    aria-label="Clear"
+                    t-on-click="onClearFileButtonClick"
+                />
+            </t>
+
+            <div t-attf-class="o_hidden_input_file {{ props.fileUploadClass or '' }}" t-att-style="props.fileUploadStyle" aria-atomic="true">
+                <form class="o_form_binary_form" t-att-target="id" method="post" enctype="multipart/form-data" t-att-action="props.fileUploadAction or '/web/binary/upload'">
+                    <input type="hidden" name="csrf_token" t-att-value="CSRFToken" />
+                    <input type="hidden" name="callback" t-att-value="id" />
+                    <input
+                        type="file"
+                        class="o_input_file"
+                        name="ufile"
+                        t-ref="fileInput"
+                        t-att="{'multiple': props.multiUpload ? 'multiple' : false, 'accept': props.acceptedFileExtensions or '*'}"
+                        t-on-change="onFileChange"
+                    />
+                </form>
+                <iframe t-att-id="id" t-att-name="id" style="display: none"/>
+            </div>
+        </div>
+    </t>
+
     <t t-name="web.ImageField" owl="1">
-        <img class="img img-fluid" alt="Binary file" t-att-src="url" t-att-border="props.readonly ? 0 : 1" t-att-name="props.name" />
+        <div class="o_field_image" aria-atomic="true">
+            <t t-if="!props.readonly">
+                <ImageUploader
+                    acceptedFileExtensions="props.options.accepted_file_extensions or 'image/*'"
+                    onUploaded="(info) => onFileUploaded(info)"
+                    onRemove="() => onFileRemove()"
+                />
+            </t>
+            <img
+                class="img img-fluid"
+                alt="Binary file"
+                t-att-src="url"
+                t-att-border="props.readonly ? 0 : 1"
+                t-att-name="props.name"
+                t-att-height="props.options.size and props.options.size[1]"
+                t-att-width="props.options.size and props.options.size[0]"
+                t-att-style="props.options.size and `max-height: ${props.options.size[1]}px; max-width: ${props.options.size[0]}px;`"
+                t-on-error="onLoadFailed"
+            />
+        </div>
     </t>
 
 </templates>
