@@ -198,29 +198,6 @@ function getMatchedCSSRules(a) {
         delete style['text-decoration-thickness'];
     }
 
-    // color and text-align inheritance do not seem to get past <td> elements on
-    // some mail clients. TODO: This is hacky as it applies a color/text-align
-    // style to all descendants of nodes with a color style. We can probably do
-    // this more elegantly.
-    if (style.color || style['text-align']) {
-        function _styleDescendants(node, styleName) {
-            const camelCased = styleName.replace(/-(\w)/g, match => match[1].toUpperCase());
-            node.style[camelCased] = style[styleName];
-            for (const child of $(node).children()) {
-                if (child.style[camelCased] !== style[styleName]) {
-                    break;
-                }
-                _styleDescendants(child, styleName);
-            }
-        }
-        if (style.color) {
-            _styleDescendants(a, 'color');
-        }
-        if (style['text-align']) {
-            _styleDescendants(a, 'text-align');
-        }
-    }
-
     // flexboxes are not supported in Windows Outlook
     for (const styleName in style) {
         if (styleName.includes('flex') || `${style[styleName]}`.includes('flex')) {
