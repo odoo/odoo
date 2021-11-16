@@ -1139,6 +1139,7 @@ class Picking(models.Model):
         picking, the backorder, and move the stock.moves that are not `done` or `cancel` into it.
         """
         backorders = self.env['stock.picking']
+        bo_to_assign = self.env['stock.picking']
         for picking in self:
             moves_to_backorder = picking.move_lines.filtered(lambda x: x.state not in ('done', 'cancel'))
             if moves_to_backorder:
@@ -1155,6 +1156,10 @@ class Picking(models.Model):
                 moves_to_backorder.mapped('package_level_id').write({'picking_id':backorder_picking.id})
                 moves_to_backorder.mapped('move_line_ids').write({'picking_id': backorder_picking.id})
                 backorders |= backorder_picking
+                if backorder_picking.picking_type_id.reservation_method == 'at_confirm':
+                    bo_to_assign |= backorder_picking
+        if bo_to_assign:
+            bo_to_assign.action_assign()
         return backorders
 
     def _log_activity_get_documents(self, orig_obj_changes, stream_field, stream, sorted_method=False, groupby_method=False):
