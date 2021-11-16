@@ -50,8 +50,8 @@ class LeaveReportCalendar(models.Model):
                 WHEN hl.holiday_type = 'employee' THEN rr.tz
                 ELSE %s
             END AS tz,
-            state = 'refuse' as is_striked,
-            state not in ('validate', 'refuse') as is_hatched
+            hl.state = 'refuse' as is_striked,
+            hl.state not in ('validate', 'refuse') as is_hatched
         FROM hr_leave hl
             LEFT JOIN hr_employee em
                 ON em.id = hl.employee_id
