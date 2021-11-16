@@ -843,7 +843,11 @@ class ChromeBrowser:
             'Page.frameStoppedLoading': self._handle_frame_stopped_loading,
             'Page.screencastFrame': self._handle_screencast_frame,
         }
-        self._receiver = threading.Thread(target=self._receive, name="WebSocket events consumer")
+        self._receiver = threading.Thread(
+            target=self._receive,
+            name="WebSocket events consumer",
+            args=(get_db_name(),)
+        )
         self._receiver.start()
         self._logger.info('Enable chrome headless console log notification')
         self._websocket_send('Runtime.enable')
@@ -1033,7 +1037,8 @@ class ChromeBrowser:
             raise unittest.SkipTest("Cannot connect to chrome dev tools")
         self.ws.settimeout(0.01)
 
-    def _receive(self):
+    def _receive(self, dbname):
+        threading.current_thread().dbname = dbname
         # So CDT uses a streamed JSON-RPC structure, meaning a request is
         # {id, method, params} and eventually a {id, result | error} should
         # arrive the other way, however for events it uses "notifications"
