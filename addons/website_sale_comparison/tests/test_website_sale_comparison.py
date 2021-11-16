@@ -16,7 +16,7 @@ class TestWebsiteSaleComparison(odoo.tests.TransactionCase):
 
         Technically it tests the removal of copied views by the base method
         `_remove_copied_views`. The problematic view that has to be removed is
-        `product_add_to_compare` because it has a reference to `add_to_compare`.
+        `product_attributes_body` because it has a reference to `add_to_compare`.
         """
         # YTI TODO: Adapt this tour without demo data
         # I still didn't figure why, but this test freezes on runbot
@@ -30,12 +30,12 @@ class TestWebsiteSaleComparison(odoo.tests.TransactionCase):
         # Create a generic inherited view, with a key not starting with
         # `website_sale_comparison` otherwise the unlink will work just based on
         # the key, but we want to test also for `MODULE_UNINSTALL_FLAG`.
-        product_add_to_compare = Website0.viewref('website_sale_comparison.product_add_to_compare')
+        product_attributes_body = Website0.viewref('website_sale_comparison.product_attributes_body')
         test_view_key = 'my_test.my_key'
         self.env['ir.ui.view'].with_context(website_id=None).create({
             'name': 'test inherited view',
             'key': test_view_key,
-            'inherit_id': product_add_to_compare.id,
+            'inherit_id': product_attributes_body.id,
             'arch': '<div/>',
         })
 
@@ -46,7 +46,7 @@ class TestWebsiteSaleComparison(odoo.tests.TransactionCase):
 
         # Verify initial state: the specific views exist
         self.assertEqual(Website1.viewref('website_sale.product').website_id.id, 1)
-        self.assertEqual(Website1.viewref('website_sale_comparison.product_add_to_compare').website_id.id, 1)
+        self.assertEqual(Website1.viewref('website_sale_comparison.product_attributes_body').website_id.id, 1)
         self.assertEqual(Website1.viewref(test_view_key).website_id.id, 1)
 
         # Remove the module (use `module_uninstall` because it is enough to test
@@ -56,9 +56,9 @@ class TestWebsiteSaleComparison(odoo.tests.TransactionCase):
         website_sale_comparison.module_uninstall()
 
         # Check that the generic view is correctly removed
-        self.assertFalse(Website0.viewref('website_sale_comparison.product_add_to_compare', raise_if_not_found=False))
+        self.assertFalse(Website0.viewref('website_sale_comparison.product_attributes_body', raise_if_not_found=False))
         # Check that the specific view is correctly removed
-        self.assertFalse(Website1.viewref('website_sale_comparison.product_add_to_compare', raise_if_not_found=False))
+        self.assertFalse(Website1.viewref('website_sale_comparison.product_attributes_body', raise_if_not_found=False))
 
         # Check that the generic inherited view is correctly removed
         self.assertFalse(Website0.viewref(test_view_key, raise_if_not_found=False))
