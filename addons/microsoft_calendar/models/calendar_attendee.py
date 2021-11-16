@@ -11,14 +11,14 @@ class Attendee(models.Model):
     _name = 'calendar.attendee'
     _inherit = 'calendar.attendee'
 
-    def _send_mail_to_attendees(self, mail_template, force_send=False, ignore_recurrence=False):
+    def _send_mail_to_attendees(self, template_xmlid, force_send=False, ignore_recurrence=False):
         """ Override the super method
         If not synced with Microsoft Outlook, let Odoo in charge of sending emails
         Otherwise, Microsoft Outlook will send them
         """
         with microsoft_calendar_token(self.env.user.sudo()) as token:
             if not token:
-                super()._send_mail_to_attendees(mail_template, force_send, ignore_recurrence)
+                super()._send_mail_to_attendees(template_xmlid, force_send, ignore_recurrence)
 
     def do_tentative(self):
         # Synchronize event after state change
