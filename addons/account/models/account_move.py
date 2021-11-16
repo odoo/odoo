@@ -4126,43 +4126,53 @@ class AccountMoveLine(models.Model):
                     move_initial_values[line.move_id.id].update({field: line[field]})
 
         result = True
-        for line in self:
-            cleaned_vals = line.move_id._cleanup_write_orm_values(line, vals)
-            if not cleaned_vals:
-                continue
+        for batched_line_ids in self._cr.split_for_in_conditions(self.ids):
+            cleaned_vals_dicts = {}
+            process_move_lines_one_by_one = {}
+            for line in self.browse(batched_line_ids):
+                cleaned_vals = line.move_id._cleanup_write_orm_values(line, vals)
+                if not cleaned_vals:
+                    continue
 
-            # Auto-fill amount_currency if working in single-currency.
-            if 'currency_id' not in cleaned_vals \
-                and line.currency_id == line.company_currency_id \
-                and any(field_name in cleaned_vals for field_name in ('debit', 'credit')):
-                cleaned_vals.update({
-                    'amount_currency': vals.get('debit', 0.0) - vals.get('credit', 0.0),
-                })
+                # Auto-fill amount_currency if working in single-currency.
+                if 'currency_id' not in cleaned_vals \
+                    and line.currency_id == line.company_currency_id \
+                    and any(field_name in cleaned_vals for field_name in ('debit', 'credit')):
+                    cleaned_vals.update({
+                        'amount_currency': vals.get('debit', 0.0) - vals.get('credit', 0.0),
+                    })
+                    process_move_lines_one_by_one[line] = [cleaned_vals, line]
+                else:
+                    cleaned_vals_keys = tuple(cleaned_vals.keys())
+                    cleaned_vals_dicts.setdefault(cleaned_vals_keys, [cleaned_vals, self.browse()])
+                    cleaned_vals_dicts[cleaned_vals_keys][1] += line
 
-            result |= super(AccountMoveLine, line).write(cleaned_vals)
+            for cleaned_vals, move_lines in list(cleaned_vals_dicts.values()) + list(process_move_lines_one_by_one.values()):
+                result |= super(AccountMoveLine, move_lines).write(cleaned_vals)
 
-            if not line.move_id.is_invoice(include_receipts=True):
-                continue
+                for line in move_lines:
+                    if not line.move_id.is_invoice(include_receipts=True):
+                        continue
 
-            # Ensure consistency between accounting & business fields.
-            # As we can't express such synchronization as computed fields without cycling, we need to do it both
-            # in onchange and in create/write. So, if something changed in accounting [resp. business] fields,
-            # business [resp. accounting] fields are recomputed.
-            if any(field in cleaned_vals for field in ACCOUNTING_FIELDS):
-                price_subtotal = line._get_price_total_and_subtotal().get('price_subtotal', 0.0)
-                to_write = line._get_fields_onchange_balance(price_subtotal=price_subtotal)
-                to_write.update(line._get_price_total_and_subtotal(
-                    price_unit=to_write.get('price_unit', line.price_unit),
-                    quantity=to_write.get('quantity', line.quantity),
-                    discount=to_write.get('discount', line.discount),
-                ))
-                result |= super(AccountMoveLine, line).write(to_write)
-            elif any(field in cleaned_vals for field in BUSINESS_FIELDS):
-                to_write = line._get_price_total_and_subtotal()
-                to_write.update(line._get_fields_onchange_subtotal(
-                    price_subtotal=to_write['price_subtotal'],
-                ))
-                result |= super(AccountMoveLine, line).write(to_write)
+                    # Ensure consistency between accounting & business fields.
+                    # As we can't express such synchronization as computed fields without cycling, we need to do it both
+                    # in onchange and in create/write. So, if something changed in accounting [resp. business] fields,
+                    # business [resp. accounting] fields are recomputed.
+                    if any(field in cleaned_vals for field in ACCOUNTING_FIELDS):
+                        price_subtotal = line._get_price_total_and_subtotal().get('price_subtotal', 0.0)
+                        to_write = line._get_fields_onchange_balance(price_subtotal=price_subtotal)
+                        to_write.update(line._get_price_total_and_subtotal(
+                            price_unit=to_write.get('price_unit', line.price_unit),
+                            quantity=to_write.get('quantity', line.quantity),
+                            discount=to_write.get('discount', line.discount),
+                        ))
+                        result |= super(AccountMoveLine, line).write(to_write)
+                    elif any(field in cleaned_vals for field in BUSINESS_FIELDS):
+                        to_write = line._get_price_total_and_subtotal()
+                        to_write.update(line._get_fields_onchange_subtotal(
+                            price_subtotal=to_write['price_subtotal'],
+                        ))
+                        result |= super(AccountMoveLine, line).write(to_write)
 
         # Check total_debit == total_credit in the related moves.
         if self._context.get('check_move_validity', True):
