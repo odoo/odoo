@@ -336,7 +336,7 @@ class Project(models.Model):
     is_milestone_exceeded = fields.Boolean(compute="_compute_is_milestone_exceeded", search='_search_is_milestone_exceeded')
 
     _sql_constraints = [
-        ('project_date_greater', 'check(date >= date_start)', 'Error! Project start date must be before project end date.')
+        ('project_date_greater', 'check(date >= date_start)', "The project's start date must be before its end date.")
     ]
 
     @api.depends('partner_id.email')
@@ -2291,7 +2291,7 @@ class ProjectTags(models.Model):
     task_ids = fields.Many2many('project.task', string='Tasks')
 
     _sql_constraints = [
-        ('name_uniq', 'unique (name)', "Tag name already exists!"),
+        ('name_uniq', 'unique (name)', "A tag with the same name already exists."),
     ]
 
     @api.model
