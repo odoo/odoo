@@ -3,7 +3,6 @@ import { makeView } from "../helpers";
 import { setupControlPanelServiceRegistry } from "../../search/helpers";
 import { FormCompiler } from "@web/views/form/form_compiler";
 import { registry } from "@web/core/registry";
-import { parse } from "../../../src/core/py_js/py_parser";
 
 function compileTemplate(arch) {
     const parser = new DOMParser();
@@ -21,7 +20,6 @@ QUnit.assert.areEquivalent = function (template1, template2) {
 };
 
 QUnit.assert.areContentEquivalent = function (template, content) {
-    debugger;
     const parser = new DOMParser();
     const doc = parser.parseFromString(template, "text/xml");
     const templateContent = doc.documentElement.firstChild.innerHTML;
@@ -33,10 +31,7 @@ QUnit.module("Form Compiler", (hooks) => {
         const arch = /*xml*/ `<form><div>lol</div></form>`;
         const expected = /*xml*/ `
             <t>
-                <div
-                    class=\"o_form_view\"
-                    t-attf-class=\"{{props.mode === 'readonly' ? 'o_form_readonly' : 'o_form_editable'}}\"
-                >
+                <div t-attf-class="{{props.readonly ? 'o_form_readonly' : 'o_form_editable'}}" class="o_form_nosheet">
                     <div>lol</div>
                 </div>
             </t>`;
@@ -48,12 +43,10 @@ QUnit.module("Form Compiler", (hooks) => {
         const arch = /*xml*/ `<form><div class="someClass">lol<field name="display_name"/></div></form>`;
         const expected = /*xml*/ `
             <t>
-                <div
-                    class=\"o_form_view\"
-                    t-attf-class=\"{{props.mode === 'readonly' ? 'o_form_readonly' : 'o_form_editable'}}\"
-                >
-                    <div class=\"someClass\">lol
-                        <Field name=\"&quot;display_name&quot;\" record=\"record\" mode=\"props.mode\" />
+                <div t-attf-class="{{props.readonly ? 'o_form_readonly' : 'o_form_editable'}}" class="o_form_nosheet">
+                    <div class="someClass">
+                        lol
+                        <Field id="&quot;field_display_name_0&quot;" name="&quot;display_name&quot;" record="record" archs="&quot;views&quot; in props.fields.display_name and props.fields.display_name.views" t-att-class="{   o_readonly_modifier: false , o_required_modifier: false , o_field_empty: isFieldEmpty(record,&quot;display_name&quot;, &quot;null&quot;) }" readonly="false or null === 'readonly' or isFieldReadonly(record,&quot;display_name&quot;,&quot;null&quot;,props.readonly)"/>
                     </div>
                 </div>
             </t>`;
@@ -70,18 +63,28 @@ QUnit.module("Form Compiler", (hooks) => {
                 </group>
             </form>`;
         const expected = /*xml*/ `
-            <div class=\"o_group\">
-                <table class=\"o_group o_inner_group o_group_col_6\">
+            <div class="o_group">
+                <table class="o_group o_inner_group o_group_col_6">
                     <tbody>
                         <tr>
-                            <Field name=\"&quot;display_name&quot;\" record=\"record\" mode=\"props.mode\"/>
+                            <td class="o_td_label">
+                                <label class="o_form_label" for="field_display_name_0" t-esc="record.fields.display_name.string" t-att-class="{   o_readonly_modifier: false , o_required_modifier: false , o_form_label_empty: isFieldEmpty(record,&quot;display_name&quot;, &quot;null&quot;) }"/>
+                            </td>
+                            <td style="width: 100%">
+                                <Field id="&quot;field_display_name_0&quot;" name="&quot;display_name&quot;" record="record" archs="&quot;views&quot; in props.fields.display_name and props.fields.display_name.views" t-att-class="{   o_readonly_modifier: false , o_required_modifier: false , o_field_empty: isFieldEmpty(record,&quot;display_name&quot;, &quot;null&quot;) }" readonly="false or null === 'readonly' or isFieldReadonly(record,&quot;display_name&quot;,&quot;null&quot;,props.readonly)"/>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
-                <table class=\"o_group o_inner_group o_group_col_6\">
+                <table class="o_group o_inner_group o_group_col_6">
                     <tbody>
                         <tr>
-                            <Field name=\"&quot;charfield&quot;\" record=\"record\" mode=\"props.mode\"/>
+                            <td class="o_td_label">
+                                <label class="o_form_label" for="field_charfield_1" t-esc="record.fields.charfield.string" t-att-class="{   o_readonly_modifier: false , o_required_modifier: false , o_form_label_empty: isFieldEmpty(record,&quot;charfield&quot;, &quot;null&quot;) }"/>
+                            </td>
+                            <td style="width: 100%">
+                                <Field id="&quot;field_charfield_1&quot;" name="&quot;charfield&quot;" record="record" archs="&quot;views&quot; in props.fields.charfield and props.fields.charfield.views" t-att-class="{   o_readonly_modifier: false , o_required_modifier: false , o_field_empty: isFieldEmpty(record,&quot;charfield&quot;, &quot;null&quot;) }" readonly="false or null === 'readonly' or isFieldReadonly(record,&quot;charfield&quot;,&quot;null&quot;,props.readonly)"/>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -100,27 +103,31 @@ QUnit.module("Form Compiler", (hooks) => {
                 </form>`;
 
         const expected = /*xml*/ `
-            <div class=\"o_notebook\">
-                <t t-set=\"notebook_0\" t-value=\"state.notebook_0 or getActivePage(record,{&quot;page_1&quot;:false,&quot;page_2&quot;:false})\"/>
-                <div class=\"o_notebook_headers\">
-                    <ul class=\"nav nav-tabs\">
-                        <li class=\"nav-item\">
-                            <a t-on-click.prevent=\"state.notebook_0 = &quot;page_1&quot;\" href=\"#\" class=\"nav-link\" role=\"tab\" t-attf-class=\"{{ notebook_0 === &quot;page_1&quot; ? 'active' : '' }}\">Page1</a>
-                        </li>
-                        <li class=\"nav-item\">
-                            <a t-on-click.prevent=\"state.notebook_0 = &quot;page_2&quot;\" href=\"#\" class=\"nav-link\" role=\"tab\" t-attf-class=\"{{ notebook_0 === &quot;page_2&quot; ? 'active' : '' }}\">Page2</a>
-                        </li>
-                    </ul>
+        <div class="o_notebook">
+            <t t-set="notebook_0" t-value="state.notebook_0 or getActivePage(record, {&quot;page_1&quot;:false,&quot;page_3&quot;:false})"/>
+            <div class="o_notebook_headers">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a t-on-click.prevent="state.notebook_0 = &quot;page_1&quot;" href="#" class="nav-link" role="tab" t-attf-class="{{ notebook_0 === &quot;page_1&quot; ? 'active' : '' }}">
+                            Page1
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a t-on-click.prevent="state.notebook_0 = &quot;page_3&quot;" href="#" class="nav-link" role="tab" t-attf-class="{{ notebook_0 === &quot;page_3&quot; ? 'active' : '' }}">
+                            Page2
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="tab-content">
+                <div t-if="notebook_0 === &quot;page_1&quot;" class="tab-pane active">
+                    <Field id="&quot;field_charfield_2&quot;" name="&quot;charfield&quot;" record="record" archs="&quot;views&quot; in props.fields.charfield and props.fields.charfield.views" t-att-class="{   o_readonly_modifier: false , o_required_modifier: false , o_field_empty: isFieldEmpty(record,&quot;charfield&quot;, &quot;null&quot;) }" readonly="false or null === 'readonly' or isFieldReadonly(record,&quot;charfield&quot;,&quot;null&quot;,props.readonly)"/>
                 </div>
-                <div class=\"tab-content\">
-                    <div t-if=\"notebook_0 === &quot;page_1&quot;\" class=\"tab-pane active\">
-                        <Field name=\"&quot;charfield&quot;\" record=\"record\" mode=\"props.mode\"/>
-                    </div>
-                    <div t-if=\"notebook_0 === &quot;page_2&quot;\" class=\"tab-pane active\">
-                        <Field name=\"&quot;display_name&quot;\" record=\"record\" mode=\"props.mode\"/>
-                    </div>
+                <div t-if="notebook_0 === &quot;page_3&quot;" class="tab-pane active">
+                    <Field id="&quot;field_display_name_4&quot;" name="&quot;display_name&quot;" record="record" archs="&quot;views&quot; in props.fields.display_name and props.fields.display_name.views" t-att-class="{   o_readonly_modifier: false , o_required_modifier: false , o_field_empty: isFieldEmpty(record,&quot;display_name&quot;, &quot;null&quot;) }" readonly="false or null === 'readonly' or isFieldReadonly(record,&quot;display_name&quot;,&quot;null&quot;,props.readonly)"/>
                 </div>
-            </div>`;
+            </div>
+        </div>`;
 
         assert.areContentEquivalent(compileTemplate(arch), expected);
     });
@@ -132,7 +139,7 @@ QUnit.module("Form Compiler", (hooks) => {
             </form>`;
 
         const expected = /*xml*/ `
-            <Field name=\"&quot;display_name&quot;\" record=\"record\" mode=\"props.mode\" placeholder=\"&quot;e.g. Contact's Name or //someinfo...&quot;\"/>
+        <Field id="&quot;field_display_name_0&quot;" name="&quot;display_name&quot;" record="record" archs="&quot;views&quot; in props.fields.display_name and props.fields.display_name.views" t-att-class="{   o_readonly_modifier: false , o_required_modifier: false , o_field_empty: isFieldEmpty(record,&quot;display_name&quot;, &quot;null&quot;) }" readonly="false or null === 'readonly' or isFieldReadonly(record,&quot;display_name&quot;,&quot;null&quot;,props.readonly)" placeholder="&quot;e.g. Contact's Name or //someinfo...&quot;"/>
         `;
 
         assert.areContentEquivalent(compileTemplate(arch), expected);
@@ -151,10 +158,10 @@ QUnit.module("Form Compiler", (hooks) => {
             </form>`;
 
         const expected = /*xml*/ `
-            <div class=\"visible1\"/>
-            <div class=\"visible2\"/>
-            <div class=\"visible3\"/>
-            <div t-if=\"!evalDomain([[&quot;display_name&quot;,&quot;=&quot;,&quot;take&quot;]])\"/>
+            <div class="visible1"/>
+            <div class="visible2"/>
+            <div class="visible3"/>
+            <div t-if="!evalDomain(record,[[&quot;display_name&quot;,&quot;=&quot;,&quot;take&quot;]])"/>
         `;
 
         assert.areContentEquivalent(compileTemplate(arch), expected);

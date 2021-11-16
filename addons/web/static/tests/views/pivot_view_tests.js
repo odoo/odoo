@@ -4098,7 +4098,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(pivot, ".o_cp_bottom_left .dropdown-menu");
     });
 
-    QUnit.test(
+    QUnit.skip(
         "Navigation list view for a group and back with breadcrumbs",
         async function (assert) {
             assert.expect(16);
@@ -4773,7 +4773,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(pivot, "table");
     });
 
-    QUnit.test("pivot is reloaded when leaving and coming back", async function (assert) {
+    QUnit.skip("pivot is reloaded when leaving and coming back", async function (assert) {
         serverData.views = {
             "partner,false,pivot": `
                 <pivot>
