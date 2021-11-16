@@ -329,15 +329,8 @@ class HolidaysType(models.Model):
             holiday_status.virtual_leaves_taken = result.get('virtual_leaves_taken', 0)
 
     def _compute_group_days_allocation(self):
-        date_from = fields.Datetime.to_string(datetime.datetime.now().replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0))
-        domain = [
-            ('holiday_status_id', 'in', self.ids),
-            '|',
-            ('date_from', '>=', date_from),
-            ('date_from', '=', False),
-        ]
         grouped_res = self.env['hr.leave.allocation'].read_group(
-            domain,
+            [('holiday_status_id', 'in', self.ids), ],
             ['holiday_status_id'],
             ['holiday_status_id'],
         )
@@ -404,13 +397,8 @@ class HolidaysType(models.Model):
     def action_see_days_allocated(self):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("hr_holidays.hr_leave_allocation_action_all")
-        date_from = fields.Datetime.to_string(
-                datetime.datetime.now().replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0))
         action['domain'] = [
             ('holiday_status_id', 'in', self.ids),
-            '|',
-            ('date_from', '>=', date_from),
-            ('date_from', '=', False),
         ]
         action['context'] = {
             'default_holiday_type': 'department',
