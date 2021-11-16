@@ -4,7 +4,6 @@ odoo.define('wysiwyg.widgets.LinkTools', function (require) {
 const Link = require('wysiwyg.widgets.Link');
 const {ColorPaletteWidget} = require('web_editor.ColorPalette');
 const {ColorpickerWidget} = require('web.Colorpicker');
-const dom = require('web.dom');
 const {
     computeColorClasses,
     getCSSVariableValue,
@@ -53,11 +52,7 @@ const LinkTools = Link.extend({
         this.options.wysiwyg.odooEditor.observerUnactive();
         this.$link.addClass('oe_edited_link');
         this.$button.addClass('active');
-        return this._super(...arguments).then(() => {
-            if (!this.options.noFocusUrl) {
-                dom.scrollTo(this.$(':visible:last')[0], {duration: 0});
-            }
-        });
+        return this._super(...arguments);
     },
     destroy: function () {
         if (!this.el) {
@@ -82,6 +77,18 @@ const LinkTools = Link.extend({
         this._super(...arguments);
         this.options.wysiwyg.odooEditor.observerUnactive();
         this._observer.observe(this._link, {subtree: true, childList: true, characterData: true});
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    focusUrl() {
+        this.el.scrollIntoView();
+        this._super();
     },
 
     //--------------------------------------------------------------------------
