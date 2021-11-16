@@ -550,6 +550,22 @@ function factory(dependencies) {
          * @private
          * @returns {string}
          */
+        _computeSendButtonText() {
+            if (
+                this.composer &&
+                this.composer.isLog &&
+                this.composer.activeThread &&
+                this.composer.activeThread.model !== 'mail.channel'
+            ) {
+                return this.env._t("Log");
+            }
+            return this.env._t("Send");
+        }
+
+        /**
+         * @private
+         * @returns {string}
+         */
         _computeSuggestionDelimiter() {
             if (
                 !this.composer ||
@@ -930,6 +946,12 @@ function factory(dependencies) {
         messageViewInEditing: one2one('mail.message_view', {
             inverse: 'composerViewInEditing',
             readonly: true,
+        }),
+        /**
+         * Determines the label on the send button of this composer view.
+         */
+        sendButtonText: attr({
+            compute: '_computeSendButtonText',
         }),
         /**
          * States which type of suggestion is currently in progress, if any.
