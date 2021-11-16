@@ -2,7 +2,7 @@
 
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2many, many2one, one2many, one2one } from '@mail/model/model_field';
-import { clear, replace, unlink } from '@mail/model/model_field_command';
+import { clear, insertAndReplace, replace, unlink } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
@@ -148,6 +148,11 @@ function factory(dependencies) {
             default: false,
         }),
         composerViews: one2many('mail.composer_view', {
+            inverse: 'composer',
+            isCausal: true,
+        }),
+        fileUploader: one2one('mail.file_uploader', {
+            default: insertAndReplace(),
             inverse: 'composer',
             isCausal: true,
         }),

@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
 import { registerNewModel } from '@mail/model/model_core';
-import { attr, many2many, many2one } from '@mail/model/model_field';
-import { clear, insert, unlink, unlinkAll } from '@mail/model/model_field_command';
+import { attr, many2many, many2one, one2one } from '@mail/model/model_field';
+import { clear, insert, insertAndReplace, unlink, unlinkAll } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
@@ -262,6 +262,11 @@ function factory(dependencies) {
          * In all other cases, this field value should not be trusted.
          */
         feedbackBackup: attr(),
+        fileUploader: one2one('mail.file_uploader', {
+            default: insertAndReplace(),
+            inverse: 'activity',
+            isCausal: true,
+        }),
         chaining_type: attr({
             default: 'suggest',
         }),

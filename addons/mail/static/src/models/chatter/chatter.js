@@ -338,6 +338,11 @@ function factory(dependencies) {
         context: attr({
             default: {},
         }),
+        fileUploader: one2one('mail.file_uploader', {
+            default: insertAndReplace(),
+            inverse: 'chatter',
+            isCausal: true,
+        }),
         /**
          * Determines whether `this` should display an activity box.
          */
