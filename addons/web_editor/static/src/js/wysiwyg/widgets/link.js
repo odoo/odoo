@@ -36,6 +36,7 @@ const Link = Widget.extend({
         this.data = data || {};
         this.isButton = this.data.isButton;
         this.$button = $button;
+        this.noFocusUrl = this.options.noFocusUrl;
 
         this.data.className = this.data.className || "";
         this.data.iniClassName = this.data.iniClassName || "";
@@ -143,13 +144,8 @@ const Link = Widget.extend({
 
         this._updateOptionsUI();
 
-        if (!this.options.noFocusUrl) {
-            // ensure the focus in the first input of the link modal
-            setTimeout(()=> {
-                const firstInput = this.$('input:visible:first');
-                firstInput.focus();
-                firstInput.select();
-            }, 0);
+        if (!this.noFocusUrl) {
+            this.focusUrl();
         }
 
         return this._super.apply(this, arguments);
@@ -251,6 +247,14 @@ const Link = Widget.extend({
             }
         }
         return link;
+    },
+    /**
+     * Focuses the url input.
+     */
+    focusUrl() {
+        const urlInput = this.el.querySelector('input[name="url"]');
+        urlInput.focus();
+        urlInput.select();
     },
 
     //--------------------------------------------------------------------------
