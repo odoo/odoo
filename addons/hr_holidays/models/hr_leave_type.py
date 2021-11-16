@@ -346,6 +346,7 @@ class HolidaysType(models.Model):
             holiday_status.virtual_leaves_taken = result.get('virtual_leaves_taken', 0)
             holiday_status.closest_allocation_to_expire = result.get('closest_allocation_to_expire', 0)
 
+<<<<<<< HEAD
     def _compute_allocation_count(self):
         min_datetime = fields.Datetime.to_string(datetime.datetime.now().replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0))
         max_datetime = fields.Datetime.to_string(datetime.datetime.now().replace(month=12, day=31, hour=23, minute=59, second=59))
@@ -356,8 +357,11 @@ class HolidaysType(models.Model):
             ('state', 'in', ('confirm', 'validate')),
         ]
 
+=======
+    def _compute_group_days_allocation(self):
+>>>>>>> 61a61bcc4b3... temp
         grouped_res = self.env['hr.leave.allocation'].read_group(
-            domain,
+            [('holiday_status_id', 'in', self.ids), ],
             ['holiday_status_id'],
             ['holiday_status_id'],
         )
@@ -434,8 +438,6 @@ class HolidaysType(models.Model):
     def action_see_days_allocated(self):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("hr_holidays.hr_leave_allocation_action_all")
-        date_from = fields.Datetime.to_string(
-                datetime.datetime.now().replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0))
         action['domain'] = [
             ('holiday_status_id', 'in', self.ids),
         ]
