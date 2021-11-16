@@ -25,7 +25,6 @@ import types
 import unicodedata
 from collections import OrderedDict
 from collections.abc import Iterable, Mapping, MutableSet
-from contextlib import contextmanager
 from difflib import HtmlDiff
 from functools import wraps
 from itertools import islice, groupby as itergroupby
@@ -1191,13 +1190,6 @@ class Reverse(object):
     def __gt__(self, other): return self.val < other.val
     def __le__(self, other): return self.val >= other.val
     def __lt__(self, other): return self.val > other.val
-
-@contextmanager
-def ignore(*exc):
-    try:
-        yield
-    except exc:
-        pass
 
 html_escape = markupsafe.escape
 
