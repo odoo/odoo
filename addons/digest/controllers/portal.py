@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import hmac
 
 from werkzeug.exceptions import Forbidden, NotFound
 from werkzeug.urls import url_encode
 
 from odoo import _
 from odoo.http import Controller, request, route
-from odoo.tools import consteq
 
 
 class DigestController(Controller):
@@ -18,7 +18,7 @@ class DigestController(Controller):
         # new route parameters
         if digest_sudo and token and user_id:
             correct_token = digest_sudo._get_unsubscribe_token(int(user_id))
-            if not consteq(correct_token, token):
+            if not hmac.compare_digest(correct_token, token):
                 raise NotFound()
             digest_sudo._action_unsubscribe_users(request.env['res.users'].sudo().browse(int(user_id)))
         # old route was given without any token or user_id but only for auth users

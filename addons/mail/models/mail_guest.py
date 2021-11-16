@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import hmac
 
 import pytz
 import uuid
 
-from odoo.tools import consteq
 from odoo import _, api, fields, models
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError
@@ -37,7 +37,7 @@ class MailGuest(models.Model):
         if not guest_id or not guest_access_token:
             return self.env['mail.guest']
         guest = self.env['mail.guest'].browse(int(guest_id)).sudo().exists()
-        if not guest or not guest.access_token or not consteq(guest.access_token, guest_access_token):
+        if not guest or not guest.access_token or not hmac.compare_digest(guest.access_token, guest_access_token):
             return self.env['mail.guest']
         if not guest.timezone:
             timezone = self._get_timezone_from_request(request)

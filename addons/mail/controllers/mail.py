@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import hmac
 import logging
 
 from werkzeug.urls import url_encode
@@ -8,7 +8,6 @@ from werkzeug.urls import url_encode
 from odoo import http
 from odoo.exceptions import AccessError
 from odoo.http import request
-from odoo.tools import consteq
 
 _logger = logging.getLogger(__name__)
 
@@ -27,7 +26,7 @@ class MailController(http.Controller):
         params = dict(request.params)
         params.pop('token', '')
         valid_token = request.env['mail.thread']._notify_encode_link(base_link, params)
-        return consteq(valid_token, str(token))
+        return hmac.compare_digest(valid_token, str(token))
 
     @classmethod
     def _check_token_and_record_or_redirect(cls, model, res_id, token):

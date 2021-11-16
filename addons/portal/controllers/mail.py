@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import hmac
 
 from werkzeug import urls
 from werkzeug.exceptions import NotFound, Forbidden
@@ -7,7 +8,7 @@ from werkzeug.exceptions import NotFound, Forbidden
 from odoo import http, _
 from odoo.http import request
 from odoo.osv import expression
-from odoo.tools import consteq, plaintext2html
+from odoo.tools import plaintext2html
 from odoo.addons.mail.controllers import mail
 from odoo.addons.portal.controllers.portal import CustomerPortal
 from odoo.exceptions import AccessError, MissingError, UserError
@@ -17,9 +18,9 @@ def _check_special_access(res_model, res_id, token='', _hash='', pid=False):
     record = request.env[res_model].browse(res_id).sudo()
     if token:  # Token Case: token is the global one of the document
         token_field = request.env[res_model]._mail_post_token_field
-        return (token and record and consteq(record[token_field], token))
+        return token and record and hmac.compare_digest(record[token_field], token)
     elif _hash and pid:  # Signed Token Case: hash implies token is signed by partner pid
-        return consteq(_hash, record._sign_token(pid))
+        return hmac.compare_digest(_hash, record._sign_token(pid))
     else:
         raise Forbidden()
 
@@ -229,7 +230,7 @@ class MailController(mail.MailController):
                 record_sudo.with_user(uid).check_access_rights('read')
                 record_sudo.with_user(uid).check_access_rule('read')
             except AccessError:
-                if record_sudo.access_token and access_token and consteq(record_sudo.access_token, access_token):
+                if record_sudo.access_token and access_token and hmac.compare_digest(record_sudo.access_token, access_token):
                     record_action = record_sudo.with_context(force_website=True).get_access_action()
                     if record_action['type'] == 'ir.actions.act_url':
                         pid = kwargs.get('pid')

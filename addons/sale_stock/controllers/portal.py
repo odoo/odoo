@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import hmac
 
 from odoo import exceptions, SUPERUSER_ID
 from odoo.addons.sale.controllers.portal import CustomerPortal
 from odoo.http import request, route
-from odoo.tools import consteq
 
 
 class SaleStockPortal(CustomerPortal):
@@ -16,7 +16,7 @@ class SaleStockPortal(CustomerPortal):
             picking.check_access_rights('read')
             picking.check_access_rule('read')
         except exceptions.AccessError:
-            if not access_token or not consteq(picking_sudo.sale_id.access_token, access_token):
+            if not access_token or not hmac.compare_digest(picking_sudo.sale_id.access_token, access_token):
                 raise
         return picking_sudo
 

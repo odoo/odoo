@@ -7,12 +7,9 @@ import logging
 import pprint
 from datetime import datetime
 
-import werkzeug
-
 from odoo import http
 from odoo.exceptions import ValidationError
 from odoo.http import request
-from odoo.tools import consteq
 
 _logger = logging.getLogger(__name__)
 
@@ -166,7 +163,7 @@ class StripeController(http.Controller):
             signed_payload.encode('utf-8'),
             hashlib.sha256
         ).hexdigest()
-        if not consteq(received_signature, expected_signature):
+        if not hmac.compare_digest(received_signature, expected_signature):
             _logger.warning("ignored event with invalid signature")
             return False
 
