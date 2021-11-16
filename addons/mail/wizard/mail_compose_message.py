@@ -264,7 +264,7 @@ class MailComposer(models.TransientModel):
                 new_attachment_ids = []
                 for attachment in wizard.attachment_ids:
                     if attachment in wizard.template_id.attachment_ids:
-                        new_attachment_ids.append(attachment.copy({'res_model': 'mail.compose.message', 'res_id': wizard.id}).id)
+                        new_attachment_ids.append(attachment.sudo().copy({'res_model': 'mail.compose.message', 'res_id': wizard.id}).id)
                     else:
                         new_attachment_ids.append(attachment.id)
                 new_attachment_ids.reverse()
