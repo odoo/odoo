@@ -2509,7 +2509,9 @@ var SnippetsMenu = Widget.extend({
                         });
                     } else {
                         $toInsert.remove();
-                        dragAndDropResolve();
+                        if (dragAndDropResolve) {
+                            dragAndDropResolve();
+                        }
                         self.$el.find('.oe_snippet_thumbnail').removeClass('o_we_already_dragging');
                     }
                 },
