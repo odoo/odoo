@@ -212,11 +212,12 @@ const Wysiwyg = Widget.extend({
             }, options));
             await this._insertSnippetMenu();
 
-            window.addEventListener('beforeunload', (event) => {
+            this._onBeforeUnload = (event) => {
                 if (this.isDirty()) {
                     event.returnValue = _t('This document is not saved!');
                 }
-            });
+            };
+            window.addEventListener('beforeunload', this._onBeforeUnload);
         }
         if (this.options.getContentEditableAreas) {
             $(this.options.getContentEditableAreas()).find('*').off('mousedown mouseup click');
@@ -676,7 +677,7 @@ const Wysiwyg = Widget.extend({
         await this._saveViewBlocks();
 
         this.trigger_up('edition_was_stopped');
-        window.onbeforeunload = null;
+        window.removeEventListener('beforeunload', this._onBeforeUnload);
         if (reload) {
             window.location.reload();
         }
