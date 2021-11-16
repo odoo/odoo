@@ -45,7 +45,7 @@ class TestWorkEntryHolidaysMultiContract(TestWorkEntryHolidaysBase):
         self.assertEqual(sum(leave.mapped('duration')), 28, "It should be 28 hours of leave this month for this contract")
 
     def test_move_contract_in_leave(self):
-        # test move contract dates such that a leave is accross two contracts
+        # test move contract dates such that a leave is across two contracts
         start = datetime.strptime('2015-11-05 07:00:00', '%Y-%m-%d %H:%M:%S')
         end = datetime.strptime('2015-12-15 18:00:00', '%Y-%m-%d %H:%M:%S')
         self.contract_cdi.write({'date_start': datetime.strptime('2015-12-30', '%Y-%m-%d').date()})
@@ -57,7 +57,7 @@ class TestWorkEntryHolidaysMultiContract(TestWorkEntryHolidaysBase):
             self.contract_cdi.date_start = datetime.strptime('2015-11-17', '%Y-%m-%d').date()
 
     def test_create_contract_in_leave(self):
-        # test create contract such that a leave is accross two contracts
+        # test create contract such that a leave is across two contracts
         start = datetime.strptime('2015-11-05 07:00:00', '%Y-%m-%d %H:%M:%S')
         end = datetime.strptime('2015-12-15 18:00:00', '%Y-%m-%d %H:%M:%S')
         self.contract_cdi.date_start = datetime.strptime('2015-12-30', '%Y-%m-%d').date()  # remove this contract to be able to create the leave
