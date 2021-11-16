@@ -10,10 +10,8 @@ import collections
 import datetime
 import hmac as hmac_lib
 import hashlib
-import io
 import itertools
 import os
-import pickle as pickle_
 import re
 import socket
 import subprocess
@@ -21,7 +19,6 @@ import sys
 import threading
 import time
 import traceback
-import types
 import unicodedata
 from collections import OrderedDict
 from collections.abc import Iterable, Mapping, MutableSet
@@ -1448,28 +1445,6 @@ def format_duration(value):
     if value < 0:
         return '-%02d:%02d' % (hours, minutes)
     return '%02d:%02d' % (hours, minutes)
-
-
-# forbid globals entirely: str/unicode, int/long, float, bool, tuple, list, dict, None
-class Unpickler(pickle_.Unpickler, object):
-    find_global = None # Python 2
-    find_class = None # Python 3
-def _pickle_load(stream, encoding='ASCII', errors=False):
-    if sys.version_info[0] == 3:
-        unpickler = Unpickler(stream, encoding=encoding)
-    else:
-        unpickler = Unpickler(stream)
-    try:
-        return unpickler.load()
-    except Exception:
-        _logger.warning('Failed unpickling data, returning default: %r',
-                        errors, exc_info=True)
-        return errors
-pickle = types.ModuleType(__name__ + '.pickle')
-pickle.load = _pickle_load
-pickle.loads = lambda text, encoding='ASCII': _pickle_load(io.BytesIO(text), encoding=encoding)
-pickle.dump = pickle_.dump
-pickle.dumps = pickle_.dumps
 
 
 class DotDict(dict):
