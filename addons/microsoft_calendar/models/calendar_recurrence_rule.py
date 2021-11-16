@@ -19,6 +19,7 @@ class RecurrenceRule(models.Model):
     def _compute_rrule(self):
         for recurrence in self:
             if recurrence.rrule != recurrence._rrule_serialize():
+<<<<<<< HEAD
                 recurrence.write({'rrule': recurrence._rrule_serialize()})
 
     def _inverse_rrule(self):
@@ -31,6 +32,13 @@ class RecurrenceRule(models.Model):
     def _apply_recurrence(self, specific_values_creation=None, no_send_edit=False, generic_values_creation=None):
         events = self.filtered('need_sync_m').calendar_event_ids
         detached_events = super()._apply_recurrence(specific_values_creation, no_send_edit, generic_values_creation)
+=======
+                recurrence.write({'rrule': recurrence._rrule_serialize(), 'need_sync_m': False})
+
+    def _apply_recurrence(self, specific_values_creation=None, no_send_edit=False):
+        events = self.filtered('need_sync_m').calendar_event_ids
+        detached_events = super()._apply_recurrence(specific_values_creation, no_send_edit)
+>>>>>>> 499ce1e7fde... temp
 
         microsoft_service = MicrosoftCalendarService(self.env['microsoft.service'])
 

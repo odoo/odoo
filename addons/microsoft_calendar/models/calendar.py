@@ -7,7 +7,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import html2plaintext, is_html_empty, plaintext2html
+from odoo.tools import html2plaintext, is_html_empty, plaintext2html, email_normalize
 
 ATTENDEE_CONVERTER_O2M = {
     'needsAction': 'notresponded',
@@ -122,7 +122,11 @@ class Meeting(models.Model):
             values['partner_ids'] = commands_partner
 
         if microsoft_event.is_recurrent() and not microsoft_event.is_recurrence():
+<<<<<<< HEAD
             # Propagate the follow_recurrence according to the google result
+=======
+            # Propagate the follow_recurrence according to the outlook result
+>>>>>>> 499ce1e7fde... temp
             values['follow_recurrence'] = not microsoft_event.is_recurrence_outlier()
 
         values['microsoft_id'] = microsoft_event.id
@@ -156,7 +160,7 @@ class Meeting(models.Model):
         commands_partner = []
 
         microsoft_attendees = microsoft_event.attendees or []
-        emails = [a.get('emailAddress').get('address') for a in microsoft_attendees]
+        emails = [a.get('emailAddress').get('address') for a in microsoft_attendees if email_normalize(a.get('emailAddress').get('address'))]
         existing_attendees = self.env['calendar.attendee']
         if microsoft_event.exists(self.env):
             existing_attendees = self.env['calendar.attendee'].search([
@@ -167,20 +171,19 @@ class Meeting(models.Model):
             commands_partner += [(4, self.env.user.partner_id.id)]
         partners = self.env['mail.thread']._mail_find_partner_from_emails(emails, records=self, force_create=True)
         attendees_by_emails = {a.email: a for a in existing_attendees}
-        for attendee in zip(emails, partners, microsoft_attendees):
-            email = attendee[0]
-            state = ATTENDEE_CONVERTER_M2O.get(attendee[2].get('status').get('response'))
 
+        for email, partner, m_attendee in zip(emails, partners, microsoft_attendees):
+            state = ATTENDEE_CONVERTER_M2O.get(m_attendee.get('status').get('response'))
             if email in attendees_by_emails:
                 # Update existing attendees
                 commands_attendee += [(1, attendees_by_emails[email].id, {'state': state})]
             else:
                 # Create new attendees
-                partner = attendee[1]
                 commands_attendee += [(0, 0, {'state': state, 'partner_id': partner.id})]
                 commands_partner += [(4, partner.id)]
-                if attendee[2].get('emailAddress').get('name') and not partner.name:
-                    partner.name = attendee[2].get('emailAddress').get('name')
+                if m_attendee.get('emailAddress').get('name') and not partner.name:
+                    partner.name = m_attendee.get('emailAddress').get('name')
+
         for odoo_attendee in attendees_by_emails.values():
             # Remove old attendees
             if odoo_attendee.email not in emails:

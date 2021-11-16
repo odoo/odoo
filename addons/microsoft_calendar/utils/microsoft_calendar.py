@@ -7,6 +7,11 @@ import logging
 
 from werkzeug import urls
 
+<<<<<<< HEAD
+=======
+from odoo import fields
+
+>>>>>>> 499ce1e7fde... temp
 from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
 from odoo.addons.microsoft_account.models.microsoft_service import TIMEOUT
 
@@ -31,13 +36,13 @@ class MicrosoftCalendarService():
     @requires_auth_token
     def get_events(self, sync_token=None, token=None, timeout=TIMEOUT):
         url = "/v1.0/me/calendarView/delta"
-        headers = {'Content-type': 'application/json', 'Authorization': 'Bearer %s' % token}
+        headers = {'Content-type': 'application/json', 'Authorization': 'Bearer %s' % token, 'Prefer': 'odata.maxpagesize=50'}
         params = {}
         if sync_token:
             params['$deltatoken'] = sync_token
         else:
-            params['startDateTime'] = '2016-12-01T00:00:00Z'
-            params['endDateTime'] = '2030-1-01T00:00:00Z'
+            params['startDateTime'] = fields.Datetime.subtract(fields.Datetime.now(), years=3).strftime("%Y-%m-%dT00:00:00Z")
+            params['endDateTime'] = fields.Datetime.add(fields.Datetime.now(), years=3).strftime("%Y-%m-%dT00:00:00Z")
         try:
             status, data, time = self.microsoft_service._do_request(url, params, headers, method='GET', timeout=timeout)
         except requests.HTTPError as e:

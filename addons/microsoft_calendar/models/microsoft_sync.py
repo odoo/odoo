@@ -102,6 +102,12 @@ class MicrosoftSync(models.AbstractModel):
 
     def unlink(self):
         synced = self.filtered('microsoft_id')
+<<<<<<< HEAD
+=======
+        if self.env.context.get('archive_on_error') and self._active_name:
+            synced.write({self._active_name: False})
+            self = self - synced
+>>>>>>> 499ce1e7fde... temp
         microsoft_service = MicrosoftCalendarService(self.env['microsoft.service'])
         for ev in synced:
             ev._microsoft_delete(microsoft_service, ev.microsoft_id)
@@ -382,3 +388,4 @@ class MicrosoftSync(models.AbstractModel):
         a given user.
         """
         raise NotImplementedError()
+
