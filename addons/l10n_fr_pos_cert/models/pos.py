@@ -64,7 +64,7 @@ class pos_order(models.Model):
                                  ('l10n_fr_secure_sequence_number', '=', int(secure_seq_number) - 1)])
         if prev_order and len(prev_order) != 1:
             raise UserError(
-               _('An error occured when computing the inalterability. Impossible to get the unique previous posted point of sale order.'))
+               _('An error occurred when computing the inalterability. Impossible to get the unique previous posted point of sale order.'))
 
         #build and return the hash
         return self._compute_hash(prev_order.l10n_fr_hash if prev_order else u'')

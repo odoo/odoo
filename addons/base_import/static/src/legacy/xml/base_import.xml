@@ -158,7 +158,7 @@
         <div class="oe_import_report_message">
             <t t-if="errors[0].value">
             No matching records found for the following <t t-esc="errors[0].field_type"/> </t>
-            <t t-else="">Multiple errors occured </t>
+            <t t-else="">Multiple errors occurred </t>
             in field <b t-esc="errors[0].field_name"/>:
             <ul>
                 <t t-foreach="errors.length" t-as="index">

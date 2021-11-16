@@ -2283,7 +2283,9 @@ class AccountMove(models.Model):
         explicitly empty the 'name' field of the move; but we discourage that practice.
         """
         if not self._context.get('force_delete') and not self.filtered(lambda move: move.name != '/')._is_end_of_seq_chain():
-            raise UserError(_("You cannot delete this entry, as it has already consumed a sequence number and is not the last one in the chain. Probably you should revert it instead."))
+            raise UserError(_(
+                "You cannot delete this entry, as it has already consumed a sequence number and is not the last one in the chain. You should probably revert it instead."
+            ))
 
     def unlink(self):
         self.line_ids.unlink()
@@ -3152,7 +3154,7 @@ class AccountMove(models.Model):
                                  ('secure_sequence_number', '=', int(secure_seq_number) - 1)])
         if prev_move and len(prev_move) != 1:
             raise UserError(
-               _('An error occured when computing the inalterability. Impossible to get the unique previous posted journal entry.'))
+               _('An error occurred when computing the inalterability. Impossible to get the unique previous posted journal entry.'))
 
         #build and return the hash
         return self._compute_hash(prev_move.inalterable_hash if prev_move else u'')
@@ -3530,7 +3532,7 @@ class AccountMoveLine(models.Model):
         comodel_name='account.tax',
         string="Originator Group of Taxes",
         index=True,
-        help="The group of taxes generator of this tax line",
+        help="The group of taxes that generated this tax line",
     )
     tax_line_id = fields.Many2one('account.tax', string='Originator Tax', ondelete='restrict', store=True,
         compute='_compute_tax_line_id', help="Indicates that this journal item is a tax line")

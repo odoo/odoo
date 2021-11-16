@@ -692,7 +692,7 @@ class AssetsBundle(object):
         if 'Cannot load compass' in error:
             error += "Maybe you should install the compass gem using this extra argument:\n\n" \
                      "    $ sudo gem install compass --pre\n"
-        error += "This error occured while compiling the bundle '%s' containing:" % self.name
+        error += "This error occurred while compiling the bundle '%s' containing:" % self.name
         for asset in self.stylesheets:
             if isinstance(asset, PreprocessedCSS):
                 error += '\n    - %s' % (asset.url if asset.url else '<inline sass>')
@@ -701,7 +701,7 @@ class AssetsBundle(object):
     def get_rtlcss_error(self, stderr, source=None):
         """Improve and remove sensitive information from sass/less compilator error messages"""
         error = misc.ustr(stderr).split('Load paths')[0].replace('  Use --trace for backtrace.', '')
-        error += "This error occured while compiling the bundle '%s' containing:" % self.name
+        error += "This error occurred while compiling the bundle '%s' containing:" % self.name
         return error
 
 class WebAsset(object):

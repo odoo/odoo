@@ -430,7 +430,7 @@ class MailMail(models.Model):
                                          mail.message_id, email.get('email_to'))
                         else:
                             raise
-                if res:  # mail has been sent at least once, no major exception occured
+                if res:  # mail has been sent at least once, no major exception occurred
                     mail.write({'state': 'sent', 'message_id': res, 'failure_reason': False})
                     _logger.info('Mail with ID %r and Message-Id %r successfully sent', mail.id, mail.message_id)
                     # /!\ can't use mail.state here, as mail.refresh() will cause an error

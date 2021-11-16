@@ -51,7 +51,7 @@ class HrLeave(models.Model):
         """
             A leave cannot be set across multiple contracts.
             Note: a leave can be across multiple contracts despite this constraint.
-            It happens if a leave is correctly created (not accross multiple contracts) but
+            It happens if a leave is correctly created (not across multiple contracts) but
             contracts are later modifed/created in the middle of the leave.
         """
         for holiday in self.filtered('employee_id'):

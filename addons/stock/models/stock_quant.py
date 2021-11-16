@@ -753,7 +753,7 @@ class StockQuant(models.Model):
                 self.env.cr.execute(query)
                 self.invalidate_cache()
         except Error as e:
-            _logger.info('an error occured while merging quants: %s', e.pgerror)
+            _logger.info('an error occurred while merging quants: %s', e.pgerror)
 
     @api.model
     def _quant_tasks(self):

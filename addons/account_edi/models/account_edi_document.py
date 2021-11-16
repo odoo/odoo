@@ -23,10 +23,10 @@ class AccountEdiDocument(models.Model):
     error = fields.Html(help='The text of the last error that happened during Electronic Invoice operation.')
     blocking_level = fields.Selection(
         selection=[('info', 'Info'), ('warning', 'Warning'), ('error', 'Error')],
-        help="Blocks the document current operation depending on the error severity :\n"
+        help="Blocks the current operation of the document depending on the error severity:\n"
         "  * Info: the document is not blocked and everything is working as it should.\n"
-        "  * Warning : there is an error that doesn't prevent the current Electronic Invoicing operation to succeed.\n"
-        "  * Error : there is an error that blocks the current Electronic Invoicing operation.")
+        "  * Warning: there is an error that doesn't prevent the current Electronic Invoicing operation to succeed.\n"
+        "  * Error: there is an error that blocks the current Electronic Invoicing operation.")
 
     # == Not stored fields ==
     name = fields.Char(related='attachment_id.name')

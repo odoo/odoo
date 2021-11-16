@@ -288,7 +288,7 @@ var PaymentAdyen = PaymentInterface.extend({
                 msg = params.get('message');
             }
 
-            this._show_error(_.str.sprintf(_t('An unexpected error occured. Message from Adyen: %s'), msg));
+            this._show_error(_.str.sprintf(_t('An unexpected error occurred. Message from Adyen: %s'), msg));
             if (line) {
                 line.set_payment_status('force_done');
             }

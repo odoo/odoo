@@ -97,7 +97,7 @@ def serialize_exception(f):
         try:
             return f(*args, **kwargs)
         except Exception as e:
-            _logger.exception("An exception occured during an http request")
+            _logger.exception("An exception occurred during an http request")
             se = _serialize_exception(e)
             error = {
                 'code': 200,
