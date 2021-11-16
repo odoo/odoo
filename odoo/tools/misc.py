@@ -37,7 +37,6 @@ import babel.dates
 import markupsafe
 import passlib.utils
 import pytz
-import werkzeug.utils
 from lxml import etree
 
 import odoo
@@ -77,12 +76,6 @@ def _exec_pipe(prog, args, env=None):
     close_fds = os.name=="posix"
     pop = subprocess.Popen(cmd, bufsize=-1, stdin=subprocess.PIPE, stdout=subprocess.PIPE, close_fds=close_fds, env=env)
     return pop.stdin, pop.stdout
-
-def exec_command_pipe(name, *args):
-    prog = find_in_path(name)
-    if not prog:
-        raise Exception('Command `%s` not found.' % name)
-    return _exec_pipe(prog, args)
 
 #----------------------------------------------------------
 # Postgres subprocesses
@@ -366,10 +359,6 @@ try:
 except ImportError:
     xlsxwriter = None
 
-
-def to_xml(s):
-    return s.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')
-
 def get_iso_codes(lang):
     if lang.find('_') != -1:
         if lang.split('_')[0] == lang.split('_')[1].lower():
@@ -440,92 +429,6 @@ def human_size(sz):
         i += 1
     return "%0.2f %s" % (s, units[i])
 
-def logged(f):
-    @wraps(f)
-    def wrapper(*args, **kwargs):
-        from pprint import pformat
-
-        vector = ['Call -> function: %r' % f]
-        for i, arg in enumerate(args):
-            vector.append('  arg %02d: %s' % (i, pformat(arg)))
-        for key, value in kwargs.items():
-            vector.append('  kwarg %10s: %s' % (key, pformat(value)))
-
-        timeb4 = time.time()
-        res = f(*args, **kwargs)
-
-        vector.append('  result: %s' % pformat(res))
-        vector.append('  time delta: %s' % (time.time() - timeb4))
-        _logger.debug('\n'.join(vector))
-        return res
-
-    return wrapper
-
-class profile(object):
-    def __init__(self, fname=None):
-        self.fname = fname
-
-    def __call__(self, f):
-        @wraps(f)
-        def wrapper(*args, **kwargs):
-            profile = cProfile.Profile()
-            result = profile.runcall(f, *args, **kwargs)
-            profile.dump_stats(self.fname or ("%s.cprof" % (f.__name__,)))
-            return result
-
-        return wrapper
-
-def detect_ip_addr():
-    """Try a very crude method to figure out a valid external
-       IP or hostname for the current machine. Don't rely on this
-       for binding to an interface, but it could be used as basis
-       for constructing a remote URL to the server.
-    """
-    def _detect_ip_addr():
-        from array import array
-        from struct import pack, unpack
-
-        try:
-            import fcntl
-        except ImportError:
-            fcntl = None
-
-        ip_addr = None
-
-        if not fcntl: # not UNIX:
-            host = socket.gethostname()
-            ip_addr = socket.gethostbyname(host)
-        else: # UNIX:
-            # get all interfaces:
-            nbytes = 128 * 32
-            s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            names = array('B', '\0' * nbytes)
-            #print 'names: ', names
-            outbytes = unpack('iL', fcntl.ioctl( s.fileno(), 0x8912, pack('iL', nbytes, names.buffer_info()[0])))[0]
-            namestr = names.tostring()
-
-            # try 64 bit kernel:
-            for i in range(0, outbytes, 40):
-                name = namestr[i:i+16].split('\0', 1)[0]
-                if name != 'lo':
-                    ip_addr = socket.inet_ntoa(namestr[i+20:i+24])
-                    break
-
-            # try 32 bit kernel:
-            if ip_addr is None:
-                ifaces = [namestr[i:i+32].split('\0', 1)[0] for i in range(0, outbytes, 32)]
-
-                for ifname in [iface for iface in ifaces if iface if iface != 'lo']:
-                    ip_addr = socket.inet_ntoa(fcntl.ioctl(s.fileno(), 0x8915, pack('256s', ifname[:15]))[20:24])
-                    break
-
-        return ip_addr or 'localhost'
-
-    try:
-        ip_addr = _detect_ip_addr()
-    except Exception:
-        ip_addr = 'localhost'
-    return ip_addr
 
 DEFAULT_SERVER_DATE_FORMAT = "%Y-%m-%d"
 DEFAULT_SERVER_TIME_FORMAT = "%H:%M:%S"
@@ -665,38 +568,6 @@ def split_every(n, iterable, piece_maker=tuple):
         yield piece
         piece = piece_maker(islice(iterator, n))
 
-def get_and_group_by_field(cr, uid, obj, ids, field, context=None):
-    """ Read the values of ``field´´ for the given ``ids´´ and group ids by value.
-
-       :param string field: name of the field we want to read and group by
-       :return: mapping of field values to the list of ids that have it
-       :rtype: dict
-    """
-    res = {}
-    for record in obj.read(cr, uid, ids, [field], context=context):
-        key = record[field]
-        res.setdefault(key[0] if isinstance(key, tuple) else key, []).append(record['id'])
-    return res
-
-def get_and_group_by_company(cr, uid, obj, ids, context=None):
-    return get_and_group_by_field(cr, uid, obj, ids, field='company_id', context=context)
-
-# port of python 2.6's attrgetter with support for dotted notation
-def resolve_attr(obj, attr):
-    for name in attr.split("."):
-        obj = getattr(obj, name)
-    return obj
-
-def attrgetter(*items):
-    if len(items) == 1:
-        attr = items[0]
-        def g(obj):
-            return resolve_attr(obj, attr)
-    else:
-        def g(obj):
-            return tuple(resolve_attr(obj, attr) for attr in items)
-    return g
-
 def discardattr(obj, key):
     """ Perform a ``delattr(obj, key)`` but without crashing if ``key`` is not present. """
     try:
@@ -739,32 +610,6 @@ class unquote(str):
     def __repr__(self):
         return self
 
-class UnquoteEvalContext(defaultdict):
-    """Defaultdict-based evaluation context that returns
-       an ``unquote`` string for any missing name used during
-       the evaluation.
-       Mostly useful for evaluating OpenERP domains/contexts that
-       may refer to names that are unknown at the time of eval,
-       so that when the context/domain is converted back to a string,
-       the original names are preserved.
-
-       **Warning**: using an ``UnquoteEvalContext`` as context for ``eval()`` or
-       ``safe_eval()`` will shadow the builtins, which may cause other
-       failures, depending on what is evaluated.
-
-       Example (notice that ``section_id`` is preserved in the final
-       result) :
-
-       >>> context_str = "{'default_user_id': uid, 'default_section_id': section_id}"
-       >>> eval(context_str, UnquoteEvalContext(uid=1))
-       {'default_user_id': 1, 'default_section_id': section_id}
-
-       """
-    def __init__(self, *args, **kwargs):
-        super(UnquoteEvalContext, self).__init__(None, *args, **kwargs)
-
-    def __missing__(self, key):
-        return unquote(key)
 
 
 class mute_logger(logging.Handler):
@@ -923,7 +768,7 @@ class ConstantMapping(Mapping):
         return self._value
 
 
-def dumpstacks(sig=None, frame=None, thread_idents=None):
+def dumpstacks(thread_idents=None):
     """ Signal handler: dump a stack trace for each existing thread or given
     thread(s) specified through the ``thread_idents`` sequence.
     """
@@ -1225,24 +1070,6 @@ def unique(it):
         if e not in seen:
             seen.add(e)
             yield e
-
-class Reverse(object):
-    """ Wraps a value and reverses its ordering, useful in key functions when
-    mixing ascending and descending sort on non-numeric data as the
-    ``reverse`` parameter can not do piecemeal reordering.
-    """
-    __slots__ = ['val']
-
-    def __init__(self, val):
-        self.val = val
-
-    def __eq__(self, other): return self.val == other.val
-    def __ne__(self, other): return self.val != other.val
-
-    def __ge__(self, other): return self.val <= other.val
-    def __gt__(self, other): return self.val < other.val
-    def __le__(self, other): return self.val >= other.val
-    def __lt__(self, other): return self.val > other.val
 
 @contextmanager
 def ignore(*exc):
