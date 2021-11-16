@@ -4,6 +4,9 @@ odoo.define('web.abstract_view_tests', function (require) {
 var AbstractView = require('web.AbstractView');
 var ajax = require('web.ajax');
 var testUtils = require('web.test_utils');
+const { registry } = require('@web/core/registry');
+const legacyViewRegistry = require('web.view_registry');
+var ListView = require('web.ListView');
 
 const { createWebClient, doAction } = require('@web/../tests/webclient/helpers');
 var createView = testUtils.createView;
@@ -116,6 +119,9 @@ QUnit.module('Views', {
 
     QUnit.test('group_by from context can be a string, instead of a list of strings', async function (assert) {
         assert.expect(1);
+
+        registry.category("views").remove("list"); // remove new list from registry
+        legacyViewRegistry.add("list", ListView); // add legacy list -> will be wrapped and added to new registry
 
         const serverData = {
             actions: {

@@ -350,7 +350,7 @@ QUnit.module('Views', {
             'Meetings Test (2016)', "should display the current year");
     });
 
-    QUnit.test('create and change events', async function (assert) {
+    QUnit.skip('create and change events', async function (assert) {
         assert.expect(28);
 
         var calendar = await createCalendarView({
@@ -571,7 +571,7 @@ QUnit.module('Views', {
         calendar.destroy();
     });
 
-    QUnit.test('quickcreate switching to actual create for required fields', async function (assert) {
+    QUnit.skip('quickcreate switching to actual create for required fields', async function (assert) {
         assert.expect(4);
 
         var event = $.Event();
