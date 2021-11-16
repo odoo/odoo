@@ -90,7 +90,7 @@ class AccountMove(models.Model):
         return transaction
 
     def payment_action_capture(self):
-        self.authorized_transaction_ids.s2s_capture_transaction()
+        self.authorized_transaction_ids.action_capture()
 
     def payment_action_void(self):
-        self.authorized_transaction_ids.s2s_void_transaction()
+        self.authorized_transaction_ids.action_void()
