@@ -291,6 +291,7 @@ class Mailing(models.Model):
                     'col_subtitle': _('BOUNCED (%i)', self.bounced),
                 },
                 'kpi_action': None,
+                'kpi_name': self.mailing_type,
             }
         return values
 

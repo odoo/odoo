@@ -18,8 +18,8 @@ class TestMailFullCommon(TestMassMailCommon, MassSMSCommon):
             'subject': 'Xmas SMS for {object.name}',
             'mailing_model_id': cls.env['ir.model']._get('mail.test.sms').id,
             'mailing_type': 'sms',
-            'mailing_domain': '%s' % repr([('name', 'ilike', 'SMSTest')]),
-            'body_plaintext': 'Dear {{ object.display_name }} this is a mass SMS with two links http://www.odoo.com/smstest and http://www.odoo.com/smstest/{{ object.id }}',
+            'mailing_domain': '%s' % repr([('name', 'ilike', 'MassSMSTest')]),
+            'body_plaintext': 'Dear {{object.display_name}} this is a mass SMS with two links http://www.odoo.com/smstest and http://www.odoo.com/smstest/{{object.id}}',
             'sms_force_send': True,
             'sms_allow_unsubscribe': True,
         })
@@ -34,7 +34,7 @@ class TestMailFullCommon(TestMassMailCommon, MassSMSCommon):
         vals_list = []
         for idx in range(count):
             vals = {
-                'name': 'SMSTestRecord_%02d' % idx,
+                'name': 'MassSMSTestRecord_%02d' % idx,
                 phone_field: '045600%02d%02d' % (idx, idx)
             }
             if partners:

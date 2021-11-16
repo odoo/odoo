@@ -391,21 +391,36 @@
     </div>
 </div>
 
-<div t-if="preferences">
+<t t-if="body" t-out="body"/>
+
+<div>
     <div class="global_layout">
         <div class="preference_div">
-            <div t-foreach="preferences" t-as="preference" class="preference">
+            <div t-if="preferences" t-foreach="preferences" t-as="preference"
+                class="preference">
                 <t t-out="preference"/>
             </div>
             <div class="by_odoo">
-                Sent by <a href="https://www.odoo.com" target="_blank" class="odoo_link"><span class="odoo_link_text">Odoo</span></a> –
-                <a t-att-href="'/web#view_type=form&amp;model=digest.digest&amp;id=%s' % object.id" target="_blank" style="text-decoration: none;"><span style="color: #8f8f8f;">Unsubscribe</span></a>
+                Sent by <a href="https://www.odoo.com" target="_blank" class="odoo_link"><span class="odoo_link_text">Odoo</span></a>
+                <t t-if="unsubscribe_token">
+                    –
+                    <a t-attf-href="/digest/#{object.id}/unsubscribe?token=#{unsubscribe_token}&amp;user_id=#{user.id}"
+                       target="_blank" style="text-decoration: none;">
+                        <span style="color: #8f8f8f;">Unsubscribe</span>
+                    </a>
+                </t>
+                <t t-elif="object and object._name == 'digest.digest'">
+                    –
+                    <a t-att-href="'/web#view_type=form&amp;model=digest.digest&amp;id=%s' % object.id"
+                       target="_blank" style="text-decoration: none;">
+                        <span style="color: #8f8f8f;">Unsubscribe</span>
+                    </a>
+                </t>
             </div>
         </div>
     </div>
 </div>
 
-<t t-if="body" t-out="body"/>
 <div t-if="display_mobile_banner" t-call="digest.digest_section_mobile" />
 
 <div class="global_layout" id="footer">
