@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api, fields, models, _
+from odoo import api, Command, models
 
 
 class AccountChartTemplate(models.Model):
@@ -14,3 +14,10 @@ class AccountChartTemplate(models.Model):
             if account:
                 account.tag_ids = [(4, self.env.ref('l10n_nl.account_tag_12').id)]
         return res
+
+    @api.model
+    def _create_liquidity_journal_suspense_account(self, company, code_digits):
+        account = super()._create_liquidity_journal_suspense_account(company, code_digits)
+        if company.account_fiscal_country_id.code == 'NL':
+            account.tag_ids = [Command.link(self.env.ref('l10n_nl.account_tag_25').id)]
+        return account
