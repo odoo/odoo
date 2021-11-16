@@ -4,6 +4,7 @@ export const standardFieldProps = {
     archs: { type: [Object, false], optional: true },
     id: { type: String, optional: true },
     name: String,
+    options: Object,
     readonly: Boolean,
     required: Boolean,
     record: Object,
