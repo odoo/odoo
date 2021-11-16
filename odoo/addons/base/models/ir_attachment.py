@@ -167,23 +167,26 @@ class IrAttachment(models.Model):
                 fname = "%s/%s" % (dirname, filename)
                 checklist[fname] = os.path.join(dirpath, filename)
 
-        # determine which files to keep among the checklist
-        whitelist = set()
-        for names in cr.split_for_in_conditions(checklist):
-            cr.execute("SELECT store_fname FROM ir_attachment WHERE store_fname IN %s", [names])
-            whitelist.update(row[0] for row in cr.fetchall())
-
-        # remove garbage files, and clean up checklist
+        # Clean up the checklist. The checklist is split in chunks and files are garbage-collected
+        # for each chunk.
         removed = 0
-        for fname, filepath in checklist.items():
-            if fname not in whitelist:
-                try:
-                    os.unlink(self._full_path(fname))
-                    removed += 1
-                except (OSError, IOError):
-                    _logger.info("_file_gc could not unlink %s", self._full_path(fname), exc_info=True)
-            with tools.ignore(OSError):
-                os.unlink(filepath)
+        for names in cr.split_for_in_conditions(checklist):
+            # determine which files to keep among the checklist
+            cr.execute("SELECT store_fname FROM ir_attachment WHERE store_fname IN %s", [names])
+            whitelist = set(row[0] for row in cr.fetchall())
+
+            # remove garbage files, and clean up checklist
+            for fname in names:
+                filepath = checklist[fname]
+                if fname not in whitelist:
+                    try:
+                        os.unlink(self._full_path(fname))
+                        _logger.debug("_file_gc unlinked %s", self._full_path(fname))
+                        removed += 1
+                    except (OSError, IOError):
+                        _logger.info("_file_gc could not unlink %s", self._full_path(fname), exc_info=True)
+                with tools.ignore(OSError):
+                    os.unlink(filepath)
 
         # commit to release the lock
         cr.commit()
