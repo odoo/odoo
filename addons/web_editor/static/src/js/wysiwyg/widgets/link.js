@@ -89,6 +89,13 @@ const Link = Widget.extend({
             this.data.content = this.data.content ? this.data.content.replace(/[ \t\r\n]+/g, ' ') : '';
         }
 
+        if (!this.data.url) {
+            const urls = this.data.content.match(OdooEditorLib.URL_REGEX_WITH_INFOS);
+            if (urls) {
+                this.data.url = urls[0];
+            }
+        }
+
         if (this.linkEl) {
             this.data.isNewWindow = this.data.isNewWindow || this.linkEl.target === '_blank';
         }
