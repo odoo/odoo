@@ -40,4 +40,5 @@ class MassMailing(models.Model):
             'value': tools.format_decimalized_number(self.crm_lead_count, decimal=0),
             'col_subtitle': _('LEADS'),
         }
+        values['kpi_data'][1]['kpi_name'] = 'lead'
         return values
