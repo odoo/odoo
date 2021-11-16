@@ -5303,6 +5303,7 @@ QUnit.module('Views', {
     });
 
     QUnit.skip('empty grouped kanban with sample data: fold/unfold a column', async function (assert) {
+        // #long-term-skipped-test
         // folding/unfolding of grouped kanban with sample data is currently disabled
         assert.expect(8);
 

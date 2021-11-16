@@ -9377,6 +9377,7 @@ QUnit.module("Fields", (hooks) => {
     );
 
     QUnit.skip("one2many with several pages, onchange and default order", async function (assert) {
+        // #long-term-skipped-test
         // This test reproduces a specific scenario where a one2many is displayed
         // over several pages, and has a default order such that a record that
         // would normally be on page 1 is actually on another page. Moreover,
@@ -11246,6 +11247,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skip(
         "one2many with many2many_tags in list and list in form with a limit",
         async function (assert) {
+            // #long-term-skipped-test
             // This test is skipped for now, as it doesn't work, and it can't be fixed in the current
             // architecture (without large changes). However, this is unlikely to happen as the default
             // limit is 80, and it would be useless to display so many records with a many2many_tags
