@@ -98,13 +98,13 @@ function getMatchedCSSRules(a) {
 
     function specificity(selector) {
         // http://www.w3.org/TR/css3-selectors/#specificity
-        var a = 0;
-        selector = selector.replace(/#[a-z0-9_-]+/gi, function () { a++; return ''; });
-        var b = 0;
-        selector = selector.replace(/(\.[a-z0-9_-]+)|(\[.*?\])/gi, function () { b++; return ''; });
-        var c = 0;
-        selector = selector.replace(/(^|\s+|:+)[a-z0-9_-]+/gi, function (a) { if (a.indexOf(':not(')===-1) c++; return ''; });
-        return a*100 + b*10 + c;
+        let a = 0;
+        selector = selector.replace(/#[a-z0-9_-]+/gi, () => { a++; return ''; });
+        let b = 0;
+        selector = selector.replace(/(\.[a-z0-9_-]+)|(\[.*?\])/gi, () => { b++; return ''; });
+        let c = 0;
+        selector = selector.replace(/(^|\s+|:+)[a-z0-9_-]+/gi, a => { if (!a.includes(':not(')) c++; return ''; });
+        return (a * 100) + (b * 10) + c;
     }
     css.sort(function (a, b) { return specificity(a[0]) - specificity(b[0]); });
     // Add inline styles at the highest specificity.
@@ -117,19 +117,19 @@ function getMatchedCSSRules(a) {
     }
 
     style = {};
-    _.each(css, function (v,k) {
-        _.each(v[1], function (v,k) {
-            if (v && _.isString(v) && k.indexOf('-webkit') === -1 && (!style[k] || style[k].indexOf('important') === -1 || v.indexOf('important') !== -1)) {
-                style[k] = v;
+    for (const cssValue of css) {
+        for (const [key, value] of Object.entries(cssValue[1])) {
+            if (value && _.isString(value) && key.indexOf('-webkit') === -1 && (!style[key] || style[key].indexOf('important') === -1 || value.indexOf('important') !== -1)) {
+                style[key] = value;
             }
-        });
-    });
+        };
+    };
 
-    _.each(style, function (v,k) {
-        if (v.indexOf('important') !== -1) {
-            style[k] = v.slice(0, v.length-11);
+    for (const [key, value] of Object.entries(style)) {
+        if (value.endsWith('important')) {
+            style[key] = value.replace(/\s*!important\s*$/, '');
         }
-    });
+    };
 
     if (style.display === 'block' && !(a.classList && a.classList.contains('btn-block'))) {
         delete style.display;
@@ -138,38 +138,29 @@ function getMatchedCSSRules(a) {
         style['box-sizing'] = 'border-box'; // This is by default with Bootstrap.
     }
 
-    // The css generates all the attributes separately and not in simplified form.
-    // In order to have a better compatibility (outlook for example) we simplify the css tags.
-    // e.g. border-left-style: none; border-bottom-s .... will be simplified in border-style = none
-    _.each([
-        {property: 'margin'},
-        {property: 'padding'},
-        {property: 'border', propertyEnd: '-style', defaultValue: 'none'},
-    ], function (propertyInfo) {
-        var p = propertyInfo.property;
-        var e = propertyInfo.propertyEnd || '';
-        var defVal = propertyInfo.defaultValue || 0;
-
-        if (style[p+'-top'+e] || style[p+'-right'+e] || style[p+'-bottom'+e] || style[p+'-left'+e]) {
-            if (style[p+'-top'+e] === style[p+'-right'+e] && style[p+'-top'+e] === style[p+'-bottom'+e] && style[p+'-top'+e] === style[p+'-left'+e]) {
-                // keep => property: [top/right/bottom/left value];
-                style[p+e] = style[p+'-top'+e];
+    // The css generates all the attributes separately and not in simplified
+    // form. In order to have a better compatibility (outlook for example) we
+    // simplify the css tags. e.g. border-left-style: none; border-bottom-s ....
+    // will be simplified in border-style = none
+    for (const info of [
+        {name: 'margin'},
+        {name: 'padding'},
+        {name: 'border', suffix: '-style', defaultValue: 'none'},
+    ]) {
+        const positions = ['top', 'right', 'bottom', 'left'];
+        const positionalKeys = positions.map(position => `${info.name}-${position}${info.suffix || ''}`);
+        const hasStyles = positionalKeys.some(key => style[key]);
+        const inherits = positionalKeys.some(key => ['inherit', 'initial'].includes((style[key] || '').trim()));
+        if (hasStyles && !inherits) {
+            const propertyName = `${info.name}${info.suffix || ''}`;
+            style[propertyName] = positionalKeys.every(key => style[positionalKeys[0]] === style[key])
+                ? style[propertyName] = style[positionalKeys[0]] // top = right = bottom = left => property: [top];
+                : positionalKeys.map(key => style[key] || (info.defaultValue || 0)).join(' '); // property: [top] [right] [bottom] [left];
+            for (const prop of positionalKeys) {
+                delete style[prop];
             }
-            else {
-                // keep => property: [top value] [right value] [bottom value] [left value];
-                style[p+e] = (style[p+'-top'+e] || defVal) + ' ' + (style[p+'-right'+e] || defVal) + ' ' + (style[p+'-bottom'+e] || defVal) + ' ' + (style[p+'-left'+e] || defVal);
-                if (style[p+e].indexOf('inherit') !== -1 || style[p+e].indexOf('initial') !== -1) {
-                    // keep => property-top: [top value]; property-right: [right value]; property-bottom: [bottom value]; property-left: [left value];
-                    delete style[p+e];
-                    return;
-                }
-            }
-            delete style[p+'-top'+e];
-            delete style[p+'-right'+e];
-            delete style[p+'-bottom'+e];
-            delete style[p+'-left'+e];
         }
-    });
+    };
 
     if (style['border-bottom-left-radius']) {
         style['border-radius'] = style['border-bottom-left-radius'];
@@ -179,13 +170,14 @@ function getMatchedCSSRules(a) {
         delete style['border-top-right-radius'];
     }
 
-    // if the border styling is initial we remove it to simplify the css tags for compatibility.
-    // Also, since we do not send a css style tag, the initial value of the border is useless.
-    _.each(_.keys(style), function (k) {
-        if (k.indexOf('border') !== -1 && style[k] === 'initial') {
-            delete style[k];
+    // If the border styling is initial we remove it to simplify the css tags
+    // for compatibility. Also, since we do not send a css style tag, the
+    // initial value of the border is useless.
+    for (const styleName in style) {
+        if (styleName.includes('border') && style[styleName] === 'initial') {
+            delete style[styleName];
         }
-    });
+    };
 
     // text-decoration rule is decomposed in -line, -color and -style. This is
     // however not supported by many browser/mail clients and the editor does
@@ -600,6 +592,11 @@ function listGroupToTable($editable) {
     }
 }
 
+/**
+ * Convert snippets and mailing bodies to tables.
+ *
+ * @param {JQuery} $editable
+ */
 function addTables($editable) {
     for (const snippet of $editable.find('.o_mail_snippet_general, .o_layout')) {
         // Convert all snippets and the mailing itself into table > tr > td
@@ -631,6 +628,13 @@ function addTables($editable) {
 }
 
 const rePadding = /([\d.]+)/;
+/**
+ * Format table styles so they display well in most mail clients. This implies
+ * moving table paddings to its cells, adding tbody (with canceled styles) where
+ * needed, and adding pixel heights to parents of elements with percent heights.
+ *
+ * @param {JQuery} $editable
+ */
 function formatTables($editable) {
     for (const table of $editable.find('table.o_mail_snippet_general, .o_mail_snippet_general table')) {
         const $table = $(table);
@@ -743,7 +747,12 @@ function classToStyle($editable) {
     });
 }
 
-// Note: ignores rgba colors, which are not supported in Outlook.
+/**
+ * Converts all styles containing rgb colors to hexadecimal colors.
+ * Note: ignores rgba colors, which are not supported in Microsoft Outlook.
+ *
+ * @param {JQuery} $editable
+ */
 function normalizeColors($editable) {
     for (const node of $editable.find('[style*="rgb"]')) {
         const rgbMatch = node.getAttribute('style').match(/rgb?\(([\d\.]*,?\s?){3,4}\)/g);
