@@ -92,7 +92,7 @@ class TestLeadConvert(crm_common.TestCrmCommon):
             self.assertEqual(lead.probability, 0)
             self.assertEqual(lead.lost_reason_id, self.lost_reason)
             # check messages
-            self.assertEqual(len(lead.message_ids), 3, 'Should have 3 messages: creation, lost, and log')
+            self.assertEqual(len(lead.message_ids), 2, 'Should have 2 messages: creation, lost with log')
             lost_message = lead.message_ids.filtered(lambda msg: msg.subtype_id == self.env.ref('crm.mt_lead_lost'))
             self.assertTrue(lost_message)
             self.assertTracking(
@@ -101,9 +101,8 @@ class TestLeadConvert(crm_common.TestCrmCommon):
                  ('lost_reason_id', 'many2one', False, self.lost_reason)
                 ]
             )
-            note_message = lead.message_ids.filtered(lambda msg: msg.subtype_id == self.env.ref('mail.mt_note'))
-            self.assertTrue(note_message)
-            self.assertEqual(note_message.body, '<p>I cannot find it. It was in my closet and pouf, disappeared.</p>')
+            self.assertIn('<p>I cannot find it. It was in my closet and pouf, disappeared.</p>', lost_message.body,
+                          'Feedback should be included directly within tracking message')
 
     @users('user_sales_salesman')
     @mute_logger('odoo.addons.base.models')
