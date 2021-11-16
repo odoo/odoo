@@ -3,7 +3,7 @@
 
     <t t-name="mail.FileUploader" owl="1">
         <div class="o_FileUploader">
-            <input class="o_FileUploader_input" t-on-change="_onChangeAttachment" multiple="true" type="file" t-ref="fileInput" t-key="'fileInput'"/>
+            <input class="o_FileUploader_input" t-on-change="fileUploaderView.onChangeAttachment" multiple="true" type="file" t-ref="fileInput" t-key="'fileInput'"/>
         </div>
     </t>
 
