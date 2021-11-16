@@ -354,7 +354,7 @@ class SnailmailLetter(models.Model):
             else:
                 error = doc['error'] if response['request_code'] == 200 else response['reason']
 
-                note = _('An error occured when sending the document by post.<br>Error: %s', self._get_error_message(error))
+                note = _('An error occurred when sending the document by post.<br>Error: %s', self._get_error_message(error))
                 letter_data = {
                     'info_msg': note,
                     'state': 'error',

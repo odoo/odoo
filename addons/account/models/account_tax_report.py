@@ -140,7 +140,7 @@ class AccountTaxReportLine(models.Model):
     )
     is_carryover_persistent = fields.Boolean(
         string="Persistent",
-        help="Defines how this report line creates carry over lines when performing tax closing."
+        help="Defines how this report line creates carry over lines when performing tax closing. "
              "If true, the amounts carried over will always be added on top of each other: "
              "for example, a report line with a balance of 10 with an existing carryover of 50 "
              "will add an additional 10 to it when doing the closing, making a total carryover of 60. "
@@ -151,7 +151,7 @@ class AccountTaxReportLine(models.Model):
     )
     is_carryover_used_in_balance = fields.Boolean(
         string="Used in line balance",
-        help="If set, the carryover amount for this line will be used when calculating its balance in the report."
+        help="If set, the carryover amount for this line will be used when calculating its balance in the report. "
              "This means that the carryover could affect other lines if they are using this one in their computation."
     )
 
