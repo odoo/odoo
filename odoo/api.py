@@ -16,7 +16,7 @@ __all__ = [
 
 import logging
 import warnings
-from collections import defaultdict
+from collections import defaultdict, ChainMap
 from collections.abc import Mapping
 from contextlib import contextmanager
 from inspect import signature
@@ -26,7 +26,7 @@ from weakref import WeakSet
 from decorator import decorate
 
 from .exceptions import CacheMiss
-from .tools import frozendict, classproperty, lazy_property, StackMap
+from .tools import frozendict, classproperty, lazy_property
 from .tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -719,9 +719,9 @@ class Environment(Mapping):
         - ``what`` a collection of fields and ``records`` a recordset, or
         - ``what`` a collection of pairs ``(fields, records)``.
         """
-        protected = self._protected
+        prev = self._protected
+        protected = self._protected = prev.new_child()
         try:
-            protected.pushmap()
             if records is not None:  # Handle first signature
                 ids_by_field = {field: records._ids for field in what}
             else:  # Handle second signature
@@ -735,7 +735,7 @@ class Environment(Mapping):
                 protected[field] = ids.union(rec_ids) if ids else frozenset(rec_ids)
             yield
         finally:
-            protected.popmap()
+            self._protected = prev
 
     def fields_to_compute(self):
         """ Return a view on the field to compute. """
@@ -819,7 +819,7 @@ class Transaction:
         # cache for all records
         self.cache = Cache()
         # fields to protect {field: ids}
-        self.protected = StackMap()
+        self.protected = ChainMap()
         # pending computations {field: ids}
         self.tocompute = defaultdict(set)
         # pending updates {model: {id: {field: value}}}
