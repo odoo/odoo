@@ -8,9 +8,8 @@ from odoo import http
 from odoo.http import request
 from odoo.exceptions import ValidationError
 
+
 _logger = logging.getLogger(__name__)
-
-
 
 class BuckarooController(http.Controller):
     _return_url = '/payment/buckaroo/return'
@@ -38,7 +37,7 @@ class BuckarooController(http.Controller):
         try:
             # Handle the feedback data crafted with Buckaroo API objects as a regular feedback
             request.env['payment.transaction'].sudo()._handle_feedback_data('buckaroo', data)
-        except ValidationError: # Acknowledge the notification to avoid getting spammed
+        except ValidationError:  # Acknowledge the notification to avoid getting spammed
             _logger.exception("unable to handle the event data; skipping to acknowledge")
         return ''
 
@@ -59,10 +58,9 @@ class BuckarooController(http.Controller):
         tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_feedback_data(
             'buckaroo', values
         )
-
         # Compute signature
         expected_signature = tx_sudo.acquirer_id._buckaroo_generate_digital_sign(values, incoming=True)
-
         # Compare signatures
         if received_signature != expected_signature:
             raise Forbidden()
+

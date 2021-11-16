@@ -94,6 +94,8 @@ class BuckarooTest(BuckarooCommon, PaymentHttpCommon):
             'Buckaroo: unexpected status code should put tx in error state')
 
     def test_webhook(self):
+        """ Verify the correctness of error handling during the webhook. """
+
         webhook_url = self._build_url('/payment/buckaroo/webhook')
         # Create dummy payload
         buckaroo_post_data = {
@@ -106,7 +108,7 @@ class BuckarooTest(BuckarooCommon, PaymentHttpCommon):
         # Raise Forbidden due to missing signature
         self.assertEqual(self._make_http_post_request(webhook_url, buckaroo_post_data).status_code, Forbidden().code)
 
-        # Do not raise error
+        # Do not raise Forbidden error
         buckaroo_post_data['BRQ_SIGNATURE'] = u'6ec033ad740eab7ab05d36c7824bcd3308036511'
         self._assert_not_raises(
             Forbidden,
@@ -118,5 +120,3 @@ class BuckarooTest(BuckarooCommon, PaymentHttpCommon):
         # Raise Forbidden due to invalid signature
         buckaroo_post_data['BRQ_SIGNATURE'] = u'wrong signature'
         self.assertEqual(self._make_http_post_request(webhook_url, buckaroo_post_data).status_code, Forbidden().code)
-
-
