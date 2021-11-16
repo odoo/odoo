@@ -84,7 +84,9 @@ QUnit.module('HR Attendance', {
             data: this.data,
             session: {
                 uid: 1,
-                company_id: 1,
+                user_context: {
+                    allowed_company_ids: [1],
+                }
             },
             mockRPC: function(route, args) {
                 if (args.method === 'attendance_scan' && args.model === 'hr.employee') {
