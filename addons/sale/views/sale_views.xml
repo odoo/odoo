@@ -1228,7 +1228,13 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//field[@name='partner_id']" position="after">
-                       <field name="partner_shipping_id"
+                        <div class="o_td_label" groups="sale.group_delivery_invoice_address">
+                            <label for="partner_shipping_id" string="Delivery Address" style="font-weight:bold;"
+                                   attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund'))]}"/>
+                            <label for="partner_shipping_id" string="Dispatch Address" style="font-weight:bold;"
+                                   attrs="{'invisible': [('move_type', 'not in', ('in_invoice', 'in_refund'))]}"/>
+                        </div>
+                        <field name="partner_shipping_id" nolabel="1"
                               groups="sale.group_delivery_invoice_address"
                               attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}"/>
                    </xpath>
