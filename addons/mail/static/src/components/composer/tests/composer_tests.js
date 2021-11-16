@@ -2141,6 +2141,23 @@ QUnit.test('[technical] does not crash when an attachment is removed before its 
     );
 });
 
+QUnit.test('send button on mail.channel should have "Send" as label', async function (assert) {
+    assert.expect(1);
+
+    this.data['mail.channel'].records.push({ id: 20 });
+    const { createComposerComponent } = await this.start();
+    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await createComposerComponent(thread.composer);
+    assert.strictEqual(
+        document.querySelector('.o_Composer_buttonSend').textContent,
+        "Send",
+        "Send button of mail.channel composer should have 'Send' as label",
+    );
+});
+
 });
 });
 });
