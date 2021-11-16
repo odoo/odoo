@@ -6,7 +6,6 @@ __all__ = ['synchronized', 'lazy_classproperty', 'lazy_property',
 
 from functools import wraps
 from inspect import getsourcefile
-from json import JSONEncoder
 
 
 class lazy_property(object):
@@ -60,7 +59,6 @@ def conditional(condition, decorator):
         return decorator
     else:
         return lambda fn: fn
-
 def synchronized(lock_attr='_lock'):
     def decorator(func):
         @wraps(func)
@@ -92,21 +90,6 @@ def frame_codeinfo(fframe, back=0):
         return fname, lineno
     except Exception:
         return "<unknown>", ''
-
-def compose(a, b):
-    """ Composes the callables ``a`` and ``b``. ``compose(a, b)(*args)`` is
-    equivalent to ``a(b(*args))``.
-
-    Can be used as a decorator by partially applying ``a``::
-
-         @partial(compose, a)
-         def b():
-            ...
-    """
-    @wraps(b)
-    def wrapper(*args, **kwargs):
-        return a(b(*args, **kwargs))
-    return wrapper
 
 
 class _ClassProperty(property):
