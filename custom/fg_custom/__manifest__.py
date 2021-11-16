@@ -7,7 +7,7 @@
     'description': """
     Pilmico custom addons
         """,
-    'depends': ['product', 'website', 'account', 'point_of_sale'],
+    'depends': ['product', 'account', 'point_of_sale'],
     'data': [
         'views/FgOrderDetails.xml',
         'views/FgImportOrders.xml',
