@@ -1774,12 +1774,12 @@ odoo.define('web.OwlCompatibilityTests', function (require) {
                 `,
             });
 
-            assert.containsOnce(form, ".o_form_view.o_form_readonly");
+            assert.containsOnce(form, ".o_legacy_form_view.o_form_readonly");
 
             await testUtils.dom.click(form.$(".o_form_label")[0]);
             await testUtils.nextTick(); // wait for quick edit
 
-            assert.containsOnce(form, ".o_form_view.o_form_editable");
+            assert.containsOnce(form, ".o_legacy_form_view.o_form_editable");
             assert.verifySteps(["setValue"]);
 
             form.destroy();
