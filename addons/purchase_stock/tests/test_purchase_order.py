@@ -300,7 +300,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         self.assertEqual(expected_rate, po.on_time_rate)
 
         # Create a purchase order with 80% qty received for company B
-        # The On-Time Delivery Rate shouldn't be shared accross multiple companies
+        # The On-Time Delivery Rate shouldn't be shared across multiple companies
         self.env.user.write({
             'company_id': company_b.id,
             'company_ids': [(6, 0, [company_b.id])],

@@ -32,7 +32,7 @@ class EventBoothCategory(models.Model):
     @api.depends('product_id')
     def _compute_price(self):
         """ By default price comes from category but can be changed by event
-        people as product may be shared accross various categories. """
+        people as product may be shared across various categories. """
         for category in self:
             if category.product_id and category.product_id.list_price:
                 category.price = category.product_id.list_price + category.product_id.price_extra
