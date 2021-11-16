@@ -11,5 +11,6 @@ class TestMailGuestPages(HttpCase):
         modules load correctly on the welcome and channel page"""
         channel = self.env['mail.channel'].create({
             'name': 'Test channel',
+            'public': 'public',
         })
         self.start_tour(f"/chat/{channel.id}/{channel.uuid}", "mail/static/tests/tours/mail_channel_as_guest_tour.js")

@@ -319,6 +319,13 @@ class Channel(models.Model):
                         group_name=channel.group_public_id.name,
                         partner_names=', '.join(partner.name for partner in invalid_partners)
                     ))
+                if guests:
+                    raise UserError(_(
+                        'Channel "%(channel_name)s" only accepts members of group "%(group_name)s". Forbidden for: %(guest_names)s',
+                        channel_name=channel.name,
+                        group_name=channel.group_public_id.name,
+                        guest_names=', '.join(guest.name for guest in guests)
+                    ))
             existing_partners = self.env['res.partner'].search([('id', 'in', partners.ids), ('channel_ids', 'in', channel.id)])
             members_to_create += [{
                 'partner_id': partner.id,
