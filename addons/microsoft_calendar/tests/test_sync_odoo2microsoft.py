@@ -11,6 +11,7 @@ from odoo.addons.microsoft_calendar.models.res_users import User
 from odoo.addons.microsoft_calendar.models.microsoft_sync import MicrosoftSync
 from odoo.modules.registry import Registry
 from odoo.addons.microsoft_account.models.microsoft_service import TIMEOUT
+from freezegun import freeze_time
 
 
 def patch_api(func):
@@ -22,6 +23,7 @@ def patch_api(func):
     return patched
 
 @patch.object(User, '_get_microsoft_calendar_token', lambda user: 'dummy-token')
+@freeze_time("2020-06-03")
 class TestSyncOdoo2Microsoft(TransactionCase):
 
     def setUp(self):
