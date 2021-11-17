@@ -125,7 +125,6 @@ class SaleOrder(models.Model):
                     'product_uom_qty': line.product_uom_qty,
                     'product_id': line.product_id.id,
                     'product_uom': line.product_uom_id.id,
-                    'customer_lead': self._get_customer_lead(line.product_id.product_tmpl_id),
                 })
 
             order_lines.append((0, 0, data))

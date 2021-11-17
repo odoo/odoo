@@ -1068,10 +1068,6 @@ class SaleOrder(models.Model):
         self.ensure_one()
         return self.transaction_ids._get_last()
 
-    @api.model
-    def _get_customer_lead(self, product_tmpl_id):
-        return False
-
     def _get_report_base_filename(self):
         self.ensure_one()
         return '%s %s' % (self.type_name, self.name)
