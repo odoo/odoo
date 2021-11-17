@@ -148,9 +148,6 @@ class SaleOrderLine(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        for values in vals_list:
-            if values.get('display_type', self.default_get(['display_type'])['display_type']):
-                values.update(product_id=False, price_unit=0, product_uom_qty=0, product_uom=False, customer_lead=0)
         lines = super().create(vals_list)
         for line in lines:
             if line.product_id and line.order_id.state == 'sale':
@@ -453,9 +450,13 @@ class SaleOrderLine(models.Model):
             if not line.product_uom or (line.product_id.uom_id.id != line.product_uom.id):
                 line.product_uom = line.product_id.uom_id
 
-    @api.depends('product_packaging_qty', 'product_id')
+    @api.depends('display_type', 'product_id', 'product_packaging_qty')
     def _compute_product_uom_qty(self):
         for line in self:
+            if line.display_type:
+                line.product_uom_qty = 0.0
+                continue
+
             if not line.product_uom or (line.product_id.uom_id.id != line.product_uom.id):
                 line.product_uom_qty = line.product_uom_qty or 1.0
             if not line.product_packaging_id:
