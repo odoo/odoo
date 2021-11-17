@@ -118,7 +118,7 @@ odoo.define('board.AddToBoardMenu', function (require) {
             switch (ev.key) {
                 case 'Enter':
                     ev.preventDefault();
-                    this._addToBoard();
+                    this.addToBoard();
                     break;
                 case 'Escape':
                     // Gives the focus back to the component.
