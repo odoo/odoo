@@ -1902,8 +1902,8 @@ class Task(models.Model):
         # Track changes on depending tasks
         depends_tracked_fields = self._get_depends_tracked_fields()
         depends_changes = changes & depends_tracked_fields
-        if depends_changes and self.user_has_groups('project.group_project_task_dependencies') and self.allow_task_dependencies:
-            parent_ids = self.env['project.task'].search([('depend_on_ids', 'in', self.ids)])
+        if depends_changes and self.allow_task_dependencies and self.user_has_groups('project.group_project_task_dependencies'):
+            parent_ids = self.dependent_ids
             if parent_ids:
                 fields_to_ids = self.env['ir.model.fields']._get_ids('project.task')
                 field_ids = [fields_to_ids.get(name) for name in depends_changes]
@@ -1911,7 +1911,7 @@ class Task(models.Model):
                     tracking_values for tracking_values in tracking_value_ids
                     if tracking_values[2]['field'] in field_ids
                 ]
-                subtype = self.env.ref('project.mt_task_dependency_change')
+                subtype = self.env['ir.model.data']._xmlid_to_res_id('project.mt_task_dependency_change')
                 # We want to include the original subtype message coming from the child task
                 # for example when the stage changes the message in the chatter starts with 'Stage Changed'
                 child_subtype = self._track_subtype(dict((col_name, initial_values[col_name]) for col_name in changes))
@@ -1923,7 +1923,7 @@ class Task(models.Model):
                     'child_subtype': child_subtype_info,
                 })
                 for p in parent_ids:
-                    p.message_post(body=body, subtype_id=subtype.id, tracking_value_ids=depends_tracking_value_ids)
+                    p.message_post(body=body, subtype_id=subtype, tracking_value_ids=depends_tracking_value_ids)
         return result
 
     def _track_template(self, changes):
