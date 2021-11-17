@@ -8,7 +8,7 @@
             }
         }
     }
-    .row {
+    > div > .row {
         display: flex;
         flex-flow: row wrap;
 
@@ -22,6 +22,15 @@
         padding: 8% 5%;
         padding-top: 8vw; // A flex item cannot have % padding top and bottom (even if it works on chrome)
         padding-bottom: 8vw; // Solution is vw units but we keep 8% as a fallback
+        & > .s_hoverable.row {
+            // The default inherited padding for the hover effect does not work
+            // because the width of the parent element is different. Since the
+            // snippet contains two boxes we can simply double the relative
+            // padding values.
+            padding: 16% 10%;
+            padding-top: 8vw;
+            padding-bottom: 8vw;
+        }
     }
     @include media-breakpoint-down(md) {
         [class*="col-lg-"] {

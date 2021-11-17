@@ -239,6 +239,17 @@ body.editor_enable {
     }
 }
 
+// Hover Effect
+body.editor_enable {
+    *:hover > .s_hoverable.row > div {
+        visibility: hidden;
+    }
+    .s_hoverable.row > div[data-visible="1"] {
+        visibility: visible;
+    }
+}
+
+
 // Website Animate
 .editor_enable.o_animated_text_highlighted {
     .o_animated_text {

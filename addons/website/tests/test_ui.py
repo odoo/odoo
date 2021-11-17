@@ -290,3 +290,6 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_18_sticky_overlay(self):
         self.start_tour("/", "sticky_overlay", login="admin")
+
+    def test_19_snippet_hoverable(self):
+        self.start_tour("/", "snippet_hoverable", login="admin")

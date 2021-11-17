@@ -2268,6 +2268,113 @@ options.registry.MobileVisibility = options.Class.extend({
 });
 
 /**
+ * Handles elements displayed when hovering the target.
+ */
+ options.registry.EditHoverable = options.Class.extend({
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Retrieve the hover effect element if there is one.
+     * @returns {DOMElement} The element containing the hover effect content.
+     */
+    getHoverable() {
+        return this.$target[0].querySelector(':scope > .s_hoverable.row > div');
+    },
+    /**
+     * @override
+     */
+    cleanForSave() {
+        const hoverableEl = this.getHoverable();
+        if (hoverableEl) {
+            delete hoverableEl.dataset.visible;
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Adds or removes a section that will be displayed over the target on
+     * hover.
+     *
+     * @see this.selectClass for parameters
+     */
+    async toggleHoverable(previewMode, widgetValue, params) {
+        let hoverableEl = this.getHoverable();
+        if (widgetValue && !hoverableEl) {
+            hoverableEl = this._insertHoverContent();
+            const display = window.getComputedStyle(hoverableEl).getPropertyValue('display');
+
+            // Set default values for the mobile visibility, hover visibility
+            // toggle and color styling options.
+            hoverableEl.classList.add('d-none', `d-md-${display}`);
+            hoverableEl.dataset.visible = '1';
+        }
+
+        if (widgetValue) {
+            this.trigger_up('activate_snippet', {$snippet: $(hoverableEl)});
+        } else if (hoverableEl) {
+            this.trigger_up('remove_snippet', {$snippet: $(hoverableEl)});
+        }
+    },
+    /**
+     * Toggles the visibility of the hover effect, allowing the user to switch
+     * between editing the original and the hover content.
+     *
+     * @see this.selectClass for parameters
+     */
+    previewHoverable(previewMode, widgetValue, params) {
+        if (!previewMode) {
+            const hoverableEl = this.getHoverable();
+            hoverableEl.dataset.visible = widgetValue;
+            this.trigger_up('activate_snippet', {
+                $snippet: widgetValue === '1' ? $(hoverableEl) : this.$target,
+            });
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _computeWidgetState(methodName, params) {
+        const hoverableEl = this.getHoverable();
+        if (methodName === 'toggleHoverable') {
+            return !!hoverableEl;
+        } else if (methodName === 'previewHoverable') {
+            return hoverableEl && hoverableEl.dataset.visible || '';
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @private
+     * @returns {DOMElement} The element containing the hover effect content.
+     */
+    _insertHoverContent() {
+        const containerEl = document.createElement('div');
+        const hoverableEl = containerEl.appendChild(containerEl.cloneNode());
+        const duplicateEl = this.$target[0].cloneNode(true);
+
+        // Remove the duplicated connector from the steps block, if any.
+        duplicateEl.querySelectorAll('.s_process_step_connector').forEach(el => el.remove());
+
+        containerEl.classList.add('s_hoverable', 'row', 'no-gutters');
+        hoverableEl.classList.add('o_animable', 'col-lg-12', 'offset-lg-0', 'mt0', 'mb0');
+        hoverableEl.textContent = '';
+        hoverableEl.append(...duplicateEl.childNodes);
+        this.$target[0].appendChild(containerEl);
+
+        return hoverableEl;
+    },
+});
+
+/**
  * Hide/show footer in the current page.
  */
 options.registry.HideFooter = VisibilityPageOptionUpdate.extend({

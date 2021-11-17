@@ -2016,3 +2016,31 @@ ul.o_checklist > li.o_checked::after {
 .o_anim_del2500 {
     animation-delay: 2500ms;
 }
+
+// Hover Effect styles
+@mixin inherit-layout {
+    @include o-position-absolute(0, 0, 0, 0);
+    display: inherit;
+    // The padding is inherited so the contents of the hoverable element
+    // correspond to those from the original element.
+    padding: inherit;
+    flex-flow: inherit;
+    justify-content: inherit;
+    align-items: inherit;
+    align-content: inherit;
+}
+
+.s_hoverable.row {
+    @include inherit-layout();
+    visibility: hidden;
+    z-index: 1;
+
+    & > div {
+        @include inherit-layout();
+        overflow: hidden;
+    }
+
+    *:hover > & > div {
+        visibility: visible;
+    }
+}
