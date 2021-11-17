@@ -866,6 +866,10 @@ td {
     overflow: hidden;
 }
 
+.pos .products-widget .products-widget-control{
+    display: grid;
+}
+
 .pos .product-list-container {
     overflow: hidden;
     overflow-y: auto;
@@ -927,6 +931,8 @@ td {
     line-height: 48px;
     height: 48px;
     min-width: 48px;
+    overflow: hidden;
+    white-space: nowrap;
 }
 .pos .breadcrumb:last-child {
     padding-right: 3px;
@@ -939,6 +945,10 @@ td {
     color: #808080;
     font-size: 14px;
     cursor: pointer;
+    max-width: 300px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis
 }
 .pos .breadcrumb-button.breadcrumb-home {
     line-height: 50px;
@@ -1080,17 +1090,29 @@ td {
 }
 
 .pos .category-simple-button{
-    display: flex;
+    display: inline-block;
     align-items: center;
     font-size: 14px;
     padding: 5px 12px;
     cursor: pointer;
-    flex: 1;
     text-align: left;
     background: rgb(229, 229, 229);
     border-right: solid 1px #d3d3d3;
     border-top: solid 1px #d3d3d3;
+    max-width: 300px;
+    vertical-align: middle;
+    white-space: nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
 }
+
+.pos .category-simple-button:before {
+    content: '';
+    display: inline-block;
+    vertical-align: middle;
+    height: 100%;
+}
+
 .pos .category-simple-button:active{
     color: white;
     background: black;
@@ -1295,7 +1317,6 @@ td {
     height: 100%;
     width: 100%;
     display: flex;
-    flex-wrap: wrap;
     flex-direction: row;
 }
 
