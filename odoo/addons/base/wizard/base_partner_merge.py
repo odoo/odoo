@@ -208,8 +208,8 @@ class MergePartnerAutomatic(models.TransientModel):
             update_records('mail.message', src=partner)
             update_records('ir.model.data', src=partner)
 
-        records = self.env['ir.model.fields'].search([('ttype', '=', 'reference')])
-        for record in records.sudo():
+        records = self.env['ir.model.fields'].sudo().search([('ttype', '=', 'reference')])
+        for record in records:
             try:
                 Model = self.env[record.model]
                 field = Model._fields[record.name]
