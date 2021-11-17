@@ -90,6 +90,7 @@
         'views/snippets/s_mega_menu_big_icons_subtitles.xml',
         'views/snippets/s_mega_menu_cards.xml',
         'views/snippets/s_google_map.xml',
+        'views/snippets/s_hoverable.xml',
         'views/snippets/s_map.xml',
         'views/snippets/s_dynamic_snippet.xml',
         'views/snippets/s_dynamic_snippet_carousel.xml',

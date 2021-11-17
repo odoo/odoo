@@ -387,6 +387,9 @@ weSnippetEditor.SnippetEditor.include({
      * @override
      */
     getName() {
+        if (this.$target[0].parentElement.classList.contains('s_hoverable')) {
+            return _t('Hover Item');
+        }
         if (this.$target[0].closest('[data-oe-field=logo]')) {
             return _t("Logo");
         }

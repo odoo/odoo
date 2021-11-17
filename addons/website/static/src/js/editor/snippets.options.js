@@ -2108,6 +2108,90 @@ options.registry.topMenuColor = options.Class.extend({
                 onSuccess: value => resolve(!!value),
             });
         });
+    },  
+});
+
+/**
+ * Handles elements displayed when hovering the target.
+ */
+options.registry.EditHoverable = options.Class.extend({
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @returns The DOM element that is shown on hover if there is one.
+     */
+    getHoverable() {
+        return this.$target[0].querySelector(':scope > .s_hoverable > div');
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Adds or removes a section that will be displayed over the target on
+     * hover.
+     *
+     * @see this.selectClass for parameters
+     */
+     async toggleHoverable(previewMode, widgetValue, params) {
+        if (widgetValue) {
+            const colorClass = this.$target[0].classList.contains('o_cc1') ? 'o_cc2' : 'o_cc1';
+
+            this.$target[0].insertAdjacentHTML('afterbegin', await this._rpc({
+                model: 'ir.ui.view',
+                method: 'render_public_asset',
+                args: ['website.s_hoverable', {}],
+                kwargs: {context: this.options.context},
+            }));
+
+            const hoverableEl = this.getHoverable();
+
+            hoverableEl.classList.add(colorClass);
+            this.trigger_up('snippet_option_visibility_update', {
+                $snippet: $(hoverableEl),
+                show: true
+            });
+            this.trigger_up('activate_snippet', {
+                $snippet: $(hoverableEl),
+            });
+        } else {
+            this.getHoverable().parentElement.remove();
+            this.trigger_up('snippet_removed');
+        }
+    },
+    previewHoverable(previewMode, widgetValue, params) {
+        const show = !!widgetValue;
+        const hoverableEl = this.getHoverable();
+
+        this.trigger_up('snippet_option_visibility_update', {
+            $snippet: $(hoverableEl),
+            show,
+        });
+        this.trigger_up('activate_snippet', {
+            $snippet: show ? $(hoverableEl) : this.$target,
+        });
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+     _computeWidgetState(methodName, params) {
+        const hoverableEl = this.getHoverable();
+
+        if (methodName === 'previewHoverable') {
+            return hoverableEl && hoverableEl.dataset.invisible !== '1';
+        }
+        if (methodName === 'toggleHoverable') {
+            return !!hoverableEl;
+        }
+        return this._super(...arguments);
     },
 });
 

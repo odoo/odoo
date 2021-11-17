@@ -227,6 +227,17 @@ body.editor_enable {
     }
 }
 
+//s_hoverable
+body.editor_enable {
+    *:hover > .s_hoverable > div {
+        display: none;
+    }
+    .s_hoverable > div:not([data-invisible="1"]) {
+        display: block;
+    }
+}
+
+
 // Website Animate
 .editor_enable.o_animated_text_highlighted {
     .o_animated_text {

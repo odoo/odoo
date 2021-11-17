@@ -1632,7 +1632,12 @@ var SnippetsMenu = Widget.extend({
             $selectorSiblings = $(_.uniq(($selectorSiblings || $()).add($selectorChildren.children()).get()));
         }
 
-        var noDropZonesSelector = '[data-invisible="1"], .o_we_no_overlay, :not(:visible)';
+        // The following selector finds all contents of elements that have a
+        // currently visible hoverable overlay. Since the hoverable overlay
+        // hides these contents from view, they should not be searched for
+        // potential drop zones.
+        const hoveredContentSelector = ':has(> .s_hoverable:not([data-invisible="1"])) > :not(.s_hoverable) *';
+        const noDropZonesSelector = `[data-invisible="1"], .o_we_no_overlay, :not(:visible), ${hoveredContentSelector}`;
         if ($selectorSiblings) {
             $selectorSiblings.not(`.oe_drop_zone, .oe_drop_clone, ${noDropZonesSelector}`).each(function () {
                 var data;

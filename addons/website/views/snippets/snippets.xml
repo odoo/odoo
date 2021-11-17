@@ -470,7 +470,7 @@
     <t t-set="only_bg_image_selector" t-value="base_only_bg_image_selector"/>
     <t t-set="only_bg_image_exclude" t-value="''"/>
 
-    <t t-set="both_bg_color_image_selector" t-value="'section, .carousel-item, .s_masonry_block .row > div, .s_color_blocks_2 .row > div, .parallax'"/>
+    <t t-set="both_bg_color_image_selector" t-value="'section, .carousel-item, .s_masonry_block .row > div, .s_color_blocks_2 .row > div, .parallax, .s_hoverable > div'"/>
     <t t-set="both_bg_color_image_exclude" t-value="base_only_bg_image_selector + ', .s_carousel_wrapper, .s_color_blocks_2, .s_image_gallery .carousel-item, .s_google_map, .s_map, [data-snippet] :not(.oe_structure) > [data-snippet], .s_masonry_block, .s_masonry_block .s_col_no_resize'"/>
 
     <t t-call="web_editor.snippet_options_background_options">
@@ -500,7 +500,7 @@
 
     <!-- Border | Columns -->
     <div data-js="Box"
-         data-selector="section .row > div"
+         data-selector="section .row > div, .s_hoverable > div"
          data-exclude=".s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .s_image_gallery .row > div, .s_masonry_block .s_col_no_resize">
         <t t-call="website.snippet_options_border_widgets"/>
         <t t-call="website.snippet_options_shadow_widgets"/>
@@ -512,6 +512,15 @@
         <we-button class="o_we_link o_we_mobile" data-show-on-mobile="true" data-no-preview="true"
                    data-img="/website/static/src/img/snippets_options/mobile_invisible.svg"
                    data-active-img="/website/static/src/img/snippets_options/mobile_visible.svg"/>
+    </div>
+
+    <div data-js="EditHoverable" data-selector="section .row > div:not(.s_hoverable)">
+        <we-row string="Hover Content" class="o_we_full_row">
+            <we-checkbox data-toggle-hoverable="true" data-name="toggle_hoverable_opt" data-no-preview="true"/>
+            <we-button class="align-self-end ml-auto" title="Show the hover item" data-preview-hoverable="true" data-dependencies="toggle_hoverable_opt" data-no-preview="true">
+                <i class="fa fa-fw fa-eye"/>
+            </we-button>
+        </we-row>
     </div>
 
     <div data-js="sizing_y"

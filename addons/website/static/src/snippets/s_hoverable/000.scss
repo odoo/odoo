@@ -1,0 +1,24 @@
+.s_hoverable {
+    @include o-position-absolute(0, 0, 0, 0);
+    padding: inherit;
+    visibility: hidden;
+    z-index: 1;
+
+    .o_colored_level > & {
+        padding: 0;
+    }
+
+    & > div {
+        visibility: visible;
+        display: none;
+        text-align: center;
+        height: 100%;
+        width: 100%;
+        padding: $grid-gutter-width;
+        overflow: auto;
+    }
+
+    *:hover > & > div {
+        display: block;
+    }
+}
