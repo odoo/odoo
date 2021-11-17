@@ -22,6 +22,7 @@ export class Field extends Component {
         const field = this.props.record.fields[this.props.name];
         return {
             ...this.props,
+            attrs: this.props.record.activeFields[this.props.name].attrs || {},
             options: this.props.record.activeFields[this.props.name].options || {},
             readonly: this.props.readonly || field.readonly || false,
             required: this.props.required || field.required || false,
