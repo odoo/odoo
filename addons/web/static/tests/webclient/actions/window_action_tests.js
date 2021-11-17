@@ -13,6 +13,7 @@ import { session } from "@web/session";
 import {
     click,
     getFixture,
+    editInput,
     legacyExtraNextTick,
     makeDeferred,
     nextTick,
@@ -39,7 +40,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.module("Window Actions");
 
-    QUnit.skip("can execute act_window actions from db ID", async function (assert) {
+    QUnit.test("can execute act_window actions from db ID", async function (assert) {
         assert.expect(7);
         const mockRPC = async (route, args) => {
             assert.step((args && args.method) || route);
@@ -56,7 +57,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             "get_views",
-            "/web/dataset/search_read",
+            "web_search_read",
         ]);
     });
 
@@ -86,7 +87,7 @@ QUnit.module("ActionManager", (hooks) => {
         );
     });
 
-    QUnit.skip("can switch between views", async function (assert) {
+    QUnit.test("can switch between views", async function (assert) {
         assert.expect(19);
         const mockRPC = async (route, args) => {
             assert.step((args && args.method) || route);
@@ -123,11 +124,11 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             "get_views",
-            "/web/dataset/search_read",
-            "/web/dataset/search_read",
-            "/web/dataset/search_read",
+            "web_search_read",
+            "web_search_read",
+            "web_search_read",
             "read",
-            "/web/dataset/search_read",
+            "web_search_read",
         ]);
     });
 
@@ -178,8 +179,8 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/action/load",
             "get_views",
             "web_read_group",
-            "/web/dataset/search_read",
-            "/web/dataset/search_read",
+            "web_search_read",
+            "web_search_read",
             "onchange",
             "name_create",
             "read",
@@ -211,7 +212,7 @@ QUnit.module("ActionManager", (hooks) => {
             ];
             let searchReadCount = 1;
             const mockRPC = async (route, args) => {
-                if (route === "/web/dataset/search_read") {
+                if (route === "web_search_read") {
                     args = args || {};
                     if (searchReadCount === 1) {
                         assert.strictEqual(args.model, "partner");
@@ -242,7 +243,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.skip("breadcrumbs are updated when switching between views", async function (assert) {
+    QUnit.test("breadcrumbs are updated when switching between views", async function (assert) {
         assert.expect(15);
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
@@ -337,7 +338,7 @@ QUnit.module("ActionManager", (hooks) => {
         );
     });
 
-    QUnit.skip("switch buttons are updated when switching between views", async function (assert) {
+    QUnit.test("switch buttons are updated when switching between views", async function (assert) {
         assert.expect(13);
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
@@ -425,6 +426,7 @@ QUnit.module("ActionManager", (hooks) => {
     });
     QUnit.skip("pager is updated when switching between views", async function (assert) {
         assert.expect(10);
+
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 4);
         assert.strictEqual(
@@ -516,7 +518,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsN(target, ".o_data_row", 5);
     });
 
-    QUnit.skip("there is no flickering when switching between views", async function (assert) {
+    QUnit.test("there is no flickering when switching between views", async function (assert) {
         assert.expect(20);
         let def;
         const mockRPC = async (route, args) => {
@@ -592,12 +594,12 @@ QUnit.module("ActionManager", (hooks) => {
         );
     });
 
-    QUnit.skip("breadcrumbs are updated when display_name changes", async function (assert) {
+    QUnit.test("breadcrumbs are updated when display_name changes", async function (assert) {
         assert.expect(4);
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
         // open a record in form view
-        await testUtils.dom.click(target.querySelector(".o_list_view .o_data_row"));
+        await click(target.querySelector(".o_list_view .o_data_row"));
         await legacyExtraNextTick();
         assert.containsN(
             target,
@@ -611,12 +613,9 @@ QUnit.module("ActionManager", (hooks) => {
             "breadcrumbs should contain the display_name of the opened record"
         );
         // switch to edit mode and change the display_name
-        await testUtils.dom.click($(target).find(".o_control_panel .o_form_button_edit"));
-        await testUtils.fields.editInput(
-            target.querySelector(".o_field_widget[name=display_name]"),
-            "New name"
-        );
-        await testUtils.dom.click(target.querySelector(".o_control_panel .o_form_button_save"));
+        await click(target.querySelector(".o_control_panel .o_form_button_edit"));
+        await editInput(target, ".o_field_widget[name=display_name]", "New name");
+        await click(target.querySelector(".o_control_panel .o_form_button_save"));
         assert.containsN(
             target,
             ".o_control_panel .breadcrumb-item",
@@ -657,7 +656,7 @@ QUnit.module("ActionManager", (hooks) => {
         );
     });
 
-    QUnit.skip("reload previous controller when discarding a new record", async function (assert) {
+    QUnit.test("reload previous controller when discarding a new record", async function (assert) {
         assert.expect(9);
         const mockRPC = async (route, args) => {
             assert.step((args && args.method) || route);
@@ -669,7 +668,7 @@ QUnit.module("ActionManager", (hooks) => {
         await legacyExtraNextTick();
         assert.containsOnce(
             target,
-            ".o_form_view.o_form_editable",
+            ".o_form_view .o_form_editable",
             "should have opened the form view in edit mode"
         );
         // discard
@@ -680,13 +679,13 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             "get_views",
-            "/web/dataset/search_read",
+            "web_search_read",
             "onchange",
-            "/web/dataset/search_read",
+            "web_search_read",
         ]);
     });
 
-    QUnit.skip("requests for execute_action of type object are handled", async function (assert) {
+    QUnit.test("requests for execute_action of type object are handled", async function (assert) {
         assert.expect(11);
         patchWithCleanup(session.user_context, { some_key: 2 });
         const mockRPC = async (route, args) => {
@@ -738,7 +737,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             "get_views",
-            "/web/dataset/search_read",
+            "web_search_read",
             "read",
             "object",
             "read",
@@ -851,7 +850,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.skip("requests for execute_action of type action are handled", async function (assert) {
+    QUnit.test("requests for execute_action of type action are handled", async function (assert) {
         assert.expect(12);
         const mockRPC = async (route, args) => {
             assert.step((args && args.method) || route);
@@ -885,11 +884,11 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             "get_views",
-            "/web/dataset/search_read",
+            "web_search_read",
             "read",
             "/web/action/load",
             "get_views",
-            "/web/dataset/search_read",
+            "web_search_read",
         ]);
     });
 
@@ -899,7 +898,7 @@ QUnit.module("ActionManager", (hooks) => {
             if (args.method === "read") {
                 assert.notOk("default_partner" in args.kwargs.context);
             }
-            if (route === "/web/dataset/search_read") {
+            if (route === "web_search_read") {
                 assert.strictEqual(args.context.default_partner, 2);
             }
         };
@@ -920,7 +919,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.expect(12);
         const mockRPC = async (route, args) => {
             assert.step(route);
-            if (route === "/web/dataset/search_read") {
+            if (route === "web_search_read") {
                 return Promise.reject();
             }
         };
@@ -939,11 +938,11 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/dataset/call_kw/partner/read",
             "/web/action/load",
             "/web/dataset/call_kw/partner/get_views",
-            "/web/dataset/search_read",
+            "web_search_read",
         ]);
     });
 
-    QUnit.skip(
+    QUnit.test(
         "requests for execute_action of type object: disable buttons",
         async function (assert) {
             assert.expect(2);
@@ -1011,7 +1010,7 @@ QUnit.module("ActionManager", (hooks) => {
         );
     });
 
-    QUnit.skip("can open different records from a multi record view", async function (assert) {
+    QUnit.test("can open different records from a multi record view", async function (assert) {
         assert.expect(12);
         const mockRPC = async (route, args) => {
             assert.step((args && args.method) || route);
@@ -1051,9 +1050,9 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             "get_views",
-            "/web/dataset/search_read",
+            "web_search_read",
             "read",
-            "/web/dataset/search_read",
+            "web_search_read",
             "read",
         ]);
     });
@@ -1192,7 +1191,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             "/web/dataset/call_kw/partner/get_views",
-            "/web/dataset/search_read",
+            "web_search_read",
             "/web/dataset/call_kw/partner/read",
             "/web/dataset/call_kw/partner/get_formview_id",
             "/web/dataset/call_kw/partner",
@@ -1417,7 +1416,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             "get_views",
-            "/web/dataset/search_read",
+            "web_search_read",
         ]);
     });
 
@@ -1717,7 +1716,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             "get_views",
-            "/web/dataset/search_read",
+            "web_search_read",
             "onchange",
             "get_formview_action",
             "create", // FIXME: to check with mcm
@@ -2037,7 +2036,7 @@ QUnit.module("ActionManager", (hooks) => {
         // because of how native events are handled in tests
         const searchPromise = testUtils.makeTestPromise();
         const mockRPC = async (route, args) => {
-            if (route === "/web/dataset/search_read") {
+            if (route === "web_search_read") {
                 assert.step("search_read " + args.domain);
                 if (JSON.stringify(args.domain) === JSON.stringify([["foo", "ilike", "m"]])) {
                     await searchPromise;
@@ -2297,7 +2296,7 @@ QUnit.module("ActionManager", (hooks) => {
             sections: [],
         });
         const mockRPC = async (route, args) => {
-            if (route === "/web/dataset/search_read") {
+            if (route === "web_search_read") {
                 assert.deepEqual(args.domain, [["id", "=", 99]]);
             }
         };
@@ -2379,7 +2378,7 @@ QUnit.module("ActionManager", (hooks) => {
         );
     });
 
-    QUnit.skip("action and get_views rpcs are cached", async function (assert) {
+    QUnit.test("action and get_views rpcs are cached", async function (assert) {
         const mockRPC = async (route, args) => {
             assert.step(args.method || route);
         };
@@ -2388,12 +2387,12 @@ QUnit.module("ActionManager", (hooks) => {
 
         await doAction(webClient, 1);
         assert.containsOnce(target, ".o_kanban_view");
-        assert.verifySteps(["/web/action/load", "get_views", "/web/dataset/search_read"]);
+        assert.verifySteps(["/web/action/load", "get_views", "web_search_read"]);
 
         await doAction(webClient, 1);
         assert.containsOnce(target, ".o_kanban_view");
 
-        assert.verifySteps(["/web/dataset/search_read"]);
+        assert.verifySteps(["web_search_read"]);
     });
 
     QUnit.test("pushState also changes the title of the tab", async (assert) => {

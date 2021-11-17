@@ -337,6 +337,12 @@ export async function mouseEnter(el, selector) {
     return triggerEvent(el, selector, "mouseenter");
 }
 
+export function editInput(el, selector, value) {
+    const input = el.querySelector(selector);
+    input.value = value;
+    return triggerEvent(input, null, "change");
+}
+
 /**
  * Triggers an hotkey properly disregarding the operating system.
  *

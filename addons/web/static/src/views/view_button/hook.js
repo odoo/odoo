@@ -38,7 +38,7 @@ export function useViewButtons(model) {
         if (clickParams.context) {
             buttonContext = evaluateExpr(clickParams.context, valuesForEval);
         }
-        const envContext = null; //LPE FIXME record.context ?? new Context(payload.env.context).eval();
+        const envContext = record.context; //LPE FIXME new Context(payload.env.context).eval();
 
         const doActionParams = Object.assign({}, clickParams, {
             resModel,
