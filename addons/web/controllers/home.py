@@ -21,7 +21,7 @@ _logger = logging.getLogger(__name__)
 # Shared parameters for all login/signup flows
 SIGN_UP_REQUEST_PARAMS = {'db', 'login', 'debug', 'token', 'message', 'error', 'scope', 'mode',
                           'redirect', 'redirect_hostname', 'email', 'name', 'partner_id',
-                          'password', 'confirm_password', 'city', 'country_id', 'lang'}
+                          'password', 'confirm_password', 'city', 'country_id', 'lang', 'signup_email'}
 LOGIN_SUCCESSFUL_PARAMS = set()
 
 
