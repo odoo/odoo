@@ -5057,7 +5057,7 @@ registry.ImageTools = ImageHandlerOption.extend({
     async crop() {
         this.trigger_up('hide_overlay');
         this.trigger_up('disable_loading_effect');
-        new weWidgets.ImageCropWidget(this, this.$target[0]).appendTo(this.options.wysiwyg.$editable);
+        new weWidgets.ImageCropWidget(this, this.$target[0]).appendTo(this.options.wysiwyg.odooEditor.document.body);
 
         await new Promise(resolve => {
             this.$target.one('image_cropper_destroyed', async () => {
@@ -5098,7 +5098,7 @@ registry.ImageTools = ImageHandlerOption.extend({
      */
     async resetCrop() {
         const cropper = new weWidgets.ImageCropWidget(this, this.$target[0]);
-        await cropper.appendTo(this.options.wysiwyg.$editable);
+        await cropper.appendTo(this.options.wysiwyg.odooEditor.document.body);
         await cropper.reset();
         await this._reapplyCurrentShape();
     },
