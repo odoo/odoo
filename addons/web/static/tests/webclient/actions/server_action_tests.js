@@ -14,7 +14,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.module("Server actions");
 
-    QUnit.skip("can execute server actions from db ID", async function (assert) {
+    QUnit.test("can execute server actions from db ID", async function (assert) {
         assert.expect(10);
         const mockRPC = async (route, args) => {
             assert.step((args && args.method) || route);
@@ -33,7 +33,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/action/run",
             "/web/action/load",
             "get_views",
-            "/web/dataset/search_read",
+            "web_search_read",
         ]);
     });
 
