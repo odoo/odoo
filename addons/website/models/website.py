@@ -1424,7 +1424,6 @@ class Website(models.Model):
                     return True
         return False
 
-    @api.autovacuum
     def _disable_unused_snippets_assets(self):
         snippets_assets = self._get_snippets_assets()
         html_fields = self._get_html_fields()

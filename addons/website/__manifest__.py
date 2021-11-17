@@ -27,6 +27,7 @@
         'security/website_security.xml',
         'security/ir.model.access.csv',
         'data/ir_asset.xml',
+        'data/ir_cron_data.xml',
         'data/mail_mail_data.xml',
         'data/website_data.xml',
         'data/website_visitor_cron.xml',
