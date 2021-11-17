@@ -357,7 +357,7 @@ class MailActivity(models.Model):
                 SELECT DISTINCT activity.id, activity.res_model, activity.res_id
                 FROM "%s" activity
                 WHERE activity.id = ANY (%%(ids)s)""" % self._table, dict(ids=list(sub_ids)))
-            activities_to_check = self._cr.dictfetchall()
+            activities_to_check += self._cr.dictfetchall()
 
         activity_to_documents = {}
         for activity in activities_to_check:
