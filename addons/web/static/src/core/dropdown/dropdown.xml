@@ -14,6 +14,7 @@
         t-attf-class="{{props.togglerClass || ''}} {{hasParentDropdown ? 'dropdown-item' : ''}}"
         t-on-click="onTogglerClick"
         t-on-mouseenter="onTogglerMouseEnter"
+        t-on-mouseleave="onTogglerMouseLeave"
         t-att-title="props.title"
         t-att-data-hotkey="props.hotkey"
         t-ref="togglerRef"

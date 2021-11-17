@@ -151,10 +151,12 @@ export class Dropdown extends Component {
     /**
      * Closes the dropdown.
      *
+     * @param {boolean} [groupIsOpen=false] can be used to close the dropdown
+     *   but leave the group state open.
      * @returns {Promise<void>}
      */
-    close() {
-        return this.changeStateAndNotify({ open: false, groupIsOpen: false });
+    close(groupIsOpen = false) {
+        return this.changeStateAndNotify({ open: false, groupIsOpen });
     }
 
     /**
@@ -224,11 +226,10 @@ export class Dropdown extends Component {
             if (this.state.open && args.newState.open) {
                 this.state.open = false;
             }
-        } else {
-            // Another dropdown is now open ? Close myself and notify the world (i.e. siblings).
-            if (this.state.open && args.newState.open) {
-                this.close();
-            }
+        } else if (args.newState.open) {
+            // Another dropdown group is now open.
+            this.state.groupIsOpen = false;
+            this.state.open = false;
         }
     }
 
@@ -246,6 +247,20 @@ export class Dropdown extends Component {
     onTogglerMouseEnter() {
         if (this.state.groupIsOpen && !this.state.open) {
             this.open();
+        }
+    }
+
+    /**
+     * Close the dropdown when the mouse leaves its toggler.
+     * NB: only if it the pointing device entered to a target
+     *     that is outside the whole dropdown.
+     *
+     * @param {MouseEvent} ev
+     */
+    onTogglerMouseLeave(ev) {
+        const outside = !this.el.contains(ev.relatedTarget);
+        if (outside) {
+            this.close(this.state.groupIsOpen);
         }
     }
 
