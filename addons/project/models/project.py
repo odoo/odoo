@@ -1896,6 +1896,8 @@ class Task(models.Model):
                 )
 
     def _message_auto_subscribe_followers(self, updated_values, default_subtype_ids):
+        if 'user_ids' not in updated_values:
+            return []
         # Since the changes to user_ids becoming a m2m, the default implementation of this function
         #  could not work anymore, override the function to keep the functionality.
         new_followers = []
