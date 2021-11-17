@@ -200,7 +200,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps(["/web/webclient/load_menus"]);
     });
 
-    QUnit.skip("properly load act window actions", async function (assert) {
+    QUnit.test("properly load act window actions", async function (assert) {
         assert.expect(7);
         const mockRPC = async function (route, args) {
             assert.step((args && args.method) || route);
@@ -217,7 +217,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             "get_views",
-            "/web/dataset/search_read",
+            "web_search_read",
         ]);
     });
 
@@ -292,7 +292,7 @@ QUnit.module("ActionManager", (hooks) => {
         ]);
     });
 
-    QUnit.skip("load requested view for act window actions", async function (assert) {
+    QUnit.test("load requested view for act window actions", async function (assert) {
         assert.expect(7);
         const mockRPC = async function (route, args) {
             assert.step((args && args.method) || route);
@@ -310,11 +310,11 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             "get_views",
-            "/web/dataset/search_read",
+            "web_search_read",
         ]);
     });
 
-    QUnit.skip(
+    QUnit.test(
         "lazy load multi record view if mono record one is requested",
         async function (assert) {
             assert.expect(12);
@@ -347,12 +347,12 @@ QUnit.module("ActionManager", (hooks) => {
                 "/web/action/load",
                 "get_views",
                 "read",
-                "/web/dataset/search_read",
+                "web_search_read",
             ]);
         }
     );
 
-    QUnit.skip("lazy load multi record view with previous action", async function (assert) {
+    QUnit.test("lazy load multi record view with previous action", async function (assert) {
         assert.expect(6);
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 4);
@@ -464,13 +464,13 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             "get_views",
-            "/web/dataset/search_read",
-            "/web/dataset/search_read",
+            "web_search_read",
+            "web_search_read",
             "read",
         ]);
     });
 
-    QUnit.skip("change the id of the current action", async function (assert) {
+    QUnit.test("change the id of the current action", async function (assert) {
         assert.expect(12);
         const mockRPC = async function (route, args) {
             assert.step((args && args.method) || route);
@@ -513,13 +513,13 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             "get_views",
-            "/web/dataset/search_read",
+            "web_search_read",
             "read",
             "read",
         ]);
     });
 
-    QUnit.skip("should push the correct state at the right time", async function (assert) {
+    QUnit.test("should push the correct state at the right time", async function (assert) {
         // formerly "should not push a loaded state"
         assert.expect(7);
         const pushState = browser.history.pushState;
@@ -680,7 +680,7 @@ QUnit.module("ActionManager", (hooks) => {
         delete core.action_registry.map.ClientAction;
     });
 
-    QUnit.skip("load a window action without id (in a multi-record view)", async function (assert) {
+    QUnit.test("load a window action without id (in a multi-record view)", async function (assert) {
         assert.expect(14);
         patchWithCleanup(browser.sessionStorage, {
             getItem(k) {
@@ -718,15 +718,15 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             "get_views",
-            "/web/dataset/search_read",
+            "web_search_read",
             "setItem session current_action",
             "getItem session current_action",
-            "/web/dataset/search_read",
+            "web_search_read",
             "setItem session current_action",
         ]);
     });
 
-    QUnit.skip("load state supports being given menu_id alone", async function (assert) {
+    QUnit.test("load state supports being given menu_id alone", async function (assert) {
         assert.expect(7);
         serverData.menus[666] = {
             id: 666,
@@ -750,7 +750,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             "/web/dataset/call_kw/partner/get_views",
-            "/web/dataset/search_read",
+            "/web/dataset/call_kw/partner/web_search_read",
         ]);
     });
 
@@ -778,7 +778,7 @@ QUnit.module("ActionManager", (hooks) => {
         );
     });
 
-    QUnit.skip("load state supports #home as initial state", async function (assert) {
+    QUnit.test("load state supports #home as initial state", async function (assert) {
         assert.expect(7);
         serverData.menus = {
             root: { id: "root", children: [1], name: "root", appID: "root" },
@@ -800,7 +800,7 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/webclient/load_menus",
             "/web/action/load",
             "/web/dataset/call_kw/partner/get_views",
-            "/web/dataset/search_read",
+            "/web/dataset/call_kw/partner/web_search_read",
         ]);
     });
 
