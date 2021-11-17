@@ -13,15 +13,15 @@ export class ActivityBox extends Component {
     /**
      * @returns {Chatter}
      */
-    get chatter() {
-        return this.messaging.models['mail.chatter'].get(this.props.chatterLocalId);
+    get activityBoxView() {
+        return this.messaging.models['mail.activity_box_view'].get(this.props.activityBoxViewLocalId);
     }
 
 }
 
 Object.assign(ActivityBox, {
     props: {
-        chatterLocalId: String,
+        activityBoxViewLocalId: String,
     },
     template: 'mail.ActivityBox',
 });
