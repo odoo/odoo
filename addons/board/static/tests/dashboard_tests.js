@@ -24,6 +24,7 @@ odoo.define("board.dashboard_tests", function (require) {
         toggleComparisonMenu,
         toggleFavoriteMenu,
     } = require("@web/../tests/search/helpers");
+    const { mouseEnter, triggerEvent } = require("@web/../tests/helpers/utils");
     const LegacyFavoriteMenu = require("web.FavoriteMenu");
     const LegacyAddToBoard = require("board.AddToBoardMenu");
     const { AddToBoard } = require("@board/add_to_board/add_to_board");
@@ -1201,8 +1202,7 @@ odoo.define("board.dashboard_tests", function (require) {
         form.destroy();
     });
 
-    // TODO: The button "Add to my dashboard" is not yet developped on the new control panel search view
-    QUnit.skip(
+    QUnit.test(
         "correctly save the time ranges of a reporting view in comparison mode",
         async function (assert) {
             assert.expect(1);
@@ -1241,6 +1241,8 @@ odoo.define("board.dashboard_tests", function (require) {
 
             registry.category("services").add("user", makeFakeUserService());
 
+            patchWithCleanup(browser, { setTimeout: (fn) => fn() }); // makes mouseEnter work
+
             const webClient = await createWebClient({ serverData, mockRPC });
 
             await doAction(webClient, {
@@ -1262,13 +1264,51 @@ odoo.define("board.dashboard_tests", function (require) {
             // add the view to the dashboard
             await toggleFavoriteMenu(webClient);
 
-            await testUtils.dom.click($(".o_add_to_board button.dropdown-toggle"));
-            await testUtils.fields.editInput($(".o_add_to_board input"), "a name");
+            await mouseEnter(webClient.el.querySelector(".o_add_to_board .dropdown-toggle"));
+            const input = webClient.el.querySelector(".o_add_to_board .dropdown-menu input");
+            await testUtils.fields.editInput(input, "Pipeline");
             await testUtils.dom.click($(".o_add_to_board div button"));
 
             unpatchDate();
         }
     );
+
+    QUnit.test("Add a view to dashboard (key nav)", async function (assert) {
+        assert.expect(2);
+
+        serverData.views = {
+            "partner,false,pivot": '<pivot><field name="foo"/></pivot>',
+            "partner,false,search": '<search/>',
+        };
+
+        registry.category("services").add("user", makeFakeUserService());
+
+        patchWithCleanup(browser, { setTimeout: (fn) => fn() }); // makes mouseEnter work
+
+        const mockRPC = (route) => {
+            if (route === "/board/add_to_dashboard") {
+                assert.step("add to board")
+                return Promise.resolve(true);
+            }
+        };
+
+        const webClient = await createWebClient({ serverData, mockRPC });
+
+        await doAction(webClient, {
+            id: 1,
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            views: [[false, "pivot"]],
+        });
+
+        await toggleFavoriteMenu(webClient.el);
+        await mouseEnter(webClient.el.querySelector(".o_add_to_board .dropdown-toggle"));
+        const input = webClient.el.querySelector(".o_add_to_board .dropdown-menu input");
+        await testUtils.fields.editInput(input, "Pipeline");
+        await triggerEvent(input, null, "keydown", { key: "Enter" });
+
+        assert.verifySteps(["add to board"]);
+    });
 
     QUnit.test(
         "correctly display the time range descriptions of a reporting view in comparison mode",
