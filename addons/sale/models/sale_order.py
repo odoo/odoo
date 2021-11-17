@@ -1,15 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, timedelta
-from functools import partial
+from datetime import timedelta
 from itertools import groupby
 import json
 
 from odoo import api, fields, models, SUPERUSER_ID, _
-from odoo.fields import Datetime
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.tools.misc import formatLang
 from odoo.osv import expression
 from odoo.tools import float_is_zero, html_keep_url, is_html_empty
 
@@ -25,7 +22,7 @@ class SaleOrder(models.Model):
         if self.env['ir.config_parameter'].sudo().get_param('sale.use_quotation_validity_days'):
             days = self.env.company.quotation_validity_days
             if days > 0:
-                return fields.Date.to_string(datetime.now() + timedelta(days))
+                return fields.Datetime.now() + timedelta(days)
         return False
 
     def _get_default_require_signature(self):
@@ -337,7 +334,7 @@ class SaleOrder(models.Model):
                 dt = line._expected_date()
                 dates_list.append(dt)
             if dates_list:
-                order.expected_date = Datetime.to_string(min(dates_list))
+                order.expected_date = min(dates_list)
             else:
                 order.expected_date = False
 
@@ -541,8 +538,8 @@ class SaleOrder(models.Model):
             if 'company_id' in vals:
                 self = self.with_company(vals['company_id'])
             if vals.get('name', _('New')) == _('New'):
-                seq_date = Datetime.context_timestamp(
-                    self, Datetime.to_datetime(vals['date_order'])
+                seq_date = fields.Datetime.context_timestamp(
+                    self, fields.Datetime.to_datetime(vals['date_order'])
                 ) if 'date_order' in vals else None
                 vals['name'] = self.env['ir.sequence'].next_by_code(
                     'sale.order', sequence_date=seq_date) or _('New')

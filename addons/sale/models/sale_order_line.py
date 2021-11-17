@@ -49,7 +49,10 @@ class SaleOrderLine(models.Model):
 
     def _expected_date(self):
         self.ensure_one()
-        order_date = fields.Datetime.from_string(self.order_id.date_order if self.order_id.date_order and self.order_id.state in ['sale', 'done'] else fields.Datetime.now())
+        if self.state in ['sale', 'done'] and self.order_id.date_order:
+            order_date = self.order_id.date_order
+        else:
+            order_date = fields.Datetime.now()
         return order_date + timedelta(days=self.customer_lead or 0.0)
 
     @api.depends('product_uom_qty', 'discount', 'price_unit', 'tax_id')
