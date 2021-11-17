@@ -23,7 +23,7 @@ class SaleOrderLine(models.Model):
         - no: if the SO is not in status 'sale' or 'done', we consider that there is nothing to
           invoice. This is also hte default value if the conditions of no other status is met.
         - to invoice: we refer to the quantity to invoice of the line. Refer to method
-          `_get_to_invoice_qty()` for more information on how this quantity is calculated.
+          `_compute_qty_to_invoice()` for more information on how this quantity is calculated.
         - upselling: this is possible only for a product invoiced on ordered quantities for which
           we delivered more than expected. The could arise if, for example, a project took more
           time than expected but we decided not to invoice the extra cost to the client. This
@@ -81,7 +81,7 @@ class SaleOrderLine(models.Model):
 
     # no trigger product_id.invoice_policy to avoid retroactively changing SO
     @api.depends('qty_invoiced', 'qty_delivered', 'product_uom_qty', 'order_id.state')
-    def _get_to_invoice_qty(self):
+    def _compute_qty_to_invoice(self):
         """
         Compute the quantity to invoice. If the invoice policy is order, the quantity to invoice is
         calculated from the ordered quantity. Otherwise, the quantity delivered is used.
@@ -283,7 +283,7 @@ class SaleOrderLine(models.Model):
         compute='_compute_qty_delivered', store=True, readonly=False,
         digits='Product Unit of Measure')
     qty_to_invoice = fields.Float(
-        compute='_get_to_invoice_qty', string='To Invoice Quantity', store=True,
+        compute='_compute_qty_to_invoice', string='To Invoice Quantity', store=True,
         digits='Product Unit of Measure')
     qty_invoiced = fields.Float(
         compute='_compute_qty_invoiced', string='Invoiced Quantity', store=True,
