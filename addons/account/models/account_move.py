@@ -362,7 +362,7 @@ class AccountMove(models.Model):
     # ONCHANGE METHODS
     # -------------------------------------------------------------------------
 
-    def _get_accounting_date(self, invoice_date, has_tax):
+    def _get_accounting_date(self, invoice_date, reverse=False):
         """Get correct accounting date for previous periods, taking tax lock date into account.
 
         When registering an invoice in the past, we still want the sequence to be increasing.
@@ -371,17 +371,22 @@ class AccountMove(models.Model):
         last date of the first open period.
 
         :param invoice_date (datetime.date): The invoice date
-        :param has_tax (bool): Iff any taxes are involved in the lines of the invoice
+        :param reverse: Iff self is the reversal of another move.
         :return (datetime.date):
         """
         tax_lock_date = self.company_id.tax_lock_date
+        period_lock_date = self.company_id.period_lock_date
         today = fields.Date.today()
-        lock_violated = invoice_date and tax_lock_date and has_tax and invoice_date <= tax_lock_date
-        if lock_violated:
+        has_tax = bool(self.line_ids.tax_ids or self.line_ids.tax_tag_ids)
+        tax_lock_violated = invoice_date and tax_lock_date and has_tax and invoice_date <= tax_lock_date
+        period_lock_violated = invoice_date and period_lock_date and invoice_date <= period_lock_date
+        if tax_lock_violated:
             invoice_date = tax_lock_date + timedelta(days=1)
+        if period_lock_violated:
+            invoice_date = period_lock_date + timedelta(days=1)
 
-        if self.is_sale_document(include_receipts=True):
-            if lock_violated:
+        if not reverse and self.is_sale_document(include_receipts=True):
+            if tax_lock_violated:
                 raise UserError(_(
                     'The operation is refused as it would impact an already issued tax statement.\n'
                     'Please change the journal entry date or the tax lock date set in the settings'
@@ -389,7 +394,7 @@ class AccountMove(models.Model):
                     tax_lock_date=format_date(self.env, tax_lock_date),
                 ))
             return invoice_date
-        elif self.is_purchase_document(include_receipts=True):
+        else:
             highest_name = self.highest_name or self._get_last_sequence(relaxed=True)
             number_reset = self._deduce_sequence_number_reset(highest_name)
             if not highest_name or number_reset == 'month':
@@ -410,8 +415,7 @@ class AccountMove(models.Model):
             if not self.invoice_payment_term_id and (not self.invoice_date_due or self.invoice_date_due < self.invoice_date):
                 self.invoice_date_due = self.invoice_date
 
-            has_tax = bool(self.line_ids.tax_ids or self.line_ids.tax_tag_ids)
-            accounting_date = self._get_accounting_date(self.invoice_date, has_tax)
+            accounting_date = self._get_accounting_date(self.invoice_date)
             if accounting_date != self.date:
                 self.date = accounting_date
                 self._onchange_currency()
@@ -2460,6 +2464,7 @@ class AccountMove(models.Model):
                 'move_type': reverse_type_map[move.move_type],
                 'reversed_entry_id': move.id,
             })
+            default_values.setdefault('date', self._get_accounting_date(move.date, reverse=True))
             move_vals_list.append(move.with_context(move_reverse_cancel=cancel)._reverse_move_vals(default_values, cancel=cancel))
 
         reverse_moves = self.env['account.move'].create(move_vals_list)
@@ -2614,7 +2619,7 @@ class AccountMove(models.Model):
             # /!\ 'check_move_validity' must be there since the dynamic lines will be recomputed outside the 'onchange'
             # environment.
             if (move.company_id.tax_lock_date and move.date <= move.company_id.tax_lock_date) and (move.line_ids.tax_ids or move.line_ids.tax_tag_ids):
-                move.date = move._get_accounting_date(move.invoice_date or move.date, True)
+                move.date = move._get_accounting_date(move.invoice_date or move.date)
                 move.with_context(check_move_validity=False)._onchange_currency()
 
         # Create the analytic lines in batch is faster as it leads to less cache invalidation.
