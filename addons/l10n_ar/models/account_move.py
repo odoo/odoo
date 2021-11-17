@@ -324,22 +324,32 @@ class AccountMove(models.Model):
 
     def _l10n_ar_get_invoice_totals_for_report(self):
         self.ensure_one()
-        tax_ids_filter = tax_line_id_filter = None
         include_vat = self._l10n_ar_include_vat()
+        base_lines = self.line_ids.filtered(lambda x: not x.display_type and not x.exclude_from_invoice_tab)
+        tax_lines = self.line_ids.filtered(lambda x: not x.display_type and x.tax_repartition_line_id)
 
+        # Base lines.
+        base_line_vals_list = [x._convert_to_tax_base_line_dict() for x in base_lines]
         if include_vat:
-            tax_ids_filter = (lambda aml, tax: not bool(tax.tax_group_id.l10n_ar_vat_afip_code))
-            tax_line_id_filter = (lambda aml, tax: not bool(tax.tax_group_id.l10n_ar_vat_afip_code))
+            for vals in base_line_vals_list:
+                vals['taxes'] = vals['taxes']\
+                    .flatten_taxes_hierarchy()\
+                    .filtered(lambda tax: not tax.tax_group_id.l10n_ar_vat_afip_code)
 
-        tax_lines_data = self._prepare_tax_lines_data_for_totals_from_invoice(
-            tax_ids_filter=tax_ids_filter, tax_line_id_filter=tax_line_id_filter)
-
+        # Tax lines.
+        tax_line_vals_list = [x._convert_to_tax_line_dict() for x in tax_lines]
         if include_vat:
-            amount_untaxed = self.currency_id.round(
-                self.amount_total - sum([x['tax_amount'] for x in tax_lines_data if 'tax_amount' in x]))
-        else:
-            amount_untaxed = self.amount_untaxed
-        return self._get_tax_totals(self.partner_id, tax_lines_data, self.amount_total, amount_untaxed, self.currency_id)
+            tax_line_vals_list = [
+                x
+                for x in tax_line_vals_list
+                if not x['tax_repartition_line'].tax_id.tax_group_id.l10n_ar_vat_afip_code
+            ]
+
+        return self.env['account.tax']._prepare_tax_totals_json(
+            base_line_vals_list,
+            self.currency_id,
+            tax_lines=tax_line_vals_list,
+        )
 
     def _l10n_ar_include_vat(self):
         self.ensure_one()
