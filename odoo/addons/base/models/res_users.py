@@ -592,11 +592,7 @@ class Users(models.Model):
         # per-method / per-model caches have been removed so the various
         # clear_cache/clear_caches methods pretty much just end up calling
         # Registry._clear_cache
-        invalidation_fields = {
-            'groups_id', 'active', 'lang', 'tz', 'company_id',
-            *USER_PRIVATE_FIELDS,
-            *self._get_session_token_fields()
-        }
+        invalidation_fields = self._get_invalidation_fields()
         if (invalidation_fields & values.keys()) or any(key.startswith('context_') for key in values):
             self.clear_caches()
 
@@ -655,6 +651,14 @@ class Users(models.Model):
 
     def check_super(self, passwd):
         return check_super(passwd)
+
+    @api.model
+    def _get_invalidation_fields(self):
+        return {
+            'groups_id', 'active', 'lang', 'tz', 'company_id',
+            *USER_PRIVATE_FIELDS,
+            *self._get_session_token_fields()
+        }
 
     @api.model
     def _update_last_login(self):
