@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.PhoneField" owl="1">
+        <t t-if="props.readonly">
+            <div>
+                <a class="o-phone-field o_field_widget o_form_uri" t-att-href="'tel:'+formattedValue" t-esc="formattedValue"/>
+            </div>
+        </t>
+        <t t-else="">
+            <input
+                class="o-phone-field o_input"
+                type="phone"
+                t-att-value="props.value or ''"
+                t-on-change="onChange"
+            />
+        </t>
+    </t>
+
+</templates>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.EmailField" owl="1">
+        <t t-if="props.readonly">
+            <a class="o-email-field o_form_uri o_text_overflow" t-att-href="'mailto:'+formattedValue" t-esc="formattedValue"/>
+        </t>
+        <t t-else="">
+            <input
+                class="o-email-field o_input"
+                type="email"
+                t-att-value="props.value or ''"
+                t-att-required="props.required"
+                t-on-change="onChange"
+            />
+        </t>
+    </t>
+
+</templates>

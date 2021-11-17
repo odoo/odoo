@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-inherit="web.PhoneField" t-inherit-mode="extension">
+        <xpath expr="//*[hasclass('o-phone-field')]" position="after">
+            <t t-if="formattedValue.length > 0">
+                <SendSMSButton record="props.record" value="formattedValue"/>
+            </t>
+        </xpath>
+    </t>
+
+</templates>

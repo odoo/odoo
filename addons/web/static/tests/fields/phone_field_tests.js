@@ -2,8 +2,8 @@
 
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { registry } from "@web/core/registry";
-import { makeFakeLocalizationService, makeFakeUserService } from "../helpers/mock_services";
-import { click, makeDeferred, nextTick, triggerEvent, triggerEvents } from "../helpers/utils";
+import { makeFakeUserService } from "../helpers/mock_services";
+import { click, nextTick, triggerEvent } from "../helpers/utils";
 import {
     setupControlPanelFavoriteMenuRegistry,
     setupControlPanelServiceRegistry,
@@ -44,7 +44,7 @@ QUnit.module("Fields", (hooks) => {
                         },
                         txt: {
                             string: "txt",
-                            type: "text",
+                            type: "phone",
                             default: "My little txt Value\nHo-ho-hoooo Merry Christmas",
                         },
                         int_field: {
@@ -216,12 +216,12 @@ QUnit.module("Fields", (hooks) => {
     QUnit.module("PhoneField");
 
     QUnit.skip("PhoneField in form view on normal screens", async function (assert) {
-        assert.expect(5);
+        assert.expect(7);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        const form = await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
             arch:
                 '<form string="Partners">' +
                 "<sheet>" +
@@ -230,42 +230,47 @@ QUnit.module("Fields", (hooks) => {
                 "</group>" +
                 "</sheet>" +
                 "</form>",
-            res_id: 1,
-            config: {
-                device: {
-                    size_class: config.device.SIZES.LG,
-                },
-            },
+            resId: 1,
+            // config: {
+            //     device: {
+            //         size_class: config.device.SIZES.LG,
+            //     },
+            // },
         });
 
-        var $phone = form.$("div.o_field_widget.o_form_uri.o_field_phone > a");
-        assert.strictEqual(
-            $phone.length,
-            1,
-            "should have rendered the phone number as a link with correct classes"
-        );
-        assert.strictEqual($phone.text(), "yop", "value should be displayed properly");
-
-        // switch to edit mode and check the result
-        await testUtils.form.clickEdit(form);
+        var phone = form.el.querySelector("a.o-phone-field");
         assert.containsOnce(
             form,
-            'input[type="text"].o_field_widget',
+            phone,
+            "should have rendered the phone number as a link with correct classes"
+        );
+        assert.strictEqual(phone.innerText, "yop", "value should be displayed properly");
+        assert.hasAttrValue(phone, "href", "tel:yop", "should have proper tel prefix");
+        // verify the presence of the sms link next to the phone
+        assert.hasAttrValue(phone.nextSibling, "href", "sms:yop", "should have proper sms prefix");
+
+        // switch to edit mode and check the result
+        await click(form.el.querySelector(".o_form_button_edit"));
+        assert.containsOnce(
+            form,
+            'input[type="phone"].o_field_widget',
             "should have an input for the phone field"
         );
         assert.strictEqual(
-            form.$('input[type="text"].o_field_widget').val(),
+            form.el.querySelector('input[type="phone"].o_field_widget').value,
             "yop",
             "input should contain field value in edit mode"
         );
 
         // change value in edit mode
-        await testUtils.fields.editInput(form.$('input[type="text"].o_field_widget'), "new");
+        const field = form.el.querySelector('input[type="phone"].o_field_widget');
+        field.value = "new";
+        await triggerEvent(field, null, "change");
 
         // save
-        await testUtils.form.clickSave(form);
+        await click(form.el.querySelector(".o_form_button_save"));
         assert.strictEqual(
-            form.$("div.o_field_widget.o_form_uri.o_field_phone > a").text(),
+            form.el.querySelector("a.o-phone-field").innerText,
             "new",
             "new value should be displayed properly"
         );
@@ -275,61 +280,62 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.skip("PhoneField in editable list view on normal screens", async function (assert) {
         assert.expect(8);
-        var doActionCount = 0;
 
-        var list = await createView({
-            View: ListView,
-            model: "partner",
-            data: this.data,
+        var list = await makeView({
+            serverData,
+            type: "list",
+            resModel: "partner",
             arch: '<tree editable="bottom"><field name="foo" widget="phone"/></tree>',
-            config: {
-                device: {
-                    size_class: config.device.SIZES.LG,
-                },
-            },
+            // config: {
+            //     device: {
+            //         size_class: config.device.SIZES.LG,
+            //     },
+            // },
         });
 
         assert.containsN(list, "tbody td:not(.o_list_record_selector)", 5);
         assert.strictEqual(
-            list.$("tbody td:not(.o_list_record_selector) a").first().text(),
+            list.el.querySelector("tbody td:not(.o_list_record_selector) a").innerText,
             "yop",
             "value should be displayed properly with a link to send SMS"
         );
 
         assert.containsN(
             list,
-            "div.o_field_widget.o_form_uri.o_field_phone > a",
+            "a.o_field_widget.o_form_uri.o-phone-field",
             5,
             "should have the correct classnames"
         );
 
         // Edit a line and check the result
-        var $cell = list.$("tbody td:not(.o_list_record_selector)").first();
-        await testUtils.dom.click($cell);
-        assert.hasClass($cell.parent(), "o_selected_row", "should be set as edit mode");
+        var cell = list.el.querySelector("tbody td:not(.o_list_record_selector)");
+        await click(cell);
+        assert.hasClass(cell.parent(), "o_selected_row", "should be set as edit mode");
         assert.strictEqual(
-            $cell.find("input").val(),
+            cell.find("input").value,
             "yop",
             "should have the corect value in internal input"
         );
-        await testUtils.fields.editInput($cell.find("input"), "new");
+        const inputField = cell.querySelector("input");
+        inputField.value = "new";
+        await triggerEvent(inputField, null, "change");
 
         // save
-        await testUtils.dom.click(list.$buttons.find(".o_list_button_save"));
-        $cell = list.$("tbody td:not(.o_list_record_selector)").first();
+        await click(form.el.querySelector(".o_form_button_save"));
+        cell = list.el.querySelector("tbody td:not(.o_list_record_selector)");
         assert.doesNotHaveClass(
-            $cell.parent(),
+            cell.parentElement,
             "o_selected_row",
             "should not be in edit mode anymore"
         );
         assert.strictEqual(
-            list.$("tbody td:not(.o_list_record_selector) a").first().text(),
+            list.el.querySelector("tbody td:not(.o_list_record_selector) a").innerText,
             "new",
             "value should be properly updated"
         );
         assert.containsN(
             list,
-            "div.o_field_widget.o_form_uri.o_field_phone > a",
+            "a.o_field_widget.o_form_uri.o-phone-field",
             5,
             "should still have links with correct classes"
         );
@@ -340,10 +346,10 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skip("use TAB to navigate to a PhoneField", async function (assert) {
         assert.expect(2);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        const form = await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
             arch:
                 '<form string="Partners">' +
                 "<sheet>" +
@@ -354,19 +360,18 @@ QUnit.module("Fields", (hooks) => {
                 "</sheet>" +
                 "</form>",
         });
-
-        testUtils.dom.click(form.$("input[name=display_name]"));
+        await click(form.el.querySelector("input[name=display_name]"));
         assert.strictEqual(
-            form.$('input[name="display_name"]')[0],
             document.activeElement,
+            form.el.querySelector('input[name="display_name"]'),
             "display_name should be focused"
         );
-        form.$('input[name="display_name"]').trigger(
-            $.Event("keydown", { which: $.ui.keyCode.TAB })
-        );
+        await triggerEvent(form.el, 'input[name="display_name"]', "keydown", {
+            key: "Tab",
+        });
         assert.strictEqual(
-            form.$('input[name="foo"]')[0],
             document.activeElement,
+            form.el.querySelector('input[name="foo"]'),
             "foo should be focused"
         );
 

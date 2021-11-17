@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="sms.SendSMSButton" owl="1">
+        <a 
+            type="action"
+            t-att-data-target="'new'"
+            t-att-data-model="'sms.composer'"
+            t-att-data-resId="props.record.resId"
+            t-att-title="env._t('Send SMS Text Message')"
+            t-att-href="'sms:'+props.value"
+            class="ml-3 d-inline-flex align-items-center o_field_phone_sms"
+        ><i class="fa fa-mobile"></i><small class="font-weight-bold ml-1">SMS</small></a>
+    </t>
+
+</templates>
