@@ -88,6 +88,7 @@ export class KanbanArchParser extends XMLParser {
             activeActions.create &&
             isAttr(xmlDoc, "quick_create").truthy(true) &&
             isAttr(xmlDoc, "on_create").equalTo("quick_create");
+        const quickCreateView = xmlDoc.getAttribute("quick_create_view");
         const tooltips = {};
         let kanbanBoxTemplate = document.createElement("t");
         let colorField = "color";
@@ -242,6 +243,7 @@ export class KanbanArchParser extends XMLParser {
             defaultGroupBy,
             colorField,
             quickCreate,
+            quickCreateView,
             recordsDraggable,
             limit: limit ? parseInt(limit, 10) : 40,
             progressAttributes,
@@ -297,5 +299,6 @@ KanbanView.multiRecord = true;
 KanbanView.template = `web.KanbanView`;
 KanbanView.components = { Layout, KanbanRenderer };
 KanbanView.props = { ...standardViewProps };
+KanbanView.ArchParser = KanbanArchParser;
 
 registry.category("views").add("kanban", KanbanView);

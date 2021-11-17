@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { Domain } from "@web/core/domain";
+import { registry } from "@web/core/registry";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { url } from "@web/core/utils/urls";
@@ -9,12 +9,12 @@ import { ColorPickerField } from "@web/fields/color_picker_field";
 import { Field } from "@web/fields/field";
 import { fileTypeMagicWordMap } from "@web/fields/image_field";
 import { session } from "@web/session";
+import { FormRenderer } from "@web/views/form/form_renderer";
 import { useViewCompiler } from "@web/views/helpers/view_compiler";
 import { isRelational } from "@web/views/helpers/view_utils";
 import { KanbanAnimatedNumber } from "@web/views/kanban/kanban_animated_number";
 import { KanbanCompiler } from "@web/views/kanban/kanban_compiler";
 import { useSortable } from "@web/views/kanban/kanban_sortable";
-import { View } from "@web/views/view";
 import { ViewButton } from "@web/views/view_button/view_button";
 
 const { Component, hooks } = owl;
@@ -30,13 +30,12 @@ export class KanbanRenderer extends Component {
         this.cards = cards;
         this.className = className;
         this.cardTemplate = useViewCompiler(KanbanCompiler, arch, fields, xmlDoc);
-        this.state = useState({
-            newColumn: "",
-            quickCreate: {},
-        });
+        this.state = useState({ newColumn: "" });
+        this.quickCreateInfo = null; // Lazy loaded
         this.action = useService("action");
         this.dialog = useService("dialog");
         this.notification = useService("notification");
+        this.views = useService("view");
         this.colors = RECORD_COLORS;
         useAutofocus();
         useExternalListener(window, "keydown", this.onWindowKeydown);
@@ -105,11 +104,31 @@ export class KanbanRenderer extends Component {
         this.state.quickCreateGroup = false;
     }
 
-    quickCreate(group) {
-        const [groupByField] = this.props.list.groupBy;
-        this.state.quickCreate[group.id] = {
-            [groupByField]: Array.isArray(group.value) ? group.value[0] : group.value,
-        };
+    async _loadQuickCreateView() {
+        if (this.isLoadingQuickCreate) {
+            return;
+        }
+        this.isLoadingQuickCreate = true;
+        const { context, resModel } = this.props.list;
+        const { ArchParser } = registry.category("views").get("form");
+        const result = await this.views.loadViews({
+            context: { ...context, form_view_ref: this.props.info.quickCreateView },
+            resModel,
+            views: [[false, "form"]],
+        });
+        this.isLoadingQuickCreate = false;
+        return new ArchParser().parse(result.form.arch, this.props.fields);
+    }
+
+    async quickCreate(group) {
+        if (!this.quickCreateInfo) {
+            this.quickCreateInfo = await this._loadQuickCreateView();
+        }
+        await group.list.quickCreate(this.quickCreateInfo.fields);
+    }
+
+    async cancelQuickCreate(group) {
+        await group.list.cancelQuickCreate();
     }
 
     toggleGroup(group) {
@@ -284,7 +303,7 @@ export class KanbanRenderer extends Component {
     }
 
     getRecordProgressColor(record, fieldName, group) {
-        if (!group) {
+        if (!group || !record.data[fieldName]) {
             return "";
         }
         const value = record.data[fieldName];
@@ -404,14 +423,7 @@ export class KanbanRenderer extends Component {
     kanban_getcolorname(value) {
         return this.colors[this.kanban_getcolor(value)];
     }
-
-    /**
-     * Computes a given domain.
-     */
-    kanban_compute_domain(domain) {
-        return new Domain(domain).compute(this.props.domain);
-    }
 }
 
 KanbanRenderer.template = "web.KanbanRenderer";
-KanbanRenderer.components = { Field, View, ViewButton, KanbanAnimatedNumber };
+KanbanRenderer.components = { Field, FormRenderer, ViewButton, KanbanAnimatedNumber };
