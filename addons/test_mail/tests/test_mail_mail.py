@@ -124,9 +124,9 @@ class TestMailMail(TestMailCommon, MockSmtplibCase):
             any_order=True,
         )
 
-        self.assert_email_sent_smtp(message_from='"test@unknown_domain.com" <notifications@test.com>',
+        self.assert_email_sent_smtp(message_from='"test" <notifications@test.com>',
                                     emails_count=5, from_filter=self.server_notification.from_filter)
-        self.assert_email_sent_smtp(message_from='"test_2@unknown_domain.com" <notifications@test.com>',
+        self.assert_email_sent_smtp(message_from='"test_2" <notifications@test.com>',
                                     emails_count=5, from_filter=self.server_notification.from_filter)
         self.assert_email_sent_smtp(message_from='user_1@test_2.com', emails_count=5, from_filter=self.server_domain_2.from_filter)
         self.assert_email_sent_smtp(message_from='user_2@test_2.com', emails_count=5, from_filter=self.server_domain_2.from_filter)

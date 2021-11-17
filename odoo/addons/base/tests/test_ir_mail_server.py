@@ -7,7 +7,6 @@ from odoo.addons.base.tests.common import MockSmtplibCase
 from odoo.tests.common import TransactionCase
 from odoo.tools import mute_logger
 
-
 class TestIrMailServer(TransactionCase, MockSmtplibCase):
 
     def setUp(self):
@@ -132,7 +131,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
 
         self.assert_email_sent_smtp(
             smtp_from='notifications@test.com',
-            message_from='"Name (test@unknown_domain.com)" <notifications@test.com>',
+            message_from='"Name" <notifications@test.com>',
             from_filter='notifications@test.com',
         )
 
@@ -145,7 +144,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
 
         self.assert_email_sent_smtp(
             smtp_from='notifications@test.com',
-            message_from='"test@unknown_domain.com" <notifications@test.com>',
+            message_from='"test" <notifications@test.com>',
             from_filter='notifications@test.com',
         )
 
@@ -179,7 +178,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
 
         self.assert_email_sent_smtp(
             smtp_from=default_bounce_adress,
-            message_from='"Name (test@unknown_domain.com)" <notifications@test.com>',
+            message_from='"Name" <notifications@test.com>',
             from_filter='test.com',
         )
 
@@ -230,7 +229,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
         self.connect_mocked.assert_called_once()
         self.assert_email_sent_smtp(
             smtp_from='notifications@test.com',
-            message_from='"Name (test@unknown_domain.com)" <notifications@test.com>',
+            message_from='"Name" <notifications@test.com>',
             from_filter='notifications@test.com',
         )
 
@@ -262,7 +261,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
         self.connect_mocked.assert_called_once()
         self.assert_email_sent_smtp(
             smtp_from=default_bounce_adress,
-            message_from='"Name (test@unknown_domain.com)" <notifications@test.com>',
+            message_from='"Name" <notifications@test.com>',
             from_filter='test.com',
         )
 
@@ -314,7 +313,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
         self.connect_mocked.assert_called_once()
         self.assert_email_sent_smtp(
             smtp_from=default_bounce_adress,
-            message_from='"test@unknown_domain.com" <notifications@test.com>',
+            message_from='"test" <notifications@test.com>',
             from_filter='test.com',
         )
 
@@ -357,7 +356,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
         self.connect_mocked.assert_called_once()
         self.assert_email_sent_smtp(
             smtp_from=default_bounce_adress,
-            message_from='"test@unknown_domain.com" <notifications@test.com>',
+            message_from='"test" <notifications@test.com>',
             from_filter='test.com',
         )
 
