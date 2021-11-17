@@ -188,5 +188,6 @@ ListView.defaultProps = {
 
 ListView.template = `web.ListView`;
 ListView.buttonTemplate = "web.ListView.Buttons";
+ListView.ArchParser = ListArchParser;
 
 registry.category("views").add("list", ListView);

@@ -96,14 +96,21 @@
                             </div>
                         </div>
                         <t t-if="!group.isFolded">
-                            <t t-if="state.quickCreate[group.id]">
-                                <View resModel="props.list.resModel" type="'form'" display="{ controlPanel: false }" />
-                            </t>
                             <t t-foreach="group.list.records" t-as="record" t-key="record.id">
-                                <t t-call="{{ cardTemplate }}" />
+                                <div t-if="record.isQuickCreate" class="o_kanban_quick_create">
+                                    <FormRenderer class="o_form_view o_xxs_form_view" record="record" fields="props.fields" info="quickCreateInfo" />
+                                    <div class="d-flex">
+                                        <button class="btn btn-primary o_kanban_add mr-1 text_truncate">Add</button>
+                                        <button class="btn btn-primary o_kanban_edit mr-1 text_truncate">Edit</button>
+                                        <button class="btn btn-secondary o_kanban_cancel ml-auto" t-on-click="cancelQuickCreate(group)">
+                                            <i class="fa fa-trash" />
+                                        </button>
+                                    </div>
+                                </div>
+                                <t t-else="" t-call="{{ cardTemplate }}" />
                             </t>
                             <t t-set="unloadedCount" t-value="!group.isDirty and getGroupUnloadedCount(group)" />
-                            <div t-if="unloadedCount" class="o_kanban_load_more">
+                            <div t-if="unloadedCount > 0" class="o_kanban_load_more">
                                 <a href="#" t-on-click="loadMore(group)">
                                     Load more... (<t t-esc="unloadedCount" /> remaining)
                                 </a>

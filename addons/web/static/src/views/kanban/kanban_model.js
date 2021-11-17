@@ -31,7 +31,7 @@ class KanbanGroup extends Group {
 
     async filterProgressValue(value) {
         const { fieldName } = this.model.progressAttributes;
-        const domains = [this.domain, this.groupDomain];
+        const domains = [this.groupDomain];
         this.activeProgressValue = this.activeProgressValue === value ? null : value;
         if (this.hasActiveProgressValue) {
             domains.push([[fieldName, "=", this.activeProgressValue]]);
@@ -103,7 +103,7 @@ class KanbanDynamicGroupList extends DynamicGroupList {
             domain: this.domain,
             groupBy: this.groupBy.slice(1),
             context: this.context,
-            orderedBy: this.orderedBy,
+            orderedBy: this.orderBy,
         });
         group.isFolded = false;
         group.progressValues.push({
@@ -144,6 +144,7 @@ class KanbanDynamicGroupList extends DynamicGroupList {
         const [progressData] = await Promise.all([progressPromise, loadPromise]);
 
         const progressField = this.fields[fieldName];
+        /** @type {[string | false, string][]} */
         const colorEntries = Object.entries(colors);
         const selection = Object.fromEntries(progressField.selection || []);
 
@@ -160,7 +161,7 @@ class KanbanDynamicGroupList extends DynamicGroupList {
                 group.progressValues.push({
                     count: count || 0,
                     value: key,
-                    string: selection[key] || this.model.env._t("Other"),
+                    string: selection[String(key)] || this.model.env._t("Other"),
                     color,
                 });
             }
@@ -195,6 +196,28 @@ class KanbanDynamicRecordList extends DynamicRecordList {
         await this.model.orm.call(this.resModel, "action_unarchive", [resIds]);
         await this.model.load();
     }
+
+    async cancelQuickCreate() {
+        this._cancelQuickCreate();
+        await this.model.notify();
+    }
+
+    async quickCreate(activeFields) {
+        this._cancelQuickCreate();
+        const record = this.model.createDataPoint("record", {
+            resModel: this.resModel,
+            fields: this.fields,
+            activeFields,
+        });
+        record.isQuickCreate = true;
+        this.records.unshift(record);
+        await record.load();
+        await this.model.notify();
+    }
+
+    _cancelQuickCreate() {
+        this.records = this.records.filter((r) => !r.isQuickCreate);
+    }
 }
 
 export class KanbanModel extends RelationalModel {
@@ -210,9 +233,10 @@ export class KanbanModel extends RelationalModel {
      * @override
      */
     async load(params = {}) {
+        /** @type {any} */
         const actualParams = { ...params };
         if (this.defaultGroupBy && !this.env.inDialog) {
-            const groupBy = [...(this.groupBy || []), this.defaultGroupBy];
+            const groupBy = [...(params.groupby || []), this.defaultGroupBy];
             actualParams.groupBy = groupBy.slice(0, 1);
         }
         await super.load(actualParams);

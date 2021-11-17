@@ -8,14 +8,13 @@ import { FormRenderer } from "@web/views/form/form_renderer";
 import { useModel } from "@web/views/helpers/model";
 import { standardViewProps } from "@web/views/helpers/standard_view_props";
 import { useSetupView } from "@web/views/helpers/view_hook";
-import { processField, getActiveActions } from "@web/views/helpers/view_utils";
+import { getActiveActions, processField } from "@web/views/helpers/view_utils";
 import { Layout } from "@web/views/layout";
 import { RelationalModel } from "@web/views/relational_model";
 import { useViewButtons } from "@web/views/view_button/hook";
-import { ListArchParser } from "../list/list_view";
-import { KanbanArchParser } from "../kanban/kanban_view";
 
 const { Component, useState } = owl;
+const viewRegistry = registry.category("views");
 
 // -----------------------------------------------------------------------------
 
@@ -33,22 +32,8 @@ export class FormArchParser extends XMLParser {
                     for (let viewType in field.views) {
                         const subView = field.views[viewType];
                         viewType = viewType === "tree" ? "list" : viewType; // FIXME: get rid of this
-                        let Parser;
-                        switch (viewType) {
-                            case "form": {
-                                Parser = FormArchParser;
-                                break;
-                            }
-                            case "kanban": {
-                                Parser = KanbanArchParser;
-                                break;
-                            }
-                            case "list": {
-                                Parser = ListArchParser;
-                                break;
-                            }
-                        }
-                        const archInfo = new Parser().parse(subView.arch, subView.fields);
+                        const { ArchParser } = viewRegistry.get(viewType);
+                        const archInfo = new ArchParser().parse(subView.arch, subView.fields);
                         fieldInfo.views[viewType] = {
                             ...archInfo,
                             activeFields: archInfo.fields,
@@ -167,5 +152,6 @@ FormView.buttonTemplate = "web.FormView.Buttons";
 FormView.display = { controlPanel: { ["top-right"]: false } };
 FormView.components = { Layout, FormRenderer };
 FormView.props = { ...standardViewProps };
+FormView.ArchParser = FormArchParser;
 
-registry.category("views").add("form", FormView);
+viewRegistry.add("form", FormView);

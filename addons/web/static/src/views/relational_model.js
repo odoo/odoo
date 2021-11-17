@@ -691,6 +691,7 @@ export class RelationalModel extends Model {
     }
 
     /**
+     * @param {object} params
      * @param {Comparison | null} [params.comparison]
      * @param {Context} [params.context]
      * @param {DomainListRepr} [params.domain]
