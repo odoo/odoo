@@ -11,6 +11,7 @@ import {
     legacyExtraNextTick,
     patchWithCleanup,
 } from "../../helpers/utils";
+import KanbanView from "web.KanbanView";
 import { registerCleanup } from "../../helpers/cleanup";
 import { makeTestEnv } from "../../helpers/mock_env";
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
@@ -26,19 +27,25 @@ import core from "web.core";
 import AbstractAction from "web.AbstractAction";
 import Widget from "web.Widget";
 import SystrayMenu from "web.SystrayMenu";
+import legacyViewRegistry from 'web.view_registry';
 
 let serverData;
 let target;
 
 QUnit.module("ActionManager", (hooks) => {
     hooks.beforeEach(() => {
+        registry.category("views").remove("list"); // remove new list from registry
+        registry.category("views").remove("kanban"); // remove new kanban from registry
+        legacyViewRegistry.add("list", ListView); // add legacy list -> will be wrapped and added to new registry
+        legacyViewRegistry.add("kanban", KanbanView); // add legacy kanban -> will be wrapped and added to new registry
+
         serverData = getActionManagerServerData();
         target = getFixture();
     });
 
     QUnit.module("Legacy tests (to eventually drop)");
 
-    QUnit.skip("display warning as notification", async function (assert) {
+    QUnit.test("display warning as notification", async function (assert) {
         // this test can be removed as soon as the legacy layer is dropped
         assert.expect(5);
         let list;
@@ -51,20 +58,20 @@ QUnit.module("ActionManager", (hooks) => {
 
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
-        assert.containsOnce(target, ".o_list_view");
+        assert.containsOnce(target, ".o_legacy_list_view");
         list.trigger_up("warning", {
             title: "Warning!!!",
             message: "This is a warning...",
         });
         await testUtils.nextTick();
         await legacyExtraNextTick();
-        assert.containsOnce(target, ".o_list_view");
+        assert.containsOnce(target, ".o_legacy_list_view");
         assert.containsOnce(document.body, ".o_notification.border-warning");
         assert.strictEqual($(".o_notification_title").text(), "Warning!!!");
         assert.strictEqual($(".o_notification_content").text(), "This is a warning...");
     });
 
-    QUnit.skip("display warning as modal", async function (assert) {
+    QUnit.test("display warning as modal", async function (assert) {
         // this test can be removed as soon as the legacy layer is dropped
         assert.expect(5);
         let list;
@@ -77,7 +84,7 @@ QUnit.module("ActionManager", (hooks) => {
 
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
-        assert.containsOnce(target, ".o_list_view");
+        assert.containsOnce(target, ".o_legacy_list_view");
         list.trigger_up("warning", {
             title: "Warning!!!",
             message: "This is a warning...",
@@ -85,7 +92,7 @@ QUnit.module("ActionManager", (hooks) => {
         });
         await testUtils.nextTick();
         await legacyExtraNextTick();
-        assert.containsOnce(target, ".o_list_view");
+        assert.containsOnce(target, ".o_legacy_list_view");
         assert.containsOnce(document.body, ".modal");
         assert.strictEqual($(".modal-title").text(), "Warning!!!");
         assert.strictEqual($(".modal-body").text(), "This is a warning...");
@@ -175,7 +182,7 @@ QUnit.module("ActionManager", (hooks) => {
         delete core.action_registry.map.customLegacy;
     });
 
-    QUnit.skip("willUnmount is called down the legacy layers", async (assert) => {
+    QUnit.test("willUnmount is called down the legacy layers", async (assert) => {
         assert.expect(7);
 
         let mountCount = 0;
@@ -225,7 +232,7 @@ QUnit.module("ActionManager", (hooks) => {
         delete core.action_registry.map.customLegacy;
     });
 
-    QUnit.skip("Checks the availability of all views in the action", async (assert) => {
+    QUnit.test("Checks the availability of all views in the action", async (assert) => {
         assert.expect(2);
         patchWithCleanup(ListView.prototype, {
             init(viewInfo, params) {
@@ -417,7 +424,7 @@ QUnit.module("ActionManager", (hooks) => {
         delete SystrayMenu.Items.FakeSystrayItemWidget;
     });
 
-    QUnit.skip("usercontext always added to legacy actions", async (assert) => {
+    QUnit.test("usercontext always added to legacy actions", async (assert) => {
         assert.expect(8);
         core.action_registry.add("testClientAction", AbstractAction);
         registerCleanup(() => delete core.action_registry.map.testClientAction);
