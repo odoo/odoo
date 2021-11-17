@@ -52,7 +52,7 @@ export function useViewArch(arch, params = {}) {
  * @param  {String} params.resModel The default resModel to which actions will apply
  * @param  {Function} [params.reload] The function to execute to reload, if a button has data-reload-on-close
  */
-export function useActionLinks({ resModel, reload }) {
+export function useActionLinks({ resModel, reload, actionContext }) {
     const selector = `a[type="action"]`;
     const component = owl.hooks.useComponent();
     const keepLast = component.env.keepLast;
@@ -106,15 +106,17 @@ export function useActionLinks({ resModel, reload }) {
                           [false, "form"],
                       ];
             }
-
             const action = {
                 name: target.getAttribute("title") || target.textContent.trim(),
                 type: "ir.actions.act_window",
                 res_model: data.model || resModel,
-                target: "current", // TODO: make customisable?
+                target: data.target || "current",
                 views,
                 domain: data.domain ? evaluateExpr(data.domain) : [],
             };
+            if (actionContext) {
+                action.context = actionContext;
+            }
             if (resId) {
                 action.res_id = resId;
             }
