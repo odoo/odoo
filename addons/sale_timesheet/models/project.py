@@ -54,6 +54,7 @@ class Project(models.Model):
     warning_employee_rate = fields.Boolean(compute='_compute_warning_employee_rate')
     partner_id = fields.Many2one(
         compute='_compute_partner_id', store=True, readonly=False)
+    allocated_hours = fields.Float(compute='_compute_allocated_hours', store=True, readonly=False, copy=False)
 
     @api.depends('sale_line_id', 'sale_line_employee_ids', 'allow_billable')
     def _compute_pricing_type(self):
@@ -173,6 +174,45 @@ class Project(models.Model):
                 ('remaining_hours', '>', 0)
             ], limit=1)
             project.sale_line_id = sol or project.sale_line_employee_ids.sale_line_id[:1]  # get the first SOL containing in the employee mappings if no sol found in the search
+
+    @api.depends('sale_line_id.product_uom_qty', 'sale_line_id.product_uom')
+    def _compute_allocated_hours(self):
+        sol_ids = self._fetch_sale_order_item_ids()
+        sols_read_group = self.env['sale.order.line']._read_group([
+            ('id', 'in', sol_ids), ('is_service', '=', True),
+            ('is_downpayment', '=', False),
+            ('product_id.service_tracking', 'in', ['task_in_project', 'project_only'])],
+            ['project_id', 'product_uom_qty', 'product_uom'],
+            ['project_id', 'product_uom'],
+            lazy=False)
+
+        uom_hour = self.env.ref('uom.product_uom_hour')
+        sol_qty_dict = defaultdict(list)
+        uom_ids = set(self.timesheet_encode_uom_id.ids)
+
+        for result in sols_read_group:
+            uom_id = result['product_uom'] and result['product_uom'][0]
+            if uom_id:
+                uom_ids.add(uom_id)
+            if result.get('project_id'):
+                sol_qty_dict[result['project_id'][0]].append((uom_id, result['product_uom_qty']))
+
+        uoms_dict = {uom.id: uom for uom in self.env['uom.uom'].browse(uom_ids)}
+
+        for project in self:
+            if not project.sale_line_id:
+                project.allocated_hours = 0
+                continue
+            # sale order line may be stored in a different unit of measure, so first
+            # we convert all of them to the reference unit
+            # if the sol has no product_uom_id then we take the one of the project
+            allocated_hours = sum([
+                product_uom_qty * uoms_dict.get(product_uom, project.timesheet_encode_uom_id.id).factor_inv
+                for product_uom, product_uom_qty in sol_qty_dict[project.id]
+            ], 0.0)
+            # Now convert to the unit of measure to hours
+            allocated_hours *= uom_hour.factor
+            project.allocated_hours = allocated_hours
 
     @api.depends('sale_line_employee_ids.sale_line_id', 'allow_billable')
     def _compute_sale_order_count(self):
