@@ -513,6 +513,13 @@
         <t t-call="web_editor.snippet_options_image_optimization_widgets"/>
     </div>
 
+    <div data-js="ImageLink" data-selector="img">
+        <we-row string="Link">
+            <we-button class="fa fa-fw fa-link" data-make-link="true" data-no-preview="true" title="Add or modify link"/>
+            <we-button class="fa fa-fw fa-unlink" data-remove-link="" data-no-preview="true" title="Remove link"/>
+        </we-row>
+    </div>
+
     <div data-js="ImageTools" data-selector="img">
         <we-row string="Transform">
             <we-button class="fa fa-fw fa-crop" data-crop="true" data-no-preview="true" title="Crop Image"/>

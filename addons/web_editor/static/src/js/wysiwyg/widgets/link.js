@@ -35,6 +35,7 @@ const Link = Widget.extend({
 
         this.data = data || {};
         this.isButton = this.data.isButton;
+        this.customizeStyle = typeof data.customizeStyle === 'undefined' ? true : data.customizeStyle;
         this.$button = $button;
         this.noFocusUrl = this.options.noFocusUrl;
 
@@ -199,7 +200,7 @@ const Link = Widget.extend({
         if (!this.$link.attr('target')) {
             this.$link[0].removeAttribute('target');
         }
-        if (this._setLinkContent && (data.content !== this.data.originalText || data.url !== this.data.url)) {
+        if (this._setLinkContent && (data.content !== this.data.originalText || (!data.content && data.url !== this.data.url))) {
             const content = (data.content && data.content.length) ? data.content : data.url;
             // If there is a this.data.originalText, it means that we selected
             // the text and we could not change the content through the text
@@ -276,7 +277,7 @@ const Link = Widget.extend({
             url = url.replace(/^tel:([0-9]+)$/, 'tel://$1');
         } else if (url.indexOf('@') !== -1 && url.indexOf(':') === -1) {
             url = 'mailto:' + url;
-        } else if (url.indexOf('://') === -1 && url[0] !== '/'
+        } else if (url && url.indexOf('://') === -1 && url[0] !== '/'
                     && url[0] !== '#' && url.slice(0, 2) !== '${') {
             url = 'http://' + url;
         }

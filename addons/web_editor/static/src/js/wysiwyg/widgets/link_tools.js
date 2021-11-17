@@ -30,7 +30,7 @@ const LinkTools = Link.extend({
      */
     init: function (parent, options, editable, data, $button, node) {
         if (node && !$(node).is('a')) {
-            $(node).wrap('<a href="#"/>');
+            $(node).wrap('<a/>');
             node = node.parentElement;
         }
         this._link = node || this.getOrCreateLink(editable);

@@ -11,6 +11,7 @@ const utils = require('web.utils');
 var Widget = require('web.Widget');
 var ColorPaletteWidget = require('web_editor.ColorPalette').ColorPaletteWidget;
 const weUtils = require('web_editor.utils');
+const wysiwygUtils = require('@web_editor/js/common/wysiwyg_utils');
 const {
     normalizeColor,
     getBgImageURL,
@@ -4704,6 +4705,101 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
         // TODO for now, this simulates a double click on the media,
         // to be refactored when the new editor is merged
         this.$target.dblclick();
+    },
+});
+
+/**
+ * Link for image.
+ */
+registry.ImageLink = SnippetOptionWidget.extend({
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Display the link tool to create or modify a link.
+     *
+     * @see this.selectClass for parameters
+     */
+    async makeLink() {
+        const parent = this.$target.parent()[0];
+        const node = parent.tagName === "A" ? parent : this.$target[0];
+        const odooEditor = this.options.wysiwyg.odooEditor;
+        const $dataMakeLink = this.$el.find('[data-make-link]');
+
+        if (!this.linkTools) {
+            this.linkTools = new weWidgets.LinkTools(this,
+                { wysiwyg: this.options.wysiwyg },
+                odooEditor.editable,
+                { customizeStyle: false },
+                $(),
+                node,
+            );
+            const observer = new MutationObserver(() => {
+                this.updateUI();
+            });
+            observer.observe(this.linkTools.$link[0], { attributes: true });
+            this._linkToolRemove = ev => {
+                const hierarchy = ev && [ev.target, ...wysiwygUtils.ancestors(ev.target)]
+                if (!hierarchy || !this.linkTools || !(
+                    ev.target.closest('.ui-autocomplete') ||
+                    hierarchy.includes(node) ||
+                    hierarchy.includes(this.linkTools.el) ||
+                    hierarchy.includes(this.$el.find('[data-remove-link]')[0]) ||
+                    hierarchy.includes($dataMakeLink[0])
+                )) {
+                    this.linkTools && this.linkTools.destroy();
+                    this.linkTools = undefined;
+                    this._linkToolRemove = undefined;
+                    odooEditor.document.removeEventListener('mousedown', this._linkToolRemove, true);
+                    observer.disconnect();
+                    this.updateUI();
+                }
+            };
+            odooEditor.document.addEventListener('mousedown', this._linkToolRemove, true);
+            this.linkTools.insertAfter(this.$el);
+        } else {
+            this._linkToolRemove && this._linkToolRemove();
+        }
+    },
+    /**
+     * Remove the link.
+     *
+     * @see this.selectClass for parameters
+     */
+    async removeLink() {
+        const $parent = this.$target.parent();
+        if ($parent.is('a')) {
+            this.$target.unwrap();
+            if (this._linkToolRemove) {
+                this._linkToolRemove();
+            }
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async _computeWidgetState(methodName, params) {
+        if (methodName === 'makeLink') {
+            return !!this.linkTools;
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    _computeWidgetVisibility(widgetName, params) {
+        if (params.optionsPossibleValues.removeLink) {
+            const $parent = this.$target.parent();
+            return $parent.is('a') && $parent.attr('href');
+        }
+        return this._super(...arguments);
     },
 });
 

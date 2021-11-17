@@ -492,7 +492,7 @@
             <a href="#" target="_blank" class="o_we_full_url mt-1 text-muted d-none" t-esc="widget.href" title="Open in a new tab"/>
         </div>
     </div>
-    <we-customizeblock-option t-name="wysiwyg.widgets.linkTools">
+    <we-customizeblock-option t-name="wysiwyg.widgets.linkTools" class="customizeblock-linktool">
         <we-row t-attf-class="{{widget.needLabel ? '' : 'd-none'}}">
             <we-title>⌙ Link Label</we-title>
             <we-input class="o_we_user_value_widget">
@@ -517,7 +517,7 @@
                     </div>
             </we-button>
         </we-row>
-        <we-row>
+        <we-row t-attf-class="{{widget.customizeStyle ? '' : 'd-none'}}">
             <we-select class="o_we_user_value_widget">
                 <we-title>⌙ Style</we-title>
                 <div class="dropdown">

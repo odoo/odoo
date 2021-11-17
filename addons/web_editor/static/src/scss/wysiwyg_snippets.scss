@@ -517,58 +517,6 @@ body.editor_enable.editor_has_snippets {
                 padding-left: 0;
                 padding-right: 0;
 
-                we-title {
-                    &.o_short_title {
-                        width: unset !important;
-                        padding-right: 0 !important;
-                    }
-                    &.o_long_title {
-                        width: fit-content !important;
-                        padding-right: 10px !important;
-                    }
-                }
-                .highlighted-text {
-                    color: white;
-                    font-weight: bold;
-                    padding: 1px;
-                }
-                .dropdown {
-                    position: unset;
-                    width: -webkit-fill-available;
-
-                    .dropdown-toggle {
-                        padding: 0;
-                        width: inherit;
-
-                        &::after {
-                            display: none;
-                        }
-                    }
-                    .dropdown-menu.show {
-                        position: absolute !important;
-                        padding: 0;
-
-                        we-button {
-                            text-align: left;
-                            font-family: Roboto, "Montserrat", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
-                            font-size: 12px;
-                            font-weight: 400;
-
-                            div {
-                                width: 100%;
-                            }
-                        }
-                    }
-                }
-                input::placeholder {
-                    font-style: italic;
-                }
-                we-input:not(.o_we_small_input) {
-                    &, div, input {
-                        width: 100% !important;
-                    }
-                }
-
                 & + we-customizeblock-option {
                     grid-area: options2;
                 }
@@ -672,6 +620,71 @@ body.editor_enable.editor_has_snippets {
                 border: $o-we-sidebar-content-field-dropdown-border-width solid $o-we-sidebar-content-field-dropdown-border-color;
                 border-radius: $o-we-item-border-radius;
                 padding: 0;
+            }
+        }
+
+        .customizeblock-linktool {
+            we-title {
+                &.o_short_title {
+                    width: unset !important;
+                    padding-right: 0 !important;
+                }
+                &.o_long_title {
+                    width: fit-content !important;
+                    padding-right: 10px !important;
+                }
+            }
+            .highlighted-text {
+                color: white;
+                font-weight: bold;
+                padding: 1px;
+            }
+            .dropdown {
+                position: unset;
+                width: -webkit-fill-available;
+
+                .dropdown-toggle {
+                    padding: 0;
+                    width: inherit;
+
+                    &::after {
+                        display: none;
+                    }
+                }
+                .dropdown-menu.show {
+                    position: absolute !important;
+                    padding: 0;
+
+                    we-button {
+                        text-align: left;
+                        font-family: Roboto, "Montserrat", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+                        font-size: 12px;
+                        font-weight: 400;
+
+                        div {
+                            width: 100%;
+                        }
+                    }
+                }
+            }
+            input::placeholder {
+                font-style: italic;
+            }
+            we-input:not(.o_we_small_input) {
+                &, div, input {
+                    width: 100% !important;
+                }
+            }
+
+            .dropdown-toggle {
+                background: transparent;
+                border: none;
+            }
+            .dropdown-menu {
+                background: #222222;
+                min-width: max-content;
+                min-width: -webkit-max-content;
+                text-align: center;
             }
         }
 
