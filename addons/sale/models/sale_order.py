@@ -404,21 +404,16 @@ class SaleOrder(models.Model):
                     user_id=user_id, domain=[('company_id', 'in', [company_id, False])])
             order.team_id = cached_teams[key]
 
-    @api.depends('order_line.price_total')
+    @api.depends('order_line.price_subtotal', 'order_line.price_tax', 'order_line.price_total')
     def _amount_all(self):
         """
         Compute the total amounts of the SO.
         """
         for order in self:
-            amount_untaxed = amount_tax = 0.0
-            for line in order.order_line:
-                amount_untaxed += line.price_subtotal
-                amount_tax += line.price_tax
-            order.update({
-                'amount_untaxed': amount_untaxed,
-                'amount_tax': amount_tax,
-                'amount_total': amount_untaxed + amount_tax,
-            })
+            order_lines = order.order_line.filtered(lambda x: not x.display_type)
+            order.amount_untaxed = sum(order_lines.mapped('price_subtotal'))
+            order.amount_total = sum(order_lines.mapped('price_total'))
+            order.amount_tax = sum(order_lines.mapped('price_tax'))
 
     @api.depends('order_line.invoice_lines')
     def _get_invoiced(self):
@@ -546,16 +541,12 @@ class SaleOrder(models.Model):
 
     @api.depends('order_line.tax_id', 'order_line.price_unit', 'amount_total', 'amount_untaxed')
     def _compute_tax_totals_json(self):
-        def compute_taxes(order_line):
-            price = order_line.price_unit * (1 - (order_line.discount or 0.0) / 100.0)
-            order = order_line.order_id
-            return order_line.tax_id._origin.compute_all(price, order.currency_id, order_line.product_uom_qty, product=order_line.product_id, partner=order.partner_shipping_id)
-
-        account_move = self.env['account.move']
         for order in self:
-            tax_lines_data = account_move._prepare_tax_lines_data_for_totals_from_object(order.order_line, compute_taxes)
-            tax_totals = account_move._get_tax_totals(order.partner_id, tax_lines_data, order.amount_total, order.amount_untaxed, order.currency_id)
-            order.tax_totals_json = json.dumps(tax_totals)
+            order_lines = order.order_line.filtered(lambda x: not x.display_type)
+            order.tax_totals_json = json.dumps(self.env['account.tax']._prepare_tax_totals_json(
+                [x._convert_to_tax_base_line_dict() for x in order_lines],
+                order.currency_id,
+            ))
 
     @api.depends('state')
     def _compute_type_name(self):

@@ -211,7 +211,7 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
         ], self.move_vals)
 
         move_form = Form(self.invoice)
-        with move_form.line_ids.edit(2) as line_form:
+        with move_form.invoice_line_ids.edit(0) as line_form:
             # Reset field except the discount that becomes 100%.
             # /!\ The modification is made on the accounting tab.
             line_form.quantity = 1

@@ -24,17 +24,10 @@ class PurchaseOrder(models.Model):
     @api.depends('order_line.price_total')
     def _amount_all(self):
         for order in self:
-            amount_untaxed = amount_tax = 0.0
-            for line in order.order_line:
-                line._compute_amount()
-                amount_untaxed += line.price_subtotal
-                amount_tax += line.price_tax
-            currency = order.currency_id or order.partner_id.property_purchase_currency_id or self.env.company.currency_id
-            order.update({
-                'amount_untaxed': currency.round(amount_untaxed),
-                'amount_tax': currency.round(amount_tax),
-                'amount_total': amount_untaxed + amount_tax,
-            })
+            order_lines = order.order_line.filtered(lambda x: not x.display_type)
+            order.amount_untaxed = sum(order_lines.mapped('price_subtotal'))
+            order.amount_total = sum(order_lines.mapped('price_total'))
+            order.amount_tax = sum(order_lines.mapped('price_tax'))
 
     @api.depends('state', 'order_line.qty_to_invoice')
     def _get_invoiced(self):
@@ -205,14 +198,12 @@ class PurchaseOrder(models.Model):
 
     @api.depends('order_line.taxes_id', 'order_line.price_subtotal', 'amount_total', 'amount_untaxed')
     def  _compute_tax_totals_json(self):
-        def compute_taxes(order_line):
-            return order_line.taxes_id._origin.compute_all(**order_line._prepare_compute_all_values())
-
-        account_move = self.env['account.move']
         for order in self:
-            tax_lines_data = account_move._prepare_tax_lines_data_for_totals_from_object(order.order_line, compute_taxes)
-            tax_totals = account_move._get_tax_totals(order.partner_id, tax_lines_data, order.amount_total, order.amount_untaxed, order.currency_id)
-            order.tax_totals_json = json.dumps(tax_totals)
+            order_lines = order.order_line.filtered(lambda x: not x.display_type)
+            order.tax_totals_json = json.dumps(self.env['account.tax']._prepare_tax_totals_json(
+                [x._convert_to_tax_base_line_dict() for x in order_lines],
+                order.currency_id,
+            ))
 
     @api.depends('company_id.account_fiscal_country_id', 'fiscal_position_id.country_id', 'fiscal_position_id.foreign_vat')
     def _compute_tax_country_id(self):
@@ -978,27 +969,34 @@ class PurchaseOrderLine(models.Model):
     @api.depends('product_qty', 'price_unit', 'taxes_id')
     def _compute_amount(self):
         for line in self:
-            taxes = line.taxes_id.compute_all(**line._prepare_compute_all_values())
+            tax_results = self.env['account.tax']._compute_taxes([line._convert_to_tax_base_line_dict()])
+            totals = list(tax_results['totals'].values())[0]
+            amount_untaxed = totals['amount_untaxed']
+            amount_tax = totals['amount_tax']
+
             line.update({
-                'price_tax': taxes['total_included'] - taxes['total_excluded'],
-                'price_total': taxes['total_included'],
-                'price_subtotal': taxes['total_excluded'],
+                'price_subtotal': amount_untaxed,
+                'price_tax': amount_tax,
+                'price_total': amount_untaxed + amount_tax,
             })
 
-    def _prepare_compute_all_values(self):
-        # Hook method to returns the different argument values for the
-        # compute_all method, due to the fact that discounts mechanism
-        # is not implemented yet on the purchase orders.
-        # This method should disappear as soon as this feature is
-        # also introduced like in the sales module.
+    def _convert_to_tax_base_line_dict(self):
+        """ Convert the current record to a dictionary in order to use the generic taxes computation method
+        defined on account.tax.
+
+        :return: A python dictionary.
+        """
         self.ensure_one()
-        return {
-            'price_unit': self.price_unit,
-            'currency': self.order_id.currency_id,
-            'quantity': self.product_qty,
-            'product': self.product_id,
-            'partner': self.order_id.partner_id,
-        }
+        return self.env['account.tax']._convert_to_tax_base_line_dict(
+            self,
+            partner=self.order_id.partner_id,
+            currency=self.order_id.currency_id,
+            product=self.product_id,
+            taxes=self.taxes_id,
+            price_unit=self.price_unit,
+            quantity=self.product_qty,
+            price_subtotal=self.price_subtotal,
+        )
 
     def _compute_tax_id(self):
         for line in self:
