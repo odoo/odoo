@@ -13,7 +13,6 @@ odoo.define('point_of_sale.tour.PosHr', function (require) {
 
     startSteps();
 
-    ProductScreen.do.confirmOpeningPopup();
     PosHr.check.loginScreenIsShown();
     PosHr.do.clickLoginButton();
     SelectionPopup.check.isShown();
@@ -38,6 +37,7 @@ odoo.define('point_of_sale.tour.PosHr', function (require) {
     NumberPopup.check.inputShownIs('••••');
     NumberPopup.do.clickConfirm();
     ProductScreen.check.isShown();
+    ProductScreen.do.confirmOpeningPopup();
     PosHr.check.cashierNameIs('Pos Employee1');
     PosHr.do.clickCashierName();
     SelectionPopup.do.clickItem('Mitchell Admin');

@@ -12,9 +12,10 @@ odoo.define('point_of_sale.Chrome', function(require) {
     const Registries = require('point_of_sale.Registries');
     const IndependentToOrderScreen = require('point_of_sale.IndependentToOrderScreen');
     const contexts = require('point_of_sale.PosContext');
-    const { identifyError } = require('point_of_sale.utils');
+    const { identifyError, posbus } = require('point_of_sale.utils');
     const { odooExceptionTitleMap } = require("@web/core/errors/error_dialogs");
     const { ConnectionLostError, ConnectionAbortedError, RPCError } = require('@web/core/network/rpc_service');
+    const { useBus } = require("@web/core/utils/hooks");
 
     // This is kind of a trick.
     // We get a reference to the whole exports so that
@@ -40,6 +41,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
             useListener('set-sync-status', this._onSetSyncStatus);
             useListener('show-notification', this._onShowNotification);
             useListener('close-notification', this._onCloseNotification);
+            useBus(posbus, 'start-cash-control', this.openCashControl);
             NumberBuffer.activate();
 
             this.chromeContext = useContext(contexts.chrome);
@@ -203,6 +205,16 @@ odoo.define('point_of_sale.Chrome', function(require) {
                     exitButtonIsShown: true,
                 });
             }
+        }
+
+        openCashControl() {
+            if (this.shouldShowCashControl()) {
+                this.showPopup('CashOpeningPopup', { notEscapable: true });
+            }
+        }
+
+        shouldShowCashControl() {
+            return this.env.pos.config.cash_control && this.env.pos.pos_session.state == 'opening_control';
         }
 
         // EVENT HANDLERS //

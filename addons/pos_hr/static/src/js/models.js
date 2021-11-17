@@ -40,6 +40,12 @@ models.load_models([{
 
 var posmodel_super = models.PosModel.prototype;
 models.PosModel = models.PosModel.extend({
+    after_load_server_data: function() {
+        return posmodel_super.after_load_server_data.apply(this, arguments).then(() => {
+            // Value starts at false when module_pos_hr is true.
+            this.hasLoggedIn = !this.config.module_pos_hr;
+        });
+    },
     load_server_data: function () {
         var self = this;
         return posmodel_super.load_server_data.apply(this, arguments).then(function () {
