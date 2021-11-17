@@ -202,7 +202,9 @@ const LinkDialog = Dialog.extend({
             return;
         }
         this.final_data = this.linkWidget.final_data;
-        return this._super(...arguments);
+        if (this.final_data) {
+            return this._super(...arguments);
+        }
     },
 });
 
