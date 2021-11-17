@@ -181,15 +181,11 @@ odoo.define('hr_holidays.employee.dashboard.views', function(require) {
         _onNewTimeOff: function () {
             let self = this;
 
-            let domain = [
-                ['name', '=', 'hr.leave.view.form.dashboard.new.time.off']
-            ];
-
             self._rpc({
-                model: 'ir.ui.view',
-                method: 'search',
-                args: [domain],
-            }).then(function(ids) {
+                model: 'hr.leave',
+                method: 'get_new_time_off_view_ids',
+                args: [[]],
+            }).then(function (ids) {
                 self.timeOffDialog = new dialogs.FormViewDialog(self, {
                     res_model: "hr.leave",
                     view_id: ids,

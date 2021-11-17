@@ -1240,6 +1240,11 @@ class HolidaysRequest(models.Model):
             'domain': domain
         }
 
+    def get_new_time_off_view_ids(self):
+        return self.env['ir.ui.view'].sudo().search([
+            ['name', '=', 'hr.leave.view.form.dashboard.new.time.off'],
+            ['model', '=', 'hr.leave'],
+        ]).ids
 
     def _check_approval_update(self, state):
         """ Check if target state is achievable. """
