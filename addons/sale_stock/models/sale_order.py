@@ -233,11 +233,6 @@ class SaleOrder(models.Model):
         invoice_vals['invoice_incoterm_id'] = self.incoterm.id
         return invoice_vals
 
-    @api.model
-    def _get_customer_lead(self, product_tmpl_id):
-        super(SaleOrder, self)._get_customer_lead(product_tmpl_id)
-        return product_tmpl_id.sale_delay
-
     def _log_decrease_ordered_quantity(self, documents, cancel=False):
 
         def _render_note_exception_quantity_so(rendering_context):
@@ -281,7 +276,8 @@ class SaleOrderLine(models.Model):
     is_mto = fields.Boolean(compute='_compute_is_mto')
     display_qty_widget = fields.Boolean(compute='_compute_qty_to_deliver')
     customer_lead = fields.Float(
-        compute='_compute_customer_lead', store=True, readonly=False, pre_compute=True)
+        compute='_compute_customer_lead', store=True, readonly=False, pre_compute=True,
+        inverse='_inverse_customer_lead')
 
     @api.depends('product_type', 'product_uom_qty', 'qty_delivered', 'state', 'move_ids', 'product_uom')
     def _compute_qty_to_deliver(self):
@@ -435,9 +431,6 @@ class SaleOrderLine(models.Model):
         res = super(SaleOrderLine, self).write(values)
         if lines:
             lines._action_launch_stock_rule(previous_product_uom_qty)
-        if 'customer_lead' in values and self.state == 'sale' and not self.order_id.commitment_date:
-            # Propagate deadline on related stock move
-            self.move_ids.date_deadline = self.order_id.date_order + timedelta(days=self.customer_lead or 0.0)
         return res
 
     @api.depends('order_id.state')
@@ -474,8 +467,14 @@ class SaleOrderLine(models.Model):
 
     @api.depends('product_id')
     def _compute_customer_lead(self):
-        for order in self:
-            order.customer_lead = order.product_id.sale_delay
+        for line in self:
+            line.customer_lead = line.product_id.sale_delay
+
+    def _inverse_customer_lead(self):
+        for line in self:
+            if line.state == 'sale' and not line.order_id.commitment_date:
+                # Propagate deadline on related stock move
+                line.move_ids.date_deadline = line.order_id.date_order + timedelta(days=line.customer_lead or 0.0)
 
     def _prepare_procurement_values(self, group_id=False):
         """ Prepare specific key for moves or other components that will be created from a stock rule
