@@ -362,16 +362,14 @@
 
     // Automatically log errors detected when loading modules
     window.addEventListener("load", function logWhenLoaded() {
-        setTimeout(function () {
-            var len = jobPromises.length;
-            Promise.all(jobPromises).then(function () {
-                if (len === jobPromises.length) {
-                    odoo.log();
-                } else {
-                    logWhenLoaded();
-                }
-            });
-        }, 5000);
+        const len = jobPromises.length;
+        Promise.all(jobPromises).then(function () {
+            if (len === jobPromises.length) {
+                odoo.log();
+            } else {
+                logWhenLoaded();
+            }
+        });
     });
 
     /**
