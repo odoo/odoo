@@ -1376,4 +1376,45 @@ odoo.define("board.dashboard_tests", function (require) {
             form.destroy();
         }
     );
+
+    QUnit.test("Add a view with dynamic domain", async function (assert) {
+        assert.expect(1);
+
+        serverData.views = {
+            "partner,false,pivot": '<pivot><field name="foo"/></pivot>',
+            "partner,false,search": `
+                <search>
+                    <filter name="filter" domain="[('user_id','=',uid)]"/>
+                </search>
+            `,
+        };
+
+        registry.category("services").add("user", makeFakeUserService());
+
+        patchWithCleanup(browser, { setTimeout: (fn) => fn() }); // makes mouseEnter work
+
+        const mockRPC = (route, args) => {
+            if (route === "/board/add_to_dashboard") {
+                assert.deepEqual(args.domain, 	["&", ["int_field", "<=", 3], ["user_id", "=", 7]]);
+                return Promise.resolve(true);
+            }
+        };
+
+        const webClient = await createWebClient({ serverData, mockRPC });
+
+        await doAction(webClient, {
+            id: 1,
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            views: [[false, "pivot"]],
+            domain: [["int_field", "<=", 3]],
+            context: { search_default_filter: 1 },
+        });
+
+        await toggleFavoriteMenu(webClient.el);
+        await mouseEnter(webClient.el.querySelector(".o_add_to_board .dropdown-toggle"));
+        const input = webClient.el.querySelector(".o_add_to_board .dropdown-menu input");
+        await testUtils.fields.editInput(input, "Pipeline");
+        await triggerEvent(input, null, "keydown", { key: "Enter" });
+    });
 });
