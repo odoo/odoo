@@ -652,7 +652,7 @@ class SaleOrderLine(models.Model):
                     line.product_no_variant_attribute_value_ids -= ptav
 
     @api.onchange('product_id')
-    def product_id_change(self):
+    def _onchange_product_id_warning(self):
         if not self.product_id:
             return
         product = self.product_id
@@ -777,11 +777,14 @@ class SaleOrderLine(models.Model):
 
     @api.depends('product_id', 'price_unit', 'product_uom', 'product_uom_qty', 'tax_id')
     def _compute_discount(self):
+        if not self.env.user.has_group('product.group_discount_per_so_line'):
+            # Do not compute discounts if the feature is not enabled.
+            return
+
         for line in self:
             if not (line.product_id and line.product_uom and
                     line.order_id.partner_id and line.order_id.pricelist_id and
-                    line.order_id.pricelist_id.discount_policy == 'without_discount' and
-                    self.env.user.has_group('product.group_discount_per_so_line')):
+                    line.order_id.pricelist_id.discount_policy == 'without_discount'):
                 continue
 
             line.discount = 0.0

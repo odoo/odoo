@@ -309,7 +309,7 @@ class TestOnchangeProductId(TransactionCase):
             'order_id': sale_order.id,
             'product_id': product_with_warning.id,
         })
-        warning = sale_order_line.product_id_change()
+        warning = sale_order_line._onchange_product_id_warning()
         self.assertDictEqual(warning, {
             'warning': {
                 'title': "Warning for Test Product",
@@ -318,7 +318,7 @@ class TestOnchangeProductId(TransactionCase):
         })
 
         sale_order_line.product_id = product_with_block_warning
-        warning = sale_order_line.product_id_change()
+        warning = sale_order_line._onchange_product_id_warning()
 
         self.assertDictEqual(warning, {
             'warning': {
