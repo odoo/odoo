@@ -46,9 +46,8 @@ class Project(models.Model):
     encode_uom_in_days = fields.Boolean(compute='_compute_encode_uom_in_days')
     is_internal_project = fields.Boolean(compute='_compute_is_internal_project', search='_search_is_internal_project')
     remaining_hours = fields.Float(compute='_compute_remaining_hours', string='Remaining Invoiced Time', compute_sudo=True)
-    has_planned_hours_tasks = fields.Boolean(compute='_compute_remaining_hours', compute_sudo=True,
-        help="True if any of the project's task has a set planned hours")
     is_project_overtime = fields.Boolean('Project in Overtime', compute='_compute_remaining_hours', search='_search_is_project_overtime', compute_sudo=True)
+    allocated_hours = fields.Float(string='Allocated Hours')
 
     def _compute_encode_uom_in_days(self):
         self.encode_uom_in_days = self.env.company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day')
@@ -81,18 +80,24 @@ class Project(models.Model):
             operator_new = 'not inselect'
         return [('id', operator_new, (query, ()))]
 
-    @api.depends('allow_timesheets', 'task_ids.planned_hours', 'task_ids.remaining_hours')
+    @api.model
+    def _fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+        result = super()._fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+        if view_type in ['tree', 'form'] and self.env.company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day'):
+            result['arch'] = self.env['account.analytic.line']._apply_time_label(result['arch'], related_model=self._name)
+        return result
+
+    @api.depends('allow_timesheets', 'timesheet_ids')
     def _compute_remaining_hours(self):
-        group_read = self.env['project.task']._read_group(
-            domain=[('planned_hours', '!=', False), ('project_id', 'in', self.filtered('allow_timesheets').ids),
-                     '|', ('stage_id.fold', '=', False), ('stage_id', '=', False)],
-            fields=['planned_hours:sum', 'remaining_hours:sum'], groupby='project_id')
-        group_per_project_id = {group['project_id'][0]: group for group in group_read}
+        timesheets_read_group = self.env['account.analytic.line']._read_group(
+            [('project_id', 'in', self.ids)],
+            ['project_id', 'unit_amount'],
+            ['project_id'],
+            lazy=False)
+        timesheet_time_dict = {res['project_id'][0]: res['unit_amount'] for res in timesheets_read_group}
         for project in self:
-            group = group_per_project_id.get(project.id, {})
-            project.remaining_hours = group.get('remaining_hours', 0)
-            project.has_planned_hours_tasks = bool(group.get('planned_hours', False))
-            project.is_project_overtime = group.get('remaining_hours', 0) < 0
+            project.remaining_hours = project.allocated_hours - timesheet_time_dict.get(project.id, 0)
+            project.is_project_overtime = project.remaining_hours < 0
 
     @api.model
     def _search_is_project_overtime(self, operator, value):

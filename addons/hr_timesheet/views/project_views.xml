@@ -86,6 +86,9 @@
                         </div>
                     </button>
                 </xpath>
+                <xpath expr="//div[@name='dates']" position="after">
+                    <field name="allocated_hours" widget="timesheet_uom_no_toggle" attrs="{'invisible': [('allow_timesheets', '=', False)]}"/>
+                </xpath>
                 <xpath expr="//div[@id='rating_settings']" position="before">
                     <div class="col-lg-6 o_setting_box"  id="timesheet_settings">
                         <div class="o_setting_left_pane">
@@ -250,6 +253,17 @@
             </field>
         </record>
 
+        <record id="project_project_view_tree_inherit_sale_project" model="ir.ui.view">
+            <field name="name">project.project.tree.inherit.sale.timesheet</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.view_project"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date']" position="after">
+                    <field name="allocated_hours" widget="timesheet_uom_no_toggle" optional="show" attrs="{'invisible' : [('allocated_hours', '=', 0)]}"/>
+                </xpath>
+            </field>
+        </record>
+
         <record id="view_task_tree2_inherited" model="ir.ui.view">
             <field name="name">project.task.tree.inherited</field>
             <field name="model">project.task</field>
@@ -263,7 +277,7 @@
                     <field name="subtask_effective_hours" widget="timesheet_uom" attrs="{'invisible' : [('allow_subtasks', '=', False)]}" optional="hide"/>
                     <field name="total_hours_spent" widget="timesheet_uom" attrs="{'invisible' : [('allow_subtasks', '=', False)]}" optional="hide"/>
                     <field name="remaining_hours" widget="timesheet_uom" sum="Remaining Hours" optional="hide" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100"/>
-                    <field name="progress" widget="progressbar" optional="show" groups="hr_timesheet.group_hr_timesheet_user"/>
+                    <field name="progress" widget="progressbar" optional="show" groups="hr_timesheet.group_hr_timesheet_user" attrs="{'invisible' : [('planned_hours', '=', 0)]}"/>
                 </field>
             </field>
         </record>
@@ -278,8 +292,8 @@
                     <field name="allow_timesheets" invisible="1"/>
                     <field name="timesheet_count" invisible="1"/>
                     <field name="remaining_hours" invisible="1"/>
-                    <field name="has_planned_hours_tasks" invisible="1"/>
                     <field name="encode_uom_in_days" invisible="1"/>
+                    <field name="allocated_hours" invisible="1"/>
                 </field>
                 <xpath expr="//div[hasclass('o_kanban_manage_view')]" position="inside">
                     <div role="menuitem" t-if="record.allow_timesheets.raw_value and record.timesheet_count.raw_value" groups="hr_timesheet.group_hr_timesheet_user">
@@ -291,7 +305,7 @@
                     <t t-set="badge" t-value="'badge-danger'" t-if="record.remaining_hours.raw_value &lt; 0"/>
                     <t t-set="title" t-value="'Remaining days'" t-if="record.encode_uom_in_days.raw_value"/>
                     <t t-set="title" t-value="'Remaining hours'" t-else=""/>
-                    <div t-if="record.has_planned_hours_tasks.raw_value"
+                    <div t-if="record.allocated_hours.raw_value &gt; 0"
                         t-attf-class="oe_kanban_align badge {{ badge }}" t-att-title="title">
                         <field name="remaining_hours" widget="timesheet_uom"/>
                     </div>

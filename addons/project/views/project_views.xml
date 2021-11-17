@@ -213,7 +213,6 @@
                     <field name="rating_template_id" optional="hide" groups="project.group_project_rating"/>
                     <field name="project_ids" optional="show" widget="many2many_tags" options="{'color_field': 'color'}" />
                     <field name="fold" optional="show"/>
-                    <field name="user_id" optional="show"/>
                 </tree>
             </field>
         </record>
@@ -252,6 +251,7 @@
             <field name="res_model">project.task.type</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="view_id" ref="task_type_tree"/>
+            <field name="domain">[('user_id', '=', False)]</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 No stages found. Let's create one!
@@ -380,6 +380,7 @@
                             <field name="label_tasks" string="Name of the tasks"/>
                             <field name="partner_id" widget="res_partner_many2one"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                         <group>
                             <field name="active" invisible="1"/>
@@ -391,7 +392,6 @@
                                 <i class="fa fa-long-arrow-right mx-2 oe_read_only" aria-label="Arrow icon" title="Arrow" attrs="{'invisible': [('date_start', '=', False), ('date', '=', False)]}"/>
                                 <field name="date" widget="daterange" options='{"related_start_date": "date_start"}'/>
                             </div>
-                            <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                     </group>
                     <notebook>
@@ -1204,7 +1204,7 @@
                     <field name="parent_id" optional="hide" attrs="{'invisible': [('allow_subtasks', '=', False)]}" groups="base.group_no_one"/>
                     <field name="user_ids" optional="show" widget="many2many_avatar_user" domain="[('share', '=', False), ('active', '=', True)]"/>
                     <field name="company_id" groups="base.group_multi_company" optional="show"/>
-                    <field name="activity_ids" widget="list_activity" optional="show"/>
+                    <field name="activity_ids" string="Next Activity" widget="list_activity" optional="show"/>
                     <field name="date_deadline" optional="hide" widget="remaining_days" attrs="{'invisible': [('is_closed', '=', True)]}"/>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show" context="{'project_id': project_id}"/>
                     <field name="rating_last_text" string="Rating" decoration-danger="rating_last_text == 'ko'"
