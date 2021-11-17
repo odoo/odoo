@@ -181,7 +181,9 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
             'name': "Sick 1 that doesn't make sense, but it's the prod so YOLO",
             'employee_id': employee.id,
             'holiday_status_id': leave_type.id,
+            'date_from': date(2020, 9, 4),
             'request_date_from': date(2020, 9, 4),
+            'date_to': date(2020, 9, 4),
             'request_date_to': date(2020, 9, 4),
             'number_of_days': 1,
         })

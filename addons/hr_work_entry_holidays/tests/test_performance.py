@@ -97,7 +97,9 @@ class TestWorkEntryHolidaysPerformancesBigData(TestWorkEntryHolidaysBase):
             'name': 'Holiday - %s' % employee.name,
             'employee_id': employee.id,
             'holiday_status_id': cls.paid_time_off.id,
+            'date_from': date(2020, 8, 3),
             'request_date_from': date(2020, 8, 3),
+            'date_to': date(2020, 8, 7),
             'request_date_to': date(2020, 8, 7),
             'number_of_days': 5,
         } for employee in cls.employees])
