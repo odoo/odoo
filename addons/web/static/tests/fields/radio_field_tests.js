@@ -2,8 +2,8 @@
 
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { registry } from "@web/core/registry";
-import { makeFakeLocalizationService, makeFakeUserService } from "../helpers/mock_services";
-import { click, makeDeferred, nextTick, triggerEvent, triggerEvents } from "../helpers/utils";
+import { makeFakeUserService } from "../helpers/mock_services";
+import { click } from "../helpers/utils";
 import {
     setupControlPanelFavoriteMenuRegistry,
     setupControlPanelServiceRegistry,
@@ -246,10 +246,10 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skip("fieldradio widget on a many2one in a new record", async function (assert) {
         assert.expect(6);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch: "<form>" + '<field name="product_id" widget="radio"/>' + "</form>",
         });
 
@@ -261,31 +261,30 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.containsNone(form, "input:checked", "none of the input should be checked");
 
-        await testUtils.dom.click(form.$("input.o_radio_input:first"));
+        await click(form.$("input.o_radio_input:first"));
 
         assert.containsOnce(form, "input:checked", "one of the input should be checked");
 
-        await testUtils.form.clickSave(form);
+        await click(form.el, ".o_form_button_save");
 
-        var newRecord = _.last(this.data.partner.records);
+        var newRecord = _.last(serverData.models.partner.records);
         assert.strictEqual(newRecord.product_id, 37, "should have saved record with correct value");
-        form.destroy();
     });
 
     QUnit.skip("fieldradio change value by onchange", async function (assert) {
         assert.expect(4);
 
-        this.data.partner.onchanges = {
+        serverData.models.partner.onchanges = {
             bar: function (obj) {
                 obj.product_id = obj.bar ? 41 : 37;
                 obj.color = obj.bar ? "red" : "black";
             },
         };
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch:
                 "<form>" +
                 '<field name="bar"/>' +
@@ -294,7 +293,7 @@ QUnit.module("Fields", (hooks) => {
                 "</form>",
         });
 
-        await testUtils.dom.click(form.$("input[type='checkbox']"));
+        await click(form.$("input[type='checkbox']"));
         assert.containsOnce(
             form,
             'input.o_radio_input[data-value="37"]:checked',
@@ -305,7 +304,7 @@ QUnit.module("Fields", (hooks) => {
             'input.o_radio_input[data-value="black"]:checked',
             "the other of the input should be checked"
         );
-        await testUtils.dom.click(form.$("input[type='checkbox']"));
+        await click(form.$("input[type='checkbox']"));
         assert.containsOnce(
             form,
             'input.o_radio_input[data-value="41"]:checked',
@@ -316,64 +315,76 @@ QUnit.module("Fields", (hooks) => {
             'input.o_radio_input[data-value="red"]:checked',
             "one of the input should be checked"
         );
-
-        form.destroy();
     });
 
-    QUnit.skip("fieldradio widget on a selection in a new record", async function (assert) {
+    QUnit.test("fieldradio widget on a selection in a new record", async function (assert) {
         assert.expect(4);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch: "<form>" + '<field name="color" widget="radio"/>' + "</form>",
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="color" widget="radio"/>
+                </form>
+            `,
         });
 
-        assert.ok(form.$("div.o_radio_item").length, "should have rendered outer div");
+        assert.ok(
+            form.el.querySelectorAll("div.o_radio_item").length,
+            "should have rendered outer div"
+        );
         assert.containsN(form, "input.o_radio_input", 2, "should have 2 possible choices");
-        assert.ok(form.$("label.o_form_label:contains(Red)").length, "one of them should be Red");
+        assert.strictEqual(
+            form.el.querySelector(".o_field_radio").textContent.replace(/\s+/g, ""),
+            "RedBlack"
+        );
 
         // click on 2nd option
-        await testUtils.dom.click(form.$("input.o_radio_input").eq(1));
+        await click(form.el.querySelectorAll("input.o_radio_input")[1]);
 
-        await testUtils.form.clickSave(form);
+        await click(form.el, ".o_form_button_save");
 
-        var newRecord = _.last(this.data.partner.records);
-        assert.strictEqual(newRecord.color, "black", "should have saved record with correct value");
-        form.destroy();
+        assert.hasAttrValue(
+            form.el.querySelector("input.o_radio_input:checked"),
+            "data-value",
+            "black",
+            "should have saved record with correct value"
+        );
     });
 
-    QUnit.skip("fieldradio widget has o_horizontal or o_vertical class", async function (assert) {
+    QUnit.test("fieldradio widget has o_horizontal or o_vertical class", async function (assert) {
         assert.expect(2);
 
-        this.data.partner.fields.color2 = this.data.partner.fields.color;
+        serverData.models.partner.fields.color2 = serverData.models.partner.fields.color;
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                "<form>" +
-                "<group>" +
-                '<field name="color" widget="radio"/>' +
-                '<field name="color2" widget="radio" options="{\'horizontal\': True}"/>' +
-                "</group>" +
-                "</form>",
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <group>
+                        <field name="color" widget="radio" />
+                        <field name="color2" widget="radio" options="{'horizontal': True}" />
+                    </group>
+                </form>
+            `,
         });
 
-        var btn1 = form.$("div.o_field_radio.o_vertical");
-        var btn2 = form.$("div.o_field_radio.o_horizontal");
-
-        assert.strictEqual(btn1.length, 1, "should have o_vertical class");
-        assert.strictEqual(btn2.length, 1, "should have o_horizontal class");
-        form.destroy();
+        assert.containsOnce(form, "div.o_field_radio.o_vertical", "should have o_vertical class");
+        assert.containsOnce(
+            form,
+            "div.o_field_radio.o_horizontal",
+            "should have o_horizontal class"
+        );
     });
 
-    QUnit.skip("fieldradio widget with numerical keys encoded as strings", async function (assert) {
+    QUnit.test("fieldradio widget with numerical keys encoded as strings", async function (assert) {
         assert.expect(7);
 
-        this.data.partner.fields.selection = {
+        serverData.models.partner.fields.selection = {
             type: "selection",
             selection: [
                 ["0", "Red"],
@@ -381,53 +392,54 @@ QUnit.module("Fields", (hooks) => {
             ],
         };
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch: "<form>" + '<field name="selection" widget="radio"/>' + "</form>",
-            res_id: 1,
-            mockRPC: function (route, args) {
-                if (args.method === "write") {
-                    assert.strictEqual(args.args[1].selection, "1", "should write correct value");
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="selection" widget="radio"/>
+                </form>
+            `,
+            mockRPC: function (route, { args, method, model }) {
+                if (model === "partner" && method === "write") {
+                    assert.strictEqual(args[1].selection, "1", "should write correct value");
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
         assert.strictEqual(
-            form.$(".o_field_widget").text().trim().split(/\s+/g).join(","),
-            "Red,Black"
+            form.el.querySelector(".o_field_widget").textContent.replace(/\s+/g, ""),
+            "RedBlack"
         );
-        assert.containsNone(form, ".o_radio_input:checked", "no value should be checked");
+        assert.containsNone(form.el, ".o_radio_input:checked", "no value should be checked");
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el, ".o_form_button_edit");
 
-        assert.containsNone(form, ".o_radio_input:checked", "no value should be checked");
+        assert.containsNone(form.el, ".o_radio_input:checked", "no value should be checked");
 
-        await testUtils.dom.click(form.$("input.o_radio_input:nth(1)"));
+        await click(form.el.querySelectorAll("input.o_radio_input")[1]);
 
-        await testUtils.form.clickSave(form);
+        await click(form.el, ".o_form_button_save");
 
         assert.strictEqual(
-            form.$(".o_field_widget").text().trim().split(/\s+/g).join(","),
-            "Red,Black"
+            form.el.querySelector(".o_field_widget").textContent.replace(/\s+/g, ""),
+            "RedBlack"
         );
         assert.containsOnce(
-            form,
-            ".o_radio_input[data-index=1]:checked",
+            form.el,
+            ".o_radio_input[data-index='1']:checked",
             "'Black' should be checked"
         );
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el, ".o_form_button_edit");
 
         assert.containsOnce(
-            form,
-            ".o_radio_input[data-index=1]:checked",
+            form.el,
+            ".o_radio_input[data-index='1']:checked",
             "'Black' should be checked"
         );
-
-        form.destroy();
     });
 
     QUnit.skip(
@@ -435,15 +447,15 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(4);
 
-            this.data.partner.onchanges = {
+            serverData.models.partner.onchanges = {
                 int_field: function () {},
             };
 
             var domain = [];
-            var form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
                 arch:
                     "<form>" +
                     '<field name="int_field"/>' +
@@ -490,8 +502,6 @@ QUnit.module("Fields", (hooks) => {
                 ".o_field_widget[name=trululu] .o_radio_item",
                 "should be no more radio button"
             );
-
-            form.destroy();
         }
     );
 });

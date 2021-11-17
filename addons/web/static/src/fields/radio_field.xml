@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.RadioField" owl="1">
+        <div
+            role="radiogroup"
+            t-att-class="props.options.horizontal ? 'o_horizontal' : 'o_vertical'"
+            t-att-aria-label="props.record.activeFields[props.name].string"
+        >
+            <t t-foreach="items" t-as="item" t-key="item[0]">
+                <div class="custom-control custom-radio o_radio_item" aria-atomic="true">
+                    <input
+                        type="radio"
+                        class="custom-control-input o_radio_input"
+                        t-att-checked="item[0] === props.value"
+                        t-att-disabled="props.readonly"
+                        t-att-name="id"
+                        t-att-data-value="item[0]"
+                        t-att-data-index="item_index"
+                        t-att-id="`${id}_${item[0]}`"
+                        t-on-change="onChange(item[0])"
+                    />
+                    <label class="custom-control-label o_form_label" t-att-for="`${id}_${item[0]}`" t-esc="item[1]" />
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>
