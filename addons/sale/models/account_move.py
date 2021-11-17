@@ -22,7 +22,7 @@ class AccountMove(models.Model):
         readonly=True,
         states={'draft': [('readonly', False)]},
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
-        help="Delivery address for current invoice.\nOR\nDispatch address for current bill.")
+        help="Delivery address for customer invoice.  Dispatch address for vendor bill.")
 
     @api.onchange('partner_shipping_id', 'company_id')
     def _onchange_partner_shipping_id(self):
