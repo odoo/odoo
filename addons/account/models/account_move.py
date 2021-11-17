@@ -3350,9 +3350,6 @@ class AccountMoveLine(models.Model):
             audit_str = ''
             for tag in record.tag_ids:
 
-                caba_origin_inv_type = record.move_id.type
-                caba_origin_inv_journal_type = record.journal_id.type
-
                 if record.move_id.tax_cash_basis_rec_id:
                     # Cash basis entries are always treated as misc operations, applying the tag sign directly to the balance
                     type_multiplicator = 1
