@@ -151,11 +151,9 @@ class SaleAdvancePaymentInv(models.TransientModel):
         del context
         return so_values
 
-    def create_invoices(self):
-        sale_orders = self.env['sale.order'].browse(self._context.get('active_ids', []))
-
+    def _create_invoices(self, sale_orders):
         if self.advance_payment_method == 'delivered':
-            sale_orders._create_invoices(final=self.deduct_down_payments)
+            return sale_orders._create_invoices(final=self.deduct_down_payments)
         else:
             # Create deposit product if necessary
             if not self.product_id:
@@ -164,6 +162,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 self.env['ir.config_parameter'].sudo().set_param('sale.default_deposit_product_id', self.product_id.id)
 
             sale_line_obj = self.env['sale.order.line']
+            invoices = self.env['account.move']
             for order in sale_orders:
                 amount, name = self._get_advance_details(order)
 
@@ -179,7 +178,12 @@ class SaleAdvancePaymentInv(models.TransientModel):
 
                 so_line_values = self._prepare_so_line(order, analytic_tag_ids, tax_ids, amount)
                 so_line = sale_line_obj.create(so_line_values)
-                self._create_invoice(order, so_line, amount)
+                invoices += self._create_invoice(order, so_line, amount)
+            return invoices
+
+    def create_invoices(self):
+        sale_orders = self.env['sale.order'].browse(self._context.get('active_ids', []))
+        self._create_invoices(sale_orders)
         if self._context.get('open_invoices', False):
             return sale_orders.action_view_invoice()
         return {'type': 'ir.actions.act_window_close'}

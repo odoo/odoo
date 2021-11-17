@@ -24,7 +24,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
         help="Only timesheets not yet invoiced (and validated, if applicable) from this period will be invoiced. If the period is not indicated, all timesheets not yet invoiced (and validated, if applicable) will be invoiced without distinction.")
     invoicing_timesheet_enabled = fields.Boolean(default=_default_invoicing_timesheet_enabled)
 
-    def create_invoices(self):
+    def _create_invoices(self, sale_orders):
         """ Override method from sale/wizard/sale_make_invoice_advance.py
 
             When the user want to invoice the timesheets to the SO
@@ -32,18 +32,10 @@ class SaleAdvancePaymentInv(models.TransientModel):
             qty_to_invoice for each product_id in sale.order.line,
             before creating the invoice.
         """
-        sale_orders = self.env['sale.order'].browse(
-            self._context.get('active_ids', [])
-        )
-
         if self.advance_payment_method == 'delivered' and self.invoicing_timesheet_enabled:
             if self.date_start_invoice_timesheet or self.date_end_invoice_timesheet:
                 sale_orders.mapped('order_line')._recompute_qty_to_invoice(self.date_start_invoice_timesheet, self.date_end_invoice_timesheet)
 
-            sale_orders._create_invoices(final=self.deduct_down_payments, start_date=self.date_start_invoice_timesheet, end_date=self.date_end_invoice_timesheet)
+            return sale_orders._create_invoices(final=self.deduct_down_payments, start_date=self.date_start_invoice_timesheet, end_date=self.date_end_invoice_timesheet)
 
-            if self._context.get('open_invoices', False):
-                return sale_orders.action_view_invoice()
-            return {'type': 'ir.actions.act_window_close'}
-
-        return super(SaleAdvancePaymentInv, self).create_invoices()
+        return super()._create_invoices(sale_orders)
