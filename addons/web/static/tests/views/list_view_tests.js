@@ -14076,7 +14076,7 @@ QUnit.module("Views", (hooks) => {
 
         // var MyWidget = Widget.extend({
         //     start: function () {
-        //         this.$el.html('<i class="fa fa-info"/>');
+        //         this.$el.ht--removethis--ml('<i class="fa fa-info"/>');
         //     },
         // });
         // widgetRegistry.add("some_widget", MyWidget);
