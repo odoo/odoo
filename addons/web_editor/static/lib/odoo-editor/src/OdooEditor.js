@@ -115,6 +115,8 @@ const CLIPBOARD_WHITELISTS = {
         'img-thumbnail',
         'rounded',
         'rounded-circle',
+        'table',
+        'table-bordered',
         /^padding-/,
         /^shadow/,
         // Odoo colors
