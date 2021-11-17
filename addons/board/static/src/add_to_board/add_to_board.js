@@ -34,7 +34,8 @@ export class AddToBoard extends Component {
     //---------------------------------------------------------------------
 
     async addToBoard() {
-        const { context, domain } = this.env.searchModel.getIrFilterValues();
+        const { domain } = this.env.searchModel;
+        const { context } = this.env.searchModel.getIrFilterValues();
         const contextToSave = {
             ...context,
             orderedBy: this.env.searchModel.orderBy,
