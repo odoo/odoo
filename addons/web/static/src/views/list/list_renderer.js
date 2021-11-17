@@ -276,7 +276,7 @@ export class ListRenderer extends Component {
     }
 
     openRecord(record, ev) {
-        if (ev.target.tagName !== "BUTTON" && ev.target.parentElement.tagName !== "BUTTON") {
+        if (!ev.target.closest("button")) {
             this.props.openRecord(record);
         }
     }

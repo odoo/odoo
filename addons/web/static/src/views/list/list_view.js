@@ -52,14 +52,27 @@ export class ListArchParser extends XMLParser {
             fields: {},
         };
         const groupListArchParser = new GroupListArchParser();
+        let buttonGroup = undefined;
         this.visitXML(arch, (node) => {
+            if (node.tagName !== "button") {
+                buttonGroup = undefined;
+            }
             if (node.tagName === "button") {
-                columns.push({
+                const button = {
                     ...processButton(node),
                     defaultRank: "btn-link",
                     type: "button",
                     id: buttonId++,
-                });
+                };
+                if (buttonGroup) {
+                    buttonGroup.buttons.push(button);
+                } else {
+                    buttonGroup = {
+                        type: "button_group",
+                        buttons: [button],
+                    };
+                    columns.push(buttonGroup);
+                }
             } else if (node.tagName === "field") {
                 if (isAttr(node, "invisible").falsy(true)) {
                     const fieldInfo = processField(node, fields, "list");
@@ -69,8 +82,6 @@ export class ListArchParser extends XMLParser {
                         optional: node.getAttribute("optional") || false,
                         type: "field",
                     });
-                } else {
-                    columns.push({ type: "invisible" });
                 }
             } else if (node.tagName === "groupby" && node.getAttribute("name")) {
                 const fieldName = node.getAttribute("name");
@@ -103,26 +114,7 @@ export class ListArchParser extends XMLParser {
             }
         });
 
-        function processColumns(unprocessedColumns) {
-            const columns = [];
-            unprocessedColumns.forEach((col) => {
-                if (col.type === "button") {
-                    if (columns.length && columns[columns.length - 1].type === "button_group") {
-                        columns[columns.length - 1].buttons.push(col);
-                    } else {
-                        columns.push({
-                            type: "button_group",
-                            buttons: [col],
-                        });
-                    }
-                } else {
-                    columns.push(col);
-                }
-            });
-            return columns.filter((col) => col.type !== "invisible");
-        }
-
-        return { activeActions, fields: activeFields, columns: processColumns(columns), groupBy };
+        return { activeActions, fields: activeFields, columns, groupBy };
     }
 }
 
