@@ -604,8 +604,13 @@ class MailActivity(models.Model):
         activity_type_infos = []
         activity_type_ids = self.env['mail.activity.type'].search(
             ['|', ('res_model', '=', res_model), ('res_model', '=', False)])
+        displayed_activities = activity_type_ids.ids
+        if self._context.get('activity_hide_empty_group'):
+            displayed_activities = set([a['activity_type_id'][0] for a in grouped_activities])
         for elem in sorted(activity_type_ids, key=lambda item: item.sequence):
             mail_template_info = []
+            if elem.id not in displayed_activities:
+                continue
             for mail_template_id in elem.mail_template_ids:
                 mail_template_info.append({"id": mail_template_id.id, "name": mail_template_id.name})
             activity_type_infos.append([elem.id, elem.name, mail_template_info])

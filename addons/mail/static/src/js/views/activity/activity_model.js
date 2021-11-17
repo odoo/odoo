@@ -67,6 +67,7 @@ const ActivityModel = BasicModel.extend({
         params.domain.push(['activity_ids', '!=', false]);
         this.domain = params.domain;
         this.modelName = params.modelName;
+        this.context = params.context;
         params.groupedBy = [];
         var def = this._super.apply(this, arguments);
         return Promise.all([def, this._fetchData()]).then(function (result) {
@@ -110,7 +111,7 @@ const ActivityModel = BasicModel.extend({
             kwargs: {
                 res_model: this.modelName,
                 domain: this.domain,
-                context: session.user_context,
+                context: this.context,
             }
         }).then(function (result) {
             self.additionalData = result;
