@@ -14074,12 +14074,12 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("enter edition in editable list with <widget>", async function (assert) {
         assert.expect(1);
 
-        var MyWidget = Widget.extend({
-            start: function () {
-                this.$el.html('<i class="fa fa-info"/>');
-            },
-        });
-        widgetRegistry.add("some_widget", MyWidget);
+        // var MyWidget = Widget.extend({
+        //     start: function () {
+        //         this.$el.html('<i class="fa fa-info"/>');
+        //     },
+        // });
+        // widgetRegistry.add("some_widget", MyWidget);
 
         const list = await makeView({
             type: "list",

@@ -5215,20 +5215,20 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("quick create column and examples", async (assert) => {
         assert.expect(12);
 
-        kanbanExamplesRegistry.add("test", {
-            examples: [
-                {
-                    name: "A first example",
-                    columns: ["Column 1", "Column 2", "Column 3"],
-                    description: "A <b>weak</b> description.",
-                },
-                {
-                    name: "A second example",
-                    columns: ["Col 1", "Col 2"],
-                    description: Markup`A <b>fantastic</b> description.`,
-                },
-            ],
-        });
+        // kanbanExamplesRegistry.add("test", {
+        //     examples: [
+        //         {
+        //             name: "A first example",
+        //             columns: ["Column 1", "Column 2", "Column 3"],
+        //             description: "A <b>weak</b> description.",
+        //         },
+        //         {
+        //             name: "A second example",
+        //             columns: ["Col 1", "Col 2"],
+        //             description: Markup`A <b>fantastic</b> description.`,
+        //         },
+        //     ],
+        // });
 
         const kanban = await makeView({
             type: "kanban",
@@ -9142,7 +9142,7 @@ QUnit.module("Views", (hooks) => {
                     return fooFieldProm;
                 },
                 start: function () {
-                    this.el.querySelectorel.html("LOADED");
+                    this.el.innerText = "LOADED";
                 },
             })
         );
@@ -9195,7 +9195,7 @@ QUnit.module("Views", (hooks) => {
                     return fooFieldProm;
                 },
                 start: function () {
-                    this.el.querySelectorel.html("LOADED");
+                    this.el.innerText = "LOADED";
                 },
             })
         );
@@ -9248,7 +9248,7 @@ QUnit.module("Views", (hooks) => {
                     return fooFieldDef;
                 },
                 start: function () {
-                    this.el.querySelectorel.html("LOADED");
+                    this.el.innerText = "LOADED";
                 },
             })
         );
@@ -9296,7 +9296,7 @@ QUnit.module("Views", (hooks) => {
                     return widgetDef;
                 },
                 start: function () {
-                    this.el.querySelectorel.html("LOADED");
+                    this.el.innerText = "LOADED";
                 },
             })
         );
@@ -9341,7 +9341,7 @@ QUnit.module("Views", (hooks) => {
                     return fooFieldDef;
                 },
                 start: function () {
-                    this.el.querySelectorel.html("LOADED");
+                    this.el.innerText = "LOADED";
                 },
             })
         );
