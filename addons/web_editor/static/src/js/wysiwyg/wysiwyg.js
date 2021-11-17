@@ -86,7 +86,7 @@ const Wysiwyg = Widget.extend({
             editorCollaborationOptions = this.setupCollaboration(options.collaborationChannel);
         }
 
-        const getYoutubeVideoElement =  (url) => {
+        const getYoutubeVideoElement = (url) => {
             const videoWidget = new weWidgets.VideoWidget(this, undefined, {});
             const src = videoWidget._createVideoNode(url).$video.attr('src');
             return videoWidget.getWrappedIframe(src)[0];
@@ -117,8 +117,8 @@ const Wysiwyg = Widget.extend({
             },
             filterMutationRecords: (records) => {
                 return records.filter((record) => {
-                    return !(record.target.classList && record.target.classList.contains('o_header_standard'))
-                })
+                    return !(record.target.classList && record.target.classList.contains('o_header_standard'));
+                });
             },
             noScrollSelector: 'body, .note-editable, .o_content, #wrapwrap',
             commands: commands,
@@ -392,10 +392,9 @@ const Wysiwyg = Widget.extend({
                             this.ptp.removeClient(fromClientId);
                             this.odooEditor.multiselectionRemove(fromClientId);
                             break;
-                        case 'rtc_data_channel_open':
+                        case 'rtc_data_channel_open': {
                             fromClientId = notificationPayload.connectionClientId;
-                            const remoteStartTime = await this.ptp.requestClient(fromClientId, 'get_start_time', undefined, { transport: 'rtc' });
-                            this.ptp.clientsInfos[fromClientId].startTime = remoteStartTime;
+                            this.ptp.clientsInfos[fromClientId].startTime = await this.ptp.requestClient(fromClientId, 'get_start_time', undefined, { transport: 'rtc' });
                             this.ptp.requestClient(fromClientId, 'get_client_name', undefined, { transport: 'rtc' }).then((clientName) => {
                                 this.ptp.clientsInfos[fromClientId].clientName = clientName;
                             });
@@ -411,6 +410,7 @@ const Wysiwyg = Widget.extend({
                                 }
                             }
                             break;
+                        }
                         case 'oe_history_step':
                             // Avoid race condition where the step is received
                             // before the history has synced at least once.
@@ -418,7 +418,7 @@ const Wysiwyg = Widget.extend({
                                 this.odooEditor.onExternalHistorySteps([notificationPayload]);
                             }
                             break;
-                        case 'oe_history_set_selection':
+                        case 'oe_history_set_selection': {
                             const client = this.ptp.clientsInfos[fromClientId];
                             if (!client) {
                                 return;
@@ -427,6 +427,7 @@ const Wysiwyg = Widget.extend({
                             selection.clientName = client.clientName;
                             this.odooEditor.onExternalMultiselectionUpdate(selection);
                             break;
+                        }
                     }
                 }
             });
@@ -610,7 +611,7 @@ const Wysiwyg = Widget.extend({
      * Get the value of the editable element.
      *
      * @param {object} [options]
-     * @param {jQueryElement} [options.$layout]
+     * @param {jQuery} [options.$layout]
      * @returns {String}
      */
     getValue: function (options) {
@@ -635,8 +636,8 @@ const Wysiwyg = Widget.extend({
      *      - resolve with true if the content was dirty
      */
     save: function () {
-        var isDirty = this.isDirty();
-        var html = this.getValue();
+        const isDirty = this.isDirty();
+        const html = this.getValue();
         if (this.$editable.is('textarea')) {
             this.$editable.val(html);
         } else {
@@ -750,8 +751,6 @@ const Wysiwyg = Widget.extend({
     },
     /**
      * @param {String} value
-     * @param {Object} options
-     * @param {Boolean} [options.notifyChange]
      * @returns {String}
      */
     setValue: function (value) {
@@ -1808,7 +1807,7 @@ const Wysiwyg = Widget.extend({
             this.start();
         });
     },
-
+    // TODO unused => remove or reuse as it should be
     _attachTooltips: function () {
         $(document.body)
             .tooltip({
