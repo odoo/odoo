@@ -152,7 +152,9 @@ class TestCompanyLeave(TransactionCase):
             'name': 'Hol11',
             'employee_id': self.employee.id,
             'holiday_status_id': self.paid_time_off.id,
+            'date_from': date(2020, 1, 7),
             'request_date_from': date(2020, 1, 7),
+            'date_to': date(2020, 1, 7),
             'request_date_to': date(2020, 1, 7),
             'number_of_days': 0.5,
             'request_unit_half': True,
@@ -196,7 +198,9 @@ class TestCompanyLeave(TransactionCase):
             'name': 'Hol11',
             'employee_id': self.employee.id,
             'holiday_status_id': self.paid_time_off.id,
+            'date_from': datetime.now(),
             'request_date_from': date(2020, 1, 9),
+            'date_to': datetime.now(),
             'request_date_to': date(2020, 1, 9),
             'number_of_days': 1,
 
@@ -247,7 +251,9 @@ class TestCompanyLeave(TransactionCase):
             'name': 'Hol11',
             'employee_id': self.employee.id,
             'holiday_status_id': self.paid_time_off.id,
+            'date_from': date(2020, 1, 6),
             'request_date_from': date(2020, 1, 6),
+            'date_to': date(2020, 1, 10),
             'request_date_to': date(2020, 1, 10),
             'number_of_days': 3,
         })
@@ -297,7 +303,9 @@ class TestCompanyLeave(TransactionCase):
             'employee_id': employee.id,
             'holiday_status_id': self.paid_time_off.id,
             'request_date_from': date(2020, 3, 29),
+            'date_from': date(2020, 3, 29),
             'request_date_to': date(2020, 4, 1),
+            'date_to': date(2020, 4, 1),
             'number_of_days': 3,
         } for employee in employees[0:15]])
         leaves._compute_date_from_to()
