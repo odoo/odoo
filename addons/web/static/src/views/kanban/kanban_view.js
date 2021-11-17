@@ -23,8 +23,6 @@ const TRANSPILED_EXPRESSIONS = [
     { regex: /\bwidget\.(\w+)\b/g, value: "props.$1" },
     // `record.prop` => `record.data.prop`
     { regex: /\brecord\.(\w+)\b/g, value: "record.data.$1" },
-    // `context.prop` => `props.context.prop`
-    { regex: /\bcontext\.([\w.]+)\b/g, value: "props.context.$1" },
     // `prop.raw_value` => `prop`
     { regex: /(\w+)\.(raw_)?value\b/g, value: "$1" },
     // `#{expr}` => `{{expr}}`

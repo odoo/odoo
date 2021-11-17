@@ -198,12 +198,15 @@ class KanbanDynamicRecordList extends DynamicRecordList {
     }
 
     async cancelQuickCreate() {
-        this._cancelQuickCreate();
-        await this.model.notify();
+        const { length } = this.records;
+        this.records = this.records.filter((r) => !r.isQuickCreate);
+        if (this.records.length !== length) {
+            await this.model.notify();
+        }
     }
 
     async quickCreate(activeFields) {
-        this._cancelQuickCreate();
+        this.records = this.records.filter((r) => !r.isQuickCreate);
         const record = this.model.createDataPoint("record", {
             resModel: this.resModel,
             fields: this.fields,
@@ -215,8 +218,10 @@ class KanbanDynamicRecordList extends DynamicRecordList {
         await this.model.notify();
     }
 
-    _cancelQuickCreate() {
-        this.records = this.records.filter((r) => !r.isQuickCreate);
+    async validateQuickCreate() {
+        const record = this.records.find((r) => r.isQuickCreate);
+        await record.save();
+        return record;
     }
 }
 
