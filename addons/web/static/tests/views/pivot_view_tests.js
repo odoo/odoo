@@ -4099,7 +4099,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(pivot, ".o_cp_bottom_left .dropdown-menu");
     });
 
-    QUnit.skip(
+    QUnit.test(
         "Navigation list view for a group and back with breadcrumbs",
         async function (assert) {
             assert.expect(16);
@@ -4133,9 +4133,9 @@ QUnit.module("Views", (hooks) => {
                     }
                     readGroupCount++;
                 }
-                if (route === "/web/dataset/search_read") {
+                if (args.method === "web_search_read") {
                     assert.step("search_read");
-                    const domain = args.domain;
+                    const domain = args.kwargs.domain;
                     assert.deepEqual(
                         domain,
                         ["&", ["customer", "=", 1], ["foo", "=", 12]],
@@ -4774,7 +4774,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(pivot, "table");
     });
 
-    QUnit.skip("pivot is reloaded when leaving and coming back", async function (assert) {
+    QUnit.test("pivot is reloaded when leaving and coming back", async function (assert) {
         serverData.views = {
             "partner,false,pivot": `
                 <pivot>
@@ -4808,7 +4808,7 @@ QUnit.module("Views", (hooks) => {
         await legacyExtraNextTick();
 
         assert.containsOnce(webClient, ".o_list_view");
-        assert.verifySteps(["/web/dataset/search_read"]);
+        assert.verifySteps(["web_search_read"]);
 
         // switch back to pivot
         await click(webClient.el.querySelector(".o_control_panel .o_switch_view.o_pivot"));
