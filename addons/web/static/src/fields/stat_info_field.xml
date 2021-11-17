@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.StatInfoField" owl="1">
+        <div class="o_stat_info">
+            <span class="o_stat_value">
+                <t t-esc="value" />
+            </span>
+            <t t-if="!props.attrs.nolabel">
+                <span class="o_stat_text">
+                    <t t-esc="text"/>
+                </span>
+            </t>
+        </div>
+    </t>
+
+</templates>
