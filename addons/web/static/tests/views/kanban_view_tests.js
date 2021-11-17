@@ -5225,7 +5225,7 @@ QUnit.module("Views", (hooks) => {
         //         {
         //             name: "A second example",
         //             columns: ["Col 1", "Col 2"],
-        //             description: Markup`A <b>fantastic</b> description.`,
+        //             description: Mar--removethis--kup`A <b>fantastic</b> description.`,
         //         },
         //     ],
         // });
