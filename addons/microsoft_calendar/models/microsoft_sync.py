@@ -33,6 +33,9 @@ def after_commit(func):
         context = self.env.context
         uid = self.env.uid
 
+        if self.env.context.get('no_calendar_sync'):
+            return
+
         @self.env.cr.postcommit.add
         def called_after():
             db_registry = registry(dbname)

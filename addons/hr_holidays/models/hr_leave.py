@@ -1189,6 +1189,7 @@ class HolidaysRequest(models.Model):
                     tracking_disable=True,
                     mail_activity_automation_skip=True,
                     leave_fast_create=True,
+                    no_calendar_sync=True,
                     leave_skip_state_check=True,
                 ).create(values)
 
