@@ -4,7 +4,13 @@ import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import testUtils from "web.test_utils";
-import { click, legacyExtraNextTick, nextTick, patchWithCleanup } from "../../helpers/utils";
+import {
+    click,
+    legacyExtraNextTick,
+    makeDeferred,
+    nextTick,
+    patchWithCleanup,
+} from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
 
 const { Component, tags } = owl;
@@ -170,7 +176,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(webClient, ".modal .test_client_action");
     });
 
-    QUnit.skip("properly push state", async function (assert) {
+    QUnit.test("properly push state", async function (assert) {
         assert.expect(3);
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 4);
@@ -186,7 +192,7 @@ QUnit.module("ActionManager", (hooks) => {
             view_type: "list",
         });
         await testUtils.dom.click($(webClient.el).find("tr.o_data_row:first"));
-        await legacyExtraNextTick();
+        await nextTick();
         assert.deepEqual(webClient.env.services.router.current.hash, {
             action: 8,
             model: "pony",
@@ -195,22 +201,22 @@ QUnit.module("ActionManager", (hooks) => {
         });
     });
 
-    QUnit.skip("push state after action is loaded, not before", async function (assert) {
+    QUnit.test("push state after action is loaded, not before", async function (assert) {
         assert.expect(2);
-        const def = testUtils.makeTestPromise();
-        const mockRPC = async function (route) {
-            if (route === "/web/dataset/search_read") {
+        const def = makeDeferred();
+        const mockRPC = async function (route, args) {
+            if (args.method === "web_search_read") {
                 await def;
             }
         };
         const webClient = await createWebClient({ serverData, mockRPC });
         doAction(webClient, 4);
-        await testUtils.nextTick();
-        await legacyExtraNextTick();
+        await nextTick();
+        await nextTick();
         assert.deepEqual(webClient.env.services.router.current.hash, {});
         def.resolve();
-        await testUtils.nextTick();
-        await legacyExtraNextTick();
+        await nextTick();
+        await nextTick();
         assert.deepEqual(webClient.env.services.router.current.hash, {
             action: 4,
             model: "partner",
