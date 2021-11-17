@@ -878,7 +878,7 @@ $o-form-label-margin-right: 0px;
     }
 
     // One2Many List views
-    .o_field_widget .o_list_view {
+    .o_field_widget .o_list_renderer {
         margin-bottom: 10px;
 
         > tfoot > tr > td {
@@ -886,10 +886,10 @@ $o-form-label-margin-right: 0px;
             color: $o-main-text-color;
         }
     }
-    &.o_form_readonly .o_field_widget .o_list_view .o_row_handle {
+    .o_form_readonly .o_field_widget .o_list_renderer .o_row_handle {
         display: none;  // Hide the handler in non-edit mode
     }
-    .o_field_widget.o_readonly_modifier .o_list_view .o_row_handle {
+    .o_field_widget.o_readonly_modifier .o_list_renderer .o_row_handle {
         display: none;  // Hide the handler on readonly fields
     }
 
