@@ -39,7 +39,7 @@ export class KanbanRenderer extends Component {
         this.colors = RECORD_COLORS;
         useAutofocus();
         useExternalListener(window, "keydown", this.onWindowKeydown);
-        useExternalListener(window, "click", this.onWindowClick);
+        useExternalListener(window, "mousedown", this.onWindowMousedown);
         // Sortable
         let dataRecordId;
         let dataGroupId;
@@ -87,6 +87,11 @@ export class KanbanRenderer extends Component {
         });
     }
 
+    // `context` can be called in the evaluated kanban template.
+    get context() {
+        return this.props.context;
+    }
+
     get recordsDraggable() {
         return this.props.list.isGrouped && this.props.info.recordsDraggable;
     }
@@ -127,8 +132,17 @@ export class KanbanRenderer extends Component {
         await group.list.quickCreate(this.quickCreateInfo.fields);
     }
 
-    async cancelQuickCreate(group) {
-        await group.list.cancelQuickCreate();
+    cancelQuickCreate() {
+        for (const group of this.props.list.groups) {
+            group.list.cancelQuickCreate();
+        }
+    }
+
+    async validateQuickCreate(group, editAfterCreate) {
+        const record = await group.list.validateQuickCreate();
+        if (editAfterCreate) {
+            await this.openRecord(record);
+        }
     }
 
     toggleGroup(group) {
@@ -158,8 +172,8 @@ export class KanbanRenderer extends Component {
         this.props.list.deleteGroup(group);
     }
 
-    openRecord(record) {
-        this.props.openRecord(record);
+    async openRecord(record) {
+        await this.props.openRecord(record);
     }
 
     onGroupClick(group, ev) {
@@ -353,14 +367,24 @@ export class KanbanRenderer extends Component {
     }
 
     onWindowKeydown(ev) {
+        if (!this.props.list.isGrouped) {
+            return;
+        }
         if (ev.key === "Escape") {
             this.state.quickCreateGroup = false;
+            this.cancelQuickCreate();
         }
     }
 
-    onWindowClick(ev) {
+    onWindowMousedown(ev) {
+        if (!this.props.list.isGrouped) {
+            return;
+        }
         if (!ev.target.closest(".o_column_quick_create")) {
             this.state.quickCreateGroup = false;
+        }
+        if (!ev.target.closest(".o_kanban_quick_create,.o_kanban_quick_add")) {
+            this.cancelQuickCreate();
         }
     }
 
