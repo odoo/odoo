@@ -918,7 +918,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("editable rendering with handle and no data", async function (assert) {
         assert.expect(6);
 
-        this.data.foo.records = [];
+        serverData.models.foo.records = [];
         const list = await makeView({
             type: "list",
             resModel: "foo",
@@ -984,7 +984,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("field titles are not escaped", async function (assert) {
         assert.expect(2);
 
-        this.data.foo.records[0].foo = "<div>Hello</div>";
+        serverData.models.foo.records[0].foo = "<div>Hello</div>";
 
         const list = await makeView({
             type: "list",
@@ -1042,7 +1042,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(3);
 
-            this.data.foo.fields.m2o.default = 2;
+            serverData.models.foo.fields.m2o.default = 2;
 
             const list = await makeView({
                 type: "list",
@@ -1587,7 +1587,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(6);
 
-            this.data.foo.fields.priority = {
+            serverData.models.foo.fields.priority = {
                 string: "Priority",
                 type: "selection",
                 selection: [
@@ -1655,8 +1655,8 @@ QUnit.module("Views", (hooks) => {
         assert.expect(1);
         // Equivalent to saving a custom filter
 
-        this.data.foo.fields.foo.sortable = true;
-        this.data.foo.fields.date.sortable = true;
+        serverData.models.foo.fields.foo.sortable = true;
+        serverData.models.foo.fields.date.sortable = true;
 
         const list = await makeView({
             type: "list",
@@ -1694,8 +1694,8 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("Loading a filter with a sort attribute", async function (assert) {
         assert.expect(2);
 
-        this.data.foo.fields.foo.sortable = true;
-        this.data.foo.fields.date.sortable = true;
+        serverData.models.foo.fields.foo.sortable = true;
+        serverData.models.foo.fields.date.sortable = true;
 
         var searchReads = 0;
         const list = await makeView({
@@ -1819,7 +1819,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("editable list view: readonly fields cannot be edited", async function (assert) {
         assert.expect(4);
 
-        this.data.foo.fields.foo.readonly = true;
+        serverData.models.foo.fields.foo.readonly = true;
 
         const list = await makeView({
             type: "list",
@@ -1849,7 +1849,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("editable list view: line with no active element", async function (assert) {
         assert.expect(3);
 
-        this.data.bar = {
+        serverData.models.bar = {
             fields: {
                 titi: { string: "Char", type: "char" },
                 grosminet: { string: "Bool", type: "boolean" },
@@ -1859,7 +1859,7 @@ QUnit.module("Views", (hooks) => {
                 { id: 2, titi: "cuicui", grosminet: false },
             ],
         };
-        this.data.foo.records[0].o2m = [1, 2];
+        serverData.models.foo.records[0].o2m = [1, 2];
 
         var form = await makeView({
             View: FormView,
@@ -1907,7 +1907,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(1);
 
-            this.data.bar = {
+            serverData.models.bar = {
                 fields: {
                     titi: { string: "Char", type: "char", required: true },
                     int_field: {
@@ -1922,7 +1922,7 @@ QUnit.module("Views", (hooks) => {
                     { id: 2, titi: "cuicui", int_field: 4 },
                 ],
             };
-            this.data.foo.records[0].o2m = [1, 2];
+            serverData.models.foo.records[0].o2m = [1, 2];
 
             var form = await makeView({
                 View: FormView,
@@ -2124,7 +2124,7 @@ QUnit.module("Views", (hooks) => {
             "saved row should be in readonly mode"
         );
         assert.strictEqual(
-            this.data.foo.records[0].foo,
+            serverData.models.foo.records[0].foo,
             "abc",
             "the edition should have been properly saved"
         );
@@ -2135,7 +2135,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(3);
 
-            this.data.foo.fields.foo.sortable = true;
+            serverData.models.foo.fields.foo.sortable = true;
 
             const list = await makeView({
                 type: "list",
@@ -2838,16 +2838,16 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.skip("groups cannot be sorted on non-aggregable fields", async function (assert) {
         assert.expect(6);
-        this.data.foo.fields.sort_field = {
+        serverData.models.foo.fields.sort_field = {
             string: "sortable_field",
             type: "sting",
             sortable: true,
             default: "value",
         };
-        _.each(this.data.records, function (elem) {
+        _.each(serverData.models.records, function (elem) {
             elem.sort_field = "value" + elem.id;
         });
-        this.data.foo.fields.foo.sortable = true;
+        serverData.models.foo.fields.foo.sortable = true;
         const list = await makeView({
             type: "list",
             resModel: "foo",
@@ -2883,7 +2883,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("properly apply onchange in simple case", async function (assert) {
         assert.expect(2);
 
-        this.data.foo.onchanges = {
+        serverData.models.foo.onchanges = {
             foo: function (obj) {
                 obj.int_field = obj.foo.length + 1000;
             },
@@ -2969,7 +2969,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(1);
 
-            this.data.foo.records[0].foo = "Some very very long value for a char field";
+            serverData.models.foo.records[0].foo = "Some very very long value for a char field";
 
             const list = await makeView({
                 type: "list",
@@ -3013,7 +3013,7 @@ QUnit.module("Views", (hooks) => {
             ];
             assert.expect(9);
 
-            this.data.foo.records = [];
+            serverData.models.foo.records = [];
             const list = await makeView({
                 type: "list",
                 resModel: "foo",
@@ -3069,7 +3069,11 @@ QUnit.module("Views", (hooks) => {
             ];
             assert.expect(12);
 
-            this.data.foo.fields.foo_o2m = { string: "Foo O2M", type: "one2many", relation: "foo" };
+            serverData.models.foo.fields.foo_o2m = {
+                string: "Foo O2M",
+                type: "one2many",
+                relation: "foo",
+            };
             const form = await makeView({
                 View: FormView,
                 resModel: "foo",
@@ -3142,7 +3146,7 @@ QUnit.module("Views", (hooks) => {
             assert.expect(4);
 
             // no records for the foo model
-            this.data.foo.records = [];
+            serverData.models.foo.records = [];
 
             const list = await makeView({
                 type: "list",
@@ -3194,7 +3198,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("editable list: overflowing table", async function (assert) {
         assert.expect(1);
 
-        this.data.bar = {
+        serverData.models.bar = {
             fields: {
                 titi: { string: "Small char", type: "char", sortable: true },
                 grosminet: { string: "Beeg char", type: "char", sortable: true },
@@ -3250,7 +3254,7 @@ QUnit.module("Views", (hooks) => {
                         nunc, ut aliquet enim. Suspendisse malesuada felis non metus
                         efficitur aliquet.`;
 
-        this.data.bar = {
+        serverData.models.bar = {
             fields: {
                 titi: { string: "Small char", type: "char", sortable: true },
                 grosminet1: { string: "Beeg char 1", type: "char", sortable: true },
@@ -3297,8 +3301,8 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(5);
 
-            this.data.foo.records = [{ id: 1, o2m: [1] }];
-            this.data.bar = {
+            serverData.models.foo.records = [{ id: 1, o2m: [1] }];
+            serverData.models.bar = {
                 fields: {
                     titi: { string: "Small char", type: "char", sortable: true },
                     grosminet: { string: "Beeg char", type: "char", sortable: true },
@@ -3364,8 +3368,8 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("editable list: list view hidden by an invisible modifier", async function (assert) {
         assert.expect(5);
 
-        this.data.foo.records = [{ id: 1, bar: true, o2m: [1] }];
-        this.data.bar = {
+        serverData.models.foo.records = [{ id: 1, bar: true, o2m: [1] }];
+        serverData.models.bar = {
             fields: {
                 titi: { string: "Small char", type: "char", sortable: true },
                 grosminet: { string: "Beeg char", type: "char", sortable: true },
@@ -3422,7 +3426,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("editable list: updating list state while invisible", async function (assert) {
         assert.expect(2);
 
-        this.data.foo.onchanges = {
+        serverData.models.foo.onchanges = {
             bar: function (obj) {
                 obj.o2m = [[5], [0, null, { display_name: "Whatever" }]];
             },
@@ -3501,8 +3505,8 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("editable list: unnamed columns cannot be resized", async function (assert) {
         assert.expect(2);
 
-        this.data.foo.records = [{ id: 1, o2m: [1] }];
-        this.data.bar.records = [{ id: 1, display_name: "Oui" }];
+        serverData.models.foo.records = [{ id: 1, o2m: [1] }];
+        serverData.models.bar.records = [{ id: 1, display_name: "Oui" }];
         var form = await makeView({
             View: FormView,
             resModel: "foo",
@@ -3625,7 +3629,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("column width should depend on the widget", async function (assert) {
         assert.expect(1);
 
-        this.data.foo.records = []; // the width heuristic only applies when there are no records
+        serverData.models.foo.records = []; // the width heuristic only applies when there are no records
         const list = await makeView({
             type: "list",
             resModel: "foo",
@@ -3647,7 +3651,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("column widths are kept when adding first record", async function (assert) {
         assert.expect(2);
 
-        this.data.foo.records = []; // in this scenario, we start with no records
+        serverData.models.foo.records = []; // in this scenario, we start with no records
         const list = await makeView({
             type: "list",
             resModel: "foo",
@@ -3730,7 +3734,7 @@ QUnit.module("Views", (hooks) => {
             RESIZE_DELAY: 0,
         });
 
-        this.data.foo.records[0].text =
+        serverData.models.foo.records[0].text =
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
             "Sed blandit, justo nec tincidunt feugiat, mi justo suscipit libero, sit amet tempus " +
             "ipsum purus bibendum est.";
@@ -3765,7 +3769,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(2);
 
-            this.data.foo.records[0].text =
+            serverData.models.foo.records[0].text =
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, " +
                 "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim " +
                 "veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo " +
@@ -3799,10 +3803,10 @@ QUnit.module("Views", (hooks) => {
             "consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum " +
             "dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, " +
             "sunt in culpa qui officia deserunt mollit anim id est laborum";
-        this.data.foo.records[0].foo = longText;
-        this.data.foo.records[0].text = longText;
-        this.data.foo.records[1].foo = "short text";
-        this.data.foo.records[1].text = "short text";
+        serverData.models.foo.records[0].foo = longText;
+        serverData.models.foo.records[0].text = longText;
+        serverData.models.foo.records[1].foo = "short text";
+        serverData.models.foo.records[1].text = "short text";
         const list = await makeView({
             type: "list",
             resModel: "foo",
@@ -3935,10 +3939,10 @@ QUnit.module("Views", (hooks) => {
             var multiLang = _t.database.multi_lang;
             _t.database.multi_lang = true;
 
-            this.data.foo.fields.foo.translate = true;
-            this.data.foo.fields.boolean = { type: "boolean", string: "Bool" };
+            serverData.models.foo.fields.foo.translate = true;
+            serverData.models.foo.fields.boolean = { type: "boolean", string: "Bool" };
             var currencies = {};
-            _.each(this.data.res_currency.records, function (currency) {
+            _.each(serverData.models.res_currency.records, function (currency) {
                 currencies[currency.id] = currency;
             });
 
@@ -3996,7 +4000,7 @@ QUnit.module("Views", (hooks) => {
 
         var multiLang = _t.database.multi_lang;
         _t.database.multi_lang = true;
-        this.data.foo.fields.foo.translate = true;
+        serverData.models.foo.fields.foo.translate = true;
 
         const list = await makeView({
             type: "list",
@@ -4040,8 +4044,8 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("long words in text cells should break into smaller lines", async function (assert) {
         assert.expect(2);
 
-        this.data.foo.records[0].text = "a";
-        this.data.foo.records[1].text = "pneumonoultramicroscopicsilicovolcanoconiosis"; // longest english word I could find
+        serverData.models.foo.records[0].text = "a";
+        serverData.models.foo.records[1].text = "pneumonoultramicroscopicsilicovolcanoconiosis"; // longest english word I could find
 
         const list = await makeView({
             type: "list",
@@ -4131,7 +4135,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("delete all records matching the domain", async function (assert) {
         assert.expect(6);
 
-        this.data.foo.records.push({ id: 5, bar: true, foo: "xxx" });
+        serverData.models.foo.records.push({ id: 5, bar: true, foo: "xxx" });
 
         const list = await makeView({
             type: "list",
@@ -4176,8 +4180,8 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("delete all records matching the domain (limit reached)", async function (assert) {
         assert.expect(8);
 
-        this.data.foo.records.push({ id: 5, bar: true, foo: "xxx" });
-        this.data.foo.records.push({ id: 6, bar: true, foo: "yyy" });
+        serverData.models.foo.records.push({ id: 5, bar: true, foo: "xxx" });
+        serverData.models.foo.records.push({ id: 6, bar: true, foo: "yyy" });
 
         const list = await makeView({
             type: "list",
@@ -4228,7 +4232,7 @@ QUnit.module("Views", (hooks) => {
         assert.expect(12);
 
         // add active field on foo model and make all records active
-        this.data.foo.fields.active = { string: "Active", type: "boolean", default: true };
+        serverData.models.foo.fields.active = { string: "Active", type: "boolean", default: true };
 
         const list = await makeView({
             type: "list",
@@ -4239,7 +4243,7 @@ QUnit.module("Views", (hooks) => {
             mockRPC: function (route) {
                 assert.step(route);
                 if (route === "/web/dataset/call_kw/foo/action_archive") {
-                    this.data.foo.records[0].active = false;
+                    serverData.models.foo.records[0].active = false;
                     return Promise.resolve();
                 }
                 return this._super.apply(this, arguments);
@@ -4272,8 +4276,8 @@ QUnit.module("Views", (hooks) => {
         assert.expect(6);
 
         // add active field on foo model and make all records active
-        this.data.foo.fields.active = { string: "Active", type: "boolean", default: true };
-        this.data.foo.records.push({ id: 5, bar: true, foo: "xxx" });
+        serverData.models.foo.fields.active = { string: "Active", type: "boolean", default: true };
+        serverData.models.foo.records.push({ id: 5, bar: true, foo: "xxx" });
 
         const list = await makeView({
             type: "list",
@@ -4320,9 +4324,9 @@ QUnit.module("Views", (hooks) => {
         assert.expect(8);
 
         // add active field on foo model and make all records active
-        this.data.foo.fields.active = { string: "Active", type: "boolean", default: true };
-        this.data.foo.records.push({ id: 5, bar: true, foo: "xxx" });
-        this.data.foo.records.push({ id: 6, bar: true, foo: "yyy" });
+        serverData.models.foo.fields.active = { string: "Active", type: "boolean", default: true };
+        serverData.models.foo.records.push({ id: 5, bar: true, foo: "xxx" });
+        serverData.models.foo.records.push({ id: 6, bar: true, foo: "yyy" });
 
         const list = await makeView({
             type: "list",
@@ -4470,7 +4474,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("can sort records when clicking on header", async function (assert) {
         assert.expect(9);
 
-        this.data.foo.fields.foo.sortable = true;
+        serverData.models.foo.fields.foo.sortable = true;
 
         var nbSearchRead = 0;
         const list = await makeView({
@@ -4524,7 +4528,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("do not sort records when clicking on header with nolabel", async function (assert) {
         assert.expect(6);
 
-        this.data.foo.fields.foo.sortable = true;
+        serverData.models.foo.fields.foo.sortable = true;
 
         let nbSearchRead = 0;
         const list = await makeView({
@@ -4618,7 +4622,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("use default_order on editable tree: sort on save", async function (assert) {
         assert.expect(8);
 
-        this.data.foo.records[0].o2m = [1, 3];
+        serverData.models.foo.records[0].o2m = [1, 3];
 
         var form = await makeView({
             View: FormView,
@@ -4665,10 +4669,10 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("use default_order on editable tree: sort on demand", async function (assert) {
         assert.expect(11);
 
-        this.data.foo.records[0].o2m = [1, 3];
-        this.data.bar.fields = { name: { string: "Name", type: "char", sortable: true } };
-        this.data.bar.records[0].name = "Value 1";
-        this.data.bar.records[2].name = "Value 3";
+        serverData.models.foo.records[0].o2m = [1, 3];
+        serverData.models.bar.fields = { name: { string: "Name", type: "char", sortable: true } };
+        serverData.models.bar.records[0].name = "Value 1";
+        serverData.models.bar.records[2].name = "Value 3";
 
         var form = await makeView({
             View: FormView,
@@ -4729,18 +4733,20 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(4);
 
-            this.data.bar.fields = { name: { string: "Name", type: "char", sortable: true } };
+            serverData.models.bar.fields = {
+                name: { string: "Name", type: "char", sortable: true },
+            };
 
             var ids = [];
             for (var i = 0; i < 45; i++) {
                 var id = 4 + i;
                 ids.push(id);
-                this.data.bar.records.push({
+                serverData.models.bar.records.push({
                     id: id,
                     name: "Value " + (id < 10 ? "0" : "") + id,
                 });
             }
-            this.data.foo.records[0].o2m = ids;
+            serverData.models.foo.records[0].o2m = ids;
 
             var form = await makeView({
                 View: FormView,
@@ -4927,7 +4933,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("support row decoration (with unset numeric values)", async function (assert) {
         assert.expect(2);
 
-        this.data.foo.records = [];
+        serverData.models.foo.records = [];
 
         const list = await makeView({
             type: "list",
@@ -4957,7 +4963,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("support row decoration with date", async function (assert) {
         assert.expect(3);
 
-        this.data.foo.records[0].datetime = "2017-02-27 12:51:35";
+        serverData.models.foo.records[0].datetime = "2017-02-27 12:51:35";
 
         const list = await makeView({
             type: "list",
@@ -5034,9 +5040,9 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("no content helper when no data", async function (assert) {
         assert.expect(5);
 
-        var records = this.data.foo.records;
+        var records = serverData.models.foo.records;
 
-        this.data.foo.records = [];
+        serverData.models.foo.records = [];
 
         const list = await makeView({
             type: "list",
@@ -5060,7 +5066,7 @@ QUnit.module("Views", (hooks) => {
             "should have rendered no content helper from action"
         );
 
-        this.data.foo.records = records;
+        serverData.models.foo.records = records;
         await list.reload();
 
         assert.containsNone(list, ".o_view_nocontent", "should not display the no content helper");
@@ -5070,7 +5076,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("no nocontent helper when no data and no help", async function (assert) {
         assert.expect(3);
 
-        this.data.foo.records = [];
+        serverData.models.foo.records = [];
 
         const list = await makeView({
             type: "list",
@@ -5455,7 +5461,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("Do not display nocontent when it is an empty html tag", async function (assert) {
         assert.expect(2);
 
-        this.data.foo.records = [];
+        serverData.models.foo.records = [];
 
         const list = await makeView({
             type: "list",
@@ -5645,12 +5651,12 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(5);
 
-            this.data.res_currency.fields.m2o = {
+            serverData.models.res_currency.fields.m2o = {
                 string: "Currency M2O",
                 type: "many2one",
                 relation: "bar",
             };
-            this.data.res_currency.records[0].m2o = 1;
+            serverData.models.res_currency.records[0].m2o = 1;
 
             const list = await makeView({
                 type: "list",
@@ -5787,7 +5793,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("groupby node with subfields, and onchange", async function (assert) {
         assert.expect(1);
 
-        this.data.foo.onchanges = {
+        serverData.models.foo.onchanges = {
             foo: function () {},
         };
 
@@ -5825,9 +5831,9 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("list view, editable, without data", async function (assert) {
         assert.expect(12);
 
-        this.data.foo.records = [];
+        serverData.models.foo.records = [];
 
-        this.data.foo.fields.date.default = "2017-02-10";
+        serverData.models.foo.fields.date.default = "2017-02-10";
 
         const list = await makeView({
             type: "list",
@@ -5906,7 +5912,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("list view, editable, with a button", async function (assert) {
         assert.expect(1);
 
-        this.data.foo.records = [];
+        serverData.models.foo.records = [];
 
         const list = await makeView({
             type: "list",
@@ -5994,8 +6000,8 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("editable list view, click on the list to save", async function (assert) {
         assert.expect(3);
 
-        this.data.foo.fields.date.default = "2017-02-10";
-        this.data.foo.records = [];
+        serverData.models.foo.fields.date.default = "2017-02-10";
+        serverData.models.foo.records = [];
 
         var createCount = 0;
 
@@ -6148,7 +6154,7 @@ QUnit.module("Views", (hooks) => {
         assert.expect(3);
 
         var currencies = {};
-        _.each(this.data.res_currency.records, function (currency) {
+        _.each(serverData.models.res_currency.records, function (currency) {
             currencies[currency.id] = currency;
         });
         const list = await makeView({
@@ -6214,7 +6220,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("edit a row by clicking on a readonly field", async function (assert) {
         assert.expect(9);
 
-        this.data.foo.fields.foo.readonly = true;
+        serverData.models.foo.fields.foo.readonly = true;
 
         const list = await makeView({
             type: "list",
@@ -6273,8 +6279,8 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("list view with nested groups", async function (assert) {
         assert.expect(42);
 
-        this.data.foo.records.push({ id: 5, foo: "blip", int_field: -7, m2o: 1 });
-        this.data.foo.records.push({ id: 6, foo: "blip", int_field: 5, m2o: 2 });
+        serverData.models.foo.records.push({ id: 5, foo: "blip", int_field: -7, m2o: 1 });
+        serverData.models.foo.records.push({ id: 6, foo: "blip", int_field: 5, m2o: 2 });
 
         var nbRPCs = { readGroup: 0, searchRead: 0 };
         var envIDs = []; // the ids that should be in the environment during this test
@@ -6457,7 +6463,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("grouped list on selection field at level 2", async function (assert) {
         assert.expect(4);
 
-        this.data.foo.fields.priority = {
+        serverData.models.foo.fields.priority = {
             string: "Priority",
             type: "selection",
             selection: [
@@ -6467,8 +6473,20 @@ QUnit.module("Views", (hooks) => {
             ],
             default: 1,
         };
-        this.data.foo.records.push({ id: 5, foo: "blip", int_field: -7, m2o: 1, priority: 2 });
-        this.data.foo.records.push({ id: 6, foo: "blip", int_field: 5, m2o: 1, priority: 3 });
+        serverData.models.foo.records.push({
+            id: 5,
+            foo: "blip",
+            int_field: -7,
+            m2o: 1,
+            priority: 2,
+        });
+        serverData.models.foo.records.push({
+            id: 6,
+            foo: "blip",
+            int_field: 5,
+            m2o: 1,
+            priority: 3,
+        });
 
         const list = await makeView({
             type: "list",
@@ -6495,7 +6513,7 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.skip("grouped list with a pager in a group", async function (assert) {
         assert.expect(6);
-        this.data.foo.records[3].bar = true;
+        serverData.models.foo.records[3].bar = true;
 
         const list = await makeView({
             type: "list",
@@ -6831,7 +6849,7 @@ QUnit.module("Views", (hooks) => {
             // re-evaluated.
             assert.expect(5);
 
-            this.data.foo.onchanges = {
+            serverData.models.foo.onchanges = {
                 o2m: function (obj) {
                     obj.o2m = [
                         [5],
@@ -6841,7 +6859,7 @@ QUnit.module("Views", (hooks) => {
                 },
             };
 
-            this.data.bar.fields.stage = {
+            serverData.models.bar.fields.stage = {
                 string: "Stage",
                 type: "selection",
                 selection: [
@@ -6850,9 +6868,9 @@ QUnit.module("Views", (hooks) => {
                 ],
             };
 
-            this.data.foo.records[0].o2m = [1, 2];
-            this.data.bar.records[0].stage = "draft";
-            this.data.bar.records[1].stage = "open";
+            serverData.models.foo.records[0].o2m = [1, 2];
+            serverData.models.bar.records[0].stage = "draft";
+            serverData.models.bar.records[1].stage = "open";
 
             const form = await makeView({
                 View: FormView,
@@ -7603,7 +7621,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip('navigation with tab on a one2many list with create="0"', async function (assert) {
         assert.expect(4);
 
-        this.data.foo.records[0].o2m = [1, 2];
+        serverData.models.foo.records[0].o2m = [1, 2];
         var form = await makeView({
             View: FormView,
             resModel: "foo",
@@ -7718,11 +7736,15 @@ QUnit.module("Views", (hooks) => {
             // field will not crash
             assert.expect(4);
 
-            this.data.bar.onchanges = {
+            serverData.models.bar.onchanges = {
                 o2m: function () {},
             };
-            this.data.bar.fields.o2m = { string: "O2M field", type: "one2many", relation: "foo" };
-            this.data.bar.records[0].o2m = [1, 4];
+            serverData.models.bar.fields.o2m = {
+                string: "O2M field",
+                type: "one2many",
+                relation: "foo",
+            };
+            serverData.models.bar.records[0].o2m = [1, 4];
 
             var form = await makeView({
                 View: FormView,
@@ -8045,7 +8067,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(6);
 
-            this.data.foo.fields.foo.type = "text";
+            serverData.models.foo.fields.foo.type = "text";
             const list = await makeView({
                 type: "list",
                 resModel: "foo",
@@ -8128,7 +8150,7 @@ QUnit.module("Views", (hooks) => {
         assert.expect(2);
 
         var currencies = {};
-        _.each(this.data.res_currency.records, function (currency) {
+        _.each(serverData.models.res_currency.records, function (currency) {
             currencies[currency.id] = currency;
         });
         const list = await makeView({
@@ -8172,11 +8194,11 @@ QUnit.module("Views", (hooks) => {
         "grouped list with another grouped list parent, click unfold",
         async function (assert) {
             assert.expect(3);
-            this.data.bar.fields = {
+            serverData.models.bar.fields = {
                 cornichon: { string: "cornichon", type: "char" },
             };
 
-            var rec = this.data.bar.records[0];
+            var rec = serverData.models.bar.records[0];
             // create records to have the search more button
             var newRecs = [];
             for (var i = 0; i < 8; i++) {
@@ -8185,7 +8207,7 @@ QUnit.module("Views", (hooks) => {
                 newRec.cornichon = "extra fin";
                 newRecs.push(newRec);
             }
-            this.data.bar.records = newRecs;
+            serverData.models.bar.records = newRecs;
 
             const list = await makeView({
                 type: "list",
@@ -8228,7 +8250,7 @@ QUnit.module("Views", (hooks) => {
         assert.expect(1);
         var value = "<script>throw Error();</script>";
 
-        this.data.foo.records[0].foo = value;
+        serverData.models.foo.records[0].foo = value;
 
         const list = await makeView({
             type: "list",
@@ -8400,7 +8422,7 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.skip("result of consecutive resequences is correctly sorted", async function (assert) {
         assert.expect(9);
-        this.data = {
+        serverData.models = {
             // we want the data to be minimal to have a minimal test
             foo: {
                 fields: { int_field: { string: "int_field", type: "integer", sortable: true } },
@@ -8515,10 +8537,10 @@ QUnit.module("Views", (hooks) => {
         assert.expect(12);
 
         // resequence makes sense on a sequence field, not on arbitrary fields
-        this.data.foo.records[0].int_field = 0;
-        this.data.foo.records[1].int_field = 1;
-        this.data.foo.records[2].int_field = 2;
-        this.data.foo.records[3].int_field = 3;
+        serverData.models.foo.records[0].int_field = 0;
+        serverData.models.foo.records[1].int_field = 1;
+        serverData.models.foo.records[2].int_field = 2;
+        serverData.models.foo.records[3].int_field = 3;
 
         const list = await makeView({
             type: "list",
@@ -8613,12 +8635,12 @@ QUnit.module("Views", (hooks) => {
         assert.expect(6);
 
         // we need another sortable field to lock/unlock the handle
-        this.data.foo.fields.amount.sortable = true;
+        serverData.models.foo.fields.amount.sortable = true;
         // resequence makes sense on a sequence field, not on arbitrary fields
-        this.data.foo.records[0].int_field = 0;
-        this.data.foo.records[1].int_field = 1;
-        this.data.foo.records[2].int_field = 2;
-        this.data.foo.records[3].int_field = 3;
+        serverData.models.foo.records[0].int_field = 0;
+        serverData.models.foo.records[1].int_field = 1;
+        serverData.models.foo.records[2].int_field = 2;
+        serverData.models.foo.records[3].int_field = 3;
 
         const list = await makeView({
             type: "list",
@@ -8700,10 +8722,10 @@ QUnit.module("Views", (hooks) => {
         assert.expect(15);
 
         // resequence makes sense on a sequence field, not on arbitrary fields
-        this.data.foo.records[0].int_field = 0;
-        this.data.foo.records[1].int_field = 1;
-        this.data.foo.records[2].int_field = 2;
-        this.data.foo.records[3].int_field = 3;
+        serverData.models.foo.records[0].int_field = 0;
+        serverData.models.foo.records[1].int_field = 1;
+        serverData.models.foo.records[2].int_field = 2;
+        serverData.models.foo.records[3].int_field = 3;
 
         var prom = testUtils.makeTestPromise();
 
@@ -8877,7 +8899,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("multiple clicks on Add do not create invalid rows", async function (assert) {
         assert.expect(2);
 
-        this.data.foo.onchanges = {
+        serverData.models.foo.onchanges = {
             m2o: function () {},
         };
 
@@ -8913,7 +8935,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("reference field rendering", async function (assert) {
         assert.expect(4);
 
-        this.data.foo.records.push({
+        serverData.models.foo.records.push({
             id: 5,
             reference: "res_currency,2",
         });
@@ -8945,7 +8967,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("reference field batched in grouped list", async function (assert) {
         assert.expect(8);
 
-        this.data.foo.records = [
+        serverData.models.foo.records = [
             // group 1
             { id: 1, foo: "1", reference: "bar,1" },
             { id: 2, foo: "1", reference: "bar,2" },
@@ -8988,7 +9010,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("multi edit reference field batched in grouped list", async function (assert) {
         assert.expect(18);
 
-        this.data.foo.records = [
+        serverData.models.foo.records = [
             // group 1
             { id: 1, foo: "1", reference: "bar,1" },
             { id: 2, foo: "1", reference: "bar,2" },
@@ -9049,7 +9071,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("multi edit field with daterange widget", async function (assert) {
         assert.expect(5);
 
-        this.data.daterange = {
+        serverData.models.daterange = {
             fields: {
                 date_start: { string: "Date Start", type: "date" },
                 date_end: { string: "Date End", type: "date" },
@@ -9143,7 +9165,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(4);
 
-            this.data.daterange = {
+            serverData.models.daterange = {
                 fields: {
                     date_start: { string: "Date Start", type: "date" },
                     date_end: { string: "Date End", type: "date" },
@@ -9383,7 +9405,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("editable list view: do not commit changes twice", async function (assert) {
         assert.expect(5);
 
-        this.data.foo.onchanges = {
+        serverData.models.foo.onchanges = {
             bar: function (obj) {
                 obj.foo = "changed";
             },
@@ -9613,7 +9635,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("editable list view: multi edition cannot call onchanges", async function (assert) {
         assert.expect(15);
 
-        this.data.foo.onchanges = {
+        serverData.models.foo.onchanges = {
             foo: function (obj) {
                 obj.int_field = obj.foo.length;
             },
@@ -9743,7 +9765,7 @@ QUnit.module("Views", (hooks) => {
         assert.expect(5);
 
         for (let i = 4; i <= 10; i++) {
-            this.data.bar.records.push({ id: i, display_name: "Value" + i });
+            serverData.models.bar.records.push({ id: i, display_name: "Value" + i });
         }
 
         const list = await makeView({
@@ -10627,7 +10649,11 @@ QUnit.module("Views", (hooks) => {
             // mouseup and click events
             assert.expect(5);
 
-            this.data.bar.fields.m2o = { string: "M2O field", type: "many2one", relation: "foo" };
+            serverData.models.bar.fields.m2o = {
+                string: "M2O field",
+                type: "many2one",
+                relation: "foo",
+            };
 
             const form = await makeView({
                 View: FormView,
@@ -10768,7 +10794,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("grouped list view, indentation for empty group", async function (assert) {
         assert.expect(3);
 
-        this.data.foo.fields.priority = {
+        serverData.models.foo.fields.priority = {
             string: "Priority",
             type: "selection",
             selection: [
@@ -10778,8 +10804,20 @@ QUnit.module("Views", (hooks) => {
             ],
             default: 1,
         };
-        this.data.foo.records.push({ id: 5, foo: "blip", int_field: -7, m2o: 1, priority: 2 });
-        this.data.foo.records.push({ id: 6, foo: "blip", int_field: 5, m2o: 1, priority: 3 });
+        serverData.models.foo.records.push({
+            id: 5,
+            foo: "blip",
+            int_field: -7,
+            m2o: 1,
+            priority: 2,
+        });
+        serverData.models.foo.records.push({
+            id: 6,
+            foo: "blip",
+            int_field: 5,
+            m2o: 1,
+            priority: 3,
+        });
 
         const list = await makeView({
             type: "list",
@@ -10837,10 +10875,10 @@ QUnit.module("Views", (hooks) => {
 
         var MyWidget = Widget.extend({
             init: function (parent, dataPoint) {
-                this.data = dataPoint.data;
+                serverData.models = dataPoint.data;
             },
             start: function () {
-                this.$el.text(JSON.stringify(this.data));
+                this.$el.text(JSON.stringify(serverData.models));
             },
         });
         widgetRegistry.add("test", MyWidget);
@@ -11202,7 +11240,11 @@ QUnit.module("Views", (hooks) => {
             assert.expect(9);
 
             // add active field on foo model and make all records active
-            this.data.foo.fields.active = { string: "Active", type: "boolean", default: true };
+            serverData.models.foo.fields.active = {
+                string: "Active",
+                type: "boolean",
+                default: true,
+            };
 
             const list = await makeView({
                 type: "list",
@@ -11214,7 +11256,7 @@ QUnit.module("Views", (hooks) => {
                 },
                 mockRPC: function (route) {
                     if (route === "/web/dataset/call_kw/foo/action_archive") {
-                        this.data.foo.records[3].active = false;
+                        serverData.models.foo.records[3].active = false;
                         return Promise.resolve();
                     }
                     return this._super.apply(this, arguments);
@@ -11308,7 +11350,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(2);
 
-            this.data.foo.fields.int_field.default = 10;
+            serverData.models.foo.fields.int_field.default = 10;
 
             const list = await makeView({
                 type: "list",
@@ -11570,7 +11612,7 @@ QUnit.module("Views", (hooks) => {
         assert.expect(10);
 
         for (var i = 0; i < 15; i++) {
-            this.data.foo.records.push({ foo: "record " + i, int_field: i });
+            serverData.models.foo.records.push({ foo: "record " + i, int_field: i });
         }
 
         const list = await makeView({
@@ -11756,7 +11798,7 @@ QUnit.module("Views", (hooks) => {
         await click($(list.el).findbuttons.find(".o_list_button_save"));
 
         assert.strictEqual(
-            this.data.foo.records[0].foo,
+            serverData.models.foo.records[0].foo,
             "pla",
             "the edition should have been properly saved"
         );
@@ -13154,7 +13196,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("add a new row in (selection) grouped editable list", async function (assert) {
         assert.expect(6);
 
-        this.data.foo.fields.priority = {
+        serverData.models.foo.fields.priority = {
             string: "Priority",
             type: "selection",
             selection: [
@@ -13164,8 +13206,20 @@ QUnit.module("Views", (hooks) => {
             ],
             default: 1,
         };
-        this.data.foo.records.push({ id: 5, foo: "blip", int_field: -7, m2o: 1, priority: 2 });
-        this.data.foo.records.push({ id: 6, foo: "blip", int_field: 5, m2o: 1, priority: 3 });
+        serverData.models.foo.records.push({
+            id: 5,
+            foo: "blip",
+            int_field: -7,
+            m2o: 1,
+            priority: 2,
+        });
+        serverData.models.foo.records.push({
+            id: 6,
+            foo: "blip",
+            int_field: 5,
+            m2o: 1,
+            priority: 3,
+        });
 
         const list = await makeView({
             type: "list",
@@ -13556,9 +13610,9 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(1);
 
-            this.data.bar.fields.name = { string: "Name", type: "char", sortable: true };
-            this.data.bar.fields.foo = { string: "Foo", type: "char", sortable: true };
-            this.data.foo.records[0].o2m = [1, 2];
+            serverData.models.bar.fields.name = { string: "Name", type: "char", sortable: true };
+            serverData.models.bar.fields.foo = { string: "Foo", type: "char", sortable: true };
+            serverData.models.foo.records[0].o2m = [1, 2];
 
             const form = await makeView({
                 View: FormView,
@@ -13925,7 +13979,7 @@ QUnit.module("Views", (hooks) => {
         // This test will ensure that, on resize list header,
         // the resized element have the correct size and other elements are not resized
         assert.expect(2);
-        this.data.foo.records[0].foo = "a".repeat(200);
+        serverData.models.foo.records[0].foo = "a".repeat(200);
 
         const list = await makeView({
             type: "list",
@@ -13964,8 +14018,8 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("resize column with several x2many lists in form group", async function (assert) {
         assert.expect(3);
 
-        this.data.bar.fields.text = { string: "Text field", type: "char" };
-        this.data.foo.records[0].o2m = [1, 2];
+        serverData.models.bar.fields.text = { string: "Text field", type: "char" };
+        serverData.models.foo.records[0].o2m = [1, 2];
 
         const form = await makeView({
             View: FormView,
@@ -14027,7 +14081,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(1);
 
-            this.data.foo.records[0].o2m = [1, 2];
+            serverData.models.foo.records[0].o2m = [1, 2];
 
             const form = await makeView({
                 View: FormView,
@@ -14209,10 +14263,10 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        this.data.foo.fields.birthday = { string: "Birthday", type: "date" };
-        this.data.foo.records[0].birthday = "1997-01-08";
-        this.data.foo.records[1].birthday = "1997-01-09";
-        this.data.foo.records[2].birthday = "1997-01-10";
+        serverData.models.foo.fields.birthday = { string: "Birthday", type: "date" };
+        serverData.models.foo.records[0].birthday = "1997-01-08";
+        serverData.models.foo.records[1].birthday = "1997-01-09";
+        serverData.models.foo.records[2].birthday = "1997-01-10";
 
         const list = await makeView({
             arch: `
@@ -14258,10 +14312,10 @@ QUnit.module("Views", (hooks) => {
         }
 
         // "datetime" field may collide with "datetime" object in context
-        this.data.foo.fields.birthday = { string: "Birthday", type: "datetime" };
-        this.data.foo.records[0].birthday = dateStringDelta(-30);
-        this.data.foo.records[1].birthday = dateStringDelta(0);
-        this.data.foo.records[2].birthday = dateStringDelta(+30);
+        serverData.models.foo.fields.birthday = { string: "Birthday", type: "datetime" };
+        serverData.models.foo.records[0].birthday = dateStringDelta(-30);
+        serverData.models.foo.records[1].birthday = dateStringDelta(0);
+        serverData.models.foo.records[2].birthday = dateStringDelta(+30);
 
         const list = await makeView({
             arch: `
@@ -14606,7 +14660,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("Auto save: save on closing tab/browser (onchanges)", async function (assert) {
         assert.expect(1);
 
-        this.data.foo.onchanges = {
+        serverData.models.foo.onchanges = {
             int_field: function (obj) {
                 obj.foo = `${obj.int_field}`;
             },
@@ -14653,11 +14707,15 @@ QUnit.module("Views", (hooks) => {
             // field will not crash
             assert.expect(4);
 
-            this.data.bar.onchanges = {
+            serverData.models.bar.onchanges = {
                 o2m: function () {},
             };
-            this.data.bar.fields.o2m = { string: "O2M field", type: "one2many", relation: "foo" };
-            this.data.bar.records[0].o2m = [1, 4];
+            serverData.models.bar.fields.o2m = {
+                string: "O2M field",
+                type: "one2many",
+                relation: "foo",
+            };
+            serverData.models.bar.records[0].o2m = [1, 4];
 
             var form = await makeView({
                 View: FormView,
@@ -14733,8 +14791,8 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(1);
 
-            this.data.foo.fields.html = { string: "HTML field", type: "html" };
-            this.data.foo.records[0].html = `
+            serverData.models.foo.fields.html = { string: "HTML field", type: "html" };
+            serverData.models.foo.records[0].html = `
             <table class="table table-bordered">
                 <tbody>
                     <tr>
