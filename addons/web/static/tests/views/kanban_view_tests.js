@@ -6774,10 +6774,12 @@ QUnit.module("Views", (hooks) => {
             count++;
             event.data.on_closed();
         });
-        await click($('button[data-name="a1"]').first());
+        click($('button[data-name="a1"]').first());
+        await new Promise((r) => setTimeout(r));
         assert.strictEqual(count, 1, "should have triggered a execute action");
 
-        await click($('button[data-name="a1"]').first());
+        click($('button[data-name="a1"]').first());
+        await new Promise((r) => setTimeout(r));
         assert.strictEqual(count, 1, "double-click on kanban actions should be debounced");
 
         assert.verifySteps(

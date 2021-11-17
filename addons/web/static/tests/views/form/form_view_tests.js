@@ -1179,6 +1179,124 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.skip(
+        "notebook page is changing when an anchor is clicked from another page",
+        async (assert) => {
+            assert.expect(6);
+
+            // This should be removed as soon as the view is moved to owl
+            const wowlEnv = await makeTestEnv();
+            const legacyEnv = makeTestEnvironment({ bus: core.bus });
+            mapLegacyEnvToWowlEnv(legacyEnv, wowlEnv);
+
+            const scrollableParent = document.createElement("div");
+            scrollableParent.style.overflow = "auto";
+            const target = getFixture();
+            target.append(scrollableParent);
+
+            var form = await createView({
+                View: FormView,
+                model: "partner",
+                data: {
+                    partner: {
+                        fields: {},
+                        records: [
+                            {
+                                id: 1,
+                            },
+                        ],
+                    },
+                },
+                arch: `<form string="Partners">
+                        <sheet>
+                            <notebook>
+                                <page string="Non scrollable page">
+                                    <div id="anchor1">No scrollbar!</div>
+                                    <a href="#anchor2" class="link2">TO ANCHOR 2</a> 
+                                </page>
+                                <page string="Other scrollable page">
+                                    <p style="font-size: large">
+                                        Aliquam convallis sollicitudin purus. Praesent aliquam, enim at fermentum mollis,
+                                        ligula massa adipiscing nisl, ac euismod nibh nisl eu lectus. Fusce vulputate sem
+                                        at sapien. Vivamus leo. Aliquam euismod libero eu enim. Nulla nec felis sed leo
+                                        placerat imperdiet. Aenean suscipit nulla in justo. Suspendisse cursus rutrum
+                                        augue.
+                                    </p>
+                                    <p style="font-size: large">
+                                        Aliquam convallis sollicitudin purus. Praesent aliquam, enim at fermentum mollis,
+                                        ligula massa adipiscing nisl, ac euismod nibh nisl eu lectus. Fusce vulputate sem
+                                        at sapien. Vivamus leo. Aliquam euismod libero eu enim. Nulla nec felis sed leo
+                                        placerat imperdiet. Aenean suscipit nulla in justo. Suspendisse cursus rutrum
+                                        augue.
+                                    </p>
+                                    <h2 id="anchor2">There is a scroll bar</h2>
+                                    <a href="#anchor1" class="link1">TO ANCHOR 1</a>
+                                    <p style="font-size: large">
+                                        Aliquam convallis sollicitudin purus. Praesent aliquam, enim at fermentum mollis,
+                                        ligula massa adipiscing nisl, ac euismod nibh nisl eu lectus. Fusce vulputate sem
+                                        at sapien. Vivamus leo. Aliquam euismod libero eu enim. Nulla nec felis sed leo
+                                        placerat imperdiet. Aenean suscipit nulla in justo. Suspendisse cursus rutrum
+                                        augue.
+                                    </p>
+                                </page>
+                            </notebook>
+                        </sheet>
+                </form>`,
+                res_id: 1,
+            });
+            scrollableParent.append(form.el);
+
+            // We set the height of the parent to the height of the second pane
+            // We are then sure there will be no scrollable on this pane but a
+            // only for the first pane
+            scrollableParent.style.maxHeight =
+                scrollableParent.querySelector(".o_action").getBoundingClientRect().height + "px";
+
+            // The element must be contained in the scrollable parent (top and bottom)
+            const isVisible = (el) => {
+                return (
+                    el.getBoundingClientRect().bottom <=
+                        scrollableParent.getBoundingClientRect().bottom &&
+                    el.getBoundingClientRect().top >= scrollableParent.getBoundingClientRect().top
+                );
+            };
+
+            assert.ok(
+                scrollableParent
+                    .querySelector(".tab-pane.active")
+                    .contains(scrollableParent.querySelector("#anchor1")),
+                "the first pane is visible"
+            );
+            assert.ok(
+                !isVisible(scrollableParent.querySelector("#anchor2")),
+                "the second anchor is not visible"
+            );
+            scrollableParent.querySelector(".link2").click();
+            assert.ok(
+                scrollableParent
+                    .querySelector(".tab-pane.active")
+                    .contains(scrollableParent.querySelector("#anchor2")),
+                "the second pane is visible"
+            );
+            assert.ok(
+                isVisible(scrollableParent.querySelector("#anchor2")),
+                "the second anchor is visible"
+            );
+            scrollableParent.querySelector(".link1").click();
+            assert.ok(
+                scrollableParent
+                    .querySelector(".tab-pane.active")
+                    .contains(scrollableParent.querySelector("#anchor1")),
+                "the first pane is visible"
+            );
+            assert.ok(
+                isVisible(scrollableParent.querySelector("#anchor1")),
+                "the first anchor is visible"
+            );
+            form.destroy();
+        }
+    );
+
+    QUnit.skip(
         "invisible attrs on group are re-evaluated on field change",
         async function (assert) {
             assert.expect(2);
@@ -1291,17 +1409,55 @@ QUnit.module("Views", (hooks) => {
         assert.hasClass($(webClient.el).find(".o_notebook .nav-link:eq(0)"), "active");
     });
 
-    QUnit.skip("rendering stat buttons", async function (assert) {
+    QUnit.skip("rendering stat buttons with action", async function (assert) {
         assert.expect(3);
 
-        const form = await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
+        var form = await createView({
+            View: FormView,
+            model: "partner",
+            data: this.data,
             arch:
                 '<form string="Partners">' +
                 "<sheet>" +
-                '<div name="button_box">' +
+                '<div name="button_box" class="oe_button_box">' +
+                '<button class="oe_stat_button" >' +
+                '<field name="int_field"/>' +
+                "</button>" +
+                '<button class="oe_stat_button" name="some_action" type="action" attrs=\'{"invisible": [["bar", "=", true]]}\'>' +
+                '<field name="bar"/>' +
+                "</button>" +
+                "</div>" +
+                "<group>" +
+                '<field name="foo"/>' +
+                "</group>" +
+                "</sheet>" +
+                "</form>",
+            res_id: 2,
+        });
+
+        assert.containsN(form, "button.oe_stat_button", 2);
+        assert.containsOnce(form, "button.oe_stat_button.o_invisible_modifier");
+
+        var count = 0;
+        await testUtils.mock.intercept(form, "execute_action", function () {
+            count++;
+        });
+        await testUtils.dom.click(".oe_stat_button");
+        assert.strictEqual(count, 0, "should have triggered an execute_action");
+        form.destroy();
+    });
+
+    QUnit.skip("rendering stat buttons without action", async function (assert) {
+        assert.expect(4);
+
+        var form = await createView({
+            View: FormView,
+            model: "partner",
+            data: this.data,
+            arch:
+                '<form string="Partners">' +
+                "<sheet>" +
+                '<div name="button_box" class="oe_button_box">' +
                 '<button class="oe_stat_button">' +
                 '<field name="int_field"/>' +
                 "</button>" +
@@ -1314,18 +1470,72 @@ QUnit.module("Views", (hooks) => {
                 "</group>" +
                 "</sheet>" +
                 "</form>",
-            resId: 2,
+            res_id: 2,
         });
 
         assert.containsN(form, "button.oe_stat_button", 2);
         assert.containsOnce(form, "button.oe_stat_button.o_invisible_modifier");
+        assert.containsN(form, "button.oe_stat_button:disabled", 2);
 
         var count = 0;
         await testUtils.mock.intercept(form, "execute_action", function () {
             count++;
         });
         await testUtils.dom.click(".oe_stat_button");
-        assert.strictEqual(count, 1, "should have triggered a execute action");
+        assert.strictEqual(count, 0, "should have not triggered an execute_action");
+        form.destroy();
+    });
+
+    QUnit.skip("readonly stat buttons stays disabled", async function (assert) {
+        assert.expect(4);
+
+        var form = await createView({
+            View: FormView,
+            model: "partner",
+            data: this.data,
+            arch:
+                '<form string="Partners">' +
+                "<sheet>" +
+                '<div name="button_box" class="oe_button_box">' +
+                '<button class="oe_stat_button">' +
+                '<field name="int_field"/>' +
+                "</button>" +
+                '<button class="oe_stat_button" type="action" name="some_action">' +
+                '<field name="bar"/>' +
+                "</button>" +
+                "</div>" +
+                "<group>" +
+                '<button type="action" name="action_to_perform">Run an action</button>' +
+                "</group>" +
+                "</sheet>" +
+                "</form>",
+            res_id: 2,
+        });
+
+        var count = 0;
+        await testUtils.mock.intercept(form, "execute_action", function (event) {
+            if (event.data.action_data.name == "action_to_perform") {
+                assert.containsN(
+                    form,
+                    "button.oe_stat_button[disabled]",
+                    2,
+                    "While performing the action, both buttons should be disabled."
+                );
+                event.data.on_success();
+            }
+        });
+
+        assert.containsN(form, "button.oe_stat_button", 2);
+        assert.containsN(form, "button.oe_stat_button[disabled]", 1);
+        await testUtils.dom.click("button[name=action_to_perform]");
+        assert.containsN(
+            form,
+            "button.oe_stat_button[disabled]",
+            1,
+            "After performing the action, only one button should be disabled."
+        );
+
+        form.destroy();
     });
 
     QUnit.skip("label uses the string attribute", async function (assert) {
@@ -1631,6 +1841,73 @@ QUnit.module("Views", (hooks) => {
                 'input[name="foo"]',
                 "the foo field widget should have been rerendered to now be editable again"
             );
+        }
+    );
+
+    QUnit.skip(
+        "readonly attrs on lines are re-evaluated on field change 2",
+        async function (assert) {
+            assert.expect(4);
+
+            this.data.partner.records[0].product_ids = [37];
+            this.data.partner.records[0].trululu = false;
+            this.data.partner.onchanges = {
+                trululu(record) {
+                    // when trululu changes, push another record in product_ids.
+                    // only push a second record once.
+                    if (record.product_ids.map((command) => command[1]).includes(41)) {
+                        return;
+                    }
+                    // copy the list to force it as different from the original
+                    record.product_ids = record.product_ids.slice();
+                    record.product_ids.push([4, 41, false]);
+                },
+            };
+
+            this.data.product.records[0].name = "test";
+            // This one is necessary to have a valid, rendered widget
+            this.data.product.fields.int_field = { type: "integer", string: "intField" };
+
+            var form = await createView({
+                View: FormView,
+                model: "partner",
+                data: this.data,
+                arch: `
+            <form>
+                <field name="trululu"/>
+                <field name="product_ids" attrs="{'readonly': [['trululu', '=', False]]}">
+                    <tree editable="top"><field name="int_field" widget="handle" /><field name="name"/></tree>
+                </field>
+            </form>
+            `,
+                res_id: 1,
+                viewOptions: {
+                    mode: "edit",
+                },
+            });
+
+            for (let value of [true, false, true, false]) {
+                if (value) {
+                    await testUtils.fields.many2one.clickOpenDropdown("trululu");
+                    await testUtils.fields.many2one.clickHighlightedItem("trululu");
+                    assert.notOk(
+                        $('.o_field_one2many[name="product_ids"]').hasClass("o_readonly_modifier"),
+                        "lines should not be readonly"
+                    );
+                } else {
+                    await testUtils.fields.editAndTrigger(
+                        form.$('.o_field_many2one[name="trululu"] input'),
+                        "",
+                        ["keyup"]
+                    );
+                    assert.ok(
+                        $('.o_field_one2many[name="product_ids"]').hasClass("o_readonly_modifier"),
+                        "lines should be readonly"
+                    );
+                }
+            }
+
+            form.destroy();
         }
     );
 
@@ -2208,9 +2485,9 @@ QUnit.module("Views", (hooks) => {
                 willStart: function () {
                     assert.step("load " + rpcCount);
                     if (rpcCount === 2) {
-                        return $.Deferred();
+                        return new Promise(() => {});
                     }
-                    return $.Deferred().resolve();
+                    return Promise.resolve();
                 },
             })
         );
@@ -2239,18 +2516,13 @@ QUnit.module("Views", (hooks) => {
         });
         assert.verifySteps(["load 1"]);
 
-        await testUtils.mock.intercept(form, "execute_action", function (ev) {
+        testUtils.mock.intercept(form, "execute_action", function (ev) {
             ev.data.on_success();
             ev.data.on_closed();
         });
 
         await testUtils.dom.click(".o_form_statusbar button.p", form);
         assert.verifySteps(["load 2"]);
-
-        testUtils.mock.intercept(form, "execute_action", function (ev) {
-            ev.data.on_success();
-            ev.data.on_closed();
-        });
 
         await testUtils.dom.click(".o_form_statusbar button.p", form);
         assert.verifySteps(["load 3"]);
@@ -3094,7 +3366,7 @@ QUnit.module("Views", (hooks) => {
                 '<form string="Partners">' +
                 "<sheet>" +
                 '<div name="button_box">' +
-                '<button class="oe_stat_button">' +
+                '<button class="oe_stat_button" name="some_action" type="action">' +
                 '<field name="bar"/>' +
                 "</button>" +
                 "</div>" +
@@ -4100,7 +4372,7 @@ QUnit.module("Views", (hooks) => {
                             "should have a warning with correct title"
                         );
                         assert.strictEqual(
-                            params.message,
+                            params.message.toString(),
                             "<ul><li>Foo</li></ul>",
                             "should have a warning with correct message"
                         );
@@ -8243,7 +8515,7 @@ QUnit.module("Views", (hooks) => {
                 '<button name="some_method" class="s" string="Do it" type="object"/>' +
                 "</header>" +
                 "<sheet>" +
-                '<div name="button_box" class="oe_button_box">' +
+                '<div name="button_box" class="oe_button_box" name="some_action" type="action">' +
                 '<button class="oe_stat_button">' +
                 '<field name="bar"/>' +
                 "</button>" +
@@ -8334,7 +8606,7 @@ QUnit.module("Views", (hooks) => {
                 '<button name="some_method" class="s" string="Do it" type="object"/>' +
                 "</header>" +
                 "<sheet>" +
-                '<div name="button_box" class="oe_button_box">' +
+                '<div name="button_box" class="oe_button_box" name="some_action" type="action">' +
                 '<button class="oe_stat_button">' +
                 '<field name="bar"/>' +
                 "</button>" +
@@ -8479,7 +8751,7 @@ QUnit.module("Views", (hooks) => {
                         "<form>" +
                         "<sheet>" +
                         '<div name="button_box" class="oe_button_box">' +
-                        '<button class="oe_stat_button">' +
+                        '<button class="oe_stat_button" name="some_action" type="action">' +
                         '<field name="bar"/>' +
                         "</button>" +
                         "</div>" +
@@ -12582,6 +12854,43 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(form, 'input[type="radio"]:eq(2):checked');
     });
 
+    QUnit.skip("Quick Edition: Selection radio click on value", async function (assert) {
+        assert.expect(5);
+
+        const form = await createView({
+            View: FormView,
+            model: "partner",
+            data: this.data,
+            arch: `
+                <form>
+                    <group>
+                        <field name="state" widget="radio"/>
+                    </group>
+                </form>`,
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.model === "partner" && args.method === "write") {
+                    assert.step("Write");
+                }
+                return this._super(route, args);
+            },
+        });
+
+        assert.containsOnce(form, ".o_form_view.o_form_readonly");
+        assert.containsOnce(form, 'input[type="radio"]:eq(0):checked');
+
+        // click on the last value
+        await testUtils.dom.click(form.$(".o_radio_item .o_form_label:contains(EF)"));
+
+        // should be switched in edit mode
+        assert.containsOnce(form, ".o_form_view.o_form_editable");
+        assert.containsOnce(form, 'input[type="radio"]:eq(2):checked');
+
+        assert.verifySteps([], "No write RPC done");
+
+        form.destroy();
+    });
+
     QUnit.skip("Quick Edition: non-editable form", async function (assert) {
         assert.expect(3);
 
@@ -12657,25 +12966,48 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.skip("Quick Edition: selecting text of quick editable field", async function (assert) {
-        assert.expect(5);
+        assert.expect(8);
 
-        const MULTI_CLICK_TIME = 50;
+        const MULTI_CLICK_DELAY = 6498651354; // arbitrary large number to identify setTimeout calls
+        let quickEditCB;
+        let quickEditTimeoutId;
+        let nextId = 1;
+        const originalSetTimeout = window.setTimeout;
+        const originalClearTimeout = window.clearTimeout;
+        patchWithCleanup(window, {
+            setTimeout(fn, delay) {
+                if (delay === MULTI_CLICK_DELAY) {
+                    quickEditCB = fn;
+                    quickEditTimeoutId = `quick_edit_${nextId++}`;
+                    return quickEditTimeoutId;
+                } else {
+                    return originalSetTimeout(...arguments);
+                }
+            },
+            clearTimeout(id) {
+                if (id === quickEditTimeoutId) {
+                    quickEditCB = undefined;
+                } else {
+                    return originalClearTimeout(...arguments);
+                }
+            },
+        });
 
         const form = await createView({
-            type: "form",
-            resModel: "partner",
-            serverData,
+            View: FormView,
+            model: "partner",
+            data: this.data,
             arch: `
                 <form>
                     <group>
                         <field name="display_name"/>
                     </group>
                 </form>`,
-            formMultiClickTime: MULTI_CLICK_TIME,
-            resId: 1,
+            formMultiClickTime: MULTI_CLICK_DELAY,
+            res_id: 1,
         });
 
-        assert.containsOnce(form, ".o_form_view.o_form_readonly");
+        assert.containsOnce(form, ".o_legacy_form_view.o_form_readonly");
 
         // text selected by holding and dragging doesn't start quick edit
         window.getSelection().removeAllRanges();
@@ -12683,8 +13015,9 @@ QUnit.module("Views", (hooks) => {
         await range.selectNode(form.$('.o_field_widget[name="display_name"]')[0]);
         window.getSelection().addRange(range);
         await testUtils.dom.click(form.$('.o_field_widget[name="display_name"]'));
-        await concurrency.delay(MULTI_CLICK_TIME);
-        assert.containsOnce(form, ".o_form_view.o_form_readonly");
+        await testUtils.nextTick();
+        assert.strictEqual(quickEditCB, undefined, "no quickEdit callback should have been set");
+        assert.containsOnce(form, ".o_legacy_form_view.o_form_readonly");
 
         // double click selecting text doesn't start quick edit
         window.getSelection().removeAllRanges();
@@ -12692,16 +13025,22 @@ QUnit.module("Views", (hooks) => {
         range.selectNode(form.$('.o_field_widget[name="display_name"]')[0]);
         window.getSelection().addRange(range);
         await testUtils.dom.click(form.$('.o_field_widget[name="display_name"]'));
-        await concurrency.delay(MULTI_CLICK_TIME);
-        assert.containsOnce(form, ".o_form_view.o_form_readonly");
+        await testUtils.nextTick();
+        assert.strictEqual(quickEditCB, undefined, "no quickEdit callback should have been set");
+        assert.containsOnce(form, ".o_legacy_form_view.o_form_readonly");
 
         // quick edit happens after timeout
         window.getSelection().removeAllRanges();
         await testUtils.dom.click(form.$('.o_field_widget[name="display_name"]'));
         await testUtils.nextTick();
-        assert.containsOnce(form, ".o_form_view.o_form_readonly");
-        await concurrency.delay(MULTI_CLICK_TIME);
-        assert.containsOnce(form, ".o_form_view.o_form_editable");
+        assert.containsOnce(form, ".o_legacy_form_view.o_form_readonly");
+        assert.ok(quickEditCB, "quickEdit callback should have been set");
+        quickEditCB();
+        await testUtils.nextTick();
+        await legacyExtraNextTick();
+        assert.containsOnce(form, ".o_legacy_form_view.o_form_editable");
+
+        form.destroy();
     });
 
     QUnit.skip(

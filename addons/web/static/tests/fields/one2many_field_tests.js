@@ -5953,16 +5953,21 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.skip(
-        "one2many kanban with edit type action and domain widget (widget using SpecialData)",
+        "one2many kanban with edit type action and widget with specialData",
         async function (assert) {
-            assert.expect(1);
+            assert.expect(3);
 
-            this.data.turtle.fields.model_name = { string: "Domain Condition Model", type: "char" };
-            this.data.turtle.fields.condition = { string: "Domain Condition", type: "char" };
-            _.each(this.data.turtle.records, function (record) {
-                record.model_name = "partner";
-                record.condition = "[]";
+            testUtils.mock.patch(BasicModel, {
+                _fetchSpecialDataForMyWidget() {
+                    assert.step("_fetchSpecialDataForMyWidget");
+                    return Promise.resolve();
+                },
             });
+            const MyWidget = AbstractField.extend({
+                specialData: "_fetchSpecialDataForMyWidget",
+                className: "my_widget",
+            });
+            fieldRegistry.add("specialWidget", MyWidget);
 
             var form = await createView({
                 View: FormView,
@@ -5978,16 +5983,15 @@ QUnit.module("Fields", (hooks) => {
                     '<div><field name="display_name"/></div>' +
                     '<div><field name="turtle_foo"/></div>' +
                     // field without Widget in the list
-                    '<div><field name="condition"/></div>' +
+                    '<div><field name="turtle_int"/></div>' +
                     '<div> <a type="edit"> Edit </a> </div>' +
                     "</t>" +
                     "</templates>" +
                     "</kanban>" +
                     "<form>" +
                     '<field name="product_id" widget="statusbar"/>' +
-                    '<field name="model_name"/>' +
                     // field with Widget requiring specialData in the form
-                    '<field name="condition" widget="domain" options="{\'model\': \'model_name\'}"/>' +
+                    '<field name="turtle_int" widget="specialWidget"/>' +
                     "</form>" +
                     "</field>" +
                     "</group>" +
@@ -5996,11 +6000,8 @@ QUnit.module("Fields", (hooks) => {
             });
 
             await testUtils.dom.click(form.$(".oe_kanban_action:eq(0)"));
-            assert.strictEqual(
-                $(".o_domain_selector").length,
-                1,
-                "should add domain selector widget"
-            );
+            assert.containsOnce(document.body, ".modal .my_widget", "should add our custom widget");
+            assert.verifySteps(["_fetchSpecialDataForMyWidget"]);
             form.destroy();
         }
     );
@@ -6008,14 +6009,21 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skip(
         "one2many list with onchange and domain widget (widget using SpecialData)",
         async function (assert) {
-            assert.expect(3);
+            // TODO: rename this test: it no longer uses the DomainField
+            assert.expect(4);
 
-            this.data.turtle.fields.model_name = { string: "Domain Condition Model", type: "char" };
-            this.data.turtle.fields.condition = { string: "Domain Condition", type: "char" };
-            _.each(this.data.turtle.records, function (record) {
-                record.model_name = "partner";
-                record.condition = "[]";
+            testUtils.mock.patch(BasicModel, {
+                _fetchSpecialDataForMyWidget() {
+                    assert.step("_fetchSpecialDataForMyWidget");
+                    return Promise.resolve();
+                },
             });
+            const MyWidget = AbstractField.extend({
+                specialData: "_fetchSpecialDataForMyWidget",
+                className: "my_widget",
+            });
+            fieldRegistry.add("specialWidget", MyWidget);
+
             this.data.partner.onchanges = {
                 turtles: function (obj) {
                     var virtualID = obj.turtles[1][1];
@@ -6033,14 +6041,11 @@ QUnit.module("Fields", (hooks) => {
                                 turtle_qux: 9.8,
                                 partner_ids: [],
                                 turtle_ref: "product,37",
-                                model_name: "partner",
-                                condition: "[]",
                             },
                         ],
                     ];
                 },
             };
-            var nbFetchSpecialDomain = 0;
             var form = await createView({
                 View: FormView,
                 model: "partner",
@@ -6053,12 +6058,11 @@ QUnit.module("Fields", (hooks) => {
                     '<field name="display_name"/>' +
                     '<field name="turtle_foo"/>' +
                     // field without Widget in the list
-                    '<field name="condition"/>' +
+                    '<field name="turtle_int"/>' +
                     "</tree>" +
                     "<form>" +
-                    '<field name="model_name"/>' +
                     // field with Widget requiring specialData in the form
-                    '<field name="condition" widget="domain" options="{\'model\': \'model_name\'}"/>' +
+                    '<field name="turtle_int" widget="specialWidget"/>' +
                     "</form>" +
                     "</field>" +
                     "</group>" +
@@ -6067,31 +6071,27 @@ QUnit.module("Fields", (hooks) => {
                 viewOptions: {
                     mode: "edit",
                 },
-                mockRPC: function (route) {
-                    if (route === "/web/dataset/call_kw/partner/search_count") {
-                        nbFetchSpecialDomain++;
-                    }
-                    return this._super.apply(this, arguments);
-                },
             });
 
             await testUtils.dom.click(form.$(".o_field_one2many .o_field_x2many_list_row_add a"));
             assert.strictEqual($(".modal").length, 1, "form view dialog should be opened");
-            await testUtils.fields.editInput($('.modal-body input[name="model_name"]'), "partner");
             await testUtils.dom.click($(".modal-footer button:first"));
 
             assert.strictEqual(
                 form.$(".o_field_one2many tbody tr:first").text(),
-                "coucouhas changed[]",
+                "coucouhas changed42",
                 "the onchange should create one new record and remove the existing"
             );
 
             await testUtils.dom.click(
-                form.$(".o_field_one2many .o_list_view tbody tr:eq(0) td:first")
+                form.$(".o_field_one2many .o_legacy_list_view tbody tr:eq(0) td:first")
             );
 
             await testUtils.form.clickSave(form);
-            assert.strictEqual(nbFetchSpecialDomain, 1, "should only fetch special domain once");
+            assert.verifySteps(
+                ["_fetchSpecialDataForMyWidget"],
+                "should only fetch special data once"
+            );
             form.destroy();
         }
     );
