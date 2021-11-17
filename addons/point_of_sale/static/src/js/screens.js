@@ -1358,6 +1358,16 @@ var ClientListScreenWidget = ScreenWidget.extend({
             })
             .then(function(partner_id){
                 self.saved_client_details(partner_id);
+
+                // Adicionado pela Multidados
+                self.pos.update_security_domain(partner_id);
+                self.pos.load_new_partners();
+                self.display_client_details('hide');
+                self.gui.show_popup('alert',{
+                    'title': _t('Partner sucessfully added.'),
+                    'body': _t('Partner Created !'),
+                });
+
             },function(err,ev){
                 ev.preventDefault();
                 var error_body = _t('Your Internet connection is probably down.');
