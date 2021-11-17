@@ -22,26 +22,32 @@ class WebsiteSnippetFilter(models.Model):
         if model._name == 'product.product':
             data = [{
                 'image_512': b'/product/static/img/product_chair.png',
+                'name': _('Chair'),
                 'display_name': _('Chair'),
                 'description_sale': _('Sit comfortably'),
             }, {
                 'image_512': b'/product/static/img/product_lamp.png',
+                'name': _('Lamp'),
                 'display_name': _('Lamp'),
                 'description_sale': _('Lightbulb sold separately'),
             }, {
                 'image_512': b'/product/static/img/product_product_20-image.png',
+                'name': _('Whiteboard'),
                 'display_name': _('Whiteboard'),
                 'description_sale': _('With three feet'),
             }, {
                 'image_512': b'/product/static/img/product_product_27-image.png',
+                'name': _('Drawer'),
                 'display_name': _('Drawer'),
                 'description_sale': _('On wheels'),
             }, {
                 'image_512': b'/product/static/img/product_product_7-image.png',
+                'name': _('Box'),
                 'display_name': _('Box'),
                 'description_sale': _('Reinforced for heavy loads'),
             }, {
                 'image_512': b'/product/static/img/product_product_9-image.png',
+                'name': _('Bin'),
                 'display_name': _('Bin'),
                 'description_sale': _('Pedal-based opening system'),
             }]

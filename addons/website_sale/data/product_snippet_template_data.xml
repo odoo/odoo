@@ -15,7 +15,7 @@
                     <i t-if="data.get('_latest_viewed')" class="fa fa-trash o_carousel_product_remove js_remove"></i>
                     <div class="o_carousel_product_card_body card-body border-top">
                         <a t-att-href="record.website_url" class="text-decoration-none">
-                            <div class="h6 card-title mb-0" t-field="record.display_name"/>
+                            <div class="h6 card-title mb-0" t-field="record.name"/>
                         </a>
                         <div class="mt-2">
                             <t t-if="is_view_active('website_sale.product_comment')" t-call="portal_rating.rating_widget_stars_static">
@@ -45,7 +45,7 @@
                         <img class="card-img-top p-3" loading="lazy" t-att-src="data['image_512']" t-att-alt="record.display_name"/>
                     </a>
                     <div class="o_carousel_product_card_body card-body d-flex flex-column justify-content-between">
-                        <div class="card-title h5" t-field="record.display_name"/>
+                        <div class="card-title h5" t-field="record.name"/>
                         <div class="card-text" t-field="record.description_sale"/>
                         <div class="mt-2">
                             <t t-if="is_view_active('website_sale.product_comment')" t-call="portal_rating.rating_widget_stars_static">
@@ -109,7 +109,7 @@
                     <a class="o_carousel_product_img_link stretched-link" t-att-href="record.website_url">
                         <img class="card-img-top p-3" loading="lazy" t-att-src="data['image_512']" t-att-alt="record.display_name"/>
                     </a>
-                    <div class="h6 text-center mt-2 p-2" t-field="record.display_name"/>
+                    <div class="h6 text-center mt-2 p-2" t-field="record.name"/>
                 </div>
             </t>
         </template>
@@ -124,7 +124,7 @@
                         <img class="card-img-top" loading="lazy" t-att-src="data['image_512']" t-att-alt="record.display_name"/>
                     </a>
                     <div class="o_carousel_product_card_body card-body d-flex flex-column justify-content-between">
-                        <div class="card-title h5 text-center" t-field="record.display_name"/>
+                        <div class="card-title h5 text-center" t-field="record.name"/>
                         <div class="text-center">
                             <div class="h5">
                                 <t t-call="website_sale.price_dynamic_filter_template_product_product"/>
@@ -160,7 +160,7 @@
                     </a>
                     <div class="o_carousel_product_card_body d-flex flex-wrap flex-column justify-content-between h-100">
                         <a t-att-href="record.website_url" class="o_carousel_product_img_link text-decoration-none">
-                            <div class="h6 card-title mt-4" t-field="record.display_name"/>
+                            <div class="h6 card-title mt-4" t-field="record.name"/>
                         </a>
                         <div>
                             <t t-if="is_view_active('website_sale.product_comment')" t-call="portal_rating.rating_widget_stars_static">
@@ -196,7 +196,7 @@
                                     <t t-set="rating_count" t-value="record.rating_count"/>
                                 </t>
                             </t>
-                            <div class="card-title h6 w-100 mt-2" t-field="record.display_name"/>
+                            <div class="card-title h6 w-100 mt-2" t-field="record.name"/>
                         </div>
                         <div class="text-right o_dynamic_snippet_btn_wrapper">
                             <button type="button" role="button" class="btn btn-primary js_add_cart" title="Add to Cart">
@@ -220,7 +220,7 @@
                         </div>
                         <div class="col-lg-6">
                             <div class="o_carousel_product_card_body p-5">
-                                <div class="card-title h1" t-field="record.display_name"/>
+                                <div class="card-title h1" t-field="record.name"/>
                                 <div class="d-flex align-items-center my-4">
                                     <div class="text-primary h4 mb-0 mr-3">
                                         <t t-call="website_sale.price_dynamic_filter_template_product_product"/>
@@ -260,7 +260,7 @@
                         </div>
                         <div class="o_carousel_product_card_body col-lg-8 pl-3 d-flex flex-column justify-content-between">
                             <div>
-                                <div class="card-title h6" t-field="record.display_name"/>
+                                <div class="card-title h6" t-field="record.name"/>
                                 <div class="mb-2">
                                     <t t-if="is_view_active('website_sale.product_comment')" t-call="portal_rating.rating_widget_stars_static">
                                         <t t-set="rating_avg" t-value="record.rating_avg"/>
