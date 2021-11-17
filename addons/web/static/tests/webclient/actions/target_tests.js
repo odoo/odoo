@@ -48,9 +48,9 @@ QUnit.module("ActionManager", (hooks) => {
             "o_act_window",
             "dialog main element should have classname 'o_act_window'"
         );
-        assert.hasClass(
-            $(".o_technical_modal .o_form_view")[0],
-            "o_form_editable",
+        assert.containsOnce(
+            document.body,
+            ".o_technical_modal .o_form_view o_form_editable",
             "form view should be in edit mode"
         );
         assert.verifySteps([
