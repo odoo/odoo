@@ -198,7 +198,9 @@ const LinkDialog = Dialog.extend({
     save: function () {
         this.linkWidget.save();
         this.final_data = this.linkWidget.final_data;
-        return this._super(...arguments);
+        if (this.final_data) {
+            return this._super(...arguments);
+        }
     },
 });
 
