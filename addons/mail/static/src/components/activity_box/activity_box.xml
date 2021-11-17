@@ -3,37 +3,37 @@
 
     <t t-name="mail.ActivityBox" owl="1">
         <div class="o_ActivityBox">
-            <t t-if="chatter and chatter.thread">
-                <a role="button" class="o_ActivityBox_title btn" t-on-click="chatter.onClickActivityBoxTitle">
+            <t t-if="activityBoxView">
+                <a role="button" class="o_ActivityBox_title btn" t-on-click="activityBoxView.onClickActivityBoxTitle">
                     <hr class="o_ActivityBox_titleLine" />
                     <span class="o_ActivityBox_titleText">
-                        <i class="fa fa-fw" t-att-class="chatter.isActivityBoxVisible ? 'fa-caret-down' : 'fa-caret-right'"/>
+                        <i class="fa fa-fw" t-att-class="activityBoxView.isActivityListVisible ? 'fa-caret-down' : 'fa-caret-right'"/>
                         Planned activities
                     </span>
-                    <t t-if="!chatter.isActivityBoxVisible">
+                    <t t-if="!activityBoxView.isActivityListVisible">
                         <span class="o_ActivityBox_titleBadges">
-                            <t t-if="chatter.thread.overdueActivities.length > 0">
+                            <t t-if="activityBoxView.chatter.thread.overdueActivities.length > 0">
                                 <span class="o_ActivityBox_titleBadge badge rounded-circle badge-danger">
-                                    <t t-esc="chatter.thread.overdueActivities.length"/>
+                                    <t t-esc="activityBoxView.chatter.thread.overdueActivities.length"/>
                                 </span>
                             </t>
-                            <t t-if="chatter.thread.todayActivities.length > 0">
+                            <t t-if="activityBoxView.chatter.thread.todayActivities.length > 0">
                                 <span class="o_ActivityBox_titleBadge badge rounded-circle badge-warning">
-                                    <t t-esc="chatter.thread.todayActivities.length"/>
+                                    <t t-esc="activityBoxView.chatter.thread.todayActivities.length"/>
                                 </span>
                             </t>
-                            <t t-if="chatter.thread.futureActivities.length > 0">
+                            <t t-if="activityBoxView.chatter.thread.futureActivities.length > 0">
                                 <span class="o_ActivityBox_titleBadge badge rounded-circle badge-success">
-                                    <t t-esc="chatter.thread.futureActivities.length"/>
+                                    <t t-esc="activityBoxView.chatter.thread.futureActivities.length"/>
                                 </span>
                             </t>
                         </span>
                     </t>
                     <hr class="o_ActivityBox_titleLine" />
                 </a>
-                <t t-if="chatter.isActivityBoxVisible">
-                    <div class="o_ActivityList">
-                        <t t-foreach="chatter.thread.activities" t-as="activity" t-key="activity.localId">
+                <t t-if="activityBoxView.isActivityListVisible">
+                    <div class="o_ActivityBox_activityList">
+                        <t t-foreach="activityBoxView.chatter.thread.activities" t-as="activity" t-key="activity.localId">
                             <Activity class="o_ActivityBox_activity" activityLocalId="activity.localId"/>
                         </t>
                     </div>

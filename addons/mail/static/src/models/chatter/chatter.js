@@ -32,7 +32,6 @@ function factory(dependencies) {
             this._attachmentsLoaderTimeout = undefined;
             this._isPreparingAttachmentsLoading = undefined;
             // Bind necessary until OWL supports arrow function in handlers: https://github.com/odoo/owl/issues/876
-            this.onClickActivityBoxTitle = this.onClickActivityBoxTitle.bind(this);
             this.onClickButtonAttachments = this.onClickButtonAttachments.bind(this);
             this.onClickChatterTopbarClose = this.onClickChatterTopbarClose.bind(this);
             this.onClickLogNote = this.onClickLogNote.bind(this);
@@ -57,15 +56,6 @@ function factory(dependencies) {
             if (this.composerView) {
                 this.composerView.update({ doFocus: true });
             }
-        }
-
-        /**
-         * Handles click on activity box title.
-         *
-         * @param {MouseEvent} ev
-         */
-        onClickActivityBoxTitle(ev) {
-            this.update({ isActivityBoxVisible: !this.isActivityBoxVisible });
         }
 
         /**
@@ -184,6 +174,17 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
         // Private
         //----------------------------------------------------------------------
+
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeActivityBoxView() {
+            if (this.thread && this.thread.hasActivities && this.thread.activities.length > 0) {
+                return insertAndReplace();
+            }
+            return clear();
+        }
 
         /**
          * @private
@@ -311,6 +312,11 @@ function factory(dependencies) {
     }
 
     Chatter.fields = {
+        activityBoxView: one2one('mail.activity_box_view', {
+            compute: '_computeActivityBoxView',
+            inverse: 'chatter',
+            isCausal: true,
+        }),
         attachmentBoxView: one2one('mail.attachment_box_view', {
             inverse: 'chatter',
             isCausal: true,
@@ -386,9 +392,6 @@ function factory(dependencies) {
         id: attr({
             readonly: true,
             required: true,
-        }),
-        isActivityBoxVisible: attr({
-            default: true,
         }),
         /**
          * Determiners whether the attachment box is visible initially.

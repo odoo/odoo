@@ -29,10 +29,10 @@
                             attachmentBoxViewLocalId="chatter.attachmentBoxView.localId"
                         />
                     </t>
-                    <t t-if="chatter.thread and chatter.hasActivities and chatter.thread.activities.length > 0">
+                    <t t-if="chatter.activityBoxView">
                         <ActivityBox
                             class="o_Chatter_activityBox"
-                            chatterLocalId="chatter.localId"
+                            activityBoxViewLocalId="chatter.activityBoxView.localId"
                         />
                     </t>
                     <t t-if="chatter.threadView">
