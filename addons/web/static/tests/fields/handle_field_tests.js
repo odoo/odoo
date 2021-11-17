@@ -2,8 +2,8 @@
 
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { registry } from "@web/core/registry";
-import { makeFakeLocalizationService, makeFakeUserService } from "../helpers/mock_services";
-import { click, makeDeferred, nextTick, triggerEvent, triggerEvents } from "../helpers/utils";
+import { makeFakeUserService } from "../helpers/mock_services";
+import { click } from "../helpers/utils";
 import {
     setupControlPanelFavoriteMenuRegistry,
     setupControlPanelServiceRegistry,
@@ -24,183 +24,31 @@ QUnit.module("Fields", (hooks) => {
             models: {
                 partner: {
                     fields: {
-                        date: { string: "A date", type: "date", searchable: true },
-                        datetime: { string: "A datetime", type: "datetime", searchable: true },
                         display_name: { string: "Displayed name", type: "char", searchable: true },
-                        foo: {
-                            string: "Foo",
-                            type: "char",
-                            default: "My little Foo Value",
-                            searchable: true,
-                            trim: true,
-                        },
-                        bar: { string: "Bar", type: "boolean", default: true, searchable: true },
-                        empty_string: {
-                            string: "Empty string",
-                            type: "char",
-                            default: false,
-                            searchable: true,
-                            trim: true,
-                        },
-                        txt: {
-                            string: "txt",
-                            type: "text",
-                            default: "My little txt Value\nHo-ho-hoooo Merry Christmas",
-                        },
-                        int_field: {
-                            string: "int_field",
-                            type: "integer",
-                            sortable: true,
-                            searchable: true,
-                        },
-                        qux: { string: "Qux", type: "float", digits: [16, 1], searchable: true },
                         p: {
                             string: "one2many field",
                             type: "one2many",
                             relation: "partner",
                             searchable: true,
                         },
-                        trululu: {
-                            string: "Trululu",
-                            type: "many2one",
-                            relation: "partner",
-                            searchable: true,
-                        },
-                        timmy: {
-                            string: "pokemon",
-                            type: "many2many",
-                            relation: "partner_type",
-                            searchable: true,
-                        },
-                        product_id: {
-                            string: "Product",
-                            type: "many2one",
-                            relation: "product",
-                            searchable: true,
-                        },
                         sequence: { type: "integer", string: "Sequence", searchable: true },
-                        currency_id: {
-                            string: "Currency",
-                            type: "many2one",
-                            relation: "currency",
-                            searchable: true,
-                        },
-                        selection: {
-                            string: "Selection",
-                            type: "selection",
-                            searchable: true,
-                            selection: [
-                                ["normal", "Normal"],
-                                ["blocked", "Blocked"],
-                                ["done", "Done"],
-                            ],
-                        },
-                        document: { string: "Binary", type: "binary" },
-                        hex_color: { string: "hexadecimal color", type: "char" },
                     },
                     records: [
                         {
                             id: 1,
-                            date: "2017-02-03",
-                            datetime: "2017-02-08 10:00:00",
                             display_name: "first record",
-                            bar: true,
-                            foo: "yop",
-                            int_field: 10,
-                            qux: 0.44444,
                             p: [],
-                            timmy: [],
-                            trululu: 4,
-                            selection: "blocked",
-                            document: "coucou==\n",
-                            hex_color: "#ff0000",
                         },
                         {
                             id: 2,
                             display_name: "second record",
-                            bar: true,
-                            foo: "blip",
-                            int_field: 0,
-                            qux: 0,
                             p: [],
-                            timmy: [],
-                            trululu: 1,
                             sequence: 4,
-                            currency_id: 2,
-                            selection: "normal",
                         },
                         {
                             id: 4,
                             display_name: "aaa",
-                            foo: "abc",
                             sequence: 9,
-                            int_field: false,
-                            qux: false,
-                            selection: "done",
-                        },
-                        { id: 3, bar: true, foo: "gnap", int_field: 80, qux: -3.89859 },
-                        { id: 5, bar: false, foo: "blop", int_field: -4, qux: 9.1, currency_id: 1 },
-                    ],
-                    onchanges: {},
-                },
-                product: {
-                    fields: {
-                        name: { string: "Product Name", type: "char", searchable: true },
-                    },
-                    records: [
-                        {
-                            id: 37,
-                            display_name: "xphone",
-                        },
-                        {
-                            id: 41,
-                            display_name: "xpad",
-                        },
-                    ],
-                },
-                partner_type: {
-                    fields: {
-                        name: { string: "Partner Type", type: "char", searchable: true },
-                        color: { string: "Color index", type: "integer", searchable: true },
-                    },
-                    records: [
-                        { id: 12, display_name: "gold", color: 2 },
-                        { id: 14, display_name: "silver", color: 5 },
-                    ],
-                },
-                currency: {
-                    fields: {
-                        digits: { string: "Digits" },
-                        symbol: { string: "Currency Sumbol", type: "char", searchable: true },
-                        position: { string: "Currency Position", type: "char", searchable: true },
-                    },
-                    records: [
-                        {
-                            id: 1,
-                            display_name: "$",
-                            symbol: "$",
-                            position: "before",
-                        },
-                        {
-                            id: 2,
-                            display_name: "€",
-                            symbol: "€",
-                            position: "after",
-                        },
-                    ],
-                },
-                "ir.translation": {
-                    fields: {
-                        lang: { type: "char" },
-                        value: { type: "char" },
-                        res_id: { type: "integer" },
-                    },
-                    records: [
-                        {
-                            id: 99,
-                            res_id: 37,
-                            value: "",
-                            lang: "en_US",
                         },
                     ],
                 },
@@ -215,81 +63,87 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("HandleField");
 
-    QUnit.skip("HandleField in x2m", async function (assert) {
+    QUnit.test("HandleField in x2m", async function (assert) {
         assert.expect(6);
 
-        this.data.partner.records[0].p = [2, 4];
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                '<field name="p">' +
-                '<tree editable="bottom">' +
-                '<field name="sequence" widget="handle"/>' +
-                '<field name="display_name"/>' +
-                "</tree>" +
-                "</field>" +
-                "</form>",
-            res_id: 1,
+        serverData.models.partner.records[0].p = [2, 4];
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="p">
+                        <tree editable="bottom">
+                            <field name="sequence" widget="handle" />
+                            <field name="display_name" />
+                        </tree>
+                    </field>
+                </form>
+            `,
         });
 
         assert.strictEqual(
-            form.$("td span.o_row_handle").text(),
+            form.el.querySelector("td span.o_row_handle").textContent,
             "",
             "handle should not have any content"
         );
 
-        assert.notOk(
-            form.$("td span.o_row_handle").is(":visible"),
+        assert.strictEqual(
+            getComputedStyle(form.el.querySelector("td span.o_row_handle")).display,
+            "none",
             "handle should be invisible in readonly mode"
         );
 
-        assert.containsN(form, "span.o_row_handle", 2, "should have 2 handles");
+        assert.containsN(form.el, "span.o_row_handle", 2, "should have 2 handles");
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el, ".o_form_button_edit");
 
         assert.hasClass(
-            form.$("td:first"),
+            form.el.querySelector("td"),
             "o_handle_cell",
             "column widget should be displayed in css class"
         );
 
-        assert.ok(
-            form.$("td span.o_row_handle").is(":visible"),
-            "handle should be visible in readonly mode"
+        assert.notStrictEqual(
+            getComputedStyle(form.el.querySelector("td span.o_row_handle")).display,
+            "none",
+            "handle should be visible in edit mode"
         );
 
-        testUtils.dom.click(form.$("td").eq(1));
+        click(form.el.querySelectorAll("td")[1]);
         assert.containsOnce(
-            form,
-            "td:first span.o_row_handle",
+            form.el.querySelector("td"),
+            "span.o_row_handle",
             "content of the cell should have been replaced"
         );
-        form.destroy();
     });
 
-    QUnit.skip("HandleField with falsy values", async function (assert) {
+    QUnit.test("HandleField with falsy values", async function (assert) {
         assert.expect(1);
 
-        var list = await createView({
-            View: ListView,
-            model: "partner",
-            data: this.data,
-            arch:
-                "<tree>" +
-                '<field name="sequence" widget="handle"/>' +
-                '<field name="display_name"/>' +
-                "</tree>",
+        const list = await makeView({
+            type: "list",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <tree>
+                    <field name="sequence" widget="handle" />
+                    <field name="display_name" />
+                </tree>
+            `,
         });
+
+        const visibleRowHandles = [...list.el.querySelectorAll(".o_row_handle")].filter(
+            (el) => getComputedStyle(el).display !== "none"
+        );
 
         assert.containsN(
             list,
-            ".o_row_handle:visible",
-            this.data.partner.records.length,
+            visibleRowHandles,
+            serverData.models.partner.records.length,
             "there should be a visible handle for each record"
         );
-        list.destroy();
     });
 });
