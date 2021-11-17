@@ -8259,7 +8259,7 @@ QUnit.module('Legacy basic_fields', {
 
         await testUtils.form.clickSave(form);
         assert.hasClass(form.$(".o_field_domain"), "o_field_invalid", "the field is marked as invalid");
-        assert.hasClass(form.$(".o_form_view"), "o_form_editable", "the view is still in edit mode");
+        assert.hasClass(form.$(".o_legacy_form_view"), "o_form_editable", "the view is still in edit mode");
         assert.verifySteps(["[[\"abc\"]]"]);
 
         form.destroy();
