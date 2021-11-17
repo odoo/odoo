@@ -6,6 +6,9 @@ var FieldOne2Many = require('web.relational_fields').FieldOne2Many;
 var FieldRegistry = require('web.field_registry');
 var ListRenderer = require('web.ListRenderer');
 var config = require('web.config');
+var core = require('web.core');
+
+var _t = core._t;
 
 var SectionListRenderer = ListRenderer.extend({
     init: function (parent, state, params) {
@@ -148,6 +151,14 @@ var SectionFieldOne2Many = FieldOne2Many.extend({
         this._super.apply(this, arguments);
         this.sectionFieldName = "is_page";
         this.rendered = false;
+        // Fetch an additional Javascript function from model for client-side form
+        // validation of "Validate Entry" fields to avoid multiple calls or batch validation.
+        let self = this;
+        this._rpc({
+            route: '/survey/form_validation'
+        }).then(function (response) {
+            self.validateRecordForm = eval(JSON.parse(response)["validateRecordForm"]);
+        });
     },
     /**
      * Overridden to use our custom renderer
@@ -179,6 +190,40 @@ var SectionFieldOne2Many = FieldOne2Many.extend({
         }
         this._super.apply(this, arguments);
     },
+    /**
+     * Override to perform additional model-specific client-side form validation
+     * @override
+     * @param {Object} params
+     * @param {Object} [params.context]
+     * @private
+     */
+    _openFormDialog: function (params) {
+        let self = this;
+        let onSaved = params["on_saved"];
+
+        Object.assign(params, {
+            on_saved: function (record){
+                let errorMessage = self.validateRecordForm();
+                if (errorMessage) {
+                    this.displayNotification({
+                        title: _t("Validation Error"),
+                        message: errorMessage,
+                        type: 'danger'
+                    });
+                    return Promise.reject(errorMessage);
+                }
+                onSaved(record);
+            }
+        });
+        let fnSuper = this._super;
+        let fnArguments = arguments;
+        // ensures the survey exists to read the scoring option
+        this.trigger_up('save_form_before_new_question', {
+            callback: function () {
+                fnSuper.apply(self, fnArguments);
+            }
+        });
+    }
 });
 
 FieldRegistry.add('question_page_one2many', SectionFieldOne2Many);

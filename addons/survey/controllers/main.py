@@ -704,3 +704,11 @@ class Survey(http.Controller):
         user_input_lines = request.env['survey.user_input'].sudo().search(user_input_domain).mapped('user_input_line_ids')
 
         return user_input_lines, search_filters
+
+    # ------------------------------------------------------------
+    # SURVEY "VALIDATE ENTRY" CHECKS
+    # ------------------------------------------------------------
+
+    @http.route('/survey/form_validation', type='json', auth='user', website=False)
+    def get_check_validate_entry_js(self):
+        return json.dumps(request.env['survey.question'].get_form_validation_js())

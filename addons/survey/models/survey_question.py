@@ -71,6 +71,8 @@ class SurveyQuestion(models.Model):
         help="Used on randomized sections to take X random questions from all the questions of that section.")
     # question specific
     page_id = fields.Many2one('survey.question', string='Page', compute="_compute_page_id", store=True)
+
+    # Changes in the order of these items may require an update of _js_and_sql_constraints below
     question_type = fields.Selection([
         ('text_box', 'Multiple Lines Text Box'),
         ('char_box', 'Single Line Text Box'),
@@ -146,30 +148,103 @@ class SurveyQuestion(models.Model):
         if the specified conditional answer have been selected in a previous question""")
     triggering_question_id = fields.Many2one(
         'survey.question', string="Triggering Question", copy=False, compute="_compute_triggering_question_id",
-        store=True, readonly=False, help="Question containing the triggering answer to display the current question.",
-        domain="""[('survey_id', '=', survey_id),
-                 '&', ('question_type', 'in', ['simple_choice', 'multiple_choice']),
-                 '|',
-                     ('sequence', '<', sequence),
-                     '&', ('sequence', '=', sequence), ('id', '<', id)]""")
+        store=False, readonly=False, help="Question containing the triggering answer to display the current question.")
+
+    allowed_triggering_question_ids = fields.Many2many(
+        'survey.question', string="Allowed Triggering Questions", copy=False,
+        compute="_compute_allowed_triggering_question_ids",
+        store=False, readonly=True)
     triggering_answer_id = fields.Many2one(
         'survey.question.answer', string="Triggering Answer", copy=False, compute="_compute_triggering_answer_id",
-        store=True, readonly=False, help="Answer that will trigger the display of the current question.",
+        store=False, readonly=False, help="Answer that will trigger the display of the current question.",
         domain="[('question_id', '=', triggering_question_id)]")
 
+    # These constraints are jointly declared in this model to support robust evolution.
+    # This enables convenient client-side verification with the same constraints as those
+    # set up in the database, enabling the chaining of question creation
+    # with parameters validation on the fly without multiplying rpc calls.
+    # NB Beware of fields rendered by a widget, their value can be a little trickier to reach.
+    _js_and_sql_constraints = [{
+        'name': 'positive_len_min',
+        'sql': 'CHECK (validation_length_min >= 0)',
+        'js': 'document.getElementsByName("validation_length_min")[0].value >= 0',
+        'error': _('"Minimum Text Length" cannot be negative!')
+    }, {
+        'name': 'positive_len_max',
+        'sql': 'CHECK (validation_length_max >= 0)',
+        'js': 'document.getElementsByName("validation_length_max")[0].value >= 0',
+        'error': _('"Maximum Text Length" cannot be negative!')
+    }, {
+        'name': 'validation_length',
+        'sql': 'CHECK (validation_length_min <= validation_length_max)',
+        'js': 'document.getElementsByName("validation_length_max")[0].value >= document.getElementsByName("validation_length_min")[0].value'
+              '|| document.getElementsByName("validation_length_min")[0].value === "0"'
+              '|| document.getElementsByName("validation_length_max")[0].value === "0"',
+        'error': _('"Maximum Text Length" cannot be smaller than "Minimum Text Length"!')
+    }, {
+        'name': 'validation_float',
+        'sql': 'CHECK (validation_min_float_value <= validation_max_float_value)',
+        'js': 'document.getElementsByName("validation_min_float_value")[0].value <= document.getElementsByName("validation_max_float_value")[0].value',
+        'error': _('"Maximum value" cannot be smaller than "Minimum value"!')
+    }, {
+        'name': 'validation_date',
+        'sql': 'CHECK (validation_min_date <= validation_max_date)',
+        'js': 'document.getElementsByName("validation_min_date")[1].value <= document.getElementsByName("validation_max_date")[1].value'
+              '|| document.getElementsByName("validation_min_date")[1].value === undefined'
+              '|| document.getElementsByName("validation_max_date")[1].value === undefined',
+        'error': _('"Maximum Date" cannot be smaller than "Minimum Date"!')
+    }, {
+        'name': 'validation_datetime',
+        'sql': 'CHECK (validation_min_datetime <= validation_max_datetime)',
+        'js': 'document.getElementsByName("validation_min_datetime")[1].value <= document.getElementsByName("validation_max_datetime")[1].value'
+              '|| document.getElementsByName("validation_min_datetime")[1].value === undefined'
+              '|| document.getElementsByName("validation_max_datetime")[1].value === undefined',
+        'error': _('"Maximum Datetime" cannot be smaller than "Minimum Datetime"!')
+    }, {
+        'name': 'positive_answer_score',
+        'sql': 'CHECK (answer_score >= 0)',
+        'js': 'document.getElementsByName("answer_score")[0].value >= 0',
+        'error': _('An answer score for a non-multiple choice question cannot be negative!')
+    }, {
+        'name': 'scored_datetime_have_answers',
+        'sql': "CHECK (is_scored_question != True OR question_type != 'datetime' OR answer_datetime is not null)",
+        'js': '(!document.getElementsByName("is_scored_question")[0].firstElementChild.checked '
+              '|| document.querySelectorAll("[aria-label=\'Question Type\'] > div > input[checked=true]")[0].dataset[\'index\'] !== "4"'  # datetime
+              '|| document.getElementsByName("answer_datetime")[0].value !== undefined)',
+        'error': _('All "Is a scored question = True" and "Question Type: Datetime" questions need a correct answer')
+    }, {
+        'name': 'scored_date_have_answers',
+        'sql': "CHECK (is_scored_question != True OR question_type != 'date' OR answer_date is not null)",
+        'js': '(!document.getElementsByName("is_scored_question")[0].firstElementChild.checked '
+              '|| document.querySelectorAll("[aria-label=\'Question Type\'] > div > input[checked=true]")[0].dataset[\'index\'] !== "3"'  # date
+              '|| document.getElementsByName("answer_date")[0].value !== undefined)',
+        'error': _('All "Is a scored question = True" and "Question Type: Date" questions need a correct answer')
+    }]
+
     _sql_constraints = [
-        ('positive_len_min', 'CHECK (validation_length_min >= 0)', 'A length must be positive!'),
-        ('positive_len_max', 'CHECK (validation_length_max >= 0)', 'A length must be positive!'),
-        ('validation_length', 'CHECK (validation_length_min <= validation_length_max)', 'Max length cannot be smaller than min length!'),
-        ('validation_float', 'CHECK (validation_min_float_value <= validation_max_float_value)', 'Max value cannot be smaller than min value!'),
-        ('validation_date', 'CHECK (validation_min_date <= validation_max_date)', 'Max date cannot be smaller than min date!'),
-        ('validation_datetime', 'CHECK (validation_min_datetime <= validation_max_datetime)', 'Max datetime cannot be smaller than min datetime!'),
-        ('positive_answer_score', 'CHECK (answer_score >= 0)', 'An answer score for a non-multiple choice question cannot be negative!'),
-        ('scored_datetime_have_answers', "CHECK (is_scored_question != True OR question_type != 'datetime' OR answer_datetime is not null)",
-            'All "Is a scored question = True" and "Question Type: Datetime" questions need an answer'),
-        ('scored_date_have_answers', "CHECK (is_scored_question != True OR question_type != 'date' OR answer_date is not null)",
-            'All "Is a scored question = True" and "Question Type: Date" questions need an answer')
+        (constraint["name"], constraint["sql"], constraint["error"])
+        for constraint in _js_and_sql_constraints  # if constraint.get("sql")
     ]
+
+    @api.model
+    def get_form_validation_js(self):
+        """Generates JSON containing a javascript function to validate the form
+        on the client side using the same constraints as those used in the
+        database."""
+        tests = [
+            "if (!(%s)) {return '%s';}" % (constraint["js"], constraint["error"])
+            for constraint in self._js_and_sql_constraints  # if constraint.get("js")
+        ]
+
+        return {
+            "validateRecordForm": """
+                (function() {
+                    return function checkValidateEntry(){
+                        """ + "\n".join(tests) + """
+                        return '' // If no test failed;
+                    };
+                })();"""
+        }
 
     @api.depends('is_page')
     def _compute_question_type(self):
@@ -222,7 +297,19 @@ class SurveyQuestion(models.Model):
             if question.question_type != 'char_box':
                 question.save_as_nickname = False
 
-    @api.depends('is_conditional')
+    @api.depends('survey_id', 'survey_id.question_ids')
+    def _compute_allowed_triggering_question_ids(self):
+        """ This field/function is required to fetch the right questions when
+        the child question does not yet exist as a question. """
+        for question in self:
+            question.allowed_triggering_question_ids = self.search([
+                ('survey_id', '=', (question.survey_id._origin.id
+                                    if isinstance(question.survey_id.id, models.NewId)
+                                    else question.survey_id.id)),
+                ('question_type', 'in', ['simple_choice', 'multiple_choice'])
+            ])
+
+    @api.depends('allowed_triggering_question_ids')
     def _compute_triggering_question_id(self):
         """ Used as an 'onchange' : Reset the triggering question if user uncheck 'Conditional Display'
             Avoid CacheMiss : set the value to False if the value is not set yet."""
