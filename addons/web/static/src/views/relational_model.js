@@ -164,6 +164,7 @@ export class Record extends DataPoint {
                 views,
                 viewMode,
             });
+            this._values[fieldName] = list;
             this.data[fieldName] = list;
             if (!invisible) {
                 proms.push(list.load());
