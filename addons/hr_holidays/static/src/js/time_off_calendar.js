@@ -85,15 +85,10 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
         _onNewTimeOff: function () {
             let self = this;
 
-            let domain = [
-                ['name', '=', 'hr.leave.view.form.dashboard.new.time.off'],
-                ['model', '=', 'hr.leave']
-            ];
-
             self._rpc({
                 model: 'ir.ui.view',
-                method: 'search',
-                args: [domain],
+                method: 'get_view_id',
+                args: ['hr_holidays.hr_leave_view_form_dashboard_new_time_off'],
             }).then(function(ids) {
                 self.timeOffDialog = new dialogs.FormViewDialog(self, {
                     res_model: "hr.leave",
@@ -120,15 +115,10 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
         _onNewAllocation: function () {
             let self = this;
 
-            let domain = [
-                ['name', '=', 'hr.leave.view.form.dashboard'],
-                ['model', '=', 'hr.leave.allocation']
-            ];
-
             self._rpc({
                 model: 'ir.ui.view',
-                method: 'search',
-                args: [domain],
+                method: 'get_view_id',
+                args: ['hr_holidays.hr_leave_allocation_view_form_dashboard'],
             }).then(function(ids) {
                 self.allocationDialog = new dialogs.FormViewDialog(self, {
                     res_model: "hr.leave.allocation",
