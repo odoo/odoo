@@ -2051,14 +2051,14 @@ QUnit.module("Search", (hooks) => {
         assert.containsOnce(target, ".o_content.o_component_with_search_panel .o_search_panel");
     });
 
-    QUnit.skip("search panel state is shared between views", async (assert) => {
+    QUnit.test("search panel state is shared between views", async (assert) => {
         assert.expect(16);
 
         const webclient = await createWebClient({
             serverData,
-            async mockRPC(route, { domain }) {
-                if (route === "/web/dataset/search_read") {
-                    assert.step(JSON.stringify(domain));
+            async mockRPC(route, { kwargs, method }) {
+                if (method === "web_search_read") {
+                    assert.step(JSON.stringify(kwargs.domain));
                 }
             },
         });
@@ -2075,7 +2075,6 @@ QUnit.module("Search", (hooks) => {
         assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 2);
 
         await switchView(target, "list");
-        await legacyExtraNextTick();
 
         assert.hasClass(getCategory(target, 1), "active");
         assert.containsN(target, ".o_data_row", 2);
@@ -2087,7 +2086,6 @@ QUnit.module("Search", (hooks) => {
         assert.containsN(target, ".o_data_row", 2);
 
         await switchView(target, "kanban");
-        await legacyExtraNextTick();
 
         assert.hasClass(getCategory(target, 2), "active");
         assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 2);
@@ -2101,14 +2099,14 @@ QUnit.module("Search", (hooks) => {
         ]);
     });
 
-    QUnit.skip("search panel filters are kept between switch views", async (assert) => {
+    QUnit.test("search panel filters are kept between switch views", async (assert) => {
         assert.expect(17);
 
         const webclient = await createWebClient({
             serverData,
-            async mockRPC(route, { domain }) {
-                if (route === "/web/dataset/search_read") {
-                    assert.step(JSON.stringify(domain));
+            async mockRPC(route, { kwargs, method }) {
+                if (method === "web_search_read") {
+                    assert.step(JSON.stringify(kwargs.domain));
                 }
             },
         });
@@ -2125,7 +2123,6 @@ QUnit.module("Search", (hooks) => {
         assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 1);
 
         await switchView(target, "list");
-        await legacyExtraNextTick();
 
         assert.containsOnce(target, ".o_search_panel_filter_value input:checked");
         assert.containsN(target, ".o_data_row", 1);
@@ -2137,15 +2134,12 @@ QUnit.module("Search", (hooks) => {
         assert.containsN(target, ".o_data_row", 4);
 
         await switchView(target, "kanban");
-        await legacyExtraNextTick();
 
         assert.containsN(target, ".o_search_panel_filter_value input:checked", 2);
         assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 4);
 
         await click(target.querySelector(".o_kanban_record"));
-        await legacyExtraNextTick();
         await click(target.querySelector(".breadcrumb-item"));
-        await legacyExtraNextTick();
 
         assert.verifySteps([
             "[]", // initial search_read
@@ -2207,14 +2201,13 @@ QUnit.module("Search", (hooks) => {
         }
     );
 
-    QUnit.skip('after onExecuteAction, selects "All" as default category value', async (assert) => {
+    QUnit.test('after onExecuteAction, selects "All" as default category value', async (assert) => {
         assert.expect(3);
 
         const webclient = await createWebClient({ serverData });
 
         await doAction(webclient, 1, { viewType: "form" });
-        await click(target.querySelector(".o_form_view button"));
-        await legacyExtraNextTick();
+        await click(target.querySelector(".o_form_view .o_form_nosheet button"));
 
         assert.containsOnce(target, ".o_kanban_view");
         assert.containsOnce(target, ".o_search_panel");
