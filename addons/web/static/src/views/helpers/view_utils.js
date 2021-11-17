@@ -55,8 +55,8 @@ export function processButton(node, fields, viewType) {
     return {
         classes: (node.getAttribute("class") || "").split(" "),
         icon: node.getAttribute("icon") || false,
-        title: node.getAttribute("title"),
-        string: node.getAttribute("string"),
+        title: node.getAttribute("title") || undefined,
+        string: node.getAttribute("string") || undefined,
         clickParams: {
             name: node.getAttribute("name"),
             type: node.getAttribute("type"),

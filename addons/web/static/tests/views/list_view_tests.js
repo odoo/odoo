@@ -411,7 +411,7 @@ QUnit.module("Views", (hooks) => {
         assert.isVisible(list.el.querySelector(".o_list_export_xlsx"));
     });
 
-    QUnit.skip("list view with adjacent buttons", async function (assert) {
+    QUnit.test("list view with adjacent buttons", async function (assert) {
         assert.expect(2);
 
         const list = await makeView({
@@ -434,10 +434,10 @@ QUnit.module("Views", (hooks) => {
             4,
             "adjacent buttons in the arch must be grouped in a single column"
         );
-        assert.containsN($(list.el).find(".o_data_row:first"), "td.o_list_button", 2);
+        assert.containsN(list.el.querySelector(".o_data_row:first-child"), "td.o_list_button", 2);
     });
 
-    QUnit.skip("list view with adjacent buttons and invisible field", async function (assert) {
+    QUnit.test("list view with adjacent buttons and invisible field", async function (assert) {
         assert.expect(2);
 
         const list = await makeView({
@@ -460,10 +460,10 @@ QUnit.module("Views", (hooks) => {
             3,
             "adjacent buttons in the arch must be grouped in a single column"
         );
-        assert.containsN($(list.el).find(".o_data_row:first"), "td.o_list_button", 2);
+        assert.containsN(list.el.querySelector(".o_data_row:first-child"), "td.o_list_button", 2);
     });
 
-    QUnit.skip(
+    QUnit.test(
         "list view with adjacent buttons and invisible field (modifier)",
         async function (assert) {
             assert.expect(2);
@@ -488,11 +488,15 @@ QUnit.module("Views", (hooks) => {
                 4,
                 "adjacent buttons in the arch must be grouped in a single column"
             );
-            assert.containsN($(list.el).find(".o_data_row:first"), "td.o_list_button", 2);
+            assert.containsN(
+                list.el.querySelector(".o_data_row:first-child"),
+                "td.o_list_button",
+                2
+            );
         }
     );
 
-    QUnit.skip("list view with adjacent buttons and optional field", async function (assert) {
+    QUnit.test("list view with adjacent buttons and optional field", async function (assert) {
         assert.expect(2);
 
         const list = await makeView({
@@ -515,7 +519,7 @@ QUnit.module("Views", (hooks) => {
             3,
             "adjacent buttons in the arch must be grouped in a single column"
         );
-        assert.containsN($(list.el).find(".o_data_row:first"), "td.o_list_button", 2);
+        assert.containsN(list.el.querySelector(".o_data_row:first-child"), "td.o_list_button", 2);
     });
 
     QUnit.skip("list view with adjacent buttons with invisible modifier", async function (assert) {
@@ -547,10 +551,10 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(list, "td button i.fa-exclamation:visible", 3);
     });
 
-    QUnit.skip("list view with icon buttons", async function (assert) {
+    QUnit.test("list view with icon buttons", async function (assert) {
         assert.expect(5);
 
-        this.data.foo.records.splice(1);
+        serverData.models.foo.records.splice(1);
 
         const list = await makeView({
             type: "list",
@@ -623,7 +627,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(3);
 
-            const executeActionDef = testUtils.makeTestPromise();
+            const executeActionDef = makeDeferred();
             const list = await makeView({
                 type: "list",
                 resModel: "foo",
@@ -664,12 +668,12 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.test(
         "list view: buttons handler is called once on double click",
         async function (assert) {
             assert.expect(2);
 
-            const executeActionDef = testUtils.makeTestPromise();
+            const executeActionDef = makeDeferred();
             const list = await makeView({
                 type: "list",
                 resModel: "foo",
@@ -679,21 +683,19 @@ QUnit.module("Views", (hooks) => {
                 <field name="foo" />
                 <button name="x" type="object" class="do_something" string="Do Something"/>
             </tree>`,
-                intercepts: {
-                    async execute_action(ev) {
-                        assert.step("execute_action");
-                        const { on_success } = ev.data;
-                        await executeActionDef;
-                        on_success();
-                    },
+            });
+            patchWithCleanup(list.env.services.action, {
+                doActionButton: async () => {
+                    assert.step("execute_action");
+                    await executeActionDef;
                 },
             });
-
-            await click($(list.el).find("tbody .o_list_button:first > button"));
-            await click($(list.el).find("tbody .o_list_button:first > button"));
+            const button = list.el.querySelector("tbody .o_list_button > button > span");
+            await click(button);
+            await click(button);
 
             executeActionDef.resolve();
-            await testUtils.nextTick();
+            await nextTick();
             assert.verifySteps(["execute_action"]);
         }
     );
@@ -3471,8 +3473,9 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("empty list: state with nameless and stringless buttons", async function (assert) {
         assert.expect(2);
 
-        this.data.foo.records = [];
+        serverData.models.foo.records = [];
         const list = await makeView({
+            type: "list",
             arch: `
                 <tree>
                     <field name="foo"/>
@@ -3481,7 +3484,6 @@ QUnit.module("Views", (hooks) => {
                 </tree>`,
             serverData,
             resModel: "foo",
-            serverData,
         });
 
         assert.strictEqual(
@@ -3828,10 +3830,11 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skip("button in a list view with a default relative width", async function (assert) {
+    QUnit.test("button in a list view with a default relative width", async function (assert) {
         assert.expect(1);
 
         const list = await makeView({
+            type: "list",
             arch: `
             <tree>
                 <field name="foo"/>
@@ -3857,7 +3860,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         // set a long foo value s.t. the column can be squeezed
-        this.data.foo.records[0].foo = "Lorem ipsum dolor sit amet";
+        serverData.models.foo.records[0].foo = "Lorem ipsum dolor sit amet";
         const list = await makeView({
             arch: `
                 <tree>
@@ -3868,7 +3871,6 @@ QUnit.module("Views", (hooks) => {
                 </tree>`,
             serverData,
             resModel: "foo",
-            serverData,
         });
 
         // simulate a window resize (buttons column width should not be squeezed)

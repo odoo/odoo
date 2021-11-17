@@ -15,7 +15,7 @@ const odooToBootstrapClasses = {
     oe_link: "btn-link",
 };
 
-function transformButtonClasses(givenClasses = []) {
+function transformButtonClasses(givenClasses = [], defaultRank) {
     const classes = [];
 
     let hasExplicitRank = false;
@@ -30,7 +30,7 @@ function transformButtonClasses(givenClasses = []) {
     }
 
     if (!hasExplicitRank) {
-        classes.push("btn-secondary");
+        classes.push(defaultRank || "btn-secondary");
     }
 
     return classes;
@@ -50,7 +50,7 @@ function iconFromString(iconString) {
 
 export class ViewButton extends owl.Component {
     setup() {
-        const classes = transformButtonClasses(this.props.classes);
+        const classes = transformButtonClasses(this.props.classes, this.props.defaultRank);
         if (this.props.size) {
             classes.push(`btn-${this.props.size}`);
         }

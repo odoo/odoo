@@ -275,8 +275,10 @@ export class ListRenderer extends Component {
         }
     }
 
-    openRecord(record) {
-        this.props.openRecord(record);
+    openRecord(record, ev) {
+        if (ev.target.tagName !== "BUTTON" && ev.target.parentElement.tagName !== "BUTTON") {
+            this.props.openRecord(record);
+        }
     }
 
     saveOptionalActiveFields() {

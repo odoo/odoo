@@ -54,10 +54,9 @@ export class ListArchParser extends XMLParser {
         const groupListArchParser = new GroupListArchParser();
         this.visitXML(arch, (node) => {
             if (node.tagName === "button") {
-                const button = processButton(node);
-                button.classes.push("btn-link");
                 columns.push({
-                    ...button,
+                    ...processButton(node),
+                    defaultRank: "btn-link",
                     type: "button",
                     id: buttonId++,
                 });
@@ -70,6 +69,8 @@ export class ListArchParser extends XMLParser {
                         optional: node.getAttribute("optional") || false,
                         type: "field",
                     });
+                } else {
+                    columns.push({ type: "invisible" });
                 }
             } else if (node.tagName === "groupby" && node.getAttribute("name")) {
                 const fieldName = node.getAttribute("name");
@@ -118,7 +119,7 @@ export class ListArchParser extends XMLParser {
                     columns.push(col);
                 }
             });
-            return columns;
+            return columns.filter((col) => col.type !== "invisible");
         }
 
         return { activeActions, fields: activeFields, columns: processColumns(columns), groupBy };
