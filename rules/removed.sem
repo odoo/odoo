@@ -1,0 +1,32 @@
+rules:
+
+- id: use-contextlib-suppress
+  languages:
+  - python
+  message: Use contextlib.suppress over odoo.tools.misc.ignore.
+  pattern-either:
+    - pattern: odoo.tools.misc.ignore($X)
+    - pattern: odoo.tools.ignore($X)
+  fix: contextlib.suppress($X)
+  severity: ERROR
+
+- id: use-hmac-compare-digest
+  languages:
+  - python
+  message: hmac.compare_digest is the standard stdlib version
+  pattern-either:
+    - pattern: odoo.tools.consteq($X, $Y)
+    - pattern: odoo.tools.misc.consteq($X, $Y)
+    - pattern: passlib.utils.consteq($X, $Y)
+  fix: hmac.compare_digest($X, $Y)
+  severity: ERROR
+
+- id: use-operator-attrgetter
+  languages:
+  - python
+  message: attrgetter port with support for dotted notation has been removed
+  pattern-either:
+    - pattern: odoo.tools.attrgetter($X)
+    - pattern: odoo.tools.misc.attrgetter($X)
+  fix: operator.attrgetter($X)
+  severity: ERROR
