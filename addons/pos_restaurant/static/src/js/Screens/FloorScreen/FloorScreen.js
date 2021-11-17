@@ -6,6 +6,7 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
     const { useState, useRef } = owl.hooks;
     const { useListener } = require('web.custom_hooks');
     const Registries = require('point_of_sale.Registries');
+    const { posbus } = require('point_of_sale.utils');
 
     class FloorScreen extends PosComponent {
         /**
@@ -45,6 +46,7 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
             if (this.env.pos.table) {
                 this.env.pos.set_table(null);
             }
+            posbus.trigger('start-cash-control');
             this.floorMapRef.el.style.background = this.state.floorBackground;
             this.state.floorMapScrollTop = this.floorMapRef.el.getBoundingClientRect().top;
             // call _tableLongpolling once then set interval of 5sec.

@@ -7,8 +7,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
     const { useListener } = require('web.custom_hooks');
     const Registries = require('point_of_sale.Registries');
     const { onChangeOrder, useBarcodeReader } = require('point_of_sale.custom_hooks');
-    const { Gui } = require('point_of_sale.Gui');
-    const { isConnectionError } = require('point_of_sale.utils');
+    const { isConnectionError, posbus } = require('point_of_sale.utils');
     const { useState, onMounted } = owl.hooks;
     const { parse } = require('web.field_utils');
 
@@ -45,9 +44,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
             });
         }
         mounted() {
-            if(this.env.pos.config.cash_control && this.env.pos.pos_session.state == 'opening_control') {
-                Gui.showPopup('CashOpeningPopup', {notEscapable: true});
-            }
+            posbus.trigger('start-cash-control');
             this.env.pos.on('change:selectedClient', this.render, this);
         }
         willUnmount() {
