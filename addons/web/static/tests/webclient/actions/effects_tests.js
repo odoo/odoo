@@ -26,7 +26,7 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.module("Effects");
 
-    QUnit.skip("rainbowman integrated to webClient", async function (assert) {
+    QUnit.test("rainbowman integrated to webClient", async function (assert) {
         assert.expect(10);
         patchWithCleanup(session, { show_effect: true });
         clearRegistryWithCleanup(mainComponentRegistry);

@@ -276,9 +276,17 @@ class KanbanView extends owl.Component {
         });
     }
 
-    openRecord(record) {
+    async openRecord(record) {
         const resIds = this.model.root.records.map((datapoint) => datapoint.resId);
-        this.action.switchView("form", { resId: record.resId, resIds });
+        try {
+            await this.action.switchView("form", { resId: record.resId, resIds });
+        } catch (e) {
+            if (e.constructor.name === "ViewNotFoundError") {
+                // there's no form view in the current action
+                return;
+            }
+            throw e;
+        }
     }
 }
 
