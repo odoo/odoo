@@ -2,8 +2,8 @@
 
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { registry } from "@web/core/registry";
-import { makeFakeLocalizationService, makeFakeUserService } from "../helpers/mock_services";
-import { click, makeDeferred, nextTick, triggerEvent, triggerEvents } from "../helpers/utils";
+import { makeFakeUserService } from "../helpers/mock_services";
+import { click, nextTick, triggerEvent } from "../helpers/utils";
 import {
     setupControlPanelFavoriteMenuRegistry,
     setupControlPanelServiceRegistry,
@@ -215,386 +215,434 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("PriorityField");
 
-    QUnit.skip("PriorityField when not set", async function (assert) {
+    QUnit.test("PriorityField when not set", async function (assert) {
         assert.expect(4);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                "<group>" +
-                '<field name="selection" widget="priority"/>' +
-                "</group>" +
-                "</sheet>" +
-                "</form>",
-            res_id: 2,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 2,
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="selection" widget="priority" />
+                        </group>
+                    </sheet>
+                </form>
+            `,
         });
 
-        assert.strictEqual(
-            form.$(".o_field_widget.o_priority:not(.o_field_empty)").length,
-            1,
+        assert.containsOnce(
+            form.el,
+            ".o_field_widget.o_priority:not(.o_field_empty)",
             "widget should be considered set, even though there is no value for this field"
         );
-        assert.strictEqual(
-            form.$(".o_field_widget.o_priority").find("a.o_priority_star").length,
+        assert.containsN(
+            form.el,
+            ".o_field_widget.o_priority a.o_priority_star",
             2,
             "should have two stars for representing each possible value: no star, one star and two stars"
         );
-        assert.strictEqual(
-            form.$(".o_field_widget.o_priority").find("a.o_priority_star.fa-star").length,
-            0,
+        assert.containsNone(
+            form.el,
+            ".o_field_widget.o_priority a.o_priority_star.fa-star",
             "should have no full star since there is no value"
         );
-        assert.strictEqual(
-            form.$(".o_field_widget.o_priority").find("a.o_priority_star.fa-star-o").length,
+        assert.containsN(
+            form.el,
+            ".o_field_widget.o_priority a.o_priority_star.fa-star-o",
             2,
             "should have two empty stars since there is no value"
         );
-
-        form.destroy();
     });
 
-    QUnit.skip("PriorityField in form view", async function (assert) {
-        assert.expect(22);
+    QUnit.test("PriorityField in form view", async function (assert) {
+        assert.expect(25);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                "<group>" +
-                '<field name="selection" widget="priority"/>' +
-                "</group>" +
-                "</sheet>" +
-                "</form>",
-            res_id: 1,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="selection" widget="priority" />
+                        </group>
+                    </sheet>
+                </form>
+            `,
         });
 
-        assert.strictEqual(
-            form.$(".o_field_widget.o_priority:not(.o_field_empty)").length,
-            1,
+        assert.containsOnce(
+            form.el,
+            ".o_field_widget.o_priority:not(.o_field_empty)",
             "widget should be considered set"
         );
-        assert.strictEqual(
-            form.$(".o_field_widget.o_priority").find("a.o_priority_star").length,
+        assert.containsN(
+            form.el,
+            ".o_field_widget.o_priority a.o_priority_star",
             2,
             "should have two stars for representing each possible value: no star, one star and two stars"
         );
-        assert.strictEqual(
-            form.$(".o_field_widget.o_priority").find("a.o_priority_star.fa-star").length,
-            1,
+        assert.containsOnce(
+            form.el,
+            ".o_field_widget.o_priority a.o_priority_star.fa-star",
             "should have one full star since the value is the second value"
         );
-        assert.strictEqual(
-            form.$(".o_field_widget.o_priority").find("a.o_priority_star.fa-star-o").length,
-            1,
+        assert.containsOnce(
+            form.el,
+            ".o_field_widget.o_priority a.o_priority_star.fa-star-o",
             "should have one empty star since the value is the second value"
         );
 
         // hover last star
-        form.$(".o_field_widget.o_priority a.o_priority_star.fa-star-o")
-            .last()
-            .trigger("mouseover");
-        assert.strictEqual(
-            form.$(".o_field_widget.o_priority").find("a.o_priority_star").length,
+        let stars = form.el.querySelectorAll(
+            ".o_field_widget.o_priority a.o_priority_star.fa-star-o"
+        );
+        await triggerEvent(stars[stars.length - 1], null, "mouseenter");
+        assert.containsN(
+            form.el,
+            ".o_field_widget.o_priority a.o_priority_star",
             2,
             "should have two stars for representing each possible value: no star, one star and two stars"
         );
-        assert.strictEqual(
-            form.$(".o_field_widget.o_priority").find("a.o_priority_star.fa-star").length,
+        assert.containsN(
+            form.el,
+            ".o_field_widget.o_priority a.o_priority_star.fa-star",
             2,
             "should temporary have two full stars since we are hovering the third value"
         );
-        assert.strictEqual(
-            form.$(".o_field_widget.o_priority").find("a.o_priority_star.fa-star-o").length,
-            0,
+        assert.containsNone(
+            form.el,
+            ".o_field_widget.o_priority a.o_priority_star.fa-star-o",
             "should temporary have no empty star since we are hovering the third value"
         );
 
-        // Here we should test with mouseout, but currently the effect associated with it
-        // occurs in a setTimeout after 200ms so it's not trivial to test it here.
+        await triggerEvent(stars[stars.length - 1], null, "mouseleave");
+        assert.containsN(
+            form.el,
+            ".o_field_widget.o_priority a.o_priority_star",
+            2,
+            "should have two stars for representing each possible value: no star, one star and two stars"
+        );
+        assert.containsOnce(
+            form.el,
+            ".o_field_widget.o_priority a.o_priority_star.fa-star",
+            "should temporary have two full stars since we are hovering the third value"
+        );
+        assert.containsOnce(
+            form.el,
+            ".o_field_widget.o_priority a.o_priority_star.fa-star-o",
+            "should temporary have no empty star since we are hovering the third value"
+        );
 
         // switch to edit mode and check the result
-        await testUtils.form.clickEdit(form);
-        assert.strictEqual(
-            form.$(".o_field_widget.o_priority").find("a.o_priority_star").length,
+        await click(form.el, ".o_form_button_edit");
+        assert.containsN(
+            form.el,
+            ".o_field_widget.o_priority a.o_priority_star",
             2,
             "should still have two stars"
         );
-        assert.strictEqual(
-            form.$(".o_field_widget.o_priority").find("a.o_priority_star.fa-star").length,
-            1,
+        assert.containsOnce(
+            form.el,
+            ".o_field_widget.o_priority a.o_priority_star.fa-star",
             "should still have one full star since the value is the second value"
         );
-        assert.strictEqual(
-            form.$(".o_field_widget.o_priority").find("a.o_priority_star.fa-star-o").length,
-            1,
+        assert.containsOnce(
+            form.el,
+            ".o_field_widget.o_priority a.o_priority_star.fa-star-o",
             "should still have one empty star since the value is the second value"
         );
 
         // save
-        await testUtils.form.clickSave(form);
-        assert.strictEqual(
-            form.$(".o_field_widget.o_priority").find("a.o_priority_star").length,
+        await click(form.el, ".o_form_button_save");
+        assert.containsN(
+            form.el,
+            ".o_field_widget.o_priority a.o_priority_star",
             2,
             "should still have two stars"
         );
-        assert.strictEqual(
-            form.$(".o_field_widget.o_priority").find("a.o_priority_star.fa-star").length,
-            1,
+        assert.containsOnce(
+            form.el,
+            ".o_field_widget.o_priority a.o_priority_star.fa-star",
             "should still have one full star since the value is the second value"
         );
-        assert.strictEqual(
-            form.$(".o_field_widget.o_priority").find("a.o_priority_star.fa-star-o").length,
-            1,
+        assert.containsOnce(
+            form.el,
+            ".o_field_widget.o_priority a.o_priority_star.fa-star-o",
             "should still have one empty star since the value is the second value"
         );
 
         // switch to edit mode to check that the new value was properly written
-        await testUtils.form.clickEdit(form);
-        assert.strictEqual(
-            form.$(".o_field_widget.o_priority").find("a.o_priority_star").length,
+        await click(form.el, ".o_form_button_edit");
+
+        assert.containsN(
+            form.el,
+            ".o_field_widget.o_priority a.o_priority_star",
             2,
             "should still have two stars"
         );
-        assert.strictEqual(
-            form.$(".o_field_widget.o_priority").find("a.o_priority_star.fa-star").length,
-            1,
+        assert.containsOnce(
+            form.el,
+            ".o_field_widget.o_priority a.o_priority_star.fa-star",
             "should still have one full star since the value is the second value"
         );
-        assert.strictEqual(
-            form.$(".o_field_widget.o_priority").find("a.o_priority_star.fa-star-o").length,
-            1,
+        assert.containsOnce(
+            form.el,
+            ".o_field_widget.o_priority a.o_priority_star.fa-star-o",
             "should still have one empty star since the value is the second value"
         );
 
         // click on the second star in edit mode
-        await testUtils.dom.click(
-            form.$(".o_field_widget.o_priority a.o_priority_star.fa-star-o").last()
-        );
+        stars = form.el.querySelectorAll(".o_field_widget.o_priority a.o_priority_star.fa-star-o");
+        await click(stars[stars.length - 1]);
 
-        assert.strictEqual(
-            form.$(".o_field_widget.o_priority").find("a.o_priority_star").length,
+        assert.containsN(
+            form.el,
+            ".o_field_widget.o_priority a.o_priority_star",
             2,
             "should still have two stars"
         );
-        assert.strictEqual(
-            form.$(".o_field_widget.o_priority").find("a.o_priority_star.fa-star").length,
+        assert.containsN(
+            form.el,
+            ".o_field_widget.o_priority a.o_priority_star.fa-star",
             2,
             "should now have two full stars since the value is the third value"
         );
-        assert.strictEqual(
-            form.$(".o_field_widget.o_priority").find("a.o_priority_star.fa-star-o").length,
-            0,
+        assert.containsNone(
+            form.el,
+            ".o_field_widget.o_priority a.o_priority_star.fa-star-o",
             "should now have no empty star since the value is the third value"
         );
 
         // save
-        await testUtils.form.clickSave(form);
-        assert.strictEqual(
-            form.$(".o_field_widget.o_priority").find("a.o_priority_star").length,
+        await click(form.el, ".o_form_button_save");
+        assert.containsN(
+            form.el,
+            ".o_field_widget.o_priority a.o_priority_star",
             2,
             "should still have two stars"
         );
-        assert.strictEqual(
-            form.$(".o_field_widget.o_priority").find("a.o_priority_star.fa-star").length,
+        assert.containsN(
+            form.el,
+            ".o_field_widget.o_priority a.o_priority_star.fa-star",
             2,
             "should now have two full stars since the value is the third value"
         );
-        assert.strictEqual(
-            form.$(".o_field_widget.o_priority").find("a.o_priority_star.fa-star-o").length,
-            0,
+        assert.containsNone(
+            form.el,
+            ".o_field_widget.o_priority a.o_priority_star.fa-star-o",
             "should now have no empty star since the value is the third value"
         );
-
-        form.destroy();
     });
 
     QUnit.skip("PriorityField in editable list view", async function (assert) {
         assert.expect(25);
 
-        var list = await createView({
-            View: ListView,
-            model: "partner",
-            data: this.data,
-            arch: '<tree editable="bottom"><field name="selection" widget="priority"/></tree>',
+        const list = await makeView({
+            type: "list",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <tree editable="bottom">
+                    <field name="selection" widget="priority" />
+                </tree>
+            `,
         });
 
-        assert.strictEqual(
-            list.$(".o_data_row").first().find(".o_priority:not(.o_field_empty)").length,
-            1,
+        assert.containsOnce(
+            list.el.querySelectorAll(".o_data_row")[0],
+            ".o_priority:not(.o_field_empty)",
             "widget should be considered set"
         );
-        assert.strictEqual(
-            list.$(".o_data_row").first().find(".o_priority a.o_priority_star").length,
+        assert.containsN(
+            list.el.querySelectorAll(".o_data_row")[0],
+            ".o_priority a.o_priority_star",
             2,
             "should have two stars for representing each possible value: no star, one star and two stars"
         );
-        assert.strictEqual(
-            list.$(".o_data_row").first().find(".o_priority a.o_priority_star.fa-star").length,
-            1,
+        assert.containsOnce(
+            list.el.querySelectorAll(".o_data_row")[0],
+            ".o_priority a.o_priority_star.fa-star",
             "should have one full star since the value is the second value"
         );
-        assert.strictEqual(
-            list.$(".o_data_row").first().find(".o_priority a.o_priority_star.fa-star-o").length,
-            1,
+        assert.containsOnce(
+            list.el.querySelectorAll(".o_data_row")[0],
+            ".o_priority a.o_priority_star.fa-star-o",
             "should have one empty star since the value is the second value"
         );
 
-        // Here we should test with mouseout, but currently the effect associated with it
-        // occurs in a setTimeout after 200ms so it's not trivial to test it here.
-
         // switch to edit mode and check the result
-        var $cell = list.$("tbody td:not(.o_list_record_selector)").first();
-        await testUtils.dom.click($cell);
-        assert.strictEqual(
-            list.$(".o_data_row").first().find(".o_priority a.o_priority_star").length,
+        await click(list.el.querySelector("tbody td:not(.o_list_record_selector)"));
+
+        assert.containsN(
+            list.el.querySelectorAll(".o_data_row")[0],
+            ".o_priority a.o_priority_star",
             2,
             "should have two stars for representing each possible value: no star, one star and two stars"
         );
-        assert.strictEqual(
-            list.$(".o_data_row").first().find(".o_priority a.o_priority_star.fa-star").length,
-            1,
+        assert.containsOnce(
+            list.el.querySelectorAll(".o_data_row")[0],
+            ".o_priority a.o_priority_star.fa-star",
             "should have one full star since the value is the second value"
         );
-        assert.strictEqual(
-            list.$(".o_data_row").first().find(".o_priority a.o_priority_star.fa-star-o").length,
-            1,
+        assert.containsOnce(
+            list.el.querySelectorAll(".o_data_row")[0],
+            ".o_priority a.o_priority_star.fa-star-o",
             "should have one empty star since the value is the second value"
         );
 
         // save
-        await testUtils.dom.click(list.$buttons.find(".o_list_button_save"));
-        assert.strictEqual(
-            list.$(".o_data_row").first().find(".o_priority a.o_priority_star").length,
+        await click(list.el, ".o_list_button_save");
+
+        assert.containsN(
+            list.el.querySelectorAll(".o_data_row")[0],
+            ".o_priority a.o_priority_star",
             2,
             "should have two stars for representing each possible value: no star, one star and two stars"
         );
-        assert.strictEqual(
-            list.$(".o_data_row").first().find(".o_priority a.o_priority_star.fa-star").length,
-            1,
+        assert.containsOnce(
+            list.el.querySelectorAll(".o_data_row")[0],
+            ".o_priority a.o_priority_star.fa-star",
             "should have one full star since the value is the second value"
         );
-        assert.strictEqual(
-            list.$(".o_data_row").first().find(".o_priority a.o_priority_star.fa-star-o").length,
-            1,
+        assert.containsOnce(
+            list.el.querySelectorAll(".o_data_row")[0],
+            ".o_priority a.o_priority_star.fa-star-o",
             "should have one empty star since the value is the second value"
         );
 
         // hover last star
-        list.$(".o_data_row .o_priority a.o_priority_star.fa-star-o").first().trigger("mouseenter");
-        assert.strictEqual(
-            list.$(".o_data_row").first().find(".o_priority a.o_priority_star").length,
+        await triggerEvent(
+            list.el.querySelector(".o_data_row"),
+            ".o_priority a.o_priority_star.fa-star-o",
+            "mouseenter"
+        );
+
+        assert.containsN(
+            list.el.querySelectorAll(".o_data_row")[0],
+            ".o_priority a.o_priority_star",
             2,
             "should have two stars for representing each possible value: no star, one star and two stars"
         );
-        assert.strictEqual(
-            list.$(".o_data_row").first().find("a.o_priority_star.fa-star").length,
+        assert.containsN(
+            list.el.querySelectorAll(".o_data_row")[0],
+            "a.o_priority_star.fa-star",
             2,
             "should temporary have two full stars since we are hovering the third value"
         );
-        assert.strictEqual(
-            list.$(".o_data_row").first().find("a.o_priority_star.fa-star-o").length,
-            0,
+        assert.containsNone(
+            list.el.querySelectorAll(".o_data_row")[0],
+            "a.o_priority_star.fa-star-o",
             "should temporary have no empty star since we are hovering the third value"
         );
 
         // click on the first star in readonly mode
-        await testUtils.dom.click(list.$(".o_priority a.o_priority_star.fa-star").first());
+        await click(list.el.querySelector(".o_priority a.o_priority_star.fa-star"));
 
-        assert.strictEqual(
-            list.$(".o_data_row").first().find(".o_priority a.o_priority_star").length,
+        assert.containsN(
+            list.el.querySelectorAll(".o_data_row")[0],
+            ".o_priority a.o_priority_star",
             2,
             "should still have two stars"
         );
-        assert.strictEqual(
-            list.$(".o_data_row").first().find(".o_priority a.o_priority_star.fa-star").length,
-            0,
+        assert.containsNone(
+            list.el.querySelectorAll(".o_data_row")[0],
+            ".o_priority a.o_priority_star.fa-star",
             "should now have no full star since the value is the first value"
         );
-        assert.strictEqual(
-            list.$(".o_data_row").first().find(".o_priority a.o_priority_star.fa-star-o").length,
+        assert.containsN(
+            list.el.querySelectorAll(".o_data_row")[0],
+            ".o_priority a.o_priority_star.fa-star-o",
             2,
             "should now have two empty stars since the value is the first value"
         );
 
         // re-enter edit mode to force re-rendering the widget to check if the value was correctly saved
-        $cell = list.$("tbody td:not(.o_list_record_selector)").first();
-        await testUtils.dom.click($cell);
+        await click(list.el.querySelector("tbody td:not(.o_list_record_selector)"));
 
-        assert.strictEqual(
-            list.$(".o_data_row").first().find(".o_priority a.o_priority_star").length,
+        assert.containsN(
+            list.el.querySelectorAll(".o_data_row")[0],
+            ".o_priority a.o_priority_star",
             2,
             "should still have two stars"
         );
-        assert.strictEqual(
-            list.$(".o_data_row").first().find(".o_priority a.o_priority_star.fa-star").length,
-            0,
+        assert.containsNone(
+            list.el.querySelectorAll(".o_data_row")[0],
+            ".o_priority a.o_priority_star.fa-star",
             "should now only have no full star since the value is the first value"
         );
-        assert.strictEqual(
-            list.$(".o_data_row").first().find(".o_priority a.o_priority_star.fa-star-o").length,
+        assert.containsN(
+            list.el.querySelectorAll(".o_data_row")[0],
+            ".o_priority a.o_priority_star.fa-star-o",
             2,
             "should now have two empty stars since the value is the first value"
         );
 
         // Click on second star in edit mode
-        await testUtils.dom.click(list.$(".o_priority a.o_priority_star.fa-star-o").last());
+        let stars = list.el.querySelectorAll(".o_priority a.o_priority_star.fa-star-o");
+        await click(stars[stars.length - 1]);
 
-        assert.strictEqual(
-            list.$(".o_data_row").last().find(".o_priority a.o_priority_star").length,
+        let rows = list.el.querySelectorAll(".o_data_row");
+        assert.containsN(
+            rows[rows.length - 1],
+            ".o_priority a.o_priority_star",
             2,
             "should still have two stars"
         );
-        assert.strictEqual(
-            list.$(".o_data_row").last().find(".o_priority a.o_priority_star.fa-star").length,
+        assert.containsN(
+            rows[rows.length - 1],
+            ".o_priority a.o_priority_star.fa-star",
             2,
             "should now have two full stars since the value is the third value"
         );
-        assert.strictEqual(
-            list.$(".o_data_row").last().find(".o_priority a.o_priority_star.fa-star-o").length,
-            0,
+        assert.containsNone(
+            rows[rows.length - 1],
+            ".o_priority a.o_priority_star.fa-star-o",
             "should now have no empty star since the value is the third value"
         );
 
         // save
-        await testUtils.dom.click(list.$buttons.find(".o_list_button_save"));
-        assert.strictEqual(
-            list.$(".o_data_row").last().find(".o_priority a.o_priority_star").length,
+        await click(list.el, ".o_list_button_save");
+        rows = list.el.querySelectorAll(".o_data_row");
+
+        assert.containsN(
+            rows[rows.length - 1],
+            ".o_priority a.o_priority_star",
             2,
             "should still have two stars"
         );
-        assert.strictEqual(
-            list.$(".o_data_row").last().find(".o_priority a.o_priority_star.fa-star").length,
+        assert.containsN(
+            rows[rows.length - 1],
+            ".o_priority a.o_priority_star.fa-star",
             2,
             "should now have two full stars since the value is the third value"
         );
-        assert.strictEqual(
-            list.$(".o_data_row").last().find(".o_priority a.o_priority_star.fa-star-o").length,
-            0,
+        assert.containsNone(
+            rows[rows.length - 1],
+            ".o_priority a.o_priority_star.fa-star-o",
             "should now have no empty star since the value is the third value"
         );
-
-        list.destroy();
     });
 
-    QUnit.skip("PriorityField with readonly attribute", async function (assert) {
+    QUnit.test("PriorityField with readonly attribute", async function (assert) {
         assert.expect(1);
 
-        const form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 2,
+            serverData,
             arch: `
                 <form>
-                    <field name="selection" widget="priority" readonly="1"/>
-                </form>`,
-            res_id: 2,
+                    <field name="selection" widget="priority" readonly="1" />
+                </form>
+            `,
         });
 
         assert.containsN(
@@ -603,8 +651,6 @@ QUnit.module("Fields", (hooks) => {
             2,
             "stars of priority widget should rendered with span tag if readonly"
         );
-
-        form.destroy();
     });
 
     QUnit.skip(
