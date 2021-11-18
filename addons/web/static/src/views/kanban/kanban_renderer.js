@@ -172,6 +172,15 @@ export class KanbanRenderer extends Component {
         this.props.list.deleteGroup(group);
     }
 
+    deleteRecord(record, group) {
+        const { list } = group || this.props;
+        this.dialog.add(ConfirmationDialog, {
+            body: this.env._t("Are you sure you want to delete this record?"),
+            confirm: () => list.unlink(record),
+            cancel: () => {},
+        });
+    }
+
     async openRecord(record) {
         await this.props.openRecord(record);
     }
@@ -189,7 +198,7 @@ export class KanbanRenderer extends Component {
         });
     }
 
-    triggerAction(record, params) {
+    triggerAction(record, group, params) {
         const { type } = params;
         switch (type) {
             case "edit":
@@ -198,8 +207,7 @@ export class KanbanRenderer extends Component {
                 break;
             }
             case "delete": {
-                // TODO
-                console.warn("TODO: Delete record", record.id);
+                this.deleteRecord(record, group);
                 break;
             }
             case "action":

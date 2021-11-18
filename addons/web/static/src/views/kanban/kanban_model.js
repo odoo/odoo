@@ -185,23 +185,18 @@ class KanbanDynamicGroupList extends DynamicGroupList {
 }
 
 class KanbanDynamicRecordList extends DynamicRecordList {
-    async archive() {
-        const resIds = this.records.map((r) => r.resId);
-        await this.model.orm.call(this.resModel, "action_archive", [resIds]);
-        await this.model.load();
-    }
-
-    async unarchive() {
-        const resIds = this.records.map((r) => r.resId);
-        await this.model.orm.call(this.resModel, "action_unarchive", [resIds]);
-        await this.model.load();
+    async loadMore() {
+        this.offset = this.records.length;
+        const nextRecords = await this._loadRecords();
+        this.records.push(...nextRecords);
+        this.model.notify();
     }
 
     async cancelQuickCreate() {
         const previousCount = this.records.length;
         this.records = this.records.filter((r) => !r.isQuickCreate);
         if (this.records.length !== previousCount) {
-            await this.model.notify();
+            this.model.notify();
         }
     }
 
@@ -215,7 +210,7 @@ class KanbanDynamicRecordList extends DynamicRecordList {
         record.isQuickCreate = true;
         this.records.unshift(record);
         await record.load();
-        await this.model.notify();
+        this.model.notify();
     }
 
     async validateQuickCreate() {

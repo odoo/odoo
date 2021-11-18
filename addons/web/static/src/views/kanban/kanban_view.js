@@ -228,7 +228,7 @@ export class KanbanArchParser extends XMLParser {
                 const strParams = Object.keys(params)
                     .map((k) => `${k}:"${params[k]}"`)
                     .join(",");
-                el.setAttribute("t-on-click", `triggerAction(record,{${strParams}})`);
+                el.setAttribute("t-on-click", `triggerAction(record,group,{${strParams}})`);
             }
         }
 
