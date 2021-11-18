@@ -354,6 +354,8 @@ class TestSaleOrder(TestSaleCommon):
     def test_sale_change_of_pricelists_excluded_value_discount(self):
         """ Test SO with the pricelist 'discount displayed' and check displayed percentage value after multiple changes of pricelist """
 
+        self.env.user.groups_id += self.env.ref('product.group_discount_per_so_line')
+
         # Create a pricelist without discount policy: percentage on all products
         pricelist_discount_excl_global = self.env['product.pricelist'].create({
             'name': 'Pricelist C',
