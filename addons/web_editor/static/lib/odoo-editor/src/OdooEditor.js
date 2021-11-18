@@ -175,6 +175,7 @@ export class OdooEditor extends EventTarget {
         this.document = options.document || document;
 
         this.isMobile = matchMedia('(max-width: 767px)').matches;
+        this.isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
 
         // Keyboard type detection, happens only at the first keydown event.
         this.keyboardType = KEYBOARD_TYPES.UNKNOWN;
@@ -1335,7 +1336,8 @@ export class OdooEditor extends EventTarget {
             const el = closestElement(joinWith);
             const { zws } = fillEmpty(el);
             if (zws) {
-                setSelection(zws, 0, zws, nodeSize(zws));
+                // ZWS selection in OdooEditor is not working in current version of firefox (since v93.0)
+                setSelection(zws, 0, zws, this.isFirefox ? 0 : nodeSize(zws));
             }
         }
     }
