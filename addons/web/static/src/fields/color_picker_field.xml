@@ -4,12 +4,12 @@
     <t t-name="web.ColorPickerField" owl="1">
         <div class="o_field_color_picker">
             <t t-if="!state.isExpanded">
-                <div t-on-click="toggle" role="menuitem"  t-att-title="currentColor" t-att-aria-label="currentColor">
+                <div t-on-click.prevent.stop="toggle" role="menuitem"  t-att-title="currentColor" t-att-aria-label="currentColor">
                     <a href="#" t-att-class="{ 'o_color_picker_disabled': isReadonly  }" t-attf-class="o_field_color_picker_color_{{ props.value || 0 }}" />
                 </div>
             </t>
             <t t-if="state.isExpanded" t-foreach="constructor.RECORD_COLORS" t-as="color" t-key="color">
-                <div t-on-click="switchColor(color_index)" role="menuitem"  t-att-title="color" t-att-aria-label="color">
+                <div t-on-click.prevent.stop="switchColor(color_index)" role="menuitem"  t-att-title="color" t-att-aria-label="color">
                     <a href="#" t-attf-class="o_field_color_picker_color_{{ color_index }}" />
                 </div>
             </t>

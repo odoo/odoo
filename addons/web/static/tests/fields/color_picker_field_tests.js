@@ -3,6 +3,8 @@
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { registry } from "@web/core/registry";
 import { click, triggerEvent } from "../helpers/utils";
+import { makeFakeUserService } from "../helpers/mock_services";
+
 import {
     setupControlPanelFavoriteMenuRegistry,
     setupControlPanelServiceRegistry,
@@ -11,6 +13,10 @@ import { makeView } from "../views/helpers";
 
 const serviceRegistry = registry.category("services");
 let serverData;
+
+function hasGroup(group) {
+    return group === "base.group_allow_export";
+}
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
@@ -31,14 +37,14 @@ QUnit.module("Fields", (hooks) => {
                             sortable: true,
                             searchable: true,
                         },
-                        records: [
-                            {
-                                id: 1,
-                                foo: "yop",
-                                int_field: 0,
-                            },
-                        ],
                     },
+                    records: [
+                        {
+                            id: 1,
+                            foo: "first",
+                            int_field: 0,
+                        },
+                    ],
                 },
             },
         };
@@ -46,6 +52,7 @@ QUnit.module("Fields", (hooks) => {
         setupControlPanelFavoriteMenuRegistry();
         setupControlPanelServiceRegistry();
         serviceRegistry.add("dialog", dialogService);
+        serviceRegistry.add("user", makeFakeUserService(hasGroup), { force: true });
     });
 
     QUnit.module("ColorPickerField");
@@ -176,4 +183,37 @@ QUnit.module("Fields", (hooks) => {
             "there should be one color element when the component is closed"
         );
     });
+
+    QUnit.test(
+        "stop event propagation on click to avoid oppening record on tree view",
+        async function (assert) {
+            assert.expect(2);
+
+            const list = await makeView({
+                type: "list",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <tree>
+                        <field name="int_field" widget="color_picker"/>
+                </tree>`,
+            });
+
+            await click(list.el, ".o_field_color_picker a");
+
+            assert.strictEqual(
+                document.querySelectorAll(".o_list_renderer").length,
+                1,
+                "The current view should still be a list view"
+            );
+
+            await click(list.el, ".o_field_color_picker_color_6");
+
+            assert.strictEqual(
+                document.querySelectorAll(".o_list_renderer").length,
+                1,
+                "The current view should still be a list view"
+            );
+        }
+    );
 });
