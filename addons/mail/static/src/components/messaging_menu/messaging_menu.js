@@ -3,14 +3,15 @@
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
+const { onMounted, onWillUnmount } = owl.hooks;
 
 export class MessagingMenu extends Component {
 
     /**
      * @override
      */
-    constructor(...args) {
-        super(...args);
+    setup() {
+        super.setup();
         /**
          * global JS generated ID for this component. Useful to provide a
          * custom class to autocomplete input, so that click in an autocomplete
@@ -22,29 +23,18 @@ export class MessagingMenu extends Component {
         this._onMobileNewMessageInputSelect = this._onMobileNewMessageInputSelect.bind(this);
         this._onMobileNewMessageInputSource = this._onMobileNewMessageInputSource.bind(this);
         this._onClickCaptureGlobal = this._onClickCaptureGlobal.bind(this);
-        this._constructor(...args);
-    }
-
-    /**
-     * Allows patching constructor.
-     */
-    _constructor() {}
-
-    /**
-     * @override
-     */
-    setup() {
         // for now, the legacy env is needed for internal functions such as
         // `useModels` to work
         this.env = owl.Component.env;
-        super.setup();
+        onMounted(() => this._mounted());
+        onWillUnmount(() => this._willUnmount());
     }
 
-    mounted() {
+    _mounted() {
         document.addEventListener('click', this._onClickCaptureGlobal, true);
     }
 
-    willUnmount() {
+    _willUnmount() {
         document.removeEventListener('click', this._onClickCaptureGlobal, true);
     }
 

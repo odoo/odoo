@@ -12,8 +12,8 @@ export class ComposerTextInput extends Component {
     /**
      * @override
      */
-    constructor(...args) {
-        super(...args);
+    setup() {
+        super.setup();
         /**
          * Updates the composer text input content when composer is mounted
          * as textarea content can't be changed from the DOM.

@@ -3,14 +3,15 @@
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
-const { useRef, useState } = owl.hooks;
+const { onMounted, onWillUnmount, useRef, useState } = owl.hooks;
 
 export class FollowerListMenu extends Component {
+
     /**
      * @override
      */
-    constructor(...args) {
-        super(...args);
+    setup() {
+        super.setup();
         this.state = useState({
             /**
              * Determine whether the dropdown is open or not.
@@ -19,13 +20,15 @@ export class FollowerListMenu extends Component {
         });
         this._dropdownRef = useRef('dropdown');
         this._onClickCaptureGlobal = this._onClickCaptureGlobal.bind(this);
+        onMounted(() => this._mounted());
+        onWillUnmount(() => this._willUnmount());
     }
 
-    mounted() {
+    _mounted() {
         document.addEventListener('click', this._onClickCaptureGlobal, true);
     }
 
-    willUnmount() {
+    _willUnmount() {
         document.removeEventListener('click', this._onClickCaptureGlobal, true);
     }
 

@@ -12,8 +12,8 @@ export class DiscussSidebar extends Component {
     /**
      * @override
      */
-    constructor(...args) {
-        super(...args);
+    setup() {
+        super.setup();
         useUpdate({ func: () => this._update() });
         useRefToModel({ fieldName: 'startAMeetingButtonRef', modelName: 'mail.discuss', propNameAsRecordLocalId: 'localId', refName: 'startAMeetingButton' });
         /**

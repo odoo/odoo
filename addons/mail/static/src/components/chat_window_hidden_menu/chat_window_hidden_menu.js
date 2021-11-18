@@ -3,15 +3,15 @@
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
-const { useRef } = owl.hooks;
+const { onMounted, onPatched, onWillUnmount, useRef } = owl.hooks;
 
 export class ChatWindowHiddenMenu extends Component {
 
     /**
      * @override
      */
-    constructor(...args) {
-        super(...args);
+    setup() {
+        super.setup();
         this._onClickCaptureGlobal = this._onClickCaptureGlobal.bind(this);
         /**
          * Reference of the dropup list. Useful to auto-set max height based on
@@ -22,18 +22,21 @@ export class ChatWindowHiddenMenu extends Component {
          * The intent of the toggle button depends on the last rendered state.
          */
         this._wasMenuOpen;
+        onMounted(() => this._mounted());
+        onPatched(() => this._patched());
+        onWillUnmount(() => this._willUnmount());
     }
 
-    mounted() {
+    _mounted() {
         this._apply();
         document.addEventListener('click', this._onClickCaptureGlobal, true);
     }
 
-    patched() {
+    _patched() {
         this._apply();
     }
 
-    willUnmount() {
+    _willUnmount() {
         document.removeEventListener('click', this._onClickCaptureGlobal, true);
     }
 

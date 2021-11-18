@@ -3,10 +3,20 @@
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
+const { onMounted, onWillUnmount } = owl.hooks;
 
 export class AutocompleteInput extends Component {
 
-    mounted() {
+    /**
+     * @override
+     */
+    setup() {
+        super.setup();
+        onMounted(() => this._mounted());
+        onWillUnmount(() => this._willUnmount());
+    }
+
+    _mounted() {
         if (this.props.isFocusOnMount) {
             this.el.focus();
         }
@@ -32,7 +42,7 @@ export class AutocompleteInput extends Component {
         };
     }
 
-    willUnmount() {
+    _willUnmount() {
         $(this.el).autocomplete('destroy');
     }
 

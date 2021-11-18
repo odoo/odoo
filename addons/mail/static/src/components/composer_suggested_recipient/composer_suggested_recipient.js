@@ -22,8 +22,11 @@ class FormViewDialogComponentAdapter extends ComponentAdapter {
 
 export class ComposerSuggestedRecipient extends Component {
 
-    constructor(...args) {
-        super(...args);
+    /**
+     * @override
+     */
+    setup() {
+        super.setup();
         this.id = _.uniqueId('o_ComposerSuggestedRecipient_');
         useUpdate({ func: () => this._update() });
         /**

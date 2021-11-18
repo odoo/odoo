@@ -9,10 +9,10 @@ const { Component } = owl;
 export class EmojisPopover extends Component {
 
     /**
-     * @param {...any} args
+     * @override
      */
-    constructor(...args) {
-        super(...args);
+    setup() {
+        super.setup();
         this.emojis = emojis;
         useUpdate({ func: () => this._update() });
     }

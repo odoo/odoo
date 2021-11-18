@@ -7,7 +7,7 @@ import { link } from '@mail/model/model_field_command';
 import { hidePDFJSButtons } from '@web/legacy/js/libs/pdfjs';
 
 const { Component } = owl;
-const { useRef } = owl.hooks;
+const { onMounted, onPatched, onWillUnmount, useRef } = owl.hooks;
 
 const MIN_SCALE = 0.5;
 const SCROLL_ZOOM_STEP = 0.1;
@@ -18,8 +18,8 @@ export class AttachmentViewer extends Component {
     /**
      * @override
      */
-    constructor(...args) {
-        super(...args);
+    setup() {
+        super.setup();
         this.MIN_SCALE = MIN_SCALE;
         /**
          * Used to ensure that the ref is always up to date, which seems to be needed if the element
@@ -51,9 +51,12 @@ export class AttachmentViewer extends Component {
          */
         this._translate = { x: 0, y: 0, dx: 0, dy: 0 };
         this._onClickGlobal = this._onClickGlobal.bind(this);
+        onMounted(() => this._mounted());
+        onPatched(() => this._patched());
+        onWillUnmount(() => this._willUnmount());
     }
 
-    mounted() {
+    _mounted() {
         this.el.focus();
         this._handleImageLoad();
         this._hideUnwantedPdfJsButtons();
@@ -63,12 +66,12 @@ export class AttachmentViewer extends Component {
     /**
      * When a new image is displayed, show a spinner until it is loaded.
      */
-    patched() {
+    _patched() {
         this._handleImageLoad();
         this._hideUnwantedPdfJsButtons();
     }
 
-    willUnmount() {
+    _willUnmount() {
         document.removeEventListener('click', this._onClickGlobal);
     }
 

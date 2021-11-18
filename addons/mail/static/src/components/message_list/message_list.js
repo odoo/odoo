@@ -5,7 +5,7 @@ import { useRenderedValues } from '@mail/component_hooks/use_rendered_values/use
 import { useUpdate } from '@mail/component_hooks/use_update/use_update';
 
 const { Component } = owl;
-const { useRef } = owl.hooks;
+const { onWillPatch, useRef } = owl.hooks;
 
 export class MessageList extends Component {
 
@@ -58,9 +58,10 @@ export class MessageList extends Component {
         // use onMounted/onPatched, and the calls from useRenderedValues must
         // happen first to save the values before useUpdate accesses them.
         useUpdate({ func: () => this._update() });
+        onWillPatch(() => this._willPatch());
     }
 
-    willPatch() {
+    _willPatch() {
         this._willPatchSnapshot = {
             scrollHeight: this._getScrollableElement().scrollHeight,
             scrollTop: this._getScrollableElement().scrollTop,

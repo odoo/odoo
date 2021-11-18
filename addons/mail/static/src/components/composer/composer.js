@@ -8,15 +8,15 @@ import {
 } from '@mail/utils/utils';
 
 const { Component } = owl;
-const { useRef } = owl.hooks;
+const { onMounted, onWillUnmount, useRef } = owl.hooks;
 
 export class Composer extends Component {
 
     /**
      * @override
      */
-    constructor(...args) {
-        super(...args);
+    setup() {
+        super.setup();
         this.isDropZoneVisible = useDragVisibleDropZone();
         /**
          * Reference of the emoji popover. Useful to include emoji popover as
@@ -34,13 +34,15 @@ export class Composer extends Component {
          */
         this._textInputRef = useRef('textInput');
         this._onClickCaptureGlobal = this._onClickCaptureGlobal.bind(this);
+        onMounted(() => this._mounted());
+        onWillUnmount(() => this._willUnmount());
     }
 
-    mounted() {
+    _mounted() {
         document.addEventListener('click', this._onClickCaptureGlobal, true);
     }
 
-    willUnmount() {
+    _willUnmount() {
         document.removeEventListener('click', this._onClickCaptureGlobal, true);
     }
 

@@ -16,8 +16,8 @@ export class Activity extends Component {
     /**
      * @override
      */
-    constructor(...args) {
-        super(...args);
+    setup() {
+        super.setup();
         this.state = useState({
             areDetailsVisible: false,
         });

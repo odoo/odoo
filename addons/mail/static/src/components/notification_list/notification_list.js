@@ -3,10 +3,19 @@
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
+const { onMounted } = owl.hooks;
 
 export class NotificationList extends Component {
 
-    mounted() {
+    /**
+     * @override
+     */
+    setup() {
+        super.setup();
+        onMounted(() => this._mounted());
+    }
+
+    _mounted() {
         this._loadPreviews();
     }
 

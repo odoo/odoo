@@ -3,35 +3,31 @@
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
-const { useRef } = owl.hooks;
+const { onMounted, onWillUnmount, useRef } = owl.hooks;
 
 export class Dialog extends Component {
 
     /**
-     * @param {...any} args
+     * @override
      */
-    constructor(...args) {
-        super(...args);
+    setup() {
+        super.setup();
         /**
          * Reference to the component used inside this dialog.
          */
         this._componentRef = useRef('component');
         this._onClickGlobal = this._onClickGlobal.bind(this);
         this._onKeydownDocument = this._onKeydownDocument.bind(this);
-        this._constructor();
+        onMounted(() => this._mounted());
+        onWillUnmount(() => this._willUnmount());
     }
 
-    /**
-     * Allows patching constructor.
-     */
-    _constructor() {}
-
-    mounted() {
+    _mounted() {
         document.addEventListener('click', this._onClickGlobal, true);
         document.addEventListener('keydown', this._onKeydownDocument);
     }
 
-    willUnmount() {
+    _willUnmount() {
         document.removeEventListener('click', this._onClickGlobal, true);
         document.removeEventListener('keydown', this._onKeydownDocument);
     }

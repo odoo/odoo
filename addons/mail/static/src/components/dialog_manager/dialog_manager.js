@@ -3,14 +3,24 @@
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
+const { onMounted, onPatched } = owl.hooks;
 
 export class DialogManager extends Component {
 
-    mounted() {
+    /**
+     * @override
+     */
+    setup() {
+        super.setup();
+        onMounted(() => this._mounted());
+        onPatched(() => this._patched());
+    }
+
+    _mounted() {
         this._checkDialogOpen();
     }
 
-    patched() {
+    _patched() {
         this._checkDialogOpen();
     }
 

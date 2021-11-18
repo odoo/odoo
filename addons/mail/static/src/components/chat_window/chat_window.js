@@ -12,8 +12,8 @@ export class ChatWindow extends Component {
     /**
      * @override
      */
-    constructor(...args) {
-        super(...args);
+    setup() {
+        super.setup();
         useUpdate({ func: () => this._update() });
         /**
          * Reference of the header of the chat window.
@@ -34,13 +34,7 @@ export class ChatWindow extends Component {
         // the following are passed as props to children
         this._onAutocompleteSelect = this._onAutocompleteSelect.bind(this);
         this._onAutocompleteSource = this._onAutocompleteSource.bind(this);
-        this._constructor(...args);
     }
-
-    /**
-     * Allows patching constructor.
-     */
-    _constructor() {}
 
     //--------------------------------------------------------------------------
     // Public

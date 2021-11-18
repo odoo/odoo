@@ -21,8 +21,8 @@ export class FileUploader extends Component {
     /**
      * @override
      */
-    constructor(...args) {
-        super(...args);
+    setup() {
+        super.setup();
         this._fileInputRef = useRef('fileInput');
         this._fileUploadId = _.uniqueId('o_FileUploader_fileupload');
     }

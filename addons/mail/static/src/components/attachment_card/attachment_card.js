@@ -6,6 +6,9 @@ const { Component } = owl;
 
 export class AttachmentCard extends Component {
 
+    /**
+     * @override
+     */
     setup() {
         super.setup();
         useComponentToModel({ fieldName: 'component', modelName: 'mail.attachment_card', propNameAsRecordLocalId: 'attachmentCardLocalId' });
