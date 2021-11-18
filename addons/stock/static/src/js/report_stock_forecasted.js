@@ -35,6 +35,7 @@ const ReplenishReport = clientAction.extend({
         var loadWarehouses = this._rpc({
             model: 'report.stock.report_product_product_replenishment',
             method: 'get_warehouses',
+            context: this.context,
         }).then((res) => {
             this.warehouses = res;
             if (this.context.warehouse) {
