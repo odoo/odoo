@@ -65,3 +65,27 @@ class ModelWithoutAccess(models.Model):
 
     name = fields.Char()
     another_field = fields.Char()
+
+
+class Project(models.Model):
+    _name = _description = 'test_base_automation.project'
+
+    name = fields.Char()
+    task_ids = fields.One2many('test_base_automation.task', 'project_id')
+
+
+class Task(models.Model):
+    _name = _description = 'test_base_automation.task'
+
+    name = fields.Char()
+    parent_id = fields.Many2one('test_base_automation.task')
+    project_id = fields.Many2one(
+        'test_base_automation.project',
+        compute='_compute_project_id', recursive=True, store=True, readonly=False,
+    )
+
+    @api.depends('parent_id.project_id')
+    def _compute_project_id(self):
+        for task in self:
+            if not task.project_id:
+                task.project_id = task.parent_id.project_id
