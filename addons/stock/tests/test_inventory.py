@@ -702,6 +702,7 @@ class TestInventory(SavepointCase):
         # Expect line of inventory 1 is still up to date
         self.assertEqual(inventory_1.line_ids.outdated, False)
 
+<<<<<<< HEAD
     def test_inventory_include_exhausted_product(self):
         """ Checks that exhausted product (quant not set or == 0) is added
         to inventory line
@@ -803,16 +804,30 @@ class TestInventory(SavepointCase):
         self.assertEqual(line_ids_loc1[0].theoretical_qty, 10)
         self.assertEqual(line_ids_loc2[0].theoretical_qty, 0)
 
+=======
+>>>>>>> 7bf5e43ebc5... temp
     def test_inventory_line_duplicates(self):
         """ Checks that creating duplicated inventory lines
         raises a UserError.
         """
         inventory = self.env['stock.inventory'].create({
             'name': 'Existing Inventory',
+<<<<<<< HEAD
             'exhausted': True,
             'location_ids': [(4, self.stock_location.id)],
             'product_ids': [(4, self.product1.id)]
         })
+=======
+            'location_ids': [(4, self.stock_location.id)],
+            'product_ids': [(4, self.product1.id)]
+        })
+
+        quant = self.env['stock.quant'].create({
+            'location_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'quantity': 10,
+        })
+>>>>>>> 7bf5e43ebc5... temp
         inventory.action_start()
 
         dup_vals = [{

@@ -6,6 +6,10 @@ from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import float_compare, float_is_zero
+<<<<<<< HEAD
+=======
+from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
+>>>>>>> 7bf5e43ebc5... temp
 from odoo.tools.misc import OrderedSet
 
 
@@ -236,6 +240,7 @@ class Inventory(models.Model):
             domain_loc = [('company_id', '=', self.company_id.id), ('usage', 'in', ['internal', 'transit'])]
         locations_ids = [l['id'] for l in self.env['stock.location'].search_read(domain_loc, ['id'])]
 
+<<<<<<< HEAD
         domain = [('company_id', '=', self.company_id.id),
                   ('quantity', '!=', '0'),
                   ('location_id', 'in', locations_ids)]
@@ -322,6 +327,46 @@ class Inventory(models.Model):
             val['product_uom_id'] = product_id_to_product[val['product_id']].product_tmpl_id.uom_id.id
         if self.exhausted:
             vals += self._get_exhausted_inventory_lines_vals({(l['product_id'], l['location_id']) for l in vals})
+=======
+        vals = []
+        Product = self.env['product.product']
+
+        # If inventory by company
+        if self.company_id:
+            domain += ' AND sq.company_id = %s'
+            args += (self.company_id.id,)
+        if self.product_ids:
+            domain += ' AND sq.product_id in %s'
+            args += (tuple(self.product_ids.ids),)
+
+        self.env['stock.quant'].flush(['company_id', 'product_id', 'quantity', 'location_id', 'lot_id', 'package_id', 'owner_id'])
+        self.env['product.product'].flush(['active'])
+        self.env.cr.execute("""SELECT sq.product_id, sum(sq.quantity) as product_qty, sq.location_id, sq.lot_id as prod_lot_id, sq.package_id, sq.owner_id as partner_id
+            FROM stock_quant sq
+            LEFT JOIN product_product pp
+            ON pp.id = sq.product_id
+            WHERE %s
+            GROUP BY sq.product_id, sq.location_id, sq.lot_id, sq.package_id, sq.owner_id """ % domain, args)
+
+        product_ids = OrderedSet()
+
+        for product_data in self.env.cr.dictfetchall():
+            product_data['company_id'] = self.company_id.id
+            product_data['inventory_id'] = self.id
+            # replace the None the dictionary by False, because falsy values are tested later on
+            for void_field in [item[0] for item in product_data.items() if item[1] is None]:
+                product_data[void_field] = False
+            product_data['theoretical_qty'] = product_data['product_qty']
+            if self.prefill_counted_quantity == 'zero':
+                product_data['product_qty'] = 0
+            if product_data['product_id']:
+                product_ids.add(product_data['product_id'])
+            vals.append(product_data)
+        product_id_to_product = dict(zip(product_ids, self.env['product.product'].browse(product_ids)))
+        for val in vals:
+            if val.get('product_id'):
+                val['product_uom_id'] = product_id_to_product[val['product_id']].product_tmpl_id.uom_id.id
+>>>>>>> 7bf5e43ebc5... temp
         return vals
 
 
