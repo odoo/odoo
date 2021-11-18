@@ -1863,12 +1863,17 @@ const Wysiwyg = Widget.extend({
             return Promise.resolve();
         }
 
+        // remove ZeroWidthSpace from odoo field value
+        // ZeroWidthSpace may be present from OdooEditor edition process
+        let escapedHtml = this._getEscapedElement($el).prop('outerHTML');
+        escapedHtml = escapedHtml.replace(/[\u200B-\u200D\uFEFF]/g, '');
+
         return this._rpc({
             model: 'ir.ui.view',
             method: 'save',
             args: [
                 viewID,
-                this._getEscapedElement($el).prop('outerHTML'),
+                escapedHtml,
                 !$el.data('oe-expression') && $el.data('oe-xpath') || null, // Note: hacky way to get the oe-xpath only if not a t-field
             ],
             context: context,
