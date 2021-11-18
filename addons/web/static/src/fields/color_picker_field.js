@@ -16,13 +16,16 @@ export class ColorPickerField extends Component {
     onOutsideClick(ev) {
         if (this.el.contains(ev.target)) return;
         if (this.state.isExpanded) {
-            this.toggle();
+            this.toggle(false);
         }
     }
 
-    toggle() {
+    toggle(focus = true) {
         if (!this.isReadonly) {
             this.state.isExpanded = !this.state.isExpanded;
+        }
+        if (focus) {
+            this.el.focus();
         }
     }
 
