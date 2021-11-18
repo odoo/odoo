@@ -246,8 +246,9 @@ class TestMrpAccountMove(TestAccountMove):
 
         # unbuild
         res_dict = production.button_unbuild()
-        wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
-        wizard.action_validate()
+        wizard_form = Form(self.env[res_dict['res_model']].with_context(res_dict['context']), view=self.env.ref('mrp.mrp_quick_unbuild_form_view'))
+        wizard_form.qty_producing = 1
+        wizard_form.save().action_unbuild()
 
         # finished product move
         productA_debit_line = self.env['account.move.line'].search([('ref', 'ilike', 'UB%Product A'), ('credit', '=', 0)])
@@ -308,8 +309,9 @@ class TestMrpAccountMove(TestAccountMove):
 
         # unbuild
         res_dict = production.button_unbuild()
-        wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
-        wizard.action_validate()
+        wizard_form = Form(self.env[res_dict['res_model']].with_context(res_dict['context']), view=self.env.ref('mrp.mrp_quick_unbuild_form_view'))
+        wizard_form.qty_producing = 1
+        wizard_form.save().action_unbuild()
 
         productA_debit_line = self.env['account.move.line'].search([('ref', 'ilike', 'UB%Product A'), ('credit', '=', 0)])
         productA_credit_line = self.env['account.move.line'].search([('ref', 'ilike', 'UB%Product A'), ('debit', '=', 0)])

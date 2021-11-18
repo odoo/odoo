@@ -1219,13 +1219,9 @@ class TestMrpOrder(TestMrpCommon):
         details_operation_form.save()
         mo1.button_mark_done()
 
-        unbuild_form = Form(self.env['mrp.unbuild'])
-        unbuild_form.product_id = p_final
-        unbuild_form.bom_id = bom
-        unbuild_form.product_qty = 1
-        unbuild_form.mo_id = mo1
-        unbuild_order = unbuild_form.save()
-        unbuild_order.action_unbuild()
+        unbuild_form = self.unbuildForm()
+        unbuild_form.production_id = mo1
+        self.processUnbuild(unbuild_form)
 
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = p_final

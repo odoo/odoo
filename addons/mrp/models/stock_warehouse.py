@@ -22,6 +22,9 @@ class StockWarehouse(models.Model):
     manu_type_id = fields.Many2one(
         'stock.picking.type', 'Manufacturing Operation Type',
         domain="[('code', '=', 'mrp_operation'), ('company_id', '=', company_id)]", check_company=True)
+    unbuild_type_id = fields.Many2one(
+        'stock.picking.type', 'Unbuild Operation Type',
+        domain="[('code', '=', 'mrp_operation'), ('company_id', '=', company_id)]", check_company=True)
 
     pbm_type_id = fields.Many2one('stock.picking.type', 'Picking Before Manufacturing Operation Type', check_company=True)
     sam_type_id = fields.Many2one('stock.picking.type', 'Stock After Manufacturing Operation Type', check_company=True)
@@ -215,6 +218,7 @@ class StockWarehouse(models.Model):
             'pbm_type_id': {'name': self.name + ' ' + _('Sequence picking before manufacturing'), 'prefix': self.code + '/PC/', 'padding': 5, 'company_id': self.company_id.id},
             'sam_type_id': {'name': self.name + ' ' + _('Sequence stock after manufacturing'), 'prefix': self.code + '/SFP/', 'padding': 5, 'company_id': self.company_id.id},
             'manu_type_id': {'name': self.name + ' ' + _('Sequence production'), 'prefix': self.code + '/MO/', 'padding': 5, 'company_id': self.company_id.id},
+            'unbuild_type_id': {'name': f'{self.name} {_("Sequence unbuild")}', 'prefix': f'{self.code}/UB/', 'padding': 5, 'company_id': self.company_id.id},
         })
         return values
 
@@ -252,8 +256,18 @@ class StockWarehouse(models.Model):
                 'sequence_code': 'MO',
                 'company_id': self.company_id.id,
             },
+            'unbuild_type_id': {
+                'active': False,
+                'name': _('Unbuild'),
+                'code': 'mrp_operation',
+                'use_create_lots': True,
+                'use_existing_lots': True,
+                'sequence': next_sequence + 4,
+                'sequence_code': 'UB',
+                'company_id': self.company_id.id,
+            },
         })
-        return data, max_sequence + 4
+        return data, max_sequence + 5
 
     def _get_picking_type_update_values(self):
         data = super(StockWarehouse, self)._get_picking_type_update_values()
@@ -270,6 +284,11 @@ class StockWarehouse(models.Model):
                 'active': self.manufacture_to_resupply and self.active,
                 'default_location_src_id': self.manufacture_steps in ('pbm', 'pbm_sam') and self.pbm_loc_id.id or self.lot_stock_id.id,
                 'default_location_dest_id': self.manufacture_steps == 'pbm_sam' and self.sam_loc_id.id or self.lot_stock_id.id,
+            },
+            'unbuild_type_id': {
+                'active': self.manufacture_to_resupply and self.active and self.unbuild_type_id.active,
+                'default_location_src_id': self.lot_stock_id.id,
+                'default_location_dest_id': self.lot_stock_id.id,
             },
         })
         return data

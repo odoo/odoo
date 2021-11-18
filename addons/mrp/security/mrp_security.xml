@@ -47,12 +47,6 @@
         <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
 
-    <record model="ir.rule" id="mrp_unbuild_rule">
-        <field name="name">mrp_unbuild multi-company</field>
-        <field name="model_id" search="[('model','=','mrp.unbuild')]" model="ir.model"/>
-        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
-    </record>
-
     <record model="ir.rule" id="mrp_workcenter_rule">
         <field name="name">mrp_workcenter multi-company</field>
         <field name="model_id" search="[('model','=','mrp.workcenter')]" model="ir.model"/>

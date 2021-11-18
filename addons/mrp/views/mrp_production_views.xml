@@ -115,7 +115,7 @@
                     <button name="action_cancel" type="object" string="Cancel" data-hotkey="z"
                             attrs="{'invisible': ['|', '|', ('id', '=', False), ('state', 'in', ('done', 'cancel')), ('confirm_cancel', '=', False)]}"
                             confirm="Some product moves have already been confirmed, this manufacturing order can't be completely cancelled. Are you still sure you want to process ?"/>
-                    <button name="button_unbuild" type="object" string="Unbuild" attrs="{'invisible': [('state', '!=', 'done')]}" data-hotkey="shift+v"/>
+                    <button name="button_unbuild" type="object" string="Unbuild" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('unbuild', '=', True)]}" data-hotkey="shift+v"/>
                 </header>
                 <sheet>
                     <field name="reservation_state" invisible="1"/>
@@ -126,6 +126,7 @@
                     <field name="reserve_visible" invisible="1"/>
                     <field name="consumption" invisible="1"/>
                     <field name="is_planned" invisible="1"/>
+                    <field name="unbuild_count" invisible="1"/>
                     <div class="oe_button_box" name="button_box">
                         <button class="oe_stat_button" name="action_view_mrp_production_childs" type="object" icon="fa-wrench" attrs="{'invisible': [('mrp_production_child_count', '=', 0)]}">
                             <div class="o_field_widget o_stat_info">
@@ -156,6 +157,12 @@
                         </button>
                         <button name="%(stock.action_stock_report)d" icon="fa-arrow-up" class="oe_stat_button" string="Traceability" type="action" states="done" groups="stock.group_production_lot"/>
                         <button name="%(action_mrp_production_moves)d" type="action" string="Product Moves" class="oe_stat_button" icon="fa-exchange" attrs="{'invisible': [('state', 'not in', ('progress', 'done'))]}"/>
+                        <button class="oe_stat_button" name="action_view_unbuild_orders" type="object" icon="fa-cubes" attrs="{'invisible': [('unbuild_count', '=', 0)]}">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value"><field name="unbuild_count"/></span>
+                                <span class="o_stat_text">Unbuild Orders</span>
+                            </div>
+                        </button>
                     </div>
                     <div class="oe_title">
                         <h1>
@@ -169,6 +176,7 @@
                             <field name="use_create_components_lots" invisible="1"/>
                             <field name="show_lot_ids" invisible="1"/>
                             <field name="product_tracking" invisible="1"/>
+                            <field name="unbuild" invisible="1"/>
                             <field name="product_id" context="{'default_detailed_type': 'product'}" attrs="{'readonly': [('state', '!=', 'draft')]}" default_focus="1"/>
                             <field name="product_tmpl_id" invisible="1"/>
                             <field name="forecasted_issue" invisible="1"/>
@@ -187,14 +195,14 @@
                                 <label for="product_uom_id" string="" class="oe_inline"/>
                                 <field name="product_uom_category_id" invisible="1"/>
                                 <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" force_save="1" groups="uom.group_uom" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                <span class='font-weight-bold'>To Produce</span>
+                                <span name="quantity-purpose" class='font-weight-bold'>To Produce</span>
                                 <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" attrs="{'invisible': [('forecasted_issue', '=', True)]}"/>
                                 <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" attrs="{'invisible': [('forecasted_issue', '=', False)]}" class="text-danger"/>
                             </div>
                             <label for="lot_producing_id" attrs="{'invisible': ['|', ('state', '=', 'draft'), ('product_tracking', 'in', ('none', False))]}"/>
-                            <div class="o_row" attrs="{'invisible': ['|', ('state', '=', 'draft'), ('product_tracking', 'in', ('none', False))]}">
+                            <div name="lot_field" class="o_row" attrs="{'invisible': ['|', ('state', '=', 'draft'), ('product_tracking', 'in', ('none', False))]}">
                                 <field name="lot_producing_id"
-                                    context="{'default_product_id': product_id, 'default_company_id': company_id}" attrs="{'invisible': [('product_tracking', 'in', ('none', False))]}"/>
+                                    context="{'default_product_id': product_id, 'default_company_id': company_id}"/>
                                 <button name="action_generate_serial" type="object" class="btn btn-primary fa fa-plus-square-o" aria-label="Creates a new serial/lot number" title="Creates a new serial/lot number" role="img" attrs="{'invisible': ['|', ('product_tracking', 'in', ('none', False)), ('lot_producing_id', '!=', False)]}"/>
                             </div>
                             <label for="bom_id" name="bom_label"/>
@@ -215,14 +223,13 @@
                                 <field nolabel="1" name="json_popover" widget="stock_rescheduling_popover" attrs="{'invisible': [('json_popover', '=', False)]}"/>
                             </div>
                             <field name="components_availability_state" invisible="1"/>
-                            <field name="components_availability" attrs="{'invisible': [('state', 'not in', ['confirmed', 'progress'])]}"
+                            <field name="components_availability" attrs="{'invisible': ['|', ('unbuild', '=', True), ('state', 'not in', ['confirmed', 'progress'])]}"
                                 decoration-success="reservation_state == 'assigned' or components_availability_state == 'available'"
                                 decoration-warning="reservation_state != 'assigned' and components_availability_state in ('expected', 'available')"
                                 decoration-danger="reservation_state != 'assigned' and components_availability_state == 'late'"/>
                             <field name="user_id" domain="[('share', '=', False)]"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}" force_save="1"/>
                             <field name="show_final_lots" invisible="1"/>
-                            <field name="production_location_id" invisible="1" readonly="1"/>
                             <field name="move_finished_ids" invisible="1" attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}">
                                 <tree editable="bottom">
                                     <field name="product_id"/>
@@ -257,24 +264,6 @@
                                 <tree default_order="is_done,sequence" editable="bottom">
                                     <field name="product_id" force_save="1" required="1" context="{'default_detailed_type': 'product'}" attrs="{'readonly': ['|', '|', ('move_lines_count', '&gt;', 0), ('state', '=', 'cancel'), '&amp;', ('state', '!=', 'draft'), ('additional', '=', False) ]}"/>
                                     <field name="location_id" string="From" readonly="1" groups="stock.group_stock_multi_locations" optional="show"/>
-                                    <field name="move_line_ids" invisible="1">
-                                        <tree>
-                                            <field name="lot_id" invisible="1"/>
-                                            <field name="owner_id" invisible="1"/>
-                                            <field name="package_id" invisible="1"/>
-                                            <field name="result_package_id" invisible="1"/>
-                                            <field name="location_id" invisible="1"/>
-                                            <field name="location_dest_id" invisible="1"/>
-                                            <field name="qty_done" invisible="1"/>
-                                            <field name="product_id" invisible="1"/>
-                                            <field name="product_uom_id" invisible="1"/>
-                                            <field name="reserved_uom_qty" invisible="1"/>
-                                            <field name="state" invisible="1"/>
-                                            <field name="move_id" invisible="1"/>
-                                            <field name="id" invisible="1"/>
-                                        </tree>
-                                    </field>
-                                    
                                     <field name="propagate_cancel" invisible="1"/>
                                     <field name="price_unit" invisible="1"/>
                                     <field name="company_id" invisible="1"/>
@@ -295,7 +284,7 @@
                                     <field name="warehouse_id" invisible="1"/>
                                     <field name="is_locked" invisible="1"/>
                                     <field name="move_lines_count" invisible="1"/>
-                                    <field name="location_dest_id" domain="[('id', 'child_of', parent.location_dest_id)]" invisible="1"/>
+                                    <field name="location_dest_id" domain="[('id', 'child_of', parent.location_dest_id)]" groups="stock.group_stock_multi_locations" invisible="1"/>
                                     <field name="state" invisible="1" force_save="1"/>
                                     <field name="should_consume_qty" invisible="1"/>
                                     <field name="product_uom_qty" widget="mrp_should_consume" force_save="1" string="To Consume" attrs="{'readonly': ['&amp;', ('parent.state', '!=', 'draft'), '|', '&amp;', ('parent.state', 'not in', ('confirmed', 'progress', 'to_close')), ('parent.is_planned', '!=', True), ('parent.is_locked', '=', True)]}" width="1"/>
@@ -305,9 +294,9 @@
                                     <field name="reserved_availability" invisible="1"/>
                                     <field name="forecast_expected_date" invisible="1"/>
                                     <!-- Button are used in state draft to doesn't have the name of the column "Reserved"-->
-                                    <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" attrs="{'column_invisible': [('parent.state', '!=', 'draft')], 'invisible': [('forecast_availability', '&lt;', 0)]}"/>
-                                    <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart text-danger" attrs="{'column_invisible': [('parent.state', '!=', 'draft')], 'invisible': [('forecast_availability', '&gt;=', 0)]}"/>
-                                    <field name="forecast_availability" string="Reserved" attrs="{'column_invisible': [('parent.state', 'in', ('draft', 'done'))]}" widget="forecast_widget"/>
+                                    <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" attrs="{'column_invisible': ['|', ('parent.unbuild', '=', True), ('parent.state', '!=', 'draft')], 'invisible': [('forecast_availability', '&lt;', 0)]}"/>
+                                    <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart text-danger" attrs="{'column_invisible': ['|', ('parent.unbuild', '=', True), ('parent.state', '!=', 'draft')], 'invisible': [('forecast_availability', '&gt;=', 0)]}"/>
+                                    <field name="forecast_availability" string="Reserved" attrs="{'column_invisible': ['|', ('parent.unbuild', '=', True), ('parent.state', 'in', ('draft', 'done'))]}" widget="forecast_widget"/>
                                     <field name="is_quantity_done_editable" invisible="1"/>
                                     <field name="quantity_done" string="Consumed"
                                         decoration-success="not is_done and (quantity_done - should_consume_qty == 0)"
@@ -326,19 +315,8 @@
                                     <field name="group_id" invisible="1"/>
                                     <button name="action_show_details" type="object" title="Show Details" icon="fa-list" context="{'default_product_uom_qty': 0}" attrs="{'invisible': ['|', ('show_details_visible', '=', False), ('has_tracking', '=','none')]}" options="{&quot;warn&quot;: true}"/>
                                     <button class="o_optional_button" name="action_show_details" type="object" title="Show Details" icon="fa-list" context="{'default_product_uom_qty': 0}" attrs="{'invisible': ['|', ('has_tracking', '!=','none'), ('show_details_visible', '=', False)]}" options="{&quot;warn&quot;: true}"/>
-                                </tree>
-                            </field>
-                        </page>
-                        <page string="Work Orders" name="operations" groups="mrp.group_mrp_routings">
-                            <field name="workorder_ids" attrs="{'readonly': [('state', 'in', ['cancel', 'done'])]}" context="{'tree_view_ref': 'mrp.mrp_production_workorder_tree_editable_view', 'default_product_uom_id': product_uom_id}"/>
-                        </page>
-                        <page string="By-Products" name="finished_products" groups="mrp.group_mrp_byproducts">
-                            <field name="move_byproduct_ids" context="{'default_date': date_planned_finished, 'default_date_deadline': date_deadline, 'default_location_id': production_location_id, 'default_location_dest_id': location_src_id, 'default_state': 'draft', 'default_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id}" attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}" options="{'delete': [('state', '=', 'draft')]}">
-                                <tree default_order="is_done,sequence" decoration-muted="is_done" editable="bottom">
-                                    <field name="byproduct_id" invisible="1"/>
-                                    <field name="product_id" context="{'default_detailed_type': 'product'}" domain="[('id', '!=', parent.product_id)]" required="1"/>
-                                    <field name="location_dest_id" string="To" readonly="1" groups="stock.group_stock_multi_locations"/>
-
+                                    <!-- Must be at the end of the tree view to avoid conflict when we
+                                    override a move field who has the same name than a move line field. -->
                                     <field name="move_line_ids" invisible="1">
                                         <tree>
                                             <field name="lot_id" invisible="1"/>
@@ -356,7 +334,18 @@
                                             <field name="id" invisible="1"/>
                                         </tree>
                                     </field>
-
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Work Orders" name="operations" groups="mrp.group_mrp_routings">
+                            <field name="workorder_ids" attrs="{'readonly': [('state', 'in', ['cancel', 'done'])]}" context="{'tree_view_ref': 'mrp.mrp_production_workorder_tree_editable_view', 'default_product_uom_id': product_uom_id}"/>
+                        </page>
+                        <page string="By-Products" name="finished_products" groups="mrp.group_mrp_byproducts">
+                            <field name="move_byproduct_ids" context="{'default_date': date_planned_finished, 'default_date_deadline': date_deadline, 'default_location_id': production_location_id, 'default_location_dest_id': location_src_id, 'default_state': 'draft', 'default_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id}" attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}" options="{'delete': [('state', '=', 'draft')]}">
+                                <tree default_order="is_done,sequence" decoration-muted="is_done" editable="bottom">
+                                    <field name="byproduct_id" invisible="1"/>
+                                    <field name="product_id" context="{'default_detailed_type': 'product'}" domain="[('id', '!=', parent.product_id)]" required="1"/>
+                                    <field name="location_dest_id" string="To" readonly="1" groups="stock.group_stock_multi_locations"/>
                                     <field name="company_id" invisible="1"/>
                                     <field name="product_uom_category_id" invisible="1"/>
                                     <field name="name" invisible="1"/>
@@ -391,6 +380,25 @@
                                     />
                                     <button name="action_show_details" type="object" title="Show Details" icon="fa-list" attrs="{'invisible': ['|', ('has_tracking', '=','none'), ('show_details_visible', '=', False)]}" options="{&quot;warn&quot;: true}"/>
                                     <button class="o_optional_button" name="action_show_details" type="object" title="Show Details" icon="fa-list" attrs="{'invisible': ['|', ('has_tracking', '!=','none'), ('show_details_visible', '=', False)]}" options="{&quot;warn&quot;: true}"/>
+                                    <!-- Must be at the end of the tree view to avoid conflict when we
+                                    override a move field who has the same name than a move line field. -->
+                                    <field name="move_line_ids" invisible="1">
+                                        <tree>
+                                            <field name="lot_id" invisible="1"/>
+                                            <field name="owner_id" invisible="1"/>
+                                            <field name="package_id" invisible="1"/>
+                                            <field name="result_package_id" invisible="1"/>
+                                            <field name="location_id" invisible="1"/>
+                                            <field name="location_dest_id" invisible="1"/>
+                                            <field name="qty_done" invisible="1"/>
+                                            <field name="product_id" invisible="1"/>
+                                            <field name="product_uom_id" invisible="1"/>
+                                            <field name="reserved_uom_qty" invisible="1"/>
+                                            <field name="state" invisible="1"/>
+                                            <field name="move_id" invisible="1"/>
+                                            <field name="id" invisible="1"/>
+                                        </tree>
+                                    </field>
                                 </tree>
                             </field>
                         </page>
@@ -399,6 +407,7 @@
                                 <group>
                                     <field name="picking_type_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                     <field name="location_src_id" groups="stock.group_stock_multi_locations" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                    <field name="production_location_id" invisible="1" readonly="1" groups="stock.group_stock_multi_locations"/>
                                     <field name="location_dest_id" groups="stock.group_stock_multi_locations" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 </group>
                                 <group>
@@ -461,6 +470,7 @@
                 </kanban>
             </field>
         </record>
+
 
         <record id="view_production_calendar" model="ir.ui.view">
             <field name="name">mrp.production.calendar</field>
@@ -537,6 +547,9 @@
                         domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter name="filter_date_planned_start" string="Scheduled Date" date="date_planned_start"/>
                     <separator/>
+                    <filter string="Manufacturing Orders" name="manufacturing_orders" domain="[('unbuild', '=', False)]"/>
+                    <filter string="Unbuild Orders" name="unbuild_orders" domain="[('unbuild', '=', True)]"/>
+                    <separator/>
                     <filter string="Warnings" name="activities_exception"
                         domain="[('activity_exception_decoration', '!=', False)]"/>
                     <group expand="0" string="Group By...">
@@ -556,8 +569,8 @@
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_mrp_production_filter"/>
-            <field name="context">{'search_default_todo': True, 'default_company_id': allowed_company_ids[0]}</field>
-            <field name="domain">[('picking_type_id.active', '=', True)]</field>
+            <field name="context">{'search_default_todo': True, 'default_company_id': allowed_company_ids[0], 'default_unbuild': False}</field>
+            <field name="domain">[('picking_type_id.active', '=', True), ('unbuild', '=', False)]</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 No manufacturing order found. Let's create one.

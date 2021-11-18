@@ -110,10 +110,6 @@ class StockMove(models.Model):
         'mrp.production', 'Production Order for finished products', check_company=True, index=True)
     raw_material_production_id = fields.Many2one(
         'mrp.production', 'Production Order for components', check_company=True, index=True)
-    unbuild_id = fields.Many2one(
-        'mrp.unbuild', 'Disassembly Order', check_company=True)
-    consume_unbuild_id = fields.Many2one(
-        'mrp.unbuild', 'Consumed Disassembly Order', check_company=True)
     allowed_operation_ids = fields.One2many(
         'mrp.routing.workcenter', related='raw_material_production_id.bom_id.operation_ids')
     operation_id = fields.Many2one(

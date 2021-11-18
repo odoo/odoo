@@ -1,211 +1,212 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!--  Unbuild and scrap menu -->
-
-   <record id="action_mrp_unbuild_moves" model="ir.actions.act_window">
-        <field name="name">Stock Moves</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">stock.move.line</field>
-        <field name="view_mode">tree,form</field>
-        <field name="domain">['|', ('move_id.unbuild_id', '=', active_id), ('move_id.consume_unbuild_id', '=', active_id)]</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_empty_folder">
-                There's no product move yet
-            </p><p>
-                This menu gives you the full traceability of inventory operations on a specific product.
-                You can filter on the product to see all the past movements for the product.
-            </p>
+    <!-- Unbuild Views -->
+    <record id="mrp_unbuild_form_view" model="ir.ui.view">
+        <field name="name">mrp.unbuild.form</field>
+        <field name="model">mrp.production</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_view_mrp_production_backorders']" position="attributes">
+                <attribute name="context">{
+                    'tree_view_ref': 'mrp.mrp_unbuild_tree_view',
+                    'form_view_ref': 'mrp.mrp_unbuild_form_view',
+                }</attribute>
+            </xpath>
+            <xpath expr="//span[@name='quantity-purpose']" position="replace">
+                <span name="quantity-purpose" class='font-weight-bold'>To Unbuild</span>
+            </xpath>
+            <xpath expr="//page[@name='miscellaneous']//group//group[last()]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//div[@name='lot_field']" position="attributes">
+                <attribute name="attrs">
+                    {'invisible': [('product_tracking', 'in', ('none', False))]}
+                </attribute>
+            </xpath>
+            <xpath expr="//label[@for='lot_producing_id']" position="attributes">
+                <attribute name="attrs">
+                    {'invisible': [('product_tracking', 'in', ('none', False))]}
+                </attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_generate_serial']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <!-- Fields overrides -->
+            <field name="bom_id" position="attributes">
+                <attribute name="attrs">{
+                    'readonly': ['|', ('state', '!=', 'draft'), ('production_id', '!=', False)]
+                }</attribute>
+                <attribute name="force_save">1</attribute>
+            </field>
+            <field name="company_id" position="after">
+                <field name="production_id" options="{'no_create': 1}" force_save="1"
+                       readonly="context.get('default_production_id')"/>
+            </field>
+            <field name="product_id" position="attributes">
+                <attribute name="attrs">{
+                    'readonly': ['|', ('state', '!=', 'draft'), ('production_id', '!=', False)]
+                }</attribute>
+                <attribute name="domain">[('bom_ids', '!=', False)]</attribute>
+                <attribute name="force_save">1</attribute>
+            </field>
+            <field name="lot_producing_id" position="attributes">
+                <attribute name="attrs">{'readonly': [('production_id', '!=', False)]}</attribute>
+                <attribute name="force_save">1</attribute>
+            </field>
+            <field name="location_src_id" position="attributes">
+                <attribute name="string">Finished Product Source Location</attribute>
+            </field>
+            <field name="production_location_id" position="attributes">
+                <attribute name="attrs">{'readonly': [('state', '!=', 'draft')]}</attribute>
+                <attribute name="invisible">0</attribute>
+                <attribute name="options">{'no_create': True}</attribute>
+                <attribute name="readonly">0</attribute>
+                <attribute name="string">Finished Production Destination Location</attribute>
+            </field>
+            <xpath expr="//page[@name='miscellaneous']//field[@name='location_dest_id']" position="attributes">
+                <attribute name="string">Components Destination Location</attribute>
+            </xpath>
+            <xpath expr="//field[@name='move_finished_ids']//field[@name='product_id']" position="attributes">
+                <attribute name="force_save">1</attribute>
+            </xpath>
+            <!-- Components' moves tree view overrides -->
+            <xpath expr="//field[@name='move_raw_ids']//field[@name='location_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+                <attribute name="force_save">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='move_raw_ids']//field[@name='location_dest_id']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            <xpath expr="//field[@name='move_raw_ids']//field[@name='product_uom_qty']" position="attributes">
+                <attribute name="string">To Remove</attribute>
+            </xpath>
+            <xpath expr="//field[@name='move_raw_ids']//field[@name='quantity_done']" position="attributes">
+                <attribute name="string">Removed</attribute>
+            </xpath>
+            <!-- By-Products' moves tree view overrides -->
+            <xpath expr="//field[@name='move_byproduct_ids']//field[@name='product_uom_qty']" position="attributes">
+                <attribute name="string">To Unbuild</attribute>
+            </xpath>
+            <xpath expr="//field[@name='move_byproduct_ids']//field[@name='quantity_done']" position="attributes">
+                <attribute name="string">Unbuilt</attribute>
+            </xpath>
+            <xpath expr="//field[@name='move_byproduct_ids']//field[@name='location_id']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            <xpath expr="//field[@name='move_byproduct_ids']//field[@name='location_dest_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+                <attribute name="force_save">1</attribute>
+            </xpath>
         </field>
     </record>
 
-        <record id="mrp_unbuild_search_view" model="ir.ui.view">
-            <field name="name">mrp.unbuild.search</field>
-            <field name="model">mrp.unbuild</field>
-            <field name="arch" type="xml">
-                <search string="Search">
-                    <field name="product_id"/>
-                    <field name="mo_id"/>
-                    <group expand="0" string="Filters">
-                        <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]"/>
-                        <filter name="done" string="Done" domain="[('state', '=', 'done')]"/>
-                        <filter invisible="1" string="Late Activities" name="activities_overdue"
-                            domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
-                            help="Show all records which has next action date is before today"/>
-                        <filter invisible="1" string="Today Activities" name="activities_today"
-                            domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                        <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                            domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
-                    </group>
-                    <group expand='0' string='Group by...'>
-                        <filter string='Product' name="productgroup" context="{'group_by': 'product_id'}"/>
-                        <filter string="Manufacturing Order" name="mogroup" context="{'group_by': 'mo_id'}"/>
-                    </group>
-               </search>
-            </field>
-        </record>
-
-        <record id="mrp_unbuild_kanban_view" model="ir.ui.view">
-            <field name="name">mrp.unbuild.kanban</field>
-            <field name="model">mrp.unbuild</field>
-            <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile" sample="1">
-                    <field name="name"/>
-                    <field name="product_id"/>
-                    <field name="product_qty"/>
-                    <field name="product_uom_id"/>
-                    <field name="state"/>
-                    <field name="location_id"/>
-                    <field name="activity_state"/>
-                    <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
-                    <templates>
-                        <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_global_click">
-                                <div class="o_kanban_record_top">
-                                    <div class="o_kanban_record_headings mt4">
-                                        <strong class="o_kanban_record_title"><span><field name="name"/></span></strong>
-                                    </div>
-                                    <strong><t t-esc="record.product_qty.value"/> <small><t t-esc="record.product_uom_id.value"/></small></strong>
-                                </div>
-                                <div class="row">
-                                    <div class="col-8 text-muted">
-                                        <span><t t-esc="record.product_id.value"/></span>
-                                    </div>
-                                    <div class="col-4">
-                                        <span class="float-right text-right">
-                                            <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'done': 'success'}}" readonly="1"/>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </t>
-                    </templates>
-                </kanban>
-            </field>
-        </record>
-
-        <record id="mrp_unbuild_form_view" model="ir.ui.view">
-            <field name="name">mrp.unbuild.form</field>
-            <field name="model">mrp.unbuild</field>
-            <field name="arch" type="xml">
-                <form string="Unbuild Orders">
-                    <header>
-                        <button name="action_validate" string="Unbuild" type="object" states="draft" class="oe_highlight" data-hotkey="v"/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
-                    </header>
-                    <sheet>
-                        <div class="oe_button_box" name="button_box">
-                            <button class="oe_stat_button" name="%(action_mrp_unbuild_moves)d"
-                                    string="Product Moves" type="action" icon="fa-exchange" states="done"/>
+    <record id="mrp_quick_unbuild_form_view" model="ir.ui.view">
+        <field name="name">mrp.quick.unbuild.form</field>
+        <field name="model">mrp.production</field>
+        <field name="arch" type="xml"><form>
+            <sheet><group>
+                <field name="product_tmpl_id" invisible="1"/>
+                <field name="product_tracking" invisible="1"/>
+                <field name="state" invisible="1"/>
+                <group>
+                    <field name="product_id" required="1" readonly="1"
+                        force_save="1" context="{'default_detailed_type': 'product'}"/>
+                    <label for="product_qty" string="Quantity"/>
+                    <div class="o_row no-gutters d-flex">
+                        <div class="o_row">
+                            <field name="qty_producing" class="text-left"/>/
                         </div>
-                        <div class="oe_title">
-                            <h1><field name="name" placeholder="Unbuild Order" nolabel="1"/></h1>
-                        </div>
-                        <group>
-                            <group>
-                                <field name="product_id" attrs="{'readonly':['|', ('mo_id','!=',False), ('state', '=', 'done')]}" force_save="1"/>
-                                <field name="mo_bom_id" invisible="1"/>
-                                <field name="bom_id" attrs="{'required': [('mo_id', '=', False)], 'readonly':['|', ('mo_id','!=',False), ('state', '=', 'done')], 'invisible': [('mo_id', '!=', False), ('mo_bom_id', '=', False)]}" force_save="1"/>
-                                <label for="product_qty"/>
-                                <div class="o_row">
-                                    <field name="product_qty" attrs="{'readonly': ['|', ('has_tracking', '=', 'serial'), ('state', '=', 'done')]}"/>
-                                    <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" attrs="{'readonly': ['|', ('mo_id', '!=', False), ('state', '=', 'done')]}" force_save="1"/>
-                                </div>
-                            </group>
-                            <group>
-                                <field name="mo_id"/>
-                                <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
-                                <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
-                                <field name="has_tracking" invisible="1"/>
-                                <field name="lot_id" attrs="{'invisible': [('has_tracking', '=', 'none')], 'required': [('has_tracking', '!=', 'none')]}" groups="stock.group_production_lot"/>
-                                <field name="company_id" groups="base.group_multi_company"/>
-                            </group>
-                        </group>
-                    </sheet>
-                    <div class="oe_chatter">
-                        <field name="message_follower_ids"/>
-                        <field name="activity_ids"/>
-                        <field name="message_ids"/>
+                        <field name="product_qty" force_save="1" readonly="1" class="oe_inline text-left"/>
+                        <label for="product_uom_id" string="" class="oe_inline"/>
+                        <field name="product_uom_category_id" invisible="1"/>
+                        <field name="product_uom_id" options="{'no_open': True, 'no_create': True}"
+                            force_save="1" groups="uom.group_uom"/>
+                        <span name="quantity-purpose" class='font-weight-bold'>To Unbuild</span>
                     </div>
-                </form>
-            </field>
-        </record>
+                    <label for="lot_producing_id" attrs="{
+                        'invisible': [('product_tracking', 'in', ('none', False))]}"/>
+                    <div class="o_row" attrs="{'invisible': [('product_tracking', 'in', ('none', False))]}">
+                        <field name="lot_producing_id"
+                            context="{'default_product_id': product_id, 'default_company_id': company_id}"
+                            attrs="{'invisible': [('product_tracking', 'in', ('none', False))],
+                                    'required': [('product_tracking', 'not in', ('none', False))]}"/>
+                    </div>
+                    <field name="bom_id" required="1"
+                        attrs="{'readonly': [('production_id', '!=', False)]}"
+                        context="{'default_product_tmpl_id': product_tmpl_id}"/>
+                </group>
+                <group>
+                    <field name="company_id" groups="base.group_multi_company" force_save="1"
+                        options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                    <field name="production_id" required="1" readonly="1" force_save="1"/>
+                </group>
+            </group></sheet>
+            <footer>
+                <button name="action_unbuild" string="Unbuild" data-hotkey="q" type="object" class="btn-primary"/>
+                <button string="Cancel" special="cancel" data-hotkey="z" />
+            </footer>
+        </form></field>
+    </record>
 
-        <!-- simplified version of unbuild form for unbuild button via manufacturing order,
-             expects required fields to be filled in via 'default_' values -->
-        <record id="mrp_unbuild_form_view_simplified" model="ir.ui.view">
-            <field name="name">mrp.unbuild.form.simplified</field>
-            <field name="model">mrp.unbuild</field>
-            <field name="arch" type="xml">
-                <form string="Unbuild Order">
-                    <sheet>
-                        <group>
-                            <group>
-                                <field name="state" invisible="1"/>
-                                <field name="product_id" invisible="1"/>
-                                <field name="bom_id" invisible="1"/>
-                                <label for="product_qty"/>
-                                <div class="o_row">
-                                    <field name="product_qty" attrs="{'readonly': [('has_tracking', '=', 'serial')]}"/>
-                                    <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" attrs="{'readonly': [('mo_id', '!=', False)]}" force_save="1"/>
-                                </div>
-                            </group>
-                            <group>
-                                <field name="mo_id" invisible="1"/>
-                                <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
-                                <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
-                                <field name="has_tracking" invisible="1"/>
-                                <field name="lot_id" attrs="{'invisible': [('has_tracking', '=', 'none')], 'required': [('has_tracking', '!=', 'none')]}" groups="stock.group_production_lot"/>
-                                <field name="company_id" groups="base.group_multi_company" readonly="1"/>
-                            </group>
-                        </group>
-                    </sheet>
-                    <footer class="oe_edit_only">
-                        <button name="action_validate" string="Unbuild" type="object" states="draft" class="oe_highlight" data-hotkey="q"/>
-                        <button string="Discard" special="cancel" data-hotkey="z"/>
-                    </footer>
-                </form>
-            </field>
-        </record>
+    <record id="mrp_unbuild_tree_view" model="ir.ui.view">
+        <field name="name">mrp.unbuild.tree</field>
+        <field name="model">mrp.production</field>
+        <field name="arch" type="xml">
+            <tree string="Unbuild Orders" default_order="priority desc, date_planned_start desc" multi_edit="1" sample="1" decoration-info="state == 'draft'">
+                <field name="name" decoration-bf="1" optional="show"/>
+                <field name="date_planned_start" readonly="1" optional="show" widget="remaining_days"/>
+                <field name="product_id" readonly="1" optional="show"/>
+                <field name="bom_id" readonly="1" optional="show"/>
+                <field name="production_id" readonly="1" optional="show"/>
+                <field name="lot_producing_id" readonly="1" optional="show"/>
+                <field name="product_qty" sum="Total Qty" string="Quantity" readonly="1" optional="show"/>
+                <field name="product_uom_id" string="UoM" groups="uom.group_uom"
+                        options="{'no_open':True,'no_create':True}" optional="show"/>
+                <field name="location_src_id" string="Source Location"
+                    groups="stock.group_stock_multi_locations" optional="show"/>
+                <field name="production_duration_expected" groups="mrp.group_mrp_routings"
+                        attrs="{'invisible': [('production_duration_expected', '=', 0)]}"
+                        widget="float_time" sum="Total expected duration" optional="hide"/>
+                <field name="production_real_duration" groups="mrp.group_mrp_routings"
+                        attrs="{'invisible': [('production_real_duration', '=', 0)]}"
+                        widget="float_time" sum="Total real duration" optional="hide"/>
+                <field name="user_id" optional="hide" widget="many2one_avatar_user"/>
+                <field name="company_id" readonly="1" groups="base.group_multi_company" optional="show"/>
+                <field name="state"
+                        decoration-success="state in ('done', 'to_close')"
+                        decoration-warning="state == 'progress'"
+                        decoration-info="state in ('confirmed', 'draft')"
+                        optional="show" widget="badge"/>
+            </tree>
+        </field>
+    </record>
 
-
-        <record id="mrp_unbuild_tree_view" model="ir.ui.view">
-            <field name="name">mrp.unbuild.tree</field>
-            <field name="model">mrp.unbuild</field>
-            <field name="arch" type="xml">
-                <tree sample="1">
-                    <field name="name" decoration-bf="1"/>
-                    <field name="product_id"/>
-                    <field name="bom_id"/>
-                    <field name="mo_id"/>
-                    <field name="lot_id" groups="stock.group_production_lot"/>
-                    <field name="product_qty"/>
-                    <field name="product_uom_id" groups="uom.group_uom"/>
-                    <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
-                    <field name="activity_exception_decoration" widget="activity_exception"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="state" widget='badge' decoration-success="state == 'done'" decoration-info="state == 'draft'"/>
-                </tree>
-            </field>
-        </record>
-
-    <record model="ir.actions.act_window" id="mrp_unbuild">
+    <!-- Action & Menu -->
+    <record id="mrp_unbuild_action" model="ir.actions.act_window">
         <field name="name">Unbuild Orders</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">mrp.unbuild</field>
-        <field name="view_mode">tree,kanban,form</field>
+        <field name="res_model">mrp.production</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'tree', 'view_id': ref('mrp.mrp_unbuild_tree_view')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('mrp.mrp_unbuild_form_view')}),
+        ]"/>
+        <field name="search_view_id" ref="view_mrp_production_filter"/>
+        <field name="context">{'search_default_todo': True, 'default_company_id': allowed_company_ids[0], 'default_unbuild': True}</field>
+        <field name="domain">[('unbuild', '=', True)]</field>
         <field name="help" type="html">
-          <p class="o_view_nocontent_smiling_face">
-            No unbuild order found
-          </p><p>
+            <p class="o_view_nocontent_smiling_face">
+            No unbuild order found.
+            </p><p>
             An unbuild order is used to break down a finished product into its components.
-          </p>
+            </p>
         </field>
     </record>
 
     <menuitem id="menu_mrp_unbuild"
           name="Unbuild Orders"
           parent="menu_mrp_manufacturing"
-          action="mrp_unbuild"
+          action="mrp_unbuild_action"
           sequence="20"/>
-
 </odoo>
