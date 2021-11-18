@@ -6,6 +6,26 @@ import { useEffect } from "@web/core/utils/hooks";
 const { Component, hooks } = owl;
 
 /**
+ * @typedef Common
+ * @property {string} [fadeout='medium'] Delay for rainbowman to disappear.
+ *  - 'fast' will make rainbowman dissapear quickly,
+ *  - 'medium' and 'slow' will wait little longer before disappearing
+ *      (can be used when props.message is longer),
+ *  - 'no' will keep rainbowman on screen until user clicks anywhere outside rainbowman
+ * @property {string} [imgUrl] URL of the image to be displayed
+ *
+ * @typedef Simple
+ * @property {string} message Message to be displayed on rainbowman card
+ * @property {boolean} [messageIsHtml=false]
+ *
+ * @typedef Custom
+ * @property {Component} Component
+ * @property {any} [props]
+ *
+ * @typedef {Common & (Simple | Custom)} RainbowManProps
+ */
+
+/**
  * The RainbowMan widget is the widget displayed by default as a 'fun/rewarding'
  * effect in some cases.  For example, when the user marked a large deal as won,
  * or when he cleared its inbox.
@@ -16,20 +36,10 @@ const { Component, hooks } = owl;
  * service (by triggering the 'show_effect' event)
  */
 export class RainbowMan extends Component {
-    /**
-     * @override
-     * @constructor
-     * @param {Object} [options]
-     * @param {string} [options.message] Message to be displayed on rainbowman card
-     * @param {string} [options.fadeout='medium'] Delay for rainbowman to disappear. 'fast' will make rainbowman dissapear quickly, 'medium' and 'slow' will wait little longer before disappearing (can be used when options.message is longer), 'no' will keep rainbowman on screen until user clicks anywhere outside rainbowman
-     * @param {string} [options.img_url] URL of the image to be displayed
-     */
     setup() {
         hooks.useExternalListener(document.body, "click", this.closeRainbowMan);
-        const fadeout = "fadeout" in this.props ? this.props.fadeout : "medium";
-        const delay = fadeout ? RainbowMan.rainbowFadeouts[fadeout] : false;
-        this.delay = typeof delay === "number" ? delay : false;
-        if (this.delay !== false) {
+        this.delay = RainbowMan.rainbowFadeouts[this.props.fadeout];
+        if (this.delay) {
             useEffect(
                 () => {
                     const timeout = browser.setTimeout(() => {
@@ -43,7 +53,7 @@ export class RainbowMan extends Component {
     }
 
     onAnimationEnd(ev) {
-        if (this.delay !== false && ev.animationName === "reward-fading-reverse") {
+        if (this.delay && ev.animationName === "reward-fading-reverse") {
             ev.stopPropagation();
             this.closeRainbowMan();
         }
