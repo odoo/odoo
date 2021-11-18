@@ -43,6 +43,12 @@ class EventTemplateTicket(models.Model):
             if not ticket.description:
                 ticket.description = False
 
+    # TODO clean this feature in master
+    # Feature broken by design, depending on the hacky `price` field on products
+    # context_dependent, core part of the pricelist mess
+    # This field usage should be restricted to the UX, and any use in effective
+    # price computation should be replaced by clear calls to the pricelist API
+    @api.depends_context('uom', 'qty', 'pricelist') # Cf product.price context dependencies
     @api.depends('product_id', 'price')
     def _compute_price_reduce(self):
         for ticket in self:

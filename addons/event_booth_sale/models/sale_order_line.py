@@ -66,6 +66,10 @@ class SaleOrderLine(models.Model):
 
     @api.depends('event_booth_pending_ids')
     def _compute_name(self):
+        """Override to add the compute dependency.
+
+        The custom name logic can be found below in get_sale_order_line_multiline_description_sale.
+        """
         super()._compute_name()
 
     def _update_event_booths(self, set_paid=False):
