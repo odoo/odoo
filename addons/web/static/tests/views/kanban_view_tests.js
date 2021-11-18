@@ -660,10 +660,15 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(getPagerLimit(kanban), 4);
     });
 
-    QUnit.skip(
+    QUnit.test(
         "pager, ungrouped, deleting all records from last page should move to previous page",
         async (assert) => {
-            assert.expect(5);
+            assert.expect(7);
+
+            addDialog = (cls, props) => {
+                assert.step("open-dialog");
+                props.confirm();
+            };
 
             const kanban = await makeView({
                 type: "kanban",
@@ -690,9 +695,9 @@ QUnit.module("Views", (hooks) => {
             assert.deepEqual(getPagerValue(kanban), [4, 4]);
 
             // delete a record
-            await click(kanban.el.querySelector(".o_kanban_record:first a:first"));
-            await click($(".modal-footer button:first"));
+            await click(kanban.el.querySelector(".o_kanban_record a"));
 
+            assert.verifySteps(["open-dialog"]);
             assert.deepEqual(getPagerValue(kanban), [1, 3]);
             assert.strictEqual(getPagerLimit(kanban), 3);
         }

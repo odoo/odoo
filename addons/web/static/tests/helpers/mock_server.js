@@ -486,6 +486,8 @@ export class MockServer {
                 return this.mockWebReadGroup(args.model, args.kwargs);
             case "write":
                 return this.mockWrite(args.model, args.args);
+            case "unlink":
+                return this.mockUnlink(args.model, args.args);
         }
         const model = this.models[args.model];
         const method = model && model.methods[args.method];
@@ -1638,6 +1640,35 @@ export class MockServer {
 
     mockWrite(modelName, args) {
         args[0].forEach((id) => this.writeRecord(modelName, args[1], id));
+        return true;
+    }
+
+    /**
+     * @param {string} modelName
+     * @param {[number | number[]]} args
+     * @returns {true} currently, always returns true
+     */
+    mockUnlink(modelName, [idOrIds]) {
+        const model = this.models[modelName];
+        const ids = Array.isArray(idOrIds) ? idOrIds : [idOrIds];
+
+        // Delete
+        model.records = model.records.filter((r) => !ids.includes(r.id));
+
+        // update value of x2many fields pointing to the deleted records
+        for (const { fields, records } of Object.values(this.models)) {
+            for (const [fieldName, field] of Object.entries(fields)) {
+                if (
+                    ["one2many", "many2many"].includes(field.type) &&
+                    field.relation === modelName
+                ) {
+                    for (const record of records) {
+                        record[fieldName] = record[fieldName].filter((id) => !ids.includes(id));
+                    }
+                }
+            }
+        }
+
         return true;
     }
 

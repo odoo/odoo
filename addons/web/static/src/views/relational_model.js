@@ -308,16 +308,27 @@ export class DynamicRecordList extends DynamicList {
         this.records = await this._loadRecords();
     }
 
+    async archive() {
+        const resIds = this.records.map((r) => r.resId);
+        await this.model.orm.call(this.resModel, "action_archive", [resIds]);
+        await this.model.load();
+    }
+
+    async unarchive() {
+        const resIds = this.records.map((r) => r.resId);
+        await this.model.orm.call(this.resModel, "action_unarchive", [resIds]);
+        await this.model.load();
+    }
+
     async resequence() {
         this.records = await this._resequence(this.records, ...arguments);
     }
 
-    // TODO: only for Kanban
-    async loadMore() {
-        this.offset = this.records.length;
-        const nextRecords = await this._loadRecords();
-        this.records.push(...nextRecords);
-        this.model.notify();
+    async unlink({ resId }) {
+        const result = await this.model.orm.unlink(this.resModel, [resId], this.context);
+        if (result) {
+            await this.model.load();
+        }
     }
 
     // -------------------------------------------------------------------------
