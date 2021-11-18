@@ -242,7 +242,7 @@
 
 <t t-name="web.OwlDialog" owl="1">
     <Portal target="'body'">
-        <div class="o_dialog" t-on-focus="_onFocus" t-on-click="_onClick">
+        <div class="o_dialog" t-on-focus="_onFocus" t-on-click="_onClick" t-on-dialog-closed="_onDialogClosed">
             <div role="dialog" class="modal"
                 tabindex="-1"
                 t-att-class="{ o_technical_modal: props.technical, o_modal_full: props.fullscreen }"

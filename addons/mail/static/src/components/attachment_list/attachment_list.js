@@ -18,6 +18,10 @@ export class AttachmentList extends Component {
 Object.assign(AttachmentList, {
     props: {
         attachmentListLocalId: String,
+        onAttachmentRemoved: {
+            type: Function,
+            optional: true,
+        },
     },
     template: 'mail.AttachmentList',
 });

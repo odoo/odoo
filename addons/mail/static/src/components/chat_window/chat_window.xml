@@ -17,7 +17,7 @@
                     chatWindowLocalId="chatWindow.localId"
                     hasCloseAsBackButton="props.hasCloseAsBackButton"
                     isExpandable="props.isExpandable"
-                    t-on-o-clicked="_onClickedHeader"
+                    onClicked="_onClickedHeader"
                     t-ref="header"
                 />
                 <t t-if="chatWindow.thread and chatWindow.thread.hasMemberListFeature and chatWindow.isMemberListOpened">
@@ -32,7 +32,7 @@
                         hasComposerCurrentPartnerAvatar="false"
                         hasComposerSendButton="messaging.device.isMobile"
                         threadViewLocalId="chatWindow.threadView.localId"
-                        t-on-focusin="_onFocusinThread"
+                        onFocusin="_onFocusinThread"
                         t-ref="thread"
                     />
                 </t>
@@ -46,7 +46,7 @@
                             placeholder="newMessageFormInputPlaceholder"
                             select="_onAutocompleteSelect"
                             source="_onAutocompleteSource"
-                            t-on-focusin="chatWindow.onFocusInNewMessageFormInput"
+                            onFocusin="chatWindow.onFocusInNewMessageFormInput"
                             t-ref="input"
                         />
                     </div>

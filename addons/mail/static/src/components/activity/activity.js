@@ -26,6 +26,7 @@ export class Activity extends Component {
          * Useful to programmatically prompts the browser file uploader.
          */
         this._fileUploaderRef = useRef('fileUploader');
+        this._onAttachmentCreated = this._onAttachmentCreated.bind(this);
     }
 
     //--------------------------------------------------------------------------
@@ -105,12 +106,11 @@ export class Activity extends Component {
 
     /**
      * @private
-     * @param {CustomEvent} ev
-     * @param {Object} ev.detail
-     * @param {mail.attachment} ev.detail.attachment
+     * @param {Object} detail
+     * @param {mail.attachment} detail.attachment
      */
-    _onAttachmentCreated(ev) {
-        this.activity.markAsDone({ attachments: [ev.detail.attachment] });
+    _onAttachmentCreated(detail) {
+        this.activity.markAsDone({ attachments: [detail.attachment] });
     }
 
     /**

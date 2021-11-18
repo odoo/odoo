@@ -15,7 +15,7 @@
                     <t t-if="isDropZoneVisible.value">
                         <DropZone
                             className="'o_AttachmentBox_dropZone'"
-                            t-on-o-dropzone-files-dropped="_onDropZoneFilesDropped"
+                            onDropzoneFilesDropped="_onDropZoneFilesDropped"
                             t-ref="dropzone"
                         />
                     </t>
@@ -23,7 +23,7 @@
                         <AttachmentList
                             className="'o_attachmentBox_attachmentList'"
                             attachmentListLocalId="attachmentBoxView.chatter.attachmentList.localId"
-                            t-on-o-attachment-removed="attachmentBoxView.onAttachmentRemoved"
+                            onAttachmentRemoved="attachmentBoxView.onAttachmentRemoved"
                         />
                     </t>
                     <button class="o_AttachmentBox_buttonAdd btn btn-link" type="button" t-on-click="attachmentBoxView.onClickAddAttachment">
@@ -33,7 +33,7 @@
                 </div>
                 <FileUploader
                     threadLocalId="attachmentBoxView.chatter.thread.localId"
-                    t-on-o-attachment-created="attachmentBoxView.onAttachmentCreated"
+                    onAttachmentCreated="attachmentBoxView.onAttachmentCreated"
                     t-ref="fileUploader"
                 />
             </t>

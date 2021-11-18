@@ -15,9 +15,11 @@ export class MobileMessagingNavbar extends Component {
      * @param {MouseEvent} ev
      */
     _onClick(ev) {
-        this.trigger('o-select-mobile-messaging-navbar-tab', {
-            tabId: ev.currentTarget.dataset.tabId,
-        });
+        if (this.props.onSelectMobileMessagingNavbarTab) {
+            this.props.onSelectMobileMessagingNavbarTab({
+                tabId: ev.currentTarget.dataset.tabId,
+            });
+        }
     }
 
 }
@@ -28,6 +30,10 @@ Object.assign(MobileMessagingNavbar, {
     },
     props: {
         activeTabId: String,
+        onSelectMobileMessagingNavbarTab: {
+            type: Function,
+            optional: true,
+        },
         tabs: {
             type: Array,
             element: {

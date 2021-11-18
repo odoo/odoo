@@ -18,7 +18,7 @@
 
         <xpath expr="//*[@name='rootCondition']" position="inside">
             <t t-if="snailmailState.hasDialog">
-                <SnailmailErrorDialog messageLocalId="messageView.message.localId" t-on-dialog-closed="_onDialogClosedSnailmailError"/>
+                <SnailmailErrorDialog messageLocalId="messageView.message.localId" onClosed="_onDialogClosedSnailmailError"/>
             </t>
         </xpath>
 

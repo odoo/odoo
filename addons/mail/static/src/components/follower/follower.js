@@ -53,6 +53,10 @@ export class Follower extends Component {
 Object.assign(Follower, {
     props: {
         followerLocalId: String,
+        onClick: {
+            type: Function,
+            optional: true,
+        },
     },
     template: 'mail.Follower',
 });
