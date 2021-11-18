@@ -75,8 +75,10 @@ const NavbarLinkPopoverWidget = weWidgets.LinkPopoverWidget.extend({
                 method: 'save',
                 args: [websiteId, {'data': [data]}],
             }).then(function () {
+                self.options.wysiwyg.odooEditor.observerUnactive();
                 self.$target.attr('href', link.url);
                 $menu.text(link.content);
+                self.options.wysiwyg.odooEditor.observerActive();
             });
         });
         dialog.open();
