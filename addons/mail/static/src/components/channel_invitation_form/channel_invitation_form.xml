@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ChannelInvitationForm" owl="1">
-        <div class="o_ChannelInvitationForm d-flex flex-column" t-ref="root">
+        <div class="o_ChannelInvitationForm d-flex flex-column" t-attf-class="{{ className }}" t-ref="root">
             <t t-if="channelInvitationForm">
                 <h3 class="mx-3 mt-3 mb-2">Invite people</h3>
                 <t t-if="!messaging.isCurrentUserGuest">
@@ -16,8 +16,8 @@
                                     <img class="o_ChannelInvitationForm_selectablePartnerAvatar w-100 h-100 rounded-circle" t-att-src="selectablePartner.avatarUrl" alt="Avatar"/>
                                     <t t-if="selectablePartner.im_status and selectablePartner.im_status !== 'im_partner'">
                                         <PartnerImStatusIcon
-                                            class="o_ChannelInvitationForm_selectablePartnerImStatusIcon d-flex align-items-center justify-content-center text-white"
-                                            t-att-class="{
+                                            className="'o_ChannelInvitationForm_selectablePartnerImStatusIcon d-flex align-items-center justify-content-center text-white'"
+                                            classNameObj="{
                                                 'o_ChannelInvitationForm_selectablePartnerImStatusIcon-mobile': messaging.device.isMobile,
                                             }"
                                             partnerLocalId="selectablePartner.localId"

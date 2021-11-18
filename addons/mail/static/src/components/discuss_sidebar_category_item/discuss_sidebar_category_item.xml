@@ -5,7 +5,7 @@
             t-att-class="{
                 'o-active': categoryItem and categoryItem.isActive,
                 'o-unread': categoryItem and categoryItem.isUnread,
-            }" t-on-click="categoryItem and categoryItem.onClick" t-att-data-thread-local-id="categoryItem and categoryItem.channel.localId" t-att-data-thread-name="categoryItem and categoryItem.channel.displayName"
+            }" t-attf-class="{{ className }}" t-on-click="categoryItem and categoryItem.onClick" t-att-data-thread-local-id="categoryItem and categoryItem.channel.localId" t-att-data-thread-name="categoryItem and categoryItem.channel.displayName"
             t-ref="root"
         >
             <t t-if="categoryItem">
@@ -13,7 +13,7 @@
                     <div class="o_DiscussSidebarCategoryItem_imageContainer">
                         <img class="o_DiscussSidebarCategoryItem_image rounded-circle" t-att-src="categoryItem.avatarUrl" alt="Thread Image"/>
                         <t t-if="categoryItem.hasThreadIcon">
-                            <ThreadIcon class="o_DiscussSidebarCategoryItem_threadIcon" threadLocalId="categoryItem.channel.localId"/>
+                            <ThreadIcon className="'o_DiscussSidebarCategoryItem_threadIcon'" threadLocalId="categoryItem.channel.localId"/>
                         </t>
                     </div>
                 </div>

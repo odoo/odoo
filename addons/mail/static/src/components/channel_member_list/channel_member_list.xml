@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ChannelMemberList" owl="1">
-        <div class="o_ChannelMemberList d-flex flex-column overflow- bg-light" t-ref="root">
+        <div class="o_ChannelMemberList d-flex flex-column overflow- bg-light" t-attf-class="{{ className }}" t-ref="root">
             <t t-if="channel.orderedOnlineMembers.length > 0">
                 <t t-call="mail.ChannelMemberList_memberList">
                     <t t-set="members" t-value="channel.orderedOnlineMembers"/>
@@ -38,8 +38,8 @@
 
                     <t t-if="member.im_status and member.im_status !== 'im_partner'">
                         <PartnerImStatusIcon
-                            class="o_ChannelMemberList_partnerImStatusIcon d-flex align-items-center justify-content-center"
-                            t-att-class="{
+                            className="'o_ChannelMemberList_partnerImStatusIcon d-flex align-items-center justify-content-center'"
+                            classNameObj="{
                                 'o-mobile': messaging.device.isMobile,
                             }"
                             partnerLocalId="member.localId"

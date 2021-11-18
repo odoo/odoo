@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ActivityBox" owl="1">
-        <div class="o_ActivityBox" t-ref="root">
+        <div class="o_ActivityBox" t-attf-class="{{ className }}" t-ref="root">
             <t t-if="activityBoxView">
                 <a role="button" class="o_ActivityBox_title btn" t-on-click="activityBoxView.onClickActivityBoxTitle">
                     <hr class="o_ActivityBox_titleLine" />
@@ -34,7 +34,7 @@
                 <t t-if="activityBoxView.isActivityListVisible">
                     <div class="o_ActivityBox_activityList">
                         <t t-foreach="activityBoxView.chatter.thread.activities" t-as="activity" t-key="activity.localId">
-                            <Activity class="o_ActivityBox_activity" activityLocalId="activity.localId"/>
+                            <Activity className="'o_ActivityBox_activity'" activityLocalId="activity.localId"/>
                         </t>
                     </div>
                 </t>

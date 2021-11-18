@@ -2,10 +2,10 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ThreadView" owl="1">
-        <div class="o_ThreadView" t-att-class="threadView and threadView.extraClass" t-att-data-correspondent-id="threadView and threadView.thread and threadView.thread.correspondent and threadView.thread.correspondent.id" t-att-data-thread-local-id="threadView and threadView.thread and threadView.thread.localId" t-ref="root">
+        <div class="o_ThreadView" t-att-class="threadView and threadView.extraClass" t-attf-class="{{ className }}" t-att-data-correspondent-id="threadView and threadView.thread and threadView.thread.correspondent and threadView.thread.correspondent.id" t-att-data-thread-local-id="threadView and threadView.thread and threadView.thread.localId" t-ref="root">
             <t t-if="threadView">
                 <t t-if="threadView.topbar">
-                    <ThreadViewTopbar class="border-bottom" localId="threadView.topbar.localId"/>
+                    <ThreadViewTopbar className="'border-bottom'" localId="threadView.topbar.localId"/>
                 </t>
                 <div class="o_ThreadView_bottomPart d-flex flex-grow-1">
                     <div class="o_ThreadView_core d-flex flex-column flex-grow-1">
@@ -19,7 +19,7 @@
                         </t>
                         <t t-elif="threadView.threadCache.isLoaded or threadView.thread.isTemporary">
                             <MessageList
-                                class="o_ThreadView_messageList"
+                                className="'o_ThreadView_messageList'"
                                 getScrollableElement= "props.getScrollableElement"
                                 hasScrollAdjust="props.hasScrollAdjust"
                                 threadViewLocalId="threadView.localId"
@@ -41,7 +41,7 @@
                         </t>
                         <t t-if="threadView.composerView">
                             <Composer
-                                class="o_ThreadView_composer"
+                                className="'o_ThreadView_composer'"
                                 composerViewLocalId="threadView.composerView.localId"
                                 hasCurrentPartnerAvatar="props.hasComposerCurrentPartnerAvatar"
                                 hasDiscardButton="props.hasComposerDiscardButton"
@@ -55,7 +55,7 @@
                         </t>
                     </div>
                     <t t-if="threadView.thread and threadView.thread.hasMemberListFeature and threadView.hasMemberList and threadView.isMemberListOpened">
-                        <ChannelMemberList class="o_ThreadView_channelMemberList flex-shrink-0 border-left" channelLocalId="threadView.thread.localId"/>
+                        <ChannelMemberList className="'o_ThreadView_channelMemberList flex-shrink-0 border-left'" channelLocalId="threadView.thread.localId"/>
                     </t>
                 </div>
             </t>

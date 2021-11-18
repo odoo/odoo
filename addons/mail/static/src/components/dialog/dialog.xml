@@ -2,11 +2,11 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.Dialog" owl="1">
-        <div class="o_Dialog" t-ref="root">
+        <div class="o_Dialog" t-attf-class="{{ className }}" t-ref="root">
             <t t-if="dialog">
                 <t
                     t-component="constructor.components[dialog.componentName]"
-                    class="o_Dialog_component"
+                    className="'o_Dialog_component'"
                     t-props="{ localId: dialog.record.localId }"
                     t-ref="component"
                 />

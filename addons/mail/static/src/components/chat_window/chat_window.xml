@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ChatWindow" owl="1">
-        <div class="o_ChatWindow bg-white" tabindex="0" t-att-data-visible-index="chatWindow ? chatWindow.visibleIndex : undefined"
+        <div class="o_ChatWindow bg-white" t-attf-class="{{ className }}" tabindex="0" t-att-data-visible-index="chatWindow ? chatWindow.visibleIndex : undefined"
             t-att-class="{
                 'o-focused': chatWindow and chatWindow.isFocused,
                 'o-folded': chatWindow and chatWindow.isFolded,
@@ -13,7 +13,7 @@
         >
             <t t-if="chatWindow">
                 <ChatWindowHeader
-                    class="o_ChatWindow_header"
+                    className="'o_ChatWindow_header'"
                     chatWindowLocalId="chatWindow.localId"
                     hasCloseAsBackButton="props.hasCloseAsBackButton"
                     isExpandable="props.isExpandable"
@@ -21,14 +21,14 @@
                     t-ref="header"
                 />
                 <t t-if="chatWindow.thread and chatWindow.thread.hasMemberListFeature and chatWindow.isMemberListOpened">
-                    <ChannelMemberList channelLocalId="chatWindow.thread.localId" class="bg-white"/>
+                    <ChannelMemberList channelLocalId="chatWindow.thread.localId" className="'bg-white'"/>
                 </t>
                 <t t-if="chatWindow.channelInvitationForm">
-                    <ChannelInvitationForm class="o_ChatWindow_channelInvitationForm" localId="chatWindow.channelInvitationForm.localId"/>
+                    <ChannelInvitationForm className="'o_ChatWindow_channelInvitationForm'" localId="chatWindow.channelInvitationForm.localId"/>
                 </t>
                 <t t-if="chatWindow.threadView">
                     <ThreadView
-                        class="o_ChatWindow_thread"
+                        className="'o_ChatWindow_thread'"
                         hasComposerCurrentPartnerAvatar="false"
                         hasComposerSendButton="messaging.device.isMobile"
                         threadViewLocalId="chatWindow.threadView.localId"
@@ -42,7 +42,7 @@
                             To:
                         </span>
                         <AutocompleteInput
-                            class="o_ChatWindow_newMessageFormInput"
+                            className="'o_ChatWindow_newMessageFormInput'"
                             placeholder="newMessageFormInputPlaceholder"
                             select="_onAutocompleteSelect"
                             source="_onAutocompleteSource"

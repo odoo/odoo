@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.RtcCallViewer" owl="1">
-    <div class="o_RtcCallViewer" t-att-class="{ 'o-fullScreen': rtcCallViewer and rtcCallViewer.isFullScreen, 'o-isMinimized': rtcCallViewer and rtcCallViewer.isMinimized }" t-ref="root">
+    <div class="o_RtcCallViewer" t-att-class="{ 'o-fullScreen': rtcCallViewer and rtcCallViewer.isFullScreen, 'o-isMinimized': rtcCallViewer and rtcCallViewer.isMinimized }" t-attf-class="{{ className }}" t-ref="root">
         <t t-if="rtcCallViewer">
 
             <!-- Used to make the component depend on the window size and trigger an update when the window size changes. -->
@@ -13,7 +13,7 @@
                 <t t-if="rtcCallViewer.layout !== 'tiled'">
                     <div class="o_RtcCallViewer_mainParticipantContainer justify-content-center mw-100 mh-100">
                         <t t-if="rtcCallViewer.mainParticipantCard">
-                            <RtcCallParticipantCard class="o_RtcCallViewer_participantCard w-100" callParticipantCardLocalId="rtcCallViewer.mainParticipantCard.localId"/>
+                            <RtcCallParticipantCard className="'o_RtcCallViewer_participantCard w-100'" callParticipantCardLocalId="rtcCallViewer.mainParticipantCard.localId"/>
                         </t>
                     </div>
                 </t>
@@ -31,7 +31,7 @@
                             <t t-if="!rtcCallViewer.filterVideoGrid or (participantCard.rtcSession and participantCard.rtcSession.videoStream)">
                                 <!-- maybe filter focused partner out? -->
                                 <RtcCallParticipantCard
-                                    class="o_RtcCallViewer_participantCard o_RtcCallViewer_gridTile"
+                                    className="'o_RtcCallViewer_participantCard o_RtcCallViewer_gridTile'"
                                     callParticipantCardLocalId="participantCard.localId"
                                 />
                             </t>
