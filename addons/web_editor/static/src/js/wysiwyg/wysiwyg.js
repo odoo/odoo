@@ -161,16 +161,22 @@ const Wysiwyg = Widget.extend({
                         }, 0);
                     }
                 }
-                if ($field.data('oe-type') === "monetary") {
-                    $field.attr('contenteditable', false);
-                    $field.find('.oe_currency_value').attr('contenteditable', true);
-                }
-                if ($field.data('oe-type') === "image") {
-                    $field.attr('contenteditable', false);
-                    $field.find('img').attr('contenteditable', true);
-                }
-                if ($field.is('[data-oe-many2one-id]')) {
-                    $field.attr('contenteditable', false);
+                if ($field.attr('contenteditable') !== 'false') {
+                    if ($field.data('oe-type') === "monetary") {
+                        $field.attr('contenteditable', false);
+                        const $currencyValue = $field.find('.oe_currency_value');
+                        $currencyValue.attr('contenteditable', true);
+                        $currencyValue.one('mouseup touchend', (e) => {
+                            $currencyValue.selectContent();
+                        });
+                    }
+                    if ($field.data('oe-type') === "image") {
+                        $field.attr('contenteditable', false);
+                        $field.find('img').attr('contenteditable', true);
+                    }
+                    if ($field.is('[data-oe-many2one-id]')) {
+                        $field.attr('contenteditable', false);
+                    }
                 }
                 self.odooEditor.observerActive();
             }
