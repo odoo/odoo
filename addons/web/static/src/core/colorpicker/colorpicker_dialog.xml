@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+  <t t-name="web.ColorPickerDialogBody" owl="1">
+    <ColorPicker color="props.color" t-on-colorSelected="onColorSelected" />
+  </t>
+
+  <t t-name="web.ColorPickerDialogFooter" owl="1">
+    <button class="btn btn-primary" t-on-click="choose">
+      Choose
+    </button>
+    <button class="btn btn-secondary" t-on-click="discard">
+      Discard
+    </button>
+  </t>
+
+</templates>

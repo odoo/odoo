@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+  <t t-name="web.ColorPicker" owl="1">
+    <div class="o_colorpicker_widget" t-on-mouseup="unfocusPickers"  t-on-mouseleave="unfocusPickers">
+        <div class="d-flex justify-content-between align-items-stretch mb-2">
+            <div t-ref="colorPickArea" t-on-mousedown="onMouseDownColorPickArea" t-on-mousemove="onMouseMoveColorPickArea" class="o_color_pick_area position-relative w-75" t-attf-style="background-color: hsl({{ state.latentHue }}, {{ state.latentSaturation }}%, {{ state.latentLightness }}%); width: {{ props.transparency ? 89 : 100 }}%;">
+                <div t-ref="colorPickAreaPointer" class="o_picker_pointer rounded-circle p-1 position-absolute" tabindex="-1"/>
+            </div>
+            <div t-ref="colorSlider" t-on-mousedown="onMouseDownColorSlider" t-on-mousemove="onMouseMoveColorSlider" class="o_color_slider position-relative">
+                <div t-ref="colorSliderPointer" class="o_slider_pointer" tabindex="-1"/>
+            </div>
+            <div t-ref="colorOpacitySlider" t-on-mousedown="onMouseDownColorOpacitySlider" t-on-mousemove="onMouseMoveColorOpacitySlider" t-attf-style="background: linear-gradient({{hexColor}} 0%, transparent 100%)" class="o_opacity_slider position-relative" t-if="props.transparency">
+                <div t-ref="colorOpacitySliderPointer" class="o_opacity_pointer" tabindex="-1"/>
+            </div>
+        </div>
+        <div t-if="props.showPreview" t-attf-style="background-color: hsla({{state.hue}},{{state.saturation}}%,{{state.lightness}}%,{{state.opacity / 100}})" class="o_color_preview mb-1 w-100 p-2"/>
+        <div class="o_color_picker_inputs d-flex justify-content-between mb-2">
+            <t t-set="input_classes" t-value="'p-0 border-0 text-center text-monospace bg-transparent'" />
+
+            <div class="o_hex_div px-1 d-flex align-items-baseline">
+                <input t-on-change="onInputChangeHex" t-att-value="hex" type="text" t-attf-class="o_hex_input {{input_classes}}" data-color-method="hex" size="1"/>
+                <label class="flex-grow-0 ml-1 mb-0">hex</label>
+            </div>
+            <div class="o_rgba_div px-1 d-flex align-items-baseline">
+                <input t-on-change="onInputChangeRed" t-att-value="red" type="text" t-attf-class="o_red_input {{input_classes}}" data-color-method="rgb" size="1"/>
+                <input t-on-change="onInputChangeGreen" t-att-value="green" type="text" t-attf-class="o_green_input {{input_classes}}" data-color-method="rgb" size="1"/>
+                <input t-on-change="onInputChangeBlue" t-att-value="blue" type="text" t-attf-class="o_blue_input {{ !props.transparency ? 'mr-0' : '' }} {{input_classes}}" data-color-method="rgb" size="1"/>
+                <t t-if="props.transparency">
+                    <input t-on-change="onInputChangeOpacity" t-att-value="state.opacity" type="text" t-attf-class="o_opacity_input {{input_classes}}" data-color-method="opacity" size="1"/>
+                    <label class="flex-grow-0 ml-1 mb-0">
+                        RGBA
+                    </label>
+                </t>
+                <label t-else="" class="flex-grow-0 ml-1 mb-0">
+                    RGB
+                </label>
+            </div>
+        </div>
+    </div>
+  </t>
+
+</templates>

@@ -4129,7 +4129,7 @@ var FieldColorPicker = FieldInteger.extend({
      * @override
      */
     _renderEdit: function () {
-        this.$el.html(qweb.render('ColorPicker'));
+        this.$el.html(qweb.render('legacy.ColorPicker'));
         this._setupColorPicker();
         this._highlightSelectedColor();
     },
