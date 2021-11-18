@@ -35,7 +35,7 @@ class Rating(models.Model):
     def _selection_target_model(self):
         return [(model.model, model.name) for model in self.env['ir.model'].search([])]
 
-    create_date = fields.Datetime(string="Submitted on")
+    create_date = fields.Datetime(string="Submitted on", help="The date at which the rating is submitted to the client.")
     res_name = fields.Char(string='Resource name', compute='_compute_res_name', store=True, help="The name of the rated resource.")
     res_model_id = fields.Many2one('ir.model', 'Related Document Model', index=True, ondelete='cascade', help='Model of the followed resource')
     res_model = fields.Char(string='Document Model', related='res_model_id.model', store=True, index=True, readonly=True)
