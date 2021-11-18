@@ -1669,7 +1669,7 @@ class Website(models.Model):
                 from_clause=from_clause,
             )
             self.env.cr.execute(query, {'search': search})
-            ids = {row[0] for row in self.env.cr.fetchall() if row[1] >= similarity_threshold}
+            ids = {row[0] for row in self.env.cr.fetchall() if row[1] and row[1] >= similarity_threshold}
             if self.env.lang:
                 # Specific handling for website.page that inherits its arch_db and name fields
                 # TODO make more generic
@@ -1688,6 +1688,7 @@ class Website(models.Model):
                         WHERE t.lang = {lang}
                         AND t.name = ANY({names})
                         AND t.type = 'model_terms'
+                        AND t.value IS NOT NULL
                         ORDER BY _similarity desc
                         LIMIT 1000
                     """).format(
@@ -1708,6 +1709,7 @@ class Website(models.Model):
                         WHERE lang = {lang}
                         AND name = ANY({names})
                         AND type = 'model'
+                        AND value IS NOT NULL
                         ORDER BY _similarity desc
                         LIMIT 1000
                     """).format(
@@ -1716,7 +1718,7 @@ class Website(models.Model):
                         names=sql.Placeholder('names'),
                     )
                 self.env.cr.execute(query, {'lang': self.env.lang, 'names': names, 'search': search})
-                ids.update(row[0] for row in self.env.cr.fetchall() if row[1] >= similarity_threshold)
+                ids.update(row[0] for row in self.env.cr.fetchall() if row[1] and row[1] >= similarity_threshold)
             domain.append([('id', 'in', list(ids))])
             domain = AND(domain)
             records = model.search_read(domain, fields, limit=limit)
