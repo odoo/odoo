@@ -292,10 +292,6 @@ class SaleOrderLine(models.Model):
     untaxed_amount_invoiced = fields.Monetary("Untaxed Invoiced Amount", compute='_compute_untaxed_amount_invoiced', store=True)
     untaxed_amount_to_invoice = fields.Monetary("Untaxed Amount To Invoice", compute='_compute_untaxed_amount_to_invoice', store=True)
 
-    salesman_id = fields.Many2one(related='order_id.user_id', store=True, string='Salesperson')
-    currency_id = fields.Many2one(related='order_id.currency_id', depends=['order_id.currency_id'], store=True, string='Currency')
-    company_id = fields.Many2one(related='order_id.company_id', string='Company', store=True, index=True)
-    order_partner_id = fields.Many2one(related='order_id.partner_id', store=True, string='Customer')
     analytic_tag_ids = fields.Many2many(
         'account.analytic.tag', string='Analytic Tags',
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
@@ -305,8 +301,13 @@ class SaleOrderLine(models.Model):
         string="Is a down payment", help="Down payments are made when creating invoices from a sales order."
         " They are not copied when duplicating a sales order.")
 
+    # Related stored fields from the order
+    currency_id = fields.Many2one(related='order_id.currency_id', depends=['order_id.currency_id'], store=True, string='Currency', pre_compute=True)
+    company_id = fields.Many2one(related='order_id.company_id', string='Company', store=True, index=True, pre_compute=True)
+    order_partner_id = fields.Many2one(related='order_id.partner_id', store=True, string='Customer', pre_compute=True)
+    salesman_id = fields.Many2one(related='order_id.user_id', store=True, string='Salesperson', pre_compute=True)
     state = fields.Selection(
-        related='order_id.state', string='Order Status', copy=False, store=True)
+        related='order_id.state', string='Order Status', copy=False, store=True, pre_compute=True)
 
     customer_lead = fields.Float(
         'Lead Time', required=True, default=0.0,
