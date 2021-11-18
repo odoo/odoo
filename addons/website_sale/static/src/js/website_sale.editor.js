@@ -250,25 +250,6 @@ Wysiwyg.include({
     },
 });
 
-publicWidget.registry.websiteSaleCurrency = publicWidget.Widget.extend({
-    selector: '.oe_website_sale',
-    disabledInEditableMode: false,
-    edit_events: {
-        'click .oe_currency_value:o_editable': '_onCurrencyValueClick',
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _onCurrencyValueClick: function (ev) {
-        $(ev.currentTarget).selectContent();
-    },
-});
-
 function reload() {
     if (window.location.href.match(/\?enable_editor/)) {
         window.location.reload();
