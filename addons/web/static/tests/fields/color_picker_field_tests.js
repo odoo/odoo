@@ -2,8 +2,7 @@
 
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { registry } from "@web/core/registry";
-import { makeFakeLocalizationService, makeFakeUserService } from "../helpers/mock_services";
-import { click, makeDeferred, nextTick, triggerEvent, triggerEvents } from "../helpers/utils";
+import { click, triggerEvent } from "../helpers/utils";
 import {
     setupControlPanelFavoriteMenuRegistry,
     setupControlPanelServiceRegistry,
@@ -11,12 +10,7 @@ import {
 import { makeView } from "../views/helpers";
 
 const serviceRegistry = registry.category("services");
-
 let serverData;
-
-function hasGroup(group) {
-    return group === "base.group_allow_export";
-}
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
@@ -24,9 +18,6 @@ QUnit.module("Fields", (hooks) => {
             models: {
                 partner: {
                     fields: {
-                        date: { string: "A date", type: "date", searchable: true },
-                        datetime: { string: "A datetime", type: "datetime", searchable: true },
-                        display_name: { string: "Displayed name", type: "char", searchable: true },
                         foo: {
                             string: "Foo",
                             type: "char",
@@ -34,175 +25,20 @@ QUnit.module("Fields", (hooks) => {
                             searchable: true,
                             trim: true,
                         },
-                        bar: { string: "Bar", type: "boolean", default: true, searchable: true },
-                        empty_string: {
-                            string: "Empty string",
-                            type: "char",
-                            default: false,
-                            searchable: true,
-                            trim: true,
-                        },
-                        txt: {
-                            string: "txt",
-                            type: "text",
-                            default: "My little txt Value\nHo-ho-hoooo Merry Christmas",
-                        },
                         int_field: {
                             string: "int_field",
                             type: "integer",
                             sortable: true,
                             searchable: true,
                         },
-                        qux: { string: "Qux", type: "float", digits: [16, 1], searchable: true },
-                        p: {
-                            string: "one2many field",
-                            type: "one2many",
-                            relation: "partner",
-                            searchable: true,
-                        },
-                        trululu: {
-                            string: "Trululu",
-                            type: "many2one",
-                            relation: "partner",
-                            searchable: true,
-                        },
-                        timmy: {
-                            string: "pokemon",
-                            type: "many2many",
-                            relation: "partner_type",
-                            searchable: true,
-                        },
-                        product_id: {
-                            string: "Product",
-                            type: "many2one",
-                            relation: "product",
-                            searchable: true,
-                        },
-                        sequence: { type: "integer", string: "Sequence", searchable: true },
-                        currency_id: {
-                            string: "Currency",
-                            type: "many2one",
-                            relation: "currency",
-                            searchable: true,
-                        },
-                        selection: {
-                            string: "Selection",
-                            type: "selection",
-                            searchable: true,
-                            selection: [
-                                ["normal", "Normal"],
-                                ["blocked", "Blocked"],
-                                ["done", "Done"],
-                            ],
-                        },
-                        document: { string: "Binary", type: "binary" },
-                        hex_color: { string: "hexadecimal color", type: "char" },
+                        records: [
+                            {
+                                id: 1,
+                                foo: "yop",
+                                int_field: 0,
+                            },
+                        ],
                     },
-                    records: [
-                        {
-                            id: 1,
-                            date: "2017-02-03",
-                            datetime: "2017-02-08 10:00:00",
-                            display_name: "first record",
-                            bar: true,
-                            foo: "yop",
-                            int_field: 10,
-                            qux: 0.44444,
-                            p: [],
-                            timmy: [],
-                            trululu: 4,
-                            selection: "blocked",
-                            document: "coucou==\n",
-                            hex_color: "#ff0000",
-                        },
-                        {
-                            id: 2,
-                            display_name: "second record",
-                            bar: true,
-                            foo: "blip",
-                            int_field: 0,
-                            qux: 0,
-                            p: [],
-                            timmy: [],
-                            trululu: 1,
-                            sequence: 4,
-                            currency_id: 2,
-                            selection: "normal",
-                        },
-                        {
-                            id: 4,
-                            display_name: "aaa",
-                            foo: "abc",
-                            sequence: 9,
-                            int_field: false,
-                            qux: false,
-                            selection: "done",
-                        },
-                        { id: 3, bar: true, foo: "gnap", int_field: 80, qux: -3.89859 },
-                        { id: 5, bar: false, foo: "blop", int_field: -4, qux: 9.1, currency_id: 1 },
-                    ],
-                    onchanges: {},
-                },
-                product: {
-                    fields: {
-                        name: { string: "Product Name", type: "char", searchable: true },
-                    },
-                    records: [
-                        {
-                            id: 37,
-                            display_name: "xphone",
-                        },
-                        {
-                            id: 41,
-                            display_name: "xpad",
-                        },
-                    ],
-                },
-                partner_type: {
-                    fields: {
-                        name: { string: "Partner Type", type: "char", searchable: true },
-                        color: { string: "Color index", type: "integer", searchable: true },
-                    },
-                    records: [
-                        { id: 12, display_name: "gold", color: 2 },
-                        { id: 14, display_name: "silver", color: 5 },
-                    ],
-                },
-                currency: {
-                    fields: {
-                        digits: { string: "Digits" },
-                        symbol: { string: "Currency Sumbol", type: "char", searchable: true },
-                        position: { string: "Currency Position", type: "char", searchable: true },
-                    },
-                    records: [
-                        {
-                            id: 1,
-                            display_name: "$",
-                            symbol: "$",
-                            position: "before",
-                        },
-                        {
-                            id: 2,
-                            display_name: "€",
-                            symbol: "€",
-                            position: "after",
-                        },
-                    ],
-                },
-                "ir.translation": {
-                    fields: {
-                        lang: { type: "char" },
-                        value: { type: "char" },
-                        res_id: { type: "integer" },
-                    },
-                    records: [
-                        {
-                            id: 99,
-                            res_id: 37,
-                            value: "",
-                            lang: "en_US",
-                        },
-                    ],
                 },
             },
         };
@@ -210,42 +46,134 @@ QUnit.module("Fields", (hooks) => {
         setupControlPanelFavoriteMenuRegistry();
         setupControlPanelServiceRegistry();
         serviceRegistry.add("dialog", dialogService);
-        serviceRegistry.add("user", makeFakeUserService(hasGroup), { force: true });
     });
 
     QUnit.module("ColorPickerField");
 
-    QUnit.skip("ColorPickerField: can navigate away with TAB", async function (assert) {
+    QUnit.skip("can navigate away with TAB", async function (assert) {
         assert.expect(1);
 
-        const form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
             arch: `
                 <form string="Partners">
-                    <field name="int_field" widget="color_picker"/>
-                    <field name="foo" />
+                    <group>
+                        <field name="int_field" widget="color_picker"/>
+                        <field name="foo" />
+                    </group>
                 </form>`,
-            res_id: 1,
-            viewOptions: {
-                mode: "edit",
-            },
         });
 
-        form.$el.find("a.oe_kanban_color_1")[0].focus();
+        // switch to edit mode
+        await click(form.el, ".o_form_button_edit");
 
-        form.$el.find("a.oe_kanban_color_1").trigger(
-            $.Event("keydown", {
-                which: $.ui.keyCode.TAB,
-                keyCode: $.ui.keyCode.TAB,
-            })
-        );
+        // click on the only element (because it's closed) to open the field component
+        await click(form.el, "a");
+
+        await triggerEvent(document.activeElement, null, "keydown", {
+            which: 13, // tab
+        });
+
         assert.strictEqual(
             document.activeElement,
-            form.$el.find('input[name="foo"]')[0],
+            form.el.querySelector('input[name="foo"]'),
             "foo field should be focused"
         );
-        form.destroy();
+    });
+
+    QUnit.test(
+        "No chosen color is a red line with a white background (color 0)",
+        async function (assert) {
+            assert.expect(3);
+
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
+                <form string="Partners">
+                    <group>
+                        <field name="int_field" widget="color_picker"/>
+                    </group>
+                </form>`,
+            });
+
+            // switch to edit mode
+            await click(form.el, ".o_form_button_edit");
+
+            assert.hasClass(
+                form.el.querySelectorAll("a:first-child"),
+                "o_field_color_picker_color_0",
+                "The no color item doesn't have the right class"
+            );
+
+            await click(form.el, "a");
+
+            assert.hasClass(
+                form.el.querySelectorAll("a:first-child"),
+                "o_field_color_picker_color_0",
+                "The no color item doesn't have the right class"
+            );
+
+            await click(form.el, ".o_field_color_picker_color_3");
+            await click(form.el, "a");
+
+            assert.hasClass(
+                form.el.querySelectorAll("a:first-child"),
+                "o_field_color_picker_color_0",
+                "The no color item doesn't have the right class"
+            );
+        }
+    );
+
+    QUnit.test("closes when color selected or outside click", async function (assert) {
+        assert.expect(3);
+
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form string="Partners">
+                    <group>
+                        <field name="int_field" widget="color_picker"/>
+                        <field name="foo"/>
+                    </group>
+                </form>`,
+        });
+
+        // switch to edit mode
+        await click(form.el, ".o_form_button_edit");
+
+        await click(form.el, "a");
+
+        assert.strictEqual(
+            form.el.querySelectorAll("a").length > 1,
+            true,
+            "there should be more color elements when the component is opened"
+        );
+
+        await click(form.el, ".o_field_color_picker_color_3");
+
+        assert.strictEqual(
+            form.el.querySelectorAll("a").length,
+            1,
+            "there should be one color element when the component is closed"
+        );
+
+        await click(form.el, "a");
+
+        await click(form.el.querySelector('input[name="foo"]'));
+
+        assert.strictEqual(
+            form.el.querySelectorAll("a").length,
+            1,
+            "there should be one color element when the component is closed"
+        );
     });
 });
