@@ -4,6 +4,7 @@ from datetime import timedelta
 from freezegun import freeze_time
 
 from odoo import fields
+from odoo.fields import Command
 from odoo.exceptions import UserError, AccessError
 from odoo.tests import tagged, Form
 from odoo.tools import float_compare
@@ -11,7 +12,7 @@ from odoo.tools import float_compare
 from .common import TestSaleCommon
 
 
-@tagged('post_install', '-at_install', 'sale_order')
+@tagged('post_install', '-at_install')
 class TestSaleOrder(TestSaleCommon):
 
     @classmethod
@@ -723,3 +724,42 @@ class TestSaleOrder(TestSaleCommon):
         # (541,26 / 1,15) * ,98 * 38 = 17527,410782609 ~= 17527.41
         self.assertEqual(line.price_subtotal, 17527.41)
         self.assertEqual(line.untaxed_amount_to_invoice, line.price_subtotal)
+
+    def test_so_tax_mapping(self):
+        uom = self.env['uom.uom'].search([('name', '=', 'Units')], limit=1)
+        pricelist = self.env['product.pricelist'].search([('name', '=', 'Public Pricelist')], limit=1)
+
+        partner = self.env['res.partner'].create(dict(name="George"))
+        tax_include = self.env['account.tax'].create(dict(name="Include tax",
+                                                    amount='21.00',
+                                                    price_include=True,
+                                                    type_tax_use='sale'))
+        tax_exclude = self.env['account.tax'].create(dict(name="Exclude tax",
+                                                    amount='0.00',
+                                                    type_tax_use='sale'))
+
+        product_tmpl = self.env['product.template'].create(dict(name="Voiture",
+                                                              list_price=121,
+                                                              taxes_id=[(6, 0, [tax_include.id])]))
+
+        product = product_tmpl.product_variant_id
+
+        fpos = self.env['account.fiscal.position'].create(dict(name="fiscal position", sequence=1))
+        fp_tax_id = self.env['account.fiscal.position.tax'].create({
+            'position_id': fpos.id,
+            'tax_src_id': tax_include.id,
+            'tax_dest_id': tax_exclude.id,
+        })
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': partner.id,
+            'pricelist_id': pricelist.id,
+            'fiscal_position_id': fpos.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_uom': uom.id,
+            })]
+        })
+
+        # Check the unit price of SO line
+        self.assertEqual(100, sale_order.order_line[0].price_unit, "The included tax must be subtracted to the price")
