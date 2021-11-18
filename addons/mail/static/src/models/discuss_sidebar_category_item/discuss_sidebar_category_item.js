@@ -133,9 +133,6 @@ function factory(dependencies) {
          * @param {MouseEvent} ev
          */
         onClick(ev) {
-            if (isEventHandled(ev, 'EditableText.click')) {
-                return;
-            }
             this.channel.open();
         }
 
