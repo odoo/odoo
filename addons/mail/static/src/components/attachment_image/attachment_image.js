@@ -6,6 +6,9 @@ const { Component } = owl;
 
 export class AttachmentImage extends Component {
 
+    /**
+     * @override
+     */
     setup() {
         super.setup();
         useComponentToModel({ fieldName: 'component', modelName: 'mail.attachment_image', propNameAsRecordLocalId: 'attachmentImageLocalId' });

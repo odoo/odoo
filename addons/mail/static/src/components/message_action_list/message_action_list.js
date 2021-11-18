@@ -7,6 +7,9 @@ const { Component } = owl;
 
 export class MessageActionList extends Component {
 
+    /**
+     * @override
+     */
     setup() {
         super.setup();
         useRefToModel({ fieldName: 'reactionPopoverRef', modelName: 'mail.message_action_list', propNameAsRecordLocalId: 'messageActionListLocalId', refName: 'reactionPopover' });

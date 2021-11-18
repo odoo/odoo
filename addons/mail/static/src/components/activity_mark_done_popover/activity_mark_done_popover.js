@@ -3,23 +3,24 @@
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
-const { useRef } = owl.hooks;
+const { onMounted, useRef } = owl.hooks;
 
 export class ActivityMarkDonePopover extends Component {
 
     /**
      * @override
      */
-    constructor(...args) {
-        super(...args);
+    setup() {
+        super.setup();
         this._feedbackTextareaRef = useRef('feedbackTextarea');
+        onMounted(() => this._mounted());
     }
 
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
 
-    mounted() {
+    _mounted() {
         this._feedbackTextareaRef.el.focus();
         if (this.activity.feedbackBackup) {
             this._feedbackTextareaRef.el.value = this.activity.feedbackBackup;

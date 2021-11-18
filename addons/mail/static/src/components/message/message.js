@@ -10,7 +10,7 @@ import { format } from 'web.field_utils';
 import { getLangDatetimeFormat } from 'web.time';
 
 const { Component, useState } = owl;
-const { useRef } = owl.hooks;
+const { onWillUnmount, useRef } = owl.hooks;
 
 const READ_MORE = _lt("read more");
 const READ_LESS = _lt("read less");
@@ -20,8 +20,9 @@ export class Message extends Component {
     /**
      * @override
      */
-    constructor(...args) {
-        super(...args);
+    setup() {
+        super.setup();
+        useComponentToModel({ fieldName: 'component', modelName: 'mail.message_view', propNameAsRecordLocalId: 'messageViewLocalId' });
         this.state = useState({
             /**
              * Determine whether the message is hovered. When message is hovered
@@ -58,23 +59,10 @@ export class Message extends Component {
          * regular time.
          */
         this._intervalId = undefined;
-        this._constructor();
+        onWillUnmount(() => this._willUnmount());
     }
 
-    /**
-     * Allows patching constructor.
-     */
-    _constructor() {}
-
-    /**
-     * @override
-     */
-    setup() {
-        super.setup();
-        useComponentToModel({ fieldName: 'component', modelName: 'mail.message_view', propNameAsRecordLocalId: 'messageViewLocalId' });
-    }
-
-    willUnmount() {
+    _willUnmount() {
         clearInterval(this._intervalId);
     }
 

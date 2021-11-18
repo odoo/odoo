@@ -10,8 +10,8 @@ patch(Message.prototype, 'snailmail/static/src/components/message/message.js', {
     /**
      * @override
      */
-    _constructor() {
-        this._super(...arguments);
+    setup() {
+        this._super();
         this.snailmailState = useState({
             // Determine if the error dialog is displayed.
             hasDialog: false,

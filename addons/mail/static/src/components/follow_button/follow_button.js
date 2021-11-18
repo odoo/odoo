@@ -6,11 +6,12 @@ const { Component } = owl;
 const { useState } = owl.hooks;
 
 export class FollowButton extends Component {
+
     /**
      * @override
      */
-    constructor(...args) {
-        super(...args);
+    setup() {
+        super.setup();
         this.state = useState({
             /**
              * Determine whether the unfollow button is highlighted or not.
