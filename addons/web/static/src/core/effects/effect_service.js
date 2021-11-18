@@ -19,21 +19,21 @@ const effectRegistry = registry.category("effects");
  *
  * @param {Object} env
  * @param {Object} [params={}]
- * @param {string} [params.message="Well Done"]
+ * @param {string} [params.message="Well Done!"]
  *    The message in the notice the rainbowman holds or the content of the notification if effects are disabled
  *    Can be a simple a string
  *    Can be a string representation of html (prefer component if you want interactions in the DOM)
- * @param {boolean} [params.img_url="/web/static/img/smile.svg"]
+ * @param {string} [params.img_url="/web/static/img/smile.svg"]
  *    The url of the image to display inside the rainbow
- * @param {boolean} [params.messageIsHtml]
+ * @param {boolean} [params.messageIsHtml=false]
  *    Set to true if the message encodes html, s.t. it will be correctly inserted into the DOM.
  * @param {"slow"|"medium"|"fast"|"no"} [params.fadeout="medium"]
  *    Delay for rainbowman to disappear
  *    'fast' will make rainbowman dissapear quickly
  *    'medium' and 'slow' will wait little longer before disappearing (can be used when options.message is longer)
  *    'no' will keep rainbowman on screen until user clicks anywhere outside rainbowman
- * @param {owl.Component} [params.Component=RainbowMan]
- *    Component class to instantiate (if effects aren't disabled)
+ * @param {owl.Component} [params.Component]
+ *    Custom Component class to instantiate inside the Rainbow Man
  * @param {Object} [params.props]
  *    If params.Component is given, its props can be passed with this argument
  */
@@ -50,19 +50,19 @@ function rainbowMan(env, params = {}) {
         );
         message = message.outerHTML;
     } else if (!message) {
-        message = env._t("well Done!");
+        message = env._t("Well Done!");
     }
     if (env.services.user.showEffect) {
-        return {
-            Component: params.Component || RainbowMan,
-            props: {
-                imgUrl: params.img_url || "/web/static/img/smile.svg",
-                fadeout: params.fadeout,
-                message,
-                messageIsHtml: params.messageIsHtml || false,
-                ...params.props,
-            },
+        /** @type {import("./rainbow_man").RainbowManProps} */
+        const props = {
+            imgUrl: params.img_url || "/web/static/img/smile.svg",
+            fadeout: params.fadeout || "medium",
+            message,
+            messageIsHtml: params.messageIsHtml || false,
+            Component: params.Component,
+            props: params.props,
         };
+        return { Component: RainbowMan, props };
     }
     env.services.notification.add(message);
 }
@@ -82,10 +82,10 @@ export const effectService = {
         let effectId = 0;
 
         /**
-         * @param {Object} params various params depending on the type of effect
+         * @param {Object} [params] various params depending on the type of effect
          * @param {string} [params.type="rainbow_man"] the effect to display
          */
-        function add(params) {
+        function add(params = {}) {
             const type = params.type || "rainbow_man";
             const effect = effectRegistry.get(type);
             const { Component, props } = effect(env, params) || {};
