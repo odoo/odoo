@@ -23,10 +23,10 @@ export function computeVariation(value, comparisonValue) {
 
 /**
  * Returns value clamped to the inclusive range of min and max.
- * 
+ *
  * @param {Number} num
  * @param {Number} min
- * @param {Number} max 
+ * @param {Number} max
  * @returns {Number}
  */
 export function clamp(num, min, max) {
