@@ -676,9 +676,7 @@ class SaleOrderLine(models.Model):
                 }
             }
 
-    @api.depends(
-        'product_uom', 'product_uom_qty', 'product_id',
-        'order_id.partner_id')
+    @api.depends('product_id', 'product_uom', 'product_uom_qty')
     def _compute_price_unit(self):
         for line in self:
             if not line.product_uom or not line.product_id:
