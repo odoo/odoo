@@ -175,5 +175,11 @@
         <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
     </record>
 
+    <record model="ir.rule" id="stock_storage_category_rule">
+        <field name="name">stock_storage_category multi-company</field>
+        <field name="model_id" ref="model_stock_storage_category"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+    </record>
+
 </data>
 </odoo>
