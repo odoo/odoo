@@ -7,6 +7,7 @@
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2020
 # gsong <gsong2014@foxmail.com>, 2020
 # Odoo Thaidev <odoothaidev@gmail.com>, 2020
+# Wichanon Jamwutthipreecha, 2021
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:13+0000\n"
 "PO-Revision-Date: 2020-09-07 08:21+0000\n"
-"Last-Translator: Odoo Thaidev <odoothaidev@gmail.com>, 2020\n"
+"Last-Translator: Wichanon Jamwutthipreecha, 2021\n"
 "Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,7 +40,7 @@ msgstr "'%s' เป็นวันที่และเวลาที่ไม�
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid ", .s_website_form"
-msgstr ""
+msgstr ", .s_website_form"
 
 #. module: website_form
 #: code:addons/website_form/controllers/main.py:0
@@ -54,11 +55,13 @@ msgid ""
 "<span class=\"fa fa-check-circle\"/>\n"
 "                                            <span>Your message has been sent <b>successfully</b></span>"
 msgstr ""
+"<span class=\"fa fa-check-circle\"/>\n"
+"                                            <span>ข้อความของคุณถูกส่ง<b>เรียบร้อยแล้ว</b></span>"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
 msgid "<span class=\"s_website_form_label_content\">Email To</span>"
-msgstr ""
+msgstr "<span class=\"s_website_form_label_content\">อีเมลถึง</span>"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
@@ -70,7 +73,7 @@ msgstr ""
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
 msgid "<span class=\"s_website_form_label_content\">Phone Number</span>"
-msgstr ""
+msgstr "<span class=\"s_website_form_label_content\">หมายเลขโทรศัพท์</span>"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
@@ -82,7 +85,7 @@ msgstr ""
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
 msgid "<span class=\"s_website_form_label_content\">Your Company</span>"
-msgstr ""
+msgstr "<span class=\"s_website_form_label_content\">บริษัทของคุณ</span>"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
@@ -94,17 +97,17 @@ msgstr ""
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
 msgid "<span class=\"s_website_form_label_content\">Your Question</span>"
-msgstr ""
+msgstr "<span class=\"s_website_form_label_content\">คำถามของคุณ</span>"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Add a new field after this one"
-msgstr ""
+msgstr "เพิ่มฟิลด์ใหม่หลังจากอันนี้"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Add a new field at the end"
-msgstr ""
+msgstr "เพิ่มฟิลด์ใหม่ในตอนท้าย"
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_access
@@ -131,7 +134,7 @@ msgstr "แบล็คลิสต์ในเว็บฟอร์ม"
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Button Position"
-msgstr ""
+msgstr "ตำแหน่งปุ่ม"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -146,7 +149,7 @@ msgstr "ช่องทำเครื่องหมาย"
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Custom field"
-msgstr ""
+msgstr "ฟิลด์ที่กำหนดเอง"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -178,7 +181,7 @@ msgstr "ชื่อที่ใช้แสดง"
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Edit Message"
-msgstr ""
+msgstr "แก้ไขข้อความ"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -201,7 +204,7 @@ msgstr "ผิดพลาด"
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_default_field_id
 msgid "Field for custom form data"
-msgstr ""
+msgstr "ช่องสำหรับข้อมูลแบบฟอร์มที่กำหนดเอง"
 
 #. module: website_form
 #: model:ir.model,name:website_form.model_ir_model_fields
@@ -219,6 +222,8 @@ msgid ""
 "Form action label. Ex: crm.lead could be 'Send an e-mail' and project.issue "
 "could be 'Create an Issue'."
 msgstr ""
+"ป้ายการดำเนินการแบบฟอร์ม เช่น crm.lead อาจเป็น 'ส่งอีเมล' และ project.issue "
+"อาจเป็น 'สร้างปัญหา'"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -233,7 +238,7 @@ msgstr "ซ่อน"
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Hide"
-msgstr ""
+msgstr "ซ่อน"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -252,12 +257,12 @@ msgstr "รหัส"
 #: code:addons/website_form/static/src/xml/website_form_editor.xml:0
 #, python-format
 msgid "In the meantime we invite you to visit our"
-msgstr ""
+msgstr "ในระหว่างนี้เราขอเชิญคุณเยี่ยมชม"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Input Aligned"
-msgstr ""
+msgstr "ใส่ข้อมูลตรงกัน"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -267,7 +272,7 @@ msgstr ""
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Input Type"
-msgstr ""
+msgstr "ประเภทการนำเข้า"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -282,12 +287,12 @@ msgstr ""
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_label
 msgid "Label for form action"
-msgstr ""
+msgstr "ป้ายสำหรับการดำเนินการแบบฟอร์ม"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Labels Width"
-msgstr ""
+msgstr "ความกว้างฉลาก"
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model____last_update
@@ -304,23 +309,23 @@ msgstr "Left"
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Long Text"
-msgstr ""
+msgstr "ข้อความยาว"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Mark Text"
-msgstr ""
+msgstr "ทำเครื่องหมายข้อความ"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Marked Fields"
-msgstr ""
+msgstr "ช่องทำเครื่องหมาย"
 
 #. module: website_form
 #: code:addons/website_form/controllers/main.py:0
 #, python-format
 msgid "Metadata"
-msgstr ""
+msgstr "ข้อมูลอภิพันธุ์"
 
 #. module: website_form
 #: model:ir.model,name:website_form.model_ir_model
@@ -330,7 +335,7 @@ msgstr "โมเดล"
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Multiple Checkboxes"
-msgstr ""
+msgstr "กล่องทำเครื่องหมายหลายกล่อง"
 
 #. module: website_form
 #. openerp-web
@@ -338,7 +343,7 @@ msgstr ""
 #: code:addons/website_form/static/src/xml/website_form_editor.xml:0
 #, python-format
 msgid "No matching record !"
-msgstr ""
+msgstr "ไม่มีบันทึกที่ตรงกัน !"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -348,7 +353,7 @@ msgstr "ไม่มี"
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Nothing"
-msgstr ""
+msgstr "ไม่มี"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -358,7 +363,7 @@ msgstr "หมายเลข"
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "On Success"
-msgstr ""
+msgstr "สำเร็จ"
 
 #. module: website_form
 #. openerp-web
@@ -366,7 +371,7 @@ msgstr ""
 #: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
 #, python-format
 msgid "Option 1"
-msgstr ""
+msgstr "ตัวเลือก 1"
 
 #. module: website_form
 #. openerp-web
@@ -374,7 +379,7 @@ msgstr ""
 #: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
 #, python-format
 msgid "Option 2"
-msgstr ""
+msgstr "ตัวเลือก 2"
 
 #. module: website_form
 #. openerp-web
@@ -382,49 +387,49 @@ msgstr ""
 #: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
 #, python-format
 msgid "Option 3"
-msgstr ""
+msgstr "ตัวเลือก 3"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Optional"
-msgstr ""
+msgstr "เลือกได้"
 
 #. module: website_form
 #: code:addons/website_form/controllers/main.py:0
 #, python-format
 msgid "Other Information:"
-msgstr ""
+msgstr "ข้อมูลอื่น ๆ:"
 
 #. module: website_form
 #. openerp-web
 #: code:addons/website_form/static/src/xml/website_form_editor.xml:0
 #, python-format
 msgid "Our team will message you back as soon as possible."
-msgstr ""
+msgstr "ทีมงานของเราจะส่งข้อความกลับหาคุณโดยเร็วที่สุด"
 
 #. module: website_form
 #. openerp-web
 #: code:addons/website_form/static/src/snippets/s_website_form/000.js:0
 #, python-format
 msgid "Please fill in the form correctly."
-msgstr ""
+msgstr "กรุณากรอกแบบฟอร์มให้ถูกต้อง"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Radio Buttons"
-msgstr ""
+msgstr "ปุ่มตัวเลือก"
 
 #. module: website_form
 #. openerp-web
 #: code:addons/website_form/static/src/js/website_form_editor_registry.js:0
 #, python-format
 msgid "Recipient Email"
-msgstr ""
+msgstr "อีเมลผู้รับ"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Redirect"
-msgstr ""
+msgstr "เปลี่ยนเส้นทาง"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -446,29 +451,29 @@ msgstr "เลือก"
 #: code:addons/website_form/static/src/xml/website_form_editor.xml:0
 #, python-format
 msgid "Separate email addresses with a comma."
-msgstr ""
+msgstr "แยกที่อยู่อีเมลด้วยเครื่องหมายจุลภาค (,)"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Show Message"
-msgstr ""
+msgstr "แสดงข้อความ"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Show reCaptcha Policy"
-msgstr ""
+msgstr "แสดงนโยบาย reCaptcha"
 
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model__website_form_default_field_id
 msgid ""
 "Specify the field which will contain meta and custom form fields datas."
-msgstr ""
+msgstr "ระบุฟิลด์ที่จะมีข้อมูลฟิลด์เมตาและฟอร์มแบบกำหนดเอง"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form
 msgid "Submit"
-msgstr ""
+msgstr "ส่ง"
 
 #. module: website_form
 #. openerp-web
@@ -482,12 +487,12 @@ msgstr "สำเร็จ"
 #: code:addons/website_form/controllers/main.py:0
 #, python-format
 msgid "Suspicious activity detected by Google reCaptcha."
-msgstr ""
+msgstr "กิจกรรมน่าสงสัยที่ตรวจพบโดย Google reCaptcha"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Telephone"
-msgstr ""
+msgstr "โทรศัพท์"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -499,26 +504,26 @@ msgstr "ข้อความ"
 #: code:addons/website_form/static/src/xml/website_form_editor.xml:0
 #, python-format
 msgid "Thank You For Your Feedback"
-msgstr ""
+msgstr "ขอบคุณสำหรับความคิดเห็นของคุณ"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_thanks_ir_ui_view
 #: model_terms:website.page,arch_db:website_form.contactus_thanks
 msgid "Thank You!"
-msgstr ""
+msgstr "ขอบคุณ!"
 
 #. module: website_form
 #. openerp-web
 #: code:addons/website_form/static/src/xml/website_form.xml:0
 #, python-format
 msgid "The form has been sent successfully."
-msgstr ""
+msgstr "ส่งแบบฟอร์มเรียบร้อยแล้ว"
 
 #. module: website_form
 #: code:addons/website_form/controllers/main.py:0
 #, python-format
 msgid "The form's specified model does not exist"
-msgstr ""
+msgstr "ไม่มีรูปแบบที่ระบุของแบบฟอร์ม"
 
 #. module: website_form
 #: code:addons/website_form/controllers/main.py:0
@@ -549,7 +554,7 @@ msgstr "ที่อยู่ Url"
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model__website_form_key
 msgid "Used in FormBuilder Registry"
-msgstr ""
+msgstr "ใช้ใน FormBuilder Registry"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -560,7 +565,7 @@ msgstr "แนวตั้ง"
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_thanks_ir_ui_view
 #: model_terms:website.page,arch_db:website_form.contactus_thanks
 msgid "We will get back to you shortly."
-msgstr ""
+msgstr "เราจะติดต่อกลับหาคุณในไม่ช้า"
 
 #. module: website_form
 #: model:ir.model,name:website_form.model_website
@@ -608,7 +613,7 @@ msgstr ""
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "rows"
-msgstr ""
+msgstr "แถว"
 
 #. module: website_form
 #. openerp-web
