@@ -3,7 +3,7 @@
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { registry } from "@web/core/registry";
 import { makeFakeUserService } from "../helpers/mock_services";
-import { click } from "../helpers/utils";
+import { click, triggerEvent } from "../helpers/utils";
 import {
     setupControlPanelFavoriteMenuRegistry,
     setupControlPanelServiceRegistry,
@@ -243,40 +243,51 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("RadioField");
 
-    QUnit.skip("fieldradio widget on a many2one in a new record", async function (assert) {
+    QUnit.test("fieldradio widget on a many2one in a new record", async function (assert) {
         assert.expect(6);
 
         const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch: "<form>" + '<field name="product_id" widget="radio"/>' + "</form>",
+            arch: `
+                <form>
+                    <field name="product_id" widget="radio" />
+                </form>
+            `,
         });
 
-        assert.ok(form.$("div.o_radio_item").length, "should have rendered outer div");
-        assert.containsN(form, "input.o_radio_input", 2, "should have 2 possible choices");
         assert.ok(
-            form.$("label.o_form_label:contains(xphone)").length,
-            "one of them should be xphone"
+            form.el.querySelectorAll("div.o_radio_item").length,
+            "should have rendered outer div"
         );
-        assert.containsNone(form, "input:checked", "none of the input should be checked");
+        assert.containsN(form.el, "input.o_radio_input", 2, "should have 2 possible choices");
+        assert.strictEqual(
+            form.el.querySelector(".o_field_radio").textContent.replace(/\s+/g, ""),
+            "xphonexpad"
+        );
+        assert.containsNone(form.el, "input:checked", "none of the input should be checked");
 
-        await click(form.$("input.o_radio_input:first"));
+        await click(form.el.querySelectorAll("input.o_radio_input")[0]);
 
-        assert.containsOnce(form, "input:checked", "one of the input should be checked");
+        assert.containsOnce(form.el, "input:checked", "one of the input should be checked");
 
         await click(form.el, ".o_form_button_save");
 
-        var newRecord = _.last(serverData.models.partner.records);
-        assert.strictEqual(newRecord.product_id, 37, "should have saved record with correct value");
+        assert.hasAttrValue(
+            form.el.querySelector("input.o_radio_input:checked"),
+            "data-value",
+            "37",
+            "should have saved record with correct value"
+        );
     });
 
-    QUnit.skip("fieldradio change value by onchange", async function (assert) {
+    QUnit.test("fieldradio change value by onchange", async function (assert) {
         assert.expect(4);
 
         serverData.models.partner.onchanges = {
-            bar: function (obj) {
-                obj.product_id = obj.bar ? 41 : 37;
+            bar(obj) {
+                obj.product_id = obj.bar ? [41] : [37];
                 obj.color = obj.bar ? "red" : "black";
             },
         };
@@ -285,34 +296,37 @@ QUnit.module("Fields", (hooks) => {
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                '<field name="bar"/>' +
-                '<field name="product_id" widget="radio"/>' +
-                '<field name="color" widget="radio"/>' +
-                "</form>",
+            arch: `
+                <form>
+                    <field name="bar" />
+                    <field name="product_id" widget="radio" />
+                    <field name="color" widget="radio" />
+                </form>
+            `,
         });
 
-        await click(form.$("input[type='checkbox']"));
+        await click(form.el, "input[type='checkbox']");
+
         assert.containsOnce(
-            form,
-            'input.o_radio_input[data-value="37"]:checked',
+            form.el,
+            "input.o_radio_input[data-value='37']:checked",
             "one of the input should be checked"
         );
         assert.containsOnce(
-            form,
-            'input.o_radio_input[data-value="black"]:checked',
+            form.el,
+            "input.o_radio_input[data-value='black']:checked",
             "the other of the input should be checked"
         );
-        await click(form.$("input[type='checkbox']"));
+
+        await click(form.el, "input[type='checkbox']");
         assert.containsOnce(
             form,
-            'input.o_radio_input[data-value="41"]:checked',
+            "input.o_radio_input[data-value='41']:checked",
             "the other of the input should be checked"
         );
         assert.containsOnce(
             form,
-            'input.o_radio_input[data-value="red"]:checked',
+            "input.o_radio_input[data-value='red']:checked",
             "one of the input should be checked"
         );
     });
@@ -448,22 +462,23 @@ QUnit.module("Fields", (hooks) => {
             assert.expect(4);
 
             serverData.models.partner.onchanges = {
-                int_field: function () {},
+                int_field() {},
             };
 
-            var domain = [];
+            let domain = [];
             const form = await makeView({
                 type: "form",
                 resModel: "partner",
+                resId: 1,
                 serverData,
-                arch:
-                    "<form>" +
-                    '<field name="int_field"/>' +
-                    '<field name="trululu" widget="radio"/>' +
-                    "</form>",
-                res_id: 1,
-                mockRPC: function (route, args) {
-                    if (args.method === "onchange") {
+                arch: `
+                    <form>
+                        <field name="int_field" />
+                        <field name="trululu" widget="radio" />
+                    </form>
+                `,
+                mockRPC(route, { kwargs, method }) {
+                    if (method === "onchange") {
                         domain = [["id", "in", [10]]];
                         return Promise.resolve({
                             value: {
@@ -474,32 +489,27 @@ QUnit.module("Fields", (hooks) => {
                             },
                         });
                     }
-                    if (args.method === "search_read") {
-                        assert.deepEqual(
-                            args.kwargs.domain,
-                            domain,
-                            "sent domain should be correct"
-                        );
+                    if (method === "search_read") {
+                        assert.deepEqual(kwargs.domain, domain, "sent domain should be correct");
                     }
-                    return this._super(route, args);
-                },
-                viewOptions: {
-                    mode: "edit",
                 },
             });
 
+            await click(form.el, ".o_form_button_edit");
             assert.containsN(
-                form,
-                ".o_field_widget[name=trululu] .o_radio_item",
+                form.el,
+                ".o_field_widget[name='trululu'] .o_radio_item",
                 3,
                 "should be 3 radio buttons"
             );
 
             // trigger an onchange that will update the domain
-            await testUtils.fields.editInput(form.$(".o_field_widget[name=int_field]"), 2);
+            const input = form.el.querySelector(".o_field_widget[name='int_field']");
+            input.value = "2";
+            await triggerEvent(input, null, "change");
             assert.containsNone(
-                form,
-                ".o_field_widget[name=trululu] .o_radio_item",
+                form.el,
+                ".o_field_widget[name='trululu'] .o_radio_item",
                 "should be no more radio button"
             );
         }

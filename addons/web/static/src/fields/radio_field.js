@@ -11,10 +11,25 @@ export class RadioField extends Component {
     }
 
     get items() {
-        if (this.props.type === "selection") {
-            return this.props.record.fields[this.props.name].selection;
-        } else {
-            return [[0, "m2o radio"]];
+        switch (this.props.type) {
+            case "selection":
+                return this.props.record.fields[this.props.name].selection;
+            case "many2one":
+                return this.props.record.specialData
+                    ? this.props.record.specialData[this.props.name]
+                    : [];
+            default:
+                return [];
+        }
+    }
+    get value() {
+        switch (this.props.type) {
+            case "selection":
+                return this.props.value;
+            case "many2one":
+                return Array.isArray(this.props.value) ? this.props.value[0] : this.props.value;
+            default:
+                return null;
         }
     }
 
@@ -22,8 +37,13 @@ export class RadioField extends Component {
      * @param {any} value
      */
     onChange(value) {
-        if (this.props.type === "selection") {
-            this.props.update(value);
+        switch (this.props.type) {
+            case "selection":
+                this.props.update(value[0]);
+                break;
+            case "many2one":
+                this.props.update(value);
+                break;
         }
     }
 }
@@ -40,3 +60,16 @@ Object.assign(RadioField, {
 });
 
 registry.category("fields").add("radio", RadioField);
+
+export async function fetchRadioSpecialData(datapoint, fieldName) {
+    const field = datapoint.fields[fieldName];
+    if (field.type !== "many2one") {
+        return null;
+    }
+
+    const orm = datapoint.model.orm;
+    const records = await orm.searchRead(field.relation, [], ["id"]);
+    return await orm.call(field.relation, "name_get", [records.map((record) => record.id)]);
+}
+
+registry.category("specialData").add("radio", fetchRadioSpecialData);

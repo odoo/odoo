@@ -12,13 +12,13 @@
                     <input
                         type="radio"
                         class="custom-control-input o_radio_input"
-                        t-att-checked="item[0] === props.value"
+                        t-att-checked="item[0] === value"
                         t-att-disabled="props.readonly"
                         t-att-name="id"
                         t-att-data-value="item[0]"
                         t-att-data-index="item_index"
                         t-att-id="`${id}_${item[0]}`"
-                        t-on-change="onChange(item[0])"
+                        t-on-change="onChange(item)"
                     />
                     <label class="custom-control-label o_form_label" t-att-for="`${id}_${item[0]}`" t-esc="item[1]" />
                 </div>
