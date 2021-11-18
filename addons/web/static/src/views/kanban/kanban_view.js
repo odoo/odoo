@@ -10,6 +10,7 @@ import { useSetupView } from "@web/views/helpers/view_hook";
 import { getActiveActions } from "@web/views/helpers/view_utils";
 import { KanbanModel } from "@web/views/kanban/kanban_model";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
+import { usePager } from "@web/search/pager_hook";
 import { Layout } from "@web/views/layout";
 import { useViewButtons } from "@web/views/view_button/hook";
 import { ViewNotFoundError } from "@web/views/view";
