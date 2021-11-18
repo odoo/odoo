@@ -467,6 +467,7 @@ class SaleOrderLine(models.Model):
 
     @api.depends('product_id')
     def _compute_customer_lead(self):
+        super()._compute_customer_lead() # Reset customer_lead when the product is modified
         for line in self:
             line.customer_lead = line.product_id.sale_delay
 

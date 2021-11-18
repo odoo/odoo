@@ -310,7 +310,8 @@ class SaleOrderLine(models.Model):
         related='order_id.state', string='Order Status', copy=False, store=True, pre_compute=True)
 
     customer_lead = fields.Float(
-        'Lead Time', required=True, default=0.0,
+        'Lead Time', required=True,
+        compute="_compute_customer_lead", store=True, readonly=False, pre_compute=True,
         help="Number of days between the order confirmation and the shipping of the products to the customer")
 
     display_type = fields.Selection([
@@ -325,6 +326,13 @@ class SaleOrderLine(models.Model):
     product_packaging_qty = fields.Float(
         'Packaging Quantity',
         compute='_compute_product_packaging_qty', store=True, readonly=False, pre_compute=True)
+
+    # This computed default is necessary
+    # because the ORM doesn't provide a way to remove a field default on inheritance
+    # if a default is specified in sale, it disables the compute in sale_stock
+    # when a SOL is created with a product but without customer_lead values.
+    def _compute_customer_lead(self):
+        self.customer_lead = 0.0
 
     @api.depends('state')
     def _compute_product_uom_readonly(self):
