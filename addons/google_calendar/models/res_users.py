@@ -69,10 +69,11 @@ class User(models.Model):
                 'google_calendar_token_validity': fields.Datetime.now() + timedelta(seconds=ttl),
             })
         except requests.HTTPError as error:
-            if error.response.status_code == 400:  # invalid grant
+            if error.response.status_code in (400, 401):  # invalid grant or invalid client
                 # Delete refresh token and make sure it's commited
-                with self.pool.cursor() as cr:
-                    self.env.user.with_env(self.env(cr=cr)).write({'google_calendar_rtoken': False})
+                self.env.cr.rollback()
+                self._set_auth_tokens(False, False, 0)
+                self.env.cr.commit()
             error_key = error.response.json().get("error", "nc")
             error_msg = _("Something went wrong during your token generation. Maybe your Authorization Code is invalid or already expired [%s]", error_key)
             raise UserError(error_msg)
