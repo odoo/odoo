@@ -676,7 +676,6 @@ class Project(models.Model):
         self.ensure_one()
         return {
             'user': self._get_user_values(),
-            'tasks_analysis': self._get_tasks_analysis(),
             'milestones': self._get_milestones(),
             'buttons': sorted(self._get_stat_buttons(), key=lambda k: k['sequence']),
         }
@@ -684,38 +683,6 @@ class Project(models.Model):
     def _get_user_values(self):
         return {
             'is_project_user': self.user_has_groups('project.group_project_user'),
-        }
-
-    def _get_tasks_analysis(self):
-        self.ensure_one()
-        counts = self._get_tasks_analysis_counts(updated=True)
-        data = [{
-            'name': _("Open Tasks"),
-            'action': {
-                'action': "project.action_project_task_user_tree",
-                'additional_context': json.dumps({
-                    'search_default_project_id': self.id,
-                    'active_id': self.id,
-                    'search_default_open_tasks': True,
-                    'search_default_Stage': True,
-                }),
-            },
-            'value': counts['open_tasks_count']
-        }, {
-            'name': _("Updated (Last 30 Days)"),
-            'action': {
-                'action': "project.action_project_task_burndown_chart_report",
-                'additional_context': json.dumps({
-                    'search_default_project_id': self.id,
-                    'active_id': self.id,
-                    'search_default_last_month': 1,
-                    'graph_mode': 'bar'
-                }),
-            },
-            'value': counts['updated_tasks_count']
-        }]
-        return {
-            'data': data,
         }
 
     def _get_milestones(self):
@@ -783,25 +750,6 @@ class Project(models.Model):
                 'sequence': 18,
             })
         return buttons
-
-    def _get_tasks_analysis_counts(self, created=False, updated=False):
-        tasks = self.env['project.task'].search([('display_project_id', '=', self.id)])
-        open_tasks_count = created_tasks_count = updated_tasks_count = 0
-        tasks_count = len(tasks)
-        thirty_days_ago = datetime.combine(fields.Date.context_today(self) + timedelta(days=-30), datetime.min.time())
-        for t in tasks:
-            if not t.stage_id.fold and not t.stage_id.is_closed:
-                open_tasks_count += 1
-            if created and t.create_date > thirty_days_ago:
-                created_tasks_count += 1
-            if updated and t.write_date > thirty_days_ago:
-                updated_tasks_count += 1
-        return dict(
-            open_tasks_count=open_tasks_count,
-            created_tasks_count=created_tasks_count,
-            updated_tasks_count=updated_tasks_count,
-            tasks_count=tasks_count
-        )
 
     # ---------------------------------------------------
     #  Business Methods
