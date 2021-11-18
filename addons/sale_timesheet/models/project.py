@@ -437,7 +437,7 @@ class ProjectTask(models.Model):
     has_multi_sol = fields.Boolean(compute='_compute_has_multi_sol', compute_sudo=True)
     allow_billable = fields.Boolean(related="project_id.allow_billable")
     timesheet_product_id = fields.Many2one(related="project_id.timesheet_product_id")
-    remaining_hours_so = fields.Float('Remaining Hours on SO', compute='_compute_remaining_hours_so', compute_sudo=True)
+    remaining_hours_so = fields.Float('Remaining Hours on SO', compute='_compute_remaining_hours_so', search='_search_remaining_hours_so', compute_sudo=True)
     remaining_hours_available = fields.Boolean(related="sale_line_id.remaining_hours_available")
 
     @property
@@ -467,6 +467,10 @@ class ProjectTask(models.Model):
 
         for task in self:
             task.remaining_hours_so = mapped_remaining_hours[task._origin.id]
+
+    @api.model
+    def _search_remaining_hours_so(self, operator, value):
+        return [('sale_line_id.remaining_hours', operator, value)]
 
     @api.depends('so_analytic_account_id.active')
     def _compute_analytic_account_active(self):

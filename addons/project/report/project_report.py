@@ -3,6 +3,7 @@
 
 from odoo import fields, models, tools
 
+from odoo.addons.rating.models.rating import RATING_LIMIT_MIN
 
 class ReportProjectTaskUser(models.Model):
     _name = "report.project.task.user"
@@ -30,6 +31,7 @@ class ReportProjectTaskUser(models.Model):
     working_hours_open = fields.Float(string='Working Hours to Assign', digits=(16, 2), readonly=True, group_operator="avg", help="Number of Working Hours to open the task")
     working_hours_close = fields.Float(string='Working Hours to Close', digits=(16, 2), readonly=True, group_operator="avg", help="Number of Working Hours to close the task")
     rating_last_value = fields.Float('Rating Value (/5)', group_operator="avg", readonly=True, groups="project.group_project_rating")
+    rating_avg = fields.Float('Average Rating', readonly=True)
     priority = fields.Selection([
         ('0', 'Low'),
         ('1', 'Normal'),
@@ -44,61 +46,85 @@ class ReportProjectTaskUser(models.Model):
     partner_id = fields.Many2one('res.partner', string='Customer', readonly=True)
     stage_id = fields.Many2one('project.task.type', string='Stage', readonly=True)
     task_id = fields.Many2one('project.task', string='Tasks', readonly=True)
+    active = fields.Boolean(readonly=True)
+    tag_ids = fields.Many2many('project.tags', relation='project_tags_project_task_rel',
+        column1='project_task_id', column2='project_tags_id',
+        string='Tags', readonly=True)
+    parent_id = fields.Many2one('project.task', string='Parent Task', readonly=True)
 
     def _select(self):
-        select_str = """
-             SELECT
-                    (select 1 ) AS nbr,
-                    t.id as id,
-                    t.id as task_id,
-                    t.create_date as create_date,
-                    t.date_assign as date_assign,
-                    t.date_end as date_end,
-                    t.date_last_stage_update as date_last_stage_update,
-                    t.date_deadline as date_deadline,
-                    t.project_id,
-                    t.priority,
-                    t.name as name,
-                    t.company_id,
-                    t.partner_id,
-                    t.stage_id as stage_id,
-                    t.kanban_state as state,
-                    NULLIF(t.rating_last_value, 0) as rating_last_value,
-                    t.working_days_close as working_days_close,
-                    t.working_days_open  as working_days_open,
-                    t.working_hours_open as working_hours_open,
-                    t.working_hours_close as working_hours_close,
-                    (extract('epoch' from (t.date_deadline-(now() at time zone 'UTC'))))/(3600*24)  as delay_endings_days
+        return """
+                (select 1) AS nbr,
+                t.id as id,
+                t.id as task_id,
+                t.active,
+                t.create_date as create_date,
+                t.date_assign as date_assign,
+                t.date_end as date_end,
+                t.date_last_stage_update as date_last_stage_update,
+                t.date_deadline as date_deadline,
+                t.project_id,
+                t.priority,
+                t.name as name,
+                t.company_id,
+                t.partner_id,
+                t.parent_id as parent_id,
+                t.stage_id as stage_id,
+                t.kanban_state as state,
+                NULLIF(t.rating_last_value, 0) as rating_last_value,
+                AVG(rt.rating) as rating_avg,
+                t.working_days_close as working_days_close,
+                t.working_days_open  as working_days_open,
+                t.working_hours_open as working_hours_open,
+                t.working_hours_close as working_hours_close,
+                (extract('epoch' from (t.date_deadline-(now() at time zone 'UTC'))))/(3600*24)  as delay_endings_days
         """
-        return select_str
 
     def _group_by(self):
-        group_by_str = """
-                GROUP BY
-                    t.id,
-                    t.create_date,
-                    t.write_date,
-                    t.date_assign,
-                    t.date_end,
-                    t.date_deadline,
-                    t.date_last_stage_update,
-                    t.project_id,
-                    t.priority,
-                    t.name,
-                    t.company_id,
-                    t.partner_id,
-                    t.stage_id
+        return """
+                t.id,
+                t.active,
+                t.create_date,
+                t.date_assign,
+                t.date_end,
+                t.date_last_stage_update,
+                t.date_deadline,
+                t.project_id,
+                t.priority,
+                t.name,
+                t.company_id,
+                t.partner_id,
+                t.parent_id,
+                t.stage_id,
+                t.kanban_state,
+                t.rating_last_value,
+                t.working_days_close,
+                t.working_days_open,
+                t.working_hours_open,
+                t.working_hours_close
         """
-        return group_by_str
+
+    def _from(self):
+        return f"""
+                project_task t
+                    LEFT JOIN project_task_user_rel tu on t.id=tu.task_id
+                    LEFT JOIN rating_rating rt ON rt.parent_res_id = t.id
+                        AND rt.res_model = 'project.task'
+                        AND rt.consumed = True
+                        AND rt.rating >= {RATING_LIMIT_MIN}
+        """
+
+    def _where(self):
+        return """
+                t.project_id IS NOT NULL
+        """
 
     def init(self):
         tools.drop_view_if_exists(self._cr, self._table)
         self._cr.execute("""
-            CREATE view %s as
-              %s
-              FROM project_task t
-              LEFT JOIN project_task_user_rel tu on t.id=tu.task_id
-                WHERE t.active = 'true'
-                AND t.project_id IS NOT NULL
-                %s
-        """ % (self._table, self._select(), self._group_by()))
+    CREATE view %s as
+         SELECT %s
+           FROM %s
+          WHERE %s
+       GROUP BY %s
+        """ % (self._table, self._select(), self._from(), self._where(), self._group_by()))

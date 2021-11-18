@@ -212,7 +212,7 @@
                 <xpath expr="//field[@name='sale_line_id']" position="attributes">
                     <attribute name="context">{'with_remaining_hours': True, 'with_price_unit': True}</attribute>
                     <attribute name="attrs">
-                        {'invisible': ['|', ('allow_billable', '=', False), ('partner_id', '=', False)]}
+                        {'invisible': [('allow_billable', '=', False)]}
                     </attribute>
                 </xpath>
                 <xpath expr="//field[@name='sale_order_id']" position="attributes">

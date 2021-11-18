@@ -333,7 +333,7 @@ class Project(models.Model):
     @api.depends('partner_id.email')
     def _compute_partner_email(self):
         for project in self:
-            if project.partner_id and project.partner_id.email != project.partner_email:
+            if project.partner_id.email != project.partner_email:
                 project.partner_email = project.partner_id.email
 
     def _inverse_partner_email(self):
@@ -344,7 +344,7 @@ class Project(models.Model):
     @api.depends('partner_id.phone')
     def _compute_partner_phone(self):
         for project in self:
-            if project.partner_id and project.partner_phone != project.partner_id.phone:
+            if project.partner_phone != project.partner_id.phone:
                 project.partner_phone = project.partner_id.phone
 
     def _inverse_partner_phone(self):
@@ -1325,7 +1325,7 @@ class Task(models.Model):
     @api.depends('partner_id.email')
     def _compute_partner_email(self):
         for task in self:
-            if task.partner_id and task.partner_id.email != task.partner_email:
+            if task.partner_id.email != task.partner_email:
                 task.partner_email = task.partner_id.email
 
     def _inverse_partner_email(self):
@@ -1336,7 +1336,7 @@ class Task(models.Model):
     @api.depends('partner_id.phone')
     def _compute_partner_phone(self):
         for task in self:
-            if task.partner_id and task.partner_phone != task.partner_id.phone:
+            if task.partner_phone != task.partner_id.phone:
                 task.partner_phone = task.partner_id.phone
 
     def _inverse_partner_phone(self):
