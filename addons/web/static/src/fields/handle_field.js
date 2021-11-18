@@ -5,7 +5,7 @@ import { standardFieldProps } from "./standard_field_props";
 
 const { Component } = owl;
 
-class HandleField extends Component {}
+export class HandleField extends Component {}
 
 Object.assign(HandleField, {
     props: {

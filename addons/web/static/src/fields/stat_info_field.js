@@ -5,7 +5,7 @@ import { standardFieldProps } from "./standard_field_props";
 
 const { Component } = owl;
 
-class StatInfoField extends Component {
+export class StatInfoField extends Component {
     get formatter() {
         return registry.category("formatters").get(this.props.type);
     }

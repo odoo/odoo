@@ -5,7 +5,7 @@ import { standardFieldProps } from "./standard_field_props";
 
 const { Component } = owl;
 
-class RadioField extends Component {
+export class RadioField extends Component {
     setup() {
         this.id = `radio_field_${++RadioField.nextId}`;
     }
