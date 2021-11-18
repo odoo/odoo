@@ -106,7 +106,7 @@ export class DropZone extends Component {
     }
 
     /**
-     * Triggers the `o-dropzone-files-dropped` event when new files are dropped
+     * Trigger callback 'props.onDropzoneFilesDropped' with event when new files are dropped
      * on the dropzone, and then removes the visual drop effect.
      *
      * The parents should handle this event to process the files as they wish,
@@ -118,9 +118,11 @@ export class DropZone extends Component {
     _onDrop(ev) {
         ev.preventDefault();
         if (this._isDragSourceExternalFile(ev.dataTransfer)) {
-            this.trigger('o-dropzone-files-dropped', {
-                files: ev.dataTransfer.files,
-            });
+            if (this.props.onDropzoneFilesDropped) {
+                this.props.onDropzoneFilesDropped({
+                    files: ev.dataTransfer.files,
+                });
+            }
         }
         this.state.isDraggingInside = false;
     }
@@ -128,7 +130,12 @@ export class DropZone extends Component {
 }
 
 Object.assign(DropZone, {
-    props: {},
+    props: {
+        onDropzoneFilesDropped: {
+            type: Function,
+            optional: true,
+        },
+    },
     template: 'mail.DropZone',
 });
 

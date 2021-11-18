@@ -36,6 +36,10 @@ export class Composer extends Component {
         this._onClickCaptureGlobal = this._onClickCaptureGlobal.bind(this);
         onMounted(() => this._mounted());
         onWillUnmount(() => this._willUnmount());
+        this._onDropZoneFilesDropped = this._onDropZoneFilesDropped.bind(this);
+        this._onComposerTextInputSendShortcut = this._onComposerTextInputSendShortcut.bind(this);
+        this._onPasteTextInput = this._onPasteTextInput.bind(this);
+        this._onEmojiSelection = this._onEmojiSelection.bind(this);
     }
 
     _mounted() {
@@ -228,28 +232,24 @@ export class Composer extends Component {
      * Called when some files have been dropped in the dropzone.
      *
      * @private
-     * @param {CustomEvent} ev
-     * @param {Object} ev.detail
-     * @param {FileList} ev.detail.files
+     * @param {Object} detail
+     * @param {FileList} detail.files
      */
-    async _onDropZoneFilesDropped(ev) {
-        ev.stopPropagation();
-        await this._fileUploaderRef.comp.uploadFiles(ev.detail.files);
+    async _onDropZoneFilesDropped(detail) {
+        await this._fileUploaderRef.comp.uploadFiles(detail.files);
         this.isDropZoneVisible.value = false;
     }
 
     /**
-     * Handles `o-emoji-selection` event from the emoji popover.
+     * Handles `onEmojiSelection` callback from the emoji popover.
      *
      * @private
-     * @param {CustomEvent} ev
-     * @param {Object} ev.detail
-     * @param {string} ev.detail.unicode
+     * @param {Object} detail
+     * @param {string} detail.unicode
      */
-    _onEmojiSelection(ev) {
-        ev.stopPropagation();
+    _onEmojiSelection(detail) {
         this._textInputRef.comp.saveStateInStore();
-        this.composerView.insertIntoTextInput(ev.detail.unicode);
+        this.composerView.insertIntoTextInput(detail.unicode);
         if (!this.messaging.device.isMobileDevice) {
             this.composerView.update({ doFocus: true });
         }

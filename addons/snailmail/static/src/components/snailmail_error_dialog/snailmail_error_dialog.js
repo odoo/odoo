@@ -78,6 +78,10 @@ Object.assign(SnailmailErrorDialog, {
     components: { Dialog },
     props: {
         messageLocalId: String,
+        onClosed: {
+            type: Function,
+            optional: true,
+        },
     },
     template: 'snailmail.SnailmailErrorDialog',
 });

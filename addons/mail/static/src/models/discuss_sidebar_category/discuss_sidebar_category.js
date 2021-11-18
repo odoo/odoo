@@ -182,11 +182,7 @@ registerModel({
                 await this.open();
             }
         },
-        /**
-         * @param {CustomEvent} ev
-         */
-        onHideAddingItem(ev) {
-            ev.stopPropagation();
+        onHideAddingItem() {
             this.update({ isAddingItem: false });
         },
         /**

@@ -23,6 +23,7 @@ export class AttachmentBox extends Component {
         this._fileUploaderRef = useRef('fileUploader');
         useComponentToModel({ fieldName: 'component', modelName: 'mail.attachment_box_view', propNameAsRecordLocalId: 'attachmentBoxViewLocalId' });
         useRefToModel({ fieldName: 'fileUploaderRef', modelName: 'mail.attachment_box_view', propNameAsRecordLocalId: 'attachmentBoxViewLocalId', refName: 'fileUploader' });
+        this._onDropZoneFilesDropped = this._onDropZoneFilesDropped.bind(this);
     }
 
     //--------------------------------------------------------------------------
@@ -42,13 +43,11 @@ export class AttachmentBox extends Component {
 
     /**
      * @private
-     * @param {CustomEvent} ev
-     * @param {Object} ev.detail
-     * @param {FileList} ev.detail.files
+     * @param {Object} detail
+     * @param {FileList} detail.files
      */
-    async _onDropZoneFilesDropped(ev) {
-        ev.stopPropagation();
-        await this._fileUploaderRef.comp.uploadFiles(ev.detail.files);
+    async _onDropZoneFilesDropped(detail) {
+        await this._fileUploaderRef.comp.uploadFiles(detail.files);
         this.isDropZoneVisible.value = false;
     }
 

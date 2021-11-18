@@ -34,6 +34,8 @@ export class ChatWindow extends Component {
         // the following are passed as props to children
         this._onAutocompleteSelect = this._onAutocompleteSelect.bind(this);
         this._onAutocompleteSource = this._onAutocompleteSource.bind(this);
+        this._onClickedHeader = this._onClickedHeader.bind(this);
+        this._onFocusinThread = this._onFocusinThread.bind(this);
     }
 
     //--------------------------------------------------------------------------
@@ -179,10 +181,8 @@ export class ChatWindow extends Component {
      * window.
      *
      * @private
-     * @param {CustomEvent} ev
      */
-    _onClickedHeader(ev) {
-        ev.stopPropagation();
+    _onClickedHeader() {
         if (this.messaging.device.isMobile) {
             return;
         }
@@ -199,10 +199,8 @@ export class ChatWindow extends Component {
      * Called when an element in the thread becomes focused.
      *
      * @private
-     * @param {FocusEvent} ev
      */
-    _onFocusinThread(ev) {
-        ev.stopPropagation();
+    _onFocusinThread() {
         if (!this.chatWindow) {
             // prevent crash on destroy
             return;

@@ -60,7 +60,9 @@ export class ChatWindowHeader extends Component {
             return;
         }
         const chatWindow = this.chatWindow;
-        this.trigger('o-clicked', { chatWindow });
+        if (this.props.onClicked) {
+            this.props.onClicked({ chatWindow });
+        }
     }
 
     /**
@@ -137,6 +139,10 @@ Object.assign(ChatWindowHeader, {
         chatWindowLocalId: String,
         hasCloseAsBackButton: Boolean,
         isExpandable: Boolean,
+        onClicked: {
+            type: Function,
+            optional: true,
+        },
     },
     template: 'mail.ChatWindowHeader',
 });

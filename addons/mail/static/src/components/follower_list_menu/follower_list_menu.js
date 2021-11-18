@@ -22,6 +22,7 @@ export class FollowerListMenu extends Component {
         this._onClickCaptureGlobal = this._onClickCaptureGlobal.bind(this);
         onMounted(() => this._mounted());
         onWillUnmount(() => this._willUnmount());
+        this._onClickFollower = this._onClickFollower.bind(this);
     }
 
     _mounted() {

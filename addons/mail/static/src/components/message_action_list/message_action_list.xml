@@ -3,9 +3,9 @@
     <t t-name="mail.MessageActionList" owl="1">
         <div class="o_MessageActionList d-flex" t-attf-class="{{ className }}" t-on-click="messageActionList and messageActionList.onClick" t-ref="root">
             <t t-if="messageActionList">
-                <Popover t-if="messageActionList.message.hasReactionIcon" class="o_MessageActionList_action o_MessageActionList_actionReaction p-2 fa fa-lg fa-smile-o" position="'top'" titleAttribute="ADD_A_REACTION" t-on-o-emoji-selection="messageActionList.onEmojiSelection" t-on-o-popover-closed="messageActionList.onReactionPopoverClosed" t-on-o-popover-opened="messageActionList.onReactionPopoverOpened" t-ref="reactionPopover">
+                <Popover t-if="messageActionList.message.hasReactionIcon" class="o_MessageActionList_action o_MessageActionList_actionReaction p-2 fa fa-lg fa-smile-o" position="'top'" titleAttribute="ADD_A_REACTION" onClosed="messageActionList.onReactionPopoverClosed" onOpened="messageActionList.onReactionPopoverOpened" t-ref="reactionPopover">
                     <t t-set="opened">
-                        <EmojisPopover/>
+                        <EmojisPopover onEmojiSelection="messageActionList.onEmojiSelection"/>
                     </t>
                 </Popover>
                 <span t-if="messageActionList.message.canStarBeToggled" class="o_MessageActionList_action o_MessageActionList_actionStar p-2" t-att-class="{
