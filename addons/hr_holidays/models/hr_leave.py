@@ -338,6 +338,7 @@ class HolidaysRequest(models.Model):
             [
                 ('holiday_status_id', 'in', self.holiday_status_id.ids),
                 ('employee_id', 'in', self.employee_id.ids),
+                ('state', '=', 'validate'),
                 '|',
                 ('date_to', '>=', min(self.mapped('date_to'))),
                 '&',
