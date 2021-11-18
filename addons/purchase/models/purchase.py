@@ -128,6 +128,8 @@ class PurchaseOrder(models.Model):
     tax_country_id = fields.Many2one(
         comodel_name='res.country',
         compute='_compute_tax_country_id',
+        # Avoid access error on fiscal position, when reading a purchase order with company != user.company_ids
+        compute_sudo=True,
         help="Technical field to filter the available taxes depending on the fiscal country and fiscal position.")
     payment_term_id = fields.Many2one('account.payment.term', 'Payment Terms', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     incoterm_id = fields.Many2one('account.incoterms', 'Incoterm', states={'done': [('readonly', True)]}, help="International Commercial Terms are a series of predefined commercial terms used in international transactions.")
