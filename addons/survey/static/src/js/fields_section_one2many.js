@@ -6,6 +6,9 @@ var FieldOne2Many = require('web.relational_fields').FieldOne2Many;
 var FieldRegistry = require('web.field_registry');
 var ListRenderer = require('web.ListRenderer');
 var config = require('web.config');
+var core = require('web.core');
+
+var _t = core._t;
 
 var SectionListRenderer = ListRenderer.extend({
     init: function (parent, state, params) {
@@ -179,6 +182,55 @@ var SectionFieldOne2Many = FieldOne2Many.extend({
         }
         this._super.apply(this, arguments);
     },
+
+    /**
+     * Override to perform additional model-specific client-side form validation
+     * @override
+     * @param {Object} params
+     * @param {Object} [params.context]
+     * @private
+     */
+    _openFormDialog: function (params) {
+        let onSaved = params["on_saved"];
+        let self = this;
+
+        Object.assign(params, {
+            on_saved: async function (record){
+                let formValues = self._getQuestionFormValues();
+                let error = await this._rpc({
+                    route: '/survey/validate_entry_fields',
+                    params: {'validate_entry_fields': formValues}
+                });
+                if (error){
+                    this.displayNotification({
+                        title: _t("Validation Error"),
+                        message: error["error"],
+                        type: 'danger'
+                    });
+                    return Promise.reject(error["error"]);
+                }
+                onSaved(record);
+            }
+        });
+        this._super.apply(this, arguments);
+    },
+
+    _getQuestionFormValues: function() {
+        return {
+            'validation_length_min': Number(document.getElementsByName("validation_length_min")[0].value),
+            'validation_length_max': Number(document.getElementsByName("validation_length_max")[0].value),
+            'validation_min_float_value': Number(document.getElementsByName("validation_min_float_value")[0].value),
+            'validation_max_float_value': Number(document.getElementsByName("validation_max_float_value")[0].value),
+            'validation_min_date': document.getElementsByName("validation_min_date")[1].value,
+            'validation_max_date': document.getElementsByName("validation_max_date")[1].value,
+            'validation_min_datetime': document.getElementsByName("validation_min_datetime")[1].value,
+            'validation_max_datetime': document.getElementsByName("validation_max_datetime")[1].value,
+            'is_scored_question': document.getElementsByName("is_scored_question")[0].firstElementChild.checked,
+            'answer_score': document.getElementsByName('answer_score')[0].value,
+            'question_type': document.querySelectorAll("[aria-label='Question Type'] > div > input[checked=true]")[0].dataset['value'],
+            'answer_date': document.getElementsByName("answer_date")[1].value
+        };
+    }
 });
 
 FieldRegistry.add('question_page_one2many', SectionFieldOne2Many);

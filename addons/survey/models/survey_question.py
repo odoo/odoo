@@ -171,6 +171,14 @@ class SurveyQuestion(models.Model):
             'All "Is a scored question = True" and "Question Type: Date" questions need an answer')
     ]
 
+    @api.constrains('validation_length_min', 'validation_length_max', 'validation_min_float_value', 'validation_max_float_value',
+                    'validation_min_date', 'validation_max_date', 'validation_min_datetime', 'validation_max_datetime',
+                    'answer_score', 'question_type', 'is_scored_question', 'answer_date')
+    def _check_validate_entry_parameters(self):
+        for record in self:
+            if isinstance(record, list):  # replace dummy test
+                raise ValidationError
+
     @api.depends('is_page')
     def _compute_question_type(self):
         for question in self:

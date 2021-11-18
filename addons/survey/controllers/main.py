@@ -10,7 +10,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import fields, http, _
 from odoo.addons.base.models.ir_ui_view import keep_query
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.http import request, content_disposition
 from odoo.osv import expression
 from odoo.tools import format_datetime, format_date, is_html_empty
@@ -704,3 +704,27 @@ class Survey(http.Controller):
         user_input_lines = request.env['survey.user_input'].sudo().search(user_input_domain).mapped('user_input_line_ids')
 
         return user_input_lines, search_filters
+
+    # ------------------------------------------------------------
+    # QUESTION CREATION VALIDATION
+    # ------------------------------------------------------------
+
+    @http.route('/survey/validate_entry_fields', type='json', auth='user', website=False)
+    def survey_question_validate_entry_fields(self, validate_entry_fields):
+        """
+        Check that no model constraints would fail when saving the question at
+        a later stage (when saving the survey).
+
+        :param validate_entry_fields: All fields used in constraints
+        :raises ValidationError:
+        """
+        question_data = dict(title="Any title", **validate_entry_fields)
+        # Attempt to create the question and validate the fields.
+        # (Use a 'new' and not a create to avoid having to rollback anything if
+        # an error is raised)
+        try:
+            question = request.env['survey.question'].new(question_data)
+            question._validate_fields(validate_entry_fields.keys())
+
+        except ValidationError as e:
+            return {'error': e.args[0]}
