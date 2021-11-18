@@ -62,7 +62,7 @@ class SaleOrderLine(models.Model):
         """
         for line in self:
             price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-            taxes = line.tax_id.compute_all(price, line.order_id.currency_id, line.product_uom_qty, product=line.product_id, partner=line.order_id.partner_shipping_id)
+            taxes = line.tax_id.compute_all(price, line.currency_id, line.product_uom_qty, product=line.product_id, partner=line.order_id.partner_shipping_id)
             line.update({
                 'price_tax': taxes['total_included'] - taxes['total_excluded'],
                 'price_total': taxes['total_included'],
@@ -71,7 +71,7 @@ class SaleOrderLine(models.Model):
             if self.env.context.get('import_file', False) and not self.env.user.user_has_groups('account.group_account_manager'):
                 line.tax_id.invalidate_cache(['invoice_repartition_line_ids'], [line.tax_id.id])
 
-    @api.depends('product_id', 'order_id.state', 'qty_invoiced', 'qty_delivered')
+    @api.depends('product_id', 'state', 'qty_invoiced', 'qty_delivered')
     def _compute_product_updatable(self):
         for line in self:
             if line.state in ['done', 'cancel'] or (line.state == 'sale' and (line.qty_invoiced > 0 or line.qty_delivered > 0)):
@@ -80,14 +80,14 @@ class SaleOrderLine(models.Model):
                 line.product_updatable = True
 
     # no trigger product_id.invoice_policy to avoid retroactively changing SO
-    @api.depends('qty_invoiced', 'qty_delivered', 'product_uom_qty', 'order_id.state')
+    @api.depends('qty_invoiced', 'qty_delivered', 'product_uom_qty', 'state')
     def _compute_qty_to_invoice(self):
         """
         Compute the quantity to invoice. If the invoice policy is order, the quantity to invoice is
         calculated from the ordered quantity. Otherwise, the quantity delivered is used.
         """
         for line in self:
-            if line.order_id.state in ['sale', 'done']:
+            if line.state in ['sale', 'done']:
                 if line.product_id.invoice_policy == 'order':
                     line.qty_to_invoice = line.product_uom_qty - line.qty_invoiced
                 else:
@@ -150,7 +150,7 @@ class SaleOrderLine(models.Model):
     def create(self, vals_list):
         lines = super().create(vals_list)
         for line in lines:
-            if line.product_id and line.order_id.state == 'sale':
+            if line.product_id and line.state == 'sale':
                 msg = _("Extra line with %s", line.product_id.display_name)
                 line.order_id.message_post(body=msg)
                 # create an analytic account if at least an expense product
@@ -196,7 +196,7 @@ class SaleOrderLine(models.Model):
 
         # Prevent writing on a locked SO.
         protected_fields = self._get_protected_fields()
-        if 'done' in self.mapped('order_id.state') and any(f in values.keys() for f in protected_fields):
+        if 'done' in self.mapped('state') and any(f in values.keys() for f in protected_fields):
             protected_fields_modified = list(set(protected_fields) & set(values.keys()))
             fields = self.env['ir.model.fields'].search([
                 ('name', 'in', protected_fields_modified), ('model', '=', self._name)
@@ -524,7 +524,7 @@ class SaleOrderLine(models.Model):
                     # `price_reduce_taxexcl` cannot be used as it is computed from `price_subtotal` field. (see upper Note)
                     price_subtotal = line.tax_id.compute_all(
                         price_reduce,
-                        currency=line.order_id.currency_id,
+                        currency=line.currency_id,
                         quantity=uom_qty_to_consider,
                         product=line.product_id,
                         partner=line.order_id.partner_shipping_id)['total_excluded']
@@ -682,10 +682,10 @@ class SaleOrderLine(models.Model):
             if not line.product_uom or not line.product_id:
                 line.price_unit = 0.0
                 continue
-            if line.order_id.pricelist_id and line.order_id.partner_id:
+            if line.order_id.pricelist_id and line.order_partner_id:
                 product = line.product_id.with_context(
                     lang=line.order_id.partner_id.lang,
-                    partner=line.order_id.partner_id,
+                    partner=line.order_partner_id,
                     quantity=line.product_uom_qty,
                     date=line.order_id.date_order,
                     pricelist=line.order_id.pricelist_id.id,
@@ -790,14 +790,14 @@ class SaleOrderLine(models.Model):
 
         for line in self:
             if not (line.product_id and line.product_uom and
-                    line.order_id.partner_id and line.order_id.pricelist_id and
+                    line.order_partner_id and line.order_id.pricelist_id and
                     line.order_id.pricelist_id.discount_policy == 'without_discount'):
                 continue
 
             line.discount = 0.0
             product = line.product_id.with_context(
                 lang=line.order_id.partner_id.lang,
-                partner=line.order_id.partner_id,
+                partner=line.order_partner_id,
                 quantity=line.product_uom_qty,
                 date=line.order_id.date_order,
                 pricelist=line.order_id.pricelist_id.id,
@@ -806,14 +806,14 @@ class SaleOrderLine(models.Model):
 
             product_context = dict(
                 self.env.context,
-                partner_id=line.order_id.partner_id.id,
+                partner_id=line.order_partner_id.id,
                 date=line.order_id.date_order,
                 uom=line.product_uom.id)
 
             price, rule_id = line.order_id.pricelist_id.with_context(product_context).get_product_price_rule(
                 line.product_id,
                 line.product_uom_qty or 1.0,
-                line.order_id.partner_id)
+                line.order_partner_id)
             new_list_price, currency = line.with_context(product_context)._get_real_price_currency(
                 product, rule_id, line.product_uom_qty,
                 line.product_uom, line.order_id.pricelist_id.id)
@@ -864,13 +864,13 @@ class SaleOrderLine(models.Model):
         # display the no_variant attributes, except those that are also
         # displayed by a custom (avoid duplicate description)
         for ptav in (no_variant_ptavs - custom_ptavs):
-            name += "\n" + ptav.with_context(lang=self.order_id.partner_id.lang).display_name
+            name += "\n" + ptav.with_context(lang=self.order_partner_id.lang).display_name
 
         # Sort the values according to _order settings, because it doesn't work for virtual records in onchange
         custom_values = sorted(self.product_custom_attribute_value_ids, key=lambda r: (r.custom_product_template_attribute_value_id.id, r.id))
         # display the is_custom values
         for pacv in custom_values:
-            name += "\n" + pacv.with_context(lang=self.order_id.partner_id.lang).display_name
+            name += "\n" + pacv.with_context(lang=self.order_partner_id.lang).display_name
 
         return name
 
