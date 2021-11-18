@@ -17,9 +17,7 @@
                         <field name="has_multiple_acquirers" invisible="1"/>
                         <field name="description"/>
                         <field name="amount"/>
-                        <field name="acquirer_id"
-                            placeholder="Leave empty to allow all acquirers"
-                            options="{'no_open': True, 'no_create': True}"
+                        <field name="payment_acquirer_selection"
                             attrs="{'invisible':[('has_multiple_acquirers', '=', False)]}"/>
                         <field name="currency_id" invisible="1"/>
                         <field name="access_token" invisible="1"/>
