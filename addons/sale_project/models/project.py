@@ -150,7 +150,7 @@ class ProjectTask(models.Model):
         'sale.order.line', 'Sales Order Item',
         copy=False, tracking=True, index='btree_not_null', recursive=True,
         compute='_compute_sale_line', store=True, readonly=False,
-        domain="[('company_id', '=', company_id), ('is_service', '=', True), ('order_partner_id', 'child_of', commercial_partner_id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done'])]",
+        domain="[('company_id', '=', company_id), ('is_service', '=', True), ('order_partner_id', '=?', partner_id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done'])]",
         help="Sales Order Item to which the time spent on this task will be added, in order to be invoiced to your customer.")
     project_sale_order_id = fields.Many2one('sale.order', string="Project's sale order", related='project_id.sale_order_id')
     task_to_invoice = fields.Boolean("To invoice", compute='_compute_task_to_invoice', search='_search_task_to_invoice', groups='sales_team.group_sale_salesman_all_leads')
@@ -271,6 +271,10 @@ class ProjectTask(models.Model):
             operator_new = 'not inselect'
         return [('sale_order_id', operator_new, (query, ()))]
 
+    @api.onchange('sale_line_id')
+    def _onchange_partner_id(self):
+        if not self.partner_id and self.sale_line_id:
+            self.partner_id = self.sale_line_id.order_partner_id
 
 class ProjectTaskRecurrence(models.Model):
     _inherit = 'project.task.recurrence'

@@ -45,21 +45,23 @@
             <field name="arch" type="xml">
                 <search string="Tasks Analysis">
                     <field name="project_id"/>
-                    <field name="name" />
+                    <field name="name"/>
                     <field name="stage_id"/>
                     <field name="user_ids"/>
                     <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
-                    <field name="name" string="Tags" filter_domain="[('task_id.tag_ids', 'ilike', self)]"/>
+                    <field name="active"/>
+                    <field name="parent_id"/>
+                    <field name="name" string="Tags" filter_domain="[('tag_ids', 'ilike', self)]"/>
                     <field name="date_assign"/>
                     <field name="date_end"/>
                     <field name="date_deadline"/>
                     <field name="date_last_stage_update"/>
                     <filter string="My Projects" name="own_projects" domain="[('project_id.user_id', '=', uid)]"/>
-                    <filter string="My Tasks" name="my_tasks" domain="[('task_id.user_ids', 'in', uid)]"/>
+                    <filter string="My Tasks" name="my_tasks" domain="[('user_ids', 'in', uid)]"/>
                     <separator/>
-                    <filter string="Starred" name="starred" domain="[('task_id.priority', 'in', [0, 1])]"/>
+                    <filter string="Starred" name="starred" domain="[('priority', 'in', [0, 1])]"/>
                     <separator/>
-                    <filter string="Tasks Late" name="late" domain="[('task_id.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Tasks Late" name="late" domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <separator/>
                     <filter string="Unassigned Tasks" name="unassigned" domain="[('user_ids', '=', False)]"/>
                     <separator/>

@@ -22,6 +22,13 @@ LOCKED_FIELD_STATES = {
     for state in {'done', 'cancel'}
 }
 
+INVOICE_STATUS = [
+    ('upselling', 'Upselling Opportunity'),
+    ('invoiced', 'Fully Invoiced'),
+    ('to invoice', 'To Invoice'),
+    ('no', 'Nothing to Invoice')
+]
+
 
 class SaleOrder(models.Model):
     _name = "sale.order"
@@ -218,12 +225,7 @@ class SaleOrder(models.Model):
 
     invoice_count = fields.Integer(string='Invoice Count', compute='_get_invoiced')
     invoice_ids = fields.Many2many("account.move", string='Invoices', compute="_get_invoiced", copy=False, search="_search_invoice_ids")
-    invoice_status = fields.Selection([
-        ('upselling', 'Upselling Opportunity'),
-        ('invoiced', 'Fully Invoiced'),
-        ('to invoice', 'To Invoice'),
-        ('no', 'Nothing to Invoice')
-        ], string='Invoice Status', compute='_get_invoice_status', store=True)
+    invoice_status = fields.Selection(INVOICE_STATUS, string='Invoice Status', compute='_get_invoice_status', store=True)
 
     note = fields.Html(
         'Terms and conditions',
