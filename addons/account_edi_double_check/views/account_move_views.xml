@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_move_form_inherit_account_edi_double_check" model="ir.ui.view">
+        <field name="name">invoice.move.form.inherit.edi.double.check</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position='after'>
+                <div class="alert alert-info" role="alert" style="margin-bottom:0px;"
+                    attrs="{'invisible': ['|', ('edi_web_services_to_confrim', 'in', ['', False]), ('state', '=', 'draft')]}">
+                     <div>You will process this invoice for the following E-invoicing service: 
+                        <field name="edi_web_services_to_confrim" class="oe_inline"/>?
+                     </div>
+                     <button name="action_process_edi_web_services_confrim" type="object" class="oe_link" string="Confirm"/> 
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
