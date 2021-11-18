@@ -11,8 +11,8 @@ export class ComposerSuggestion extends Component {
     /**
      * @override
      */
-    constructor(...args) {
-        super(...args);
+    setup() {
+        super.setup();
         useUpdate({ func: () => this._update() });
     }
 

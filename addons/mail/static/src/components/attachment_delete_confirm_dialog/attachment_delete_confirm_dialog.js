@@ -12,8 +12,8 @@ export class AttachmentDeleteConfirmDialog extends Component {
     /**
      * @override
      */
-    constructor(...args) {
-        super(...args);
+    setup() {
+        super.setup();
         // to manually trigger the dialog close event
         this._dialogRef = useRef('dialog');
     }

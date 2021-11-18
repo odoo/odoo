@@ -5,18 +5,21 @@ import { link, unlink } from '@mail/model/model_field_command';
 import { useUpdate } from '@mail/component_hooks/use_update/use_update';
 
 const { Component } = owl;
+const { onWillUnmount } = owl.hooks;
 
 export class Discuss extends Component {
+
     /**
      * @override
      */
-    constructor(...args) {
-        super(...args);
+    setup() {
+        super.setup();
         this._updateLocalStoreProps();
         // bind since passed as props
         this._onMobileAddItemHeaderInputSelect = this._onMobileAddItemHeaderInputSelect.bind(this);
         this._onMobileAddItemHeaderInputSource = this._onMobileAddItemHeaderInputSource.bind(this);
         useUpdate({ func: () => this._update() });
+        onWillUnmount(() => this._willUnmount());
     }
 
     _update() {
@@ -42,7 +45,7 @@ export class Discuss extends Component {
         this._updateLocalStoreProps();
     }
 
-    willUnmount() {
+    _willUnmount() {
         if (this.discuss) {
             this.discuss.close();
         }

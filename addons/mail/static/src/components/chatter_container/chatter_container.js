@@ -4,6 +4,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { clear } from '@mail/model/model_field_command';
 
 const { Component } = owl;
+const { onWillUpdateProps } = owl.hooks;
 
 const getChatterNextTemporaryId = (function () {
     let tmpId = 0;
@@ -26,19 +27,16 @@ export class ChatterContainer extends Component {
     /**
      * @override
      */
-    constructor(...args) {
-        super(...args);
+    setup() {
+        super.setup();
         this.chatter = undefined;
         this.chatterId = getChatterNextTemporaryId();
         this._insertFromProps(this.props);
+        onWillUpdateProps(nextProps => this._willUpdateProps(nextProps));
     }
 
-    /**
-     * @override
-     */
-    willUpdateProps(nextProps) {
+    _willUpdateProps(nextProps) {
         this._insertFromProps(nextProps);
-        return super.willUpdateProps(...arguments);
     }
 
     /**
