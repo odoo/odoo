@@ -105,6 +105,9 @@ odoo.define('web.OwlDialog', function (require) {
          * @private
          */
         _close() {
+            if (this.props.onClosed) {
+                this.props.onClosed();
+            }
             this.trigger('dialog-closed');
         }
 
@@ -146,6 +149,12 @@ odoo.define('web.OwlDialog', function (require) {
         _onClick(ev) {
             if (this.props.stopClicks) {
                 ev.stopPropagation();
+            }
+        }
+
+        _onDialogClosed() {
+            if (this.props.onClosed) {
+                this.props.onClosed();
             }
         }
 
@@ -248,6 +257,7 @@ odoo.define('web.OwlDialog', function (require) {
         backdrop: { validate: b => ['static', true, false].includes(b) },
         contentClass: { type: String, optional: 1 },
         fullscreen: { type: Boolean, optional: 1 },
+        onClosed: { type: Function, optional: 1 },
         renderFooter: Boolean,
         renderHeader: Boolean,
         size: { validate: s => ['extra-large', 'large', 'medium', 'small'].includes(s) },

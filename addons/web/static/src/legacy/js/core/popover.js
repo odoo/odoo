@@ -81,6 +81,9 @@ odoo.define('web.Popover', function (require) {
 
         _close() {
             this.state.displayed = false;
+            if (this.props.onClosed) {
+                this.props.onClosed();
+            }
             this.trigger('o-popover-closed');
         }
 
@@ -173,8 +176,14 @@ odoo.define('web.Popover', function (require) {
         _onClick(ev) {
             this.state.displayed = !this.state.displayed;
             if (this.state.displayed) {
+                if (this.props.onOpened) {
+                    this.props.onOpened();
+                }
                 this.trigger('o-popover-opened');
             } else {
+                if (this.props.onClosed) {
+                    this.props.onClosed();
+                }
                 this.trigger('o-popover-closed');
             }
         }
@@ -319,6 +328,14 @@ odoo.define('web.Popover', function (require) {
         position: 'bottom',
     };
     Popover.props = {
+        onClosed: {
+            type: Function,
+            optional: true,
+        },
+        onOpened: {
+            type: Function,
+            optional: true,
+        },
         popoverClass: {
             type: String,
             optional: true,

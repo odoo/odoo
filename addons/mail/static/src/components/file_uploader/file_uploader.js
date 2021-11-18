@@ -154,7 +154,9 @@ export class FileUploader extends Component {
             originThread: (!composer && thread) ? replace(thread) : undefined,
             ...attachmentData,
         });
-        this.trigger('o-attachment-created', { attachment });
+        if (this.props.onAttachmentCreated) {
+            this.props.onAttachmentCreated({ attachment });
+        }
     }
 
     /**
@@ -175,6 +177,10 @@ Object.assign(FileUploader, {
     props: {
         composerViewLocalId: {
             type: String,
+            optional: true,
+        },
+        onAttachmentCreated: {
+            type: Function,
             optional: true,
         },
         threadLocalId: {

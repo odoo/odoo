@@ -20,6 +20,8 @@ export class Discuss extends Component {
         this._onMobileAddItemHeaderInputSource = this._onMobileAddItemHeaderInputSource.bind(this);
         useUpdate({ func: () => this._update() });
         onWillUnmount(() => this._willUnmount());
+        this._onHideMobileAddItemHeader = this._onHideMobileAddItemHeader.bind(this);
+        this._onSelectMobileNavbarTab = this._onSelectMobileNavbarTab.bind(this);
     }
 
     _update() {
@@ -132,10 +134,8 @@ export class Discuss extends Component {
 
     /**
      * @private
-     * @param {CustomEvent} ev
      */
-    _onHideMobileAddItemHeader(ev) {
-        ev.stopPropagation();
+    _onHideMobileAddItemHeader() {
         this.discuss.clearIsAddingItem();
     }
 
@@ -171,16 +171,14 @@ export class Discuss extends Component {
 
     /**
      * @private
-     * @param {CustomEvent} ev
-     * @param {Object} ev.detail
-     * @param {string} ev.detail.tabId
+     * @param {Object} detail
+     * @param {string} detail.tabId
      */
-    _onSelectMobileNavbarTab(ev) {
-        ev.stopPropagation();
-        if (this.discuss.activeMobileNavbarTabId === ev.detail.tabId) {
+    _onSelectMobileNavbarTab(detail) {
+        if (this.discuss.activeMobileNavbarTabId === detail.tabId) {
             return;
         }
-        this.discuss.update({ activeMobileNavbarTabId: ev.detail.tabId });
+        this.discuss.update({ activeMobileNavbarTabId: detail.tabId });
         if (
             this.discuss.activeMobileNavbarTabId === 'mailbox' &&
             (!this.discuss.thread || this.discuss.thread.model !== 'mailbox')

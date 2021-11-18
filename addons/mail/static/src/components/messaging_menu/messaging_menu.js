@@ -23,6 +23,8 @@ export class MessagingMenu extends Component {
         this._onMobileNewMessageInputSelect = this._onMobileNewMessageInputSelect.bind(this);
         this._onMobileNewMessageInputSource = this._onMobileNewMessageInputSource.bind(this);
         this._onClickCaptureGlobal = this._onClickCaptureGlobal.bind(this);
+        this._onHideMobileNewMessage = this._onHideMobileNewMessage.bind(this);
+        this._onSelectMobileNavbarTab = this._onSelectMobileNavbarTab.bind(this);
         // for now, the legacy env is needed for internal functions such as
         // `useModels` to work
         this.env = owl.Component.env;
@@ -133,10 +135,8 @@ export class MessagingMenu extends Component {
 
     /**
      * @private
-     * @param {CustomEvent} ev
      */
-    _onHideMobileNewMessage(ev) {
-        ev.stopPropagation();
+    _onHideMobileNewMessage() {
         this.messagingMenu.toggleMobileNewMessage();
     }
 
@@ -177,13 +177,11 @@ export class MessagingMenu extends Component {
 
     /**
      * @private
-     * @param {CustomEvent} ev
-     * @param {Object} ev.detail
-     * @param {string} ev.detail.tabId
+     * @param {Object} detail
+     * @param {string} detail.tabId
      */
-    _onSelectMobileNavbarTab(ev) {
-        ev.stopPropagation();
-        this.messagingMenu.update({ activeTabId: ev.detail.tabId });
+    _onSelectMobileNavbarTab(detail) {
+        this.messagingMenu.update({ activeTabId: detail.tabId });
     }
 
 }

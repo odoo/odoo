@@ -272,7 +272,9 @@ export class ComposerTextInput extends Component {
             !ev.metaKey &&
             !ev.shiftKey
         ) {
-            this.trigger('o-composer-text-input-send-shortcut');
+            if (this.props.onComposerTextInputSendShortcut) {
+                this.props.onComposerTextInputSendShortcut();
+            }
             ev.preventDefault();
             return;
         }
@@ -283,7 +285,9 @@ export class ComposerTextInput extends Component {
             !ev.metaKey &&
             !ev.shiftKey
         ) {
-            this.trigger('o-composer-text-input-send-shortcut');
+            if (this.props.onComposerTextInputSendShortcut) {
+                this.props.onComposerTextInputSendShortcut();
+            }
             ev.preventDefault();
             return;
         }
@@ -294,7 +298,9 @@ export class ComposerTextInput extends Component {
             ev.metaKey &&
             !ev.shiftKey
         ) {
-            this.trigger('o-composer-text-input-send-shortcut');
+            if (this.props.onComposerTextInputSendShortcut) {
+                this.props.onComposerTextInputSendShortcut();
+            }
             ev.preventDefault();
             return;
         }
@@ -400,6 +406,14 @@ Object.assign(ComposerTextInput, {
         composerViewLocalId: String,
         hasMentionSuggestionsBelowPosition: Boolean,
         isCompact: Boolean,
+        onComposerTextInputSendShortcut: {
+            type: Function,
+            optional: true,
+        },
+        onPaste: {
+            type: Function,
+            optional: true,
+        },
         /**
          * Keyboard shortcuts from text input to send message.
          */

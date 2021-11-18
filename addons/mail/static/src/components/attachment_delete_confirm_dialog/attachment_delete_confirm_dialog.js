@@ -54,7 +54,11 @@ export class AttachmentDeleteConfirmDialog extends Component {
     async _onClickOk() {
         await this.attachment.remove();
         this.root.comp._close();
-        this.trigger('o-attachment-removed', { attachmentLocalId: this.props.attachmentLocalId });
+        if (this.props.onAttachmentRemoved) {
+            this.props.onAttachmentRemoved({
+                attachmentLocalId: this.props.attachmentLocalId,
+            })
+        }
     }
 
 }
@@ -63,6 +67,14 @@ Object.assign(AttachmentDeleteConfirmDialog, {
     components: { Dialog },
     props: {
         attachmentLocalId: String,
+        onAttachmentRemoved: {
+            type: Function,
+            optional: true,
+        },
+        onClosed: {
+            type: Function,
+            optional: true,
+        }
     },
     template: 'mail.AttachmentDeleteConfirmDialog',
 });

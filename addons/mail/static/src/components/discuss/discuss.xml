@@ -39,7 +39,7 @@
                     placeholder="discuss.isAddingChannel ? addChannelInputPlaceholder : addChatInputPlaceholder"
                     select="_onMobileAddItemHeaderInputSelect"
                     source="_onMobileAddItemHeaderInputSource"
-                    t-on-o-hide="_onHideMobileAddItemHeader"
+                    onHide="_onHideMobileAddItemHeader"
                 />
             </div>
         </t>
@@ -81,7 +81,7 @@
                 className="'o_Discuss_mobileNavbar'"
                 activeTabId="discuss.activeMobileNavbarTabId"
                 tabs="mobileNavbarTabs()"
-                t-on-o-select-mobile-messaging-navbar-tab="_onSelectMobileNavbarTab"
+                onSelectMobileMessagingNavbarTab="_onSelectMobileNavbarTab"
             />
         </t>
     </t>

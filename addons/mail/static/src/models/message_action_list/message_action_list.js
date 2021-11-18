@@ -103,15 +103,14 @@ registerModel({
             this.update({ showDeleteConfirm: false });
         },
         /**
-         * Handles `o-emoji-selection` event from the emoji popover.
+         * Handles `onEmojiSelection` calback from the emoji popover.
          *
          * @private
-         * @param {CustomEvent} ev
-         * @param {Object} ev.detail
-         * @param {string} ev.detail.unicode
+         * @param {Object} detail
+         * @param {string} detail.unicode
          */
-        onEmojiSelection(ev) {
-            this.message.addReaction(ev.detail.unicode);
+        onEmojiSelection(detail) {
+            this.message.addReaction(detail.unicode);
         },
         /**
          * @private

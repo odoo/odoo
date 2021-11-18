@@ -13,6 +13,7 @@ export class ChatWindowHiddenMenu extends Component {
     setup() {
         super.setup();
         this._onClickCaptureGlobal = this._onClickCaptureGlobal.bind(this);
+        this._onClickedChatWindow = this._onClickedChatWindow.bind(this);
         /**
          * Reference of the dropup list. Useful to auto-set max height based on
          * browser screen height.
@@ -109,12 +110,11 @@ export class ChatWindowHiddenMenu extends Component {
 
     /**
      * @private
-     * @param {CustomEvent} ev
-     * @param {Object} ev.detail
-     * @param {mail.chat_window} ev.detail.chatWindow
+     * @param {Object} detail
+     * @param {mail.chat_window} detail.chatWindow
      */
-    _onClickedChatWindow(ev) {
-        const chatWindow = ev.detail.chatWindow;
+    _onClickedChatWindow(detail) {
+        const chatWindow = detail.chatWindow;
         chatWindow.makeActive();
         this.messaging.chatWindowManager.closeHiddenMenu();
     }

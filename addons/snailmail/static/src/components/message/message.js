@@ -12,6 +12,7 @@ patch(Message.prototype, 'snailmail/static/src/components/message/message.js', {
      */
     setup() {
         this._super();
+        this._onDialogClosedSnailmailError = this._onDialogClosedSnailmailError.bind(this);
         this.snailmailState = useState({
             // Determine if the error dialog is displayed.
             hasDialog: false,

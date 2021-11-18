@@ -128,6 +128,10 @@ Object.assign(ThreadView, {
             type: Boolean,
             optional: true,
         },
+        onFocusin: {
+            type: Function,
+            optional: true,
+        },
         showComposerAttachmentsExtensions: Boolean,
         showComposerAttachmentsFilenames: Boolean,
         threadViewLocalId: String,

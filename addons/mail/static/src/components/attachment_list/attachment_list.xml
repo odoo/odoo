@@ -6,12 +6,12 @@
             <t t-if="attachmentList">
                 <div class="o_AttachmentList_partialList o_AttachmentList_partialListImages">
                     <t t-foreach="attachmentList.attachmentImages" t-as="attachmentImage" t-key="attachmentImage.localId">
-                        <AttachmentImage className="'o_AttachmentList_attachment'" attachmentImageLocalId="attachmentImage.localId"/>
+                        <AttachmentImage className="'o_AttachmentList_attachment'" attachmentImageLocalId="attachmentImage.localId" onAttachmentRemoved="props.onAttachmentRemoved"/>
                     </t>
                 </div>
                 <div class="o_AttachmentList_partialList o_AttachmentList_partialListNonImages">
                     <t t-foreach="attachmentList.attachmentCards" t-as="attachmentCard" t-key="attachmentCard.localId">
-                        <AttachmentCard className="'o_AttachmentList_attachment'" attachmentCardLocalId="attachmentCard.localId"/>
+                        <AttachmentCard className="'o_AttachmentList_attachment'" attachmentCardLocalId="attachmentCard.localId" onAttachmentRemoved="props.onAttachmentRemoved"/>
                     </t>
                 </div>
             </t>

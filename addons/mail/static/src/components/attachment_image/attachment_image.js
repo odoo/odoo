@@ -30,6 +30,10 @@ export class AttachmentImage extends Component {
 Object.assign(AttachmentImage, {
     props: {
         attachmentImageLocalId: String,
+        onAttachmentRemoved: {
+            type: Function,
+            optional: true,
+        },
     },
     template: 'mail.AttachmentImage',
 });

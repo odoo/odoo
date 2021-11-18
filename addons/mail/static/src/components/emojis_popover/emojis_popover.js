@@ -56,15 +56,22 @@ export class EmojisPopover extends Component {
      */
     _onClickEmoji(ev) {
         this.close();
-        this.trigger('o-emoji-selection', {
-            unicode: ev.currentTarget.dataset.unicode,
-        });
+        if (this.props.onEmojiSelection) {
+            this.props.onEmojiSelection({
+                unicode: ev.currentTarget.dataset.unicode,
+            });
+        }
     }
 
 }
 
 Object.assign(EmojisPopover, {
-    props: {},
+    props: {
+        onEmojiSelection: {
+            type: Function,
+            optional: true,
+        },
+    },
     template: 'mail.EmojisPopover',
 });
 

@@ -124,7 +124,9 @@ export class AutocompleteInput extends Component {
      * @param {MouseEvent} ev
      */
     _onBlur(ev) {
-        this.trigger('o-hide');
+        if (this.props.onHide) {
+            this.props.onHide();
+        }
     }
 
     /**
@@ -133,7 +135,9 @@ export class AutocompleteInput extends Component {
      */
     _onKeydown(ev) {
         if (ev.key === 'Escape') {
-            this.trigger('o-hide');
+            if (this.props.onHide) {
+                this.props.onHide();
+            }
         }
     }
 
@@ -156,6 +160,14 @@ Object.assign(AutocompleteInput, {
         },
         isFocusOnMount: Boolean,
         isHtml: Boolean,
+        onFocusin: {
+            type: Function,
+            optional: true,
+        },
+        onHide: {
+            type: Function,
+            optional: true,
+        },
         placeholder: String,
         select: {
             type: Function,
