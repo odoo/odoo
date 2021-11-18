@@ -708,7 +708,13 @@ class GoogleCalendar(models.AbstractModel):
                 try:
                     status, response, ask_time = self.update_recurrent_event_exclu(new_google_internal_event_id, source_attendee_record.google_internal_event_id, att.event_id)
                     if status_response(status):
-                        att.write({'google_internal_event_id': new_google_internal_event_id})
+                        # Multidados: Verifica se o google_interna_event_id passe existente para regravar
+                        exist_google_id = self.env['calendar.attendee'].search(
+                            [('google_internal_event_id', '=', new_google_internal_event_id),
+                             ('partner_id', '=', att.partner_id.id), ('event_id', '=', att.event_id.id)])
+                        if not exist_google_id:
+                            att.write({'google_internal_event_id': new_google_internal_event_id})
+                        ######
                         new_ids.append(new_google_internal_event_id)
                         self.env.cr.commit()
                     else:
@@ -930,7 +936,13 @@ class GoogleCalendar(models.AbstractModel):
         headers = {'Content-type': 'application/json'}
         url = "/calendar/v3/calendars/%s/events/%s" % ('primary', instance_id)
         status, content, ask_time = self.env['google.service']._do_request(url, params, headers, type='GET')
-        return content.get('sequence', 0)
+
+        # Multidados: Adiciona verificação do Content
+        # para evitar erro: AttributeError: 'str' object has no attribute 'get'
+        if content != "":
+            return content.get('sequence', 0)
+        else:
+            return 0
 
     #################################
     ##  MANAGE CONNEXION TO GMAIL  ##
