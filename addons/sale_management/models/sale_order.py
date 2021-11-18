@@ -88,6 +88,7 @@ class SaleOrder(models.Model):
     def update_prices(self):
         self.ensure_one()
         res = super().update_prices()
+        # TODO env.add_to_compute after onchange conversion to computes
         for line in self.sale_order_option_ids:
             line.price_unit = self.pricelist_id._get_product_price(line.product_id, line.quantity, uom=line.uom_id)
         return res
@@ -220,15 +221,15 @@ class SaleOrderOption(models.Model):
             return [('line_id', '=', False)]
         return [('line_id', '!=', False)]
 
+    # TODO convert to compute (+ precompute)
     @api.onchange('product_id', 'uom_id', 'quantity')
     def _onchange_product_id(self):
         if not self.product_id:
             return
-        product = self.product_id
-        product_lang = product.with_context(lang=self.order_id.partner_id.lang)
+        product_lang = self.product_id.with_context(lang=self.order_id.partner_id.lang)
 
         self.name = product_lang.get_product_multiline_description_sale()
-        self.uom_id = self.uom_id or product.uom_id
+        self.uom_id = self.uom_id or self.product_id.uom_id
         # To compute the discount a so line is created in cache
         values = self._get_values_to_add_to_order()
         new_sol = self.env['sale.order.line'].new(values)

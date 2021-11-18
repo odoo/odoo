@@ -113,6 +113,7 @@ class SaleOrder(models.Model):
 
         pricelist = order.pricelist_id
         pricelist_price, pricelist_rule_id = pricelist._get_product_price_rule(product, qty, date=order_date)
+        # TODO VFE factorize discount computation or delegate discount computation to sale computes
         if pricelist.discount_policy == 'without_discount':
             # This part is pretty much a copy-paste of the method '_onchange_discount' of
             # 'sale.order.line'.

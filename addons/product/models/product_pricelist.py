@@ -108,11 +108,22 @@ class Pricelist(models.Model):
 
         Note: self.ensure_one()
 
-        :returns: (product unit price, applied pricelist rule)
-        :rtype: tuple
+        :returns: (product unit price, applied pricelist rule id)
+        :rtype: tuple(float, int)
         """
         self.ensure_one()
         return self._compute_price_rule(product, quantity, uom=uom, date=date)[product.id]
+
+    def _get_product_rule(self, product, quantity, uom=None, date=False):
+        """Compute the pricelist price & rule for the specified product, qty & uom.
+
+        Note: self.ensure_one()
+
+        :returns: applied pricelist rule id
+        :rtype: int or False
+        """
+        self.ensure_one()
+        return self._compute_price_rule(product, quantity, uom=uom, date=date)[product.id][1]
 
     def _compute_price_rule(self, products, qty, uom=None, date=False):
         """ Low-level method - Mono pricelist, multi products
@@ -182,6 +193,7 @@ class Pricelist(models.Model):
                     suitable_rule = rule
                     break
 
+            # TODO VFE provide a way for lazy computation of price ?
             if suitable_rule:
                 price = suitable_rule._compute_price(product, qty, target_uom, date)
             else:

@@ -99,6 +99,7 @@ class ProductTemplate(models.Model):
 
     sale_ok = fields.Boolean('Can be Sold', default=True)
     purchase_ok = fields.Boolean('Can be Purchased', default=True)
+    # TODO VFE remove this search magic & the price field?
     pricelist_id = fields.Many2one(
         'product.pricelist', 'Pricelist', store=False,
         help='Technical field. Used for searching on pricelists, not stored in database.')
@@ -624,7 +625,7 @@ class ProductTemplate(models.Model):
             templates = self.with_company(company).sudo()
         if not company:
             company = self.env.company
-        date = date or fields.Date.today()
+        date = date or fields.Date.context_today(self)
 
         prices = dict.fromkeys(self.ids, 0.0)
         for template in templates:

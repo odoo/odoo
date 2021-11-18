@@ -679,7 +679,7 @@ class ProductProduct(models.Model):
         if not company:
             company = self.env.company
 
-        date = date or fields.Date.today()
+        date = date or fields.Date.context_today(self)
 
         prices = dict.fromkeys(self.ids, 0.0)
         for product in products:
