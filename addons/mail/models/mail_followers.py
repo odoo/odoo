@@ -235,7 +235,7 @@ FROM mail_followers fol
 LEFT JOIN mail_followers_mail_message_subtype_rel fol_rel ON fol_rel.mail_followers_id = fol.id
 LEFT JOIN mail_message_subtype subtype ON subtype.id = fol_rel.mail_message_subtype_id
 WHERE %s
-GROUP BY fol.id%s""" % (
+GROUP BY fol.id, fol.res_id, fol.partner_id, fol.channel_id%s""" % (
             ', partner.partner_share' if include_pshare else '',
             'LEFT JOIN res_partner partner ON partner.id = fol.partner_id' if include_pshare else '',
             where_clause,
