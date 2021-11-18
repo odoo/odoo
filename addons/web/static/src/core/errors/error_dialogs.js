@@ -175,6 +175,7 @@ registry
     .add("odoo.exceptions.MissingError", WarningDialog)
     .add("odoo.exceptions.UserError", WarningDialog)
     .add("odoo.exceptions.ValidationError", WarningDialog)
+    .add("odoo.exceptions.Warning", WarningDialog)
     .add("odoo.exceptions.RedirectWarning", RedirectWarningDialog)
     .add("odoo.http.SessionExpiredException", SessionExpiredDialog)
     .add("werkzeug.exceptions.Forbidden", SessionExpiredDialog)
