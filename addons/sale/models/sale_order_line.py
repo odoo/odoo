@@ -221,7 +221,7 @@ class SaleOrderLine(models.Model):
         ('invoiced', 'Fully Invoiced'),
         ('to invoice', 'To Invoice'),
         ('no', 'Nothing to Invoice')
-        ], string='Invoice Status', compute='_compute_invoice_status', store=True, default='no')
+        ], string='Invoice Status', compute='_compute_invoice_status', store=True, pre_compute=True)
     price_unit = fields.Float(
         'Unit Price', required=True, digits='Product Price',
         compute='_compute_price_unit', store=True, readonly=False, pre_compute=True)
