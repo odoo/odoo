@@ -198,9 +198,9 @@ class KanbanDynamicRecordList extends DynamicRecordList {
     }
 
     async cancelQuickCreate() {
-        const { length } = this.records;
+        const previousCount = this.records.length;
         this.records = this.records.filter((r) => !r.isQuickCreate);
-        if (this.records.length !== length) {
+        if (this.records.length !== previousCount) {
             await this.model.notify();
         }
     }
@@ -224,6 +224,8 @@ class KanbanDynamicRecordList extends DynamicRecordList {
         return record;
     }
 }
+
+KanbanDynamicRecordList.DEFAULT_LIMIT = 40;
 
 export class KanbanModel extends RelationalModel {
     setup(params = {}) {
