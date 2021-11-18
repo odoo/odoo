@@ -175,25 +175,24 @@ class SaleOrder(models.Model):
         required=True, change_default=True, index=True, tracking=1,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
     partner_invoice_id = fields.Many2one(
-        'res.partner', string='Invoice Address',
-        readonly=False, required=True, pre_compute=True,
+        'res.partner', string='Invoice Address', required=True,
+        compute='_compute_partner_invoice_id', store=True, readonly=False, pre_compute=True,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
-        compute='_compute_partner_invoice_id', store=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
     partner_shipping_id = fields.Many2one(
-        'res.partner', string='Delivery Address', readonly=False, required=True,
+        'res.partner', string='Delivery Address', required=True,
+        compute='_compute_partner_shipping_id', store=True, readonly=False, pre_compute=True,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
-        compute='_compute_partner_shipping_id', store=True, pre_compute=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
 
     pricelist_id = fields.Many2one(
-        'product.pricelist', string='Pricelist', check_company=True,  # Unrequired company
-        required=False, readonly=False, store=True,
-        compute='_compute_pricelist_id', pre_compute=True,
+        'product.pricelist', string='Pricelist', required=False, check_company=True,  # Unrequired company
+        compute='_compute_pricelist_id', store=True, pre_compute=True, readonly=False,
         states={'sale': [('readonly', True)], 'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", tracking=1,
         help="If you change the pricelist, only newly added lines will be affected.")
-    currency_id = fields.Many2one(related='pricelist_id.currency_id', depends=["pricelist_id"], store=True, ondelete="restrict")
+    currency_id = fields.Many2one(
+        related='pricelist_id.currency_id', depends=["pricelist_id"], store=True, pre_compute=True, ondelete="restrict")
     analytic_account_id = fields.Many2one(
         'account.analytic.account', 'Analytic Account',
         readonly=True, copy=False, check_company=True,  # Unrequired company
@@ -536,7 +535,7 @@ class SaleOrder(models.Model):
                 vals['name'] = self.env['ir.sequence'].next_by_code(
                     'sale.order', sequence_date=seq_date) or _('New')
 
-        return super(SaleOrder, self).create(vals_list)
+        return super().create(vals_list)
 
     def _compute_field_value(self, field):
         if field.name == 'invoice_status' and not self.env.context.get('mail_activity_automation_skip'):

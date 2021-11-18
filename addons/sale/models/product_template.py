@@ -53,7 +53,7 @@ class ProductTemplate(models.Model):
 
     @api.depends('sale_ok')
     def _compute_expense_policy(self):
-        self.filtered(lambda t: not t.sale_ok).update({'expense_policy': 'no'})
+        self.filtered(lambda t: not t.sale_ok).expense_policy = 'no'
 
     @api.depends('product_variant_ids.sales_count')
     def _compute_sales_count(self):

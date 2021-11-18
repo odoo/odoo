@@ -34,9 +34,9 @@ class AccountMove(models.Model):
         """
         Trigger the change of fiscal position when the shipping address is modified.
         """
-        delivery_partner_id = self.env['res.partner'].browse(self._get_invoice_delivery_partner_id())
+        delivery_partner = self.env['res.partner'].browse(self._get_invoice_delivery_partner_id())
         fiscal_position = self.env['account.fiscal.position'].with_company(self.company_id)._get_fiscal_position(
-            self.partner_id, delivery=delivery_partner_id)
+            self.partner_id, delivery=delivery_partner)
 
         if fiscal_position:
             self.fiscal_position_id = fiscal_position

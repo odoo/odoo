@@ -122,7 +122,7 @@ class TestSaleOrder(TestSaleCommon):
         order = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
         })
-        order_lines = self.env['sale.order.line'].create([
+        self.env['sale.order.line'].create([
             {
                 'display_type': 'line_section',
                 'name': 'Dummy section',
@@ -800,7 +800,7 @@ class TestSaleOrder(TestSaleCommon):
         product = product_tmpl.product_variant_id
 
         fpos = self.env['account.fiscal.position'].create(dict(name="fiscal position", sequence=1))
-        fp_tax_id = self.env['account.fiscal.position.tax'].create({
+        self.env['account.fiscal.position.tax'].create({
             'position_id': fpos.id,
             'tax_src_id': tax_include.id,
             'tax_dest_id': tax_exclude.id,

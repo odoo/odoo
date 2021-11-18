@@ -34,7 +34,7 @@ class SaleOrderTemplateLine(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         vals_list = [self._inject_quotation_description(vals) for vals in vals_list]
-        return super(SaleOrderTemplateLine, self).create(vals_list)
+        return super().create(vals_list)
 
     def write(self, values):
         values = self._inject_quotation_description(values)
