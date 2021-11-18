@@ -45,7 +45,6 @@ class SaleOrder(models.Model):
         if self.grid and self.grid_update:
             grid = json.loads(self.grid)
             product_template = self.env['product.template'].browse(grid['product_template_id'])
-            product_ids = set()
             dirty_cells = grid['changes']
             Attrib = self.env['product.template.attribute.value']
             default_so_line_vals = {}
@@ -68,8 +67,6 @@ class SaleOrder(models.Model):
 
                 if not diff:
                     continue
-
-                product_ids.add(product.id)
 
                 # TODO keep qty check? cannot be 0 because we only get cell changes ...
                 if order_lines:
@@ -115,7 +112,7 @@ class SaleOrder(models.Model):
                         product_uom_qty=qty,
                         product_no_variant_attribute_value_ids=no_variant_attribute_values.ids)
                     ))
-            if product_ids and new_lines:
+            if new_lines:
                 # Add new SO lines
                 self.update(dict(order_line=new_lines))
 

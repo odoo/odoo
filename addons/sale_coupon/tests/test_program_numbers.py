@@ -6,7 +6,7 @@ from odoo.exceptions import UserError
 from odoo.tests import tagged
 
 
-@tagged('post_install', '-at_install', 'program_numbers')
+@tagged('post_install', '-at_install')
 class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
 
     def setUp(self):

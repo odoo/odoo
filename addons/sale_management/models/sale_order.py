@@ -52,8 +52,8 @@ class SaleOrder(models.Model):
 
     @api.depends('partner_id', 'sale_order_template_id')
     def _compute_note(self):
-        super(SaleOrder, self)._compute_note()
-        for order in self:
+        super()._compute_note()
+        for order in self.filtered('sale_order_template_id'):
             template = order.sale_order_template_id.with_context(lang=order.partner_id.lang)
             order.note = template.note if not is_html_empty(template.note) else order.note
 

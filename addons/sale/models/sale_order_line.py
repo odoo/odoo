@@ -418,7 +418,7 @@ class SaleOrderLine(models.Model):
             # remove packaging if not match the product
             if line.product_packaging_id.product_id != line.product_id:
                 line.product_packaging_id = False
-            # suggest biggest suitable packaging
+            # Find biggest suitable packaging
             if line.product_id and line.product_uom_qty and line.product_uom:
                 line.product_packaging_id = line.product_id.packaging_ids.filtered(
                     'sales')._find_suitable_product_packaging(line.product_uom_qty, line.product_uom)
@@ -629,13 +629,7 @@ class SaleOrderLine(models.Model):
         for line in self:
             if not line.product_id:
                 continue
-            product = line.product_id.with_context(
-                lang=get_lang(line.env, line.order_id.partner_id.lang).code,
-                partner=line.order_id.partner_id,
-                quantity=line.product_uom_qty,
-                date=line.order_id.date_order,
-                pricelist=line.order_id.pricelist_id.id,
-                uom=line.product_uom.id)
+            product = line.product_id.with_context(lang=line.order_partner_id.lang)
             line.name = line.get_sale_order_line_multiline_description_sale(product)
 
     @api.depends('product_id')
@@ -684,7 +678,6 @@ class SaleOrderLine(models.Model):
                 continue
             if line.order_id.pricelist_id and line.order_partner_id:
                 product = line.product_id.with_context(
-                    lang=line.order_id.partner_id.lang,
                     partner=line.order_partner_id,
                     quantity=line.product_uom_qty,
                     date=line.order_id.date_order,
@@ -796,7 +789,6 @@ class SaleOrderLine(models.Model):
 
             line.discount = 0.0
             product = line.product_id.with_context(
-                lang=line.order_id.partner_id.lang,
                 partner=line.order_partner_id,
                 quantity=line.product_uom_qty,
                 date=line.order_id.date_order,

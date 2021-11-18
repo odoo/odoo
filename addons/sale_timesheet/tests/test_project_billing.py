@@ -5,7 +5,7 @@ from odoo.fields import Command
 from odoo.tests import tagged
 from odoo.tests.common import Form
 
-@tagged('post_install', '-at_install', 'project_billing')
+@tagged('post_install', '-at_install')
 class TestProjectBilling(TestCommonSaleTimesheet):
     """ This test suite provide checks for miscellaneous small things. """
 

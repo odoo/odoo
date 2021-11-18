@@ -328,9 +328,11 @@ class Website(models.Model):
             fiscal_position = sale_order.fiscal_position_id.id
 
             # change the partner, and trigger the onchange
-            sale_order.with_context(not_self_saleperson=True).write({'partner_id': partner.id})
-            sale_order.write({'partner_invoice_id': partner.id})
-            sale_order['payment_term_id'] = self.sale_get_payment_term(partner)
+            sale_order.write({
+                'partner_id': partner.id,
+                'partner_invoice_id': partner.id,
+                'payment_term_id': self.sale_get_payment_term(partner),
+            })
 
             # check the pricelist : update it if the pricelist is not the 'forced' one
             values = {}
