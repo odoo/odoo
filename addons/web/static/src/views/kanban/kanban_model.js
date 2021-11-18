@@ -175,6 +175,7 @@ class KanbanDynamicGroupList extends DynamicGroupList {
         for (const group of this.groups) {
             const previous = oldGroups.find((g) => g.value === group.value);
             if (previous) {
+                group.list.count = previous.list.count;
                 group.list.records = previous.list.records;
             } else {
                 promises.push(group.list.load());

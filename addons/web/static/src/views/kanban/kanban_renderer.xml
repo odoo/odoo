@@ -8,16 +8,16 @@
                     <t t-set="group" t-value="groupOrRecord.group" />
                     <div class="o_kanban_group"
                         t-att-class="getGroupClasses(group)"
-                        t-att-data-id="(recordsDraggable or columnsDraggable) and group.id"
-                        t-on-mouseenter="() => state.hoveredColumn = group.id"
-                        t-on-mouseleave="() => state.hoveredColumn = null"
+                        t-att-data-id="(recordsDraggable or groupsDraggable) and group.id"
+                        t-on-mouseenter="() => state.hoveredGroup = group.id"
+                        t-on-mouseleave="() => state.hoveredGroup = null"
                         t-on-click="onGroupClick(group)"
                     >
                         <div class="o_kanban_header">
                             <div class="o_kanban_header_title">
                                 <span class="o_column_title" t-esc="getGroupName(group)" />
                                 <t t-if="!group.isFolded">
-                                    <Dropdown t-if="state.hoveredColumn === group.id" class="o_kanban_config" togglerClass="'btn p-0'">
+                                    <Dropdown t-if="state.hoveredGroup === group.id" class="o_kanban_config" togglerClass="'btn p-0'">
                                         <t t-set-slot="toggler">
                                             <i class="fa fa-gear" role="img" aria-label="Settings" title="Settings" />
                                         </t>
@@ -58,7 +58,7 @@
                                             </t>
                                         </ul>
                                     </Dropdown>
-                                    <span t-if="props.info.quickCreate" class="o_kanban_quick_add" t-on-click="quickCreate(group)">
+                                    <span t-if="props.info.onCreate === 'quick_create'" class="o_kanban_quick_add" t-on-click="quickCreate(group)">
                                         <i class="fa fa-plus" role="img" aria-label="Quick add" title="Quick add" />
                                     </span>
                                 </t>
@@ -97,8 +97,8 @@
                         </div>
                         <t t-if="!group.isFolded">
                             <t t-foreach="group.list.records" t-as="record" t-key="record.id">
-                                <div t-if="record.isQuickCreate" class="o_kanban_quick_create">
-                                    <FormRenderer class="o_form_view o_xxs_form_view" record="record" fields="props.fields" info="quickCreateInfo" />
+                                <div t-if="record.isQuickCreate and props.quickCreateInfo" class="o_kanban_quick_create">
+                                    <FormRenderer class="o_form_view o_xxs_form_view" record="record" fields="props.fields" info="props.quickCreateInfo" />
                                     <div class="d-flex">
                                         <button class="btn btn-primary o_kanban_add mr-1 text_truncate" t-on-click="validateQuickCreate(group, false)">
                                             Add
@@ -137,13 +137,13 @@
                                     class="form-control o_input"
                                     placeholder="Column title"
                                     autofocus=""
-                                    t-model="state.newColumn"
+                                    t-model="state.newGroup"
                                     t-on-focus="() => state.quickCreateGroupInputFocus = true"
                                     t-on-blur="() => state.quickCreateGroupInputFocus = false"
-                                    t-on-keydown="onAddColumnKeydown"
+                                    t-on-keydown="onAddGroupKeydown"
                                 />
                                 <span class="input-group-append">
-                                    <button class="btn btn-primary o_kanban_add" type="button" t-on-click="createColumn">
+                                    <button class="btn btn-primary o_kanban_add" type="button" t-on-click="createGroup">
                                         Add
                                     </button>
                                 </span>

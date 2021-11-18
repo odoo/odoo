@@ -15,15 +15,7 @@ import { registry } from "@web/core/registry";
 
 const serviceRegistry = registry.category("services");
 
-const getRecords = (kanban) => {
-    const records = [];
-    for (const dp of Object.values(kanban.model.db)) {
-        if (dp.resId) {
-            records.push(dp);
-        }
-    }
-    return records;
-};
+const clickCreate = async (kanban) => click(kanban.el.querySelector("button.o-kanban-button-new"));
 
 const toggleColumnActions = async (kanban, columnIndex) => {
     const group = kanban.el.querySelector(`.o_kanban_group:nth-child(${columnIndex + 1})`);
@@ -703,8 +695,12 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skip("create in grouped on m2o", async (assert) => {
+    QUnit.test("create in grouped on m2o", async (assert) => {
         assert.expect(5);
+
+        serverData.views = {
+            "partner,false,form": `<form><field name="foo" /></form>`,
+        };
 
         const kanban = await makeView({
             type: "kanban",
@@ -720,36 +716,17 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["product_id"],
         });
 
-        assert.hasClass(
-            kanban.el.querySelector(".o_kanban_view"),
-            "ui-sortable",
-            "columns are sortable when grouped by a m2o field"
-        );
-        assert.hasClass(
-            kanban.el.querySelectorbuttons.find(".o-kanban-button-new"),
-            "btn-primary",
-            "'create' button should be btn-primary for grouped kanban with at least one column"
-        );
-        assert.hasClass(
-            kanban.el.querySelector(".o_kanban_view > div:last"),
-            "o_column_quick_create",
-            "column quick create should be enabled when grouped by a many2one field)"
-        );
+        assert.containsN(kanban, ".o_kanban_group.o_group_draggable", 2);
+        assert.containsOnce(kanban, ".btn-primary.o-kanban-button-new");
+        assert.containsOnce(kanban, ".o_column_quick_create");
 
-        await testUtils.kanban.clickCreate(kanban); // Click on 'Create'
-        assert.hasClass(
-            kanban.el.querySelector(".o_kanban_group:first() > div:nth(1)"),
-            "o_kanban_quick_create",
-            "clicking on create should open the quick_create in the first column"
-        );
+        await clickCreate(kanban);
 
-        assert.ok(
-            kanban.el.querySelector("span.o_column_title:contains(hello)").length,
-            "should have a column title with a value from the many2one"
-        );
+        assert.containsOnce(kanban, ".o_kanban_group:first-child > .o_kanban_quick_create");
+        assert.strictEqual(kanban.el.querySelector(".o_column_title").innerText, "hello");
     });
 
-    QUnit.skip("create in grouped on char", async (assert) => {
+    QUnit.test("create in grouped on char", async (assert) => {
         assert.expect(4);
 
         const kanban = await makeView({
@@ -765,22 +742,10 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["foo"],
         });
 
-        assert.doesNotHaveClass(
-            kanban.el.querySelector(".o_kanban_view"),
-            "ui-sortable",
-            "columns aren't sortable when not grouped by a m2o field"
-        );
-        assert.containsN(kanban, ".o_kanban_group", 3, "should have " + 3 + " columns");
-        assert.strictEqual(
-            kanban.el.querySelector(".o_kanban_group:first() .o_column_title").text(),
-            "yop",
-            "'yop' column should be the first column"
-        );
-        assert.doesNotHaveClass(
-            kanban.el.querySelector(".o_kanban_view > div:last"),
-            "o_column_quick_create",
-            "column quick create should be disabled when not grouped by a many2one field)"
-        );
+        assert.containsNone(kanban, ".o_kanban_group.o_group_draggable");
+        assert.containsN(kanban, ".o_kanban_group", 3);
+        assert.strictEqual(kanban.el.querySelector(".o_column_title").innerText, "yop");
+        assert.containsNone(kanban, ".o_kanban_group:first-child > .o_kanban_quick_create");
     });
 
     QUnit.skip("prevent deletion when grouped by many2many field", async (assert) => {

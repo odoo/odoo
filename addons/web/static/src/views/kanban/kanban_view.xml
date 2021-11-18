@@ -3,8 +3,30 @@
 
     <t t-name="web.KanbanView" owl="1">
         <Layout viewType="'kanban'" useSampleModel="model.useSampleModel">
-            <KanbanRenderer list="model.root" fields="props.fields" context="props.context" readonly="true" info="archInfo" openRecord="record => openRecord(record)" />
+            <t t-set-slot="control-panel-bottom-left">
+                <t t-call="{{ constructor.buttonTemplate }}"/>
+            </t>
+            <KanbanRenderer
+                list="model.root"
+                fields="props.fields"
+                context="props.context"
+                info="archInfo"
+                readonly="true"
+                openRecord="record => openRecord(record)"
+                createRecord="group => createRecord(group)"
+                quickCreateInfo="quickCreateInfo"
+            />
         </Layout>
+    </t>
+
+    <t t-name="web.KanbanView.Buttons" owl="1">
+        <div class="o_kanban_buttons d-flex" role="toolbar" aria-label="Main actions">
+            <t t-if="archInfo.activeActions['create']">
+                <button type="button" class="btn btn-primary o-kanban-button-new" data-tooltip="Create record" aria-label="Create record" accesskey="c" t-on-click="createRecord(null)">
+                    Create
+                </button>
+            </t>
+        </div>
     </t>
 
 </templates>

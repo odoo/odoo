@@ -9,6 +9,12 @@ const X2M_TYPES = ["one2many", "many2many"];
 const RELATIONAL_TYPES = [...X2M_TYPES, "many2one"];
 
 /**
+ * @param {string} str
+ * @returns {string}
+ */
+const snakeToCamel = (str) => str.replace(/_([a-z])/gi, ([, c]) => c.toUpperCase());
+
+/**
  * @param {any} field
  * @returns {boolean}
  */
@@ -82,7 +88,7 @@ export function processField(node, fields, viewType) {
     };
     for (const attribute of node.attributes) {
         // FIXME: black list special attributes like on_change, name... ?
-        fieldInfo.attrs[attribute.name] = attribute.value;
+        fieldInfo.attrs[snakeToCamel(attribute.name)] = attribute.value;
     }
     if (X2M_TYPES.includes(field.type)) {
         fieldInfo.viewMode = getX2MViewModes(node.getAttribute("mode"))[0];

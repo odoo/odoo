@@ -3,15 +3,18 @@
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { combineAttributes, isAttr, XMLParser } from "@web/core/utils/xml";
+import { usePager } from "@web/search/pager_hook";
 import { useModel } from "@web/views/helpers/model";
 import { standardViewProps } from "@web/views/helpers/standard_view_props";
 import { useSetupView } from "@web/views/helpers/view_hook";
 import { getActiveActions, processField } from "@web/views/helpers/view_utils";
 import { KanbanModel } from "@web/views/kanban/kanban_model";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
-import { usePager } from "@web/search/pager_hook";
 import { Layout } from "@web/views/layout";
 import { useViewButtons } from "@web/views/view_button/hook";
+import { ViewNotFoundError } from "@web/webclient/actions/action_service";
+
+const viewRegistry = registry.category("views");
 
 const KANBAN_BOX_ATTRIBUTE = "kanban-box";
 const ACTION_TYPES = ["action", "object"];
@@ -52,11 +55,11 @@ const translateAttribute = (attrValue) => {
 const applyDefaultAttributes = (kanbanBox) => {
     kanbanBox.setAttribute("tabindex", 0);
     kanbanBox.setAttribute("role", "article");
+    kanbanBox.setAttribute("t-att-class", "getRecordClasses(record,groupOrRecord.group)");
     kanbanBox.setAttribute("t-att-data-id", "recordsDraggable and record.id");
     if (hasClass(kanbanBox, ...KANBAN_CLICK_CLASSES)) {
-        kanbanBox.setAttribute("t-on-click", "onCardClicked(record)");
+        kanbanBox.setAttribute("t-on-click", "onRecordClick(record)");
     }
-    combineAttributes(kanbanBox, "class", "o_kanban_record");
     return kanbanBox;
 };
 
@@ -83,10 +86,10 @@ export class KanbanArchParser extends XMLParser {
             groupDelete: isAttr(xmlDoc, "group_delete").truthy(true),
             groupEdit: isAttr(xmlDoc, "group_edit").truthy(true),
         };
-        const quickCreate =
+        const onCreate =
             activeActions.create &&
             isAttr(xmlDoc, "quick_create").truthy(true) &&
-            isAttr(xmlDoc, "on_create").equalTo("quick_create");
+            xmlDoc.getAttribute("on_create");
         const quickCreateView = xmlDoc.getAttribute("quick_create_view");
         const tooltips = {};
         let kanbanBoxTemplate = document.createElement("t");
@@ -148,10 +151,6 @@ export class KanbanArchParser extends XMLParser {
                 sumField: fields[attrs.sum_field] || false,
                 help: attrs.help,
             };
-            kanbanBox.setAttribute(
-                "t-att-class",
-                `getRecordProgressColor(record, '${attrs.field}', groupOrRecord.group)`
-            );
         }
 
         // Dropdown element
@@ -241,7 +240,7 @@ export class KanbanArchParser extends XMLParser {
             className,
             defaultGroupBy,
             colorField,
-            quickCreate,
+            onCreate,
             quickCreateView,
             recordsDraggable,
             limit: limit && parseInt(limit, 10),
@@ -257,7 +256,8 @@ export class KanbanArchParser extends XMLParser {
 
 class KanbanView extends owl.Component {
     setup() {
-        this.action = useService("action");
+        this.actionService = useService("action");
+        this.viewService = useService("view");
         this.archInfo = new KanbanArchParser().parse(this.props.arch, this.props.fields);
         const { resModel, fields } = this.props;
         const { fields: activeFields, defaultGroupBy } = this.archInfo;
@@ -271,6 +271,7 @@ class KanbanView extends owl.Component {
             viewMode: "kanban",
             openGroupsByDefault: true,
         });
+        this.quickCreateInfo = null; // Lazy loaded
         useViewButtons(this.model);
         useSetupView({
             /** TODO **/
@@ -295,14 +296,61 @@ class KanbanView extends owl.Component {
     async openRecord(record) {
         const resIds = this.model.root.records.map((datapoint) => datapoint.resId);
         try {
-            await this.action.switchView("form", { resId: record.resId, resIds });
+            await this.actionService.switchView("form", { resId: record.resId, resIds });
         } catch (e) {
-            if (e.constructor.name === "ViewNotFoundError") {
+            if (e instanceof ViewNotFoundError) {
                 // there's no form view in the current action
                 return;
             }
             throw e;
         }
+    }
+
+    async createRecord(group) {
+        const { onCreate } = this.archInfo;
+        const { root } = this.model;
+        if (this.canQuickCreate()) {
+            if (!this.quickCreateInfo) {
+                this.quickCreateInfo = await this._loadQuickCreateView();
+            }
+            const { list } = group || root.groups[0];
+            await list.quickCreate(this.quickCreateInfo.fields);
+            this.render();
+        } else if (onCreate) {
+            await this.actionService.doAction(onCreate, { additionalContext: root.context });
+        } else {
+            await this.actionService.switchView("form");
+        }
+    }
+
+    async _loadQuickCreateView() {
+        if (this.isLoadingQuickCreate) {
+            return;
+        }
+        this.isLoadingQuickCreate = true;
+        const { context, resModel } = this.model.root;
+        const { ArchParser } = viewRegistry.get("form");
+        const result = await this.viewService.loadViews({
+            context: { ...context, form_view_ref: this.archInfo.quickCreateView },
+            resModel,
+            views: [[false, "form"]],
+        });
+        this.isLoadingQuickCreate = false;
+        return new ArchParser().parse(result.form.arch, this.props.fields);
+    }
+
+    canQuickCreate() {
+        if (!this.model.root.groupByField || this.archInfo.onCreate !== "quick_create") {
+            return false;
+        }
+        const { groupByField } = this.model.root;
+        const activeField = this.archInfo.fields[groupByField.name];
+        const dateTypes = ["date", "datetime"];
+        if (!activeField.readonly && dateTypes.includes(groupByField.type)) {
+            return activeField.allowGroupRangeValue;
+        }
+        const availableTypes = ["char", "boolean", "many2one", "selection"];
+        return availableTypes.includes(groupByField.type);
     }
 }
 
@@ -313,6 +361,7 @@ KanbanView.multiRecord = true;
 KanbanView.template = `web.KanbanView`;
 KanbanView.components = { Layout, KanbanRenderer };
 KanbanView.props = { ...standardViewProps };
+KanbanView.buttonTemplate = "web.KanbanView.Buttons";
 KanbanView.ArchParser = KanbanArchParser;
 
-registry.category("views").add("kanban", KanbanView);
+viewRegistry.add("kanban", KanbanView);
