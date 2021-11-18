@@ -250,7 +250,7 @@ class SaleOrderLine(models.Model):
         related="product_id.product_tmpl_id", domain=[('sale_ok', '=', True)])
     product_updatable = fields.Boolean(compute='_compute_product_updatable', string='Can Edit Product')
     product_uom_qty = fields.Float(
-        string='Quantity', digits='Product Unit of Measure', required=True, default=1.0,
+        string='Quantity', digits='Product Unit of Measure', required=True,
         compute='_compute_product_uom_qty', store=True, readonly=False, pre_compute=True)
     product_uom = fields.Many2one(
         'uom.uom', string='Unit of Measure',
@@ -458,8 +458,8 @@ class SaleOrderLine(models.Model):
                 line.product_uom_qty = 0.0
                 continue
 
-            if not line.product_uom or (line.product_id.uom_id.id != line.product_uom.id):
-                line.product_uom_qty = line.product_uom_qty or 1.0
+            # Default value = 1.0
+            line.product_uom_qty = line.product_uom_qty or 1.0
             if not line.product_packaging_id:
                 continue
             packaging_uom = line.product_packaging_id.product_uom_id
