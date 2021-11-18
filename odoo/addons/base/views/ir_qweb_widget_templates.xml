@@ -1,7 +1,7 @@
 <odoo>
 <template id="contact_name">
     <div t-if="'name' in fields">
-        <t t-if="object.name">
+        <t t-if="object.name" name="object_name">
             <span itemprop="name" t-esc="name"/>
         </t>
         <t t-if="not object.name and object.parent_name">
