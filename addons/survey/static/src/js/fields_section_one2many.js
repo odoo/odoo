@@ -6,6 +6,9 @@ var FieldOne2Many = require('web.relational_fields').FieldOne2Many;
 var FieldRegistry = require('web.field_registry');
 var ListRenderer = require('web.ListRenderer');
 var config = require('web.config');
+var core = require('web.core');
+
+var _t = core._t;
 
 var SectionListRenderer = ListRenderer.extend({
     init: function (parent, state, params) {
@@ -179,6 +182,87 @@ var SectionFieldOne2Many = FieldOne2Many.extend({
         }
         this._super.apply(this, arguments);
     },
+
+    /**
+     * Override to perform additional model-specific client-side form validation
+     * @override
+     * @param {Object} params
+     * @param {Object} [params.context]
+     * @private
+     */
+    _openFormDialog: function (params) {
+        let onSaved = params["on_saved"];
+        let self = this;
+
+        Object.assign(params, {
+            on_saved: function (record){
+                let errorMessage = self._checkValidateEntry();
+                if (errorMessage) {
+                    this.displayNotification({
+                        title: _t("Validation Error"),
+                        message: errorMessage,
+                        type: 'danger'
+                    });
+                    return Promise.reject(errorMessage);
+                }
+                onSaved(record);
+            }
+        });
+        this._super.apply(this, arguments);
+    },
+
+    _checkValidateEntry: function () {
+        let isScored = document.getElementsByName("is_scored_question")[0].firstElementChild.checked;
+        let questionType = document.querySelectorAll("[aria-label='Question Type'] > div > input[checked=true]")[0].dataset['value'];
+
+        // Score
+        if (document.getElementsByName("answer_score")[0].value < 0) {
+            return 'An answer score for a non-multiple choice question cannot be negative!';
+        }
+
+        // Single line text
+        let validation_length_min = document.getElementsByName("validation_length_min")[0].value
+        let validation_length_max = document.getElementsByName("validation_length_max")[0].value
+        if (validation_length_min < 0) {
+            return '"Minimum Text Length" cannot be negative!';
+        }
+        if (validation_length_max < 0) {
+            return '"Maximum Text Length" cannot be negative!';
+        }
+        if (validation_length_max < validation_length_min && validation_length_min !== "0" && validation_length_max !== "0") {
+            return '"Maximum Text Length" cannot be smaller than "Minimum Text Length"!';
+        }
+
+        // Numbers
+        if (document.getElementsByName("validation_min_float_value")[0].value
+            > document.getElementsByName("validation_max_float_value")[0].value) {
+            return '"Maximum value" cannot be smaller than "Minimum value"!';
+        }
+
+        // Date
+        let validationMinDate = document.getElementsByName("validation_min_date")[1].value;
+        let validationMaxDate = document.getElementsByName("validation_max_date")[1].value;
+        if (validationMinDate > validationMaxDate && validationMinDate !== undefined && validationMaxDate !== undefined) {
+            return '"Maximum Date" cannot be smaller than "Minimum Date"!';
+        }
+        if (isScored && questionType === "date"
+            && document.getElementsByName("answer_date")[0].value === undefined) {
+            return 'All "Is a scored question = True" and "Question Type: Date" questions need an answer';
+        }
+
+        // Datetime
+        let validationMinDatetime = document.getElementsByName("validation_min_datetime")[1].value;
+        let validationMaxDatetime = document.getElementsByName("validation_max_datetime")[1].value;
+        if (validationMinDatetime > validationMaxDatetime && validationMinDatetime !== undefined && validationMaxDatetime !== undefined) {
+            return '"Maximum Datetime" cannot be smaller than "Minimum Datetime"!';
+        }
+        if (isScored && questionType === "datetime"
+            && document.getElementsByName("answer_datetime")[0].value === undefined) {
+            return 'All "Is a scored question = True" and "Question Type: Datetime" questions need an answer';
+        }
+
+        return '' // No test failed;
+    }
 });
 
 FieldRegistry.add('question_page_one2many', SectionFieldOne2Many);
