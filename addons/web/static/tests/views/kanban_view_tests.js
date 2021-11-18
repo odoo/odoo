@@ -3,6 +3,9 @@
 import { makeFakeDialogService } from "@web/../tests/helpers/mock_services";
 import { click, makeDeferred, nextTick, triggerEvent } from "@web/../tests/helpers/utils";
 import {
+    getPagerLimit,
+    getPagerValue,
+    pagerNext,
     setupControlPanelFavoriteMenuRegistry,
     setupControlPanelServiceRegistry,
     validateSearch,
@@ -591,7 +594,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(kanban, ".o_pager");
     });
 
-    QUnit.skip("pager, ungrouped, with default limit", async (assert) => {
+    QUnit.test("pager, ungrouped, with default limit", async (assert) => {
         assert.expect(3);
 
         const kanban = await makeView({
@@ -603,20 +606,16 @@ QUnit.module("Views", (hooks) => {
                 '<templates><t t-name="kanban-box">' +
                 '<div><field name="foo"/></div>' +
                 "</t></templates></kanban>",
-            async mockRPC(route, args) {
-                assert.strictEqual(args.limit, 40, "default limit should be 40 in Kanban");
+            async mockRPC(route, { kwargs }) {
+                assert.strictEqual(kwargs.limit, 40, "default limit should be 40 in Kanban");
             },
         });
 
         assert.containsOnce(kanban, ".o_pager");
-        assert.strictEqual(
-            testUtils.controlPanel.getPagerSize(kanban),
-            "4",
-            "pager's size should be 4"
-        );
+        assert.deepEqual(getPagerValue(kanban), [1, 4]);
     });
 
-    QUnit.skip("pager, ungrouped, with limit given in options", async (assert) => {
+    QUnit.test("pager, ungrouped, with limit given in options", async (assert) => {
         assert.expect(3);
 
         const kanban = await makeView({
@@ -628,27 +627,17 @@ QUnit.module("Views", (hooks) => {
                 '<templates><t t-name="kanban-box">' +
                 '<div><field name="foo"/></div>' +
                 "</t></templates></kanban>",
-            async mockRPC(route, args) {
-                assert.strictEqual(args.limit, 2, "limit should be 2");
+            async mockRPC(route, { kwargs }) {
+                assert.strictEqual(kwargs.limit, 2);
             },
-            viewOptions: {
-                limit: 2,
-            },
+            limit: 2,
         });
 
-        assert.strictEqual(
-            testUtils.controlPanel.getPagerValue(kanban),
-            "1-2",
-            "pager's limit should be 2"
-        );
-        assert.strictEqual(
-            testUtils.controlPanel.getPagerSize(kanban),
-            "4",
-            "pager's size should be 4"
-        );
+        assert.deepEqual(getPagerValue(kanban), [1, 2]);
+        assert.strictEqual(getPagerLimit(kanban), 4);
     });
 
-    QUnit.skip("pager, ungrouped, with limit set on arch and given in options", async (assert) => {
+    QUnit.test("pager, ungrouped, with limit set on arch and given in options", async (assert) => {
         assert.expect(3);
 
         // the limit given in the arch should take the priority over the one given in options
@@ -661,24 +650,14 @@ QUnit.module("Views", (hooks) => {
                 '<templates><t t-name="kanban-box">' +
                 '<div><field name="foo"/></div>' +
                 "</t></templates></kanban>",
-            async mockRPC(route, args) {
-                assert.strictEqual(args.limit, 3, "limit should be 3");
+            async mockRPC(route, { kwargs }) {
+                assert.strictEqual(kwargs.limit, 3);
             },
-            viewOptions: {
-                limit: 2,
-            },
+            limit: 2,
         });
 
-        assert.strictEqual(
-            testUtils.controlPanel.getPagerValue(kanban),
-            "1-3",
-            "pager's limit should be 3"
-        );
-        assert.strictEqual(
-            testUtils.controlPanel.getPagerSize(kanban),
-            "4",
-            "pager's size should be 4"
-        );
+        assert.deepEqual(getPagerValue(kanban), [1, 3]);
+        assert.strictEqual(getPagerLimit(kanban), 4);
     });
 
     QUnit.skip(
@@ -702,38 +681,20 @@ QUnit.module("Views", (hooks) => {
                 </kanban>`,
             });
 
-            assert.strictEqual(
-                testUtils.controlPanel.getPagerValue(kanban),
-                "1-3",
-                "should have 3 records on current page"
-            );
-            assert.strictEqual(
-                testUtils.controlPanel.getPagerSize(kanban),
-                "4",
-                "should have 4 records"
-            );
+            assert.deepEqual(getPagerValue(kanban), [1, 3]);
+            assert.strictEqual(getPagerLimit(kanban), 4);
 
             // move to next page
-            await testUtils.controlPanel.pagerNext(kanban);
-            assert.strictEqual(
-                testUtils.controlPanel.getPagerValue(kanban),
-                "4-4",
-                "should be on second page"
-            );
+            await pagerNext(kanban);
+
+            assert.deepEqual(getPagerValue(kanban), [4, 4]);
 
             // delete a record
             await click(kanban.el.querySelector(".o_kanban_record:first a:first"));
             await click($(".modal-footer button:first"));
-            assert.strictEqual(
-                testUtils.controlPanel.getPagerValue(kanban),
-                "1-3",
-                "should have 1 page only"
-            );
-            assert.strictEqual(
-                testUtils.controlPanel.getPagerSize(kanban),
-                "3",
-                "should have 4 records"
-            );
+
+            assert.deepEqual(getPagerValue(kanban), [1, 3]);
+            assert.strictEqual(getPagerLimit(kanban), 3);
         }
     );
 

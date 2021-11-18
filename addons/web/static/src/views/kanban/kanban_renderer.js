@@ -313,7 +313,7 @@ export class KanbanRenderer extends Component {
             );
             total = progressValue.count;
         }
-        return total - group.list.records.length;
+        return total - group.list.count;
     }
 
     getRecordProgressColor(record, fieldName, group) {

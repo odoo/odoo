@@ -1,5 +1,14 @@
 /** @odoo-module **/
 
+import { makeTestEnv } from "@web/../tests/helpers/mock_env";
+import {
+    click,
+    editInput,
+    getFixture,
+    mount,
+    mouseEnter,
+    triggerEvent,
+} from "@web/../tests/helpers/utils";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { notificationService } from "@web/core/notifications/notification_service";
 import { ormService } from "@web/core/orm_service";
@@ -9,8 +18,6 @@ import { WithSearch } from "@web/search/with_search/with_search";
 import { getDefaultConfig } from "@web/views/view";
 import { viewService } from "@web/views/view_service";
 import { actionService } from "@web/webclient/actions/action_service";
-import { makeTestEnv } from "../helpers/mock_env";
-import { click, getFixture, mount, mouseEnter, triggerEvent } from "../helpers/utils";
 
 const { Component } = owl;
 const serviceRegistry = registry.category("services");
@@ -65,7 +72,7 @@ const findItem = (target, selector, finder = 0) => {
     if (Number.isInteger(finder)) {
         return elems[finder];
     }
-    return elems.find((el) => el.innerText.trim().toLowerCase() === finder.toLowerCase());
+    return elems.find((el) => el.innerText.trim().toLowerCase() === String(finder).toLowerCase());
 };
 
 /** Menu (generic) */
@@ -237,6 +244,31 @@ export const validateSearch = async (el) => {
 
 export const switchView = async (el, viewType) => {
     await click(findItem(el, `button.o_switch_view.o_${viewType}`));
+};
+
+/** Pager */
+
+export const getPagerValue = (el) => {
+    const valueEl = findItem(el, ".o_pager .o_pager_value");
+    return valueEl.innerText.trim().split("-").map(Number);
+};
+
+export const getPagerLimit = (el) => {
+    const limitEl = findItem(el, ".o_pager .o_pager_limit");
+    return Number(limitEl.innerText.trim());
+};
+
+export const pagerNext = async (el) => {
+    await click(findItem(el, ".o_pager button.o_pager_next"));
+};
+
+export const pagerPrevious = async (el) => {
+    await click(findItem(el, ".o_pager button.o_pager_previous"));
+};
+
+export const editPager = async (el, value) => {
+    await click(findItem(el, ".o_pager .o_pager_value"));
+    await editInput(getNode(el), ".o_pager .o_pager_value.o_input", value);
 };
 
 /////////////////////////////////////

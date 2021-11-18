@@ -6,9 +6,6 @@ import { Deferred, KeepLast } from "@web/core/utils/concurrency";
 import { Model } from "@web/views/helpers/model";
 import { isX2Many } from "@web/views/helpers/view_utils";
 
-const LOADED_GROUP_LIMIT = 10;
-const DEFAULT_LIMIT = 40;
-
 class RequestBatcherORM extends ORM {
     constructor() {
         super(...arguments);
@@ -253,7 +250,7 @@ export class Record extends DataPoint {
 }
 
 class DynamicList extends DataPoint {
-    constructor(model, params, state = {}) {
+    constructor(model, params, state) {
         super(...arguments);
 
         this.groupBy = params.groupBy || [];
@@ -261,7 +258,7 @@ class DynamicList extends DataPoint {
         this.orderBy = params.orderedBy || {}; // rename orderBy + get back from state
         this.offset = 0;
         this.count = 0;
-        this.limit = state.limit || 80; // FIXME: get this limit in params
+        this.limit = params.limit || state.limit || this.constructor.DEFAULT_LIMIT;
     }
 
     exportState() {
@@ -360,10 +357,13 @@ export class DynamicRecordList extends DynamicList {
     }
 }
 
+DynamicRecordList.DEFAULT_LIMIT = 80;
+
 export class DynamicGroupList extends DynamicList {
-    constructor(model, params, state = {}) {
+    constructor(model, params, state) {
         super(...arguments);
-        this.groupLimit = params.groupLimit || LOADED_GROUP_LIMIT;
+
+        this.groupLimit = params.groupLimit || state.groupLimit || this.constructor.DEFAULT_LIMIT;
         this.groupByInfo = params.groupByInfo || {}; // FIXME: is this something specific to the list view?
         this.groupByField = this.fields[this.groupBy[0]];
         this.openGroupsByDefault = params.openGroupsByDefault || false;
@@ -491,8 +491,10 @@ export class DynamicGroupList extends DynamicList {
     }
 }
 
+DynamicGroupList.DEFAULT_LIMIT = 10;
+
 export class Group extends DataPoint {
-    constructor(model, params, state = {}) {
+    constructor(model, params, state) {
         super(...arguments);
 
         this.value = params.value;
@@ -535,7 +537,7 @@ export class Group extends DataPoint {
         if (!this.isFolded) {
             await this.list.load();
             if (this.recordParam) {
-                this.record = new Record(this.model, this.recordParam);
+                this.record = this.model.createDataPoint("record", this.recordParam);
                 await this.record.load();
             }
         }
@@ -548,7 +550,7 @@ export class Group extends DataPoint {
     }
 }
 export class StaticList extends DataPoint {
-    constructor(model, params, state = {}) {
+    constructor(model, params, state) {
         super(...arguments);
 
         this.resIds = params.resIds || [];
@@ -558,7 +560,7 @@ export class StaticList extends DataPoint {
         this.views = params.views || {};
         this.viewMode = params.viewMode;
         this.orderBy = params.orderedBy || {}; // rename orderBy + get back from state
-        this.limit = state.limit || 80; // FIXME: get this limit in params
+        this.limit = params.limit || state.limit || this.constructor.DEFAULT_LIMIT;
         this.offset = 0;
     }
 
@@ -658,6 +660,8 @@ export class StaticList extends DataPoint {
     }
 }
 
+StaticList.DEFAULT_LIMIT = 80;
+
 export class RelationalModel extends Model {
     setup(params, { rpc, user }) {
         this.rpc = rpc;
@@ -676,7 +680,7 @@ export class RelationalModel extends Model {
             this.rootParams.resId = params.resId;
         } else {
             this.rootParams.openGroupsByDefault = params.openGroupsByDefault || false;
-            this.rootParams.limit = params.limit || DEFAULT_LIMIT;
+            this.rootParams.limit = params.limit;
             this.rootParams.groupLimit = params.groupLimit;
         }
 

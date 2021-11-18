@@ -9,6 +9,7 @@ import { useSetupView } from "@web/views/helpers/view_hook";
 import { getActiveActions, processField } from "@web/views/helpers/view_utils";
 import { KanbanModel } from "@web/views/kanban/kanban_model";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
+import { usePager } from "@web/search/pager_hook";
 import { Layout } from "@web/views/layout";
 import { useViewButtons } from "@web/views/view_button/hook";
 
@@ -243,7 +244,7 @@ export class KanbanArchParser extends XMLParser {
             quickCreate,
             quickCreateView,
             recordsDraggable,
-            limit: limit ? parseInt(limit, 10) : 40,
+            limit: limit && parseInt(limit, 10),
             progressAttributes,
             xmlDoc: applyDefaultAttributes(kanbanBox),
             fields: activeFields,
@@ -259,13 +260,13 @@ class KanbanView extends owl.Component {
         this.action = useService("action");
         this.archInfo = new KanbanArchParser().parse(this.props.arch, this.props.fields);
         const { resModel, fields } = this.props;
-        const { fields: activeFields, limit, defaultGroupBy } = this.archInfo;
+        const { fields: activeFields, defaultGroupBy } = this.archInfo;
         this.model = useModel(KanbanModel, {
             activeFields,
             progressAttributes: this.archInfo.progressAttributes,
             fields,
             resModel,
-            limit,
+            limit: this.archInfo.limit || this.props.limit,
             defaultGroupBy,
             viewMode: "kanban",
             openGroupsByDefault: true,
@@ -274,6 +275,21 @@ class KanbanView extends owl.Component {
         useSetupView({
             /** TODO **/
         });
+        usePager(() =>
+            this.model.root.isGrouped
+                ? { total: 0 }
+                : {
+                      offset: this.model.root.offset,
+                      limit: this.model.root.limit,
+                      total: this.model.root.count,
+                      onUpdate: async ({ offset, limit }) => {
+                          this.model.root.offset = offset;
+                          this.model.root.limit = limit;
+                          await this.model.root.load();
+                          this.render();
+                      },
+                  }
+        );
     }
 
     async openRecord(record) {
