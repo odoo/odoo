@@ -173,7 +173,7 @@ export const useSortable = (params) => {
         ) {
             const previous = ghost.previousElementSibling;
             const parent = ghost.parentNode;
-            onDrop({ previous, parent });
+            onDrop({ list: currentList, item: currentItem, previous, parent });
         }
         for (const cleanup of cleanups) {
             cleanup();

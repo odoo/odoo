@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { registry } from "@web/core/registry";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { url } from "@web/core/utils/urls";
@@ -30,12 +29,10 @@ export class KanbanRenderer extends Component {
         this.cards = cards;
         this.className = className;
         this.cardTemplate = useViewCompiler(KanbanCompiler, arch, fields, xmlDoc);
-        this.state = useState({ newColumn: "" });
-        this.quickCreateInfo = null; // Lazy loaded
+        this.state = useState({ newGroup: "" });
         this.action = useService("action");
         this.dialog = useService("dialog");
         this.notification = useService("notification");
-        this.views = useService("view");
         this.colors = RECORD_COLORS;
         useAutofocus();
         useExternalListener(window, "keydown", this.onWindowKeydown);
@@ -46,8 +43,8 @@ export class KanbanRenderer extends Component {
         useSortable({
             activate: () => this.recordsDraggable,
             listSelector: ".o_kanban_group",
-            itemSelector: ".o_kanban_record:not(.o_updating)",
-            // TODO recordsMovable = whether the records can be moved accross columns
+            itemSelector: ".o_record_draggable",
+            // TODO recordsMovable = whether the records can be moved accross groups
             // containment: this.props.info.recordsMovable ? false : "parent",
             cursor: "move",
             onListEnter(group) {
@@ -64,25 +61,29 @@ export class KanbanRenderer extends Component {
             onStop(group, item) {
                 item.classList.remove("o_currently_dragged", "ui-sortable-helper");
             },
-            onDrop: async ({ previous, parent }) => {
+            onDrop: async ({ item, previous, parent }) => {
+                item.classList.remove("o_record_draggable");
                 const groupEl = parent.closest(".o_kanban_group");
                 const refId = previous ? previous.dataset.id : null;
                 const groupId = groupEl.dataset.id;
                 await this.props.list.moveRecord(dataRecordId, dataGroupId, refId, groupId);
+                item.classList.add("o_record_draggable");
             },
         });
         useSortable({
-            activate: () => this.columnsDraggable,
+            activate: () => this.groupsDraggable,
             axis: "x",
-            itemSelector: ".o_kanban_group",
+            itemSelector: ".o_group_draggable",
             handle: ".o_column_title",
             cursor: "move",
             onStart(group, item) {
                 dataGroupId = item.dataset.id;
             },
-            onDrop: async ({ previous }) => {
+            onDrop: async ({ item, previous }) => {
+                item.classList.remove("o_group_draggable");
                 const refId = previous ? previous.dataset.id : null;
                 await this.props.list.resequence(dataGroupId, refId);
+                item.classList.add("o_group_draggable");
             },
         });
     }
@@ -96,40 +97,21 @@ export class KanbanRenderer extends Component {
         return this.props.list.isGrouped && this.props.info.recordsDraggable;
     }
 
-    get columnsDraggable() {
+    get groupsDraggable() {
         return this.props.list.isGrouped && this.props.list.groupByField.type === "many2one";
     }
 
-    createColumn() {
-        const columnName = this.state.newColumn.trim();
-        if (columnName.length) {
-            this.props.list.createGroup(columnName);
+    createGroup() {
+        const groupName = this.state.newGroup.trim();
+        if (groupName.length) {
+            this.props.list.createGroup(groupName);
         }
-        this.state.newColumn = "";
+        this.state.newGroup = "";
         this.state.quickCreateGroup = false;
     }
 
-    async _loadQuickCreateView() {
-        if (this.isLoadingQuickCreate) {
-            return;
-        }
-        this.isLoadingQuickCreate = true;
-        const { context, resModel } = this.props.list;
-        const { ArchParser } = registry.category("views").get("form");
-        const result = await this.views.loadViews({
-            context: { ...context, form_view_ref: this.props.info.quickCreateView },
-            resModel,
-            views: [[false, "form"]],
-        });
-        this.isLoadingQuickCreate = false;
-        return new ArchParser().parse(result.form.arch, this.props.fields);
-    }
-
-    async quickCreate(group) {
-        if (!this.quickCreateInfo) {
-            this.quickCreateInfo = await this._loadQuickCreateView();
-        }
-        await group.list.quickCreate(this.quickCreateInfo.fields);
+    quickCreate(group) {
+        this.props.createRecord(group);
     }
 
     cancelQuickCreate() {
@@ -141,7 +123,7 @@ export class KanbanRenderer extends Component {
     async validateQuickCreate(group, editAfterCreate) {
         const record = await group.list.validateQuickCreate();
         if (editAfterCreate) {
-            await this.openRecord(record);
+            await this.props.openRecord(record);
         }
     }
 
@@ -181,10 +163,6 @@ export class KanbanRenderer extends Component {
         });
     }
 
-    async openRecord(record) {
-        await this.props.openRecord(record);
-    }
-
     onGroupClick(group, ev) {
         if (!ev.target.closest(".dropdown") && group.isFolded) {
             group.toggle();
@@ -203,7 +181,7 @@ export class KanbanRenderer extends Component {
         switch (type) {
             case "edit":
             case "open": {
-                this.openRecord(record);
+                this.props.openRecord(record);
                 break;
             }
             case "delete": {
@@ -246,7 +224,7 @@ export class KanbanRenderer extends Component {
     }
 
     /**
-     * When the kanban records are grouped, the 'false' or 'undefined' column
+     * When the kanban records are grouped, the 'false' or 'undefined' group
      * must appear first.
      * @returns {any[]}
      */
@@ -292,6 +270,9 @@ export class KanbanRenderer extends Component {
 
     getGroupClasses(group) {
         const classes = [];
+        if (this.groupsDraggable) {
+            classes.push("o_group_draggable");
+        }
         if (!group.count) {
             classes.push("o_kanban_no_records");
         }
@@ -324,13 +305,18 @@ export class KanbanRenderer extends Component {
         return total - group.list.count;
     }
 
-    getRecordProgressColor(record, fieldName, group) {
-        if (!group || !record.data[fieldName]) {
-            return "";
+    getRecordClasses(record, group) {
+        const classes = ["o_kanban_record"];
+        const { fieldName } = this.props.list.model.progressAttributes || {};
+        if (group && record.data[fieldName]) {
+            const value = record.data[fieldName];
+            const { color } = group.progressValues.find((p) => p.value === value);
+            classes.push(`oe_kanban_card_${color}`);
         }
-        const value = record.data[fieldName];
-        const { color } = group.progressValues.find((p) => p.value === value);
-        return `oe_kanban_card_${color}`;
+        if (this.recordsDraggable) {
+            classes.push("o_record_draggable");
+        }
+        return classes.join(" ");
     }
 
     getGroupAggregate(group) {
@@ -353,25 +339,21 @@ export class KanbanRenderer extends Component {
         return { value: value || 0, currency, title };
     }
 
-    getColumnTitle(group) {
-        return Array.isArray(group.value) ? group.value[1] : group.value;
-    }
-
     loadMore(group) {
         group.list.loadMore();
     }
 
-    onAddColumnKeydown(ev) {
+    onAddGroupKeydown(ev) {
         if (ev.key === "Enter") {
-            this.createColumn();
+            this.createGroup();
         }
     }
 
-    onCardClicked(record, ev) {
+    onRecordClick(record, ev) {
         if (ev.target.closest(GLOBAL_CLICK_CANCEL_SELECTORS.join(","))) {
             return;
         }
-        this.openRecord(record);
+        this.props.openRecord(record);
     }
 
     onWindowKeydown(ev) {
@@ -391,7 +373,7 @@ export class KanbanRenderer extends Component {
         if (!ev.target.closest(".o_column_quick_create")) {
             this.state.quickCreateGroup = false;
         }
-        if (!ev.target.closest(".o_kanban_quick_create,.o_kanban_quick_add")) {
+        if (!ev.target.closest(".o_kanban_quick_create")) {
             this.cancelQuickCreate();
         }
     }

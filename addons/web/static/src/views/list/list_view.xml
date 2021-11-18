@@ -10,22 +10,23 @@
         </Layout>
     </t>
 
-  <t t-name="web.ListView.Buttons" owl="1">
-    <div class="o_list_buttons d-flex" role="toolbar" aria-label="Main actions">
-        <button type="button" class="btn btn-primary o_list_button_save" data-tooltip="Save record" aria-label="Save record" accesskey="s">
-            Save
-        </button>
-        <button type="button" class="btn btn-secondary o_list_button_discard" data-tooltip="Discard record" aria-label="Discard record" accesskey="j">
-            Discard
-        </button>
-        <t t-if="activeActions['create']">
-            <button type="button" class="btn btn-primary o_list_button_add" data-tooltip="Create record" aria-label="Create record" accesskey="c" t-on-click="onClickCreate">
-                Create
+    <t t-name="web.ListView.Buttons" owl="1">
+        <div class="o_list_buttons d-flex" role="toolbar" aria-label="Main actions">
+            <button type="button" class="btn btn-primary o_list_button_save" data-tooltip="Save record" aria-label="Save record" accesskey="s">
+                Save
             </button>
-        </t>
-        <t t-if="activeActions['exportXlsx'] and isExportEnable">
-            <button type="button" class="btn btn-secondary fa fa-download o_list_export_xlsx" data-tooltip="Export All" aria-label="Export All"/>
-        </t>
-    </div>
-  </t>
+            <button type="button" class="btn btn-secondary o_list_button_discard" data-tooltip="Discard record" aria-label="Discard record" accesskey="j">
+                Discard
+            </button>
+            <t t-if="activeActions['create']">
+                <button type="button" class="btn btn-primary o_list_button_add" data-tooltip="Create record" aria-label="Create record" accesskey="c" t-on-click="onClickCreate">
+                    Create
+                </button>
+            </t>
+            <t t-if="activeActions['exportXlsx'] and isExportEnable">
+                <button type="button" class="btn btn-secondary fa fa-download o_list_export_xlsx" data-tooltip="Export All" aria-label="Export All"/>
+            </t>
+        </div>
+    </t>
+
 </templates>

@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.Many2OneField" owl="1">
-        <t t-if="props.mode === 'edit'">
+        <t t-if="props.readonly">
             <span class="o-field">
                 <t t-esc="data" />
             </span>
