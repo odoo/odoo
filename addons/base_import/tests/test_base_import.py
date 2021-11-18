@@ -826,22 +826,54 @@ class TestBatching(TransactionCase):
         preview = import_wizard.parse_preview({**opts, 'limit': 15})
         self.assertIs(preview['batch'], True)
 
-        results = import_wizard.execute_import(
-            ['name', 'value/value'], [],
-            {**opts, 'limit': 5}
-        )
-        self.assertFalse(results['messages'])
-        self.assertEqual(len(results['ids']), 1, "should have imported the first record in full, got %s" % results['ids'])
-        self.assertEqual(results['nextrow'], 10)
+        batches_results = []
+        model = type(self.env['base_import.tests.models.o2m'])
+        _load = model.load
 
-        results = import_wizard.execute_import(
-            ['name', 'value/value'], [],
-            {**opts, 'limit': 15}
-        )
-        self.assertFalse(results['messages'])
-        self.assertEqual(len(results['ids']), 2, "should have importe the first two records, got %s" % results['ids'])
-        self.assertEqual(results['nextrow'], 20)
+        def patched_load(model, fields, data):
+            """Patched load method, store all results in "batches_results"."""
+            results = _load(model, fields, data)
+            batches_results.append(results)
+            return results
 
+        with unittest.mock.patch.object(model, 'load', patched_load):
+            import_wizard.execute_import(
+                ['name', 'value/value'],
+                [],
+                {**opts, 'limit': 5},
+            )
+
+        self.assertEqual(len(batches_results), 10, msg='Should have done 10 batches')
+
+        all_ids = []
+        for results in batches_results:
+            self.assertFalse(results['messages'])
+            self.assertEqual(len(results['ids']), 1, f'should have imported the first record in full, got {results["ids"]}')
+            self.assertEqual(results['nextrow'], 10)
+            all_ids.extend(results['ids'])
+
+        self.assertEqual(len(all_ids), 10, msg='Should have imported 10 records')
+        self.assertEqual(sorted(set(all_ids)), all_ids, msg='Should have imported the records in the right order')
+
+        batches_results = []
+        with unittest.mock.patch.object(model, 'load', patched_load):
+            import_wizard.execute_import(
+                ['name', 'value/value'],
+                [],
+                {**opts, 'limit': 15},
+            )
+
+        self.assertEqual(len(batches_results), 5, msg='Should have done 5 batches')
+
+        all_ids = []
+        for results in batches_results:
+            self.assertFalse(results['messages'])
+            self.assertEqual(len(results['ids']), 2, f'should have imported the first two records, got {results["ids"]}')
+            self.assertEqual(results['nextrow'], 20)
+            all_ids.extend(results['ids'])
+
+        self.assertEqual(len(all_ids), 10, msg='Should have imported 10 records')
+        self.assertEqual(sorted(set(all_ids)), all_ids, msg='Should have imported the records in the right order')
 
     def test_batches(self):
         partners_before = self.env['res.partner'].search([])
@@ -865,26 +897,9 @@ g,g@example.com
 
         results = import_wizard.execute_import(['name', 'email'], [], {**opts, 'limit': 1})
         self.assertFalse(results['messages'])
-        self.assertEqual(len(results['ids']), 1)
-        # titlerow is ignored by lastrow's counter
-        self.assertEqual(results['nextrow'], 1)
-        partners_1 = self.env['res.partner'].search([]) - partners_before
-        self.assertEqual(partners_1.name, 'a')
-
-        results = import_wizard.execute_import(['name', 'email'], [], {**opts, 'limit': 2, 'skip': 1})
-        self.assertFalse(results['messages'])
-        self.assertEqual(len(results['ids']), 2)
-        # empty row should also be ignored
-        self.assertEqual(results['nextrow'], 3)
-        partners_2 = self.env['res.partner'].search([]) - (partners_before | partners_1)
-        self.assertEqual(partners_2.mapped('name'), ['b', 'c'])
-
-        results = import_wizard.execute_import(['name', 'email'], [], {**opts, 'limit': 10, 'skip': 3})
-        self.assertFalse(results['messages'])
-        self.assertEqual(len(results['ids']), 4)
-        self.assertEqual(results['nextrow'], 0)
-        partners_3 = self.env['res.partner'].search([]) - (partners_before | partners_1 | partners_2)
-        self.assertEqual(partners_3.mapped('name'), ['d', 'e', 'f', 'g'])
+        self.assertEqual(len(results['ids']), 7)
+        partners = self.env['res.partner'].search([]) - partners_before
+        self.assertEqual(partners.mapped('name'), ['a', 'b', 'c', 'd', 'e', 'f', 'g'])
 
 
 class test_failures(TransactionCase):

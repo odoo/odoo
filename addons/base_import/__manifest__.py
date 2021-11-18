@@ -21,7 +21,7 @@ Re-implement Odoo's file import system:
 * In a module, so that administrators and users of Odoo who do not
   need or want an online import can avoid it being available to users.
 """,
-    'depends': ['web'],
+    'depends': ['web', 'bus'],
     'version': '2.0',
     'category': 'Hidden/Tools',
     'installable': True,

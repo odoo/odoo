@@ -147,6 +147,8 @@ var DataImport = AbstractAction.extend({
         this.do_not_change_match = false;
         this.sheets = [];
         this.selectionFields = {};  // Used to compute fallback values in backend.
+
+        this.call('bus_service', 'onNotification', this, this._onNotification);
     },
     /**
      * @override
@@ -679,47 +681,25 @@ var DataImport = AbstractAction.extend({
     },
 
     /**
-     * Called at the start of every batch to update the progress bar display.
-     * It also computes an estimated time left based on: starting time of the whole process,
-     * percentage done so far and remaining records.
-     */
-    _onBatchStart: function () {
-        var recordsDone = this.batchSize * (this.currentBatchNumber - 1);
-        var percentage = parseInt(recordsDone / this.totalToImport * 100);
-        $('.o_import_progress_dialog')
-            .find('.progress-bar')
-            .text(percentage + "%")
-            .attr('aria-valuenow', percentage)
-            .css('width', percentage + '%');
-        $('.o_import_progress_dialog')
-            .find('.o_import_progress_dialog_batch_count')
-            .text(this.currentBatchNumber);
-        if (percentage !== 0) {
-            // e.g: it took 1 seconds (1000 millis) to import 33%
-            // -> there is (1000) * ((100 - 33) / 33) / 60000 minutes left
-            // -> 1000 * (66 / 33) / 60000 -> 2000 / 60000 -> 0.03 minute left (2 seconds) left
-            var estimatedTimeLeftMinutes = ((Date.now() - this.importStartTime) * ((100 - percentage) / percentage)) / 60000;
-            $('.o_import_progress_dialog_time_left').removeClass('d-none');
-            $('.o_import_progress_dialog_time_left_text')
-                .text(fieldUtils.format.float_time(estimatedTimeLeftMinutes));
-        }
-    },
-
-    /**
      * Called when the user manually interrupts the import during a batched import.
      * Sets 'stopImport' to true, which will stop the process when the current batch is done.
      *
      * @private
      * @param {MouseEvent} event
      */
-    _onStopImport: function (event) {
+    _onStopImport: async function (event) {
         var $currentTarget = $(event.currentTarget);
         $currentTarget.enable(false);
         $currentTarget
             .closest('.o_import_progress_dialog')
             .find('.o_import_progress_dialog_stop, .o_import_progress_dialog_batch')
             .toggleClass('d-none');
-        this.stopImport = true;
+
+        await this._rpc({
+            model: 'base_import.import',
+            method: 'write',
+            args: [this.batchImportId, {stop: true}],
+        });
     },
 
    /**
@@ -879,12 +859,10 @@ var DataImport = AbstractAction.extend({
         );
 
         this.importStartTime = Date.now();
-        this.stopImport = false;
         this.totalToImport = this.fileLength - parseInt(this.$('#oe_import_row_start').val());
         this.batchSize = parseInt(this.$('#oe_import_batch_limit').val() || 0);
         var isBatch = this.batchSize !== 0 && this.totalToImport > this.batchSize;
         var totalSteps = isBatch ? Math.floor(this.totalToImport / this.batchSize) + 1 : 1;
-        this.currentBatchNumber = 1;
 
         $.blockUI({
             message: QWeb.render(
@@ -937,80 +915,61 @@ var DataImport = AbstractAction.extend({
                 $(document.body).removeClass('o_ui_blocked');
                 $.unblockUI();
             });
-    }, /**
+    },
+
+    /**
+     * Update the UI to show the progression of the import. Display the estimated time
+     * left, the batch we currently import, the percentage,...
+     */
+    _setProgression() {
+        const recordsDone = this.batchSize * (this.currentBatchNumber - 1);
+        const percentage = parseInt(recordsDone / this.totalToImport * 100);
+        $('.o_import_progress_dialog')
+            .find('.progress-bar')
+            .text(percentage + '%')
+            .attr('aria-valuenow', percentage)
+            .css('width', percentage + '%');
+        $('.o_import_progress_dialog')
+            .find('.o_import_progress_dialog_batch_count')
+            .text(this.currentBatchNumber);
+
+        if (percentage !== 0) {
+            // e.g. it took 1 second to import 33%, there's
+            // (1 second / 0.33) * 0.66 = 2 seconds left
+            const elapsedTimeMinutes = (Date.now() - this.importStartTime) / 60000;
+            const estimatedTimeLeftMinutes = elapsedTimeMinutes * (100 - percentage) / percentage;
+            $('.o_import_progress_dialog_time_left').removeClass('d-none');
+            $('.o_import_progress_dialog_time_left_text')
+                .text(fieldUtils.format.float_time(estimatedTimeLeftMinutes));
+        }
+    },
+
+    /**
      *
      * @param opts import options
      * @param args positional arguments to pass along (augmented with the options)
      * @param kwargs keyword arguments to pass along (directly)
-     * @param {Object} rec recursion information record
-     * @param {Number} rec.done how many records have been loaded so far
-     * @param {Number} rec.prev nextrow of the previous call so we can know
-     *                          how many rows the call we're here performing
-     *                          will have consumed, and thus by how much we
-     *                          need to offset the messages of the *next* call
      * @returns {Promise<{name, ids, messages}>}
      * @private
      */
-    _batchedImport: function (opts, args, kwargs, rec) {
-        var self = this;
-        opts.callback && opts.callback(this);
-        this._onBatchStart();
-        this.currentBatchNumber += 1;
-
-        if (this.stopImport) {
-            $(document.body).removeClass('o_ui_blocked');
-            $.unblockUI();
-            return Promise.resolve({});
+    _batchedImport: async function (opts, args, kwargs) {
+        if (opts.callback) {
+            opts.callback(this);
         }
 
-        return this._rpc({
+        const results = await this._rpc({
             model: 'base_import.import',
             method: 'execute_import',
             args: args.concat([opts]),
             kwargs: kwargs
         }, {
             shadow: true,
-        }).then(function (results) {
-            _.each(results.messages, offset_by(opts.skip));
-            if (!kwargs.dryrun && !results.ids) {
-                // update skip to failed batch
-                self.$('#oe_import_row_start').val(opts.skip + 1);
-                if (opts.skip) {
-                    // there's been an error during a "proper" import, stop & warn
-                    // about partial import maybe
-                    results.messages.push({
-                        type: 'info',
-                        priority: true,
-                        message: _.str.sprintf(_t("This file has been successfully imported up to line %d."), opts.skip)
-                    });
-                }
-                return results;
-            }
-            if (!results.nextrow) {
-                // we're done
-                return results;
-            }
-
-            // do the next batch
-            return self._batchedImport(
-                // avoid modifying opts in-place
-                _.defaults({skip: results.nextrow}, opts),
-                args, kwargs, {
-                    done: rec.done + (results.ids || []).length,
-                    prev: results.nextrow
-                }
-            ).then(function (r2) {
-                return {
-                    name: _.zip(results.name, r2.name).map(function (names) {
-                        return names[0] || names[1];
-                    }),
-                    ids: (results.ids || []).concat(r2.ids || []),
-                    messages: r2.messages ? results.messages.concat(r2.messages) : results.messages,
-                    skip: r2.skip || results.nextrow,
-                    nextrow: r2.nextrow
-                }
-            });
         });
+
+        $(document.body).removeClass('o_ui_blocked');
+        $.unblockUI();
+
+        return results;
     },
     onvalidate: function () {
         var prom = this.call_import({ dryrun: true, tracking_disable: true });
@@ -1021,7 +980,7 @@ var DataImport = AbstractAction.extend({
         var self = this;
         var prom = this.call_import({ dryrun: false });
         prom.then(function (results) {
-            if (self.stopImport) {
+            if (results.partial_import) {
                 var recordsImported = results.ids ? results.ids.length : 0;
                 if (recordsImported) {
                     self.$('#oe_import_row_start').val((results.skip || 0) + 1);
@@ -1041,6 +1000,9 @@ var DataImport = AbstractAction.extend({
         return prom;
     },
     onimported: function (event, from, to, results) {
+        this.toggle_partial(null);
+        this.onresults(null, null, null, results);
+
         this.displayNotification({ message: _.str.sprintf(
             _t("%d records successfully imported"),
             results.ids.length
@@ -1138,6 +1100,20 @@ var DataImport = AbstractAction.extend({
                 $errorCell.find(".oe_import_options_div").removeClass('d-none');
             }
         });
+    },
+
+    /**
+     * Receive a bus notification about the current import
+     */
+    _onNotification: function (notifications) {
+        for (let notification of notifications) {
+            if (notification.type === 'base-import/start') {
+                this.batchImportId = notification.payload.id;
+            } else if (notification.type === 'base-import/progress') {
+                this.currentBatchNumber = notification.payload.batch;
+                this._setProgression();
+            }
+        }
     },
 
     /**
@@ -1239,7 +1215,7 @@ var DataImport = AbstractAction.extend({
         var $form = this.$('.oe_import');
         var $partial_warning = this.$('.o_import_partial_alert');
         var $partial_count = this.$('.o_import_partial_count');
-        if (result == null) {
+        if (!result || !result.partial_import) {
             $partial_warning.addClass('d-none');
             $form.add(this.$buttons).removeClass('o_import_partial_mode');
             var $skip = this.$('#oe_import_row_start');
@@ -1277,15 +1253,6 @@ StateMachine.create({
         { name: 'import_failed', from: 'importing', to: 'results' }
     ],
 });
-
-function offset_by(by) {
-    return function offset_message(msg) {
-        if (msg.rows) {
-            msg.rows.from += by;
-            msg.rows.to += by;
-        }
-    }
-}
 
 return {
     DataImport: DataImport,

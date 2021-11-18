@@ -18,6 +18,7 @@ import operator
 import os
 import re
 import requests
+import threading
 
 from PIL import Image
 
@@ -196,6 +197,7 @@ class Import(models.TransientModel):
     file = fields.Binary('File', help="File to check and/or import, raw binary (not base64)", attachment=False)
     file_name = fields.Char('File Name')
     file_type = fields.Char('File Type')
+    stop = fields.Boolean('Stop the import')
 
     @api.model
     def get_fields_tree(self, model, depth=FIELDS_RECURSION_LIMIT):
@@ -1288,7 +1290,19 @@ class Import(models.TransientModel):
         :rtype: dict(ids: list(int), messages: list({type, message, record}))
         """
         self.ensure_one()
-        self._cr.execute('SAVEPOINT import')
+        self.stop = False
+
+        thread = threading.currentThread()
+        auto_commit = not getattr(thread, 'testing', False)
+
+        # Odoo has a parameter "limit-time-real" to set the maximum thread life time
+        # when this period of time is reached, the thread is killed. As this method might
+        # take a long time, we need to bypass this limit (see server.py@process_limit).
+        setattr(thread, 'ignore_limit_time', True)
+
+        self.env['bus.bus']._sendone(self.env.user.partner_id, 'base-import/start', {'id': self.id})
+        if auto_commit:
+            self.env.cr.commit()
 
         try:
             input_file_data, import_fields = self._convert_import_data(fields, options)
@@ -1296,8 +1310,6 @@ class Import(models.TransientModel):
             input_file_data = self._parse_import_data(input_file_data, import_fields, options)
         except ImportValidationError as error:
             return {'messages': [error.__dict__]}
-
-        _logger.info('importing %d rows...', len(input_file_data))
 
         import_fields, merged_data = self._handle_multi_mapping(import_fields, input_file_data)
 
@@ -1312,29 +1324,79 @@ class Import(models.TransientModel):
             import_set_empty_fields=options.get('import_set_empty_fields', []),
             import_skip_records=options.get('import_skip_records', []),
             _import_limit=import_limit)
-        import_result = model.load(import_fields, merged_data)
-        _logger.info('done')
 
-        # If transaction aborted, RELEASE SAVEPOINT is going to raise
-        # an InternalError (ROLLBACK should work, maybe). Ignore that.
-        # TODO: to handle multiple errors, create savepoint around
-        #       write and release it in case of write error (after
-        #       adding error to errors array) => can keep on trying to
-        #       import stuff, and rollback at the end if there is any
-        #       error in the results.
-        try:
+        self.env['bus.bus']._sendone(self.env.user.partner_id, 'base-import/progress', {'batch': 1})
+        if auto_commit:
+            self.env.cr.commit()
+
+        skip = options.get('skip', 0)
+        final_result = {'ids': [], 'messages': [], 'skip': skip}
+
+        nextrow = 0
+        batch_number = 1
+
+        while True:
             if dryrun:
-                self._cr.execute('ROLLBACK TO SAVEPOINT import')
-                # cancel all changes done to the registry/ormcache
-                self.pool.clear_caches()
-                self.pool.reset_changes()
-            else:
-                self._cr.execute('RELEASE SAVEPOINT import')
-        except psycopg2.InternalError:
-            pass
+                self._cr.execute('SAVEPOINT import')
+
+            _logger.info('Import batch #%i, from %i to %i', batch_number, nextrow, len(merged_data))
+            import_result = model.load(import_fields, merged_data[nextrow:])
+
+            if dryrun:
+                # Can not rollback at the end of the method, because we need to commit
+                # to send the bus notification
+                try:
+                    self._cr.execute('ROLLBACK TO SAVEPOINT import')
+                    # cancel all changes done to the registry/ormcache
+                    self.pool.clear_caches()
+                    self.pool.reset_changes()
+                except psycopg2.InternalError:
+                    pass
+
+            for message in import_result['messages']:
+                if message.get('rows'):
+                    message['rows']['from'] += nextrow + skip
+                    message['rows']['to'] += nextrow + skip
+
+            final_result['ids'].extend(import_result['ids'] or [])
+            final_result['messages'].extend(import_result['messages'] or [])
+
+            if any(m['type'] == 'error' for m in import_result['messages']):
+                # An error occurred
+                _logger.error('An error occurred during the import')
+                if not dryrun:
+                    final_result['messages'].append({
+                        'type': 'info',
+                        'priority': True,
+                        'message': _('This file has been successfully imported up to line %i.', nextrow + skip + 1),
+                    })
+                    final_result['partial_import'] = True
+                break
+
+            nextrow += import_result['nextrow']
+            batch_number += 1
+            final_result['skip'] = nextrow + skip
+
+            self.env['bus.bus']._sendone(
+                self.env.user.partner_id,
+                'base-import/progress',
+                {'batch': batch_number},
+            )
+
+            if auto_commit:
+                self.env.cr.commit()
+                # invalidate the cache to avoid memory error on very large file
+                model.invalidate_cache()
+                self.invalidate_cache(['stop'])
+
+            if self.stop:
+                final_result['partial_import'] = True
+
+            if self.stop or nextrow >= len(merged_data) or not import_result['nextrow']:
+                break
 
         # Insert/Update mapping columns when import complete successfully
-        if import_result['ids'] and options.get('has_headers'):
+        if final_result['ids'] and options.get('has_headers'):
             BaseImportMapping = self.env['base_import.mapping']
             for index, column_name in enumerate(columns):
                 if column_name:
@@ -1348,26 +1410,21 @@ class Import(models.TransientModel):
                         BaseImportMapping.create({
                             'res_model': self.res_model,
                             'column_name': column_name,
-                            'field_name': fields[index]
+                            'field_name': fields[index],
                         })
+
+        # Return the name of each lines in the file
+        # this is useful to show an appropriate error message
         if 'name' in import_fields:
             index_of_name = import_fields.index('name')
             skipped = options.get('skip', 0)
-            # pad front as data doesn't contain anythig for skipped lines
-            r = import_result['name'] = [''] * skipped
-            # only add names for the window being imported
-            r.extend(x[index_of_name] for x in input_file_data[:import_limit])
-            # pad back (though that's probably not useful)
-            r.extend([''] * (len(input_file_data) - (import_limit or 0)))
+            # pad front as data doesn't contain anything for skipped lines
+            final_result['name'] = [''] * skipped
+            final_result['name'].extend(x[index_of_name] for x in input_file_data)
         else:
-            import_result['name'] = []
+            final_result['name'] = []
 
-        skip = options.get('skip', 0)
-        # convert load's internal nextrow to the imported file's
-        if import_result['nextrow']: # don't update if nextrow = 0 (= no nextrow)
-            import_result['nextrow'] += skip
-
-        return import_result
+        return final_result
 
     def _handle_multi_mapping(self, import_fields, input_file_data):
         """ This method handles multiple mapping on the same field.

@@ -388,6 +388,8 @@ class ThreadedServer(CommonServer):
             self.limits_reached_threads.add(threading.currentThread())
 
         for thread in threading.enumerate():
+            if getattr(thread, 'ignore_limit_time', None):
+                continue
             if not thread.daemon or getattr(thread, 'type', None) == 'cron':
                 # We apply the limits on cron threads and HTTP requests,
                 # longpolling requests excluded.
