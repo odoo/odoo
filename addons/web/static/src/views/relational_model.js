@@ -5,6 +5,9 @@ import { ORM } from "@web/core/orm_service";
 import { Deferred, KeepLast } from "@web/core/utils/concurrency";
 import { Model } from "@web/views/helpers/model";
 import { isX2Many } from "@web/views/helpers/view_utils";
+import { registry } from "../core/registry";
+
+const specialDataRegistry = registry.category("specialData");
 
 class RequestBatcherORM extends ORM {
     constructor() {
@@ -108,6 +111,7 @@ export class Record extends DataPoint {
         this._values = params.values || {};
         this._changes = {};
         this.data = { ...this._values };
+        this.specialData = {};
     }
 
     get evalContext() {
@@ -138,6 +142,24 @@ export class Record extends DataPoint {
 
         // Relational data
         await this.loadRelationalData();
+        await this.loadSpecialData();
+    }
+
+    loadSpecialData() {
+        const fetchSpecialData = async (fetchFn, fieldName) => {
+            this.specialData[fieldName] = await fetchFn(this, fieldName);
+        };
+
+        const proms = [];
+        for (const fieldName in this.activeFields) {
+            const activeField = this.activeFields[fieldName];
+            // @FIXME type should not be get like this
+            const type = activeField.widget || this.fields[fieldName].type;
+            if (!activeField.invisible && specialDataRegistry.contains(type)) {
+                proms.push(fetchSpecialData(specialDataRegistry.get(type), fieldName));
+            }
+        }
+        return Promise.all(proms);
     }
 
     async loadRelationalData() {
@@ -362,6 +384,7 @@ export class DynamicRecordList extends DynamicList {
                     activeFields: this.activeFields,
                 });
                 await record.loadRelationalData();
+                await record.loadSpecialData();
                 return record;
             })
         );
