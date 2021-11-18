@@ -29,6 +29,11 @@ export class Field extends Component {
         const activeField = record.activeFields[this.props.name];
         const readonyFromModifiers = activeField.readonly;
         const readonlyFromViewMode = this.props.readonly;
+        let value = this.props.record.data[this.props.name];
+        if (value === undefined) {
+            // FIXME: this is certainly wrong, should we set the default in the datapoint?
+            value = field.default !== undefined ? field.default : null;
+        }
         return {
             attrs: activeField.attrs || {},
             options: activeField.options || {},
@@ -40,7 +45,7 @@ export class Field extends Component {
                     return record.save();
                 }
             },
-            value: this.props.record.data[this.props.name] || null,
+            value,
             ...this.props,
             type: field.type,
             readonly: readonlyFromViewMode || readonyFromModifiers || false,
