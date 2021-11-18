@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.NotificationList" owl="1">
-        <div class="o_NotificationList" t-att-class="{ 'o-empty': notifications.length === 0 }" t-ref="root">
+        <div class="o_NotificationList" t-att-class="{ 'o-empty': notifications.length === 0 }" t-attf-class="{{ className }}" t-ref="root">
             <t t-if="notifications.length === 0">
                 <div class="o_NotificationList_noConversation">
                     No conversation yet...
@@ -12,27 +12,27 @@
                 <t t-foreach="notifications" t-as="notification" t-key="notification.uniqueId">
                     <t t-if="notification.type === 'thread' and notification.thread">
                         <ThreadPreview
-                            class="o_NotificationList_preview"
-                            t-att-class="{ 'o-mobile': messaging.device.isMobile }"
+                            className="'o_NotificationList_preview'"
+                            classNameObj="{ 'o-mobile': messaging.device.isMobile }"
                             threadLocalId="notification.thread.localId"
                         />
                     </t>
                     <t t-if="notification.type === 'thread_needaction' and notification.thread">
                         <ThreadNeedactionPreview
-                            class="o_NotificationList_preview"
-                            t-att-class="{ 'o-mobile': messaging.device.isMobile }"
+                            className="'o_NotificationList_preview'"
+                            classNameObj="{ 'o-mobile': messaging.device.isMobile }"
                             threadLocalId="notification.thread.localId"
                         />
                     </t>
                     <t t-if="notification.notificationGroup">
                         <NotificationGroup
-                            class="o_NotificationList_group"
+                            className="'o_NotificationList_group'"
                             notificationGroupLocalId="notification.notificationGroup.localId"
                         />
                     </t>
                     <t t-if="notification.type === 'odoobotRequest'">
                         <NotificationRequest
-                            class="o_NotificationList_notificationRequest"
+                            className="'o_NotificationList_notificationRequest'"
                             t-att-class="{ 'o-mobile': messaging.device.isMobile }"
                         />
                     </t>

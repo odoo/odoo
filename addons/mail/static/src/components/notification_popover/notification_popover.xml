@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.NotificationPopover" owl="1">
-        <div class="o_NotificationPopover" t-ref="root">
+        <div class="o_NotificationPopover" t-attf-class="{{ className }}" t-ref="root">
             <t t-foreach="notifications" t-as="notification" t-key="notification.localId">
                 <div class="o_NotificationPopover_notification">
                     <i class="o_NotificationPopover_notificationIcon" t-att-class="iconClass" t-att-title="iconTitle" role="img"/>

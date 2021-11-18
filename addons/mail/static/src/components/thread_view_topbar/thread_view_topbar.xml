@@ -2,10 +2,10 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ThreadViewTopbar" owl="1">
-        <div class="o_ThreadViewTopbar d-flex flex-shrink-0 w-100 px-3" t-ref="root">
+        <div class="o_ThreadViewTopbar d-flex flex-shrink-0 w-100 px-3" t-attf-class="{{ className }}" t-ref="root">
             <t t-if="threadViewTopbar">
                 <t t-if="threadViewTopbar.thread">
-                    <ThreadIcon class="o_ThreadViewTopbar_threadIcon mr-2 align-self-center" threadLocalId="threadViewTopbar.thread.localId"/>
+                    <ThreadIcon className="'o_ThreadViewTopbar_threadIcon mr-2 align-self-center'" threadLocalId="threadViewTopbar.thread.localId"/>
                 </t>
                 <div class="o_ThreadViewTopbar_title d-flex flex-grow-1 align-self-center align-items-center">
                     <t t-if="threadViewTopbar.thread">
@@ -62,7 +62,7 @@
                             <i class="fa fa-lg fa-user-plus"/>
                         </button>
                         <t t-if="threadViewTopbar.invitePopoverView">
-                            <PopoverView class="o_ThreadViewTopbar_invitePopoverView" popoverViewLocalId="threadViewTopbar.invitePopoverView.localId"/>
+                            <PopoverView className="'o_ThreadViewTopbar_invitePopoverView'" popoverViewLocalId="threadViewTopbar.invitePopoverView.localId"/>
                         </t>
                     </t>
                     <!-- FIXME: guests should be able to see members but there currently is no route for it, so hide it for now -->

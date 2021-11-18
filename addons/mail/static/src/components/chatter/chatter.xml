@@ -2,17 +2,17 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.Chatter" owl="1">
-        <div class="o_Chatter" t-ref="root">
+        <div class="o_Chatter" t-attf-class="{{ className }}" t-ref="root">
             <t t-if="chatter">
                 <div class="o_Chatter_fixedPanel">
                     <ChatterTopbar
-                        class="o_Chatter_topbar"
+                        className="'o_Chatter_topbar'"
                         chatterLocalId="chatter.localId"
                     />
                     <t t-if="chatter.composerView">
                         <Composer
-                            class="o_Chatter_composer"
-                            t-att-class="{ 'o-bordered': chatter.hasExternalBorder }"
+                            className="'o_Chatter_composer'"
+                            classNameObj="{ 'o-bordered': chatter.hasExternalBorder }"
                             composerViewLocalId="chatter.composerView.localId"
                             hasFollowers="true"
                             hasMentionSuggestionsBelowPosition="true"
@@ -25,19 +25,19 @@
                 <div class="o_Chatter_scrollPanel" t-on-scroll="chatter.onScrollScrollPanel" t-ref="scrollPanel">
                     <t t-if="chatter.attachmentBoxView">
                         <AttachmentBox
-                            class="o_Chatter_attachmentBox"
+                            className="'o_Chatter_attachmentBox'"
                             attachmentBoxViewLocalId="chatter.attachmentBoxView.localId"
                         />
                     </t>
                     <t t-if="chatter.activityBoxView">
                         <ActivityBox
-                            class="o_Chatter_activityBox"
+                            className="'o_Chatter_activityBox'"
                             activityBoxViewLocalId="chatter.activityBoxView.localId"
                         />
                     </t>
                     <t t-if="chatter.threadView">
                         <ThreadView
-                            class="o_Chatter_thread"
+                            className="'o_Chatter_thread'"
                             getScrollableElement="getScrollableElement"
                             hasScrollAdjust="chatter.hasMessageListScrollAdjust"
                             threadViewLocalId="chatter.threadView.localId"

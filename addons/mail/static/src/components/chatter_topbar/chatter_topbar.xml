@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ChatterTopbar" owl="1">
-        <div class="o_ChatterTopbar" t-ref="root">
+        <div class="o_ChatterTopbar" t-attf-class="{{ className }}" t-ref="root">
             <t t-if="chatter">
                 <div class="o_ChatterTopbar_actions" t-att-class="{'o-has-active-button': chatter.composerView }">
                     <t t-if="chatter.threadView">
@@ -53,13 +53,13 @@
                             <t t-if="chatter.hasFollowers and chatter.thread">
                                 <t t-if="chatter.thread.channel_type !== 'chat'">
                                     <FollowButton
-                                        class="o_ChatterTopbar_button o_ChatterTopbar_followButton"
+                                        className="'o_ChatterTopbar_button o_ChatterTopbar_followButton'"
                                         isDisabled="chatter.isDisabled"
                                         threadLocalId="chatter.thread.localId"
                                     />
                                 </t>
                                 <FollowerListMenu
-                                    class="o_ChatterTopbar_button o_ChatterTopbar_followerListMenu"
+                                    className="'o_ChatterTopbar_button o_ChatterTopbar_followerListMenu'"
                                     isDisabled="chatter.isDisabled"
                                     threadLocalId="chatter.thread.localId"
                                 />

@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.AttachmentBox" owl="1">
-        <div class="o_AttachmentBox" t-ref="root">
+        <div class="o_AttachmentBox" t-attf-class="{{ className }}" t-ref="root">
             <t t-if="attachmentBoxView">
                 <div class="o_AttachmentBox_title">
                     <hr class="o_AttachmentBox_dashedLine"/>
@@ -14,14 +14,14 @@
                 <div class="o_AttachmentBox_content">
                     <t t-if="isDropZoneVisible.value">
                         <DropZone
-                            class="o_AttachmentBox_dropZone"
+                            className="'o_AttachmentBox_dropZone'"
                             t-on-o-dropzone-files-dropped="_onDropZoneFilesDropped"
                             t-ref="dropzone"
                         />
                     </t>
                     <t t-if="attachmentBoxView.chatter.attachmentList">
                         <AttachmentList
-                            class="o_attachmentBox_attachmentList"
+                            className="'o_attachmentBox_attachmentList'"
                             attachmentListLocalId="attachmentBoxView.chatter.attachmentList.localId"
                             t-on-o-attachment-removed="attachmentBoxView.onAttachmentRemoved"
                         />

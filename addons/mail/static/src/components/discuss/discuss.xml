@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.Discuss" owl="1">
-        <div class="o_Discuss"
+        <div class="o_Discuss" t-attf-class="{{ className }}"
             t-att-class="{
                 'o-adding-item': discuss ? discuss.isAddingChannel or discuss.isAddingChat : false,
                 'o-mobile': messaging ? messaging.device.isMobile : false,
@@ -14,7 +14,7 @@
             </t>
             <t t-else="">
                 <t t-if="!messaging.device.isMobile">
-                    <DiscussSidebar class="o_Discuss_sidebar bg-light border-right" localId="discuss.localId"/>
+                    <DiscussSidebar className="'o_Discuss_sidebar bg-light border-right'" localId="discuss.localId"/>
                 </t>
                 <t t-if="messaging.device.isMobile" t-call="mail.Discuss.content"/>
                 <t t-else="">
@@ -28,12 +28,12 @@
 
     <t t-name="mail.Discuss.content" owl="1">
         <t t-if="messaging.device.isMobile and discuss.activeMobileNavbarTabId === 'mailbox'">
-            <DiscussMobileMailboxSelection class="o_Discuss_mobileMailboxSelection border-bottom"/>
+            <DiscussMobileMailboxSelection className="'o_Discuss_mobileMailboxSelection border-bottom'"/>
         </t>
         <t t-if="messaging.device.isMobile and (discuss.isAddingChannel or discuss.isAddingChat)">
             <div class="o_Discuss_mobileAddItemHeader border-bottom">
                 <AutocompleteInput
-                    class="o_Discuss_mobileAddItemHeaderInput"
+                    className="'o_Discuss_mobileAddItemHeaderInput'"
                     isFocusOnMount="true"
                     isHtml="discuss.isAddingChannel"
                     placeholder="discuss.isAddingChannel ? addChannelInputPlaceholder : addChatInputPlaceholder"
@@ -44,8 +44,9 @@
             </div>
         </t>
         <t t-if="discuss.threadView">
+            <t name="beforeThread"/>
             <ThreadView
-                class="o_Discuss_thread"
+                className="'o_Discuss_thread'"
                 t-att-class="{ 'o-mobile': messaging.device.isMobile }"
                 hasComposerCurrentPartnerAvatar="!messaging.device.isMobile"
                 hasComposerDiscardButton="discuss.thread === messaging.inbox"
@@ -71,13 +72,13 @@
                 </button>
             </t>
             <NotificationList
-                class="o_Discuss_notificationList"
+                className="'o_Discuss_notificationList'"
                 filter="discuss.activeMobileNavbarTabId"
             />
         </t>
         <t t-if="messaging.device.isMobile and !(discuss.threadView and discuss.threadView.replyingToMessageView)">
             <MobileMessagingNavbar
-                class="o_Discuss_mobileNavbar"
+                className="'o_Discuss_mobileNavbar'"
                 activeTabId="discuss.activeMobileNavbarTabId"
                 tabs="mobileNavbarTabs()"
                 t-on-o-select-mobile-messaging-navbar-tab="_onSelectMobileNavbarTab"

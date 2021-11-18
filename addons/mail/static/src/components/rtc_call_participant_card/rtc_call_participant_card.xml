@@ -8,6 +8,7 @@
                 'o-isTalking': callParticipantCard and !callParticipantCard.isMinimized and callParticipantCard.isTalking,
                 'o-isInvitation': callParticipantCard and callParticipantCard.isInvitation,
             }"
+            t-attf-class="{{ className }}"
             t-on-contextmenu="_onContextMenu"
             t-ref="root"
         >

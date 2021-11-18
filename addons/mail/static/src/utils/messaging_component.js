@@ -20,7 +20,7 @@ const componentRegistry = {};
  * @param {Object} [param1.propsCompareDepth] @see useShouldUpdateBasedOnProps
  */
 export function registerMessagingComponent(ComponentClass, { propsCompareDepth = {} } = {}) {
-    const { name, components } = ComponentClass;
+    const { defaultProps, components, name, props } = ComponentClass;
     if (componentRegistry[name]) {
         throw new Error(`There already is a registered component with the name "${name}"`);
     }
@@ -37,6 +37,20 @@ export function registerMessagingComponent(ComponentClass, { propsCompareDepth =
             useModels();
             useShouldUpdateBasedOnProps({ propsCompareDepth });
         }
+        get className() {
+            let res = '';
+            if (this.props.className) {
+                res += this.props.className;
+            }
+            if (this.props.classNameObj) {
+                for (const [key, val] of Object.entries(this.props.classNameObj)) {
+                    if (val) {
+                        res += ' ' + key;
+                    }
+                }
+            }
+            return res;
+        }
         get messaging() {
             return this.env.services.messaging.modelManager.messaging;
         }
@@ -51,6 +65,29 @@ export function registerMessagingComponent(ComponentClass, { propsCompareDepth =
     // Component.components. This means that trying to get a value from this object will first look
     // into the original Component's components, and fall back on the registry if not found.
     MessagingClass.components = Object.assign(Object.create(componentRegistry), components);
+    MessagingClass.defaultProps = {
+        ...defaultProps,
+    };
+    MessagingClass.props = {
+        /**
+         * String that contains class names, separated by whitespace, that are
+         * part of classnames on root node of this messaging component.
+         */
+        className: {
+            type: String,
+            optional: true,
+        },
+        /**
+         * Object that contains class names (separated by whitespace) as key
+         * and truthy/falsy value as value. All classnames that have truthy
+         * value are part of classnames on root node of this messaging component.
+         */
+        classNameObj: {
+            type: Object,
+            optional: true,
+        },
+        ...props,
+    };
     componentRegistry[name] = MessagingClass;
 }
 

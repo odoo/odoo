@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.Activity" owl="1">
-        <div class="o_Activity" t-on-click="_onClick" t-ref="root">
+        <div class="o_Activity" t-attf-class="{{ className }}" t-on-click="_onClick" t-ref="root">
             <t t-if="activity">
                 <div class="o_Activity_sidebar">
                     <div class="o_Activity_user">
@@ -105,7 +105,7 @@
                         <div class="o_Activity_mailTemplates">
                             <t t-foreach="activity.mailTemplates" t-as="mailTemplate" t-key="mailTemplate.localId">
                                 <MailTemplate
-                                    class="o_Activity_mailTemplate"
+                                    className="'o_Activity_mailTemplate'"
                                     activityLocalId="activity.localId"
                                     mailTemplateLocalId="mailTemplate.localId"
                                 />

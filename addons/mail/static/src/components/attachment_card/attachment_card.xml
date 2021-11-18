@@ -4,6 +4,7 @@
         <div t-ref="root">
             <t t-if="attachmentCard">
                 <div class="o_AttachmentCard d-flex o-has-card-details"
+                    t-attf-class="{{ className }}"
                      t-att-class="{
                             'o-downloadable': !attachmentCard.attachmentList.composerView,
                             'o-isUploading': attachmentCard.attachment.isUploading,

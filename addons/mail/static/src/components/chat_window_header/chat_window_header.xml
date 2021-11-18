@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ChatWindowHeader" owl="1">
-        <div class="o_ChatWindowHeader" t-att-class="{ 'o-mobile': messaging and messaging.device.isMobile }" t-on-click="_onClick" t-ref="root">
+        <div class="o_ChatWindowHeader" t-att-class="{ 'o-mobile': messaging and messaging.device.isMobile }" t-attf-class="{{ className }}" t-on-click="_onClick" t-ref="root">
             <t t-if="chatWindow">
                 <t t-if="props.hasCloseAsBackButton">
                     <div class="o_ChatWindowHeader_command o_ChatWindowHeader_commandBack o_ChatWindowHeader_commandClose" t-att-class="{ 'o-mobile': messaging.device.isMobile }" t-on-click="_onClickClose" title="Close conversation">
@@ -11,7 +11,7 @@
                 </t>
                 <t t-if="chatWindow.thread and chatWindow.thread.model === 'mail.channel'">
                     <ThreadIcon
-                        class="o_ChatWindowHeader_icon o_ChatWindowHeader_item"
+                        className="'o_ChatWindowHeader_icon o_ChatWindowHeader_item'"
                         threadLocalId="chatWindow.thread.localId"
                     />
                 </t>

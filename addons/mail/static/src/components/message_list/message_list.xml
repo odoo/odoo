@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.MessageList" owl="1">
-        <div class="o_MessageList" t-att-class="{ 'o-empty': threadView and threadView.messages.length === 0 }" t-on-scroll="onScroll" t-ref="root">
+        <div class="o_MessageList" t-att-class="{ 'o-empty': threadView and threadView.messages.length === 0 }" t-attf-class="{{ className }}" t-on-scroll="onScroll" t-ref="root">
             <t t-if="threadView">
                 <!-- No result messages -->
                 <t t-if="threadView.threadCache.orderedNonEmptyMessages.length === 0">
@@ -61,7 +61,7 @@
                                 <t t-set="current_day" t-value="message_day"/>
                             </div>
                         </t>
-                        <Message class="o_MessageList_item o_MessageList_message" messageViewLocalId="messageView.localId"/>
+                        <Message className="'o_MessageList_item o_MessageList_message'" messageViewLocalId="messageView.localId"/>
                     </t>
                 </t>
                 <!-- LOADING (if order desc)-->
