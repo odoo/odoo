@@ -968,7 +968,7 @@ class Task(models.Model):
         help="The current user's personal task stage.")
     partner_id = fields.Many2one('res.partner',
         string='Customer',
-        compute='_compute_partner_id', recursive=True, store=True, readonly=False, tracking=True,
+        compute='_compute_partner_id', store=True, readonly=False, tracking=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     partner_is_company = fields.Boolean(related='partner_id.is_company', readonly=True)
     commercial_partner_id = fields.Many2one(related='partner_id.commercial_partner_id')
@@ -977,7 +977,7 @@ class Task(models.Model):
         string='Email', readonly=False, store=True, copy=False)
     partner_phone = fields.Char(
         compute='_compute_partner_phone', inverse='_inverse_partner_phone',
-        string="Phone", readonly=False, store=True, copy=False)
+        string="Phone", readonly=False, store=True, tracking=True, copy=False)
     partner_city = fields.Char(related='partner_id.city', readonly=False)
     manager_id = fields.Many2one('res.users', string='Project Manager', related='project_id.user_id', readonly=True)
     company_id = fields.Many2one(

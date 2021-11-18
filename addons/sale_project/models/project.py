@@ -139,7 +139,7 @@ class ProjectTask(models.Model):
 
     sale_order_id = fields.Many2one('sale.order', 'Sales Order', compute='_compute_sale_order_id', store=True, help="Sales order to which the task is linked.")
     sale_line_id = fields.Many2one(
-        'sale.order.line', 'Sales Order Item', domain="[('company_id', '=', company_id), ('is_service', '=', True), ('order_partner_id', 'child_of', commercial_partner_id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done'])]",
+        'sale.order.line', 'Sales Order Item', domain="[('company_id', '=', company_id), ('is_service', '=', True), ('order_partner_id', '=?', partner_id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done'])]",
         compute='_compute_sale_line', recursive=True, store=True, readonly=False, copy=False, tracking=True, index=True,
         help="Sales Order Item to which the time spent on this task will be added, in order to be invoiced to your customer.")
     project_sale_order_id = fields.Many2one('sale.order', string="Project's sale order", related='project_id.sale_order_id')

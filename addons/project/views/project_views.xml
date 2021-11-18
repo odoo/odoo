@@ -927,7 +927,7 @@
                             <field name="display_project_id" string="Project" attrs="{'invisible': [('parent_id', '=', False)]}" domain="[('active', '=', True), ('company_id', '=', company_id)]"/>
                             <field name="user_ids"
                                 class="o_task_user_field"
-                                options="{'no_open': True}"
+                                options="{'no_open': True, 'no_quick_create': True}"
                                 widget="many2many_avatar_user"
                                 domain="[('share', '=', False)]"/>
                         </group>
@@ -1186,7 +1186,7 @@
                                         </b>
                                     </div>
                                     <div class="oe_kanban_bottom_right" t-if="!selection_mode">
-                                        <field name="kanban_state" widget="state_selection" groups="base.group_user" invisible="context.get('fsm_mode', False)"/>
+                                        <field name="kanban_state" widget="state_selection" groups="base.group_user"/>
                                         <t t-if="record.user_ids.raw_value"><field name="user_ids" widget="many2many_avatar_user"/></t>
                                     </div>
                                 </div>
