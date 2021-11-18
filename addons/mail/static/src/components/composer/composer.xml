@@ -12,13 +12,14 @@
                 'o-is-compact': props.isCompact,
                 'o-messaging-in-editing': composerView and composerView.messageViewInEditing,
             }"
+            t-attf-class="{{ className }}"
             t-on-keydown="_onKeydown"
             t-ref="root"
         >
             <t t-if="composerView">
                 <t t-if="isDropZoneVisible.value">
                     <DropZone
-                        class="o_Composer_dropZone"
+                        className="'o_Composer_dropZone'"
                         t-on-o-dropzone-files-dropped="_onDropZoneFilesDropped"
                         t-ref="dropzone"
                     />
@@ -74,8 +75,8 @@
                     }"
                 >
                     <ComposerTextInput
-                        class="o_Composer_textInput"
-                        t-att-class="{
+                        className="'o_Composer_textInput'"
+                        classNameObj="{
                             'o-composer-is-compact': props.isCompact,
                             'o_Composer_textInput-mobile': messaging.device.isMobile,
                             'o-has-current-partner-avatar': props.hasCurrentPartnerAvatar,
@@ -130,12 +131,12 @@
                 <t t-if="hasFooter">
                     <div class="o_Composer_coreFooter" t-att-class="{ 'o-composer-is-compact': props.isCompact }">
                         <t t-if="props.hasThreadTyping">
-                            <ThreadTextualTypingStatus class="o_Composer_threadTextualTypingStatus" threadLocalId="composerView.composer.activeThread.localId"/>
+                            <ThreadTextualTypingStatus className="'o_Composer_threadTextualTypingStatus'" threadLocalId="composerView.composer.activeThread.localId"/>
                         </t>
                         <AttachmentList
                             t-if="composerView.attachmentList"
-                            class="o_Composer_attachmentList"
-                            t-att-class="{ 'o-composer-is-compact': props.isCompact }"
+                            className="'o_Composer_attachmentList'"
+                            classNameObj="{ 'o-composer-is-compact': props.isCompact }"
                             attachmentListLocalId="composerView.attachmentList.localId"
                         />
                         <t t-if="!props.isCompact">

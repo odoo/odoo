@@ -7,6 +7,7 @@
                     t-att-class="{
                         'o-isUploading': attachmentImage.attachment.isUploading,
                     }"
+                    t-attf-class="{{ className }}"
                     t-att-title="attachmentImage.attachment.displayName ? attachmentImage.attachment.displayName : undefined"
                     t-att-data-id="attachmentImage.attachment.localId"
                     t-on-click="attachmentImage.onClickImage"

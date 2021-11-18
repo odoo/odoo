@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.MessagingMenu" owl="1">
-        <div class="o_MessagingMenu dropdown" t-att-class="{ 'show': messagingMenu ? messagingMenu.isOpen : false, 'o-mobile': messaging ? messaging.device.isMobile : false }" t-ref="root">
+        <div class="o_MessagingMenu dropdown" t-att-class="{ 'show': messagingMenu ? messagingMenu.isOpen : false, 'o-mobile': messaging ? messaging.device.isMobile : false }" t-attf-class="{{ className }}" t-ref="root">
             <a class="o_MessagingMenu_toggler dropdown-toggle o-no-caret o-dropdown--narrow" t-att-class="{ 'o-no-notification': messagingMenu ? !messagingMenu.counter : false }" href="#" title="Conversations" role="button" t-att-aria-expanded="messagingMenu and messagingMenu.isOpen ? 'true' : 'false'" aria-haspopup="true" t-on-click="_onClickToggler">
                 <i class="o_MessagingMenu_icon fa fa-comments" role="img" aria-label="Messages"/>
                 <t t-if="!messagingMenu or !messaging.isInitialized">
@@ -39,7 +39,7 @@
                             </t>
                             <t t-if="messaging.device.isMobile and messagingMenu.isMobileNewMessageToggled">
                                 <AutocompleteInput
-                                    class="o_MessagingMenu_mobileNewMessageInput"
+                                    className="'o_MessagingMenu_mobileNewMessageInput'"
                                     customClass="id + '_mobileNewMessageInputAutocomplete'"
                                     isFocusOnMount="true"
                                     placeholder="mobileNewMessageInputPlaceholder"
@@ -50,13 +50,13 @@
                             </t>
                         </div>
                         <NotificationList
-                            class="o_MessagingMenu_notificationList"
-                            t-att-class="{ 'o-mobile': messaging.device.isMobile }"
+                            className="'o_MessagingMenu_notificationList'"
+                            classNameObj="{ 'o-mobile': messaging.device.isMobile }"
                             filter="messagingMenu.activeTabId"
                         />
                         <t t-if="messaging.device.isMobile">
                             <MobileMessagingNavbar
-                                class="o_MessagingMenu_mobileNavbar"
+                                className="'o_MessagingMenu_mobileNavbar'"
                                 activeTabId="messagingMenu.activeTabId"
                                 tabs="tabs"
                                 t-on-o-select-mobile-messaging-navbar-tab="_onSelectMobileNavbarTab"

@@ -6,15 +6,15 @@
             The preview template is used by the discuss in mobile, and by the systray
             menu in order to show preview of threads.
         -->
-        <div class="o_ThreadNeedactionPreview" t-on-click="_onClick" t-att-data-thread-local-id="thread ? thread.localId : undefined" t-ref="root">
+        <div class="o_ThreadNeedactionPreview" t-attf-class="{{ className }}" t-on-click="_onClick" t-att-data-thread-local-id="thread ? thread.localId : undefined" t-ref="root">
             <t t-if="thread">
                 <div class="o_ThreadNeedactionPreview_sidebar">
                     <div class="o_ThreadNeedactionPreview_imageContainer o_ThreadNeedactionPreview_sidebarItem">
                         <img class="o_ThreadNeedactionPreview_image" t-att-src="image()" alt="Thread Image"/>
                         <t t-if="thread.correspondent and thread.correspondent.im_status">
                             <PartnerImStatusIcon
-                                class="o_ThreadNeedactionPreview_partnerImStatusIcon"
-                                t-att-class="{
+                                className="'o_ThreadNeedactionPreview_partnerImStatusIcon'"
+                                classNameObj="{
                                     'o-mobile': messaging.device.isMobile,
                                 }"
                                 partnerLocalId="thread.correspondent.localId"
