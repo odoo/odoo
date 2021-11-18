@@ -28,16 +28,17 @@ class TestSaleStockLeadTime(TestSaleCommon, ValuationReconciliationTestCommon):
         # Create sale order of product_1
         order = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
-            'partner_invoice_id': self.partner_a.id,
-            'partner_shipping_id': self.partner_a.id,
             'pricelist_id': self.company_data['default_pricelist'].id,
             'picking_policy': 'direct',
             'warehouse_id': self.company_data['default_warehouse'].id,
-            'order_line': [(0, 0, {'name': self.test_product_order.name,
-                                   'product_id': self.test_product_order.id,
-                                   'product_uom_qty': 10,
-                                   'product_uom': self.env.ref('uom.product_uom_unit').id,
-                                   'customer_lead': self.test_product_order.sale_delay})]})
+            'order_line': [(0, 0, {
+                'product_id': self.test_product_order.id,
+                'product_uom_qty': 10,
+                'product_uom': self.env.ref('uom.product_uom_unit').id,
+            })]
+        })
+
+        self.assertEqual(order.order_line.customer_lead, self.test_product_order.sale_delay)
 
         # Confirm our standard sale order
         order.action_confirm()
@@ -46,8 +47,8 @@ class TestSaleStockLeadTime(TestSaleCommon, ValuationReconciliationTestCommon):
         self.assertTrue(order.picking_ids, "Picking should be created.")
 
         # Check schedule date of picking
-        out_date = fields.Datetime.from_string(order.date_order) + timedelta(days=self.test_product_order.sale_delay) - timedelta(days=self.env.company.security_lead)
-        min_date = fields.Datetime.from_string(order.picking_ids[0].scheduled_date)
+        out_date = order.date_order + timedelta(days=self.test_product_order.sale_delay) - timedelta(days=self.env.company.security_lead)
+        min_date = order.picking_ids[0].scheduled_date
         self.assertTrue(abs(min_date - out_date) <= timedelta(seconds=1), 'Schedule date of picking should be equal to: order date + Customer Lead Time - Sales Safety Days.')
 
     def test_01_product_route_level_delays(self):
@@ -206,3 +207,34 @@ class TestSaleStockLeadTime(TestSaleCommon, ValuationReconciliationTestCommon):
         self.assertEqual(pack.date_deadline, new_deadline)
         new_deadline -= timedelta(days=pick.move_ids.rule_id.delay)
         self.assertEqual(pick.date_deadline, new_deadline)
+
+    def test_03_product_company_level_delays(self):
+        """Partial duplicate of test_02 to make sure there is no default value specified in sale
+        that disables the computation of the customer_lead.
+        """
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'pricelist_id': self.company_data['default_pricelist'].id,
+            'picking_policy': 'direct',
+            'warehouse_id': self.company_data['default_warehouse'].id,
+        })
+
+        order_line = self.env['sale.order.line'].create({
+            'product_id': self.test_product_order.id,
+            'product_uom_qty': 10,
+            'product_uom': self.env.ref('uom.product_uom_unit').id,
+            'order_id': order.id,
+        })
+
+        self.assertEqual(order_line.customer_lead, self.test_product_order.sale_delay)
+
+        # Confirm our standard sale order
+        order.action_confirm()
+
+        # Check the picking crated or not
+        self.assertTrue(order.picking_ids, "Picking should be created.")
+
+        # Check schedule date of picking
+        out_date = order.date_order + timedelta(days=self.test_product_order.sale_delay) - timedelta(days=self.env.company.security_lead)
+        min_date = order.picking_ids[0].scheduled_date
+        self.assertTrue(abs(min_date - out_date) <= timedelta(seconds=1), 'Schedule date of picking should be equal to: order date + Customer Lead Time - Sales Safety Days.')
