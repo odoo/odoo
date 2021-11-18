@@ -86,6 +86,60 @@ class TestSaleOrder(TestSaleCommon):
             'tax_id': False,
         })
 
+    def test_computes_auto_fill(self):
+        free_product = self.env['product.product'].create({
+            'name': 'Free product',
+            'list_price': 0.0,
+        })
+        dummy_product = self.env['product.product'].create({
+            'name': 'Dummy product',
+            'list_price': 0.0,
+        })
+        # Test pre-computes of lines with order
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'display_type': 'line_section',
+                    'name': 'Dummy section',
+                }),
+                Command.create({
+                    'display_type': 'line_section',
+                    'name': 'Dummy section',
+                }),
+                Command.create({
+                    'product_id': free_product.id,
+                }),
+                Command.create({
+                    'product_id': dummy_product.id,
+                })
+            ]
+        })
+
+        # Test pre-computes of lines creation alone
+        # Ensures the creation works fine even if the computes
+        # are triggered after the defaults
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+        })
+        order_lines = self.env['sale.order.line'].create([
+            {
+                'display_type': 'line_section',
+                'name': 'Dummy section',
+                'order_id': order.id,
+            }, {
+                'display_type': 'line_section',
+                'name': 'Dummy section',
+                'order_id': order.id,
+            }, {
+                'product_id': free_product.id,
+                'order_id': order.id,
+            }, {
+                'product_id': dummy_product.id,
+                'order_id': order.id,
+            }
+        ])
+
     def test_sale_order(self):
         """ Test the sales order flow (invoicing and quantity updates)
             - Invoice repeatedly while varrying delivered quantities and check that invoice are always what we expect
@@ -311,8 +365,9 @@ class TestSaleOrder(TestSaleCommon):
             'company_id': self.company_data['company'].id,
         })
         so_1.write({
-            'order_line': [(0, False, {'product_id': product_shared.product_variant_id.id, 'order_id': so_1.id})],
+            'order_line': [Command.create({'product_id': product_shared.product_variant_id.id, 'order_id': so_1.id})],
         })
+        self.assertEqual(so_1.order_line.product_uom_qty, 1)
 
         self.assertEqual(so_1.order_line.tax_id, self.company_data['default_tax_sale'],
             'Only taxes from the right company are put by default')
