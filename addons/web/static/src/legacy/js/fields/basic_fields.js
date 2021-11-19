@@ -572,6 +572,19 @@ var FieldChar = InputField.extend(TranslatableFieldMixin, {
     supportedFieldTypes: ['char'],
     isQuickEditable: true,
 
+    start: function () {
+        var self = this;
+        var prom = Promise.resolve();
+        if (this.mode === 'edit' && this.field.pattern) {
+            prom = prom.then(() => {
+                IMask(self.el, {
+                    mask: new RegExp(this.field.pattern),
+                });
+            });
+        }
+        return prom.then(this._super.bind(this));
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -903,6 +916,22 @@ var FieldDate = InputField.extend({
                 self.datewidget.$el.addClass(self.$el.attr('class'));
                 self._prepareInput(self.datewidget.$input);
                 self._replaceElement(self.datewidget.$el);
+            }).then(() => {
+                var momentFormat = self.datewidget.options.format
+                IMask(self.$el.find('input')[0], {
+                    mask: momentFormat,
+                    blocks: {
+                        DD: {
+                            mask: '0[0]'
+                        },
+                        MM: {
+                            mask: '0[0]'
+                        },
+                        YYYY: {
+                            mask: '00[00]'
+                        }
+                    },
+                });
             });
         }
         return Promise.resolve(prom).then(this._super.bind(this));
