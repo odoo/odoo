@@ -138,7 +138,7 @@ def exec_pg_command_pipe(name, *args):
 #file_path_root = os.getcwd()
 #file_path_addons = os.path.join(file_path_root, 'addons')
 
-def file_open(name, mode="r", subdir='addons', pathinfo=False):
+def file_open(name, mode="r", subdir='addons', pathinfo=False, filter_ext=None):
     """Open a file from the OpenERP root, using a subdir folder.
 
     Example::
@@ -150,6 +150,7 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
     @param mode file open mode
     @param subdir subdirectory
     @param pathinfo if True returns tuple (fileobject, filepath)
+    @param filter_ext: optional list of supported extensions (without leading dot)
 
     @return fileobject if pathinfo is False else (fileobject, filepath)
     """
@@ -171,7 +172,7 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
         else:
             # It is outside the OpenERP root: skip zipfile lookup.
             base, name = os.path.split(name)
-        return _fileopen(name, mode=mode, basedir=base, pathinfo=pathinfo, basename=basename)
+        return _fileopen(name, mode=mode, basedir=base, pathinfo=pathinfo, basename=basename, filter_ext=filter_ext)
 
     if name.replace(os.sep, '/').startswith('addons/'):
         subdir = 'addons'
@@ -189,15 +190,15 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
         for adp in adps:
             try:
                 return _fileopen(name2, mode=mode, basedir=adp,
-                                 pathinfo=pathinfo, basename=basename)
+                                 pathinfo=pathinfo, basename=basename, filter_ext=filter_ext)
             except IOError:
                 pass
 
     # Second, try to locate in root_path
-    return _fileopen(name, mode=mode, basedir=rtp, pathinfo=pathinfo, basename=basename)
+    return _fileopen(name, mode=mode, basedir=rtp, pathinfo=pathinfo, basename=basename, filter_ext=filter_ext)
 
 
-def _fileopen(path, mode, basedir, pathinfo, basename=None):
+def _fileopen(path, mode, basedir, pathinfo, basename=None, filter_ext=None):
     name = os.path.normpath(os.path.normcase(os.path.join(basedir, path)))
 
     paths = odoo.addons.__path__ + [config['root_path']]
@@ -207,6 +208,9 @@ def _fileopen(path, mode, basedir, pathinfo, basename=None):
             break
     else:
         raise ValueError("Unknown path: %s" % name)
+
+    if filter_ext and not name.lower().endswith(filter_ext):
+        raise ValueError("Unsupported path: %s" % name)
 
     if basename is None:
         basename = name
