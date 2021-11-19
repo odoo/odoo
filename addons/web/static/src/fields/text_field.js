@@ -13,6 +13,7 @@ export class TextField extends Component {
 
 TextField.props = {
     ...standardFieldProps,
+    placeholder: { type: String, optional: true },
 };
 TextField.template = "web.TextField";
 
