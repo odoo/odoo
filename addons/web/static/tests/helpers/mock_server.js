@@ -559,7 +559,7 @@ export class MockServer {
      * Simulate a 'name_create' operation
      *
      * @private
-     * @param {string} model
+     * @param {string} modelName
      * @param {string} name
      * @returns {Array} a couple [id, name]
      */

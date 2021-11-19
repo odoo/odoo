@@ -217,13 +217,6 @@ QUnit.module("Views", (hooks) => {
                     ],
                 },
             },
-            views: {
-                "partner,false,form": /* xml */ `
-                    <form>
-                        <field name="display_name" />
-                    </form>
-                `,
-            },
         };
 
         setupControlPanelFavoriteMenuRegistry();
@@ -793,8 +786,8 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(kanban, ".thisisdeletable", 4, "records should be deletable");
     });
 
-    QUnit.skip("quick create record without quick_create_view", async (assert) => {
-        assert.expect(16);
+    QUnit.test("quick create record without quick_create_view", async (assert) => {
+        assert.expect(15);
 
         const kanban = await makeView({
             type: "kanban",
@@ -832,7 +825,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsOnce(quickCreate, ".o_form_view.o_xxs_form_view");
         assert.containsOnce(quickCreate, "input");
-        // assert.containsOnce(quickCreate, "input.o_required_modifier[placeholder=Title]");
+        assert.containsOnce(quickCreate, "input.o_required_modifier[placeholder=Title]");
 
         // fill the quick create and validate
         await editInput(quickCreate, "input", "new partner");
@@ -842,17 +835,26 @@ QUnit.module("Views", (hooks) => {
 
         assert.verifySteps([
             "web_read_group", // initial read_group
-            "/web/dataset/search_read", // initial search_read (first column)
-            "/web/dataset/search_read", // initial search_read (second column)
+            "web_search_read", // initial search_read (first column)
+            "web_search_read", // initial search_read (second column)
             "onchange", // quick create
+            "onchange", // change in quick create
             "name_create", // should perform a name_create to create the record
             "read", // read the created record
-            "onchange", // reopen the quick create automatically
         ]);
     });
 
     QUnit.skip("quick create record with quick_create_view", async (assert) => {
-        assert.expect(19);
+        assert.expect(20);
+
+        serverData.views = {
+            "partner,some_view_ref,form":
+                "<form>" +
+                '<field name="foo"/>' +
+                '<field name="int_field"/>' +
+                '<field name="state" widget="priority"/>' +
+                "</form>",
+        };
 
         const kanban = await makeView({
             type: "kanban",
@@ -864,14 +866,6 @@ QUnit.module("Views", (hooks) => {
                 '<templates><t t-name="kanban-box">' +
                 '<div><field name="foo"/></div>' +
                 "</t></templates></kanban>",
-            archs: {
-                "partner,some_view_ref,form":
-                    "<form>" +
-                    '<field name="foo"/>' +
-                    '<field name="int_field"/>' +
-                    '<field name="state" widget="priority"/>' +
-                    "</form>",
-            },
             groupBy: ["bar"],
             async mockRPC(route, args) {
                 assert.step(args.method || route);
@@ -890,66 +884,44 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsOnce(kanban, ".o_control_panel", "should have one control panel");
-        assert.containsOnce(
-            kanban,
-            ".o_kanban_group:first .o_kanban_record",
-            "first column should contain one record"
-        );
+        assert.containsOnce(kanban, ".o_kanban_group:first-child .o_kanban_record");
 
         // click on 'Create' -> should open the quick create in the first column
         await clickCreate(kanban);
-        const $quickCreate = kanban.el.querySelector(
-            ".o_kanban_group:first .o_kanban_quick_create"
+
+        assert.containsOnce(kanban, ".o_kanban_group:first-child .o_kanban_quick_create");
+        const quickCreate = kanban.el.querySelector(
+            ".o_kanban_group:first-child .o_kanban_quick_create"
         );
 
-        assert.strictEqual(
-            $quickCreate.length,
-            1,
-            "should have a quick create element in the first column"
-        );
-        assert.strictEqual(
-            $quickCreate.find(".o_form_view.o_xxs_form_view").length,
-            1,
-            "should have rendered an XXS form view"
-        );
+        assert.containsOnce(quickCreate, ".o_form_view.o_xxs_form_view");
         assert.containsOnce(
             kanban,
             ".o_control_panel",
             "should not have instantiated an extra control panel"
         );
-        assert.strictEqual($quickCreate.find("input").length, 2, "should have two inputs");
-        assert.strictEqual(
-            $quickCreate.find(".o_field_widget").length,
-            3,
-            "should have rendered three widgets"
-        );
+        assert.containsN(quickCreate, "input", 2);
+        assert.containsN(quickCreate, ".o_field_widget", 3, "should have rendered three widgets");
 
         // fill the quick create and validate
-        await testUtils.fields.editInput(
-            $quickCreate.find(".o_field_widget[name=foo]"),
-            "new partner"
-        );
-        await testUtils.fields.editInput($quickCreate.find(".o_field_widget[name=int_field]"), "4");
-        await click($quickCreate.find(".o_field_widget[name=state] .o_priority_star:first"));
-        await click($quickCreate.find("button.o_kanban_add"));
+        await editInput(quickCreate, ".o_field_widget[name=foo]", "new partner");
+        await editInput(quickCreate, ".o_field_widget[name=int_field]", "4");
+        await click(quickCreate, ".o_field_widget[name=state] .o_priority_star:first-child");
+        await click(quickCreate, "button.o_kanban_add");
 
-        assert.containsN(
-            kanban,
-            ".o_kanban_group:first .o_kanban_record",
-            2,
-            "first column should contain two records"
-        );
+        assert.containsN(kanban, ".o_kanban_group:first .o_kanban_record", 2);
 
         assert.verifySteps([
             "web_read_group", // initial read_group
-            "/web/dataset/search_read", // initial search_read (first column)
-            "/web/dataset/search_read", // initial search_read (second column)
+            "web_search_read", // initial search_read (first column)
+            "web_search_read", // initial search_read (second column)
             "load_views", // form view in quick create
             "onchange", // quick create
+            "onchange", // first field onchange
+            "onchange", // second field onchange
+            "onchange", // third field onchange
             "create", // should perform a create to create the record
             "read", // read the created record
-            "load_views", // form view in quick create (is actually in cache)
-            "onchange", // reopen the quick create automatically
         ]);
     });
 
@@ -1027,6 +999,15 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("quick create record in grouped on m2o (with quick_create_view)", async (assert) => {
         assert.expect(14);
 
+        serverData.views = {
+            "partner,some_view_ref,form":
+                "<form>" +
+                '<field name="foo"/>' +
+                '<field name="int_field"/>' +
+                '<field name="state" widget="priority"/>' +
+                "</form>",
+        };
+
         const kanban = await makeView({
             type: "kanban",
             resModel: "partner",
@@ -1037,14 +1018,6 @@ QUnit.module("Views", (hooks) => {
                 '<templates><t t-name="kanban-box">' +
                 '<div><field name="foo"/></div>' +
                 "</t></templates></kanban>",
-            archs: {
-                "partner,some_view_ref,form":
-                    "<form>" +
-                    '<field name="foo"/>' +
-                    '<field name="int_field"/>' +
-                    '<field name="state" widget="priority"/>' +
-                    "</form>",
-            },
             groupBy: ["product_id"],
             async mockRPC(route, args) {
                 assert.step(args.method || route);
@@ -1124,6 +1097,10 @@ QUnit.module("Views", (hooks) => {
                 }
             },
         };
+        serverData.views = {
+            "partner,some_view_ref,form":
+                "<form>" + '<field name="foo"/>' + '<field name="int_field"/>' + "</form>",
+        };
 
         const kanban = await makeView({
             type: "kanban",
@@ -1135,10 +1112,6 @@ QUnit.module("Views", (hooks) => {
                 '<templates><t t-name="kanban-box">' +
                 '<div><field name="foo"/></div>' +
                 "</t></templates></kanban>",
-            archs: {
-                "partner,some_view_ref,form":
-                    "<form>" + '<field name="foo"/>' + '<field name="int_field"/>' + "</form>",
-            },
             groupBy: ["bar"],
             async mockRPC(route, args) {
                 assert.step(args.method || route);
@@ -1187,6 +1160,14 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("quick create record with quick_create_view: modifiers", async (assert) => {
         assert.expect(3);
 
+        serverData.views = {
+            "partner,some_view_ref,form":
+                "<form>" +
+                '<field name="foo" required="1"/>' +
+                '<field name="int_field" attrs=\'{"invisible": [["foo", "=", false]]}\'/>' +
+                "</form>",
+        };
+
         const kanban = await makeView({
             type: "kanban",
             resModel: "partner",
@@ -1197,13 +1178,6 @@ QUnit.module("Views", (hooks) => {
                 '<templates><t t-name="kanban-box">' +
                 '<div><field name="foo"/></div>' +
                 "</t></templates></kanban>",
-            archs: {
-                "partner,some_view_ref,form":
-                    "<form>" +
-                    '<field name="foo" required="1"/>' +
-                    '<field name="int_field" attrs=\'{"invisible": [["foo", "=", false]]}\'/>' +
-                    "</form>",
-            },
             groupBy: ["bar"],
         });
 
@@ -1422,6 +1396,11 @@ QUnit.module("Views", (hooks) => {
         // directly
         assert.expect(3);
 
+        serverData.views = {
+            "partner,some_view_ref,form":
+                "<form>" + '<field name="foo"/>' + '<field name="int_field"/>' + "</form>",
+        };
+
         const kanban = await makeView({
             type: "kanban",
             resModel: "partner",
@@ -1432,10 +1411,6 @@ QUnit.module("Views", (hooks) => {
                 '<templates><t t-name="kanban-box">' +
                 '<div><field name="foo"/></div>' +
                 "</t></templates></kanban>",
-            archs: {
-                "partner,some_view_ref,form":
-                    "<form>" + '<field name="foo"/>' + '<field name="int_field"/>' + "</form>",
-            },
             groupBy: ["bar"],
             fieldDebounce: 5000,
         });
@@ -1458,7 +1433,13 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("quick create record: prevent multiple adds with ENTER", async (assert) => {
         assert.expect(9);
 
+        serverData.views = {
+            "partner,some_view_ref,form":
+                "<form>" + '<field name="foo"/>' + '<field name="int_field"/>' + "</form>",
+        };
+
         let prom = makeDeferred();
+
         const kanban = await makeView({
             type: "kanban",
             resModel: "partner",
@@ -1469,10 +1450,6 @@ QUnit.module("Views", (hooks) => {
                 '<templates><t t-name="kanban-box">' +
                 '<div><field name="foo"/></div>' +
                 "</t></templates></kanban>",
-            archs: {
-                "partner,some_view_ref,form":
-                    "<form>" + '<field name="foo"/>' + '<field name="int_field"/>' + "</form>",
-            },
             groupBy: ["bar"],
             // add a fieldDebounce to accurately simulate what happens in the webclient: the field
             // doesn't notify the BasicModel that it has changed directly, as it waits for the user
@@ -1537,6 +1514,11 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("quick create record: prevent multiple adds with Add clicked", async (assert) => {
         assert.expect(9);
 
+        serverData.views = {
+            "partner,some_view_ref,form":
+                "<form>" + '<field name="foo"/>' + '<field name="int_field"/>' + "</form>",
+        };
+
         let prom = makeDeferred();
         const kanban = await makeView({
             type: "kanban",
@@ -1548,10 +1530,6 @@ QUnit.module("Views", (hooks) => {
                 '<templates><t t-name="kanban-box">' +
                 '<div><field name="foo"/></div>' +
                 "</t></templates></kanban>",
-            archs: {
-                "partner,some_view_ref,form":
-                    "<form>" + '<field name="foo"/>' + '<field name="int_field"/>' + "</form>",
-            },
             groupBy: ["bar"],
             async mockRPC(route, args) {
                 const result = this._super.apply(this, arguments);
@@ -1616,6 +1594,11 @@ QUnit.module("Views", (hooks) => {
                     obj.int_field += obj.foo ? 3 : 0;
                 },
             };
+            serverData.views = {
+                "partner,some_view_ref,form":
+                    "<form>" + '<field name="foo"/>' + '<field name="int_field"/>' + "</form>",
+            };
+
             const shouldDelayOnchange = false;
             let prom = makeDeferred();
             const kanban = await makeView({
@@ -1628,10 +1611,6 @@ QUnit.module("Views", (hooks) => {
                     '<templates><t t-name="kanban-box">' +
                     '<div><field name="foo"/></div>' +
                     "</t></templates></kanban>",
-                archs: {
-                    "partner,some_view_ref,form":
-                        "<form>" + '<field name="foo"/>' + '<field name="int_field"/>' + "</form>",
-                },
                 groupBy: ["bar"],
                 async mockRPC(route, args) {
                     if (args.method === "onchange") {
@@ -1726,6 +1705,11 @@ QUnit.module("Views", (hooks) => {
                     obj.int_field += obj.foo ? 3 : 0;
                 },
             };
+            serverData.views = {
+                "partner,some_view_ref,form":
+                    "<form>" + '<field name="foo"/>' + '<field name="int_field"/>' + "</form>",
+            };
+
             const shouldDelayOnchange = false;
             let prom = makeDeferred();
             const kanban = await makeView({
@@ -1738,10 +1722,6 @@ QUnit.module("Views", (hooks) => {
                     '<templates><t t-name="kanban-box">' +
                     '<div><field name="foo"/><field name="int_field"/></div>' +
                     "</t></templates></kanban>",
-                archs: {
-                    "partner,some_view_ref,form":
-                        "<form>" + '<field name="foo"/>' + '<field name="int_field"/>' + "</form>",
-                },
                 groupBy: ["bar"],
                 async mockRPC(route, args) {
                     if (args.method === "onchange") {
@@ -1992,6 +1972,10 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("quick create record: cancel when modal is opened", async (assert) => {
         assert.expect(3);
 
+        serverData.views = {
+            "partner,some_view_ref,form": "<form>" + '<field name="product_id"/>' + "</form>",
+        };
+
         const kanban = await makeView({
             type: "kanban",
             resModel: "partner",
@@ -2002,9 +1986,6 @@ QUnit.module("Views", (hooks) => {
                 '<div><field name="foo"/></div>' +
                 "</t></templates>" +
                 "</kanban>",
-            archs: {
-                "partner,some_view_ref,form": "<form>" + '<field name="product_id"/>' + "</form>",
-            },
             groupBy: ["bar"],
         });
 
@@ -2314,6 +2295,14 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("quick create record fail in grouped by many2one", async (assert) => {
         assert.expect(8);
 
+        serverData.views = {
+            "partner,false,form":
+                '<form string="Partner">' +
+                '<field name="product_id"/>' +
+                '<field name="foo"/>' +
+                "</form>",
+        };
+
         const kanban = await makeView({
             type: "kanban",
             resModel: "partner",
@@ -2325,13 +2314,6 @@ QUnit.module("Views", (hooks) => {
                 '<div><field name="foo"/></div>' +
                 "</t></templates>" +
                 "</kanban>",
-            archs: {
-                "partner,false,form":
-                    '<form string="Partner">' +
-                    '<field name="product_id"/>' +
-                    '<field name="foo"/>' +
-                    "</form>",
-            },
             groupBy: ["product_id"],
             async mockRPC(route, args) {
                 if (args.method === "name_create") {
@@ -2403,6 +2385,14 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("quick create record is re-enabled after discard on failure", async (assert) => {
         assert.expect(4);
 
+        serverData.views = {
+            "partner,false,form":
+                '<form string="Partner">' +
+                '<field name="product_id"/>' +
+                '<field name="foo"/>' +
+                "</form>",
+        };
+
         const kanban = await makeView({
             type: "kanban",
             resModel: "partner",
@@ -2414,13 +2404,6 @@ QUnit.module("Views", (hooks) => {
                 '<div><field name="foo"/></div>' +
                 "</t></templates>" +
                 "</kanban>",
-            archs: {
-                "partner,false,form":
-                    '<form string="Partner">' +
-                    '<field name="product_id"/>' +
-                    '<field name="foo"/>' +
-                    "</form>",
-            },
             groupBy: ["product_id"],
             async mockRPC(route, args) {
                 if (args.method === "name_create") {
@@ -2460,6 +2443,10 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("quick create record fails in grouped by char", async (assert) => {
         assert.expect(7);
 
+        serverData.views = {
+            "partner,false,form": "<form>" + '<field name="foo"/>' + "</form>",
+        };
+
         const kanban = await makeView({
             type: "kanban",
             resModel: "partner",
@@ -2470,9 +2457,6 @@ QUnit.module("Views", (hooks) => {
                 '<div><field name="foo"/></div>' +
                 "</t></templates>" +
                 "</kanban>",
-            archs: {
-                "partner,false,form": "<form>" + '<field name="foo"/>' + "</form>",
-            },
             async mockRPC(route, args) {
                 if (args.method === "name_create") {
                     return Promise.reject({
@@ -2537,6 +2521,10 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("quick create record fails in grouped by selection", async (assert) => {
         assert.expect(7);
 
+        serverData.views = {
+            "partner,false,form": "<form>" + '<field name="state"/>' + "</form>",
+        };
+
         const kanban = await makeView({
             type: "kanban",
             resModel: "partner",
@@ -2547,9 +2535,6 @@ QUnit.module("Views", (hooks) => {
                 '<div><field name="state"/></div>' +
                 "</t></templates>" +
                 "</kanban>",
-            archs: {
-                "partner,false,form": "<form>" + '<field name="state"/>' + "</form>",
-            },
             async mockRPC(route, args) {
                 if (args.method === "name_create") {
                     return Promise.reject({
@@ -2727,6 +2712,10 @@ QUnit.module("Views", (hooks) => {
             serverData.models.partner.records[1].datetime = "2017-01-09 11:31:10";
             serverData.models.partner.records[2].datetime = "2017-01-08 09:20:25";
             serverData.models.partner.records[3].datetime = "2017-01-10 08:05:51";
+            serverData.views = {
+                "partner,quick_form,form":
+                    "<form>" + '<field name="date"/>' + '<field name="datetime"/>' + "</form>",
+            };
 
             const kanban = await makeView({
                 type: "kanban",
@@ -2740,10 +2729,6 @@ QUnit.module("Views", (hooks) => {
                     '<div><field name="display_name"/></div>' +
                     "</t></templates>" +
                     "</kanban>",
-                archs: {
-                    "partner,quick_form,form":
-                        "<form>" + '<field name="date"/>' + '<field name="datetime"/>' + "</form>",
-                },
                 groupBy: ["date"],
             });
 
@@ -2999,6 +2984,10 @@ QUnit.module("Views", (hooks) => {
         async (assert) => {
             assert.expect(6);
 
+            serverData.views = {
+                "partner,some_view_ref,form": "<form>" + '<field name="foo"/>' + "</form>",
+            };
+
             const kanban = await makeView({
                 type: "kanban",
                 resModel: "partner",
@@ -3009,9 +2998,6 @@ QUnit.module("Views", (hooks) => {
                     '<div><field name="foo"/></div>' +
                     "</t></templates>" +
                     "</kanban>",
-                archs: {
-                    "partner,some_view_ref,form": "<form>" + '<field name="foo"/>' + "</form>",
-                },
                 groupBy: ["foo"],
                 async mockRPC(route, args) {
                     if (args.method === "create") {
@@ -3063,6 +3049,10 @@ QUnit.module("Views", (hooks) => {
         async (assert) => {
             assert.expect(6);
 
+            serverData.views = {
+                "partner,some_view_ref,form": "<form>" + '<field name="bar"/>' + "</form>",
+            };
+
             const kanban = await makeView({
                 type: "kanban",
                 resModel: "partner",
@@ -3073,9 +3063,6 @@ QUnit.module("Views", (hooks) => {
                     '<div><field name="bar"/></div>' +
                     "</t></templates>" +
                     "</kanban>",
-                archs: {
-                    "partner,some_view_ref,form": "<form>" + '<field name="bar"/>' + "</form>",
-                },
                 groupBy: ["bar"],
                 async mockRPC(route, args) {
                     if (args.method === "create") {
@@ -3127,6 +3114,10 @@ QUnit.module("Views", (hooks) => {
         async (assert) => {
             assert.expect(6);
 
+            serverData.views = {
+                "partner,some_view_ref,form": "<form>" + '<field name="state"/>' + "</form>",
+            };
+
             const kanban = await makeView({
                 type: "kanban",
                 resModel: "partner",
@@ -3137,9 +3128,6 @@ QUnit.module("Views", (hooks) => {
                     '<div><field name="state"/></div>' +
                     "</t></templates>" +
                     "</kanban>",
-                archs: {
-                    "partner,some_view_ref,form": "<form>" + '<field name="state"/>' + "</form>",
-                },
                 groupBy: ["state"],
                 async mockRPC(route, args) {
                     if (args.method === "create") {
@@ -3255,6 +3243,10 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("close a column while quick creating a record", async (assert) => {
         assert.expect(6);
 
+        serverData.views = {
+            "partner,some_view_ref,form": '<form><field name="int_field"/></form>',
+        };
+
         let prom = makeDeferred();
         const kanban = await makeView({
             type: "kanban",
@@ -3266,9 +3258,6 @@ QUnit.module("Views", (hooks) => {
                         <div><field name="foo"/></div>
                     </t></templates>
                 </kanban>`,
-            archs: {
-                "partner,some_view_ref,form": '<form><field name="int_field"/></form>',
-            },
             groupBy: ["product_id"],
             async mockRPC(route, args) {
                 const result = this._super(...arguments);
@@ -4337,6 +4326,14 @@ QUnit.module("Views", (hooks) => {
         const searchMenuTypesOriginal = KanbanView.prototype.searchMenuTypes;
         KanbanView.prototype.searchMenuTypes = ["filter", "favorite"];
 
+        serverData.views = {
+            "partner,false,search": `
+                <search>
+                    <filter string="candle" name="itsName" context="{'group_by': 'foo'}"/>
+                </search>
+            `,
+        };
+
         const kanban = await makeView({
             type: "kanban",
             resModel: "partner",
@@ -4351,13 +4348,6 @@ QUnit.module("Views", (hooks) => {
                     </templates>
                 </kanban>
             `,
-            archs: {
-                "partner,false,search": `
-                    <search>
-                        <filter string="candle" name="itsName" context="{'group_by': 'foo'}"/>
-                    </search>
-                `,
-            },
             async mockRPC(route, args) {
                 if (args.method === "read_group") {
                     throw new Error("Should not do a read_group RPC");
@@ -4882,6 +4872,10 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("edit a column in grouped on m2o", async (assert) => {
         assert.expect(12);
 
+        serverData.views = {
+            "product,false,form": '<form string="Product"><field name="display_name"/></form>',
+        };
+
         const nbRPCs = 0;
         const kanban = await makeView({
             type: "kanban",
@@ -4895,9 +4889,6 @@ QUnit.module("Views", (hooks) => {
                 "</t></templates>" +
                 "</kanban>",
             groupBy: ["product_id"],
-            archs: {
-                "product,false,form": '<form string="Product"><field name="display_name"/></form>',
-            },
             async mockRPC(route, args) {
                 nbRPCs++;
                 return this._super(route, args);
@@ -4965,6 +4956,10 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("edit a column propagates right context", async (assert) => {
         assert.expect(4);
 
+        serverData.views = {
+            "product,false,form": '<form string="Product"><field name="display_name"/></form>',
+        };
+
         const kanban = await makeView({
             type: "kanban",
             resModel: "partner",
@@ -4977,9 +4972,6 @@ QUnit.module("Views", (hooks) => {
                 "</t></templates>" +
                 "</kanban>",
             groupBy: ["product_id"],
-            archs: {
-                "product,false,form": '<form string="Product"><field name="display_name"/></form>',
-            },
             session: { user_context: { lang: "brol" } },
             async mockRPC(route, args) {
                 let context;
@@ -8346,6 +8338,10 @@ QUnit.module("Views", (hooks) => {
         async (assert) => {
             assert.expect(1);
 
+            serverData.views = {
+                "partner,some_view_ref,form": `<form><field name="int_field"/></form>`,
+            };
+
             const kanban = await makeView({
                 type: "kanban",
                 resModel: "partner",
@@ -8360,10 +8356,6 @@ QUnit.module("Views", (hooks) => {
                     "</div>" +
                     "</t></templates>" +
                     "</kanban>",
-                archs: {
-                    "partner,some_view_ref,form":
-                        "<form>" + '<field name="int_field"/>' + "</form>",
-                },
                 groupBy: ["bar"],
             });
 
@@ -8398,6 +8390,14 @@ QUnit.module("Views", (hooks) => {
         async (assert) => {
             assert.expect(2);
 
+            serverData.views = {
+                "partner,some_view_ref,form": `
+                    <form>
+                        <field name="int_field"/>
+                        <field name="foo"/>
+                    </form>`,
+            };
+
             const kanban = await makeView({
                 type: "kanban",
                 resModel: "partner",
@@ -8412,14 +8412,6 @@ QUnit.module("Views", (hooks) => {
                     </t></templates>
                 </kanban>
             `,
-                archs: {
-                    "partner,some_view_ref,form": `
-                    <form>
-                        <field name="int_field"/>
-                        <field name="foo"/>
-                    </form>
-                `,
-                },
                 groupBy: ["bar"],
             });
 

@@ -206,7 +206,18 @@ export class Record extends DataPoint {
         if (this.resId) {
             await this.model.orm.write(this.resModel, [this.resId], changes);
         } else {
-            this.resId = await this.model.orm.create(this.resModel, changes);
+            const keys = Object.keys(changes);
+            if (keys.length === 1 && keys[0] === "display_name") {
+                const [resId] = await this.model.orm.call(
+                    this.resModel,
+                    "name_create",
+                    [changes.display_name],
+                    { context: this.context }
+                );
+                this.resId = resId;
+            } else {
+                this.resId = await this.model.orm.create(this.resModel, changes, this.context);
+            }
         }
         await this.load();
         this.model.notify();
