@@ -70,7 +70,7 @@ export class Composer extends Component {
         if (emojisPopover && emojisPopover.contains(node)) {
             return true;
         }
-        return Boolean(this.el && this.el.contains(node));
+        return Boolean(this.root.el && this.root.el.contains(node));
     }
 
     /**

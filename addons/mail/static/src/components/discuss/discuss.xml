@@ -7,6 +7,7 @@
                 'o-adding-item': discuss ? discuss.isAddingChannel or discuss.isAddingChat : false,
                 'o-mobile': messaging ? messaging.device.isMobile : false,
             }"
+            t-ref="root"
         >
             <t t-if="!discuss or !messaging.isInitialized">
                 <div class="o_Discuss_messagingNotInitialized"><i class="o_Discuss_messagingNotInitializedIcon fa fa-circle-o-notch fa-spin"/>Please wait...</div>

@@ -70,8 +70,8 @@ export class ChatWindow extends Component {
         const textDirection = this.messaging.locale.textDirection;
         const offsetFrom = textDirection === 'rtl' ? 'left' : 'right';
         const oppositeFrom = offsetFrom === 'right' ? 'left' : 'right';
-        this.el.style[offsetFrom] = this.chatWindow.visibleOffset + 'px';
-        this.el.style[oppositeFrom] = 'auto';
+        this.root.el.style[offsetFrom] = this.chatWindow.visibleOffset + 'px';
+        this.root.el.style[oppositeFrom] = 'auto';
     }
 
     /**

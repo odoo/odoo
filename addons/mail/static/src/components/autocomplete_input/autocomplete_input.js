@@ -18,7 +18,7 @@ export class AutocompleteInput extends Component {
 
     _mounted() {
         if (this.props.isFocusOnMount) {
-            this.el.focus();
+            this.root.el.focus();
         }
 
         let args = {
@@ -33,7 +33,7 @@ export class AutocompleteInput extends Component {
             args.classes = { 'ui-autocomplete': this.props.customClass };
         }
 
-        const autoCompleteElem = $(this.el).autocomplete(args);
+        const autoCompleteElem = $(this.root.el).autocomplete(args);
         // Resize the autocomplete dropdown options to handle the long strings
         // By setting the width of dropdown based on the width of the input element.
         autoCompleteElem.data("ui-autocomplete")._resizeMenu = function () {
@@ -43,7 +43,7 @@ export class AutocompleteInput extends Component {
     }
 
     _willUnmount() {
-        $(this.el).autocomplete('destroy');
+        $(this.root.el).autocomplete('destroy');
     }
 
     //--------------------------------------------------------------------------
@@ -58,10 +58,10 @@ export class AutocompleteInput extends Component {
      * @returns {boolean}
      */
     contains(node) {
-        if (!this.el) {
+        if (!this.root.el) {
             return false;
         }
-        if (this.el.contains(node)) {
+        if (this.root.el.contains(node)) {
             return true;
         }
         if (!this.props.customClass) {
@@ -75,10 +75,10 @@ export class AutocompleteInput extends Component {
     }
 
     focus() {
-        if (!this.el) {
+        if (!this.root.el) {
             return;
         }
-        this.el.focus();
+        this.root.el.focus();
     }
 
     //--------------------------------------------------------------------------

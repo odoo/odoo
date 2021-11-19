@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ThreadIcon" owl="1">
-        <div class="o_ThreadIcon">
+        <div class="o_ThreadIcon" t-ref="root">
             <t t-if="thread" name="rootCondition">
                 <t t-if="thread.channel_type === 'channel'">
                     <t t-if="thread.public === 'private'">

@@ -14,7 +14,6 @@ export class RtcVideo extends Component {
     setup() {
         super.setup();
         useUpdate({ func: () => this._update() });
-        this._videoRef = useRef("video");
     }
 
     //--------------------------------------------------------------------------
@@ -45,15 +44,15 @@ export class RtcVideo extends Component {
      *
      */
     _loadVideo() {
-        if (!this._videoRef) {
+        if (!this.root) {
             return;
         }
         if (!this.rtcSession || !this.rtcSession.videoStream) {
-            this._videoRef.el.srcObject = undefined;
+            this.root.el.srcObject = undefined;
         } else {
-            this._videoRef.el.srcObject = this.rtcSession.videoStream;
+            this.root.el.srcObject = this.rtcSession.videoStream;
         }
-        this._videoRef.el.load();
+        this.root.el.load();
     }
 
     //--------------------------------------------------------------------------

@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.RtcCallViewer" owl="1">
-    <div class="o_RtcCallViewer" t-att-class="{ 'o-fullScreen': rtcCallViewer and rtcCallViewer.isFullScreen, 'o-isMinimized': rtcCallViewer and rtcCallViewer.isMinimized }">
+    <div class="o_RtcCallViewer" t-att-class="{ 'o-fullScreen': rtcCallViewer and rtcCallViewer.isFullScreen, 'o-isMinimized': rtcCallViewer and rtcCallViewer.isMinimized }" t-ref="root">
         <t t-if="rtcCallViewer">
 
             <!-- Used to make the component depend on the window size and trigger an update when the window size changes. -->

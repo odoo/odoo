@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.MessageAuthorPrefix" owl="1">
-        <span class="o_MessageAuthorPrefix">
+        <span class="o_MessageAuthorPrefix" t-ref="root">
             <t t-if="message">
                 <t t-if="message.author and message.author === messaging.currentPartner">
                     <i class="o_MessageAuthorPrefixIcon fa fa-mail-reply"/>You:
