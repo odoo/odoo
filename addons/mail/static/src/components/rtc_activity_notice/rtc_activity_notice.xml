@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.RtcActivityNotice" owl="1">
-        <div class="o_RtcActivityNotice dropdown">
+        <div class="o_RtcActivityNotice dropdown" t-ref="root">
             <t t-if="messaging">
                 <RtcInvitations/>
                 <t t-if="messaging.rtc.channel">

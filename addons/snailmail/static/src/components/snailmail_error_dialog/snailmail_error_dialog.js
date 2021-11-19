@@ -9,15 +9,6 @@ const { useRef } = owl.hooks;
 
 class SnailmailErrorDialog extends Component {
 
-    /**
-     * @override
-     */
-    setup() {
-        super.setup();
-        // to manually trigger the dialog close event
-        this._dialogRef = useRef('dialog');
-    }
-
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
@@ -62,7 +53,7 @@ class SnailmailErrorDialog extends Component {
      * @private
      */
     _onClickCancelLetter() {
-        this._dialogRef.comp._close();
+        this.root.comp._close();
         this.message.cancelLetter();
     }
 
@@ -70,14 +61,14 @@ class SnailmailErrorDialog extends Component {
      * @private
      */
     _onClickClose() {
-        this._dialogRef.comp._close();
+        this.root.comp._close();
     }
 
     /**
      * @private
      */
     _onClickResendLetter() {
-        this._dialogRef.comp._close();
+        this.root.comp._close();
         this.message.resendLetter();
     }
 

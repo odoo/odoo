@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ChannelMemberList" owl="1">
-        <div class="o_ChannelMemberList d-flex flex-column overflow- bg-light">
+        <div class="o_ChannelMemberList d-flex flex-column overflow- bg-light" t-ref="root">
             <t t-if="channel.orderedOnlineMembers.length > 0">
                 <t t-call="mail.ChannelMemberList_memberList">
                     <t t-set="members" t-value="channel.orderedOnlineMembers"/>

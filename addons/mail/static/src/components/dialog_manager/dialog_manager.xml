@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.DialogManager" owl="1">
-        <div class="o_DialogManager">
+        <div class="o_DialogManager" t-ref="root">
             <t t-if="messaging and messaging.dialogManager">
                 <t t-foreach="messaging.dialogManager.dialogs" t-as="dialog" t-key="dialog.localId">
                     <Dialog

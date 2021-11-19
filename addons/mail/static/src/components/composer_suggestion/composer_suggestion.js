@@ -85,7 +85,7 @@ export class ComposerSuggestion extends Component {
             this.composerView.hasToScrollToActiveSuggestion &&
             this.props.isActive
         ) {
-            this.el.scrollIntoView({
+            this.root.el.scrollIntoView({
                 block: 'center',
             });
             this.composerView.update({ hasToScrollToActiveSuggestion: false });

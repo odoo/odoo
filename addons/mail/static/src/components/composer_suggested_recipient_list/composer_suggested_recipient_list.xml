@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.ComposerSuggestedRecipientList" owl="1">
-        <div class="o_ComposerSuggestedRecipientList">
+        <div class="o_ComposerSuggestedRecipientList" t-ref="root">
             <t t-if="thread">
                 <t t-foreach="state.hasShowMoreButton ? thread.suggestedRecipientInfoList : thread.suggestedRecipientInfoList.slice(0,3)" t-as="recipientInfo" t-key="recipientInfo.localId">
                     <ComposerSuggestedRecipient

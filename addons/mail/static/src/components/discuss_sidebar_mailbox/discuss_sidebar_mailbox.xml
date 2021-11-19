@@ -6,6 +6,7 @@
                 'o-active': mailbox and mailbox === messaging.discuss.thread,
                 'o-starred-box': mailbox and mailbox === messaging.starred,
             }" t-on-click="mailbox.onClick" t-att-data-thread-local-id="mailbox.localId" t-att-data-thread-name="mailbox.displayName"
+            t-ref="root"
         >
             <ThreadIcon class="o_DiscussSidebarMailbox_item" threadLocalId="mailbox.localId"/>
             <div class="o_DiscussSidebarMailbox_item o_DiscussSidebarMailbox_name">

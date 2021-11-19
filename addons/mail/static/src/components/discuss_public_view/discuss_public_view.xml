@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.DiscussPublicView" owl="1">
-        <div class="o_DiscussPublicView d-flex flex-column h-100">
+        <div class="o_DiscussPublicView d-flex flex-column h-100" t-ref="root">
             <t t-if="discussPublicView">
                 <ThreadView t-if="discussPublicView.threadView"
                     hasComposerThreadTyping="true"

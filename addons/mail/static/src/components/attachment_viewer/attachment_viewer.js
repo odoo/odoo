@@ -57,7 +57,7 @@ export class AttachmentViewer extends Component {
     }
 
     _mounted() {
-        this.el.focus();
+        this.root.el.focus();
         this._handleImageLoad();
         this._hideUnwantedPdfJsButtons();
         document.addEventListener('click', this._onClickGlobal);
@@ -580,7 +580,7 @@ export class AttachmentViewer extends Component {
      */
     _onWheelImage(ev) {
         ev.stopPropagation();
-        if (!this.el) {
+        if (!this.root.el) {
             return;
         }
         if (ev.deltaY > 0) {

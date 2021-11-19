@@ -3,6 +3,8 @@
 import { useModels } from "@mail/component_hooks/use_models/use_models";
 import { useShouldUpdateBasedOnProps } from "@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props";
 
+const { useRef } = owl.hooks;
+
 const componentRegistry = {};
 
 /**
@@ -27,6 +29,7 @@ export function registerMessagingComponent(ComponentClass, { propsCompareDepth =
     // has "decoratedName" as its class name in stack traces and stuff.
     const MessagingClass = { [decoratedName]: class extends ComponentClass {
         setup(...args) {
+            this.root = useRef('root');
             super.setup(...args);
             // useModels must be defined after useRenderedValues, indeed records and
             // fields accessed during useRenderedValues should be observed by

@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.NotificationRequest" owl="1">
-        <div class="o_NotificationRequest" t-on-click="_onClick">
+        <div class="o_NotificationRequest" t-on-click="_onClick" t-ref="root">
             <t t-if="messaging">
                 <div class="o_NotificationRequest_sidebar">
                     <div class="o_NotificationRequest_imageContainer o_NotificationRequest_sidebarItem">

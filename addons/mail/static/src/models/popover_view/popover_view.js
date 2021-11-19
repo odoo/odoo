@@ -44,13 +44,13 @@ registerModel({
          * @param {MouseEvent} ev
          */
         _onClickCaptureGlobal(ev) {
-            if (!this.component || !this.component.el) {
+            if (!this.component || !this.component.root.el) {
                 return;
             }
             if (this.anchorRef && this.anchorRef.el && this.anchorRef.el.contains(ev.target)) {
                 return;
             }
-            if (this.component.el.contains(ev.target)) {
+            if (this.component.root.el.contains(ev.target)) {
                 return;
             }
             this.delete();

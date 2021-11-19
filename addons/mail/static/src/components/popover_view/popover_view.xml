@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.PopoverView" owl="1">
-        <div class="o_PopoverView">
+        <div class="o_PopoverView" t-ref="root">
             <t t-if="popoverView">
                 <ChannelInvitationForm class="o_PopoverView_channelInvitationForm" localId="popoverView.channelInvitationForm.localId"/>
             </t>

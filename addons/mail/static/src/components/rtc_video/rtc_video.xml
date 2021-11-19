@@ -3,11 +3,11 @@
 
     <t t-name="mail.RtcVideo" owl="1">
         <video class="o_RtcVideo"
-           t-ref="video"
            playsinline="true"
            autoplay="true"
            muted="true"
            t-on-loadedmetadata="_onVideoLoadedMetaData"
+           t-ref="root"
         />
     </t>
 

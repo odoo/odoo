@@ -17,6 +17,7 @@
                 'o-starred': messageView and messageView.message.isStarred,
                 'mt-3': messageView and !messageView.isSquashed,
             }" t-on-click="_onClick" t-on-mouseenter="state.isHovered = true" t-on-mouseleave="state.isHovered = false" t-att-data-message-local-id="messageView and messageView.message.localId"
+            t-ref="root"
         >
             <t t-if="messageView" name="rootCondition">
                 <MessageInReplyToView t-if="messageView.messageInReplyToView" messageInReplyToViewLocalId="messageView.messageInReplyToView.localId"/>

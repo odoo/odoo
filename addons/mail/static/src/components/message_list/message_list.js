@@ -256,7 +256,7 @@ export class MessageList extends Component {
         if (this.props.getScrollableElement) {
             return this.props.getScrollableElement();
         } else {
-            return this.el;
+            return this.root.el;
         }
     }
 

@@ -9,15 +9,6 @@ const { useRef } = owl.hooks;
 
 export class AttachmentDeleteConfirmDialog extends Component {
 
-    /**
-     * @override
-     */
-    setup() {
-        super.setup();
-        // to manually trigger the dialog close event
-        this._dialogRef = useRef('dialog');
-    }
-
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
@@ -54,7 +45,7 @@ export class AttachmentDeleteConfirmDialog extends Component {
      * @private
      */
     _onClickCancel() {
-        this._dialogRef.comp._close();
+        this.root.comp._close();
     }
 
     /**
@@ -62,7 +53,7 @@ export class AttachmentDeleteConfirmDialog extends Component {
      */
     async _onClickOk() {
         await this.attachment.remove();
-        this._dialogRef.comp._close();
+        this.root.comp._close();
         this.trigger('o-attachment-removed', { attachmentLocalId: this.props.attachmentLocalId });
     }
 

@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.Chatter" owl="1">
-        <div class="o_Chatter">
+        <div class="o_Chatter" t-ref="root">
             <t t-if="chatter">
                 <div class="o_Chatter_fixedPanel">
                     <ChatterTopbar

@@ -6,6 +6,7 @@
                 'o-active': categoryItem and categoryItem.isActive,
                 'o-unread': categoryItem and categoryItem.isUnread,
             }" t-on-click="categoryItem and categoryItem.onClick" t-att-data-thread-local-id="categoryItem and categoryItem.channel.localId" t-att-data-thread-name="categoryItem and categoryItem.channel.displayName"
+            t-ref="root"
         >
             <t t-if="categoryItem">
                 <div class="o_DiscussSidebarCategoryItem_item o_DiscussSidebarCategoryItem_avatar">

@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="snailmail.SnailmailErrorDialog" owl="1">
-        <Dialog contentClass="'o_SnailmailErrorDialog'" title="title" size="'medium'" t-ref="dialog">
+        <Dialog contentClass="'o_SnailmailErrorDialog'" title="title" size="'medium'" t-ref="root">
             <t t-if="message and notification">
                 <t t-if="notification.failure_type === 'sn_credit'">
                     <p class="o_SnailmailErrorDialog_contentCredit">

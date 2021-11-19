@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.AttachmentList" owl="1">
-        <div class="o_AttachmentList">
+        <div class="o_AttachmentList" t-ref="root">
             <t t-if="attachmentList">
                 <div class="o_AttachmentList_partialList o_AttachmentList_partialListImages">
                     <t t-foreach="attachmentList.attachmentImages" t-as="attachmentImage" t-key="attachmentImage.localId">

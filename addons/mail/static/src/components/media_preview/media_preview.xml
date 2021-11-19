@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.MediaPreview" owl="1">
-        <div class="o_MediaPreview position-relative d-flex justify-content-center">
+        <div class="o_MediaPreview position-relative d-flex justify-content-center" t-ref="root">
             <t t-if="mediaPreview">
                 <video class="o_MediaPreview_videoDisplay shadow rounded bg-dark" height="480" width="640" autoplay="" t-ref="video"/>
                 <p t-if="mediaPreview.doesBrowserSupportMediaDevices and !mediaPreview.isVideoEnabled" class="o_MediaPreview_mediaDevicesStatus position-absolute text-light">

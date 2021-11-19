@@ -15,7 +15,6 @@ export class DeleteMessageConfirmDialog extends Component {
     setup() {
         super.setup();
         this.title = this.env._t("Confirmation");
-        this.dialogRef = useRef('dialog');
     }
 
     /**

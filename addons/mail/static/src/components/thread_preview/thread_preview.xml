@@ -6,7 +6,7 @@
             The preview template is used by the discuss in mobile, and by the systray
             menu in order to show preview of threads.
         -->
-        <div class="o_ThreadPreview" t-att-class="{ 'o-muted': thread and thread.localMessageUnreadCounter === 0 }" t-on-click="_onClick" t-att-data-thread-local-id="thread ? thread.localId : undefined">
+        <div class="o_ThreadPreview" t-att-class="{ 'o-muted': thread and thread.localMessageUnreadCounter === 0 }" t-on-click="_onClick" t-att-data-thread-local-id="thread ? thread.localId : undefined" t-ref="root">
             <t t-if="thread">
                 <div class="o_ThreadPreview_sidebar">
                     <div class="o_ThreadPreview_imageContainer o_ThreadPreview_sidebarItem">

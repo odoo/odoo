@@ -98,7 +98,7 @@ export class RtcCallViewer extends Component {
         if (!this.rtcCallViewer) {
             return;
         }
-        if (!this.el) {
+        if (!this.root.el) {
             return;
         }
         if (!this.tileContainerRef.el) {

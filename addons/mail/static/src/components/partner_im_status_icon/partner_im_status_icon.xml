@@ -12,6 +12,7 @@
             }"
             t-on-click="_onClick"
             t-att-data-partner-local-id="partner ? partner.localId : undefined"
+            t-ref="root"
         >
             <t t-if="partner" name="rootCondition">
                 <t t-if="props.hasBackground">
