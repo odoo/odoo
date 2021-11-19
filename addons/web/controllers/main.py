@@ -1011,6 +1011,11 @@ class WebClient(http.Controller):
 
     @http.route('/web/webclient/qweb/<string:unique>', type='http', auth="none", cors="*")
     def qweb(self, unique, mods=None, db=None):
+
+        if not mods:
+            module_boot_mods = module_boot()
+            mods = module_boot_mods
+
         content = HomeStaticTemplateHelpers.get_qweb_templates(mods, db, debug=request.session.debug)
 
         return request.make_response(content, [
@@ -1053,10 +1058,13 @@ class WebClient(http.Controller):
         :param lang: the language of the user
         :return:
         """
+
         request.disable_db = False
 
-        if mods:
-            mods = mods.split(',')
+        if not mods:
+            module_boot_mods = module_boot()
+            mods = module_boot_mods
+
         translations_per_module, lang_params = request.env["ir.translation"].get_translations_for_webclient(mods, lang)
 
         body = json.dumps({
