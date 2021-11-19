@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.DeleteMessageConfirmDialog" owl="1">
-        <Dialog contentClass="'o_DeleteMessageConfirmDialog'" title="title" t-on-dialog-closed="messageActionList and messageActionList.onDeleteConfirmDialogClosed" t-ref="dialog">
+        <Dialog contentClass="'o_DeleteMessageConfirmDialog'" title="title" t-on-dialog-closed="messageActionList and messageActionList.onDeleteConfirmDialogClosed" t-ref="root">
             <t t-if="messageActionList">
                 <p>Are you sure you want to delete this message?</p>
                 <blockquote class="o_DeleteMessageConfirmDialog_blockquote">

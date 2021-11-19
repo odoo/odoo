@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ChannelInvitationForm" owl="1">
-        <div class="o_ChannelInvitationForm d-flex flex-column" t-ref="channelInvitationForm">
+        <div class="o_ChannelInvitationForm d-flex flex-column" t-ref="root">
             <t t-if="channelInvitationForm">
                 <h3 class="mx-3 mt-3 mb-2">Invite people</h3>
                 <t t-if="!messaging.isCurrentUserGuest">

@@ -138,7 +138,7 @@ export class ComposerTextInput extends Component {
         if (this.composerView.doFocus) {
             this.composerView.update({ doFocus: false });
             if (this.messaging.device.isMobile) {
-                this.el.scrollIntoView();
+                this.root.el.scrollIntoView();
             }
             this._textareaRef.el.focus();
         }

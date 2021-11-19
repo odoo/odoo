@@ -12,6 +12,7 @@
                 'o-messaging-in-editing': composerView and composerView.messageViewInEditing,
             }"
             t-on-keydown="_onKeydown"
+            t-ref="root"
         >
             <t t-if="composerView">
                 <t t-if="isDropZoneVisible.value">

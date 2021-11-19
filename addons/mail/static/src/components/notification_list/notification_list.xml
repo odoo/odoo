@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.NotificationList" owl="1">
-        <div class="o_NotificationList" t-att-class="{ 'o-empty': notifications.length === 0 }">
+        <div class="o_NotificationList" t-att-class="{ 'o-empty': notifications.length === 0 }" t-ref="root">
             <t t-if="notifications.length === 0">
                 <div class="o_NotificationList_noConversation">
                     No conversation yet...

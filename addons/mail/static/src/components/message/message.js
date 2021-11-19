@@ -151,14 +151,14 @@ export class Message extends Component {
      * @returns {boolean}
      */
     isBottomVisible({ offset = 0 } = {}) {
-        if (!this.el) {
+        if (!this.root.el) {
             return false;
         }
-        const elRect = this.el.getBoundingClientRect();
-        if (!this.el.parentNode) {
+        const elRect = this.root.el.getBoundingClientRect();
+        if (!this.root.el.parentNode) {
             return false;
         }
-        const parentRect = this.el.parentNode.getBoundingClientRect();
+        const parentRect = this.root.el.parentNode.getBoundingClientRect();
         // bottom with (double) 10px offset
         return (
             elRect.bottom < parentRect.bottom + offset &&
@@ -172,14 +172,14 @@ export class Message extends Component {
      * @returns {boolean}
      */
     isPartiallyVisible() {
-        if (!this.el) {
+        if (!this.root.el) {
             return false;
         }
-        const elRect = this.el.getBoundingClientRect();
-        if (!this.el.parentNode) {
+        const elRect = this.root.el.getBoundingClientRect();
+        if (!this.root.el.parentNode) {
             return false;
         }
-        const parentRect = this.el.parentNode.getBoundingClientRect();
+        const parentRect = this.root.el.parentNode.getBoundingClientRect();
         // intersection with 5px offset
         return (
             elRect.top < parentRect.bottom + 5 &&
@@ -223,7 +223,7 @@ export class Message extends Component {
      * @returns {Promise}
      */
     async scrollIntoView({ behavior = 'auto', block = 'end' } = {}) {
-        this.el.scrollIntoView({
+        this.root.el.scrollIntoView({
             behavior,
             block,
             inline: 'nearest',

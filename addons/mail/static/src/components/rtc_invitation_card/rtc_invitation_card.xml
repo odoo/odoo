@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.RtcInvitationCard" owl="1">
-        <div class="o_RtcInvitationCard">
+        <div class="o_RtcInvitationCard" t-ref="root">
             <t t-if="thread and thread.rtcInvitingSession">
                 <div class="o_RtcInvitationCard_partnerInfo">
                     <img class="o_RtcInvitationCard_partnerInfoImage rounded-circle"

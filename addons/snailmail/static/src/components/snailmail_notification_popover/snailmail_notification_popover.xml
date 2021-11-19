@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="snailmail.SnailmailNotificationPopover" owl="1">
-        <div class="o_SnailmailNotificationPopover">
+        <div class="o_SnailmailNotificationPopover" t-ref="root">
             <t t-if="message and notification">
                 <i class="o_SnailmailNotificationPopover_icon" t-att-class="iconClass" role="img"/>
                 <span t-esc="iconTitle"/>

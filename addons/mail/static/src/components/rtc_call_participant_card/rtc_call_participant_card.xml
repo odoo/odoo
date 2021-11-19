@@ -9,6 +9,7 @@
                 'o-isInvitation': callParticipantCard and callParticipantCard.isInvitation,
             }"
             t-on-contextmenu="_onContextMenu"
+            t-ref="root"
         >
             <t t-if="callParticipantCard">
                 <div class="o_RtcCallParticipantCard_container align-items-center"

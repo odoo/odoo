@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.MailTemplate" owl="1">
-        <div class="o_MailTemplate">
+        <div class="o_MailTemplate" t-ref="root">
             <t t-if="mailTemplate">
                 <i class="fa fa-envelope-o" title="Mail" role="img"/>
                 <span class="o_MailTemplate_name" t-esc="mailTemplate.name"/>

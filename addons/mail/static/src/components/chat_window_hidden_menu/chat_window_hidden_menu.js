@@ -73,8 +73,8 @@ export class ChatWindowHiddenMenu extends Component {
         const offsetFrom = textDirection === 'rtl' ? 'left' : 'right';
         const oppositeFrom = offsetFrom === 'right' ? 'left' : 'right';
         const offset = this.messaging.chatWindowManager.visual.hidden.offset;
-        this.el.style[offsetFrom] = `${offset}px`;
-        this.el.style[oppositeFrom] = 'auto';
+        this.root.el.style[offsetFrom] = `${offset}px`;
+        this.root.el.style[oppositeFrom] = 'auto';
     }
 
     //--------------------------------------------------------------------------
@@ -89,7 +89,7 @@ export class ChatWindowHiddenMenu extends Component {
      * @param {MouseEvent} ev
      */
     _onClickCaptureGlobal(ev) {
-        if (!this.el || this.el.contains(ev.target)) {
+        if (!this.root.el || this.root.el.contains(ev.target)) {
             return;
         }
         this.messaging.chatWindowManager.closeHiddenMenu();
