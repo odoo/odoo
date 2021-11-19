@@ -1641,6 +1641,7 @@ class Task(models.Model):
         # The sudo is required for a portal user as the record creation
         # requires the read access on other models, as mail.template
         # in order to compute the field tracking
+        was_in_sudo = self.env.su
         if is_portal_user:
             ctx = {
                 key: value for key, value in self.env.context.items()
@@ -1652,7 +1653,9 @@ class Task(models.Model):
         tasks = super(Task, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
         tasks._populate_missing_personal_stages()
         self._task_message_auto_subscribe_notify({task: task.user_ids - self.env.user for task in tasks})
-        if is_portal_user:
+
+        # in case we were already in sudo, we don't check the rights.
+        if is_portal_user and not was_in_sudo:
             # since we use sudo to create tasks, we need to check
             # if the portal user could really create the tasks based on the ir rule.
             tasks.with_user(self.env.user).check_access_rule('create')
