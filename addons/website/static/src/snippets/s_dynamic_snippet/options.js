@@ -47,18 +47,6 @@ const dynamicSnippetOptions = options.Class.extend({
         if (params.attributeName === 'templateKey' && previewMode === false) {
             this._templateUpdated(widgetValue, params.activeValue);
         }
-        if (params.attributeName === 'numberOfRecords' && previewMode === false) {
-            const dataSet = this.$target.get(0).dataset;
-            const numberOfElements = parseInt(dataSet.numberOfElements);
-            const numberOfRecords = parseInt(dataSet.numberOfRecords);
-            const numberOfElementsSmallDevices = parseInt(dataSet.numberOfElementsSmallDevices);
-            if (numberOfElements > numberOfRecords) {
-                dataSet.numberOfElements = numberOfRecords;
-            }
-            if (numberOfElementsSmallDevices > numberOfRecords) {
-                dataSet.numberOfElementsSmallDevices = numberOfRecords;
-            }
-        }
     },
 
     //--------------------------------------------------------------------------
@@ -77,16 +65,6 @@ const dynamicSnippetOptions = options.Class.extend({
             return;
         }
         await this._super(...arguments);
-    },
-
-    /**
-     * @override
-     */
-    async updateUIVisibility() {
-        await this._super(...arguments);
-        const template = this._getCurrentTemplate();
-        const groupingMessage = this.el.querySelector('.o_grouping_message');
-        groupingMessage.classList.toggle('d-none', template && !!template.numOfEl && !!template.numOfElSm);
     },
 
     //--------------------------------------------------------------------------
@@ -110,16 +88,6 @@ const dynamicSnippetOptions = options.Class.extend({
         if (widgetName === 'filter_opt') {
             // Hide if exaclty one is available: show when none to help understand what is missing
             return Object.keys(this.dynamicFilters).length !== 1;
-        }
-
-        if (widgetName === 'number_of_elements_opt') {
-            const template = this._getCurrentTemplate();
-            return template && !template.numOfEl;
-        }
-
-        if (widgetName === 'number_of_elements_small_devices_opt') {
-            const template = this._getCurrentTemplate();
-            return template && !template.numOfElSm;
         }
 
         if (widgetName === 'number_of_records_opt') {
@@ -249,8 +217,6 @@ const dynamicSnippetOptions = options.Class.extend({
         // numberOfElements or numberOfElementsSmallDevices) might throw an
         // exception by not finding the attribute on the element.
         this.options.wysiwyg.odooEditor.observerUnactive();
-        this._setOptionValue('numberOfElements', 4);
-        this._setOptionValue('numberOfElementsSmallDevices', 1);
         const filterKeys = this.$el.find("we-select[data-attribute-name='filterId'] we-selection-items we-button");
         if (filterKeys.length > 0) {
             this._setOptionValue('numberOfRecords', this.dynamicFilters[Object.keys(this.dynamicFilters)[0]].limit);
@@ -285,12 +251,21 @@ const dynamicSnippetOptions = options.Class.extend({
         const template = this.dynamicFilterTemplates[newTemplate];
         if (template.numOfEl) {
             this.$target[0].dataset.numberOfElements = template.numOfEl;
+        } else {
+            delete this.$target[0].dataset.numberOfElements;
         }
         if (template.numOfElSm) {
             this.$target[0].dataset.numberOfElementsSmallDevices = template.numOfElSm;
+        } else {
+            delete this.$target[0].dataset.numberOfElementsSmallDevices;
         }
         if (template.numOfElFetch) {
             this.$target[0].dataset.numberOfRecords = template.numOfElFetch;
+        }
+        if (template.extraClasses) {
+            this.$target[0].dataset.extraClasses = template.extraClasses;
+        } else {
+            delete this.$target[0].dataset.extraClasses;
         }
     },
     /**

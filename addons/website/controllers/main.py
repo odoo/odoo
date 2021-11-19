@@ -398,6 +398,9 @@ class Website(Home):
             t['numOfEl'] = attribs.get('data-number-of-elements')
             t['numOfElSm'] = attribs.get('data-number-of-elements-sm')
             t['numOfElFetch'] = attribs.get('data-number-of-elements-fetch')
+            t['rowPerSlide'] = attribs.get('data-row-per-slide')
+            t['arrowPosition'] = attribs.get('data-arrow-position')
+            t['extraClasses'] = attribs.get('data-extra-classes')
         return templates
 
     @http.route('/website/get_current_currency', type='json', auth="public", website=True)
