@@ -1,9 +1,10 @@
 /** @odoo-module **/
 
+import { browser } from "@web/core/browser/browser";
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { registry } from "@web/core/registry";
-import { makeFakeLocalizationService, makeFakeUserService } from "../helpers/mock_services";
-import { click, makeDeferred, nextTick, triggerEvent, triggerEvents } from "../helpers/utils";
+import { makeFakeUserService } from "../helpers/mock_services";
+import { click, patchWithCleanup } from "../helpers/utils";
 import {
     setupControlPanelFavoriteMenuRegistry,
     setupControlPanelServiceRegistry,
@@ -246,15 +247,15 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skip("static statusbar widget on many2one field", async function (assert) {
         assert.expect(5);
 
-        this.data.partner.fields.trululu.domain = "[('bar', '=', True)]";
-        this.data.partner.records[1].bar = false;
+        serverData.models.partner.fields.trululu.domain = "[('bar', '=', True)]";
+        serverData.models.partner.records[1].bar = false;
 
         var count = 0;
         var nb_fields_fetched;
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<header><field name="trululu" widget="statusbar"/></header>' +
@@ -269,7 +270,7 @@ QUnit.module("Fields", (hooks) => {
                 }
                 return this._super.apply(this, arguments);
             },
-            res_id: 1,
+            resId: 1,
             config: { device: { isMobile: false } },
         });
 
@@ -288,10 +289,10 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skip("static statusbar widget on many2one field with domain", async function (assert) {
         assert.expect(1);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<header><field name="trululu" domain="[(\'user_id\',\'=\',uid)]" widget="statusbar"/></header>' +
@@ -306,79 +307,91 @@ QUnit.module("Fields", (hooks) => {
                 }
                 return this._super.apply(this, arguments);
             },
-            res_id: 1,
+            resId: 1,
             session: { user_context: { uid: 17 } },
         });
 
         form.destroy();
     });
 
-    QUnit.skip("clickable statusbar widget on many2one field", async function (assert) {
+    QUnit.test("clickable statusbar widget on many2one field", async function (assert) {
         assert.expect(5);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                '<header><field name="trululu" widget="statusbar" options=\'{"clickable": "1"}\'/></header>' +
-                "</form>",
-            res_id: 1,
-            config: { device: { isMobile: false } },
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <header>
+                        <field name="trululu" widget="statusbar" options="{'clickable': 1}" />
+                    </header>
+                </form>
+            `,
+            // config: { device: { isMobile: false } },
         });
 
-        assert.hasClass(form.$('.o_statusbar_status button[data-value="4"]'), "btn-primary");
-        assert.hasClass(form.$('.o_statusbar_status button[data-value="4"]'), "disabled");
-
-        assert.containsN(
-            form,
-            ".o_statusbar_status button.btn-secondary:not(.dropdown-toggle):not(:disabled)",
-            2
+        assert.hasClass(
+            form.el.querySelector(".o_statusbar_status button[data-value='4']"),
+            "btn-primary"
+        );
+        assert.hasClass(
+            form.el.querySelector(".o_statusbar_status button[data-value='4']"),
+            "disabled"
         );
 
-        var $clickable = form.$(
+        const clickableButtons = form.el.querySelectorAll(
             ".o_statusbar_status button.btn-secondary:not(.dropdown-toggle):not(:disabled)"
         );
-        await testUtils.dom.click($clickable.last()); // (last is visually the first here (css))
+        assert.strictEqual(clickableButtons.length, 2);
 
-        assert.hasClass(form.$('.o_statusbar_status button[data-value="1"]'), "btn-primary");
-        assert.hasClass(form.$('.o_statusbar_status button[data-value="1"]'), "disabled");
+        await click(clickableButtons[clickableButtons.length - 1]); // (last is visually the first here (css))
 
-        form.destroy();
+        assert.hasClass(
+            form.el.querySelector(".o_statusbar_status button[data-value='1']"),
+            "btn-primary"
+        );
+        assert.hasClass(
+            form.el.querySelector(".o_statusbar_status button[data-value='1']"),
+            "disabled"
+        );
     });
 
-    QUnit.skip("statusbar with no status", async function (assert) {
+    QUnit.test("statusbar with no status", async function (assert) {
         assert.expect(2);
 
-        this.data.product.records = [];
-        const form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch: `<form string="Partners">
-                    <header><field name="product_id" widget="statusbar"/></header>
-                </form>`,
-            res_id: 1,
-            config: { device: { isMobile: false } },
+        serverData.models.product.records = [];
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <header>
+                        <field name="product_id" widget="statusbar" />
+                    </header>
+                </form>
+            `,
+            // config: { device: { isMobile: false } },
         });
 
-        assert.doesNotHaveClass(form.$(".o_statusbar_status"), "o_field_empty");
+        assert.doesNotHaveClass(form.el.querySelector(".o_statusbar_status"), "o_field_empty");
         assert.strictEqual(
-            form.$(".o_statusbar_status").children().length,
+            form.el.querySelector(".o_statusbar_status").children.length,
             0,
             "statusbar widget should be empty"
         );
-        form.destroy();
     });
 
     QUnit.skip("statusbar with required modifier", async function (assert) {
         assert.expect(2);
 
-        const form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch: `<form string="Partners">
                     <header><field name="product_id" widget="statusbar" required="1"/></header>
                 </form>`,
@@ -404,36 +417,37 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("statusbar with no value in readonly", async function (assert) {
+    QUnit.test("statusbar with no value in readonly", async function (assert) {
         assert.expect(2);
 
-        const form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
             arch: `
                 <form>
-                    <header><field name="product_id" widget="statusbar"/></header>
-                </form>`,
-            res_id: 1,
-            config: { device: { isMobile: false } },
+                    <header>
+                        <field name="product_id" widget="statusbar" />
+                    </header>
+                </form>
+            `,
+            // config: { device: { isMobile: false } },
         });
 
-        assert.doesNotHaveClass(form.$(".o_statusbar_status"), "o_field_empty");
-        assert.containsN(form, ".o_statusbar_status button:visible", 2);
-
-        form.destroy();
+        assert.doesNotHaveClass(form.el.querySelector(".o_statusbar_status"), "o_field_empty");
+        assert.containsN(form.el, ".o_statusbar_status button:visible", 2);
     });
 
     QUnit.skip("statusbar with domain but no value (create mode)", async function (assert) {
         assert.expect(1);
 
-        this.data.partner.fields.trululu.domain = "[('bar', '=', True)]";
+        serverData.models.partner.fields.trululu.domain = "[('bar', '=', True)]";
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<header><field name="trululu" widget="statusbar"/></header>' +
@@ -450,17 +464,17 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(2);
 
-            this.data.partner.fields.trululu.domain = "[('bar', '=', True)]";
+            serverData.models.partner.fields.trululu.domain = "[('bar', '=', True)]";
 
-            var form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     '<header><field name="trululu" widget="statusbar" options=\'{"clickable": "1"}\'/></header>' +
                     "</form>",
-                res_id: 1,
+                resId: 1,
                 config: { device: { isMobile: false } },
             });
 
@@ -475,46 +489,53 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.test(
         "statusbar fold_field option and statusbar_visible attribute",
         async function (assert) {
             assert.expect(2);
 
-            this.data.partner.records[0].bar = false;
-
-            var form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
-                arch:
-                    '<form string="Partners">' +
-                    '<header><field name="trululu" widget="statusbar" options="{\'fold_field\': \'bar\'}"/>' +
-                    '<field name="color" widget="statusbar" statusbar_visible="red"/></header>' +
-                    "</form>",
-                res_id: 1,
-                config: { device: { isMobile: false } },
+            patchWithCleanup(browser, {
+                setTimeout: (fn) => fn(),
             });
 
-            await testUtils.form.clickEdit(form);
+            serverData.models.partner.records[0].bar = false;
 
-            assert.containsOnce(form, ".o_statusbar_status:first .dropdown-menu button.disabled");
-            assert.containsOnce(form, ".o_statusbar_status:last button.disabled");
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
+                    <form>
+                        <header>
+                            <field name="trululu" widget="statusbar" options="{'fold_field': 'bar'}" />
+                            <field name="color" widget="statusbar" statusbar_visible="red" />
+                        </header>
+                    </form>
+                `,
+                // config: { device: { isMobile: false } },
+            });
 
-            form.destroy();
+            await click(form.el, ".o_form_button_edit");
+            await click(form.el, ".dropdown-toggle");
+
+            const status = form.el.querySelectorAll(".o_statusbar_status");
+            assert.containsOnce(status[0], ".dropdown-item.disabled");
+            assert.containsOnce(status[status.length - 1], "button.disabled");
         }
     );
 
     QUnit.skip("statusbar with dynamic domain", async function (assert) {
         assert.expect(5);
 
-        this.data.partner.fields.trululu.domain = "[('int_field', '>', qux)]";
-        this.data.partner.records[2].int_field = 0;
+        serverData.models.partner.fields.trululu.domain = "[('int_field', '>', qux)]";
+        serverData.models.partner.records[2].int_field = 0;
 
         var rpcCount = 0;
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<header><field name="trululu" widget="statusbar"/></header>' +
@@ -527,7 +548,7 @@ QUnit.module("Fields", (hooks) => {
                 }
                 return this._super.apply(this, arguments);
             },
-            res_id: 1,
+            resId: 1,
             config: { device: { isMobile: false } },
         });
 
