@@ -1,7 +1,13 @@
 /** @odoo-module **/
 
 import { makeFakeDialogService } from "@web/../tests/helpers/mock_services";
-import { click, makeDeferred, nextTick, triggerEvent } from "@web/../tests/helpers/utils";
+import {
+    click,
+    editInput,
+    makeDeferred,
+    nextTick,
+    triggerEvent,
+} from "@web/../tests/helpers/utils";
 import {
     getPagerLimit,
     getPagerValue,
@@ -16,6 +22,11 @@ import { registry } from "@web/core/registry";
 const serviceRegistry = registry.category("services");
 
 const clickCreate = async (kanban) => click(kanban.el.querySelector("button.o-kanban-button-new"));
+
+const reload = async (kanban, params = {}) => {
+    await kanban.model.load(params);
+    await nextTick();
+};
 
 const toggleColumnActions = async (kanban, columnIndex) => {
     const group = kanban.el.querySelector(`.o_kanban_group:nth-child(${columnIndex + 1})`);
@@ -205,6 +216,13 @@ QUnit.module("Views", (hooks) => {
                         { id: 2, display_name: "EUR", symbol: "€", position: "after" },
                     ],
                 },
+            },
+            views: {
+                "partner,false,form": /* xml */ `
+                    <form>
+                        <field name="display_name" />
+                    </form>
+                `,
             },
         };
 
@@ -698,10 +716,6 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("create in grouped on m2o", async (assert) => {
         assert.expect(5);
 
-        serverData.views = {
-            "partner,false,form": `<form><field name="foo" /></form>`,
-        };
-
         const kanban = await makeView({
             type: "kanban",
             resModel: "partner",
@@ -748,7 +762,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(kanban, ".o_kanban_group:first-child > .o_kanban_quick_create");
     });
 
-    QUnit.skip("prevent deletion when grouped by many2many field", async (assert) => {
+    QUnit.test("prevent deletion when grouped by many2many field", async (assert) => {
         assert.expect(2);
 
         serverData.models.partner.records[0].category_ids = [6, 7];
@@ -774,7 +788,8 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsNone(kanban, ".thisisdeletable", "records should not be deletable");
 
-        await kanban.reload({ groupBy: ["foo"] });
+        await reload(kanban, { groupBy: ["foo"] });
+
         assert.containsN(kanban, ".thisisdeletable", 4, "records should be deletable");
     });
 
@@ -792,14 +807,10 @@ QUnit.module("Views", (hooks) => {
                 '<div><field name="foo"/></div>' +
                 "</t></templates></kanban>",
             groupBy: ["bar"],
-            async mockRPC(route, args) {
-                assert.step(args.method || route);
-                if (args.method === "name_create") {
-                    assert.strictEqual(
-                        args.args[0],
-                        "new partner",
-                        "should send the correct value"
-                    );
+            async mockRPC(route, { args, method }) {
+                assert.step(method || route);
+                if (method === "name_create") {
+                    assert.strictEqual(args[0], "new partner");
                 }
             },
         });
@@ -811,43 +822,23 @@ QUnit.module("Views", (hooks) => {
         );
 
         // click on 'Create' -> should open the quick create in the first column
-        await testUtils.kanban.clickCreate(kanban);
-        const $quickCreate = kanban.el.querySelector(
-            ".o_kanban_group:first .o_kanban_quick_create"
+        await clickCreate(kanban);
+
+        assert.containsOnce(kanban, ".o_kanban_group:first-child .o_kanban_quick_create");
+
+        const quickCreate = kanban.el.querySelector(
+            ".o_kanban_group:first-child .o_kanban_quick_create"
         );
 
-        assert.strictEqual(
-            $quickCreate.length,
-            1,
-            "should have a quick create element in the first column"
-        );
-        assert.strictEqual(
-            $quickCreate.find(".o_form_view.o_xxs_form_view").length,
-            1,
-            "should have rendered an XXS form view"
-        );
-        assert.strictEqual($quickCreate.find("input").length, 1, "should have only one input");
-        assert.hasClass(
-            $quickCreate.find("input"),
-            "o_required_modifier",
-            "the field should be required"
-        );
-        assert.strictEqual(
-            $quickCreate.find("input[placeholder=Title]").length,
-            1,
-            "input placeholder should be 'Title'"
-        );
+        assert.containsOnce(quickCreate, ".o_form_view.o_xxs_form_view");
+        assert.containsOnce(quickCreate, "input");
+        // assert.containsOnce(quickCreate, "input.o_required_modifier[placeholder=Title]");
 
         // fill the quick create and validate
-        await testUtils.fields.editInput($quickCreate.find("input"), "new partner");
-        await click($quickCreate.find("button.o_kanban_add"));
+        await editInput(quickCreate, "input", "new partner");
+        await click(quickCreate, "button.o_kanban_add");
 
-        assert.containsN(
-            kanban,
-            ".o_kanban_group:first .o_kanban_record",
-            2,
-            "first column should contain two records"
-        );
+        assert.containsN(kanban, ".o_kanban_group:first-child .o_kanban_record", 2);
 
         assert.verifySteps([
             "web_read_group", // initial read_group
@@ -906,7 +897,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // click on 'Create' -> should open the quick create in the first column
-        await testUtils.kanban.clickCreate(kanban);
+        await clickCreate(kanban);
         const $quickCreate = kanban.el.querySelector(
             ".o_kanban_group:first .o_kanban_quick_create"
         );
@@ -1008,7 +999,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // click on 'Create', fill the quick create and validate
-        await testUtils.kanban.clickCreate(kanban);
+        await clickCreate(kanban);
         const $quickCreate = kanban.el.querySelector(
             ".o_kanban_group:first .o_kanban_quick_create"
         );
@@ -1090,7 +1081,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // click on 'Create', fill the quick create and validate
-        await testUtils.kanban.clickCreate(kanban);
+        await clickCreate(kanban);
         const $quickCreate = kanban.el.querySelector(
             ".o_kanban_group:first .o_kanban_quick_create"
         );
@@ -1155,7 +1146,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         // click on 'Create' -> should open the quick create in the first column
-        await testUtils.kanban.clickCreate(kanban);
+        await clickCreate(kanban);
         const $quickCreate = kanban.el.querySelector(
             ".o_kanban_group:first .o_kanban_quick_create"
         );
@@ -1859,7 +1850,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // click on 'Create' to open the quick create in the first column
-        await testUtils.kanban.clickCreate(kanban);
+        await clickCreate(kanban);
 
         assert.doesNotHaveClass(
             kanban.el.querySelector(".o_kanban_group:first"),
@@ -2363,7 +2354,7 @@ QUnit.module("Views", (hooks) => {
             "there should be 2 records in first column"
         );
 
-        await testUtils.kanban.clickCreate(kanban); // Click on 'Create'
+        await clickCreate(kanban); // Click on 'Create'
         assert.hasClass(
             kanban.el.querySelector(".o_kanban_group:first() > div:nth(1)"),
             "o_kanban_quick_create",
@@ -2445,7 +2436,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await testUtils.kanban.clickCreate(kanban);
+        await clickCreate(kanban);
         assert.containsOnce(kanban, ".o_kanban_quick_create", "should have a quick create widget");
 
         await testUtils.kanban.quickCreate(kanban, "test");
@@ -2655,7 +2646,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(kanban, ".o_kanban_group", 2, "there should be 2 columns");
         assert.containsNone(kanban, ".o_kanban_record", "both columns should be empty");
 
-        await testUtils.kanban.clickCreate(kanban);
+        await clickCreate(kanban);
 
         assert.containsOnce(
             kanban,
@@ -2699,7 +2690,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // clicking on CREATE in control panel should not open a quick create
-        await testUtils.kanban.clickCreate(kanban);
+        await clickCreate(kanban);
         assert.containsNone(
             kanban,
             ".o_kanban_quick_create",
@@ -2715,7 +2706,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // clicking on CREATE in control panel should not open a quick create
-        await testUtils.kanban.clickCreate(kanban);
+        await clickCreate(kanban);
         assert.containsNone(
             kanban,
             ".o_kanban_quick_create",
@@ -2763,7 +2754,7 @@ QUnit.module("Views", (hooks) => {
             );
 
             // clicking on CREATE in control panel should open a quick create
-            await testUtils.kanban.clickCreate(kanban);
+            await clickCreate(kanban);
             assert.containsOnce(
                 kanban,
                 ".o_kanban_group:first .o_kanban_quick_create",
@@ -2787,7 +2778,7 @@ QUnit.module("Views", (hooks) => {
             );
 
             // clicking on CREATE in control panel should open a quick create
-            await testUtils.kanban.clickCreate(kanban);
+            await clickCreate(kanban);
             assert.containsOnce(
                 kanban,
                 ".o_kanban_group:first .o_kanban_quick_create",
@@ -4554,7 +4545,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(nbRPCs, 0, "no rpc should have been done when folding/unfolding");
 
         // quick create a record
-        await testUtils.kanban.clickCreate(kanban);
+        await clickCreate(kanban);
         assert.hasClass(
             kanban.el.querySelector(".o_kanban_group:first() > div:nth(1)"),
             "o_kanban_quick_create",
@@ -8380,7 +8371,7 @@ QUnit.module("Views", (hooks) => {
                 kanban.el.querySelector(".o_kanban_counter_side:first").text()
             );
 
-            await testUtils.kanban.clickCreate(kanban);
+            await clickCreate(kanban);
             // fill the quick create and validate
             const $quickCreate = kanban.el.querySelector(
                 ".o_kanban_group:first .o_kanban_quick_create"
@@ -8444,7 +8435,7 @@ QUnit.module("Views", (hooks) => {
             assert.strictEqual(initialCount, -4, "Initial count should be -4");
 
             // open the quick create
-            await testUtils.kanban.clickCreate(kanban);
+            await clickCreate(kanban);
 
             // fill it with a record that satisfies the activated filter
             let quickCreate = kanban.el.querySelector(
@@ -8521,7 +8512,7 @@ QUnit.module("Views", (hooks) => {
             await _quickCreateAndTest();
 
             const _quickCreateAndTest = async () => {
-                await testUtils.kanban.clickCreate(kanban);
+                await clickCreate(kanban);
                 $quickCreateGroup = kanban.el
                     .querySelector(".o_kanban_quick_create")
                     .closest(".o_kanban_group");
@@ -8828,7 +8819,7 @@ QUnit.module("Views", (hooks) => {
                 },
             },
         });
-        await testUtils.kanban.clickCreate(kanban);
+        await clickCreate(kanban);
     });
 
     QUnit.skip("keyboard navigation on kanban basic rendering", async (assert) => {
@@ -9592,7 +9583,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         // Open quick create
-        await testUtils.kanban.clickCreate(kanban);
+        await clickCreate(kanban);
 
         assert.containsOnce(kanban, ".o_kanban_group:first .o_kanban_quick_create");
 

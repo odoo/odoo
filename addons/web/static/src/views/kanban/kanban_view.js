@@ -21,8 +21,10 @@ const ACTION_TYPES = ["action", "object"];
 const SPECIAL_TYPES = [...ACTION_TYPES, "edit", "open", "delete", "url", "set_cover"];
 const TRANSPILED_EXPRESSIONS = [
     // Action names
-    { regex: /\bwidget.editable\b/g, value: "props.info.activeActions.edit" },
-    { regex: /\bwidget.deletable\b/g, value: "props.info.activeActions.delete" },
+    { regex: /\bwidget.editable\b/g, value: "canEditRecord()" },
+    { regex: /\bwidget.deletable\b/g, value: "canDeleteRecord()" },
+    // Special case: 'isHtmlEmpty' method
+    { regex: /\bwidget.isHtmlEmpty\b/g, value: "isHtmlEmpty" },
     // `widget.prop` => `props.prop`
     { regex: /\bwidget\.(\w+)\b/g, value: "props.$1" },
     // `record.prop` => `record.data.prop`

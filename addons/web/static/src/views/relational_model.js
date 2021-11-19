@@ -399,12 +399,46 @@ export class DynamicGroupList extends DynamicList {
 
         this.groupLimit = params.groupLimit || state.groupLimit || this.constructor.DEFAULT_LIMIT;
         this.groupByInfo = params.groupByInfo || {}; // FIXME: is this something specific to the list view?
-        this.groupByField = this.fields[this.groupBy[0]];
         this.openGroupsByDefault = params.openGroupsByDefault || false;
         this.groups = state.groups || [];
         this.activeFields = params.activeFields;
         this.type = "group-list";
         this.isGrouped = true;
+    }
+
+    get groupByField() {
+        return this.fields[this.groupBy[0]];
+    }
+
+    /**
+     * @param {string} shortType
+     * @returns {boolean}
+     */
+    groupedBy(shortType) {
+        const { type } = this.groupByField;
+        switch (shortType) {
+            case "m2o":
+            case "many2one": {
+                return type === "many2one";
+            }
+            case "o2m":
+            case "one2many": {
+                return type === "one2many";
+            }
+            case "m2m":
+            case "many2many": {
+                return type === "many2many";
+            }
+            case "m2x":
+            case "many2x": {
+                return ["many2one", "many2many"].includes(type);
+            }
+            case "x2m":
+            case "x2many": {
+                return ["one2many", "many2many"].includes(type);
+            }
+        }
+        return false;
     }
 
     exportState() {
@@ -453,7 +487,6 @@ export class DynamicGroupList extends DynamicList {
         );
         this.count = length;
 
-        const groupedByField = this.fields[this.groupBy[0]];
         const commonGroupParams = {
             fields: this.fields,
             activeFields: this.activeFields,
@@ -470,32 +503,32 @@ export class DynamicGroupList extends DynamicList {
                     ...commonGroupParams,
                     aggregates: {},
                     isFolded: !this.openGroupsByDefault,
-                    groupedByFieldName: groupedByField.name,
+                    groupedByFieldName: this.groupByField.name,
                 };
                 for (const key in data) {
                     const value = data[key];
                     switch (key) {
-                        case groupedByField.name: {
+                        case this.groupByField.name: {
                             // FIXME: not sure about this
                             groupParams.value = Array.isArray(value) ? value[0] : value;
                             groupParams.displayName = Array.isArray(value) ? value[1] : value;
-                            if (["many2one", "many2many"].includes(groupedByField.type)) {
+                            if (this.groupedBy("m2x")) {
                                 if (!groupParams.value) {
                                     groupParams.displayName = this.model.env._t("Undefined");
                                 }
-                                if (this.groupByInfo[groupedByField.name]) {
+                                if (this.groupByInfo[this.groupByField.name]) {
                                     groupParams.recordParam = {
-                                        resModel: groupedByField.relation,
+                                        resModel: this.groupByField.relation,
                                         resId: groupParams.value,
-                                        activeFields: this.groupByInfo[groupedByField.name]
+                                        activeFields: this.groupByInfo[this.groupByField.name]
                                             .activeFields,
-                                        fields: this.groupByInfo[groupedByField.name].fields,
+                                        fields: this.groupByInfo[this.groupByField.name].fields,
                                     };
                                 }
                             }
                             break;
                         }
-                        case `${groupedByField.name}_count`: {
+                        case `${this.groupByField.name}_count`: {
                             groupParams.count = value;
                             break;
                         }

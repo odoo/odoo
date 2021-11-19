@@ -88,6 +88,10 @@ export class KanbanRenderer extends Component {
         });
     }
 
+    // ------------------------------------------------------------------------
+    // Getters
+    // ------------------------------------------------------------------------
+
     // `context` can be called in the evaluated kanban template.
     get context() {
         return this.props.context;
@@ -99,128 +103,6 @@ export class KanbanRenderer extends Component {
 
     get groupsDraggable() {
         return this.props.list.isGrouped && this.props.list.groupByField.type === "many2one";
-    }
-
-    createGroup() {
-        const groupName = this.state.newGroup.trim();
-        if (groupName.length) {
-            this.props.list.createGroup(groupName);
-        }
-        this.state.newGroup = "";
-        this.state.quickCreateGroup = false;
-    }
-
-    quickCreate(group) {
-        this.props.createRecord(group);
-    }
-
-    cancelQuickCreate() {
-        for (const group of this.props.list.groups) {
-            group.list.cancelQuickCreate();
-        }
-    }
-
-    async validateQuickCreate(group, editAfterCreate) {
-        const record = await group.list.validateQuickCreate();
-        if (editAfterCreate) {
-            await this.props.openRecord(record);
-        }
-    }
-
-    toggleGroup(group) {
-        group.toggle();
-    }
-
-    editGroup(group) {
-        // TODO
-        console.warn("TODO: Open group", group.id);
-    }
-
-    archiveGroup(group) {
-        this.dialog.add(ConfirmationDialog, {
-            body: this.env._t(
-                "Are you sure that you want to archive all the records from this column?"
-            ),
-            confirm: () => group.list.archive(),
-            cancel: () => {},
-        });
-    }
-
-    unarchiveGroup(group) {
-        group.list.unarchive();
-    }
-
-    deleteGroup(group) {
-        this.props.list.deleteGroup(group);
-    }
-
-    deleteRecord(record, group) {
-        const { list } = group || this.props;
-        this.dialog.add(ConfirmationDialog, {
-            body: this.env._t("Are you sure you want to delete this record?"),
-            confirm: () => list.unlink(record),
-            cancel: () => {},
-        });
-    }
-
-    onGroupClick(group, ev) {
-        if (!ev.target.closest(".dropdown") && group.isFolded) {
-            group.toggle();
-        }
-    }
-
-    selectColor(record, colorIndex) {
-        // TODO
-        console.warn("TODO: Update record", record.id, {
-            [this.props.info.colorField]: colorIndex,
-        });
-    }
-
-    triggerAction(record, group, params) {
-        const { type } = params;
-        switch (type) {
-            case "edit":
-            case "open": {
-                this.props.openRecord(record);
-                break;
-            }
-            case "delete": {
-                this.deleteRecord(record, group);
-                break;
-            }
-            case "action":
-            case "object": {
-                // TODO
-                console.warn("TODO: Button clicked for record", record.id, { params });
-                break;
-            }
-            case "set_cover": {
-                const { fieldName, widget, autoOpen } = params;
-                const field = this.props.list.fields[fieldName];
-                if (
-                    field.type === "many2one" &&
-                    field.relation === "ir.attachment" &&
-                    widget === "attachment_image"
-                ) {
-                    // TODO
-                    console.warn("TODO: Update record", record.id, { fieldName, autoOpen });
-                } else {
-                    const warning = sprintf(
-                        this.env._t(
-                            `Could not set the cover image: incorrect field ("%s") is provided in the view.`
-                        ),
-                        fieldName
-                    );
-                    this.notification.add({ title: warning, type: "danger" });
-                }
-                break;
-            }
-            default: {
-                this.notification.add(this.env._t("Kanban: no action for type: ") + type, {
-                    type: "danger",
-                });
-            }
-        }
     }
 
     /**
@@ -241,31 +123,6 @@ export class KanbanRenderer extends Component {
 
     getGroupName({ count, displayName, isFolded }) {
         return isFolded ? `${displayName} (${count})` : displayName;
-    }
-
-    canArchiveGroup(group) {
-        const { activeActions } = this.props.info;
-        const { groupByField } = this.props.list;
-        const hasActiveField = "active" in group.fields;
-        return activeActions.groupArchive && hasActiveField && groupByField.type !== "many2many";
-    }
-
-    canCreateGroup() {
-        const { activeActions } = this.props.info;
-        const { groupByField } = this.props.list;
-        return activeActions.groupCreate && groupByField.type === "many2one";
-    }
-
-    canDeleteGroup(group) {
-        const { activeActions } = this.props.info;
-        const { groupByField } = this.props.list;
-        return activeActions.groupDelete && isRelational(groupByField) && group.value;
-    }
-
-    canEditGroup(group) {
-        const { activeActions } = this.props.info;
-        const { groupByField } = this.props.list;
-        return activeActions.groupEdit && isRelational(groupByField) && group.value;
     }
 
     getGroupClasses(group) {
@@ -339,13 +196,179 @@ export class KanbanRenderer extends Component {
         return { value: value || 0, currency, title };
     }
 
+    // ------------------------------------------------------------------------
+    // Permissions
+    // ------------------------------------------------------------------------
+
+    canArchiveGroup(group) {
+        const { activeActions } = this.props.info;
+        const hasActiveField = "active" in group.fields;
+        return activeActions.groupArchive && hasActiveField && !this.props.list.groupedBy("m2m");
+    }
+
+    canCreateGroup() {
+        const { activeActions } = this.props.info;
+        return activeActions.groupCreate && this.props.list.groupedBy("m2o");
+    }
+
+    canDeleteGroup(group) {
+        const { activeActions } = this.props.info;
+        const { groupByField } = this.props.list;
+        return activeActions.groupDelete && isRelational(groupByField) && group.value;
+    }
+
+    canDeleteRecord() {
+        const { activeActions } = this.props.info;
+        return activeActions.delete && !this.props.list.groupedBy("m2m");
+    }
+
+    canEditGroup(group) {
+        const { activeActions } = this.props.info;
+        const { groupByField } = this.props.list;
+        return activeActions.groupEdit && isRelational(groupByField) && group.value;
+    }
+
+    canEditRecord() {
+        return this.props.info.activeActions.edit;
+    }
+
+    // ------------------------------------------------------------------------
+    // Edition methods
+    // ------------------------------------------------------------------------
+
+    createGroup() {
+        const groupName = this.state.newGroup.trim();
+        if (groupName.length) {
+            this.props.list.createGroup(groupName);
+        }
+        this.state.newGroup = "";
+        this.state.quickCreateGroup = false;
+    }
+
+    quickCreate(group) {
+        this.props.createRecord(group);
+    }
+
+    cancelQuickCreate() {
+        for (const group of this.props.list.groups) {
+            group.list.cancelQuickCreate();
+        }
+    }
+
+    async validateQuickCreate(group, editAfterCreate) {
+        const record = await group.list.validateQuickCreate();
+        if (editAfterCreate) {
+            await this.props.openRecord(record);
+        }
+    }
+
+    toggleGroup(group) {
+        group.toggle();
+    }
+
     loadMore(group) {
         group.list.loadMore();
     }
 
+    editGroup(group) {
+        // TODO
+        console.warn("TODO: Open group", group.id);
+    }
+
+    archiveGroup(group) {
+        this.dialog.add(ConfirmationDialog, {
+            body: this.env._t(
+                "Are you sure that you want to archive all the records from this column?"
+            ),
+            confirm: () => group.list.archive(),
+            cancel: () => {},
+        });
+    }
+
+    unarchiveGroup(group) {
+        group.list.unarchive();
+    }
+
+    deleteGroup(group) {
+        this.props.list.deleteGroup(group);
+    }
+
+    deleteRecord(record, group) {
+        const { list } = group || this.props;
+        this.dialog.add(ConfirmationDialog, {
+            body: this.env._t("Are you sure you want to delete this record?"),
+            confirm: () => list.unlink(record),
+            cancel: () => {},
+        });
+    }
+
+    selectColor(record, colorIndex) {
+        // TODO
+        console.warn("TODO: Update record", record.id, {
+            [this.props.info.colorField]: colorIndex,
+        });
+    }
+
+    triggerAction(record, group, params) {
+        const { type } = params;
+        switch (type) {
+            case "edit":
+            case "open": {
+                this.props.openRecord(record);
+                break;
+            }
+            case "delete": {
+                this.deleteRecord(record, group);
+                break;
+            }
+            case "action":
+            case "object": {
+                // TODO
+                console.warn("TODO: Button clicked for record", record.id, { params });
+                break;
+            }
+            case "set_cover": {
+                const { fieldName, widget, autoOpen } = params;
+                const field = this.props.list.fields[fieldName];
+                if (
+                    field.type === "many2one" &&
+                    field.relation === "ir.attachment" &&
+                    widget === "attachment_image"
+                ) {
+                    // TODO
+                    console.warn("TODO: Update record", record.id, { fieldName, autoOpen });
+                } else {
+                    const warning = sprintf(
+                        this.env._t(
+                            `Could not set the cover image: incorrect field ("%s") is provided in the view.`
+                        ),
+                        fieldName
+                    );
+                    this.notification.add({ title: warning, type: "danger" });
+                }
+                break;
+            }
+            default: {
+                this.notification.add(this.env._t("Kanban: no action for type: ") + type, {
+                    type: "danger",
+                });
+            }
+        }
+    }
+
+    // ------------------------------------------------------------------------
+    // Handlers
+    // ------------------------------------------------------------------------
+
     onAddGroupKeydown(ev) {
         if (ev.key === "Enter") {
             this.createGroup();
+        }
+    }
+
+    onGroupClick(group, ev) {
+        if (!ev.target.closest(".dropdown") && group.isFolded) {
+            group.toggle();
         }
     }
 
@@ -436,6 +459,22 @@ export class KanbanRenderer extends Component {
      */
     kanban_getcolorname(value) {
         return this.colors[this.kanban_getcolor(value)];
+    }
+
+    /**
+     * Checks if a html content is empty. If there are only formatting tags
+     * with style attributes or a void content. Famous use case is
+     * '<p style="..." class=".."><br></p>' added by some web editor(s).
+     * Note that because the use of this method is limited, we ignore the cases
+     * like there's one <img> tag in the content. In such case, even if it's the
+     * actual content, we consider it empty.
+     *
+     * @param {string} innerHTML
+     * @returns {boolean} true if no content found or if containing only formatting tags
+     */
+    isHtmlEmpty(innerHTML = "") {
+        const div = Object.assign(document.createElement("div"), { innerHTML });
+        return div.innerText.trim() === "";
     }
 }
 
