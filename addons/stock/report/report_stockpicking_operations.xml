@@ -111,7 +111,7 @@
                                                 </div>
                                             </td>
                                             <td class=" text-center h6" t-if="has_serial_number">
-                                                <div t-if="has_serial_number and (ml.lot_id or ml.lot_name)" t-field="ml.lot_id.name or ml.lot_name" t-options="{'widget': 'barcode', 'humanreadable': 1, 'width': 400, 'height': 100, 'img_style': 'width:100%;height:35px;'}"/>
+                                                <div t-if="has_serial_number and (ml.lot_id or ml.lot_name)" t-esc="ml.lot_id.name or ml.lot_name" t-options="{'widget': 'barcode', 'humanreadable': 1, 'width': 400, 'height': 100, 'img_style': 'width:100%;height:35px;'}"/>
                                             </td>
                                             <td class="text-center" t-if="has_barcode">
                                                 <t t-if="product_barcode != ml.product_id.barcode">
