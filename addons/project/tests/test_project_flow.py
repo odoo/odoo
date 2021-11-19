@@ -248,7 +248,9 @@ class TestProjectFlow(TestProjectCommon, MockEmail):
         self.assertEqual(rating_good.parent_res_id, self.project_pigs.id)
 
         self.assertEqual(self.project_goats.rating_percentage_satisfaction, -1)
+        self.assertEqual(self.project_goats.rating_avg, 0, 'Since there is no rating in this project, the Average Rating should be equal to 0.')
         self.assertEqual(self.project_pigs.rating_percentage_satisfaction, 0)  # There is a rating but not a "great" on, just an "okay".
+        self.assertEqual(self.project_pigs.rating_avg, rating_bad.rating, 'Since there is only one rating the Average Rating should be equal to the rating value of this one.')
 
         # Consuming rating_good
         first_task.rating_apply(5, rating_good.access_token)
@@ -257,10 +259,14 @@ class TestProjectFlow(TestProjectCommon, MockEmail):
         # Our One2Many is linked to a res_id (int) for which the orm doesn't create an inverse
         first_task.invalidate_cache()
 
+        rating_avg = (rating_good.rating + rating_bad.rating) / 2
         self.assertEqual(first_task.rating_count, 2, "Task should have two ratings associated with it")
+        self.assertEqual(first_task.rating_avg_text, 'top')
         self.assertEqual(rating_good.parent_res_id, self.project_pigs.id)
         self.assertEqual(self.project_goats.rating_percentage_satisfaction, -1)
         self.assertEqual(self.project_pigs.rating_percentage_satisfaction, 50)
+        self.assertEqual(self.project_pigs.rating_avg, rating_avg)
+        self.assertEqual(self.project_pigs.rating_avg_percentage, rating_avg / 5)
 
         # We change the task from project_pigs to project_goats, ratings should be associated with the new project
         first_task.project_id = self.project_goats.id
@@ -271,7 +277,9 @@ class TestProjectFlow(TestProjectCommon, MockEmail):
 
         self.assertEqual(rating_good.parent_res_id, self.project_goats.id)
         self.assertEqual(self.project_goats.rating_percentage_satisfaction, 50)
+        self.assertEqual(self.project_goats.rating_avg, rating_avg)
         self.assertEqual(self.project_pigs.rating_percentage_satisfaction, -1)
+        self.assertEqual(self.project_pigs.rating_avg, 0)
 
     def test_task_with_no_project(self):
         """

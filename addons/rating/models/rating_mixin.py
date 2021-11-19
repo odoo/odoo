@@ -1,10 +1,21 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import operator
 from datetime import timedelta
 
 from odoo import api, fields, models, tools
 from odoo.addons.rating.models.rating import RATING_LIMIT_SATISFIED, RATING_LIMIT_OK, RATING_LIMIT_MIN
 from odoo.osv import expression
+from odoo.tools.float_utils import float_compare
+
+OPERATOR_MAPPING = {
+    '=': operator.eq,
+    '!=': operator.ne,
+    '<': operator.lt,
+    '<=': operator.le,
+    '>': operator.gt,
+    '>=': operator.ge,
+}
 
 
 class RatingParentMixin(models.AbstractModel):
@@ -59,7 +70,8 @@ class RatingMixin(models.AbstractModel):
     rating_last_feedback = fields.Text('Rating Last Feedback', groups='base.group_user', related='rating_ids.feedback')
     rating_last_image = fields.Binary('Rating Last Image', groups='base.group_user', related='rating_ids.rating_image')
     rating_count = fields.Integer('Rating count', compute="_compute_rating_stats", compute_sudo=True)
-    rating_avg = fields.Float("Rating Average", compute='_compute_rating_stats', compute_sudo=True)
+    rating_avg = fields.Float("Average Rating",
+        compute='_compute_rating_stats', compute_sudo=True, search='_search_rating_avg')
     rating_percentage_satisfaction = fields.Float("Rating Satisfaction", compute='_compute_rating_satisfaction', compute_sudo=True)
     rating_last_text = fields.Selection(string="Rating Text", groups='base.group_user', related="rating_ids.rating_text")
 
@@ -78,6 +90,19 @@ class RatingMixin(models.AbstractModel):
         for record in self:
             record.rating_count = mapping.get(record.id, {}).get('rating_count', 0)
             record.rating_avg = mapping.get(record.id, {}).get('rating_avg', 0)
+
+    def _search_rating_avg(self, operator, value):
+        if operator not in OPERATOR_MAPPING:
+            raise NotImplementedError('This operator %s is not supported in this search method.' % operator)
+        rating_read_group = self.env['rating.rating'].sudo().read_group(
+            [('res_model', '=', self._name), ('consumed', '=', True), ('rating', '>=', RATING_LIMIT_MIN)],
+            ['res_id', 'rating_avg:avg(rating)'], ['res_id'])
+        res_ids = [
+            res['res_id']
+            for res in rating_read_group
+            if OPERATOR_MAPPING[operator](float_compare(res['rating_avg'], value, 2), 0)
+        ]
+        return [('id', 'in', res_ids)]
 
     @api.depends('rating_ids.res_id', 'rating_ids.rating')
     def _compute_rating_satisfaction(self):
