@@ -16,7 +16,7 @@ class WebsiteTest(Home):
     def test_view(self, **kwargs):
         return request.render('test_website.test_view')
 
-    @http.route('/ignore_args/converteronly/<string:a>/', type='http', auth="public", website=True, sitemap=False)
+    @http.route('/ignore_args/converteronly/<string:a>', type='http', auth="public", website=True, sitemap=False)
     def test_ignore_args_converter_only(self, a):
         return request.make_response(json.dumps(dict(a=a, kw=None)))
 
@@ -32,7 +32,7 @@ class WebsiteTest(Home):
     def test_ignore_args_kw(self, a, **kw):
         return request.make_response(json.dumps(dict(a=a, kw=kw)))
 
-    @http.route('/ignore_args/converter/<string:a>/', type='http', auth="public", website=True, sitemap=False)
+    @http.route('/ignore_args/converter/<string:a>', type='http', auth="public", website=True, sitemap=False)
     def test_ignore_args_converter(self, a, b='youhou', **kw):
         return request.make_response(json.dumps(dict(a=a, b=b, kw=kw)))
 
