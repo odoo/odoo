@@ -168,6 +168,7 @@ class TestMrpAccount(TestMrpCommon):
         quants.action_apply_inventory()
 
         bom = self.mrp_bom_desk.copy()
+        bom.bom_line_ids.manual_consumption = False
         bom.operation_ids = False
         production_table_form = Form(self.env['mrp.production'])
         production_table_form.product_id = self.dining_table
