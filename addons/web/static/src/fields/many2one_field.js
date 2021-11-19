@@ -1,14 +1,31 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
 import { standardFieldProps } from "./standard_field_props";
 
 const { Component } = owl;
 
 export class Many2OneField extends Component {
     setup() {
-        const data = this.props.record.data[this.props.name];
-        this.data = data ? data[1] : "";
+        this.orm = useService("orm");
+        this.action = useService("action");
+    }
+
+    get displayName() {
+        return this.props.value ? this.props.value[1] : "";
+    }
+
+    async onClick() {
+        const action = await this.orm.call(
+            this.props.record.fields[this.props.name].relation,
+            "get_formview_action",
+            [[this.props.value[0]]],
+            {
+                /* context: this.props.record.context */
+            }
+        );
+        await this.action.doAction(action);
     }
 }
 
