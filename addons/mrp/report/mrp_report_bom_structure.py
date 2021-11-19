@@ -16,7 +16,7 @@ class ReportBomStructure(models.AbstractModel):
             bom = self.env['mrp.bom'].browse(bom_id)
             variant = data.get('variant')
             candidates = variant and self.env['product.product'].browse(variant) or bom.product_id or bom.product_tmpl_id.product_variant_ids
-            quantity = float(data.get('quantity', 1))
+            quantity = float(data.get('quantity', bom.product_qty))
             for product_variant_id in candidates.ids:
                 if data and data.get('childs'):
                     doc = self._get_pdf_line(bom_id, product_id=product_variant_id, qty=quantity, child_bom_ids=json.loads(data.get('childs')))
