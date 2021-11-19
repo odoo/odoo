@@ -101,3 +101,18 @@ class TestMrpCancelMO(TestMrpCommon):
         self.assertEqual(manufacturing_order.exists().state, 'progress')
         with self.assertRaises(UserError):
             manufacturing_order.unlink()
+
+    def test_cancel_mo_without_component(self):
+        product_form = Form(self.env['product.product'])
+        product_form.name = "SuperProduct"
+        product = product_form.save()
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = product
+        mo = mo_form.save()
+
+        mo.action_confirm()
+        mo.action_cancel()
+
+        self.assertEqual(mo.move_finished_ids.state, 'cancel')
+        self.assertEqual(mo.state, 'cancel')
