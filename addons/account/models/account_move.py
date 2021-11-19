@@ -2331,10 +2331,6 @@ class AccountMove(models.Model):
             # invoice_repartition_line => refund_repartition_line
             mapping = {}
 
-            # Do nothing if the move is not a credit note.
-            if move_vals['move_type'] not in ('out_refund', 'in_refund'):
-                return mapping
-
             for line_command in move_vals.get('line_ids', []):
                 line_vals = line_command[2]  # (0, 0, {...})
 
@@ -2352,9 +2348,33 @@ class AccountMove(models.Model):
                         mapping[inv_rep_line] = ref_rep_line
             return mapping
 
+        def invert_tags_if_needed(repartition_line, tags):
+            tax_type = repartition_line.tax_id.type_tax_use
+            tags_need_inversion = self._tax_tags_need_inversion(
+                self,
+                (
+                    (tax_type == 'purchase' and line_vals['credit'] > 0) or
+                    (tax_type == 'sale' and line_vals['debit'] > 0)
+                ),
+                tax_type)
+            if tags_need_inversion:
+                return self.env['account.move.line']._revert_signed_tags(tags)
+            return tags
+
         move_vals = self.with_context(include_business_fields=True).copy_data(default=default_values)[0]
 
-        tax_repartition_lines_mapping = compute_tax_repartition_lines_mapping(move_vals)
+        is_refund = False
+        if move_vals['move_type'] in ('out_refund', 'in_refund'):
+            is_refund = True
+        elif move_vals['move_type'] == 'entry':
+            base_lines = self.line_ids.filtered(lambda line: line.tax_ids)
+            tax_type = set(base_lines.tax_ids.mapped('type_tax_use'))
+            if tax_type == {'sale'} and sum(base_lines.mapped('debit')) == 0:
+                is_refund = True
+            elif tax_type == {'purchase'} and sum(base_lines.mapped('credit')) == 0:
+                is_refund = True
+
+        tax_repartition_lines_mapping = compute_tax_repartition_lines_mapping(move_vals) if is_refund else {}
 
         for line_command in move_vals.get('line_ids', []):
             line_vals = line_command[2]  # (0, 0, {...})
@@ -2369,7 +2389,7 @@ class AccountMove(models.Model):
                 'credit': balance < 0.0 and -balance or 0.0,
             })
 
-            if move_vals['move_type'] not in ('out_refund', 'in_refund'):
+            if not is_refund:
                 continue
 
             # ==== Map tax repartition lines ====
@@ -2396,6 +2416,7 @@ class AccountMove(models.Model):
                     subsequent_taxes = self.env['account.tax'].browse(line_vals['tax_ids'][0][2])
                     tags += subsequent_taxes.refund_repartition_line_ids.filtered(lambda x: x.repartition_type == 'base').tag_ids
 
+                tags = invert_tags_if_needed(refund_repartition_line, tags)
                 line_vals.update({
                     'tax_repartition_line_id': refund_repartition_line.id,
                     'account_id': account_id,
@@ -2410,7 +2431,11 @@ class AccountMove(models.Model):
                 refund_repartition_lines = invoice_repartition_lines\
                     .mapped(lambda line: tax_repartition_lines_mapping[line])
 
-                line_vals['tax_tag_ids'] = [(6, 0, refund_repartition_lines.mapped('tag_ids').ids)]
+                tag_ids = []
+                for refund_repartition_line in refund_repartition_lines:
+                    tag_ids += invert_tags_if_needed(refund_repartition_line, refund_repartition_line.tag_ids).ids
+
+                line_vals['tax_tag_ids'] = [(6, 0, tag_ids)]
         return move_vals
 
     def _reverse_moves(self, default_values_list=None, cancel=False):
