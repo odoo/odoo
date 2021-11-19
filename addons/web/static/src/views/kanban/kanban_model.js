@@ -217,6 +217,7 @@ class KanbanDynamicRecordList extends DynamicRecordList {
     async validateQuickCreate() {
         const record = this.records.find((r) => r.isQuickCreate);
         await record.save();
+        record.isQuickCreate = false;
         return record;
     }
 }

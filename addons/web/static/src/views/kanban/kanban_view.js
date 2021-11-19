@@ -36,6 +36,17 @@ const TRANSPILED_EXPRESSIONS = [
 ];
 // These classes determine whether a click on a record should open it.
 const KANBAN_CLICK_CLASSES = ["oe_kanban_global_click", "oe_kanban_global_click_edit"];
+const DEFAULT_QUICK_CREATE_VIEW = {
+    form: {
+        arch: /* xml */ `
+            <form>
+                <field name="display_name" placeholder="Title" required="1" />
+            </form>`,
+        fields: {
+            display_name: { string: "Display name", type: "char" },
+        },
+    },
+};
 
 const hasClass = (node, ...classes) => {
     const classAttribute = node.getAttribute("class") || "";
@@ -331,14 +342,18 @@ class KanbanView extends owl.Component {
         }
         this.isLoadingQuickCreate = true;
         const { context, resModel } = this.model.root;
+        const { quickCreateView: viewRef } = this.archInfo;
         const { ArchParser } = viewRegistry.get("form");
-        const result = await this.viewService.loadViews({
-            context: { ...context, form_view_ref: this.archInfo.quickCreateView },
-            resModel,
-            views: [[false, "form"]],
-        });
+        let fieldsView = DEFAULT_QUICK_CREATE_VIEW;
+        if (viewRef) {
+            fieldsView = await this.viewService.loadViews({
+                context: { ...context, form_view_ref: viewRef },
+                resModel,
+                views: [[false, "form"]],
+            });
+        }
         this.isLoadingQuickCreate = false;
-        return new ArchParser().parse(result.form.arch, this.props.fields);
+        return new ArchParser().parse(fieldsView.form.arch, fieldsView.form.fields);
     }
 
     canQuickCreate() {
