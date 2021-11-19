@@ -83,15 +83,6 @@ class SaleOrder(models.Model):
                 expected_date = min(dates_list) if order.picking_policy == 'direct' else max(dates_list)
                 order.expected_date = fields.Datetime.to_string(expected_date)
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        # YTI TODO: Achieve this with a compute method
-        for vals in vals_list:
-            if 'warehouse_id' not in vals and 'company_id' in vals:
-                user = self.env['res.users'].browse(vals.get('user_id', False))
-                vals['warehouse_id'] = user.with_company(vals.get('company_id'))._get_default_warehouse_id().id
-        return super().create(vals_list)
-
     def write(self, values):
         if values.get('order_line') and self.state == 'sale':
             for order in self:
