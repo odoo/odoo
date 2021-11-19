@@ -3,13 +3,21 @@
 
     <t t-name="web.Many2OneField" owl="1">
         <t t-if="props.readonly">
-            <span class="o-field">
-                <t t-esc="data" />
-            </span>
+            <t t-if="props.options.no_open">
+                <span t-esc="displayName" />
+            </t>
+            <t t-else="">
+                <a
+                    href="#"
+                    class="o_form_uri"
+                    t-esc="displayName"
+                    t-on-click="onClick"
+                />
+            </t>
         </t>
         <t t-else="">
-            <span class="o-field">
-                <t t-esc="data" />
+            <span class="o_field">
+                <t t-esc="displayName" />
             </span>
         </t>
     </t>
