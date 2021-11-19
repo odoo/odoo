@@ -140,6 +140,17 @@ class StockMove(models.Model):
     product_qty_available = fields.Float('Product On Hand Quantity', related='product_id.qty_available')
     product_virtual_available = fields.Float('Product Forecasted Quantity', related='product_id.virtual_available')
     description_bom_line = fields.Char('Kit', compute='_compute_description_bom_line')
+    manual_consumption = fields.Boolean(
+        'Manual Consumption', compute='_compute_manual_consumption', store=True,
+        help="When activated, then the registration of consumption for that component is recorded manually exclusively.\n"
+             "If not activated, and any of the components consumption is edited manually on the manufacturing order, Odoo assumes manual consumption also.")
+
+    @api.depends('state', 'product_id', 'operation_id')
+    def _compute_manual_consumption(self):
+        for move in self:
+            if move.state != 'draft':
+                continue
+            move.manual_consumption = move.bom_line_id.manual_consumption or move.product_id.tracking != 'none'
 
     @api.depends('bom_line_id')
     def _compute_description_bom_line(self):
@@ -226,6 +237,12 @@ class StockMove(models.Model):
             mo = self.raw_material_production_id
             self._update_quantity_done(mo)
 
+    @api.onchange('quantity_done')
+    def _onchange_quantity_done(self):
+        if self.raw_material_production_id and not self.manual_consumption and \
+           self.should_consume_qty != self.quantity_done:
+            self.manual_consumption = True
+
     @api.model
     def default_get(self, fields_list):
         defaults = super(StockMove, self).default_get(fields_list)
@@ -250,6 +267,9 @@ class StockMove(models.Model):
         - Moves from a copied MO
         - Backorders
         """
+        if self.env.context.get('force_manual_consumption'):
+            for vals in vals_list:
+                vals['manual_consumption'] = True
         mo_id_to_mo = defaultdict(lambda: self.env['mrp.production'])
         product_id_to_product = defaultdict(lambda: self.env['product.product'])
         for values in vals_list:
@@ -278,6 +298,8 @@ class StockMove(models.Model):
         return super().create(vals_list)
 
     def write(self, vals):
+        if self.env.context.get('force_manual_consumption'):
+            vals['manual_consumption'] = True
         if 'product_uom_qty' in vals and 'move_line_ids' in vals:
             # first update lines then product_uom_qty as the later will unreserve
             # so possibly unlink lines
@@ -340,6 +362,7 @@ class StockMove(models.Model):
         if self.raw_material_production_id:
             action['views'] = [(self.env.ref('mrp.view_stock_move_operations_raw').id, 'form')]
             action['context']['show_destination_location'] = False
+            action['context']['force_manual_consumption'] = True
         elif self.production_id:
             action['views'] = [(self.env.ref('mrp.view_stock_move_operations_finished').id, 'form')]
             action['context']['show_source_location'] = False
@@ -395,6 +418,7 @@ class StockMove(models.Model):
         return {
             'state': 'confirmed',
             'reservation_date': self.reservation_date,
+            'manual_consumption': self.bom_line_id.manual_consumption or self.product_id.tracking != 'none',
             'move_orig_ids': [Command.link(m.id) for m in self.mapped('move_orig_ids')],
             'move_dest_ids': [Command.link(m.id) for m in self.mapped('move_dest_ids')]
         }
@@ -424,7 +448,8 @@ class StockMove(models.Model):
         # Do not update extra product quantities
         if float_is_zero(self.product_uom_qty, precision_rounding=self.product_uom.rounding):
             return True
-        if self.has_tracking != 'none' or self.state == 'done':
+        if self.has_tracking != 'none' or self.state == 'done' or \
+           self.manual_consumption or self._origin.manual_consumption:
             return True
         return False
 
