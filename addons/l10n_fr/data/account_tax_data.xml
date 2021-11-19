@@ -53,7 +53,7 @@
         <field name="amount" eval="10.0"/>
         <field name="amount_type">percent</field>
         <field name="tax_exigibility">on_payment</field>
-        <field name="cash_basis_transition_account_id" ref="pcg_44571" />
+        <field name="cash_basis_transition_account_id" ref="pcg_445800" />
         <field name="sequence" eval="10"/>
         <field name="type_tax_use">sale</field>
         <field name="tax_group_id" ref="tax_group_tva_10"/>
@@ -68,7 +68,7 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'plus_report_line_ids': [ref('l10n_fr.tax_report_tva_coll_10')],
-                'account_id': ref('pcg_445800'),
+                'account_id': ref('pcg_44571'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -416,7 +416,7 @@
         <field name="amount" eval="10"/>
         <field name="amount_type">percent</field>
         <field name="tax_exigibility">on_payment</field>
-        <field name="cash_basis_transition_account_id" ref="pcg_44571" />
+        <field name="cash_basis_transition_account_id" ref="pcg_445800" />
         <field name="sequence" eval="10"/>
         <field name="type_tax_use">sale</field>
         <field name="tax_group_id" ref="tax_group_tva_10"/>
@@ -431,7 +431,7 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'plus_report_line_ids': [ref('l10n_fr.tax_report_tva_coll_10')],
-                'account_id': ref('pcg_445800'),
+                'account_id': ref('pcg_44571'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
