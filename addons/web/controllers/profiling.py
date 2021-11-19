@@ -20,7 +20,7 @@ class Profiling(Controller):
         except UserError as e:
             return Response(response='error: %s' % e, status=500)
 
-    @route(['/web/speedscope/', '/web/speedscope/<model("ir.profile"):profile>'], type='http', sitemap=False, auth='user')
+    @route(['/web/speedscope', '/web/speedscope/<model("ir.profile"):profile>'], type='http', sitemap=False, auth='user')
     def speedscope(self, profile=None):
         # don't server speedscope index if profiling is not enabled
         if not request.env['ir.profile']._enabled_until():
