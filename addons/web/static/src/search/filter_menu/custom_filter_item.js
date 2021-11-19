@@ -40,6 +40,8 @@ const FIELD_OPERATORS = {
     char: [
         { symbol: "ilike", description: _lt("contains") },
         { symbol: "not ilike", description: _lt("doesn't contain") },
+        { symbol: "startswith", description: _lt("starts with") },
+        { symbol: "endswith", description: _lt("ends with") },
         { symbol: "=", description: _lt("is equal to") },
         { symbol: "!=", description: _lt("is not equal to") },
         { symbol: "!=", description: _lt("is set"), value: false },
@@ -233,6 +235,10 @@ export class CustomFilterItem extends Component {
                     [field.name, ">=", domainValue[0]],
                     [field.name, "<=", domainValue[1]]
                 );
+            } else if (operator.symbol === "startswith") {
+                domainArray.push([field.name, "=ilike", domainValue[0]] + '%');
+            } else if (operator.symbol === "endswith") {
+                domainArray.push([field.name, "=ilike", '%' + domainValue[0]]);
             } else {
                 domainArray.push([field.name, operator.symbol, domainValue[0]]);
             }

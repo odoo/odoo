@@ -182,6 +182,10 @@ odoo.define('web.CustomFilterItem', function (require) {
                         [field.name, '>=', domainValue[0]],
                         [field.name, '<=', domainValue[1]]
                     );
+                } else if (operator.symbol === 'startswith') {
+                    domainArray.push([field.name, '=ilike', domainValue[0] + '%']);
+                } else if (operator.symbol === 'endswith') {
+                    domainArray.push([field.name, '=ilike', '%' + domainValue[0]]);
                 } else {
                     domainArray.push([field.name, operator.symbol, domainValue[0]]);
                 }
