@@ -32,8 +32,6 @@
                 <field name="color"/>
                 <field name="priority"/>
                 <field name="stage_id" options='{"group_by_tooltip": {"description": "Description"}}'/>
-                <!-- TODO: [XBO] remove me in master -->
-                <field name="user_ids" invisible="1"/>
                 <field name="portal_user_names"/>
                 <field name="partner_id"/>
                 <field name="sequence"/>
@@ -74,8 +72,6 @@
                                         <span class="fa fa-ellipsis-v"/>
                                     </a>
                                     <div class="dropdown-menu" role="menu">
-                                        <!-- [XBO] TODO: remove me in master -->
-                                        <a t-if="widget.editable" role="menuitem" type="set_cover" class="dropdown-item d-none" data-field="displayed_image_id">Set Cover Image</a>
                                         <a t-if="widget.editable" role="menuitem" type="edit" class="dropdown-item">Edit</a>
                                         <div role="separator" class="dropdown-divider"></div>
                                         <ul class="oe_kanban_colorpicker" data-field="color"/>
@@ -103,8 +99,6 @@
                                         <t t-else=""> assignee</t>
                                     </span>
                                     <field name="kanban_state" widget="state_selection"/>
-                                    <!-- TODO: [XBO] remove me in master -->
-                                    <field name="user_ids" string="Assignees" widget="many2many_avatar_user" invisible="1"/>
                                 </div>
                             </div>
                         </div>
@@ -131,8 +125,6 @@
                 <field name="company_id" invisible="1"/>
                 <field name="partner_id" optional="hide"/>
                 <field name="portal_user_names" string="Assignees" optional="show"/>
-                <!-- TODO: [XBO] remove me in master -->
-                <field name="user_ids" invisible="1" />
                 <field name="date_deadline" optional="hide" widget="remaining_days" attrs="{'invisible': [('is_closed', '=', True)]}"/>
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
                 <field name="kanban_state" widget="state_selection" optional="hide"/>
@@ -217,8 +209,7 @@
                                     <field name="display_project_id" string="Project" optional="hide" invisible="1"/>
                                     <field name="company_id" invisible="1"/>
                                     <field name="partner_id" options="{'no_open': True, 'no_create': True, 'no_edit': True}" optional="hide"/>
-                                    <!-- TODO: [XBO] remove me in master -->
-                                    <field name="user_ids" invisible="1"/>
+                                    <field name="user_ids" invisible="1" />
                                     <field name="portal_user_names" string="Assignees"/>
                                     <field name="date_deadline" attrs="{'invisible': [('is_closed', '=', True)]}" optional="show"/>
                                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
@@ -245,8 +236,6 @@
             <search string="Tasks">
                 <field name="name" string="Task"/>
                 <field name="tag_ids"/>
-                <!-- TODO: [XBO] remove me in master -->
-                <field name="user_ids" invisible="1"/>
                 <field name="portal_user_names" string="Assignees"/>
                 <field name="partner_id" operator="child_of"/>
                 <field name="stage_id"/>
@@ -263,15 +252,9 @@
                     domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                 <group expand="0" string="Group By">
                     <filter string="Stage" name="stage" context="{'group_by': 'stage_id'}"/>
-                    <!-- TODO: [XBO] remove me in master -->
-                    <filter string="Assignees" name="user" context="{'group_by': 'user_ids'}" invisible="1"/>
-                    <!-- [XBO] TODO: remove me in master -->
-                    <filter string="Project" name="project" context="{'group_by': 'project_id'}" invisible="1"/>
                     <filter string="Customer" name="customer" context="{'group_by': 'partner_id'}"/>
                     <filter string="Kanban State" name="kanban_state" context="{'group_by': 'kanban_state'}"/>
                     <filter string="Deadline" name="date_deadline" context="{'group_by': 'date_deadline'}"/>
-                    <!-- [XBO] TODO: remove me in master -->
-                    <filter string="Creation Date" name="group_create_date" context="{'group_by': 'create_date'}" invisible="1"/>
                 </group>
             </search>
         </field>
