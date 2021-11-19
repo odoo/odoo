@@ -41,6 +41,8 @@ export function useTooltip() {
     let openTooltipTimeout;
     let closeTooltip;
     let target = null;
+    let positionX;
+    let positionY;
 
     /**
      * Closes the currently opened tooltip if any, or prevent it from opening.
@@ -50,6 +52,29 @@ export function useTooltip() {
         if (closeTooltip) {
             closeTooltip();
         }
+    }
+
+    /**
+     * Checks that the target is in the DOM and we're hovering the target.
+     * @returns {boolean}
+     */
+    function shouldCleanup() {
+        if (!target) {
+            return false;
+        }
+        if (!document.body.contains(target)) {
+            return true; // target is no longer in the DOM
+        }
+        const targetRect = target.getBoundingClientRect();
+        if (
+            positionX < targetRect.left ||
+            positionX > targetRect.right ||
+            positionY < targetRect.top ||
+            positionY > targetRect.bottom
+        ) {
+            return true; // mouse is no longer hovering the target
+        }
+        return false;
     }
 
     /**
@@ -70,21 +95,23 @@ export function useTooltip() {
             cleanup();
             target = ev.target;
             openTooltipTimeout = browser.setTimeout(() => {
-                const position = dataset.tooltipPosition;
-                closeTooltip = popover.add(
-                    target,
-                    Tooltip,
-                    { tooltip, template, info },
-                    { position }
-                );
+                if (shouldCleanup()) {
+                    cleanup();
+                } else {
+                    const position = dataset.tooltipPosition;
+                    closeTooltip = popover.add(
+                        target,
+                        Tooltip,
+                        { tooltip, template, info },
+                        { position }
+                    );
+                }
             }, dataset.tooltipDelay || OPEN_DELAY);
         }
     }
 
     // Track mouse position to be able to detect that we are no longer hovering
     // the target, thus that we should close the tooltip
-    let positionX;
-    let positionY;
     useListener("mousemove", (ev) => {
         positionX = ev.x;
         positionY = ev.y;
@@ -95,20 +122,8 @@ export function useTooltip() {
     useEffect(
         () => {
             const interval = browser.setInterval(() => {
-                if (!target) {
-                    return;
-                }
-                if (!document.body.contains(target)) {
-                    return cleanup(); // target is no longer in the DOM
-                }
-                const targetRect = target.getBoundingClientRect();
-                if (
-                    positionX < targetRect.left ||
-                    positionX > targetRect.right ||
-                    positionY < targetRect.top ||
-                    positionY > targetRect.bottom
-                ) {
-                    return cleanup(); // mouse is no longer hovering the target
+                if (shouldCleanup()) {
+                    cleanup();
                 }
             }, CLOSE_DELAY);
             return () => browser.clearInterval(interval);
