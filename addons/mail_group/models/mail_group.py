@@ -251,9 +251,7 @@ class MailGroup(models.Model):
 
         if alias.alias_contact == 'followers':
             # Members only
-            author_id = message_dict.get('author_id', None)
-            email_from = message_dict.get('email_from')
-            if not self._find_member(email_from, author_id):
+            if not self._find_member(message_dict.get('email_from')):
                 return _('Only members can send email to the mailing list.')
             # Skip the verification because the partner is in the member list
             return
