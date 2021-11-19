@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Mateusz Sołtys mateusz@soltys.co https://github.com/d3stozaur
+Mateusz Sołtys 32417963+d3stozaur@users.noreply.github.com https://github.com/d3stozaur
