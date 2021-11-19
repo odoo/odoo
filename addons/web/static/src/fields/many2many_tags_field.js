@@ -6,14 +6,17 @@ import { standardFieldProps } from "./standard_field_props";
 const { Component } = owl;
 
 export class Many2ManyTagsField extends Component {
-    setup() {
-        const dataList = this.props.record.data[this.props.name];
-        this.data = (dataList && dataList.data) || [];
+    get tags() {
+        return this.props.value.records.map((record) => ({
+            id: record.data.id,
+            name: record.data.display_name,
+            color: record.data.color,
+        }));
     }
 }
 
 Many2ManyTagsField.fieldsToFetch = {
-    display_name: { type: "char" },
+    display_name: { name: "display_name", type: "char" },
 };
 Many2ManyTagsField.props = {
     ...standardFieldProps,
