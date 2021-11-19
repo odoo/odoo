@@ -372,7 +372,8 @@ class Project(models.Model):
 
         profitability = self.env['project.profitability.report'].read_group(
             [('project_id', '=', self.id)],
-            ['project_id',
+            [
+                'project_id',
                 'amount_untaxed_to_invoice',
                 'amount_untaxed_invoiced',
                 'expense_amount_untaxed_to_invoice',
@@ -380,16 +381,18 @@ class Project(models.Model):
                 'other_revenues',
                 'expense_cost',
                 'timesheet_cost',
-                'margin'],
+            ],
             ['project_id'], limit=1)
         if profitability:
             profitability = profitability[0]
+            costs = profitability['timesheet_cost'] + profitability['expense_cost']
+            revenues = (profitability['amount_untaxed_invoiced'] + profitability['amount_untaxed_to_invoice'] +
+                        profitability['expense_amount_untaxed_invoiced'] + profitability['expense_amount_untaxed_to_invoice'] +
+                        profitability['other_revenues'])
             result.update({
-                'costs': profitability['timesheet_cost'] + profitability['expense_cost'],
-                'margin': profitability['margin'],
-                'revenues': (profitability['amount_untaxed_invoiced'] + profitability['amount_untaxed_to_invoice'] +
-                                profitability['expense_amount_untaxed_invoiced'] + profitability['expense_amount_untaxed_to_invoice'] +
-                                profitability['other_revenues']),
+                'costs': costs,
+                'margin': revenues + costs,
+                'revenues': revenues,
             })
         return result
 
