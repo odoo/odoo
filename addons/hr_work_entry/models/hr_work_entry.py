@@ -3,9 +3,10 @@
 
 from contextlib import contextmanager
 from dateutil.relativedelta import relativedelta
+import itertools
 from psycopg2 import OperationalError
 
-from odoo import api, fields, models
+from odoo import api, fields, models, tools
 
 
 class HrWorkEntry(models.Model):
@@ -15,7 +16,7 @@ class HrWorkEntry(models.Model):
 
     name = fields.Char(required=True)
     active = fields.Boolean(default=True)
-    employee_id = fields.Many2one('hr.employee', required=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    employee_id = fields.Many2one('hr.employee', required=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", index=True)
     date_start = fields.Datetime(required=True, string='From')
     date_stop = fields.Datetime(compute='_compute_date_stop', store=True, readonly=False, string='To')
     duration = fields.Float(compute='_compute_duration', store=True, string="Period")
@@ -35,6 +36,9 @@ class HrWorkEntry(models.Model):
         ('_work_entry_has_end', 'check (date_stop IS NOT NULL)', 'Work entry must end. Please define an end date or a duration.'),
         ('_work_entry_start_before_end', 'check (date_stop > date_start)', 'Starting time should be before end time.')
     ]
+
+    def init(self):
+        tools.create_index(self._cr, "hr_work_entry_date_start_date_stop_index", self._table, ["date_start", "date_stop"])
 
     @api.depends('state')
     def _compute_conflict(self):
@@ -78,11 +82,11 @@ class HrWorkEntry(models.Model):
         conflict = self._mark_conflicting_work_entries(min(self.mapped('date_start')), max(self.mapped('date_stop')))
         return undefined_type or conflict
 
-    @api.model
     def _mark_conflicting_work_entries(self, start, stop):
         """
         Set `state` to `conflict` for overlapping work entries
         between two dates.
+        If `self.ids` is truthy then check conflicts with the corresponding work entries.
         Return True if overlapping work entries were detected.
         """
         # Use the postgresql range type `tsrange` which is a range of timestamp
@@ -92,26 +96,21 @@ class HrWorkEntry(models.Model):
         # limit the resulting set size and fasten the query.
         self.flush(['date_start', 'date_stop', 'employee_id', 'active'])
         query = """
-            SELECT b1.id
-            FROM hr_work_entry b1
-            WHERE
-            b1.date_start <= %s
-            AND b1.date_stop >= %s
-            AND active = TRUE
-            AND EXISTS (
-                SELECT 1
-                FROM hr_work_entry b2
-                WHERE
-                    b2.date_start <= %s
-                    AND b2.date_stop >= %s
-                    AND active = TRUE
-                    AND tsrange(b1.date_start, b1.date_stop, '()') && tsrange(b2.date_start, b2.date_stop, '()')
-                    AND b1.id <> b2.id
-                    AND b1.employee_id = b2.employee_id
-            );
-        """
-        self.env.cr.execute(query, (stop, start, stop, start))
-        conflicts = [res.get('id') for res in self.env.cr.dictfetchall()]
+            SELECT b1.id,
+                   b2.id
+              FROM hr_work_entry b1
+              JOIN hr_work_entry b2
+                ON b1.employee_id = b2.employee_id
+               AND b1.id <> b2.id
+             WHERE b1.date_start <= %(stop)s
+               AND b1.date_stop >= %(start)s
+               AND b1.active = TRUE
+               AND b2.active = TRUE
+               AND tsrange(b1.date_start, b1.date_stop, '()') && tsrange(b2.date_start, b2.date_stop, '()')
+               AND {}
+        """.format("b2.id IN %(ids)s" if self.ids else "b2.date_start <= %(stop)s AND b2.date_stop >= %(start)s")
+        self.env.cr.execute(query, {"stop": stop, "start": start, "ids": tuple(self.ids)})
+        conflicts = set(itertools.chain.from_iterable(self.env.cr.fetchall()))
         self.browse(conflicts).write({
             'state': 'conflict',
         })
