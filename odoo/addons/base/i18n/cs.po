@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-05 11:22+0000\n"
+"POT-Creation-Date: 2021-11-16 13:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
 "Last-Translator: trendspotter <jirka.p@volny.cz>, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
@@ -755,6 +755,22 @@ msgid ""
 msgstr ""
 "\n"
 "Spojovací modul mezi Helpdeskem a průmyslovým prodejem FSM"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_be_reports_base_address_extended
+msgid ""
+"\n"
+"        Bridge module between belgian accounting and Base address extended\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_be_reports_sms
+msgid ""
+"\n"
+"        Bridge module between belgian accounting and SMS\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_account_reports
@@ -1518,6 +1534,13 @@ msgstr ""
 "Přidá pracovní centra do řízení kvality\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_gcc_invoice
+msgid ""
+"\n"
+"    Arabic/English for GCC\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_mrp_workorder_iot
 msgid ""
 "\n"
@@ -1554,6 +1577,13 @@ msgid ""
 msgstr ""
 "\n"
 "Ganttův pohled na ovládací panel volné dny"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_sa_invoice
+msgid ""
+"\n"
+"    Invoices for the Kingdom of Saudi Arabia\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_lock
@@ -2101,6 +2131,16 @@ msgstr ""
 "Účetní data pravidel belgické výplatní pásky.\n"
 "==========================================\n"
 "    "
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_sa_hr_payroll_account
+msgid ""
+"\n"
+"Accounting Data for KSA Payroll Rules.\n"
+"=======================================================\n"
+"\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ae_hr_payroll_account
@@ -3996,7 +4036,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_l10n_no_edi
 msgid ""
 "\n"
-"EHF 3 is the Norvegian implementation of EN 16931 norm.\n"
+"EHF 3 is the Norwegian implementation of EN 16931 norm.\n"
 "    "
 msgstr ""
 
@@ -4250,7 +4290,7 @@ msgid ""
 "Functional\n"
 "----------\n"
 "\n"
-"Be able to create journals in Odoo to create electronic customer invoices and report then to AFIP (via webserices).\n"
+"Be able to create journals in Odoo to create electronic customer invoices and report then to AFIP (via webservices).\n"
 "The options available are:\n"
 "\n"
 "    * Electronic Invoice - Web Service\n"
@@ -4315,67 +4355,6 @@ msgid ""
 "For Development information go to http://www.afip.gob.ar/fe/documentos/WSBFEv1%20-%20Manual%20para%20el%20desarrollador.pdf\n"
 "\n"
 msgstr ""
-"\n"
-"Funkční\n"
-"----------\n"
-"\n"
-"Schopnost vytvářet deníky v Odoo pro vytváření elektronických faktur pro zákazníky a jejich vykazování do AFIP (prostřednictvím webových faktur).\n"
-"K dispozici jsou tyto možnosti:\n"
-"\n"
-"* Elektronická faktura - webová služba\n"
-"* Export poukazu - webová služba\n"
-"* Elektronický daňový doklad - webová služba\n"
-"\n"
-"Pokud v elektronických denících potvrdíte fakturu, bude tato potvrzena jak v Odoo, tak v AFIP. Tato validace je provedena okamžitě a z AFIPu obdržíme stav \"schváleno/schváleno s připomínkou/zamítnuto\". Pokud má faktura byla zamítnuta AFIPem, nebude v systému zaúčtována a zobrazí se vyskakovací zpráva s detailem chyby (důvody zamítnutí). které jsme obdrželi, a nápovědu o tom, v čem by mohl být problém.\n"
-"\n"
-"Pro účely kontroly a řešení problémů jsme také přidali nabídku \"Consulit Invoice in AFIP\", která nám umožňuje nahlížet do dříve vystavených faktur. odeslané do AFIP a poslední použité číslo jako podporu pro případné problémy se synchronizací sekvencí mezi Odoo a AFIP.\n"
-"\n"
-"POZNÁMKA: Z pohledu formuláře deníku jsme schopni vynutit synchronizaci mezi sekvencemi Odoo ke každému z typů dokladů v sekci s posledními čísly registrovanými v AFIP.\n"
-"\n"
-"Z dodavatelských účtů jsme přidali funkci, kterou lze nakonfigurovat v nastavení účetnictví, aby bylo možné ověřit. dodavatelské účty v AFIP, aby bylo možné zkontrolovat, zda jsou dodavatelské účty skutečné (více informací naleznete v popisu nastavení).\n"
-"\n"
-"Konfigurace:\n"
-"\n"
-"1. Přejděte do sekce Nastavení účetnictví > Argentinská lokalizace.\n"
-"\n"
-"1.1. Nakonfigurujte režim webových služeb AFIP:\n"
-"\n"
-"* Testovací prostředí pro použití demo certifikátů, které budou použity k testování instance a k provedení NOT.\n"
-"skutečné faktury do AFIP. slouží pouze k testování. Pro demo instaces je již předdefinováno, nebudete muset konfigurovat.\n"
-"(v AFIP se běžně nazývá Homologační prostředí).\n"
-"* Produkční prostředí pro generování skutečných certifikátů a legálních faktur do AFIP,\n"
-"\n"
-"1.2. Nakonfigurujte svůj certifikát AFIP: Pokud se nacházíte v demonstrační instanci, bude tento nastaven jako výchozí. Pokud jste\n"
-"v produkční instanci, stačí přejít k nahrání certifikátu AFIP.\n"
-"\n"
-"1.3. Volitelně můžete definovat, zda chcete mít možnost ověřovat účty dodavatelů v AFIP.\n"
-"\n"
-"2. Vytvořte prodejní deníky, které budou reprezentovat každou vaši AFIP pokladnu (k dispozici na Portálu AFIP), kterou chcete v Odoo používat.\n"
-"\n"
-"2.1. Pole Používat doklady je nastaveno jako výchozí, neměňte ho prosím.\n"
-"2.2. Nastavte systém AFIP POS na jeden z elektronických.\n"
-"\n"
-"* Elektronická faktura - webová služba'\n"
-"* Elektronický daňový doklad - webová služba'\n"
-"* Export voucheru - webová služba\n"
-"\n"
-"2.3. Nastavte číslo AFIP POS a adresu AFIP POS s přihlédnutím k tomu, co máte nastaveno na portálu AFIP.\n"
-"\n"
-"POZNÁMKA: Pro potvrzení můžete použít tlačítko \"Zkontrolovat dostupný AFIP POS\" ve formuláři deníku, které se má použít pro vytvoření deníků.\n"
-"\n"
-"Další informace o argentinské elektronické fakturaci naleznete na adrese http://www.afip.gob.ar/fe/ayuda.asp.\n"
-"\n"
-"Technická stránka\n"
-"---------\n"
-"\n"
-"Implementované webové služby jsou ty nejběžnější:\n"
-"\n"
-"* wsfev1 - \"Factura Electrónica\" (Elektronická faktura)\n"
-"* wsbfev1 - \"Bono Fiscal Electrónico\" (Elektronický daňový doklad)\n"
-"* wsfexv1 - \"Factura de Exportación Electrónica\" (Elektronická faktura za export - stejná jako export poukaz).\n"
-"* wscdc - \"Constatación de Comprobantes\" (Ověření faktur)\n"
-"\n"
-"Informace o exportu naleznete na adrese http://www.afip.gob.ar/fe/documentos/WSBFEv1%20-%20Manual%20para%20el%20desarrollador.pdf\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_latam_invoice_document
@@ -5032,6 +5011,16 @@ msgstr ""
 msgid ""
 "\n"
 "It allows for comparing products from the wishlist\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_sa_hr_payroll
+msgid ""
+"\n"
+"Kingdom of Saudi Arabia Payroll and End of Service rules.\n"
+"===========================================================\n"
+"\n"
 "    "
 msgstr ""
 
@@ -8325,6 +8314,14 @@ msgstr ""
 "Tento modul přepíše komunitní vzhled webových stránek na firemní vzhled a dojem."
 
 #. module: base
+#: model:ir.module.module,description:base.module_timesheet_grid_holidays
+msgid ""
+"\n"
+"This module prevents taking time offs into account when computing employee overtime.\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_purchase_mrp
 msgid ""
 "\n"
@@ -9032,8 +9029,8 @@ msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
-msgid "%A - Full weekday name."
-msgstr "%A - Plný název dne v týdnu."
+msgid "%A - Full day of the week."
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -9067,8 +9064,8 @@ msgstr "%Y - Rok se stoletím.\""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
-msgid "%a - Abbreviated weekday name."
-msgstr "%a - zkratka dne v týdnu."
+msgid "%a - Abbreviated day of the week."
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -9354,9 +9351,7 @@ msgstr "9. %w ==&gt; 5 (pátek je 6. den)"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
-msgid ""
-"<b class=\"position-absolute\" attrs=\"{'invisible': [('is_company', '=', "
-"False)]}\">Address</b>"
+msgid "<b attrs=\"{'invisible': [('is_company', '=', False)]}\">Address</b>"
 msgstr ""
 
 #. module: base
@@ -10025,8 +10020,8 @@ msgstr "Modul pro ověření mechanismu balíků majeteku."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_inherit_depends
-msgid "A module to verify the inheritance using _inherit accross modules."
-msgstr "Modul k ověření dědičnosti pomocí _inherit napříč moduly."
+msgid "A module to verify the inheritance using _inherit across modules."
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_inherits_depends
@@ -12313,6 +12308,16 @@ msgid "Belgium - Accounting Reports"
 msgstr "Belgie - účetní zprávy"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_reports_base_address_extended
+msgid "Belgium - Accounting Reports - Base address extended"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_reports_sms
+msgid "Belgium - Accounting Reports - SMS"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_disallowed_expenses
 msgid "Belgium - Disallowed Expenses Data"
 msgstr "Belgie - nepovolené údaje o výdajích"
@@ -12331,6 +12336,11 @@ msgstr "Belgie - prohlášení Importní banky CODA "
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll
 msgid "Belgium - Payroll"
 msgstr "Belgie - mzdy"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_december
+msgid "Belgium - Payroll - December Slip"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_fleet
@@ -13076,8 +13086,8 @@ msgstr "Zaškrtnout, pokud je kontakt společností, jinak se jedná o osobu"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_check_printing
-msgid "Check printing commons"
-msgstr "Zaškrtnout tiskové záležitosti"
+msgid "Check printing basic features"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_accountant_check_printing
@@ -17383,6 +17393,11 @@ msgid "G WHOLESALE AND RETAIL TRADE;REPAIR OF MOTOR VEHICLES AND MOTORCYCLES"
 msgstr "G VELKOOBCHOD A MALOOBCHOD, OPRAVY MOTOROVÝCH VOZIDEL A MOTOCYKLŮ"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_gcc_invoice
+msgid "G.C.C. - Arabic/English Invoice"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__gpl-2
 msgid "GPL Version 2"
 msgstr "GPL Verze 2"
@@ -17909,6 +17924,11 @@ msgstr "Guinea"
 #: model:res.country,name:base.gw
 msgid "Guinea-Bissau"
 msgstr "Guinea-Bissau"
+
+#. module: base
+#: model:res.country.group,name:base.gulf_cooperation_council
+msgid "Gulf Cooperation Council (GCC)"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.gy
@@ -19742,6 +19762,21 @@ msgid "K FINANCIAL AND INSURANCE ACTIVITIES"
 msgstr "K FINANČNÍ A POJIŠŤOVACÍ ČINNOSTI"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_sa_invoice
+msgid "K.S.A - Invoice"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_sa_hr_payroll
+msgid "K.S.A. - Payroll"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_sa_hr_payroll_account
+msgid "K.S.A. - Payroll with Accounting"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_digest
 msgid "KPI Digests"
 msgstr "Výkazy KPI"
@@ -20421,6 +20456,11 @@ msgstr "Pole odkazu"
 #: model:ir.module.module,shortdesc:base.module_website_links
 msgid "Link Tracker"
 msgstr "Tracker odkazu"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_timesheet_grid_holidays
+msgid "Link between timesheet and time off"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_voip_crm
@@ -23636,8 +23676,8 @@ msgstr ""
 #. module: base
 #: code:addons/base/models/ir_actions_report.py:0
 #, python-format
-msgid "One of the documents, you try to merge is encrypted"
-msgstr "Jeden z dokumentů, které se pokoušíte sloučit, je šifrovaný"
+msgid "One of the documents you are trying to merge is encrypted"
+msgstr ""
 
 #. module: base
 #: code:addons/models.py:0
@@ -26689,6 +26729,11 @@ msgid "Salary Configurator (Belgium)"
 msgstr "Konfigurátor platů (Belgie)"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_canteen
+msgid "Salary Configurator (Belgium) - Canteen Cost"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_contract_salary_group_insurance
 msgid "Salary Configurator (Belgium) - Group Insurance"
 msgstr ""
@@ -26707,6 +26752,11 @@ msgstr "Konfigurátor platů - mzdy"
 #: model:ir.module.module,summary:base.module_l10n_be_hr_contract_salary
 msgid "Salary Package Configurator"
 msgstr "Konfigurátor platových balíčků"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_canteen
+msgid "Salary Package Configurator - Canteen Cost"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_be_hr_contract_salary_group_insurance
@@ -29672,6 +29722,11 @@ msgstr "Pracovní výkazy když jsou volné dny"
 #: model:ir.module.module,shortdesc:base.module_timesheet_grid
 msgid "Timesheets"
 msgstr "Pracovní výkazy"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_timesheet_grid_holidays
+msgid "Timesheets And Timeoff"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet_attendance

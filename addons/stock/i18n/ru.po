@@ -950,7 +950,8 @@ msgid ""
 "Apply specific route(s) for the replenishment instead of product's default "
 "routes."
 msgstr ""
-"Примените конкретные маршруты для пополнения, а не маршруты по умолчанию."
+"Примените конкретные маршруты для пополнения, а не маршруты по умолчанию для"
+" товара."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__4
@@ -1942,7 +1943,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_replenish__date_planned
 msgid "Date at which the replenishment should take place."
-msgstr "Дата, на которую предстоит пополнения."
+msgstr "Дата, на которую предстоит пополнение."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__date_done
@@ -2224,6 +2225,9 @@ msgid ""
 "of the product in this packaging: whether it will be bought, manufactured, "
 "replenished on order, etc."
 msgstr ""
+"В зависимости от установленных модулей это позволит вам определить маршрут "
+"движения продукта: будет ли он куплен, изготовлен, пополнен по заказу и т. "
+"д."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__route_ids
@@ -2234,8 +2238,8 @@ msgid ""
 "order, etc."
 msgstr ""
 "В зависимости от установленных модулей это позволит вам определить маршрут "
-"движения продукта: будет ли он куплен, изготовлен, пополняться по заказу и "
-"т. д."
+"движения продукта: будет ли он куплен, изготовлен, пополнен по заказу и т. "
+"д."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__name
@@ -2633,7 +2637,7 @@ msgstr "Эксп."
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Exp %s"
-msgstr ""
+msgstr "План %s"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__products_availability_state__expected
@@ -2744,7 +2748,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable_config
 msgid "Forecast Description"
-msgstr ""
+msgstr "Описание прогнозирования"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__virtual_available
@@ -3897,7 +3901,7 @@ msgstr "Время выполнения заказа"
 #: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
 #, python-format
 msgid "Lead Times"
-msgstr ""
+msgstr "Срок пополнения"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_request_count__set_count__empty
@@ -4222,7 +4226,7 @@ msgstr "Отметить"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_max_qty
 msgid "Max Quantity"
-msgstr ""
+msgstr "Макс. количество"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__max_weight
@@ -4297,7 +4301,7 @@ msgstr "Метод"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_min_qty
 msgid "Min Quantity"
-msgstr ""
+msgstr "Мин. количество"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse_orderpoint
@@ -4387,7 +4391,7 @@ msgstr "Многошаговые маршруты"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_multiple
 msgid "Multiple Quantity"
-msgstr ""
+msgstr "Множитель на количество"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_storage_category_capacity_unique_package_type
@@ -4585,7 +4589,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint
 msgid "No reordering rule found"
-msgstr ""
+msgstr "Нет правил дозаказа"
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:0
@@ -4639,12 +4643,12 @@ msgstr "Нормальный"
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 #, python-format
 msgid "Not Available"
-msgstr ""
+msgstr "Не доступно"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
 msgid "Not Snoozed"
-msgstr ""
+msgstr "Не приглушено"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -4920,7 +4924,7 @@ msgstr "Оригинал Перемещения"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__orderpoint_id
 msgid "Original Reordering Rule"
-msgstr ""
+msgstr "Исходное правило дозаказа"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -5546,7 +5550,7 @@ msgstr "Количество товара обновлено"
 #: model:ir.model,name:stock.model_product_replenish
 #, python-format
 msgid "Product Replenish"
-msgstr "пополнение товара"
+msgstr "Пополнение товара"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_stock_rule
@@ -6142,19 +6146,19 @@ msgstr "Стратегия ротации %s не реализована."
 #: model:ir.model.fields,field_description:stock.field_product_product__reordering_max_qty
 #: model:ir.model.fields,field_description:stock.field_product_template__reordering_max_qty
 msgid "Reordering Max Qty"
-msgstr "Максимальное количество пополнений"
+msgstr "Максимальное количество дозаказа"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__reordering_min_qty
 #: model:ir.model.fields,field_description:stock.field_product_template__reordering_min_qty
 msgid "Reordering Min Qty"
-msgstr "Минимальное количество пополнений"
+msgstr "Минимальное количество дозаказа"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Reordering Rule"
-msgstr "Правило повторной подачи заказа"
+msgstr "Правило дозаказа"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_orderpoint
@@ -6170,7 +6174,7 @@ msgstr "Правила дозаказа"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Reordering Rules Search"
-msgstr "Поиск правил упорядочивания"
+msgstr "Поиск правил дозаказа"
 
 #. module: stock
 #. openerp-web
@@ -6192,7 +6196,7 @@ msgstr "Пополнение заказа (Ведомость заказа ма�
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_product_replenish
 msgid "Replenish wizard"
-msgstr "Мастер воспополнения"
+msgstr "Мастер пополнения"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_orderpoint_replenish
@@ -6200,12 +6204,12 @@ msgstr "Мастер воспополнения"
 #: model:ir.ui.menu,name:stock.menu_reordering_rules_replenish
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 msgid "Replenishment"
-msgstr "Восполнение"
+msgstr "Пополнение"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_replenishment_info
 msgid "Replenishment Information"
-msgstr ""
+msgstr "Информация о пополнении"
 
 #. module: stock
 #: code:addons/stock/models/stock_orderpoint.py:0
@@ -6493,7 +6497,7 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_procurement_compute
 #: model_terms:ir.ui.view,arch_db:stock.view_procurement_compute_wizard
 msgid "Run Scheduler"
-msgstr "запустить планировщик"
+msgstr "Запустить планировщик"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_scheduler_compute
@@ -6503,7 +6507,7 @@ msgstr "Запустить планировщик вручную"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
 msgid "Run the scheduler"
-msgstr "запустите планировщик"
+msgstr "Запустить планировщик"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_sms
@@ -6527,7 +6531,7 @@ msgstr ""
 #: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
 #, python-format
 msgid "Sales History"
-msgstr ""
+msgstr "История продаж"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__date_planned
@@ -6983,12 +6987,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 #, python-format
 msgid "Snooze"
-msgstr "Повторение сигнала"
+msgstr "Приглушить"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_snooze__snoozed_until
 msgid "Snooze Date"
-msgstr ""
+msgstr "Дата приглушения"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_orderpoint_snooze
@@ -6998,12 +7002,12 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_snooze__predefined_date
 msgid "Snooze for"
-msgstr ""
+msgstr "Приглушить на"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__snoozed_until
 msgid "Snoozed"
-msgstr ""
+msgstr "Приглушено"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_track_confirmation
@@ -8003,7 +8007,7 @@ msgstr "В процессе"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
 msgid "To Reorder"
-msgstr ""
+msgstr "Нужно пополнить"
 
 #. module: stock
 #. openerp-web
@@ -8397,8 +8401,8 @@ msgid ""
 "                a manufacturing order or a transfer."
 msgstr ""
 "Воспользуйтесь этим помощником для пополнения запасов.\n"
-"                В зависимости от конфигурации вашего продукта запуск пополнения запасов может вызвать запрос коммерческого предложения,\n"
-"                заказ на производство или перевод."
+"                В зависимости от конфигурации вашего продукта запуск пополнения запасов может вызвать запрос цен поставщика,\n"
+"                заказ на производство или перемещение."
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_picking_wave
@@ -8822,7 +8826,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint_replenish
 msgid "You are good, no replenishment to perform!"
-msgstr ""
+msgstr "Все в порядке, ничего пополнять не требуется!"
 
 #. module: stock
 #: code:addons/stock/models/stock_production_lot.py:0
@@ -9198,8 +9202,8 @@ msgid ""
 "You still have some active reordering rules on this product. Please archive "
 "or delete them first."
 msgstr ""
-"У вас все еще есть некоторые активные правила переупорядочивания на этом "
-"продукте. Сначала архивируйте или удалите их."
+"У вас все еще есть некоторые активные правила дозаказа на этом продукте. "
+"Сначала архивируйте или удалите их."
 
 #. module: stock
 #: code:addons/stock/models/stock_location.py:0
@@ -9214,6 +9218,9 @@ msgid ""
 "            Choose the quantity to buy or manufacture and launch orders in a click.\n"
 "            To save time in the future, set the rules as \"automated\"."
 msgstr ""
+"Вы найдете здесь предложения на пополнение, основанные на складских прогнозах.\n"
+"            Укажите количество для покупки, производства и создавайте заказы по клику.\n"
+"            Чтобы сэкономить время пометьте правила как \"автоматические\"."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__print_format__zpl
@@ -9359,7 +9366,7 @@ msgstr "report_stock_quantity_graph"
 #: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
 #, python-format
 msgid "should be replenished"
-msgstr ""
+msgstr "должны быть пополнены"
 
 #. module: stock
 #. openerp-web
