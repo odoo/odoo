@@ -246,7 +246,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         var self = this;
         var lock = this.qweb_mutex.exec(function () {
             var cacheId = self.cache_hashes && self.cache_hashes.qweb;
-            var route  = '/web/webclient/qweb/' + (cacheId ? cacheId : Date.now()) + '?mods=' + mods;
+            var route  = '/web/webclient/qweb/' + (cacheId ? cacheId : Date.now()) + '?mods='; //+ mods; // ??
             return $.get(route).then(function (doc) {
                 if (!doc) { return; }
                 const owlTemplates = [];

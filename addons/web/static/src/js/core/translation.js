@@ -67,7 +67,8 @@ var TranslationDataBase = Class.extend(/** @lends instance.TranslationDataBase# 
         url = url || '/web/webclient/translations';
         url += '/' + (cacheId ? cacheId : Date.now());
         return $.get(url, {
-            mods: modules ? modules.join(',') : null,
+            // mods: modules ? modules.join(',') : null,
+            mods: null,
             lang: lang || null,
         }).then(function (trans) {
             self.set_bundle(trans);
