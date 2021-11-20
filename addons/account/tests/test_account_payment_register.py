@@ -67,14 +67,16 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'date': '2017-01-01',
             'invoice_date': '2017-01-01',
             'partner_id': cls.partner_a.id,
-            'invoice_line_ids': [(0, 0, {'product_id': cls.product_a.id, 'price_unit': 12.01})],
+            'currency_id': cls.currency_data['currency'].id,
+            'invoice_line_ids': [(0, 0, {'product_id': cls.product_a.id, 'price_unit': 24.02})],
         })
         cls.out_invoice_4 = cls.env['account.move'].create({
             'move_type': 'out_invoice',
             'date': '2017-01-01',
             'invoice_date': '2017-01-01',
             'partner_id': cls.partner_a.id,
-            'invoice_line_ids': [(0, 0, {'product_id': cls.product_a.id, 'price_unit': 11.99})],
+            'currency_id': cls.currency_data['currency'].id,
+            'invoice_line_ids': [(0, 0, {'product_id': cls.product_a.id, 'price_unit': 23.98})],
         })
         (cls.out_invoice_1 + cls.out_invoice_2 + cls.out_invoice_3 + cls.out_invoice_4).action_post()
 
@@ -1005,4 +1007,54 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
                 'ref': 'INV/2017/00002',
                 'partner_bank_id': self.comp_bank_account2.id,
             },
+        ])
+
+    def test_register_payment_invoice_foreign_curr_payment_comp_curr(self):
+        # Invoice 1200 Gol = 400 USD
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'date': '2016-01-01',
+            'invoice_date': '2016-01-01',
+            'partner_id': self.partner_a.id,
+            'currency_id': self.currency_data['currency'].id,
+            'invoice_line_ids': [(0, 0, {'product_id': self.product_a.id, 'price_unit': 1200.0})],
+        })
+        invoice.action_post()
+
+        # Payment of 600 USD (equivalent to 1200 Gol in 2017).
+        # 600.0 USD should be computed correctly to fully paid the invoices.
+        payment = self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=invoice.ids)\
+            .create({'currency_id': self.company_data['currency'].id})\
+            ._create_payments()
+
+        lines = (invoice + payment.move_id).line_ids.filtered(lambda x: x.account_internal_type == 'receivable')
+        self.assertRecordValues(lines, [
+            {'amount_residual': 0.0, 'amount_residual_currency': 0.0, 'currency_id': self.currency_data['currency'].id, 'reconciled': True},
+            {'amount_residual': 0.0, 'amount_residual_currency': 0.0, 'currency_id': self.company_data['currency'].id, 'reconciled': True},
+        ])
+
+    def test_register_payment_invoice_comp_curr_payment_foreign_curr(self):
+        # Invoice of 400 USD (equivalent to 1200 Gol in 2016).
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'date': '2016-01-01',
+            'invoice_date': '2016-01-01',
+            'partner_id': self.partner_a.id,
+            'currency_id': self.company_data['currency'].id,
+            'invoice_line_ids': [(0, 0, {'product_id': self.product_a.id, 'price_unit': 400.0})],
+        })
+        invoice.action_post()
+
+        # Payment of 600 USD = 1200 Gol.
+        # 1200.0 Gol should be computed correctly to fully paid the invoices.
+        payment = self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=invoice.ids)\
+            .create({'currency_id': self.currency_data['currency'].id})\
+            ._create_payments()
+
+        lines = (invoice + payment.move_id).line_ids.filtered(lambda x: x.account_internal_type == 'receivable')
+        self.assertRecordValues(lines, [
+            {'amount_residual': 0.0, 'amount_residual_currency': 0.0, 'currency_id': self.company_data['currency'].id, 'reconciled': True},
+            {'amount_residual': 0.0, 'amount_residual_currency': 0.0, 'currency_id': self.currency_data['currency'].id, 'reconciled': True},
         ])
