@@ -3,9 +3,11 @@
 from odoo import fields
 from odoo.tests.common import TransactionCase, HttpCase, tagged, Form
 
+import json
 import time
 import base64
 from lxml import etree
+
 
 @tagged('post_install', '-at_install')
 class AccountTestInvoicingCommon(TransactionCase):
@@ -412,6 +414,35 @@ class AccountTestInvoicingCommon(TransactionCase):
         self.assertRecordValues(sort_lines(move.invoice_line_ids.sorted()), expected_lines_values[:len(move.invoice_line_ids)])
         self.assertRecordValues(move, [expected_move_values])
 
+    def assert_invoice_outstanding_to_reconcile_widget(self, invoice, expected_amounts):
+        """ Check the outstanding widget before the reconciliation.
+        :param invoice:             An invoice.
+        :param expected_amounts:    A map <move_id> -> <amount>
+        """
+        invoice.invalidate_cache(['invoice_outstanding_credits_debits_widget'])
+        widget_vals = json.loads(invoice.invoice_outstanding_credits_debits_widget)
+
+        if widget_vals:
+            current_amounts = {vals['move_id']: vals['amount'] for vals in widget_vals['content']}
+        else:
+            current_amounts = {}
+        self.assertDictEqual(current_amounts, expected_amounts)
+
+    def assert_invoice_outstanding_reconciled_widget(self, invoice, expected_amounts):
+        """ Check the outstanding widget after the reconciliation.
+        :param invoice:             An invoice.
+        :param expected_amounts:    A map <move_id> -> <amount>
+        """
+        invoice.invalidate_cache(['invoice_payments_widget'])
+        widget_vals = json.loads(invoice.invoice_payments_widget)
+
+        if widget_vals:
+            current_amounts = {vals['move_id']: vals['amount'] for vals in widget_vals['content']}
+        else:
+            current_amounts = {}
+        formatted_expected_amounts = {k: invoice.currency_id.round(v) for k, v in expected_amounts.items()}
+        self.assertDictEqual(current_amounts, formatted_expected_amounts)
+
     ####################################################
     # Xml Comparison
     ####################################################
@@ -676,38 +707,3 @@ class TestAccountReconciliationCommon(AccountTestInvoicingCommon):
             payment_term_id=payment_term_id,
             auto_validate=True
         )
-
-    def make_payment(self, invoice_record, bank_journal, amount=0.0, amount_currency=0.0, currency_id=None, reconcile_param=None):
-        reconcile_param = reconcile_param or []
-        bank_stmt = self.env['account.bank.statement'].create({
-            'journal_id': bank_journal.id,
-            'date': time.strftime('%Y') + '-07-15',
-            'name': 'payment' + invoice_record.name,
-            'line_ids': [(0, 0, {
-                'payment_ref': 'payment',
-                'partner_id': self.partner_agrolait_id,
-                'amount': amount,
-                'amount_currency': amount_currency,
-                'foreign_currency_id': currency_id,
-            })],
-        })
-        bank_stmt.button_post()
-
-        bank_stmt.line_ids[0].reconcile(reconcile_param)
-        return bank_stmt
-
-    def make_customer_and_supplier_flows(self, invoice_currency_id, invoice_amount, bank_journal, amount, amount_currency, transaction_currency_id):
-        #we create an invoice in given invoice_currency
-        invoice_record = self.create_invoice(move_type='out_invoice', invoice_amount=invoice_amount, currency_id=invoice_currency_id)
-        #we encode a payment on it, on the given bank_journal with amount, amount_currency and transaction_currency given
-        line = invoice_record.line_ids.filtered(lambda line: line.account_id.user_type_id.type in ('receivable', 'payable'))
-        bank_stmt = self.make_payment(invoice_record, bank_journal, amount=amount, amount_currency=amount_currency, currency_id=transaction_currency_id, reconcile_param=[{'id': line.id}])
-        customer_move_lines = bank_stmt.line_ids.line_ids
-
-        #we create a supplier bill in given invoice_currency
-        invoice_record = self.create_invoice(move_type='in_invoice', invoice_amount=invoice_amount, currency_id=invoice_currency_id)
-        #we encode a payment on it, on the given bank_journal with amount, amount_currency and transaction_currency given
-        line = invoice_record.line_ids.filtered(lambda line: line.account_id.user_type_id.type in ('receivable', 'payable'))
-        bank_stmt = self.make_payment(invoice_record, bank_journal, amount=-amount, amount_currency=-amount_currency, currency_id=transaction_currency_id, reconcile_param=[{'id': line.id}])
-        supplier_move_lines = bank_stmt.line_ids.line_ids
-        return customer_move_lines, supplier_move_lines

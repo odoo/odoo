@@ -910,41 +910,17 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         for p in patchers:
             p.stop()
 
-        move_lines = inv.line_ids
-        self.assertEqual(len(move_lines), 2)
-
-        # PAYABLE CHECK
-        payable_line = move_lines.filtered(lambda l: l.account_id.internal_type == 'payable')
-        self.assertEqual(payable_line.amount_currency, -30.0)
-        self.assertAlmostEqual(payable_line.balance, -15.00)
-
-        # PRODUCTS CHECKS
-
-        # DELIVERY DIFFERENCE (AVERAGE)
-        # We ordered a product at 30 EUR valued at 20 USD
-        # We received it when the exchange rate has appreciated
-        # So, the actualized 20 USD are now 20*1.5/0.7 = 42.86 USD
-        product_lines = move_lines.filtered(lambda l: l.product_id == product_avg)
-
-        # Although those 42.86 USD are just due to the exchange difference
-        stock_line = product_lines.filtered(lambda l: l.account_id == self.stock_input_account)
-        self.assertEqual(stock_line.journal_id, inv.journal_id)
-        self.assertEqual(stock_line.amount_currency, 30.00)
-        self.assertAlmostEqual(stock_line.balance, 15.00)
-        full_reconcile = stock_line.full_reconcile_id
-        self.assertTrue(full_reconcile.exists())
-
-        reconciled_lines = full_reconcile.reconciled_line_ids - stock_line
-        self.assertEqual(len(reconciled_lines), 2)
-
-        stock_journal_line = reconciled_lines.filtered(lambda l: l.journal_id == self.stock_journal)
-        self.assertEqual(stock_journal_line.amount_currency, -30.00)
-        self.assertAlmostEqual(stock_journal_line.balance, -42.86)
-
-        exhange_diff_journal = company.currency_exchange_journal_id.exists()
-        exchange_stock_line = reconciled_lines.filtered(lambda l: l.journal_id == exhange_diff_journal)
-        self.assertEqual(exchange_stock_line.amount_currency, 0.00)
-        self.assertAlmostEqual(exchange_stock_line.balance, 27.86)
+        self.assertRecordValues(inv.line_ids, [
+            # pylint: disable=C0326
+            {'balance': 15.0,   'amount_currency': 30.0,    'account_id': self.stock_input_account.id},
+            {'balance': -15.0,  'amount_currency': -30.0,   'account_id': self.company_data['default_account_payable'].id},
+        ])
+        self.assertRecordValues(inv.line_ids.full_reconcile_id.reconciled_line_ids, [
+            # pylint: disable=C0326
+            {'balance': -42.86, 'amount_currency': -30.0,   'account_id': self.stock_input_account.id},
+            {'balance': 15.0,   'amount_currency': 30.0,    'account_id': self.stock_input_account.id},
+            {'balance': 27.86,  'amount_currency': 0.0,     'account_id': self.stock_input_account.id},
+        ])
 
     def test_average_realtime_with_two_delivery_anglo_saxon_valuation_multicurrency_different_dates(self):
         """
@@ -1119,76 +1095,47 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         ##########################
         #       Invoice 0        #
         ##########################
-        move_lines = inv.line_ids
-        self.assertEqual(len(move_lines), 4)
 
-        # PAYABLE CHECK
-        payable_line = move_lines.filtered(lambda l: l.account_id.internal_type == 'payable')
-        self.assertEqual(payable_line.amount_currency, -100.0)
-        self.assertAlmostEqual(payable_line.balance, -50.00)
+        self.assertRecordValues(inv.line_ids, [
+            # pylint: disable=C0326
+            {'balance': 50.0,   'amount_currency': 100.0,   'account_id': self.stock_input_account.id},
+            {'balance': -50.0,  'amount_currency': -100.0,  'account_id': self.company_data['default_account_payable'].id},
+            {'balance': -25.0,  'amount_currency': -50.0,   'account_id': self.price_diff_account.id},
+            {'balance': 25.0,   'amount_currency': 50.0,    'account_id': self.stock_input_account.id},
+        ])
 
-        # # PRODUCTS CHECKS
-
-        # DELIVERY DIFFERENCE (AVERAGE)
-        stock_lines = move_lines.filtered(lambda l: l.account_id == self.stock_input_account)
-        self.assertEqual(len(stock_lines), 2)
-        self.assertAlmostEqual(sum(stock_lines.mapped('amount_currency')), 150.00)
-        self.assertAlmostEqual(sum(stock_lines.mapped('balance')), 75.00)
-
-        price_diff_line = move_lines.filtered(lambda l: l.account_id == self.price_diff_account)
-        self.assertAlmostEqual(price_diff_line.amount_currency, -50.00)
-        self.assertAlmostEqual(price_diff_line.balance, -25.00)
-
-        full_reconcile = stock_lines.mapped('full_reconcile_id')
-        self.assertTrue(full_reconcile.exists())
-
-        reconciled_lines = full_reconcile.reconciled_line_ids - stock_lines
-        self.assertEqual(len(reconciled_lines), 2)
-
-        stock_journal_line = reconciled_lines.filtered(lambda l: l.journal_id == self.stock_journal)
-        self.assertEqual(stock_journal_line.amount_currency, -150)
-        self.assertAlmostEqual(stock_journal_line.balance, -214.29)
-
-        exchange_stock_line = reconciled_lines.filtered(lambda l: l.journal_id == exchange_diff_journal)
-        self.assertEqual(exchange_stock_line.amount_currency, 0.00)
-        self.assertAlmostEqual(exchange_stock_line.balance, 139.29)
+        self.assertRecordValues(inv.line_ids.full_reconcile_id.reconciled_line_ids, [
+            # pylint: disable=C0326
+            # Exchange difference lines:
+            {'balance': 46.43,      'amount_currency': 0.0},
+            {'balance': 92.86,      'amount_currency': 0.0},
+            # Other lines:
+            {'balance': 50.0,       'amount_currency': 100.0},
+            {'balance': 25.0,       'amount_currency': 50.0},
+            {'balance': -214.29,    'amount_currency': -150.0},
+        ])
 
         ##########################
         #       Invoice 1        #
         ##########################
-        move_lines = inv1.line_ids
-        self.assertEqual(len(move_lines), 4)
 
-        # PAYABLE CHECK
-        payable_line = move_lines.filtered(lambda l: l.account_id.internal_type == 'payable')
-        self.assertEqual(payable_line.amount_currency, -200.0)
-        self.assertAlmostEqual(payable_line.balance, -90.91)
+        self.assertRecordValues(inv1.line_ids, [
+            # pylint: disable=C0326
+            {'balance': 90.91,  'amount_currency': 200.0,   'account_id': self.stock_input_account.id},
+            {'balance': -90.91, 'amount_currency': -200.0,  'account_id': self.company_data['default_account_payable'].id},
+            {'balance': 22.73,  'amount_currency': 50.0,    'account_id': self.price_diff_account.id},
+            {'balance': -22.73, 'amount_currency': -50.0,   'account_id': self.stock_input_account.id},
+        ])
 
-        # # PRODUCTS CHECKS
-
-        # DELIVERY DIFFERENCE (AVERAGE)
-        stock_lines = move_lines.filtered(lambda l: l.account_id == self.stock_input_account)
-        self.assertEqual(stock_lines.mapped('journal_id'), inv.journal_id)
-        self.assertAlmostEqual(sum(stock_lines.mapped('amount_currency')), 150.00)
-        self.assertAlmostEqual(sum(stock_lines.mapped('balance')), 68.18)
-
-        price_diff_line = move_lines.filtered(lambda l: l.account_id == self.price_diff_account)
-        self.assertEqual(price_diff_line.amount_currency, 50.00)
-        self.assertAlmostEqual(price_diff_line.balance, 22.73)
-
-        full_reconcile = stock_lines.mapped('full_reconcile_id')
-        self.assertTrue(full_reconcile.exists())
-
-        reconciled_lines = full_reconcile.reconciled_line_ids - stock_lines
-        self.assertEqual(len(reconciled_lines), 3)
-
-        stock_journal_line = reconciled_lines.filtered(lambda l: l.journal_id == self.stock_journal)
-        self.assertEqual(stock_journal_line.amount_currency, -150)
-        self.assertAlmostEqual(stock_journal_line.balance, -187.5)
-
-        exchange_stock_lines = reconciled_lines.filtered(lambda l: l.journal_id == exchange_diff_journal)
-        self.assertAlmostEqual(sum(exchange_stock_lines.mapped('amount_currency')), 0.00)
-        self.assertAlmostEqual(sum(exchange_stock_lines.mapped('balance')), 119.32)
+        self.assertRecordValues(inv1.line_ids.full_reconcile_id.reconciled_line_ids, [
+            # pylint: disable=C0326
+            # Other lines:
+            {'balance': -187.5,     'amount_currency': -150.0},
+            {'balance': 90.91,      'amount_currency': 200.0},
+            {'balance': -22.73,     'amount_currency': -50.0},
+            # Exchange difference lines:
+            {'balance': 119.32,     'amount_currency': 0.0},
+        ])
 
     def test_anglosaxon_valuation_price_total_diff_discount(self):
         """

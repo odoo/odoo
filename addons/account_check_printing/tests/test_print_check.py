@@ -111,11 +111,11 @@ class TestPrintCheck(AccountTestInvoicingCommon):
         })
         invoice.action_post()
 
-        # Partial payment in foreign currency: 100Gol = 33.33$.
+        # Partial payment in foreign currency.
         payment = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
             'payment_method_line_id': self.payment_method_line_check.id,
             'currency_id': self.currency_data['currency'].id,
-            'amount': 100.0,
+            'amount': 150.0,
             'payment_date': '2017-01-01',
         })._create_payments()
 
