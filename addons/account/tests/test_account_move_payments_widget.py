@@ -2,8 +2,6 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
 
-import json
-
 
 @tagged('post_install', '-at_install')
 class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
@@ -72,40 +70,6 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
         cls.payment_2017_curr_3.action_post()
 
     # -------------------------------------------------------------------------
-    # HELPERS
-    # -------------------------------------------------------------------------
-
-    def _test_all_outstanding_payments(self, invoice, expected_amounts):
-        ''' Check the outstanding payments widget before/after the reconciliation.
-        :param invoice:             An account.move record.
-        :param expected_amounts:    A map <move_id> -> <amount>
-        '''
-
-        # Check suggested outstanding payments.
-        to_reconcile_payments_widget_vals = json.loads(invoice.invoice_outstanding_credits_debits_widget)
-
-        self.assertTrue(to_reconcile_payments_widget_vals)
-
-        current_amounts = {vals['move_id']: vals['amount'] for vals in to_reconcile_payments_widget_vals['content']}
-        self.assertDictEqual(current_amounts, expected_amounts)
-
-        # Reconcile
-        pay_term_lines = invoice.line_ids\
-                .filtered(lambda line: line.account_id.user_type_id.type in ('receivable', 'payable'))
-        to_reconcile = self.env['account.move'].browse(list(current_amounts.keys()))\
-            .line_ids\
-            .filtered(lambda line: line.account_id == pay_term_lines.account_id)
-        (pay_term_lines + to_reconcile).reconcile()
-
-        # Check payments after reconciliation.
-        reconciled_payments_widget_vals = json.loads(invoice.invoice_payments_widget)
-
-        self.assertTrue(reconciled_payments_widget_vals)
-
-        current_amounts = {vals['move_id']: vals['amount'] for vals in reconciled_payments_widget_vals['content']}
-        self.assertDictEqual(current_amounts, expected_amounts)
-
-    # -------------------------------------------------------------------------
     # TESTS
     # -------------------------------------------------------------------------
 
@@ -144,8 +108,8 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
             self.payment_2017_curr_3.id: 500.0,
         }
 
-        self._test_all_outstanding_payments(out_invoice, expected_amounts)
-        self._test_all_outstanding_payments(in_invoice, expected_amounts)
+        self.assert_invoice_outstanding_to_reconcile_widget(out_invoice, expected_amounts)
+        self.assert_invoice_outstanding_to_reconcile_widget(in_invoice, expected_amounts)
 
     def test_outstanding_payments_foreign_currency(self):
         ''' Test the outstanding payments widget on invoices having a foreign currency. '''
@@ -180,5 +144,5 @@ class TestAccountMovePaymentsWidget(AccountTestInvoicingCommon):
             self.payment_2017_curr_3.id: 1000.0,
         }
 
-        self._test_all_outstanding_payments(out_invoice, expected_amounts)
-        self._test_all_outstanding_payments(in_invoice, expected_amounts)
+        self.assert_invoice_outstanding_to_reconcile_widget(out_invoice, expected_amounts)
+        self.assert_invoice_outstanding_to_reconcile_widget(in_invoice, expected_amounts)

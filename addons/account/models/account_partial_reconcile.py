@@ -20,6 +20,7 @@ class AccountPartialReconcile(models.Model):
     full_reconcile_id = fields.Many2one(
         comodel_name='account.full.reconcile',
         string="Full Reconcile", copy=False)
+    exchange_move_id = fields.Many2one(comodel_name='account.move')
 
     # ==== Currency fields ====
     company_currency_id = fields.Many2one(
@@ -112,9 +113,14 @@ class AccountPartialReconcile(models.Model):
 
         # Retrieve the CABA entries to reverse.
         moves_to_reverse = self.env['account.move'].search([('tax_cash_basis_rec_id', 'in', self.ids)])
+        # Same for the exchange difference entries.
+        moves_to_reverse += self.exchange_move_id
 
         # Unlink partials before doing anything else to avoid 'Record has already been deleted' due to the recursion.
         res = super().unlink()
+
+        # Remove the matching numbers before reversing the moves to avoid trying to remove the full twice.
+        full_to_unlink.unlink()
 
         # Reverse CABA entries.
         today = fields.Date.context_today(self)
@@ -123,9 +129,6 @@ class AccountPartialReconcile(models.Model):
             'ref': _('Reversal of: %s') % move.name,
         } for move in moves_to_reverse]
         moves_to_reverse._reverse_moves(default_values_list, cancel=True)
-
-        # Remove the matching numbers.
-        full_to_unlink.unlink()
 
         return res
 
@@ -150,13 +153,14 @@ class AccountPartialReconcile(models.Model):
             for move in {partial.debit_move_id.move_id, partial.credit_move_id.move_id}:
 
                 # Collect data about cash basis.
-                if move.id not in tax_cash_basis_values_per_move:
-                    tax_cash_basis_values_per_move[move.id] = move._collect_tax_cash_basis_values()
+                if move.id in tax_cash_basis_values_per_move:
+                    move_values = tax_cash_basis_values_per_move[move.id]
+                else:
+                    move_values = move._collect_tax_cash_basis_values()
 
                 # Nothing to process on the move.
-                if not tax_cash_basis_values_per_move.get(move.id):
+                if not move_values:
                     continue
-                move_values = tax_cash_basis_values_per_move[move.id]
 
                 # Check the cash basis configuration only when at least one cash basis tax entry need to be created.
                 journal = partial.company_id.tax_cash_basis_journal_id
@@ -185,9 +189,17 @@ class AccountPartialReconcile(models.Model):
                     counterpart_line = partial.debit_move_id
 
                 if move_values['currency'] == move.company_id.currency_id:
+                    # Ignore the exchange difference.
+                    if move.company_currency_id.is_zero(partial_amount):
+                        continue
+
                     # Percentage made on company's currency.
                     percentage = partial_amount / move_values['total_balance']
                 else:
+                    # Ignore the exchange difference.
+                    if move.currency_id.is_zero(partial_amount_currency):
+                        continue
+
                     # Percentage made on foreign currency.
                     percentage = partial_amount_currency / move_values['total_amount_currency']
 
@@ -204,6 +216,8 @@ class AccountPartialReconcile(models.Model):
                     payment_rate = rate_amount_currency / rate_amount
                 else:
                     payment_rate = 0.0
+
+                tax_cash_basis_values_per_move[move.id] = move_values
 
                 partial_vals = {
                     'partial': partial,
