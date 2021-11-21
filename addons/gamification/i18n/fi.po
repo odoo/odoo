@@ -14,10 +14,10 @@
 # Topi Aura <topi@aurat.fi>, 2018
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2019
 # Jenni Heikkilä <jenni.heikkila@sv-oy.fi>, 2019
-# Johanna Valkonen <johanna.valkonen@sv-oy.fi>, 2019
+# Johanna Valkonen <johanna@vividi.fi>, 2019
 # Sari Mäyrä <sari.mayra@sv-oy.fi>, 2019
 # Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2019
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2020
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -25,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 10:10+0000\n"
 "PO-Revision-Date: 2018-08-24 09:18+0000\n"
-"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2020\n"
+"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2021\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,13 +37,13 @@ msgstr ""
 #: code:addons/gamification/models/challenge.py:594
 #, python-format
 msgid "%s has joined the challenge"
-msgstr ""
+msgstr "%s on liittynyt haasteeseen"
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:603
 #, python-format
 msgid "%s has refused the challenge"
-msgstr ""
+msgstr "%s on hylännyt haasteen"
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.email_template_badge_received
@@ -153,7 +153,7 @@ msgstr ""
 #: code:addons/gamification/models/challenge.py:660
 #, python-format
 msgid "<br/> %(rank)d. %(user_name)s - %(reward_name)s"
-msgstr ""
+msgstr "<br/> %(rank)d. %(user_name)s - %(reward_name)s"
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:657
@@ -162,6 +162,8 @@ msgid ""
 "<br/>Nobody has succeeded to reach every goal, no badge is rewarded for this"
 " challenge."
 msgstr ""
+"<br/>Kukaan ei ole onnistunut saavuttamaan kaikkia tavoitteita, joten tästä "
+"haasteesta ei ole vielä myönnetty ansiomerkkejä."
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:655
@@ -200,6 +202,8 @@ msgid ""
 "<i role=\"img\" class=\"fa fa-clock-o fa-3x\" title=\"Goal in Progress\" "
 "aria-label=\"Goal in Progress\"/>"
 msgstr ""
+"<i role=\"img\" class=\"fa fa-clock-o fa-3x\" title=\"Keskeneräinen "
+"tavoite\" aria-label=\"Keskeneräinen tavoite\"/>"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
@@ -207,6 +211,8 @@ msgid ""
 "<i role=\"img\" class=\"o_green fa fa-check fa-3x\" title=\"Goal Reached\" "
 "aria-label=\"Goal Reached\"/>"
 msgstr ""
+"<i role=\"img\" class=\"o_green fa fa-check fa-3x\" title=\"Tavoite "
+"saavutettu\" aria-label=\"Tavoite saavutettu\"/>"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
@@ -214,6 +220,8 @@ msgid ""
 "<i role=\"img\" class=\"o_red fa fa-times fa-3x\" title=\"Goal Failed\" "
 "aria-label=\"Goal Failed\"/>"
 msgstr ""
+"<i role=\"img\" class=\"o_red fa fa-times fa-3x\" title=\"Tavoite "
+"epäonnistunut\" aria-label=\"Tavoite epäonnistunut\"/>"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -221,6 +229,8 @@ msgid ""
 "<span class=\"o_stat_text\">Related</span>\n"
 "                                <span class=\"o_stat_text\">Goals</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Liittyvät</span>\n"
+"                                <span class=\"o_stat_text\">tavoitteet</span>"
 
 #. module: gamification
 #: model:mail.template,body_html:gamification.simple_report_template
