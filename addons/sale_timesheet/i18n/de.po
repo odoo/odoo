@@ -192,7 +192,7 @@ msgstr ""
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:60
 #, python-format
 msgid "At least one line should be filled."
-msgstr ""
+msgstr "Mindestens eine Zeile sollte befüllt sein."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/controllers/main.py:249
@@ -272,7 +272,7 @@ msgstr "Abbrechen"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__sale_order_id
 msgid "Choose the Sales Order to invoice"
-msgstr ""
+msgstr "Wählen Sie den zu fakturierenden Kundenauftrag"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_search
@@ -296,7 +296,7 @@ msgstr "Rechnung erzeugen"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_create_invoice
 msgid "Create Invoice from project"
-msgstr ""
+msgstr "Rechnung aus Projekt erstellen"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_create_sale_order_line
@@ -306,7 +306,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_create_sale_order
 msgid "Create SO from project"
-msgstr ""
+msgstr "Kundenauftrag aus Projekt erstellen"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:102
@@ -314,7 +314,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 #, python-format
 msgid "Create Sales Order"
-msgstr ""
+msgstr "Kundenauftrag erstellen"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_invoice_view_form
@@ -386,7 +386,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__partner_id
 msgid "Customer of the sales order"
-msgstr ""
+msgstr "Kunde des Verkaufsauftrags"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__display_name
@@ -445,7 +445,7 @@ msgstr "Festpreis-Dienste"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__project_id
 msgid "Generated Project"
-msgstr ""
+msgstr "Generiertes Projekt"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__task_id
@@ -534,7 +534,7 @@ msgstr "Ist eine Dienstleistung"
 #: model:product.product,name:sale_timesheet.product_service_deliver_timesheet_2
 #: model:product.template,name:sale_timesheet.product_service_deliver_timesheet_2_product_template
 msgid "Junior Architect (Invoice on Timesheets)"
-msgstr ""
+msgstr "Junior Architekt (Abrechnung anhand von Stundenzetteln)"
 
 #. module: sale_timesheet
 #: model:product.product,name:sale_timesheet.product_service_deliver_manual
@@ -763,7 +763,7 @@ msgstr "Profitabilität"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_pivot
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_search
 msgid "Profitability Analysis"
-msgstr ""
+msgstr "Rentabilitätsanalyse"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/controllers/main.py:373
@@ -783,7 +783,7 @@ msgstr "Projekt"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__company_id
 msgid "Project Company"
-msgstr ""
+msgstr "Projekt Unternehmen"
 
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.project_profitability_report_action
@@ -816,12 +816,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__project_template_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_template__project_template_id
 msgid "Project Template"
-msgstr ""
+msgstr "Projekt-Vorlage"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__project_id
 msgid "Project for which we are creating a sales order"
-msgstr ""
+msgstr "Projekt, für das wir einen Kundenauftrag erstellen"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order_line__project_id
@@ -992,7 +992,7 @@ msgstr "Dienste verkaufen und Zeitaufwand abrechnen"
 #: model:product.product,name:sale_timesheet.product_service_deliver_timesheet_1
 #: model:product.template,name:sale_timesheet.product_service_deliver_timesheet_1_product_template
 msgid "Senior Architect (Invoice on Timesheets)"
-msgstr ""
+msgstr "Senior Architekt (Abrechnung anhand von Stundenzetteln)"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__product_id
@@ -1099,6 +1099,8 @@ msgid ""
 "The product %s should not have a global project since it will generate a "
 "project."
 msgstr ""
+"Das Produkt %s sollte kein globales Projekt haben, da es ein Projekt "
+"erzeugen wird."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/product.py:64
@@ -1107,6 +1109,8 @@ msgid ""
 "The product %s should not have a project nor a project template since it "
 "will not generate project."
 msgstr ""
+"Das Produkt %s sollte weder ein Projekt noch eine Projektvorlage haben, da "
+"es kein Projekt erzeugen wird."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/product.py:66
@@ -1115,6 +1119,8 @@ msgid ""
 "The product %s should not have a project template since it will generate a "
 "task in a global project."
 msgstr ""
+"Das Produkt %s sollte keine Projektvorlage haben, da es eine Aufgabe in "
+"einem globalen Projekt erzeugen wird."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:25
@@ -1135,12 +1141,15 @@ msgid ""
 "The sales order cannot be created because some timesheets of this project "
 "are already linked to another sales order."
 msgstr ""
+"Der Kundenauftrag kann nicht erstellt werden, da einige Stundenzettel dieses"
+" Projekts bereits mit einem anderen Kundenauftrag verknüpft sind."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_invoice.py:51
 #, python-format
 msgid "The selected Sales Order should contain something to invoice."
 msgstr ""
+"Der ausgewählte Kundenauftrag sollte abrechenbare Positionen enthalten."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan

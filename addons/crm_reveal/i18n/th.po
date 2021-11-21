@@ -68,12 +68,12 @@ msgstr ""
 #. module: crm_reveal
 #: model_terms:ir.ui.view,arch_db:crm_reveal.crm_reveal_rule_form
 msgid "<span class=\"o_stat_text\"> Leads </span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"> ลูกค้าเป้าหมาย </span>"
 
 #. module: crm_reveal
 #: model_terms:ir.ui.view,arch_db:crm_reveal.crm_reveal_rule_form
 msgid "<span class=\"o_stat_text\"> Opportunities </span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"> โอกาสในการขาย </span>"
 
 #. module: crm_reveal
 #: model_terms:ir.ui.view,arch_db:crm_reveal.crm_reveal_rule_form
@@ -223,12 +223,12 @@ msgstr ""
 #. module: crm_reveal
 #: model:ir.model,name:crm_reveal.model_crm_reveal_rule
 msgid "CRM Lead Generation Rules"
-msgstr ""
+msgstr "กฎการสร้างลูกค้าเป้าหมาย CRM"
 
 #. module: crm_reveal
 #: model:ir.model,name:crm_reveal.model_crm_reveal_view
 msgid "CRM Reveal View"
-msgstr ""
+msgstr "CRM Reveal View"
 
 #. module: crm_reveal
 #: model:crm.reveal.industry,name:crm_reveal.crm_reveal_industry_162
@@ -374,7 +374,7 @@ msgstr ""
 #. module: crm_reveal
 #: model_terms:ir.ui.view,arch_db:crm_reveal.crm_reveal_rule_form
 msgid "Contact Filter"
-msgstr ""
+msgstr "ตัวกรองการติดต่อ"
 
 #. module: crm_reveal
 #: model:crm.reveal.industry,name:crm_reveal.crm_reveal_industry_196
@@ -438,7 +438,7 @@ msgstr ""
 #. module: crm_reveal
 #: model:ir.model.fields,field_description:crm_reveal.field_crm_reveal_rule__lead_for
 msgid "Data Tracking"
-msgstr ""
+msgstr "การติดตามข้อมูล"
 
 #. module: crm_reveal
 #: model:crm.reveal.industry,name:crm_reveal.crm_reveal_industry_36
@@ -553,7 +553,7 @@ msgstr ""
 #: code:addons/crm_reveal/models/crm_reveal_rule.py:73
 #, python-format
 msgid "Enter Valid Regex."
-msgstr ""
+msgstr "ป้อน Regex ที่ถูกต้อง"
 
 #. module: crm_reveal
 #: model:crm.reveal.industry,name:crm_reveal.crm_reveal_industry_233
@@ -673,7 +673,7 @@ msgstr ""
 #. module: crm_reveal
 #: model:ir.model.fields,field_description:crm_reveal.field_crm_reveal_rule__lead_ids
 msgid "Generated Lead / Opportunity"
-msgstr ""
+msgstr "สร้างลูกค้าเป้าหมาย / โอกาส"
 
 #. module: crm_reveal
 #: model:crm.reveal.industry,name:crm_reveal.crm_reveal_industry_226
@@ -783,7 +783,7 @@ msgstr "ทรัพยากรบุคคล"
 #. module: crm_reveal
 #: model:ir.model.fields,field_description:crm_reveal.field_crm_lead__reveal_iap_credits
 msgid "IAP Credits"
-msgstr ""
+msgstr "IAP เครดิต"
 
 #. module: crm_reveal
 #: model:mail.template,subject:crm_reveal.reveal_no_credits
@@ -803,7 +803,7 @@ msgstr "รหัส"
 #: model:ir.model.fields,field_description:crm_reveal.field_crm_lead__reveal_ip
 #: model:ir.model.fields,field_description:crm_reveal.field_crm_reveal_view__reveal_ip
 msgid "IP Address"
-msgstr ""
+msgstr "ที่อยู่ IP"
 
 #. module: crm_reveal
 #: model:crm.reveal.industry,name:crm_reveal.crm_reveal_industry_234
@@ -973,19 +973,19 @@ msgstr "ผู้นำ"
 #. module: crm_reveal
 #: model_terms:ir.ui.view,arch_db:crm_reveal.crm_reveal_rule_form
 msgid "Lead Data"
-msgstr ""
+msgstr "ข้อมูลลูกค้าเป้าหมาย"
 
 #. module: crm_reveal
 #: model_terms:ir.ui.view,arch_db:crm_reveal.crm_reveal_lead_form
 #: model_terms:ir.ui.view,arch_db:crm_reveal.crm_reveal_lead_opportunity_form
 msgid "Lead Generation Information"
-msgstr ""
+msgstr "ข้อมูลการสร้างลูกค้าเป้าหมาย"
 
 #. module: crm_reveal
 #: model:ir.model.fields,field_description:crm_reveal.field_crm_lead__reveal_rule_id
 #: model:ir.model.fields,field_description:crm_reveal.field_crm_reveal_view__reveal_rule_id
 msgid "Lead Generation Rule"
-msgstr ""
+msgstr "กฎการสร้างลูกค้าเป้าหมาย"
 
 #. module: crm_reveal
 #: model:ir.actions.act_window,name:crm_reveal.crm_reveal_rule_action
@@ -997,7 +997,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:crm_reveal.crm_reveal_view_action
 #: model:ir.ui.menu,name:crm_reveal.crm_reveal_view_menu_action
 msgid "Lead Generation Views"
-msgstr ""
+msgstr "มุมมองการสร้างลูกค้าเป้าหมาย"
 
 #. module: crm_reveal
 #: code:addons/crm_reveal/models/crm_reveal_rule.py:79
@@ -1006,13 +1006,15 @@ msgid ""
 "Lead Generation requires a GeoIP resolver which could not be found on your "
 "system. Please consult https://pypi.org/project/GeoIP/."
 msgstr ""
+"การสร้างลูกค้าเป้าหมายต้องใช้ตัวแก้ไข GeoIP ซึ่งไม่พบในระบบของคุณ โปรดปรึกษา"
+" https://pypi.org/project/GeoIP/"
 
 #. module: crm_reveal
 #: model:ir.actions.server,name:crm_reveal.ir_cron_crm_reveal_lead_ir_actions_server
 #: model:ir.cron,cron_name:crm_reveal.ir_cron_crm_reveal_lead
 #: model:ir.cron,name:crm_reveal.ir_cron_crm_reveal_lead
 msgid "Lead Generation: Leads/Opportunities Generation"
-msgstr ""
+msgstr "การสร้างลูกค้าเป้าหมาย: การสร้างลูกค้าเป้าหมาย/โอกาส"
 
 #. module: crm_reveal
 #: model:ir.model,name:crm_reveal.model_crm_lead
@@ -1023,6 +1025,7 @@ msgstr "เป้าหมาย / โอกาส"
 #: model:ir.model.fields,help:crm_reveal.field_crm_reveal_rule__industry_tag_ids
 msgid "Leave empty to always match. Odoo will not create lead if no match"
 msgstr ""
+"เว้นว่างไว้เพื่อให้ตรงกันเสมอ Odoo จะไม่สร้างลูกค้าเป้าหมายหากไม่ตรงกัน"
 
 #. module: crm_reveal
 #: model:ir.model.fields,help:crm_reveal.field_crm_reveal_rule__company_size_max
@@ -1038,7 +1041,7 @@ msgstr ""
 #. module: crm_reveal
 #: model:crm.reveal.industry,name:crm_reveal.crm_reveal_industry_204
 msgid "Leisure Facilities"
-msgstr ""
+msgstr "สิ่งอำนวยความสะดวกเพื่อการพักผ่อน"
 
 #. module: crm_reveal
 #: model:crm.reveal.industry,name:crm_reveal.crm_reveal_industry_80
@@ -1144,7 +1147,7 @@ msgstr ""
 #: code:addons/crm_reveal/models/crm_reveal_rule.py:82
 #, python-format
 msgid "Missing Library"
-msgstr ""
+msgstr "คลังที่สูญหาย"
 
 #. module: crm_reveal
 #: model:crm.reveal.industry,name:crm_reveal.crm_reveal_industry_236
@@ -1212,17 +1215,17 @@ msgstr ""
 #. module: crm_reveal
 #: selection:crm.reveal.view,reveal_state:0
 msgid "Not Found"
-msgstr ""
+msgstr "ไม่พบ"
 
 #. module: crm_reveal
 #: model:ir.model.fields,field_description:crm_reveal.field_crm_reveal_rule__leads_count
 msgid "Number of Generated Leads"
-msgstr ""
+msgstr "จำนวนลูกค้าเป้าหมายที่สร้างขึ้น"
 
 #. module: crm_reveal
 #: model:ir.model.fields,field_description:crm_reveal.field_crm_reveal_rule__opportunity_count
 msgid "Number of Generated Opportunity"
-msgstr ""
+msgstr "จำนวนโอกาสการขายที่สร้าง"
 
 #. module: crm_reveal
 #: model:crm.reveal.industry,name:crm_reveal.crm_reveal_industry_96
@@ -1235,6 +1238,8 @@ msgid ""
 "Only visitors of following countries will be converted into "
 "leads/opportunities (using GeoIP)."
 msgstr ""
+"เฉพาะผู้เข้าชมจากประเทศต่อไปนี้เท่านั้นที่จะถูกแปลงเป็นลูกค้าเป้าหมาย/โอกาส "
+"(โดยใช้ GeoIP)"
 
 #. module: crm_reveal
 #: selection:crm.reveal.rule,lead_type:0
@@ -1244,22 +1249,22 @@ msgstr "โอกาส"
 #. module: crm_reveal
 #: model_terms:ir.ui.view,arch_db:crm_reveal.crm_reveal_rule_form
 msgid "Opportunity Data"
-msgstr ""
+msgstr "ข้อมูลโอกาสการขาย"
 
 #. module: crm_reveal
 #: model_terms:ir.ui.view,arch_db:crm_reveal.crm_reveal_rule_form
 msgid "Opportunity Generation Conditions"
-msgstr ""
+msgstr "เงื่อนไขการสร้างโอกาสการขาย"
 
 #. module: crm_reveal
 #: model_terms:ir.ui.view,arch_db:crm_reveal.lead_message_template
 msgid "Opportunity created by Odoo Lead Generation"
-msgstr ""
+msgstr "โอกาสที่สร้างโดย การสร้างลูกค้าเป้าหมาย Odoo "
 
 #. module: crm_reveal
 #: model:ir.model.fields,field_description:crm_reveal.field_crm_reveal_rule__other_role_ids
 msgid "Other Roles"
-msgstr ""
+msgstr "บทบาทอื่น ๆ "
 
 #. module: crm_reveal
 #: model:crm.reveal.industry,name:crm_reveal.crm_reveal_industry_97
@@ -1364,7 +1369,7 @@ msgstr ""
 #. module: crm_reveal
 #: model:ir.model.fields,field_description:crm_reveal.field_crm_reveal_rule__preferred_role_id
 msgid "Preferred Role"
-msgstr ""
+msgstr "บทบาทที่ต้องการ"
 
 #. module: crm_reveal
 #: model:crm.reveal.industry,name:crm_reveal.crm_reveal_industry_109
@@ -1413,6 +1418,9 @@ msgid ""
 "to target the homepage. Example: /page* to track all the pages which begin "
 "with /page"
 msgstr ""
+"Regex เพื่อติดตามหน้าเว็บไซต์ เว้นว่างไว้เพื่อติดตามทั้งเว็บไซต์ หรือ / "
+"เพื่อกำหนดเป้าหมายหน้าแรก ตัวอย่าง: /page* "
+"เพื่อติดตามเพจทั้งหมดที่ขึ้นต้นด้วย /page"
 
 #. module: crm_reveal
 #: model:crm.reveal.industry,name:crm_reveal.crm_reveal_industry_115
@@ -1529,7 +1537,7 @@ msgstr ""
 #. module: crm_reveal
 #: model:ir.model.fields,field_description:crm_reveal.field_crm_reveal_rule__seniority_id
 msgid "Seniority"
-msgstr ""
+msgstr "Seniority"
 
 #. module: crm_reveal
 #: model:ir.model.fields,field_description:crm_reveal.field_crm_reveal_rule__sequence
@@ -1670,6 +1678,8 @@ msgid ""
 "This will be appended in name of generated lead so you can identify "
 "lead/opportunity is generated with this rule"
 msgstr ""
+"สิ่งนี้จะถูกผนวกเข้ากับชื่อลูกค้าเป้าหมายที่สร้างขึ้น "
+"เพื่อให้คุณสามารถระบุลูกค้าเป้าหมาย/โอกาสที่ถูกสร้างขึ้นด้วยกฎนี้"
 
 #. module: crm_reveal
 #: model_terms:ir.ui.view,arch_db:crm_reveal.lead_message_template
@@ -1719,7 +1729,7 @@ msgstr "ประเภท"
 #. module: crm_reveal
 #: model:ir.model.fields,field_description:crm_reveal.field_crm_reveal_rule__regex_url
 msgid "URL Expression"
-msgstr ""
+msgstr "URL Expression"
 
 #. module: crm_reveal
 #: model:ir.model.fields,help:crm_reveal.field_crm_reveal_rule__sequence
@@ -1727,6 +1737,8 @@ msgid ""
 "Used to order the rules with same URL and countries. Rules with a lower "
 "sequence number will be processed first."
 msgstr ""
+"ใช้เพื่อสร้างคำสั่งด้วยกฎกับ URL และประเทศเดียวกัน "
+"กฎที่มีหมายเลขลำดับต่ำกว่าจะได้รับการประมวลผลก่อน"
 
 #. module: crm_reveal
 #: model:crm.reveal.industry,name:crm_reveal.crm_reveal_industry_138
@@ -1766,7 +1778,7 @@ msgstr ""
 #. module: crm_reveal
 #: model_terms:ir.ui.view,arch_db:crm_reveal.crm_reveal_rule_form
 msgid "Website Traffic Conditions"
-msgstr ""
+msgstr "เงื่อนไขการเข้าดูเว็บไซต์"
 
 #. module: crm_reveal
 #: model:crm.reveal.industry,name:crm_reveal.crm_reveal_industry_144
@@ -1811,7 +1823,7 @@ msgstr ""
 #. module: crm_reveal
 #: model_terms:ir.ui.view,arch_db:crm_reveal.crm_reveal_rule_form
 msgid "e.g. US Visitors"
-msgstr ""
+msgstr "เช่น ผู้เยี่ยมชม US "
 
 #. module: crm_reveal
 #: model:crm.reveal.role,name:crm_reveal.crm_reveal_role_5
