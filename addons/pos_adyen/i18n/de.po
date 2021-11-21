@@ -41,7 +41,7 @@ msgstr "Konto"
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.pos_config_view_form
 msgid "Add tip through payment terminal (Adyen)"
-msgstr ""
+msgstr "Geben Sie ein Trinkgeld über das Zahlungsterminal (Adyen)"
 
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.adyen_store_view_form
@@ -51,7 +51,7 @@ msgstr "Adresse"
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_api_key
 msgid "Adyen API key"
-msgstr ""
+msgstr "Adyen API-Schlüssel"
 
 #. module: pos_adyen
 #: model:ir.actions.server,name:pos_adyen.action_pos_adyen_account
@@ -68,7 +68,7 @@ msgstr "Adyen Konto"
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "Adyen Error"
-msgstr ""
+msgstr "Adyen Fehler"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_latest_diagnosis
@@ -103,7 +103,7 @@ msgstr ""
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_test_mode
 msgid "Adyen Test Mode"
-msgstr ""
+msgstr "Adyen Testmodus"
 
 #. module: pos_adyen
 #: model:ir.model,name:pos_adyen.model_adyen_account
@@ -130,7 +130,7 @@ msgstr "Ein unerwarteter Fehler ist aufgetreten. Nachricht von Adyen: %s"
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_config__adyen_ask_customer_for_tip
 msgid "Ask Customers For Tip"
-msgstr ""
+msgstr "Fragen Sie Kunden nach einem Trinkgeld"
 
 #. module: pos_adyen
 #. openerp-web
@@ -138,6 +138,8 @@ msgstr ""
 #, python-format
 msgid "Authentication failed. Please check your Adyen credentials."
 msgstr ""
+"Authentifizierung fehlgeschlagen. Bitte überprüfen Sie Ihre Adyen-"
+"Anmeldedaten."
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__city
@@ -235,7 +237,7 @@ msgstr "Zuletzt aktualisiert am"
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "Message from Adyen: %s"
-msgstr ""
+msgstr "Nachricht von Adyen: %s"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__name
@@ -263,6 +265,8 @@ msgstr "Telefonnummer"
 msgid ""
 "Please configure a tip product for POS %s to support tipping with Adyen."
 msgstr ""
+"Bitte konfigurieren Sie ein Trinkgeldprodukt für PoS %sum Trinkgeld mit "
+"Adyen zu unterstützen."
 
 #. module: pos_adyen
 #: code:addons/pos_adyen/models/adyen_account.py:0
@@ -283,7 +287,7 @@ msgstr "Point of Sale Zahlungsmethoden"
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_config__adyen_ask_customer_for_tip
 msgid "Prompt the customer to tip."
-msgstr ""
+msgstr "Fordern Sie Kunden dazu auf, Trinkgeld zu geben."
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__store_reference
@@ -293,7 +297,7 @@ msgstr "Referenz"
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_test_mode
 msgid "Run transactions in the test environment."
-msgstr ""
+msgstr "Führen Sie Transaktionen in der Testumgebung aus."
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__state_id
@@ -334,6 +338,7 @@ msgstr ""
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_latest_diagnosis
 msgid "Technical field used to determine if the terminal is still connected."
 msgstr ""
+"Technisches Feld, um festzustellen, ob das Terminal noch verbunden ist."
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_account__terminal_ids
@@ -344,7 +349,7 @@ msgstr ""
 #: code:addons/pos_adyen/models/pos_payment_method.py:0
 #, python-format
 msgid "Terminal %s is already used on payment method %s."
-msgstr ""
+msgstr "Terminal %s wird schon für Zahlungsmethode %sverwendet."
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_terminal__terminal_uuid
@@ -368,6 +373,8 @@ msgid ""
 "The connection to your payment terminal failed. Please check if it is still "
 "connected to the internet."
 msgstr ""
+"Die Verbindung mit Ihrem Zahlungsterminal ist fehlgeschlagen. Bitte prüfen "
+"Sie die Internetverbindung."
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_adyen_store__state_code
@@ -385,6 +392,8 @@ msgid ""
 "Used when connecting to Adyen: https://docs.adyen.com/user-management/how-"
 "to-get-the-api-key/#description"
 msgstr ""
+"Bei der Verbindung mit Adyen verwendet: https://docs.adyen.com/user-"
+"management/how-to-get-the-api-key/#description"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__zip
@@ -395,4 +404,4 @@ msgstr "PLZ"
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_terminal_identifier
 msgid "[Terminal model]-[Serial number], for example: P400Plus-123456789"
-msgstr ""
+msgstr "[Terminal model]-[Serial number], zum Beispiel: P400Plus-123456789"

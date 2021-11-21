@@ -28,6 +28,7 @@
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2021
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2021
 # Kim Asplund <kim.asplund@gmail.com>, 2021
+# Victor Ekström, 2021
 # Simon S, 2021
 # 
 msgid ""
@@ -160,7 +161,7 @@ msgstr "%s är inte ett sparat fält"
 #: model:ir.actions.report,print_report_name:account.account_invoices
 #: model:ir.actions.report,print_report_name:account.account_invoices_without_payment
 msgid "(object._get_report_base_filename())"
-msgstr ""
+msgstr "(object._get_report_base_filename())"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -991,8 +992,8 @@ msgid ""
 "A journal entry consists of several journal items, each of\n"
 "                which is either a debit or a credit transaction."
 msgstr ""
-"Ett verifikat består av flera transaktioner där varje \n"
-"                transaktion antingen är en debet- eller kredittransaktion."
+"Ett verifikat består av flera journalrader där varje \n"
+"                journalrad antingen är en debet- eller kredittransaktion."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_form
@@ -1219,7 +1220,7 @@ msgstr "Kontoegenskaper"
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_receivable_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_account_receivable_id
 msgid "Account Receivable"
-msgstr "Fordringar"
+msgstr "Kundfordran"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_root_id
@@ -1906,7 +1907,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__allowed_journal_ids
 msgid "Allowed Journals"
-msgstr ""
+msgstr "Tillåtna journaler"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__type_control_ids
@@ -1992,14 +1993,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__match_total_amount
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_total_amount
 msgid "Amount Matching"
-msgstr ""
+msgstr "Beloppmatchning"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_total_amount_param
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__match_total_amount_param
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_total_amount_param
 msgid "Amount Matching %"
-msgstr ""
+msgstr "Beloppmatchning %"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_amount_max
@@ -2400,7 +2401,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__auto_reconcile
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__auto_reconcile
 msgid "Auto-validate"
-msgstr ""
+msgstr "Auto-validera"
 
 #. module: account
 #: code:addons/account/models/company.py:0
@@ -5270,12 +5271,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_partner_mapping__payment_ref_regex
 msgid "Find Text in Label"
-msgstr ""
+msgstr "Hitta text i etikett"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_partner_mapping__narration_regex
 msgid "Find Text in Notes"
-msgstr ""
+msgstr "Hitta text i anteckningar"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.dashboard_onboarding_bill_step
@@ -5905,7 +5906,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_payment__message_has_error
 #: model:ir.model.fields,help:account.field_account_payment__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Om markerad så har det blivit ett leveransfel för några  meddelanden."
+msgstr "Om markerad har det uppstått leveransfel för vissa meddelanden."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_template__nocreate
@@ -6786,7 +6787,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_print_journal__sort_selection__move_name
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "Journal Entry Number"
-msgstr "Verifikation nummer"
+msgstr "Verifikations nummer"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_group__name
@@ -6814,7 +6815,7 @@ msgstr "Transaktion"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__label
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line_template__label
 msgid "Journal Item Label"
-msgstr "Journalrader märka"
+msgstr "Journalradsetikett"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_moves_all
@@ -7471,7 +7472,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__writeoff_button
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__rule_type__writeoff_button
 msgid "Manually create a write-off on clicked button"
-msgstr ""
+msgstr "Skapa manuellt en avskrivning genom att klicka på en knapp"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__3
@@ -7496,7 +7497,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Match Invoice/bill with"
-msgstr ""
+msgstr "Matcha kund-/leverantörsfaktura med"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_label__match_regex
@@ -7571,7 +7572,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__matching_order
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__matching_order
 msgid "Matching Order"
-msgstr ""
+msgstr "Matchningsordning"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__matching_number
@@ -7813,7 +7814,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__new_first
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__matching_order__new_first
 msgid "Newest first"
-msgstr ""
+msgstr "Nyaste först"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_date_deadline
@@ -8091,6 +8092,8 @@ msgid ""
 "Number of months in the past to consider entries from when applying this "
 "model."
 msgstr ""
+"Antal månader i det förflutna som denna modell ska ta hänsyn till poster "
+"från."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__message_unread_counter
@@ -8154,7 +8157,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__old_first
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__matching_order__old_first
 msgid "Oldest first"
-msgstr ""
+msgstr "Äldsta först"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_line_form
@@ -8648,7 +8651,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Partner Is Set & Matches"
-msgstr ""
+msgstr "Partner är inställd och matchar"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_moves_ledger_partner
@@ -8685,7 +8688,7 @@ msgstr "Företagsmappning för avstämningsmodeller"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__past_months_limit
 msgid "Past Months Limit"
-msgstr ""
+msgstr "Gräns för tidigare månader"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -9122,7 +9125,7 @@ msgstr "Bokförda verifikationer"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Posted Journal Items"
-msgstr "Bokförda tranksationer"
+msgstr "Bokförda journalrader"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -9806,13 +9809,13 @@ msgstr "Ansvarig användare"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner_category_ids
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_partner_category_ids
 msgid "Restrict Partner Categories to"
-msgstr ""
+msgstr "Begränsa partnerkategorier till"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner_ids
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_partner_ids
 msgid "Restrict Partners to"
-msgstr ""
+msgstr "Begränsa partners till"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__tax_scope
@@ -9825,7 +9828,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_reconcile_model_template__match_same_currency
 msgid ""
 "Restrict to propositions having the same currency as the statement line."
-msgstr ""
+msgstr "Begränsa till förslag som har samma valuta som utdragsraden."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue
@@ -10060,7 +10063,7 @@ msgstr "Säljare"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_same_currency
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_same_currency
 msgid "Same Currency Matching"
-msgstr ""
+msgstr "Matchning med samma valuta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tour_upload_bill__sample_bill_preview
@@ -10939,7 +10942,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__writeoff_suggestion
 msgid "Suggest counterpart values"
-msgstr ""
+msgstr "Föreslå motpartsvärden"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__suitable_journal_ids
@@ -11169,7 +11172,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_tax_report_line__report_id
 #: model:ir.ui.menu,name:account.menu_configure_tax_report
 msgid "Tax Report"
-msgstr ""
+msgstr "Skatterapport"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__tax_report_line_ids
@@ -11179,7 +11182,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.action_configure_tax_report
 msgid "Tax Reports"
-msgstr ""
+msgstr "Skatterapporter"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__tax_scope
@@ -12958,7 +12961,7 @@ msgstr "Spåra kostnader &amp; intäkter per projekt, avdelning, etc."
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_transaction_type
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_transaction_type
 msgid "Transaction Type"
-msgstr ""
+msgstr "Typ av transaktion"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_transaction_type_param
@@ -13888,8 +13891,8 @@ msgid ""
 "You cannot change the owner company of an account that already contains "
 "journal items."
 msgstr ""
-"D kan inte ändra kontots bolag för ett konto som det redan registrerats "
-"transaktioner på."
+"Du kan inte ändra kontots bolag för ett konto som det redan har registrerats"
+" transaktioner på."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
