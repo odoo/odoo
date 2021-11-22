@@ -8,7 +8,7 @@
         <field name="priority">10</field>
         <field name="arch" type="xml">
             <xpath expr="//button[@name='preview_sale_order']" position="before">
-                <button type="object" name="action_view_project_ids" class="oe_stat_button" icon="fa-puzzle-piece" attrs="{'invisible': [('project_ids', '=', [])]}" groups="project.group_project_manager">
+                <button type="object" name="action_view_project_ids" class="oe_stat_button" icon="fa-puzzle-piece" attrs="{'invisible': ['|', ('state', 'in', ['draft', 'sent']), ('project_ids', '=', [])]}" groups="project.group_project_manager">
                     <field name="project_ids" invisible="1"/>
                     <field name="project_count" widget="statinfo" string="Projects"/>
                 </button>
