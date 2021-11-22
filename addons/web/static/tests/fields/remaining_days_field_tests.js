@@ -2,8 +2,8 @@
 
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { registry } from "@web/core/registry";
-import { makeFakeLocalizationService, makeFakeUserService } from "../helpers/mock_services";
-import { click, makeDeferred, nextTick, triggerEvent, triggerEvents } from "../helpers/utils";
+import { makeFakeUserService } from "../helpers/mock_services";
+import { click, patchDate, triggerEvents } from "../helpers/utils";
 import {
     setupControlPanelFavoriteMenuRegistry,
     setupControlPanelServiceRegistry,
@@ -215,11 +215,11 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("RemainingDaysField");
 
-    QUnit.skip("RemainingDaysField on a date field in list view", async function (assert) {
+    QUnit.test("RemainingDaysField on a date field in list view", async function (assert) {
         assert.expect(16);
 
-        const unpatchDate = patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11
-        this.data.partner.records = [
+        patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11
+        serverData.models.partner.records = [
             { id: 1, date: "2017-10-08" }, // today
             { id: 2, date: "2017-10-09" }, // tomorrow
             { id: 3, date: "2017-10-07" }, // yesterday
@@ -230,46 +230,45 @@ QUnit.module("Fields", (hooks) => {
             { id: 8, date: false },
         ];
 
-        const list = await createView({
-            View: ListView,
-            model: "partner",
-            data: this.data,
-            arch: '<tree><field name="date" widget="remaining_days"/></tree>',
+        const list = await makeView({
+            type: "list",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <tree>
+                    <field name="date" widget="remaining_days" />
+                </tree>
+            `,
         });
 
-        assert.strictEqual(list.$(".o_data_cell:nth(0)").text(), "Today");
-        assert.strictEqual(list.$(".o_data_cell:nth(1)").text(), "Tomorrow");
-        assert.strictEqual(list.$(".o_data_cell:nth(2)").text(), "Yesterday");
-        assert.strictEqual(list.$(".o_data_cell:nth(3)").text(), "In 2 days");
-        assert.strictEqual(list.$(".o_data_cell:nth(4)").text(), "3 days ago");
-        assert.strictEqual(list.$(".o_data_cell:nth(5)").text(), "02/08/2018");
-        assert.strictEqual(list.$(".o_data_cell:nth(6)").text(), "06/08/2017");
-        assert.strictEqual(list.$(".o_data_cell:nth(7)").text(), "");
+        const cells = list.el.querySelectorAll(".o_data_cell");
+        assert.strictEqual(cells[0].textContent, "Today");
+        assert.strictEqual(cells[1].textContent, "Tomorrow");
+        assert.strictEqual(cells[2].textContent, "Yesterday");
+        assert.strictEqual(cells[3].textContent, "In 2 days");
+        assert.strictEqual(cells[4].textContent, "3 days ago");
+        assert.strictEqual(cells[5].textContent, "02/08/2018");
+        assert.strictEqual(cells[6].textContent, "06/08/2017");
+        assert.strictEqual(cells[7].textContent, "");
 
-        assert.strictEqual(
-            list.$(".o_data_cell:nth(0) .o_field_widget").attr("title"),
-            "10/08/2017"
-        );
+        assert.hasAttrValue(cells[0].querySelector(".o_field_widget"), "title", "10/08/2017");
 
-        assert.hasClass(list.$(".o_data_cell:nth(0) div"), "font-weight-bold text-warning");
+        assert.hasClass(cells[0].querySelector("div"), "font-weight-bold text-warning");
         assert.doesNotHaveClass(
-            list.$(".o_data_cell:nth(1) div"),
+            cells[1].querySelector("div"),
             "font-weight-bold text-warning text-danger"
         );
-        assert.hasClass(list.$(".o_data_cell:nth(2) div"), "font-weight-bold text-danger");
+        assert.hasClass(cells[2].querySelector("div"), "font-weight-bold text-danger");
         assert.doesNotHaveClass(
-            list.$(".o_data_cell:nth(3) div"),
+            cells[3].querySelector("div"),
             "font-weight-bold text-warning text-danger"
         );
-        assert.hasClass(list.$(".o_data_cell:nth(4) div"), "font-weight-bold text-danger");
+        assert.hasClass(cells[4].querySelector("div"), "font-weight-bold text-danger");
         assert.doesNotHaveClass(
-            list.$(".o_data_cell:nth(5) div"),
+            cells[5].querySelector("div"),
             "font-weight-bold text-warning text-danger"
         );
-        assert.hasClass(list.$(".o_data_cell:nth(6) div"), "font-weight-bold text-danger");
-
-        list.destroy();
-        unpatchDate();
+        assert.hasClass(cells[6].querySelector("div"), "font-weight-bold text-danger");
     });
 
     QUnit.skip(
@@ -277,60 +276,64 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(7);
 
-            const unpatchDate = patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11
-            this.data.partner.records = [
+            patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11
+            serverData.models.partner.records = [
                 { id: 1, date: "2017-10-08" }, // today
                 { id: 2, date: "2017-10-09" }, // tomorrow
                 { id: 8, date: false },
             ];
 
-            const list = await createView({
-                View: ListView,
-                model: "partner",
-                data: this.data,
-                arch: '<tree multi_edit="1"><field name="date" widget="remaining_days"/></tree>',
-                translateParameters: {
-                    // Avoid issues due to localization formats
-                    date_format: "%m/%d/%Y",
-                },
+            const list = await makeView({
+                type: "list",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <tree multi_edit="1">
+                        <field name="date" widget="remaining_days" />
+                    </tree>
+                `,
             });
 
-            assert.strictEqual(list.$(".o_data_cell:nth(0)").text(), "Today");
-            assert.strictEqual(list.$(".o_data_cell:nth(1)").text(), "Tomorrow");
+            const cells = list.el.querySelectorAll(".o_data_cell");
+            const rows = list.el.querySelectorAll(".o_data_row");
+
+            assert.strictEqual(cells[0].textContent, "Today");
+            assert.strictEqual(cells[1].textContent, "Tomorrow");
 
             // select two records and edit them
-            await testUtils.dom.click(list.$(".o_data_row:eq(0) .o_list_record_selector input"));
-            await testUtils.dom.click(list.$(".o_data_row:eq(1) .o_list_record_selector input"));
+            await click(rows[0], ".o_list_record_selector input");
+            await click(rows[1], ".o_list_record_selector input");
 
-            await testUtils.dom.click(list.$(".o_data_row:first .o_data_cell"));
-            assert.containsOnce(list, "input.o_datepicker_input", "should have date picker input");
-            await testUtils.fields.editAndTrigger(list.$(".o_datepicker_input"), "10/10/2017", [
-                "input",
-                "change",
-                "focusout",
-            ]);
+            await click(rows[0], ".o_data_cell");
+            assert.containsOnce(
+                list.el,
+                "input.o_datepicker_input",
+                "should have date picker input"
+            );
 
-            assert.containsOnce(document.body, ".modal");
+            const input = list.el.querySelector(".o_datepicker_input");
+            input.value = "blabla";
+            await triggerEvents(input, null, ["input", "change"]);
+            await click(list.el);
+
+            assert.containsNone(document.body, ".modal");
             assert.strictEqual(
-                $(".modal .o_field_widget").text(),
+                document.querySelector(".modal .o_field_widget").textContent,
                 "In 2 days",
                 "should have 'In 2 days' value to change"
             );
-            await testUtils.dom.click($(".modal .modal-footer .btn-primary"));
+            await click(document.body, ".modal .modal-footer .btn-primary");
 
             assert.strictEqual(
-                list.$(".o_data_row:first .o_data_cell").text(),
+                rows[0].querySelector(".o_data_cell").textContent,
                 "In 2 days",
                 "should have 'In 2 days' as date field value"
             );
             assert.strictEqual(
-                list.$(".o_data_row:nth(1) .o_data_cell").text(),
+                rows[1].querySelector(".o_data_cell").textContent,
                 "In 2 days",
                 "should have 'In 2 days' as date field value"
             );
-
-            list.destroy();
-            unpatchDate();
         }
     );
 
@@ -339,140 +342,139 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(6);
 
-            const unpatchDate = patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11
-            this.data.partner.records = [
+            patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11
+            serverData.models.partner.records = [
                 { id: 1, date: "2017-10-08" }, // today
                 { id: 2, date: "2017-10-09" }, // tomorrow
                 { id: 8, date: false },
             ];
 
-            const list = await createView({
-                View: ListView,
-                model: "partner",
-                data: this.data,
-                arch: '<tree multi_edit="1"><field name="date" widget="remaining_days"/></tree>',
-                translateParameters: {
-                    // Avoid issues due to localization formats
-                    date_format: "%m/%d/%Y",
-                },
+            const list = await makeView({
+                type: "list",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <tree multi_edit="1">
+                        <field name="date" widget="remaining_days" />
+                    </tree>
+                `,
             });
 
-            assert.strictEqual(list.$(".o_data_cell:nth(0)").text(), "Today");
-            assert.strictEqual(list.$(".o_data_cell:nth(1)").text(), "Tomorrow");
+            const cells = list.el.querySelectorAll(".o_data_cell");
+            const rows = list.el.querySelectorAll(".o_data_row");
+
+            assert.strictEqual(cells[0].textContent, "Today");
+            assert.strictEqual(cells[1].textContent, "Tomorrow");
 
             // select two records and edit them
-            await testUtils.dom.click(list.$(".o_data_row:eq(0) .o_list_record_selector input"));
-            await testUtils.dom.click(list.$(".o_data_row:eq(1) .o_list_record_selector input"));
+            await click(rows[0], ".o_list_record_selector input");
+            await click(rows[1], ".o_list_record_selector input");
 
-            await testUtils.dom.click(list.$(".o_data_row:first .o_data_cell"));
-            assert.containsOnce(list, "input.o_datepicker_input", "should have date picker input");
-            await testUtils.fields.editAndTrigger(list.$(".o_datepicker_input"), "blabla", [
-                "input",
-                "change",
-            ]);
-            await testUtils.dom.click(list.$el);
+            await click(rows[0], ".o_data_cell");
+            assert.containsOnce(
+                list.el,
+                "input.o_datepicker_input",
+                "should have date picker input"
+            );
+
+            const input = list.el.querySelector(".o_datepicker_input");
+            input.value = "blabla";
+            await triggerEvents(input, null, ["input", "change"]);
+            await click(list.el);
 
             assert.containsNone(document.body, ".modal");
-            assert.strictEqual(list.$(".o_data_cell:nth(0)").text(), "Today");
-            assert.strictEqual(list.$(".o_data_cell:nth(1)").text(), "Tomorrow");
-
-            list.destroy();
-            unpatchDate();
+            assert.strictEqual(cells[0].textContent, "Today");
+            assert.strictEqual(cells[1].textContent, "Tomorrow");
         }
     );
 
-    QUnit.skip("RemainingDaysField on a date field in form view", async function (assert) {
+    QUnit.test("RemainingDaysField on a date field in form view", async function (assert) {
         assert.expect(8);
 
-        const unpatchDate = patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11
-        this.data.partner.records = [
+        patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11
+        serverData.models.partner.records = [
             { id: 1, date: "2017-10-08" }, // today
         ];
 
-        const form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch: '<form><field name="date" widget="remaining_days"/></form>',
-            res_id: 1,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="date" widget="remaining_days" />
+                </form>
+            `,
         });
 
-        assert.strictEqual(form.$(".o_field_widget").text(), "Today");
-        assert.hasClass(form.$(".o_field_widget"), "font-weight-bold text-warning");
+        assert.strictEqual(form.el.querySelector(".o_field_widget").textContent, "Today");
+        assert.hasClass(form.el.querySelector(".o_field_widget"), "font-weight-bold text-warning");
 
         // in edit mode, this widget should be editable.
-        await testUtils.form.clickEdit(form);
+        await click(form.el, ".o_form_button_edit");
 
-        assert.hasClass(form.$(".o_form_view"), "o_form_editable");
-        assert.containsOnce(form, "div.o_field_widget[name=date] .o_datepicker");
+        assert.containsOnce(form.el, ".o_form_editable");
+        assert.containsOnce(form.el, "div.o_field_widget[name='date'] .o_datepicker");
 
-        await testUtils.dom.openDatepicker(form.$(".o_datepicker"));
-        assert.strictEqual(
-            $(".bootstrap-datetimepicker-widget:visible").length,
-            1,
+        await click(form.el.querySelector(".o_datepicker .o_datepicker_input"));
+        assert.containsOnce(
+            document.body,
+            ".bootstrap-datetimepicker-widget",
             "datepicker should be opened"
         );
 
-        await testUtils.dom.click(
-            $('.bootstrap-datetimepicker-widget .day[data-day="10/09/2017"]')
-        );
-        await testUtils.form.clickSave(form);
-        assert.strictEqual(form.$(".o_field_widget").text(), "Tomorrow");
+        await click(document.body, ".bootstrap-datetimepicker-widget .day[data-day='10/09/2017']");
+        await click(form.el, ".o_form_button_save");
+        assert.strictEqual(form.el.querySelector(".o_field_widget").textContent, "Tomorrow");
 
-        await testUtils.form.clickEdit(form);
-        await testUtils.dom.openDatepicker(form.$(".o_datepicker"));
-        await testUtils.dom.click(
-            $('.bootstrap-datetimepicker-widget .day[data-day="10/07/2017"]')
-        );
-        await testUtils.form.clickSave(form);
-        assert.strictEqual(form.$(".o_field_widget").text(), "Yesterday");
-        assert.hasClass(form.$(".o_field_widget"), "text-danger");
-
-        form.destroy();
-        unpatchDate();
+        await click(form.el, ".o_form_button_edit");
+        await click(form.el.querySelector(".o_datepicker .o_datepicker_input"));
+        await click(document.body, ".bootstrap-datetimepicker-widget .day[data-day='10/07/2017']");
+        await click(form.el, ".o_form_button_save");
+        assert.strictEqual(form.el.querySelector(".o_field_widget").textContent, "Yesterday");
+        assert.hasClass(form.el.querySelector(".o_field_widget"), "text-danger");
     });
 
-    QUnit.skip("RemainingDaysField on a datetime field in form view", async function (assert) {
+    QUnit.test("RemainingDaysField on a datetime field in form view", async function (assert) {
         assert.expect(6);
 
-        const unpatchDate = patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11
-        this.data.partner.records = [
+        patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11
+        serverData.models.partner.records = [
             { id: 1, datetime: "2017-10-08 10:00:00" }, // today
         ];
 
-        const form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch: '<form><field name="datetime" widget="remaining_days"/></form>',
-            res_id: 1,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="datetime" widget="remaining_days" />
+                </form>
+            `,
         });
-
-        assert.strictEqual(form.$(".o_field_widget").text(), "Today");
-        assert.hasClass(form.$(".o_field_widget"), "text-warning");
+        assert.strictEqual(form.el.querySelector(".o_field_widget").textContent, "Today");
+        assert.hasClass(form.el.querySelector(".o_field_widget"), "text-warning");
 
         // in edit mode, this widget should be editable.
-        await testUtils.form.clickEdit(form);
+        await click(form.el, ".o_form_button_edit");
 
-        assert.hasClass(form.$(".o_form_view"), "o_form_editable");
-        assert.containsOnce(form, "div.o_field_widget[name=datetime] .o_datepicker");
+        assert.containsOnce(form.el, ".o_form_editable");
+        assert.containsOnce(form.el, "div.o_field_widget[name='datetime'] .o_datepicker");
 
-        await testUtils.dom.openDatepicker(form.$(".o_datepicker"));
-        assert.strictEqual(
-            $(".bootstrap-datetimepicker-widget:visible").length,
-            1,
+        await click(form.el.querySelector(".o_datepicker .o_datepicker_input"));
+        assert.containsOnce(
+            document.body,
+            ".bootstrap-datetimepicker-widget",
             "datepicker should be opened"
         );
 
-        await testUtils.dom.click(
-            $('.bootstrap-datetimepicker-widget .day[data-day="10/09/2017"]')
-        );
-        await testUtils.dom.click($('a[data-action="close"]'));
-        await testUtils.form.clickSave(form);
-        assert.strictEqual(form.$(".o_field_widget").text(), "Tomorrow");
-
-        form.destroy();
-        unpatchDate();
+        await click(document.body, ".bootstrap-datetimepicker-widget .day[data-day='10/09/2017']");
+        await click(document.body, "a[data-action='close']");
+        await click(form.el, ".o_form_button_save");
+        assert.strictEqual(form.el.querySelector(".o_field_widget").textContent, "Tomorrow");
     });
 
     QUnit.skip(
@@ -480,8 +482,8 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(16);
 
-            const unpatchDate = patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11
-            this.data.partner.records = [
+            patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11
+            serverData.models.partner.records = [
                 { id: 1, datetime: "2017-10-08 20:00:00" }, // today
                 { id: 2, datetime: "2017-10-09 08:00:00" }, // tomorrow
                 { id: 3, datetime: "2017-10-07 18:00:00" }, // yesterday
@@ -492,11 +494,15 @@ QUnit.module("Fields", (hooks) => {
                 { id: 8, datetime: false },
             ];
 
-            const list = await createView({
-                View: ListView,
-                model: "partner",
-                data: this.data,
-                arch: '<tree><field name="datetime" widget="remaining_days"/></tree>',
+            const list = await makeView({
+                type: "list",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <tree>
+                        <field name="datetime" widget="remaining_days" />
+                    </tree>
+                `,
                 session: {
                     getTZOffset: () => 0,
                 },
@@ -532,9 +538,6 @@ QUnit.module("Fields", (hooks) => {
                 "font-weight-bold text-warning text-danger"
             );
             assert.hasClass(list.$(".o_data_cell:nth(6) div"), "font-weight-bold text-danger");
-
-            list.destroy();
-            unpatchDate();
         }
     );
 
@@ -543,8 +546,8 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(6);
 
-            const unpatchDate = patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11, UTC+6
-            this.data.partner.records = [
+            patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11, UTC+6
+            serverData.models.partner.records = [
                 { id: 1, datetime: "2017-10-08 20:00:00" }, // tomorrow
                 { id: 2, datetime: "2017-10-09 08:00:00" }, // tomorrow
                 { id: 3, datetime: "2017-10-07 18:30:00" }, // today
@@ -552,11 +555,15 @@ QUnit.module("Fields", (hooks) => {
                 { id: 5, datetime: "2017-10-09 20:00:00" }, // + 2 days
             ];
 
-            const list = await createView({
-                View: ListView,
-                model: "partner",
-                data: this.data,
-                arch: '<tree><field name="datetime" widget="remaining_days"/></tree>',
+            const list = await makeView({
+                type: "list",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <tree>
+                        <field name="datetime" widget="remaining_days" />
+                    </tree>
+                `,
                 session: {
                     getTZOffset: () => 360,
                 },
@@ -572,17 +579,14 @@ QUnit.module("Fields", (hooks) => {
                 list.$(".o_data_cell:nth(0) .o_field_widget").attr("title"),
                 "10/09/2017"
             );
-
-            list.destroy();
-            unpatchDate();
         }
     );
 
     QUnit.skip("RemainingDaysField on a date field in list view in UTC-6", async function (assert) {
         assert.expect(6);
 
-        const unpatchDate = patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11
-        this.data.partner.records = [
+        patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11
+        serverData.models.partner.records = [
             { id: 1, date: "2017-10-08" }, // today
             { id: 2, date: "2017-10-09" }, // tomorrow
             { id: 3, date: "2017-10-07" }, // yesterday
@@ -590,11 +594,15 @@ QUnit.module("Fields", (hooks) => {
             { id: 5, date: "2017-10-05" }, // - 3 days
         ];
 
-        const list = await createView({
-            View: ListView,
-            model: "partner",
-            data: this.data,
-            arch: '<tree><field name="date" widget="remaining_days"/></tree>',
+        const list = await makeView({
+            type: "list",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <tree>
+                    <field name="date" widget="remaining_days" />
+                </tree>
+            `,
             session: {
                 getTZOffset: () => -360,
             },
@@ -610,9 +618,6 @@ QUnit.module("Fields", (hooks) => {
             list.$(".o_data_cell:nth(0) .o_field_widget").attr("title"),
             "10/08/2017"
         );
-
-        list.destroy();
-        unpatchDate();
     });
 
     QUnit.skip(
@@ -620,8 +625,8 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(5);
 
-            const unpatchDate = patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11, UTC-8
-            this.data.partner.records = [
+            patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11, UTC-8
+            serverData.models.partner.records = [
                 { id: 1, datetime: "2017-10-08 20:00:00" }, // today
                 { id: 2, datetime: "2017-10-09 07:00:00" }, // today
                 { id: 3, datetime: "2017-10-09 10:00:00" }, // tomorrow
@@ -629,11 +634,15 @@ QUnit.module("Fields", (hooks) => {
                 { id: 5, datetime: "2017-10-07 02:00:00" }, // - 2 days
             ];
 
-            const list = await createView({
-                View: ListView,
-                model: "partner",
-                data: this.data,
-                arch: '<tree><field name="datetime" widget="remaining_days"/></tree>',
+            const list = await makeView({
+                type: "list",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <tree>
+                        <field name="datetime" widget="remaining_days" />
+                    </tree>
+                `,
                 session: {
                     getTZOffset: () => -560,
                 },
@@ -644,9 +653,6 @@ QUnit.module("Fields", (hooks) => {
             assert.strictEqual(list.$(".o_data_cell:nth(2)").text(), "Tomorrow");
             assert.strictEqual(list.$(".o_data_cell:nth(3)").text(), "Yesterday");
             assert.strictEqual(list.$(".o_data_cell:nth(4)").text(), "2 days ago");
-
-            list.destroy();
-            unpatchDate();
         }
     );
 });

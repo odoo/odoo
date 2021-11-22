@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.RemainingDaysField" owl="1">
+        <t t-if="props.readonly">
+            <t t-set="days" t-value="diffDays" />
+            <t t-set="formatted" t-value="formattedValue" />
+            <div
+                t-att-class="{
+                    'font-weight-bold': days !== null and days lte 0,
+                    'text-danger': days !== null and days lt 0,
+                    'text-warning': days !== null and days === 0,
+                }"
+                t-att-title="formatted"
+            >
+                <t t-if="days !== null">
+                    <t t-if="Math.abs(days) gt 99"><t t-esc="formatted" /></t>
+                    <t t-elif="days lt -1"><t t-esc="-days" /> days ago</t>
+                    <t t-elif="days === -1">Yesterday</t>
+                    <t t-elif="days === 0">Today</t>
+                    <t t-elif="days === 1">Tomorrow</t>
+                    <t t-elif="days gt 1">In <t t-esc="days" /> days</t>
+                </t>
+            </div>
+        </t>
+        <t t-else="">
+            <div>
+                <t t-component="pickerComponent" date="parsedValue" t-on-datetime-changed="onChange" />
+            </div>
+        </t>
+    </t>
+
+</templates>
