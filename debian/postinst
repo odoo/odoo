@@ -1,15 +1,96 @@
 #!/bin/sh
 
 set -e
+. /usr/share/debconf/confmodule
 
 ODOO_CONFIGURATION_FILE=/etc/odoo/odoo.conf
 ODOO_GROUP="odoo"
 ODOO_DATA_DIR=/var/lib/odoo
 ODOO_LOG_DIR=/var/log/odoo
 ODOO_USER="odoo"
+NGINX_ODOO_FILE=/etc/nginx/sites-available/odoo-deb.conf
+TEMPODOOCONF=$(mktemp -t odoo.conf.XXXXXXXXXX)
+
+configure_nginx() {
+    # compute available CPU's and FQDN
+    NBWORKERS=$(($(nproc)*2+1))
+
+    # update odoo configuration file
+    # setting number of workers
+    if ! grep -q workers "$TEMPODOOCONF" ; then
+        echo "workers = $NBWORKERS" >> "$TEMPODOOCONF"
+    else
+        sed -i -e "s/workers \?= \?[[:digit:]]\+/workers = $NBWORKERS/" "$TEMPODOOCONF"
+    fi
+
+    # setting proxy_mode
+    if ! grep -q proxy_mode "$TEMPODOOCONF" ; then
+            echo "proxy_mode = True" >> "$TEMPODOOCONF"
+        else
+            sed -i -e "s/proxy_mode \?= \?False/proxy_mode = True/" "$TEMPODOOCONF"
+    fi
+
+    # update odoo nginx configuration file
+    tempnginxconf=$(mktemp -t odoo-nginx.conf.XXXXXXXXXX)
+    if [ -e "$NGINX_ODOO_FILE" ]; then
+        cat  "$NGINX_ODOO_FILE" > "$tempnginxconf"
+    else
+        cat /usr/share/doc/odoo/odoo-nginx-site.conf > "$tempnginxconf"
+    fi
+
+    db_get odoo-nginx/server_name || true
+    if [ -n "$RET"  ] && [ "$RET" = "foo.bar.com" ]; then
+        FQDN=$(hostname --fqdn)
+        db_set odoo-nginx/server_name "${FQDN}"
+    fi
+
+    db_input high odoo-nginx/server_name || true
+    db_go || true
+
+    db_get odoo-nginx/server_name || true
+    if [ -n "$RET"  ]; then
+        SERVERNAME=$RET
+        sed -i -e "s/server_name odoo.mycompany.com/server_name ${SERVERNAME}/g" "$tempnginxconf"
+    fi
+
+    ucf --debconf-ok --three-way "$tempnginxconf" "$NGINX_ODOO_FILE"
+    ucfr odoo "$NGINX_ODOO_FILE"
+    rm -f "$tempnginxconf"
+
+    # enable the odoo site
+    ln -fs $NGINX_ODOO_FILE /etc/nginx/sites-enabled/
+    # reload nginx
+    if [ -d /run/systemd/system ]; then
+        deb-systemd-invoke reload nginx > /dev/null || true
+    fi
+
+    # let'sencrypt
+    if dpkg -s certbot python3-certbot-nginx > /dev/null 2>&1 && [ ! -e "/etc/letsencrypt/live/${SERVERNAME}" ]; then
+        db_input high odoo-certbot/email || true
+        db_go || true
+        db_get odoo-certbot/email || true
+        if [ -n "$RET"  ]; then
+            certbot -n -q --nginx --agree-tos -m "$RET" -d "${SERVERNAME}"
+        fi
+    fi;
+}
 
 case "${1}" in
-    configure)
+    configure | reconfigure)
+        if [ -e "$ODOO_CONFIGURATION_FILE" ]; then
+            cat  "$ODOO_CONFIGURATION_FILE" > "$TEMPODOOCONF"
+        else
+            cat /usr/share/doc/odoo/odoo.conf > "$TEMPODOOCONF"
+        fi
+        # configure nginx if installed
+        if dpkg -s nginx > /dev/null 2>&1; then
+            configure_nginx
+        fi;
+
+        ucf --debconf-ok --three-way "$TEMPODOOCONF" "$ODOO_CONFIGURATION_FILE"
+        ucfr odoo "$ODOO_CONFIGURATION_FILE"
+        rm -f "$TEMPODOOCONF"
+
         if ! getent passwd | grep -q "^odoo:"; then
             adduser --system --home $ODOO_DATA_DIR --quiet --group $ODOO_USER
         fi

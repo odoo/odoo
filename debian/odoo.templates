@@ -1,0 +1,11 @@
+Template: odoo-nginx/server_name
+Type: string
+Default: foo.bar.com
+Description: Server name for nginx configuration
+ This is what nginx will listen for to handle requests for the Odoo server.
+
+Template: odoo-certbot/email
+Type: string
+Default: email@example.com
+Description: Email address
+ This address is used to register let's encrypt certificate.
