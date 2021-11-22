@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="report_simple_label2x7">
+            <t t-set="barcode_size" t-value="'width:80mm;height:12mm'"/>
+            <t t-set="table_style" t-value="'width:97mm;height:37.1mm;' + table_style"/>
+            <td t-att-style="make_invisible and 'visibility:hidden;'" >
+                <div class="o_label_full" t-att-style="table_style">
+                    <div class="o_label_name">
+                        <strong t-field="lot.product_id.display_name"/>
+                    </div>
+                    <div class="o_label_data">
+                        <div class="text-center o_label_column" style="font-size: 1em; margin-top: 5px;">
+                            <div t-field="lot.name" t-options="{'widget': 'barcode', 'symbology': 'auto', 'img_style': barcode_size}"/>
+                            <span class="text-center" t-field="lot.name"/>
+                        </div>
+                        <div class="o_label_clear"></div>
+                    </div>
+                </div>
+            </td>
+        </template>
+
+        <template id="report_simple_label4x7">
+            <t t-set="barcode_size" t-value="'width:45mm;height:7mm'"/>
+            <t t-set="table_style" t-value="'width:47mm;height:37.1mm;' + table_style"/>
+            <td t-att-style="make_invisible and 'visibility:hidden;'" >
+                <div class="o_label_full" t-att-style="table_style">
+                    <div class="o_label_name">
+                        <strong t-field="lot.product_id.display_name"/>
+                    </div>
+                    <div class= "text-center o_label_small_barcode" style="margin-top: 5px; font-size: 1em;">
+                        <div t-field="lot.name" t-options="{'widget': 'barcode', 'symbology': 'auto', 'img_style': barcode_size}"/>
+                        <span class="text-center" t-field="lot.name"/>
+                    </div>
+                </div>
+            </td>
+        </template>
+
+        <template id="report_simple_label4x12">
+            <t t-set="barcode_size" t-value="'width:33mm;height:4mm'"/>
+            <t t-set="table_style" t-value="'width:43mm;height:19mm;' + table_style"/>
+            <td t-att-style="make_invisible and 'visibility:hidden;'" >
+                <div class="o_label_full o_label_small_text" t-att-style="table_style">
+                    <div class="o_label_name">
+                        <strong t-field="lot.product_id.display_name"/>
+                    </div>
+                    <div class="text-center o_label_small_barcode" style="margin-top: 5px; font-size: 1em;">
+                        <div t-field="lot.name" style="padding:0" t-options="{'widget': 'barcode', 'symbology': 'auto', 'img_style': barcode_size}"/>
+                        <span class="text-center" t-field="lot.name"/>
+                    </div>
+                </div>
+            </td>
+        </template>
+
+        <template id="report_simple_label_dymo">
+            <div class="o_label_sheet o_label_dymo" t-att-style="padding_page">
+                <div class="o_label_full" t-att-style="table_style">
+                    <div class="o_label_name" style="line-height: 120%;height:2.5em;background-color: transparent;">
+                        <span t-field="lot.product_id.display_name"/>
+                    </div>
+                    <div class= "text-left o_label_small_barcode">
+                        <div t-field="lot.name" style="padding:0" t-options="{'widget': 'barcode', 'quiet': 0, 'symbology': 'auto', 'img_style': barcode_size}"/>
+                    </div>
+                    <div class="o_label_left_column">
+                        <span>LN/SN:</span>
+                        <span t-field="lot.name"/>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <template id="report_lot_label_template">
+            <t t-call="web.html_container">
+                <t t-if="columns and rows">
+                    <t t-if="columns == 2 and rows == 7">
+                        <t t-set="padding_page" t-value="'padding: 14mm 3mm'"/>
+                        <t t-set="report_to_call" t-value="'stock.report_simple_label2x7'"/>
+                    </t>
+                    <t t-if="columns == 4 and rows == 7">
+                        <t t-set="padding_page" t-value="'padding: 14mm 3mm'"/>
+                        <t t-set="report_to_call" t-value="'stock.report_simple_label4x7'"/>
+                    </t>
+                    <t t-if="columns == 4 and rows == 12">
+                        <t t-set="padding_page" t-value="'padding: 20mm 8mm'"/>
+                        <t t-set="report_to_call" t-value="'stock.report_simple_label4x12'"/>
+                    </t>
+                    <t t-foreach="range(page_numbers)" t-as="page">
+                        <div class="o_label_sheet" t-att-style="padding_page">
+                            <table class="my-0 table table-sm table-borderless">
+                                <t t-foreach="range(rows)" t-as="row">
+                                    <tr>
+                                        <t t-foreach="range(columns)" t-as="column">
+                                            <t t-if="not current_quantity and quantity">
+                                                <t t-set="current_data" t-value="quantity.popitem()"/>
+                                                <t t-set="lot" t-value="current_data[0]"/>
+                                                <t t-set="current_quantity" t-value="current_data[1]"/>
+                                            </t>
+                                            <t t-if="current_quantity">
+                                                <t t-set="make_invisible" t-value="False"/>
+                                                <t t-set="current_quantity" t-value="current_quantity - 1"/>
+                                            </t>
+                                            <t t-else="">
+                                                <t t-set="make_invisible" t-value="True"/>
+                                            </t>
+                                            <t t-set="table_style" t-value="'border: 1px solid %s;' % (lot.env.user.company_id.primary_color or 'black')"/>
+                                            <t t-call="{{report_to_call}}"/>
+                                        </t>
+                                    </tr>
+                                </t>
+                            </table>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <template id="report_lotlabel_dymo">
+            <t t-call="web.html_container">
+                <t t-set="barcode_size" t-value="'width:45.5mm;height:7.5mm'"/>
+                <t t-set="table_style" t-value="'width:100%;height:25mm;'"/>
+                <t t-set="padding_page" t-value="'padding: 2mm'"/>
+                <t t-foreach="quantity.items()" t-as="qty_by_lot">
+                    <t t-set="lot" t-value="qty_by_lot[0]"/>
+                    <t t-foreach="range(qty_by_lot[1])" t-as="qty">
+                        <t t-call="stock.report_simple_label_dymo"/>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <template id="report_lotlabel">
+            <t t-call="web.basic_layout">
+                <div class="page">
+                    <t t-call="stock.report_lot_label_template">
+                        <t t-set="lots" t-value="lots"/>
+                    </t>
+                </div>
+            </t>
+        </template>
+
+        <template id="report_lotlabel_zpl">
+            <t t-foreach="quantity.items()" t-as="qty_by_lot">
+                <t t-set="lot" t-value="qty_by_lot[0]"/>
+                <t t-foreach="range(qty_by_lot[1])" t-as="qty">
+                    <t t-translation="off">
+^XA
+^FO100,50
+^A0N,44,33^FD<t t-esc="lot.product_id.display_name"/>^FS
+^FO100,100
+^A0N,44,33^FDLN/SN: <t t-esc="lot.name"/>^FS
+^FO100,150^BY3
+^BCN,100,Y,N,N
+^FD<t t-esc="lot.name"/>^FS
+^XZ
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

@@ -62,6 +62,9 @@
         <field name="model">stock.production.lot</field>
         <field name="arch" type="xml">
             <tree string="Lots/Serial Numbers" multi_edit="1">
+            <header>
+                <button string="Print Labels" type="object" name="action_open_label_layout"/>
+            </header>
                 <field name="name" decoration-bf="1"/>
                 <field name="ref" optional="show"/>
                 <field name="product_id" readonly="1"/>

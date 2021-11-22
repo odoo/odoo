@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="paperformat_label_sheet" model="report.paperformat">
+            <field name="name">A4 Label Sheet</field>
+            <field name="default" eval="True" />
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">0</field>
+            <field name="margin_bottom">0</field>
+            <field name="margin_left">0</field>
+            <field name="margin_right">0</field>
+            <field name="disable_shrinking" eval="True"/>
+            <field name="dpi">96</field>
+        </record>
+
+        <record id="report_lot_label1" model="ir.actions.report">
+            <field name="name">Lot/Serial Label (PDF)</field>
+            <field name="model">stock.production.lot</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">stock.report_lotlabel</field>
+            <field name="report_file">stock.report_lotlabel</field>
+            <field name="paperformat_id" ref="stock.paperformat_label_sheet"/>
+            <field name="print_report_name">'Lot/Serial Labels - %s' % (object.name)</field>
+            <field name="binding_model_id" eval="False"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <record id="report_lot_label_zpl" model="ir.actions.report">
+            <field name="name">Lot/Serial Label (ZPL)</field>
+            <field name="model">stock.production.lot</field>
+            <field name="report_type">qweb-text</field>
+            <field name="report_name">stock.report_lotlabel_zpl</field>
+            <field name="report_file">stock.report_lotlabel_zpl</field>
+            <field name="binding_model_id" eval="False"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <record id="paperformat_label_sheet_dymo" model="report.paperformat">
+            <field name="name">Dymo Label Sheet</field>
+            <field name="default" eval="True" />
+            <field name="format">custom</field>
+            <field name="page_height">57</field>
+            <field name="page_width">32</field>
+            <field name="orientation">Landscape</field>
+            <field name="margin_top">0</field>
+            <field name="margin_bottom">0</field>
+            <field name="margin_left">0</field>
+            <field name="margin_right">0</field>
+            <field name="disable_shrinking" eval="True"/>
+            <field name="dpi">96</field>
+        </record>
+
+        <record id="report_lot_label_dymo" model="ir.actions.report">
+            <field name="name">Lot/Serial Label (PDF)</field>
+            <field name="model">stock.production.lot</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">stock.report_lotlabel_dymo</field>
+            <field name="report_file">stock.report_lotlabel_dymo</field>
+            <field name="paperformat_id" ref="stock.paperformat_label_sheet_dymo"/>
+            <field name="print_report_name">'Lot/Serial Labels - %s' % (object.name)</field>
+            <field name="binding_type">report</field>
+        </record>
+    </data>
+</odoo>

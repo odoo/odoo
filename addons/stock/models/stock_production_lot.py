@@ -168,6 +168,11 @@ class ProductionLot(models.Model):
             self = self.with_context(inventory_mode=True)
         return self.env['stock.quant']._get_quants_action()
 
+    def action_open_label_layout(self):
+        action = self.env['ir.actions.act_window']._for_xml_id('stock.action_open_label_layout')
+        action['context'] = {'default_lot_ids': self.ids}
+        return action
+
     def action_lot_open_transfers(self):
         self.ensure_one()
 

@@ -28,6 +28,8 @@
         'data/stock_sequence_data.xml',
         'data/stock_traceability_report_data.xml',
 
+        'report/lot_templates.xml',
+        'report/lot_reports.xml',
         'report/report_stock_forecasted.xml',
         'report/report_stock_quantity.xml',
         'report/report_stock_reception.xml',
@@ -45,6 +47,7 @@
         'report/product_packaging.xml',
         'data/mail_template_data.xml',
 
+        'wizard/lot_label_layout_views.xml',
         'views/stock_menu_views.xml',
         'wizard/stock_assign_serial_views.xml',
         'wizard/stock_change_product_qty_views.xml',

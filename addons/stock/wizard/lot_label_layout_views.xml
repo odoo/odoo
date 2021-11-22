@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="lot_label_layout_form" model="ir.ui.view">
+        <field name="name">lot.label.layout.form</field>
+        <field name="model">lot.label.layout</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="lot_ids" invisible="1"/>
+                        <field name="custom_quantity"/>
+                        <field name="print_format" widget="radio"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="process" string="Confirm" type="object" class="btn-primary"/>
+                    <button string="Discard" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_open_label_layout" model="ir.actions.act_window">
+        <field name="name">Choose Labels Layout</field>
+        <field name="res_model">lot.label.layout</field>
+        <field name="view_ids"
+                eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('lot_label_layout_form')})]" />
+        <field name="target">new</field>
+    </record>
+</odoo>
