@@ -86,8 +86,8 @@
                             icon="fa-pencil"
                             type="object"
                             context="{'active_test': False}"
-                            attrs="{'invisible': [('application_count', '&lt;' , 2)]}">
-                        <field name="application_count" widget="statinfo" string="Applications"/>
+                            attrs="{'invisible': [('application_count', '=' , 0)]}">
+                        <field name="application_count" widget="statinfo" string="Other applications"/>
                     </button>
                     <button name="action_makeMeeting" class="oe_stat_button" icon="fa-calendar" type="object"
                          >
