@@ -58,8 +58,8 @@ class AccountChartTemplate(models.Model):
             res['tag_ids'] = [(6, 0, self.env.ref('l10n_mx.account_tag_102_01').ids)]
         return res
 
-    def _load(self, sale_tax_rate, purchase_tax_rate, company):
-        res = super()._load(sale_tax_rate, purchase_tax_rate, company)
+    def _load(self, company):
+        res = super()._load(company)
         if self == self.env.ref('l10n_mx.mx_coa'):
             company.account_journal_payment_debit_account_id.tag_ids = [(6, 0, self.env.ref('l10n_mx.account_tag_102_01').ids)]
             company.account_journal_payment_credit_account_id.tag_ids = [(6, 0, self.env.ref('l10n_mx.account_tag_102_01').ids)]

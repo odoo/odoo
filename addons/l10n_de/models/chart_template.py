@@ -6,8 +6,8 @@ class AccountChartTemplate(models.Model):
     _inherit = 'account.chart.template'
 
     # Write paperformat and report template used on company
-    def _load(self, sale_tax_rate, purchase_tax_rate, company):
-        res = super(AccountChartTemplate, self)._load(sale_tax_rate, purchase_tax_rate, company)
+    def _load(self, company):
+        res = super(AccountChartTemplate, self)._load(company)
         if self in [
             self.env.ref('l10n_de_skr03.l10n_de_chart_template', raise_if_not_found=False),
             self.env.ref('l10n_de_skr04.l10n_chart_de_skr04', raise_if_not_found=False)
