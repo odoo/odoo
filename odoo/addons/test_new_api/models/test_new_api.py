@@ -516,6 +516,9 @@ class CompanyDependent(models.Model):
     date = fields.Date(company_dependent=True)
     moment = fields.Datetime(company_dependent=True)
     tag_id = fields.Many2one('test_new_api.multi.tag', company_dependent=True)
+    truth = fields.Boolean(company_dependent=True)
+    count = fields.Integer(company_dependent=True)
+    phi = fields.Float(company_dependent=True, digits=(2, 5))
 
 
 class CompanyDependentAttribute(models.Model):
