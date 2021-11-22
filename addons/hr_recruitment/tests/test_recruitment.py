@@ -23,6 +23,6 @@ class TestRecruitment(TransactionCase):
                 'email_from': 'laure.poiret@aol.ru',
             },
         ])
-        self.assertEqual(dup1.application_count, 2)
-        self.assertEqual(dup2.application_count, 2)
-        self.assertEqual(no_dup.application_count, 1)
+        self.assertEqual(dup1.application_count, 1)
+        self.assertEqual(dup2.application_count, 1)
+        self.assertEqual(no_dup.application_count, 0)
