@@ -171,7 +171,7 @@ odoo.define('payment.manage_form', require => {
             ev.preventDefault();
 
             // Extract contextual values from the delete button
-            const linkedRadio = $(ev.target).siblings().find('input[name="o_payment_radio"]')[0];
+            const linkedRadio = $(ev.currentTarget).siblings().find('input[name="o_payment_radio"]')[0];
             const tokenId = this._getPaymentOptionIdFromRadio(linkedRadio);
 
             // Delete the token
