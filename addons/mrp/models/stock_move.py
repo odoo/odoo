@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 from odoo import api, Command, fields, models
 from odoo.osv import expression
 from odoo.tools import float_compare, float_round, float_is_zero, OrderedSet
@@ -241,6 +242,40 @@ class StockMove(models.Model):
                 defaults['group_id'] = production_id.procurement_group_id.id
                 defaults['reference'] = production_id.name
         return defaults
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        """ Enforce consistent values (i.e. match _get_move_raw_values/_get_move_finished_values) for:
+        - Manually added components/byproducts specifically values we can't set via view with "default_"
+        - Moves from a copied MO
+        - Backorders
+        """
+        mo_id_to_mo = defaultdict(lambda: self.env['mrp.production'])
+        product_id_to_product = defaultdict(lambda: self.env['product.product'])
+        for values in vals_list:
+            mo_id = values.get('raw_material_production_id', False) or values.get('production_id', False)
+            if mo_id:
+                mo = mo_id_to_mo[mo_id]
+                if not mo:
+                    mo = mo.browse(mo_id)
+                    mo_id_to_mo[mo_id] = mo
+                values['name'] = mo.name
+                values['origin'] = mo._get_origin()
+                values['group_id'] = mo.procurement_group_id.id
+                values['propagate_cancel'] = mo.propagate_cancel
+                if values.get('raw_material_production_id', False):
+                    product = product_id_to_product[values['product_id']]
+                    if not product:
+                        product = product.browse(values['product_id'])
+                    product_id_to_product[values['product_id']] = product
+                    values['location_dest_id'] = mo.production_location_id.id
+                    values['price_unit'] = product.standard_price
+                    continue
+                # produced products + byproducts
+                values['location_id'] = mo.production_location_id.id
+                values['date'] = mo._get_date_planned_finished()
+                values['date_deadline'] = mo.date_deadline
+        return super().create(vals_list)
 
     def write(self, vals):
         if 'product_uom_qty' in vals and 'move_line_ids' in vals:
@@ -490,3 +525,8 @@ class StockMove(models.Model):
             self.move_line_ids = self._set_quantity_done_prepare_vals(quantity_done)
         else:
             super()._multi_line_quantity_done_set(quantity_done)
+
+    def _prepare_extra_move_vals(self, qty):
+        vals = super()._prepare_extra_move_vals(qty)
+        vals['date_deadline'] = self.date_deadline
+        return vals
