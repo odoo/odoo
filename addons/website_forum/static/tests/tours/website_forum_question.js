@@ -56,7 +56,7 @@ odoo.define('website_forum.tour_forum_question', function (require) {
     }, {
         content: "Click here to accept this answer.",
         extra_trigger: '#wrap:has(".o_wforum_validate_toggler")',
-        trigger: '.o_wforum_validate_toggler[data-karma="20"]:first',
+        trigger: '.o_wforum_validate_toggler[data-karma]:first',
     }, {
         content: "Congratulations! You just created and post your first question and answer.",
         trigger: '#wrap:has(".o_wforum_answer_correct")',
