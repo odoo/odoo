@@ -151,13 +151,13 @@ class ResPartner(models.Model):
     def check_vat(self):
         for partner in self:
             country = partner.commercial_partner_id.country_id
-            if partner.vat and self._run_vat_test(partner.vat, country) is False:
+            if partner.vat and self._run_vat_test(partner.vat, country, partner.is_company) is False:
                 partner_label = _("partner [%s]", partner.name)
                 msg = partner._build_vat_error_message(country and country.code.lower() or None, partner.vat, partner_label)
                 raise ValidationError(msg)
 
     @api.model
-    def _run_vat_test(self, vat_number, default_country):
+    def _run_vat_test(self, vat_number, default_country, partner_is_company=True):
         """ Checks a VAT number, either syntactically or using VIES, depending
         on the active company's configuration.
         A first check is made by using the first two characters of the VAT as
@@ -165,6 +165,7 @@ class ResPartner(models.Model):
 
         :param vat_number: a string with the VAT number to check.
         :param default_country: a res.country object
+        :param partner_is_company: True if the partner is a company, else False
 
         :return: The country code (in lower case) of the country the VAT number
                  was validated for, if it was validated. False if it could not be validated
@@ -179,7 +180,7 @@ class ResPartner(models.Model):
 
         # Get check function: either simple syntactic check or call to VIES service
         eu_countries = self.env.ref('base.europe').country_ids
-        if company.vat_check_vies and default_country in eu_countries:
+        if company.vat_check_vies and default_country in eu_countries and partner_is_company:
             check_func = self.vies_vat_check
         else:
             check_func = self.simple_vat_check
