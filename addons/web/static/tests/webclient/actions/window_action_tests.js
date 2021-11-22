@@ -1329,6 +1329,26 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
+    QUnit.test(
+        "form views are restored with the correct id in its url when coming back in breadcrumbs",
+        async function (assert) {
+            assert.expect(3);
+            const webClient = await createWebClient({ serverData });
+            await doAction(webClient, 3);
+            // open a record in form view
+            await testUtils.dom.click($(webClient.el).find(".o_list_view .o_data_row:first"));
+            await legacyExtraNextTick();
+            assert.strictEqual(webClient.env.services.router.current.hash.id, 1);
+            // do some other action
+            await doAction(webClient, 4);
+            assert.notOk(webClient.env.services.router.current.hash.id);
+            // go back to form view
+            await testUtils.dom.clickLast($(webClient.el).find(".o_control_panel .breadcrumb a"));
+            await legacyExtraNextTick();
+            assert.strictEqual(webClient.env.services.router.current.hash.id, 1);
+        }
+    );
+
     QUnit.test("honor group_by specified in actions context", async function (assert) {
         assert.expect(5);
         serverData.actions[3].context = "{'group_by': 'bar'}";
