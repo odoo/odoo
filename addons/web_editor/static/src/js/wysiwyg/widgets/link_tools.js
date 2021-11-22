@@ -4,7 +4,6 @@ odoo.define('wysiwyg.widgets.LinkTools', function (require) {
 const Link = require('wysiwyg.widgets.Link');
 const {ColorPaletteWidget} = require('web_editor.ColorPalette');
 const {ColorpickerWidget} = require('web.Colorpicker');
-const OdooEditorLib = require('@web_editor/../lib/odoo-editor/src/OdooEditor');
 const dom = require('web.dom');
 const {
     computeColorClasses,
@@ -13,8 +12,6 @@ const {
     getNumericAndUnit,
     isColorGradient,
 } = require('web_editor.utils');
-
-const setSelection = OdooEditorLib.setSelection;
 
 /**
  * Allows to customize link content and style.
@@ -37,8 +34,13 @@ const LinkTools = Link.extend({
             $(node).wrap('<a href="#"/>');
             node = node.parentElement;
         }
-        const link = node || this.getOrCreateLink(editable);
-        this._super(parent, options, editable, data, $button, link);
+        this._link = node || this.getOrCreateLink(editable);
+        this._observer = new MutationObserver(() =>{
+            this._setLinkContent = false;
+            this._observer.disconnect();
+        });
+        this._observer.observe(this._link, {subtree: true, childList: true, characterData: true});
+        this._super(parent, options, editable, data, $button, this._link);
         // Keep track of each selected custom color and colorpicker.
         this.customColors = {};
         this.colorpickers = {};
@@ -70,7 +72,14 @@ const LinkTools = Link.extend({
         this.options.wysiwyg.odooEditor.observerActive();
         this.applyLinkToDom(this._getData());
         this.options.wysiwyg.odooEditor.historyStep();
+        this._observer.disconnect();
         this._super(...arguments);
+    },
+
+    applyLinkToDom() {
+        this._observer.disconnect();
+        this._super(...arguments);
+        this._observer.observe(this._link, {subtree: true, childList: true, characterData: true});
     },
 
     //--------------------------------------------------------------------------
