@@ -335,7 +335,7 @@ class TestPurchaseToInvoice(AccountTestInvoicingCommon):
         company_b = self.env['res.company'].create({
             'name': 'Company B',
         })
-        self.env.ref('l10n_generic_coa.configurable_chart_template')._load(15.0, 15.0, company_b)
+        self.env.ref('l10n_generic_coa.configurable_chart_template')._load(company_b)
 
         partner = self.env['res.partner'].create({
             'name': 'AAAAA',

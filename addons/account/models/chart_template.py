@@ -94,9 +94,6 @@ class AccountChartTemplate(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency', required=True)
     use_anglo_saxon = fields.Boolean(string="Use Anglo-Saxon accounting", default=False)
     use_storno_accounting = fields.Boolean(string="Use Storno accounting", default=False)
-    complete_tax_set = fields.Boolean(string='Complete Set of Taxes', default=True,
-        help="This boolean helps you to choose if you want to propose to the user to encode the sale and purchase rates or choose from list "
-            "of taxes. This last choice assumes that the set of tax defined on this template is complete")
     account_ids = fields.One2many('account.account.template', 'chart_template_id', string='Associated Account Templates')
     tax_template_ids = fields.One2many('account.tax.template', 'chart_template_id', string='Tax Template List',
         help='List of all the taxes that have to be installed by the wizard')
@@ -196,7 +193,7 @@ class AccountChartTemplate(models.Model):
         # If we don't have any chart of account on this company, install this chart of account
         if not company.chart_template_id and not self.existing_accounting(company):
             for template in self:
-                template.with_context(default_company_id=company.id)._load(15.0, 15.0, company)
+                template.with_context(default_company_id=company.id)._load(company)
             # Install the demo data when the first localization is instanciated on the company
             if install_demo and self.env.ref('base.module_account').demo:
                 self.with_context(
@@ -219,7 +216,7 @@ class AccountChartTemplate(models.Model):
             # Do not rollback installation of CoA if demo data failed
             _logger.exception('Error while loading accounting demo data')
 
-    def _load(self, sale_tax_rate, purchase_tax_rate, company):
+    def _load(self, company):
         """ Installs this chart of accounts on the current company, replacing
         the existing one if it had already one defined. If some accounting entries
         had already been made, this function fails instead, triggering a UserError.
@@ -277,9 +274,6 @@ class AccountChartTemplate(models.Model):
                     tmp2 = self.env.ref(reference).write({'currency_id': self.currency_id.id})
                 except ValueError:
                     pass
-
-        # If the floats for sale/purchase rates have been filled, create templates from them
-        self._create_tax_templates_from_rates(company.id, sale_tax_rate, purchase_tax_rate)
 
         # Install all the templates objects and generate the real objects
         acc_template_ref, taxes_ref = self._install_template(company, code_digits=self.code_digits)
@@ -358,28 +352,6 @@ class AccountChartTemplate(models.Model):
         if self.env['account.move'].sudo().search([('company_id', '=', company_id.id), ('state', '!=', 'draft')], limit=1):
             return True
         return False
-
-    def _create_tax_templates_from_rates(self, company_id, sale_tax_rate, purchase_tax_rate):
-        '''
-        This function checks if this chart template is configured as containing a full set of taxes, and if
-        it's not the case, it creates the templates for account.tax object accordingly to the provided sale/purchase rates.
-        Then it saves the new tax templates as default taxes to use for this chart template.
-
-        :param company_id: id of the company for which the wizard is running
-        :param sale_tax_rate: the rate to use for created sales tax
-        :param purchase_tax_rate: the rate to use for created purchase tax
-        :return: True
-        '''
-        self.ensure_one()
-        obj_tax_temp = self.env['account.tax.template']
-        all_parents = self._get_chart_parent_ids()
-        # create tax templates from purchase_tax_rate and sale_tax_rate fields
-        if not self.complete_tax_set:
-            ref_taxs = obj_tax_temp.search([('type_tax_use', '=', 'sale'), ('chart_template_id', 'in', all_parents)], order="sequence, id desc", limit=1)
-            ref_taxs.write({'amount': sale_tax_rate, 'name': _('Tax %.2f%%') % sale_tax_rate, 'description': '%.2f%%' % sale_tax_rate})
-            ref_taxs = obj_tax_temp.search([('type_tax_use', '=', 'purchase'), ('chart_template_id', 'in', all_parents)], order="sequence, id desc", limit=1)
-            ref_taxs.write({'amount': purchase_tax_rate, 'name': _('Tax %.2f%%') % purchase_tax_rate, 'description': '%.2f%%' % purchase_tax_rate})
-        return True
 
     def _get_chart_parent_ids(self):
         """ Returns the IDs of all ancestor charts, including the chart itself.
