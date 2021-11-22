@@ -242,6 +242,10 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             'res_id': cls.activity_type_1.id,
         })
 
+    def setUp(self):
+        super(TestCrmCommon, self).setUp()
+        self.flush_tracking()
+
     @classmethod
     def _activate_multi_company(cls):
         cls.company_2 = cls.env['res.company'].create({
