@@ -167,32 +167,32 @@ class SaleOrder(models.Model):
 
     user_id = fields.Many2one(
         'res.users', string='Salesperson', index=True, tracking=2,
-        compute='_compute_user_id', store=True, readonly=False, pre_compute=True,
+        compute='_compute_user_id', store=True, readonly=False, precompute=True,
         domain=lambda self: [('groups_id', 'in', self.env.ref('sales_team.group_sale_salesman').id)])
     partner_id = fields.Many2one(
-        'res.partner', string='Customer', readonly=False, pre_compute=True,
+        'res.partner', string='Customer', readonly=False,
         states={'sale': [('readonly', True)], 'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         required=True, change_default=True, index=True, tracking=1,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
     partner_invoice_id = fields.Many2one(
         'res.partner', string='Invoice Address', required=True,
-        compute='_compute_partner_invoice_id', store=True, readonly=False, pre_compute=True,
+        compute='_compute_partner_invoice_id', store=True, readonly=False, precompute=True,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
     partner_shipping_id = fields.Many2one(
         'res.partner', string='Delivery Address', required=True,
-        compute='_compute_partner_shipping_id', store=True, readonly=False, pre_compute=True,
+        compute='_compute_partner_shipping_id', store=True, readonly=False, precompute=True,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
 
     pricelist_id = fields.Many2one(
         'product.pricelist', string='Pricelist', required=False, check_company=True,  # Unrequired company
-        compute='_compute_pricelist_id', store=True, pre_compute=True, readonly=False,
+        compute='_compute_pricelist_id', store=True, precompute=True, readonly=False,
         states={'sale': [('readonly', True)], 'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", tracking=1,
         help="If you change the pricelist, only newly added lines will be affected.")
     currency_id = fields.Many2one(
-        related='pricelist_id.currency_id', depends=["pricelist_id"], store=True, pre_compute=True, ondelete="restrict")
+        related='pricelist_id.currency_id', depends=["pricelist_id"], store=True, precompute=True, ondelete="restrict")
     analytic_account_id = fields.Many2one(
         'account.analytic.account', 'Analytic Account',
         readonly=True, copy=False, check_company=True,  # Unrequired company
@@ -213,7 +213,7 @@ class SaleOrder(models.Model):
 
     note = fields.Html(
         'Terms and conditions',
-        compute='_compute_note', store=True, readonly=False, pre_compute=True)
+        compute='_compute_note', store=True, readonly=False, precompute=True)
     terms_type = fields.Selection(related='company_id.terms_type')
 
     amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, compute='_amount_all', tracking=5)
@@ -224,12 +224,12 @@ class SaleOrder(models.Model):
 
     payment_term_id = fields.Many2one(
         'account.payment.term', string='Payment Terms', check_company=True,  # Unrequired company
-        compute='_compute_payment_term_id', store=True, readonly=False,
+        compute='_compute_payment_term_id', store=True, readonly=False, precompute=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
     fiscal_position_id = fields.Many2one(
         'account.fiscal.position', string='Fiscal Position',
         domain="[('company_id', '=', company_id)]", check_company=True,
-        compute='_compute_fiscal_position_id', store=True, readonly=False,
+        compute='_compute_fiscal_position_id', store=True, readonly=False, precompute=True,
         help="Fiscal positions are used to adapt taxes and accounts for particular customers or sales orders/invoices."
         "The default value comes from the customer.")
     tax_country_id = fields.Many2one(
@@ -240,7 +240,7 @@ class SaleOrder(models.Model):
     team_id = fields.Many2one(
         'crm.team', 'Sales Team',
         ondelete="set null", tracking=True,
-        compute='_compute_team_id', store=True, readonly=False, pre_compute=True,
+        compute='_compute_team_id', store=True, readonly=False, precompute=True,
         change_default=True, check_company=True,  # Unrequired company
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
 
@@ -266,7 +266,7 @@ class SaleOrder(models.Model):
                                                   string='Authorized Transactions', copy=False)
     show_update_pricelist = fields.Boolean(
         string='Has Pricelist Changed',
-        compute='_compute_show_update_pricelist', store=True, readonly=True, pre_compute=True,
+        compute='_compute_show_update_pricelist', store=True, readonly=True, precompute=True,
         help="Technical Field, True if the pricelist was changed;\n"
              " this will then display a recomputation button")
     tag_ids = fields.Many2many('crm.tag', 'sale_order_tag_rel', 'order_id', 'tag_id', string='Tags')

@@ -224,9 +224,10 @@ class Partner(models.Model):
     contact_address = fields.Char(compute='_compute_contact_address', string='Complete Address')
 
     # technical field used for managing commercial fields
-    commercial_partner_id = fields.Many2one('res.partner', string='Commercial Entity',
-                                            compute='_compute_commercial_partner', recursive=True,
-                                            store=True, index=True)
+    commercial_partner_id = fields.Many2one(
+        'res.partner', string='Commercial Entity',
+        compute='_compute_commercial_partner', store=True,
+        recursive=True, index=True)
     commercial_company_name = fields.Char('Company Name Entity', compute='_compute_commercial_company_name',
                                           store=True)
     company_name = fields.Char('Company Name')

@@ -61,11 +61,11 @@ class SaleOrderLine(models.Model):
 
     event_id = fields.Many2one(
         'event.event', string='Event',
-        compute="_compute_event_id", store=True, readonly=False, pre_compute=True,
+        compute="_compute_event_id", store=True, readonly=False, precompute=True,
         help="Choose an event and it will automatically create a registration for this event.")
     event_ticket_id = fields.Many2one(
         'event.event.ticket', string='Event Ticket',
-        compute="_compute_event_ticket_id", store=True, readonly=False, pre_compute=True,
+        compute="_compute_event_ticket_id", store=True, readonly=False, precompute=True,
         help="Choose an event ticket and it will automatically create a registration for this event ticket.")
     event_ok = fields.Boolean(compute='_compute_event_ok')
 

@@ -53,7 +53,8 @@ class Project(models.Model):
         compute="_compute_timesheet_product_id", store=True, readonly=False,
         default=_default_timesheet_product_id)
     warning_employee_rate = fields.Boolean(compute='_compute_warning_employee_rate')
-    partner_id = fields.Many2one(compute='_compute_partner_id', store=True, readonly=False)
+    partner_id = fields.Many2one(
+        compute='_compute_partner_id', store=True, readonly=False, precompute=True)
 
     @api.depends('sale_line_id', 'sale_line_employee_ids', 'allow_billable')
     def _compute_pricing_type(self):
@@ -482,7 +483,7 @@ class ProjectTask(models.Model):
         super(ProjectTask, billable_tasks)._compute_sale_order_id()
         (self - billable_tasks).sale_order_id = False
 
-    @api.depends('commercial_partner_id', 'sale_line_id.order_partner_id.commercial_partner_id', 'parent_id.sale_line_id', 'project_id.sale_line_id', 'allow_billable')
+    @api.depends('commercial_partner_id', 'sale_line_id.order_partner_id', 'parent_id.sale_line_id', 'project_id.sale_line_id', 'allow_billable')
     def _compute_sale_line(self):
         billable_tasks = self.filtered('allow_billable')
         (self - billable_tasks).update({'sale_line_id': False})

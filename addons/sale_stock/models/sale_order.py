@@ -29,7 +29,7 @@ class SaleOrder(models.Model):
         "product lead time. Otherwise, it will be based on the shortest.")
     warehouse_id = fields.Many2one(
         'stock.warehouse', string='Warehouse', required=True,
-        compute='_compute_warehouse_id', store=True, readonly=False, pre_compute=True,
+        compute='_compute_warehouse_id', store=True, readonly=False, precompute=True,
         states={'sale': [('readonly', True)], 'done': [('readonly', False)], 'cancel': [('readonly', False)]},
         check_company=True)
     picking_ids = fields.One2many('stock.picking', 'sale_id', string='Transfers')
@@ -268,7 +268,7 @@ class SaleOrderLine(models.Model):
     is_mto = fields.Boolean(compute='_compute_is_mto')
     display_qty_widget = fields.Boolean(compute='_compute_qty_to_deliver')
     customer_lead = fields.Float(
-        compute='_compute_customer_lead', store=True, readonly=False, pre_compute=True,
+        compute='_compute_customer_lead', store=True, readonly=False, precompute=True,
         inverse='_inverse_customer_lead')
 
     @api.depends('product_type', 'product_uom_qty', 'qty_delivered', 'state', 'move_ids', 'product_uom')
