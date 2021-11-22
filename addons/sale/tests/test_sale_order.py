@@ -50,38 +50,26 @@ class TestSaleOrder(TestSaleCommon):
             'pricelist_id': cls.company_data['default_pricelist'].id,
         })
         cls.sol_product_order = cls.env['sale.order.line'].create({
-            'name': cls.company_data['product_order_no'].name,
             'product_id': cls.company_data['product_order_no'].id,
             'product_uom_qty': 2,
-            'product_uom': cls.company_data['product_order_no'].uom_id.id,
-            'price_unit': cls.company_data['product_order_no'].list_price,
             'order_id': cls.sale_order.id,
             'tax_id': False,
         })
         cls.sol_serv_deliver = cls.env['sale.order.line'].create({
-            'name': cls.company_data['product_service_delivery'].name,
             'product_id': cls.company_data['product_service_delivery'].id,
             'product_uom_qty': 2,
-            'product_uom': cls.company_data['product_service_delivery'].uom_id.id,
-            'price_unit': cls.company_data['product_service_delivery'].list_price,
             'order_id': cls.sale_order.id,
             'tax_id': False,
         })
         cls.sol_serv_order = cls.env['sale.order.line'].create({
-            'name': cls.company_data['product_service_order'].name,
             'product_id': cls.company_data['product_service_order'].id,
             'product_uom_qty': 2,
-            'product_uom': cls.company_data['product_service_order'].uom_id.id,
-            'price_unit': cls.company_data['product_service_order'].list_price,
             'order_id': cls.sale_order.id,
             'tax_id': False,
         })
         cls.sol_product_deliver = cls.env['sale.order.line'].create({
-            'name': cls.company_data['product_delivery_no'].name,
             'product_id': cls.company_data['product_delivery_no'].id,
             'product_uom_qty': 2,
-            'product_uom': cls.company_data['product_delivery_no'].uom_id.id,
-            'price_unit': cls.company_data['product_delivery_no'].list_price,
             'order_id': cls.sale_order.id,
             'tax_id': False,
         })

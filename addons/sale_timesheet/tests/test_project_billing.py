@@ -36,20 +36,14 @@ class TestProjectBilling(TestCommonSaleTimesheet):
         })
 
         cls.so1_line_order_no_task = SaleOrderLine.create({
-            'name': cls.product_order_timesheet1.name,
             'product_id': cls.product_order_timesheet1.id,
             'product_uom_qty': 10,
-            'product_uom': cls.product_order_timesheet1.uom_id.id,
-            'price_unit': cls.product_order_timesheet1.list_price,
             'order_id': cls.sale_order_1.id,
         })
 
         cls.so1_line_deliver_no_task = SaleOrderLine.create({
-            'name': cls.product_delivery_timesheet1.name,
             'product_id': cls.product_delivery_timesheet1.id,
             'product_uom_qty': 10,
-            'product_uom': cls.product_delivery_timesheet1.uom_id.id,
-            'price_unit': cls.product_delivery_timesheet1.list_price,
             'order_id': cls.sale_order_1.id,
         })
         # Sale Order 2, creates 2 project billed at task rate
@@ -60,19 +54,13 @@ class TestProjectBilling(TestCommonSaleTimesheet):
         })
         cls.so2_line_deliver_project_task = SaleOrderLine.create({
             'order_id': cls.sale_order_2.id,
-            'name': cls.product_delivery_timesheet3.name,
             'product_id': cls.product_delivery_timesheet3.id,
             'product_uom_qty': 5,
-            'product_uom': cls.product_delivery_timesheet3.uom_id.id,
-            'price_unit': cls.product_delivery_timesheet3.list_price
         })
         cls.so2_line_deliver_project_template = SaleOrderLine.create({
             'order_id': cls.sale_order_2.id,
-            'name': cls.product_delivery_timesheet5.name,
             'product_id': cls.product_delivery_timesheet5.id,
             'product_uom_qty': 7,
-            'product_uom': cls.product_delivery_timesheet5.uom_id.id,
-            'price_unit': cls.product_delivery_timesheet5.list_price
         })
         cls.sale_order_2.action_confirm()
 

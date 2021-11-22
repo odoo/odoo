@@ -35,19 +35,13 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'pricelist_id': self.company_data['default_pricelist'].id,
         })
         so_line_ordered_project_only = self.env['sale.order.line'].create({
-            'name': self.product_order_timesheet4.name,
             'product_id': self.product_order_timesheet4.id,
             'product_uom_qty': 10,
-            'product_uom': self.product_order_timesheet4.uom_id.id,
-            'price_unit': self.product_order_timesheet4.list_price,
             'order_id': sale_order.id,
         })
         so_line_ordered_global_project = self.env['sale.order.line'].create({
-            'name': self.product_order_timesheet2.name,
             'product_id': self.product_order_timesheet2.id,
             'product_uom_qty': 50,
-            'product_uom': self.product_order_timesheet2.uom_id.id,
-            'price_unit': self.product_order_timesheet2.list_price,
             'order_id': sale_order.id,
         })
         sale_order.action_confirm()
@@ -109,11 +103,8 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
 
         # add so line with produdct "create task in new project".
         so_line_ordered_task_in_project = self.env['sale.order.line'].create({
-            'name': self.product_order_timesheet3.name,
             'product_id': self.product_order_timesheet3.id,
             'product_uom_qty': 3,
-            'product_uom': self.product_order_timesheet3.uom_id.id,
-            'price_unit': self.product_order_timesheet3.list_price,
             'order_id': sale_order.id,
         })
 
@@ -171,19 +162,13 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'pricelist_id': self.company_data['default_pricelist'].id,
         })
         so_line_deliver_global_project = self.env['sale.order.line'].create({
-            'name': self.product_delivery_timesheet2.name,
             'product_id': self.product_delivery_timesheet2.id,
             'product_uom_qty': 50,
-            'product_uom': self.product_delivery_timesheet2.uom_id.id,
-            'price_unit': self.product_delivery_timesheet2.list_price,
             'order_id': sale_order.id,
         })
         so_line_deliver_task_project = self.env['sale.order.line'].create({
-            'name': self.product_delivery_timesheet3.name,
             'product_id': self.product_delivery_timesheet3.id,
             'product_uom_qty': 20,
-            'product_uom': self.product_delivery_timesheet3.uom_id.id,
-            'price_unit': self.product_delivery_timesheet3.list_price,
             'order_id': sale_order.id,
         })
 
@@ -248,11 +233,8 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
 
         # add a line on SO
         so_line_deliver_only_project = self.env['sale.order.line'].create({
-            'name': self.product_delivery_timesheet4.name,
             'product_id': self.product_delivery_timesheet4.id,
             'product_uom_qty': 5,
-            'product_uom': self.product_delivery_timesheet4.uom_id.id,
-            'price_unit': self.product_delivery_timesheet4.list_price,
             'order_id': sale_order.id,
         })
         self.assertEqual(len(sale_order.project_ids), 2, "No new project should have been created by the SO, when selling 'project only' product, since it reuse the one from 'new task in new project'.")
@@ -303,19 +285,13 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'pricelist_id': self.company_data['default_pricelist'].id,
         })
         so_line_manual_global_project = self.env['sale.order.line'].create({
-            'name': self.product_delivery_manual2.name,
             'product_id': self.product_delivery_manual2.id,
             'product_uom_qty': 50,
-            'product_uom': self.product_delivery_manual2.uom_id.id,
-            'price_unit': self.product_delivery_manual2.list_price,
             'order_id': sale_order.id,
         })
         so_line_manual_only_project = self.env['sale.order.line'].create({
-            'name': self.product_delivery_manual4.name,
             'product_id': self.product_delivery_manual4.id,
             'product_uom_qty': 20,
-            'product_uom': self.product_delivery_manual4.uom_id.id,
-            'price_unit': self.product_delivery_manual4.list_price,
             'order_id': sale_order.id,
         })
 
@@ -396,19 +372,13 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'display_type': 'line_section',
         })
         so_line_deliver_global_project = self.env['sale.order.line'].create({
-            'name': self.product_delivery_timesheet2.name,
             'product_id': self.product_delivery_timesheet2.id,
             'product_uom_qty': 50,
-            'product_uom': self.product_delivery_timesheet2.uom_id.id,
-            'price_unit': self.product_delivery_timesheet2.list_price,
             'order_id': sale_order.id,
         })
         so_line_deliver_task_project = self.env['sale.order.line'].create({
-            'name': self.product_delivery_timesheet3.name,
             'product_id': self.product_delivery_timesheet3.id,
             'product_uom_qty': 20,
-            'product_uom': self.product_delivery_timesheet3.uom_id.id,
-            'price_unit': self.product_delivery_timesheet3.list_price,
             'order_id': sale_order.id,
         })
 
@@ -603,19 +573,13 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             'pricelist_id': self.company_data['default_pricelist'].id,
         })
         so1_product_global_project_so_line = self.env['sale.order.line'].create({
-            'name': self.product_delivery_timesheet2.name,
             'product_id': self.product_delivery_timesheet2.id,
             'product_uom_qty': 50,
-            'product_uom': self.product_delivery_timesheet2.uom_id.id,
-            'price_unit': self.product_delivery_timesheet2.list_price,
             'order_id': sale_order1.id,
         })
         so2_product_global_project_so_line = self.env['sale.order.line'].create({
-            'name': self.product_delivery_timesheet2.name,
             'product_id': self.product_delivery_timesheet2.id,
             'product_uom_qty': 20,
-            'product_uom': self.product_delivery_timesheet2.uom_id.id,
-            'price_unit': self.product_delivery_timesheet2.list_price,
             'order_id': sale_order2.id,
         })
 
@@ -674,11 +638,8 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         uom_days = self.env.ref('uom.product_uom_day')
         sale_order_line = self.env['sale.order.line'].create({
             'order_id': sale_order.id,
-            'name': self.product_order_timesheet3.name,
             'product_id': self.product_order_timesheet3.id,
-            'product_uom_qty': 1,
             'product_uom': uom_days.id,
-            'price_unit': self.product_order_timesheet3.list_price,
         })
         sale_order.action_confirm()
         task = sale_order_line.task_id

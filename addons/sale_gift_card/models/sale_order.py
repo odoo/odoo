@@ -43,8 +43,6 @@ class SaleOrder(models.Model):
             self.env["sale.order.line"].create({
                 'product_id': pay_gift_card_id.id,
                 'price_unit': - amount,
-                'product_uom_qty': 1,
-                'product_uom': pay_gift_card_id.uom_id.id,
                 'gift_card_id': gift_card.id,
                 'order_id': self.id
             })

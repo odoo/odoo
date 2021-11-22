@@ -55,10 +55,8 @@ class TestDropship(common.TransactionCase):
         # Create a new so line
         sol2 = self.env['sale.order.line'].create({
             'order_id': so.id,
-            'name': prod.name,
             'product_id': prod.id,
             'product_uom_qty': 3.00,
-            'product_uom': prod.uom_id.id,
             'price_unit': 12,
         })
         # there is a new line

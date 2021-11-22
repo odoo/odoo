@@ -351,10 +351,8 @@ class TestCommonSaleTimesheet(TestSaleCommon):
         })
         self.env['sale.order.line'].create([{
             'order_id': self.so.id,
-            'name': self.product_delivery_timesheet1.name,
             'product_id': self.product_delivery_timesheet1.id,
             'product_uom_qty': 10,
-            'price_unit': self.product_delivery_timesheet1.list_price
         }, {
             'order_id': self.so.id,
             'product_id': self.product_delivery_timesheet2.id,

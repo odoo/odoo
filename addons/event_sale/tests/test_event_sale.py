@@ -49,10 +49,7 @@ class TestEventSale(TestEventSaleCommon):
         cls.env['sale.order.line'].create({
             'product_id': product.id,
             'price_unit': 190.50,
-            'product_uom': cls.env.ref('uom.product_uom_unit').id,
-            'product_uom_qty': 1.0,
             'order_id': cls.sale_order.id,
-            'name': 'sales order line',
             'event_id': cls.event_0.id,
             'event_ticket_id': cls.ticket.id,
         })
@@ -238,10 +235,7 @@ class TestEventSale(TestEventSaleCommon):
             'pricelist_id': pricelist.id,
         })
         sol = self.env['sale.order.line'].create({
-            'name': event.name,
             'product_id': event_product.product_variant_id.id,
-            'product_uom_qty': 1,
-            'product_uom': event_product.uom_id.id,
             'order_id': so.id,
             'event_id': event.id,
             'event_ticket_id': event_ticket.id,
