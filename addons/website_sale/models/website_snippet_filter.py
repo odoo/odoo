@@ -21,7 +21,7 @@ class WebsiteSnippetFilter(models.Model):
         samples = super()._get_hardcoded_sample(model)
         if model._name == 'product.product':
             data = [{
-                'image_512': b'/product/static/img/product_chair.png',
+                'image_512': b'/product/static/img/product_chair.jpg',
                 'display_name': _('Chair'),
                 'description_sale': _('Sit comfortably'),
             }, {
@@ -33,7 +33,7 @@ class WebsiteSnippetFilter(models.Model):
                 'display_name': _('Whiteboard'),
                 'description_sale': _('With three feet'),
             }, {
-                'image_512': b'/product/static/img/product_product_27-image.png',
+                'image_512': b'/product/static/img/product_product_27-image.jpg',
                 'display_name': _('Drawer'),
                 'description_sale': _('On wheels'),
             }, {
@@ -41,7 +41,7 @@ class WebsiteSnippetFilter(models.Model):
                 'display_name': _('Box'),
                 'description_sale': _('Reinforced for heavy loads'),
             }, {
-                'image_512': b'/product/static/img/product_product_9-image.png',
+                'image_512': b'/product/static/img/product_product_9-image.jpg',
                 'display_name': _('Bin'),
                 'description_sale': _('Pedal-based opening system'),
             }]
