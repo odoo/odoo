@@ -63,18 +63,9 @@ const DynamicSnippetProducts = DynamicSnippetCarousel.extend({
      */
     _getTagSearchDomain() {
         const searchDomain = [];
-        let productTagId = this.$el.get(0).dataset.productTagId;
-        if (productTagId && productTagId !== 'all') {
-            if (productTagId === 'current') {
-                productTagId = undefined;
-                const productTagField = $("#product_details").find(".product_tag_id");
-                if (productTagField && productTagField.length) {
-                    productTagId = parseInt(productTagField[0].value);
-                }
-            }
-            if (productTagId) {
-                searchDomain.push(['all_product_tag_ids', '=', parseInt(productTagId)]);
-            }
+        let productTagIds = this.$el.get(0).dataset.productTagIds;
+        if (productTagIds) {
+            searchDomain.push(['all_product_tag_ids', 'in', JSON.parse(productTagIds).map(productTag => productTag.id)]);
         }
         return searchDomain;
     },
