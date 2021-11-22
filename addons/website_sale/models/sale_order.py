@@ -30,11 +30,11 @@ class SaleOrder(models.Model):
                                  help='Website through which this order was placed.')
 
     @api.model
-    def _default_note_url(self):
+    def _get_note_url(self):
         website = self.env['website'].get_current_website()
         if website:
             return website.get_base_url()
-        return super()._default_note_url()
+        return super()._get_note_url()
 
     @api.depends('order_line')
     def _compute_website_order_line(self):

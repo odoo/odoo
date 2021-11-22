@@ -103,16 +103,8 @@ class SaleOrder(models.Model):
         return super(SaleOrder, self).get_empty_list_help(help)
 
     @api.model
-    def _default_note_url(self):
+    def _get_note_url(self):
         return self.env.company.get_base_url()
-
-    @api.model
-    def _default_note(self):
-        use_invoice_terms = self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms')
-        if use_invoice_terms and self.env.company.terms_type == "html":
-            baseurl = html_keep_url(self._default_note_url() + '/terms')
-            return _('Terms & Conditions: %s', baseurl)
-        return use_invoice_terms and self.env.company.invoice_terms or ''
 
     def _search_invoice_ids(self, operator, value):
         if operator == 'in' and value:
@@ -221,8 +213,8 @@ class SaleOrder(models.Model):
         ], string='Invoice Status', compute='_get_invoice_status', store=True)
 
     note = fields.Html(
-        'Terms and conditions', default=_default_note,
-        compute='_compute_note', store=True, readonly=False)
+        'Terms and conditions',
+        compute='_compute_note', store=True, readonly=False, pre_compute=True)
     terms_type = fields.Selection(related='company_id.terms_type')
 
     amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, compute='_amount_all', tracking=5)
@@ -443,7 +435,7 @@ class SaleOrder(models.Model):
         for order in self:
             order = order.with_company(order.company_id)
             if order.terms_type == 'html' and self.env.company.invoice_terms_html:
-                baseurl = html_keep_url(order.get_base_url() + '/terms')
+                baseurl = html_keep_url(order._get_note_url() + '/terms')
                 order.note = _('Terms & Conditions: %s', baseurl)
             elif not is_html_empty(self.env.company.invoice_terms):
                 order.note = order.with_context(lang=order.partner_id.lang).env.company.invoice_terms
