@@ -22,6 +22,14 @@ class TestStockLandedCostsCommon(ValuationReconciliationTestCommon):
         cls.supplier_location_id = cls.env.ref('stock.stock_location_suppliers').id
         cls.customer_location_id = cls.env.ref('stock.stock_location_customers').id
         cls.categ_all = cls.stock_account_product_categ
+        cls.categ_manual_periodic = cls.env.ref('product.product_category_all').copy({
+            "property_valuation": "manual_periodic",
+            "property_cost_method": "fifo"
+        })
+        cls.categ_real_time = cls.env.ref('product.product_category_all').copy({
+            "property_valuation": "real_time",
+            "property_cost_method": "average"
+        })
         cls.expenses_journal = cls.company_data['default_journal_purchase']
         cls.stock_journal = cls.env['account.journal'].create({
             'name': 'Stock Journal',
@@ -35,14 +43,14 @@ class TestStockLandedCostsCommon(ValuationReconciliationTestCommon):
             'standard_price': 1.0,
             'weight': 10,
             'volume': 1,
-            'categ_id': cls.categ_all.id})
+            'categ_id': cls.categ_real_time.id})
         cls.product_oven = cls.Product.create({
             'name': 'Microwave Oven',
             'type': 'product',
             'standard_price': 1.0,
             'weight': 20,
             'volume': 1.5,
-            'categ_id': cls.categ_all.id})
+            'categ_id': cls.categ_real_time.id})
         # Create service type product 1.Labour 2.Brokerage 3.Transportation 4.Packaging
         cls.landed_cost = cls.Product.create({'name': 'Landed Cost', 'type': 'service'})
         cls.brokerage_quantity = cls.Product.create({'name': 'Brokerage Cost', 'type': 'service'})
