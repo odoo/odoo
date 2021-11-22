@@ -67,7 +67,7 @@ class PosConfig(models.Model):
             )
             raise UserError(f"{intro}\n{invalid_reward_products_msg}")
 
-        return super(PosConfig, self).open_session_cb(check_coa)
+        return super(PosConfig, self).open_session_cb()
 
     def use_coupon_code(self, code, creation_date, partner_id, reserved_program_ids):
         coupon_to_check = self.env["coupon.coupon"].search(
