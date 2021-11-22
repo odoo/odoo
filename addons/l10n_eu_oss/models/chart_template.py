@@ -6,8 +6,8 @@ from odoo import models
 class AccountChartTemplate(models.Model):
     _inherit = 'account.chart.template'
 
-    def _load(self, sale_tax_rate, purchase_tax_rate, company):
-        rslt = super()._load(sale_tax_rate, purchase_tax_rate, company)
+    def _load(self, company):
+        rslt = super()._load(company)
 
         if company.account_fiscal_country_id in self.env.ref('base.europe').country_ids:
             company._map_eu_taxes()

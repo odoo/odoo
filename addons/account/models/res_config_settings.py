@@ -157,7 +157,7 @@ class ResConfigSettings(models.TransientModel):
         if self.env.company == self.company_id \
                 and self.chart_template_id \
                 and self.chart_template_id != self.company_id.chart_template_id:
-            self.chart_template_id._load(15.0, 15.0, self.env.company)
+            self.chart_template_id._load(self.env.company)
 
     @api.depends('company_id')
     def _compute_has_chart_of_accounts(self):

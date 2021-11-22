@@ -44,7 +44,7 @@ class AccountChartTemplate(models.Model):
         }
         return match.get(chart_template_id)
 
-    def _load(self, sale_tax_rate, purchase_tax_rate, company):
+    def _load(self, company):
         """ Set companies AFIP Responsibility and Country if AR CoA is installed, also set tax calculation rounding
         method required in order to properly validate match AFIP invoices.
 
@@ -64,7 +64,7 @@ class AccountChartTemplate(models.Model):
             # the default VAT type.
             company.partner_id.l10n_latam_identification_type_id = self.env.ref('l10n_ar.it_cuit')
 
-        res = super()._load(sale_tax_rate, purchase_tax_rate, company)
+        res = super()._load(company)
 
         # If Responsable Monotributista remove the default purchase tax
         if self == self.env.ref('l10n_ar.l10nar_base_chart_template') or \
