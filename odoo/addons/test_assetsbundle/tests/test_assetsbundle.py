@@ -6,18 +6,19 @@ from lxml import etree
 import os
 import time
 from unittest import skip
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 import textwrap
 import pathlib
 import lxml
 import base64
 
+import odoo
 from odoo import api, http
 from odoo.addons import __path__ as ADDONS_PATH
 from odoo.addons.base.models.assetsbundle import AssetsBundle
 from odoo.addons.base.models.ir_asset import AssetPaths
 from odoo.addons.base.models.ir_attachment import IrAttachment
-from odoo.modules.module import get_resource_path, read_manifest
+from odoo.modules.module import get_resource_path, get_manifest
 from odoo.tests import HttpCase, tagged
 from odoo.tests.common import TransactionCase
 from odoo.addons.base.models.qweb import QWebException
@@ -80,32 +81,18 @@ class TestAddonPaths(TransactionCase):
 
 
 class AddonManifestPatched(TransactionCase):
-
-    test_assetsbundle_manifest = None
-    for path in ADDONS_PATH:
-        manifest = read_manifest(path, 'test_assetsbundle')
-        if manifest:
-            manifest['addons_path'] = path
-            test_assetsbundle_manifest = manifest
-            break
-
-    def tearDown(self):
-        super().tearDown()
-        self.env.registry._init_modules = self.__genuine_registry_modules
-        http.addons_manifest = self.__genuine_addons_manifest
-
     def setUp(self):
         super().setUp()
-        self.__genuine_registry_modules = self.env.registry._init_modules
-        self.env.registry._init_modules = func.lazy(lambda: set(self.installed_modules))
 
-        self.__genuine_addons_manifest = http.addons_manifest
-        http.addons_manifest = func.lazy(lambda: self.manifests)
-
-        self.installed_modules = ['base', 'test_assetsbundle']
+        self.installed_modules = {'base', 'test_assetsbundle'}
         self.manifests = {
-            'test_assetsbundle': self.test_assetsbundle_manifest,
+            'base': get_manifest('base'),
+            'web': get_manifest('web'),
+            'test_assetsbundle': get_manifest('test_assetsbundle'),
         }
+
+        self.patch(self.env.registry, '_init_modules', self.installed_modules)
+        self.patch(odoo.modules.module, 'get_manifest', Mock(side_effect=lambda module: self.manifests.get(module, {})))
 
 
 class FileTouchable(AddonManifestPatched):
@@ -1205,7 +1192,7 @@ class TestAssetsManifest(AddonManifestPatched):
         )
 
     def test_14_other_module(self):
-        self.installed_modules.append('test_other')
+        self.installed_modules.add('test_other')
         self.manifests['test_other'] = {
             'name': 'test_other',
             'depends': ['test_assetsbundle'],
@@ -1229,7 +1216,7 @@ class TestAssetsManifest(AddonManifestPatched):
         )
 
     def test_15_other_module_append(self):
-        self.installed_modules.append('test_other')
+        self.installed_modules.add('test_other')
         self.manifests['test_other'] = {
             'name': 'test_other',
             'depends': ['test_assetsbundle'],
@@ -1256,7 +1243,7 @@ class TestAssetsManifest(AddonManifestPatched):
         )
 
     def test_16_other_module_prepend(self):
-        self.installed_modules.append('test_other')
+        self.installed_modules.add('test_other')
         self.manifests['test_other'] = {
             'name': 'test_other',
             'depends': ['test_assetsbundle'],
@@ -1283,7 +1270,7 @@ class TestAssetsManifest(AddonManifestPatched):
         )
 
     def test_17_other_module_replace(self):
-        self.installed_modules.append('test_other')
+        self.installed_modules.add('test_other')
         self.manifests['test_other'] = {
             'name': 'test_other',
             'depends': ['test_assetsbundle'],
@@ -1307,7 +1294,7 @@ class TestAssetsManifest(AddonManifestPatched):
         )
 
     def test_17_other_module_remove(self):
-        self.installed_modules.append('test_other')
+        self.installed_modules.add('test_other')
         self.manifests['test_other'] = {
             'name': 'test_other',
             'depends': ['test_assetsbundle'],
@@ -1332,7 +1319,7 @@ class TestAssetsManifest(AddonManifestPatched):
         )
 
     def test_18_other_module_external(self):
-        self.installed_modules.append('test_other')
+        self.installed_modules.add('test_other')
         self.manifests['test_other'] = {
             'name': 'test_other',
             'depends': ['test_assetsbundle'],
@@ -1431,7 +1418,7 @@ class TestAssetsManifest(AddonManifestPatched):
 
     def test_21_js_before_css(self):
         '''Non existing target node: ignore the manifest line'''
-        self.installed_modules.append('test_other')
+        self.installed_modules.add('test_other')
         self.manifests['test_other'] = {
             'name': 'test_other',
             'depends': ['test_assetsbundle'],
@@ -1461,7 +1448,7 @@ class TestAssetsManifest(AddonManifestPatched):
         )
 
     def test_22_js_before_js(self):
-        self.installed_modules.append('test_other')
+        self.installed_modules.add('test_other')
         self.manifests['test_other'] = {
             'name': 'test_other',
             'depends': ['test_assetsbundle'],
@@ -1495,7 +1482,7 @@ class TestAssetsManifest(AddonManifestPatched):
 
     def test_23_js_after_css(self):
         '''Non existing target node: ignore the manifest line'''
-        self.installed_modules.append('test_other')
+        self.installed_modules.add('test_other')
         self.manifests['test_other'] = {
             'name': 'test_other',
             'depends': ['test_assetsbundle'],
@@ -1525,7 +1512,7 @@ class TestAssetsManifest(AddonManifestPatched):
         )
 
     def test_24_js_after_js(self):
-        self.installed_modules.append('test_other')
+        self.installed_modules.add('test_other')
         self.manifests['test_other'] = {
             'name': 'test_other',
             'depends': ['test_assetsbundle'],
@@ -1785,7 +1772,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'path': '/test_assetsbundle/%s' % path_to_dummy,
         })
 
-        files = self.env['ir.asset']._get_asset_paths('test_assetsbundle.irassetsec', addons=self.installed_modules, xml=False)
+        files = self.env['ir.asset']._get_asset_paths('test_assetsbundle.irassetsec', addons=list(self.installed_modules), xml=False)
         self.assertFalse(files)
 
     def test_33(self):
@@ -1834,7 +1821,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'bundle': 'test_assetsbundle.irassetsec',
             'path': '/test_assetsbundle/data/ir_asset.xml',
         })
-        files = self.env['ir.asset']._get_asset_paths('test_assetsbundle.irassetsec', addons=self.installed_modules, xml=False)
+        files = self.env['ir.asset']._get_asset_paths('test_assetsbundle.irassetsec', addons=list(self.installed_modules), xml=False)
         self.assertFalse(files)
 
     def test_36(self):
@@ -1843,7 +1830,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'bundle': 'test_assetsbundle.irassetsec',
             'path': '/test_assetsbundle/static/accessible.xml',
         })
-        files = self.env['ir.asset']._get_asset_paths('test_assetsbundle.irassetsec', addons=self.installed_modules, xml=False)
+        files = self.env['ir.asset']._get_asset_paths('test_assetsbundle.irassetsec', addons=list(self.installed_modules), xml=False)
         self.assertEqual(len(files), 1)
         self.assertTrue('test_assetsbundle/static/accessible.xml' in files[0][0])
 

@@ -56,7 +56,7 @@ from .tools import ustr, consteq, frozendict, pycompat, unique, date_utils
 from .tools.mimetypes import guess_mimetype
 from .tools.misc import str2bool
 from .tools._vendor import sessions
-from .modules.module import read_manifest
+from .modules.module import get_manifest
 
 _logger = logging.getLogger(__name__)
 rpc_request = logging.getLogger(__name__ + '.rpc.request')
@@ -860,7 +860,6 @@ more details.
 #----------------------------------------------------------
 # Controller and route registration
 #----------------------------------------------------------
-addons_manifest = {}
 controllers_per_module = collections.defaultdict(list)
 
 class ControllerType(type):
@@ -1316,22 +1315,15 @@ class Root(object):
         controllers and configure them.  """
         # TODO should we move this to ir.http so that only configured modules are served ?
         statics = {}
-        manifests = addons_manifest
         for addons_path in odoo.addons.__path__:
-            for module in sorted(os.listdir(str(addons_path))):
-                if module not in manifests:
-                    # Deal with the manifest first
-                    mod_path = opj(addons_path, module)
-                    manifest = read_manifest(addons_path, module)
-                    if not manifest or (not manifest.get('installable', True) and 'assets' not in manifest):
-                        continue
-                    manifest['addons_path'] = addons_path
-                    manifests[module] = manifest
-                    # Then deal with the statics
-                    path_static = opj(addons_path, module, 'static')
-                    if os.path.isdir(path_static):
-                        _logger.debug("Loading %s", module)
-                        statics['/%s/static' % module] = path_static
+            for module in os.listdir(addons_path):
+                manifest = get_manifest(module)
+                static_path = opj(addons_path, module, 'static')
+                if (manifest
+                        and manifest['installable']
+                        and manifest['assets']
+                        and os.path.isdir(static_path)):
+                    statics[f'/{module}/static'] = static_path
 
         if statics:
             _logger.info("HTTP Configuring static files")

@@ -23,7 +23,7 @@ from odoo.addons.portal.controllers.portal import pager
 from odoo.addons.iap.tools import iap_tools
 from odoo.exceptions import UserError, AccessError
 from odoo.http import request
-from odoo.modules.module import get_resource_path
+from odoo.modules.module import get_resource_path, get_manifest
 from odoo.osv.expression import AND, OR, FALSE_DOMAIN, get_unaccent_wrapper
 from odoo.tools.translate import _
 from odoo.tools import escape_psql, pycompat
@@ -296,10 +296,10 @@ class Website(models.Model):
 
     @api.model
     def get_theme_snippet_lists(self, theme_name):
-        default_snippet_lists = http.addons_manifest['theme_default'].get('snippet_lists', {})
-        theme_snippet_lists = http.addons_manifest[theme_name].get('snippet_lists', {})
-        snippet_lists = {**default_snippet_lists, **theme_snippet_lists}
-        return snippet_lists
+        return {
+            **get_manifest('theme_default')['snippet_lists'],
+            **get_manifest(theme_name).get('snippet_lists', {}),
+        }
 
     def configurator_set_menu_links(self, menu_company, module_data):
         menus = self.env['website.menu'].search([('url', 'in', list(module_data.keys())), ('website_id', '=', self.id)])
@@ -339,7 +339,7 @@ class Website(models.Model):
     def configurator_recommended_themes(self, industry_id, palette):
         domain = [('name', '=like', 'theme%'), ('name', 'not in', ['theme_default', 'theme_common'])]
         client_themes = request.env['ir.module.module'].search(domain).mapped('name')
-        client_themes_img = dict([(t, http.addons_manifest[t].get('images_preview_theme', {})) for t in client_themes])
+        client_themes_img = {t: get_manifest(t).get('images_preview_theme', {}) for t in client_themes}
         themes_suggested = self._website_api_rpc(
             '/api/website/2/configurator/recommended_themes/%s' % industry_id,
             {'client_themes': client_themes_img}
