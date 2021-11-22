@@ -37,7 +37,7 @@ class HolidaysAllocation(models.Model):
 
     def _domain_holiday_status_id(self):
         if self.user_has_groups('hr_holidays.group_hr_holidays_user'):
-            return []
+            return [('requires_allocation', '=', 'yes')]
         return [('employee_requests', '=', 'yes')]
 
     name = fields.Char('Description', compute='_compute_description', inverse='_inverse_description', search='_search_description', compute_sudo=False)
