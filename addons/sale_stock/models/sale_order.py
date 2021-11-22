@@ -24,8 +24,8 @@ class SaleOrder(models.Model):
         ('direct', 'As soon as possible'),
         ('one', 'When all products are ready')],
         string='Shipping Policy', required=True, readonly=True, default='direct',
-        states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}
-        ,help="If you deliver all products at once, the delivery order will be scheduled based on the greatest "
+        states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
+        help="If you deliver all products at once, the delivery order will be scheduled based on the greatest "
         "product lead time. Otherwise, it will be based on the shortest.")
     warehouse_id = fields.Many2one(
         'stock.warehouse', string='Warehouse', required=True,
@@ -143,8 +143,9 @@ class SaleOrder(models.Model):
 
     @api.depends('user_id', 'company_id')
     def _compute_warehouse_id(self):
-        default_warehouse_id = self.env['ir.default'].get_model_defaults('sale.order').get('warehouse_id')
         for order in self:
+            default_warehouse_id = self.env['ir.default'].with_company(
+                order.company_id.id).get_model_defaults('sale.order').get('warehouse_id')
             if order.company_id and order.company_id != order._origin.company_id:
                 warehouse = default_warehouse_id
             else:
