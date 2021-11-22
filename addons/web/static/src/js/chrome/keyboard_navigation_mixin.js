@@ -198,8 +198,15 @@ odoo.define('web.KeyboardNavigationMixin', function (require) {
                     if (elementWithAccessKey.length) {
                         if (this.BrowserDetection.isOsMac() ||
                             !this.BrowserDetection.isBrowserChrome()) { // on windows and linux, chrome does not prevent the default of the accesskeys
+                            // we want to trigger onchange before click is trigerred as otherwise click handler is called
+                            // before onchange is trigerred and form gets dirty
+                            // scenario: Go to form view and edit and any input field and then go to next page using ALT + N
+                            // form is not get saved because click handler to go to next page is called before onchange is called.
+                            // add setTimeout before click is called so that focus triggers onchange event first and then click event trigerred
                             elementWithAccessKey[0].focus();
-                            elementWithAccessKey[0].click();
+                            setTimeout(() => {
+                                elementWithAccessKey[0].click();
+                            }, 0);
                             if (keyDownEvent.preventDefault) keyDownEvent.preventDefault(); else keyDownEvent.returnValue = false;
                             if (keyDownEvent.stopPropagation) keyDownEvent.stopPropagation();
                             if (keyDownEvent.cancelBubble) keyDownEvent.cancelBubble = true;
