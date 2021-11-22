@@ -230,17 +230,19 @@ class SaleOrderLine(models.Model):
     price_tax = fields.Float(compute='_compute_amount', string='Total Tax', store=True)
     price_total = fields.Monetary(compute='_compute_amount', string='Total', store=True)
 
-    price_reduce = fields.Float(compute='_compute_price_reduce', string='Price Reduce', digits='Product Price', store=True)
+    price_reduce = fields.Float(
+        string='Price Reduce', digits='Product Price',
+        compute='_compute_price_reduce', store=True, pre_compute=True)
     tax_id = fields.Many2many(
         'account.tax', string='Taxes',
-        compute='_compute_tax_id', store=True, readonly=False,
+        compute='_compute_tax_id', store=True, readonly=False, pre_compute=True,
         domain=['|', ('active', '=', False), ('active', '=', True)])
     price_reduce_taxinc = fields.Monetary(compute='_compute_price_reduce_taxinc', string='Price Reduce Tax inc', store=True)
     price_reduce_taxexcl = fields.Monetary(compute='_compute_price_reduce_taxexcl', string='Price Reduce Tax excl', store=True)
 
     discount = fields.Float(
         string='Discount (%)', digits='Discount',
-        compute='_compute_discount', store=True, readonly=False)
+        compute='_compute_discount', store=True, readonly=False, pre_compute=True)
 
     product_id = fields.Many2one(
         'product.product', string='Product', domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
@@ -261,18 +263,18 @@ class SaleOrderLine(models.Model):
     product_custom_attribute_value_ids = fields.One2many(
         'product.attribute.custom.value', 'sale_order_line_id',
         string="Custom Values", copy=True,
-        compute='_compute_custom_attribute_values', store=True, readonly=False)
+        compute='_compute_custom_attribute_values', store=True, readonly=False, pre_compute=True)
 
     # M2M holding the values of product.attribute with create_variant field set to 'no_variant'
     # It allows keeping track of the extra_price associated to those attribute values and add them to the SO line description
     product_no_variant_attribute_value_ids = fields.Many2many(
         'product.template.attribute.value', string="Extra Values", ondelete='restrict',
-        compute='_compute_no_variant_attribute_values', store=True, readonly=False)
+        compute='_compute_no_variant_attribute_values', store=True, readonly=False, pre_compute=True)
 
-    qty_delivered_method = fields.Selection([
-        ('manual', 'Manual'),
-        ('analytic', 'Analytic From Expenses')
-    ], string="Method to update delivered qty", compute='_compute_qty_delivered_method', store=True,
+    qty_delivered_method = fields.Selection(
+        [('manual', 'Manual'),
+         ('analytic', 'Analytic From Expenses')], string="Method to update delivered qty",
+        compute='_compute_qty_delivered_method', store=True, pre_compute=True,
         help="According to product configuration, the delivered quantity can be automatically computed by mechanism :\n"
              "  - Manual: the quantity is set manually on the line\n"
              "  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
@@ -280,17 +282,21 @@ class SaleOrderLine(models.Model):
              "  - Stock Moves: the quantity comes from confirmed pickings\n")
     qty_delivered = fields.Float(
         'Delivered Quantity', copy=False,
-        compute='_compute_qty_delivered', store=True, readonly=False,
+        compute='_compute_qty_delivered', store=True, readonly=False, pre_compute=True,
         digits='Product Unit of Measure')
     qty_to_invoice = fields.Float(
-        compute='_compute_qty_to_invoice', string='To Invoice Quantity', store=True,
+        compute='_compute_qty_to_invoice', string='To Invoice Quantity', store=True, pre_compute=True,
         digits='Product Unit of Measure')
     qty_invoiced = fields.Float(
-        compute='_compute_qty_invoiced', string='Invoiced Quantity', store=True,
+        compute='_compute_qty_invoiced', string='Invoiced Quantity', store=True, pre_compute=True,
         digits='Product Unit of Measure')
 
-    untaxed_amount_invoiced = fields.Monetary("Untaxed Invoiced Amount", compute='_compute_untaxed_amount_invoiced', store=True)
-    untaxed_amount_to_invoice = fields.Monetary("Untaxed Amount To Invoice", compute='_compute_untaxed_amount_to_invoice', store=True)
+    untaxed_amount_invoiced = fields.Monetary(
+        "Untaxed Invoiced Amount",
+        compute='_compute_untaxed_amount_invoiced', store=True, pre_compute=True)
+    untaxed_amount_to_invoice = fields.Monetary(
+        "Untaxed Amount To Invoice",
+        compute='_compute_untaxed_amount_to_invoice', store=True, pre_compute=True)
 
     analytic_tag_ids = fields.Many2many(
         'account.analytic.tag', string='Analytic Tags',
@@ -302,7 +308,9 @@ class SaleOrderLine(models.Model):
         " They are not copied when duplicating a sales order.")
 
     # Related stored fields from the order
-    currency_id = fields.Many2one(related='order_id.currency_id', depends=['order_id.currency_id'], store=True, string='Currency', pre_compute=True)
+    currency_id = fields.Many2one(
+        related='order_id.currency_id', depends=['order_id.currency_id'],
+        store=True, string='Currency', pre_compute=True)
     company_id = fields.Many2one(related='order_id.company_id', string='Company', store=True, index=True, pre_compute=True)
     order_partner_id = fields.Many2one(related='order_id.partner_id', store=True, string='Customer', pre_compute=True)
     salesman_id = fields.Many2one(related='order_id.user_id', store=True, string='Salesperson', pre_compute=True)
