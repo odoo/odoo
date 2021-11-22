@@ -284,9 +284,9 @@ class AccountMove(models.Model):
     # =========================================================
 
     # ==== Business fields ====
-    fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position', readonly=True,
-        states={'draft': [('readonly', False)]},
-        check_company=True,
+    fiscal_position_id = fields.Many2one(
+        'account.fiscal.position', string='Fiscal Position', readonly=True,
+        states={'draft': [('readonly', False)]}, check_company=True,
         domain="[('company_id', '=', company_id)]", ondelete="restrict",
         help="Fiscal positions are used to adapt taxes and accounts for particular customers or sales orders/invoices. "
              "The default value comes from the customer.")
