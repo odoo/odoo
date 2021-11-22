@@ -589,9 +589,10 @@ function factory(dependencies) {
         checkedThreadCaches: many2many('mail.thread_cache', {
             inverse: 'checkedMessages',
         }),
-        date: attr({
-            default: moment(),
-        }),
+        /**
+         * Determines the date of the message as a moment object.
+         */
+        date: attr(),
         /**
          * States the time elapsed since date up to now.
          */
