@@ -95,6 +95,8 @@
         <field name="model">stock.move.line</field>
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile">
+                <field name="location_id" invisible="1"/>
+                <field name="location_dest_id" invisible="1"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_card oe_kanban_global_click">
