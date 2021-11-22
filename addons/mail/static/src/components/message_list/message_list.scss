@@ -117,17 +117,3 @@
 .o_MessageList_separatorLabel {
     background-color: $white;
 }
-
-// ------------------------------------------------------------------
-// Animation
-// ------------------------------------------------------------------
-
-.o_MessageList_separatorNewMessages:not(.o-disable-animation) {
-    &.fade-leave-active {
-        transition: opacity 0.5s;
-    }
-
-    &.fade-leave-to {
-        opacity: 0;
-    }
-}

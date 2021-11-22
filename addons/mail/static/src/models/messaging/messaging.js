@@ -293,12 +293,6 @@ function factory(dependencies) {
             isCausal: true,
             readonly: true,
         }),
-        /**
-         * Determines whether animations should be disabled.
-         */
-        disableAnimation: attr({
-            default: false,
-        }),
         discuss: one2one('mail.discuss', {
             default: insertAndReplace(),
             isCausal: true,

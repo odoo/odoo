@@ -638,7 +638,6 @@ async function start(param0 = {}) {
             // test specific values
             messagingValues: {
                 autofetchPartnerImStatus: false,
-                disableAnimation: true,
                 isQUnitTest: true,
                 loadingBaseDelayDuration,
                 messagingBus,
