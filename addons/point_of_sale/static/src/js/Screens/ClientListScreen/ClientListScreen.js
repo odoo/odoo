@@ -74,7 +74,7 @@ odoo.define('point_of_sale.ClientListScreen', function(require) {
             } else {
                 res = this.env.pos.db.get_partners_sorted(1000);
             }
-            return res.sort(function (a, b) { return a.name.localeCompare(b.name) });
+            return res.sort(function (a, b) { return (a.name || '').localeCompare(b.name) });
         }
         get isNextButtonVisible() {
             return this.state.selectedClient ? true : false;
