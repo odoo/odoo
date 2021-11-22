@@ -31,6 +31,8 @@ const Link = Widget.extend({
             title: _t("Link to"),
         }, this.options));
 
+        this._setLinkContent = true;
+
         this.data = data || {};
         this.isButton = this.data.isButton;
         this.$button = $button;
@@ -201,7 +203,7 @@ const Link = Widget.extend({
         if (!this.$link.attr('target')) {
             this.$link[0].removeAttribute('target');
         }
-        if (data.content !== this.data.originalText || data.url !== this.data.url) {
+        if (this._setLinkContent && (data.content !== this.data.originalText || data.url !== this.data.url)) {
             const content = (data.content && data.content.length) ? data.content : data.url;
             // If there is a this.data.originalText, it means that we selected
             // the text and we could not change the content through the text
