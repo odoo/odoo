@@ -39,11 +39,8 @@ class TestAccessRights(TestCommonSalePurchaseNoChart):
         })
 
         sol_service_purchase = self.env['sale.order.line'].with_user(self.user_salesperson).create({
-            'name': self.service_purchase_1.name,
             'product_id': self.service_purchase_1.id,
             'product_uom_qty': 4,
-            'product_uom': self.service_purchase_1.uom_id.id,
-            'price_unit': self.service_purchase_1.list_price,
             'order_id': sale_order.id,
             'tax_id': False,
         })

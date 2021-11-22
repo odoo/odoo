@@ -38,21 +38,15 @@ class TestReInvoice(TestSaleCommon):
         """ Test vendor bill at cost for product based on ordered and delivered quantities. """
         # create SO line and confirm SO (with only one line)
         sale_order_line1 = self.env['sale.order.line'].create({
-            'name': self.company_data['product_order_cost'].name,
             'product_id': self.company_data['product_order_cost'].id,
             'product_uom_qty': 2,
             'qty_delivered': 1,
-            'product_uom': self.company_data['product_order_cost'].uom_id.id,
-            'price_unit': self.company_data['product_order_cost'].list_price,
             'order_id': self.sale_order.id,
         })
         sale_order_line2 = self.env['sale.order.line'].create({
-            'name': self.company_data['product_delivery_cost'].name,
             'product_id': self.company_data['product_delivery_cost'].id,
             'product_uom_qty': 4,
             'qty_delivered': 1,
-            'product_uom': self.company_data['product_delivery_cost'].uom_id.id,
-            'price_unit': self.company_data['product_delivery_cost'].list_price,
             'order_id': self.sale_order.id,
         })
 
@@ -154,21 +148,15 @@ class TestReInvoice(TestSaleCommon):
         """
         # create SO line and confirm SO (with only one line)
         sale_order_line1 = self.env['sale.order.line'].create({
-            'name': self.company_data['product_delivery_sales_price'].name,
             'product_id': self.company_data['product_delivery_sales_price'].id,
             'product_uom_qty': 2,
             'qty_delivered': 1,
-            'product_uom': self.company_data['product_delivery_sales_price'].uom_id.id,
-            'price_unit': self.company_data['product_delivery_sales_price'].list_price,
             'order_id': self.sale_order.id,
         })
         sale_order_line2 = self.env['sale.order.line'].create({
-            'name': self.company_data['product_order_sales_price'].name,
             'product_id': self.company_data['product_order_sales_price'].id,
             'product_uom_qty': 3,
             'qty_delivered': 1,
-            'product_uom': self.company_data['product_order_sales_price'].uom_id.id,
-            'price_unit': self.company_data['product_order_sales_price'].list_price,
             'order_id': self.sale_order.id,
         })
         self.sale_order.action_confirm()
@@ -230,12 +218,9 @@ class TestReInvoice(TestSaleCommon):
         """ Test invoicing vendor bill with no policy. Check nothing happen. """
         # confirm SO
         sale_order_line = self.env['sale.order.line'].create({
-            'name': self.company_data['product_delivery_no'].name,
             'product_id': self.company_data['product_delivery_no'].id,
             'product_uom_qty': 2,
             'qty_delivered': 1,
-            'product_uom': self.company_data['product_delivery_no'].uom_id.id,
-            'price_unit': self.company_data['product_delivery_no'].list_price,
             'order_id': self.sale_order.id,
         })
         self.sale_order.action_confirm()
@@ -256,20 +241,12 @@ class TestReInvoice(TestSaleCommon):
     def test_not_reinvoicing_invoiced_so_lines(self):
         """ Test that invoiced SO lines are not re-invoiced. """
         so_line1 = self.env['sale.order.line'].create({
-            'name': self.company_data['product_delivery_cost'].name,
             'product_id': self.company_data['product_delivery_cost'].id,
-            'product_uom_qty': 1,
-            'product_uom': self.company_data['product_delivery_cost'].uom_id.id,
-            'price_unit': self.company_data['product_delivery_cost'].list_price,
             'discount': 100.00,
             'order_id': self.sale_order.id,
         })
         so_line2 = self.env['sale.order.line'].create({
-            'name': self.company_data['product_delivery_sales_price'].name,
             'product_id': self.company_data['product_delivery_sales_price'].id,
-            'product_uom_qty': 1,
-            'product_uom': self.company_data['product_delivery_sales_price'].uom_id.id,
-            'price_unit': self.company_data['product_delivery_sales_price'].list_price,
             'discount': 100.00,
             'order_id': self.sale_order.id,
         })

@@ -174,11 +174,7 @@ class TestWebsiteSaleProductPricelist(TestSaleProductAttributeValueCommon):
             'partner_id': self.env.user.partner_id.id,
         })
         sol = self.env['sale.order.line'].create({
-            'name': test_product.name,
             'product_id': test_product.product_variant_id.id,
-            'product_uom_qty': 1,
-            'product_uom': test_product.uom_id.id,
-            'price_unit': test_product.list_price,
             'order_id': so.id,
             'tax_id': [(6, 0, [tax10.id])],
         })
