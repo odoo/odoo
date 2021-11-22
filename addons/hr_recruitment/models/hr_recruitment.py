@@ -229,7 +229,11 @@ class Applicant(models.Model):
         else:
             application_data_mapped = dict()
         for applicant in applicants:
+<<<<<<< HEAD
             applicant.application_count = application_data_mapped.get(applicant.email_from.lower(), 1)
+=======
+            applicant.application_count = application_data_mapped.get(applicant.email_from, 1) - 1
+>>>>>>> 84893023984... temp
         (self - applicants).application_count = False
 
     @api.depends_context('lang')
