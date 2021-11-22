@@ -12,7 +12,7 @@ from os.path import join as opj
 import odoo
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.modules import load_information_from_description_file
+from odoo.modules.module import load_manifest
 from odoo.tools import convert_file, exception_to_unicode
 
 _logger = logging.getLogger(__name__)
@@ -37,7 +37,7 @@ class IrModule(models.Model):
         known_mods_names = {m.name: m for m in known_mods}
         installed_mods = [m.name for m in known_mods if m.state == 'installed']
 
-        terp = load_information_from_description_file(module, mod_path=path)
+        terp = load_manifest(module, mod_path=path)
         if not terp:
             return False
         values = self.get_values_from_terp(terp)

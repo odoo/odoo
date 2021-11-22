@@ -266,7 +266,6 @@ def load_iot_handlers():
             if spec:
                 module = util.module_from_spec(spec)
                 spec.loader.exec_module(module)
-    http.addons_manifest = {}
     http.root = http.Root()
 
 def odoo_restart(delay):

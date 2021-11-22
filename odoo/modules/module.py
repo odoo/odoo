@@ -3,6 +3,8 @@
 
 import ast
 import collections.abc
+import copy
+import functools
 import importlib
 import logging
 import os
@@ -10,7 +12,7 @@ import pkg_resources
 import re
 import sys
 import warnings
-from os.path import join as opj
+from os.path import join as opj, realpath
 
 import odoo
 import odoo.tools as tools
@@ -19,6 +21,42 @@ from odoo.tools import pycompat
 
 MANIFEST_NAMES = ('__manifest__.py', '__openerp__.py')
 README = ['README.rst', 'README.md', 'README.txt']
+
+_DEFAULT_MANIFEST = {
+    #addons_path: f'/path/to/the/addons/path/of/{module}',  # automatic
+    'application': False,
+    'bootstrap': False,  # web
+    'assets': {},
+    'author': 'Odoo S.A.',
+    'auto_install': False,
+    'category': 'Uncategorized',
+    'data': [],
+    'demo': [],
+    'demo_xml': [],
+    'depends': [],
+    'description': '',
+    'external_dependencies': [],
+    #icon: f'/{module}/static/description/icon.png',  # automatic
+    'init_xml': [],
+    'installable': True,
+    'images': [],  # website
+    'images_preview_theme': {},  # website themes
+    #license, mandatory
+    'live_test_url': '',  # website themes
+    #name, mandatory
+    'post_init_hook': '',
+    'post_load': None,
+    'pre_init_hook': '',
+    'sequence': 100,
+    'snippet_lists': {},  # website themes
+    'summary': '',
+    'test': [],
+    'update_xml': [],
+    'uninstall_hook': '',
+    'version': '1.0',
+    'web': False,
+    'website': '',
+}
 
 _logger = logging.getLogger(__name__)
 
@@ -276,14 +314,6 @@ def module_manifest(path):
         if os.path.isfile(opj(path, manifest_name)):
             return opj(path, manifest_name)
 
-def read_manifest(addons_path, module):
-    mod_path = opj(addons_path, module)
-    manifest_path = module_manifest(mod_path)
-    if manifest_path:
-        with tools.file_open(manifest_path, 'r') as fd:
-            manifest_data = fd.read()
-        return ast.literal_eval(manifest_data)
-
 def get_module_root(path):
     """
     Get closest module's root beginning from path
@@ -311,74 +341,75 @@ def get_module_root(path):
         path = new_path
     return path
 
-def load_information_from_description_file(module, mod_path=None):
-    """
-    :param module: The name of the module (sale, purchase, ...)
-    :param mod_path: Physical path of module, if not providedThe name of the module (sale, purchase, ...)
-    """
+def load_manifest(module, mod_path=None):
+    """ Load the module manifest from the file system. """
+
     if not mod_path:
         mod_path = get_module_path(module, downloaded=True)
     manifest_file = module_manifest(mod_path)
-    if manifest_file:
-        # default values for descriptor
-        info = {
-            'application': False,
-            'author': 'Odoo S.A.',
-            'auto_install': False,
-            'category': 'Uncategorized',
-            'depends': [],
-            'description': '',
-            'icon': get_module_icon(module),
-            'installable': True,
-            'post_load': None,
-            'version': '1.0',
-            'web': False,
-            'sequence': 100,
-            'summary': '',
-            'website': '',
-        }
-        info.update(zip(
-            'depends data demo test init_xml update_xml demo_xml'.split(),
-            iter(list, None)))
 
-        f = tools.file_open(manifest_file, mode='rb')
-        try:
-            info.update(ast.literal_eval(pycompat.to_text(f.read())))
-        finally:
-            f.close()
+    if not manifest_file:
+        _logger.debug('module %s: no manifest file found %s', module, MANIFEST_NAMES)
+        return {}
 
-        if not info.get('description'):
-            readme_path = [opj(mod_path, x) for x in README
-                           if os.path.isfile(opj(mod_path, x))]
-            if readme_path:
-                with tools.file_open(readme_path[0]) as fd:
-                    info['description'] = fd.read()
+    manifest = copy.deepcopy(_DEFAULT_MANIFEST)
+    manifest['icon'] = get_module_icon(module)
 
-        if not info.get('license'):
-            info['license'] = 'LGPL-3'
-            _logger.warning("Missing `license` key in manifest for '%s', defaulting to LGPL-3", module)
+    with tools.file_open(manifest_file, mode='r') as f:
+        manifest.update(ast.literal_eval(f.read()))
 
-        # auto_install is either `False` (by default) in which case the module
-        # is opt-in, either a list of dependencies in which case the module is
-        # automatically installed if all dependencies are (special case: [] to
-        # always install the module), either `True` to auto-install the module
-        # in case all dependencies declared in `depends` are installed.
-        if isinstance(info['auto_install'], collections.abc.Iterable):
-            info['auto_install'] = set(info['auto_install'])
-            non_dependencies = info['auto_install'].difference(info['depends'])
-            assert not non_dependencies,\
-                "auto_install triggers must be dependencies, found " \
-                "non-dependencies [%s] for module %s" % (
-                    ', '.join(non_dependencies), module
-                )
-        elif info['auto_install']:
-            info['auto_install'] = set(info['depends'])
+    if not manifest['description']:
+        readme_path = [opj(mod_path, x) for x in README
+                       if os.path.isfile(opj(mod_path, x))]
+        if readme_path:
+            with tools.file_open(readme_path[0]) as fd:
+                manifest['description'] = fd.read()
 
-        info['version'] = adapt_version(info['version'])
-        return info
+    if not manifest.get('license'):
+        manifest['license'] = 'LGPL-3'
+        _logger.warning("Missing `license` key in manifest for %r, defaulting to LGPL-3", module)
 
-    _logger.debug('module %s: no manifest file found %s', module, MANIFEST_NAMES)
-    return {}
+    # auto_install is either `False` (by default) in which case the module
+    # is opt-in, either a list of dependencies in which case the module is
+    # automatically installed if all dependencies are (special case: [] to
+    # always install the module), either `True` to auto-install the module
+    # in case all dependencies declared in `depends` are installed.
+    if isinstance(manifest['auto_install'], collections.abc.Iterable):
+        manifest['auto_install'] = set(manifest['auto_install'])
+        non_dependencies = manifest['auto_install'].difference(manifest['depends'])
+        assert not non_dependencies,\
+            "auto_install triggers must be dependencies, found " \
+            "non-dependencies [%s] for module %s" % (
+                ', '.join(non_dependencies), module
+            )
+    elif manifest['auto_install']:
+        manifest['auto_install'] = set(manifest['depends'])
+
+    manifest['version'] = adapt_version(manifest['version'])
+    manifest['addons_path'] = realpath(opj(mod_path, os.pardir))
+
+    return manifest
+
+@functools.lru_cache(maxsize=None)
+def get_manifest(module, mod_path=None):
+    """
+    Get the module manifest.
+
+    :param str module: The name of the module (sale, purchase, ...).
+    :param Optional[str] mod_path: The optional path to the module on
+        the file-system. If not set, it is determined by scanning the
+        addons-paths.
+    :returns: The module manifest as a dict or an empty dict
+        when the manifest was not found.
+    :rtype: dict
+    """
+    return load_manifest(module, mod_path)
+
+def load_information_from_description_file(module, mod_path=None):
+    warnings.warn(
+        'load_information_from_description_file() is a deprecated '
+        'alias to get_manifest()', DeprecationWarning, stacklevel=2)
+    return get_manifest(module, mod_path)
 
 def load_openerp_module(module_name):
     """ Load an OpenERP module, if not already loaded.
@@ -398,7 +429,7 @@ def load_openerp_module(module_name):
         # Call the module's post-load hook. This can done before any model or
         # data has been initialized. This is ok as the post-load hook is for
         # server-wide (instead of registry-specific) functionalities.
-        info = load_information_from_description_file(module_name)
+        info = get_manifest(module_name)
         if info['post_load']:
             getattr(sys.modules['odoo.addons.' + module_name], info['post_load'])()
 
@@ -440,7 +471,7 @@ def get_modules_with_version():
     res = dict.fromkeys(modules, adapt_version('1.0'))
     for module in modules:
         try:
-            info = load_information_from_description_file(module)
+            info = get_manifest(module)
             res[module] = info['version']
         except Exception:
             continue

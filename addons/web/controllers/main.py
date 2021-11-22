@@ -32,7 +32,7 @@ import odoo
 import odoo.modules.registry
 from odoo.api import call_kw
 from odoo.addons.base.models.qweb import QWeb
-from odoo.modules import get_resource_path, module
+from odoo.modules import get_resource_path, module, get_manifest
 from odoo.tools import html_escape, pycompat, ustr, apply_inheritance_specs, lazy_property, float_repr, osutil
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.translate import _
@@ -331,7 +331,7 @@ def fix_view_modes(action):
 def _local_web_translations(trans_file):
     messages = []
     try:
-        with open(trans_file) as t_file:
+        with file_open(trans_file, filter_ext=('.po')) as t_file:
             po = babel.messages.pofile.read_po(t_file)
     except Exception:
         return
@@ -962,11 +962,10 @@ class WebClient(http.Controller):
 
         translations_per_module = {}
         for addon_name in mods:
-            manifest = http.addons_manifest.get(addon_name)
-            if manifest and manifest.get('bootstrap'):
-                addons_path = http.addons_manifest[addon_name]['addons_path']
-                f_name = os.path.join(addons_path, addon_name, "i18n", lang + ".po")
-                if not os.path.exists(f_name):
+            manifest = get_manifest(addon_name)
+            if manifest and manifest['bootstrap']:
+                f_name = get_resource_path(addon_name, 'i18n', f'{lang}.po')
+                if not f_name:
                     continue
                 translations_per_module[addon_name] = {'messages': _local_web_translations(f_name)}
 

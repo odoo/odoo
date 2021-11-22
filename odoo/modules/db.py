@@ -37,7 +37,7 @@ def initialize(cr):
             continue
 
         # This will raise an exception if no/unreadable descriptor file.
-        info = odoo.modules.load_information_from_description_file(i)
+        info = odoo.modules.get_manifest(i)
 
         if not info:
             continue

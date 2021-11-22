@@ -1,17 +1,14 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import os
-
 from glob import glob
 from logging import getLogger
 from werkzeug import urls
 
 import odoo
+import odoo.modules.module  # get_manifest, don't from-import it
+from odoo import api, fields, models, tools
 from odoo.tools import misc
-from odoo import tools
-from odoo import api, fields, http, models
-from odoo.http import root
 
 _logger = getLogger(__name__)
 
@@ -140,10 +137,6 @@ class IrAsset(models.Model):
         if bundle in seen:
             raise Exception("Circular assets bundle declaration: %s" % " > ".join(seen + [bundle]))
 
-        if not root._loaded:
-            root.load_addons()
-            root._loaded = True
-        manifest_cache = http.addons_manifest
         exts = []
         if js:
             exts += SCRIPT_EXTENSIONS
@@ -163,7 +156,7 @@ class IrAsset(models.Model):
             accordingly.
 
             It is nested inside `_get_asset_paths` since we need the current
-            list of addons, extensions, asset_paths and manifest_cache.
+            list of addons, extensions and asset_paths.
 
             :param directive: string
             :param target: string or None or False
@@ -209,11 +202,7 @@ class IrAsset(models.Model):
 
         # 2. Process all addons' manifests.
         for addon in self._topological_sort(tuple(addons)):
-            manifest = manifest_cache.get(addon)
-            if not manifest:
-                continue
-            manifest_assets = manifest.get('assets', {})
-            for command in manifest_assets.get(bundle, []):
+            for command in odoo.modules.module.get_manifest(addon)['assets'].get(bundle, ()):
                 directive, target, path_def = self._process_command(command)
                 process_path(directive, target, path_def)
 
@@ -269,7 +258,7 @@ class IrAsset(models.Model):
         IrModule = self.env['ir.module.module']
 
         def mapper(addon):
-            manif = http.addons_manifest.get(addon, {})
+            manif = odoo.modules.module.get_manifest(addon)
             from_terp = IrModule.get_values_from_terp(manif)
             from_terp['name'] = addon
             from_terp['depends'] = manif.get('depends', ['base'])
@@ -314,7 +303,7 @@ class IrAsset(models.Model):
         path_url = fs2web(path_def)
         path_parts = [part for part in path_url.split('/') if part]
         addon = path_parts[0]
-        addon_manifest = http.addons_manifest.get(addon)
+        addon_manifest = odoo.modules.module.get_manifest(addon)
 
         safe_path = True
         if addon_manifest:

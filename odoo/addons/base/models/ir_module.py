@@ -168,7 +168,7 @@ class Module(models.Model):
     @classmethod
     def get_module_info(cls, name):
         try:
-            return modules.load_information_from_description_file(name)
+            return modules.get_manifest(name)
         except Exception:
             _logger.debug('Error when trying to fetch information for module %s', name, exc_info=True)
             return {}
