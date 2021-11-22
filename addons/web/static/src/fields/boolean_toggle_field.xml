@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.BooleanToggleField" owl="1">
+        <CheckBox
+            class="o_field_boolean o_boolean_toggle"
+            id="props.id"
+            value="props.value or false"
+            disabled="props.readonly"
+            t-on-change="onChange"
+            t-on-keydown="onKeydown"
+        >
+            &#8203; <!-- Zero width space needed to set height -->
+            <i class="fa" t-att-class="props.value ? 'fa-check-circle' : 'fa-times-circle'" />
+        </CheckBox>
+    </t>
+
+</templates>
