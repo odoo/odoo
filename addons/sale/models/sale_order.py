@@ -266,7 +266,7 @@ class SaleOrder(models.Model):
                                                   string='Authorized Transactions', copy=False)
     show_update_pricelist = fields.Boolean(
         string='Has Pricelist Changed',
-        compute='_compute_show_update_pricelist', store=True, readonly=True,
+        compute='_compute_show_update_pricelist', store=True, readonly=True, pre_compute=True,
         help="Technical Field, True if the pricelist was changed;\n"
              " this will then display a recomputation button")
     tag_ids = fields.Many2many('crm.tag', 'sale_order_tag_rel', 'order_id', 'tag_id', string='Tags')
