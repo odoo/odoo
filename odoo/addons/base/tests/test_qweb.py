@@ -1178,7 +1178,7 @@ class TestQWebStaticXml(TransactionCase):
 
             result = doc.find('result[@id="{}"]'.format(template)).text
             self.assertEqual(
-                qweb._render(template, values=params, load=loader).strip(),
+                qweb.with_context(tz=self.env.user.tz)._render(template, values=params, load=loader).strip(),
                 (result or u'').strip().replace('&quot;', '&#34;'),
                 template
             )

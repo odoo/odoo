@@ -1301,7 +1301,11 @@ def format_date(env, value, lang_code=False, date_format=False):
     if not date_format:
         date_format = posix_to_ldml(lang.date_format, locale=locale)
 
-    return babel.dates.format_date(value, format=date_format, locale=locale)
+    tzinfo = None
+    if env.context.get("tz"):
+        tzinfo = babel.dates.get_timezone(env.context["tz"])
+
+    return babel.dates.format_datetime(value, format=date_format, tzinfo=tzinfo, locale=locale)
 
 def parse_date(env, value, lang_code=False):
     '''
