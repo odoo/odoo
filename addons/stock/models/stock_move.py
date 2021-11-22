@@ -34,7 +34,7 @@ class StockMove(models.Model):
         'Date Scheduled', default=fields.Datetime.now, index=True, required=True,
         help="Scheduled date until move is done, then date of actual move processing")
     date_deadline = fields.Datetime(
-        "Deadline", readonly=True,
+        "Deadline", readonly=True, copy=False,
         help="Date Promise to the customer on the top level document (SO/PO)")
     company_id = fields.Many2one(
         'res.company', 'Company',
@@ -1691,6 +1691,7 @@ class StockMove(models.Model):
             'move_orig_ids': [(4, x.id) for x in self.move_orig_ids],
             'origin_returned_move_id': self.origin_returned_move_id.id,
             'price_unit': self.price_unit,
+            'date_deadline': self.date_deadline,
         }
         if self.env.context.get('force_split_uom_id'):
             vals['product_uom'] = self.env.context['force_split_uom_id']
