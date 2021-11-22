@@ -1941,7 +1941,7 @@ const ListUserValueWidget = UserValueWidget.extend({
      */
     setValue() {
         this._super(...arguments);
-        const currentValues = JSON.parse(this._value);
+        const currentValues = this._value ? JSON.parse(this._value) : [];
         this.listTable.innerHTML = '';
         if (this.addItemButton) {
             this.addItemButton.remove();
