@@ -193,12 +193,12 @@ QUnit.module("Fields", (hooks) => {
                     fields: {
                         lang: { type: "char" },
                         value: { type: "char" },
-                        res_id: { type: "integer" },
+                        resId: { type: "integer" },
                     },
                     records: [
                         {
                             id: 99,
-                            res_id: 37,
+                            resId: 37,
                             value: "",
                             lang: "en_US",
                         },
@@ -215,13 +215,13 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("UrlField");
 
-    QUnit.skip("UrlField in form view", async function (assert) {
+    QUnit.test("UrlField in form view", async function (assert) {
         assert.expect(10);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        const form = await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
             arch:
                 '<form string="Partners">' +
                 "<sheet>" +
@@ -230,73 +230,57 @@ QUnit.module("Fields", (hooks) => {
                 "</group>" +
                 "</sheet>" +
                 "</form>",
-            res_id: 1,
+            resId: 1,
         });
-
-        assert.containsOnce(
-            form,
-            "div.o_form_uri.o_field_widget.o_text_overflow.o_field_url > a",
-            "should have a anchor with correct classes"
-        );
+        const matchingEl = form.el.querySelector("a.o-url-field.o_field_widget.o_form_uri");
+        assert.containsOnce(form, matchingEl, "should have a anchor with correct classes");
+        assert.hasAttrValue(matchingEl, "href", "http://yop", "should have proper href link");
         assert.hasAttrValue(
-            form.$("div.o_form_uri.o_field_widget.o_text_overflow.o_field_url > a"),
-            "href",
-            "http://yop",
-            "should have proper href link"
-        );
-        assert.hasAttrValue(
-            form.$("div.o_form_uri.o_field_widget.o_text_overflow.o_field_url > a"),
+            matchingEl,
             "target",
             "_blank",
             "should have target attribute set to _blank"
         );
-        assert.strictEqual(
-            form.$("div.o_form_uri.o_field_widget.o_text_overflow.o_field_url > a").text(),
-            "yop",
-            "the value should be displayed properly"
-        );
+        assert.strictEqual(matchingEl.innerText, "yop", "the value should be displayed properly");
 
         // switch to edit mode and check the result
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
         assert.containsOnce(
             form,
             'input[type="text"].o_field_widget',
             "should have an input for the char field"
         );
         assert.strictEqual(
-            form.$('input[type="text"].o_field_widget').val(),
+            form.el.querySelector('input[type="text"].o_field_widget').value,
             "yop",
             "input should contain field value in edit mode"
         );
 
         // change value in edit mode
-        testUtils.fields.editInput(form.$('input[type="text"].o_field_widget'), "limbo");
+        let editField = form.el.querySelector('input[type="text"].o_field_widget');
+        editField.value = "limbo";
+        await triggerEvent(editField, null, "change");
 
         // save
-        await testUtils.form.clickSave(form);
-        assert.containsOnce(
-            form,
-            "div.o_form_uri.o_field_widget.o_text_overflow.o_field_url > a",
-            "should still have a anchor with correct classes"
-        );
+        await click(form.el.querySelector(".o_form_button_save"));
+        const editedElement = form.el.querySelector("a.o-url-field.o_field_widget.o_form_uri");
+        assert.containsOnce(form, editedElement, "should still have a anchor with correct classes");
         assert.hasAttrValue(
-            form.$("div.o_form_uri.o_field_widget.o_text_overflow.o_field_url > a"),
+            editedElement,
             "href",
             "http://limbo",
             "should have proper new href link"
         );
-        assert.strictEqual(
-            form.$("div.o_form_uri.o_field_widget.o_text_overflow.o_field_url > a").text(),
-            "limbo",
-            "the new value should be displayed"
-        );
+        assert.strictEqual(editedElement.innerText, "limbo", "the new value should be displayed");
 
-        await testUtils.form.clickEdit(form);
-        testUtils.fields.editInput(form.$('input[type="text"].o_field_widget'), "/web/limbo");
+        await click(form.el.querySelector(".o_form_button_edit"));
+        editField = form.el.querySelector('input[type="text"].o_field_widget');
+        editField.value = "/web/limbo";
+        await triggerEvent(editField, null, "change");
 
-        await testUtils.form.clickSave(form);
+        await click(form.el.querySelector(".o_form_button_save"));
         assert.hasAttrValue(
-            form.$("div.o_form_uri.o_field_widget.o_text_overflow.o_field_url > a"),
+            form.el.querySelector("a.o-url-field.o_field_widget.o_form_uri"),
             "href",
             "/web/limbo",
             "should'nt have change link"
@@ -305,48 +289,56 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("UrlField takes text from proper attribute", async function (assert) {
+    QUnit.test("UrlField takes text from proper attribute", async function (assert) {
         assert.expect(1);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        const form = await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
             arch:
                 '<form string="Partners">' +
                 '<field name="foo" widget="url" text="kebeclibre"/>' +
                 "</form>",
-            res_id: 1,
+            resId: 1,
         });
 
         assert.strictEqual(
-            form.$('div[name="foo"].o_field_url > a').text(),
+            form.el.querySelector('a[name="foo"]').innerText,
             "kebeclibre",
             "url text should come from the text attribute"
         );
         form.destroy();
     });
 
-    QUnit.skip("UrlField: href attribute and website_path option", async function (assert) {
+    QUnit.test("UrlField: href attribute and website_path option", async function (assert) {
         assert.expect(4);
 
-        this.data.partner.fields.url1 = { string: "Url 1", type: "char", default: "www.url1.com" };
-        this.data.partner.fields.url2 = { string: "Url 2", type: "char", default: "www.url2.com" };
-        this.data.partner.fields.url3 = {
+        serverData.models.partner.fields.url1 = {
+            string: "Url 1",
+            type: "char",
+            default: "www.url1.com",
+        };
+        serverData.models.partner.fields.url2 = {
+            string: "Url 2",
+            type: "char",
+            default: "www.url2.com",
+        };
+        serverData.models.partner.fields.url3 = {
             string: "Url 3",
             type: "char",
             default: "http://www.url3.com",
         };
-        this.data.partner.fields.url4 = {
+        serverData.models.partner.fields.url4 = {
             string: "Url 4",
             type: "char",
             default: "https://url4.com",
         };
 
-        const form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        const form = await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
             arch: `
                 <form>
                     <field name="url1" widget="url"/>
@@ -354,20 +346,22 @@ QUnit.module("Fields", (hooks) => {
                     <field name="url3" widget="url"/>
                     <field name="url4" widget="url"/>
                 </form>`,
-            res_id: 1,
+            resId: 1,
         });
-
         assert.strictEqual(
-            form.$('div[name="url1"].o_field_url > a').attr("href"),
+            form.el.querySelector('[name="url1"]').getAttribute("href"),
             "http://www.url1.com"
         );
-        assert.strictEqual(form.$('div[name="url2"].o_field_url > a').attr("href"), "www.url2.com");
         assert.strictEqual(
-            form.$('div[name="url3"].o_field_url > a').attr("href"),
+            form.el.querySelector('[name="url2"]').getAttribute("href"),
+            "www.url2.com"
+        );
+        assert.strictEqual(
+            form.el.querySelector('[name="url3"]').getAttribute("href"),
             "http://www.url3.com"
         );
         assert.strictEqual(
-            form.$('div[name="url4"].o_field_url > a').attr("href"),
+            form.el.querySelector('[name="url4"]').getAttribute("href"),
             "https://url4.com"
         );
 
@@ -377,111 +371,99 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skip("UrlField in editable list view", async function (assert) {
         assert.expect(10);
 
-        var list = await createView({
-            View: ListView,
-            model: "partner",
-            data: this.data,
+        var list = await makeView({
+            serverData,
+            type: "list",
+            resModel: "partner",
             arch: '<tree editable="bottom"><field name="foo" widget="url"/></tree>',
         });
-
         assert.strictEqual(
-            list.$("tbody td:not(.o_list_record_selector)").length,
+            list.el.querySelectorAll("tbody td:not(.o_list_record_selector)").length,
             5,
             "should have 5 cells"
         );
         assert.containsN(
             list,
-            "div.o_form_uri.o_field_widget.o_text_overflow.o_field_url > a",
+            "a.o_field_widget.o_field_url",
             5,
             "should have 5 anchors with correct classes"
         );
         assert.hasAttrValue(
-            list.$("div.o_form_uri.o_field_widget.o_text_overflow.o_field_url > a").first(),
+            list.el.querySelector("a.o_field_widget.o_field_url"),
             "href",
             "http://yop",
             "should have proper href link"
         );
         assert.strictEqual(
-            list.$("tbody td:not(.o_list_record_selector)").first().text(),
+            list.el.querySelector("tbody td:not(.o_list_record_selector)").innerText,
             "yop",
             "value should be displayed properly as text"
         );
 
         // Edit a line and check the result
-        var $cell = list.$("tbody td:not(.o_list_record_selector)").first();
-        await testUtils.dom.click($cell);
-        assert.hasClass($cell.parent(), "o_selected_row", "should be set as edit mode");
+        var cell = list.el.querySelector("tbody td:not(.o_list_record_selector)");
+        await testUtils.dom.click(cell);
+        assert.hasClass(cell.parentElement, "o_selected_row", "should be set as edit mode");
         assert.strictEqual(
-            $cell.find("input").val(),
+            cell.querySelector("input").value,
             "yop",
             "should have the corect value in internal input"
         );
-        await testUtils.fields.editInput($cell.find("input"), "brolo");
+        await testUtils.fields.editInput(cell.querySelector("input"), "brolo");
 
         // save
-        await testUtils.dom.click(list.$buttons.find(".o_list_button_save"));
-        $cell = list.$("tbody td:not(.o_list_record_selector)").first();
+        await click(form.el.querySelector(".o_form_button_save"));
+        cell = list.el.querySelector("tbody td:not(.o_list_record_selector)");
         assert.doesNotHaveClass(
-            $cell.parent(),
+            cell.parentElement,
             "o_selected_row",
             "should not be in edit mode anymore"
         );
-        assert.containsN(
-            list,
-            "div.o_form_uri.o_field_widget.o_text_overflow.o_field_url > a",
-            5,
-            "should still have 5 anchors with correct classes"
+        const resultEl = list.el.querySelector(
+            "div.o_form_uri.o_field_widget.o_text_overflow.o_field_url > a"
         );
-        assert.hasAttrValue(
-            list.$("div.o_form_uri.o_field_widget.o_text_overflow.o_field_url > a").first(),
-            "href",
-            "http://brolo",
-            "should have proper new href link"
-        );
-        assert.strictEqual(
-            list.$("div.o_form_uri.o_field_widget.o_text_overflow.o_field_url > a").first().text(),
-            "brolo",
-            "value should be properly updated"
-        );
+        assert.containsN(list, resultEl, 5, "should still have 5 anchors with correct classes");
+        assert.hasAttrValue(resultEl, "href", "http://brolo", "should have proper new href link");
+        assert.strictEqual(resultEl.innerText, "brolo", "value should be properly updated");
 
         list.destroy();
     });
 
-    QUnit.skip("UrlField with falsy value", async function (assert) {
+    QUnit.test("UrlField with falsy value", async function (assert) {
         assert.expect(4);
 
-        this.data.partner.records[0].foo = false;
-        const form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        serverData.models.partner.records[0].foo = false;
+        const form = await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
             arch: '<form><field name="foo" widget="url"/></form>',
-            res_id: 1,
+            resId: 1,
         });
 
-        assert.containsOnce(form, "div.o_field_widget[name=foo]");
-        assert.strictEqual(form.$(".o_field_widget[name=foo]").text(), "");
+        assert.containsOnce(form, "[name=foo]");
+        assert.strictEqual(form.el.querySelector("[name=foo]").innerText, "");
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
 
-        assert.containsOnce(form, "input.o_field_widget[name=foo]");
-        assert.strictEqual(form.$(".o_field_widget[name=foo]").val(), "");
+        assert.containsOnce(form, "input[name=foo]");
+        assert.strictEqual(form.el.querySelector("[name=foo]").value, "");
 
         form.destroy();
     });
 
-    QUnit.skip("UrlField: url old content is cleaned on render edit", async function (assert) {
+    QUnit.test("UrlField: url old content is cleaned on render edit", async function (assert) {
         assert.expect(3);
 
-        this.data.partner.fields.foo2 = { string: "Foo2", type: "char", default: "foo2" };
-        this.data.partner.onchanges.foo2 = function (record) {
+        serverData.models.partner.fields.foo2 = { string: "Foo2", type: "char", default: "foo2" };
+        serverData.models.partner.onchanges.foo2 = function (record) {
             record.foo = record.foo2;
         };
 
-        const form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        const form = await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
             arch: `
                 <form string="Partners">
                     <sheet>
@@ -492,28 +474,29 @@ QUnit.module("Fields", (hooks) => {
                     </sheet>
                 </form>
                 `,
-            res_id: 1,
+            resId: 1,
         });
 
         assert.strictEqual(
-            form.$(".o_field_widget[name=foo]").text(),
+            form.el.querySelector(".o_field_widget[name=foo]").innerText,
             "yop",
             "the starting value should be displayed properly"
         );
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
 
         assert.strictEqual(
-            form.$(".o_field_widget[name=foo2]").val(),
+            form.el.querySelector(".o_field_widget[name=foo2]").value,
             "foo2",
             "input should contain field value in edit mode"
         );
-
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=foo2]"), "bonjour");
+        const field = form.el.querySelector(".o_field_widget[name=foo2]");
+        field.value = "bonjour";
+        await triggerEvent(field, null, "change");
         assert.strictEqual(
-            form.$(".o_field_widget[name=foo]").text(),
+            form.el.querySelector(".o_field_widget[name=foo]").innerText,
             "bonjour",
             "Url widget should show the new value and not " +
-                form.$(".o_field_widget[name=foo]").text()
+                form.el.querySelector(".o_field_widget[name=foo]").innerText
         );
 
         form.destroy();
