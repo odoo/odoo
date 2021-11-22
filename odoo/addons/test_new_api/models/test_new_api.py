@@ -430,6 +430,14 @@ class Related(models.Model):
     message_name = fields.Text(related="message.body", related_sudo=False, string='Message Body')
     message_currency = fields.Many2one(related="message.author", string='Message Author')
 
+    # various related field definition: readonly, editable and invertible
+    related = fields.Char(string='Related', related='name')
+    related_editable = fields.Char(string='Related editable', related='name', readonly=False)
+    related_invertible = fields.Char(string='Related invertible', related='name', related_inverse=True)
+    related_store = fields.Char(string='Related store', related='name', store=True)
+    related_store_editable = fields.Char(string='Related store editable', related='name', store=True, readonly=False)
+    related_store_invertible = fields.Char(string='Related store invertible', related='name', store=True, related_inverse=True)
+
 
 class ComputeReadonly(models.Model):
     _name = 'test_new_api.compute.readonly'

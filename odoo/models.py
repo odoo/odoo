@@ -2882,8 +2882,9 @@ class BaseModel(metaclass=MetaModel):
                     inherited_field=field,
                     related=f"{parent_fname}.{name}",
                     related_sudo=False,
-                    copy=field.copy,
+                    related_inverse=True,
                     readonly=field.readonly,
+                    copy=field.copy,
                 ))
 
     @api.model

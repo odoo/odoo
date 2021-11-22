@@ -268,7 +268,10 @@ class Field(MetaField('DummyField', (object,), {})):
 
     :param str search: name of a method that implement search on the field (optional)
 
-    :param str related: sequence of field names
+    :param str related: sequence of field names for related fields
+
+    :param bool related_inverse: on a related field, whether writing on the
+        field will update its related source field (default: ``False``)
 
     :param bool default_export_compatible: whether the field must be exported by default in an import-compatible export
 
@@ -313,6 +316,7 @@ class Field(MetaField('DummyField', (object,), {})):
     inverse = None                      # inverse(recs) inverses field on recs
     search = None                       # search(recs, operator, value) searches on self
     related = None                      # sequence of field names, for related fields
+    related_inverse = False             # whether field is invertible, for related fields
     company_dependent = False           # whether ``self`` is company-dependent (property field)
     default = None                      # default(recs) returns the default value
 
@@ -454,7 +458,7 @@ class Field(MetaField('DummyField', (object,), {})):
             attrs['store'] = store = attrs.get('store', False)
             attrs['compute_sudo'] = attrs.get('compute_sudo', attrs.get('related_sudo', True))
             attrs['copy'] = attrs.get('copy', False)
-            attrs['readonly'] = attrs.get('readonly', True)
+            attrs['readonly'] = attrs.get('readonly', not attrs.get('inverse', attrs.get('related_inverse')))
         if attrs.get('precompute'):
             if not attrs.get('compute') and not attrs.get('related'):
                 warnings.warn(f"precompute attribute doesn't make any sense on non computed field {self}")
@@ -623,7 +627,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
         # determine dependencies, compute, inverse, and search
         self.compute = self._compute_related
-        if self.inherited or not (self.readonly or field.readonly):
+        if self.related_inverse:
             self.inverse = self._inverse_related
         if field._description_searchable:
             # allow searching on self only if the related field is searchable
