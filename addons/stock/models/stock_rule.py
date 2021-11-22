@@ -302,9 +302,16 @@ class StockRule(models.Model):
                     partner = partners
                     move_dest.partner_id = partner
 
+        # If no route is defined on procurement level, choose the one defined
+        # on rule level in order to propagate it if companies are equal
+        company_id = self.company_id.id or self.location_src_id.company_id.id or self.location_id.company_id.id or company_id.id,
+        route_ids = values.get("route_ids", [])
+        if not route_ids and company_id == self.company_id.id:
+            route_ids = self.route_id
+
         move_values = {
             'name': name[:2000],
-            'company_id': self.company_id.id or self.location_src_id.company_id.id or self.location_id.company_id.id or company_id.id,
+            'company_id': company_id,
             'product_id': product_id.id,
             'product_uom': product_uom.id,
             'product_uom_qty': qty_left,
@@ -317,7 +324,7 @@ class StockRule(models.Model):
             'origin': origin,
             'picking_type_id': self.picking_type_id.id,
             'group_id': group_id,
-            'route_ids': [(4, route.id) for route in values.get('route_ids', [])],
+            'route_ids': [(4, route.id) for route in route_ids],
             'warehouse_id': self.propagate_warehouse_id.id or self.warehouse_id.id,
             'date': date_scheduled,
             'date_deadline': False if self.group_propagation_option == 'fixed' else date_deadline,
