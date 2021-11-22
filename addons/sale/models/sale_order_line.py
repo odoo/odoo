@@ -644,6 +644,7 @@ class SaleOrderLine(models.Model):
     def _compute_custom_attribute_values(self):
         for line in self:
             if not line.product_id:
+                line.product_custom_attribute_value_ids = False
                 continue
             valid_values = line.product_id.product_tmpl_id.valid_product_template_attribute_line_ids.product_template_value_ids
             # remove the is_custom values that don't belong to this template
@@ -655,6 +656,7 @@ class SaleOrderLine(models.Model):
     def _compute_no_variant_attribute_values(self):
         for line in self:
             if not line.product_id:
+                line.product_no_variant_attribute_value_ids = False
                 continue
             valid_values = line.product_id.product_tmpl_id.valid_product_template_attribute_line_ids.product_template_value_ids
             # remove the no_variant attributes that don't belong to this template
