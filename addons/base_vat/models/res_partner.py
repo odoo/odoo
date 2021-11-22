@@ -182,7 +182,8 @@ class ResPartner(models.Model):
         for partner in self:
             if not partner.vat:
                 continue
-            if company.vat_check_vies and partner.commercial_partner_id.country_id in eu_countries:
+            is_eu_country = partner.commercial_partner_id.country_id in eu_countries
+            if company.vat_check_vies and is_eu_country and partner.is_company:
                 # force full VIES online check
                 check_func = self.vies_vat_check
             else:
