@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.FavoriteField" owl="1">
+        <div class="o_favorite" t-on-click.prevent.stop="onClick">
+            <a href="#">
+                <i
+                    class="fa"
+                    role="img"
+                    t-att-class="props.value ? 'fa-star' : 'fa-star-o'"
+                    t-att-title="props.value ? 'Remove from Favorites' : 'Add to Favorites'"
+                    t-att-aria-label="props.value ? 'Remove from Favorites' : 'Add to Favorites'"
+                />
+                <t t-if="!props.attrs.nolabel"> <t t-esc="props.value ? 'Remove from Favorites' : 'Add to Favorites'" /></t>
+            </a>
+        </div>
+    </t>
+
+</templates>
