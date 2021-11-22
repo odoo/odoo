@@ -27,6 +27,7 @@ from . import test_mail
 from . import test_menu
 from . import test_mimetypes
 from . import test_misc
+from . import test_module
 from . import test_orm
 from . import test_ormcache
 from . import test_osv

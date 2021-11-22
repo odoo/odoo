@@ -6,7 +6,7 @@ import time
 import odoo
 import odoo.tests
 
-from odoo.modules.module import read_manifest
+from odoo.modules.module import get_manifest
 from odoo.tools import mute_logger
 
 _logger = logging.getLogger(__name__)
@@ -15,14 +15,12 @@ _logger = logging.getLogger(__name__)
 class TestAssetsGenerateTimeCommon(odoo.tests.TransactionCase):
 
     def generate_bundles(self):
-        bundles = set()
         installed_module_names = self.env['ir.module.module'].search([('state', '=', 'installed')]).mapped('name')
-        for addon_path in odoo.addons.__path__:
-            for addon in installed_module_names:
-                manifest = read_manifest(addon_path, addon) or {}
-                assets = manifest.get('assets')
-                if assets:
-                    bundles |= set(assets.keys())
+        bundles = {
+            key
+            for module in installed_module_names
+            for key in get_manifest(module)['assets']
+        }
 
         for bundle in bundles:
             with mute_logger('odoo.addons.base.models.assetsbundle'):
