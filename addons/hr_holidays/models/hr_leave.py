@@ -364,9 +364,9 @@ class HolidaysRequest(models.Model):
                 date_to = leave.date_to.replace(tzinfo=UTC).astimezone(timezone(leave.tz)).date()
                 date_from = leave.date_from.replace(tzinfo=UTC).astimezone(timezone(leave.tz)).date()
                 for allocation in allocations_dict[(leave.holiday_status_id.id, leave.employee_id.id)]:
-                    date_to_check = allocation['date_to'] > date_to if allocation['date_to'] else False
-                    date_from_check = allocation['date_to'] is False and allocation['date_from'] <= date_from
-                    if (date_to_check or date_from_check):
+                    date_to_check = allocation['date_to'] >= date_to if allocation['date_to'] else True
+                    date_from_check = allocation['date_from'] <= date_from
+                    if (date_to_check and date_from_check):
                         found_allocation = allocation['id']
                         break
                 leave.holiday_allocation_id = self.env['hr.leave.allocation'].browse(found_allocation) if found_allocation else False
