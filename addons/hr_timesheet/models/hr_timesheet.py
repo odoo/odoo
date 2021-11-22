@@ -39,11 +39,12 @@ class AccountAnalyticLine(models.Model):
         return []
 
     task_id = fields.Many2one(
-        'project.task', 'Task', compute='_compute_task_id', store=True, readonly=False, index=True,
+        'project.task', 'Task', index=True,
+        compute='_compute_task_id', store=True, readonly=False, precompute=True,
         domain="[('company_id', '=', company_id), ('project_id.allow_timesheets', '=', True), ('project_id', '=?', project_id)]")
     project_id = fields.Many2one(
-        'project.project', 'Project', compute='_compute_project_id', store=True, readonly=False,
-        domain=_domain_project_id)
+        'project.project', 'Project', domain=_domain_project_id,
+        compute='_compute_project_id', store=True, readonly=False, precompute=True)
     user_id = fields.Many2one(compute='_compute_user_id', store=True, readonly=False)
     employee_id = fields.Many2one('hr.employee', "Employee", domain=_domain_employee_id)
     department_id = fields.Many2one('hr.department', "Department", compute='_compute_department_id', store=True, compute_sudo=True)

@@ -32,7 +32,7 @@ class AccountMove(models.Model):
     source_id = fields.Many2one(ondelete='set null')
 
     fiscal_position_id = fields.Many2one(
-        compute='_compute_fiscal_position_id', store=True, pre_compute=True)
+        compute='_compute_fiscal_position_id', store=True)
 
 
     @api.depends('partner_shipping_id', 'company_id')
