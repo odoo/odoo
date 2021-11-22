@@ -1167,3 +1167,36 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         self.assertEqual(len(order.order_line), 2, 'The order must contain 2 order lines: 1x Product F and 1x 5$ discount')
         self.assertEqual(order.amount_total, 190.0, 'The price must be 190.0 since there is now 2x 5$ discount and 2x Product F')
         self.assertEqual(order.order_line.filtered(lambda x: x.is_reward_line).price_unit, -5, 'The discount unit price should still be -5 after the quantity was manually changed')
+
+    def test_program_maximum_use_number_with_other_promo(self):
+        self.env['coupon.program'].create({
+            'name': '20% discount on first order',
+            'promo_code_usage': 'no_code_needed',
+            'program_type': 'promotion_program',
+            'discount_type': 'percentage',
+            'discount_percentage': 20.0,
+            'maximum_use_number': 1,
+        })
+        self.p1.promo_code_usage = 'no_code_needed'
+
+        #check that 20% is applied at first order
+        order = self.empty_order
+        self.env['sale.order.line'].create({
+            'product_id': self.drawerBlack.id,
+            'product_uom_qty': 1.0,
+            'order_id': order.id,
+        })
+        order.recompute_coupon_lines()
+        self.assertEqual(order.amount_total, 20.0, "20% discount should be applied")
+        self.assertEqual(len(order.order_line.ids), 2, "discount should be applied")
+
+        #check that 10% is applied at second order
+        order2 = self.env['sale.order'].create({'partner_id': self.steve.id})
+        self.env['sale.order.line'].create({
+            'product_id': self.drawerBlack.id,
+            'product_uom_qty': 1.0,
+            'order_id': order2.id,
+        })
+        order2.recompute_coupon_lines()
+        self.assertEqual(order2.amount_total, 22.5, "10% discount should be applied")
+        self.assertEqual(len(order2.order_line.ids), 2, "discount should be applied")
