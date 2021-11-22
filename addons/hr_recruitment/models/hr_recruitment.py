@@ -196,7 +196,7 @@ class Applicant(models.Model):
         application_data_mapped = dict((data['email_from'], data['email_from_count']) for data in application_data)
         applicants = self.filtered(lambda applicant: applicant.email_from)
         for applicant in applicants:
-            applicant.application_count = application_data_mapped.get(applicant.email_from, 1)
+            applicant.application_count = application_data_mapped.get(applicant.email_from, 1) - 1
         (self - applicants).application_count = False
 
     @api.depends_context('lang')
