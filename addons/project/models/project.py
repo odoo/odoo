@@ -1332,7 +1332,23 @@ class Task(models.Model):
         self.ensure_one()
 
         project_user_group_id = self.env.ref('project.group_project_user').id
+<<<<<<< HEAD
         new_group = ('group_project_user', lambda pdata: pdata['type'] == 'user' and project_user_group_id in pdata['groups'], {})
+=======
+        project_manager_group_id = self.env.ref('project.group_project_manager').id
+
+        group_func = lambda pdata: pdata['type'] == 'user' and project_user_group_id in pdata['groups']
+        if self.project_id.privacy_visibility == 'followers':
+            allowed_user_ids = self.project_id.allowed_internal_user_ids.partner_id.ids
+            group_func = lambda pdata:\
+                pdata['type'] == 'user'\
+                and (
+                        project_manager_group_id in pdata['groups']\
+                        or (project_user_group_id in pdata['groups'] and pdata['id'] in allowed_user_ids)
+                )
+        new_group = ('group_project_user', group_func, {})
+
+>>>>>>> 7f82803957c... temp
         if not self.user_id and not self.stage_id.fold:
             take_action = self._notify_get_action_link('assign', **local_msg_vals)
             project_actions = [{'url': take_action, 'title': _('I take it')}]
