@@ -8,6 +8,7 @@ from unittest.mock import patch
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.test_mail.models.test_mail_models import MailTestTicket
 from odoo.addons.test_mail.tests.common import TestMailCommon, TestRecipients
+from odoo.exceptions import AccessError
 from odoo.tests import tagged
 from odoo.tests.common import users, Form
 from odoo.tools import mute_logger
@@ -31,6 +32,17 @@ class TestMailComposer(TestMailCommon, TestRecipients):
             notification_type='email', email='eglantine@example.com',
             name='Eglantine Employee', signature='--\nEglantine')
         cls.partner_employee_2 = cls.user_employee_2.partner_id
+
+        # User without the group "mail.group_mail_template_editor"
+        cls.user_rendering_restricted = mail_new_test_user(
+            cls.env, login='user_rendering_restricted',
+            groups='base.group_user',
+            company_id=cls.company_admin.id,
+            name='Code Template Restricted User',
+            notification_type='inbox',
+            signature='--\nErnest'
+        )
+        cls.env.ref('mail.group_mail_template_editor').users -= cls.user_rendering_restricted
 
         cls.test_record = cls.env['mail.test.ticket'].with_context(cls._test_context).create({
             'name': 'TestRecord',
@@ -422,6 +434,40 @@ class TestComposerInternals(TestMailComposer):
 
             self.assertEqual(self.test_record.message_ids[0].body, '<p>Body text 2</p>')
             self.assertEqual(self.test_record.message_ids[0].author_id, portal_user.partner_id)
+
+    @users('user_rendering_restricted')
+    def test_mail_composer_rights_attachments(self):
+        """ Ensure a user without write access to a template can send an email"""
+        template_1 = self.template.copy({
+            'report_name': 'TestReport for {{ object.name }}.html',  # test cursor forces html
+            'report_template': self.test_report.id,
+        })
+        attachment_data = self._generate_attachments_data(2)
+        template_1.write({
+            'attachment_ids': [(0, 0, dict(a, res_model="mail.template", res_id=template_1.id)) for a in attachment_data]
+        })
+        with self.assertRaises(AccessError):
+            # ensure user_rendering_restricted has no write access
+            template_1.with_user(self.env.user).write({'name': 'New Name'})
+
+        template_1_attachments = template_1.attachment_ids
+        self.assertEqual(len(template_1_attachments), 2)
+
+        composer = self.env['mail.compose.message'].with_context(
+            self._get_web_context(self.test_record)
+        ).create({
+            'subject': 'Template Subject',
+            'body': '<p>Template Body</p>',
+            'template_id': template_1.id,
+            'attachment_ids': template_1_attachments.ids,
+            'partner_ids': [self.partner_employee_2.id],
+        })
+        composer._action_send_mail()
+
+        self.assertEqual(self.test_record.message_ids[0].subject, 'Template Subject')
+        self.assertEqual(
+            sorted(self.test_record.message_ids[0].attachment_ids.mapped('name')),
+            sorted(template_1_attachments.mapped('name')))
 
     @users('employee')
     def test_mail_composer_save_template(self):
