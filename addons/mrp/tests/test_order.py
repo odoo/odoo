@@ -1807,6 +1807,40 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(mo.workorder_ids[1].date_planned_start, tuesday.replace(hour=1))
         self.assertEqual(mo.workorder_ids[1].date_planned_finished, tuesday.replace(hour=2))
 
+    def test_backorder_with_underconsumption(self):
+        """ Check that the components of the backorder have the correct quantities
+        when there is underconsumption in the initial MO
+        """
+        mo, _, _, p1, p2 = self.generate_mo(qty_final=20, qty_base_1=1, qty_base_2=1)
+        mo.action_confirm()
+        mo.qty_producing = 10
+        mo.move_raw_ids.filtered(lambda m: m.product_id == p1).quantity_done = 5
+        mo.move_raw_ids.filtered(lambda m: m.product_id == p2).quantity_done = 10
+        action = mo.button_mark_done()
+        backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
+        backorder.save().action_backorder()
+        mo_backorder = mo.procurement_group_id.mrp_production_ids[-1]
+
+        # Check quantities of the original MO
+        self.assertEqual(mo.product_uom_qty, 10.0)
+        self.assertEqual(mo.qty_produced, 10.0)
+        move_prod_1_done = mo.move_raw_ids.filtered(lambda m: m.product_id == p1 and m.state == 'done')
+        self.assertEqual(sum(move_prod_1_done.mapped('quantity_done')), 5)
+        self.assertEqual(sum(move_prod_1_done.mapped('product_uom_qty')), 5)
+        move_prod_1_cancel = mo.move_raw_ids.filtered(lambda m: m.product_id == p1 and m.state == 'cancel')
+        self.assertEqual(sum(move_prod_1_cancel.mapped('quantity_done')), 0)
+        self.assertEqual(sum(move_prod_1_cancel.mapped('product_uom_qty')), 5)
+        move_prod_2 = mo.move_raw_ids.filtered(lambda m: m.product_id == p2)
+        self.assertEqual(sum(move_prod_2.mapped('quantity_done')), 10)
+        self.assertEqual(sum(move_prod_2.mapped('product_uom_qty')), 10)
+
+        # Check quantities of the backorder MO
+        self.assertEqual(mo_backorder.product_uom_qty, 10.0)
+        move_prod_1_bo = mo_backorder.move_raw_ids.filtered(lambda m: m.product_id == p1)
+        move_prod_2_bo = mo_backorder.move_raw_ids.filtered(lambda m: m.product_id == p2)
+        self.assertEqual(sum(move_prod_1_bo.mapped('product_uom_qty')), 10.0)
+        self.assertEqual(sum(move_prod_2_bo.mapped('product_uom_qty')), 10.0)
+
     def test_products_with_variants(self):
         """Check for product with different variants with same bom"""
         product = self.env['product.template'].create({
