@@ -3984,6 +3984,114 @@ QUnit.test('mark channel as seen if last message is visible when switching chann
     );
 });
 
+QUnit.test('warning on send with shortcut when attempting to post message with still-uploading attachments', async function (assert) {
+    assert.expect(7);
+
+    this.data['mail.channel'].records.push({ id: 10 });
+    await this.start({
+        discuss: {
+            context: {
+                active_id: 'mail.channel_10',
+            },
+        },
+        async mockFetch(resource, init) {
+            const res = this._super(...arguments);
+            if (resource === '/mail/attachment/upload') {
+                // simulates attachment is never finished uploading
+                await new Promise(() => {});
+            }
+            return res;
+        },
+        services: {
+            notification: {
+                notify(params) {
+                    assert.strictEqual(
+                        params.message,
+                        "Please wait while the file is uploading.",
+                        "notification content should be about the uploading file"
+                    );
+                    assert.strictEqual(
+                        params.type,
+                        'warning',
+                        "notification should be a warning"
+                    );
+                    assert.step('notification');
+                }
+            }
+        },
+    });
+    const file = await createFile({
+        content: 'hello, world',
+        contentType: 'text/plain',
+        name: 'text.txt',
+    });
+    await afterNextRender(() =>
+        inputFiles(
+            document.querySelector('.o_FileUploader_input'),
+            [file]
+        )
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_AttachmentCard',
+        "should have only one attachment"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_AttachmentCard.o-isUploading',
+        "attachment displayed is being uploaded"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Composer_buttonSend',
+        "composer send button should be displayed"
+    );
+
+    // Try to send message
+    document
+        .querySelector(`.o_ComposerTextInput_textarea`)
+        .dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Enter' }));
+    assert.verifySteps(
+        ['notification'],
+        "should have triggered a notification for inability to post message at the moment (some attachments are still being uploaded)"
+    );
+});
+
+QUnit.test('send message only once when enter is pressed twice quickly', async function (assert) {
+    assert.expect(2);
+
+    this.data['mail.channel'].records.push({ id: 20 });
+    await this.start({
+        discuss: {
+            context: {
+                active_id: 'mail.channel_20',
+            },
+        },
+        async mockRPC(route, args) {
+            if (route === '/mail/message/post') {
+                assert.step('message_post');
+            }
+            return this._super(...arguments);
+        },
+    });
+    // Type message
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "test message");
+    });
+    await afterNextRender(() => {
+        const enterEvent = new window.KeyboardEvent('keydown', { key: 'Enter' });
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(enterEvent);
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(enterEvent);
+    });
+    assert.verifySteps(
+        ['message_post'],
+        "The message has been posted only once"
+    );
+});
+
 });
 });
 });

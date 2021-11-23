@@ -519,6 +519,38 @@ registerModel({
         },
         /**
          * @private
+         * @returns {string[]}
+         */
+         _computeSendShortcuts() {
+            if (this.chatter) {
+                return ['ctrl-enter', 'meta-enter'];
+            }
+            if (this.messageViewInEditing) {
+                return ['enter'];
+            }
+            if (this.threadView) {
+                if (!this.messaging.device) {
+                    return clear();
+                }
+                // Actually in mobile there is a send button, so we need there 'enter' to allow new
+                // line. Hence, we want to use a different shortcut 'ctrl/meta enter' to send for
+                // small screen size with a non-mailing channel. Here send will be done on clicking
+                // the button or using the 'ctrl/meta enter' shortcut.
+                if (
+                    this.messaging.device.isMobile ||
+                    (
+                        this.messaging.discuss.threadView === this.threadView &&
+                        this.messaging.discuss.thread === this.messaging.inbox
+                    )
+                ) {
+                    return ['ctrl-enter', 'meta-enter'];
+                }
+                return ['enter'];
+            }
+            return clear();
+        },
+        /**
+         * @private
          * @returns {string}
          */
         _computeSuggestionDelimiter() {
@@ -894,6 +926,15 @@ registerModel({
          */
         sendButtonText: attr({
             compute: '_computeSendButtonText',
+        }),
+        /**
+         * Keyboard shortcuts from text input to send message.
+         * The format is an array of string that can contain 'enter',
+         * 'ctrl-enter', and/or 'meta-enter'.
+         */
+        sendShortcuts: attr({
+            compute: '_computeSendShortcuts',
+            default: [],
         }),
         /**
          * States which type of suggestion is currently in progress, if any.
