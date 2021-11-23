@@ -2417,4 +2417,20 @@ QUnit.module("ActionManager", (hooks) => {
         await click(webClient.el.querySelector(".o_pager_next"));
         assert.strictEqual(titleService.current, "{\"zopenerp\":\"Odoo\",\"action\":\"Second record\"}");
     });
+
+    QUnit.test("action group_by of type string", async function (assert) {
+        assert.expect(2);
+        serverData.views["partner,false,pivot"] = `<pivot/>`;
+        registry.category("services").add("user", makeFakeUserService());
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, {
+            name: "Partner",
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            views: [[3, "pivot"]],
+            context: { group_by: "foo" },
+        });
+        assert.containsOnce(webClient, ".o_pivot_view");
+        assert.containsN(webClient, ".o_pivot_view tbody th", 6);
+    });
 });
