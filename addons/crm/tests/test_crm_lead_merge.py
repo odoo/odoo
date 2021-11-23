@@ -307,7 +307,7 @@ class TestLeadMerge(TestLeadMergeCommon):
         # because "lead_1" is not lost
         lost_reason = self.env['crm.lost.reason'].create({'name': 'Test Reason'})
         self.lead_w_partner.write({
-            'lost_reason': lost_reason,
+            'lost_reason_id': lost_reason,
             'probability': 0,
         })
 
@@ -317,7 +317,7 @@ class TestLeadMerge(TestLeadMergeCommon):
                                    name='Nibbler Spacecraft Request',
                                    partner_id=self.contact_company_1,
                                    priority='2',
-                                   lost_reason=False,
+                                   lost_reason_id=False,
                                    tag_ids=all_tags):
             leads._merge_opportunity(auto_unlink=False, max_length=None)
 
@@ -331,11 +331,11 @@ class TestLeadMerge(TestLeadMergeCommon):
         })
 
         lost_reason = self.env['crm.lost.reason'].create({'name': 'Test Reason'})
-        self.lead_w_partner.lost_reason = lost_reason
+        self.lead_w_partner.lost_reason_id = lost_reason
 
         leads = self.env['crm.lead'].browse(self.leads.ids)._sort_by_confidence_level(reverse=True)
 
-        with self.assertLeadMerged(leads[0], leads, lost_reason=lost_reason):
+        with self.assertLeadMerged(leads[0], leads, lost_reason_id=lost_reason):
             leads._merge_opportunity(auto_unlink=False, max_length=None)
 
     @users('user_sales_manager')
