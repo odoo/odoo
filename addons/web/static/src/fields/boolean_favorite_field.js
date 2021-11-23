@@ -5,14 +5,14 @@ import { standardFieldProps } from "./standard_field_props";
 
 const { Component } = owl;
 
-export class FavoriteField extends Component {
+export class BooleanFavoriteField extends Component {
     onClick() {
         this.props.update(!this.props.value);
     }
 }
 
-Object.assign(FavoriteField, {
-    template: "web.FavoriteField",
+Object.assign(BooleanFavoriteField, {
+    template: "web.BooleanFavoriteField",
     props: {
         ...standardFieldProps,
     },
@@ -21,4 +21,4 @@ Object.assign(FavoriteField, {
     },
 });
 
-registry.category("fields").add("boolean_favorite", FavoriteField);
+registry.category("fields").add("boolean_favorite", BooleanFavoriteField);

@@ -43,7 +43,7 @@ QUnit.module("Fields", (hooks) => {
         serviceRegistry.add("user", makeFakeUserService(hasGroup), { force: true });
     });
 
-    QUnit.module("FavoriteField");
+    QUnit.module("BooleanFavoriteField");
 
     QUnit.test("FavoriteField in kanban view", async function (assert) {
         assert.expect(4);

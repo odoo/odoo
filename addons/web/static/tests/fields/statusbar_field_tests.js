@@ -242,7 +242,7 @@ QUnit.module("Fields", (hooks) => {
         serviceRegistry.add("user", makeFakeUserService(hasGroup), { force: true });
     });
 
-    QUnit.module("StatusField");
+    QUnit.module("StatusBarField");
 
     QUnit.skip("static statusbar widget on many2one field", async function (assert) {
         assert.expect(5);
