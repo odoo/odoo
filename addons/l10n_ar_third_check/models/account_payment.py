@@ -15,10 +15,6 @@ class AccountPayment(models.Model):
     amount = fields.Monetary(compute='_compute_amount', store=True, recursive=True, copy=True,)
     third_check_current_journal_id = fields.Many2one('account.journal', compute='_compute_third_check_last_journal', string="Third Check Current Journal", store=True)
     third_check_operation_ids = fields.One2many('account.payment', 'check_id', readonly=True)
-    third_check_issue_date = fields.Date(
-        readonly=True,
-        states={'draft': [('readonly', False)]},
-    )
     third_check_bank_id = fields.Many2one(
         'res.bank',
         readonly=False,
@@ -30,12 +26,6 @@ class AccountPayment(models.Model):
         readonly=False,
         states={'cancel': [('readonly', True)], 'posted': [('readonly', True)]},
         compute='_compute_third_check_data',
-        store=True,
-    )
-    third_check_issuer_name = fields.Char(
-        readonly=False,
-        states={'cancel': [('readonly', True)], 'posted': [('readonly', True)]},
-        compute='_compute_third_check_issuer_name',
         store=True,
     )
 
@@ -51,17 +41,7 @@ class AccountPayment(models.Model):
             rec.update({
                 'third_check_bank_id': rec.partner_id.bank_ids and rec.partner_id.bank_ids[0].bank_id or False,
                 'third_check_issuer_vat': rec.partner_id.vat,
-                'third_check_issue_date': fields.Date.context_today(rec),
             })
-
-    @api.depends('third_check_issuer_vat', 'payment_method_line_id.code', 'partner_id')
-    def _compute_third_check_issuer_name(self):
-        """ We suggest owner name from owner vat """
-        new_third_checks = self.filtered(lambda x: x.payment_method_line_id.code == 'new_third_checks')
-        # (self - new_third_checks).third_check_issuer_name = False
-        for rec in new_third_checks:
-            rec.third_check_issuer_name = rec.third_check_issuer_vat and self.search(
-                [('third_check_issuer_vat', '=', rec.third_check_issuer_vat)], limit=1).third_check_issuer_name or rec.partner_id.name
 
     @api.constrains('is_internal_transfer', 'payment_method_line_id')
     def _check_transfer(self):
