@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
 from odoo import fields, models
 
 
@@ -28,7 +29,10 @@ class StockInventory(models.Model):
         self.ensure_one()
         action_data = self.env['ir.actions.act_window']._for_xml_id('account.action_move_journal_line')
         action_data['domain'] = [('stock_move_id.id', 'in', self.move_ids.ids)]
-        action_data['context'] = dict(action_data.get('context', {}), create=False)
+        action_data['context'] = dict(
+            ast.literal_eval(action_data['context'].strip()),
+            create=False,
+        )
         return action_data
 
     def post_inventory(self):

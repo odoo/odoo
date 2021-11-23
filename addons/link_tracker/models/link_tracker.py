@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
 import random
 import requests
 import string
@@ -173,7 +174,10 @@ class LinkTracker(models.Model):
     def action_view_statistics(self):
         action = self.env['ir.actions.act_window']._for_xml_id('link_tracker.link_tracker_click_action_statistics')
         action['domain'] = [('link_id', '=', self.id)]
-        action['context'] = dict(action.get('context', {}), create=False)
+        action['context'] = dict(
+            ast.literal_eval(action['context'].strip()),
+            create=False,
+        )
         return action
 
     def action_visit_page(self):

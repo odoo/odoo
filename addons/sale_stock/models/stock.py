@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
 from collections import defaultdict
 
 from odoo import api, fields, models, _
@@ -183,5 +184,8 @@ class ProductionLot(models.Model):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("sale.action_orders")
         action['domain'] = [('id', 'in', self.mapped('sale_order_ids.id'))]
-        action['context'] = dict(action.get('context', {}), create=False)
+        action['context'] = dict(
+            ast.literal_eval(action['context'].strip()),
+            create=False,
+        )
         return action

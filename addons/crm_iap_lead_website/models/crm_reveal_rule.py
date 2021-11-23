@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
 import datetime
 import itertools
 import logging
@@ -113,13 +114,19 @@ class CRMRevealRule(models.Model):
     def action_get_lead_tree_view(self):
         action = self.env["ir.actions.actions"]._for_xml_id("crm.crm_lead_all_leads")
         action['domain'] = [('id', 'in', self.lead_ids.ids), ('type', '=', 'lead')]
-        action['context'] = dict(action.get('context', {}), create=False)
+        action['context'] = dict(
+            ast.literal_eval(action['context'].strip()),
+            create=False,
+        )
         return action
 
     def action_get_opportunity_tree_view(self):
         action = self.env["ir.actions.actions"]._for_xml_id("crm.crm_lead_opportunities")
         action['domain'] = [('id', 'in', self.lead_ids.ids), ('type', '=', 'opportunity')]
-        action['context'] = dict(action.get('context', {}), create=False)
+        action['context'] = dict(
+            ast.literal_eval(action['context'].strip()),
+            create=False,
+        )
         return action
 
     @api.model

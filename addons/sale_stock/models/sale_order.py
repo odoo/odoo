@@ -10,6 +10,7 @@ from odoo import api, fields, models, _
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, float_compare, float_round
 from odoo.tools.float_utils import float_repr
 from odoo.tools.misc import format_date
+from odoo.tools.safe_eval import safe_eval
 from odoo.exceptions import UserError
 
 
@@ -187,6 +188,8 @@ class SaleOrder(models.Model):
         view, if there is only one delivery order to show.
         '''
         action = self.env["ir.actions.actions"]._for_xml_id("stock.action_picking_tree_all")
+        eval_context = self.env['ir.actions.actions']._get_eval_context()
+        eval_context['allowed_company_ids'] = self.env.user.company_ids.ids
 
         pickings = self.mapped('picking_ids')
         if len(pickings) > 1:
@@ -204,7 +207,14 @@ class SaleOrder(models.Model):
             picking_id = picking_id[0]
         else:
             picking_id = pickings[0]
-        action['context'] = dict(action.get('context', {}), default_partner_id=self.partner_id.id, default_picking_type_id=picking_id.picking_type_id.id, default_origin=self.name, default_group_id=picking_id.group_id.id, group_by=[])
+        action['context'] = dict(
+            safe_eval(action['context'].strip(), eval_context),
+            default_partner_id=self.partner_id.id,
+            default_picking_type_id=picking_id.picking_type_id.id,
+            default_origin=self.name,
+            default_group_id=picking_id.group_id.id,
+            group_by=[],
+        )
         return action
 
     def action_cancel(self):

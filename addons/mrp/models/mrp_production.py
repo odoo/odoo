@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
 import json
 import datetime
 import math
@@ -15,6 +16,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, UserError
 from odoo.tools import float_compare, float_round, float_is_zero, format_datetime
 from odoo.tools.misc import format_date
+from odoo.tools.safe_eval import safe_eval
 
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
 
@@ -397,6 +399,8 @@ class MrpProduction(models.Model):
         """
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("stock.action_picking_tree_all")
+        eval_context = self.env['ir.actions.actions']._get_eval_context()
+        eval_context['allowed_company_ids'] = self.env.user.company_ids.ids
         pickings = self.mapped('picking_ids')
         if len(pickings) > 1:
             action['domain'] = [('id', 'in', pickings.ids)]
@@ -407,7 +411,11 @@ class MrpProduction(models.Model):
             else:
                 action['views'] = form_view
             action['res_id'] = pickings.id
-        action['context'] = dict(action.get('context', {}), create=False, default_origin=self.name)
+        action['context'] = dict(
+            safe_eval(action['context'].strip(), eval_context),
+            create=False,
+            default_origin=self.name,
+        )
         return action
 
     @api.depends('product_uom_id', 'product_qty', 'product_id.uom_id')
@@ -1623,7 +1631,10 @@ class MrpProduction(models.Model):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("stock.action_stock_scrap")
         action['domain'] = [('production_id', '=', self.id)]
-        action['context'] = dict(action.get('context', {}), create=False)
+        action['context'] = dict(
+            ast.literal_eval(action['context'].strip()),
+            create=False,
+        )
         return action
 
     @api.model
