@@ -3710,7 +3710,7 @@ var FieldDomain = AbstractField.extend({
             this.domainSelector.destroy();
             this.domainSelector = null;
         }
-        if (ev.target !== this) {
+        if (!ev || ev.target !== this) {
             this.debugEdition = false;
         }
     },
