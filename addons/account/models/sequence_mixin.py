@@ -263,7 +263,7 @@ class SequenceMixin(models.AbstractModel):
         :return: True if self are the last elements of the chain.
         """
         batched = defaultdict(lambda: {'last_rec': self.browse(), 'seq_list': []})
-        for record in self:
+        for record in self.filtered(lambda x: x[x._sequence_field]):
             seq_format, format_values = record._get_sequence_format_param(record[record._sequence_field])
             seq = format_values.pop('seq')
             batch = batched[(seq_format, frozendict(format_values))]
