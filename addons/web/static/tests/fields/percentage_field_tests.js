@@ -215,57 +215,50 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("PercentageField");
 
-    QUnit.skip("PercentageField in form view", async function (assert) {
+    QUnit.test("PercentageField in form view", async function (assert) {
         assert.expect(6);
 
-        const form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        const form = await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
             arch: ` <form string="Partners">
                         <field name="qux" widget="percentage"/>
                     </form>`,
-            mockRPC: function (route, args) {
-                if (args.method === "write") {
+            mockRPC(route, { args, method }) {
+                if (method === "write") {
                     assert.strictEqual(
-                        args.args[1].qux,
+                        args[1].qux,
                         0.24,
                         "the correct float value should be saved"
                     );
                 }
-                return this._super(...arguments);
             },
-            res_id: 1,
+            resId: 1,
         });
-
         assert.strictEqual(
-            form.$(".o_field_widget").first().text(),
+            form.el.querySelector(".o_field_widget").innerText,
             "44.4%",
             "The value should be displayed properly."
         );
-
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
         assert.strictEqual(
-            form.$(".o_field_widget[name=qux] input").val(),
-            "44.4",
+            form.el.querySelector(".o_field_widget[name=qux] input").value,
+            "44.444",
             "The input should be rendered without the percentage symbol."
         );
         assert.strictEqual(
-            form.$(".o_field_widget[name=qux] span").text(),
+            form.el.querySelector(".o_field_widget[name=qux] span").innerText,
             "%",
             "The input should be followed by a span containing the percentage symbol."
         );
-
-        await testUtils.fields.editInput(form.$(".o_field_float_percentage input"), "24");
+        const field = form.el.querySelector(".o-percentage-field");
+        field.value = "24";
+        await triggerEvent(field, null, "change");
+        assert.strictEqual(field.value, "24", "The value should not be formated yet.");
+        await click(form.el.querySelector(".o_form_button_save"));
         assert.strictEqual(
-            form.$(".o_field_widget[name=qux] input").val(),
-            "24",
-            "The value should not be formated yet."
-        );
-
-        await testUtils.form.clickSave(form);
-        assert.strictEqual(
-            form.$(".o_field_widget").text(),
+            form.el.querySelector(".o_field_widget").innerText,
             "24%",
             "The new value should be formatted properly."
         );
