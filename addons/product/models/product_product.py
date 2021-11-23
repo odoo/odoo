@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 import re
 from operator import itemgetter
 
@@ -46,6 +45,13 @@ class ProductProduct(models.Model):
                                                           domain=[('attribute_line_id.value_count', '>', 1)], string="Variant Values", ondelete='restrict')
     combination_indices = fields.Char(compute='_compute_combination_indices', store=True, index=True)
     is_product_variant = fields.Boolean(compute='_compute_is_product_variant')
+
+    # Allows for a custom description for each variant of the product.
+    description_sale = fields.Text('Sales Description', translate=True,
+                                   help="A description of the Product that you want to "
+                                          "communicate to your customers. This description will be "
+                                          "copied to every Sales Order, Delivery Order and Customer"
+                                          " Invoice/Credit Note")
 
     standard_price = fields.Float(
         'Cost', company_dependent=True,
@@ -311,11 +317,15 @@ class ProductProduct(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        product_tmpl_description_sale = self.env['product.template'].search(
+            [("id", "=", vals_list[0]["product_tmpl_id"])]).description_sale
         for vals in vals_list:
             self.product_tmpl_id._sanitize_vals(vals)
         products = super(ProductProduct, self.with_context(create_product_product=True)).create(vals_list)
         # `_get_variant_id_for_combination` depends on existing variants
         self.clear_caches()
+        for product in products:
+            product.description_sale = product_tmpl_description_sale
         return products
 
     def write(self, values):

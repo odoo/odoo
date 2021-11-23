@@ -295,6 +295,9 @@
                                 <field name="product_tag_ids" string="Product Template Tags" widget="many2many_tags" readonly="1" options="{'no_open': True, 'color_field': 'color'}"/>
                                 <field name="additional_product_tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_edit_color': 1}"/>
                             </group>
+                            <group name="sale_description" string="Sales Description">
+                                <field name="description_sale" nolabel="1"/>
+                            </group>
                         </group>
                     </sheet>
                 </form>
@@ -341,6 +344,7 @@
                     <field name="company_id" groups="base.group_multi_company" optional="hide" readonly="1"/>
                     <field name="lst_price" optional="show" string="Sales Price"/>
                     <field name="standard_price" optional="show"/>
+                    <field name="description_sale" optional="hide"/>
                     <field name="categ_id" optional="hide"/>
                     <field name="product_tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_edit_color': 1}" optional="hide"/>
                     <field name="type" optional="hide" readonly="1"/>

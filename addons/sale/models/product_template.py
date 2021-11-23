@@ -237,6 +237,7 @@ class ProductTemplate(models.Model):
             display_image = bool(product.image_128)
             display_name = product.display_name
             price_extra = (product.price_extra or 0.0) + (sum(no_variant_attributes_price_extra) or 0.0)
+            description_sale = product.description_sale
         else:
             current_attributes_price_extra = [v.price_extra or 0.0 for v in combination]
             product_template = product_template.with_context(current_attributes_price_extra=current_attributes_price_extra)
@@ -251,7 +252,7 @@ class ProductTemplate(models.Model):
             combination_name = combination._get_combination_name()
             if combination_name:
                 display_name = "%s (%s)" % (display_name, combination_name)
-
+            description_sale = self.description_sale
         if pricelist and pricelist.currency_id != product_template.currency_id:
             list_price = product_template.currency_id._convert(
                 list_price, pricelist.currency_id, product_template._get_current_company(pricelist=pricelist),
@@ -274,6 +275,7 @@ class ProductTemplate(models.Model):
             'list_price': list_price,
             'price_extra': price_extra,
             'has_discounted_price': has_discounted_price,
+            'description_sale': description_sale,
         }
 
     def _is_add_to_cart_possible(self, parent_combination=None):

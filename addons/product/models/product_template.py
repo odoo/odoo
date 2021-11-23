@@ -42,6 +42,10 @@ class ProductTemplate(models.Model):
         'Purchase Description', translate=True)
     description_sale = fields.Text(
         'Sales Description', translate=True,
+        search="_search_description_sale",
+        compute="_compute_description_sale",
+        inverse="_set_description_sale",
+        store=False,
         help="A description of the Product that you want to communicate to your customers. "
              "This description will be copied to every Sales Order, Delivery Order and Customer Invoice/Credit Note")
     detailed_type = fields.Selection([
@@ -147,6 +151,36 @@ class ProductTemplate(models.Model):
             # Pricelist item count counts the rules applicable on current template or on its variants.
             template.pricelist_item_count = template.env['product.pricelist.item'].search_count([
                 '|', ('product_tmpl_id', '=', template.id), ('product_id', 'in', template.product_variant_ids.ids)])
+
+    @api.onchange('description_sale')
+    def _onchange_description_sale(self):
+        for template in self:
+            if len(template.product_variant_ids) > 1:
+                return {
+                    'warning': {
+                        'error': 'overwrite of variant',
+                        'message': ('Beware of overwriting the sale description on your variants.'
+                                    ' Discard your changes if this is not what you wanted to do.'),
+                    }
+                }
+
+    @api.depends('product_variant_ids.description_sale')
+    def _compute_description_sale(self):
+        for template in self:
+            if len(template.product_variant_ids) == 1:
+                template.description_sale = template.product_variant_ids.description_sale
+            else:
+                template.description_sale = " "
+
+    def _set_description_sale(self):
+        for template in self:
+            template.product_variant_ids.description_sale = template.description_sale
+
+    def _search_description_sale(self, operator, value):
+        if len(self.product_variant_ids) == 1:
+            variants = self.env['product.product'].search([('description_sale', operator, value)])
+            return [('id', 'in', [variant.product_tmpl_id for variant in variants])]
+        return [(0, '=', 1)]
 
     @api.depends('image_1920', 'image_1024')
     def _compute_can_image_1024_be_zoomed(self):

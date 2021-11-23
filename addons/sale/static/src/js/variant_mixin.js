@@ -515,11 +515,29 @@ var VariantMixin = {
         $price.text(self._priceToStr(combination.price));
         $default_price.text(self._priceToStr(combination.list_price));
 
+        if (combination.product_id) {
+            $parent.find('[data-oe-model="product.product"]').attr(
+                'data-oe-id',
+                combination.product_id
+            );
+        }
+
         var isCombinationPossible = true;
         if (!_.isUndefined(combination.is_combination_possible)) {
             isCombinationPossible = combination.is_combination_possible;
         }
         this._toggleDisable($parent, isCombinationPossible);
+
+        if (combination.description_sale) {
+            // This workaround is apparently the only way to keep line breaks
+            // between the backend and the frontend.
+            // Setting directly the text removes line breaks and 'append'
+            // keep them ¯\_(ツ)_/¯
+            $parent.find('#product_description_sale').text('');
+            var text = combination.description_sale;
+            text = text.replaceAll('\n', '<br/>');
+            $parent.find('#product_description_sale').append(text);
+        }
 
         if (combination.has_discounted_price) {
             $default_price
