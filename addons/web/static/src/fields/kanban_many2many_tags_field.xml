@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="web.Many2ManyKanbanTagsField" owl="1">
+    <t t-name="web.KanbanMany2ManyTagsField" owl="1">
         <div class="o_field_many2manytags o_kanban_tags">
             <t t-foreach="data" t-as="tag" t-key="tag.id">
                 <span class="o_tag" t-attf-class="o_tag_color_{{ tag.data.color }}">

@@ -6,7 +6,7 @@ import { standardFieldProps } from "./standard_field_props";
 
 const { Component } = owl;
 
-export class StatusField extends Component {
+export class StatusBarField extends Component {
     get isDisabled() {
         return !this.props.options.clickable;
     }
@@ -72,8 +72,8 @@ export class StatusField extends Component {
     }
 }
 
-Object.assign(StatusField, {
-    template: "web.StatusField",
+Object.assign(StatusBarField, {
+    template: "web.StatusBarField",
     props: {
         ...standardFieldProps,
     },
@@ -82,9 +82,9 @@ Object.assign(StatusField, {
     },
 });
 
-registry.category("fields").add("statusbar", StatusField);
+registry.category("fields").add("statusbar", StatusBarField);
 
-async function fetchStatusSpecialData(datapoint, fieldName) {
+async function fetchStatusBarSpecialData(datapoint, fieldName) {
     const field = datapoint.fields[fieldName];
     if (field.type !== "many2one") {
         return null;
@@ -113,4 +113,4 @@ async function fetchStatusSpecialData(datapoint, fieldName) {
     }));
 }
 
-registry.category("specialData").add("statusbar", fetchStatusSpecialData);
+registry.category("specialData").add("statusbar", fetchStatusBarSpecialData);
