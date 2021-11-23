@@ -15,7 +15,7 @@
 
         <!-- App Brand -->
         <MenuItem
-          t-if="currentApp"
+          t-if="currentApp and !env.isSmall"
           href="getMenuItemHref(currentApp)"
           payload="currentApp"
           t-esc="currentApp.name"
@@ -24,7 +24,7 @@
         />
 
         <!-- Current App Sections -->
-        <t t-if="currentAppSections.length" t-call="web.NavBar.SectionsMenu">
+        <t t-if="currentAppSections.length and !env.isSmall" t-call="web.NavBar.SectionsMenu">
           <t t-set="sections" t-value="currentAppSections" />
         </t>
 
