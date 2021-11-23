@@ -300,10 +300,10 @@
                                 </t>
                             </tr>
 
-                            <t t-if="current_section and (line_last or lines[line+1].display_type == 'line_section')">
+                            <t t-if="current_section and (line_last or lines[line_index+1].display_type == 'line_section')">
                                 <tr class="is-subtotal text-right">
                                     <td colspan="99">
-                                        <strong class="mr16">Subtotal/الإجمالي الفرعي</strong>
+                                        <strong class="mr16" style="display: inline-block">Subtotal/الإجمالي الفرعي</strong>
                                         <span
                                                 t-out="current_subtotal"
                                                 t-options='{"widget": "monetary", "display_currency": o.currency_id}'
