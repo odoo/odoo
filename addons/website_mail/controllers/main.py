@@ -87,6 +87,13 @@ class WebsiteMail(http.Controller):
         _message_is_follower = message_is_follower == 'on'
         _object = request.registry[object]
 
+        record = _object.browse(cr, uid, _id, context=context).exists()
+        if not record:
+            return False
+
+        _object.check_access_rights(cr, uid, 'read')
+        _object.check_access_rule(cr, uid, [_id], 'read', context)
+
         # search partner_id
         public_id = request.website.user_id.id
         if uid != public_id:
@@ -101,11 +108,9 @@ class WebsiteMail(http.Controller):
 
         # add or remove follower
         if _message_is_follower:
-            _object.check_access_rule(cr, uid, [_id], 'read', context)
             _object.message_unsubscribe(cr, SUPERUSER_ID, [_id], partner_ids, context=context)
             return False
         else:
-            _object.check_access_rule(cr, uid, [_id], 'read', context)
             # add partner to session
             request.session['partner_id'] = partner_ids[0]
             _object.message_subscribe(cr, SUPERUSER_ID, [_id], partner_ids, context=context)
