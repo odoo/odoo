@@ -4193,6 +4193,31 @@ QUnit.module('Views', {
 
         calendar.destroy();
     });
+ 
+    QUnit.test("popover ignores readonly field modifier", async function (assert) {
+        assert.expect(1);
+
+        var calendar = await createCalendarView({
+            View: CalendarView,
+            model: "event",
+            data: this.data,
+            arch: `
+                <calendar date_start="start" date_stop="stop" all_day="allday" mode="month">
+                    <field name="name" attrs="{'readonly': [['unknown_field', '=', 42]]}" />
+                </calendar>
+            `,
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+        });
+
+        await testUtils.dom.click(calendar.$(`[data-event-id="4"]`));
+        // test would fail here if we don't ignore readonly modifier
+        assert.containsOnce(calendar, ".o_cw_popover");
+
+        calendar.destroy();
+    });
 });
 
 });
