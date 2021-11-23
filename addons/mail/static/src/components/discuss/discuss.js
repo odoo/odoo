@@ -21,7 +21,6 @@ export class Discuss extends Component {
         useUpdate({ func: () => this._update() });
         onWillUnmount(() => this._willUnmount());
         this._onHideMobileAddItemHeader = this._onHideMobileAddItemHeader.bind(this);
-        this._onSelectMobileNavbarTab = this._onSelectMobileNavbarTab.bind(this);
     }
 
     _update() {
@@ -76,25 +75,6 @@ export class Discuss extends Component {
      */
     get discuss() {
         return this.messaging && this.messaging.discuss;
-    }
-
-    /**
-     * @returns {Object[]}
-     */
-    mobileNavbarTabs() {
-        return [{
-            icon: 'fa fa-inbox',
-            id: 'mailbox',
-            label: this.env._t("Mailboxes"),
-        }, {
-            icon: 'fa fa-user',
-            id: 'chat',
-            label: this.env._t("Chat"),
-        }, {
-            icon: 'fa fa-users',
-            id: 'channel',
-            label: this.env._t("Channel"),
-        }];
     }
 
     //--------------------------------------------------------------------------
@@ -166,33 +146,6 @@ export class Discuss extends Component {
             this.discuss.handleAddChannelAutocompleteSource(req, res);
         } else {
             this.discuss.handleAddChatAutocompleteSource(req, res);
-        }
-    }
-
-    /**
-     * @private
-     * @param {Object} detail
-     * @param {string} detail.tabId
-     */
-    _onSelectMobileNavbarTab(detail) {
-        if (this.discuss.activeMobileNavbarTabId === detail.tabId) {
-            return;
-        }
-        this.discuss.update({ activeMobileNavbarTabId: detail.tabId });
-        if (
-            this.discuss.activeMobileNavbarTabId === 'mailbox' &&
-            (!this.discuss.thread || this.discuss.thread.model !== 'mailbox')
-        ) {
-            this.discuss.update({ thread: link(this.messaging.inbox) });
-        }
-        if (this.discuss.activeMobileNavbarTabId !== 'mailbox') {
-            this.discuss.update({ thread: unlink() });
-        }
-        if (this.discuss.activeMobileNavbarTabId !== 'chat') {
-            this.discuss.update({ isAddingChat: false });
-        }
-        if (this.discuss.activeMobileNavbarTabId !== 'channel') {
-            this.discuss.update({ isAddingChannel: false });
         }
     }
 
