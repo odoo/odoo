@@ -111,15 +111,15 @@
             </td>
             <t t-foreach="state.columns" t-as="column" t-key="column.name">
                 <t t-if="column.type === 'field'">
-                    <td class="o_data_cell" t-att-class="getCellClass(column)">
+                    <td class="o_data_cell" t-att-class="getCellClass(column, record)">
                         <Field name="column.name" record="record" readonly="true" type="column.widget" />
                     </td>
                 </t>
                 <t t-if="column.type === 'button_group'">
-                    <td class="o_data_cell" t-att-class="getCellClass(column)">
+                    <td class="o_data_cell" t-att-class="getCellClass(column, record)">
                         <t t-foreach="column.buttons" t-as="button" t-key="button.id">
                             <ViewButton
-                                classes="button.classes"
+                                classes="getButtonClass(button, record)"
                                 clickParams="button.clickParams"
                                 defaultRank="button.defaultRank"
                                 icon="button.icon"

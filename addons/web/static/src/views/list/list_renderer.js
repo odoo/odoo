@@ -5,6 +5,7 @@ import { registry } from "@web/core/registry";
 import { CheckBoxDropdownItem } from "@web/core/dropdown/checkbox_dropdown_item";
 import { Field } from "@web/fields/field";
 import { ViewButton } from "@web/views/view_button/view_button";
+import { Domain } from "@web/core/domain";
 
 const { Component, useState } = owl;
 
@@ -189,7 +190,7 @@ export class ListRenderer extends Component {
         return classNames.join(" ");
     }
 
-    getCellClass(column) {
+    getCellClass(column, record) {
         if (!this.cellClassByColumn[column.name]) {
             const classNames = ["o_data_cell"];
             if (column.type === "button_group") {
@@ -204,9 +205,22 @@ export class ListRenderer extends Component {
                     classNames.push("o_" + column.widget + "_cell");
                 }
             }
-            this.cellClassByColumn[column.name] = classNames.join(" ");
+            this.cellClassByColumn[column.name] = classNames;
         }
-        return this.cellClassByColumn[column.name];
+        const modifiersClassNames = [];
+        if (column.invisible && column.invisible.contains(record.data)) {
+            modifiersClassNames.push("o_invisible_modifier");
+        }
+
+        return [...this.cellClassByColumn[column.name], ...modifiersClassNames].join(" ");
+    }
+
+    getButtonClass(button, record) {
+        const classes = [...button.classes];
+        if (button.invisible && button.invisible.contains(record.data)) {
+            classes.push("o_invisible_modifier");
+        }
+        return classes;
     }
 
     // Group headers logic:

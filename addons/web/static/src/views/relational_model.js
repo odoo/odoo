@@ -514,13 +514,16 @@ export class DynamicGroupList extends DynamicList {
     // ------------------------------------------------------------------------
 
     async _loadGroups() {
+        const orderby = this.orderBy.fieldName
+            ? `${this.orderBy.fieldName} ${this.orderBy.asc ? "ASC" : "DESC"}`
+            : "";
         const { groups, length } = await this.model.orm.webReadGroup(
             this.resModel,
             this.domain,
             this.fieldNames,
             this.groupBy,
             {
-                orderby: this.orderby,
+                orderby,
                 limit: this.groupLimit,
                 lazy: true,
             }

@@ -523,7 +523,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(list.el.querySelector(".o_data_row:first-child"), "td.o_list_button", 2);
     });
 
-    QUnit.skip("list view with adjacent buttons with invisible modifier", async function (assert) {
+    QUnit.test("list view with adjacent buttons with invisible modifier", async function (assert) {
         assert.expect(6);
 
         const list = await makeView({
@@ -943,7 +943,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual($(list.el).find("thead th:eq(3)").attr("style"), "width: 50%;");
     });
 
-    QUnit.skip("invisible columns are not displayed", async function (assert) {
+    QUnit.test("invisible columns are not displayed", async function (assert) {
         assert.expect(1);
 
         const list = await makeView({
@@ -1004,7 +1004,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skip("record-depending invisible lines are correctly aligned", async function (assert) {
+    QUnit.test("record-depending invisible lines are correctly aligned", async function (assert) {
         assert.expect(4);
 
         const list = await makeView({
@@ -1749,7 +1749,7 @@ QUnit.module("Views", (hooks) => {
         await cpHelpers.toggleMenuItem(list.el, "My second favorite");
     });
 
-    QUnit.skip("many2one field rendering", async function (assert) {
+    QUnit.test("many2one field rendering", async function (assert) {
         assert.expect(1);
 
         const list = await makeView({
@@ -1765,8 +1765,8 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skip("grouped list view, with 1 open group", async function (assert) {
-        assert.expect(6);
+    QUnit.test("grouped list view, with 1 open group", async function (assert) {
+        assert.expect(8);
 
         const list = await makeView({
             type: "list",
@@ -2671,7 +2671,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(list.el.querySelectorAll("tfoot td")[2].innerText, "0");
     });
 
-    QUnit.skip("aggregates are computed correctly in grouped lists", async function (assert) {
+    QUnit.test("aggregates are computed correctly in grouped lists", async function (assert) {
         assert.expect(4);
 
         const list = await makeView({
@@ -2682,33 +2682,26 @@ QUnit.module("Views", (hooks) => {
             arch:
                 '<tree editable="bottom"><field name="foo" /><field name="int_field" sum="Sum"/></tree>',
         });
-
-        var $groupHeader1 = $(list.el)
-            .find(".o_group_header")
-            .filter(function (index, el) {
-                return $(el).data("group").res_id === 1;
-            });
-        var $groupHeader2 = $(list.el)
-            .find(".o_group_header")
-            .filter(function (index, el) {
-                return $(el).data("group").res_id === 2;
-            });
+        const groupHeaders = list.el.querySelectorAll(".o_group_header");
         assert.strictEqual(
-            $groupHeader1.find("td:last()").text(),
+            groupHeaders[0].querySelector("td:last-child").textContent,
             "23",
             "first group total should be 23"
         );
         assert.strictEqual(
-            $groupHeader2.find("td:last()").text(),
+            groupHeaders[1].querySelector("td:last-child").textContent,
             "9",
             "second group total should be 9"
         );
-        assert.strictEqual($(list.el).find("tfoot td:last()").text(), "32", "total should be 32");
-
-        await click($groupHeader1);
-        await click($(list.el).find("tbody .o_list_record_selector input").first());
         assert.strictEqual(
-            $(list.el).find("tfoot td:last()").text(),
+            list.el.querySelector("tfoot td:last-child").textContent,
+            "32",
+            "total should be 32"
+        );
+        await click(groupHeaders[0]);
+        await click(list.el.querySelector("tbody .o_list_record_selector input:first-child"));
+        assert.strictEqual(
+            list.el.querySelector("tfoot td:last-child").textContent,
             "10",
             "total should be 10 as first record of first group is selected"
         );
@@ -2799,7 +2792,6 @@ QUnit.module("Views", (hooks) => {
                 if (args.method === "web_read_group") {
                     assert.step(args.kwargs.orderby || "default order");
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
@@ -2810,7 +2802,7 @@ QUnit.module("Views", (hooks) => {
         );
         assert.strictEqual($(list.el).find("tfoot td:last()").text(), "32", "total should be 32");
 
-        await click($(list.el).find(".o_column_sortable"));
+        await click(list.el, ".o_column_sortable");
         assert.strictEqual(
             $(list.el).find("tfoot td:last()").text(),
             "32",
@@ -2822,7 +2814,7 @@ QUnit.module("Views", (hooks) => {
             "order should be 5, 10, 17"
         );
 
-        await click($(list.el).find(".o_column_sortable"));
+        await click(list.el, ".o_column_sortable");
         assert.strictEqual(
             $(list.el).find("tbody .o_list_number").text(),
             "17105",
@@ -2860,17 +2852,16 @@ QUnit.module("Views", (hooks) => {
                 if (args.method === "web_read_group") {
                     assert.step(args.kwargs.orderby || "default order");
                 }
-                return this._super.apply(this, arguments);
             },
         });
         //we cannot sort by sort_field since it doesn't have a group_operator
-        await click($(list.el).find(".o_column_sortable:eq(2)"));
+        await click(list.el.querySelectorAll(".o_column_sortable")[2]);
         //we can sort by int_field since it has a group_operator
-        await click($(list.el).find(".o_column_sortable:eq(1)"));
+        await click(list.el.querySelectorAll(".o_column_sortable")[1]);
         //we keep previous order
-        await click($(list.el).find(".o_column_sortable:eq(2)"));
+        await click(list.el.querySelectorAll(".o_column_sortable")[2]);
         //we can sort on foo since we are groupped by foo + previous order
-        await click($(list.el).find(".o_column_sortable:eq(0)"));
+        await click(list.el.querySelectorAll(".o_column_sortable")[0]);
 
         assert.verifySteps([
             "default order",
