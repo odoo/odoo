@@ -4370,6 +4370,43 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('form with domain widget: opening a many2many form and save should not crash', async function (assert) {
+        assert.expect(0);
+
+        // We just test that there is no crash in this situation
+        this.data.partner.records[0].timmy = [12];
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                `<form string="Partners">
+                    <group>
+                        <field name="foo" widget="domain"/>
+                    </group>
+                    <field name="timmy">
+                        <tree>
+                            <field name="display_name"/>
+                        </tree>
+                        <form>
+                            <field name="name"/>
+                            <field name="color"/>
+                        </form>
+                    </field>
+                </form>`,
+            res_id: 1,
+        });
+
+        // switch to edit mode
+        await testUtils.form.clickEdit(form);
+
+        // open a form view and save many2many record
+        await testUtils.dom.click(form.$('.o_data_row .o_data_cell:first'));
+        await testUtils.dom.click($('.modal-dialog footer button:first-child'));
+
+        form.destroy();
+    });
+
     QUnit.test('display_name not sent for onchanges if not in view', async function (assert) {
         assert.expect(7);
 
