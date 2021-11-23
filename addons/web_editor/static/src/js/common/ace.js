@@ -375,6 +375,13 @@ var ViewEditor = Widget.extend({
             this._switchType(type);
         }
 
+        if (!this.resources[this.currentType].hasOwnProperty(resID)) {
+            // This could happen if trying to switch to a file which is not
+            // visible with the default filters. In that case, we prefer the
+            // user to have to switch explicitely to the right filters again.
+            return;
+        }
+
         var editingSession = this.editingSessions[this.currentType][resID];
         if (!editingSession) {
             editingSession = this.editingSessions[this.currentType][resID] = this._buildEditingSession(resID);
