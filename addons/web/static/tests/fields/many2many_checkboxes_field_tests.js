@@ -317,64 +317,66 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("Many2ManyCheckBoxesField (readonly)", async function (assert) {
+    QUnit.test("Many2ManyCheckBoxesField (readonly)", async function (assert) {
         assert.expect(7);
 
-        this.data.partner.records[0].timmy = [12];
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        serverData.models.partner.records[0].timmy = [12];
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
             arch: `
-                <form string="Partners">
+                <form>
                     <group>
-                        <field name="timmy" widget="many2many_checkboxes"
-                            attrs="{'readonly': true}"/>
+                        <field name="timmy" widget="many2many_checkboxes" attrs="{'readonly': true}" />
                     </group>
-                </form>`,
-            res_id: 1,
+                </form>
+            `,
         });
 
         assert.containsN(
-            form,
+            form.el,
             "div.o_field_widget div.custom-checkbox",
             2,
             "should have fetched and displayed the 2 values of the many2many"
         );
 
         assert.ok(
-            form.$("div.o_field_widget div.custom-checkbox input").eq(0).prop("checked"),
+            form.el.querySelector("div.o_field_widget div.custom-checkbox input").checked,
             "first checkbox should be checked"
         );
         assert.notOk(
-            form.$("div.o_field_widget div.custom-checkbox input").eq(1).prop("checked"),
+            form.el.querySelectorAll("div.o_field_widget div.custom-checkbox input")[1].checked,
             "second checkbox should not be checked"
         );
 
-        assert.ok(
-            form.$("div.o_field_widget div.custom-checkbox input").prop("disabled"),
+        assert.containsN(
+            form.el,
+            "div.o_field_widget div.custom-checkbox input:disabled",
+            2,
             "the checkboxes should be disabled"
         );
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el, ".o_form_button_edit");
 
-        assert.ok(
-            form.$("div.o_field_widget div.custom-checkbox input").prop("disabled"),
+        assert.containsN(
+            form.el,
+            "div.o_field_widget div.custom-checkbox input:disabled",
+            2,
             "the checkboxes should be disabled"
         );
 
-        await testUtils.dom.click(form.$("div.o_field_widget div.custom-checkbox > label").eq(1));
+        await click(form.el.querySelectorAll("div.o_field_widget div.custom-checkbox > label")[1]);
 
         assert.ok(
-            form.$("div.o_field_widget div.custom-checkbox input").eq(0).prop("checked"),
+            form.el.querySelector("div.o_field_widget div.custom-checkbox input").checked,
             "first checkbox should be checked"
         );
         assert.notOk(
-            form.$("div.o_field_widget div.custom-checkbox input").eq(1).prop("checked"),
+            form.el.querySelectorAll("div.o_field_widget div.custom-checkbox input")[1].checked,
             "second checkbox should not be checked"
         );
-
-        form.destroy();
     });
 
     QUnit.skip(
