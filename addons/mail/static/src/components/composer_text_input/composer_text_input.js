@@ -266,7 +266,7 @@ export class ComposerTextInput extends Component {
             return;
         }
         if (
-            this.props.sendShortcuts.includes('ctrl-enter') &&
+            this.composerView.sendShortcuts.includes('ctrl-enter') &&
             !ev.altKey &&
             ev.ctrlKey &&
             !ev.metaKey &&
@@ -279,7 +279,7 @@ export class ComposerTextInput extends Component {
             return;
         }
         if (
-            this.props.sendShortcuts.includes('enter') &&
+            this.composerView.sendShortcuts.includes('enter') &&
             !ev.altKey &&
             !ev.ctrlKey &&
             !ev.metaKey &&
@@ -292,7 +292,7 @@ export class ComposerTextInput extends Component {
             return;
         }
         if (
-            this.props.sendShortcuts.includes('meta-enter') &&
+            this.composerView.sendShortcuts.includes('meta-enter') &&
             !ev.altKey &&
             !ev.ctrlKey &&
             ev.metaKey &&
@@ -400,7 +400,6 @@ export class ComposerTextInput extends Component {
 Object.assign(ComposerTextInput, {
     defaultProps: {
         hasMentionSuggestionsBelowPosition: false,
-        sendShortcuts: [],
     },
     props: {
         composerViewLocalId: String,
@@ -414,23 +413,8 @@ Object.assign(ComposerTextInput, {
             type: Function,
             optional: true,
         },
-        /**
-         * Keyboard shortcuts from text input to send message.
-         */
-        sendShortcuts: {
-            type: Array,
-            element: String,
-            validate: prop => {
-                for (const shortcut of prop) {
-                    if (!['ctrl-enter', 'enter', 'meta-enter'].includes(shortcut)) {
-                        return false;
-                    }
-                }
-                return true;
-            },
-        },
     },
     template: 'mail.ComposerTextInput',
 });
 
-registerMessagingComponent(ComposerTextInput, { propsCompareDepth: { sendShortcuts: 1 } });
+registerMessagingComponent(ComposerTextInput);

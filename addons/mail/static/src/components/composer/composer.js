@@ -332,17 +332,8 @@ Object.assign(Composer, {
         },
         isCompact: Boolean,
         isExpandable: Boolean,
-        /**
-         * If set, keyboard shortcuts from text input to send message.
-         * If not set, will use default values from `ComposerTextInput`.
-         */
-        textInputSendShortcuts: {
-            type: Array,
-            element: String,
-            optional: true,
-        },
     },
     template: 'mail.Composer',
 });
 
-registerMessagingComponent(Composer, { propsCompareDepth: { textInputSendShortcuts: 1 } });
+registerMessagingComponent(Composer);

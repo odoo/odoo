@@ -120,29 +120,6 @@ registerModel({
         },
         /**
          * @private
-         * @returns {string[]}
-         */
-        _computeTextInputSendShortcuts() {
-            if (!this.thread) {
-                return;
-            }
-            if (!this.messaging.device) {
-                return;
-            }
-            // Actually in mobile there is a send button, so we need there 'enter' to allow new line.
-            // Hence, we want to use a different shortcut 'ctrl/meta enter' to send for small screen
-            // size with a non-mailing channel.
-            // here send will be done on clicking the button or using the 'ctrl/meta enter' shortcut.
-            if (
-                this.messaging.device.isMobile ||
-                (this.messaging.discuss.threadView === this && this.messaging.discuss.thread === this.messaging.inbox)
-            ) {
-                return ['ctrl-enter', 'meta-enter'];
-            }
-            return ['enter'];
-        },
-        /**
-         * @private
          * @returns {integer|undefined}
          */
         _computeThreadCacheInitialScrollHeight() {
@@ -454,13 +431,6 @@ registerModel({
             inverse: 'threadView',
             isCausal: true,
             readonly: true,
-        }),
-        /**
-         * Determines the keyboard shortcuts that are available to send a message
-         * from the composer of this thread viewer.
-         */
-        textInputSendShortcuts: attr({
-            compute: '_computeTextInputSendShortcuts',
         }),
         /**
          * Determines the `mail.thread` currently displayed by `this`.
