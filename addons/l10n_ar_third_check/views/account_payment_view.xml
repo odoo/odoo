@@ -43,7 +43,6 @@
                 <attribute name="force_save">1</attribute>
             </xpath>
             <field name="destination_journal_id" position="after">
-                <!-- use checks in wallet for oubound, checks not in wallet for inbound -->
                 <field
                     name="check_id"
                     attrs="{'invisible': [('payment_method_code', 'not in', ['in_third_checks', 'out_third_checks'])], 'required': [('payment_method_code', 'in', ['in_third_checks', 'out_third_checks'])]}"

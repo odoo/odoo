@@ -14,23 +14,11 @@ class AccountChartTemplate(models.Model):
                 'name': _('Third Checks'),
                 'type': 'cash',
                 'company_id': company.id,
-                # 'inbound_payment_method_line_ids': [
-                #     (4, self.env.ref('l10n_ar_third_check.account_payment_method_new_third_checks').id, None),
-                # ],
-                # 'outbound_payment_method_line_ids': [
-                #     (4, self.env.ref('l10n_ar_third_check.account_payment_method_out_third_checks').id, None),
-                # ],
             })
             self.env['account.journal'].with_context(third_checks_journal=True).create({
                 'name': _('Rejected Third Checks'),
                 'type': 'cash',
                 'company_id': company.id,
-                # 'inbound_payment_method_line_ids': [
-                #     (4, self.env.ref('l10n_ar_third_check.account_payment_method_in_third_checks').id, None),
-                # ],
-                # 'outbound_payment_method_line_ids': [
-                #     (4, self.env.ref('l10n_ar_third_check.account_payment_method_out_third_checks').id, None),
-                # ],
             })
 
         return res

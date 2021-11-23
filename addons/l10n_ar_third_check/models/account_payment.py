@@ -15,17 +15,12 @@ class AccountPayment(models.Model):
     third_check_current_journal_id = fields.Many2one('account.journal', compute='_compute_third_check_last_journal', string="Third Check Current Journal", store=True)
     third_check_operation_ids = fields.One2many('account.payment', 'check_id', readonly=True)
     third_check_bank_id = fields.Many2one(
-        'res.bank',
-        readonly=False,
-        states={'cancel': [('readonly', True)], 'posted': [('readonly', True)]},
-        compute='_compute_third_check_data',
-        store=True,
+        'res.bank', readonly=False, states={'cancel': [('readonly', True)], 'posted': [('readonly', True)]},
+        compute='_compute_third_check_data', store=True,
     )
     third_check_issuer_vat = fields.Char(
-        readonly=False,
-        states={'cancel': [('readonly', True)], 'posted': [('readonly', True)]},
-        compute='_compute_third_check_data',
-        store=True,
+        readonly=False, states={'cancel': [('readonly', True)], 'posted': [('readonly', True)]},
+        compute='_compute_third_check_data', store=True,
     )
 
     @api.onchange('check_id')
@@ -80,11 +75,12 @@ class AccountPayment(models.Model):
         for rec in self.filtered('check_id'):
             if not rec.currency_id.is_zero(rec.check_id.amount - rec.amount):
                 raise UserError(_(
-                    'El importe del pago no coincide con el importe del cheque seleccionado. Por favor intente '
-                    'eliminar y volver a agregar el cheque.'))
+                    'The amount of the payment (%s) does not match the amount of the selected check (%s).\n'
+                    'Please try to deselect and select check again.') % (rec.amount, rec.check_id.amount))
 
     @api.onchange('payment_method_line_id', 'is_internal_transfer', 'journal_id', 'destination_journal_id')
     def reset_check_ids(self):
+        """ If any of this fields changes the domain of the selectable checks could change """
         self.check_id = False
 
     @api.onchange('check_number')
@@ -106,11 +102,7 @@ class AccountPayment(models.Model):
                 continue
             last_operation = third_check_operation.sorted()[0]
             if last_operation.is_internal_transfer and last_operation.payment_type == 'outbound':
-                # usamos last_operation.paired_internal_transfer_payment_id.journal_id en vez de destination_journal_id
-                # porque ahora llevamos check_id a todos los payments y con esto nos garantizamos que el ultimo journal
-                # sea el payment posteado
                 rec.third_check_current_journal_id = last_operation.paired_internal_transfer_payment_id.journal_id
-                # rec.third_check_current_journal_id = last_operation.destination_journal_id
             elif last_operation.is_internal_transfer and last_operation.payment_type == 'inbound':
                 rec.third_check_current_journal_id = last_operation.journal_id
             elif last_operation.payment_type == 'inbound':
@@ -121,7 +113,7 @@ class AccountPayment(models.Model):
     @api.model
     def _get_trigger_fields_to_sincronize(self):
         res = super()._get_trigger_fields_to_sincronize()
-        return res + ('check_payment_date', 'check_number')
+        return res + ('check_number',)
 
     def _prepare_move_line_default_vals(self, write_off_line_vals=None):
         """ Add check name and operation on liquidity line """
@@ -136,9 +128,8 @@ class AccountPayment(models.Model):
             })
         return res
 
-    @api.depends_context('show_check_number')
     def name_get(self):
-        """ We add check number to display_name for check_id m2o field """
+        """ Add check number to display_name on check_id m2o field """
         res_names = super().name_get()
         for i, (res_name, rec) in enumerate(zip(res_names, self)):
             if rec.check_number:
