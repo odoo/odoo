@@ -19,12 +19,10 @@
         <field name="inherit_id" ref="account.view_account_payment_search"/>
         <field name="arch" type="xml">
             <field name="journal_id" position="after">
-                <field name="third_check_state"/>
-                <field name="third_check_last_journal_id"/>
+                <field name="third_check_current_journal_id"/>
             </field>
             <filter name="journal" position="after">
-                <filter name="groupby_third_check_state" string="Third Check State" domain="[]" context="{'group_by': 'third_check_state'}"/>
-                <filter name="groupby_third_check_last_journal" string="Third Check State" domain="[]" context="{'group_by': 'third_check_last_journal_id'}"/>
+                <filter name="groupby_third_check_last_journal" string="Third Check Current Journal" domain="[]" context="{'group_by': 'third_check_current_journal_id'}"/>
             </filter>
         </field>
     </record>
@@ -34,9 +32,6 @@
         <field name="model">account.payment</field>
         <field name="inherit_id" ref="account.view_account_payment_form" />
         <field name="arch" type="xml">
-            <form>
-                <field name="third_check_from_state" invisible="1"/>
-            </form>
             <div class="oe_button_box" name="button_box">
                 <button name="button_open_check_operations" type="object" class="oe_stat_button" icon="fa-bars" attrs="{'invisible': ['|', ('state', '=', 'draft'), ('payment_method_code', '!=', 'new_third_checks')]}">
                     Check
@@ -48,10 +43,11 @@
                 <attribute name="force_save">1</attribute>
             </xpath>
             <field name="destination_journal_id" position="after">
+                <!-- use checks in wallet for oubound, checks not in wallet for inbound -->
                 <field
                     name="check_id"
                     attrs="{'invisible': [('payment_method_code', 'not in', ['in_third_checks', 'out_third_checks'])], 'required': [('payment_method_code', 'in', ['in_third_checks', 'out_third_checks'])]}"
-                    domain="[('payment_method_code', '=', 'new_third_checks'), ('third_check_state', '=', third_check_from_state)] if payment_method_code == 'in_third_checks' else [('payment_method_code', '=', 'new_third_checks'), ('third_check_state', '=', third_check_from_state), ('third_check_last_journal_id', '=', journal_id)]"
+                    domain="[('payment_method_code', '=', 'new_third_checks'), ('third_check_current_journal_id', '=', journal_id)] if payment_type == 'outbound' else [('payment_method_code', '=', 'new_third_checks'), ('third_check_current_journal_id', '=', destination_journal_id)] if is_internal_transfer else [('payment_method_code', '=', 'new_third_checks'), ('third_check_current_journal_id', '=', False)]"
                     options="{'no_create': True}"
                     context="{'show_check_number': True}"
                 />
@@ -60,15 +56,12 @@
                 <attribute name="force_save">1</attribute>
             </field>
             <field name="check_payment_date" position="after">
-                <group string="Third Check" attrs="{'invisible': [('payment_method_code', '!=', 'new_third_checks')]}" colspan="2">
-                    <field name="check_number" attrs="{'required': [('payment_method_code', '=', 'new_third_checks')], 'readonly': [('state', '!=', 'draft')]}"/>
-                    <field name="third_check_issue_date" string="Check Issue Date" attrs="{'required': [('payment_method_code', '=', 'new_third_checks')]}"/>
-                    <field name="check_payment_date" attrs="{'invisible': [('payment_method_code', '!=', 'new_third_checks')]}"/>
-                    <field name="third_check_bank_id" string="Check Bank" attrs="{'required': [('payment_method_code', '=', 'new_third_checks')]}"/>
-                    <field name="third_check_issuer_vat" string="Check Issuer Vat" attrs="{'required': [('payment_method_code', '=', 'new_third_checks')]}"/>
-                    <field name="third_check_issuer_name" string="Check Issuer" attrs="{'required': [('payment_method_code', '=', 'new_third_checks')]}"/>
-                    <field name="third_check_state" string="Check State" attrs="{'invisible': ['|', ('payment_method_code', '!=', 'new_third_checks'), ('state', '!=', 'posted')]}"/>
-                </group>
+                <field name="check_number" attrs="{'invisible': [('payment_method_code', '!=', 'new_third_checks')], 'required': [('payment_method_code', '=', 'new_third_checks')], 'readonly': [('state', '!=', 'draft')]}"/>
+                <field name="third_check_issue_date" string="Issue Date" attrs="{'invisible': [('payment_method_code', '!=', 'new_third_checks')], 'required': [('payment_method_code', '=', 'new_third_checks')]}"/>
+                <field name="check_payment_date" attrs="{'invisible': [('payment_method_code', '!=', 'new_third_checks')],  'invisible': [('payment_method_code', '!=', 'new_third_checks')]}"/>
+                <field name="third_check_bank_id" string="Bank" attrs="{'invisible': [('payment_method_code', '!=', 'new_third_checks')], 'required': [('payment_method_code', '=', 'new_third_checks')]}"/>
+                <field name="third_check_issuer_vat" string="Issuer Vat" attrs="{'invisible': [('payment_method_code', '!=', 'new_third_checks')], 'required': [('payment_method_code', '=', 'new_third_checks')]}"/>
+                <field name="third_check_issuer_name" string="Issuer" attrs="{'invisible': [('payment_method_code', '!=', 'new_third_checks')], 'required': [('payment_method_code', '=', 'new_third_checks')]}"/>
             </field>
         </field>
     </record>
@@ -84,10 +77,7 @@
         <field name="arch" type="xml">
             <field name="is_matched" position="replace"/>
             <field name="journal_id" position="replace">
-                <field name="third_check_last_journal_id" string="Current Journal"/>
-            </field>
-            <field name="state" position="after">
-                <field name="third_check_state" string="Check State"/>
+                <field name="third_check_current_journal_id" string="Current Journal"/>
             </field>
             <tree position="attributes">
                 <attribute name="create">false</attribute>
@@ -101,7 +91,7 @@
         <field name="view_mode">tree,form,calendar,graph,pivot</field>
         <field name="view_id" ref="l10n_ar_third_check.view_account_third_check_tree"/>
         <field name="domain">[('payment_method_code', '=', 'new_third_checks')]</field>
-        <field name="context">{'search_default_third_check_state': 'holding', 'search_default_groupby_third_check_last_journal': 1}</field>
+        <field name="context">{'search_default_groupby_third_check_last_journal': 1}</field>
     </record>
 
     <menuitem

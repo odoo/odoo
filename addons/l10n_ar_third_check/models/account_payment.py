@@ -13,25 +13,8 @@ class AccountPayment(models.Model):
 
     check_id = fields.Many2one('account.payment', string='Check', readonly=True, states={'draft': [('readonly', False)]}, copy=False,)
     amount = fields.Monetary(compute='_compute_amount', store=True, recursive=True, copy=True,)
-    third_check_last_journal_id = fields.Many2one('account.journal', compute='_compute_third_check_last_journal', string="Third Check Current Journal", store=True)
+    third_check_current_journal_id = fields.Many2one('account.journal', compute='_compute_third_check_last_journal', string="Third Check Current Journal", store=True)
     third_check_operation_ids = fields.One2many('account.payment', 'check_id', readonly=True)
-    third_check_from_state = fields.Char(compute='_compute_third_check_from_state')
-    third_check_state = fields.Selection([
-        ('draft', 'Draft'),
-        ('holding', 'In Wallet'),
-        ('deposited', 'Collected'),
-        ('delivered', 'Delivered'),
-        # ('withdrawed', 'Withdrawed'),
-        # ('handed', 'Handed'),
-        # ('debited', 'Debited'),
-        # ('returned', 'Returned'),
-    ],
-        # required=True,
-        # default='draft',
-        readonly=True,
-        copy=False,
-        index=True,
-    )
     third_check_issue_date = fields.Date(
         readonly=True,
         states={'draft': [('readonly', False)]},
@@ -81,20 +64,11 @@ class AccountPayment(models.Model):
             rec.third_check_issuer_name = rec.third_check_issuer_vat and self.search(
                 [('third_check_issuer_vat', '=', rec.third_check_issuer_vat)], limit=1).third_check_issuer_name or rec.partner_id.name
 
-    @api.depends('payment_method_line_id.code', 'is_internal_transfer', 'destination_journal_id')
-    def _compute_third_check_from_state(self):
-        moved_third_checks = self.filtered(lambda x: x.payment_method_line_id.code in ['in_third_checks', 'out_third_checks'])
-        (self - moved_third_checks).third_check_from_state = False
-        for rec in moved_third_checks:
-            from_state, to_state = rec._get_checks_states()
-            rec.third_check_from_state = from_state
-
-    @api.constrains('third_check_issue_date', 'check_payment_date')
-    @api.onchange('third_check_issue_date', 'check_payment_date')
-    def onchange_date(self):
-        for rec in self:
-            if rec.third_check_issue_date and rec.check_payment_date and rec.third_check_issue_date > rec.check_payment_date:
-                raise UserError(_('Check Payment Date must be greater than Issue Date'))
+    @api.constrains('is_internal_transfer', 'payment_method_line_id')
+    def _check_transfer(self):
+        recs = self.filtered(lambda x: x.is_internal_transfer and x.payment_method_line_id.code == 'new_third_checks')
+        if recs:
+            raise UserError(_("You can't use New Third Checks on a transfer"))
 
     @api.constrains('payment_method_line_id', 'third_check_issuer_vat', 'third_check_bank_id', 'company_id', 'check_number')
     def _check_unique(self):
@@ -111,44 +85,26 @@ class AccountPayment(models.Model):
                     'Check Number (%s) must be unique per Owner and Bank!'
                     '\n* Check ids: %s') % (rec.check_number, same_checks.ids))
 
-    def _get_checks_states(self):
-        return self._get_checks_states_model(
-            self.payment_method_code, self.payment_type, self.is_internal_transfer, self.destination_journal_id)
+    @api.constrains('check_id')
+    def check(self):
+        for rec in self.filtered('check_id'):
+            date = self.date or fields.Datetime.now()
+            operations = rec.check_id.third_check_operation_ids.sorted()
+            if operations and operations[0].date > date:
+                raise ValidationError(_(
+                    'The date of a new check operation can not be minor than '
+                    'last operation date.\n'
+                    '* Check Id: %s\n'
+                    '* Check Number: %s\n'
+                    '* Operation: %s\n'
+                    '* Operation Date: %s\n'
+                    '* Last Operation Date: %s') % (check.id, check.check_number, to_state, date, operations[0].date))
 
-    @api.model
-    def _get_checks_states_model(self, payment_method_code, payment_type, is_internal_transfer, destination_journal=None):
-        """
-        Regarding the payment data (transfer, inbound, outbound, payment mode, etc), this method returns a tuple with:
-        * expected from state for a check
-        * new state of the check after payment is posted
-        """
-        if is_internal_transfer:
-            # if it's a transfer we don't know domain till destination journal is choosen
-            if not destination_journal:
-                return False, False
-            if payment_type == 'outbound':
-                if destination_journal and any(x.code == 'in_third_checks' for x in destination_journal.inbound_payment_method_line_ids):
-                    # transferencia a otro diario de terceros
-                    # TODO implementar el movimiento entre diarios de cheques de terceros con dos operations?
-                    return 'holding', 'holding'
-                else:
-                    # deposito o venta
-                    return 'holding', 'deposited'
-            elif payment_type == 'inbound':
-                if destination_journal and any(x.code == 'out_third_checks' for x in destination_journal.inbound_payment_method_line_ids):
-                    # transferencia a otro diario de terceros
-                    # TODO implementar el movimiento entre diarios de cheques de terceros con dos operations?
-                    return 'holding', 'holding'
-                else:
-                    # Deposit rejection
-                    return 'deposited', 'holding'
-        elif payment_method_code == 'new_third_checks':
-            return False, 'holding'
-            # return 'holding', domain + [('third_check_last_journal_id', '=', journal.id), ('third_check_state', '=', 'draft')]
-        elif payment_method_code == 'out_third_checks':
-            return 'holding', 'delivered'
-        elif payment_method_code == 'in_third_checks':
-            return 'delivered', 'holding'
+        for rec in self.filtered('check_id'):
+            if not rec.currency_id.is_zero(rec.check_id.amount - rec.amount):
+                raise UserError(_(
+                    'El importe del pago no coincide con el importe del cheque seleccionado. Por favor intente '
+                    'eliminar y volver a agregar el cheque.'))
 
     @api.onchange('payment_method_line_id', 'is_internal_transfer', 'journal_id', 'destination_journal_id')
     def reset_check_ids(self):
@@ -169,9 +125,21 @@ class AccountPayment(models.Model):
         for rec in new_checks:
             third_check_operation = rec.third_check_operation_ids.filtered(lambda x: x.state == 'posted')
             if not third_check_operation:
-                rec.third_check_last_journal_id = rec.journal_id
+                rec.third_check_current_journal_id = rec.journal_id
+                continue
+            last_operation = third_check_operation.sorted()[0]
+            if last_operation.is_internal_transfer and last_operation.payment_type == 'outbound':
+                # usamos last_operation.paired_internal_transfer_payment_id.journal_id en vez de destination_journal_id
+                # porque ahora llevamos check_id a todos los payments y con esto nos garantizamos que el ultimo journal
+                # sea el payment posteado
+                rec.third_check_current_journal_id = last_operation.paired_internal_transfer_payment_id.journal_id
+                # rec.third_check_current_journal_id = last_operation.destination_journal_id
+            elif last_operation.is_internal_transfer and last_operation.payment_type == 'inbound':
+                rec.third_check_current_journal_id = last_operation.journal_id
+            elif last_operation.payment_type == 'inbound':
+                rec.third_check_current_journal_id = last_operation.journal_id
             else:
-                rec.third_check_last_journal_id = third_check_operation.sorted()[0].journal_id
+                rec.third_check_current_journal_id = False
 
     def action_post(self):
         """ this method is called when posting an account_move of a payment or the payment directly and do the
@@ -184,82 +152,25 @@ class AccountPayment(models.Model):
         #     if not rec.currency_id.is_zero(rec.check_id.amount - rec.amount):
         # for rec in self.filtered(lambda x: x.payment_method_line_id.code in ['new_third_checks', 'in_third_checks', 'out_third_checks']):
         # for rec in self.filtered(lambda x: x.payment_method_line_id.code in ['new_third_checks', 'in_third_checks', 'out_third_checks']):
-        for rec in self.filtered('check_id'):
-            # if rec.check_id and not rec.currency_id.is_zero(rec.check_id.amount - rec.amount):
-            if not rec.currency_id.is_zero(rec.check_id.amount - rec.amount):
-                raise UserError(_(
-                    'El importe del pago no coincide con el importe del cheque seleccionado. Por favor intente '
-                    'eliminar y volver a agregar el cheque.'))
-            rec._add_third_check_operation()
         return res
-
-    def _cancel_third_check_operation(self):
-        """
-        We check that the operation that is being cancel is the last operation
-        done (same as check state)
-        """
-        self.ensure_one()
-        check = self.check_id
-        from_state, to_state = self._get_checks_states()
-        operations = check.third_check_operation_ids.sorted()
-        if operations and operations[0] != self:
-            raise ValidationError(_(
-                'You can not cancel this operation because this is not '
-                'the last operation over the check.\nCheck (id): %s (%s)'
-            ) % (check.check_number, check.id))
-        msg = 'Check %s cancelled by %s' % (to_state, self)
-        check.message_post(body=msg)
-        check.third_check_state = from_state
-
-    def _add_third_check_operation(self):
-        self.ensure_one()
-        # check = self if self.payment_method_line_id.code == 'new_third_checks' else self.check_id
-        check = self.check_id
-        from_state, to_state = self._get_checks_states()
-        if from_state != check.third_check_state:
-            raise ValidationError(_(
-                "You can't set a check as '%s' from state '%s'!\n"
-                "Check nbr (id): %s (%s)") % (
-                    self._fields['third_check_state'].convert_to_export(to_state, self),
-                    self._fields['third_check_state'].convert_to_export(check.third_check_state, self),
-                    check.check_number,
-                    check.id))
-
-        # TODO re add check operation with new approach
-        date = self.date or fields.Datetime.now()
-        operations = check.third_check_operation_ids.sorted()
-        if operations and operations[0].date > date:
-            raise ValidationError(_(
-                'The date of a new check operation can not be minor than '
-                'last operation date.\n'
-                '* Check Id: %s\n'
-                '* Check Number: %s\n'
-                '* Operation: %s\n'
-                '* Operation Date: %s\n'
-                '* Last Operation Date: %s') % (check.id, check.check_number, to_state, date, operations[0].date))
-
-        msg = 'Check %s by %s' % (to_state, self)
-        check.message_post(body=msg)
-        check.third_check_state = to_state
 
     @api.model
     def _get_trigger_fields_to_sincronize(self):
         res = super()._get_trigger_fields_to_sincronize()
         return res + ('check_payment_date', 'check_number')
 
-    def _prepare_move_line_default_vals(self, write_off_line_vals=None):
-        """ Add check name and operation on liquidity line """
-        res = super()._prepare_move_line_default_vals(write_off_line_vals=write_off_line_vals)
-        check = self if self.payment_method_line_id.code == 'new_third_checks' else self.check_id
-        if check:
-            from_state, to_state = self._get_checks_states()
-            document_name = _('Check %s %s') % (check.check_number, to_state)
-            res[0].update({
-                'name': self.env['account.move.line']._get_default_line_name(
-                    document_name, self.amount, self.currency_id, self.date, partner=self.partner_id),
-                'date_maturity': check.check_payment_date or self.date,
-            })
-        return res
+    # def _prepare_move_line_default_vals(self, write_off_line_vals=None):
+    #     """ Add check name and operation on liquidity line """
+    #     res = super()._prepare_move_line_default_vals(write_off_line_vals=write_off_line_vals)
+    #     check = self if self.payment_method_line_id.code == 'new_third_checks' else self.check_id
+    #     if check:
+    #         from_state, to_state = self._get_checks_states()
+    #         document_name = _('Check %s %s') % (check.check_number, to_state)
+    #         res[0].update({
+    #             'name': self.env['account.move.line']._get_default_line_name(
+    #                 document_name, self.amount, self.currency_id, self.date, partner=self.partner_id),
+    #         })
+    #     return res
 
     # @api.depends('move_id.name', 'payment_method_line_id', 'check_number')
     # def name_get(self):
@@ -313,7 +224,7 @@ class AccountPayment(models.Model):
                     default_check_id=rec.check_id, default_payment_method_line_id=destination_payment_method.id))._create_paired_internal_transfer_payment()
             else:
                 # if it's check move we add a reference on ref field for statements and also to make it more understandable
-                super(AccountPayment, rec)._create_paired_internal_transfer_payment()
+                super(AccountPayment, rec.with_context(default_check_id=rec.check_id))._create_paired_internal_transfer_payment()
                 rec.paired_internal_transfer_payment_id.ref = '%s%s' % (
                     rec.ref + ' - ' if rec.ref else '',
                     _('Check %s') % rec.check_id.check_number)
