@@ -10616,7 +10616,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('Quick Edition: Readonly one2many list', async function (assert) {
-        assert.expect(7);
+        assert.expect(4);
 
         this.data.partner.records[0].p.push(2);
 
@@ -10643,13 +10643,8 @@ QUnit.module('Views', {
 
         await testUtils.dom.click(form.$('.o_field_cell:first'));
 
-        assert.containsOnce(form, '.o_form_view.o_form_editable',
-            'should switch into edit mode');
-        assert.containsNone(form, '.o_field_x2many_list_row_add',
-            'create line should still not be displayed');
-        assert.containsNone(form, '.o_list_record_remove',
-            'remove buttons should still not be displayed');
-        assert.containsNone(form, 'input');
+        assert.containsOnce(form, '.o_form_view.o_form_readonly',
+            'should not switch into edit mode');
 
         form.destroy();
     });
@@ -11007,7 +11002,7 @@ QUnit.module('Views', {
 
         await testUtils.dom.click(form.$('.o_field_widget[name="timmy"] label:eq(1)'));
 
-        assert.containsOnce(form, '.o_form_view.o_form_editable');
+        assert.containsOnce(form, '.o_form_view.o_form_readonly');
         assert.containsNone(form, 'input[type="checkbox"]:not(:disabled)');
         assert.containsNone(form, 'input[type="checkbox"]:checked');
 
@@ -11089,9 +11084,9 @@ QUnit.module('Views', {
 
         await testUtils.dom.click(form.$('.o_field_widget[name="trululu"] label:eq(1)'));
 
-        assert.containsOnce(form, '.o_form_view.o_form_editable');
+        assert.containsOnce(form, '.o_form_view.o_form_readonly');
         assert.containsOnce(form, 'input[type="radio"]:eq(2):checked');
-        assert.containsNone(form, 'input[type="checkbox"]:not(:disabled)');
+        assert.containsNone(form, 'input[type="radio"]:not(:disabled)');
 
         form.destroy();
     });
