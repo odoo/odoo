@@ -2276,7 +2276,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             aggregated_fields.append(name)
 
             expr = self._inherits_join_calc(self._table, fname, query)
-            if func.lower() == 'count_distinct':
+            if func.lower() in ('count_distinct', 'avg', 'sum'):
                 term = 'COUNT(DISTINCT %s) AS "%s"' % (expr, name)
             else:
                 term = '%s(%s) AS "%s"' % (func, expr, name)
