@@ -92,3 +92,7 @@ class Partner(models.Model):
 
         arch = etree.tostring(doc, encoding='unicode')
         return arch
+
+    @api.model
+    def _address_fields(self):
+        return super()._address_fields() + ["city_id"]
