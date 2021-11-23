@@ -15,6 +15,7 @@ import {
     patchWithCleanup,
     nextTick,
 } from "../../helpers/utils";
+import { toggleFilterMenu, toggleMenuItem } from "@web/../tests/search/helpers";
 import { session } from "@web/session";
 import {
     createWebClient,
@@ -931,6 +932,40 @@ QUnit.module("ActionManager", (hooks) => {
                 ".o_form_view.o_form_editable",
                 "should now display the form view in edit mode"
             );
+        }
+    );
+
+    QUnit.test(
+        "charge a form view via url, then switch to view list, the search view is correctly initialized",
+        async function (assert) {
+            assert.expect(2);
+
+            serverData.views = {
+                ...serverData.views,
+                "partner,false,search":`
+                    <search>
+                        <filter name="filter" string="Filter" domain="[('foo', '=', 'yop')]"/>
+                    </search>
+                `,
+            }
+
+            const webClient = await createWebClient({ serverData });
+
+            await loadState(webClient.env, {
+                action: 3,
+                model: "partner",
+                view_type: "form",
+            });
+
+            await click(webClient.el.querySelector(".o_control_panel .breadcrumb-item"));
+            await legacyExtraNextTick();
+
+            assert.containsN(webClient, ".o_list_view .o_data_row", 5);
+
+            await toggleFilterMenu(webClient);
+            await toggleMenuItem(webClient, "Filter");
+
+            assert.containsN(webClient, ".o_list_view .o_data_row", 1);
         }
     );
 
