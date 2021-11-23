@@ -47,6 +47,7 @@ class BaseMailPerformance(TransactionCaseWithUserDemo):
         super(BaseMailPerformance, self).setUp()
         # patch registry to simulate a ready environment
         self.patch(self.env.registry, 'ready', True)
+        self._flush_tracking()
 
     def _init_mail_gateway(self):
         # setup mail gateway
@@ -58,6 +59,12 @@ class BaseMailPerformance(TransactionCaseWithUserDemo):
         self.env['ir.config_parameter'].set_param('mail.catchall.domain', self.alias_domain)
         self.env['ir.config_parameter'].set_param('mail.catchall.alias', self.alias_catchall)
         self.env['ir.config_parameter'].set_param('mail.default.from', self.default_from)
+
+    def _flush_tracking(self):
+        """ Force the creation of tracking values notably, and ensure tests are
+        reproducible. """
+        self.env['base'].flush()
+        self.cr.flush()
 
 
 @tagged('mail_performance')
