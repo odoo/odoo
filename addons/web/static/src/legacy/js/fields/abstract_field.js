@@ -602,7 +602,7 @@ var AbstractField = Widget.extend({
      * @param {MouseEvent} ev
      */
     _onClick: function (ev) {
-        if (this._canQuickEdit && this.mode === 'readonly' &&
+        if (!this.hasReadonlyModifier && this._canQuickEdit && this.mode === 'readonly' &&
             !this.quickEditExclusion.some(x => ev.target.closest(x))
         ) {
             this.trigger_up('quick_edit', {
