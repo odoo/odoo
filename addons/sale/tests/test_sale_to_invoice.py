@@ -370,3 +370,38 @@ class TestSaleToInvoice(TestSaleCommon):
         qty_invoiced_field = sol_prod_deliver._fields.get('qty_invoiced')
         sol_prod_deliver.env.add_to_compute(qty_invoiced_field, sol_prod_deliver)
         self.assertEqual(sol_prod_deliver.qty_invoiced, expected_qty)
+
+    def test_multi_company_invoice(self):
+        """Checks that the company of the invoices generated in a multi company environment using the
+           'sale.advance.payment.inv' wizard fit with the company of the SO and not with the current company.
+        """
+        so_company_id = self.sale_order.company_id.id
+        yet_another_company_id = self.company_data_2['company'].id
+        so_for_downpayment = self.sale_order.copy()
+
+        self.context.update(allowed_company_ids=[yet_another_company_id, self.env.company.id], company_id=yet_another_company_id)
+        context_for_downpayment = self.context.copy()
+        context_for_downpayment.update(active_ids=[so_for_downpayment.id], active_id=so_for_downpayment.id)
+
+        # Make sure the invoice is not created with a journal in the context
+        # Because it makes the test always succeed (by using the journal company instead of the env company)
+        no_journal_ctxt = dict(self.context)
+        no_journal_ctxt.pop('default_journal_id', None)
+        no_journal_ctxt.pop('journal_id', None)
+
+        self.sale_order.with_context(self.context).action_confirm()
+        payment = self.env['sale.advance.payment.inv'].with_context(no_journal_ctxt).create({
+            'advance_payment_method': 'percentage',
+            'amount': 50,
+        })
+        payment.create_invoices()
+        self.assertEqual(self.sale_order.invoice_ids[0].company_id.id, so_company_id, "The company of the invoice should be the same as the one from the SO")
+
+        so_for_downpayment.with_context(context_for_downpayment).action_confirm()
+        downpayment = self.env['sale.advance.payment.inv'].with_context(context_for_downpayment).create({
+            'advance_payment_method': 'fixed',
+            'fixed_amount': 50,
+            'deposit_account_id': self.company_data['default_account_revenue'].id
+        })
+        downpayment.create_invoices()
+        self.assertEqual(so_for_downpayment.invoice_ids[0].company_id.id, so_company_id, "The company of the downpayment invoice should be the same as the one from the SO")
