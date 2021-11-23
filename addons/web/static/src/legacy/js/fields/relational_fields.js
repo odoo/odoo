@@ -2123,6 +2123,7 @@ var FieldOne2Many = FieldX2Many.extend({
             parentID: this.value.id,
             viewInfo: this.view,
             deletable: this.activeActions.delete && params.deletable && this.canDelete,
+            editable: !this.hasReadonlyModifier,
             disable_multiple_selection: params.disable_multiple_selection,
         }));
     },
