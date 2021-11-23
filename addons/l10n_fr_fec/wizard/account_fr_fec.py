@@ -304,12 +304,12 @@ class AccountFrFec(models.TransientModel):
         # LINES
         sql_query = '''
         SELECT
-            replace(replace(aj.code, '|', '/'), '\t', '') AS JournalCode,
-            replace(replace(COALESCE(aj__name.value, aj.name), '|', '/'), '\t', '') AS JournalLib,
-            replace(replace(am.name, '|', '/'), '\t', '') AS EcritureNum,
+            REGEXP_REPLACE(replace(aj.code, '|', '/'), '[\\t\\r\\n]', ' ', 'g') AS JournalCode,
+            REGEXP_REPLACE(replace(COALESCE(aj__name.value, aj.name), '|', '/'), '[\\t\\r\\n]', ' ', 'g') AS JournalLib,
+            REGEXP_REPLACE(replace(am.name, '|', '/'), '[\\t\\r\\n]', ' ', 'g') AS EcritureNum,
             TO_CHAR(am.date, 'YYYYMMDD') AS EcritureDate,
             aa.code AS CompteNum,
-            replace(replace(aa.name, '|', '/'), '\t', '') AS CompteLib,
+            REGEXP_REPLACE(replace(aa.name, '|', '/'), '[\\t\\r\\n]', ' ', 'g') AS CompteLib,
             CASE WHEN aat.type IN ('receivable', 'payable')
             THEN
                 CASE WHEN rp.ref IS null OR rp.ref = ''
@@ -320,18 +320,18 @@ class AccountFrFec(models.TransientModel):
             END
             AS CompAuxNum,
             CASE WHEN aat.type IN ('receivable', 'payable')
-            THEN COALESCE(replace(replace(rp.name, '|', '/'), '\t', ''), '')
+            THEN COALESCE(REGEXP_REPLACE(replace(rp.name, '|', '/'), '[\\t\\r\\n]', ' ', 'g'), '')
             ELSE ''
             END AS CompAuxLib,
             CASE WHEN am.ref IS null OR am.ref = ''
             THEN '-'
-            ELSE replace(replace(am.ref, '|', '/'), '\t', '')
+            ELSE REGEXP_REPLACE(replace(am.ref, '|', '/'), '[\\t\\r\\n]', ' ', 'g')
             END
             AS PieceRef,
             TO_CHAR(am.date, 'YYYYMMDD') AS PieceDate,
             CASE WHEN aml.name IS NULL OR aml.name = '' THEN '/'
-                WHEN aml.name SIMILAR TO '[\t|\s|\n]*' THEN '/'
-                ELSE replace(replace(replace(replace(aml.name, '|', '/'), '\t', ''), '\n', ''), '\r', '') END AS EcritureLib,
+                WHEN aml.name SIMILAR TO '[\\t|\\s|\\n]*' THEN '/'
+                ELSE REGEXP_REPLACE(replace(aml.name, '|', '/'), '[\\t\\n\\r]', ' ', 'g') END AS EcritureLib,
             replace(CASE WHEN aml.debit = 0 THEN '0,00' ELSE to_char(aml.debit, '000000000000000D99') END, '.', ',') AS Debit,
             replace(CASE WHEN aml.credit = 0 THEN '0,00' ELSE to_char(aml.credit, '000000000000000D99') END, '.', ',') AS Credit,
             CASE WHEN rec.name IS NULL THEN '' ELSE rec.name END AS EcritureLet,
