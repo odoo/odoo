@@ -54,12 +54,10 @@
                             classNameObj="{ 'o-mobile': messaging.device.isMobile }"
                             filter="messagingMenu.activeTabId"
                         />
-                        <t t-if="messaging.device.isMobile">
+                        <t t-if="messagingMenu.mobileMessagingNavbarView">
                             <MobileMessagingNavbar
                                 className="'o_MessagingMenu_mobileNavbar'"
-                                activeTabId="messagingMenu.activeTabId"
-                                tabs="tabs"
-                                onSelectMobileMessagingNavbarTab="_onSelectMobileNavbarTab"
+                                mobileMessagingNavbarViewLocalId="messagingMenu.mobileMessagingNavbarView.localId"
                             />
                         </t>
                     </t>

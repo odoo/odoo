@@ -76,12 +76,10 @@
                 filter="discuss.activeMobileNavbarTabId"
             />
         </t>
-        <t t-if="messaging.device.isMobile and !(discuss.threadView and discuss.threadView.replyingToMessageView)">
+        <t t-if="discuss.mobileMessagingNavbarView">
             <MobileMessagingNavbar
                 className="'o_Discuss_mobileNavbar'"
-                activeTabId="discuss.activeMobileNavbarTabId"
-                tabs="mobileNavbarTabs()"
-                onSelectMobileMessagingNavbarTab="_onSelectMobileNavbarTab"
+                mobileMessagingNavbarViewLocalId="discuss.mobileMessagingNavbarView.localId"
             />
         </t>
     </t>

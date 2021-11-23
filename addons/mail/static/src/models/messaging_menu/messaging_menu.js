@@ -1,7 +1,8 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, one2many } from '@mail/model/model_field';
+import { attr, one2many, one2one } from '@mail/model/model_field';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'MessagingMenu',
@@ -48,6 +49,16 @@ registerModel({
             const notificationPemissionCounter = this.messaging.isNotificationPermissionDefault ? 1 : 0;
             return inboxCounter + unreadChannelsCounter + notificationGroupsCounter + notificationPemissionCounter;
         },
+        /**
+         * @private
+         * @returns {MobileMessagingNavbarView|FieldCommand}
+         */
+         _computeMobileMessagingNavbarView() {
+            if (this.messaging.device && this.messaging.device.isMobile) {
+                return insertAndReplace();
+            }
+            return clear();
+        },
     },
     fields: {
         /**
@@ -78,9 +89,17 @@ registerModel({
             default: false,
         }),
         /**
+         * The navbar view on the messaging menu when in mobile.
+         */
+         mobileMessagingNavbarView: one2one('MobileMessagingNavbarView', {
+            compute: '_computeMobileMessagingNavbarView',
+            inverse: 'messagingMenu',
+            isCausal: true,
+        }),
+        /**
          * States all the pinned channels that have unread messages.
          */
-         pinnedAndUnreadChannels: one2many('Thread', {
+        pinnedAndUnreadChannels: one2many('Thread', {
             inverse: 'messagingMenuAsPinnedAndUnreadChannel',
             readonly: true,
         }),
