@@ -7,119 +7,182 @@ import { isBlock, rgbToHex } from '../../../lib/odoo-editor/src/utils/utils';
 const SELECTORS_IGNORE = /(^\*$|:hover|:before|:after|:active|:link|::|'|\([^(),]+[,(])/;
 
 /**
+ * Parse through the given document's stylesheets, preprocess(*) them and return
+ * the result as an array of objects, each containing a selector string , a
+ * style object and a specificity number. Preprocessing involves grouping
+ * whatever rules can be grouped together and precomputing their specificity so
+ * as to sort them appropriately.
+ *
+ * @param {Document} doc
+ * @returns {Object[]} Array<{selector: string;
+ *                            style: {[styleName]: string};
+ *                            specificity: number;}>
+ */
+function getCSSRules(doc) {
+    const cssRules = [];
+    for (const sheet of doc.styleSheets) {
+        // try...catch because browser may not able to enumerate rules for cross-domain sheets
+        let rules;
+        try {
+            rules = sheet.rules || sheet.cssRules;
+        } catch (e) {
+            console.log("Can't read the css rules of: " + sheet.href, e);
+            continue;
+        }
+        for (const rule of (rules || [])) {
+            const subRules = [rule];
+            const conditionText = rule.conditionText;
+            const minWidthMatch = conditionText && conditionText.match(/\(min-width *: *(\d+)/);
+            const minWidth = minWidthMatch && +(minWidthMatch[1] || '0');
+            if (minWidth && minWidth >= 1200) {
+                // Large min-width media queries should be included.
+                // eg., .container has a default max-width for all screens.
+                let mediaRules;
+                try {
+                    mediaRules = rule.rules || rule.cssRules;
+                    subRules.push(...mediaRules);
+                } catch (e) {
+                    console.log(`Can't read the css rules of: ${sheet.href} (${conditionText})`, e);
+                }
+            }
+            for (const subRule of subRules) {
+                const selectorText = subRule.selectorText;
+                if (selectorText && !SELECTORS_IGNORE.test(selectorText)) {
+                    const style = _normalizeStyle(subRule.style);
+                    if (Object.keys(style).length) {
+                        for (let selector of selectorText.split(',')) {
+                            selector = selector.trim();
+                            cssRules.push({ selector, style, specificity: _computeSpecificity(selector) });
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Group together rules with the same selector.
+    for (let i = cssRules.length - 1; i >= 0; i--) {
+        for (let j = cssRules.length - 1; j >= 0; j--) {
+            if (i > j && cssRules[i].selector === cssRules[j].selector) {
+                // Styles of "later" selector override styles of "earlier" one.
+                const importantJStyles = {};
+                for (const [key, value] of Object.entries(cssRules[j].style)) {
+                    if (value.endsWith('!important')) {
+                        importantJStyles[key] = value;
+                    }
+                }
+                cssRules[i].style = {...cssRules[j].style, ...cssRules[i].style};
+                for (const [key, value] of Object.entries(importantJStyles)) {
+                    cssRules[i].style[key] = value;
+                }
+                cssRules.splice(j, 1);
+                i--;
+            }
+        }
+    }
+    // The top element of a mailing has the class 'o_layout'. Give it the body's
+    // styles so they can trickle down.
+    cssRules.unshift({
+        selector: '.o_layout',
+        style: {...cssRules.find(r => r.selector === 'body').style},
+        specificity: 1,
+    });
+
+    const groupedRules = [];
+    const ungroupedRules = [...cssRules];
+    while (ungroupedRules.length) {
+        const rule = ungroupedRules.shift();
+        let groupedRule = {...rule};
+        for (const otherRule of ungroupedRules) {
+            if (
+                otherRule !== rule &&
+                rule.specificity === otherRule.specificity &&
+                Object.keys(rule.style).length === Object.keys(otherRule.style).length &&
+                Object.keys(rule.style).every(key => key in otherRule.style && rule.style[key] === otherRule.style[key])
+            ) {
+                if (rule.selector !== otherRule.selector) {
+                    groupedRule.selector = `${groupedRule.selector},${otherRule.selector}`;
+                }
+                ungroupedRules.splice(ungroupedRules.indexOf(otherRule), 1);
+            }
+        }
+        groupedRules.push(groupedRule);
+    }
+    groupedRules.sort((a, b) => a.specificity - b.specificity);
+    return groupedRules;
+}
+/**
+ * Take a css style declaration return a "normalized" version of it (as a
+ * standard object) for the purposes of emails. This means removing its styles
+ * that are invalid, describe animations or aren't standard css (webkit
+ * extensions). It also involves adding the "!important" suffix to styles that
+ * have that priority, so they can be handled without access to the full
+ * declaration.
+ *
+ * @param {CSSStyleDeclaration} style
+ * @returns {Object} {[styleName]: string}
+ */
+function _normalizeStyle(style) {
+    const normalizedStyle = {};
+    for (const styleName of style) {
+        const value = style[styleName];
+        if (value && !styleName.includes('animation') && !styleName.includes('-webkit') && _.isString(value)) {
+            const normalizedStyleName = styleName.replace(/-(.)/g, (a, b) => b.toUpperCase());
+            normalizedStyle[styleName] = style[normalizedStyleName];
+            if (style.getPropertyPriority(styleName) === 'important') {
+                normalizedStyle[styleName] += ' !important';
+            }
+        }
+    }
+    return normalizedStyle;
+}
+/**
+ * Take a selector and return its specificity according to the w3 specification.
+ *
+ * @see http://www.w3.org/TR/css3-selectors/#specificity
+ * @param {string} selector
+ * @returns number
+ */
+function _computeSpecificity(selector) {
+    let a = 0;
+    selector = selector.replace(/#[a-z0-9_-]+/gi, () => { a++; return ''; });
+    let b = 0;
+    selector = selector.replace(/(\.[a-z0-9_-]+)|(\[.*?\])/gi, () => { b++; return ''; });
+    let c = 0;
+    selector = selector.replace(/(^|\s+|:+)[a-z0-9_-]+/gi, a => { if (!a.includes(':not(')) c++; return ''; });
+    return (a * 100) + (b * 10) + c;
+}
+
+/**
  * Returns the css rules which applies on an element, tweaked so that they are
  * browser/mail client ok.
  *
- * @param {DOMElement} a
+ * @param {DOMElement} node
+ * @param {Object} cssRules
  * @returns {Object} css property name -> css property value
  */
-function getMatchedCSSRules(a) {
-    var i, r, k, l;
-    var doc = a.ownerDocument;
-    var rulesCache = a.ownerDocument._rulesCache || (a.ownerDocument._rulesCache = []);
-
-    if (!rulesCache.length) {
-        var sheets = doc.styleSheets;
-        for (i = sheets.length-1 ; i >= 0 ; i--) {
-            var rules;
-            // try...catch because browser may not able to enumerate rules for cross-domain sheets
-            try {
-                rules = sheets[i].rules || sheets[i].cssRules;
-            } catch (e) {
-                console.log("Can't read the css rules of: " + sheets[i].href, e);
-                continue;
-            }
-            if (rules) {
-                for (r = rules.length-1; r >= 0; r--) {
-                    const conditionText = rules[r].conditionText;
-                    const minWidthMatch = conditionText && conditionText.match(/\(min-width *: *(\d+)/);
-                    const minWidth = minWidthMatch && +(minWidthMatch[1] || '0');
-                    if (minWidth && minWidth >= 1200) {
-                        // Large min-width media queries should be included.
-                        // eg., .container has a default max-width for all
-                        // screens.
-                        let mediaRules;
-                        try {
-                            mediaRules = rules[r].rules || rules[r].cssRules;
-                        } catch (e) {
-                            console.log(`Can't read the css rules of: ${sheets[i].href} (${conditionText})`, e);
-                            continue;
-                        }
-                        if (mediaRules) {
-                            for (k = mediaRules.length-1; k >= 0; k--) {
-                                var selectorText = mediaRules[k].selectorText;
-                                if (selectorText && !SELECTORS_IGNORE.test(selectorText)) {
-                                    var st = selectorText.split(/\s*,\s*/);
-                                    for (l = 0 ; l < st.length ; l++) {
-                                        rulesCache.push({ 'selector': st[l], 'style': mediaRules[k].style });
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    var selectorText = rules[r].selectorText;
-                    if (selectorText && !SELECTORS_IGNORE.test(selectorText)) {
-                        var st = selectorText.split(/\s*,\s*/);
-                        for (l = 0 ; l < st.length ; l++) {
-                            rulesCache.push({ 'selector': st[l], 'style': rules[r].style });
-                        }
-                    }
-                }
-            }
-        }
-        rulesCache.reverse();
-    }
-
-    var css = [];
-    var style;
-    a.matches = a.matches || a.webkitMatchesSelector || a.mozMatchesSelector || a.msMatchesSelector || a.oMatchesSelector;
-    for (r = 0; r < rulesCache.length; r++) {
-        // The top element of a mailing has the class 'o_layout'. Give it the
-        // body's styles so they can trickle down.
-        if (a.matches(rulesCache[r].selector) || (a.classList.contains('o_layout') && rulesCache[r].selector === 'body')) {
-            style = rulesCache[r].style;
-            if (style.parentRule) {
-                var style_obj = {};
-                var len;
-                for (k = 0, len = style.length ; k < len ; k++) {
-                    if (style[k].indexOf('animation') !== -1) {
-                        continue;
-                    }
-                    style_obj[style[k]] = style[style[k].replace(/-(.)/g, function (a, b) { return b.toUpperCase(); })];
-                    if (new RegExp(style[k] + '\s*:[^:;]+!important' ).test(style.cssText)) {
-                        style_obj[style[k]] += ' !important';
-                    }
-                }
-                rulesCache[r].style = style = style_obj;
-            }
-            css.push([rulesCache[r].selector, style]);
+function getMatchedCSSRules(node, cssRules) {
+    node.matches = node.matches || node.webkitMatchesSelector || node.mozMatchesSelector || node.msMatchesSelector || node.oMatchesSelector;
+    const css = [];
+    for (const rule of cssRules) {
+        if (node.matches(rule.selector)) {
+            css.push([rule.selector, rule.style, rule.specificity]);
         }
     }
 
-    function specificity(selector) {
-        // http://www.w3.org/TR/css3-selectors/#specificity
-        let a = 0;
-        selector = selector.replace(/#[a-z0-9_-]+/gi, () => { a++; return ''; });
-        let b = 0;
-        selector = selector.replace(/(\.[a-z0-9_-]+)|(\[.*?\])/gi, () => { b++; return ''; });
-        let c = 0;
-        selector = selector.replace(/(^|\s+|:+)[a-z0-9_-]+/gi, a => { if (!a.includes(':not(')) c++; return ''; });
-        return (a * 100) + (b * 10) + c;
-    }
-    css.sort(function (a, b) { return specificity(a[0]) - specificity(b[0]); });
     // Add inline styles at the highest specificity.
-    if (a.style.length) {
+    if (node.style.length) {
         const inlineStyles = {};
-        for (const styleName of a.style) {
-            inlineStyles[styleName] = a.style[styleName];
+        for (const styleName of node.style) {
+            inlineStyles[styleName] = node.style[styleName];
         }
-        css.push([a, inlineStyles]);
+        css.push([node, inlineStyles]);
     }
 
-    style = {};
+    const style = {};
     for (const cssValue of css) {
         for (const [key, value] of Object.entries(cssValue[1])) {
-            if (value && _.isString(value) && key.indexOf('-webkit') === -1 && (!style[key] || style[key].indexOf('important') === -1 || value.indexOf('important') !== -1)) {
+            if (!style[key] || !style[key].includes('important') || value.includes('important')) {
                 style[key] = value;
             }
         };
@@ -131,7 +194,7 @@ function getMatchedCSSRules(a) {
         }
     };
 
-    if (style.display === 'block' && !(a.classList && a.classList.contains('btn-block'))) {
+    if (style.display === 'block' && !(node.classList && node.classList.contains('btn-block'))) {
         delete style.display;
     }
     if (!style['box-sizing']) {
@@ -699,11 +762,12 @@ function formatTables($editable) {
  * the style they give as inline style).
  *
  * @param {jQuery} $editable
+ * @param {Object} cssRules
  */
-function classToStyle($editable) {
+function classToStyle($editable, cssRules) {
     applyOverDescendants($editable[0], function (node) {
-        var $target = $(node);
-        var css = getMatchedCSSRules(node);
+        const $target = $(node);
+        const css = getMatchedCSSRules(node, cssRules);
         // Flexbox
         for (const styleName in node.style) {
             if (styleName.includes('flex') || `${node.style[styleName]}`.includes('flex')) {
@@ -712,12 +776,12 @@ function classToStyle($editable) {
         }
 
         // Do not apply css that would override inline styles (which are prioritary).
-        var style = $target.attr('style') || '';
-        _.each(css, function (v,k) {
-            if (!(new RegExp('(^|;)\\s*' + k).test(style))) {
-                style = k+':'+v+';'+style;
+        let style = $target.attr('style') || '';
+        for (const [key, value] of Object.entries(css)) {
+            if (!(new RegExp(`(^|;)\\s*${key}`).test(style))) {
+                style = `${key}:${value};${style}`;
             }
-        });
+        };
         if (_.isEmpty(style)) {
             $target.removeAttr('style');
         } else {
@@ -735,13 +799,11 @@ function classToStyle($editable) {
         if (node.nodeName === 'TD' && !node.childNodes.length) {
             $(node).html('&nbsp;');
         }
-
         // Outlook
         if (node.nodeName === 'A' && $target.hasClass('btn') && !$target.hasClass('btn-link') && !$target.children().length) {
             $target.prepend(`<!--[if mso]><i style="letter-spacing: 25px; mso-font-width: -100%; mso-text-raise: 30pt;">&nbsp;</i><![endif]-->`);
             $target.append(`<!--[if mso]><i style="letter-spacing: 25px; mso-font-width: -100%;">&nbsp;</i><![endif]-->`);
-        }
-        else if (node.nodeName === 'IMG' && $target.is('.mx-auto.d-block')) {
+        } else if (node.nodeName === 'IMG' && $target.is('.mx-auto.d-block')) {
             $target.wrap('<p class="o_outlook_hack" style="text-align:center;margin:0"/>');
         }
     });
@@ -808,6 +870,12 @@ FieldHtml.include({
     // Public
     //--------------------------------------------------------------------------
 
+    _createWysiwygIntance: function () {
+        return this._super(...arguments).then(() => {
+            this.cssRules = getCSSRules(this.wysiwyg.getEditable()[0].ownerDocument);
+        });
+    },
+
     /**
      * @override
      */
@@ -840,7 +908,7 @@ FieldHtml.include({
 
         attachmentThumbnailToLinkImg($editable);
         fontToImg($editable);
-        classToStyle($editable);
+        classToStyle($editable, this.cssRules);
         bootstrapToTable($editable);
         cardToTable($editable);
         listGroupToTable($editable);
@@ -866,6 +934,7 @@ FieldHtml.include({
 });
 
 export default {
+    getCSSRules: getCSSRules,
     fontToImg: fontToImg,
     bootstrapToTable: bootstrapToTable,
     cardToTable: cardToTable,
