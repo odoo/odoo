@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_users_form_simple_modif" model="ir.ui.view">
+        <field name="name">res.users.preferences.form.inherit.calendar.ical</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+        <field name="arch" type="xml">
+            <data>
+                <button name="preference_change_password" position="after">
+                    <button name="preference_calendar_subscribe" type="object" string="Subscribe to Calendar" class="btn-secondary"/>
+                </button>
+            </data>
+        </field>
+    </record>
+</odoo>
