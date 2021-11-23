@@ -12,7 +12,6 @@ class AccountPayment(models.Model):
     _order = "date desc, id desc, name desc"
 
     check_id = fields.Many2one('account.payment', string='Check', readonly=True, states={'draft': [('readonly', False)]}, copy=False,)
-    amount = fields.Monetary(compute='_compute_amount', store=True, recursive=True, copy=True,)
     third_check_current_journal_id = fields.Many2one('account.journal', compute='_compute_third_check_last_journal', string="Third Check Current Journal", store=True)
     third_check_operation_ids = fields.One2many('account.payment', 'check_id', readonly=True)
     third_check_bank_id = fields.Many2one(
@@ -29,8 +28,8 @@ class AccountPayment(models.Model):
         store=True,
     )
 
-    @api.depends('check_id.amount')
-    def _compute_amount(self):
+    @api.onchange('check_id')
+    def _onchange_check(self):
         for rec in self.filtered('check_id'):
             rec.amount = rec.check_id.amount
 
@@ -65,19 +64,18 @@ class AccountPayment(models.Model):
                     '\n* Check ids: %s') % (rec.check_number, same_checks.ids))
 
     @api.constrains('check_id')
-    def check(self):
+    def _check_amount_and_date(self):
         for rec in self.filtered('check_id'):
             date = self.date or fields.Datetime.now()
             operations = rec.check_id.third_check_operation_ids.sorted()
+            check = rec.check_id
             if operations and operations[0].date > date:
                 raise ValidationError(_(
-                    'The date of a new check operation can not be minor than '
-                    'last operation date.\n'
+                    'The date of a new check operation can not be minor than last operation date.\n'
                     '* Check Id: %s\n'
                     '* Check Number: %s\n'
-                    '* Operation: %s\n'
                     '* Operation Date: %s\n'
-                    '* Last Operation Date: %s') % (check.id, check.check_number, to_state, date, operations[0].date))
+                    '* Last Operation Date: %s') % (check.id, check.check_number, date, operations[0].date))
 
         for rec in self.filtered('check_id'):
             if not rec.currency_id.is_zero(rec.check_id.amount - rec.amount):

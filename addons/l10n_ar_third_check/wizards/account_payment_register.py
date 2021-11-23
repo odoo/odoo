@@ -8,7 +8,6 @@ class AccountPaymentRegister(models.TransientModel):
     _inherit = 'account.payment.register'
 
     check_id = fields.Many2one('account.payment', string='Check')
-    amount = fields.Monetary(compute='_compute_amount', readonly=False, store=True)
     third_check_bank_id = fields.Many2one('res.bank', compute='_compute_third_check_data', store=True, readonly=False)
     third_check_issuer_vat = fields.Char(store=True, compute='_compute_third_check_data', readonly=False)
 
@@ -22,8 +21,8 @@ class AccountPaymentRegister(models.TransientModel):
                 'third_check_issuer_vat': rec.partner_id.vat,
             })
 
-    @api.depends('check_id.amount')
-    def _compute_amount(self):
+    @api.onchange('check_id')
+    def _onchange_amount(self):
         for rec in self.filtered('check_id'):
             rec.amount = rec.check_id.amount
 
