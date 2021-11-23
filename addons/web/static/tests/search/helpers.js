@@ -181,6 +181,13 @@ export const applyGroup = async (el) => {
     await click(findItem(el, `.o_add_custom_group_menu .dropdown-menu .btn`));
 };
 
+export const groupByMenu = async (el, fieldName) => {
+    await toggleGroupByMenu(el);
+    await toggleAddCustomGroup(el);
+    await selectGroup(el, fieldName);
+    await applyGroup(el);
+};
+
 /** Favorite menu */
 
 export const toggleFavoriteMenu = async (el) => {
