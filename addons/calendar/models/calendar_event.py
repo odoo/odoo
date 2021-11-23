@@ -64,6 +64,15 @@ def get_weekday_occurence(date):
     return occurence_in_month
 
 
+def ics_datetime(idate, allday=False):
+    if idate:
+        if allday:
+            return idate
+        else:
+            return idate.replace(tzinfo=pytz.timezone('UTC'))
+    return False
+
+
 class Meeting(models.Model):
     _name = 'calendar.event'
     _description = "Calendar Event"
@@ -1360,22 +1369,28 @@ class Meeting(models.Model):
         """
         result = {}
 
-        def ics_datetime(idate, allday=False):
-            if idate:
-                if allday:
-                    return idate
-                return idate.replace(tzinfo=pytz.timezone('UTC'))
-            return False
-
         if not vobject:
             return result
 
         for meeting in self:
-            cal = vobject.iCalendar()
-            event = cal.add('vevent')
+            result[meeting.id] = meeting.ics()
 
+        return result
+
+    def ics(self):
+        """ Returns serialized iCalendar file containing the events. """
+        if not vobject:
+            return None
+        cal = vobject.iCalendar()
+        self._vevents(cal)
+        return cal.serialize().encode('utf-8')
+
+    def _vevents(self, cal):
+        for meeting in self:
             if not meeting.start or not meeting.stop:
                 raise UserError(_("First you have to specify the date of the invitation."))
+
+            event = cal.add('vevent')
             event.add('created').value = ics_datetime(fields.Datetime.now())
             event.add('dtstart').value = ics_datetime(meeting.start, meeting.allday)
             event.add('dtend').value = ics_datetime(meeting.stop, meeting.allday)
@@ -1413,10 +1428,6 @@ class Meeting(models.Model):
                 organizer.value = u'MAILTO:' + meeting.partner_id.email
                 if meeting.partner_id.name:
                     organizer.params['CN'] = [meeting.partner_id.display_name.replace('\"', '\'')]
-
-            result[meeting.id] = cal.serialize().encode('utf-8')
-
-        return result
 
     def _get_customer_description(self):
         """:return (str): The description to include in calendar exports"""
