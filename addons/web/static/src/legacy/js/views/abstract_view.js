@@ -237,15 +237,17 @@ var AbstractView = Factory.extend({
         if (this.withControlPanel) {
             // Control panel (Model)
             const ControlPanelComponent = this.config.ControlPanel;
-            extensions[ControlPanelComponent.modelExtension] = {
-                actionId: params.action.id,
-                // control initialization
-                activateDefaultFavorite: params.activateDefaultFavorite,
-                archNodes: controlPanelInfo.children,
-                dynamicFilters: params.dynamicFilters,
-                favoriteFilters,
-                withSearchBar: params.withSearchBar,
-            };
+            if (this.withSearchBar) {
+                extensions[ControlPanelComponent.modelExtension] = {
+                    actionId: params.action.id,
+                    // control initialization
+                    activateDefaultFavorite: params.activateDefaultFavorite,
+                    archNodes: controlPanelInfo.children,
+                    dynamicFilters: params.dynamicFilters,
+                    favoriteFilters,
+                    withSearchBar: params.withSearchBar,
+                };
+            }
             this.controllerParams.withControlPanel = true;
             // Control panel (Component)
             const controlPanelProps = {
