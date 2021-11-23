@@ -33,6 +33,7 @@ import {
     toggleMenuItem,
     toggleMenuItemOption,
     toggleSaveFavorite,
+    groupByMenu,
 } from "../search/helpers";
 import { createWebClient, doAction } from "../webclient/helpers";
 import { makeView } from "./helpers";
@@ -5480,9 +5481,10 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(list, "table", "should have a table in the dom");
     });
 
-    QUnit.skip("groupby node with a button", async function (assert) {
-        assert.expect(14);
+    QUnit.test("groupby node with a button", async function (assert) {
+        assert.expect(16);
 
+        serverData.models.foo.fields.currency_id.sortable = true;
         const list = await makeView({
             type: "list",
             resModel: "foo",
@@ -5496,39 +5498,34 @@ QUnit.module("Views", (hooks) => {
                 "</tree>",
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
-                return this._super.apply(this, arguments);
-            },
-            intercepts: {
-                execute_action: function (ev) {
-                    assert.deepEqual(ev.data.env.currentID, 2, "should call with correct id");
-                    assert.strictEqual(
-                        ev.data.env.model,
-                        "res_currency",
-                        "should call with correct model"
-                    );
-                    assert.strictEqual(
-                        ev.data.action_data.name,
-                        "button_method",
-                        "should call correct method"
-                    );
-                    assert.strictEqual(
-                        ev.data.action_data.type,
-                        "object",
-                        "should have correct type"
-                    );
-                    ev.data.on_success();
-                },
             },
         });
+        patchWithCleanup(list.env.services.action, {
+            doActionButton: (params) => {
+                assert.step(params.name);
+                assert.deepEqual(params.resId, 2, "should call with correct id");
+                assert.strictEqual(
+                    params.resModel,
+                    "res_currency",
+                    "should call with correct model"
+                );
+                assert.strictEqual(params.name, "button_method", "should call correct method");
+                assert.strictEqual(params.type, "object", "should have correct type");
+            },
+        });
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => fn(),
+            clearTimeout: () => {},
+        });
 
-        assert.verifySteps(["/web/dataset/search_read"]);
+        assert.verifySteps(["web_search_read"]);
         assert.containsOnce(
             list,
             "thead th:not(.o_list_record_selector)",
             "there should be only one column"
         );
 
-        await list.update({ groupBy: ["currency_id"] });
+        await groupByMenu(list, "currency_id");
 
         assert.verifySteps(["web_read_group"]);
         assert.containsN(list, ".o_group_header", 2, "there should be 2 group headers");
@@ -5538,12 +5535,12 @@ QUnit.module("Views", (hooks) => {
             0,
             "there should be no button in the header"
         );
+        await click(list.el, ".o_group_header:first-child");
+        assert.verifySteps(["web_search_read"]);
+        assert.containsOnce(list.el, ".o_group_header button");
 
-        await click($(list.el).find(".o_group_header:eq(0)"));
-        assert.verifySteps(["/web/dataset/search_read"]);
-        assert.containsOnce(list, ".o_group_header button");
-
-        await click($(list.el).find(".o_group_header:eq(0) button"));
+        await click(list.el, ".o_group_header:first-child button");
+        assert.verifySteps(["button_method"]);
     });
 
     QUnit.skip("groupby node with a button in inner groupbys", async function (assert) {
@@ -5570,7 +5567,7 @@ QUnit.module("Views", (hooks) => {
             "there should be no button in the header"
         );
 
-        await click($(list.el).find(".o_group_header:eq(0)"));
+        await click(list.el, ".o_group_header:first-child");
 
         assert.containsN(
             list,
