@@ -23,6 +23,18 @@
         </field>
     </record>
 
+    <record id="slide_channel_view_tree_report" model="ir.ui.view">
+        <field name="name">slide.channel.view.tree.report.inherit.sale_slides</field>
+        <field name="model">slide.channel</field>
+        <field name="inherit_id" ref="website_slides.slide_channel_view_tree_report"/>
+        <field name="arch" type="xml">
+            <field name="members_done_count" position="after">
+                <field name="currency_id" invisible="1"/>
+                <field name="product_sale_revenues" string="Total Revenues" sum="Total Revenues" widget="monetary"/>
+            </field>
+        </field>
+    </record>
+
     <record id="slide_channel_view_kanban" model="ir.ui.view">
         <field name="name">slide.channel.view.kanban.inherit.sale</field>
         <field name="model">slide.channel</field>

@@ -273,18 +273,32 @@
             <field name="name">slide.slide.tree</field>
             <field name="model">slide.slide</field>
             <field name="arch" type="xml">
+                <tree string="Contents" sample="1" multi_edit="1">
+                    <field name="name" readonly="1"/>
+                    <field name="channel_id" readonly="1"/>
+                    <field name="category_id" readonly="1" optional="hide"/>
+                    <field name="user_id" widget="many2one_avatar_user"/>
+                    <field name="is_published"/>
+                    <field name="date_published" readonly="1"/>
+                    <field name="completion_time" sum="Total" readonly="1" widget="float_time"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="slide_slide_view_tree_report" model="ir.ui.view">
+            <field name="name">slide.slide.view.tree.report</field>
+            <field name="model">slide.slide</field>
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
                 <tree string="Contents" sample="1">
                     <field name="name"/>
-                    <field name="website_id" groups="website.group_multi_website"/>
-                    <field name="active" invisible="1"/>
-                    <field name="slide_type"/>
+                    <field name="user_id" widget="many2one_avatar_user"/>
                     <field name="channel_id"/>
-                    <field name="category_id"/>
+                    <field name="category_id" optional="hide"/>
                     <field name="date_published"/>
-                    <field name="slide_views"/>
-                    <field name="public_views"/>
-                    <field name="total_views"/>
-                    <field name="completion_time"/>
+                    <field name="total_views" string="# Views" sum="Total Views"/>
+                    <field name="questions_count" string="# Questions" sum="Total Questions"/>
+                    <field name="completion_time" sum="Total Duration" widget="float_time"/>
                 </tree>
             </field>
         </record>
@@ -359,7 +373,8 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">slide.slide</field>
             <field name="view_mode">graph,tree,form,pivot</field>
-            <field name="view_id" ref="slide_slide_view_graph"/>
+            <field name="context">{"search_default_published": 1}</field>
+            <field name="domain">[('is_category', '=', False)]</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     No data yet!
@@ -367,6 +382,31 @@
                     Create new content for your eLearning
                 </p>
             </field>
+        </record>
+
+        <record id="slide_slide_action_report_view_graph" model="ir.actions.act_window.view">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="slide_slide_view_graph"/>
+            <field name="act_window_id" ref="slide_slide_action_report"/>
+        </record>
+        <record id="slide_slide_action_report_view_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="slide_slide_view_tree_report"/>
+            <field name="act_window_id" ref="slide_slide_action_report"/>
+        </record>
+        <record id="slide_slide_action_report_view_form" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_slide_slide_form"/>
+            <field name="act_window_id" ref="slide_slide_action_report"/>
+        </record>
+        <record id="slide_slide_action_report_view_pivot" model="ir.actions.act_window.view">
+            <field name="sequence" eval="3"/>
+            <field name="view_mode">pivot</field>
+            <field name="view_id" ref="slide_slide_view_pivot"/>
+            <field name="act_window_id" ref="slide_slide_action_report"/>
         </record>
     </data>
 </odoo>
