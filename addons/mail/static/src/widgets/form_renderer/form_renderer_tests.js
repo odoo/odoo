@@ -975,6 +975,81 @@ QUnit.test('chatter just contains "creating a new record" message during the cre
     );
 });
 
+QUnit.test('[TECHNICAL] unfolded read more/less links should not fold on message click besides those button links', async function (assert) {
+    // message click triggers a re-render. Before writing of this test, the
+    // insertion of read more/less links were done during render. This meant
+    // any re-render would re-insert the read more/less links. If some button
+    // links were unfolded, any re-render would fold them again.
+    //
+    // This previous behavior is undesirable, and results to bothersome UX
+    // such as inability to copy/paste unfolded message content due to click
+    // from text selection automatically folding all read more/less links.
+    assert.expect(3);
+
+    this.data['mail.message'].records.push({
+        author_id: 100,
+        // "data-o-mail-quote" added by server is intended to be compacted in read more/less blocks
+        body: `
+            <div>
+                Dear Joel Willis,<br>
+                Thank you for your enquiry.<br>
+                If you have any questions, please let us know.
+                <br><br>
+                Thank you,<br>
+                <span data-o-mail-quote="1">-- <br data-o-mail-quote="1">
+                    System
+                </span>
+            </div>
+        `,
+        id: 1000,
+        model: 'res.partner',
+        res_id: 2,
+    });
+    this.data['res.partner'].records.push({
+        display_name: "Someone",
+        id: 100,
+    });
+    await this.createView({
+        data: this.data,
+        hasView: true,
+        // View params
+        View: FormView,
+        model: 'res.partner',
+        res_id: 2,
+        arch: `
+            <form string="Partners">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        `,
+    });
+    assert.strictEqual(
+        document.querySelector('.o_Message_readMoreLess').textContent,
+        "read more",
+        "read more/less link on message should be folded initially (read more)"
+    );
+
+    document.querySelector('.o_Message_readMoreLess').click(),
+    assert.strictEqual(
+        document.querySelector('.o_Message_readMoreLess').textContent,
+        "read less",
+        "read more/less link on message should be unfolded after a click from initial rendering (read less)"
+    );
+
+    await afterNextRender(
+        () => document.querySelector('.o_Message').click(),
+    );
+    assert.strictEqual(
+        document.querySelector('.o_Message_readMoreLess').textContent,
+        "read less",
+        "read more/less link on message should still be unfolded after a click on message aside of this button click (read less)"
+    );
+});
+
 });
 });
 });
