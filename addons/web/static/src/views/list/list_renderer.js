@@ -178,8 +178,8 @@ export class ListRenderer extends Component {
             classNames.push("o_column_sortable");
         }
         const orderBy = this.props.list.orderBy;
-        if (orderBy.fieldName === column.name) {
-            classNames.push(orderBy.asc ? "o-sort-up" : "o-sort-down");
+        if (orderBy.length && orderBy[0].fieldName === column.name) {
+            classNames.push(orderBy[0].asc ? "o-sort-up" : "o-sort-down");
         }
         if (["float", "integer", "monetary"].includes(field.type)) {
             classNames.push("o_list_number_th");
@@ -285,7 +285,16 @@ export class ListRenderer extends Component {
 
     onClickSortColumn(fieldName) {
         if (this.fields[fieldName].sortable) {
-            this.props.list.sortBy(fieldName);
+            if (this.props.list.isGrouped) {
+                const isSortable =
+                    this.props.list.groups[0].aggregates[fieldName] ||
+                    this.props.list.groupBy.includes(fieldName);
+                if (isSortable) {
+                    this.props.list.sortBy(fieldName);
+                }
+            } else {
+                this.props.list.sortBy(fieldName);
+            }
         }
     }
 
