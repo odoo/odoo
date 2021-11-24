@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.mail.tests.common import MailCommon
+from uuid import uuid4
+
+from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 from odoo.tests.common import Form, users
 
 
@@ -125,6 +127,17 @@ class TestPartner(MailCommon):
         new_msg = new_user.message_ids[0]
         self.assertIn('Portal Access Granted', new_msg.body)
         self.assertEqual(new_msg.subtype_id, subtype_note)
+
+    def test_res_partner_get_mention_suggestions_priority(self):
+        name = uuid4()  # unique name to avoid conflict with already existing users
+        self.env['res.partner'].create([{'name': f'{name}-{i}-not-user'} for i in range(0, 2)])
+        for i in range(0, 2):
+            mail_new_test_user(self.env, login=f'{name}-{i}-portal-user', groups='base.group_portal')
+            mail_new_test_user(self.env, login=f'{name}-{i}-internal-user', groups='base.group_user')
+        partners_format = self.env['res.partner'].get_mention_suggestions(name, limit=5)
+        self.assertEqual(len(partners_format), 5, "should have found limit (5) partners")
+        self.assertEqual(list(map(lambda p: p['is_internal_user'], partners_format)), [True, True, False, False, False], "should return internal users in priority")
+        self.assertEqual(list(map(lambda p: bool(p['user_id']), partners_format)), [True, True, True, True, False], "should return partners without users last")
 
     @users('admin')
     def test_res_partner_merge_wizards(self):

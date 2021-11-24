@@ -416,7 +416,8 @@ class DiscussController(http.Controller):
                 'is_active': follower.is_active,
                 # When editing the followers, the "pencil" icon that leads to the edition of subtypes
                 # should be always be displayed and not only when "debug" mode is activated.
-                'is_editable': True
+                'is_editable': True,
+                'partner': follower.partner_id.mail_partner_format()[follower.partner_id],
             })
         return {
             'followers': followers,
