@@ -87,6 +87,13 @@
                                     <field class="ml-1" name="comments_count" widget="statinfo" nolabel="1"/> Comments
                                 </span>
                             </button>
+                            <button name="action_view_embeds" class="oe_stat_button" type="object" icon="fa-share-alt"
+                                attrs="{'invisible': [('embed_count', '=', 0)]}">
+                                <div class="o_stat_info">
+                                    <field name="embed_count"/>
+                                    <span class="o_stat_text">Embed Views</span>
+                                </div>
+                            </button>
                             <field name="is_published" class="ml-1" widget="website_redirect_button"
                                    attrs="{'invisible': ['|',('is_category', '=', True), ('channel_id', '=', False)]}"/>
                         </div>

@@ -1133,22 +1133,36 @@ class WebsiteSlides(WebsiteProfile):
 
     @http.route('/slides/embed/<int:slide_id>', type='http', auth='public', website=True, sitemap=False)
     def slides_embed(self, slide_id, page="1", **kw):
-        # Note : don't use the 'model' in the route (use 'slide_id'), otherwise if public cannot access the embedded
-        # slide, the error will be the website.403 page instead of the one of the website_slides.embed_slide.
-        # Do not forget the rendering here will be displayed in the embedded iframe
+        return self._slide_embed(slide_id, page=page, is_external_embed=False, **kw)
 
-        # try accessing slide, and display to corresponding template
+    @http.route('/slides/embed_external/<int:slide_id>', type='http', auth='public', website=True, sitemap=False)
+    def slides_embed_external(self, slide_id, page="1", **kw):
+        return self._slide_embed(slide_id, page=page, is_external_embed=True, **kw)
+
+    def _slide_embed(self, slide_id, page="1", is_external_embed=False, **kw):
+        """ Note : don't use the 'model' in the route (use 'slide_id'), otherwise if public cannot
+        access the embedded slide, the error will be the website.403 page instead of the one of the
+        website_slides.embed_slide.
+
+        Do not forget the rendering here will be displayed in the embedded iframe
+
+        Try accessing slide, and display to corresponding template.
+
+        When the content is embedded *externally*, meaning on a third party website, we do some
+        additional steps like displaying sharing controls and also updating some KPIs. """
+
         try:
             slide = request.env['slide.slide'].browse(slide_id)
-            # determine if it is embedded from external web page
-            referrer_url = request.httprequest.headers.get('Referer', '')
-            base_url = slide.get_base_url()
-            is_embedded = referrer_url and not bool(base_url in referrer_url) or False
-            if is_embedded:
-                request.env['slide.embed'].sudo()._add_embed_url(slide.id, referrer_url)
+            if not slide.exists():
+                raise werkzeug.exceptions.NotFound()
+
+            referer_url = request.httprequest.headers.get('Referer', '')
+            if is_external_embed:
+                slide.sudo()._embed_increment(referer_url)
+
             values = self._get_slide_detail(slide)
             values['page'] = page
-            values['is_embedded'] = is_embedded
+            values['is_external_embed'] = is_external_embed
             self._set_viewed_slide(slide)
             return request.render('website_slides.embed_slide', values)
         except AccessError: # TODO : please, make it clean one day, or find another secure way to detect

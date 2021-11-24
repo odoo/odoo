@@ -10,6 +10,7 @@ import PyPDF2
 import json
 
 from dateutil.relativedelta import relativedelta
+from markupsafe import Markup
 from PIL import Image
 from werkzeug import urls
 
@@ -54,30 +55,6 @@ class SlidePartnerRelation(models.Model):
             ('channel_id', 'in', self.channel_id.ids),
             ('partner_id', 'in', self.partner_id.ids),
         ])._recompute_completion()
-
-class EmbeddedSlide(models.Model):
-    """ Embedding in third party websites. Track view count, generate statistics. """
-    _name = 'slide.embed'
-    _description = 'Embedded Slides View Counter'
-    _rec_name = 'slide_id'
-
-    slide_id = fields.Many2one('slide.slide', string="Presentation", required=True, index=True)
-    url = fields.Char('Third Party Website URL', required=True)
-    count_views = fields.Integer('# Views', default=1)
-
-    def _add_embed_url(self, slide_id, url):
-        baseurl = urls.url_parse(url).netloc
-        if not baseurl:
-            return 0
-        embeds = self.search([('url', '=', baseurl), ('slide_id', '=', int(slide_id))], limit=1)
-        if embeds:
-            embeds.count_views += 1
-        else:
-            embeds = self.create({
-                'slide_id': slide_id,
-                'url': baseurl,
-            })
-        return embeds.count_views
 
 
 class SlideTag(models.Model):
@@ -165,8 +142,11 @@ class Slide(models.Model):
     dislikes = fields.Integer('Dislikes', compute='_compute_user_info', store=True, compute_sudo=False)
     user_vote = fields.Integer('User vote', compute='_compute_user_info', compute_sudo=False)
     embed_code = fields.Html('Embed Code', readonly=True, compute='_compute_embed_code', sanitize=False)
+    embed_code_external = fields.Html('External Embed Code', readonly=True, compute='_compute_embed_code', sanitize=False,
+        help="Same as 'Embed Code' but used to embed the content on an external website.")
     # views
-    embedcount_ids = fields.One2many('slide.embed', 'slide_id', string="Embed Count")
+    embed_ids = fields.One2many('slide.embed', 'slide_id', string="External Slide Embeds")
+    embed_count = fields.Integer('# of Embeds', compute='_compute_embed_counts')
     slide_views = fields.Integer('# of Website Views', store=True, compute="_compute_slide_views")
     public_views = fields.Integer('# of Public Views', copy=False)
     total_views = fields.Integer("# Total Views", default="0", compute='_compute_total', store=True)
@@ -272,6 +252,24 @@ class Slide(models.Model):
         for slide in self:
             slide.slide_views = mapped_data.get(slide.id, 0)
 
+    @api.depends('embed_ids.slide_id')
+    def _compute_embed_counts(self):
+        mapped_data = {}
+
+        if self.ids:
+            read_group_res = self.env['slide.embed'].read_group(
+                [('slide_id', 'in', self.ids)],
+                ['count_views'],
+                ['slide_id']
+            )
+            mapped_data = {
+                res['slide_id'][0]: res.get('count_views', 0)
+                for res in read_group_res
+            }
+
+        for slide in self:
+            slide.embed_count = mapped_data.get(slide.id, 0)
+
     @api.depends('slide_ids.sequence', 'slide_ids.slide_type', 'slide_ids.is_published', 'slide_ids.is_category')
     def _compute_slides_statistics(self):
         # Do not use dict.fromkeys(self.ids, dict()) otherwise it will use the same dictionnary for all keys.
@@ -320,25 +318,33 @@ class Slide(models.Model):
     @api.depends('document_id', 'slide_type', 'mime_type')
     def _compute_embed_code(self):
         base_url = request and request.httprequest.url_root
+
         for record in self:
+            embed_code_external = False
+
             if not base_url:
                 base_url = record.get_base_url()
             if base_url[-1] == '/':
                 base_url = base_url[:-1]
             if record.datas and (not record.document_id or record.slide_type in ['document', 'presentation']):
                 slide_url = base_url + url_for('/slides/embed/%s?page=1' % record.id)
-                record.embed_code = '<iframe src="%s" class="o_wslides_iframe_viewer" allowFullScreen="true" height="%s" width="%s" frameborder="0"></iframe>' % (slide_url, 315, 420)
+                slide_url_external = base_url + url_for('/slides/embed_external/%s?page=1' % record.id)
+                base_embed_code = Markup('<iframe src="%s" class="o_wslides_iframe_viewer" allowFullScreen="true" height="%s" width="%s" frameborder="0"></iframe>')
+                record.embed_code = base_embed_code % (slide_url, 315, 420)
+                embed_code_external = base_embed_code % (slide_url_external, 315, 420)
             elif record.slide_type == 'video' and record.document_id:
                 if not record.mime_type:
                     # embed youtube video
                     query = urls.url_parse(record.url).query
                     query = query + '&theme=light' if query else 'theme=light'
-                    record.embed_code = '<iframe src="//www.youtube-nocookie.com/embed/%s?%s" allowFullScreen="true" frameborder="0"></iframe>' % (record.document_id, query)
+                    record.embed_code = Markup('<iframe src="//www.youtube-nocookie.com/embed/%s?%s" allowFullScreen="true" frameborder="0"></iframe>') % (record.document_id, query)
                 else:
                     # embed google doc video
-                    record.embed_code = '<iframe src="//drive.google.com/file/d/%s/preview" allowFullScreen="true" frameborder="0"></iframe>' % (record.document_id)
+                    record.embed_code = Markup('<iframe src="//drive.google.com/file/d/%s/preview" allowFullScreen="true" frameborder="0"></iframe>') % (record.document_id)
             else:
                 record.embed_code = False
+
+            record.embed_code_external = embed_code_external or record.embed_code
 
     @api.onchange('url')
     def _on_change_url(self):
@@ -505,6 +511,32 @@ class Slide(models.Model):
     # Business Methods
     # ---------------------------------------------------------
 
+    def _embed_increment(self, url):
+        """ Increment the view count of the record we have based on the passed url.
+        If the url is empty, which typically happens if the browser does not pass the 'referer'
+        header properly, then we increment the entry that has 'False' as url value. """
+
+        self.ensure_one()
+
+        url_entry = url
+        if not urls.url_parse(url).netloc:
+            url_entry = False
+
+        embed_entry = self.env['slide.embed'].search([
+            ('url', '=', url_entry),
+            ('slide_id', '=', self.id)
+        ], limit=1)
+
+        if embed_entry:
+            embed_entry.count_views += 1
+        else:
+            embed_entry = self.env['slide.embed'].create({
+                'slide_id': self.id,
+                'url': url_entry,
+            })
+
+        return embed_entry
+
     def _post_publication(self):
         for slide in self.filtered(lambda slide: slide.website_published and slide.channel_id.publish_template_id):
             publish_template = slide.channel_id.publish_template_id
@@ -668,6 +700,13 @@ class Slide(models.Model):
             points += gains[user_membership_sudo.quiz_attempts_count - 1] if user_membership_sudo.quiz_attempts_count <= len(gains) else gains[-1]
 
         return self.env.user.sudo().add_karma(points)
+
+    def action_view_embeds(self):
+        self.ensure_one()
+
+        action = self.env["ir.actions.actions"]._for_xml_id("website_slides.slide_embed_action")
+        action['context'] = {'search_default_slide_id': self.id}
+        return action
 
     def _compute_quiz_info(self, target_partner, quiz_done=False):
         result = dict.fromkeys(self.ids, False)
