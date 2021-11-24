@@ -58,6 +58,9 @@
             <t t-foreach="list.records" t-as="record" t-key="record.id">
                 <t t-call="web.ListRenderer.RecordRow"/>
             </t>
+            <tr t-foreach="getEmptyRowIds" t-as="emptyRowId" t-key="emptyRowId">
+                <td t-att-colspan="state.columns.length + 1">&#8203;</td>
+            </tr>
         </t>
         <t t-else="">
             <t t-foreach="list.groups" t-as="group" t-key="group.id">

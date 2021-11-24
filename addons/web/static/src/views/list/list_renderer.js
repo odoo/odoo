@@ -4,7 +4,6 @@ import { browser } from "@web/core/browser/browser";
 import { CheckBoxDropdownItem } from "@web/core/dropdown/checkbox_dropdown_item";
 import { registry } from "@web/core/registry";
 import { Field } from "@web/fields/field";
-import { formatChar } from "@web/fields/formatters";
 import { ViewButton } from "@web/views/view_button/view_button";
 
 const { Component, useState } = owl;
@@ -237,6 +236,11 @@ export class ListRenderer extends Component {
             classes.push("o_invisible_modifier");
         }
         return classes;
+    }
+
+    get getEmptyRowIds() {
+        const nbEmptyRow = Math.max(0, 4 - this.props.list.records.length);
+        return Array.from(Array(nbEmptyRow).keys());
     }
 
     // Group headers logic:

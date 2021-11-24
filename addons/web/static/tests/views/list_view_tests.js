@@ -1148,7 +1148,7 @@ QUnit.module("Views", (hooks) => {
         await eventPromise;
     });
 
-    QUnit.skip("at least 4 rows are rendered, even if less data", async function (assert) {
+    QUnit.test("at least 4 rows are rendered, even if less data", async function (assert) {
         assert.expect(1);
 
         const list = await makeView({
