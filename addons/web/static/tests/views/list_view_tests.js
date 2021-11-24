@@ -958,7 +958,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(list, "th", 2, "should have 2 th");
     });
 
-    QUnit.skip("boolean field has no title", async function (assert) {
+    QUnit.test("boolean field has no title", async function (assert) {
         assert.expect(1);
 
         const list = await makeView({
@@ -970,7 +970,7 @@ QUnit.module("Views", (hooks) => {
         assert.equal($(list.el).find("tbody tr:first td:eq(1)").attr("title"), "");
     });
 
-    QUnit.skip("field with nolabel has no title", async function (assert) {
+    QUnit.test("field with nolabel has no title", async function (assert) {
         assert.expect(1);
 
         const list = await makeView({
@@ -982,7 +982,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual($(list.el).find("thead tr:first th:eq(1)").text(), "");
     });
 
-    QUnit.skip("field titles are not escaped", async function (assert) {
+    QUnit.test("field titles are not escaped", async function (assert) {
         assert.expect(2);
 
         serverData.models.foo.records[0].foo = "<div>Hello</div>";

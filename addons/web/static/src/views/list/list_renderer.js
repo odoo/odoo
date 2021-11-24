@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
-import { registry } from "@web/core/registry";
 import { CheckBoxDropdownItem } from "@web/core/dropdown/checkbox_dropdown_item";
+import { registry } from "@web/core/registry";
 import { Field } from "@web/fields/field";
+import { formatChar } from "@web/fields/formatters";
 import { ViewButton } from "@web/views/view_button/view_button";
-import { Domain } from "@web/core/domain";
 
 const { Component, useState } = owl;
 
@@ -213,6 +213,22 @@ export class ListRenderer extends Component {
         }
 
         return [...this.cellClassByColumn[column.name], ...modifiersClassNames].join(" ");
+    }
+
+    getCellTitle(column, record) {
+        const fieldName = column.name;
+        const fieldType = this.fields[fieldName].type;
+        if (fieldType === "boolean") {
+            return "";
+        }
+        const formatter = registry.category("formatters").get(fieldType);
+        const formatOptions = {
+            escape: false,
+            data: record.data,
+            isPassword: "password" in column.attrs,
+            digits: column.attrs.digits && JSON.parse(column.attrs.digits),
+        };
+        return formatter(record.data[fieldName], formatOptions);
     }
 
     getButtonClass(button, record) {
