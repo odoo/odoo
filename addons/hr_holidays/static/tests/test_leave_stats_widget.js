@@ -106,16 +106,15 @@ odoo.define('hr_holidays.leave_stats_widget_tests', function (require) {
                     return this._super.apply(this, arguments);
                 },
             });
-            var $leaveTypeBody = form.$('.o_leave_stats table:first > tbody');
-            var $leavesDepartmentBody = form.$('.o_leave_stats table:nth-child(2) > tbody');
-            var $leavesDepartmentHeader = form.$('.o_leave_stats table:nth-child(2) > thead');
+            const $leaveTypeBody = form.$('.o_leave_stats #o_leave_stats_employee');
+            const $leavesDepartmentBody = form.$('.o_leave_stats #o_leave_stats_department');
 
-            assert.strictEqual($leaveTypeBody.find('td:contains(Legal Leave)').length, 1, "it should have leave type");
-            assert.strictEqual($leaveTypeBody.find('td:contains(6)').length, 1, "it should have 6 days");
+            assert.strictEqual($leaveTypeBody.find('span:contains(Legal Leave)').length, 1, "it should have leave type");
+            assert.strictEqual($leaveTypeBody.find('span:contains(6)').length, 1, "it should have 6 days");
 
-            assert.strictEqual($leavesDepartmentBody.find('td:contains(Richard)').length, 2, "it should have 2 leaves for Richard");
-            assert.strictEqual($leavesDepartmentBody.find('td:contains(Jesus)').length, 1, "it should have 1 leaves for Jesus");
-            assert.strictEqual($leavesDepartmentHeader.find('td:contains(R&D)').length, 1, "it should have R&D title");
+            assert.strictEqual($leavesDepartmentBody.find('span:contains(Richard)').length, 2, "it should have 2 leaves for Richard");
+            assert.strictEqual($leavesDepartmentBody.find('span:contains(Jesus)').length, 1, "it should have 1 leaves for Jesus");
+            assert.strictEqual($leavesDepartmentBody.find('div.o_horizontal_separator:contains(R&D)').length, 1, "it should have R&D title");
             form.destroy();
         });
         QUnit.test('leave stats reload when employee/department changes', async function (assert) {
