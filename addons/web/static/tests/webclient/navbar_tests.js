@@ -9,7 +9,7 @@ import { actionService } from "@web/webclient/actions/action_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { NavBar } from "@web/webclient/navbar/navbar";
 import { clearRegistryWithCleanup, makeTestEnv } from "../helpers/mock_env";
-import { click, getFixture, nextTick, patchWithCleanup } from "../helpers/utils";
+import { click, getFixture, nextTick, patchWithCleanup, makeDeferred } from "../helpers/utils";
 
 const { Component, mount, tags } = owl;
 const { xml } = tags;
@@ -419,4 +419,39 @@ QUnit.test("'more' menu sections properly updated on app change", async (assert)
         "'more' menu should contain App2 sections"
     );
     navbar.destroy();
+});
+
+QUnit.test("Do not execute adapt when navbar is destroyed", async (assert) => {
+    assert.expect(5);
+
+    let prom = makeDeferred();
+
+    patchWithCleanup(browser, {
+        setTimeout: async (handler, delay, ...args) => { await prom; return handler(...args); },
+        clearTimeout: () => {},
+    });
+    class MyNavbar extends NavBar {
+        async adapt() {
+            assert.step("adapt NavBar");
+            return super.adapt();
+        }
+    }
+    const env = await makeTestEnv(baseConfig);
+
+    const target = getFixture();
+
+    // Set menu and mount
+    env.services.menu.setCurrentMenu(1);
+    const navbar = await mount(MyNavbar, { env, target });
+    assert.verifySteps(["adapt NavBar"]);
+    window.dispatchEvent(new Event("resize"));
+    prom.resolve();
+    await prom;
+    prom = makeDeferred();
+    assert.verifySteps(["adapt NavBar"]);
+    window.dispatchEvent(new Event("resize"));
+    navbar.destroy();
+    prom.resolve();
+    await prom;
+    assert.verifySteps([]);
 });
