@@ -228,9 +228,7 @@ export function mapDoActionOptionAPI(legacyOptions) {
         clearBreadcrumbs: legacyOptions.clear_breadcrumbs,
         viewType: legacyOptions.view_type,
         onClose: legacyOptions.on_close,
-        props: {
-            resId: legacyOptions.res_id,
-        },
+        props: Object.assign({ resId: legacyOptions.res_id }, legacyOptions.props),
     });
     if (legacyOptions.controllerState) {
         legacyOptions.props.globalState = getGlobalState(legacyOptions.controllerState);
