@@ -31,6 +31,7 @@ Featuring
         'views/res_config_settings_views.xml',
         'views/res_partner_views.xml',
         'views/rating_rating_views.xml',
+        'views/slide_embed_views.xml',
         'views/slide_question_views.xml',
         'views/slide_slide_views.xml',
         'views/slide_channel_partner_views.xml',
