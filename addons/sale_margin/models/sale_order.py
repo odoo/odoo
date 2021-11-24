@@ -23,7 +23,7 @@ class SaleOrderLine(models.Model):
                 line.purchase_price = 0.0
                 continue
             line = line.with_company(line.company_id)
-            product_cost = line.product_id.standard_price
+            product_cost = line.product_id.standard_price if line.create_date is False or line.product_type != 'service' else line.purchase_price
             line.purchase_price = line._convert_price(product_cost, line.product_id.uom_id)
 
     @api.depends('price_subtotal', 'product_uom_qty', 'purchase_price')
