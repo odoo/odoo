@@ -477,7 +477,10 @@ class MassMailing(models.Model):
         }
 
     def _get_recipients(self):
-        if self.mailing_domain:
+        if self.mailing_model_name == 'mailing.list' and self.contact_list_ids:
+            domain = [('list_ids', 'in', self.contact_list_ids.ids)]
+            res_ids = self.contact_list_ids.contact_ids.ids
+        elif self.mailing_domain:
             domain = safe_eval(self.mailing_domain)
             try:
                 res_ids = self.env[self.mailing_model_real].search(domain).ids
