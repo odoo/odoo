@@ -5,7 +5,9 @@ import config from 'web.config';
 import CalendarRenderer from "web.CalendarRenderer";
 import { TimeOffCalendarPopover } from "./time_off_calendar_popover";
 
-export const TimeOffPopoverRenderer = CalendarRenderer.extend({
+import { WidgetAdapterMixin } from 'web.OwlCompatibility';
+
+export const TimeOffPopoverRenderer = CalendarRenderer.extend(WidgetAdapterMixin, {
     template: "TimeOff.CalendarView.extend",
     /**
      * We're overriding this to display the weeknumbers on the year view
@@ -66,5 +68,23 @@ export const TimeOffPopoverRenderer = CalendarRenderer.extend({
                 this.innerHTML = '';
             }
         });
+    },
+
+    /*
+     * OWL Compatibility layer
+     */
+    on_attach_callback() {
+        this._super(...arguments);
+        WidgetAdapterMixin.on_attach_callback.call(this);
+    },
+
+    on_detach_callback() {
+        this._super(...arguments);
+        WidgetAdapterMixin.on_detach_callback.call(this);
+    },
+
+    destroy() {
+        this._super(...arguments);
+        WidgetAdapterMixin.destroy.call(this);
     },
 });
