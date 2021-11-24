@@ -31,4 +31,4 @@ class Applicant(models.Model):
                 'phone': self.partner_phone,
                 'mobile': self.partner_mobile
             })
-        return self.survey_id.with_context(default_partner_ids=self.partner_id.ids, active_model='hr.applicant', active_id=self.id).action_send_survey()
+        return self.survey_id.with_context(default_applicant_id=self.id, default_partner_ids=self.partner_id.ids).action_send_survey()
