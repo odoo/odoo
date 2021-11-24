@@ -39,11 +39,12 @@
                         <group>
                             <group>
                                 <field name="active" invisible="1"/>
+                                <field name="hide_reservation_method" invisible="1"/>
                                 <field name="name"/>
                                 <field name="sequence_id" groups="base.group_no_one"/>
                                 <field name="sequence_code"/>
                                 <field name="warehouse_id" groups="stock.group_stock_multi_warehouses" force_save="1"/>
-                                <field name="reservation_method" attrs="{'invisible': [('code', '=', 'incoming')]}" widget="radio"/>
+                                <field name="reservation_method" attrs="{'invisible': [('hide_reservation_method', '=', True)]}" widget="radio"/>
                                 <field name="auto_show_reception_report" attrs="{'invisible': [('code', 'not in', ['incoming', 'internal'])]}" groups="stock.group_reception_report"/>
                                 <label for="reservation_days_before" string="Reserve before scheduled date" attrs="{'invisible': ['|', ('code', '=', 'incoming'), ('reservation_method', '!=', 'by_date')]}"/>
                                 <div class="o_row" attrs="{'invisible': ['|', ('code', '=', 'incoming'), ('reservation_method', '!=', 'by_date')]}">

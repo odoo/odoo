@@ -82,6 +82,7 @@ class PickingType(models.Model):
     count_picking_waiting = fields.Integer(compute='_compute_picking_count')
     count_picking_late = fields.Integer(compute='_compute_picking_count')
     count_picking_backorders = fields.Integer(compute='_compute_picking_count')
+    hide_reservation_method = fields.Boolean(compute='_compute_hide_reservation_method')
     barcode = fields.Char('Barcode', copy=False)
     company_id = fields.Many2one(
         'res.company', 'Company', required=True,
@@ -127,6 +128,11 @@ class PickingType(models.Model):
                         'company_id': picking_type.env.company.id,
                     })
         return super(PickingType, self).write(vals)
+
+    @api.depends('code')
+    def _compute_hide_reservation_method(self):
+        for rec in self:
+            rec.hide_reservation_method = rec.code == 'incoming'
 
     def _compute_picking_count(self):
         domains = {
