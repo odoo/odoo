@@ -50,7 +50,7 @@ odoo.define('pos_coupon.tour.pos_coupon1', function (require) {
     //   - on cheapest product
     ProductScreen.exec.addOrderline('Letter Tray', '4');
     ProductScreen.exec.addOrderline('Desk Organizer', '9');
-    PosCoupon.check.hasRewardLine('90.0% discount on cheapest product', '-4.32');
+    PosCoupon.check.hasRewardLine('90.0% discount on cheapest product', '-4.75');
     PosCoupon.check.orderTotalIs('62.27');
     PosCoupon.do.enterCode('5678');
     PosCoupon.check.hasRewardLine('Free Product - Desk Organizer', '-15.30');
