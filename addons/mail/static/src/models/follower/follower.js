@@ -41,6 +41,9 @@ function factory(dependencies) {
                     data2.partner = insert(partnerData);
                 }
             }
+            if (data.partner) {
+                data2.partner = insertAndReplace(this.models['mail.partner'].convertData(data.partner));
+            }
             return data2;
         }
 
