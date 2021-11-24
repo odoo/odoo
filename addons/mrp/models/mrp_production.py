@@ -407,7 +407,7 @@ class MrpProduction(models.Model):
             else:
                 action['views'] = form_view
             action['res_id'] = pickings.id
-        action['context'] = dict(action.get('context', {}), create=False, default_origin=self.name)
+        action['context'] = dict(self._context, default_origin=self.name, create=False)
         return action
 
     @api.depends('product_uom_id', 'product_qty', 'product_id.uom_id')
@@ -1623,7 +1623,7 @@ class MrpProduction(models.Model):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("stock.action_stock_scrap")
         action['domain'] = [('production_id', '=', self.id)]
-        action['context'] = dict(action.get('context', {}), create=False)
+        action['context'] = dict(self._context, default_origin=self.name)
         return action
 
     @api.model

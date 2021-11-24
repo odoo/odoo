@@ -1364,7 +1364,7 @@ class Task(models.Model):
             'res_model': 'project.task',
             'res_id': self.parent_id.id,
             'type': 'ir.actions.act_window',
-            'context': dict(create=False)
+            'context': dict(self._context, create=False)
         }
 
     def action_subtask(self):
