@@ -10,6 +10,9 @@ import { evaluateExpr } from "@web/core/py_js/py";
 
 const preloadedDataRegistry = registry.category("preloadedData");
 
+function orderByToString(orderBy) {
+    return orderBy.map((o) => `${o.fieldName} ${o.asc ? "ASC" : "DESC"}`).join(", ");
+}
 class RequestBatcherORM extends ORM {
     constructor() {
         super(...arguments);
@@ -316,7 +319,7 @@ class DynamicList extends DataPoint {
 
         this.groupBy = params.groupBy || [];
         this.domain = params.domain || [];
-        this.orderBy = params.orderedBy || {}; // rename orderBy + get back from state
+        this.orderBy = params.orderedBy || []; // rename orderBy + get back from state
         this.offset = 0;
         this.count = 0;
         this.limit = params.limit || state.limit || this.constructor.DEFAULT_LIMIT;
@@ -342,14 +345,16 @@ class DynamicList extends DataPoint {
         this.model.notify();
         return list;
     }
+
     async sortBy(fieldName) {
-        if (this.orderBy.fieldName === fieldName) {
-            this.orderBy.asc = !this.orderBy.asc;
+        if (this.orderBy.length && this.orderBy[0].fieldName === fieldName) {
+            this.orderBy[0].asc = !this.orderBy[0].asc;
         } else {
-            this.orderBy = {
+            this.orderBy = this.orderBy.filter((o) => o.fieldName !== fieldName);
+            this.orderBy.unshift({
                 fieldName,
                 asc: true,
-            };
+            });
         }
 
         await this.load();
@@ -397,9 +402,7 @@ export class DynamicRecordList extends DynamicList {
     // -------------------------------------------------------------------------
 
     async _loadRecords() {
-        const order = this.orderBy.fieldName
-            ? `${this.orderBy.fieldName} ${this.orderBy.asc ? "ASC" : "DESC"}`
-            : "";
+        const order = orderByToString(this.orderBy);
         const { records, length } = await this.model.orm.webSearchRead(
             this.resModel,
             this.domain,
@@ -514,9 +517,7 @@ export class DynamicGroupList extends DynamicList {
     // ------------------------------------------------------------------------
 
     async _loadGroups() {
-        const orderby = this.orderBy.fieldName
-            ? `${this.orderBy.fieldName} ${this.orderBy.asc ? "ASC" : "DESC"}`
-            : "";
+        const orderby = orderByToString(this.orderBy);
         const { groups, length } = await this.model.orm.webReadGroup(
             this.resModel,
             this.domain,

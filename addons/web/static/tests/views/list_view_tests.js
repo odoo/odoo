@@ -2779,7 +2779,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skip("groups can be sorted on aggregates", async function (assert) {
+    QUnit.test("groups can be sorted on aggregates", async function (assert) {
         assert.expect(10);
         const list = await makeView({
             type: "list",
@@ -2829,8 +2829,8 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["default order", "int_field ASC", "int_field DESC"]);
     });
 
-    QUnit.skip("groups cannot be sorted on non-aggregable fields", async function (assert) {
-        assert.expect(6);
+    QUnit.test("groups cannot be sorted on non-aggregable fields", async function (assert) {
+        assert.expect(8);
         serverData.models.foo.fields.sort_field = {
             string: "sortable_field",
             type: "sting",
@@ -2854,22 +2854,19 @@ QUnit.module("Views", (hooks) => {
                 }
             },
         });
+        assert.verifySteps(["default order"]);
         //we cannot sort by sort_field since it doesn't have a group_operator
         await click(list.el.querySelectorAll(".o_column_sortable")[2]);
+        assert.verifySteps([]);
         //we can sort by int_field since it has a group_operator
         await click(list.el.querySelectorAll(".o_column_sortable")[1]);
+        assert.verifySteps(["int_field ASC"]);
         //we keep previous order
         await click(list.el.querySelectorAll(".o_column_sortable")[2]);
+        assert.verifySteps([]);
         //we can sort on foo since we are groupped by foo + previous order
         await click(list.el.querySelectorAll(".o_column_sortable")[0]);
-
-        assert.verifySteps([
-            "default order",
-            "default order",
-            "int_field ASC",
-            "int_field ASC",
-            "foo ASC, int_field ASC",
-        ]);
+        assert.verifySteps(["foo ASC, int_field ASC"]);
     });
 
     QUnit.skip("properly apply onchange in simple case", async function (assert) {
