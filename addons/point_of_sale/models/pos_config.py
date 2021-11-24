@@ -72,7 +72,7 @@ class PosConfig(models.Model):
         help='The receipt will automatically be printed at the end of each order.')
     iface_print_skip_screen = fields.Boolean(string='Skip Preview Screen', default=True,
         help='The receipt screen will be skipped if the receipt can be printed automatically.')
-    iface_tax_included = fields.Selection([('subtotal', 'Tax-Excluded Price'), ('total', 'Tax-Included Price')], string="Tax Display", default='subtotal', required=True)
+    iface_tax_included = fields.Selection([('subtotal', 'Tax-Excluded Price'), ('total', 'Tax-Included Price')], string="Tax Display", default='total', required=True)
     iface_start_categ_id = fields.Many2one('pos.category', string='Initial Category',
         help='The point of sale will display this product category by default. If no category is specified, all available products will be shown.')
     iface_available_categ_ids = fields.Many2many('pos.category', string='Available PoS Product Categories',
@@ -140,7 +140,7 @@ class PosConfig(models.Model):
     module_pos_discount = fields.Boolean("Global Discounts")
     module_pos_loyalty = fields.Boolean("Loyalty Program")
     module_pos_mercury = fields.Boolean(string="Integrated Card Payments")
-    product_configurator = fields.Boolean(string="Product Configurator")
+    product_configurator = fields.Boolean(string="Product Configurator", default=True)
     is_posbox = fields.Boolean("PosBox")
     is_header_or_footer = fields.Boolean("Header & Footer")
     module_pos_hr = fields.Boolean(help="Show employee login screen")

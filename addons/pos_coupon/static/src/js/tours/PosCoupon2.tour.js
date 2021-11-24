@@ -20,10 +20,10 @@ odoo.define('pos_coupon.tour.pos_coupon2', function (require) {
     ProductScreen.exec.addOrderline('Desk Organizer', '10'); // 5.1
     PosCoupon.check.hasRewardLine('on cheapest product', '-4.59');
     ProductScreen.exec.addOrderline('Letter Tray', '4'); // 4.8 tax 10%
-    PosCoupon.check.hasRewardLine('on cheapest product', '-4.32');
+    PosCoupon.check.hasRewardLine('on cheapest product', '-4.75');
     PosCoupon.do.enterCode('123456');
     PosCoupon.check.hasRewardLine('10.0% discount on total amount', '-5.10');
-    PosCoupon.check.hasRewardLine('10.0% discount on total amount', '-1.92');
+    PosCoupon.check.hasRewardLine('10.0% discount on total amount', '-2.11');
     PosCoupon.check.orderTotalIs('64.91');
     PosCoupon.exec.finalizeOrder('Cash', '70');
 
