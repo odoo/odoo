@@ -164,6 +164,18 @@ class StockPicking(models.Model):
         pickings = self.filtered(lambda p: p.picking_type_id != p.picking_type_id.warehouse_id.pos_type_id)
         return super(StockPicking, pickings)._send_confirmation_email()
 
+
+class StockPickingType(models.Model):
+    _inherit = 'stock.picking.type'
+
+    @api.depends('warehouse_id')
+    def _compute_hide_reservation_method(self):
+        super()._compute_hide_reservation_method()
+        for picking_type in self:
+            if picking_type == picking_type.warehouse_id.pos_type_id:
+                picking_type.hide_reservation_method = True
+
+
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'
 
