@@ -135,6 +135,23 @@
             </field>
         </record>
 
+        <!-- We need kanban view to be displayed first while coming from registration desk, so we have created
+         new action and changed the view sequence. -->
+        <record id="event_registration_action_kanban" model="ir.actions.act_window">
+            <field name="res_model">event.registration</field>
+            <field name="name">Attendees</field>
+            <field name="view_mode">kanban,tree,form,calendar,graph</field>
+            <field name="domain">[('event_id', '=', active_id)]</field>
+            <field name="context">{'default_event_id': active_id}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No Attendees yet!
+                </p><p>
+                    Wait until Attendees register to your Event or create their registrations manually.
+                </p>
+            </field>
+        </record>
+
         <record id="event_registration_action" model="ir.actions.act_window">
             <field name="res_model">event.registration</field>
             <field name="name">Attendees</field>
