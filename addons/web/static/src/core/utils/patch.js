@@ -83,6 +83,7 @@ export function patch(obj, patchName, patchValue, options = {}) {
                         Object.defineProperty(this, "_super", {
                             value: _superFn.bind(this),
                             configurable: true,
+                            writable: true,
                         });
                     }
                     const result = patchFn.call(this, ...args);
@@ -90,6 +91,7 @@ export function patch(obj, patchName, patchValue, options = {}) {
                         Object.defineProperty(this, "_super", {
                             value: prevSuper,
                             configurable: true,
+                            writable: true,
                         });
                     }
                     return result;
