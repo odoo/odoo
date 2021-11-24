@@ -17,6 +17,7 @@ class Survey(models.Model):
     and each page can display one or more questions. """
     _name = 'survey.survey'
     _description = 'Survey'
+    _order = 'create_date DESC'
     _rec_name = 'title'
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
@@ -55,11 +56,15 @@ class Survey(models.Model):
         help="This message will be displayed when survey is completed")
     background_image = fields.Binary("Background Image")
     active = fields.Boolean("Active", default=True)
-    user_id = fields.Many2one('res.users', string='Responsible', tracking=True, default=lambda self: self.env.user)
+    user_id = fields.Many2one(
+        'res.users', string='Responsible',
+        domain=[('share', '=', False)], tracking=True,
+        default=lambda self: self.env.user)
     # questions
     question_and_page_ids = fields.One2many('survey.question', 'survey_id', string='Sections and Questions', copy=True)
     page_ids = fields.One2many('survey.question', string='Pages', compute="_compute_page_and_question_ids")
     question_ids = fields.One2many('survey.question', string='Questions', compute="_compute_page_and_question_ids")
+    question_count = fields.Integer('# Questions', compute="_compute_page_and_question_ids")
     questions_layout = fields.Selection([
         ('one_page', 'One page with all the questions'),
         ('page_per_section', 'One page per section'),
@@ -224,6 +229,7 @@ class Survey(models.Model):
         for survey in self:
             survey.page_ids = survey.question_and_page_ids.filtered(lambda question: question.is_page)
             survey.question_ids = survey.question_and_page_ids - survey.page_ids
+            survey.question_count = len(survey.question_ids)
 
     @api.depends('question_and_page_ids.is_conditional', 'users_login_required', 'access_mode')
     def _compute_is_attempts_limited(self):
