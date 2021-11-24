@@ -5,6 +5,7 @@ var tour = require("web_tour.tour");
 var base = require("web_editor.base");
 
 tour.register("carousel_content_removal", {
+    test: true,
     url: "/",
     wait_for: base.ready(),
 }, [{
