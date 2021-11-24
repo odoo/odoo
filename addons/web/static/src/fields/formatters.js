@@ -4,9 +4,8 @@ import { formatDate, formatDateTime } from "@web/core/l10n/dates";
 import { localization as l10n } from "@web/core/l10n/localization";
 import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { intersperse } from "@web/core/utils/strings";
+import { escape, intersperse } from "@web/core/utils/strings";
 import { session } from "@web/session";
-
 // -----------------------------------------------------------------------------
 // Helpers
 // -----------------------------------------------------------------------------
@@ -88,6 +87,28 @@ const humanNumber = (number, options = { decimals: 0, minDigits: 1 }) => {
 // -----------------------------------------------------------------------------
 // Exports
 // -----------------------------------------------------------------------------
+
+/**
+ * Returns a string representing a char.  If the value is false, then we return
+ * an empty string.
+ *
+ * @param {string|false} value
+ * @param {Object} [options] additional options
+ * @param {boolean} [options.escape=false] if true, escapes the formatted value
+ * @param {boolean} [options.isPassword=false] if true, returns '********'
+ *   instead of the formatted value
+ * @returns {string}
+ */
+export const formatChar = (value, options) => {
+    value = typeof value === "string" ? value : "";
+    if (options && options.isPassword) {
+        return "*".repeat(value ? value.length : 0);
+    }
+    if (options && options.escape) {
+        value = escape(value);
+    }
+    return value;
+};
 
 /**
  * Returns a string representing a float.  The result takes into account the
@@ -336,6 +357,7 @@ export const formatPercentage = (value, options = {}) => {
 
 registry
     .category("formatters")
+    .add("char", formatChar)
     .add("date", formatDate)
     .add("datetime", formatDateTime)
     .add("float", formatFloat)

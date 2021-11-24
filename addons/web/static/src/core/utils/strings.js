@@ -31,6 +31,16 @@ export function escapeRegExp(str) {
 }
 
 /**
+ * Escapes a string.
+ *
+ * @param {string} str
+ * @returns {string} escaped string
+ */
+ export function escape(str) {
+    return _.escape(str);
+}
+
+/**
  * Intersperses ``separator`` in ``str`` at the positions indicated by
  * ``indices``.
  *

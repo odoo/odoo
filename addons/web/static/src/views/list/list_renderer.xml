@@ -11,7 +11,7 @@
                         </th>
                         <t t-foreach="state.columns" t-as="column" t-key="column.name">
                             <th t-if="column.type === 'field'" t-att-class="getColumnClass(column)" t-on-click="onClickSortColumn(column.name)">
-                                <t t-esc="column.string"/>
+                                <t t-if="!column.attrs.nolabel" t-esc="column.string"/>
                             </th>
                             <th t-else=""></th>
                         </t>
@@ -111,7 +111,7 @@
             </td>
             <t t-foreach="state.columns" t-as="column" t-key="column.name">
                 <t t-if="column.type === 'field'">
-                    <td class="o_data_cell" t-att-class="getCellClass(column, record)">
+                    <td class="o_data_cell" t-att-class="getCellClass(column, record)" t-att-title="getCellTitle(column, record)">
                         <Field name="column.name" record="record" readonly="true" type="column.widget" />
                     </td>
                 </t>
