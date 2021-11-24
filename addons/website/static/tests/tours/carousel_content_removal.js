@@ -3,6 +3,7 @@
 import tour from 'web_tour.tour';
 
 tour.register("carousel_content_removal", {
+    test: true,
     url: "/",
 }, [{
     trigger: "a[data-action=edit]",
