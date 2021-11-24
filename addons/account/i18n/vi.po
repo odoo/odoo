@@ -226,7 +226,7 @@ msgstr ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Xin chào ${object.partner_id.name}<br/><br/>\n"
 "        Cảm ơn bạn đã thanh toán.\n"
-"        Đây là biên nhận của bạn <strong>${(object.name or '').replace('/','-')}</strong> với số tiền\n"
+"        Đây là biên lai của bạn <strong>${(object.name or '').replace('/','-')}</strong> với số tiền\n"
 "        là <strong>${format_amount(object.amount, object.currency_id)}</strong> từ ${object.company_id.name}.\n"
 "        <br/><br/>\n"
 "        Đừng ngần ngại liên hệ với chúng tôi nếu bạn có bất kỳ câu hỏi nào.\n"
@@ -668,7 +668,7 @@ msgid ""
 "<span title=\"Outstanding Payments/Receipts\">Outstanding "
 "Payments/Receipts</span>"
 msgstr ""
-"<span title=\"Thanh toán trước / Biên nhận\">Thanh toán trước / Biên "
+"<span title=\"Thanh toán trước / Biên lai\">Thanh toán trước / Biên "
 "nhận</span>"
 
 #. module: account
@@ -1547,7 +1547,7 @@ msgstr "Kích hoạt các đơn vị tiền tệ khác"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Activate to create purchase receipt"
-msgstr "Kích hoạt để tạo biên nhận mua hàng"
+msgstr "Kích hoạt để tạo biên lai mua hàng"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__active
@@ -1577,7 +1577,7 @@ msgstr "Miền hiệu lực"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Active to create sale receipt"
-msgstr "Kích hoạt để tạo biên nhận bán hàng"
+msgstr "Kích hoạt để tạo biên lai bán hàng"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_ids
@@ -2493,7 +2493,7 @@ msgstr "Giá Bình quân"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "BILL"
-msgstr "HÓA ĐƠN"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__trust__bad
@@ -8751,12 +8751,12 @@ msgstr "Tài khoản Thanh toán trả trước"
 #: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid "Outstanding Receipts"
-msgstr "Biên nhận trả trước"
+msgstr "Biên lai trả trước"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__payment_debit_account_id
 msgid "Outstanding Receipts Account"
-msgstr "Tài khoản biên nhận trả trước"
+msgstr "Tài khoản biên lai trả trước"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -10294,7 +10294,7 @@ msgstr "Bán"
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_show_sale_receipts
 #: model:res.groups,name:account.group_sale_receipts
 msgid "Sale Receipt"
-msgstr "Biên nhận bán hàng"
+msgstr "Biên lai bán hàng"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_moves_journal_sales
