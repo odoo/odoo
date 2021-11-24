@@ -8,6 +8,7 @@ import time
 
 _logger = logging.getLogger(__name__)
 
+
 @tagged('external_l10n', '-at_install', 'post_install', '-standard', 'external')
 class TestAr(AccountTestInvoicingCommon):
 
@@ -75,6 +76,7 @@ class TestAr(AccountTestInvoicingCommon):
         })
 
         # ==== Partners / Customers ====
+        cls.partner_afip = cls.env.ref("l10n_ar.partner_afip")
         cls.res_partner_adhoc = cls.env['res.partner'].create({
             "name": "ADHOC SA",
             "is_company": 1,
@@ -179,6 +181,9 @@ class TestAr(AccountTestInvoicingCommon):
         cls.tax_perc_iibb = cls._search_tax(cls, 'percepcion_iibb_ba')
         cls.tax_iva_exento = cls._search_tax(cls, 'iva_exento')
 
+        cls.tax_21_purchase = cls._search_tax(cls, 'iva_21', type_tax_use='purchase')
+        cls.tax_no_gravado_purchase = cls._search_tax(cls, 'iva_no_gravado', type_tax_use='purchase')
+
         # ==== Products ====
         uom_unit = cls.env.ref('uom.product_uom_unit')
         uom_hour = cls.env.ref('uom.product_uom_hour')
@@ -188,6 +193,7 @@ class TestAr(AccountTestInvoicingCommon):
             'uom_id': uom_unit.id,
             'uom_po_id': uom_unit.id,
             'lst_price': 320.0,
+            'standard_price': 800.0,
             'type': "consu",
             'default_code': 'E-COM07',
         })
@@ -197,6 +203,7 @@ class TestAr(AccountTestInvoicingCommon):
             'uom_id': uom_unit.id,
             'uom_po_id': uom_unit.id,
             'lst_price': 130.0,
+            'standard_price': 250.0,
             'type': 'service',
             'default_code': 'TELEFONIA',
             'taxes_id': [(6, 0, cls.tax_27.ids)],
@@ -207,6 +214,7 @@ class TestAr(AccountTestInvoicingCommon):
             'uom_id': uom_unit.id,
             'uom_po_id': uom_unit.id,
             'list_price': 160.0,
+            'standard_price': 200.0,
             'type': 'consu',
             'default_code': 'CERO',
             'taxes_id': [(6, 0, cls.tax_0.ids)],
@@ -216,6 +224,7 @@ class TestAr(AccountTestInvoicingCommon):
             'name': 'Laptop Customized (VAT 10,5)',
             'uom_id': uom_unit.id,
             'uom_po_id': uom_unit.id,
+            'standard_price': 4500.0,
             'type': 'consu',
             'default_code': '10,5',
             'taxes_id': [(6, 0, cls.tax_10_5.ids)],
@@ -226,6 +235,7 @@ class TestAr(AccountTestInvoicingCommon):
             'uom_id': uom_hour.id,
             'uom_po_id': uom_hour.id,
             'list_price': 38.25,
+            'standard_price': 45.5,
             'type': 'service',
             'default_code': 'VAT 21',
             'taxes_id': [(6, 0, cls.tax_21.ids)],
@@ -236,6 +246,7 @@ class TestAr(AccountTestInvoicingCommon):
             'uom_id': uom_unit.id,
             'uom_po_id': uom_unit.id,
             'list_price': 40.00,
+            'standard_price': 50.0,
             'type': 'consu',
             'default_code': 'NOGRAVADO',
             'taxes_id': [(6, 0, cls.tax_no_gravado.ids)],
@@ -243,6 +254,7 @@ class TestAr(AccountTestInvoicingCommon):
         cls.product_iva_105_perc = cls.product_iva_105.copy({
             # product.product_product_25
             "name": "Laptop E5023 (VAT 10,5)",
+            "standard_price": 3280.0,
             # agregamos percecipn aplicada y sufrida tambien
             'taxes_id': [(6, 0, [cls.tax_10_5.id, cls.tax_perc_iibb.id])],
         })
@@ -251,10 +263,28 @@ class TestAr(AccountTestInvoicingCommon):
             'name': 'Book: Development in Odoo (VAT Exempt)',
             'uom_id': uom_unit.id,
             'uom_po_id': uom_unit.id,
+            'standard_price': 100.0,
             "list_price": 80.0,
             'type': 'consu',
             'default_code': 'EXENTO',
             'taxes_id': [(6, 0, cls.tax_iva_exento.ids)],
+        })
+        cls.service_wo_tax = cls.env['product.product'].create({
+            # demo product_product_quote_despacho
+            'name': 'Service WO TAX',
+            'type': 'service',
+            'uom_id': uom_unit.id,
+            'uom_po_id': uom_unit.id,
+            'default_code': 'AFIP_DESPACHO',
+        })
+        cls.service_iva_no_gravado = cls.env['product.product'].create({
+            # demo product_product_arancel
+            'name': 'Server VAT Untaxed',
+            'type': 'service',
+            'uom_id': uom_unit.id,
+            'uom_po_id': uom_unit.id,
+            'default_code': 'AFIP_ARANCEL',
+            "supplier_taxes_id": [(6, 0, (cls.tax_no_gravado_purchase).ids)],
         })
 
         # ==== Document Types ====
@@ -283,6 +313,8 @@ class TestAr(AccountTestInvoicingCommon):
 
         # ==== Invoices ====
         cls.demo_invoices = {}
+        cls.demo_credit_notes = {}
+        cls.demo_bills = {}
 
     def _create_test_invoices_like_demo(self, use_current_date=True):
         """ Create in the unit tests the same invoices created in demo data """
@@ -297,6 +329,7 @@ class TestAr(AccountTestInvoicingCommon):
                 "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": "out_invoice",
+                "invoice_date": "2021-03-01",
                 "company_id": self.company_ri,
                 "invoice_line_ids": [
                     {'product_id': self.service_iva_21}
@@ -308,6 +341,7 @@ class TestAr(AccountTestInvoicingCommon):
                 "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": "out_invoice",
+                "invoice_date": "2021-03-05",
                 "company_id": self.company_ri,
                 "invoice_line_ids": [
                     {'product_id': self.product_iva_105, 'price_unit': 642.0, 'quantity': 5},
@@ -321,6 +355,7 @@ class TestAr(AccountTestInvoicingCommon):
                 "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
+                "invoice_date": "2021-03-01",
                 "company_id": self.company_ri,
                 "invoice_line_ids": [
                     {'product_id': self.product_iva_105, 'price_unit': 642.0, 'quantity': 5},
@@ -333,6 +368,7 @@ class TestAr(AccountTestInvoicingCommon):
                 "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
+                "invoice_date": "2021-03-01",
                 "company_id": self.company_ri,
                 "invoice_line_ids": [
                     {'product_id': self.product_iva_105, 'price_unit': 642.0, 'quantity': 5},
@@ -345,6 +381,7 @@ class TestAr(AccountTestInvoicingCommon):
                 "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
+                "invoice_date": "2021-03-13",
                 "company_id": self.company_ri,
                 "invoice_line_ids": [
                     {'product_id': self.product_iva_105, 'price_unit': 642.0, 'quantity': 5},
@@ -362,6 +399,7 @@ class TestAr(AccountTestInvoicingCommon):
                 "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
+                "invoice_date": "2021-03-03",
                 "company_id": self.company_ri,
                 "invoice_incoterm_id": incoterm,
                 "invoice_line_ids": [
@@ -380,6 +418,7 @@ class TestAr(AccountTestInvoicingCommon):
                 "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
+                "invoice_date": "2021-03-03",
                 "company_id": self.company_ri,
                 "invoice_incoterm_id": incoterm,
                 "invoice_line_ids": [
@@ -397,6 +436,7 @@ class TestAr(AccountTestInvoicingCommon):
                 "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
+                "invoice_date": "2021-03-13",
                 "company_id": self.company_ri,
                 "invoice_line_ids": [
                     {'product_id': self.service_iva_21, 'price_unit': 642.0, 'quantity': 1},
@@ -408,6 +448,7 @@ class TestAr(AccountTestInvoicingCommon):
                 "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
+                "invoice_date": "2021-03-13",
                 "company_id": self.company_ri,
                 "invoice_line_ids": [
                     {'product_id': self.product_iva_105, 'price_unit': 1000.0, 'quantity': 5},
@@ -420,6 +461,7 @@ class TestAr(AccountTestInvoicingCommon):
                 "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
+                "invoice_date": "2021-03-13",
                 "company_id": self.company_ri,
                 "invoice_line_ids": [
                     {'product_id': self.service_iva_21, 'price_unit': 1.12, 'quantity': 1, 'name': 'Support Services 1'},
@@ -434,6 +476,7 @@ class TestAr(AccountTestInvoicingCommon):
                 "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
+                "invoice_date": "2021-03-13",
                 "company_id": self.company_ri,
                 "invoice_line_ids": [
                     {'product_id': self.service_iva_21, 'price_unit': 15.7076, 'quantity': 1, 'name': 'Support Services 1'},
@@ -448,6 +491,7 @@ class TestAr(AccountTestInvoicingCommon):
                 "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
+                "invoice_date": "2021-03-13",
                 "company_id": self.company_ri,
                 "invoice_line_ids": [
                     {'product_id': self.service_iva_21, 'price_unit': 24.3, 'quantity': 3, 'name': 'Support Services 1'},
@@ -467,6 +511,7 @@ class TestAr(AccountTestInvoicingCommon):
                 "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
+                "invoice_date": "2021-03-20",
                 "company_id": self.company_ri,
                 "invoice_incoterm_id": incoterm,
                 "invoice_line_ids": [
@@ -480,6 +525,7 @@ class TestAr(AccountTestInvoicingCommon):
                 "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
+                "invoice_date": "2021-03-20",
                 "company_id": self.company_ri,
                 "invoice_incoterm_id": incoterm,
                 "invoice_line_ids": [
@@ -493,6 +539,7 @@ class TestAr(AccountTestInvoicingCommon):
                 "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
+                "invoice_date": "2021-03-22",
                 "company_id": self.company_ri,
                 "invoice_incoterm_id": incoterm,
                 "invoice_line_ids": [
@@ -505,6 +552,7 @@ class TestAr(AccountTestInvoicingCommon):
                 "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
+                "invoice_date": "2021-03-13",
                 "company_id": self.company_ri,
                 "invoice_line_ids": [
                     {'product_id': self.service_iva_21, 'price_unit': 24.3, 'quantity': 3, 'name': 'Support Services 8', 'discount': 100},
@@ -516,6 +564,7 @@ class TestAr(AccountTestInvoicingCommon):
                 "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
+                "invoice_date": "2021-03-13",
                 "company_id": self.company_ri,
                 "invoice_line_ids": [
                     {'product_id': self.service_iva_21, 'price_unit': 24.3, 'quantity': 3, 'name': 'Support Services 8', 'discount': 100},
@@ -529,6 +578,7 @@ class TestAr(AccountTestInvoicingCommon):
                 "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
+                "invoice_date": "2021-03-13",
                 "company_id": self.company_ri,
                 "invoice_line_ids": [
                     {'product_id': self.service_iva_21, 'price_unit': 24.3, 'quantity': 3, 'name': 'Support Services 8'},
@@ -553,6 +603,8 @@ class TestAr(AccountTestInvoicingCommon):
                         line_form.product_id = line.get('product_id')
                         line_form.price_unit = line.get('price_unit')
                         line_form.quantity = line.get('quantity')
+                        if line.get('tax_ids'):
+                            line_form.tax_ids = line.get('tax_ids')
                         line_form.name = 'xxxx'
                         line_form.account_id = self.company_data['default_account_revenue']
             invoice = invoice_form.save()
@@ -661,9 +713,9 @@ class TestAr(AccountTestInvoicingCommon):
         debit_note = self.env['account.move'].browse(res['res_id'])
         return debit_note
 
-    def _search_tax(self, tax_type):
+    def _search_tax(self, tax_type, type_tax_use='sale'):
         res = self.env['account.tax'].with_context(active_test=False).search([
-            ('type_tax_use', '=', 'sale'),
+            ('type_tax_use', '=', type_tax_use),
             ('company_id', '=', self.env.company.id),
             ('tax_group_id', '=', self.env.ref('l10n_ar.tax_group_' + tax_type).id)], limit=1)
         self.assertTrue(res, '%s Tax was not found' % (tax_type))
