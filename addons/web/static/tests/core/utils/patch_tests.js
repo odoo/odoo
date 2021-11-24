@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { patch, unpatch } from "@web/core/utils/patch";
+import legacyUtils from "web.utils";
 
 function makeBaseClass(assert, assertInSetup) {
     class BaseClass {
@@ -1106,6 +1107,28 @@ QUnit.module("utils", () => {
             fn();
 
             assert.verifySteps(["patched", "original"]);
+        });
+
+        QUnit.test("patch an object with a legacy patch", async function (assert) {
+            const a = {
+                doSomething() {
+                    assert.step("a");
+                },
+            };
+            legacyUtils.patch(a, "a.patch.legacy", {
+                doSomething() {
+                    this._super();
+                    assert.step("a.patch.legacy");
+                },
+            });
+            patch(a, "a.patch", {
+                doSomething() {
+                    this._super();
+                    assert.step("a.patch");
+                },
+            });
+            a.doSomething();
+            assert.verifySteps(["a", "a.patch.legacy", "a.patch"]);
         });
 
         QUnit.module("patch 'pure' option");
