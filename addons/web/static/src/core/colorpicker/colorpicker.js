@@ -27,7 +27,6 @@ export class ColorPicker extends Component {
                 this.state.lightness = hslColor.lightness;
 
                 this.state.opacity = this.props.transparency ? rgbColor.opacity : 100;
-                // this.hex = this.props.color || "#FF0000";
 
                 // Latent colors are only updated when the hue is changed.
                 this.state.latentHue = hslColor.hue;

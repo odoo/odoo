@@ -19,6 +19,7 @@ export class ColorField extends Component {
             onColorSelected(hex) {
                 self.props.update(hex);
             },
+            color: self.props.value,
         });
     }
 }
