@@ -747,47 +747,83 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("input field: change password value", async function (assert) {
-        // assert.expect(4);
-        // const form = await makeView({
-        //     type: "form",
-        //     resModel: 'partner',
-        //     serverData,
-        //     arch: '<form>' +
-        //             '<field name="foo" password="True"/>' +
-        //         '</form>',
-        //     resId: 1,
-        // });
-        // assert.notEqual(form.$('.o_field_char').text(), "yop",
-        //     "password field value should not be visible in read mode");
-        // assert.strictEqual(form.$('.o_field_char').text(), "***",
-        //     "password field value should be hidden with '*' in read mode");
-        // await click(form.el, ".o_form_button_edit");
-        // assert.hasAttrValue(form.$('input.o_field_char'), 'type', 'password',
-        //     "password field input should be with type 'password' in edit mode");
-        // assert.strictEqual(form.$('input.o_field_char').val(), 'yop',
-        //     "password field input value should be the (non-hidden) password value");
+    QUnit.test("input field: change password value", async function (assert) {
+        assert.expect(4);
+
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="foo" password="True" />
+                </form>
+            `,
+        });
+
+        assert.notEqual(
+            form.el.querySelector(".o_field_char").textContent,
+            "yop",
+            "password field value should not be visible in read mode"
+        );
+        assert.strictEqual(
+            form.el.querySelector(".o_field_char").textContent,
+            "***",
+            "password field value should be hidden with '*' in read mode"
+        );
+
+        await click(form.el, ".o_form_button_edit");
+
+        assert.hasAttrValue(
+            form.el.querySelector(".o_field_char"),
+            "type",
+            "password",
+            "password field input should be with type 'password' in edit mode"
+        );
+        assert.strictEqual(
+            form.el.querySelector(".o_field_char").value,
+            "yop",
+            "password field input value should be the (non-hidden) password value"
+        );
     });
 
-    QUnit.skip("input field: empty password", async function (assert) {
-        // assert.expect(3);
-        // serverData.models.partner.records[0].foo = false;
-        // const form = await makeView({
-        //     type: "form",
-        //     resModel: 'partner',
-        //     serverData,
-        //     arch: '<form>' +
-        //             '<field name="foo" password="True"/>' +
-        //         '</form>',
-        //     resId: 1,
-        // });
-        // assert.strictEqual(form.$('.o_field_char').text(), "",
-        //     "password field value should be empty in read mode");
-        // await click(form.el, ".o_form_button_edit");
-        // assert.hasAttrValue(form.$('input.o_field_char'), 'type', 'password',
-        //     "password field input should be with type 'password' in edit mode");
-        // assert.strictEqual(form.$('input.o_field_char').val(), '',
-        //     "password field input value should be the (non-hidden, empty) password value");
+    QUnit.test("input field: empty password", async function (assert) {
+        assert.expect(3);
+
+        serverData.models.partner.records[0].foo = false;
+
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="foo" password="True" />
+                </form>
+            `,
+        });
+
+        assert.strictEqual(
+            form.el.querySelector(".o_field_char").textContent,
+            "",
+            "password field value should be empty in read mode"
+        );
+
+        await click(form.el, ".o_form_button_edit");
+
+        assert.hasAttrValue(
+            form.el.querySelector(".o_field_char"),
+            "type",
+            "password",
+            "password field input should be with type 'password' in edit mode"
+        );
+        assert.strictEqual(
+            form.el.querySelector(".o_field_char").value,
+            "",
+            "password field input value should be the (non-hidden, empty) password value"
+        );
     });
 
     QUnit.skip(

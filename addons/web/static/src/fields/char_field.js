@@ -8,7 +8,7 @@ const { Component } = owl;
 export class CharField extends Component {
     get formattedValue() {
         let value = typeof this.props.value === "string" ? this.props.value : "";
-        if (this.props.password) {
+        if (this.isPassword) {
             value = "*".repeat(value.length);
         }
         return value;
@@ -18,6 +18,9 @@ export class CharField extends Component {
     }
     get maxLength() {
         return this.props.record.fields[this.props.name].size;
+    }
+    get isPassword() {
+        return "password" in this.props.attrs;
     }
 
     /**
