@@ -28,6 +28,7 @@ class ActionAdapter extends ComponentAdapter {
         // In Wowl, we want to have all states pushed during the same setTimeout.
         // This is protected in legacy (backward compatibility) but should not e supported in Wowl
         this.tempQuery = {};
+        this.waitTitle = true;
         let originalUpdateControlPanel;
         useEffect(
             () => {
@@ -38,6 +39,7 @@ class ActionAdapter extends ComponentAdapter {
                 if (!this.wowlEnv.inDialog) {
                     this.pushState(query);
                     this.title.setParts({ action: this.widget.getTitle() });
+                    this.waitTitle = false;
                 }
                 this.wowlEnv.bus.on("ACTION_MANAGER:UPDATE", this, () => {
                     this.env.bus.trigger("close_dialogs");
@@ -75,6 +77,12 @@ class ActionAdapter extends ComponentAdapter {
         if (this.tempQuery) {
             Object.assign(this.tempQuery, query);
             return;
+        }
+        if (!this.waitTitle && this.widget) {
+            const actionTitle = this.widget.getTitle();
+            if (actionTitle) {
+                this.title.setParts({ action: actionTitle });
+            }
         }
         this.router.pushState(query);
     }

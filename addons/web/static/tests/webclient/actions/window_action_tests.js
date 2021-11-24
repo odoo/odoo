@@ -2383,4 +2383,18 @@ QUnit.module("ActionManager", (hooks) => {
 
         assert.verifySteps(["/web/dataset/search_read"]);
     });
+
+    QUnit.test("pushState also changes the title of the tab", async (assert) => {
+        assert.expect(3);
+
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, 3); // list view
+        const titleService = webClient.env.services.title;
+        assert.strictEqual(titleService.current, "{\"zopenerp\":\"Odoo\",\"action\":\"Partners\"}");
+        await click(webClient.el.querySelector(".o_data_row"));
+        await legacyExtraNextTick();
+        assert.strictEqual(titleService.current, "{\"zopenerp\":\"Odoo\",\"action\":\"First record\"}");
+        await click(webClient.el.querySelector(".o_pager_next"));
+        assert.strictEqual(titleService.current, "{\"zopenerp\":\"Odoo\",\"action\":\"Second record\"}");
+    });
 });
