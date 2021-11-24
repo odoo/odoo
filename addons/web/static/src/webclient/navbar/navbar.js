@@ -2,7 +2,7 @@
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { useEffect, useService } from "@web/core/utils/hooks";
+import { useEffect, useService, onDestroyed } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
 import { ErrorHandler, NotUpdatable } from "@web/core/utils/components";
@@ -53,6 +53,7 @@ export class NavBar extends Component {
         this.menuService = useService("menu");
         this.appSubMenus = useRef("appSubMenus");
         const debouncedAdapt = debounce(this.adapt.bind(this), 250);
+        onDestroyed(() => debouncedAdapt.cancel());
         useExternalListener(window, "resize", debouncedAdapt);
     }
 
