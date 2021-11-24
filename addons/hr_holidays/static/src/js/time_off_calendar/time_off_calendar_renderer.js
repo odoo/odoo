@@ -1,58 +1,69 @@
 /** @odoo-module **/
 
-import { qweb as QWeb } from 'web.core';
-import config from 'web.config';
-
+import { ComponentWrapper } from 'web.OwlCompatibility';
 import { TimeOffPopoverRenderer } from "./time_off_popover_renderer";
 
+import { TimeOffDashboard } from '@hr_holidays/dashboard/time_off_dashboard';
+import { TimeOffCardMobile } from '@hr_holidays/dashboard/time_off_card';
+
+import config from 'web.config';
+import session from 'web.session';
+
 export const TimeOffCalendarRenderer = TimeOffPopoverRenderer.extend({
-    async _render () {
+    async willStart() {
         await this._super(...arguments);
-        const result = await this._rpc({
-            model: 'hr.leave.type',
-            method: 'get_days_all_request',
-            context: this.state.context,
-        });
 
-        this.$el.parent().find('.o_calendar_mini').hide();
-        this.$el.parent().find('.o_timeoff_container').remove();
+        this.holidays = await this.loadDashboardData();
+    },
 
-        // Do not display header if there is no element to display
-        if (result.length > 0) {
-            if (config.device.isMobile) {
-                result.forEach((data) => {
-                    const elem = QWeb.render('hr_holidays.dashboard_calendar_header_mobile', {
-                        timeoff: data,
-                    });
-                    this.$el.find('.o_calendar_filter_item[data-value=' + data[3] + '] .o_cw_filter_title').append(elem);
-                });
-            } else {
-                const elem = QWeb.render('hr_holidays.dashboard_calendar_header', {
-                    timeoffs: result,
-                });
-                this.$el.before(elem);
+    async start() {
+        await this._super(...arguments);
 
-                //add popover to the information tags
-                [...this.$el.parent().find('.fa-question-circle-o')].forEach((popup) => {
-                    $(popup).popover({
-                        trigger: 'hover',
-                        html: true,
-                        delay: {show: 300, hide: 0},
-                        content() {
-                            const data = {
-                                allocated: popup.dataset.allocated,
-                                approved: popup.dataset.approved,
-                                planned: popup.dataset.planned,
-                                left: popup.dataset.left
-                            };
-                            const elem_popover = QWeb.render('hr_holidays.dashboard_calendar_header_leave_type_popover', {
-                                data: data,
-                            });
-                            return elem_popover
-                        },
-                    });
-                });
-            }
+        this.TimeOffDashboardWrapper = null;
+
+        if (!config.device.isMobile) {
+            this.TimeOffDashboardWrapper = new ComponentWrapper(this, TimeOffDashboard, { holidays: this.holidays });
+            await this.TimeOffDashboardWrapper.mount(this.el.parentElement, { position: 'first-child' });
         }
     },
+
+    async _render() {
+        await this._super(...arguments);
+
+        if (this.TimeOffDashboardWrapper) {
+            this.holidays = await this.loadDashboardData();
+            this.TimeOffDashboardWrapper.update({ holidays: this.holidays });
+        }
+    },
+
+    async loadDashboardData() {
+        return await this._rpc({
+            model: 'hr.leave.type',
+            method: 'get_days_all_request',
+            context: session.user_context,
+        });
+    },
+
+    async _renderFilters() {
+        await this._super(...arguments);
+
+        if (!config.device.isMobile) {
+            return;
+        }
+
+        this.holidays = await this.loadDashboardData();
+        for (const holiday of this.holidays) {
+            const node = this.el.querySelector(`.o_calendar_filter_item[data-value="${holiday[3]}"] .o_cw_filter_title`);
+
+            if (node) {
+                const mobileCard = new ComponentWrapper(this, TimeOffCardMobile, { 
+                    name: holiday[0],
+                    data: holiday[1],
+                    requires_allocation: holiday[2] === 'yes',
+                    id: holiday[3]
+                });
+                await mobileCard.mount(node);
+            }
+        }
+    }
 });

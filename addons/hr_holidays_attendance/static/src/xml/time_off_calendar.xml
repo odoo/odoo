@@ -1,34 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <templates id="template" xml:space="preserve">
-    <t t-inherit="hr_holidays.dashboard_calendar_header" t-inherit-mode="extension">
-        <!--inject a first condition-->
-        <xpath expr="//t[@t-if='requires_allocation']" position="before">
-            <t t-if="timeoff[1]['overtime_deductible'] == true &amp;&amp; !requires_allocation">
-                <t t-if="has_icon">
-                    <img height="30px" t-attf-src="{{timeoff[1]['icon']}}"/>
-                </t>
-                <span t-esc="timeoff[1]['virtual_remaining_leaves']" class="o_timeoff_huge o_timeoff_purple font-weight-bold align-middle"/><br/>
-                <span class="o_timeoff_purple">HOURS AVAILABLE</span>
-            </t>
+    <t t-name="hr_holidays_attendance.TimeOffCard" t-inherit="hr_holidays.TimeOffCard" t-inherit-mode="extension" owl="1">
+        <xpath expr="//t[@t-set='duration']" position="replace">
+            <t t-set="duration" t-value="props.requires_allocation || props.data['overtime_deductible']?props.data['virtual_remaining_leaves']:props.data['virtual_leaves_taken']" />
         </xpath>
-        <!--change t-if to t-elif-->
-        <xpath expr="//t[@t-if='requires_allocation']" position="attributes">
-            <attribute name="t-if"/>
-            <attribute name="t-elif">requires_allocation</attribute>
+        <xpath expr="//t[@t-set='show_popover']" position="replace">
+            <t t-set="show_popover" t-value="!props.data['overtime_deductible']"/>
+        </xpath>
+        <xpath expr="//t[@name='duration_type']" position="attributes">
+            <attribute name="t-if">props.requires_allocation || props.data['overtime_deductible']</attribute>
         </xpath>
     </t>
-    <t t-inherit="hr_holidays.dashboard_calendar_header_mobile" t-inherit-mode="extension">
-        <!--inject a first condition-->
-        <xpath expr="//t[@t-if='requires_allocation']" position="before">
-            <t t-if="timeoff[1]['overtime_deductible'] == true &amp;&amp; !requires_allocation">
-                <strong t-esc="timeoff[1]['virtual_remaining_leaves']" class="o_timeoff_green"/> Hours <span class="o_timeoff_green ml-2">Available </span>
+
+    <t t-name="hr_holidays_attendance.TimeOffCardMobile" t-inherit="hr_holidays.TimeOffCardMobile" t-inherit-mode="extension" owl="1">
+        <xpath expr="//t[@t-set='duration']" position="replace">
+            <t t-set="duration" t-value="props.requires_allocation || props.data['overtime_deductible']?props.data['virtual_remaining_leaves']:props.data['virtual_leaves_taken']" />
+        </xpath>
+        <xpath expr="//t[@name='duration_type']" position="before">
+            <t t-if="props.data['overtime_deductible'] == true &amp;&amp; !props.requires_allocation">
+                <strong t-esc="duration" class="o_timeoff_green"/> <t t-if="props.data['request_unit'] == 'hour'">Hours</t><t t-else="">Days</t> <span class="o_timeoff_green">Available</span>
             </t>
         </xpath>
-        <!--change t-if to t-elif-->
-        <xpath expr="//t[@t-if='requires_allocation']" position="attributes">
+        <xpath expr="//t[@name='duration_type']" position="attributes">
             <attribute name="t-if"/>
-            <attribute name="t-elif">requires_allocation</attribute>
+            <attribute name="t-elif">props.requires_allocation</attribute>
         </xpath>
     </t>
 </templates>
