@@ -576,11 +576,7 @@ class Environment(Mapping):
         )
 
         if res_model and res_id:
-            record = self[res_model].browse(res_id)
-            if record.exists():
-                return record
-            if raise_if_not_found:
-                raise ValueError('No record found for unique ID %s. It may have been deleted.' % (xml_id))
+            return self[res_model].browse(res_id)
         return None
 
     def is_superuser(self):
