@@ -22,7 +22,7 @@ odoo.define('point_of_sale.tour.ProductScreen', function (require) {
     // Clicking product should add new orderline and select the orderline
     // If orderline exists, increment the quantity
     ProductScreen.do.clickDisplayedProduct('Letter Tray');
-    ProductScreen.check.selectedOrderlineHas('Letter Tray', '1.0', '4.80');
+    ProductScreen.check.selectedOrderlineHas('Letter Tray', '1.0', '5.28');
     ProductScreen.do.clickDisplayedProduct('Desk Organizer');
     ProductScreen.check.selectedOrderlineHas('Desk Organizer', '3.0', '15.30');
 
