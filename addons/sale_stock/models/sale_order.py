@@ -11,6 +11,7 @@ from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, float_compare, float_roun
 from odoo.tools.float_utils import float_repr
 from odoo.tools.misc import format_date
 from odoo.exceptions import UserError
+from odoo.tools.safe_eval import safe_eval
 
 
 _logger = logging.getLogger(__name__)
@@ -204,7 +205,13 @@ class SaleOrder(models.Model):
             picking_id = picking_id[0]
         else:
             picking_id = pickings[0]
-        action['context'] = dict(self._context, default_partner_id=self.partner_id.id, default_picking_type_id=picking_id.picking_type_id.id, default_origin=self.name, default_group_id=picking_id.group_id.id)
+        eval_ctx = dict(self.env.context)
+        try:
+            ctx = safe_eval(action.get("context", "{}"), eval_ctx)
+        except Exception:
+            _logger.warning("Error while evaluating context of 'stock.action_picking_tree_all'", exc_info=True)
+            ctx = {}
+        action['context'] = dict(ctx, default_partner_id=self.partner_id.id, default_picking_type_id=picking_id.picking_type_id.id, default_origin=self.name, default_group_id=picking_id.group_id.id, group_by=[])
         return action
 
     def action_cancel(self):
