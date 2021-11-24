@@ -476,7 +476,7 @@ msgid ""
 msgstr ""
 "<span class=\"badge badge-pill badge-success\"><i class=\"fa fa-fw fa-"
 "check\" aria-label=\"Reversed\" title=\"Reversed\" role=\"img\"/><span "
-"class=\"d-none d-md-inline\"> Đảo ngược</span></span>"
+"class=\"d-none d-md-inline\"> Điều chỉnh giảm</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -1185,7 +1185,7 @@ msgstr "Ánh xạ Tài khoản"
 #. module: account
 #: model:ir.model,name:account.model_account_move_reversal
 msgid "Account Move Reversal"
-msgstr "Đảo Bút toán kế toán"
+msgstr "Đảo ngược Bút toán kế toán"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__name
@@ -3890,7 +3890,7 @@ msgstr "Tạo hóa nhà cung cấp"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_refund_type
 msgid "Create a vendor credit note"
-msgstr "Tạo Hoá đơn Điều chỉnh giảm nhà cung cấp"
+msgstr "Tạo Điều chỉnh giảm Hóa đơn NCC"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_adjustments_wizard
@@ -6060,7 +6060,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_reversal__journal_id
 msgid "If empty, uses the journal of the journal entry to be reversed."
-msgstr "Nếu để trống, sử dụng cùng sổ nhật ký của bút toán để đảo ngược."
+msgstr "Nếu để trống, sử dụng cùng sổ nhật ký của bút toán gốc cho bút toán đảo ngược."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__include_base_amount
@@ -6977,7 +6977,7 @@ msgstr "Bút toán sổ nhật ký"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_reversal__date_mode__entry
 msgid "Journal Entry Date"
-msgstr "Ngày bút toán"
+msgstr "Ngày bút toán gốc"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_print_journal__sort_selection__move_name
@@ -10137,26 +10137,26 @@ msgstr "Tài khoản doanh thu/chi phí"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Reversal Date"
-msgstr "Ngày đảo"
+msgstr "Ngày điều chỉnh"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__reversal_move_id
 #: model:ir.model.fields,field_description:account.field_account_move__reversal_move_id
 #: model:ir.model.fields,field_description:account.field_account_payment__reversal_move_id
 msgid "Reversal Move"
-msgstr "Bút toán đảo"
+msgstr "Bút toán Đảo ngược"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__date
 msgid "Reversal date"
-msgstr "Ngày Đảo ngược"
+msgstr "Ngày điều chỉnh"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__reversed_entry_id
 #: model:ir.model.fields,field_description:account.field_account_move__reversed_entry_id
 #: model:ir.model.fields,field_description:account.field_account_payment__reversed_entry_id
 msgid "Reversal of"
-msgstr "Bút toán ngược của"
+msgstr "Bút toán điều chỉnh của"
 
 #. module: account
 #: code:addons/account/wizard/account_move_reversal.py:0
@@ -10208,7 +10208,7 @@ msgstr "Đảo ngược"
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_line_tree
 msgid "Revert reconciliation"
-msgstr "Hoàn nguyên đối chiếu"
+msgstr "Hoàn nguyên đối soát"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_chart_of_account_step
@@ -11036,7 +11036,7 @@ msgstr "Email nguồn"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_reversal__date_mode__custom
 msgid "Specific"
-msgstr "Đặc thù"
+msgstr "Tùy chọn cụ thể"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding__strategy
@@ -14357,7 +14357,7 @@ msgstr "Ban có thể đánh lại mã trong các bút toán cùng sổ nhật k
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
 msgid "You can only reverse posted moves."
-msgstr "Bạn chỉ có thể đảo bút toán đã vào sổ."
+msgstr "Bạn chỉ có thể đảo ngược bút toán đã vào sổ."
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_send.py:0
