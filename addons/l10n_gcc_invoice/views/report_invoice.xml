@@ -21,7 +21,7 @@
             <t t-set="o_sec" t-value="o.with_context(lang='ar_001')"/>
             <t t-set="o" t-value="o.with_context(lang='en_US')"/>
 
-            <page>
+            <div class="page">
                 <h3>
                     <div class="row">
                         <div class="col-4" style="text-align:left">
@@ -300,10 +300,10 @@
                                 </t>
                             </tr>
 
-                            <t t-if="current_section and (line_last or lines[line+1].display_type == 'line_section')">
+                            <t t-if="current_section and (line_last or lines[line_index+1].display_type == 'line_section')">
                                 <tr class="is-subtotal text-right">
                                     <td colspan="99">
-                                        <strong class="mr16">Subtotal/الإجمالي الفرعي</strong>
+                                        <strong class="mr16" style="display: inline-block">Subtotal/الإجمالي الفرعي</strong>
                                         <span
                                                 t-esc="current_subtotal"
                                                 t-options='{"widget": "monetary", "display_currency": o.currency_id}'
@@ -480,7 +480,7 @@
                     </div>
                 </p>
 
-            </page>
+            </div>
         </t>
     </template>
 
