@@ -250,3 +250,17 @@ export function useService(serviceName) {
     }
     return service;
 }
+
+/**
+ * Executes "callback" when the component is being destroyed
+ * @param  {Function} callback
+ */
+export function onDestroyed(callback) {
+    const component = useComponent();
+    const _destroy = component.__destroy;
+    component.__destroy = (...args) => {
+        _destroy.call(component, ...args);
+        // callback is called after super to guarantee the component is actually destroyed
+        callback();
+    };
+}
