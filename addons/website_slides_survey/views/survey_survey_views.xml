@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="survey_view_tree_slides" model="ir.ui.view">
-        <field name="name">survey.view.tree.slides</field>
+    <record id="survey_survey_view_tree_slides" model="ir.ui.view">
+        <field name="name">survey.survey.view.tree.slides</field>
         <field name="model">survey.survey</field>
-        <field name="inherit_id" ref="survey.survey_tree"/>
+        <field name="inherit_id" ref="survey.survey_survey_view_tree"/>
         <field name="mode">primary</field>
         <field name="priority" eval="20"/>
         <field name="arch" type="xml">
@@ -21,8 +21,8 @@
         </field>
     </record>
 
-    <record id="survey_survey_inherit_view_search" model="ir.ui.view">
-        <field name="name">survey.survey.search.inherit.website_slides</field>
+    <record id="survey_survey_view_search_slides" model="ir.ui.view">
+        <field name="name">survey.survey.view.search.slides</field>
         <field name="model">survey.survey</field>
         <field name="inherit_id" ref="survey.survey_survey_view_search"/>
         <field name="mode">primary</field>
@@ -32,9 +32,9 @@
     </record>
 
     <record id="survey_survey_view_form" model="ir.ui.view">
-        <field name="name">survey.survey.view.form.inherit.website_slides</field>
+        <field name="name">survey.survey.view.form.inherit.website.slides</field>
         <field name="model">survey.survey</field>
-        <field name="inherit_id" ref="survey.survey_form"/>
+        <field name="inherit_id" ref="survey.survey_survey_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//button[@name='action_survey_user_input_certified']" position="before">
                 <button name="action_survey_view_slide_channels"
@@ -49,12 +49,34 @@
         </field>
     </record>
 
+    <record id="survey_survey_view_kanban" model="ir.ui.view">
+        <field name="name">survey.survey.view.kanban.inherit.website.slides</field>
+        <field name="model">survey.survey</field>
+        <field name="inherit_id" ref="survey.survey_survey_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='session_state']" position="after">
+                <field name="slide_channel_count"/>
+            </xpath>
+            <xpath expr="//div[@name='o_survey_kanban_card_section_success']" position="after">
+                <div class="col-lg-1 col-sm-4 col-6 py-0 my-2">
+                    <a t-if="record.slide_channel_count.raw_value"
+                       type="object"
+                       name="action_survey_view_slide_channels"
+                       class="font-weight-bold">
+                        <field name="slide_channel_count"/><br />
+                        <span class="text-muted">Courses</span>
+                    </a>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
     <record id="survey_survey_action_slides" model="ir.actions.act_window">
         <field name="name">Certifications</field>
         <field name="res_model">survey.survey</field>
         <field name="view_mode">kanban,tree,pivot,graph,form</field>
         <field name="domain">[('certification', '=', True)]</field>
-        <field name="search_view_id" ref="survey_survey_inherit_view_search"/>
+        <field name="search_view_id" ref="survey_survey_view_search_slides"/>
         <field name="context">{'default_certification': True, 'default_scoring_type': 'scoring_with_answers'}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -69,19 +91,19 @@
     <record id="survey_survey_action_slides_view_kanban" model="ir.actions.act_window.view">
          <field name="sequence" eval="0"/>
          <field name="view_mode">kanban</field>
-         <field name="view_id" ref="survey.survey_kanban"/>
+         <field name="view_id" ref="survey.survey_survey_view_kanban"/>
          <field name="act_window_id" ref="survey_survey_action_slides"/>
      </record>
      <record id="survey_survey_action_slides_view_tree" model="ir.actions.act_window.view">
          <field name="sequence" eval="1"/>
          <field name="view_mode">tree</field>
-         <field name="view_id" ref="survey_view_tree_slides"/>
+         <field name="view_id" ref="survey_survey_view_tree_slides"/>
          <field name="act_window_id" ref="survey_survey_action_slides"/>
      </record>
      <record id="survey_survey_action_slides_view_form" model="ir.actions.act_window.view">
          <field name="sequence" eval="4"/>
          <field name="view_mode">form</field>
-         <field name="view_id" ref="survey.survey_form"/>
+         <field name="view_id" ref="survey.survey_survey_view_form"/>
          <field name="act_window_id" ref="survey_survey_action_slides"/>
      </record>
 </odoo>
