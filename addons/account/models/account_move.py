@@ -4183,20 +4183,23 @@ class AccountMoveLine(models.Model):
                 total_amount_currency = 0.0
                 total_reconciled_currency = 0.0
                 all_same_currency = False
+                all_same_currency_in_false = False
                 #if all receivable/payable aml and their payments have the same currency, we can safely consider
                 #the amount_currency fields to avoid including the exchange rate difference in the matched_percentage
                 if lines_to_consider and all([x.currency_id.id == lines_to_consider[0].currency_id.id for x in lines_to_consider]):
                     all_same_currency = lines_to_consider[0].currency_id.id
+                    all_same_currency_in_false = bool(all_same_currency is False)
                     for line in lines_to_consider:
-                        if all_same_currency:
+                        if all_same_currency or all_same_currency_in_false:
                             total_amount_currency += abs(line.amount_currency)
                             for partial_line in (line.matched_debit_ids + line.matched_credit_ids):
-                                if partial_line.currency_id and partial_line.currency_id.id == all_same_currency:
+                                if partial_line.currency_id.id == all_same_currency:
                                     total_reconciled_currency += partial_line.amount_currency
                                 else:
                                     all_same_currency = False
+                                    all_same_currency_in_false = False
                                     break
-                if not all_same_currency:
+                if not all_same_currency and not all_same_currency_in_false:
                     #we cannot rely on amount_currency fields as it is not present on all partial reconciliation
                     matched_percentage_per_move[line.move_id.id] = line.move_id._get_cash_basis_matched_percentage()
                 else:
