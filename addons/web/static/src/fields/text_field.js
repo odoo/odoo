@@ -18,3 +18,4 @@ TextField.props = {
 TextField.template = "web.TextField";
 
 registry.category("fields").add("text", TextField);
+registry.category("fields").add("html", TextField);
