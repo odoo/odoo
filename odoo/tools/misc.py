@@ -794,12 +794,13 @@ class mute_logger(logging.Handler):
 class lower_logging(logging.Handler):
     """Temporary lower the max logging level.
     """
-    def __init__(self, max_level):
+    def __init__(self, max_level, to_level=None):
         super().__init__()
         self.old_handlers = None
         self.old_propagate = None
         self.had_error_log = False
         self.max_level = max_level
+        self.to_level = to_level or max_level
 
     def __enter__(self):
         logger = logging.getLogger()
@@ -818,13 +819,14 @@ class lower_logging(logging.Handler):
     def emit(self, record):
         if record.levelno > self.max_level:
             record.levelname = f'_{record.levelname}'
-            record.levelno = self.max_level
+            record.levelno = self.to_level
             self.had_error_log = True
             record.args = tuple(arg.replace('Traceback (most recent call last):', '_Traceback_ (most recent call last):') if type(arg) is str else arg for arg in record.args)  # pylint: disable=unidiomatic-typecheck
 
-        for handler in self.old_handlers:
-            if handler.level <= record.levelno:
-                handler.emit(record)
+        if logging.getLogger(record.name).isEnabledFor(record.levelno):
+            for handler in self.old_handlers:
+                if handler.level <= record.levelno:
+                    handler.emit(record)
 
 
 _ph = object()
