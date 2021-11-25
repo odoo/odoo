@@ -100,7 +100,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             for promo_program in self.promo_programs:
                 pos_config.promo_program_ids.add(promo_program)
 
-        self.main_pos_config.open_session_cb(check_coa=False)
+        self.main_pos_config.open_session_cb()
 
         ##
         # Tour Part 1

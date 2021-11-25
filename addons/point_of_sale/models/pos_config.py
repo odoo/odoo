@@ -558,7 +558,7 @@ class PosConfig(models.Model):
             'target': 'self',
         }
 
-    def open_session_cb(self, check_coa=True):
+    def open_session_cb(self):
         """ new session button
 
         create one if none exist
