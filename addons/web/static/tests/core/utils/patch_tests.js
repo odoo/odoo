@@ -441,6 +441,39 @@ QUnit.module("utils", () => {
             assert.strictEqual(instance.dynamic, "base");
         });
 
+        QUnit.test("patch getter/setter with value", async function (assert) {
+            assert.expect(4);
+
+            const BaseClass = makeBaseClass(assert, false);
+
+            const originalDescriptor = Object.getOwnPropertyDescriptor(
+                BaseClass.prototype,
+                "dynamic"
+            );
+            patch(BaseClass.prototype, "patch", {
+                dynamic: "patched",
+            });
+
+            const instance = new BaseClass();
+
+            assert.deepEqual(Object.getOwnPropertyDescriptor(BaseClass.prototype, "dynamic"), {
+                value: "patched",
+                writable: true,
+                configurable: true,
+                enumerable: true,
+            });
+            assert.equal(instance.dynamic, "patched");
+
+            unpatch(BaseClass.prototype, "patch");
+
+            instance.dynamic = "base";
+            assert.deepEqual(
+                Object.getOwnPropertyDescriptor(BaseClass.prototype, "dynamic"),
+                originalDescriptor
+            );
+            assert.strictEqual(instance.dynamic, "base");
+        });
+
         QUnit.test("async function", async function (assert) {
             assert.expect(3);
 
