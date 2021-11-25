@@ -9,12 +9,8 @@ import { standardFieldProps } from "./standard_field_props";
 const { Component } = owl;
 
 export class DateTimeField extends Component {
-    get parsedValue() {
-        return this.props.value ? parseDateTime(this.props.value, { timezone: false }) : undefined;
-    }
-
     get formattedValue() {
-        return this.props.value ? formatDateTime(this.parsedValue, { timezone: true }) : "";
+        return this.props.value ? formatDateTime(this.props.value, { timezone: true }) : "";
     }
 
     /**

@@ -201,6 +201,9 @@ export function formatDateTime(value, options = {}) {
  * @returns {DateTime | false} Luxon DateTime object
  */
 export function parseDate(value, options = {}) {
+    if (!value) {
+        return false;
+    }
     return parseDateTime(value, { timezone: false, ...options }).startOf("day");
 }
 
