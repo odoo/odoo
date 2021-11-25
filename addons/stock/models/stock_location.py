@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 
 
@@ -131,6 +131,11 @@ class Location(models.Model):
         else:
             domain = ['|', ('barcode', operator, name), ('complete_name', operator, name)]
         return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
+
+    @api.constrains('location_id')
+    def _check_location_id(self):
+        if not self._check_recursion():
+            raise ValidationError(_('Error ! You cannot create recursive location.'))
 
     def _get_putaway_strategy(self, product):
         ''' Returns the location where the product has to be put, if any compliant putaway strategy is found. Otherwise returns None.'''
