@@ -22,7 +22,7 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         self.customer_location = self.env.ref('stock.stock_location_customers')
         self.supplier_location = self.env.ref('stock.stock_location_suppliers')
         self.uom_unit = self.env.ref('uom.product_uom_unit')
-        self.env.ref('product.product_category_all').property_cost_method = 'fifo'
+        self.env.ref('product.product_category_all').property_cost_method = 'average'
         self.env.ref('product.product_category_all').property_valuation = 'real_time'
 
         # IN 10@10 comp1 10@20 comp2
@@ -75,3 +75,16 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         self.assertEqual(picking_receipt.move_lines.stock_valuation_layer_ids.value, 60)
         self.assertEqual(picking_receipt.move_lines.product_id.value_svl, 60)
         self.assertEqual(picking_receipt.move_lines.stock_valuation_layer_ids.account_move_id.amount_total, 60)
+
+        # Do the same without any additionnal cost
+        picking_receipt = picking_receipt.copy()
+        picking_receipt.move_lines.price_unit = 0
+
+        picking_receipt.action_confirm()
+        picking_receipt.move_lines.quantity_done = 1.0
+        picking_receipt.action_done()
+
+        # In this case, since there isn't any additionnal cost, the total cost of the subcontracting
+        # is the sum of the components' costs: 10 + 20 = 30
+        self.assertEqual(picking_receipt.move_lines.stock_valuation_layer_ids.value, 30)
+        self.assertEqual(picking_receipt.move_lines.product_id.value_svl, 90)
