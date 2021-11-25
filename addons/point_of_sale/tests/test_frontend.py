@@ -490,7 +490,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
 
         # open a session, the /pos/ui controller will redirect to it
-        self.main_pos_config.open_session_cb(check_coa=False)
+        self.main_pos_config.open_session_cb()
 
         # needed because tests are run before the module is marked as
         # installed. In js web will only load qweb coming from modules
@@ -512,7 +512,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(email_count, 1)
 
     def test_02_pos_with_invoiced(self):
-        self.main_pos_config.open_session_cb(check_coa=False)
+        self.main_pos_config.open_session_cb()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ChromeTour', login="accountman")
         n_invoiced = self.env['pos.order'].search_count([('state', '=', 'invoiced')])
         n_paid = self.env['pos.order'].search_count([('state', '=', 'paid')])
@@ -521,9 +521,9 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_04_product_configurator(self):
         self.main_pos_config.write({ 'product_configurator': True })
-        self.main_pos_config.open_session_cb(check_coa=False)
+        self.main_pos_config.open_session_cb()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config, 'ProductConfiguratorTour', login="accountman")
 
     def test_05_ticket_screen(self):
-        self.main_pos_config.open_session_cb(check_coa=False)
+        self.main_pos_config.open_session_cb()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'TicketScreenTour', login="accountman")

@@ -44,7 +44,7 @@ class PosConfig(models.Model):
         for config in self:
             config.program_ids = config.coupon_program_ids | config.promo_program_ids
 
-    def open_session_cb(self, check_coa=True):
+    def open_session_cb(self):
         # Check validity of programs before opening a new session
         invalid_reward_products_msg = ""
         for program in self.program_ids:

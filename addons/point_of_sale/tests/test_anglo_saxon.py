@@ -65,7 +65,7 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
     def test_create_account_move_line(self):
         # This test will check that the correct journal entries are created when a product in real time valuation
         # is sold in a company using anglo-saxon
-        self.pos_config.open_session_cb(check_coa=False)
+        self.pos_config.open_session_cb()
         current_session = self.pos_config.current_session_id
         self.cash_journal.loss_account_id = self.account
         current_session.set_cashbox_pos(0, None)
@@ -148,7 +148,7 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         self.assertEqual(self.product.quantity_svl, 10)
 
         self.pos_config.module_account = True
-        self.pos_config.open_session_cb(check_coa=False)
+        self.pos_config.open_session_cb()
         pos_session = self.pos_config.current_session_id
         pos_session.set_cashbox_pos(0, None)
 
