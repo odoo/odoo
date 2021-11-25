@@ -5,7 +5,7 @@
         <div class="o_field_color_picker">
             <t t-if="!state.isExpanded">
                 <div t-on-click.prevent.stop="toggle" role="menuitem"  t-att-title="currentColor" t-att-aria-label="currentColor">
-                    <a href="#" t-att-class="{ 'o_color_picker_disabled': isReadonly  }" t-attf-class="o_field_color_picker_color_{{ props.value || 0 }}" />
+                    <a href="#" t-att-class="{ 'o_field_cursor_disabled': isReadonly  }" t-attf-class="o_field_color_picker_color_{{ props.value || 0 }}" />
                 </div>
             </t>
             <t t-if="state.isExpanded" t-foreach="constructor.RECORD_COLORS" t-as="color" t-key="color">

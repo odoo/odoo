@@ -14,12 +14,13 @@ export class ColorField extends Component {
     }
 
     onClick() {
+        if (this.props.readonly) return;
         const self = this;
         this.dialogService.add(ColorPickerDialog, {
             onColorSelected(hex) {
                 self.props.update(hex);
             },
-            color: self.props.value,
+            color: self.props.value || "#ffffff",
         });
     }
 }
