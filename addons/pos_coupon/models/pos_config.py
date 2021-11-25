@@ -44,7 +44,7 @@ class PosConfig(models.Model):
         for config in self:
             config.program_ids = config.coupon_program_ids | config.promo_program_ids
 
-    def open_session_cb(self, check_coa=True):
+    def open_session_cb(self):
         # Check validity of programs before opening a new session
         invalid_reward_products_msg = ""
         for program in self.program_ids:
@@ -67,7 +67,7 @@ class PosConfig(models.Model):
             )
             raise UserError(f"{intro}\n{invalid_reward_products_msg}")
 
-        return super(PosConfig, self).open_session_cb(check_coa)
+        return super(PosConfig, self).open_session_cb()
 
     def use_coupon_code(self, code, creation_date, partner_id, reserved_program_ids):
         coupon_to_check = self.env["coupon.coupon"].search(
