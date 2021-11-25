@@ -58,12 +58,16 @@ function jsonrpc(env, rpcId, url, params, settings = {}) {
         request.addEventListener("load", () => {
             if (request.status === 502) {
                 // If Odoo is behind another server (eg.: nginx)
-                bus.trigger("RPC:RESPONSE", data.id);
+                if (!settings.silent) {
+                    bus.trigger("RPC:RESPONSE", data.id);
+                }
                 reject(new ConnectionLostError());
                 return;
             }
             const { error: responseError, result: responseResult } = JSON.parse(request.response);
-            bus.trigger("RPC:RESPONSE", data.id);
+            if (!settings.silent) {
+                bus.trigger("RPC:RESPONSE", data.id);
+            }
             if (!responseError) {
                 return resolve(responseResult);
             }
@@ -72,7 +76,9 @@ function jsonrpc(env, rpcId, url, params, settings = {}) {
         });
         // handle failure
         request.addEventListener("error", () => {
-            bus.trigger("RPC:RESPONSE", data.id);
+            if (!settings.silent) {
+                bus.trigger("RPC:RESPONSE", data.id);
+            }
             reject(new ConnectionLostError());
         });
         // configure and send request
