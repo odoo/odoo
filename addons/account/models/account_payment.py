@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from lxml import etree
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
@@ -33,10 +34,14 @@ class AccountPayment(models.Model):
     is_matched = fields.Boolean(string="Is Matched With a Bank Statement", store=True,
         compute='_compute_reconciliation_status',
         help="Technical field indicating if the payment has been matched with a statement line.")
+    available_partner_bank_ids = fields.Many2many(
+        comodel_name='res.partner.bank',
+        compute='_compute_available_partner_bank_ids',
+    )
     partner_bank_id = fields.Many2one('res.partner.bank', string="Recipient Bank Account",
         readonly=False, store=True, tracking=True,
         compute='_compute_partner_bank_id',
-        domain="[('partner_id', '=', partner_id)]",
+        domain="[('id', 'in', available_partner_bank_ids)]",
         check_company=True)
     is_internal_transfer = fields.Boolean(string="Internal Transfer",
         readonly=False, store=True,
@@ -369,21 +374,20 @@ class AccountPayment(models.Model):
             else:
                 payment.amount_signed = payment.amount
 
-    @api.depends('partner_id', 'company_id', 'payment_type', 'destination_journal_id', 'is_internal_transfer')
+    @api.depends('partner_id', 'company_id', 'payment_type')
+    def _compute_available_partner_bank_ids(self):
+        for pay in self:
+            if pay.payment_type == 'inbound':
+                pay.available_partner_bank_ids = pay.journal_id.bank_account_id
+            else:
+                pay.available_partner_bank_ids = pay.partner_id.bank_ids\
+                        .filtered(lambda x: x.company_id.id in (False, pay.company_id.id))._origin
+
+    @api.depends('available_partner_bank_ids', 'journal_id')
     def _compute_partner_bank_id(self):
         ''' The default partner_bank_id will be the first available on the partner. '''
         for pay in self:
-            if pay.payment_type == 'inbound':
-                bank_partner = pay.company_id.partner_id
-            else:
-                bank_partner = pay.partner_id
-
-            available_partner_bank_accounts = bank_partner.bank_ids.filtered(lambda x: x.company_id.id in (False, pay.company_id.id))
-            if available_partner_bank_accounts:
-                if pay.partner_bank_id not in available_partner_bank_accounts:
-                    pay.partner_bank_id = available_partner_bank_accounts[0]._origin
-            else:
-                pay.partner_bank_id = False
+            pay.partner_bank_id = pay.available_partner_bank_ids[:1]._origin
 
     @api.depends('partner_id', 'destination_account_id', 'journal_id')
     def _compute_is_internal_transfer(self):
