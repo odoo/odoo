@@ -49,8 +49,18 @@ odoo.define('point_of_sale.ClientDetailsEdit', function(require) {
                     processedChanges[key] = value;
                 }
             }
-            if ((!this.props.partner.name && !processedChanges.name) ||
-                processedChanges.name === '' ){
+
+            let savedName = this.props.partner.name;
+            let newName = processedChanges.name;
+            let isMissingName = false;
+            // if invalid name in db (undefined or empty/blank string)
+            if (!savedName || (savedName && savedName.trim() === '') )
+                isMissingName = true;
+            // if new input
+            if (typeof newName === 'string')
+                isMissingName = newName.trim() === '';
+
+            if (isMissingName) {
                 return this.showPopup('ErrorPopup', {
                   title: _t('A Customer Name Is Required'),
                 });
