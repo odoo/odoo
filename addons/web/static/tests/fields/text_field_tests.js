@@ -215,60 +215,66 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("TextField");
 
-    QUnit.skip("text fields are correctly rendered", async function (assert) {
+    QUnit.test("text fields are correctly rendered", async function (assert) {
         assert.expect(7);
 
-        this.data.partner.fields.foo.type = "text";
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                '<field name="int_field"/>' +
-                '<field name="foo"/>' +
-                "</form>",
-            res_id: 1,
+        serverData.models.partner.fields.foo.type = "text";
+        var form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="foo" />
+                </form>
+            `,
         });
 
-        assert.ok(form.$(".o_field_text").length, "should have a text area");
-        assert.strictEqual(form.$(".o_field_text").text(), "yop", 'should be "yop" in readonly');
-
-        await testUtils.form.clickEdit(form);
-
-        var $textarea = form.$("textarea.o_field_text");
-        assert.ok($textarea.length, "should have a text area");
-        assert.strictEqual($textarea.val(), "yop", 'should still be "yop" in edit');
-
-        testUtils.fields.editInput($textarea, "hello");
-        assert.strictEqual($textarea.val(), "hello", 'should be "hello" after first edition');
-
-        testUtils.fields.editInput($textarea, "hello world");
+        assert.containsOnce(form.el, ".o_field_text", "should have a text area");
         assert.strictEqual(
-            $textarea.val(),
-            "hello world",
-            'should be "hello world" after second edition'
+            form.el.querySelector(".o_field_text").textContent,
+            "yop",
+            "should be 'yop' in readonly"
         );
 
-        await testUtils.form.clickSave(form);
+        await click(form.el, ".o_form_button_edit");
+
+        const textarea = form.el.querySelector("textarea.o_field_text");
+        assert.ok(textarea, "should have a text area");
+        assert.strictEqual(textarea.value, "yop", "should still be 'yop' in edit");
+
+        textarea.value = "hello";
+        await triggerEvent(textarea, null, "change");
+        assert.strictEqual(textarea.value, "hello", "should be 'hello' after first edition");
+
+        textarea.value = "hello world";
+        await triggerEvent(textarea, null, "change");
 
         assert.strictEqual(
-            form.$(".o_field_text").text(),
+            textarea.value,
             "hello world",
-            'should be "hello world" after save'
+            "should be 'hello world' after second edition"
         );
-        form.destroy();
+
+        await click(form.el, ".o_form_button_save");
+
+        assert.strictEqual(
+            form.el.querySelector(".o_field_text").textContent,
+            "hello world",
+            "should be 'hello world' after save"
+        );
     });
 
     QUnit.skip("text fields in edit mode have correct height", async function (assert) {
         assert.expect(2);
 
-        this.data.partner.fields.foo.type = "text";
-        this.data.partner.records[0].foo = "f\nu\nc\nk\nm\ni\nl\ng\nr\no\nm";
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        serverData.models.partner.fields.foo.type = "text";
+        serverData.models.partner.records[0].foo = "f\nu\nc\nk\nm\ni\nl\ng\nr\no\nm";
+        var form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch: '<form string="Partners">' + '<field name="foo"/>' + "</form>",
             res_id: 1,
         });
@@ -297,10 +303,10 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skip("text fields in edit mode, no vertical resize", async function (assert) {
         assert.expect(1);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        var form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch: '<form string="Partners">' + '<field name="txt"/>' + "</form>",
             res_id: 1,
         });
@@ -328,23 +334,23 @@ QUnit.module("Fields", (hooks) => {
             nunc, ut aliquet enim. Suspendisse malesuada felis non metus
             efficitur aliquet.`;
 
-        this.data.partner.records[0].txt = damnLongText;
-        this.data.partner.records[0].bar = false;
-        this.data.partner.onchanges = {
+        serverData.models.partner.records[0].txt = damnLongText;
+        serverData.models.partner.records[0].bar = false;
+        serverData.models.partner.onchanges = {
             bar: function (obj) {
                 obj.txt = damnLongText;
             },
         };
-        const form = await createView({
+        const form = await makeView({
             arch: `
                 <form string="Partners">
                     <field name="bar"/>
                     <field name="txt" attrs="{'invisible': [('bar', '=', True)]}"/>
                 </form>`,
-            data: this.data,
-            model: "partner",
+            serverData,
+            resModel: "partner",
             res_id: 1,
-            View: FormView,
+            type: "form",
             viewOptions: { mode: "edit" },
         });
 
@@ -366,12 +372,12 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skip("text fields in editable list have correct height", async function (assert) {
         assert.expect(2);
 
-        this.data.partner.records[0].txt = "a\nb\nc\nd\ne\nf";
+        serverData.models.partner.records[0].txt = "a\nb\nc\nd\ne\nf";
 
-        var list = await createView({
+        var list = await makeView({
             View: ListView,
-            model: "partner",
-            data: this.data,
+            resModel: "partner",
+            serverData,
             arch:
                 '<list editable="top">' + '<field name="foo"/>' + '<field name="txt"/>' + "</list>",
         });
@@ -384,7 +390,7 @@ QUnit.module("Fields", (hooks) => {
         var $textarea = list.$("textarea:first");
 
         // make sure the correct data is there
-        assert.strictEqual($textarea.val(), this.data.partner.records[0].txt);
+        assert.strictEqual($textarea.val(), serverData.models.partner.records[0].txt);
 
         // make sure there is no scroll bar
         assert.strictEqual(
@@ -399,18 +405,18 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skip("text fields in edit mode should resize on reset", async function (assert) {
         assert.expect(1);
 
-        this.data.partner.fields.foo.type = "text";
+        serverData.models.partner.fields.foo.type = "text";
 
-        this.data.partner.onchanges = {
+        serverData.models.partner.onchanges = {
             bar: function (obj) {
                 obj.foo = "a\nb\nc\nd\ne\nf";
             },
         };
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        var form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch:
                 '<form string="Partners">' +
                 '<field name="bar"/>' +
@@ -439,15 +445,15 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skip("text field translatable", async function (assert) {
         assert.expect(3);
 
-        this.data.partner.fields.txt.translate = true;
+        serverData.models.partner.fields.txt.translate = true;
 
         var multiLang = _t.database.multi_lang;
         _t.database.multi_lang = true;
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        var form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch:
                 '<form string="Partners">' +
                 "<sheet>" +
@@ -487,14 +493,14 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skip("text field translatable in create mode", async function (assert) {
         assert.expect(1);
 
-        this.data.partner.fields.txt.translate = true;
+        serverData.models.partner.fields.txt.translate = true;
 
         var multiLang = _t.database.multi_lang;
         _t.database.multi_lang = true;
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        var form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch:
                 '<form string="Partners">' +
                 "<sheet>" +
@@ -516,11 +522,11 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(4);
 
-            this.data.partner.fields.foo.type = "text";
-            var list = await createView({
+            serverData.models.partner.fields.foo.type = "text";
+            var list = await makeView({
                 View: ListView,
-                model: "partner",
-                data: this.data,
+                resModel: "partner",
+                serverData,
                 arch:
                     '<list editable="top">' +
                     '<field name="int_field"/>' +
@@ -563,10 +569,10 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(1);
 
-            var form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
+            var form = await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     "<sheet>" +
@@ -598,7 +604,7 @@ QUnit.module("Fields", (hooks) => {
                 records: [{ id: 1, foo: "some text" }],
             },
         };
-        var list = await createView({
+        var list = await makeView({
             View: ListView,
             model: "foo",
             data: data,
@@ -618,10 +624,10 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(2);
 
-            var form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
+            var form = await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
                 arch:
                     '<form string="Partners">' +
                     '<field name="document" filename="foo"/>' +
@@ -652,12 +658,12 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skip("field text in editable list view", async function (assert) {
         assert.expect(1);
 
-        this.data.partner.fields.foo.type = "text";
+        serverData.models.partner.fields.foo.type = "text";
 
-        var list = await createView({
+        var list = await makeView({
             View: ListView,
-            model: "partner",
-            data: this.data,
+            resModel: "partner",
+            serverData,
             arch: '<tree string="Phonecalls" editable="top">' + '<field name="foo"/>' + "</tree>",
         });
 
