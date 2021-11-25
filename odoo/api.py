@@ -720,11 +720,17 @@ class Environment(Mapping):
         protected = self._protected
         try:
             protected.pushmap()
-            what = what if records is None else [(what, records)]
-            for fields, records in what:
-                for field in fields:
-                    ids = protected.get(field, frozenset())
-                    protected[field] = ids.union(records._ids)
+            if records is not None:  # Handle first signature
+                ids_by_field = {field: records._ids for field in what}
+            else:  # Handle second signature
+                ids_by_field = defaultdict(list)
+                for fields, what_records in what:
+                    for field in fields:
+                        ids_by_field[field].extend(what_records._ids)
+
+            for field, rec_ids in ids_by_field.items():
+                ids = protected.get(field)
+                protected[field] = ids.union(rec_ids) if ids else frozenset(rec_ids)
             yield
         finally:
             protected.popmap()
