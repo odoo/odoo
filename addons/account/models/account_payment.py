@@ -340,7 +340,7 @@ class AccountPayment(models.Model):
             else:
                 bank_partner = pay.partner_id
 
-            available_partner_bank_accounts = bank_partner.bank_ids.filtered(lambda x: x.company_id in (False, pay.company_id))
+            available_partner_bank_accounts = bank_partner.bank_ids.filtered(lambda x: x.company_id.id in (False, pay.company_id.id))
             if available_partner_bank_accounts:
                 if pay.partner_bank_id not in available_partner_bank_accounts:
                     pay.partner_bank_id = available_partner_bank_accounts[0]._origin

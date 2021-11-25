@@ -277,7 +277,7 @@ class AccountPaymentRegister(models.TransientModel):
                 batches = wizard._get_batches()
                 bank_partners = batches[0]['lines'].move_id.bank_partner_id
                 wizard.available_partner_bank_ids = bank_partners.bank_ids\
-                    .filtered(lambda x: x.company_id in (False, wizard.company_id))._origin
+                    .filtered(lambda x: x.company_id.id in (False, wizard.company_id.id))._origin
             else:
                 wizard.available_partner_bank_ids = False
 
