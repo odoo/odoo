@@ -269,6 +269,7 @@ export class Record extends DataPoint {
                 ...onchangeValues,
             };
         }
+        data = this.parseServerValues(data);
         this._values = data; // FIXME: don't update internal state directly
         this.data = { ...data };
 
@@ -356,6 +357,33 @@ export class Record extends DataPoint {
             await this._performOnchange(fieldName);
         }
         this.model.notify();
+    }
+
+    parseServerValue(field, value) {
+        let parsedValue = value;
+        if (field.type === "date" || field.type === "datetime") {
+            // process date(time): convert into a Luxon DateTime object
+            const parser = registry.category("parsers").get(field.type);
+            parsedValue = parser(value, { isUTC: true });
+        } else if (field.type === "selection" && value === false) {
+            // process selection: convert false to 0, if 0 is a valid key
+            const hasKey0 = field.selection.find((option) => option[0] === 0);
+            parsedValue = hasKey0 ? 0 : value;
+        }
+        return parsedValue;
+    }
+
+    parseServerValues(values) {
+        const parsedValues = {};
+        if (!values) {
+            return parsedValues;
+        }
+        Object.keys(values).forEach((fieldName) => {
+            const value = values[fieldName];
+            const field = this.fields[fieldName];
+            parsedValues[fieldName] = this.parseServerValue(field, value);
+        });
+        return parsedValues;
     }
 
     async save() {
