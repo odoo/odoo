@@ -1,15 +1,9 @@
 /** @odoo-module **/
 
 import { DatePicker, DateTimePicker } from "@web/core/datepicker/datepicker";
+import { formatDate, serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import {
-    formatDate,
-    parseDate,
-    parseDateTime,
-    serializeDate,
-    serializeDateTime,
-} from "@web/core/l10n/dates";
 import { standardFieldProps } from "./standard_field_props";
 
 const { Component } = owl;
@@ -23,21 +17,16 @@ export class RemainingDaysField extends Component {
         return this.hasTime ? DateTimePicker : DatePicker;
     }
 
-    get parsedValue() {
-        const parser = this.hasTime ? parseDateTime : parseDate;
-        return this.props.value ? parser(this.props.value, { timezone: false }) : undefined;
-    }
-
     get diffDays() {
         if (!this.props.value) {
             return null;
         }
         const today = luxon.DateTime.local().startOf("day");
-        return Math.floor(this.parsedValue.startOf("day").diff(today, "days").days);
+        return Math.floor(this.props.value.startOf("day").diff(today, "days").days);
     }
 
     get formattedValue() {
-        return this.props.value ? formatDate(this.parsedValue, { timezone: true }) : "";
+        return this.props.value ? formatDate(this.props.value, { timezone: true }) : "";
     }
 
     /**

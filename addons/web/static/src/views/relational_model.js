@@ -11,8 +11,9 @@ import { evaluateExpr } from "@web/core/py_js/py";
 const preloadedDataRegistry = registry.category("preloadedData");
 
 function orderByToString(orderBy) {
-    return orderBy.map((o) => `${o.fieldName} ${o.asc ? "ASC" : "DESC"}`).join(", ");
+    return orderBy.map((o) => `${o.name} ${o.asc ? "ASC" : "DESC"}`).join(", ");
 }
+
 class RequestBatcherORM extends ORM {
     constructor() {
         super(...arguments);
@@ -112,7 +113,7 @@ export class Record extends DataPoint {
         super(...arguments);
 
         this.resId = params.resId;
-        this._values = params.values || {};
+        this._values = this.parseServerValues(params.values);
         this._changes = {};
         this.data = { ...this._values };
         this.preloadedData = {};
@@ -140,6 +141,7 @@ export class Record extends DataPoint {
         } else {
             data = await this._performOnchange();
         }
+        data = this.parseServerValues(data);
         this._values = data; // FIXME: don't update internal state directly
         this._changes = {};
         this.data = { ...data };
@@ -224,12 +226,39 @@ export class Record extends DataPoint {
     }
 
     async update(fieldName, value) {
-        this.data[fieldName] = value;
-        this._changes[fieldName] = value;
+        this.data[fieldName] = this.parseServerValue(this.fields[fieldName], value);
+        this._changes[fieldName] = this.data[fieldName];
         const onChangeValues = await this._performOnchange(fieldName);
         Object.assign(this.data, onChangeValues);
         Object.assign(this._changes, onChangeValues);
         this.model.notify();
+    }
+
+    parseServerValue(field, value) {
+        let parsedValue = value;
+        if (field.type === "date" || field.type === "datetime") {
+            // process date(time): convert into a Luxon DateTime object
+            const parser = registry.category("parsers").get(field.type);
+            parsedValue = parser(value, { isUTC: true });
+        } else if (field.type === "selection" && value === false) {
+            // process selection: convert false to 0, if 0 is a valid key
+            const hasKey0 = field.selection.find((option) => option[0] === 0);
+            parsedValue = hasKey0 ? 0 : value;
+        }
+        return parsedValue;
+    }
+
+    parseServerValues(values) {
+        const parsedValues = {};
+        if (!values) {
+            return parsedValues;
+        }
+        Object.keys(values).forEach((fieldName) => {
+            const value = values[fieldName];
+            const field = this.fields[fieldName];
+            parsedValues[fieldName] = this.parseServerValue(field, value);
+        });
+        return parsedValues;
     }
 
     async save() {
@@ -319,7 +348,7 @@ class DynamicList extends DataPoint {
 
         this.groupBy = params.groupBy || [];
         this.domain = params.domain || [];
-        this.orderBy = params.orderedBy || []; // rename orderBy + get back from state
+        this.orderBy = params.orderBy || []; // rename orderBy + get back from state
         this.offset = 0;
         this.count = 0;
         this.limit = params.limit || state.limit || this.constructor.DEFAULT_LIMIT;
@@ -347,12 +376,12 @@ class DynamicList extends DataPoint {
     }
 
     async sortBy(fieldName) {
-        if (this.orderBy.length && this.orderBy[0].fieldName === fieldName) {
+        if (this.orderBy.length && this.orderBy[0].name === fieldName) {
             this.orderBy[0].asc = !this.orderBy[0].asc;
         } else {
-            this.orderBy = this.orderBy.filter((o) => o.fieldName !== fieldName);
+            this.orderBy = this.orderBy.filter((o) => o.name !== fieldName);
             this.orderBy.unshift({
-                fieldName,
+                name: fieldName,
                 asc: true,
             });
         }
@@ -538,7 +567,7 @@ export class DynamicGroupList extends DynamicList {
             domain: this.domain,
             groupBy: this.groupBy.slice(1),
             context: this.context,
-            orderedBy: this.orderBy,
+            orderBy: this.orderBy,
             groupByInfo: this.groupByInfo,
         };
         return Promise.all(
@@ -628,7 +657,7 @@ export class Group extends DataPoint {
             domain: Domain.and([params.domain, this.groupDomain]).toList(),
             groupBy: params.groupBy,
             context: params.context,
-            orderedBy: params.orderedBy,
+            orderBy: params.orderBy,
             resModel: params.resModel,
             activeFields: params.activeFields,
             fields: params.fields,
@@ -670,7 +699,7 @@ export class StaticList extends DataPoint {
         this.offset = 0;
         this.views = params.views || {};
         this.viewMode = params.viewMode;
-        this.orderBy = params.orderedBy || {}; // rename orderBy + get back from state
+        this.orderBy = params.orderBy || {}; // rename orderBy + get back from state
         this.limit = params.limit || state.limit || this.constructor.DEFAULT_LIMIT;
         this.offset = 0;
     }
@@ -689,7 +718,7 @@ export class StaticList extends DataPoint {
         if (!this.resIds.length) {
             return [];
         }
-        const orderFieldName = this.orderBy.fieldName;
+        const orderFieldName = this.orderBy.name;
         const hasSeveralPages = this.limit < this.resIds.length;
         if (hasSeveralPages && orderFieldName) {
             // there several pages in the x2many and it is ordered, so we must know the value
@@ -760,10 +789,10 @@ export class StaticList extends DataPoint {
     }
 
     async sortBy(fieldName) {
-        if (this.orderBy.fieldName === fieldName) {
+        if (this.orderBy.name === fieldName) {
             this.orderBy.asc = !this.orderBy.asc;
         } else {
-            this.orderBy = { fieldName, asc: true };
+            this.orderBy = { name: fieldName, asc: true };
         }
 
         await this.load();

@@ -6,7 +6,7 @@
             <span t-esc="formattedValue" />
         </t>
         <t t-else="">
-            <DateTimePicker date="parsedValue" t-on-datetime-changed="onChange" />
+            <DateTimePicker date="props.value" t-on-datetime-changed="onChange" />
         </t>
     </t>
 

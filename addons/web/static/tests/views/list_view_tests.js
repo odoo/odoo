@@ -200,6 +200,10 @@ QUnit.module("Views", (hooks) => {
         serviceRegistry.add("dialog", dialogService);
         serviceRegistry.add("localization", makeFakeLocalizationService());
         serviceRegistry.add("user", makeFakeUserService());
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => fn(),
+            clearTimeout: () => {},
+        });
     });
 
     QUnit.module("ListView");
@@ -1692,38 +1696,37 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skip("Loading a filter with a sort attribute", async function (assert) {
+    QUnit.test("Loading a filter with a sort attribute", async function (assert) {
         assert.expect(2);
 
         serverData.models.foo.fields.foo.sortable = true;
         serverData.models.foo.fields.date.sortable = true;
 
-        var searchReads = 0;
+        let searchReads = 0;
         const list = await makeView({
             type: "list",
             resModel: "foo",
             serverData,
             arch: "<tree>" + '<field name="foo"/>' + '<field name="date"/>' + "</tree>",
             mockRPC: function (route, args) {
-                if (route === "/web/dataset/search_read") {
+                if (args.method === "web_search_read") {
                     if (searchReads === 0) {
                         assert.strictEqual(
-                            args.sort,
+                            args.kwargs.order,
                             "date ASC, foo DESC",
                             "The sort attribute of the filter should be used by the initial search_read"
                         );
                     } else if (searchReads === 1) {
                         assert.strictEqual(
-                            args.sort,
+                            args.kwargs.order,
                             "date DESC, foo ASC",
                             "The sort attribute of the filter should be used by the next search_read"
                         );
                     }
                     searchReads += 1;
                 }
-                return this._super.apply(this, arguments);
             },
-            favoriteFilters: [
+            irFilters: [
                 {
                     context: "{}",
                     domain: "[]",
@@ -1745,8 +1748,8 @@ QUnit.module("Views", (hooks) => {
             ],
         });
 
-        await cpHelpers.toggleFavoriteMenu(list.el);
-        await cpHelpers.toggleMenuItem(list.el, "My second favorite");
+        await toggleFavoriteMenu(list.el);
+        await toggleMenuItem(list.el, "My second favorite");
     });
 
     QUnit.test("many2one field rendering", async function (assert) {
@@ -1793,8 +1796,19 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skip("opening records when clicking on record", async function (assert) {
-        assert.expect(3);
+    QUnit.test("opening records when clicking on record", async function (assert) {
+        assert.expect(6);
+
+        const ListView = registry.category("views").get("list");
+        class ListViewCustom extends ListView {
+            openRecord(record) {
+                assert.step("openRecord");
+                assert.strictEqual(record.data.id, 1);
+            }
+        }
+        registry.category("views").add("list", ListViewCustom, { force: true });
+
+        serverData.models.foo.fields.foo.sortable = true;
 
         const list = await makeView({
             type: "list",
@@ -1803,18 +1817,14 @@ QUnit.module("Views", (hooks) => {
             arch: '<tree><field name="foo"/></tree>',
         });
 
-        testUtils.mock.intercept(list, "open_record", function () {
-            assert.ok("list view should trigger 'open_record' event");
-        });
-
-        await click($(list.el).find("tr td:not(.o_list_record_selector)").first());
-        list.update({ groupBy: ["foo"] });
-        await testUtils.nextTick();
+        await click(list.el.querySelector("tr td:not(.o_list_record_selector)"));
+        await groupByMenu(list, "foo");
 
         assert.containsN(list, "tr.o_group_header", 3, "list should be grouped");
-        await click($(list.el).find("th.o_group_name").first());
+        await click(list.el.querySelector("th.o_group_name"));
 
-        click($(list.el).find("tr:not(.o_group_header) td:not(.o_list_record_selector)").first());
+        click(list.el.querySelector("tr:not(.o_group_header) td:not(.o_list_record_selector)"));
+        assert.verifySteps(["openRecord", "openRecord"]);
     });
 
     QUnit.skip("editable list view: readonly fields cannot be edited", async function (assert) {
@@ -5500,10 +5510,6 @@ QUnit.module("Views", (hooks) => {
                 assert.strictEqual(params.name, "button_method", "should call correct method");
                 assert.strictEqual(params.type, "object", "should have correct type");
             },
-        });
-        patchWithCleanup(browser, {
-            setTimeout: (fn) => fn(),
-            clearTimeout: () => {},
         });
 
         assert.verifySteps(["web_search_read"]);
