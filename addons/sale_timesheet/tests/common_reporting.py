@@ -9,6 +9,16 @@ class TestCommonReporting(TestCommonSaleTimesheet):
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
 
+        # Note: According to the installed module, a default pricelist is set
+        # on the created company (see create override on product module)
+        # Force the pricelist on the company to avoid having a random one
+        # with advanced discount configuration, etc...
+        cls.env['ir.property']._set_default(
+            'property_product_pricelist', 'res.partner',
+            cls.company_data['default_pricelist'],
+            cls.company_data['company'],
+        )
+
         # expense product
         cls.product_expense = cls.env['product.product'].with_context(mail_notrack=True, mail_create_nolog=True).create({
             'name': "Expense service",
