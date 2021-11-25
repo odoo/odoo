@@ -578,7 +578,7 @@ form: module.record_id""" % (xml_id,)
                         f_val = float(f_val)
                     elif field_type == 'boolean' and isinstance(f_val, str):
                         f_val = str2bool(f_val)
-                    elif field_type in 'one2many':
+                    elif field_type == 'one2many':
                         if isinstance(f_val, str):
                             f_val = None
                         for child in field.findall('./record'):
