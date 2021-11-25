@@ -197,7 +197,7 @@ QUnit.test("check trigger RPC:REQUEST and RPC:RESPONSE for a simple rpc", async 
     assert.verifySteps(["RPC:REQUEST", "RPC:RESPONSE"]);
 
     await env.services.rpc("/test/", {}, { silent: true });
-    assert.verifySteps(["RPC:RESPONSE"]);
+    assert.verifySteps([]);
 
     unpatch(browser, "mock.xhr");
 });
