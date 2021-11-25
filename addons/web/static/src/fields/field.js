@@ -73,8 +73,8 @@ export class Field extends Component {
             attrs: activeField.attrs || {},
             options: activeField.options || {},
             required: this.props.required || field.required || false,
-            update: async (value) => {
-                await record.update(this.props.name, value);
+            update: async (value, options = { name: null }) => {
+                await record.update(options.name || this.props.name, value);
                 // We save only if we're on view mode readonly and no readonly field modifier
                 if (readonlyFromViewMode && !readonyFromModifiers) {
                     return record.save();
