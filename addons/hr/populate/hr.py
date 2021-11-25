@@ -78,7 +78,8 @@ class HrEmployee(models.Model):
     _inherit = 'hr.employee'
 
     _populate_sizes = {'small': 100, 'medium': 2000, 'large': 20000}
-    _populate_dependencies = ['hr.department', 'hr.job', 'hr.work.location', 'hr.employee.category']
+    _populate_dependencies = ['res.company', 'res.users', 'resource.calendar', 'hr.department',
+                              'hr.job', 'hr.work.location', 'hr.employee.category']
 
     def _populate(self, size):
         employees = super()._populate(size)
@@ -86,11 +87,32 @@ class HrEmployee(models.Model):
         return employees
 
     def _populate_factories(self):
-        company_id = self.env.ref('base.main_company').id
+        company_ids = self.env['res.company'].browse(self.env.registry.populated_models['res.company'])
+        company_calendars = {}
+        for company_id in company_ids:
+            company_calendars[company_id.id] = company_id.resource_calendar_ids.filtered_domain([
+                         ('name', 'not like', 'Standard')]).ids
+
         department_ids = self.env.registry.populated_models['hr.department']
         job_ids = self.env.registry.populated_models['hr.job']
         work_location_ids = self.env.registry.populated_models['hr.work.location']
         tag_ids = self.env.registry.populated_models['hr.employee.category']
+        user_ids = self.env['res.users'].browse(self.env.registry.populated_models['res.users'])
+
+        def _compute_user_and_company(iterator, *args):
+            # First users
+            for values, user_id in zip(iterator, user_ids):
+                yield {'company_id': user_id.company_id.id,
+                       'user_id': user_id.id,
+                       **values}
+            # then as many as required non - users
+            for values in iterator:
+                yield {'company_id': populate.random.choice(company_ids).id,
+                       'user_id': False,
+                       **values}
+
+        def get_resource_calendar_id(values, random, **kwargs):
+            return random.choice(company_calendars[values['company_id']])
 
         def get_tag_ids(values, counter, random):
             return [
@@ -101,23 +123,25 @@ class HrEmployee(models.Model):
 
         return [
             ('active', populate.iterate([True, False], [0.9, 0.1])),
-            ('company_id', populate.constant(company_id)),
             ('name', populate.constant("employee_{counter}")),
+            ('_user_and_company', _compute_user_and_company),
             ('department_id', populate.randomize(department_ids)),
             ('job_id', populate.randomize(job_ids)),
             ('work_location_id', populate.randomize(work_location_ids)),
             ('category_ids', populate.compute(get_tag_ids)),
+            ('resource_calendar_id', populate.compute(get_resource_calendar_id)),
         ]
 
     def _populate_set_manager(self, employees):
-        manager_ids = []
+        manager_ids = defaultdict(list)
         rand = populate.Random('hr.employee+manager_generator')
 
         for employee in employees:
-            if rand.random() >= 0.85: # 15% of employees are managers
-                manager_ids.append(employee.id)
+            # 15% of employees are managers, at least one per company
+            if rand.random() >= 0.85 or not manager_ids.get(employee.company_id):
+                manager_ids[employee.company_id].append(employee.id)
 
         for employee in employees:
-            manager = rand.choice(manager_ids)
+            manager = rand.choice(manager_ids[employee.company_id])
             if manager != employee.id:
                 employee.parent_id = manager
