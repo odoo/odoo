@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from collections import defaultdict
+from lxml import etree
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
@@ -319,7 +320,7 @@ class AccountPaymentRegister(models.TransientModel):
                 batches = wizard._get_batches()
                 bank_partners = batches[0]['lines'].move_id.bank_partner_id
                 wizard.available_partner_bank_ids = bank_partners.bank_ids\
-                    .filtered(lambda x: x.company_id in (False, wizard.company_id))._origin
+                    .filtered(lambda x: x.company_id.id in (False, wizard.company_id.id))._origin
             else:
                 wizard.available_partner_bank_ids = False
 
@@ -393,6 +394,27 @@ class AccountPaymentRegister(models.TransientModel):
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS
     # -------------------------------------------------------------------------
+
+    @api.model
+    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+        # OVERRIDE to add the 'available_partner_bank_ids' field dynamically inside the view.
+        # TO BE REMOVED IN MASTER
+        res = super().fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+        if view_type == 'form':
+            form_view = self.env.ref('account.view_account_payment_register_form')
+            tree = etree.fromstring(res['arch'])
+            if res.get('view_id') == form_view.id and len(tree.xpath("//field[@name='available_partner_bank_ids']")) == 0:
+                # Don't force people to update the account module.
+                arch_tree = etree.fromstring(form_view.arch)
+                if arch_tree.tag == 'form':
+                    arch_tree.insert(0, etree.Element('field', attrib={
+                        'name': 'available_partner_bank_ids',
+                        'invisible': '1',
+                    }))
+                    form_view.arch = etree.tostring(arch_tree, encoding='unicode')
+                    return super().fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+
+        return res
 
     @api.model
     def default_get(self, fields_list):
