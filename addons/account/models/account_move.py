@@ -3776,7 +3776,7 @@ class AccountMoveLine(models.Model):
             aml_ids = [rec['debit_move_id'][0] for rec in todo if rec['debit_move_id']] + [rec['credit_move_id'][0] for rec in todo if rec['credit_move_id']]
             amls |= set(aml_ids)
             seen |= set([rec['id'] for rec in todo])
-            todo = self.env['account.partial.reconcile'].search_read(['&', '|', ('credit_move_id', 'in', aml_ids), ('debit_move_id', 'in', aml_ids), '!', ('id', 'in', list(seen))], ['debit_move_id', 'credit_move_id'])
+            todo = self.env['account.partial.reconcile'].search_read(['&', '|', ('credit_move_id', 'in', list(amls)), ('debit_move_id', 'in', list(amls)), '!', ('id', 'in', list(seen))], ['debit_move_id', 'credit_move_id'])
 
         partial_rec_ids = list(seen)
         if not amls:
