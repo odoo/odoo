@@ -1569,6 +1569,38 @@ var SnippetsMenu = Widget.extend({
         return this._activateSnippet($snippet);
     },
 
+    /**
+     * Postprocesses a snippet node when it has been inserted in the dom.
+     *
+     * @param {jQuery} $target
+     * @returns {Promise}
+     */
+    callPostSnippetDrop: async function ($target) {
+        // First call the onBuilt of all options of each item in the snippet
+        // (and so build their editor instance first).
+        await this._callForEachChildSnippet($target, function (editor, $snippet) {
+            return editor.buildSnippet();
+        });
+        // The snippet is now fully built, notify the editor for changed
+        // content.
+        $target.trigger('content_changed');
+
+        // Now notifies that a snippet was dropped (at the moment, useful to
+        // start public widgets for instance (no saved content)).
+        await this._mutex.exec(() => {
+            const proms = [];
+            this.trigger_up('snippet_dropped', {
+                $target: $target,
+                addPostDropAsync: prom => proms.push(prom),
+            });
+            return Promise.all(proms);
+        });
+
+        // Lastly, ensure that the snippets or its related parts are added to
+        // the invisible DOM list if needed.
+        await this._updateInvisibleDOM();
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -2513,32 +2545,7 @@ var SnippetsMenu = Widget.extend({
                             // (mutexed as well).
                             dragAndDropResolve();
 
-                            // First call the onBuilt of all options of each
-                            // item in the snippet (and so build their editor
-                            // instance first).
-                            await self._callForEachChildSnippet($target, function (editor, $snippet) {
-                                return editor.buildSnippet();
-                            });
-                            // The snippet is now fully built, notify the
-                            // editor for changed content.
-                            $target.trigger('content_changed');
-
-                            // Now notifies that a snippet was dropped (at the
-                            // moment, useful to start public widgets for
-                            // instance (no saved content)).
-                            await self._mutex.exec(() => {
-                                const proms = [];
-                                self.trigger_up('snippet_dropped', {
-                                    $target: $target,
-                                    addPostDropAsync: prom => proms.push(prom),
-                                });
-                                return Promise.all(proms);
-                            });
-
-                            // Lastly, ensure that the snippets or its related
-                            // parts are added to the invisible DOM list if
-                            // needed.
-                            await self._updateInvisibleDOM();
+                            await self.callPostSnippetDrop($target);
 
                             // Restore editor to its normal edition state, also
                             // make sure the undroppable snippets are updated.
