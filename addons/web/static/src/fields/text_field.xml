@@ -2,8 +2,17 @@
 <templates xml:space="preserve">
 
     <t t-name="web.TextField" owl="1">
-        <span t-if="props.readonly" t-esc="props.value" />
-        <textarea t-else="" class="o_input" t-on-change="onChange" t-att-value="props.value" />
+        <t t-if="props.readonly">
+            <span t-esc="props.value or ''" />
+        </t>
+        <t t-else="">
+            <textarea
+                class="o_input"
+                t-att-value="props.value or ''"
+                t-att-placeholder="props.placeholder"
+                t-on-change="onChange"
+            />
+        </t>
     </t>
 
 </templates>
