@@ -154,12 +154,12 @@
         <div class="container-fluid pt-3 pb-2">
             <img class="ml-lg-5" style="height: 31px; width: 99px;" src="/website/static/src/img/odoo_logo.svg" title="Odoo Logo"/>
         </div>
-        <div class="o_configurator_screen_content container d-flex flex-grow-1 align-items-center">
-            <div class="m-auto">
-                <div class="o_configurator_typing_text o_configurator_show_fast pl-2">Add <b class="text-info">Pages</b> and <b class="text-warning">Features</b></div>
-                <h5 class="o_configurator_show_fast text-muted pl-2">You'll be able to create your pages later on.</h5>
-                <div class="page_feature_selection o_configurator_show">
-                    <div class="w-100 page_feature_selection container d-flex flex-wrap py2 py-lg-3">
+        <div class="o_configurator_screen_content overflow-hidden container d-flex flex-grow-1 align-items-center">
+            <div class="m-auto d-flex mh-100 flex-column">
+                <div class="o_configurator_typing_text o_configurator_show_fast">Add <b class="text-info">Pages</b> and <b class="text-warning">Features</b></div>
+                <h5 class="o_configurator_show_fast text-muted pb-lg-3">You'll be able to create your pages later on.</h5>
+                <div class="page_feature_selection o_configurator_show overflow-auto mt-lg-3 mx-n2">
+                    <div class="w-100 page_feature_selection d-flex flex-wrap">
                         <t t-foreach="getters.getFeatures()" t-as="feature" t-key="feature_index">
                             <t t-set='isInstalled' t-value="feature.module_state == 'installed'"/>
                             <div class="p-2 w-100 w-md-50 w-lg-25" t-if="feature.type != 'empty'">
@@ -182,7 +182,7 @@
                         </t>
                     </div>
                 </div>
-                <div class="text-right">
+                <div class="text-right border-top pt-2">
                     <button class="btn btn-primary btn-lg ml-3" t-on-click="buildWebsite()">Build my website</button>
                 </div>
             </div>
