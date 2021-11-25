@@ -10,13 +10,6 @@
     // that cases.
     box-shadow: inset 0 -1px 0 $border-color;
 
-    &.o_full .oe_stat_button:not(.o_invisible_modifier) ~ .oe_stat_button {
-        border-left: 1px solid $border-color;
-    }
-    &.o_not_full .oe_stat_button {
-        border-left: 1px solid $border-color;
-    }
-
     > .btn.oe_stat_button, > .o_dropdown_more {
         flex: 0 0 auto;
         width: percentage(1/3); // Adapt the number of visible buttons for each screen width
@@ -42,6 +35,7 @@
         opacity: 0.8;
         border-radius: 0px;
         margin-bottom: 0; // If the button comes from a field
+        border: 0 solid gray('300');
 
         &:hover, &:focus {
             background-color: rgba(black, 0.03);
@@ -131,6 +125,13 @@
                 }
             }
         }
+    }
+
+    &.o-full .oe_stat_button:not(.o_invisible_modifier) ~ .oe_stat_button {
+        border-left: 1px solid $border-color;
+    }
+    &.o-not-full .oe_stat_button {
+        border-left: 1px solid $border-color;
     }
 
     // > .o_dropdown_more {

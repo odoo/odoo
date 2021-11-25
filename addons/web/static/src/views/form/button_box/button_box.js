@@ -3,8 +3,6 @@
 import { useEffect, useService } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 
-const DEFAULT_MAX_BUTTONS = 7;
-
 class ButtonBoxDropdown extends Dropdown {
     setup() {
         super.setup();
@@ -30,7 +28,7 @@ export class ButtonBox extends owl.Component {
     setup() {
         const ui = useService("ui");
         const getMaxButtons = () => {
-            return [2, 2, 2, 4][ui.size] || DEFAULT_MAX_BUTTONS;
+            return [2, 2, 2, 4, 7, 8, 8][ui.size];
         };
 
         const dropdown = owl.hooks.useRef("dropdown");
@@ -38,7 +36,7 @@ export class ButtonBox extends owl.Component {
         let visibleButtons, dropDownButtons;
 
         useEffect(() => {
-            const maxButtonsInBox = 1; //getMaxButtons();
+            const maxButtonsInBox = getMaxButtons();
             visibleButtons = [];
             dropDownButtons = [];
             const children = this.el.children;
