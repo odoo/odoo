@@ -1645,10 +1645,13 @@ const Wysiwyg = Widget.extend({
     _getSnippetsCommands: function () {
         const snippetCommandCallback = (selector) => {
             const $separatorBody = $(selector);
-            const $clonedBody = $separatorBody.clone();
+            const $clonedBody = $separatorBody.clone().removeClass('oe_snippet_body');
             const range = getDeepRange(this.odooEditor.editable);
             const block = closestElement(range.endContainer, 'p, div, ol, ul, cl, h1, h2, h3, h4, h5, h6');
-            block && block.after($clonedBody[0]);
+            if (block) {
+                block.after($clonedBody[0]);
+                this.snippetsMenu.callPostSnippetDrop($clonedBody);
+            }
         };
         return [
             {
