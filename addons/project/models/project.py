@@ -2070,6 +2070,7 @@ class Task(models.Model):
             'res_model': 'project.task',
             'type': 'ir.actions.act_window',
             'context': {**self._context, 'default_depend_on_ids': [Command.link(self.id)], 'show_project_update': False},
+            'domain': [('depend_on_ids', '=', self.id)],
         }
         if self.dependent_tasks_count == 1:
             action['view_mode'] = 'form'
@@ -2078,7 +2079,6 @@ class Task(models.Model):
         else:
             action['name'] = _('Dependent Tasks')
             action['view_mode'] = 'tree,form,kanban,calendar,pivot,graph,activity'
-            action['domain'] = [('depend_on_ids', '=', self.id)]
         return action
 
     def action_recurring_tasks(self):
