@@ -156,9 +156,11 @@ class AccountPayment(models.Model):
             'name': _("Check Operations"),
             'type': 'ir.actions.act_window',
             'res_model': 'account.payment',
-            'view_mode': 'list,form',
+            'views': [
+                (self.env.ref('l10n_ar_third_check.view_account_third_check_operations_tree').id, 'tree'),
+                (False, 'form')],
             'context': {'create': False},
-            'domain': [('id', 'in', self.third_check_operation_ids.filtered(lambda x: x.state == 'posted').ids)],
+            'domain': [('id', 'in', (self.third_check_operation_ids.filtered(lambda x: x.state == 'posted') + self).ids)],
         }
         return action
 
