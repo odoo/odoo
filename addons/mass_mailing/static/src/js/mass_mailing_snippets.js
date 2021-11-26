@@ -95,7 +95,7 @@ options.registry.BackgroundImage = options.registry.BackgroundImage.extend({
     }
 });
 
-options.registry.ImageOptimize.include({
+options.registry.ImageTools.include({
 
     //--------------------------------------------------------------------------
     // Public
@@ -108,7 +108,7 @@ options.registry.ImageOptimize.include({
         await this._super(...arguments);
 
         // The image shape option should work correctly with this update of the
-        // ImageOptimize option but unfortunately, SVG support in mail clients
+        // ImageTools option but unfortunately, SVG support in mail clients
         // prevents the final rendering of the image. For now, we disable the
         // feature.
         const imgShapeContainerEl = this.el.querySelector('.o_we_image_shape');
