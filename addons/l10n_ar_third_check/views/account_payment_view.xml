@@ -23,7 +23,7 @@
             </field>
             <filter name="date" position="after">
                 <separator/>
-                <filter string="Checks on hand" name="checks_on_hand" domain="[('third_check_current_journal_id.inbound_payment_method_line_ids.payment_method_id.code', '=', 'in_third_checks')]"/>
+                <filter string="Checks on hand" name="checks_on_hand" domain="[('state', '=', 'posted'), ('third_check_current_journal_id.inbound_payment_method_line_ids.payment_method_id.code', '=', 'in_third_checks')]"/>
             </filter>
             <filter name="journal" position="after">
                 <filter name="groupby_third_check_current_journal" string="Third Check Current Journal" domain="[]" context="{'group_by': 'third_check_current_journal_id'}"/>
@@ -108,7 +108,7 @@
         <field name="view_mode">tree,form,calendar,graph,pivot</field>
         <field name="view_id" ref="l10n_ar_third_check.view_account_third_check_tree"/>
         <field name="domain">[('payment_method_code', '=', 'new_third_checks')]</field>
-        <field name="context">{'search_default_checks_on_hand': 1, 'search_default_groupby_third_check_current_journal': 1}</field>
+        <field name="context">{'search_default_checks_on_hand': 1}</field>
     </record>
 
     <menuitem
