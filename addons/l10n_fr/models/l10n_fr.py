@@ -19,7 +19,7 @@ class AccountMove(models.Model):
         return super()._get_accounting_date(invoice_date, has_tax)
 
     @api.constrains('move_type', 'date', 'invoice_date')
-    def _check_duplicate_supplier_reference(self):
+    def _check_french_date_invoice_date(self):
         moves = self.filtered(lambda move: move.company_id._is_vat_french() and move.date and move.invoice_date \
                               and move.is_sale_document(include_receipts=True) and move.date != move.invoice_date)
         if moves:
