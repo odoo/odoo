@@ -3769,15 +3769,17 @@ class AccountMoveLine(models.Model):
         In case of full reconciliation, all moves belonging to the reconciliation will belong to the same account_full_reconcile object.
         """
         # Get first all aml involved
-        todo = self.env['account.partial.reconcile'].search_read(['|', ('debit_move_id', 'in', self.ids), ('credit_move_id', 'in', self.ids)], ['debit_move_id', 'credit_move_id'])
+        todo = self.env['account.partial.reconcile'].search(['|', ('debit_move_id', 'in', self.ids), ('credit_move_id', 'in', self.ids)])
+        todo = todo.read(['debit_move_id', 'credit_move_id'], load='')
+
         amls = set(self.ids)
         seen = set()
         while todo:
-            aml_ids = [rec['debit_move_id'][0] for rec in todo if rec['debit_move_id']] + [rec['credit_move_id'][0] for rec in todo if rec['credit_move_id']]
+            aml_ids = [rec['debit_move_id'] for rec in todo if rec['debit_move_id']] + [rec['credit_move_id'] for rec in todo if rec['credit_move_id']]
             amls |= set(aml_ids)
             seen |= set([rec['id'] for rec in todo])
-            todo = self.env['account.partial.reconcile'].search_read(['&', '|', ('credit_move_id', 'in', list(amls)), ('debit_move_id', 'in', list(amls)), '!', ('id', 'in', list(seen))], ['debit_move_id', 'credit_move_id'])
-
+            todo = self.env['account.partial.reconcile'].search(['&', '|', ('credit_move_id', 'in', list(amls)), ('debit_move_id', 'in', list(amls)), '!', ('id', 'in', list(seen))])
+            todo = todo.read(['debit_move_id', 'credit_move_id'], load='')
         partial_rec_ids = list(seen)
         if not amls:
             return
