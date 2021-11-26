@@ -38,6 +38,7 @@
         'web.assets_frontend': [
             'code_backend_theme/static/src/scss/login.scss',
             'code_backend_theme/static/src/css/pos.css',
+            'code_backend_theme/static/src/img/favicon.ico',
         ],
          'point_of_sale.assets': [
             'code_backend_theme/static/src/css/pos.css',
@@ -49,6 +50,8 @@
             'code_backend_theme/static/src/scss/theme.scss',
             'code_backend_theme/static/src/scss/sidebar.scss',
             'code_backend_theme/static/src/css/pos.css',
+            'code_backend_theme/static/src/scss/login.scss',
+            ('replace', '/web/static/src/img/favicon.ico', '/code_backend_theme/static/src/img/favicon.ico'),
             ('replace', '/web/static/src/views/graph/colors.js', '/code_backend_theme/static/src/js/fields/colors.js'),
             ('replace', '/web/static/src/views/graph/graph_renderer.js', '/code_backend_theme/static/src/js/fields/graph_renderer.js'),
             ('replace', '/web/static/src/views/graph/graph_model.js', '/code_backend_theme/static/src/js/fields/graph_model.js'),
@@ -60,6 +63,7 @@
         'web.assets_qweb': [
             'code_backend_theme/static/src/xml/styles.xml',
             'code_backend_theme/static/src/xml/top_bar.xml',
+            'code_backend_theme/static/src/xml/webclient_templates.xml',
         ],
     },
     'license': 'LGPL-3',
