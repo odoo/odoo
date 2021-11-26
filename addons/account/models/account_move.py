@@ -3800,9 +3800,8 @@ class AccountMoveLine(models.Model):
         total_amount_currency = 0
         maxdate = date.min
         to_balance = {}
-        cash_basis_partial = self.env['account.partial.reconcile']
+        cash_basis_partial = amls.mapped('move_id.tax_cash_basis_rec_id')
         for aml in amls:
-            cash_basis_partial |= aml.move_id.tax_cash_basis_rec_id
             total_debit += aml.debit
             total_credit += aml.credit
             maxdate = max(aml.date, maxdate)
