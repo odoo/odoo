@@ -4,6 +4,7 @@
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
+from psycopg2 import sql
 
 
 class ProductAttribute(models.Model):
@@ -85,6 +86,7 @@ class ProductAttributeValue(models.Model):
     _order = 'attribute_id, sequence, id'
     _description = 'Attribute Value'
 
+    active = fields.Boolean(default=True)
     name = fields.Char(string='Value', required=True, translate=True)
     sequence = fields.Integer(string='Sequence', help="Determine the display order", index=True)
     attribute_id = fields.Many2one('product.attribute', string="Attribute", ondelete='cascade', required=True, index=True,
@@ -134,6 +136,44 @@ class ProductAttributeValue(models.Model):
             self.invalidate_cache()
         return res
 
+    def _get_related_variants(self):
+        """Returns all related archived products.
+
+        When product is referenced from a SO, the variant is archived instead
+        of unlinked when it becomes not necessary. Thus, it can happen
+        that a product.attribute.value is still referenced by an archived
+        product.
+        """
+        self.ensure_one()
+        query = """
+            SELECT array_agg(pp.id)
+            FROM product_product pp
+            JOIN product_variant_combination pvc ON pp.id = pvc.product_product_id 
+            JOIN product_template_attribute_value ptav ON pvc.product_template_attribute_value_id = ptav.id
+            JOIN product_attribute_value pav ON pav.id = ptav.product_attribute_value_id
+            WHERE pav.id = %(value_id)s;
+        """
+        self.env.cr.execute(query, {"value_id": self.id})
+        # result is `[(None,)]` if nothing matched, `[([ids],)]` otherwise
+        product_ids = self.env.cr.fetchall()[0][0]
+        return self.env["product.product"].browse(product_ids)
+
+    def _archive(self):
+        return self.write({"active": False})
+
+    def _get_pav_to_archive(self):
+        pav_to_archive = self.env[self._name]
+        for pav in self:
+            related_variants = pav._get_related_variants()
+            # Archive only if all related variants are archived
+            # (none is active)
+            all_variants_are_archived = (
+                related_variants and not any(related_variants.mapped("active"))
+            )
+            if all_variants_are_archived:
+                pav_to_archive |= pav
+        return pav_to_archive
+
     def unlink(self):
         for pav in self:
             if pav.is_used_on_products:
@@ -141,7 +181,11 @@ class ProductAttributeValue(models.Model):
                     _("You cannot delete the value %s because it is used on the following products:\n%s") %
                     (pav.display_name, ", ".join(pav.pav_attribute_line_ids.product_tmpl_id.mapped('display_name')))
                 )
-        return super(ProductAttributeValue, self).unlink()
+        pav_to_archive = self._get_pav_to_archive()
+        pav_to_unlink = self - pav_to_archive
+        if pav_to_archive:
+            pav_to_archive._archive()
+        return super(ProductAttributeValue, pav_to_unlink).unlink()
 
     def _without_no_variant_attributes(self):
         return self.filtered(lambda pav: pav.attribute_id.create_variant != 'no_variant')
