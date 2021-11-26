@@ -4686,128 +4686,8 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
     },
 });
 
-/**
- * General options of an image.
- */
-registry.ImageTools = SnippetOptionWidget.extend({
-
-    //--------------------------------------------------------------------------
-    // Options
-    //--------------------------------------------------------------------------
-
-    /**
-     * Displays the image cropping tools
-     *
-     * @see this.selectClass for parameters
-     */
-    async crop() {
-        this.trigger_up('hide_overlay');
-        this.trigger_up('disable_loading_effect');
-        new weWidgets.ImageCropWidget(this, this.$target[0]).appendTo(this.options.wysiwyg.$editable);
-
-        await new Promise(resolve => {
-            this.$target.one('image_cropper_destroyed', resolve);
-        });
-        this.trigger_up('enable_loading_effect');
-    },
-    /**
-     * Displays the image transformation tools
-     *
-     * @see this.selectClass for parameters
-     */
-    async transform() {
-        this.trigger_up('hide_overlay');
-        this.trigger_up('disable_loading_effect');
-
-        const document = this.$target[0].ownerDocument;
-        this.$target.transfo({document});
-        const mousedown = mousedownEvent => {
-            if (!$(mousedownEvent.target).closest('.transfo-container').length) {
-                this.$target.transfo('destroy');
-                $(document).off('mousedown', mousedown);
-            }
-        };
-        $(document).on('mousedown', mousedown);
-
-        await new Promise(resolve => {
-            document.addEventListener('mouseup', resolve, {once: true});
-        });
-        this.trigger_up('enable_loading_effect');
-    },
-    /**
-     * Resets the image cropping
-     *
-     * @see this.selectClass for parameters
-     */
-    async resetCrop() {
-        const cropper = new weWidgets.ImageCropWidget(this, this.$target[0]);
-        await cropper.appendTo(this.options.wysiwyg.$editable);
-        await cropper.reset();
-    },
-    /**
-     * Resets the image rotation and translation
-     *
-     * @see this.selectClass for parameters
-     */
-    async resetTransform() {
-        this.$target
-            .attr('style', (this.$target.attr('style') || '')
-            .replace(/[^;]*transform[\w:]*;?/g, ''));
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-￼    * @private
-￼    */
-    _isTransformed() {
-        return this.$target.is('[style*="transform"]');
-    },
-    /**
-￼    * @private
-￼    */
-    _isCropped() {
-        return this.$target.hasClass('o_we_image_cropped');
-    },
-    /**
-     * @override
-     */
-    async _computeWidgetState(methodName, params) {
-        if (methodName === 'selectStyle' && params.cssProperty === 'width') {
-            // TODO check how to handle this the right way (here using inline
-            // style instead of computed because of the messy %-px convertion
-            // and the messy auto keyword).
-            const width = this.$target[0].style.width.trim();
-            if (width[width.length - 1] === '%') {
-                return `${parseInt(width)}%`;
-            } else {
-                return '';
-            }
-        } else if (methodName === 'transform') {
-            return this._isTransformed() ? 'true' : '';
-        } else if (methodName === 'crop') {
-            return this._isCropped() ? 'true' : '';
-        }
-        return this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    _computeWidgetVisibility(widgetName, params) {
-        if (params.optionsPossibleValues.resetTransform) {
-            return this._isTransformed();
-        }
-        if (params.optionsPossibleValues.resetCrop) {
-            return this._isCropped();
-        }
-        return this._super(...arguments);
-    },
-});
-
 /*
- * Abstract option to be extended by the ImageOptimize and BackgroundOptimize
+ * Abstract option to be extended by the ImageTools and BackgroundOptimize
  * options that handles all the common parts.
  */
 const ImageHandlerOption = SnippetOptionWidget.extend({
@@ -4914,6 +4794,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      */
     async _computeWidgetState(methodName, params) {
         const img = this._getImg();
+        const _super = this._super.bind(this);
 
         // Make sure image is loaded because we need its naturalWidth
         await new Promise((resolve, reject) => {
@@ -4941,7 +4822,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
                 return options[filterProperty] || defaultValue;
             }
         }
-        return this._super(...arguments);
+        return _super(...arguments);
     },
     /**
      * @abstract
@@ -4953,7 +4834,6 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
     async _renderCustomXML(uiFragment) {
         const img = this._getImg();
         if (!this.originalSrc || !this._isImageSupportedForProcessing(img)) {
-            [...uiFragment.childNodes].forEach(node => node.remove());
             return;
         }
         const $select = $(uiFragment).find('we-select[data-name=width_select_opt]');
@@ -4962,7 +4842,10 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         });
 
         if (this._getImageMimetype(img) !== 'image/jpeg') {
-            uiFragment.querySelector('we-range[data-set-quality]').remove();
+            const optQuality = uiFragment.querySelector('we-range[data-set-quality]');
+            if (optQuality) {
+                optQuality.remove();
+            }
         }
     },
     /**
@@ -5092,6 +4975,28 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
     _isImageSupportedForProcessing(img) {
         return isImageSupportedForProcessing(this._getImageMimetype(img));
     },
+    /**
+     * @override
+     */
+    _computeWidgetVisibility(widgetName, params) {
+        if (this._isImageProcessingWidget(widgetName, params)) {
+            const img = this._getImg();
+            return this._isImageSupportedForProcessing(img);
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * Indicates if an option should be applied only on supported mimetypes.
+     *
+     * @param {String} widgetName
+     * @param {Object} params
+     * @returns {Boolean}
+     */
+    _isImageProcessingWidget(widgetName, params) {
+        return params.optionsPossibleValues.glFilter
+            || params.optionsPossibleValues.setQuality
+            || widgetName === 'width_select_opt';
+    },
 });
 
 /**
@@ -5114,7 +5019,7 @@ const _addAnimatedShapeLabel = function addAnimatedShapeLabel(containerEl) {
 /**
  * Controls image width and quality.
  */
-registry.ImageOptimize = ImageHandlerOption.extend({
+registry.ImageTools = ImageHandlerOption.extend({
     MAX_SUGGESTED_WIDTH: 1920,
 
     /**
@@ -5144,6 +5049,69 @@ registry.ImageOptimize = ImageHandlerOption.extend({
     // Options
     //--------------------------------------------------------------------------
 
+    /**
+     * Displays the image cropping tools
+     *
+     * @see this.selectClass for parameters
+     */
+    async crop() {
+        this.trigger_up('hide_overlay');
+        this.trigger_up('disable_loading_effect');
+        new weWidgets.ImageCropWidget(this, this.$target[0]).appendTo(this.options.wysiwyg.$editable);
+
+        await new Promise(resolve => {
+            this.$target.one('image_cropper_destroyed', async () => {
+                await this._reapplyCurrentShape();
+                resolve();
+            });
+        });
+        this.trigger_up('enable_loading_effect');
+    },
+    /**
+     * Displays the image transformation tools
+     *
+     * @see this.selectClass for parameters
+     */
+    async transform() {
+        this.trigger_up('hide_overlay');
+        this.trigger_up('disable_loading_effect');
+
+        const document = this.$target[0].ownerDocument;
+        this.$target.transfo({document});
+        const mousedown = mousedownEvent => {
+            if (!$(mousedownEvent.target).closest('.transfo-container').length) {
+                this.$target.transfo('destroy');
+                $(document).off('mousedown', mousedown);
+            }
+        };
+        $(document).on('mousedown', mousedown);
+
+        await new Promise(resolve => {
+            document.addEventListener('mouseup', resolve, {once: true});
+        });
+        this.trigger_up('enable_loading_effect');
+    },
+    /**
+     * Resets the image cropping
+     *
+     * @see this.selectClass for parameters
+     */
+    async resetCrop() {
+        const cropper = new weWidgets.ImageCropWidget(this, this.$target[0]);
+        await cropper.appendTo(this.options.wysiwyg.$editable);
+        await cropper.reset();
+        await this._reapplyCurrentShape();
+    },
+    /**
+     * Resets the image rotation and translation
+     *
+     * @see this.selectClass for parameters
+     */
+    async resetTransform() {
+        this.$target
+            .attr('style', (this.$target.attr('style') || '')
+            .replace(/[^;]*transform[\w:]*;?/g, ''));
+    },
     /**
      * @see this.selectClass for parameters
      */
@@ -5198,6 +5166,18 @@ registry.ImageOptimize = ImageHandlerOption.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+￼    * @private
+￼    */
+    _isTransformed() {
+        return this.$target.is('[style*="transform"]');
+    },
+    /**
+￼    * @private
+￼    */
+    _isCropped() {
+        return this.$target.hasClass('o_we_image_cropped');
+    },
     /**
      * @override
      */
@@ -5358,15 +5338,41 @@ registry.ImageOptimize = ImageHandlerOption.extend({
             const colors = img.dataset.shapeColors.split(';');
             return colors[parseInt(params.colorId)];
         }
-        return this._super();
+        if (params.optionsPossibleValues.resetTransform) {
+            return this._isTransformed();
+        }
+        if (params.optionsPossibleValues.resetCrop) {
+            return this._isCropped();
+        }
+        return this._super(...arguments);
     },
     /**
      * @override
      */
     _computeWidgetState(methodName, params) {
         switch (methodName) {
-            case 'setImgShape':
+            case 'selectStyle': {
+                if (params.cssProperty === 'width') {
+                    // TODO check how to handle this the right way (here using
+                    // inline style instead of computed because of the messy
+                    // %-px convertion and the messy auto keyword).
+                    const width = this.$target[0].style.width.trim();
+                    if (width[width.length - 1] === '%') {
+                        return `${parseInt(width)}%`;
+                    }
+                    return '';
+                }
+                break;
+            }
+            case 'transform': {
+                return this._isTransformed() ? 'true' : '';
+            }
+            case 'crop': {
+                return this._isCropped() ? 'true' : '';
+            }
+            case 'setImgShape': {
                 return this._getImg().dataset.shape || '';
+            }
             case 'setImgShapeColor': {
                 const img = this._getImg();
                 return (img.dataset.shapeColors && img.dataset.shapeColors.split(';')[parseInt(params.colorId)]) || '';
@@ -5451,6 +5457,22 @@ registry.ImageOptimize = ImageHandlerOption.extend({
             img.dataset.mimetype = 'image/svg+xml';
         }
     },
+    /**
+     * @private
+     */
+    async _reapplyCurrentShape() {
+        const img = this._getImg();
+        if (img.dataset.shape) {
+            await this._loadShape(img.dataset.shape);
+            await this._applyShapeAndColors(true, (img.dataset.shapeColors && img.dataset.shapeColors.split(';')));
+        }
+    },
+    /**
+     * @override
+     */
+    _isImageProcessingWidget(widgetName, params) {
+        return this._super(...arguments) || widgetName === 'shape_img_opt';
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -5475,11 +5497,6 @@ registry.ImageOptimize = ImageHandlerOption.extend({
      * @param {Event} ev
      */
     async _onImageCropped(ev) {
-        const img = this._getImg();
-        if (img.dataset.shape) {
-            await this._loadShape(img.dataset.shape);
-            await this._applyShapeAndColors(true, (img.dataset.shapeColors && img.dataset.shapeColors.split(';')));
-        }
         await this._rerenderXML();
     },
 });
