@@ -4,6 +4,7 @@ import logging
 import pprint
 
 import requests
+from werkzeug.exceptions import Forbidden
 
 from odoo import _, http
 from odoo.exceptions import ValidationError
@@ -26,7 +27,7 @@ class PaypalController(http.Controller):
         _logger.info("beginning DPN with post data:\n%s", pprint.pformat(data))
         try:
             self._validate_data_authenticity(**data)
-        except ValidationError:
+        except Forbidden:
             pass  # The transaction has been moved to state 'error'. Redirect to /payment/status.
         else:
             if data:
@@ -82,21 +83,20 @@ class PaypalController(http.Controller):
 
         # Request PayPal for an authenticity check
         data['cmd'] = '_notify-validate'
-        response = requests.post(acquirer_sudo._paypal_get_api_url(), data, timeout=60)
-        response.raise_for_status()
+
+        # response = requests.post(acquirer_sudo._paypal_get_api_url(), data, timeout=60)
+        # response.raise_for_status()
 
         # Inspect the response code and raise if not 'VERIFIED'.
-        response_code = response.text
+        response_code = self.send_request(acquirer_sudo._paypal_get_api_url(), data) #response.text
         if response_code == 'VERIFIED':
             _logger.info("authenticity of notification data verified")
         else:
-            if response_code == 'INVALID':
-                error_message = "PayPal: " + _("Notification data were not acknowledged.")
-            else:
-                error_message = "PayPal: " + _(
-                    "Received unrecognized authentication check response code: received %s, "
-                    "expected VERIFIED or INVALID.",
-                    response_code
-                )
-            tx_sudo._set_error(error_message)
-            raise ValidationError(error_message)
+            raise Forbidden()
+
+
+    def send_request(self, api_url, val):
+       """ Send request URL to server """
+       response = requests.post(api_url, val, timeout=60)
+       response.raise_for_status()
+       return response.text

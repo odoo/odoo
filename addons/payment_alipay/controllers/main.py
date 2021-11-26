@@ -4,6 +4,8 @@ import logging
 import pprint
 
 import requests
+from werkzeug.exceptions import Forbidden
+
 
 from odoo import _, http
 from odoo.exceptions import ValidationError
@@ -28,19 +30,29 @@ class AlipayController(http.Controller):
         """ Alipay Notify """
         _logger.info("received Alipay notification data:\n%s", pprint.pformat(post))
         self._alipay_validate_notification(**post)
+        # self._verify_signature(**post)
         request.env['payment.transaction'].sudo()._handle_feedback_data('alipay', post)
         return 'success'  # Return 'success' to stop receiving notifications for this tx
 
+    def send_request(self, api_url, val):
+       """ Send request URL to server """
+       response = requests.post(api_url, val, timeout=60)
+       response.raise_for_status()
+       return response.text
+
+
     def _alipay_validate_notification(self, **post):
+        """  Validate a notification is from Alipay Server, ensure the authenticity of the response data.
+         If it is not the case raise an HTTP 403 error.
+
+        :param dict post: The payload used
+        :rtype: None
+        """
         tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_feedback_data(
             'alipay', post
         )
         if not tx_sudo:
-            raise ValidationError(
-                "Alipay: " + _(
-                    "Received notification data with unknown reference:\n%s", pprint.pformat(post)
-                )
-            )
+            raise Forbidden()
 
         # Ensure that the notification was sent by Alipay
         # See https://global.alipay.com/docs/ac/wap/async
@@ -50,12 +62,27 @@ class AlipayController(http.Controller):
             'partner': acquirer_sudo.alipay_merchant_partner_id,
             'notify_id': post['notify_id']
         }
-        response = requests.post(acquirer_sudo._alipay_get_api_url(), val, timeout=60)
-        response.raise_for_status()
-        if response.text != 'true':
-            raise ValidationError(
-                "Alipay: " + _(
-                    "Received notification data not acknowledged by Alipay:\n%s",
-                    pprint.pformat(post)
-                )
-            )
+        response = self.send_request(acquirer_sudo._alipay_get_api_url(), val)
+        if response != 'true':
+            raise Forbidden()
+
+    def _verify_signature(self, **post):
+        """ Check that the signature computed from the feedback matches the received one if not raise an HTTP 403 error.
+
+        :param dict post: The values used to generate the signature
+        :rtype: None
+        """
+        self._alipay_validate_notification(**post)
+
+        received_signature = post.get('sign')
+
+        # Retrieve the acquirer based on the tx reference included in the return url
+        acquirer_sudo = request.env['payment.transaction'].sudo()._get_tx_from_feedback_data(
+            'alipay', post
+        ).acquirer_id
+
+        # Compute signature
+        expected_signature = acquirer_sudo._alipay_build_sign(post)
+        # Compare signatures
+        if received_signature != expected_signature:
+            raise Forbidden()

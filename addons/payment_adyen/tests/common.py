@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.payment.tests.common import PaymentCommon
 
-
 class AdyenCommon(PaymentCommon):
 
     @classmethod
@@ -12,7 +11,7 @@ class AdyenCommon(PaymentCommon):
             'adyen_merchant_account': 'dummy',
             'adyen_api_key': 'dummy',
             'adyen_client_key': 'dummy',
-            'adyen_hmac_key': 'dummy',
+            'adyen_hmac_key': '12345678',
             'adyen_checkout_api_url': 'https://this.is.an.url',
             'adyen_recurring_api_url': 'https://this.is.an.url',
         })

@@ -6,6 +6,7 @@ from odoo.addons.account.models.account_payment_method import AccountPaymentMeth
 from odoo.fields import Command
 
 from odoo.addons.payment.tests.utils import PaymentTestUtils
+from odoo import _
 
 _logger = logging.getLogger(__name__)
 
@@ -172,3 +173,11 @@ class PaymentCommon(PaymentTestUtils):
         return self.env['payment.transaction'].sudo().search([
             ('reference', '=', reference),
         ])
+
+    def _assert_not_raises(self, exception_type, my_func, *args):
+        """ Check if a certain type of exception is not raise """
+        try:
+            my_func(*args)
+        except exception_type:
+            self.fail(_("%(func)s raised %(exp)s unexpectedly!",
+                        func=my_func.__name__, exp=exception_type.__name__))

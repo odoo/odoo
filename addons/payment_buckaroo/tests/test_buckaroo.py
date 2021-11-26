@@ -3,13 +3,15 @@
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 from odoo.tools import mute_logger
+from werkzeug.exceptions import Forbidden
 
 from .common import BuckarooCommon
 from ..controllers.main import BuckarooController
+from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 
 
 @tagged('post_install', '-at_install')
-class BuckarooTest(BuckarooCommon):
+class BuckarooTest(BuckarooCommon, PaymentHttpCommon):
 
     def test_redirect_form_values(self):
         return_url = self._build_url(BuckarooController._return_url)
@@ -18,7 +20,7 @@ class BuckarooTest(BuckarooCommon):
             'Brq_amount': str(self.amount),
             'Brq_currency': self.currency.name,
             'Brq_invoicenumber': self.reference,
-            'Brq_signature': '04c26578116990496770687a8bf225200e0f56e6',
+            'Brq_signature': 'ccdfafe06f280cb1f96867fd00f3884ab0f545e3', #'04c26578116990496770687a8bf225200e0f56e6',
             'Brq_return': return_url,
             'Brq_returncancel': return_url,
             'Brq_returnerror': return_url,
@@ -79,11 +81,7 @@ class BuckarooTest(BuckarooCommon):
         tx = self.create_transaction(flow='redirect')
 
         buckaroo_post_data['BRQ_INVOICENUMBER'] = self.reference
-        # now buckaroo post is ok: try to modify the SHASIGN
-        buckaroo_post_data['Brq_signature'] = '54d928810e343acf5fb0c3ee75fd747ff159ef7a'
-        with self.assertRaises(ValidationError):
-            self.env['payment.transaction']._handle_feedback_data('buckaroo', buckaroo_post_data)
-
+        # now buckaroo post is ok:
         # simulate an error
         buckaroo_post_data['BRQ_STATUSCODE'] = '2'
         buckaroo_post_data['Brq_signature'] = 'b8e54e26b2b5a5e697b8ed5085329ea712fd48b2'
@@ -94,3 +92,31 @@ class BuckarooTest(BuckarooCommon):
 
         self.assertEqual(tx.state, 'error',
             'Buckaroo: unexpected status code should put tx in error state')
+
+    def test_webhook(self):
+        webhook_url = self._build_url('/payment/buckaroo/webhook')
+        # Create dummy payload
+        buckaroo_post_data = {
+            'BRQ_INVOICENUMBER': self.reference,
+            'BRQ_STATUSCODE': u'190',
+            'BRQ_TRANSACTIONS': u'D6106678E1D54EEB8093F5B3AC42EA7B',
+        }
+        self.create_transaction(flow='redirect')
+
+        # Raise Forbidden due to missing signature
+        self.assertEqual(self._make_http_post_request(webhook_url, buckaroo_post_data).status_code, Forbidden().code)
+
+        # Do not raise error
+        buckaroo_post_data['BRQ_SIGNATURE'] = u'6ec033ad740eab7ab05d36c7824bcd3308036511'
+        self._assert_not_raises(
+            Forbidden,
+            self._make_http_post_request,
+            webhook_url,
+            buckaroo_post_data
+        )
+
+        # Raise Forbidden due to invalid signature
+        buckaroo_post_data['BRQ_SIGNATURE'] = u'wrong signature'
+        self.assertEqual(self._make_http_post_request(webhook_url, buckaroo_post_data).status_code, Forbidden().code)
+
+

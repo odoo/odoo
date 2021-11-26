@@ -3,13 +3,16 @@
 from odoo.exceptions import ValidationError
 from odoo.tools import mute_logger
 from odoo.tests import tagged
+from werkzeug.exceptions import Forbidden
+from unittest.mock import patch
 
 from .common import PaypalCommon
 from ..controllers.main import PaypalController
+from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 
 
 @tagged('post_install', '-at_install')
-class PaypalForm(PaypalCommon):
+class PaypalForm(PaypalCommon, PaymentHttpCommon):
 
     def _get_expected_values(self):
         return_url = self._build_url(PaypalController._return_url)
@@ -130,8 +133,10 @@ class PaypalForm(PaypalCommon):
         # Validate the transaction (pending feedback)
         self.env['payment.transaction']._handle_feedback_data('paypal', paypal_post_data)
         self.assertEqual(tx.state, 'pending', 'paypal: wrong state after receiving a valid pending notification')
-        self.assertEqual(tx.state_message, 'multi_currency', 'paypal: wrong state message after receiving a valid pending notification')
-        self.assertEqual(tx.acquirer_reference, '08D73520KX778924N', 'paypal: wrong txn_id after receiving a valid pending notification')
+        self.assertEqual(tx.state_message, 'multi_currency',
+                         'paypal: wrong state message after receiving a valid pending notification')
+        self.assertEqual(tx.acquirer_reference, '08D73520KX778924N',
+                         'paypal: wrong txn_id after receiving a valid pending notification')
 
         # Reset the transaction
         tx.write({'state': 'draft', 'acquirer_reference': False})
@@ -140,12 +145,13 @@ class PaypalForm(PaypalCommon):
         paypal_post_data['payment_status'] = 'Completed'
         self.env['payment.transaction']._handle_feedback_data('paypal', paypal_post_data)
         self.assertEqual(tx.state, 'done', 'paypal: wrong state after receiving a valid pending notification')
-        self.assertEqual(tx.acquirer_reference, '08D73520KX778924N', 'paypal: wrong txn_id after receiving a valid pending notification')
+        self.assertEqual(tx.acquirer_reference, '08D73520KX778924N',
+                         'paypal: wrong txn_id after receiving a valid pending notification')
 
     def test_fees_computation(self):
-        #If the merchant needs to keep 100€, the transaction will be equal to 103.30€.
-        #In this way, Paypal will take 103.30 * 2.9% + 0.30 = 3.30€
-        #And the merchant will take 103.30 - 3.30 = 100€
+        # If the merchant needs to keep 100€, the transaction will be equal to 103.30€.
+        # In this way, Paypal will take 103.30 * 2.9% + 0.30 = 3.30€
+        # And the merchant will take 103.30 - 3.30 = 100€
         self.paypal.write({
             'fees_active': True,
             'fees_int_fixed': 0.30,
@@ -153,3 +159,66 @@ class PaypalForm(PaypalCommon):
         })
         total_fee = self.paypal._compute_fees(100, False, False)
         self.assertEqual(round(total_fee, 2), 3.3, 'Wrong computation of the Paypal fees')
+
+    def test_webhook(self):
+        """ Verify the correctness of error handling during the webhook. """
+        webhook_url = self._build_url(PaypalController._notify_url)
+        paypal_post_data = {
+            'protection_eligibility': u'Ineligible',
+            'last_name': u'Poilu',
+            'txn_id': u'08D73520KX778924N',
+            'receiver_email': 'dummy',
+            'payment_status': u'Pending',
+            'payment_gross': u'',
+            'tax': u'0.00',
+            'residence_country': u'FR',
+            'address_state': u'Alsace',
+            'payer_status': u'verified',
+            'txn_type': u'web_accept',
+            'address_street': u'Av. de la Pelouse, 87648672 Mayet',
+            'handling_amount': u'0.00',
+            'payment_date': u'03:21:19 Nov 18, 2013 PST',
+            'first_name': u'Norbert',
+            'item_name': self.reference,
+            'address_country': u'France',
+            'charset': u'windows-1252',
+            'notify_version': u'3.7',
+            'address_name': u'Norbert Poilu',
+            'pending_reason': u'multi_currency',
+            'item_number': self.reference,
+            'receiver_id': u'dummy',
+            'transaction_subject': u'',
+            'business': u'dummy',
+            'test_ipn': u'1',
+            'payer_id': u'VTDKRZQSAHYPS',
+            'verify_sign': u'An5ns1Kso7MWUdW4ErQKJJJ4qi4-AVoiUf-3478q3vrSmqh08IouiYpM',
+            'address_zip': u'75002',
+            'address_country_code': u'FR',
+            'address_city': u'Paris',
+            'address_status': u'unconfirmed',
+            'mc_currency': u'EUR',
+            'shipping': u'0.00',
+            'payer_email': u'tde+buyer@odoo.com',
+            'payment_type': u'instant',
+            'mc_gross': str(self.amount),
+            'ipn_track_id': u'866df2ccd444b',
+            'quantity': u'1'
+        }
+        self.create_transaction(flow='redirect', reference=self.reference)
+        
+        with patch(
+                'odoo.addons.payment_paypal.controllers.main.PaypalController.send_request',
+                return_value='VERIFIED'
+        ):
+            self._assert_not_raises(
+                Forbidden,
+                self._make_http_post_request,
+                webhook_url,
+                paypal_post_data
+            )
+
+        with patch(
+                'odoo.addons.payment_paypal.controllers.main.PaypalController.send_request',
+                return_value='INVALID'
+        ):
+            self.assertEqual(self._make_http_post_request(webhook_url, paypal_post_data).status_code, Forbidden().code)

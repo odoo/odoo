@@ -3,7 +3,7 @@
 import json
 
 from freezegun import freeze_time
-
+from werkzeug.exceptions import Forbidden
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 from odoo.tools import mute_logger
@@ -11,9 +11,10 @@ from odoo.tools import mute_logger
 from .common import SipsCommon
 from ..controllers.main import SipsController
 from ..models.payment_acquirer import SUPPORTED_CURRENCIES
+from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 
 @tagged('post_install', '-at_install')
-class SipsTest(SipsCommon):
+class SipsTest(SipsCommon, PaymentHttpCommon):
 
     def test_compatible_acquirers(self):
         for curr in SUPPORTED_CURRENCIES:
@@ -58,8 +59,8 @@ class SipsTest(SipsCommon):
             f'statementReference={self.reference}|keyVersion={self.sips.sips_key_version}|' \
             f'returnContext={json.dumps(dict(reference=self.reference))}'
         )
-        self.assertEqual(form_inputs['Seal'],
-            '4d7cc67c0168e8ce11c25fbe1937231c644861e320702ab544022b032b9eb4a2')
+
+        self.assertEqual(form_inputs['Seal'], tx.acquirer_id._sips_generate_shasign(form_inputs['Data']))
 
     def test_feedback_processing(self):
         # typical data posted by Sips after client has successfully paid
@@ -119,3 +120,51 @@ class SipsTest(SipsCommon):
 
         self.env['payment.transaction']._handle_feedback_data('sips', sips_post_data)
         self.assertEqual(tx2.state, 'cancel', 'Sips: erroneous validation did not put tx into error state')
+
+    def test_webhook(self):
+        """ Verify the correctness of error handling during the webhook. """
+        webhook_url = self._build_url(SipsController._notify_url)
+
+        sips_post_data = {
+            'Data': 'captureDay=0|captureMode=AUTHOR_CAPTURE|currencyCode=840|'
+                    'merchantId=002001000000001|orderChannel=INTERNET|'
+                    'responseCode=00|transactionDateTime=2020-04-08T06:15:59+02:00|'
+                    'transactionReference=TestTransaction|keyVersion=1|'
+                    'acquirerResponseCode=00|amount=100|authorisationId=0020000006791167|'
+                    'paymentMeanBrand=IDEAL|paymentMeanType=CREDIT_TRANSFER|'
+                    'customerIpAddress=127.0.0.1|returnContext={"return_url": '
+                    '"/payment/process", "reference": '
+                    '"TestTransaction"}|holderAuthentRelegation=N|holderAuthentStatus=|'
+                    'transactionOrigin=INTERNET|paymentPattern=ONE_SHOT|customerMobilePhone=null|'
+                    'mandateAuthentMethod=null|mandateUsage=null|transactionActors=null|'
+                    'mandateId=null|captureLimitDate=20200408|dccStatus=null|dccResponseCode=null|'
+                    'dccAmount=null|dccCurrencyCode=null|dccExchangeRate=null|'
+                    'dccExchangeRateValidity=null|dccProvider=null|'
+                    'statementReference=TestTransaction|panEntryMode=MANUAL|walletType=null|'
+                    'holderAuthentMethod=NO_AUTHENT_METHOD',
+            'Encode': '',
+            'InterfaceVersion': 'HP_2.4',
+            'Seal': 'wrong',
+            'locale': 'en',
+        }
+        self.amount = 1
+        self.reference = 'TestTransaction'
+
+        self.create_transaction(flow='redirect', reference=self.reference)
+
+        self.assertEqual(self._make_http_post_request(webhook_url, sips_post_data).status_code, Forbidden().code)
+
+        sips_post_data['Seal'] = u'9a1de542d8d1f940cfd00e45a02eb0df457ec5fe6e43e6d4bd871c7a2f8bec4b'
+        self._assert_not_raises(
+            Forbidden,
+            self._make_http_post_request,
+            webhook_url,
+            sips_post_data
+        )
+
+        # WITH = {
+        #     'Data': 'amount=111111|currencyCode=978|merchantId=dummy_mid|normalReturnUrl=http://127.0.0.1:8069/payment/sips/dpn/|automaticResponseUrl=http://127.0.0.1:8069/payment/sips/ipn/|transactionReference=Test Transaction|statementReference=Test Transaction|keyVersion=2|returnContext={"reference": "Test Transaction"}',
+        #     'InterfaceVersion': 'HP_2.31', 'Seal': 'b336551f0fdf35cae8d73d9612b37357b6442e9d8216bf41c3d1db44784a89d5'}
+        # WITHOUT = {
+        #     'Data': 'amount=111111|currencyCode=978|merchantId=dummy_mid|normalReturnUrl=http://localhost:8069/payment/sips/dpn/|automaticResponseUrl=http://localhost:8069/payment/sips/ipn/|transactionReference=Test Transaction|statementReference=Test Transaction|keyVersion=2|returnContext={"reference": "Test Transaction"}',
+        #     'InterfaceVersion': 'HP_2.31', 'Seal': '4d7cc67c0168e8ce11c25fbe1937231c644861e320702ab544022b032b9eb4a2'}

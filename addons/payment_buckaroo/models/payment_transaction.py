@@ -95,16 +95,6 @@ class PaymentTransaction(models.Model):
                 "Buckaroo: " + _("No transaction found matching reference %s.", reference)
             )
 
-        # Verify signature
-        shasign_check = tx.acquirer_id._buckaroo_generate_digital_sign(data, incoming=True)
-        if shasign_check != shasign:
-            raise ValidationError(
-                "Buckaroo: " + _(
-                    "Invalid shasign: received %(sign)s, computed %(check)s",
-                    sign=shasign, check=shasign_check
-                )
-            )
-
         return tx
 
     def _process_feedback_data(self, data):

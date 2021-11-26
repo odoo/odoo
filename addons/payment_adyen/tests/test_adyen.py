@@ -1,26 +1,31 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from unittest.mock import patch
+from werkzeug.exceptions import Forbidden
 
 from odoo.exceptions import UserError
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.payment import utils as payment_utils
+from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 
 from .common import AdyenCommon
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 @tagged('post_install', '-at_install')
-class AdyenForm(AdyenCommon):
+class AdyenForm(AdyenCommon, PaymentHttpCommon):
 
     def test_processing_values(self):
         tx = self.create_transaction(flow='direct')
         with mute_logger('odoo.addons.payment.models.payment_transaction'), \
-            patch(
-                'odoo.addons.payment.utils.generate_access_token',
-                new=self._generate_test_access_token
-            ):
+                patch(
+                    'odoo.addons.payment.utils.generate_access_token',
+                    new=self._generate_test_access_token
+                ):
             processing_values = tx._get_processing_values()
 
         converted_amount = 111111
@@ -30,7 +35,7 @@ class AdyenForm(AdyenCommon):
         )
         self.assertEqual(processing_values['converted_amount'], converted_amount)
         with patch(
-            'odoo.addons.payment.utils.generate_access_token', new=self._generate_test_access_token
+                'odoo.addons.payment.utils.generate_access_token', new=self._generate_test_access_token
         ):
             self.assertTrue(payment_utils.check_access_token(
                 processing_values['access_token'], self.reference, converted_amount, self.partner.id
@@ -52,8 +57,8 @@ class AdyenForm(AdyenCommon):
 
         # Send the refund request
         with patch(
-            'odoo.addons.payment_adyen.models.payment_acquirer.PaymentAcquirer._adyen_make_request',
-            new=lambda *args, **kwargs: {'pspReference': "refund_reference", 'status': "received"}
+                'odoo.addons.payment_adyen.models.payment_acquirer.PaymentAcquirer._adyen_make_request',
+                new=lambda *args, **kwargs: {'pspReference': "refund_reference", 'status': "received"}
         ):
             tx._send_refund_request()
 
@@ -67,4 +72,37 @@ class AdyenForm(AdyenCommon):
             tx.acquirer_reference,
             msg="The acquirer reference of the refund transaction should different from that of "
                 "the source transaction."
+        )
+
+    def test_webhook(self):
+        """ Verify the correctness of error handling during the webhook.
+        Note: As JSON-RPC encapsulates the error handling of a request into a 200 response,
+         the raise of 403 can not been check here but only the non raise is verify.
+        """
+
+        def call_webhook(received_signature):
+            url = self._build_url('/payment/adyen/notification')
+            self.reference = "Test Transaction"
+            payload = {
+                "notificationItems": [
+                    {
+                        "NotificationRequestItem": {
+                            "additionalData": {
+                                "hmacSignature": received_signature
+                            },
+                            "merchantReference": self.reference,
+                            "success": "",
+                            "eventCode": ""
+                        }
+                    }
+                ]
+            }
+            self.create_transaction(flow='redirect', reference=self.reference)
+            response = self._make_json_request(url, payload, prepare_payload=False)
+            return response
+
+        self._assert_not_raises(
+            Forbidden,
+            call_webhook,
+            'qs7nSzlw0vu8n6Lic/6a0SNoBKkYPoneLbes2+4jU3M='
         )

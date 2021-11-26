@@ -3,6 +3,7 @@
 import logging
 import pprint
 import re
+from werkzeug.exceptions import Forbidden
 
 import werkzeug
 
@@ -65,18 +66,20 @@ class OgoneController(http.Controller):
         :param dict sign_data: The original feedback data used to compute the signature
         :param dict sign_data: The formatted feedback data used to find the tx and received sig
         :return: None
-        :raise: ValidationError if the signatures don't match
+        :raise: HTTP 403 Forbidden if the signatures don't match
         """
         acquirer_sudo = request.env['payment.transaction'].sudo()._get_tx_from_feedback_data(
             'ogone', data
         ).acquirer_id  # Find the acquirer based on the transaction
         received_signature = data.get('SHASIGN')
+        if not received_signature:
+            raise Forbidden()
+
         expected_signature = acquirer_sudo._ogone_generate_signature(sign_data)
+
         if received_signature != expected_signature.upper():
-            raise ValidationError(
-                "Ogone: " + _(
-                    "Received data with invalid signature. expected: %(exp)s ; received: %(rec)s ; "
-                    "data:\n%(data)s",
-                    exp=expected_signature, rec=received_signature, data=pprint.pformat(sign_data)
-                )
-            )
+            raise Forbidden(description="Ogone: " + _(
+                        "Received data with invalid signature. expected: %(exp)s ; received: %(rec)s ; "
+                        "data:\n%(data)s",
+                        exp=expected_signature, rec=received_signature, data=pprint.pformat(sign_data)
+                    ))

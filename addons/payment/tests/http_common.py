@@ -46,8 +46,18 @@ class PaymentHttpCommon(PaymentTestUtils, HttpCase):
                 formatted_data[k] = v
         return self.opener.get(url, params=formatted_data)
 
-    def _make_json_request(self, url, params):
-        data = self._build_jsonrpc_payload(params)
+    def _make_http_post_request(self, url, params):
+        # Data formatting
+        formatted_data = dict()
+        for k, v in params.items():
+            if isinstance(v, float):
+                formatted_data[k] = str(v)
+            else:
+                formatted_data[k] = v
+        return self.opener.post(url, data=formatted_data)
+
+    def _make_json_request(self, url, params, prepare_payload=True):
+        data = self._build_jsonrpc_payload(params) if prepare_payload else params
         return self.opener.post(url, json=data)
 
     def _get_tx_context(self, response, form_name):

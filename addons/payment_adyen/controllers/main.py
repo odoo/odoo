@@ -10,6 +10,7 @@ import pprint
 
 import werkzeug
 from werkzeug import urls
+from werkzeug.exceptions import Forbidden
 
 from odoo import _, http
 from odoo.exceptions import ValidationError
@@ -82,8 +83,8 @@ class AdyenController(http.Controller):
 
     @http.route('/payment/adyen/payments', type='json', auth='public')
     def adyen_payments(
-        self, acquirer_id, reference, converted_amount, currency_id, partner_id, payment_method,
-        access_token, browser_info=None
+            self, acquirer_id, reference, converted_amount, currency_id, partner_id, payment_method,
+            access_token, browser_info=None
     ):
         """ Make a payment request and process the feedback data.
 
@@ -101,7 +102,7 @@ class AdyenController(http.Controller):
         # Check that the transaction details have not been altered. This allows preventing users
         # from validating transactions by paying less than agreed upon.
         if not payment_utils.check_access_token(
-            access_token, reference, converted_amount, partner_id
+                access_token, reference, converted_amount, partner_id
         ):
             raise ValidationError("Adyen: " + _("Received tampered payment request data."))
 
@@ -236,15 +237,15 @@ class AdyenController(http.Controller):
 
             # Check the source and integrity of the notification
             received_signature = notification_data.get('additionalData', {}).get('hmacSignature')
-            PaymentTransaction = request.env['payment.transaction']
+            payment_transaction = request.env['payment.transaction']
             try:
-                acquirer_sudo = PaymentTransaction.sudo()._get_tx_from_feedback_data(
+                acquirer_sudo = payment_transaction.sudo()._get_tx_from_feedback_data(
                     'adyen', notification_data
                 ).acquirer_id  # Find the acquirer based on the transaction
-                if not self._verify_notification_signature(
+
+                self._verify_notification_signature(
                     received_signature, notification_data, acquirer_sudo.adyen_hmac_key
-                ):
-                    continue
+                )
 
                 # Check whether the event of the notification succeeded and reshape the notification
                 # data for parsing
@@ -261,21 +262,20 @@ class AdyenController(http.Controller):
                     continue  # Don't handle unsupported event codes and failed events
 
                 # Handle the notification data as a regular feedback
-                PaymentTransaction.sudo()._handle_feedback_data('adyen', notification_data)
+                payment_transaction.sudo()._handle_feedback_data('adyen', notification_data)
             except ValidationError:  # Acknowledge the notification to avoid getting spammed
                 _logger.exception("unable to handle the notification data; skipping to acknowledge")
 
         return '[accepted]'  # Acknowledge the notification
 
-    def _verify_notification_signature(self, received_signature, payload, hmac_key):
-        """ Check that the signature computed from the payload matches the received one.
+    def _compute_signature(self, payload, hmac_key):
+        """ Compute the expected signature from the payload.
 
         See https://docs.adyen.com/development-resources/webhooks/verify-hmac-signatures
 
-        :param str received_signature: The signature sent with the notification
         :param dict payload: The notification payload
         :param str hmac_key: The HMAC key of the acquirer handling the transaction
-        :return: Whether the signatures match
+        :return: The expected signature
         :rtype: str
         """
 
@@ -310,11 +310,6 @@ class AdyenController(http.Controller):
             else:
                 return str(_value)
 
-        if not received_signature:
-            _logger.warning("ignored notification with missing signature")
-            return False
-
-        # Compute the signature from the payload
         signature_keys = [
             'pspReference', 'originalReference', 'merchantAccountCode', 'merchantReference',
             'amount.value', 'amount.currency', 'eventCode', 'success'
@@ -334,9 +329,28 @@ class AdyenController(http.Controller):
         # Calculate the signature by encoding the result with Base64
         expected_signature = base64.b64encode(binary_hmac.digest())
 
-        # Compare signatures
-        if received_signature != to_text(expected_signature):
-            _logger.warning("ignored event with invalid signature")
-            return False
+        return to_text(expected_signature)
 
-        return True
+    def _verify_notification_signature(self, received_signature, payload, hmac_key):
+        """ Check that the signature computed from the payload matches the received one.
+
+        See https://docs.adyen.com/development-resources/webhooks/verify-hmac-signatures
+
+        :param str received_signature: The signature sent with the notification
+        :param dict payload: The notification payload
+        :param str hmac_key: The HMAC key of the acquirer handling the transaction
+        :return: None
+        :raise: HTTP 403 Forbidden if the signatures don't match
+        """
+        if not received_signature:
+            _logger.warning("ignored notification with missing signature")
+            raise Forbidden()
+
+        # Compute the signature from the payload
+        expected_signature = self._compute_signature(payload, hmac_key)
+
+        # Compare signatures
+        # Not tested because Forbidden error encapsulated into response 200 by JSON-RPC
+        if received_signature != to_text(expected_signature):
+            raise Forbidden()
+

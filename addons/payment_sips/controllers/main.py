@@ -3,6 +3,7 @@
 
 import logging
 import pprint
+from werkzeug.exceptions import Forbidden
 
 from odoo import http
 from odoo.exceptions import ValidationError
@@ -33,15 +34,20 @@ class SipsController(http.Controller):
         """
         _logger.info("beginning Sips DPN _handle_feedback_data with data %s", pprint.pformat(post))
         try:
-            if self._sips_validate_data(post):
-                request.env['payment.transaction'].sudo()._handle_feedback_data('sips', post)
+            self._sips_validate_data(post)
+            request.env['payment.transaction'].sudo()._handle_feedback_data('sips', post)
         except ValidationError:
             pass
         return request.redirect('/payment/status')
 
     @http.route(_notify_url, type='http', auth='public', methods=['POST'], csrf=False)
     def sips_ipn(self, **post):
-        """ Sips IPN. """
+        """ Sips IPN.
+        Process the data sent by SIPS to the webhook
+
+        :return: The empty string to acknowledge the notification
+        :rtype: str
+        """
         _logger.info("beginning Sips IPN _handle_feedback_data with data %s", pprint.pformat(post))
         if not post:
             # SIPS sometimes sends empty notifications, the reason why is unclear but they tend to
@@ -50,19 +56,21 @@ class SipsController(http.Controller):
             _logger.warning("received empty notification; skip.")
         else:
             try:
-                if self._sips_validate_data(post):
-                    request.env['payment.transaction'].sudo()._handle_feedback_data('sips', post)
+                self._sips_validate_data(post)
+                request.env['payment.transaction'].sudo()._handle_feedback_data('sips', post)
             except ValidationError:
                 pass  # Acknowledge the notification to avoid getting spammed
         return ''
 
     def _sips_validate_data(self, post):
+        """ Check that the signature computed from the feedback matches the received one.
+
+        :param dict post: The values used to generate the signature
+        :return: None
+        :raise: HTTP 403 Forbidden if the signatures don't match
+        """
         tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_feedback_data('sips', post)
         acquirer_sudo = tx_sudo.acquirer_id
         security = acquirer_sudo._sips_generate_shasign(post['Data'])
-        if security == post['Seal']:
-            _logger.debug('validated data')
-            return True
-        else:
-            _logger.warning('data are tampered')
-            return False
+        if security != post['Seal']:
+            raise Forbidden()
