@@ -146,3 +146,30 @@
 .icon_rotates {
     transform: rotate(180deg);
 }
+
+/* Style of the tiles allowing the user to load a sample survey. */
+.o_survey_sample_tile {
+    max-width: 150px;
+    height: 150px;
+    .o_survey_sample_tile_cover {
+        display: none;
+        overflow-y: auto;
+        cursor: pointer;
+    }
+    &:hover {
+        .o_survey_sample_tile_cover {
+            display: flex;
+            flex-direction: column;
+            background: rgba(0, 0, 0, 0.9);
+            &::before, &::after {
+                content: '';
+            }
+            &::before {
+                margin-top: auto;
+            }
+            &::after {
+                margin-bottom: auto;
+            }
+        }
+    }
+}
