@@ -195,3 +195,18 @@ class MassMailController(http.Controller):
                 record.sudo().message_post(body=_("Feedback from %(email)s: %(feedback)s", email=email, feedback=feedback))
             return bool(records)
         return 'error'
+
+    @http.route('/mailing/report/unsubscribe', type='http', website=True, auth='public')
+    def turn_off_mailing_reports(self, token, user_id):
+        if not token or not user_id:
+            raise werkzeug.exceptions.NotFound()
+        user_id = int(user_id)
+        correct_token = consteq(token, request.env['mailing.mailing']._get_unsubscribe_token(user_id))
+        user = request.env['res.users'].sudo().browse(user_id)
+        if correct_token and user.has_group('mass_mailing.group_mass_mailing_user'):
+            request.env['ir.config_parameter'].sudo().set_param('mass_mailing.mailing_report_deactivated', True)
+            if user.has_group('base.group_system'):
+                menu_id = request.env.ref('mass_mailing.menu_mass_mailing_global_settings').id
+                return request.render('mass_mailing.mailing_report_deactivated', {'menu_id': menu_id})
+            return request.render('mass_mailing.mailing_report_deactivated')
+        raise werkzeug.exceptions.NotFound()
