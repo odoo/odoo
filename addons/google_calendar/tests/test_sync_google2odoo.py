@@ -237,6 +237,50 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         self.assertGoogleAPINotCalled()
 
     @patch_api
+    def test_attendee_removed_multiple(self):
+
+        user = new_test_user(self.env, login='calendar-user')
+        google_id = 'oj44nep1ldf8a3ll02uip0c9aa'
+        base_event = self.env['calendar.event'].create({
+            'name': 'coucou',
+            'allday': True,
+            'start': datetime(2020, 1, 6),
+            'stop': datetime(2020, 1, 6),
+            'user_id': False,  # user is not owner
+            'need_sync': False,
+            'partner_ids': [(6, 0, user.partner_id.ids)],  # but user is attendee
+        })
+        recurrence = self.env['calendar.recurrence'].create({
+            'google_id': google_id,
+            'rrule': 'FREQ=WEEKLY;COUNT=2;BYDAY=MO',
+            'need_sync': False,
+            'base_event_id': base_event.id,
+            'calendar_event_ids': [(4, base_event.id)],
+        })
+        recurrence._apply_recurrence()
+
+        gevent = GoogleEvent([{
+            'id': google_id,
+            "updated": self.now,
+            'organizer': {'email': 'odoocalendarref@gmail.com', 'self': True},
+            'summary': 'coucou',
+            'visibility': 'public',
+            'attendees': [],  # <= attendee removed in Google
+            'recurrence': ['RRULE:FREQ=WEEKLY;COUNT=2;BYDAY=MO'],
+            'reminders': {'useDefault': True},
+            'start': {'date': '2020-01-6'},
+            'end': {'date': '2020-01-7'},
+        }])
+        events = recurrence.calendar_event_ids.sorted('start')
+        self.assertEqual(events.partner_ids, user.partner_id)
+        self.assertEqual(events.attendee_ids.partner_id, user.partner_id)
+        self.sync(gevent)
+        # User attendee removed but gevent owner might be added after synch.
+        self.assertNotEqual(events.attendee_ids.partner_id, user.partner_id)
+        self.assertNotEqual(events.partner_ids, user.partner_id)
+        self.assertGoogleAPINotCalled()
+
+    @patch_api
     def test_recurrence(self):
         recurrence_id = 'oj44nep1ldf8a3ll02uip0c9aa'
         values = {
