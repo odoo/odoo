@@ -762,6 +762,11 @@ exports.PosModel = Backbone.Model.extend({
     set_cashier: function(employee){
         this.set('cashier', employee);
         this.db.set_cashier(this.get('cashier'));
+        var selectedOrder = this.get_order()
+        if(selectedOrder && !selectedOrder.finalized){
+            selectedOrder.employee = employee
+            this.set_order(selectedOrder)
+        }
     },
     // creates a new empty order and sets it as the current order
     add_new_order: function(options){
@@ -2797,7 +2802,7 @@ exports.Order = Backbone.Model.extend({
                 return paymentline.export_for_printing();
             });
         var client  = this.get('client');
-        var cashier = this.pos.get_cashier();
+        var cashier = this.pos.get_order().employee;
         var company = this.pos.company;
         var date    = new Date();
 

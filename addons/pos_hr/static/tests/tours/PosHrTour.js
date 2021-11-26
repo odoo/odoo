@@ -66,7 +66,7 @@ odoo.define('point_of_sale.tour.PosHr', function (require) {
     ProductScreen.exec.addOrderline('Desk Pad', '1', '4');
     ProductScreen.check.totalAmountIs('4.0')
     Chrome.do.clickTicketButton();
-    TicketScreen.check.nthRowContains(2, 'Pos Employee2');
+    TicketScreen.check.nthRowContains(2, 'Pos Employee1');
     TicketScreen.check.nthRowContains(3, 'Pos Employee1');
 
     // order for admin
