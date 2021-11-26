@@ -775,6 +775,9 @@
                                             'show_address': 1, 'default_is_company': True, 'show_vat': True}"
                                        options='{"always_reload": True, "no_quick_create": True}'
                                        attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
+                                <field name="partner_shipping_id"
+                                       groups="account.group_delivery_invoice_address"
+                                       attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'out_receipt'))], 'readonly': [('state', '!=', 'draft')]}"/>
                                 <label for="ref" string="Bill Reference"
                                        attrs="{'invisible':[('move_type', 'not in', ('in_invoice', 'in_receipt', 'in_refund'))]}" />
                                 <field name="ref" nolabel="1" attrs="{'invisible':[('move_type', 'not in', ('in_invoice', 'in_receipt', 'in_refund'))]}" />

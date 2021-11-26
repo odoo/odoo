@@ -318,8 +318,8 @@
                     <group name="sale_header">
                         <group name="partner_details">
                             <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_address': 1, 'show_vat': True}" options='{"always_reload": True}'/>
-                            <field name="partner_invoice_id" groups="sale.group_delivery_invoice_address" context="{'default_type':'invoice'}" options='{"always_reload": True}'/>
-                            <field name="partner_shipping_id" groups="sale.group_delivery_invoice_address" context="{'default_type':'delivery'}" options='{"always_reload": True}'/>
+                            <field name="partner_invoice_id" groups="account.group_delivery_invoice_address" context="{'default_type':'invoice'}" options='{"always_reload": True}'/>
+                            <field name="partner_shipping_id" groups="account.group_delivery_invoice_address" context="{'default_type':'delivery'}" options='{"always_reload": True}'/>
                         </group>
                         <group name="order_details">
                             <field name="validity_date" attrs="{'invisible': [('state', 'in', ['sale', 'done'])]}"/>
@@ -1223,11 +1223,6 @@
             <field name="inherit_id" ref="account.view_move_form"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//field[@name='partner_id']" position="after">
-                       <field name="partner_shipping_id"
-                              groups="sale.group_delivery_invoice_address"
-                              attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'out_receipt'))]}"/>
-                   </xpath>
                     <xpath expr="//field[@name='invoice_line_ids']//field[@name='discount']" position="attributes">
                         <attribute name="groups">product.group_discount_per_so_line</attribute>
                     </xpath>
