@@ -2138,6 +2138,11 @@ class Task(models.Model):
     def _rating_get_parent_field_name(self):
         return 'project_id'
 
+    def rating_get_rated_partner_id(self):
+        """ Overwrite since we have user_ids and not user_id """
+        tasks_with_one_user = self.filtered(lambda task: len(task.user_ids) == 1 and task.user_ids.partner_id)
+        return tasks_with_one_user.user_ids.partner_id or self.env['res.partner']
+
     # ---------------------------------------------------
     # Privacy
     # ---------------------------------------------------
