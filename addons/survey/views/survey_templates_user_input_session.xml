@@ -39,7 +39,7 @@
                         <h1 class="mb-4" t-field="survey.title" />
                         <h2 class="mb-5 font-weight-normal">
                             <span>Go to <a t-att-href="survey.session_link" t-esc="survey.session_link" target="_blank" /></span>
-                            <i class="fa fa-copy font-weight-normal ml-3 o_survey_session_copy" />
+                            <i class="fa fa-link font-weight-normal ml-3 o_survey_session_copy" />
                             <input class="o_survey_session_copy_url d-none" type="text" t-att-value="survey.session_link" />
                         </h2>
                         <h2 class="font-weight-normal"><span>Waiting for attendees...</span>
@@ -105,6 +105,7 @@
                 </div>
             </div>
             <div class="container px-4 pb-3 pt96 d-flex flex-column o_survey_session_manage_container">
+                <div class="o_survey_session_description_done d-none" t-field="survey.description_done" />
                 <a role="button"
                     class="font-weight-bold fa fa-chevron-right o_survey_session_navigation o_survey_session_navigation_next p-3" />
                 <a role="button"
@@ -128,7 +129,7 @@
                                 <span>Waiting for attendees...</span>
                                 <span>
                                     <span class="o_survey_session_answer_count">0</span>
-                                     / 
+                                     /
                                     <span t-esc="survey.session_answer_count" />
                                 </span>
                             </h2>
