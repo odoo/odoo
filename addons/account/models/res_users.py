@@ -3,11 +3,11 @@
 
 from odoo import api, models, _
 from odoo.exceptions import ValidationError
-
+from odoo import fields
 
 class Users(models.Model):
     _inherit = "res.users"
-
+    
     @api.constrains('groups_id')
     def _check_one_user_type(self):
         super(Users, self)._check_one_user_type()

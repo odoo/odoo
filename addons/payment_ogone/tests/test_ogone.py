@@ -5,15 +5,17 @@ from freezegun import freeze_time
 from odoo.fields import Command
 from odoo.tests import tagged
 from odoo.tools import mute_logger
+from werkzeug.exceptions import Forbidden
 
 from odoo.addons.payment import utils as payment_utils
 
 from .common import OgoneCommon
 from ..controllers.main import OgoneController
+from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 
 
 @tagged('post_install', '-at_install')
-class OgoneTest(OgoneCommon):
+class OgoneTest(OgoneCommon, PaymentHttpCommon):
 
     def test_incompatibility_with_validation_operation(self):
         acquirers = self.env['payment.acquirer']._get_compatible_acquirers(
@@ -96,3 +98,35 @@ class OgoneTest(OgoneCommon):
                 value,
                 f"received value {inputs[form_key]} for input {form_key} (expected {value})"
             )
+
+    def test_webhook_call(self):
+        webhook_url = self._build_url('/payment/ogone/test/accept')
+        expected_values = {
+            'PSPID': self.ogone.ogone_pspid,
+            'ORDERID': self.reference,
+        }
+        self.create_transaction(flow='redirect')
+
+        # Raise Forbidden due to missing signature
+        self.assertEqual(self._make_http_post_request(webhook_url, expected_values).status_code, Forbidden().code)
+
+        # Raise Forbidden due to invalid signature
+        expected_values['SHASIGN'] = 'wrong_signature'
+        self.assertEqual(self._make_http_post_request(webhook_url, expected_values).status_code, Forbidden().code)
+
+        # Do not raise Forbidden
+        #SHASIGN content seems to be in uppercase
+        expected_values['SHASIGN'] = u'b00bdc5e8de830a2f1d81b4860ce77d3edc178f7'.upper()
+        expected_values['STATUS'] = 5 #done
+        self._assert_not_raises(
+            Forbidden,
+            self._make_http_post_request,
+            webhook_url,
+            expected_values
+        )
+        print(self._make_http_post_request(webhook_url, expected_values).status_code)
+
+
+
+
+

@@ -6,6 +6,7 @@ import json
 import logging
 import pprint
 from datetime import datetime
+from werkzeug.exceptions import Forbidden
 
 import werkzeug
 
@@ -91,7 +92,9 @@ class StripeController(http.Controller):
                 tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_feedback_data(
                     'stripe', data
                 )
-                if self._verify_webhook_signature(tx_sudo.acquirer_id.stripe_webhook_secret):
+                if not self._verify_webhook_signature(tx_sudo.acquirer_id.stripe_webhook_secret):
+                    raise Forbidden()
+                else:
                     # Fetch the PaymentIntent, Charge and PaymentMethod objects from Stripe
                     if checkout_session.get('payment_intent'):  # Can be None
                         payment_intent = tx_sudo.acquirer_id._stripe_make_request(
