@@ -153,7 +153,10 @@ $.fn.extend({
             }
             const scrollableEl = isScrollElement ? el : $(el).parent().closestScrollable()[0];
             const style = window.getComputedStyle(el);
-            const newValue = parseInt(style[cssProperty]) + scrollableEl.offsetWidth - scrollableEl.clientWidth;
+            const borderLeftWidth = parseInt(style.borderLeftWidth.replace('px', ''));
+            const borderRightWidth = parseInt(style.borderRightWidth.replace('px', ''));
+            const bordersWidth = borderLeftWidth + borderRightWidth;
+            const newValue = parseInt(style[cssProperty]) + scrollableEl.offsetWidth - scrollableEl.clientWidth - bordersWidth;
             el.style.setProperty(cssProperty, `${newValue}px`, 'important');
         }
     },
