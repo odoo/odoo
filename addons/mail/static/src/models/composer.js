@@ -39,6 +39,13 @@ registerModel({
             return this.attachments.some(attachment => attachment.isUploading);
         },
         /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsUserResizable() {
+            return this.thread && this.thread.model !== 'mail.channel';
+        },
+        /**
          * Detects if mentioned partners are still in the composer text input content
          * and removes them if not.
          *
@@ -185,6 +192,12 @@ registerModel({
          * Determines whether a post_message request is currently pending.
          */
         isPostingMessage: attr(),
+        /**
+         * Determines whether the composer is resizable or not.
+         */
+        isUserResizable: attr({
+            compute: '_computeIsUserResizable',
+        }),
         mentionedChannels: many('Thread', {
             compute: '_computeMentionedChannels',
         }),

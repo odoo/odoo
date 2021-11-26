@@ -141,8 +141,10 @@ export class ComposerTextInput extends Component {
      * @private
      */
     _updateHeight() {
-        this._mirroredTextareaRef.el.value = this.composerView.composer.textInputContent;
-        this._textareaRef.el.style.height = (this._mirroredTextareaRef.el.scrollHeight) + "px";
+        if (!this.composerView.composer.isUserResizable) {
+            this._mirroredTextareaRef.el.value = this.composerView.composer.textInputContent;
+            this._textareaRef.el.style.height = (this._mirroredTextareaRef.el.scrollHeight) + "px";
+        }
     }
 
     //--------------------------------------------------------------------------
