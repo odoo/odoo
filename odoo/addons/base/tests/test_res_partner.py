@@ -147,3 +147,8 @@ class TestPartner(TransactionCase):
         partner_merge_wizard = self.env['base.partner.merge.automatic.wizard'].with_context(
             {'partner_show_db_id': True, 'default_dst_partner_id': test_partner}).new()
         self.assertEqual(partner_merge_wizard.dst_partner_id.display_name, expected_partner_name, "'Destination Contact' name should contain db ID in brackets")
+
+    def test_email_formatted(self):
+        """ Check that email_formatted is correctly formatted"""
+        test_partner = self.env['res.partner'].create({'name': 'My Company Name', "email": "My company <email@example.com>"})
+        self.assertEqual(test_partner.email_formatted, '"My Company Name" <email@example.com>')
