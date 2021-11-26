@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "./standard_field_props";
 
 const { Component } = owl;
@@ -21,7 +22,15 @@ export class PhoneField extends Component {
         this.props.update(value || false);
     }
 }
-PhoneField.props = standardFieldProps;
-PhoneField.template = "web.PhoneField";
+
+Object.assign(PhoneField, {
+    template: "web.PhoneField",
+    props: {
+        ...standardFieldProps,
+    },
+
+    displayName: _lt("Phone"),
+    supportedTypes: ["char"],
+});
 
 registry.category("fields").add("phone", PhoneField);

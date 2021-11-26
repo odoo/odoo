@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { DatePicker, DateTimePicker } from "@web/core/datepicker/datepicker";
+import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import {
     formatDate,
@@ -53,6 +54,9 @@ Object.assign(RemainingDaysField, {
     props: {
         ...standardFieldProps,
     },
+
+    displayName: _lt("Remaining Days"),
+    supportedTypes: ["date", "datetime"],
 });
 
 registry.category("fields").add("remaining_days", RemainingDaysField);

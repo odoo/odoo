@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "./standard_field_props";
 
 const { Component } = owl;
@@ -21,7 +22,15 @@ export class EmailField extends Component {
         this.props.update(value || false);
     }
 }
-EmailField.props = standardFieldProps;
-EmailField.template = "web.EmailField";
+
+Object.assign(EmailField, {
+    template: "web.EmailField",
+    props: {
+        ...standardFieldProps,
+    },
+
+    displayName: _lt("Email"),
+    supportedTypes: ["char"],
+});
 
 registry.category("fields").add("email", EmailField);

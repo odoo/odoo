@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import { _lt } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { standardFieldProps } from "./standard_field_props";
 
@@ -29,10 +30,15 @@ export class Many2OneField extends Component {
     }
 }
 
-Many2OneField.props = {
-    ...standardFieldProps,
-    placeholder: { type: String, optional: true },
-};
-Many2OneField.template = "web.Many2OneField";
+Object.assign(Many2OneField, {
+    template: "web.Many2OneField",
+    props: {
+        ...standardFieldProps,
+        placeholder: { type: String, optional: true },
+    },
+
+    displayName: _lt("Many2one"),
+    supportedTypes: ["many2one"],
+});
 
 registry.category("fields").add("many2one", Many2OneField);

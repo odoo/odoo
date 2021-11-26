@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "./standard_field_props";
 
 const { Component } = owl;
@@ -61,6 +62,10 @@ Object.assign(SelectionField, {
         ...standardFieldProps,
         placeholder: { type: String, optional: true },
     },
+
+    displayName: _lt("Selection"),
+    supportedTypes: ["many2one", "selection"],
+
     isEmpty(record, fieldName) {
         return record.data[fieldName] === false;
     },

@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "./standard_field_props";
 
 const { Component } = owl;
@@ -16,6 +17,10 @@ Object.assign(BooleanFavoriteField, {
     props: {
         ...standardFieldProps,
     },
+
+    displayName: _lt("Favorite"),
+    supportedTypes: ["boolean"],
+
     isEmpty() {
         return false;
     },

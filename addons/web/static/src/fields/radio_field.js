@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "./standard_field_props";
 
 const { Component } = owl;
@@ -49,14 +50,19 @@ export class RadioField extends Component {
 }
 
 Object.assign(RadioField, {
+    template: "web.RadioField",
     props: {
         ...standardFieldProps,
     },
-    template: "web.RadioField",
-    nextId: 0,
+
+    displayName: _lt("Radio"),
+    supportedTypes: ["many2one", "selection"],
+
     isEmpty() {
         return false;
     },
+
+    nextId: 0,
 });
 
 registry.category("fields").add("radio", RadioField);

@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "./standard_field_props";
 
 const { Component } = owl;
@@ -24,12 +25,16 @@ export class BooleanField extends Component {
         }
     }
 }
-BooleanField.props = {
-    ...standardFieldProps,
-};
-BooleanField.template = "web.BooleanField";
 
 Object.assign(BooleanField, {
+    template: "web.BooleanField",
+    props: {
+        ...standardFieldProps,
+    },
+
+    displayName: _lt("Checkbox"),
+    supportedTypes: ["boolean"],
+
     isEmpty() {
         return false;
     },

@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "./standard_field_props";
 
 const { Component } = owl;
@@ -33,9 +34,14 @@ export class PercentageField extends Component {
     }
 }
 
-PercentageField.props = {
-    ...standardFieldProps,
-};
-PercentageField.template = "web.PercentageField";
+Object.assign(PercentageField, {
+    template: "web.PercentageField",
+    props: {
+        ...standardFieldProps,
+    },
+
+    displayName: _lt("Percentage"),
+    supportedTypes: ["float"],
+});
 
 registry.category("fields").add("percentage", PercentageField);

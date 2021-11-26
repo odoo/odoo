@@ -77,6 +77,9 @@ Object.assign(StatusBarField, {
     props: {
         ...standardFieldProps,
     },
+
+    supportedTypes: ["many2one", "selection"],
+
     isEmpty() {
         return false;
     },

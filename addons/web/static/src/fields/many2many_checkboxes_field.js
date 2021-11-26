@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "./standard_field_props";
 
 const { Component } = owl;
@@ -20,10 +21,14 @@ export class Many2ManyCheckboxesField extends Component {
 }
 
 Object.assign(Many2ManyCheckboxesField, {
+    template: "web.Many2ManyCheckboxesField",
     props: {
         ...standardFieldProps,
     },
-    template: "web.Many2ManyCheckboxesField",
+
+    displayName: _lt("Checkboxes"),
+    supportedTypes: ["many2many"],
+
     isEmpty() {
         return false;
     },

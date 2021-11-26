@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "./standard_field_props";
 
 const { Component } = owl;
@@ -30,6 +31,10 @@ Object.assign(BooleanToggleField, {
     props: {
         ...standardFieldProps,
     },
+
+    displayName: _lt("Toggle"),
+    supportedTypes: ["boolean"],
+
     isEmpty() {
         return false;
     },
