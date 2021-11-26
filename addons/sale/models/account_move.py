@@ -18,13 +18,6 @@ class AccountMove(models.Model):
         compute='_compute_team_id', store=True, readonly=False,
         ondelete="set null", tracking=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-    partner_shipping_id = fields.Many2one(
-        'res.partner',
-        string='Delivery Address',
-        readonly=True,
-        states={'draft': [('readonly', False)]},
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
-        help="Delivery address for current invoice.")
 
     # UTMs - enforcing the fact that we want to 'set null' when relation is unlinked
     campaign_id = fields.Many2one(ondelete='set null')
@@ -39,9 +32,9 @@ class AccountMove(models.Model):
     def _compute_fiscal_position_id(self):
         # Trigger the change of fiscal position when the shipping address is modified.
         for move in self:
-            delivery_partner = self.env['res.partner'].browse(move._get_invoice_delivery_partner_id())
-            fiscal_position = self.env['account.fiscal.position'].with_company(
-                move.company_id)._get_fiscal_position(move.partner_id, delivery=delivery_partner)
+            fiscal_position = self.env['account.fiscal.position']\
+                .with_company(move.company_id)\
+                ._get_fiscal_position(move.partner_id, delivery=move.partner_shipping_id)
             if fiscal_position:
                 move.fiscal_position_id = fiscal_position
 
@@ -50,17 +43,6 @@ class AccountMove(models.Model):
         res = super(AccountMove, self).unlink()
         if downpayment_lines:
             downpayment_lines.unlink()
-        return res
-
-    @api.onchange('partner_id')
-    def _onchange_partner_id(self):
-        # OVERRIDE
-        # Recompute 'partner_shipping_id' based on 'partner_id'.
-        addr = self.partner_id.address_get(['delivery'])
-        self.partner_shipping_id = addr and addr.get('delivery')
-
-        res = super(AccountMove, self)._onchange_partner_id()
-
         return res
 
     @api.depends('invoice_user_id')
@@ -127,8 +109,3 @@ class AccountMove(models.Model):
         for (order, name) in todo:
             order.message_post(body=_("Invoice %s paid", name))
         return res
-
-    def _get_invoice_delivery_partner_id(self):
-        # OVERRIDE
-        self.ensure_one()
-        return self.partner_shipping_id.id or super(AccountMove, self)._get_invoice_delivery_partner_id()

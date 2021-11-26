@@ -145,6 +145,9 @@ class ResConfigSettings(models.TransientModel):
     # Technical field to hide country specific fields from accounting configuration
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code', readonly=True)
 
+    # Allows for the use of a different delivery address
+    group_sale_delivery_address = fields.Boolean("Customer Addresses", implied_group='account.group_delivery_invoice_address')
+
     def set_values(self):
         super(ResConfigSettings, self).set_values()
         # install a chart of accounts for the given company (if required)

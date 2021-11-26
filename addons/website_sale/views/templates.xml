@@ -1308,7 +1308,7 @@
                                     </t>
                                 </div>
                             </div>
-                            <t t-if="not only_services" groups="sale.group_delivery_invoice_address">
+                            <t t-if="not only_services" groups="account.group_delivery_invoice_address">
                                 <div class="row">
                                     <div class="col-lg-12">
                                         <h3 class="o_page_header mt16 mb4">Shipping Address</h3>
@@ -1423,7 +1423,7 @@
                                 <t t-if="partner_id == website_sale_order.partner_shipping_id.id == website_sale_order.partner_invoice_id.id">
                                     <div class="alert alert-warning" role="alert" t-if="not only_services">
                                         <h4 class="alert-heading">Be aware!</h4>
-                                        <p  groups="sale.group_delivery_invoice_address">
+                                        <p  groups="account.group_delivery_invoice_address">
                                             You are editing your <b>billing and shipping</b> addresses at the same time!<br/>
                                             If you want to modify your shipping address, create a <a href='/shop/address'>new address</a>.
                                         </p>
@@ -1567,7 +1567,7 @@
                     <b>Billing<t t-if="same_shipping and not only_services"> &amp; Shipping</t>: </b>
                     <span t-esc="order.partner_id" t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')" class="address-inline"/>
                 </div>
-                <div t-if="not same_shipping and not only_services" groups="sale.group_delivery_invoice_address">
+                <div t-if="not same_shipping and not only_services" groups="account.group_delivery_invoice_address">
                     <b>Shipping: </b>
                     <span t-esc="order.partner_shipping_id" t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')" class="address-inline"/>
                 </div>
@@ -1797,7 +1797,7 @@
                                   <div class="card-body">
                                     <t t-set="same_shipping" t-value="bool(order.partner_shipping_id==order.partner_id or only_services)" />
                                     <div><b>Billing <t t-if="same_shipping and not only_services"> &amp; Shipping</t>: </b><span t-esc='order.partner_id' t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')" class="address-inline"/></div>
-                                    <div t-if="not same_shipping and not only_services" groups="sale.group_delivery_invoice_address"><b>Shipping: </b><span t-esc='order.partner_shipping_id' t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')"  class="address-inline"/></div>
+                                    <div t-if="not same_shipping and not only_services" groups="account.group_delivery_invoice_address"><b>Shipping: </b><span t-esc='order.partner_shipping_id' t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')"  class="address-inline"/></div>
                                   </div>
                                 </div>
                                 <div class="oe_structure mt-3" id="oe_structure_website_sale_confirmation_2"/>

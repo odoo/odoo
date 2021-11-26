@@ -36,7 +36,7 @@ class TestUi(odoo.tests.HttpCase, TestProductConfiguratorCommon):
             'groups_id': [
                 (4, self.env.ref('product.group_product_variant').id),
                 (4, self.env.ref('product.group_product_pricelist').id),
-                (4, self.env.ref('sale.group_delivery_invoice_address').id),
+                (4, self.env.ref('account.group_delivery_invoice_address').id),
             ],
         })
 

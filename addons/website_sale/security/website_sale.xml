@@ -22,15 +22,15 @@
     </record>
 
     <record id="base.group_user" model="res.groups">
-        <field name="implied_ids" eval="[(4, ref('sale.group_delivery_invoice_address'))]"/>
+        <field name="implied_ids" eval="[(4, ref('account.group_delivery_invoice_address'))]"/>
     </record>
 
     <record id="base.group_public" model="res.groups">
-        <field name="implied_ids" eval="[(4, ref('sale.group_delivery_invoice_address'))]"/>
+        <field name="implied_ids" eval="[(4, ref('account.group_delivery_invoice_address'))]"/>
     </record>
 
     <record id="base.group_portal" model="res.groups">
-        <field name="implied_ids" eval="[(4, ref('sale.group_delivery_invoice_address'))]"/>
+        <field name="implied_ids" eval="[(4, ref('account.group_delivery_invoice_address'))]"/>
     </record>
 
     <!--
