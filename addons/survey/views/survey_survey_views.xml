@@ -170,7 +170,7 @@
         <field name="name">survey.survey.view.tree</field>
         <field name="model">survey.survey</field>
         <field name="arch" type="xml">
-            <tree string="Survey" sample="1">
+            <tree string="Survey" sample="1" js_class="survey_view_tree">
                 <field name="active" invisible="1"/>
                 <field name="certification" invisible="1"/>
                 <field name="title"/>
@@ -192,7 +192,7 @@
         <field name="name">survey.survey.view.kanban</field>
         <field name="model">survey.survey</field>
         <field name="arch" type="xml">
-            <kanban class="o_survey_survey_view_kanban" sample="1">
+            <kanban class="o_survey_survey_view_kanban" js_class="survey_view_kanban" sample="1">
                 <field name="active"/>
                 <field name="certification"/>
                 <field name="color"/>
@@ -385,11 +385,11 @@
         <field name="view_mode">kanban,tree,form,activity</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
-            Add a new survey
+            Create a Survey
           </p><p>
-            You can create surveys for different purposes: customer opinion, services feedback, recruitment interviews, employee's periodical evaluations, marketing campaigns, etc.
+            Surveys can serve many purposes: collect customer feedback, gather market insights, structure employee evaluations, test and certify resellers, support a live presentation, ...
           </p><p>
-            Design easily your survey, send invitations and analyze answers.
+            Let's create one and share it! Not sure where to start? <a href="#" class="o_survey_open_sample_modal font-weight-bold">Load a survey</a>
           </p>
         </field>
     </record>
