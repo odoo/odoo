@@ -4,7 +4,8 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
 import { session } from "@web/session";
-import { sprintf } from "../core/utils/strings";
+import { _lt } from "@web/core/l10n/translation";
+import { sprintf } from "@web/core/utils/strings";
 import { formatFloat } from "./formatters";
 import { standardFieldProps } from "./standard_field_props";
 
@@ -158,12 +159,17 @@ export class ImageField extends Component {
     }
 }
 
-ImageField.components = {
-    ImageUploader,
-};
-ImageField.props = {
-    ...standardFieldProps,
-};
-ImageField.template = "web.ImageField";
+Object.assign(ImageField, {
+    template: "web.ImageField",
+    props: {
+        ...standardFieldProps,
+    },
+    components: {
+        ImageUploader,
+    },
+
+    displayName: _lt("Image"),
+    supportedTypes: ["binary"],
+});
 
 registry.category("fields").add("image", ImageField);

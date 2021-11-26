@@ -22,12 +22,15 @@ export class StatInfoField extends Component {
             : this.props.record.activeFields[this.props.name].string;
     }
 }
-StatInfoField.props = {
-    ...standardFieldProps,
-};
-StatInfoField.template = "web.StatInfoField";
 
 Object.assign(StatInfoField, {
+    template: "web.StatInfoField",
+    props: {
+        ...standardFieldProps,
+    },
+
+    supportedTypes: ["float", "integer"],
+
     isEmpty() {
         return false;
     },

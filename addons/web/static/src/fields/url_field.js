@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "./standard_field_props";
 
 const { Component } = owl;
@@ -32,9 +33,16 @@ export class UrlField extends Component {
         this.props.update(value || false);
     }
 }
-UrlField.props = {
-    ...standardFieldProps,
-    placeholder: { type: String, optional: true },
-};
-UrlField.template = "web.UrlField";
+
+Object.assign(UrlField, {
+    template: "web.UrlField",
+    props: {
+        ...standardFieldProps,
+        placeholder: { type: String, optional: true },
+    },
+
+    displayName: _lt("URL"),
+    supportedTypes: ["char"],
+});
+
 registry.category("fields").add("url", UrlField);

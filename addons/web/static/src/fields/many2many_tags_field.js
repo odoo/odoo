@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "./standard_field_props";
 
 const { Component } = owl;
@@ -15,13 +16,19 @@ export class Many2ManyTagsField extends Component {
     }
 }
 
-Many2ManyTagsField.fieldsToFetch = {
-    display_name: { name: "display_name", type: "char" },
-};
-Many2ManyTagsField.props = {
-    ...standardFieldProps,
-    placeholder: { type: String, optional: true },
-};
-Many2ManyTagsField.template = "web.Many2ManyTagsField";
+Object.assign(Many2ManyTagsField, {
+    template: "web.Many2ManyTagsField",
+    props: {
+        ...standardFieldProps,
+        placeholder: { type: String, optional: true },
+    },
+
+    displayName: _lt("Tags"),
+    supportedTypes: ["many2many"],
+
+    fieldsToFetch: {
+        display_name: { name: "display_name", type: "char" },
+    },
+});
 
 registry.category("fields").add("many2many_tags", Many2ManyTagsField);

@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "./standard_field_props";
 
 const { Component } = owl;
@@ -30,9 +31,15 @@ export class PriorityField extends Component {
         this.props.update(actualValue);
     }
 }
-PriorityField.props = {
-    ...standardFieldProps,
-};
-PriorityField.template = "web.PriorityField";
+
+Object.assign(PriorityField, {
+    template: "web.PriorityField",
+    props: {
+        ...standardFieldProps,
+    },
+
+    displayName: _lt("Priority"),
+    supportedTypes: ["selection"],
+});
 
 registry.category("fields").add("priority", PriorityField);

@@ -2,6 +2,7 @@
 
 import { DateTimePicker } from "@web/core/datepicker/datepicker";
 import { formatDateTime, parseDateTime, serializeDateTime } from "@web/core/l10n/dates";
+import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "./standard_field_props";
 
@@ -32,6 +33,9 @@ Object.assign(DateTimeField, {
     components: {
         DateTimePicker,
     },
+
+    displayName: _lt("Date & Time"),
+    supportedTypes: ["datetime"],
 });
 
 registry.category("fields").add("datetime", DateTimeField);
