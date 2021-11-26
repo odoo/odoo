@@ -8,6 +8,25 @@ class ResPartner(models.Model):
 
     siret = fields.Char(string='SIRET', size=14)
 
+
+class AccountMove(models.Model):
+    _inherit = 'account.move'
+
+    def _get_accounting_date(self, invoice_date, has_tax):
+        if self.company_id._is_vat_french() and self.is_sale_document(include_receipts=True):
+            # According to the french law invoice_date == date for customer invoice.
+            return invoice_date
+        return super()._get_accounting_date(invoice_date, has_tax)
+
+    @api.constrains('move_type', 'date', 'invoice_date')
+    def _check_duplicate_supplier_reference(self):
+        moves = self.filtered(lambda move: move.company_id._is_vat_french() and move.date and move.invoice_date \
+                              and move.is_sale_document(include_receipts=True) and move.date != move.invoice_date)
+        if moves:
+            raise ValidationError(_('According to the french law, date and invoice_date of customer invoice should be the same.\n'
+                                    'Problematic numbers: %s\n', ', '.join(moves.mapped('name')))
+
+
 class ChartTemplate(models.Model):
     _inherit = 'account.chart.template'
 
