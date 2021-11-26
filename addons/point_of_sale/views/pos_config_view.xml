@@ -633,7 +633,7 @@
                                 <div class="content-group">
                                     <div class="row mt16" title="Whenever you close a session, one entry is generated in the following accounting journal for all the orders not invoiced. Invoices are recorded in accounting separately.">
                                         <label string="Sales Journal" for="journal_id" class="col-lg-3 o_light_label" options="{'no_open': True, 'no_create': True}"/>
-                                        <field name="journal_id" required="1" domain="[('company_id', '=', company_id), ('type', '=', 'sale')]" context="{'default_company_id': company_id, 'default_type': 'sale'}"/>
+                                        <field name="journal_id" required="1" domain="[('company_id', '=', company_id), ('type', 'in', ('general', 'sale'))]" context="{'default_company_id': company_id, 'default_type': 'general'}"/>
                                     </div>
                                 </div>
                             </div>
