@@ -91,7 +91,7 @@ class AccountPayment(models.Model):
             except Exception:
                 pass
 
-    @api.depends('third_check_operation_ids.journal_id', 'third_check_operation_ids.state', 'payment_method_line_id')
+    @api.depends('third_check_operation_ids.state')
     def _compute_third_check_last_journal(self):
         new_checks = self.filtered(lambda x: x.payment_method_line_id.code == 'new_third_checks')
         for rec in new_checks:
