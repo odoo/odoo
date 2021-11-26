@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 import time
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, Command, _
 from odoo.exceptions import UserError
 
 
@@ -70,7 +71,22 @@ class SaleAdvancePaymentInv(models.TransientModel):
             return {'value': {'amount': amount}}
         return {}
 
-    def _prepare_invoice_values(self, order, name, amount, so_line):
+    def _prepare_invoice_values(self, order, so_lines):
+        invoice_lines_vals = []
+        for line in so_lines:
+            name = ' '.join([line.name] + [tax.name for tax in line.tax_id])
+            invoice_lines_vals.append(Command.create({
+                'name': name,
+                'price_unit': line.price_unit,
+                'quantity': 1.0,
+                'product_id': self.product_id.id,
+                'product_uom_id': line.product_uom.id,
+                'tax_ids': [Command.set(line.tax_id.ids)],
+                'sale_line_ids': [Command.set([line.id])],
+                'analytic_tag_ids': [Command.set(line.analytic_tag_ids.ids)],
+                'analytic_account_id': order.analytic_account_id.id or False,
+            }))
+
         invoice_vals = {
             'ref': order.client_order_ref,
             'move_type': 'out_invoice',
@@ -88,43 +104,23 @@ class SaleAdvancePaymentInv(models.TransientModel):
             'campaign_id': order.campaign_id.id,
             'medium_id': order.medium_id.id,
             'source_id': order.source_id.id,
-            'invoice_line_ids': [(0, 0, {
-                'name': name,
-                'price_unit': amount,
-                'quantity': 1.0,
-                'product_id': self.product_id.id,
-                'product_uom_id': so_line.product_uom.id,
-                'tax_ids': [(6, 0, so_line.tax_id.ids)],
-                'sale_line_ids': [(6, 0, [so_line.id])],
-                'analytic_tag_ids': [(6, 0, so_line.analytic_tag_ids.ids)],
-                'analytic_account_id': order.analytic_account_id.id or False,
-            })],
+            'invoice_line_ids': invoice_lines_vals,
         }
 
         return invoice_vals
 
-    def _get_advance_details(self, order):
-        context = {'lang': order.partner_id.lang}
+    def _get_advance_amount(self, order):
         if self.advance_payment_method == 'percentage':
-            amount = order.amount_untaxed * self.amount / 100
-            name = _("Down payment of %s%%") % (self.amount)
+            amount = order.amount_total * self.amount / 100
         else:
             amount = self.fixed_amount
-            name = _('Down Payment')
-        del context
-
-        return amount, name
-
-    def _create_invoice(self, order, so_line, amount):
-        if (self.advance_payment_method == 'percentage' and self.amount <= 0.00) or (self.advance_payment_method == 'fixed' and self.fixed_amount <= 0.00):
+        if amount <= 0.00:
             raise UserError(_('The value of the down payment amount must be positive.'))
 
-        amount, name = self._get_advance_details(order)
+        return amount
 
-        invoice_vals = self._prepare_invoice_values(order, name, amount, so_line)
-
-        if order.fiscal_position_id:
-            invoice_vals['fiscal_position_id'] = order.fiscal_position_id.id
+    def _create_invoice(self, order, so_lines):
+        invoice_vals = self._prepare_invoice_values(order, so_lines)
 
         invoice = self.env['account.move'].with_company(order.company_id)\
             .sudo().create(invoice_vals).with_user(self.env.uid)
@@ -144,7 +140,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
             'product_uom': self.product_id.uom_id.id,
             'product_id': self.product_id.id,
             'analytic_tag_ids': analytic_tag_ids,
-            'tax_id': [(6, 0, tax_ids)],
+            'tax_id': [Command.set(tax_ids)] if tax_ids else [],
             'is_downpayment': True,
             'sequence': order.order_line and order.order_line[-1].sequence + 1 or 10,
         }
@@ -164,21 +160,65 @@ class SaleAdvancePaymentInv(models.TransientModel):
             sale_line_obj = self.env['sale.order.line']
             invoices = self.env['account.move']
             for order in sale_orders:
-                amount, name = self._get_advance_details(order)
 
                 if self.product_id.invoice_policy != 'order':
                     raise UserError(_('The product used to invoice a down payment should have an invoice policy set to "Ordered quantities". Please update your deposit product to be able to create a deposit invoice.'))
                 if self.product_id.type != 'service':
                     raise UserError(_("The product used to invoice a down payment should be of type 'Service'. Please use another product or update this product."))
-                taxes = self.product_id.taxes_id.filtered(lambda r: not order.company_id or r.company_id == order.company_id)
-                tax_ids = order.fiscal_position_id.map_tax(taxes).ids
-                analytic_tag_ids = []
-                for line in order.order_line:
-                    analytic_tag_ids = [(4, analytic_tag.id, None) for analytic_tag in line.analytic_tag_ids]
 
-                so_line_values = self._prepare_so_line(order, analytic_tag_ids, tax_ids, amount)
-                so_line = sale_line_obj.create(so_line_values)
-                invoices += self._create_invoice(order, so_line, amount)
+
+                advance_amount = self._get_advance_amount(order)
+                group_by_taxes = defaultdict(lambda: {
+                    'lines': self.env['sale.order.line'],
+                    'sum_price_reduce_x_quantity': 0.0,
+                    'sum_price_subtotal': 0.0,
+                    'sum_price_total': 0.0,
+                })
+                if any(tax.amount_type == 'fixed' for tax in order.order_line.tax_id.flatten_taxes_hierarchy()):
+                    # no breakdown per taxes if any tax with amount type "fixed"
+                    group_by_taxes[None]['lines'] = order.order_line
+                else:
+                    for line in order.order_line:
+                        tax_ids = tuple(sorted(line.tax_id.ids))
+                        group_by_taxes[tax_ids]['lines'] += line
+                        group_by_taxes[tax_ids]['sum_price_reduce_x_quantity'] += line.price_unit * (1.0 - line.discount / 100.0) * line.product_uom_qty  # "price_reduce" field not used because already rounded
+                        group_by_taxes[tax_ids]['sum_price_subtotal'] += line.price_subtotal
+                        group_by_taxes[tax_ids]['sum_price_total'] += line.price_total
+
+                total_amount_left = advance_amount
+                so_line_values = []
+                group_by_taxes_items = list(group_by_taxes.items())
+                last_group = group_by_taxes_items[-1][1]
+                for tax_ids, group in group_by_taxes_items:
+                    analytic_tag_ids = [Command.set(group['lines'].analytic_tag_ids.ids)]
+
+                    if group == last_group:
+                        # last line : set total_amount_left to correct any rounding error that might have appeared
+                        so_line_amount_tax_incl = total_amount_left
+                    else:
+                        so_line_amount_tax_incl = advance_amount * (group['sum_price_total'] / order.amount_total)
+                        total_amount_left -= so_line_amount_tax_incl
+
+                    if tax_ids:
+                        so_line_amount_tax_excl = (
+                            # amount tax incl ...
+                            so_line_amount_tax_incl *
+                            # ... divided to get tax exclude ...
+                            (group['sum_price_subtotal'] / group['sum_price_total']) *
+                            # ... adapt price unit if tax include
+                            (group['sum_price_reduce_x_quantity'] / group['sum_price_subtotal'])
+                        )
+                    else:
+                        so_line_amount_tax_excl = so_line_amount_tax_incl
+
+                    so_line_values.append(self._prepare_so_line(
+                        order,
+                        analytic_tag_ids,
+                        tax_ids,
+                        so_line_amount_tax_excl
+                    ))
+                so_lines = sale_line_obj.create(so_line_values)
+                invoices += self._create_invoice(order, so_lines)
             return invoices
 
     def create_invoices(self):
@@ -197,4 +237,3 @@ class SaleAdvancePaymentInv(models.TransientModel):
             'taxes_id': [(6, 0, self.deposit_taxes_id.ids)],
             'company_id': False,
         }
-
