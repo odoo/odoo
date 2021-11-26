@@ -162,7 +162,7 @@
 
         <span t-field="line.price_subtotal" position="attributes">
             <attribute name="t-field"></attribute>
-            <attribute name="t-esc">current_subtotal + l10n_cl_values['price_subtotal']</attribute>
+            <attribute name="t-esc">l10n_cl_values['price_subtotal']</attribute>
             <attribute name="t-options">{"widget": "monetary", "display_currency": o.currency_id}</attribute>
         </span>
 
