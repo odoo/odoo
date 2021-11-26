@@ -2088,6 +2088,7 @@ class TestSinglePicking(TestStockCommon):
         receipt = receipt_form.save()
         with receipt_form.move_line_nosuggest_ids.new() as move_line:
             move_line.product_id = self.productA
+            move_line.qty_done = 1.0
 
         receipt = receipt_form.save()
         # Checks receipt has still its destination location and checks its move
