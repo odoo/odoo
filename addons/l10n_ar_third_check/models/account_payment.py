@@ -8,8 +8,6 @@ _logger = logging.getLogger(__name__)
 class AccountPayment(models.Model):
 
     _inherit = 'account.payment'
-    # TODO ver esto, agregamos el id porque nos conviene mas que el orden por name
-    _order = "date desc, id desc, name desc"
 
     check_id = fields.Many2one('account.payment', string='Check', readonly=True, states={'draft': [('readonly', False)]}, copy=False,)
     third_check_current_journal_id = fields.Many2one('account.journal', compute='_compute_third_check_last_journal', string="Third Check Current Journal", store=True)
@@ -62,15 +60,16 @@ class AccountPayment(models.Model):
     def _check_amount_and_date(self):
         for rec in self.filtered('check_id'):
             date = self.date or fields.Datetime.now()
-            operations = rec.check_id.third_check_operation_ids.sorted()
-            check = rec.check_id
-            if operations and operations[0].date > date:
+            last_operation = rec.env['account.payment'].search(
+                [('check_id', '=', rec.id), ('state', '=', 'posted')], order="date desc, id desc, name desc", limit=1)
+            if last_operation and last_operation[0].date > date:
                 raise ValidationError(_(
                     'The date of a new check operation can not be minor than last operation date.\n'
                     '* Check Id: %s\n'
                     '* Check Number: %s\n'
                     '* Operation Date: %s\n'
-                    '* Last Operation Date: %s') % (check.id, check.check_number, date, operations[0].date))
+                    '* Last Operation Date: %s') % (
+                        rec.check_id.id, rec.check_id.check_number, date, last_operation.date))
 
         for rec in self.filtered('check_id'):
             if not rec.currency_id.is_zero(rec.check_id.amount - rec.amount):
@@ -96,11 +95,11 @@ class AccountPayment(models.Model):
     def _compute_third_check_last_journal(self):
         new_checks = self.filtered(lambda x: x.payment_method_line_id.code == 'new_third_checks')
         for rec in new_checks:
-            third_check_operation = rec.third_check_operation_ids.filtered(lambda x: x.state == 'posted')
-            if not third_check_operation:
+            last_operation = rec.env['account.payment'].search(
+                [('check_id', '=', rec.id), ('state', '=', 'posted')], order="date desc, id desc, name desc", limit=1)
+            if not last_operation:
                 rec.third_check_current_journal_id = rec.journal_id
                 continue
-            last_operation = third_check_operation.sorted()[0]
             if last_operation.is_internal_transfer and last_operation.payment_type == 'outbound':
                 rec.third_check_current_journal_id = last_operation.paired_internal_transfer_payment_id.journal_id
             elif last_operation.is_internal_transfer and last_operation.payment_type == 'inbound':
