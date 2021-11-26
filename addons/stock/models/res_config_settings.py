@@ -34,7 +34,7 @@ class ResConfigSettings(models.TransientModel):
     stock_mail_confirmation_template_id = fields.Many2one(related='company_id.stock_mail_confirmation_template_id', readonly=False)
     module_stock_sms = fields.Boolean("SMS Confirmation")
     module_delivery = fields.Boolean("Delivery Methods")
-    module_delivery_dhl = fields.Boolean("DHL USA Connector")
+    module_delivery_dhl = fields.Boolean("DHL Express Connector")
     module_delivery_fedex = fields.Boolean("FedEx Connector")
     module_delivery_ups = fields.Boolean("UPS Connector")
     module_delivery_usps = fields.Boolean("USPS Connector")
