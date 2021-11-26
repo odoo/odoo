@@ -122,7 +122,15 @@ class TestAccountEdiFacturx(AccountEdiTestCommon):
                             <IssuerAssignedID>INV/2017/00001: INV/2017/00001</IssuerAssignedID>
                         </BuyerOrderReferencedDocument>
                     </ApplicableHeaderTradeAgreement>
-                    <ApplicableHeaderTradeDelivery/>
+                    <ApplicableHeaderTradeDelivery>
+                        <ShipToTradeParty>
+                            <Name>partner_b</Name>
+                            <DefinedTradeContact>
+                                <PersonName>partner_b</PersonName>
+                            </DefinedTradeContact>
+                            <PostalTradeAddress/>
+                        </ShipToTradeParty>
+                    </ApplicableHeaderTradeDelivery>
                     <ApplicableHeaderTradeSettlement>
                         <ApplicableTradeTax>
                             <CalculatedAmount currencyID="Gol">220.000</CalculatedAmount>

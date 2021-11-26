@@ -82,7 +82,7 @@
                                 <field name="product_uom" groups="uom.group_uom"/>
                             </div>
                             <field name="partner_id" widget="res_partner_many2one" attrs="{'required':[('invoice_method','!=','none')]}" context="{'res_partner_search_mode': 'customer', 'show_vat': True}"/>
-                            <field name="address_id" groups="sale.group_delivery_invoice_address"/>
+                            <field name="address_id" groups="account.group_delivery_invoice_address"/>
                             <field name="sale_order_id"/>
                             <field name="user_id" domain="[('share', '=', False)]"/>
                         </group>
@@ -92,7 +92,7 @@
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                             <field name="guarantee_limit"/>
                             <field name="invoice_method"/>
-                            <field name="partner_invoice_id" attrs="{'invisible':[('invoice_method','=', 'none')],'required':[('invoice_method','!=','none')]}" groups="sale.group_delivery_invoice_address"/>
+                            <field name="partner_invoice_id" attrs="{'invisible':[('invoice_method','=', 'none')],'required':[('invoice_method','!=','none')]}" groups="account.group_delivery_invoice_address"/>
                             <field name="pricelist_id" groups="product.group_product_pricelist" context="{'product_id':product_id}" attrs="{'invisible':[('invoice_method','=', 'none')]}"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                             <field name="currency_id" invisible="1"/>

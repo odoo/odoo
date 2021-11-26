@@ -33,6 +33,11 @@
         <field name="sequence">7</field>
     </record>
 
+    <record id="group_delivery_invoice_address" model="res.groups">
+        <field name="name">Delivery Address</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
     <record id="group_show_line_subtotals_tax_excluded" model="res.groups">
         <field name="name">Tax display B2B</field>
         <field name="comment">Show line subtotals without taxes (B2B)</field>

@@ -193,6 +193,15 @@ class AccountMove(models.Model):
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code', readonly=True)
     user_id = fields.Many2one(string='User', related='invoice_user_id',
         help='Technical field used to fit the generic behavior in mail templates.')
+    partner_shipping_id = fields.Many2one(
+        comodel_name='res.partner',
+        string='Delivery Address',
+        readonly=False,
+        store=True,
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        help="Delivery address for current invoice.",
+        compute='_compute_partner_shipping_id',
+    )
     is_move_sent = fields.Boolean(
         readonly=True,
         default=False,
@@ -502,7 +511,7 @@ class AccountMove(models.Model):
         self.partner_bank_id = bank_ids and bank_ids[0]
 
         # Find the new fiscal position.
-        delivery_partner = self.env['res.partner'].browse(self._get_invoice_delivery_partner_id())
+        delivery_partner = self.partner_shipping_id
         self.fiscal_position_id = self.env['account.fiscal.position']._get_fiscal_position(
             self.partner_id, delivery=delivery_partner)
         self._recompute_dynamic_lines()
@@ -590,6 +599,18 @@ class AccountMove(models.Model):
                             first_tax_line._onchange_amount_currency()
 
             move._recompute_dynamic_lines()
+
+    @api.onchange('partner_shipping_id', 'company_id')
+    def _onchange_partner_shipping_id(self):
+        """
+        Trigger the change of fiscal position when the shipping address is modified.
+        """
+        fiscal_position = self.env['account.fiscal.position']\
+            .with_company(self.company_id)\
+            ._get_fiscal_position(self.partner_id, delivery=self.partner_shipping_id)
+
+        if fiscal_position:
+            self.fiscal_position_id = fiscal_position
 
     @api.model
     def _get_tax_grouping_key_from_tax_line(self, tax_line):
@@ -1130,6 +1151,15 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
+
+    @api.depends('partner_id')
+    def _compute_partner_shipping_id(self):
+        for move in self:
+            if move.is_invoice(include_receipts=True):
+                addr = move.partner_id.address_get(['delivery'])
+                move.partner_shipping_id = addr and addr.get('delivery')
+            else:
+                move.partner_shipping_id = False
 
     @api.depends('company_id', 'invoice_filter_type_domain')
     def _compute_suitable_journal_ids(self):
@@ -2546,13 +2576,6 @@ class AccountMove(models.Model):
         else:
             name += self.name
         return name + (show_ref and self.ref and ' (%s%s)' % (self.ref[:50], '...' if len(self.ref) > 50 else '') or '')
-
-    def _get_invoice_delivery_partner_id(self):
-        ''' Hook allowing to retrieve the right delivery address depending of installed modules.
-        :return: A res.partner record's id representing the delivery address.
-        '''
-        self.ensure_one()
-        return self.partner_id.address_get(['delivery'])['delivery']
 
     def _get_reconciled_payments(self):
         """Helper used to retrieve the reconciled payments on this journal entry"""
