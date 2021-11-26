@@ -3,16 +3,23 @@
 
     <t t-name="web.SelectionField" owl="1">
         <t t-if="props.readonly">
-            <span t-esc="string" />
+            <span t-esc="string" t-att-raw-value="value" />
         </t>
         <t t-else="">
-            <select class="o_input" t-on-change="onChange" t-att-value="value">
-                <t t-set="options" t-value="selection" />
+            <select class="o_input" t-on-change="onChange">
                 <t t-if="!props.required">
-                    <option value="" t-esc="props.placeholder" />
+                    <option
+                        value="false"
+                        t-att-selected="!props.value"
+                        t-esc="props.placeholder"
+                    />
                 </t>
-                <t t-foreach="options" t-as="option" t-key="option">
-                    <option t-att-value="option" t-esc="options[option]" />
+                <t t-foreach="options" t-as="option" t-key="option[0]">
+                    <option
+                        t-att-selected="option[0] === value"
+                        t-att-value="stringify(option[0])"
+                        t-esc="option[1]"
+                    />
                 </t>
             </select>
         </t>
