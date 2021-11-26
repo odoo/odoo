@@ -342,12 +342,10 @@ var DataImport = AbstractAction.extend({
             if (field) {
                 if (['boolean', 'many2one', 'many2many', 'selection'].includes(type) && this.value === 'skip_record') {
                     options.import_skip_records.push(field);
-                } else if (['many2one', "many2many", "selection"].includes(type)) {
-                    if (this.value === 'set_empty') {
-                        options.import_set_empty_fields.push(field);
-                    } else {
-                        options.name_create_enabled_fields[field] = this.value === 'create';
-                    }
+                } else if (['many2one', 'many2many', 'selection'].includes(type) && this.value === 'set_empty') {
+                    options.import_set_empty_fields.push(field);
+                } else if (['many2one', 'many2many'].includes(type)) {
+                    options.name_create_enabled_fields[field] = this.value === 'create';
                 // for selection, include also 'skip' that will be interpreted as 'None' in backend.
                 } else if (['boolean','selection'].includes(type) && this.value !== 'prevent') {
                     options.fallback_values[field] = {
