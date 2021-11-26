@@ -246,14 +246,14 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skip("SelectionField in a list view", async function (assert) {
         assert.expect(3);
 
-        this.data.partner.records.forEach(function (r) {
+        serverData.models.partner.records.forEach(function (r) {
             r.color = "red";
         });
 
-        var list = await createView({
-            View: ListView,
-            model: "partner",
-            data: this.data,
+        const list = await makeView({
+            type: "list",
+            resModel: "partner",
+            serverData,
             arch: '<tree string="Colors" editable="top">' + '<field name="color"/>' + "</tree>",
         });
 
@@ -271,103 +271,101 @@ QUnit.module("Fields", (hooks) => {
         list.destroy();
     });
 
-    QUnit.skip("SelectionField, edition and on many2one field", async function (assert) {
-        assert.expect(21);
+    QUnit.test("SelectionField, edition and on many2one field", async function (assert) {
+        assert.expect(18);
 
-        this.data.partner.onchanges = { product_id: function () {} };
-        this.data.partner.records[0].product_id = 37;
-        this.data.partner.records[0].trululu = false;
+        serverData.models.partner.onchanges = { product_id: function () {} };
+        serverData.models.partner.records[0].product_id = 37;
+        serverData.models.partner.records[0].trululu = false;
 
-        var count = 0;
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                '<field name="product_id" widget="selection"/>' +
-                '<field name="trululu" widget="selection"/>' +
-                '<field name="color" widget="selection"/>' +
-                "</form>",
-            res_id: 1,
-            mockRPC: function (route, args) {
-                count++;
-                assert.step(args.method);
-                return this._super(route, args);
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="product_id" widget="selection" />
+                    <field name="trululu" widget="selection" />
+                    <field name="color" widget="selection" />
+                </form>
+            `,
+            mockRPC(route, { method }) {
+                assert.step(method);
             },
         });
 
-        assert.containsNone(form.$(".o_form_view"), "select");
+        assert.containsNone(form.el, "select");
         assert.strictEqual(
-            form.$(".o_field_widget[name=product_id]").text(),
+            form.el.querySelector(".o_field_widget[name='product_id']").textContent,
             "xphone",
             "should have rendered the many2one field correctly"
         );
-        assert.strictEqual(
-            form.$(".o_field_widget[name=product_id]").attr("raw-value"),
+        assert.hasAttrValue(
+            form.el.querySelector(".o_field_widget[name='product_id']"),
+            "raw-value",
             "37",
             "should have set the raw-value attr for many2one field correctly"
         );
+
         assert.strictEqual(
-            form.$(".o_field_widget[name=trululu]").text(),
+            form.el.querySelector(".o_field_widget[name='trululu']").textContent,
             "",
             "should have rendered the unset many2one field correctly"
         );
         assert.strictEqual(
-            form.$(".o_field_widget[name=color]").text(),
+            form.el.querySelector(".o_field_widget[name='color']").textContent,
             "Red",
             "should have rendered the selection field correctly"
         );
-        assert.strictEqual(
-            form.$(".o_field_widget[name=color]").attr("raw-value"),
+        assert.hasAttrValue(
+            form.el.querySelector(".o_field_widget[name='color']"),
+            "raw-value",
             "red",
             "should have set the raw-value attr for selection field correctly"
         );
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el, ".o_form_button_edit");
 
-        assert.containsN(form.$(".o_form_view"), "select", 3);
+        assert.containsN(form.el, "select", 3);
         assert.containsOnce(
-            form,
-            'select[name="product_id"] option:contains(xphone)',
+            form.el,
+            "select[name='product_id'] option[value='37']",
             "should have fetched xphone option"
         );
         assert.containsOnce(
-            form,
-            'select[name="product_id"] option:contains(xpad)',
+            form.el,
+            "select[name='product_id'] option[value='41']",
             "should have fetched xpad option"
         );
         assert.strictEqual(
-            form.$('select[name="product_id"]').val(),
+            form.el.querySelector("select[name='product_id']").value,
             "37",
             "should have correct product_id value"
         );
         assert.strictEqual(
-            form.$('select[name="trululu"]').val(),
+            form.el.querySelector("select[name='trululu']").value,
             "false",
             "should not have any value in trululu field"
         );
-        await testUtils.fields.editSelect(form.$('select[name="product_id"]'), 41);
+
+        const select = form.el.querySelector("select[name='product_id']");
+        select.value = "41";
+        await triggerEvent(select, null, "change");
 
         assert.strictEqual(
-            form.$('select[name="product_id"]').val(),
+            form.el.querySelector("select[name='product_id']").value,
             "41",
             "should have a value of xphone"
         );
 
         assert.strictEqual(
-            form.$('select[name="color"]').val(),
-            '"red"',
+            form.el.querySelector("select[name='color']").value,
+            `"red"`,
             "should have correct value in color field"
         );
 
         assert.verifySteps(["read", "name_search", "name_search", "onchange"]);
-        count = 0;
-        await form.reload();
-        assert.strictEqual(count, 1, "should not reload product_id relation");
-        assert.verifySteps(["read"]);
-
-        form.destroy();
     });
 
     QUnit.skip("unset selection field with 0 as key", async function (assert) {
@@ -376,7 +374,7 @@ QUnit.module("Fields", (hooks) => {
         // false. So the client must convert false to value 0 if it exists.
         assert.expect(2);
 
-        this.data.partner.fields.selection = {
+        serverData.models.partner.fields.selection = {
             type: "selection",
             selection: [
                 [0, "Value O"],
@@ -384,36 +382,38 @@ QUnit.module("Fields", (hooks) => {
             ],
         };
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch: '<form string="Partners">' + '<field name="selection"/>' + "</form>",
-            res_id: 1,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="selection" />
+                </form>
+            `,
         });
 
         assert.strictEqual(
-            form.$(".o_field_widget").text(),
+            form.el.querySelector(".o_field_widget").textContent,
             "Value O",
             "the displayed value should be 'Value O'"
         );
         assert.doesNotHaveClass(
-            form.$(".o_field_widget"),
+            form.el.querySelector(".o_field_widget"),
             "o_field_empty",
             "should not have class o_field_empty"
         );
-
-        form.destroy();
     });
 
-    QUnit.skip("unset selection field with string keys", async function (assert) {
+    QUnit.test("unset selection field with string keys", async function (assert) {
         // The server doesn't make a distinction between false value (the field
         // is unset), and selection 0, as in that case the value it returns is
         // false. So the client must convert false to value 0 if it exists. In
         // this test, it doesn't exist as keys are strings.
         assert.expect(2);
 
-        this.data.partner.fields.selection = {
+        serverData.models.partner.fields.selection = {
             type: "selection",
             selection: [
                 ["0", "Value O"],
@@ -421,80 +421,87 @@ QUnit.module("Fields", (hooks) => {
             ],
         };
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch: '<form string="Partners">' + '<field name="selection"/>' + "</form>",
-            res_id: 1,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="selection" />
+                </form>
+            `,
         });
 
         assert.strictEqual(
-            form.$(".o_field_widget").text(),
+            form.el.querySelector(".o_field_widget").textContent,
             "",
             "there should be no displayed value"
         );
         assert.hasClass(
-            form.$(".o_field_widget"),
+            form.el.querySelector(".o_field_widget"),
             "o_field_empty",
             "should have class o_field_empty"
         );
-
-        form.destroy();
     });
 
-    QUnit.skip("unset selection on a many2one field", async function (assert) {
+    QUnit.test("unset selection on a many2one field", async function (assert) {
         assert.expect(1);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                '<field name="trululu" widget="selection"/>' +
-                "</form>",
-            mockRPC: function (route, args) {
-                if (args.method === "write") {
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="trululu" widget="selection" />
+                </form>
+            `,
+            mockRPC(route, { args, method }) {
+                if (method === "write") {
                     assert.strictEqual(
-                        args.args[1].trululu,
+                        args[1].trululu,
                         false,
                         "should send 'false' as trululu value"
                     );
                 }
-                return this._super.apply(this, arguments);
-            },
-            res_id: 1,
-            viewOptions: {
-                mode: "edit",
             },
         });
 
-        await testUtils.fields.editSelect(form.$(".o_form_view select"), "false");
-        await testUtils.form.clickSave(form);
+        await click(form.el, ".o_form_button_edit");
 
-        form.destroy();
+        const select = form.el.querySelector(".o_form_view select");
+        select.value = "false";
+        await triggerEvent(select, null, "change");
+
+        await click(form.el, ".o_form_button_save");
     });
 
-    QUnit.skip("field selection with many2ones and special characters", async function (assert) {
+    QUnit.test("field selection with many2ones and special characters", async function (assert) {
         assert.expect(1);
 
         // edit the partner with id=4
-        this.data.partner.records[2].display_name = "<span>hey</span>";
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                '<field name="trululu" widget="selection"/>' +
-                "</form>",
-            res_id: 1,
-            viewOptions: { mode: "edit" },
-        });
-        assert.strictEqual(form.$('select option[value="4"]').text(), "<span>hey</span>");
+        serverData.models.partner.records[2].display_name = "<span>hey</span>";
 
-        form.destroy();
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="trululu" widget="selection" />
+                </form>
+            `,
+        });
+
+        await click(form.el, ".o_form_button_edit");
+
+        assert.strictEqual(
+            form.el.querySelector("select option[value='4']").textContent,
+            "<span>hey</span>"
+        );
     });
 
     QUnit.skip(
@@ -502,15 +509,15 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(4);
 
-            this.data.partner.onchanges = {
+            serverData.models.partner.onchanges = {
                 int_field: function () {},
             };
 
             var domain = [];
-            var form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
                 arch:
                     "<form>" +
                     '<field name="int_field"/>' +
@@ -556,10 +563,10 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("required selection widget should not have blank option", async function (assert) {
-        assert.expect(12);
+    QUnit.test("required selection widget should not have blank option", async function (assert) {
+        assert.expect(3);
 
-        this.data.partner.fields.feedback_value = {
+        serverData.models.partner.fields.feedback_value = {
             type: "selection",
             required: true,
             selection: [
@@ -569,88 +576,44 @@ QUnit.module("Fields", (hooks) => {
             default: "good",
             string: "Good",
         };
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                '<field name="feedback_value"/>' +
-                "<field name=\"color\" attrs=\"{'required': [('feedback_value', '=', 'bad')]}\"/>" +
-                "</form>",
-            res_id: 1,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="feedback_value" />
+                    <field name="color" attrs="{'required': [('feedback_value', '=', 'bad')]}" />
+                </form>
+            `,
         });
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el, ".o_form_button_edit");
 
-        var $colorField = form.$(".o_field_widget[name=color]");
-        assert.containsN($colorField, "option", 3, "Three options in non required field");
-
-        assert.hasAttrValue(
-            $colorField.find("option:first()"),
-            "style",
-            "",
-            "Should not have display=none"
+        assert.containsN(
+            form.el.querySelector(".o_field_widget[name='color']"),
+            "option",
+            3,
+            "Three options in non required field"
         );
-        assert.hasAttrValue(
-            $colorField.find("option:eq(1)"),
-            "style",
-            "",
-            "Should not have display=none"
-        );
-        assert.hasAttrValue(
-            $colorField.find("option:eq(2)"),
-            "style",
-            "",
-            "Should not have display=none"
-        );
-
-        const $requiredSelect = form.$(".o_field_widget[name=feedback_value]");
-
-        assert.containsN($requiredSelect, "option", 3, "Three options in required field");
-        assert.hasAttrValue(
-            $requiredSelect.find("option:first()"),
-            "style",
-            "display: none",
-            "Should have display=none"
-        );
-        assert.hasAttrValue(
-            $requiredSelect.find("option:eq(1)"),
-            "style",
-            "",
-            "Should not have display=none"
-        );
-        assert.hasAttrValue(
-            $requiredSelect.find("option:eq(2)"),
-            "style",
-            "",
-            "Should not have display=none"
+        assert.containsN(
+            form.el.querySelector(".o_field_widget[name='feedback_value']"),
+            "option",
+            2,
+            "Three options in required field"
         );
 
         // change value to update widget modifier values
-        await testUtils.fields.editSelect($requiredSelect, '"bad"');
-        $colorField = form.$(".o_field_widget[name=color]");
+        const select = form.el.querySelector(".o_field_widget[name='feedback_value']");
+        select.value = `"bad"`;
+        await triggerEvent(select, null, "change");
 
-        assert.containsN($colorField, "option", 3, "Three options in required field");
-        assert.hasAttrValue(
-            $colorField.find("option:first()"),
-            "style",
-            "display: none",
-            "Should have display=none"
+        assert.containsN(
+            form.el.querySelector(".o_field_widget[name='color']"),
+            "option",
+            2,
+            "Three options in non required field"
         );
-        assert.hasAttrValue(
-            $colorField.find("option:eq(1)"),
-            "style",
-            "",
-            "Should not have display=none"
-        );
-        assert.hasAttrValue(
-            $colorField.find("option:eq(2)"),
-            "style",
-            "",
-            "Should not have display=none"
-        );
-
-        form.destroy();
     });
 });
