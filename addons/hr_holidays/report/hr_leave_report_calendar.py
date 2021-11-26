@@ -44,6 +44,7 @@ class LeaveReportCalendar(models.Model):
             hl.employee_id AS employee_id,
             hl.state AS state,
             hl.department_id AS department_id,
+            hl.number_of_days as duration,
             em.company_id AS company_id,
             em.job_id AS job_id,
             COALESCE(
