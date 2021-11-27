@@ -56,7 +56,7 @@ class AccountPayment(models.Model):
                     'Check Number (%s) must be unique per Owner and Bank!'
                     '\n* Check ids: %s') % (rec.check_number, same_checks.ids))
 
-    @api.constrains('check_id')
+    @api.constrains('check_id', 'state')
     def _check_amount_and_date(self):
         for rec in self.filtered('check_id'):
             date = self.date or fields.Datetime.now()
@@ -76,6 +76,22 @@ class AccountPayment(models.Model):
                 raise UserError(_(
                     'The amount of the payment (%s) does not match the amount of the selected check (%s).\n'
                     'Please try to deselect and select check again.') % (rec.amount, rec.check_id.amount))
+
+    def action_post(self):
+        """ This method is to check when posting that a check has not already been moved by another payment """
+        for rec in self.filtered(lambda x: x.payment_method_line_id.code in ['in_third_checks', 'out_third_checks']):
+            if rec.check_id.state != 'posted':
+                raise ValidationError(_('Selected check "%s" is not posted') % rec.check_id.display_name)
+            elif (
+                    rec.payment_type == 'outbound' and rec.check_id.third_check_current_journal_id != rec.journal_id) or (
+                    rec.payment_type == 'inbound' and rec.is_internal_transfer and rec.third_check_current_journal_id != rec.destination_journal_id):
+                # check outbound payment and transfer or inbound transfer
+                raise ValidationError(_(
+                    'Check "%s" is not anymore in journal "%s", it seems it has been moved by another payment.') % (
+                        rec.check_id.display_name, rec.journal_id.name if rec.payment_type == 'outbound' else rec.destination_journal_id.name))
+            elif rec.payment_type == 'inbound' and not rec.is_internal_transfer and rec.third_check_current_journal_id:
+                raise ValidationError(_("Check '%s' is on journal '%s', we can't receive it again") % (rec.check_id.display_name, rec.journal_id.name))
+        return super().action_post()
 
     @api.onchange('payment_method_line_id', 'is_internal_transfer', 'journal_id', 'destination_journal_id')
     def reset_check_ids(self):
