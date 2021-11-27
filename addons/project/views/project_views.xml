@@ -142,7 +142,7 @@
                                 <field name="mail_template_id" context="{'default_model': 'project.task'}"/>
                                 <field name="rating_template_id" groups="project.group_project_rating" context="{'default_model': 'project.task'}"/>
                                 <field name="sequence" groups="base.group_no_one"/>
-                                <div class="alert alert-warning" role="alert" colspan='2' attrs="{'invisible': ['|', ('rating_template_id','=', False), ('disabled_rating_warning', '=', False)]}">
+                                <div class="alert alert-warning" role="alert" colspan='2' attrs="{'invisible': ['|', ('rating_template_id','=', False), ('disabled_rating_warning', '=', False)]}" groups="project.group_project_rating">
                                     <i class="fa fa-warning" title="Customer disabled on projects"/><b> Customer Ratings</b> are disabled on the following project(s) : <br/>
                                     <field name="disabled_rating_warning" class="mb-0" />
                                 </div>
