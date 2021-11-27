@@ -19,14 +19,15 @@
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2021
 # david danilov, 2021
 # shaked <shaked@laylinetech.com>, 2021
+# Jonathan Spier, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-05 10:53+0000\n"
+"POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:28+0000\n"
-"Last-Translator: shaked <shaked@laylinetech.com>, 2021\n"
+"Last-Translator: Jonathan Spier, 2021\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -295,12 +296,12 @@ msgstr "<span class=\"o_form_label\">מדיניות חיוב</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
-msgid "<span class=\"s_website_form_label_content\">A document to provide</span>"
+msgid "<span class=\"s_website_form_label_content\">Give us your feedback</span>"
 msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
-msgid "<span class=\"s_website_form_label_content\">Give us your feedback</span>"
+msgid "<span class=\"s_website_form_label_content\">Upload a document</span>"
 msgstr ""
 
 #. module: website_sale
@@ -891,6 +892,12 @@ msgstr ""
 "            ממשק מסך מגע."
 
 #. module: website_sale
+#: code:addons/website_sale/models/product_template.py:0
+#, python-format
+msgid "Categories:"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options
 msgid "Category"
@@ -904,8 +911,8 @@ msgstr "תיאור קטגוריה"
 #. module: website_sale
 #: code:addons/website_sale/models/product_template.py:0
 #, python-format
-msgid "Category: %s"
-msgstr "קטגוריה: %s"
+msgid "Category:"
+msgstr ""
 
 #. module: website_sale
 #: code:addons/website_sale/models/website_snippet_filter.py:0
@@ -1131,7 +1138,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_product__base_unit_id
 #: model:ir.model.fields,field_description:website_sale.field_product_template__base_unit_id
 msgid "Custom Unit of Measure"
-msgstr ""
+msgstr "יחידת מידה מותאמת אישית"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -2169,7 +2176,6 @@ msgid "Previous Week"
 msgstr "שבוע שעבר "
 
 #. module: website_sale
-#. openerp-web
 #: code:addons/website_sale/controllers/backend.py:0
 #, python-format
 msgid "Previous Year"

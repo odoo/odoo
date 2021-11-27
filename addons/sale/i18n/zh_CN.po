@@ -7,14 +7,16 @@
 # Ryan Zhang <so_happy_boy@hotmail.com>, 2021
 # ljsrzc007 <ljsrzc007@gmail.com>, 2021
 # 黎伟杰 <674416404@qq.com>, 2021
+# kfx2007@163.com, 2021
+# xu aaron, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-05 10:54+0000\n"
+"POT-Creation-Date: 2021-11-16 13:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: 黎伟杰 <674416404@qq.com>, 2021\n"
+"Last-Translator: xu aaron, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -795,8 +797,7 @@ msgstr "是否确定取消授权交易？此操作经确定后无法撤消。"
 msgid ""
 "As an example, if you sell pre-paid hours of services, Odoo recommends you\n"
 "                to sell extra hours when all ordered hours have been consumed."
-msgstr ""
-"举个粟子：超市里，客人从货架拿了瓶茅台到前台买单结账，而此时你收银系统里却显示茅台库存为0，系统显示没库存了，你不可能告诉客人说这瓶茅台不卖让客人别买。当然53度飞天除外。账实不符，库存不准，这些都是真实存在的，存在即合理，odoo默认允许超卖，有个模块，可以禁止超卖。开源了的，自己找吧。"
+msgstr "举个例子：假设你出售按时间计费的预付费的服务,Odoo将会在预售的时间耗尽时提示你应该出售更多的时长了."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__cost
@@ -1710,7 +1711,7 @@ msgstr "分组"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "有信息"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_update_pricelist
@@ -2264,7 +2265,7 @@ msgstr "新的报价单"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "下一个活动日历事件"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_date_deadline
@@ -3652,6 +3653,11 @@ msgid "Tags"
 msgstr "标签"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__tax_country_id
+msgid "Tax Country"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.view_quotation_tree
 msgid "Tax Total"
@@ -3695,6 +3701,13 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_sale_order_line__display_type
 msgid "Technical field for UX purpose."
 msgstr "UX用途的技术领域。"
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order__tax_country_id
+msgid ""
+"Technical field to filter the available taxes depending on the fiscal "
+"country and fiscal position."
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template

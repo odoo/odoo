@@ -6,16 +6,15 @@
 # Viktor Pogrebniak <vp@aifil.ru>, 2021
 # Evgeny <transingularity@gmail.com>, 2021
 # Vasiliy Korobatov <korobatov@gmail.com>, 2021
-# sergeiruzkiicode <sergei.ruzki@icode.by>, 2021
 # Константин Коровин <korovin74@gmail.com>, 2021
-# Сергей Шебанин <sergey@shebanin.ru>, 2021
 # Максим Дронь <dronmax@gmail.com>, 2021
 # Martin Trigaux, 2021
-# Ivan Yelizariev // IEL <yelizariev@itpp.dev>, 2021
+# Ivan Yelizariev // IEL (ellui) <yelizariev@itpp.dev>, 2021
 # ILMIR <karamov@it-projects.info>, 2021
 # Oleg Kuryan <oleg@ventor.tech>, 2021
 # Irina Fedulova <istartlin@gmail.com>, 2021
 # Диляра Дельтаева <dilya.kz93@gmail.com>, 2021
+# Сергей Шебанин <sergey@shebanin.ru>, 2021
 # 
 msgid ""
 msgstr ""
@@ -23,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:54+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Диляра Дельтаева <dilya.kz93@gmail.com>, 2021\n"
+"Last-Translator: Сергей Шебанин <sergey@shebanin.ru>, 2021\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,10 +45,8 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
-"<p class=\"o_view_nocontent_smiling_face\"> Запишите табели </p><p> Вы "
-"можете зарегистрировать и отслеживать ваши рабочие часы по проекту каждый "
-"день. Каждый час, потраченный на проект, станет стоимости и может быть "
-"выставлена в счете клиентам, если нужно. </p>"
+"\n"
+"<p class=\"o_view_nocontent_smiling_face\"> Запишите табели </p><p> Вы можете зарегистрировать и отслеживать ваши рабочие часы по проекту каждый день. Каждый час, потраченный на проект, будет переведен в стоимость и может быть выставлен в акте клиентам, если нужно. </p>"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice___candidate_orders
@@ -185,7 +182,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__amount_untaxed_invoiced
 msgid "Amount Invoiced"
-msgstr "Сфактурированная сумма"
+msgstr "Актированная сумма"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__expense_amount_untaxed_invoiced
@@ -205,7 +202,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__amount_to_invoice
 msgid "Amount to invoice"
-msgstr "Сумма к выставлению в счете"
+msgstr "Сумма к выставлению в акте"
 
 #. module: sale_timesheet
 #: model:ir.model.constraint,message:sale_timesheet.constraint_project_create_sale_order_line_unique_employee_per_wizard
@@ -319,7 +316,7 @@ msgstr "Отмена"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__sale_order_id
 msgid "Choose the Sales Order to invoice"
-msgstr "Выберите заказ на продажу для выставления счета"
+msgstr "Выберите заказ на продажу для выставления акта"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__commercial_partner_id
@@ -373,12 +370,12 @@ msgstr "Расходы и доходы"
 #: model:ir.actions.act_window,name:sale_timesheet.project_project_action_multi_create_invoice
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_invoice_view_form
 msgid "Create Invoice"
-msgstr "Создать счёт"
+msgstr "Создать акт"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_create_invoice
 msgid "Create Invoice from project"
-msgstr "Создайте счет-фактуру по проекту"
+msgstr "Создайте акт по проекту"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_create_sale_order_line
@@ -596,7 +593,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 #, python-format
 msgid "Invoice"
-msgstr "Счёт"
+msgstr "Акт"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_res_config_settings__invoice_policy
@@ -638,7 +635,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__timesheet_invoice_id
 msgid "Invoice created from the timesheet"
-msgstr "Счет, созданный табеля"
+msgstr "Акт на основе табеля"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__allow_billable
@@ -655,17 +652,17 @@ msgstr ""
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Invoices"
-msgstr "Счета"
+msgstr "Акты"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid "Invoicing"
-msgstr "Выставление счетов"
+msgstr "Актирование"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_product_timesheet_form
 msgid "Invoicing Policy"
-msgstr "Политика выставления счетов"
+msgstr "Политика актирования"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_advance_payment_inv__invoicing_timesheet_enabled
@@ -701,7 +698,7 @@ msgstr "Элемент журнала"
 #: model:product.product,name:sale_timesheet.product_service_deliver_timesheet_2
 #: model:product.template,name:sale_timesheet.product_service_deliver_timesheet_2_product_template
 msgid "Junior Architect (Invoice on Timesheets)"
-msgstr "Младший архитектор (счет-фактура на табелях)"
+msgstr "Младший архитектор (акт на основе табеля)"
 
 #. module: sale_timesheet
 #: model:product.product,name:sale_timesheet.product_service_deliver_manual
@@ -747,8 +744,8 @@ msgid ""
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
-"Задавайте количество в заказе вручную: счет на основе количества, введенного вручную, без создания аналитического счета.\n"
-"Табели учета рабочего времени в контракте: счет на основе записанных часов в соответствующем табеле.\n"
+"Задавайте количество в заказе вручную: акт на основе количества, введенного вручную, без создания аналитического счета.\n"
+"Табели учета рабочего времени в контракте: акт на основе записанных часов в соответствующем табеле.\n"
 "Создавайте задачи и вносите часы: Создайте задачу при подтверждении заказа и вносите в нее рабочие часы."
 
 #. module: sale_timesheet
@@ -887,8 +884,8 @@ msgid ""
 "Product of the sales order item. Must be a service invoiced based on "
 "timesheets on tasks."
 msgstr ""
-"Товар элемента заказ на продажу. Должно быть служебным счету, который "
-"выставляется на основе табелей задач."
+"Товар элемента заказ на продажу. Должно быть актировано на основе табелей "
+"задач."
 
 #. module: sale_timesheet
 #. openerp-web
@@ -1067,7 +1064,7 @@ msgstr "Строка продажи / сопоставления сотрудн�
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_advance_payment_inv
 msgid "Sales Advance Payment Invoice"
-msgstr "Счет на авансовый платеж"
+msgstr "Акт на авансовый платеж"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/controllers/portal.py:0
@@ -1189,13 +1186,13 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
 msgid "Sell services and invoice time spent"
-msgstr "Продавайте услуги и выставляйте счета за время"
+msgstr "Продавайте услуги и выставляйте акты за трудочасы"
 
 #. module: sale_timesheet
 #: model:product.product,name:sale_timesheet.product_service_deliver_timesheet_1
 #: model:product.template,name:sale_timesheet.product_service_deliver_timesheet_1_product_template
 msgid "Senior Architect (Invoice on Timesheets)"
-msgstr "Старший архитектор (счет-фактура на табелях)"
+msgstr "Старший архитектор (акт на основе табеля)"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__product_id
@@ -1207,7 +1204,7 @@ msgstr "Услуга"
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__service_policy
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_template__service_policy
 msgid "Service Invoicing Policy"
-msgstr "Политика выставления счетов за услуги"
+msgstr "Политика актирования за услуги"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__service_revenues
@@ -1345,7 +1342,7 @@ msgstr ""
 #: code:addons/sale_timesheet/wizard/project_create_invoice.py:0
 #, python-format
 msgid "The selected Sales Order should contain something to invoice."
-msgstr "Избранное заказ на продажу должен содержать что-то для счета-фактуры."
+msgstr "Выбранный заказ на продажу должен содержать что-то для актирования."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__pricing_type
@@ -1512,8 +1509,8 @@ msgid ""
 "Total amount to invoice on the sales order, including all items (services, "
 "storables, expenses, ...)"
 msgstr ""
-"Общая сумма счета-фактуры на заказе на продажу, включая все элементы "
-"(услуги, запасы, затраты, ...)"
+"Общая сумма акта по заказу на продажу, включая все элементы (услуги, запасы,"
+" затраты, ...)"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_bank_statement_line__timesheet_total_duration

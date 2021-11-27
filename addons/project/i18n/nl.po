@@ -3,15 +3,15 @@
 # 	* project
 # 
 # Translators:
-# Martin Trigaux, 2021
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
+# Martin Trigaux, 2021
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-05 10:53+0000\n"
+"POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -977,6 +977,7 @@ msgid "Assembling"
 msgstr "Assembleren"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Assign to Me"
 msgstr "Aan mij toewijzen"
@@ -1005,7 +1006,10 @@ msgstr "Toegewezen aan"
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__user_ids
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__user_ids
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_tree
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #, python-format
@@ -1108,7 +1112,6 @@ msgstr "Blok"
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__blocked
 #: model:project.task,legend_blocked:project.project_task_1
 #: model:project.task,legend_blocked:project.project_task_12
-#: model:project.task,legend_blocked:project.project_task_19
 #: model:project.task,legend_blocked:project.project_task_2
 #: model:project.task,legend_blocked:project.project_task_20
 #: model:project.task,legend_blocked:project.project_task_24
@@ -1167,6 +1170,7 @@ msgstr "Burndown grafiek"
 #. module: project
 #: model:project.task,legend_done:project.project_task_10
 #: model:project.task,legend_done:project.project_task_11
+#: model:project.task,legend_done:project.project_task_19
 #: model:project.task,legend_done:project.project_task_21
 #: model:project.task,legend_done:project.project_task_22
 #: model:project.task,legend_done:project.project_task_27
@@ -1630,6 +1634,11 @@ msgstr "Dagen tot deadline"
 #, python-format
 msgid "Deadline"
 msgstr "Deadline"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_message_user_assigned
+msgid "Dear"
+msgstr "Beste"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__december
@@ -2925,6 +2934,7 @@ msgstr "Naam van de taak"
 #. module: project
 #: model:project.task,legend_blocked:project.project_task_10
 #: model:project.task,legend_blocked:project.project_task_11
+#: model:project.task,legend_blocked:project.project_task_19
 #: model:project.task,legend_blocked:project.project_task_21
 #: model:project.task,legend_blocked:project.project_task_22
 #: model:project.task,legend_blocked:project.project_task_27
@@ -3452,6 +3462,11 @@ msgid "Portal Access URL"
 msgstr "Portaal toegang URL"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__portal_user_names
+msgid "Portal User Names"
+msgstr "Portaal gebruikersnamen"
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
@@ -3872,7 +3887,6 @@ msgid "Ready for Next Stage"
 msgstr "Klaar voor volgende fase"
 
 #. module: project
-#: model:project.task,legend_done:project.project_task_19
 #: model:project.task.type,legend_done:project.project_stage_3
 msgid "Ready to reopen"
 msgstr "Gereed om te heropenen"
@@ -5044,6 +5058,11 @@ msgid "Unarchive"
 msgstr "Dearchiveren"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
+msgid "Unassign Me"
+msgstr "Toewijzing aan mij ongedaan maken"
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Unassigned"
@@ -5172,6 +5191,11 @@ msgstr ""
 #: model:res.groups,name:project.group_project_user
 msgid "User"
 msgstr "Gebruiker"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_message_user_assigned
+msgid "View"
+msgstr "Weergave"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -5378,6 +5402,17 @@ msgid ""
 msgstr ""
 "Je kunt geen fasen met taken verwijderen. Je moet eerst al hun taken "
 "verwijderen."
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "You have been assigned to %s"
+msgstr "Je bent toegewezen aan %s"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_message_user_assigned
+msgid "You have been assigned to the"
+msgstr "Je bent toegewezen aan de"
 
 #. module: project
 #: code:addons/project/models/project.py:0

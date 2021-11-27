@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"POT-Creation-Date: 2021-11-16 14:47+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
 "Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -29,10 +29,9 @@ msgstr "字母數字名稱"
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_nomenclature__gs1_separator_fnc1
 msgid ""
 "Alternative regex delimiter for the FNC1 (by default, if not set, it is <GS>"
-" ASCII 29 char). The seperator must not match the begin/end of any related "
+" ASCII 29 char). The separator must not match the begin/end of any related "
 "rules pattern."
 msgstr ""
-"FNC1 的替代正則表達式分隔符（默認情況下，如果未設置，則為<GS>ASCII 29 字符）。分隔符不得與任何相關規則模式的開始/結束匹配。"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__associated_uom_id
@@ -81,8 +80,8 @@ msgstr "過期日期"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_nomenclature__gs1_separator_fnc1
-msgid "FNC1 Seperator"
-msgstr "FNC1 分離器"
+msgid "FNC1 Separator"
+msgstr ""
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__gs1_content_type
@@ -163,20 +162,18 @@ msgstr "數量"
 #. module: barcodes_gs1_nomenclature
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
 #, python-format
-msgid "The FNC1 Seperator Alternative is not a valid Regex: "
-msgstr "FNC1 分隔符替代項不是有效的正則表達式："
+msgid "The FNC1 Separator Alternative is not a valid Regex: "
+msgstr ""
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__gs1_content_type
 msgid ""
-"The GS1 content type defines to what this rule data will be handle:        *"
-" Date: the barcode will be converted into a Odoo datetime;        * Measure:"
-" the barcode's value is related to a specific UoM;        * Numeric "
-"Identifier: fixed length barcode following a specific encoding;        * "
-"Alpha-Numeric Name: variable length barcode."
+"The GS1 content type defines what kind of data the rule will process the "
+"barcode as:        * Date: the barcode will be converted into a Odoo "
+"datetime;        * Measure: the barcode's value is related to a specific "
+"UoM;        * Numeric Identifier: fixed length barcode following a specific "
+"encoding;        * Alpha-Numeric Name: variable length barcode."
 msgstr ""
-"GS1 內容類型定義了此規則數據將被處理的內容： * 日期：條碼將被轉換為 Odoo 日期時間； * 度量：條碼的值與特定的計量單位相關； * "
-"數字標識符：特定編碼後的固定長度條碼； * 字母數字名稱：可變長度條形碼。"
 
 #. module: barcodes_gs1_nomenclature
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_rule.py:0

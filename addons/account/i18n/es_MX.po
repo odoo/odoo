@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-05 10:53+0000\n"
+"POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
 "Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2021\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
@@ -2500,10 +2500,10 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
-"An error occured when computing the inalterability. Impossible to get the "
+"An error occurred when computing the inalterability. Impossible to get the "
 "unique previous posted journal entry."
 msgstr ""
-"Se produjo un error al calcular la inalterabilidad. Es imposible obtener el "
+"Ocurrió un error al calcular la inalterabilidad. Es imposible obtener el "
 "asiento de diario publicado anteriormente."
 
 #. module: account
@@ -5193,7 +5193,7 @@ msgstr "Defina como se registrarán los estados de cuenta bancarios"
 #: model:ir.model.fields,help:account.field_account_tax_report_line__is_carryover_persistent
 msgid ""
 "Defines how this report line creates carry over lines when performing tax "
-"closing.If true, the amounts carried over will always be added on top of "
+"closing. If true, the amounts carried over will always be added on top of "
 "each other: for example, a report line with a balance of 10 with an existing"
 " carryover of 50 will add an additional 10 to it when doing the closing, "
 "making a total carryover of 60. If false, the total carried over amount will"
@@ -5201,15 +5201,6 @@ msgid ""
 " 10 with an existing carryover of 50 will create a new carryover line of "
 "-40, so that the total carryover becomes 10."
 msgstr ""
-"Define cómo esta línea de reporte crea líneas de traspaso al realizar "
-"cierres fiscales. Si se establece como verdadero, los importes traspasados "
-"se agregarán encima uno del otro: por ejemplo, una línea de reporte con un "
-"balance de 10 con un traspaso existente de 50 agregará 10 adicionales al "
-"realizar el cierre, haciendo un total de 60. Si se establece como falso, el "
-"importe total traspasado se forzará en el total de esta línea de reporte: "
-"una línea de reporte con un balance de 10 con un traspaso existente de 50 "
-"creará una nueva línea de traspaso de -40, dando como resultado un traspaso "
-"total de 10."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_cash_rounding_id
@@ -6768,12 +6759,9 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_tax_report_line__is_carryover_used_in_balance
 msgid ""
 "If set, the carryover amount for this line will be used when calculating its"
-" balance in the report.This means that the carryover could affect other "
+" balance in the report. This means that the carryover could affect other "
 "lines if they are using this one in their computation."
 msgstr ""
-"Si está establecido, el importe de traspaso para esta línea se utilizará al "
-"calcular su balance en los reportes. Esto significa que el traspaso podría "
-"afectar otras líneas si utilizan esta en su cálculo."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__preceding_subtotal
@@ -7914,8 +7902,8 @@ msgstr "Apuntes contables en los que el emparejamiento no está configurado"
 #. module: account
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
-msgid "Journal should be of type of reversed entry."
-msgstr "El diario debe ser del tipo de asiento inverso."
+msgid "Journal should be the same type as the reversed entry."
+msgstr "El diario debe ser el mismo tipo que el asiento de reversa."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__automatic_entry_default_journal_id
@@ -8329,6 +8317,11 @@ msgid "Leave empty to assign the Salesperson of the invoice."
 msgstr "Mantener vacío para asignar al vendedor de la factura."
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
+msgid "Leave empty to use the default outstanding account"
+msgstr "Dejar vacío para utilizar la cuenta pendiente predeterminada"
+
+#. module: account
 #: model:ir.ui.menu,name:account.menu_finance_entries_accounting_ledgers
 msgid "Ledgers"
 msgstr "Libros mayores"
@@ -8348,11 +8341,6 @@ msgstr "Menciones legales que se tienen que imprimir en las facturas."
 #, python-format
 msgid "Less Payment"
 msgstr "Menos pagos"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
-msgid "Let empty to use the default outstanding account"
-msgstr "Dejar vacío para utilizar la cuenta pendiente predeterminada"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -13756,6 +13744,7 @@ msgstr ""
 "El país al que pertenece este plan de cuentas. Ninguno si es genérico."
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_fiscal_position__company_country_id
 #: model:ir.model.fields,help:account.field_res_company__account_fiscal_country_id
 msgid "The country to use the tax reports from for this company"
 msgstr "El país que se utilizará en los reportes fiscales de esta empresa"
@@ -13949,7 +13938,7 @@ msgstr "La posición fiscal extranjera para la que se hizo este traspaso."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__group_tax_id
-msgid "The group of taxes generator of this tax line"
+msgid "The group of taxes that generated this tax line"
 msgstr "El grupo de impuestos que generó esta línea de impuesto"
 
 #. module: account
@@ -15772,11 +15761,11 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__paired_internal_transfer_payment_id
 msgid ""
-"When an internal transfer is posted, a paired payment is created. They cross"
-" referenced trough this field"
+"When an internal transfer is posted, a paired payment is created. They are "
+"cross referenced trough this field"
 msgstr ""
 "Cuando se publica una transferencia interna, se crea un pago emparejado. Se "
-"cruzan a través de este campo."
+"referencian de forma cruzada en este campo."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_receipt_type
@@ -16230,10 +16219,10 @@ msgstr "No puede eliminar un apunte vinculado a una asiento publicado."
 #, python-format
 msgid ""
 "You cannot delete this entry, as it has already consumed a sequence number "
-"and is not the last one in the chain. Probably you should revert it instead."
+"and is not the last one in the chain. You should probably revert it instead."
 msgstr ""
-"No puede eliminar este asiento ya que ha consumido un número de secuencia y "
-"no es el último en la cadena. Probablemente debería invertirlo en su lugar."
+"No puede eliminar este asiento ya que ya consumió un número de secuencia y "
+"no es el último de la cadena. Debe revertirlo en su lugar."
 
 #. module: account
 #: code:addons/account/models/res_config_settings.py:0
