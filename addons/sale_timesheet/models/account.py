@@ -88,16 +88,6 @@ class AccountAnalyticLine(models.Model):
             if any(field_name in values for field_name in ['unit_amount', 'employee_id', 'project_id', 'task_id', 'so_line', 'amount', 'date']):
                 raise UserError(_('You cannot modify timesheets that are already invoiced.'))
 
-    @api.model
-    def _timesheet_preprocess(self, values):
-        if values.get('task_id') and not values.get('account_id'):
-            task = self.env['project.task'].browse(values.get('task_id'))
-            if task.analytic_account_id:
-                values['account_id'] = task.analytic_account_id.id
-                values['company_id'] = task.analytic_account_id.company_id.id
-        values = super(AccountAnalyticLine, self)._timesheet_preprocess(values)
-        return values
-
     def _timesheet_determine_sale_line(self):
         """ Deduce the SO line associated to the timesheet line:
             1/ timesheet on task rate: the so line will be the one from the task
