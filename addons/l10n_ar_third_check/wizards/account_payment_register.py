@@ -33,3 +33,12 @@ class AccountPaymentRegister(models.TransientModel):
             'third_check_issuer_vat': self.third_check_issuer_vat,
         })
         return vals
+
+    @api.onchange('check_number')
+    def _onchange_check_number(self):
+        for rec in self.filtered(lambda x: x.journal_id.company_id.country_id.code == "AR"):
+            try:
+                if rec.check_number:
+                    rec.check_number = '%08d' % int(rec.check_number)
+            except Exception:
+                pass
