@@ -109,11 +109,11 @@
 # qdelcourte <delcourte.quentin@hotmail.com>, 2021
 # sbr <sbr@odoo.com>, 2021
 # Rémi CAZENAVE, 2021
-# Camille Dantinne <cmd@odoo.com>, 2021
 # Cyrille de Lambert <cyrille.delambert@auguria.fr>, 2021
 # RHTodoo, 2021
 # Thomas Deleval <thd@odoo.com>, 2021
 # Cécile Collart <cco@odoo.com>, 2021
+# Camille Dantinne <cmd@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -121,7 +121,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:49+0000\n"
 "PO-Revision-Date: 2016-08-05 12:55+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2021\n"
+"Last-Translator: Camille Dantinne <cmd@odoo.com>, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -6659,7 +6659,7 @@ msgstr "Importer des fichiers .qif"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_l10n_fr_fec_import
 msgid "Import FEC files"
-msgstr ""
+msgstr "Importer des fichiers FEC"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_bank_statement_import_csv
@@ -7457,6 +7457,8 @@ msgid ""
 "Journal Entry %s is not valid. In order to proceed, all optional journal "
 "items must share the same account."
 msgstr ""
+"La pièce comptable %s n'est pas valide. Pour continuer, toutes les écritures"
+" comptables facultatives doivent partager le même compte."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -8655,7 +8657,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_report_line__carry_over_condition_method__no_negative_amount_carry_over_condition
 msgid "No negative amount"
-msgstr ""
+msgstr "Pas de montant négatif"
 
 #. module: account
 #: code:addons/account/models/ir_actions_report.py:0
@@ -9591,7 +9593,7 @@ msgstr "Paiement"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_method_line__payment_account_id
 msgid "Payment Account"
-msgstr ""
+msgstr "Compte de paiement"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -9601,7 +9603,7 @@ msgstr "Communications de Payements"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_tree
 msgid "Payment Currency"
-msgstr ""
+msgstr "Devise du paiement"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__payment_date
@@ -9873,7 +9875,7 @@ msgstr "Précisez svp une Méthode sur votre Payement."
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Please first define a fiscal country for company %s."
-msgstr ""
+msgstr "Veuillez d'abord définir un pays fiscal pour l'entreprise %s."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -10495,7 +10497,7 @@ msgstr "Remboursement créé"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_in_invoice_refund_tree
 msgid "Refund Currency"
-msgstr ""
+msgstr "Devise de remboursement"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
@@ -11675,6 +11677,8 @@ msgid ""
 "Some journal items already exist in this journal but with other accounts "
 "than the allowed ones."
 msgstr ""
+"Certaines écritures comptables existent déjà dans ce journal mais avec "
+"d'autres comptes que ceux autorisés."
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -11683,6 +11687,8 @@ msgid ""
 "Some journal items already exist with this account but in other journals "
 "than the allowed ones."
 msgstr ""
+"Certaines écritures comptables existent déjà avec ce compte mais dans "
+"d'autres journaux que ceux autorisés."
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -12802,7 +12808,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Terms & Conditions: %s"
-msgstr ""
+msgstr "Termes et conditions : %s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__narration
@@ -12865,6 +12871,7 @@ msgstr ""
 #, python-format
 msgid "The Bill/Refund date is required to validate this document."
 msgstr ""
+"La date de facturation/remboursement est requise pour valider ce document."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__country_code
@@ -13012,7 +13019,7 @@ msgstr "Le modèle de tableau pour la société (le cas échéant)"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The chosen QR-code type is not eligible for this invoice."
-msgstr ""
+msgstr "Le type de code QR choisi n'est pas éligible pour cette facture."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

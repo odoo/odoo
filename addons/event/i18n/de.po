@@ -52,12 +52,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_res_partner__event_count
 #: model:ir.model.fields,field_description:event.field_res_users__event_count
 msgid "# Events"
-msgstr ""
+msgstr "# Events"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_count_done
 msgid "# Sent"
-msgstr ""
+msgstr "# Gesendet"
 
 #. module: event
 #: model:mail.template,subject:event.event_reminder
@@ -151,7 +151,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "<i class=\"fa fa-level-up fa-rotate-90\" title=\"Confirmed\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-level-up fa-rotate-90\" title=\"Bestätigt\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -165,7 +165,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "<i class=\"fa fa-map-marker\" title=\"Location\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-map-marker\" title=\"Ort\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -912,12 +912,12 @@ msgstr "Kommunikation"
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__mail_registration_ids
 msgid "Communication related to event registrations"
-msgstr ""
+msgstr "Kommunikation in Verbindung mit Veranstaltungsanmeldungen"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Community Chat Rooms"
-msgstr ""
+msgstr "Community Chat-Räume"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__company_id
@@ -956,7 +956,7 @@ msgstr "Bestätigen"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "Confirm Attendance"
-msgstr ""
+msgstr "Teilnahme bestätigen"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -1059,7 +1059,7 @@ msgstr "Beschreibung"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_meet
 msgid "Discussion Rooms"
-msgstr ""
+msgstr "Diskussionsräume"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__display_name
@@ -1079,7 +1079,7 @@ msgstr "Anzeigename"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Display Sponsors and Exhibitors on your event pages"
-msgstr ""
+msgstr "Zeigen Sie Sponsoren und Aussteller auf Ihrer Veranstaltungsseite an"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__sequence
@@ -1244,7 +1244,7 @@ msgstr "Beginn am"
 #. module: event
 #: model:ir.model,name:event.model_event_tag
 msgid "Event Tag"
-msgstr ""
+msgstr "Event-Tag"
 
 #. module: event
 #: model:ir.model,name:event.model_event_tag_category
@@ -1274,7 +1274,7 @@ msgstr "Event Template Ticket"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_type_ticket_view_tree_from_type
 msgid "Event Template Tickets"
-msgstr ""
+msgstr "Veranstaltungsvorlage Tickets"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_type
@@ -1320,7 +1320,7 @@ msgstr "Veranstaltung: Anmeldung"
 #. module: event
 #: model:mail.template,name:event.event_registration_mail_template_badge
 msgid "Event: Registration Badge"
-msgstr ""
+msgstr "Veranstaltung: Anmelde-Badge"
 
 #. module: event
 #: model:mail.template,name:event.event_reminder
@@ -1381,6 +1381,9 @@ msgid ""
 "Events will automatically be moved into this stage when they are finished. "
 "The event moved into this stage will automatically be set as green."
 msgstr ""
+"Die Ereignisse werden automatisch in diese Phase verschoben, wenn sie "
+"beendet sind. Das in diese Phase verschobene Ereignis wird automatisch als "
+"grün gekennzeichnet."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_default_descripton
@@ -1388,6 +1391,8 @@ msgid ""
 "Every year we invite our community, partners and end-users to come and meet us! It's the ideal event to get together and present new features, roadmap of future versions, achievements of the software, workshops, training sessions, etc....\n"
 "            This event is also an opportunity to showcase our partners' case studies, methodology or developments. Be there and see directly from the source the features of the new version!"
 msgstr ""
+"Jedes Jahr laden wir unsere Community, Partner und Endnutzer ein, uns zu treffen! Es ist die ideale Veranstaltung, um zusammenzukommen und neue Funktionen, den Strategieplan für künftige Versionen, die Errungenschaften der Software, Workshops, Schulungen usw. zu präsentieren ....\n"
+"Diese Veranstaltung ist auch eine Gelegenheit, die Fallstudien, Methoden oder Entwicklungen unserer Partner zu präsentieren. Seien Sie dabei und sehen Sie sich die Funktionen der neuen Version direkt an der Quelle an!"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
@@ -1397,7 +1402,7 @@ msgstr "Erwartet"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_tree
 msgid "Expected Attendees"
-msgstr ""
+msgstr "Erwartete Teilnehmer"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
@@ -1442,11 +1447,13 @@ msgstr ""
 msgid ""
 "Foster interactions between attendees by creating virtual conference rooms"
 msgstr ""
+"Förderung der Interaktion zwischen den Teilnehmern durch Schaffung "
+"virtueller Konferenzräume"
 
 #. module: event
 #: model:event.stage,description:event.event_stage_new
 msgid "Freshly created"
-msgstr ""
+msgstr "Ganz neu erstellt"
 
 #. module: event
 #: model:event.stage,description:event.event_stage_done
@@ -1470,6 +1477,8 @@ msgstr ""
 #, python-format
 msgid "Great! Now all you have to do is wait for your attendees to show up!"
 msgstr ""
+"Großartig! Jetzt müssen Sie nur noch darauf warten, dass Ihre "
+"Teilnehmerinnen und Teilnehmer auftauchen!"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__legend_done
@@ -1549,6 +1558,8 @@ msgstr ""
 msgid ""
 "If ticketing is used, contains the earliest starting sale date of tickets."
 msgstr ""
+"Falls der Kartenverkauf genutzt wird, ist das früheste Datum des "
+"Verkaufsbeginns anzugeben."
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__now
@@ -1599,12 +1610,12 @@ msgstr "Ist ein Abonnent"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_one_day
 msgid "Is One Day"
-msgstr ""
+msgstr "Ist ein Tag"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_ongoing
 msgid "Is Ongoing"
-msgstr ""
+msgstr "Laufend"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type__seats_max
@@ -1616,7 +1627,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_default_descripton
 msgid "Join us for this 24 hours Event"
-msgstr ""
+msgstr "Nehmen Sie an dieser 24-Stunden-Veranstaltung teil"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__legend_blocked
@@ -1699,7 +1710,7 @@ msgstr "Verspätete Aktivitäten"
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Let's create your first <b>event</b>."
-msgstr ""
+msgstr "Erstellen Sie Ihr erstes <b>Event</b>."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -1714,12 +1725,12 @@ msgstr "Limitierte Sitzplätze"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Live Broadcast"
-msgstr ""
+msgstr "Live Broadcast"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track_live
 msgid "Live Mode"
-msgstr ""
+msgstr "Live-Modus"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
@@ -1793,7 +1804,7 @@ msgstr "Marketing"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
 msgid "Maximum"
-msgstr ""
+msgstr "Maximum"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_limited
@@ -1815,7 +1826,7 @@ msgstr "Maximale Anmeldungen"
 #: model:ir.model.fields,field_description:event.field_event_type_ticket__seats_max
 #: model_terms:ir.ui.view,arch_db:event.view_event_tree
 msgid "Maximum Seats"
-msgstr ""
+msgstr "Maximale Sitzplätze"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__utm_medium_id
@@ -1903,7 +1914,7 @@ msgstr "Keine weiteren Sitzplätze für diese Eintrittskarte verfügbar"
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
 msgid "No more available seats for this ticket."
-msgstr ""
+msgstr "Für dieses Ticket sind keine Plätze mehr verfügbar."
 
 #. module: event
 #: code:addons/event/models/event_event.py:0
@@ -1939,6 +1950,8 @@ msgstr "Notizen"
 #, python-format
 msgid "Now that your event is ready, click here to move it to another stage."
 msgstr ""
+"Wenn Ihr Ereignis fertig ist, klicken Sie hier, um es in eine andere Phase "
+"zu verschieben."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_needaction_counter
@@ -1994,7 +2007,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Online Exhibitors"
-msgstr ""
+msgstr "Online-Aussteller"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_sale
@@ -2021,6 +2034,8 @@ msgid ""
 "Override the default value displayed for the done state for kanban "
 "selection."
 msgstr ""
+"Überschreiben Sie den Standardwert, der für den Erledigt-Status bei der "
+"Kanban-Auswahl angezeigt wird."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__legend_normal
@@ -2029,6 +2044,8 @@ msgid ""
 "Override the default value displayed for the normal state for kanban "
 "selection."
 msgstr ""
+"Überschreiben Sie den für den Normalzustand angezeigten Standardwert für die"
+" Kanbanauswahl."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
@@ -2068,6 +2085,7 @@ msgstr "Bereit für nächste Stufe"
 #, python-format
 msgid "Ready to <b>organize events</b> in a few minutes? Let's get started!"
 msgstr ""
+"In nur wenigen Minuten <b>Events organisieren</b>? Legen Sie gleich los!"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__legend_blocked
@@ -2148,7 +2166,7 @@ msgstr "Anmeldungsmail"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_registrations_open
 msgid "Registration open"
-msgstr ""
+msgstr "Anmeldung geöffnet"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__registration_ids
@@ -2167,7 +2185,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_registrations_started
 msgid "Registrations started"
-msgstr ""
+msgstr "Anmeldungen geöffnet"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_reporting_events
@@ -2241,7 +2259,7 @@ msgstr "Geplante Lieferung"
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_limited
 #: model:ir.model.fields,field_description:event.field_event_type_ticket__seats_limited
 msgid "Seats Limit"
-msgstr ""
+msgstr "Sitzplatzbegrenzung"
 
 #. module: event
 #: model:event.type,name:event.event_type_data_ticket
@@ -2414,12 +2432,12 @@ msgstr "Das Enddatum kann nicht vor dem Anfangsdatum liegen."
 #. module: event
 #: model:event.stage,description:event.event_stage_cancelled
 msgid "The event has been cancelled"
-msgstr ""
+msgstr "Die Veranstaltung wurde abgesagt"
 
 #. module: event
 #: model:event.stage,description:event.event_stage_announced
 msgid "The event has been publicly announced"
-msgstr ""
+msgstr "Die Veranstaltung wurde öffentlich angekündigt"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__event_registrations_sold_out
@@ -2439,13 +2457,13 @@ msgstr ""
 #. module: event
 #: model:event.stage,description:event.event_stage_booked
 msgid "The place has been reserved"
-msgstr ""
+msgstr "Der Platz wurde reserviert"
 
 #. module: event
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
 msgid "The stop date cannot be earlier than the start date."
-msgstr ""
+msgstr "Das Enddatum darf nicht vor dem Startdatum liegen."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__template_id
@@ -2462,6 +2480,7 @@ msgstr ""
 #, python-format
 msgid "This is the <b>name</b> your guests will see when registering."
 msgstr ""
+"Dies ist der <b>Name</b>, den Ihre Gäste sehen, wenn sie sich anmelden."
 
 #. module: event
 #: code:addons/event/models/event_event.py:0
@@ -2530,7 +2549,7 @@ msgstr "Total"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Total Registrations for this Event"
-msgstr ""
+msgstr "Anmeldungen für diese Veranstaltung insgesamt"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track
@@ -2569,7 +2588,7 @@ msgstr "Unbestätigte Reservierung"
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_unconfirmed
 #: model_terms:ir.ui.view,arch_db:event.view_event_tree
 msgid "Unconfirmed Seats"
-msgstr ""
+msgstr "Nicht bestätigte Sitze"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_unit
@@ -2612,6 +2631,8 @@ msgstr "Standard-Zeitzone verwenden"
 #, python-format
 msgid "Use the <b>breadcrumbs</b> to go back to your kanban overview."
 msgstr ""
+"Verwenden Sie die \"<b>Brotkrumen</b>\", um zu Ihrer Kanban-Übersicht "
+"zurückzukehren."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_used
@@ -2627,7 +2648,7 @@ msgstr "Benutzer"
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "Value should be True or False (not %s)"
-msgstr ""
+msgstr "Wert sollte Wahr oder Falsch sein (nicht %s)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__address_id
@@ -2671,6 +2692,8 @@ msgid ""
 "When will your event take place? <b>Select</b> the start and end dates "
 "<b>and click Apply</b>."
 msgstr ""
+"Wann wird Ihre Veranstaltung stattfinden? <b>Wählen Sie</b> Start- und "
+"Enddatum aus und klicken Sie auf <b>Anwenden</b>."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__is_ongoing
@@ -2711,7 +2734,7 @@ msgstr "badge_of_${(object.event_id.name or '').replace('/','_')}"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "e.g. Conference for Architects"
-msgstr ""
+msgstr "z.B. Konferenz für Architekten"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
@@ -2721,7 +2744,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_form_view
 msgid "e.g. VIP Ticket"
-msgstr ""
+msgstr "z.B. VIP Ticket"
 
 #. module: event
 #: code:addons/event/models/event_registration.py:0
@@ -2753,6 +2776,8 @@ msgid ""
 "registrations have started if the current datetime is after the earliest "
 "starting date of tickets."
 msgstr ""
+"Registrierungen haben begonnen, wenn der aktuelle Zeitpunkt nach dem "
+"frühesten Startdatum der Tickets liegt."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_kanban_from_event
