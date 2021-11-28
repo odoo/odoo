@@ -9670,12 +9670,14 @@ msgid ""
 "QR-code report URL to use to generate the QR-code to scan with a banking app"
 " to perform this payment."
 msgstr ""
+"URL-адреса звіту QR-коду для створення QR-коду для сканування за допомогою "
+"банківської програми для здійснення цього платежу."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "QR-codes can only be generated for invoice entries."
-msgstr ""
+msgstr "QR-коди можуть бути створені лише для записів рахунку."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__quantity
@@ -10033,7 +10035,7 @@ msgstr "Банк партнера"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_resequence
 msgid "Resequence"
-msgstr ""
+msgstr "Послідовність"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -10053,7 +10055,7 @@ msgstr "Зробити новим"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "Reset to Processing"
-msgstr ""
+msgstr "Скинути до Обробки"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__residual
@@ -10106,7 +10108,7 @@ msgstr "Обмежити партнерів до"
 #: model:ir.model.fields,help:account.field_account_tax__tax_scope
 #: model:ir.model.fields,help:account.field_account_tax_template__tax_scope
 msgid "Restrict the use of taxes to a type of product."
-msgstr ""
+msgstr "Обмежте використання податків певним видом продукції."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_same_currency
@@ -10160,7 +10162,7 @@ msgstr "Сторнування"
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
 msgid "Reversal of: %(move_name)s, %(reason)s"
-msgstr ""
+msgstr "Скасування: %(move_name)s, %(reason)s"
 
 #. module: account
 #: code:addons/account/models/account_full_reconcile.py:0
@@ -10200,7 +10202,7 @@ msgstr "Скасувати проведення"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reversed"
-msgstr ""
+msgstr "Повернено"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
@@ -10221,7 +10223,7 @@ msgstr "Джерело"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_report__root_line_ids
 msgid "Root Report Lines"
-msgstr ""
+msgstr "Кореневі рядки звіту"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__tax_calculation_rounding_method__round_globally
@@ -10261,7 +10263,7 @@ msgstr "Дерево округлення"
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_line
 msgid "Rules for the reconciliation model"
-msgstr ""
+msgstr "Правила для моделі узгодження"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_sepa
@@ -10292,7 +10294,7 @@ msgstr "Розпродаж"
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_show_sale_receipts
 #: model:res.groups,name:account.group_sale_receipts
 msgid "Sale Receipt"
-msgstr ""
+msgstr "Квитанція продажу"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_moves_journal_sales
@@ -10353,7 +10355,7 @@ msgstr "Співставлення валюти"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tour_upload_bill__sample_bill_preview
 msgid "Sample Bill Preview"
-msgstr ""
+msgstr "Попередній перегляд прикладу рахунка постачальника"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -10455,19 +10457,22 @@ msgstr "Пошук податків"
 msgid ""
 "Search in the Statement's Label to find the Invoice/Payment's reference"
 msgstr ""
+"Здійсніть пошук у мітці виписки, щоб знайти посилання на рахунок-"
+"фактуру/платіж"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_text_location_note
 #: model:ir.model.fields,help:account.field_account_reconcile_model_template__match_text_location_note
 msgid "Search in the Statement's Note to find the Invoice/Payment's reference"
 msgstr ""
+"Шукайте у Примітках виписки, щоб знайти посилання на рахунок-фактуру/платіж"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_text_location_reference
 #: model:ir.model.fields,help:account.field_account_reconcile_model_template__match_text_location_reference
 msgid ""
 "Search in the Statement's Reference to find the Invoice/Payment's reference"
-msgstr ""
+msgstr "Шукайте у референсі виписки, щоб знайти референс рахунку/оплати"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__line_section
@@ -10584,7 +10589,7 @@ msgstr "Виберіть старий рахунок постачальника"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Select first partner"
-msgstr ""
+msgstr "Оберіть першого партнера"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__value
@@ -10664,6 +10669,8 @@ msgstr "Надіслати нагадування про рахунки та о�
 msgid ""
 "Send invoices to your customers in no time with the <b>Invoicing app</b>."
 msgstr ""
+"Надсилайте рахунки-фактури своїм клієнтам в найкоротші терміни за допомогою "
+"<b>модуля Виставлення рахунків</b>."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_id
@@ -10695,12 +10702,12 @@ msgstr "Надіслати квитанції через email"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Send the invoice and check what the customer will receive."
-msgstr ""
+msgstr "Надсилайте рахунки та перевіряйсте, що отримає клієнт."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill_email_confirm
 msgid "Send your email to"
-msgstr ""
+msgstr "Надішліть ваш електронний лист до"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
@@ -10748,7 +10755,7 @@ msgstr "Порядковий номер"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__sequence_number_reset
 msgid "Sequence Number Reset"
-msgstr ""
+msgstr "Скидання порядкового номера"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__sequence_override_regex
@@ -10762,7 +10769,7 @@ msgstr "Регулярний вираз перевизначення послі�
 #: model:ir.model.fields,field_description:account.field_account_payment__sequence_prefix
 #: model:ir.model.fields,field_description:account.field_sequence_mixin__sequence_prefix
 msgid "Sequence Prefix"
-msgstr ""
+msgstr "Префікс послідовності"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report_line__sequence
@@ -10796,7 +10803,7 @@ msgstr "Послуги"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Set a price"
-msgstr ""
+msgstr "Встановіть ціну"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
@@ -10893,12 +10900,12 @@ msgstr ""
 #. module: account
 #: model:res.groups,name:account.group_account_readonly
 msgid "Show Accounting Features - Readonly"
-msgstr ""
+msgstr "Показати функцію бухобліку - лише читання"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__show_decimal_separator
 msgid "Show Decimal Separator"
-msgstr ""
+msgstr "Показати десятковий роздільник"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__show_force_tax_included
@@ -10915,7 +10922,7 @@ msgstr "Показати всі функції бухобліку"
 #: model:ir.model.fields,field_description:account.field_account_move__show_name_warning
 #: model:ir.model.fields,field_description:account.field_account_payment__show_name_warning
 msgid "Show Name Warning"
-msgstr ""
+msgstr "Показати попередження імені"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__show_partner_bank_account
@@ -10928,13 +10935,13 @@ msgstr "Показати банківський рахунок партнера"
 #: model:ir.model.fields,field_description:account.field_account_move__show_reset_to_draft_button
 #: model:ir.model.fields,field_description:account.field_account_payment__show_reset_to_draft_button
 msgid "Show Reset To Draft Button"
-msgstr ""
+msgstr "Показати кнопку Скинути в чернетку "
 
 #. module: account
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Show Unreconciled Bank Statement Line"
-msgstr ""
+msgstr "Показати неузгоджений рядок банківської виписки"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -10982,7 +10989,7 @@ msgstr "Показати стандартні терміни та умови н�
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Show unposted entries"
-msgstr ""
+msgstr "Показати неопубліковані записи"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_snailmail_account
@@ -10996,6 +11003,8 @@ msgid ""
 "Some journal items already exist in this journal but with accounts from "
 "different types than the allowed ones."
 msgstr ""
+"Деякі статті журналу вже існують у цьому журналі, але з рахунками інших "
+"типів, ніж дозволені."
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -11004,6 +11013,8 @@ msgid ""
 "Some journal items already exist in this journal but with other accounts "
 "than the allowed ones."
 msgstr ""
+"Деякі статті журналу вже існують у цьому журналі, але в інших рахунках, ніж "
+"дозволені."
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -11012,6 +11023,8 @@ msgid ""
 "Some journal items already exist with this account but in other journals "
 "than the allowed ones."
 msgstr ""
+"Деякі статті журналу вже існують у цьому рахунку, але в інших журналах, ніж "
+"дозволені."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__bank_bic
@@ -11021,7 +11034,7 @@ msgstr "Інколи називається BIC або Swift."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__source_currency_id
 msgid "Source Currency"
-msgstr ""
+msgstr "Джерело валюти"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
@@ -11098,7 +11111,7 @@ msgstr "Стан кроку набору даних банку"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_setup_bill_state
 msgid "State of the onboarding bill step"
-msgstr ""
+msgstr "Крок етапу створення рахунка постачальника"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_setup_coa_state
@@ -11108,7 +11121,7 @@ msgstr "Стан кроку злученого плану рахунків"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_onboarding_create_invoice_state
 msgid "State of the onboarding create invoice step"
-msgstr ""
+msgstr "Етап створення рахунка-фактури"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_setup_fy_data_state
@@ -11139,7 +11152,7 @@ msgstr "Виписка"
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "Statement %s confirmed."
-msgstr ""
+msgstr "Виписка %s підтверджена."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_line_id
@@ -11165,7 +11178,7 @@ msgstr "Виписки"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_statement_ids
 msgid "Statements matched to this payment"
-msgstr ""
+msgstr "Виписка узгоджена з цим платежем"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -11242,7 +11255,7 @@ msgstr "Підрядки"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report__root_line_ids
 msgid "Subset of line_ids, containing the lines at the root of the report."
-msgstr ""
+msgstr "Підмножина line_ids, що містить рядки в корені звіту."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cashbox_line__subtotal
@@ -11260,19 +11273,19 @@ msgstr "Підтип"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__rule_type__writeoff_suggestion
 msgid "Suggest a write-off"
-msgstr ""
+msgstr "Запропонуйте списання"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__writeoff_suggestion
 msgid "Suggest counterpart values"
-msgstr ""
+msgstr "Запропонуйте відповідні значення"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__suitable_journal_ids
 #: model:ir.model.fields,field_description:account.field_account_move__suitable_journal_ids
 #: model:ir.model.fields,field_description:account.field_account_payment__suitable_journal_ids
 msgid "Suitable Journal"
-msgstr ""
+msgstr "Відповідний журнал"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__supplier_rank
@@ -11401,7 +11414,7 @@ msgstr "Журнал касового методу податків"
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__use_in_tax_closing
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__use_in_tax_closing
 msgid "Tax Closing Entry"
-msgstr ""
+msgstr "Запис закриття податку"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__amount_type
@@ -11550,7 +11563,7 @@ msgstr "Шаблони податків"
 #: model:ir.model.fields,field_description:account.field_account_tax_template__type_tax_use
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Tax Type"
-msgstr ""
+msgstr "Тип податку"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_by_group
@@ -11594,12 +11607,17 @@ msgid ""
 "not both at the same time. invoice_tax_id and refund_tax_id should not be "
 "set together."
 msgstr ""
+"Шаблони рядків розподілу податків мають застосовуватися до рахунків-фактур "
+"або відшкодувань, а не до обох одночасно. invoice_tax_id та refund_tax_id не"
+" слід встановлювати разом."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_repartition_line_id
 msgid ""
 "Tax distribution line that caused the creation of this move line, if any"
 msgstr ""
+"Рядок розподілу податків, яка спричинила створення цього рядка переміщення, "
+"якщо така є"
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -11609,6 +11627,9 @@ msgid ""
 "at the same time. invoice_tax_id and refund_tax_id should not be set "
 "together."
 msgstr ""
+"Рядок розподілу податків мають застосовуватися до рахунків-фактур або "
+"відшкодувань, а не до обох одночасно. invoice_tax_id та refund_tax_id не "
+"слід встановлювати разом."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_tax_name_company_uniq
@@ -11722,6 +11743,8 @@ msgstr "Технічне поле для призначення UX."
 #: model:ir.model.fields,help:account.field_account_payment__posted_before
 msgid "Technical field for knowing if the move has been posted before"
 msgstr ""
+"Технічне поле для того, щоб дізнатися, чи було переміщення опубліковано "
+"раніше"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__balance
@@ -11736,25 +11759,25 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_bank_statement__all_lines_reconciled
 msgid ""
 "Technical field indicating if all statement lines are fully reconciled."
-msgstr ""
+msgstr "Технічне поле, яке вказує, чи всі рядки заяв повністю звірені."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__is_matched
 msgid ""
 "Technical field indicating if the payment has been matched with a statement "
 "line."
-msgstr ""
+msgstr "Технічне поле, яке вказує, чи збігається платіж із рядком виписки."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__is_reconciled
 msgid "Technical field indicating if the payment is already reconciled."
-msgstr ""
+msgstr "Технічне поле із зазначенням того, чи платіж уже звірено."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__is_reconciled
 msgid ""
 "Technical field indicating if the statement line is already reconciled."
-msgstr ""
+msgstr "Технічне поле, яке вказує, чи вже узгоджено рядок виписки."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__show_decimal_separator
@@ -11762,6 +11785,8 @@ msgid ""
 "Technical field to decide if we should show the decimal separator for the "
 "regex matching field."
 msgstr ""
+"Технічне поле, щоб вирішити, чи потрібно показувати десятковий роздільник "
+"для поля співставлення регулярного виразу."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__is_valid_balance_start
@@ -11769,6 +11794,8 @@ msgid ""
 "Technical field to display a warning message in case starting balance is "
 "different than previous ending balance"
 msgstr ""
+"Технічне поле для відображення попереджувального повідомлення, якщо "
+"початковий баланс відрізняється від попереднього кінцевого балансу"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__bank_partner_id
@@ -11880,12 +11907,16 @@ msgid ""
 "Technical field used to indicate the user can edit the wizard content such "
 "as the amount."
 msgstr ""
+"Технічне поле, яке використовується для вказівки користувача, який може "
+"редагувати вміст помічника, наприклад суму."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_register__can_group_payments
 msgid ""
 "Technical field used to indicate the user can see the 'group_payments' box."
 msgstr ""
+"Технічне поле, яке використовується для позначення, що користувач може "
+"бачити поле 'group_payments'."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__tax_cash_basis_rec_id
@@ -11915,6 +11946,8 @@ msgid ""
 "Technical field used to know whether the field `partner_bank_id` needs to be"
 " displayed or not in the payments form views"
 msgstr ""
+"Технічне поле, яке використовується для визначення того, чи потрібно "
+"відображати поле `partner_bank_id` у переглядах форми платежів"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__require_partner_bank_account
@@ -11923,6 +11956,8 @@ msgid ""
 "Technical field used to know whether the field `partner_bank_id` needs to be"
 " required or not in the payments form views"
 msgstr ""
+"Технічне поле, яке використовується, щоб знати, чи потрібне поле "
+"`partner_bank_id` у переглядах форми платежів чи ні"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_exigible
@@ -11983,6 +12018,9 @@ msgid ""
 "conversion tooltip. The tooltip informs a currency conversion will be "
 "performed with the transfer."
 msgstr ""
+"Технічне поле. Використовується, щоб вказати, чи відображати підказку про "
+"конвертацію валют. Підказка повідомляє, що конвертація валюти буде виконана "
+"разом із переказом."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_currency__display_rounding_warning
@@ -11991,11 +12029,14 @@ msgid ""
 "warning. The warning informs a rounding factor change might be dangerous on "
 "res.currency's form view."
 msgstr ""
+"Технічне поле. Використовується, щоб визначити, чи відображати попередження "
+"про округлення. Попередження повідомляє, що зміна коефіцієнта округлення "
+"може бути небезпечною у вигляді форми res.currency."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model_line__amount
 msgid "Technical shortcut to parse the amount to a float"
-msgstr ""
+msgstr "Технічний ярлик для аналізу суми до плаваючої"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__chart_template_id
@@ -12005,7 +12046,7 @@ msgstr "Шаблон "
 #. module: account
 #: model:ir.model,name:account.model_account_group_template
 msgid "Template for Account Groups"
-msgstr ""
+msgstr "Шаблон для груп рахунків"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_template
@@ -14683,7 +14724,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The entry %s (id %s) is already posted."
-msgstr ""
+msgstr "Запис %s (id %s) вже опубліковано."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
