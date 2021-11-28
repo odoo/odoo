@@ -90,13 +90,8 @@ class AccountAnalyticLine(models.Model):
 
     @api.model
     def _timesheet_preprocess(self, values):
-        if values.get('task_id') and not values.get('account_id'):
-            task = self.env['project.task'].browse(values.get('task_id'))
-            if task.analytic_account_id:
-                values['account_id'] = task.analytic_account_id.id
-                values['company_id'] = task.analytic_account_id.company_id.id
-        values = super(AccountAnalyticLine, self)._timesheet_preprocess(values)
-        return values
+        # TODO: remove me in master
+        return super()._timesheet_preprocess(values)
 
     def _timesheet_determine_sale_line(self):
         """ Deduce the SO line associated to the timesheet line:
