@@ -7,7 +7,7 @@ registerModel({
     name: 'mail.activity_type',
     identifyingFields: ['id'],
     fields: {
-        activities: one2many('mail.activity', {
+        activities: one2many('Activity', {
             inverse: 'type',
         }),
         displayName: attr(),

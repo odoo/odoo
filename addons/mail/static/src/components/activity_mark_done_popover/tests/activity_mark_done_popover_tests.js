@@ -42,7 +42,7 @@ QUnit.test('activity mark done popover simplest layout', async function (assert)
     assert.expect(6);
 
     await this.start();
-    const activity = this.messaging.models['mail.activity'].create({
+    const activity = this.messaging.models['Activity'].create({
         canWrite: true,
         category: 'not_upload_file',
         id: 12,
@@ -86,7 +86,7 @@ QUnit.test('activity with force next mark done popover simplest layout', async f
     assert.expect(6);
 
     await this.start();
-    const activity = this.messaging.models['mail.activity'].create({
+    const activity = this.messaging.models['Activity'].create({
         canWrite: true,
         category: 'not_upload_file',
         chaining_type: 'trigger',
@@ -148,7 +148,7 @@ QUnit.test('activity mark done popover mark done without feedback', async functi
             return this._super(...arguments);
         },
     });
-    const activity = this.messaging.models['mail.activity'].create({
+    const activity = this.messaging.models['Activity'].create({
         canWrite: true,
         category: 'not_upload_file',
         id: 12,
@@ -184,7 +184,7 @@ QUnit.test('activity mark done popover mark done with feedback', async function 
             return this._super(...arguments);
         },
     });
-    const activity = this.messaging.models['mail.activity'].create({
+    const activity = this.messaging.models['Activity'].create({
         canWrite: true,
         category: 'not_upload_file',
         id: 12,
@@ -228,7 +228,7 @@ QUnit.test('activity mark done popover mark done and schedule next', async funct
         },
         env: { bus },
     });
-    const activity = this.messaging.models['mail.activity'].create({
+    const activity = this.messaging.models['Activity'].create({
         canWrite: true,
         category: 'not_upload_file',
         id: 12,
@@ -269,7 +269,7 @@ QUnit.test('[technical] activity mark done & schedule next with new action', asy
         },
         env: { bus },
     });
-    const activity = this.messaging.models['mail.activity'].create({
+    const activity = this.messaging.models['Activity'].create({
         canWrite: true,
         category: 'not_upload_file',
         id: 12,
