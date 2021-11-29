@@ -8,10 +8,11 @@ import { FormRenderer } from "@web/views/form/form_renderer";
 import { useModel } from "@web/views/helpers/model";
 import { standardViewProps } from "@web/views/helpers/standard_view_props";
 import { useSetupView } from "@web/views/helpers/view_hook";
-import { getActiveActions, processField } from "@web/views/helpers/view_utils";
+import { getActiveActions } from "@web/views/helpers/view_utils";
 import { Layout } from "@web/views/layout";
 import { RelationalModel } from "@web/views/relational_model";
 import { useViewButtons } from "@web/views/view_button/hook";
+import { Field } from "@web/fields/field";
 
 const { Component, useState } = owl;
 const viewRegistry = registry.category("views");
@@ -25,7 +26,7 @@ export class FormArchParser extends XMLParser {
         const activeFields = {};
         this.visitXML(xmlDoc, (node) => {
             if (node.tagName === "field") {
-                const fieldInfo = processField(node, fields, "form");
+                const fieldInfo = Field.parseFieldNode(node, fields, "form");
                 const field = fields[fieldInfo.name];
                 if (field.views) {
                     fieldInfo.views = {};

@@ -2,6 +2,9 @@
 import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { useEffect } from "@web/core/utils/hooks";
+import { archParseBoolean } from "@web/views/helpers/utils";
+import { snakeToCamel } from "@web/core/utils/strings";
+import { getX2MViewModes, X2M_TYPES } from "@web/views/helpers/view_utils";
 
 const { Component, tags } = owl;
 
@@ -110,6 +113,65 @@ Field.getEffectiveFieldComponent = function (record, type, fieldName) {
     }
     // todo: remove fallback? yep
     return fieldRegistry.get(type, DefaultField);
+};
+
+Field.parseFieldNode = function (node, fields, viewType) {
+    const name = node.getAttribute("name");
+    const widget = node.getAttribute("widget");
+    const field = fields[name];
+    const fieldInfo = {
+        name,
+        string: node.getAttribute("string") || field.string,
+        widget,
+        onChange: archParseBoolean(node.getAttribute("on_change")),
+        optionsAttribute: node.getAttribute("options") || "{}",
+        modifiersAttribute: node.getAttribute("modifiers") || "{}",
+        FieldComponent: Field.getEffectiveFieldComponent({ fields, viewType }, widget, name),
+        attrs: {},
+    };
+    for (const attribute of node.attributes) {
+        if (attribute.name in Field.forbiddenAttributeNames) {
+            throw new Error(Field.forbiddenAttributeNames[attribute.name]);
+        }
+
+        // prepare field decorations
+        if (attribute.name.startsWith("decoration-")) {
+            const decorationName = attribute.name.replace("decoration-", "");
+            fieldInfo.decorationAttributes = fieldInfo.decorationAttributes || {};
+            fieldInfo.decorationAttributes[decorationName] = attribute.value;
+        }
+
+        // FIXME: black list special attributes like on_change, name... ?
+        fieldInfo.attrs[snakeToCamel(attribute.name)] = attribute.value;
+    }
+    if (X2M_TYPES.includes(field.type)) {
+        fieldInfo.viewMode = getX2MViewModes(node.getAttribute("mode"))[0];
+    }
+
+    // if (!fieldInfo.invisible && X2M_TYPES.includes(field.type)) {
+    //     fieldInfo.relation = field.relation;
+    //     const relatedFields = {
+    //         id: { name: "id", type: "integer", readonly: true },
+    //     };
+    //     if (FieldClass.useSubView) {
+    //         // FIXME: this part is incomplete, we have to parse the subview archs
+    //         // and extract the field info
+    //         // fieldInfo.views = field.views;
+    //         // const firstView = fieldInfo.views[fieldInfo.viewMode];
+    //         // if (firstView) {
+    //         //     Object.assign(relatedFields, firstView.fields);
+    //         // }
+    //     }
+    //     // add fields required by specific FieldComponents
+    //     Object.assign(relatedFields, FieldClass.fieldsToFetch);
+    //     // special case for color field
+    //     const colorField = fieldInfo.options.color_field;
+    //     if (colorField) {
+    //         relatedFields[colorField] = { name: colorField, type: "integer" };
+    //     }
+    //     fieldInfo.relatedFields = relatedFields;
+    // }
+    return fieldInfo;
 };
 
 Field.forbiddenAttributeNames = {

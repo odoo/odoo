@@ -8,10 +8,11 @@ import { useModel } from "@web/views/helpers/model";
 import { standardViewProps } from "@web/views/helpers/standard_view_props";
 import { useSetupView } from "@web/views/helpers/view_hook";
 import { Layout } from "@web/views/layout";
-import { getActiveActions, processButton, processField } from "../helpers/view_utils";
+import { getActiveActions, processButton } from "../helpers/view_utils";
 import { ListRenderer } from "./list_renderer";
 import { RelationalModel } from "../relational_model";
 import { useViewButtons } from "@web/views/view_button/hook";
+import { Field } from "@web/fields/field";
 
 const { onWillStart } = owl.hooks;
 
@@ -29,7 +30,7 @@ export class GroupListArchParser extends XMLParser {
                     id: buttonId++,
                 });
             } else if (node.tagName === "field") {
-                const fieldInfo = processField(node, fields, "list");
+                const fieldInfo = Field.parseFieldNode(node, fields, "list");
                 activeFields[fieldInfo.name] = fieldInfo;
             }
         });
@@ -75,7 +76,7 @@ export class ListArchParser extends XMLParser {
                 }
             } else if (node.tagName === "field") {
                 if (isAttr(node, "invisible").falsy(true)) {
-                    const fieldInfo = processField(node, fields, "list");
+                    const fieldInfo = Field.parseFieldNode(node, fields, "list");
                     activeFields[fieldInfo.name] = fieldInfo;
                     columns.push({
                         ...fieldInfo,

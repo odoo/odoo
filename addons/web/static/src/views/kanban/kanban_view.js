@@ -7,12 +7,13 @@ import { usePager } from "@web/search/pager_hook";
 import { useModel } from "@web/views/helpers/model";
 import { standardViewProps } from "@web/views/helpers/standard_view_props";
 import { useSetupView } from "@web/views/helpers/view_hook";
-import { getActiveActions, processField } from "@web/views/helpers/view_utils";
+import { getActiveActions } from "@web/views/helpers/view_utils";
 import { KanbanModel } from "@web/views/kanban/kanban_model";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 import { Layout } from "@web/views/layout";
 import { useViewButtons } from "@web/views/view_button/hook";
 import { ViewNotFoundError } from "@web/webclient/actions/action_service";
+import { Field } from "@web/fields/field";
 
 const viewRegistry = registry.category("views");
 
@@ -117,7 +118,7 @@ export class KanbanArchParser extends XMLParser {
             }
             // Case: field node
             if (node.tagName === "field") {
-                const fieldInfo = processField(node, fields, "kanban");
+                const fieldInfo = Field.parseFieldNode(node, fields, "kanban");
                 const name = fieldInfo.name;
                 activeFields[name] = fieldInfo;
                 Object.assign(tooltips, fieldInfo.options.group_by_tooltip);
