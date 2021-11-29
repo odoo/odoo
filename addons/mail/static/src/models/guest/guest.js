@@ -4,7 +4,7 @@ import { attr, one2many, one2one } from '@mail/model/model_field';
 import { registerModel } from '@mail/model/model_core';
 
 registerModel({
-    name: 'mail.guest',
+    name: 'Guest',
     identifyingFields: ['id'],
     modelMethods: {
         /**

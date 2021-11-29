@@ -128,7 +128,7 @@ registerModel({
         /**
          * If set, this card represents an invitation of this guest to this call.
          */
-        invitedGuest: many2one('mail.guest'),
+        invitedGuest: many2one('Guest'),
         /**
          * If set, this card represents an invitation of this partner to this call.
          */
