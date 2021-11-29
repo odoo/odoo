@@ -30,9 +30,9 @@ QUnit.test('insert: should create and link a new record for an empty x2one field
     assert.expect(2);
     await this.start();
 
-    const contact = this.messaging.models['test.contact'].create({ id: 10 });
+    const contact = this.messaging.models['TestContact'].create({ id: 10 });
     contact.update({ address: insert({ id: 10 }) });
-    const address = this.messaging.models['test.address'].findFromIdentifyingData({ id: 10 });
+    const address = this.messaging.models['TestAddress'].findFromIdentifyingData({ id: 10 });
     assert.strictEqual(
         contact.address,
         address,
@@ -49,13 +49,13 @@ QUnit.test('insert: should create and replace a new record for a non-empty x2one
     assert.expect(3);
     await this.start();
 
-    const contact = this.messaging.models['test.contact'].create({
+    const contact = this.messaging.models['TestContact'].create({
         id: 10,
         address: insertAndReplace({ id: 10 }),
     });
-    const address10 = this.messaging.models['test.address'].findFromIdentifyingData({ id: 10 });
+    const address10 = this.messaging.models['TestAddress'].findFromIdentifyingData({ id: 10 });
     contact.update({ address: insert({ id: 20 }) });
-    const address20 = this.messaging.models['test.address'].findFromIdentifyingData({ id: 20 });
+    const address20 = this.messaging.models['TestAddress'].findFromIdentifyingData({ id: 20 });
     assert.strictEqual(
         contact.address,
         address20,
@@ -77,14 +77,14 @@ QUnit.test('insert: should update the existing record for an x2one field', async
     assert.expect(2);
     await this.start();
 
-    const contact = this.messaging.models['test.contact'].create({
+    const contact = this.messaging.models['TestContact'].create({
         id: 10,
         address: insertAndReplace({
             id: 10,
             addressInfo: 'address 10',
         }),
     });
-    const address10 = this.messaging.models['test.address'].findFromIdentifyingData({ id: 10 });
+    const address10 = this.messaging.models['TestAddress'].findFromIdentifyingData({ id: 10 });
     contact.update({
         address: insert({
             id: 10,
@@ -107,9 +107,9 @@ QUnit.test('insert: should create and link a new record for an x2many field', as
     assert.expect(3);
     await this.start();
 
-    const contact = this.messaging.models['test.contact'].create({ id: 10 });
+    const contact = this.messaging.models['TestContact'].create({ id: 10 });
     contact.update({ tasks: insert({ id: 10 }) });
-    const task = this.messaging.models['test.task'].findFromIdentifyingData({ id: 10 });
+    const task = this.messaging.models['TestTask'].findFromIdentifyingData({ id: 10 });
     assert.strictEqual(
         contact.tasks.length,
         1,
@@ -131,13 +131,13 @@ QUnit.test('insert: should create and add a new record for an x2many field', asy
     assert.expect(4);
     await this.start();
 
-    const contact = this.messaging.models['test.contact'].create({
+    const contact = this.messaging.models['TestContact'].create({
         id: 10,
         tasks: insertAndReplace({ id: 10 }),
     });
-    const task10 = this.messaging.models['test.task'].findFromIdentifyingData({ id: 10 });
+    const task10 = this.messaging.models['TestTask'].findFromIdentifyingData({ id: 10 });
     contact.update({ tasks: insert({ id: 20 }) });
-    const task20 = this.messaging.models['test.task'].findFromIdentifyingData({ id: 20 });
+    const task20 = this.messaging.models['TestTask'].findFromIdentifyingData({ id: 20 });
     assert.strictEqual(
         contact.tasks.length,
         2,
@@ -164,14 +164,14 @@ QUnit.test('insert: should update existing records for an x2many field', async f
     assert.expect(3);
     await this.start();
 
-    const contact = this.messaging.models['test.contact'].create({
+    const contact = this.messaging.models['TestContact'].create({
         id: 10,
         tasks: insertAndReplace({
             id: 10,
             title: 'task 10',
         }),
     });
-    const task = this.messaging.models['test.task'].findFromIdentifyingData({ id: 10 });
+    const task = this.messaging.models['TestTask'].findFromIdentifyingData({ id: 10 });
     contact.update({
         tasks: insert({
             id: 10,

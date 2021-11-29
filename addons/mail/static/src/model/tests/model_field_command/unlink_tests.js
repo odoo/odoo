@@ -31,11 +31,11 @@ QUnit.test('unlink: should unlink the record for x2one field', async function (a
     assert.expect(2);
     await this.start();
 
-    const contact = this.messaging.models['test.contact'].create({
+    const contact = this.messaging.models['TestContact'].create({
         id: 10,
         address: insertAndReplace({ id: 10 }),
     });
-    const address = this.messaging.models['test.address'].findFromIdentifyingData({ id: 10 });
+    const address = this.messaging.models['TestAddress'].findFromIdentifyingData({ id: 10 });
     contact.update({ address: unlink() });
     assert.strictEqual(
         contact.address,
@@ -53,15 +53,15 @@ QUnit.test('unlink: should unlink the specified record for x2many field', async 
     assert.expect(2);
     await this.start();
 
-    const contact = this.messaging.models['test.contact'].create({
+    const contact = this.messaging.models['TestContact'].create({
         id: 10,
         tasks: insertAndReplace([
             { id: 10 },
             { id: 20 },
         ]),
     });
-    const task10 = this.messaging.models['test.task'].findFromIdentifyingData({ id: 10 });
-    const task20 = this.messaging.models['test.task'].findFromIdentifyingData({ id: 20 });
+    const task10 = this.messaging.models['TestTask'].findFromIdentifyingData({ id: 10 });
+    const task20 = this.messaging.models['TestTask'].findFromIdentifyingData({ id: 20 });
     contact.update({ tasks: unlink(task10) });
     assert.ok(
         contact.tasks instanceof Array &&

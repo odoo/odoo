@@ -30,11 +30,11 @@ QUnit.test('unlinkAll: should set x2one field undefined', async function (assert
     assert.expect(2);
     await this.start();
 
-    const contact = this.messaging.models['test.contact'].create({
+    const contact = this.messaging.models['TestContact'].create({
         id: 10,
         address: insertAndReplace({ id: 20 }),
     });
-    const address = this.messaging.models['test.address'].findFromIdentifyingData({ id: 20 });
+    const address = this.messaging.models['TestAddress'].findFromIdentifyingData({ id: 20 });
     contact.update({ address: unlinkAll() });
     assert.strictEqual(
         contact.address,
@@ -52,13 +52,13 @@ QUnit.test('unlinkAll: should set x2many field an empty array', async function (
     assert.expect(2);
     await this.start();
 
-    const contact = this.messaging.models['test.contact'].create({
+    const contact = this.messaging.models['TestContact'].create({
         id: 10,
         tasks: insertAndReplace({
             id: 20,
         }),
     });
-    const task = this.messaging.models['test.task'].findFromIdentifyingData({ id: 20 });
+    const task = this.messaging.models['TestTask'].findFromIdentifyingData({ id: 20 });
     contact.update({ tasks: unlinkAll() });
     assert.strictEqual(
         contact.tasks.length,
