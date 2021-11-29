@@ -18,21 +18,6 @@ export class Composer extends Component {
     setup() {
         super.setup();
         this.isDropZoneVisible = useDragVisibleDropZone();
-        /**
-         * Reference of the emoji popover. Useful to include emoji popover as
-         * contained "inside" the composer.
-         */
-        this._emojisPopoverRef = useRef('emojisPopover');
-        /**
-         * Reference of the file uploader.
-         * Useful to programmatically prompts the browser file uploader.
-         */
-        this._fileUploaderRef = useRef('fileUploader');
-        /**
-         * Reference of the text input component. Useful to save state in store
-         * before inserting emoji.
-         */
-        this._textInputRef = useRef('textInput');
         this._onClickCaptureGlobal = this._onClickCaptureGlobal.bind(this);
         onMounted(() => this._mounted());
         onWillUnmount(() => this._willUnmount());
@@ -70,7 +55,7 @@ export class Composer extends Component {
      */
     contains(node) {
         // emoji popover is outside but should be considered inside
-        const emojisPopover = this._emojisPopoverRef.comp;
+        const emojisPopover = this.refs.emojisPopover;
         if (emojisPopover && emojisPopover.contains(node)) {
             return true;
         }
@@ -165,7 +150,10 @@ export class Composer extends Component {
      * @private
      */
     _onClickAddAttachment() {
-        this._fileUploaderRef.comp.openBrowserFileUploader();
+        if (!this.refs.fileUploader) {
+            return;
+        }
+        this.refs.fileUploader.openBrowserFileUploader();
         if (!this.messaging.device.isMobileDevice) {
             this.composerView.update({ doFocus: true });
         }
@@ -236,7 +224,10 @@ export class Composer extends Component {
      * @param {FileList} detail.files
      */
     async _onDropZoneFilesDropped(detail) {
-        await this._fileUploaderRef.comp.uploadFiles(detail.files);
+        if (!this.refs.fileUploader) {
+            return;
+        }
+        await this.refs.fileUploader.uploadFiles(detail.files);
         this.isDropZoneVisible.value = false;
     }
 
@@ -248,7 +239,10 @@ export class Composer extends Component {
      * @param {string} detail.unicode
      */
     _onEmojiSelection(detail) {
-        this._textInputRef.comp.saveStateInStore();
+        if (!this.refs.textInput) {
+            return;
+        }
+        this.refs.textInput.saveStateInStore();
         this.composerView.insertIntoTextInput(detail.unicode);
         if (!this.messaging.device.isMobileDevice) {
             this.composerView.update({ doFocus: true });
@@ -278,8 +272,8 @@ export class Composer extends Component {
      */
     _onKeydownEmojiButton(ev) {
         if (ev.key === 'Escape') {
-            if (this._emojisPopoverRef.comp) {
-                this._emojisPopoverRef.comp.close();
+            if (this.refs.emojisPopover) {
+                this.refs.emojisPopover.close();
                 this.composerView.update({ doFocus: true });
                 markEventHandled(ev, 'Composer.closeEmojisPopover');
             }
@@ -291,10 +285,10 @@ export class Composer extends Component {
      * @param {CustomEvent} ev
      */
     async _onPasteTextInput(ev) {
-        if (!ev.clipboardData || !ev.clipboardData.files) {
+        if (!ev.clipboardData || !ev.clipboardData.files || !this.refs.fileUploader) {
             return;
         }
-        await this._fileUploaderRef.comp.uploadFiles(ev.clipboardData.files);
+        await this.refs.fileUploader.uploadFiles(ev.clipboardData.files);
     }
 
 }

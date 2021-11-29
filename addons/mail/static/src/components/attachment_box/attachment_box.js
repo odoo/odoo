@@ -3,10 +3,9 @@
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { useComponentToModel } from '@mail/component_hooks/use_component_to_model/use_component_to_model';
 import { useDragVisibleDropZone } from '@mail/component_hooks/use_drag_visible_dropzone/use_drag_visible_dropzone';
-import { useRefToModel } from '@mail/component_hooks/use_ref_to_model/use_ref_to_model';
+import { useComponentRefToModel } from '@mail/component_hooks/use_component_ref_to_model/use_component_ref_to_model';
 
 const { Component } = owl;
-const { useRef } = owl.hooks;
 
 export class AttachmentBox extends Component {
 
@@ -16,13 +15,8 @@ export class AttachmentBox extends Component {
     setup() {
         super.setup();
         this.isDropZoneVisible = useDragVisibleDropZone();
-        /**
-         * Reference of the file uploader.
-         * Useful to programmatically prompts the browser file uploader.
-         */
-        this._fileUploaderRef = useRef('fileUploader');
         useComponentToModel({ fieldName: 'component', modelName: 'mail.attachment_box_view', propNameAsRecordLocalId: 'attachmentBoxViewLocalId' });
-        useRefToModel({ fieldName: 'fileUploaderRef', modelName: 'mail.attachment_box_view', propNameAsRecordLocalId: 'attachmentBoxViewLocalId', refName: 'fileUploader' });
+        useComponentRefToModel({ fieldName: 'fileUploader', modelName: 'mail.attachment_box_view', propNameAsRecordLocalId: 'attachmentBoxViewLocalId', refName: 'fileUploader' });
         this._onDropZoneFilesDropped = this._onDropZoneFilesDropped.bind(this);
     }
 
@@ -47,7 +41,10 @@ export class AttachmentBox extends Component {
      * @param {FileList} detail.files
      */
     async _onDropZoneFilesDropped(detail) {
-        await this._fileUploaderRef.comp.uploadFiles(detail.files);
+        if (!this.refs.fileUploader) {
+            return;
+        }
+        await this.refs.fileUploader.uploadFiles(detail.files);
         this.isDropZoneVisible.value = false;
     }
 

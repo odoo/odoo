@@ -2,7 +2,7 @@
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { useUpdate } from '@mail/component_hooks/use_update/use_update';
-import { useRefToModel } from '@mail/component_hooks/use_ref_to_model/use_ref_to_model';
+import { useComponentRefToModel } from '@mail/component_hooks/use_component_ref_to_model/use_component_ref_to_model';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
@@ -15,7 +15,7 @@ export class Chatter extends Component {
     setup() {
         super.setup();
         useUpdate({ func: () => this._update() });
-        useRefToModel({ fieldName: 'threadRef', modelName: 'mail.chatter', propNameAsRecordLocalId: 'chatterLocalId', refName: 'thread' });
+        useComponentRefToModel({ fieldName: 'threadRef', modelName: 'mail.chatter', propNameAsRecordLocalId: 'chatterLocalId', refName: 'thread' });
         /**
          * Reference of the scroll Panel (Real scroll element). Useful to pass the Scroll element to
          * child component to handle proper scrollable element.

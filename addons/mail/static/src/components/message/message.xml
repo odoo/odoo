@@ -133,7 +133,8 @@
                                     hasSendButton="false"
                                     isCompact="true"
                                     textInputSendShortcuts="['enter']"
-                                    t-ref="composer"
+                                    refs="refs"
+                                    ref="'composer'"
                                 />
                             </t>
                             <t t-if="messageView.message.subtype_description and !messageView.message.isBodyEqualSubtypeDescription">

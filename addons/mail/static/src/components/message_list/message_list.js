@@ -267,8 +267,8 @@ export class MessageList extends Component {
      * @param {mail.message_view} messageView
      */
     _highlightMessageView(messageView) {
-        if (messageView.exists() && messageView.component && messageView.component.el) {
-            messageView.component.el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if (messageView.exists() && messageView.component && messageView.component.root.el) {
+            messageView.component.root.el.scrollIntoView({ behavior: 'smooth', block: 'center' });
             messageView.highlight();
         }
     }

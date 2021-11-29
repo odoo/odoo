@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
-import { useRefToModel } from '@mail/component_hooks/use_ref_to_model/use_ref_to_model';
+import { useHtmlRefToModel } from '@mail/component_hooks/use_html_ref_to_model/use_html_ref_to_model';
 
 export class MediaPreview extends owl.Component {
 
@@ -10,8 +10,8 @@ export class MediaPreview extends owl.Component {
      */
     setup() {
         super.setup();
-        useRefToModel({ fieldName: 'audioRef', modelName: 'mail.media_preview', propNameAsRecordLocalId: 'localId', refName: 'audio' });
-        useRefToModel({ fieldName: 'videoRef', modelName: 'mail.media_preview', propNameAsRecordLocalId: 'localId', refName: 'video' });
+        useHtmlRefToModel({ fieldName: 'audioRef', modelName: 'mail.media_preview', propNameAsRecordLocalId: 'localId', refName: 'audio' });
+        useHtmlRefToModel({ fieldName: 'videoRef', modelName: 'mail.media_preview', propNameAsRecordLocalId: 'localId', refName: 'video' });
     }
 
     /**

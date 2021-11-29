@@ -21,11 +21,6 @@ export class Activity extends Component {
         this.state = useState({
             areDetailsVisible: false,
         });
-        /**
-         * Reference of the file uploader.
-         * Useful to programmatically prompts the browser file uploader.
-         */
-        this._fileUploaderRef = useRef('fileUploader');
         this._onAttachmentCreated = this._onAttachmentCreated.bind(this);
     }
 
@@ -162,7 +157,10 @@ export class Activity extends Component {
      * @param {MouseEvent} ev
      */
     _onClickUploadDocument(ev) {
-        this._fileUploaderRef.comp.openBrowserFileUploader();
+        if (!this.refs.fileUploader) {
+            return;
+        }
+        this.refs.fileUploader.openBrowserFileUploader();
     }
 
 }

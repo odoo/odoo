@@ -123,10 +123,10 @@ registerModel({
          * @param {Event} ev
          */
         onScrollScrollPanel(ev) {
-            if (!this.threadRef.comp) {
+            if (!this.threadRef) {
                 return;
             }
-            this.threadRef.comp.onScroll(ev);
+            this.threadRef.onScroll(ev);
         },
         async refresh() {
             if (this.hasActivities) {

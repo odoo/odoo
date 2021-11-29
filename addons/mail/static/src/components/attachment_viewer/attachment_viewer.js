@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
-import { useRefs } from '@mail/component_hooks/use_refs/use_refs';
+import { useRefsLegacy } from '@mail/component_hooks/use_refs_legacy/use_refs_legacy';
 import { link } from '@mail/model/model_field_command';
 
 import { hidePDFJSButtons } from '@web/legacy/js/libs/pdfjs';
@@ -26,7 +26,7 @@ export class AttachmentViewer extends Component {
          * has a t-key, which was added to force the rendering of a new element when the src of the image changes.
          * This was made to remove the display of the previous image as soon as the src changes.
          */
-        this._getRefs = useRefs();
+        this._getRefs = useRefsLegacy();
         /**
          * Determine whether the user is currently dragging the image.
          * This is useful to determine whether a click outside of the image

@@ -15,22 +15,6 @@ export class ChatWindow extends Component {
     setup() {
         super.setup();
         useUpdate({ func: () => this._update() });
-        /**
-         * Reference of the header of the chat window.
-         * Useful to prevent click on header from wrongly focusing the window.
-         */
-        this._chatWindowHeaderRef = useRef('header');
-        /**
-         * Reference of the autocomplete input (new_message chat window only).
-         * Useful when focusing this chat window, which consists of focusing
-         * this input.
-         */
-        this._inputRef = useRef('input');
-        /**
-         * Reference of thread in the chat window (chat window with thread
-         * only). Useful to save/restore scroll position.
-         */
-        this._threadRef = useRef('thread');
         // the following are passed as props to children
         this._onAutocompleteSelect = this._onAutocompleteSelect.bind(this);
         this._onAutocompleteSource = this._onAutocompleteSource.bind(this);
@@ -86,7 +70,7 @@ export class ChatWindow extends Component {
      */
     _saveThreadScrollTop() {
         if (
-            !this._threadRef.comp ||
+            !this.refs.thread ||
             !this.chatWindow ||
             !this.chatWindow.threadViewer
         ) {
@@ -101,10 +85,10 @@ export class ChatWindow extends Component {
             return;
         }
         this.chatWindow.threadViewer.saveThreadCacheScrollHeightAsInitial(
-            this._threadRef.comp.getScrollHeight()
+            this.refs.thread.getScrollHeight()
         );
         this.chatWindow.threadViewer.saveThreadCacheScrollPositionsAsInitial(
-            this._threadRef.comp.getScrollTop()
+            this.refs.thread.getScrollTop()
         );
     }
 
@@ -118,8 +102,8 @@ export class ChatWindow extends Component {
         }
         if (this.chatWindow.isDoFocus) {
             this.chatWindow.update({ isDoFocus: false });
-            if (this._inputRef.comp) {
-                this._inputRef.comp.focus();
+            if (this.refs.input) {
+                this.refs.input.focus();
             }
         }
         this._applyVisibleOffset();

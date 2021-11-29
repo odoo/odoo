@@ -18,7 +18,6 @@
                     hasCloseAsBackButton="props.hasCloseAsBackButton"
                     isExpandable="props.isExpandable"
                     onClicked="_onClickedHeader"
-                    t-ref="header"
                 />
                 <t t-if="chatWindow.thread and chatWindow.thread.hasMemberListFeature and chatWindow.isMemberListOpened">
                     <ChannelMemberList channelLocalId="chatWindow.thread.localId" className="'bg-white'"/>
@@ -33,7 +32,8 @@
                         hasComposerSendButton="messaging.device.isMobile"
                         threadViewLocalId="chatWindow.threadView.localId"
                         onFocusin="_onFocusinThread"
-                        t-ref="thread"
+                        refs="refs"
+                        ref="'thread'"
                     />
                 </t>
                 <t t-if="chatWindow.hasNewMessageForm">
@@ -47,7 +47,8 @@
                             select="_onAutocompleteSelect"
                             source="_onAutocompleteSource"
                             onFocusin="chatWindow.onFocusInNewMessageFormInput"
-                            t-ref="input"
+                            refs="refs"
+                            ref="'input'"
                         />
                     </div>
                 </t>

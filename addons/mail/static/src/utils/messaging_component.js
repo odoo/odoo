@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import { useModels } from "@mail/component_hooks/use_models/use_models";
+import { useRefs, useRefsProps } from "@mail/component_hooks/use_refs/use_refs";
 import { useShouldUpdateBasedOnProps } from "@mail/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props";
 
 const { useRef } = owl.hooks;
@@ -36,6 +37,7 @@ export function registerMessagingComponent(ComponentClass, { propsCompareDepth =
             // useModels as if they were part of the OWL rendering itself.
             useModels();
             useShouldUpdateBasedOnProps({ propsCompareDepth });
+            useRefs();
         }
         get className() {
             let res = '';
@@ -69,6 +71,7 @@ export function registerMessagingComponent(ComponentClass, { propsCompareDepth =
         ...defaultProps,
     };
     MessagingClass.props = {
+        ...useRefsProps,
         /**
          * String that contains class names, separated by whitespace, that are
          * part of classnames on root node of this messaging component.

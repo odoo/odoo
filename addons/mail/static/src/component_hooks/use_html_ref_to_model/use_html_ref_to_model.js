@@ -5,9 +5,9 @@ import { clear } from '@mail/model/model_field_command';
 const { onWillUpdateProps, useComponent, useRef } = owl.hooks;
 
 /**
- * This hook provides support for saving the result of useRef directly into the
- * field of a record, and appropriately updates it when necessary (props change
- * or destroy).
+ * This hook provides support for saving the result of (html, non-component)
+ * useRef directly into the field of a record, and appropriately updates it
+ * when necessary (props change or destroy).
  *
  * @param {Object} param0
  * @param {string} param0.fieldName Name of the field on the target record.
@@ -16,7 +16,7 @@ const { onWillUpdateProps, useComponent, useRef } = owl.hooks;
  *  component containing the localId of the target record.
  * @param {string} param0.refName Name of the t-ref on this component.
  */
-export function useRefToModel({ fieldName, modelName, propNameAsRecordLocalId, refName }) {
+export function useHtmlRefToModel({ fieldName, modelName, propNameAsRecordLocalId, refName }) {
     const component = useComponent();
     const { modelManager } = component.env.services.messaging;
     const record = modelManager.models[modelName].get(component.props[propNameAsRecordLocalId]);

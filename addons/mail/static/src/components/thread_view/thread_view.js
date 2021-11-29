@@ -7,17 +7,6 @@ const { useRef } = owl.hooks;
 
 export class ThreadView extends Component {
 
-    /**
-     * @override
-     */
-    setup() {
-        super.setup();
-        /**
-         * Reference of the message list. Useful to determine scroll positions.
-         */
-        this._messageListRef = useRef('messageList');
-    }
-
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
@@ -28,10 +17,10 @@ export class ThreadView extends Component {
      * @returns {integer|undefined}
      */
     getScrollHeight() {
-        if (!this._messageListRef.comp) {
+        if (!this.refs.messageList) {
             return undefined;
         }
-        return this._messageListRef.comp.getScrollHeight();
+        return this.refs.messageList.getScrollHeight();
     }
 
     /**
@@ -40,10 +29,10 @@ export class ThreadView extends Component {
      * @returns {integer|undefined}
      */
     getScrollTop() {
-        if (!this._messageListRef.comp) {
+        if (!this.refs.messageList) {
             return undefined;
         }
-        return this._messageListRef.comp.getScrollTop();
+        return this.refs.messageList.getScrollTop();
     }
 
     /**
@@ -51,10 +40,10 @@ export class ThreadView extends Component {
      * @param {MouseEvent} ev
      */
     onScroll(ev) {
-        if (!this._messageListRef.comp) {
+        if (!this.refs.messageList) {
             return;
         }
-        this._messageListRef.comp.onScroll(ev);
+        this.refs.messageList.onScroll(ev);
     }
 
     /**
