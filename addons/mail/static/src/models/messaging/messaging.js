@@ -27,7 +27,10 @@ registerModel({
          */
         async start() {
             this.env.services['bus_service'].on('window_focus', null, this._handleGlobalWindowFocus);
-            await this.async(() => this.initializer.start());
+            await this.initializer.start();
+            if (!this.exists()) {
+                return;
+            }
             this.notificationHandler.start();
             this.update({ isInitialized: true });
             this.initializedPromise.resolve();
