@@ -20,7 +20,7 @@ QUnit.module('file_uploader_tests.js', {
         this.components = [];
 
         this.createFileUploaderComponent = async props => {
-            return createRootMessagingComponent(this, "FileUploader", {
+            await createRootMessagingComponent(this, "FileUploader", {
                 props,
                 target: this.widget.el,
             });
@@ -43,15 +43,15 @@ QUnit.test('no conflicts between file uploaders', async function (assert) {
     assert.expect(2);
 
     await this.start();
-    const fileUploader1 = await this.createFileUploaderComponent();
-    const fileUploader2 = await this.createFileUploaderComponent();
+    await this.createFileUploaderComponent();
+    await this.createFileUploaderComponent();
     const file1 = await createFile({
         name: 'text1.txt',
         content: 'hello, world',
         contentType: 'text/plain',
     });
     inputFiles(
-        fileUploader1.el.querySelector('.o_FileUploader_input'),
+        document.querySelectorAll('.o_FileUploader_input')[0],
         [file1]
     );
     await nextAnimationFrame(); // we can't use afterNextRender as fileInput are display:none
@@ -67,7 +67,7 @@ QUnit.test('no conflicts between file uploaders', async function (assert) {
         contentType: 'text/plain',
     });
     inputFiles(
-        fileUploader2.el.querySelector('.o_FileUploader_input'),
+        document.querySelectorAll('.o_FileUploader_input')[1],
         [file2]
     );
     await nextAnimationFrame();
