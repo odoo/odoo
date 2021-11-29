@@ -6,8 +6,8 @@ const { Component } = owl;
 export class BadgeField extends Component {
     get decorationClasses() {
         let classes = "";
-        for (const key in this.props.options.decorations) {
-            if (this.props.options.decorations[key]) {
+        for (const key in this.props.decorations) {
+            if (this.props.decorations[key]) {
                 classes += `bg-${key}-light `;
             }
         }
