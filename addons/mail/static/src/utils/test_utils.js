@@ -2,6 +2,7 @@
 
 import BusService from 'bus.BusService';
 
+import { MessagingMenuContainer } from '@mail/components/messaging_menu_container/messaging_menu_container';
 import {
     addMessagingToEnv,
     addTimeControlToEnv,
@@ -373,8 +374,28 @@ function getAfterEvent({ messagingBus }) {
 }
 
 /**
- * Creates and returns a new root Component with the given props and mounts it
- * on target.
+ * Creates a new root Component, with the given props, and mounts it on target.
+ * Assumes that self.env is set to the correct value.
+ * Components created this way are automatically registered for clean up after
+ * the test, which will happen when `afterEach` is called.
+ *
+ * @param {Object} self the current QUnit instance
+ * @param {Object} Component the class of the component to create
+ * @param {Object} param2
+ * @param {Object} [param2.props={}] forwarded to component constructor
+ * @param {DOM.Element} param2.target mount target for the component
+ */
+async function createRootComponent(self, Component, { props = {}, target }) {
+    Component.env = self.env;
+    const component = new Component(null, props);
+    delete Component.env;
+    self.components.push(component);
+    await afterNextRender(() => component.mount(target));
+}
+
+/**
+ * Creates and returns a new root messaging component, based on the given
+ * componentName and with the given props, and mounts it on target.
  * Assumes that self.env is set to the correct value.
  * Components created this way are automatically registered for clean up after
  * the test, which will happen when `afterEach` is called.
@@ -384,16 +405,9 @@ function getAfterEvent({ messagingBus }) {
  * @param {Object} param2
  * @param {Object} [param2.props={}] forwarded to component constructor
  * @param {DOM.Element} param2.target mount target for the component
- * @returns {owl.Component} the new component instance
  */
 async function createRootMessagingComponent(self, componentName, { props = {}, target }) {
-    const Component = getMessagingComponent(componentName);
-    Component.env = self.env;
-    const component = new Component(null, props);
-    delete Component.env;
-    self.components.push(component);
-    await afterNextRender(() => component.mount(target));
-    return component;
+    await createRootComponent(self, getMessagingComponent(componentName), { props, target });
 }
 
 function getCreateComposerComponent({ components, env, modelManager, widget }) {
@@ -439,10 +453,7 @@ function getCreateMessageComponent({ components, env, modelManager, widget }) {
 
 function getCreateMessagingMenuComponent({ components, env, widget }) {
     return async function createMessagingMenuComponent() {
-        await createRootMessagingComponent({ components, env }, 'MessagingMenu', {
-            props: {},
-            target: widget.el,
-        });
+        await createRootComponent({ components, env }, MessagingMenuContainer, { target: widget.el });
     };
 }
 

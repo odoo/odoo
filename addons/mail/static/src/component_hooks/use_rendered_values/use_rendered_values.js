@@ -1,5 +1,7 @@
 /** @odoo-module **/
 
+import { Listener } from '@mail/model/model_listener';
+
 const { Component } = owl;
 const { onMounted, onPatched } = owl.hooks;
 
@@ -16,10 +18,16 @@ export function useRenderedValues(selector) {
     const component = Component.current;
     let renderedValues;
     let patchedValues;
-
+    const { modelManager } = component.env.services.messaging;
+    const listener = new Listener({
+        name: `useRenderedValues() of ${component}`,
+        onChange: () => component.render(),
+    });
     const __render = component.__render.bind(component);
     component.__render = function () {
+        modelManager.startListening(listener);
         renderedValues = selector();
+        modelManager.stopListening(listener);
         return __render(...arguments);
     };
     onMounted(onUpdate);
@@ -27,5 +35,10 @@ export function useRenderedValues(selector) {
     function onUpdate() {
         patchedValues = renderedValues;
     }
+    const __destroy = component.__destroy;
+    component.__destroy = parent => {
+        modelManager.removeListener(listener);
+        __destroy.call(component, parent);
+    };
     return () => patchedValues;
 }

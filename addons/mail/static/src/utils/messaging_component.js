@@ -28,14 +28,11 @@ export function registerMessagingComponent(ComponentClass, { propsCompareDepth =
     // Defining the class in an object and immediately taking it out so that it
     // has "decoratedName" as its class name in stack traces and stuff.
     const MessagingClass = { [decoratedName]: class extends ComponentClass {
-        setup(...args) {
+        setup() {
             this.root = useRef('root');
-            super.setup(...args);
-            // useModels must be defined after useRenderedValues, indeed records and
-            // fields accessed during useRenderedValues should be observed by
-            // useModels as if they were part of the OWL rendering itself.
             useModels();
             useShouldUpdateBasedOnProps({ propsCompareDepth });
+            super.setup();
         }
         get className() {
             let res = '';
@@ -50,9 +47,6 @@ export function registerMessagingComponent(ComponentClass, { propsCompareDepth =
                 }
             }
             return res;
-        }
-        get messaging() {
-            return this.env.services.messaging.modelManager.messaging;
         }
         /**
          * @returns {string}

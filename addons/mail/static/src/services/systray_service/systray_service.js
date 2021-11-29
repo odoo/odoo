@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
-import { getMessagingComponent } from '@mail/utils/messaging_component';
+import { MessagingMenuContainer } from '@mail/components/messaging_menu_container/messaging_menu_container';
+import { RtcActivityNoticeContainer } from '@mail/components/rtc_activity_notice_container/rtc_activity_notice_container';
 
 import AbstractService from 'web.AbstractService';
 import { registry } from '@web/core/registry';
@@ -13,12 +14,7 @@ export const SystrayService = AbstractService.extend({
      * @override {web.AbstractService}
      */
     async start() {
-        await owl.Component.env.services.messaging.modelManager.messagingCreatedPromise;
-        systrayRegistry.add('mail.MessagingMenu', {
-            Component: getMessagingComponent('MessagingMenu'),
-        });
-        systrayRegistry.add('mail.RtcActivityNotice', {
-            Component: getMessagingComponent('RtcActivityNotice'),
-        });
+        systrayRegistry.add('mail.MessagingMenuContainer', { Component: MessagingMenuContainer });
+        systrayRegistry.add('mail.RtcActivityNoticeContainer', { Component: RtcActivityNoticeContainer });
     },
 });
