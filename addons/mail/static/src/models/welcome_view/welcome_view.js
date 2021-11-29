@@ -27,7 +27,7 @@ registerModel({
          */
         async joinChannel() {
             if (this.hasGuestNameChanged) {
-                await this.messaging.models['mail.guest'].performRpcGuestUpdateName({
+                await this.messaging.models['Guest'].performRpcGuestUpdateName({
                     id: this.messaging.currentGuest.id,
                     name: this.pendingGuestName.trim(),
                 });

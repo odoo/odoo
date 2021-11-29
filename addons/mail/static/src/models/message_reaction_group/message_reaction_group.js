@@ -83,7 +83,7 @@ registerModel({
         /**
          * States the guests that have used this reaction on this message.
          */
-        guests: many2many('mail.guest'),
+        guests: many2many('Guest'),
         hasUserReacted: attr({
             compute: '_computeHasUserReacted',
             default: false,

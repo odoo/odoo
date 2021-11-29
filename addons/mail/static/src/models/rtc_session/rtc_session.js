@@ -309,7 +309,7 @@ registerModel({
         connectionState: attr({
             default: 'Waiting for the peer to send a RTC offer',
         }),
-        guest: many2one('mail.guest', {
+        guest: many2one('Guest', {
             inverse: 'rtcSessions',
         }),
         /**

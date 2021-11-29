@@ -102,7 +102,7 @@ registerModel({
                         case 'mail.channel/insert':
                             return this._handleNotificationChannelUpdate(message.payload);
                         case 'mail.guest/insert':
-                            return this.messaging.models['mail.guest'].insert(message.payload);
+                            return this.messaging.models['Guest'].insert(message.payload);
                         case 'mail.message/insert':
                             return this.messaging.models['mail.message'].insert(message.payload);
                         case 'mail.channel.rtc.session/insert':

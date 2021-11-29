@@ -28,7 +28,7 @@ registerModel({
         },
     },
     fields: {
-        guest: one2one('mail.guest', {
+        guest: one2one('Guest', {
             inverse: 'volumeSetting',
         }),
         id: attr({

@@ -2009,7 +2009,7 @@ registerModel({
         group_based_subscription: attr({
             default: false,
         }),
-        guestMembers: many2many('mail.guest'),
+        guestMembers: many2many('Guest'),
         /**
          * States whether `this` has activities (`mail.activity.mixin` server side).
          */
@@ -2056,7 +2056,7 @@ registerModel({
          * FIXME should be simplified if we have the mail.channel.partner model
          * in which case the two following fields should be a single relation to that model.
          */
-        invitedGuests: many2many('mail.guest'),
+        invitedGuests: many2many('Guest'),
         /**
          * List of partners that have been invited to the RTC call of this channel.
          */
