@@ -225,7 +225,7 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
                             const elem = QWeb.render('hr_holidays.dashboard_calendar_header_mobile', {
                                 timeoff: data,
                             });
-                            self.$el.find('.o_calendar_filter_item[data-value=' + data[4] + '] .o_cw_filter_title').append(elem);
+                            self.$el.find('.o_calendar_filter_item[data-value=' + data[3] + '] .o_cw_filter_title').append(elem);
                         });
                     } else {
                         const elem = QWeb.render('hr_holidays.dashboard_calendar_header', {
