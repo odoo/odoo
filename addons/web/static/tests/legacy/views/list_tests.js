@@ -7270,6 +7270,7 @@ QUnit.module('Views', {
                 if (route === '/web/dataset/resequence') {
                     if (moves === 0) {
                         assert.deepEqual(args, {
+                            context: {},
                             model: "foo",
                             ids: [4, 3],
                             offset: 13,
@@ -7278,6 +7279,7 @@ QUnit.module('Views', {
                     }
                     if (moves === 1) {
                         assert.deepEqual(args, {
+                            context: {},
                             model: "foo",
                             ids: [4, 2],
                             offset: 12,
@@ -7286,6 +7288,7 @@ QUnit.module('Views', {
                     }
                     if (moves === 2) {
                         assert.deepEqual(args, {
+                            context: {},
                             model: "foo",
                             ids: [2, 4],
                             offset: 12,
@@ -7294,6 +7297,7 @@ QUnit.module('Views', {
                     }
                     if (moves === 3) {
                         assert.deepEqual(args, {
+                            context: {},
                             model: "foo",
                             ids: [4, 2],
                             offset: 12,
