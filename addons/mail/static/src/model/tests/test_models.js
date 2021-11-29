@@ -5,7 +5,7 @@ import { attr, many2one, one2many, one2one } from '@mail/model/model_field';
 import { insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
-    name: 'test.address',
+    name: 'TestAddress',
     identifyingFields: ['id'],
     fields: {
         id: attr({
@@ -13,21 +13,21 @@ registerModel({
             required: true,
         }),
         addressInfo: attr(),
-        contact: one2one('test.contact', {
+        contact: one2one('TestContact', {
             inverse: 'address',
         }),
     },
 });
 
 registerModel({
-    name: 'test.contact',
+    name: 'TestContact',
     identifyingFields: ['id'],
     fields: {
         id: attr({
             readonly: true,
             required: true,
         }),
-        address: one2one('test.address', {
+        address: one2one('TestAddress', {
             inverse: 'contact',
         }),
         favorite: one2one('test.hobby', {
@@ -39,7 +39,7 @@ registerModel({
                 { description: 'fishing' },
             ]),
         }),
-        tasks: one2many('test.task', {
+        tasks: one2many('TestTask', {
             inverse: 'responsible'
         }),
     },
@@ -57,7 +57,7 @@ registerModel({
 });
 
 registerModel({
-    name: 'test.task',
+    name: 'TestTask',
     identifyingFields: ['id'],
     fields: {
         id: attr({
@@ -68,7 +68,7 @@ registerModel({
         difficulty: attr({
             default: 1,
         }),
-        responsible: many2one('test.contact', {
+        responsible: many2one('TestContact', {
             inverse: 'tasks'
         }),
     },
