@@ -73,16 +73,14 @@ export function processButton(node, fields, viewType) {
 export function processField(node, fields, viewType) {
     const name = node.getAttribute("name");
     const widget = node.getAttribute("widget");
-    const modifiers = evaluateExpr(node.getAttribute("modifiers") || "{}");
     const field = fields[name];
     const fieldInfo = {
         name,
         string: node.getAttribute("string") || field.string,
         widget,
         onChange: archParseBoolean(node.getAttribute("on_change")),
-        options: evaluateExpr(node.getAttribute("options") || "{}"),
-        invisible: modifiers.invisible === true, // || modifiers.column_invisible === true;
-        readonly: modifiers.readonly == true,
+        optionsAttribute: node.getAttribute("options") || "{}",
+        modifiersAttribute: node.getAttribute("modifiers") || "{}",
         FieldComponent: Field.getEffectiveFieldComponent({ fields, viewType }, widget, name),
         attrs: {},
     };
@@ -94,9 +92,10 @@ export function processField(node, fields, viewType) {
         // prepare field decorations
         if (attribute.name.startsWith("decoration-")) {
             const decorationName = attribute.name.replace("decoration-", "");
-            fieldInfo.decorations = fieldInfo.decorations || {};
-            fieldInfo.decorations[decorationName] = attribute.value;
+            fieldInfo.decorationAttributes = fieldInfo.decorationAttributes || {};
+            fieldInfo.decorationAttributes[decorationName] = attribute.value;
         }
+
         // FIXME: black list special attributes like on_change, name... ?
         fieldInfo.attrs[snakeToCamel(attribute.name)] = attribute.value;
     }
