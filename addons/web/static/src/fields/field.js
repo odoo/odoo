@@ -29,7 +29,10 @@ export class Field extends Component {
 
     evaluateExpressions(activeField, context) {
         activeField.modifiers = evaluateExpr(activeField.modifiersAttribute, context);
-        activeField.options = evaluateExpr(activeField.optionsAttribute, context);
+        activeField.options = Object.assign(
+            evaluateExpr(activeField.optionsAttribute, context),
+            activeField.options
+        );
         if (activeField.decorationAttributes) {
             activeField.decorations = {};
             for (const decorationName in activeField.decorationAttributes) {
@@ -123,6 +126,7 @@ Field.parseFieldNode = function (node, fields, viewType) {
         name,
         string: node.getAttribute("string") || field.string,
         widget,
+        options: {}, // can be already used to add options like 'group_by_tooltip'
         onChange: archParseBoolean(node.getAttribute("on_change")),
         optionsAttribute: node.getAttribute("options") || "{}",
         modifiersAttribute: node.getAttribute("modifiers") || "{}",
