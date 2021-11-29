@@ -276,7 +276,7 @@ registerModel({
     },
     fields: {
         accessToken: attr(),
-        activities: many2many('mail.activity', {
+        activities: many2many('Activity', {
             inverse: 'attachments',
         }),
         /**

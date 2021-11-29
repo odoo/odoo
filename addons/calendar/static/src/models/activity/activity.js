@@ -5,11 +5,11 @@ import { attr } from '@mail/model/model_field';
 // ensure that the model definition is loaded before the patch
 import '@mail/models/activity/activity';
 
-addFields('mail.activity', {
+addFields('Activity', {
     calendar_event_id: attr({ default: false }),
 });
 
-patchModelMethods('mail.activity', {
+patchModelMethods('Activity', {
     /**
      * @override
      */
@@ -22,7 +22,7 @@ patchModelMethods('mail.activity', {
     },
 });
 
-patchRecordMethods('mail.activity', {
+patchRecordMethods('Activity', {
     /**
      * @override
      */

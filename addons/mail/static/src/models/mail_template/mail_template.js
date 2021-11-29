@@ -8,7 +8,7 @@ registerModel({
     identifyingFields: ['id'],
     recordMethods: {
         /**
-         * @param {mail.activity} activity
+         * @param {Activity} activity
          */
         preview(activity) {
             const action = {
@@ -35,7 +35,7 @@ registerModel({
             });
         },
         /**
-         * @param {mail.activity} activity
+         * @param {Activity} activity
          */
         async send(activity) {
             await this.async(() => this.env.services.rpc({
@@ -47,7 +47,7 @@ registerModel({
         },
     },
     fields: {
-        activities: many2many('mail.activity', {
+        activities: many2many('Activity', {
             inverse: 'mailTemplates',
         }),
         id: attr({
