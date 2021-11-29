@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_payment_mass_transfer_form" model="ir.ui.view">
+        <field name="name">account.payment.mass.transfer.form</field>
+        <field name="model">account.payment.mass.transfer</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="journal_id" invisible="1"/>
+                <field name="company_id" invisible="1"/>
+                <group>
+                    <group name="group1">
+                        <field name="destination_journal_id" options="{'no_open': True, 'no_create': True}" required="1"/>
+                    </group>
+                    <group name="group2">
+                        <field name="payment_date"/>
+                        <field name="communication"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string="Create Transfers" name="action_create_payments" type="object" class="oe_highlight" data-hotkey="q"/>
+                    <button string="Cancel" class="btn btn-secondary" special="cancel" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_view_account_payment_mass_transfer" model="ir.actions.act_window">
+        <field name="name">Check Transfer</field>
+        <field name="res_model">account.payment.mass.transfer</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="account.model_account_payment"/>
+        <field name="binding_view_types">list,form</field>
+    </record>
+</odoo>

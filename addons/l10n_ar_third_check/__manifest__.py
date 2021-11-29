@@ -38,8 +38,10 @@ NOTA: En la lógica de impresón de cheques y en general, solo se tienen en cuen
     ],
     'data': [
         'data/account_payment_method_data.xml',
+        'security/ir.model.access.csv',
         'views/account_payment_view.xml',
         'wizards/account_payment_register_views.xml',
+        'wizards/account_payment_mass_transfer_views.xml',
     ],
     'demo': [
     ],

@@ -59,7 +59,7 @@ class AccountPayment(models.Model):
     @api.constrains('check_id', 'state')
     def _check_amount_and_date(self):
         for rec in self.filtered('check_id'):
-            date = self.date or fields.Datetime.now()
+            date = rec.date or fields.Datetime.now()
             last_operation = rec.env['account.payment'].search(
                 [('check_id', '=', rec.id), ('state', '=', 'posted')], order="date desc, id desc, name desc", limit=1)
             if last_operation and last_operation[0].date > date:
