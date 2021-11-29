@@ -360,7 +360,7 @@ registerModel({
          */
         _applyGuestRename() {
             if (this.hasGuestNameChanged) {
-                this.messaging.models['mail.guest'].performRpcGuestUpdateName({
+                this.messaging.models['Guest'].performRpcGuestUpdateName({
                     id: this.messaging.currentGuest.id,
                     name: this.pendingGuestName.trim(),
                 });

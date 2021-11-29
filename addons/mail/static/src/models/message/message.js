@@ -581,7 +581,7 @@ registerModel({
         failureNotifications: one2many('mail.notification', {
             compute: '_computeFailureNotifications',
         }),
-        guestAuthor: many2one('mail.guest', {
+        guestAuthor: many2one('Guest', {
             inverse: 'authoredMessages',
         }),
         /**
