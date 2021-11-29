@@ -89,6 +89,8 @@ export function capitalize(s) {
     return s ? s[0].toUpperCase() + s.slice(1) : "";
 }
 
+/* eslint-disable */
+// prettier-ignore
 const diacriticsMap = {
 '\u0041': 'A','\u24B6': 'A','\uFF21': 'A','\u00C0': 'A','\u00C1': 'A','\u00C2': 'A','\u1EA6': 'A','\u1EA4': 'A','\u1EAA': 'A','\u1EA8': 'A',
 '\u00C3': 'A','\u0100': 'A','\u0102': 'A','\u1EB0': 'A','\u1EAE': 'A','\u1EB4': 'A','\u1EB2': 'A','\u0226': 'A','\u01E0': 'A','\u00C4': 'A',
@@ -279,6 +281,7 @@ const diacriticsMap = {
 '\u007A': 'z','\u24E9': 'z','\uFF5A': 'z','\u017A': 'z','\u1E91': 'z','\u017C': 'z','\u017E': 'z','\u1E93': 'z','\u1E95': 'z','\u01B6': 'z',
 '\u0225': 'z','\u0240': 'z','\u2C6C': 'z','\uA763': 'z',
 };
+/* eslint-enable */
 
 /**
  * Replace diacritics character with ASCII character
@@ -292,4 +295,12 @@ export function unaccent(str, caseSensitive) {
         return diacriticsMap[accented] || accented;
     });
     return caseSensitive ? str : str.toLowerCase();
+}
+
+/**
+ * @param {string} str
+ * @returns {string}
+ */
+export function snakeToCamel(str) {
+    return str.replace(/_([a-z])/gi, ([, c]) => c.toUpperCase());
 }
