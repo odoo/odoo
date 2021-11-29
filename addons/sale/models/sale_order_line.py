@@ -142,11 +142,15 @@ class SaleOrderLine(models.Model):
         cached_fpos = {}
         for line in self:
             line = line.with_company(line.company_id)
+            taxes = line.product_id.taxes_id.filtered(lambda t: t.company_id == line.env.company)
+            if not line.product_id or not taxes:
+                # Nothing to map
+                line.tax_id = [(5, 0, 0)]
+                continue
             if line.order_id not in cached_fpos:
                 cached_fpos[line.order_id] = line.order_id.fiscal_position_id or line.order_id.fiscal_position_id._get_fiscal_position(line.order_partner_id)
             fpos = cached_fpos[line.order_id]
             # If company_id is set, always filter taxes by the company
-            taxes = line.product_id.taxes_id.filtered(lambda t: t.company_id == line.env.company)
             line.tax_id = fpos.map_tax(taxes)
 
     @api.model_create_multi
