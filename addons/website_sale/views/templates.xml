@@ -1563,7 +1563,7 @@
                                     <h3 class="mb24">Pay with </h3>
                                     <t t-call="payment.checkout">
                                         <t t-set="footer_template_id" t-value="'website_sale.payment_footer'"/>
-                                        <t t-set="submit_button_label" t-value="'Pay Now'"/>
+                                        <t t-set="submit_button_label">Pay Now</t>
                                     </t>
                                 </div>
                                 <div t-else="" class="alert alert-warning">
@@ -1583,7 +1583,7 @@
                                 <form target="_self" action="/shop/payment/validate" method="post">
                                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                                     <t t-call="website_sale.payment_footer">
-                                        <t t-set="submit_button_label" t-value="'Confirm Order'"/>
+                                        <t t-set="submit_button_label">Confirm Order</t>
                                     </t>
                                 </form>
                             </div>
