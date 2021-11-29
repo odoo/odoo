@@ -215,6 +215,7 @@ class DiscussController(http.Controller):
             'id': message_sudo.id,
             'body': message_sudo.body,
             'attachments': [('insert-and-replace', message_sudo.attachment_ids._attachment_format(commands=True))],
+            'editDate': message_sudo.edit_date,
         }
 
     @http.route('/mail/attachment/upload', methods=['POST'], type='http', auth='public')

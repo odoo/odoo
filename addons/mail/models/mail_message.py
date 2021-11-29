@@ -85,6 +85,7 @@ class Message(models.Model):
     # content
     subject = fields.Char('Subject')
     date = fields.Datetime('Date', default=fields.Datetime.now)
+    edit_date = fields.Datetime('last edited DateTime', readonly=1)
     body = fields.Html('Contents', default='', sanitize_style=True)
     description = fields.Char(
         'Short description', compute="_compute_description",
@@ -807,7 +808,9 @@ class Message(models.Model):
         self.ensure_one()
         thread = self.env[self.model].browse(self.res_id)
         thread._check_can_update_message_content(self)
+        msg_body = tools.html2plaintext(self.body)
         self.body = body
+        self.edit_date = (msg_body != body) and self.write_date or False
         if not attachment_ids:
             self.attachment_ids._delete_and_notify()
         else:
@@ -973,6 +976,7 @@ class Message(models.Model):
                 'is_discussion': message_sudo.subtype_id.id == com_id,
                 'subtype_description': message_sudo.subtype_id.description,
                 'is_notification': vals['message_type'] == 'user_notification',
+                'edit_date': message_sudo.edit_date,
             })
             if vals['model'] and self.env[vals['model']]._original_module:
                 vals['module_icon'] = modules.module.get_module_icon(self.env[vals['model']]._original_module)

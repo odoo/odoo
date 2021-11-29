@@ -8,7 +8,8 @@ import { addLink, htmlToTextContentInline, parseAndTransform, timeFromNow } from
 
 import { session } from '@web/session';
 
-import { str_to_datetime } from 'web.time';
+import { format } from 'web.field_utils';
+import { str_to_datetime, getLangDatetimeFormat } from 'web.time';
 
 registerModel({
     name: 'Message',
@@ -47,6 +48,9 @@ registerModel({
             }
             if ('date' in data && data.date) {
                 data2.date = moment(str_to_datetime(data.date));
+            }
+            if ('edit_date' in data && data.edit_date) {
+                data2.editDate = moment(str_to_datetime(data.edit_date));
             }
             if ('email_from' in data) {
                 data2.email_from = data.email_from;
@@ -287,6 +291,9 @@ registerModel({
             if (!this.messaging) {
                 return;
             }
+            if (messageData.editDate) {
+                messageData.editDate = moment(str_to_datetime(messageData.editDate));
+            }
             this.messaging.models['Message'].insert(messageData);
         },
         /**
@@ -360,6 +367,15 @@ registerModel({
                 return clear();
             }
             return timeFromNow(this.date);
+        },
+        /**
+         * @returns {string}
+         */
+        _computeEditDatetime() {
+            if (!this.editDate) {
+                return clear();
+            }
+            return this.editDate.format(getLangDatetimeFormat());
         },
         /**
          * @returns {boolean}
@@ -592,6 +608,12 @@ registerModel({
          */
         dateFromNow: attr({
             compute: '_computeDateFromNow',
+        }),
+        editDate: attr({
+            default: false,
+        }),
+        editDatetime: attr({
+            compute: '_computeEditDatetime',
         }),
         email_from: attr(),
         failureNotifications: many('Notification', {
