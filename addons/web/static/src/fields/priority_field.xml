@@ -6,7 +6,7 @@
             <t t-set="values" t-value="selection" />
             <t t-foreach="values" t-as="value" t-key="value">
                 <t t-if="!value_first">
-                    <t t-if="props.record.activeFields[props.name].readonly">
+                    <t t-if="props.record.activeFields[props.name].modifiers.readonly">
                         <span
                             class="o_priority_star fa"
                             role="radio"
