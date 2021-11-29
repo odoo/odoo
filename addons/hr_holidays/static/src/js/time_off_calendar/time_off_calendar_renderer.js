@@ -24,7 +24,7 @@ export const TimeOffCalendarRenderer = TimeOffPopoverRenderer.extend({
                     const elem = QWeb.render('hr_holidays.dashboard_calendar_header_mobile', {
                         timeoff: data,
                     });
-                    this.$el.find('.o_calendar_filter_item[data-value=' + data[4] + '] .o_cw_filter_title').append(elem);
+                    this.$el.find('.o_calendar_filter_item[data-value=' + data[3] + '] .o_cw_filter_title').append(elem);
                 });
             } else {
                 const elem = QWeb.render('hr_holidays.dashboard_calendar_header', {
