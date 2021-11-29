@@ -681,6 +681,10 @@ class MailGroup(models.Model):
         - A member whose email match the given email and has partner
         """
         order = 'partner_id ASC'
+        if not email_normalize(email):
+            # empty email should match nobody
+            return {}
+
         domain = [('email_normalized', '=', email_normalize(email))]
         if partner_id:
             domain = expression.OR([

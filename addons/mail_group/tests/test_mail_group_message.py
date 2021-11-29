@@ -98,3 +98,27 @@ class TestMailGroupMessage(TestMailListCommon):
         self.test_group_msg_3_rejected.invalidate_cache()
         self.assertEqual(self.test_group_msg_1_pending.with_user(self.user_admin).moderation_status, 'pending_moderation',
                          msg='Mail Group Administrator should have access to all messages')
+
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.addons.mail_group.models.mail_group_message')
+    def test_email_empty_from(self):
+        """Test that when someone sends an email the group process does not send
+        it back to the original author."""
+        self.test_group.write({
+            'access_mode': 'members',
+            'alias_contact': 'followers',
+            'moderation': False,
+        })
+        # new member without email
+        self.env['mail.group.member'].create({
+            'email': '',
+            'mail_group_id': self.test_group.id,
+        })
+
+        with self.mock_mail_gateway():
+            self.format_and_process(
+                GROUP_TEMPLATE, "Foo",
+                self.test_group.alias_id.display_name,
+                subject='Test subject', target_model='mail.group')
+
+        mails = self.env['mail.mail'].search([('subject', '=', 'Test subject')])
+        self.assertEqual(len(mails), 0, "Email should not be delivered when no email is specified")
