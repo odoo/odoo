@@ -87,6 +87,11 @@ export function processField(node, fields, viewType) {
         attrs: {},
     };
     for (const attribute of node.attributes) {
+        if (attribute.name in Field.forbiddenAttributeNames) {
+            throw new Error(Field.forbiddenAttributeNames[attribute.name]);
+        }
+
+        // prepare field decorations
         if (attribute.name.startsWith("decoration-")) {
             const decorationName = attribute.name.replace("decoration-", "");
             fieldInfo.decorations = fieldInfo.decorations || {};

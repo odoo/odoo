@@ -95,3 +95,7 @@ Field.getEffectiveFieldComponent = function (record, type, fieldName) {
     // todo: remove fallback? yep
     return fieldRegistry.get(type, DefaultField);
 };
+
+Field.forbiddenAttributeNames = {
+    decorations: `You cannot use the "decorations" attribute name as it is used as generated prop name for the composite decoration-<something> attributes.`,
+};
