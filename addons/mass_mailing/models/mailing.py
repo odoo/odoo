@@ -303,6 +303,14 @@ class MassMailing(models.Model):
                 mailing.medium_id = self.env.ref('utm.utm_medium_email').id
 
     @api.depends('mailing_model_id')
+<<<<<<< HEAD
+=======
+    def _compute_mailing_model_real(self):
+        for mailing in self:
+            mailing.mailing_model_real = (mailing.mailing_model_id.model != 'mailing.list') and mailing.mailing_model_id.model or 'mailing.contact'
+
+    @api.depends('mailing_model_id')
+>>>>>>> 1cf8e651a79... temp
     def _compute_reply_to_mode(self):
         """ For main models not really using chatter to gather answers (contacts
         and mailing contacts), set reply-to as email-based. Otherwise answers
@@ -323,12 +331,16 @@ class MassMailing(models.Model):
             elif mailing.reply_to_mode == 'update':
                 mailing.reply_to = False
 
+<<<<<<< HEAD
     @api.depends('mailing_model_id')
     def _compute_mailing_model_real(self):
         for mailing in self:
             mailing.mailing_model_real = (mailing.mailing_model_id.model != 'mailing.list') and mailing.mailing_model_id.model or 'mailing.contact'
 
     @api.depends('mailing_model_id', 'contact_list_ids', 'mailing_type', 'mailing_filter_id')
+=======
+    @api.depends('mailing_model_id', 'contact_list_ids', 'mailing_type')
+>>>>>>> 1cf8e651a79... temp
     def _compute_mailing_domain(self):
         for mailing in self:
             if not mailing.mailing_model_id:
