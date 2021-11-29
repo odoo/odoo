@@ -5,7 +5,7 @@ import { attr, one2one } from '@mail/model/model_field';
 import { insert, unlink } from '@mail/model/model_field_command';
 
 registerModel({
-    name: 'hr.employee',
+    name: 'Employee',
     identifyingFields: ['id'],
     modelMethods: {
         /**
@@ -56,8 +56,8 @@ registerModel({
                     fields,
                 },
             });
-            this.messaging.models['hr.employee'].insert(employeesData.map(employeeData =>
-                this.messaging.models['hr.employee'].convertData(employeeData)
+            this.messaging.models['Employee'].insert(employeesData.map(employeeData =>
+                this.messaging.models['Employee'].convertData(employeeData)
             ));
         },
         /**
@@ -78,8 +78,8 @@ registerModel({
                     fields,
                 },
             });
-            this.messaging.models['hr.employee'].insert(employeesData.map(employeeData =>
-                this.messaging.models['hr.employee'].convertData(employeeData)
+            this.messaging.models['Employee'].insert(employeesData.map(employeeData =>
+                this.messaging.models['Employee'].convertData(employeeData)
             ));
         },
     },
@@ -89,7 +89,7 @@ registerModel({
          * them if applicable.
          */
         async checkIsUser() {
-            return this.messaging.models['hr.employee'].performRpcRead({
+            return this.messaging.models['Employee'].performRpcRead({
                 ids: [this.id],
                 fields: ['user_id', 'user_partner_id'],
                 context: { active_test: false },
