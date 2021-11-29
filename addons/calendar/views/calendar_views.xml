@@ -281,15 +281,15 @@
                 <field name="is_highlighted" invisible="1"/>
                 <field name="is_organizer_alone" invisible="1"/>
                 <field name="display_description" invisible="1"/>
-                <field name="location" attrs="{'invisible': [('location', '=', False)]}"/>
-                <field name="description" attrs="{'invisible': [('display_description', '=', False)]}"/>
-                <field name="privacy"/>
-                <field name="alarm_ids" attrs="{'invisible': [('alarm_ids', '=', [])]}"/>
-                <field name="categ_ids" attrs="{'invisible': [('categ_ids', '=', [])]}"/>
+                <field name="location" attrs="{'invisible': [('location', '=', False)]}" options="{'icon': 'fa fa-map-marker'}"/>
+                <field name="description" attrs="{'invisible': [('display_description', '=', False)]}" options="{'icon': 'fa fa-bars'}"/>
+                <field name="privacy" invisible="1"/>
+                <field name="alarm_ids" attrs="{'invisible': [('alarm_ids', '=', [])]}" options="{'icon': 'fa fa-bell-o'}"/>
+                <field name="categ_ids" attrs="{'invisible': [('categ_ids', '=', [])]}" options="{'icon': 'fa fa-tag'}"/>
                 <!-- For recurrence update Dialog -->
                 <field name="recurrency" invisible="1"/>
                 <field name="recurrence_update" invisible="1"/>
-                <field name="partner_id" string="Organizer"/>
+                <field name="partner_id" string="Organizer" options="{'icon': 'fa fa-user-o'}"/>
             </calendar>
         </field>
     </record>
