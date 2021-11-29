@@ -7,7 +7,7 @@
                 <RtcInvitations/>
                 <t t-if="messaging.rtc.channel">
                     <t t-set="title">Open conference: <t t-esc="messaging.rtc.channel.displayName"/></t>
-                    <a class="o_RtcActivityNotice_button" t-att-title="title" role="button" t-on-click="_onClick">
+                    <a class="o_RtcActivityNotice_button dropdown-toggle o-no-caret o-dropdown--narrow" t-att-title="title" role="button" t-on-click="_onClick">
                         <div class="o_RtcActivityNotice_buttonContent">
                             <span class="o_RtcActivityNotice_buttonTitle" t-esc="messaging.rtc.channel.displayName"/>
                             <i class="o_RtcActivityNotice_outputIndicator fa" t-att-class="{
