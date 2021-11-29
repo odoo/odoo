@@ -403,7 +403,7 @@ class SaleOrder(models.Model):
             if not order.partner_id:
                 order.fiscal_position_id = False
                 continue
-            key = (order.company_id, order.partner_id, order.partner_shipping_id)
+            key = (order.company_id.id, order.partner_id.id, order.partner_shipping_id.id)
             if key not in cache:
                 cache[key] = self.env['account.fiscal.position'].with_company(
                     order.company_id
