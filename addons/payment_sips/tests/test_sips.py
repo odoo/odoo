@@ -3,17 +3,19 @@
 import json
 
 from freezegun import freeze_time
-
+from werkzeug.exceptions import Forbidden
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
+
 from .common import SipsCommon
 from ..controllers.main import SipsController
 from ..models.payment_acquirer import SUPPORTED_CURRENCIES
+from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 
 @tagged('post_install', '-at_install')
-class SipsTest(SipsCommon):
+class SipsTest(SipsCommon, PaymentHttpCommon):
 
     def test_compatible_acquirers(self):
         for curr in SUPPORTED_CURRENCIES:
@@ -119,3 +121,48 @@ class SipsTest(SipsCommon):
 
         self.env['payment.transaction']._handle_feedback_data('sips', sips_post_data)
         self.assertEqual(tx2.state, 'cancel', 'Sips: erroneous validation did not put tx into error state')
+
+    def test_webhook(self):
+        webhook_url = self._build_url(SipsController._notify_url)
+
+        sips_post_data = {
+            'Data': 'captureDay=0|captureMode=AUTHOR_CAPTURE|currencyCode=840|'
+                    'merchantId=002001000000001|orderChannel=INTERNET|'
+                    'responseCode=00|transactionDateTime=2020-04-08T06:15:59+02:00|'
+                    'transactionReference=TestTransaction|keyVersion=1|'
+                    'acquirerResponseCode=00|amount=100|authorisationId=0020000006791167|'
+                    'paymentMeanBrand=IDEAL|paymentMeanType=CREDIT_TRANSFER|'
+                    'customerIpAddress=127.0.0.1|returnContext={"return_url": '
+                    '"/payment/process", "reference": '
+                    '"TestTransaction"}|holderAuthentRelegation=N|holderAuthentStatus=|'
+                    'transactionOrigin=INTERNET|paymentPattern=ONE_SHOT|customerMobilePhone=null|'
+                    'mandateAuthentMethod=null|mandateUsage=null|transactionActors=null|'
+                    'mandateId=null|captureLimitDate=20200408|dccStatus=null|dccResponseCode=null|'
+                    'dccAmount=null|dccCurrencyCode=null|dccExchangeRate=null|'
+                    'dccExchangeRateValidity=null|dccProvider=null|'
+                    'statementReference=TestTransaction|panEntryMode=MANUAL|walletType=null|'
+                    'holderAuthentMethod=NO_AUTHENT_METHOD',
+            'Encode': '',
+            'InterfaceVersion': 'HP_2.4',
+            'Seal': 'wrong',
+            'locale': 'en',
+        }
+        self.amount = 1
+        self.reference = 'TestTransaction'
+
+        self.create_transaction(flow='redirect')
+
+        # Raise Forbidden
+        self.assertEqual(self._make_http_post_request(webhook_url, sips_post_data).status_code, Forbidden().code)
+        #print('response', self._make_http_post_request(webhook_url, sips_post_data))
+
+        sips_post_data['Seal'] = u'9a1de542d8d1f940cfd00e45a02eb0df457ec5fe6e43e6d4bd871c7a2f8bec4b'
+
+        #print('response', self._make_http_post_request(webhook_url, sips_post_data))
+        self._assert_not_raises(
+            Forbidden,
+            self._make_http_post_request,
+            webhook_url,
+            sips_post_data
+        )
+
