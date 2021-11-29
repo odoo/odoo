@@ -228,7 +228,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
             }
             this.wysiwyg.odooEditor.observerActive();
             this.wysiwyg.setValue($codeview.val());
-            this.wysiwyg.odooEditor.historyStep();
+            this.wysiwyg.odooEditor.historyStep(true);
         } else {
             this.resizerHandleObserver = new MutationObserver((mutations, observer) => {
                 for (let mutation of mutations) {
