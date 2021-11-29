@@ -11,7 +11,7 @@ addRecordMethods('mail.partner', {
      * applicable.
      */
     async checkIsEmployee() {
-        await this.async(() => this.messaging.models['hr.employee'].performRpcSearchRead({
+        await this.async(() => this.messaging.models['Employee'].performRpcSearchRead({
             context: { active_test: false },
             domain: [['user_partner_id', '=', this.id]],
             fields: ['user_id', 'user_partner_id'],
@@ -45,7 +45,7 @@ addFields('mail.partner', {
      * Employee related to this partner. It is computed through
      * the inverse relation and should be considered read-only.
      */
-    employee: one2one('hr.employee', {
+    employee: one2one('Employee', {
         inverse: 'partner',
     }),
     /**
