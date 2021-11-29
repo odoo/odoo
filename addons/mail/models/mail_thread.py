@@ -25,6 +25,7 @@ from xmlrpc import client as xmlrpclib
 
 from odoo import _, api, exceptions, fields, models, tools, registry, SUPERUSER_ID, Command
 from odoo.exceptions import MissingError
+from odoo.http import request
 from odoo.osv import expression
 
 from odoo.tools.misc import clean_context, split_every
@@ -1807,7 +1808,8 @@ class MailThread(models.AbstractModel):
         record_name = record_name or self.display_name
 
         # Find the message's author
-        if self.env.user._is_public() and 'guest' in self.env.context:
+        # connected users bypass the guest key context to avoid users with a remaining guest cookie on their session
+        if (not request or not request.session.uid) and 'guest' in self.env.context:
             author_guest_id = self.env.context['guest'].id
             author_id, email_from = False, False
         else:
