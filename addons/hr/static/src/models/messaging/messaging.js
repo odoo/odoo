@@ -11,7 +11,7 @@ patchRecordMethods('Messaging', {
      */
     async getChat({ employeeId }) {
         if (employeeId) {
-            const employee = this.messaging.models['hr.employee'].insert({ id: employeeId });
+            const employee = this.messaging.models['Employee'].insert({ id: employeeId });
             return employee.getChat();
         }
         return this._super(...arguments);
@@ -21,7 +21,7 @@ patchRecordMethods('Messaging', {
      */
     async openProfile({ id, model }) {
         if (model === 'hr.employee' || model === 'hr.employee.public') {
-            const employee = this.messaging.models['hr.employee'].insert({ id });
+            const employee = this.messaging.models['Employee'].insert({ id });
             return employee.openProfile();
         }
         return this._super(...arguments);

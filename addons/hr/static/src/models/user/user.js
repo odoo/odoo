@@ -9,7 +9,7 @@ addFields('mail.user', {
     /**
      * Employee related to this user.
      */
-    employee: one2one('hr.employee', {
+    employee: one2one('Employee', {
         inverse: 'user',
     }),
 });
