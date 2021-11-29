@@ -452,13 +452,18 @@ class SaleOrder(models.Model):
 
     @api.depends('partner_id', 'user_id')
     def _compute_team_id(self):
+        cached_teams = {}
         for order in self:
-            order.team_id = self.env['crm.team'].with_context(
-                default_team_id=(order.team_id or order.partner_id.team_id).id
-            )._get_default_team_id(
-                user_id=self.user_id.id,
-                domain=[('company_id', 'in', [self.company_id.id, False])]
-            )
+            default_team_id = (order.team_id or order.partner_id.team_id).id
+            user_id = order.user_id.id
+            company_id = order.company_id.id
+            key = (default_team_id, user_id, company_id)
+            if key not in cached_teams:
+                cached_teams[key] = self.env['crm.team'].with_context(
+                    default_team_id=default_team_id
+                )._get_default_team_id(
+                    user_id=user_id, domain=[('company_id', 'in', [company_id, False])])
+            order.team_id = cached_teams[key]
 
     @api.onchange('partner_id')
     def _onchange_partner_id_warning(self):
