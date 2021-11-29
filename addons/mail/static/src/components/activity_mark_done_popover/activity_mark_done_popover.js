@@ -28,10 +28,10 @@ export class ActivityMarkDonePopover extends Component {
     }
 
     /**
-     * @returns {mail.activity}
+     * @returns {Activity}
      */
     get activity() {
-        return this.messaging && this.messaging.models['mail.activity'].get(this.props.activityLocalId);
+        return this.messaging && this.messaging.models['Activity'].get(this.props.activityLocalId);
     }
 
     /**
