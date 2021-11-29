@@ -12,7 +12,9 @@
             <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
             <field name="mode">primary</field>
             <field name="arch" type="xml">
-                <footer position="replace"/>
+                <footer position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </footer>
                 <h1 position="replace"/>
                 <xpath expr="//field[@name='image_1920']" position="replace"/>
                 <xpath expr="//field[@name='company_id']" position="attributes">
@@ -41,9 +43,6 @@
                     <attribute name="create">false</attribute>
                     <attribute name="js_class">hr_employee_profile_form</attribute>
                 </form>
-                <footer position="attributes">
-                    <attribute name="invisible">1</attribute>
-                </footer>
                 <notebook position="replace">
                         <field name="hr_presence_state" invisible="1"/>
                         <header>
