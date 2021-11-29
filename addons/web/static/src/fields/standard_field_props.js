@@ -12,4 +12,5 @@ export const standardFieldProps = {
     type: String,
     update: Function,
     value: true,
+    decorations: { type: Object, optional: true },
 };
