@@ -89,8 +89,8 @@ export function processField(node, fields, viewType) {
     for (const attribute of node.attributes) {
         if (attribute.name.startsWith("decoration-")) {
             const decorationName = attribute.name.replace("decoration-", "");
-            fieldInfo.options.decorations = fieldInfo.options.decorations || {};
-            fieldInfo.options.decorations[decorationName] = evaluateExpr(attribute.value);
+            fieldInfo.decorations = fieldInfo.decorations || {};
+            fieldInfo.decorations[decorationName] = attribute.value;
         }
         // FIXME: black list special attributes like on_change, name... ?
         fieldInfo.attrs[snakeToCamel(attribute.name)] = attribute.value;

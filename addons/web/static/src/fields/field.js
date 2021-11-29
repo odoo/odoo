@@ -1,4 +1,5 @@
 /** @odoo-module **/
+import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { useEffect } from "@web/core/utils/hooks";
 
@@ -30,10 +31,22 @@ export class Field extends Component {
         const readonyFromModifiers = activeField.readonly;
         const readonlyFromViewMode = this.props.readonly;
         let value = this.props.record.data[this.props.name];
+
         if (value === undefined) {
             // FIXME: this is certainly wrong, should we set the default in the datapoint?
             value = field.default !== undefined ? field.default : null;
         }
+
+        if (activeField.decorations) {
+            this.props.decorations = {};
+            for (const decoration in activeField.decorations) {
+                this.props.decorations[decoration] = evaluateExpr(
+                    activeField.decorations[decoration],
+                    record.data
+                );
+            }
+        }
+
         return {
             attrs: activeField.attrs || {},
             options: activeField.options || {},
