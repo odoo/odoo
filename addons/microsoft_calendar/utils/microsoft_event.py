@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.api import model
+from collections.abc import Set
 from typing import Iterator, Mapping
-from collections import abc
+
+from odoo.api import model
 
 
-class MicrosoftEvent(abc.Set):
+class MicrosoftEvent(Set):
     """This helper class holds the values of a Microsoft event.
     Inspired by Odoo recordset, one instance can be a single Microsoft event or a
     (immutable) set of Microsoft events.

@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tools import email_normalize
+from collections.abc import Set
 import logging
 from typing import Iterator, Mapping
-from collections import abc
+
+from odoo.tools import email_normalize
 
 _logger = logging.getLogger(__name__)
 
 
-class GoogleEvent(abc.Set):
+class GoogleEvent(Set):
     """This helper class holds the values of a Google event.
     Inspired by Odoo recordset, one instance can be a single Google event or a
     (immutable) set of Google events.
