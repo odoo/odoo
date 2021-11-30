@@ -288,8 +288,6 @@ class EventMailRegistration(models.Model):
     def _compute_scheduled_date(self):
         for mail in self:
             if mail.registration_id:
-                date_open = mail.registration_id.date_open
-                date_open_datetime = date_open or fields.Datetime.now()
-                mail.scheduled_date = date_open_datetime + _INTERVALS[mail.scheduler_id.interval_unit](mail.scheduler_id.interval_nbr)
+                mail.scheduled_date = mail.registration_id.create_date + _INTERVALS[mail.scheduler_id.interval_unit](mail.scheduler_id.interval_nbr)
             else:
                 mail.scheduled_date = False
