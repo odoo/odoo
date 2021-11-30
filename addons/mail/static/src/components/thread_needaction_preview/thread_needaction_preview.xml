@@ -31,7 +31,7 @@
                             (<t t-esc="thread.needactionMessagesAsOriginThread.length"/>)
                         </span>
                         <span class="o-autogrow"/>
-                        <t t-if="thread.lastNeedactionMessageAsOriginThread">
+                        <t t-if="thread.lastNeedactionMessageAsOriginThread and thread.lastNeedactionMessageAsOriginThread.date">
                             <span class="o_ThreadNeedactionPreview_date">
                                 <t t-esc="thread.lastNeedactionMessageAsOriginThread.date.fromNow()"/>
                             </span>

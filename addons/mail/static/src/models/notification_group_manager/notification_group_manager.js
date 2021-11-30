@@ -33,25 +33,6 @@ function factory(dependencies) {
                     res_model_name: thread.model_name,
                 });
                 group.update({ notifications: [['link', notification]] });
-                // keep res_id only if all notifications are for the same record
-                // set null if multiple records are present in the group
-                let res_id = group.res_id;
-                if (group.res_id === undefined) {
-                    res_id = thread.id;
-                } else if (group.res_id !== thread.id) {
-                    res_id = null;
-                }
-                // keep only the most recent date from all notification messages
-                let date = group.date;
-                if (!date) {
-                    date = notification.message.date;
-                } else {
-                    date = moment.max(group.date, notification.message.date);
-                }
-                group.update({
-                    date,
-                    res_id,
-                });
                 // avoid linking the same group twice when adding a notification
                 // to an existing group
                 if (!groups.includes(group)) {
