@@ -11,7 +11,7 @@ export class AttachmentImage extends Component {
      */
     setup() {
         super.setup();
-        useComponentToModel({ fieldName: 'component', modelName: 'mail.attachment_image', propNameAsRecordLocalId: 'attachmentImageLocalId' });
+        useComponentToModel({ fieldName: 'component', modelName: 'AttachmentImage', propNameAsRecordLocalId: 'attachmentImageLocalId' });
     }
 
     //--------------------------------------------------------------------------
@@ -19,10 +19,10 @@ export class AttachmentImage extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {mail.attachment_image}
+     * @returns {AttachmentImage}
      */
     get attachmentImage() {
-        return this.messaging && this.messaging.models['mail.attachment_image'].get(this.props.attachmentImageLocalId);
+        return this.messaging && this.messaging.models['AttachmentImage'].get(this.props.attachmentImageLocalId);
     }
 
 }
