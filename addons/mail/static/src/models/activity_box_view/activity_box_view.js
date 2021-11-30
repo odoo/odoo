@@ -4,7 +4,7 @@ import { registerModel } from '@mail/model/model_core';
 import { attr, one2one } from '@mail/model/model_field';
 
 registerModel({
-    name: 'mail.activity_box_view',
+    name: 'ActivityBoxView',
     identifyingFields: ['chatter'],
     lifecycleHooks: {
         _created() {
