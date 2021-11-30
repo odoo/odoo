@@ -392,7 +392,6 @@ var MassMailingFieldHtml = FieldHtml.extend({
         // Overide `d-flex` class which style is `!important`
         $snippetsSideBar.find(`.o_we_website_top_actions > *:not(${selectorToKeep})`).attr('style', 'display: none!important');
         var $snippets_menu = $snippetsSideBar.find("#snippets_menu");
-        var $selectTemplateBtn = $snippets_menu.find('.o_we_select_template');
 
         if (config.device.isMobile) {
             $snippetsSideBar.hide();
@@ -447,9 +446,6 @@ var MassMailingFieldHtml = FieldHtml.extend({
          * Create theme selection screen and check if it must be forced opened.
          * Reforce it opened if the last snippet is removed.
          */
-        const $themeSelector = $(core.qweb.render("mass_mailing.theme_selector", {
-            themes: themesParams
-        }));
         const $themeSelectorNew = $(core.qweb.render("mass_mailing.theme_selector_new", {
             themes: themesParams
         }));
@@ -460,50 +456,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
             $themeSelectorNew.appendTo(this.wysiwyg.$iframeBody);
         }
 
-        /**
-         * Add proposition to install enterprise themes if not installed.
-         */
-        var $mail_themes_upgrade = $themeSelector.find(".o_mass_mailing_themes_upgrade");
-        $mail_themes_upgrade.on("click", function (e) {
-            e.stopImmediatePropagation();
-            e.preventDefault();
-            self.do_action("mass_mailing.action_mass_mailing_configuration");
-        });
-
-        $selectTemplateBtn.on('click', () => {
-            $snippetsSideBar.data('snippetMenu').activateCustomTab($themeSelector);
-            /**
-             * Ensure the parent of the theme selector is not used as parent for a
-             * tooltip as it is overflow auto and would result in the tooltip being
-             * hidden by the body of the mail.
-             */
-            $themeSelector.parent().addClass('o_forbidden_tooltip_parent');
-            $selectTemplateBtn.addClass('active');
-        });
-
-        /**
-         * Switch theme when a theme button is hovered. Confirm change if the theme button
-         * is pressed.
-         */
         var selectedTheme = false;
-        $themeSelector.on("mouseenter", ".dropdown-item", function (e) {
-            e.preventDefault();
-            var themeParams = themesParams[$(e.currentTarget).index()];
-            self._switchThemes(false, themeParams);
-        });
-        $themeSelector.on("mouseleave", ".dropdown-item", function (e) {
-            self._switchThemes(false, selectedTheme);
-        });
-        $themeSelector.on("click", '[data-toggle="dropdown"]', function (e) {
-            var $menu = $themeSelector.find('.dropdown-menu');
-            var isVisible = $menu.hasClass('show');
-            if (isVisible) {
-                e.preventDefault();
-                e.stopImmediatePropagation();
-                $menu.removeClass('show');
-            }
-        });
-
         const selectTheme = (e) => {
             e.preventDefault();
             e.stopImmediatePropagation();
@@ -511,13 +464,8 @@ var MassMailingFieldHtml = FieldHtml.extend({
             self._switchImages(themeParams, $snippets);
 
             selectedTheme = themeParams;
-
-            // Notify form view
-            $themeSelector.find('.dropdown-item.selected').removeClass('selected');
-            $themeSelector.find('.dropdown-item:eq(' + themesParams.indexOf(selectedTheme) + ')').addClass('selected');
         };
 
-        $themeSelector.on("click", ".dropdown-item", selectTheme);
         $themeSelectorNew.on("click", ".dropdown-item", async (e) => {
             e.preventDefault();
             e.stopImmediatePropagation();
@@ -530,10 +478,6 @@ var MassMailingFieldHtml = FieldHtml.extend({
             this.$content.closest('body').removeClass("o_force_mail_theme_choice");
 
             $themeSelectorNew.remove();
-
-            if ($mail_themes_upgrade.length) {
-                $snippets_menu.empty();
-            }
 
             selectTheme(e);
             // Wait the next tick because some mutation have to be processed by
@@ -550,7 +494,6 @@ var MassMailingFieldHtml = FieldHtml.extend({
         selectedTheme = this._getSelectedTheme(themesParams);
         if (selectedTheme) {
             this.$content.closest('body').addClass(selectedTheme.className);
-            $themeSelector.find('.dropdown-item:eq(' + themesParams.indexOf(selectedTheme) + ')').addClass('selected');
             this._switchImages(selectedTheme, $snippets);
         } else if (this.$content.find('.o_layout').length) {
             themesParams.push({
