@@ -248,10 +248,9 @@ var MassMailingFieldHtml = FieldHtml.extend({
      * Switch themes or import first theme.
      *
      * @private
-     * @param {Boolean} firstChoice true if this is the first chosen theme (going from no theme to a theme)
      * @param {Object} themeParams
      */
-    _switchThemes: function (firstChoice, themeParams) {
+    _switchThemes: function (themeParams) {
         if (!themeParams || this.switchThemeLast === themeParams) {
             return;
         }
@@ -285,30 +284,20 @@ var MassMailingFieldHtml = FieldHtml.extend({
             'data-name': 'Mailing',
         }).append($new_wrapper);
 
-        var $contents;
-        if (firstChoice) {
-            $contents = themeParams.template;
-        } else if (old_layout) {
-            $contents = ($old_layout.hasClass('oe_structure') ? $old_layout : $old_layout.find('.oe_structure').first()).contents().clone();
-        } else {
-            $contents = this.$content.contents().clone();
-        }
-
+        const $contents = themeParams.template;
         $newWrapperContent.append($contents);
         this._switchImages(themeParams, $newWrapperContent);
         old_layout && old_layout.remove();
         this.$content.empty().append($newLayout);
 
-        if (firstChoice) {
-            $newWrapperContent.find('*').addBack()
-                .contents()
-                .filter(function () {
-                    return this.nodeType === 3 && this.textContent.match(/\S/);
-                }).parent().addClass('o_default_snippet_text');
+        $newWrapperContent.find('*').addBack()
+            .contents()
+            .filter(function () {
+                return this.nodeType === 3 && this.textContent.match(/\S/);
+            }).parent().addClass('o_default_snippet_text');
 
-            if (themeParams.name === 'basic') {
-                this.$content[0].focus();
-            }
+        if (themeParams.name === 'basic') {
+            this.$content[0].focus();
         }
         this.wysiwyg.trigger('reload_snippet_dropzones');
         this.trigger_up('iframe_updated', { $iframe: this.wysiwyg.$iframe });
@@ -489,10 +478,11 @@ var MassMailingFieldHtml = FieldHtml.extend({
         $themeSelector.on("mouseenter", ".dropdown-item", function (e) {
             e.preventDefault();
             var themeParams = themesParams[$(e.currentTarget).index()];
-            self._switchThemes(false, themeParams);
+            self.wysiwyg.odooEditor.automaticStepSkipStack();
+            self._switchThemes(themeParams);
         });
         $themeSelector.on("mouseleave", ".dropdown-item", function (e) {
-            self._switchThemes(false, selectedTheme);
+            self._switchThemes(selectedTheme);
         });
         $themeSelector.on("click", '[data-toggle="dropdown"]', function (e) {
             var $menu = $themeSelector.find('.dropdown-menu');
@@ -526,7 +516,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
             if (themeParams.name === "basic") {
                 await this._restartWysiwygIntance(false);
             }
-            this._switchThemes(true, themeParams);
+            this._switchThemes(themeParams);
             this.$content.closest('body').removeClass("o_force_mail_theme_choice");
 
             $themeSelectorNew.remove();
