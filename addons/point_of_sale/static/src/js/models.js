@@ -1557,7 +1557,7 @@ exports.Product = Backbone.Model.extend({
     // ORM. After that they are added in this order to the pricelists.
     get_price: function(pricelist, quantity, price_extra){
         var self = this;
-        var date = moment().startOf('day');
+        var date = moment();
 
         // In case of nested pricelists, it is necessary that all pricelists are made available in
         // the POS. Display a basic alert to the user in this case.
