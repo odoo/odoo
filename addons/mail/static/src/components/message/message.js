@@ -12,8 +12,8 @@ import { getLangDatetimeFormat } from 'web.time';
 const { Component, useState } = owl;
 const { onWillUnmount, useRef } = owl.hooks;
 
-const READ_MORE = _lt("read more");
-const READ_LESS = _lt("read less");
+const READ_MORE = _lt("Read More");
+const READ_LESS = _lt("Read Less");
 
 export class Message extends Component {
 

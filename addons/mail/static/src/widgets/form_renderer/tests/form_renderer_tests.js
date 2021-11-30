@@ -750,8 +750,8 @@ QUnit.test('read more links becomes read less after being clicked', async functi
     );
     assert.strictEqual(
         document.querySelector('.o_Message_readMoreLess').textContent,
-        'read more',
-        "read more/less link should contain 'read more' as text"
+        'Read More',
+        "Read More/Less link should contain 'Read More' as text"
     );
 
     await afterNextRender(() => this.afterEvent({
@@ -762,15 +762,15 @@ QUnit.test('read more links becomes read less after being clicked', async functi
     }));
     assert.strictEqual(
         document.querySelector('.o_Message_readMoreLess').textContent,
-        'read more',
-        "read more/less link should contain 'read more' as text"
+        'Read More',
+        "Read More/Less link should contain 'Read More' as text"
     );
 
     document.querySelector('.o_Message_readMoreLess').click();
     assert.strictEqual(
         document.querySelector('.o_Message_readMoreLess').textContent,
-        'read less',
-        "read more/less link should contain 'read less' as text after it has been clicked"
+        'Read Less',
+        "Read Less/Less link should contain 'Read Less' as text after it has been clicked"
     );
 });
 
@@ -1027,15 +1027,15 @@ QUnit.test('[TECHNICAL] unfolded read more/less links should not fold on message
     });
     assert.strictEqual(
         document.querySelector('.o_Message_readMoreLess').textContent,
-        "read more",
-        "read more/less link on message should be folded initially (read more)"
+        "Read More",
+        "Read More/Less link on message should be folded initially (Read More)"
     );
 
     document.querySelector('.o_Message_readMoreLess').click(),
     assert.strictEqual(
         document.querySelector('.o_Message_readMoreLess').textContent,
-        "read less",
-        "read more/less link on message should be unfolded after a click from initial rendering (read less)"
+        "Read Less",
+        "Read More/Less link on message should be unfolded after a click from initial rendering (read less)"
     );
 
     await afterNextRender(
@@ -1043,8 +1043,8 @@ QUnit.test('[TECHNICAL] unfolded read more/less links should not fold on message
     );
     assert.strictEqual(
         document.querySelector('.o_Message_readMoreLess').textContent,
-        "read less",
-        "read more/less link on message should still be unfolded after a click on message aside of this button click (read less)"
+        "Read Less",
+        "Read More/Less link on message should still be unfolded after a click on message aside of this button click (Read Less)"
     );
 });
 
