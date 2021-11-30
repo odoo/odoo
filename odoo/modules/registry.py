@@ -331,6 +331,17 @@ class Registry(Mapping):
         table2model = {model._table: name for name, model in env.items() if not model._abstract}
         missing_tables = set(table2model).difference(existing_tables(cr, table2model))
 
+        # Correção: Multidados
+        # Ignorando a Verificação de Tabelas Criadas pelo sistema
+        # com inicio = x_ks_cr
+        ignore_missing_tables = []
+        for table in missing_tables:
+            if 'x_ks_cr' in table2model[table]:
+                ignore_missing_tables.append(table)
+        # Removendo tabelas a Ignorar do SET missing_tables
+        for table in ignore_missing_tables:
+            missing_tables.discard(table)
+
         if missing_tables:
             missing = {table2model[table] for table in missing_tables}
             _logger.warning("Models have no table: %s.", ", ".join(missing))
