@@ -149,6 +149,7 @@ function factory(dependencies) {
         _computeHasReplyIcon() {
             return Boolean(
                 this.messaging && this.messaging.inbox &&
+                this.message && !this.message.isTemporary && !this.message.isTransient &&
                 this.messageView && this.messageView.threadView && this.messageView.threadView.thread && (
                     this.messageView.threadView.thread === this.messaging.inbox ||
                     this.messageView.threadView.thread.model === 'mail.channel'
