@@ -1329,7 +1329,9 @@ class MrpProduction(models.Model):
                 'product_consumed_qty_uom': consumed_qty,
                 'product_expected_qty_uom': expected_qty
             }))
-        ctx.update({'default_mrp_production_ids': self.ids, 'default_mrp_consumption_warning_line_ids': lines})
+        ctx.update({'default_mrp_production_ids': self.ids,
+                    'default_mrp_consumption_warning_line_ids': lines,
+                    'form_view_ref': False})
         action = self.env["ir.actions.actions"]._for_xml_id("mrp.action_mrp_consumption_warning")
         action['context'] = ctx
         return action
