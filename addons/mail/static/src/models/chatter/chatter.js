@@ -277,7 +277,7 @@ registerModel({
         },
     },
     fields: {
-        activityBoxView: one2one('mail.activity_box_view', {
+        activityBoxView: one2one('ActivityBoxView', {
             compute: '_computeActivityBoxView',
             inverse: 'chatter',
             isCausal: true,
