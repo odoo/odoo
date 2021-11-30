@@ -187,6 +187,11 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
             } else {
                 let { buffer } = event.detail;
                 let val = buffer === null ? 'remove' : buffer;
+                let currentOrderline = this.env.pos.get_order().get_selected_orderline();
+                if (currentOrderline && event.detail.key === '-') {
+                    let currentQuantity = currentOrderline.get_quantity();
+                    val = currentQuantity.toString().startsWith('-') ? currentQuantity.toString().replace('-', '') : `-${currentQuantity}`
+                }
                 this._setValue(val);
             }
         }
