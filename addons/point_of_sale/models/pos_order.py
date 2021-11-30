@@ -664,8 +664,11 @@ class PosOrder(models.Model):
         order_ids = []
         for order in orders:
             existing_order = False
+            domain = []
             if 'server_id' in order['data']:
-                existing_order = self.env['pos.order'].search(['|', ('id', '=', order['data']['server_id']), ('pos_reference', '=', order['data']['name'])], limit=1)
+                domain = ['|', ('id', '=', order['data']['server_id'])]
+            domain.append(('pos_reference', '=', order['data']['name']))
+            existing_order = self.env['pos.order'].search(domain, limit=1)
             if (existing_order and existing_order.state == 'draft') or not existing_order:
                 order_ids.append(self._process_order(order, draft, existing_order))
 
