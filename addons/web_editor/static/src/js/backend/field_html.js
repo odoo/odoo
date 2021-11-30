@@ -344,6 +344,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
                     cwindow.document
                         .open("text/html", "replace")
                         .write(
+                            '<!DOCTYPE html><html>' +
                             '<head>' +
                                 '<meta charset="utf-8"/>' +
                                 '<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>\n' +
@@ -362,7 +363,8 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
                                         'window.top.' + self._onUpdateIframeId + '(' + _avoidDoubleLoad + ')' +
                                     '}' +
                                 '</script>\n' +
-                            '</body>');
+                            '</body>' +
+                            '</html>');
 
                     var height = cwindow.document.body.scrollHeight;
                     self.$iframe.css('height', Math.max(30, Math.min(height, 500)) + 'px');
