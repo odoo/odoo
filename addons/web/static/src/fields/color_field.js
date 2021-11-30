@@ -25,7 +25,7 @@ export class ColorField extends Component {
     }
 
     get isReadonly() {
-        return this.props.record.activeFields[this.props.name].readonly;
+        return this.props.record.activeFields[this.props.name].modifiers.readonly;
     }
 }
 ColorField.template = "web.ColorField";
