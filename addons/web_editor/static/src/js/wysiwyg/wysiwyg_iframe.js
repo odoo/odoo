@@ -157,7 +157,7 @@ Wysiwyg.include({
                 });
                 self.$iframe[0].contentWindow.document
                     .open("text/html", "replace")
-                    .write(iframeContent);
+                    .write(`<!DOCTYPE html><html>${iframeContent}</html>`);
             });
             self.options.document = self.$iframe[0].contentWindow.document;
         });
