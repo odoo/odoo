@@ -78,4 +78,41 @@
         </div>
     </t>
 
+    <t t-name="FieldMany2ManyAttendeePopover">
+        <t t-if="elements.length > previewAttendeesMax">
+            <div class="collapse multicollapse">
+                <a class="d-block" type="button" data-toggle="collapse" data-target=".multicollapse" aria-expanded="false">
+                    <i><t t-out="elements.length"/> attendees</i>
+                    <i class="fa fa-angle-up float-right"/>
+                </a>
+            </div>
+            <t t-foreach="elements" t-as="el">
+                <t t-set="color" t-value="el[colorField] || 0"/>
+                <t t-set="colornames" t-value="['No color', 'Red', 'Orange', 'Yellow', 'Light blue', 'Dark purple', 'Salmon pink', 'Medium blue', 'Dark blue', 'Fushia', 'Green', 'Purple']"/>
+                <div t-attf-class="badge badge-pill #{el_index >= previewAttendeesMax ? 'collapse multicollapse' : ''} o_tag_color_#{color}" t-att-data-color="color" t-att-data-index="el_index" t-att-data-id="el.id" t-attf-title="Tag color: #{colornames[color]}">
+                    <t t-set="_badge_text">
+                        <span><img t-attf-src="/web/image/#{avatarModel}/#{el.id}/#{avatarField}" t-att-data-id="el.id" class="rounded-circle o_m2m_avatar"/></span>
+                        <span class="o_badge_text" t-att-title="el.display_name"><span role="img" t-attf-aria-label="Tag color: #{colornames[color]}"/><span class="o_tag_badge_text" t-esc="el.display_name"/></span>
+                    </t>
+                    <span t-out="_badge_text"/>
+                    <a t-if="!readonly" href="#" class="fa fa-times o_delete" title="Delete" aria-label="Delete"/>
+                </div>
+            </t>
+            <div class="collapse show multicollapse">
+                <a class="d-block" type="button" data-toggle="collapse" data-target=".multicollapse" aria-expanded="false">
+                    <b><t t-out="elements.length"/> attendees
+                    <i class="fa fa-angle-down float-right"/>
+                    </b>
+                </a>
+
+                <i t-if="acceptedCount" class="d-block"><t t-out="acceptedCount"/> accepted</i>
+                <i t-if="declinedCount" class="d-block"><t t-out="declinedCount"/> declined</i>
+                <i t-if="uncertainCount" class="d-block"><t t-out="uncertainCount"/> uncertain</i>
+            </div>
+        </t>
+        <t t-else="">
+            <t t-call="FieldMany2ManyTagAvatar"/>
+        </t>
+    </t>
+
 </template>

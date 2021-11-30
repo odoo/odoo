@@ -273,15 +273,15 @@
                 event_open_popup="true"
                 event_limit="5"
                 color="partner_ids">
+                <field name="location" attrs="{'invisible': [('location', '=', False)]}" options="{'icon': 'fa fa-map-marker'}"/>
                 <field name="attendee_status" invisible="1"/>
-                <field name="partner_ids" options="{'block': True, 'icon': 'fa fa-users'}"
+                <field name="partner_ids" options="{'block': True, 'icon': 'fa fa-users', 'isPopover': True}"
                        filters="1" widget="many2manyattendee" write_model="calendar.filters"
                        write_field="partner_id" filter_field="partner_checked" avatar_field="avatar_128"
                 />
                 <field name="is_highlighted" invisible="1"/>
                 <field name="is_organizer_alone" invisible="1"/>
                 <field name="display_description" invisible="1"/>
-                <field name="location" attrs="{'invisible': [('location', '=', False)]}" options="{'icon': 'fa fa-map-marker'}"/>
                 <field name="description" attrs="{'invisible': [('display_description', '=', False)]}" options="{'icon': 'fa fa-bars'}"/>
                 <field name="privacy" invisible="1"/>
                 <field name="alarm_ids" attrs="{'invisible': [('alarm_ids', '=', [])]}" options="{'icon': 'fa fa-bell-o'}"/>

@@ -38,6 +38,9 @@ const Many2ManyAttendee = FieldMany2ManyTagsAvatar.extend({
     init: function () {
         this._super.apply(this, arguments);
         this.className += this.nodeOptions.block ? ' d-block' : '';
+        if (this.nodeOptions.isPopover) {
+            this.tag_template = 'FieldMany2ManyAttendeePopover';
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -78,6 +81,15 @@ const Many2ManyAttendee = FieldMany2ManyTagsAvatar.extend({
                 return a_org ? -1 : 1;
              });
         }
+        result = {
+            ...result,
+            acceptedCount: result.attendeesData.filter(attendee => attendee.status === 'accepted').length,
+            declinedCount: result.attendeesData.filter(attendee => attendee.status === 'declined').length,
+            previewAttendeesMax: 5
+        }
+
+        result.uncertainCount = result.attendeesData.length - result.acceptedCount - result.declinedCount;
+
         return result;
     },
 });
