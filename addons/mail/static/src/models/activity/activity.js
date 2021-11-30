@@ -290,7 +290,7 @@ registerModel({
         thread: many2one('mail.thread', {
             inverse: 'activities',
         }),
-        type: many2one('mail.activity_type', {
+        type: many2one('ActivityType', {
             inverse: 'activities',
         }),
     },
