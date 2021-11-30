@@ -502,6 +502,7 @@ class Base(models.AbstractModel):
         field = self._fields[field_name]
         supported_types = ['many2one', 'selection']
         if field.type not in supported_types:
+<<<<<<< HEAD
             types = dict(self.env["ir.model.fields"]._fields["ttype"]._description_selection(self.env))
             raise UserError(_(
                 'Only types %(supported_types)s are supported for category (found type %(field_type)s)',
@@ -591,6 +592,17 @@ class Base(models.AbstractModel):
         if hierarchize and enable_counters:
             self._search_panel_global_counters(field_range, parent_name)
 
+=======
+            raise UserError(_('Only types %(supported_types)s are supported for category (found type %(field_type)s)') % ({
+                            'supported_types': supported_types, 'field_type': field.type}))
+
+        Comodel = self.env[field.comodel_name]
+        fields = ['display_name']
+        parent_field = Comodel._fields.get(Comodel._parent_name)
+        parent_name = Comodel._parent_name if parent_field and parent_field.comodel_name == Comodel._name else False
+        if parent_name:
+            fields.append(parent_name)
+>>>>>>> de5385bdff5... temp
         return {
             'parent_field': parent_name,
             'values': list(field_range.values()),

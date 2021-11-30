@@ -3,6 +3,7 @@
 import ast
 
 from odoo import api, fields, models, _
+from odoo.addons.web.models.models import SEARCH_PANEL_LIMIT
 
 
 class Job(models.Model):
@@ -124,6 +125,17 @@ class Job(models.Model):
             }
             self.env['hr.recruitment.source'].create(source_vals)
         return new_job
+
+    @api.model
+    def search_panel_select_range(self, field_name):
+        if field_name == 'user_id':
+            users = self.search([('user_id', '!=', False)]).user_id
+            available_users = users.search([('id', 'in', users.ids)], limit=SEARCH_PANEL_LIMIT).read(['display_name'])
+            return {
+                'parent_field': False,
+                'values': available_users
+            }
+        return super(Job, self).search_panel_select_range(field_name)
 
     def _creation_subtype(self):
         return self.env.ref('hr_recruitment.mt_job_new')
