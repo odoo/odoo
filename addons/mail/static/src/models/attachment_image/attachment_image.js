@@ -5,7 +5,7 @@ import { attr, many2one } from '@mail/model/model_field';
 import { clear, insert, insertAndReplace, replace } from '@mail/model/model_field_command';
 
 registerModel({
-    name: 'mail.attachment_image',
+    name: 'AttachmentImage',
     identifyingFields: ['attachmentList', 'attachment'],
     lifecycleHooks: {
         _created() {
