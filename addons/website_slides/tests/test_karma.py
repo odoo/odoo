@@ -28,14 +28,14 @@ class TestKarmaGain(common.SlidesCase):
         self.slide_2_0 = self.env['slide.slide'].with_user(self.user_officer).create({
             'name': 'How to travel through space and time',
             'channel_id': self.channel_2.id,
-            'slide_type': 'presentation',
+            'slide_category': 'document',
             'is_published': True,
             'completion_time': 2.0,
         })
         self.slide_2_1 = self.env['slide.slide'].with_user(self.user_officer).create({
             'name': 'How to duplicate yourself',
             'channel_id': self.channel_2.id,
-            'slide_type': 'presentation',
+            'slide_category': 'document',
             'is_published': True,
             'completion_time': 2.0,
         })

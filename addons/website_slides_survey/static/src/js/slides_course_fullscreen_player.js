@@ -11,7 +11,7 @@ Fullscreen.include({
     ),
 
     /**
-     * Extend the _renderSlide method so that slides of type "certification"
+     * Extend the _renderSlide method so that slides of category "certification"
      * are also taken into account and rendered correctly
      *
      * @private
@@ -20,7 +20,7 @@ Fullscreen.include({
     _renderSlide: function (){
         var def = this._super.apply(this, arguments);
         var $content = this.$('.o_wslides_fs_content');
-        if (this.get('slide').type === "certification"){
+        if (this.get('slide').category === "certification"){
             $content.html(QWeb.render('website.slides.fullscreen.certification',{widget: this}));
         }
         return Promise.all([def]);

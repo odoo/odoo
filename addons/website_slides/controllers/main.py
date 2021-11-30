@@ -67,7 +67,7 @@ class WebsiteSlides(WebsiteProfile):
 
     def _set_completed_slide(self, slide):
         # quiz use their specific mechanism to be marked as done
-        if slide.slide_type == 'quiz' or slide.question_ids:
+        if slide.slide_category == 'quiz' or slide.question_ids:
             raise werkzeug.exceptions.Forbidden(_("Slide with questions must be marked as done when submitting all good answers "))
         if slide.website_published and slide.channel_id.is_member:
             slide.action_set_completed()
@@ -331,12 +331,12 @@ class WebsiteSlides(WebsiteProfile):
         return request.render('website_slides.courses_home', values)
 
     @http.route(['/slides/all', '/slides/all/tag/<string:slug_tags>'], type='http', auth="public", website=True, sitemap=True)
-    def slides_channel_all(self, slide_type=None, slug_tags=None, my=False, **post):
+    def slides_channel_all(self, slide_category=None, slug_tags=None, my=False, **post):
         """ Home page displaying a list of courses displayed according to some
         criterion and search terms.
 
-          :param string slide_type: if provided, filter the course to contain at
-           least one slide of type 'slide_type'. Used notably to display courses
+          :param string slide_category: if provided, filter the course to contain at
+           least one slide of type 'slide_category'. Used notably to display courses
            with certifications;
           :param string slug_tags: if provided, filter the slide.channels having
             the tag(s) (in comma separated slugified form);
@@ -347,6 +347,10 @@ class WebsiteSlides(WebsiteProfile):
            * ``search``: filter on course description / name;
         """
 
+        # retro-compatibility for older links, 'slide_category' field was previously named 'slide_type'
+        # can be safely removed after 15.3 (I swear though, don't be afraid, remove it!)
+        slide_category = slide_category or post.get('slide_type')
+
         if slug_tags and request.httprequest.method == 'GET':
             # Redirect `tag-1,tag-2` to `tag-1` to disallow multi tags
             # in GET request for proper bot indexation;
@@ -355,7 +359,7 @@ class WebsiteSlides(WebsiteProfile):
             # request and so clearly it's not SEO bot.
             tag_list = slug_tags.split(',')
             if len(tag_list) > 1 and not post.get('search'):
-                url = QueryURL('/slides/all', ['tag'], tag=tag_list[0], my=my, slide_type=slide_type)()
+                url = QueryURL('/slides/all', ['tag'], tag=tag_list[0], my=my, slide_category=slide_category)()
                 return request.redirect(url, code=302)
 
         options = {
@@ -367,7 +371,7 @@ class WebsiteSlides(WebsiteProfile):
             'allowFuzzy': not post.get('noFuzzy'),
             'my': my,
             'tag': slug_tags or post.get('tag'),
-            'slide_type': slide_type,
+            'slide_category': slide_category,
         }
         search = post.get('search')
         order = self._channel_order_by_criterion.get(post.get('sorting'))
@@ -390,7 +394,7 @@ class WebsiteSlides(WebsiteProfile):
             'tag_groups': tag_groups,
             'search_term': fuzzy_search_term or search,
             'original_search': fuzzy_search_term and search,
-            'search_slide_type': slide_type,
+            'search_slide_category': slide_category,
             'search_my': my,
             'search_tags': search_tags,
             'top3_users': self._get_top3_users(),
@@ -416,15 +420,20 @@ class WebsiteSlides(WebsiteProfile):
         '/slides/<model("slide.channel"):channel>/category/<model("slide.slide"):category>',
         '/slides/<model("slide.channel"):channel>/category/<model("slide.slide"):category>/page/<int:page>',
     ], type='http', auth="public", website=True, sitemap=sitemap_slide)
-    def channel(self, channel, category=None, tag=None, page=1, slide_type=None, uncategorized=False, sorting=None, search=None, **kw):
+    def channel(self, channel, category=None, tag=None, page=1, slide_category=None, uncategorized=False, sorting=None, search=None, **kw):
         """
         Will return all necessary data to display the requested slide_channel along with a possible category.
         """
+
+        # retro-compatibility for older links, 'slide_category' field was previously named 'slide_type'
+        # can be safely removed after 15.3 (I swear though, don't be afraid, remove it!)
+        slide_category = slide_category or kw.get('slide_type')
+
         domain = self._get_channel_slides_base_domain(channel)
 
         pager_url = "/slides/%s" % (channel.id)
         pager_args = {}
-        slide_types = dict(request.env['slide.slide']._fields['slide_type']._description_selection(request.env))
+        slide_categories = dict(request.env['slide.slide']._fields['slide_category']._description_selection(request.env))
 
         if search:
             domain += [
@@ -443,9 +452,9 @@ class WebsiteSlides(WebsiteProfile):
             if uncategorized:
                 domain += [('category_id', '=', False)]
                 pager_args['uncategorized'] = 1
-            elif slide_type:
-                domain += [('slide_type', '=', slide_type)]
-                pager_url += "?slide_type=%s" % slide_type
+            elif slide_category:
+                domain += [('slide_category', '=', slide_category)]
+                pager_url += "?slide_category=%s" % slide_category
 
         # sorting criterion
         if channel.channel_type == 'documentation':
@@ -467,8 +476,8 @@ class WebsiteSlides(WebsiteProfile):
             query_string = "?search_category=%s" % category.id
         elif tag:
             query_string = "?search_tag=%s" % tag.id
-        elif slide_type:
-            query_string = "?search_slide_type=%s" % slide_type
+        elif slide_category:
+            query_string = "?search_slide_category=%s" % slide_category
         elif uncategorized:
             query_string = "?search_uncategorized=1"
 
@@ -479,10 +488,10 @@ class WebsiteSlides(WebsiteProfile):
             # search
             'search_category': category,
             'search_tag': tag,
-            'search_slide_type': slide_type,
+            'search_slide_category': slide_category,
             'search_uncategorized': uncategorized,
             'query_string': query_string,
-            'slide_types': slide_types,
+            'slide_categories': slide_categories,
             'sorting': actual_sorting,
             'search': search,
             # display data
@@ -704,8 +713,8 @@ class WebsiteSlides(WebsiteProfile):
         values.update({
             'search_category': slide.category_id if kwargs.get('search_category') else None,
             'search_tag': request.env['slide.tag'].browse(int(kwargs.get('search_tag'))) if kwargs.get('search_tag') else None,
-            'slide_types': dict(request.env['slide.slide']._fields['slide_type']._description_selection(request.env)) if kwargs.get('search_slide_type') else None,
-            'search_slide_type': kwargs.get('search_slide_type'),
+            'slide_categories': dict(request.env['slide.slide']._fields['slide_category']._description_selection(request.env)) if kwargs.get('search_slide_category') else None,
+            'search_slide_category': kwargs.get('search_slide_category'),
             'search_uncategorized': kwargs.get('search_uncategorized')
         })
 
@@ -724,7 +733,7 @@ class WebsiteSlides(WebsiteProfile):
                 type='http', auth="public", website=True, sitemap=False)
     def slide_get_pdf_content(self, slide):
         response = werkzeug.wrappers.Response()
-        response.data = slide.datas and base64.b64decode(slide.datas) or b''
+        response.data = slide.binary_content and base64.b64decode(slide.binary_content) or b''
         response.mimetype = 'application/pdf'
         return response
 
@@ -1044,28 +1053,77 @@ class WebsiteSlides(WebsiteProfile):
     # --------------------------------------------------
 
     @http.route(['/slides/prepare_preview'], type='json', auth='user', methods=['POST'], website=True)
-    def prepare_preview(self, **data):
+    def prepare_preview(self, channel_id, slide_category, url=None):
+        """ Will attempt to fetch external metadata for this slide from the correct
+        source (YouTube, Google Drive, ...).
+
+        To take advantage of the slide business method, we create a temporary slide record before
+        fetching the metadata.
+        This allows a lot of code simplification, since we use "new", it will not created anything
+        in database. """
+
+        if not url:
+            return {}
+
         Slide = request.env['slide.slide']
-        unused, document_id = Slide._find_document_data_from_url(data['url'])
-        preview = {}
-        if not document_id:
-            preview['error'] = _('Please enter valid youtube or google doc url')
-            return preview
-        existing_slide = Slide.search([('channel_id', '=', int(data['channel_id'])), ('document_id', '=', document_id)], limit=1)
-        if existing_slide:
-            preview['error'] = _('This video already exists in this channel on the following slide: %s', existing_slide.name)
-            return preview
-        values = Slide._parse_document_url(data['url'], only_preview_fields=True)
-        if values.get('error'):
-            preview['error'] = values['error']
-            return preview
-        return values
+
+        additional_values = {}
+        if slide_category == 'video':
+            identical_video = request.env['slide.slide']
+            existing_videos = Slide.search([
+                ('channel_id', '=', int(channel_id)),
+                ('slide_category', '=', 'video')
+            ])
+
+            slide = Slide.new({
+                'channel_id': int(channel_id),
+                'name': 'memory_record_for_computed_fields',
+                'slide_category': 'video',
+                'url': url
+            })
+
+            if not slide.video_source_type:
+                slide.unlink()
+                return {'error': _("Could not find your video. Please check if your link is correct and if the video can be accessed.")}
+
+            if slide.video_source_type == 'youtube':
+                identical_video = existing_videos.filtered(
+                    lambda existing_video: slide.youtube_id == existing_video.youtube_id)
+            elif slide.video_source_type == 'google_drive':
+                identical_video = existing_videos.filtered(
+                    lambda existing_video: slide.google_drive_id == existing_video.google_drive_id)
+            elif slide.video_source_type == 'vimeo':
+                identical_video = existing_videos.filtered(
+                    lambda existing_video: slide.vimeo_id == existing_video.vimeo_id)
+            if identical_video:
+                identical_video_name = identical_video[0].name
+                additional_values['info'] = _('This video already exists in this channel on the following content: %s', identical_video_name)
+        elif slide_category in ['document', 'infographic']:
+            slide = Slide.new({
+                'channel_id': int(channel_id),
+                'name': 'memory_record_for_computed_fields',
+                'slide_category': slide_category,
+                'source_type': 'external',
+                'url': url
+            })
+
+            if not slide.google_drive_id:
+                return {'error': _('Please enter valid Google Drive Link')}
+
+        slide_values, error = slide._fetch_external_metadata(image_url_only=True)
+        if error:
+            return {'error': error}
+
+        if additional_values:
+            slide_values.update(additional_values)
+
+        return slide_values
 
     @http.route(['/slides/add_slide'], type='json', auth='user', methods=['POST'], website=True)
     def create_slide(self, *args, **post):
         # check the size only when we upload a file.
-        if post.get('datas'):
-            file_size = len(post['datas']) * 3 / 4  # base64
+        if post.get('binary_content'):
+            file_size = len(post['binary_content']) * 3 / 4  # base64
             if (file_size / 1024.0 / 1024.0) > 25:
                 return {'error': _('File is too big. File size cannot exceed 25MB')}
 
@@ -1117,9 +1175,9 @@ class WebsiteSlides(WebsiteProfile):
         channel._resequence_slides(slide, force_category=category)
 
         redirect_url = "/slides/slide/%s" % (slide.id)
-        if channel.channel_type == "training" and not slide.slide_type == "webpage":
+        if channel.channel_type == "training" and slide.slide_category not in ["article", "quiz"]:
             redirect_url = "/slides/%s" % (slug(channel))
-        if slide.slide_type == 'webpage':
+        if slide.slide_category == 'article':
             redirect_url += "?enable_editor=1"
         return {
             'url': redirect_url,
@@ -1129,8 +1187,8 @@ class WebsiteSlides(WebsiteProfile):
         }
 
     def _get_valid_slide_post_values(self):
-        return ['name', 'url', 'tag_ids', 'slide_type', 'channel_id', 'is_preview',
-                'mime_type', 'datas', 'description', 'image_1920', 'is_published']
+        return ['name', 'url', 'video_url', 'document_google_url', 'image_google_url', 'tag_ids', 'slide_category', 'channel_id',
+            'is_preview', 'binary_content', 'description', 'image_1920', 'is_published', 'source_type']
 
     @http.route(['/slides/tag/search_read'], type='json', auth='user', methods=['POST'], website=True)
     def slide_tag_search_read(self, fields, domain):

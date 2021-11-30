@@ -1,9 +1,10 @@
 /** @odoo-module **/
 
-/* global YT */
+/* global YT, Vimeo */
 
     import publicWidget from 'web.public.widget';
     import  { qweb as QWeb, _t } from 'web.core';
+    import { Markup } from 'web.utils';
     import config from 'web.config';
 
     import session from 'web.session';
@@ -30,8 +31,8 @@
      * its end, and `slide_completed` when the player is at 30 sec before the
      * end of the video (30 sec before is considered as completed).
      */
-    var VideoPlayer = publicWidget.Widget.extend({
-        template: 'website.slides.fullscreen.video',
+    var VideoPlayerYouTube = publicWidget.Widget.extend({
+        template: 'website.slides.fullscreen.video.youtube',
         youtubeUrl: 'https://www.youtube.com/iframe_api',
 
         init: function (parent, slide) {
@@ -127,6 +128,98 @@
                 }
             }
         },
+    });
+
+    /**
+     * This widget is responsible of loading the Vimeo video.
+     *
+     * Similarly to the YouTube implementation, the widget will trigger an event `change_slide` when
+     * the video is at its end, and `slide_completed` when the player is at 30 sec before the end of
+     * the video (30 sec before is considered as completed).
+     *
+     * See https://developer.vimeo.com/player/sdk/reference for all the API documentation.
+     */
+    var VideoPlayerVimeo = publicWidget.Widget.extend({
+        template: 'website.slides.fullscreen.video.vimeo',
+        vimeoScriptUrl: 'https://player.vimeo.com/api/player.js',
+
+        init: function (parent, slide) {
+            this.slide = slide;
+            return this._super.apply(this, arguments);
+        },
+
+        /**
+         * Loads the Vimeo JS API that allows interfacing with the iframe viewer.
+         * (We only load the API if not already loaded).
+         *
+         * @returns {Promise}
+         */
+        willStart: function () {
+            var self = this;
+            var vimeoAPIPromise = new Promise(function (resolve, reject) {
+                if ($(document).find('script[src="' + self.vimeoScriptUrl + '"]').length === 0) {
+                    $.ajax({
+                        url: self.vimeoScriptUrl,
+                        dataType: 'script',
+                        success: function () {resolve();}
+                    });
+                } else {
+                    resolve();
+                }
+            });
+
+            return Promise.all([this._super.apply(this, arguments), vimeoAPIPromise]);
+        },
+
+        start: function () {
+            return this._super.apply(arguments).then(this._setupVideoPlayer.bind(this));
+        },
+
+        //--------------------------------------------------------------------------
+        // Private
+        //--------------------------------------------------------------------------
+
+        /**
+         * Instantiate the Vimeo player and register the various events.
+         */
+        _setupVideoPlayer: async function () {
+            this.player = new Vimeo.Player(this.$('iframe')[0]);
+            this.videoDuration = await this.player.getDuration();
+            this.player.on('timeupdate', this._onVideoTimeUpdate.bind(this));
+            this.player.on('ended', this._onVideoEnded.bind(this));
+        },
+
+        //--------------------------------------------------------------------------
+        // Handlers
+        //--------------------------------------------------------------------------
+
+        /**
+         * When the player triggers the 'ended' event, we go to the next slide if there is one.
+         *
+         * See https://developer.vimeo.com/player/sdk/reference#ended for more information
+         */
+        _onVideoEnded: function () {
+            if (this.slide.hasNext) {
+                this.trigger_up('slide_go_next', this.slide);
+            }
+        },
+
+        /**
+         * Every time the video changes position, both while viewing and also when seeking manually,
+         * Vimeo triggers this handy 'timeupdate' event.
+         * We use it to set the slide as completed as soon as we reach the end (30 last seconds).
+         *
+         * See https://developer.vimeo.com/player/sdk/reference#timeupdate for more information
+         *
+         * @param {Object} eventData the 'timeupdate' event data
+         */
+         _onVideoTimeUpdate: async function (eventData) {
+            if (eventData.seconds > (this.videoDuration - 30)) {
+                if (!this.slide.hasQuestion && !this.slide.completed){
+                    this.trigger_up('slide_to_complete', this.slide);
+                }
+            }
+        }
     });
 
 
@@ -225,7 +318,7 @@
         //--------------------------------------------------------------------------
         /**
          * Handler called whenever the user clicks on a sub-quiz which is linked to a slide.
-         * This does NOT handle the case of a slide of type "quiz".
+         * This does NOT handle the case of a slide of category "quiz".
          * By going through this handler, the widget will be able to determine that it has to render
          * the associated quiz and not the main content.
          *
@@ -455,7 +548,7 @@
         // Private
         //--------------------------------------------------------------------------
         /**
-         * Fetches content with an rpc call for slides of type "webpage"
+         * Fetches content with an rpc call for slides of category "article"
          *
          * @private
          */
@@ -474,14 +567,14 @@
             });
         },
         /**
-        * Fetches slide content depending on its type.
+        * Fetches slide content depending on its category.
         * If the slide doesn't need to fetch any content, return a resolved deferred
         *
         * @private
         */
         _fetchSlideContent: function (){
             var slide = this.get('slide');
-            if (slide.type === 'webpage' && !slide.isQuiz) {
+            if (slide.category === 'article' && !slide.isQuiz) {
                 return this._fetchHtmlContent();
             }
             return Promise.resolve();
@@ -494,14 +587,14 @@
         },
         /**
          * Extend the slide data list to add informations about rendering method, and other
-         * specific values according to their slide_type.
+         * specific values according to their slide_category.
          */
         _preprocessSlideData: function (slidesDataList) {
             slidesDataList.forEach(function (slideData, index) {
                 // compute hasNext slide
                 slideData.hasNext = index < slidesDataList.length-1;
                 // compute embed url
-                if (slideData.type === 'video') {
+                if (slideData.category === 'video' && slideData.videoSourceType !== 'vimeo') {
                     slideData.embedCode = $(slideData.embedCode).attr('src') || ""; // embedCode contains an iframe tag, where src attribute is the url (youtube or embed document from odoo)
                     var separator = slideData.embedCode.indexOf("?") !== -1 ? "&" : "?";
                     var scheme = slideData.embedCode.indexOf('//') === 0 ? 'https:' : '';
@@ -510,16 +603,26 @@
                         params.autoplay = 1;
                     }
                     slideData.embedUrl = slideData.embedCode ? scheme + slideData.embedCode + separator + $.param(params) : "";
-                } else if (slideData.type === 'infographic') {
+                } else if (slideData.category === 'video' && slideData.videoSourceType === 'vimeo') {
+                    slideData.embedCode = Markup(slideData.embedCode);
+                } else if (slideData.category === 'infographic') {
                     slideData.embedUrl = _.str.sprintf('/web/image/slide.slide/%s/image_1024', slideData.id);
-                } else if (_.contains(['document', 'presentation'], slideData.type)) {
+                } else if (slideData.category === 'document') {
                     slideData.embedUrl = $(slideData.embedCode).attr('src');
                 }
                 // fill empty property to allow searching on it with _.filter(list, matcher)
                 slideData.isQuiz = !!slideData.isQuiz;
                 slideData.hasQuestion = !!slideData.hasQuestion;
                 // technical settings for the Fullscreen to work
-                slideData._autoSetDone = _.contains(['infographic', 'presentation', 'document', 'webpage'], slideData.type) && !slideData.hasQuestion;
+                var autoSetDone = false;
+                if (!slideData.hasQuestion) {
+                    if (_.contains(['infographic', 'document', 'article'], slideData.category)) {
+                        autoSetDone = true;  // images, documents (local + external) and articles are marked as completed when opened
+                    } else if (slideData.category === 'video' && slideData.videoSourceType === 'google_drive') {
+                        autoSetDone = true;  // google drive videos do not benefit from the YouTube integration and are marked as completed when opened
+                    }
+                }
+                slideData._autoSetDone = autoSetDone;
             });
             return slidesDataList;
         },
@@ -542,8 +645,8 @@
             history.pushState(null, '', fullscreenUrl);
         },
         /**
-         * Render the current slide content using specific mecanism according to slide type:
-         * - simply append content (for webpage)
+         * Render the current slide content using specific mecanism according to slide category:
+         * - simply append content (for article)
          * - template rendering (for image, document, ....)
          * - using a sub widget (quiz and video)
          *
@@ -556,20 +659,25 @@
             $content.empty();
 
             // display quiz slide, or quiz attached to a slide
-            if (slide.type === 'quiz' || slide.isQuiz) {
+            if (slide.category === 'quiz' || slide.isQuiz) {
                 $content.addClass('bg-white');
                 var QuizWidget = new Quiz(this, slide, this.channel);
                 return QuizWidget.appendTo($content);
             }
 
             // render slide content
-            if (_.contains(['document', 'presentation', 'infographic'], slide.type)) {
+            if (_.contains(['document', 'infographic'], slide.category)) {
                 $content.html(QWeb.render('website.slides.fullscreen.content', {widget: this}));
-            } else if (slide.type === 'video') {
-                this.videoPlayer = new VideoPlayer(this, slide);
+            } else if (slide.category === 'video' && slide.videoSourceType === 'youtube') {
+                this.videoPlayer = new VideoPlayerYouTube(this, slide);
                 return this.videoPlayer.appendTo($content);
-            } else if (slide.type === 'webpage'){
-                var $wpContainer = $('<div>').addClass('o_wslide_fs_webpage_content bg-white block w-100 overflow-auto');
+            } else if (slide.category === 'video' && slide.videoSourceType === 'vimeo') {
+                this.videoPlayer = new VideoPlayerVimeo(this, slide);
+                return this.videoPlayer.appendTo($content);
+            } else if (slide.category === 'video' && slide.videoSourceType === 'google_drive') {
+                $content.html(QWeb.render('website.slides.fullscreen.video.google_drive', {widget: this}));
+            } else if (slide.category === 'article'){
+                var $wpContainer = $('<div>').addClass('o_wslide_fs_article_content bg-white block w-100 overflow-auto');
                 $(slide.htmlContent).appendTo($wpContainer);
                 $content.append($wpContainer);
                 this.trigger_up('widgets_start_request', {
@@ -608,7 +716,7 @@
          * Triggered whenever the user changes slides.
          * When the current slide is changed, widget will be automatically updated
          * and allowed to: fetch the content if needed, render it, update the url,
-         * and set slide as "completed" according to its type requirements. In
+         * and set slide as "completed" according to its category requirements. In
          * mobile case (i.e. limited screensize), sidebar will be toggled since 
          * sidebar will block most or all of new slide visibility.
          *
@@ -627,7 +735,7 @@
                 return self._renderSlide();
             }).then(function() {
                 if (slide._autoSetDone && !session.is_website_user) {  // no useless RPC call
-                    if (['document', 'presentation'].includes(slide.type)) {
+                    if (slide.category === 'document') {
                         // only set the slide as completed after iFrame is loaded to avoid concurrent execution with 'embedUrl' controller
                         self.el.querySelector('iframe.o_wslides_iframe_viewer').addEventListener('load', () => self._setCompleted(slide.id));
                     } else {

@@ -43,7 +43,7 @@ class WebsiteSlidesSurvey(WebsiteSlides):
 
     @http.route(['/slides/add_slide'], type='json', auth='user', methods=['POST'], website=True)
     def create_slide(self, *args, **post):
-        create_new_survey = post['slide_type'] == "certification" and post.get('survey') and not post['survey']['id']
+        create_new_survey = post['slide_category'] == "certification" and post.get('survey') and not post['survey']['id']
         linked_survey_id = int(post.get('survey', {}).get('id') or 0)
 
         if create_new_survey:
@@ -87,7 +87,7 @@ class WebsiteSlidesSurvey(WebsiteSlides):
     # Utils
     # ---------------------------------------------------
     def _set_completed_slide(self, slide):
-        if slide.slide_type == 'certification':
+        if slide.slide_category == 'certification':
             raise werkzeug.exceptions.Forbidden(_("Certification slides are completed when the survey is succeeded."))
         return super(WebsiteSlidesSurvey, self)._set_completed_slide(slide)
 

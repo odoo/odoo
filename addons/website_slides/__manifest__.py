@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'eLearning',
-    'version': '2.4',
+    'version': '2.5',
     'sequence': 125,
     'summary': 'Manage and publish an eLearning platform',
     'website': 'https://www.odoo.com/app/elearning',
@@ -14,7 +14,7 @@ Featuring
 
  * Integrated course and lesson management
  * Fullscreen navigation
- * Support Youtube videos, Google documents, PDF, images, web pages
+ * Support Youtube videos, Google documents, PDF, images, articles
  * Test knowledge with quizzes
  * Filter and Tag
  * Statistics

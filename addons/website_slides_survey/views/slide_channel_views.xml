@@ -10,11 +10,11 @@
                 <span class="o_stat_text" attrs="{'invisible': [('nbr_certification', '>', 0)]}">Finished</span>
                 <span class="o_stat_text" attrs="{'invisible': [('nbr_certification', '=', 0)]}">Certified</span>
             </xpath>
-            <xpath expr="//field[@name='slide_type']" position="after">
+            <xpath expr="//field[@name='slide_category']" position="after">
                 <field name="survey_id"/>
             </xpath>
             <xpath expr="//create[@name='add_slide_lesson']" position="after">
-                <create name="add_slide_certificate" string="Add Certification" groups="survey.group_survey_user" context="{'default_slide_type': 'certification'}"/>
+                <create name="add_slide_certificate" string="Add Certification" groups="survey.group_survey_user" context="{'default_slide_category': 'certification'}"/>
             </xpath>
         </field>
     </record>

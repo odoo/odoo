@@ -33,32 +33,32 @@ class TestUICommon(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
                 (0, 0, {
                     'name': 'Gardening: The Know-How',
                     'sequence': 1,
-                    'datas': pdf_content,
-                    'slide_type': 'presentation',
+                    'binary_content': pdf_content,
+                    'slide_category': 'document',
                     'is_published': True,
                     'is_preview': True,
                 }), (0, 0, {
                     'name': 'Home Gardening',
                     'sequence': 2,
                     'image_1920': img_content,
-                    'slide_type': 'infographic',
+                    'slide_category': 'infographic',
                     'is_published': True,
                 }), (0, 0, {
                     'name': 'Mighty Carrots',
                     'sequence': 3,
                     'image_1920': img_content,
-                    'slide_type': 'infographic',
+                    'slide_category': 'infographic',
                     'is_published': True,
                 }), (0, 0, {
                     'name': 'How to Grow and Harvest The Best Strawberries | Basics',
                     'sequence': 4,
-                    'datas': pdf_content,
-                    'slide_type': 'document',
+                    'binary_content': pdf_content,
+                    'slide_category': 'document',
                     'is_published': True,
                 }), (0, 0, {
                     'name': 'Test your knowledge',
                     'sequence': 5,
-                    'slide_type': 'quiz',
+                    'slide_category': 'quiz',
                     'is_published': True,
                     'question_ids': [
                         (0, 0, {

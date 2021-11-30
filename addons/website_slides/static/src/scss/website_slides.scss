@@ -515,6 +515,25 @@ $truncate-limits: 2, 3, 10;
 // Modals
 // **************************************************
 
+.o_w_slide_upload_modal_container {
+    .o_slide_preview {
+        display: flex; // not using d-flex because it messes with d-none
+    }
+
+    .form-check {
+        line-height: 1.5rem; // necessary to align label correctly with radio button
+
+    }
+
+    .was-validated .form-check .form-check-label {
+        @include o-w-preserve-base; // avoid ugly green when form is marked as 'was-validated'
+    }
+}
+
+.o_wslides_slide_upload_loading {
+    background-color: rgba(0, 0, 0, .3);
+}
+
 .o_wslides_quiz_modal {
     @include media-breakpoint-up (sm) {
         .modal-body {

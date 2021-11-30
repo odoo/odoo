@@ -6,9 +6,9 @@
     <record id="slide_slide_demo_0_0" model="slide.slide">
         <field name="name">Gardening: The Know-How</field>
         <field name="sequence">1</field>
-        <field name="datas" type="base64" file="website_slides/static/src/img/presentation.pdf"/>
+        <field name="binary_content" type="base64" file="website_slides/static/src/img/presentation.pdf"/>
         <field name="image_1920" type="base64" file="website_slides/static/src/img/channel-training-default.jpg"/>
-        <field name="slide_type">presentation</field>
+        <field name="slide_category">document</field>
         <field name="channel_id" ref="website_slides.slide_channel_demo_0_gard_0"/>
         <field name="is_published" eval="True"/>
         <field name="date_published" eval="datetime.now() - timedelta(days=8)"/>
@@ -29,7 +29,7 @@
         <field name="name">Home Gardening</field>
         <field name="sequence">2</field>
         <field name="image_1920" type="base64" file="website_slides/static/src/img/slide_demo_gardening_1.jpg"/>
-        <field name="slide_type">infographic</field>
+        <field name="slide_category">infographic</field>
         <field name="channel_id" ref="website_slides.slide_channel_demo_0_gard_0"/>
         <field name="is_published" eval="True"/>
         <field name="date_published" eval="datetime.now() - timedelta(days=8)"/>
@@ -43,7 +43,7 @@
         <field name="name">Mighty Carrots</field>
         <field name="sequence">3</field>
         <field name="image_1920" type="base64" file="website_slides/static/src/img/slide_demo_gardening_2.jpg"/>
-        <field name="slide_type">infographic</field>
+        <field name="slide_category">infographic</field>
         <field name="channel_id" ref="website_slides.slide_channel_demo_0_gard_0"/>
         <field name="is_published" eval="True"/>
         <field name="date_published" eval="datetime.now() - timedelta(days=8)"/>
@@ -56,9 +56,9 @@
     <record id="slide_slide_demo_0_3" model="slide.slide">
         <field name="name">How to Grow and Harvest The Best Strawberries | Basics</field>
         <field name="sequence">4</field>
-        <field name="datas" type="base64" file="website_slides/static/src/img/presentation.pdf"/>
+        <field name="binary_content" type="base64" file="website_slides/static/src/img/presentation.pdf"/>
         <field name="image_1920" type="base64" file="website_slides/static/src/img/slide_demo_thumb_l0JZ25VvbwE.jpg"/>
-        <field name="slide_type">document</field>
+        <field name="slide_category">document</field>
         <field name="channel_id" ref="website_slides.slide_channel_demo_0_gard_0"/>
         <field name="is_published" eval="True"/>
         <field name="date_published" eval="datetime.now() - timedelta(days=8)"/>
@@ -72,7 +72,7 @@
         <field name="name">Test your knowledge</field>
         <field name="sequence">5</field>
         <field name="image_1920" type="base64" file="website_slides/static/src/img/slide_demo_owl.jpg"/>
-        <field name="slide_type">quiz</field>
+        <field name="slide_category">quiz</field>
         <field name="channel_id" ref="website_slides.slide_channel_demo_0_gard_0"/>
         <field name="is_published" eval="True"/>
         <field name="date_published" eval="datetime.now() - timedelta(days=8)"/>
@@ -149,7 +149,7 @@
         <field name="name">Tree Infographic</field>
         <field name="sequence">1</field>
         <field name="image_1920" type="base64" file="website_slides/static/src/img/slide_demo_tree_infographic_1.jpg"/>
-        <field name="slide_type">infographic</field>
+        <field name="slide_category">infographic</field>
         <field name="channel_id" ref="website_slides.slide_channel_demo_1_gard1"/>
         <field name="is_published" eval="True"/>
         <field name="date_published" eval="datetime.now() - timedelta(days=8)"/>
@@ -163,7 +163,7 @@
         <field name="name">Interesting Tree Facts</field>
         <field name="sequence">2</field>
         <field name="image_1920" type="base64" file="website_slides/static/src/img/slide_demo_tree_infographic_2.jpg"/>
-        <field name="slide_type">infographic</field>
+        <field name="slide_category">infographic</field>
         <field name="channel_id" ref="website_slides.slide_channel_demo_1_gard1"/>
         <field name="is_published" eval="True"/>
         <field name="date_published" eval="datetime.now() - timedelta(days=8)"/>
@@ -177,7 +177,7 @@
         <field name="name">Energy Efficiency Facts</field>
         <field name="sequence">3</field>
         <field name="image_1920" type="base64" file="website_slides/static/src/img/slide_demo_tree_infographic_3.jpg"/>
-        <field name="slide_type">infographic</field>
+        <field name="slide_category">infographic</field>
         <field name="channel_id" ref="website_slides.slide_channel_demo_1_gard1"/>
         <field name="is_published" eval="True"/>
         <field name="date_published" eval="datetime.now() - timedelta(days=8)"/>
@@ -211,8 +211,7 @@
         <field name="sequence">5</field>
         <field name="url">https://www.youtube.com/watch?v=QYmgrw0PgLU</field>
         <field name="image_1920" type="base64" file="website_slides/static/src/img/slide_demo_thumb_QYmgrw0PgLU.jpg"/>
-        <field name="document_id">QYmgrw0PgLU</field>
-        <field name="slide_type">video</field>
+        <field name="slide_category">video</field>
         <field name="channel_id" ref="website_slides.slide_channel_demo_1_gard1"/>
         <field name="is_published" eval="True"/>
         <field name="date_published" eval="datetime.now() - timedelta(days=8)"/>
@@ -226,7 +225,7 @@
         <field name="name">A little chat with Harry Potted</field>
         <field name="sequence">6</field>
         <field name="image_1920" type="base64" file="website_slides/static/src/img/slide_demo_tree_img_1.jpg"/>
-        <field name="slide_type">webpage</field>
+        <field name="slide_category">article</field>
         <field name="channel_id" ref="website_slides.slide_channel_demo_1_gard1"/>
         <field name="html_content" type="html">
 <section class="s_cover parallax bg-black-50 pt16 pb16" data-scroll-background-ratio="0" style="background-image: none;" data-snippet="s_cover">
@@ -327,9 +326,9 @@
     <record id="slide_slide_demo_1_5" model="slide.slide">
         <field name="name">3 Main Methodologies</field>
         <field name="sequence">6</field>
-        <field name="datas" type="base64" file="website_slides/static/src/img/presentation.pdf"/>
+        <field name="binary_content" type="base64" file="website_slides/static/src/img/presentation.pdf"/>
         <field name="image_1920" type="base64" file="website_slides/static/src/img/channel-training-default.jpg"/>
-        <field name="slide_type">presentation</field>
+        <field name="slide_category">document</field>
         <field name="channel_id" ref="website_slides.slide_channel_demo_1_gard1"/>
         <field name="is_published" eval="True"/>
         <field name="date_published" eval="datetime.now() - timedelta(days=8)"/>
@@ -344,8 +343,7 @@
         <field name="sequence">7</field>
         <field name="url">https://www.youtube.com/watch?v=l0JZ25VvbwE</field>
         <field name="image_1920" type="base64" file="website_slides/static/src/img/slide_demo_thumb_l0JZ25VvbwE.jpg"/>
-        <field name="document_id">l0JZ25VvbwE</field>
-        <field name="slide_type">video</field>
+        <field name="slide_category">video</field>
         <field name="channel_id" ref="website_slides.slide_channel_demo_1_gard1"/>
         <field name="is_published" eval="True"/>
         <field name="date_published" eval="datetime.now() - timedelta(days=8)"/>
@@ -378,9 +376,9 @@
     <record id="slide_slide_demo_2_0" model="slide.slide">
         <field name="name">Main Trees Categories</field>
         <field name="sequence">1</field>
-        <field name="datas" type="base64" file="website_slides/static/src/img/presentation.pdf"/>
+        <field name="binary_content" type="base64" file="website_slides/static/src/img/presentation.pdf"/>
         <field name="image_1920" type="base64" file="website_slides/static/src/img/slide_demo_tree_img_2.jpg"/>
-        <field name="slide_type">presentation</field>
+        <field name="slide_category">document</field>
         <field name="channel_id" ref="website_slides.slide_channel_demo_2_gard2"/>
         <field name="is_published" eval="True"/>
         <field name="date_published" eval="datetime.now() - timedelta(days=8)"/>
@@ -464,7 +462,7 @@
         <field name="name">A Mighty Forest from Ages</field>
         <field name="sequence">2</field>
         <field name="image_1920" type="base64" file="website_slides/static/src/img/slide_demo_tree_img_3.jpg"/>
-        <field name="slide_type">webpage</field>
+        <field name="slide_category">article</field>
         <field name="channel_id" ref="website_slides.slide_channel_demo_2_gard2"/>
         <field name="html_content" type="html">
 <section class="s_cover parallax bg-black-50 pt16 pb16" data-scroll-background-ratio="0" style="background-image: none;" data-snippet="s_cover">
@@ -512,8 +510,7 @@
         <field name="sequence">3</field>
         <field name="url">https://www.youtube.com/watch?v=ebBez6bcSEc</field>
         <field name="image_1920" type="base64" file="website_slides/static/src/img/slide_demo_thumb_ebBez6bcSEc.jpg"/>
-        <field name="document_id">ebBez6bcSEc</field>
-        <field name="slide_type">video</field>
+        <field name="slide_category">video</field>
         <field name="channel_id" ref="website_slides.slide_channel_demo_2_gard2"/>
         <field name="is_published" eval="True"/>
         <field name="date_published" eval="datetime.now() - timedelta(days=8)"/>
@@ -527,9 +524,9 @@
     <record id="slide_slide_demo_2_3" model="slide.slide">
         <field name="name">Wood Characteristics</field>
         <field name="sequence">5</field>
-        <field name="datas" type="base64" file="website_slides/static/src/img/presentation.pdf"/>
+        <field name="binary_content" type="base64" file="website_slides/static/src/img/presentation.pdf"/>
         <field name="image_1920" type="base64" file="website_slides/static/src/img/channel-documentation-default.jpg"/>
-        <field name="slide_type">presentation</field>
+        <field name="slide_category">document</field>
         <field name="channel_id" ref="website_slides.slide_channel_demo_2_gard2"/>
         <field name="is_published" eval="True"/>
         <field name="date_published" eval="datetime.now() - timedelta(days=8)"/>
@@ -561,7 +558,7 @@
         <field name="name">Comparing Hardness of Wood Species</field>
         <field name="sequence">2</field>
         <field name="image_1920" type="base64" file="website_slides/static/src/img/slide_demo_wood_infographic_1.jpg"/>
-        <field name="slide_type">infographic</field>
+        <field name="slide_category">infographic</field>
         <field name="channel_id" ref="website_slides.slide_channel_demo_3_furn0"/>
         <field name="is_published" eval="True"/>
         <field name="date_published" eval="datetime.now() - timedelta(days=8)"/>
@@ -576,8 +573,7 @@
         <field name="sequence">3</field>
         <field name="image_1920" type="base64" file="website_slides/static/src/img/slide_demo_thumb_PYr1rK8pS30.jpg"/>
         <field name="url">https://www.youtube.com/watch?v=PYr1rK8pS30</field>
-        <field name="document_id">PYr1rK8pS30</field>
-        <field name="slide_type">video</field>
+        <field name="slide_category">video</field>
         <field name="channel_id" ref="website_slides.slide_channel_demo_3_furn0"/>
         <field name="is_published" eval="True"/>
         <field name="date_published" eval="datetime.now() - timedelta(days=8)"/>
@@ -609,7 +605,7 @@
         <field name="name">Foreword</field>
         <field name="sequence">1</field>
         <field name="image_1920" type="base64" file="website_slides/static/src/img/slide_demo_furniture_2.jpg"/>
-        <field name="slide_type">webpage</field>
+        <field name="slide_category">article</field>
         <field name="channel_id" ref="website_slides.slide_channel_demo_4_furn1"/>
         <field name="html_content" type="html">
 <section class="s_cover parallax bg-black-50 pt16 pb16" data-scroll-background-ratio="0" style="background-image: none;" data-snippet="s_cover">
@@ -655,8 +651,7 @@
         <field name="sequence">2</field>
         <field name="image_1920" type="base64" file="website_slides/static/src/img/slide_demo_thumb_bvSe6r5BpaY.jpg"/>
         <field name="url">https://www.youtube.com/watch?v=bvSe6r5BpaY</field>
-        <field name="document_id">bvSe6r5BpaY</field>
-        <field name="slide_type">video</field>
+        <field name="slide_category">video</field>
         <field name="channel_id" ref="website_slides.slide_channel_demo_4_furn1"/>
         <field name="is_published" eval="True"/>
         <field name="date_published" eval="datetime.now() - timedelta(days=3)"/>
@@ -670,7 +665,7 @@
         <field name="name">Drawing 1</field>
         <field name="sequence">11</field>
         <field name="image_1920" type="base64" file="website_slides/static/src/img/slide_demo_furniture_img.jpg"/>
-        <field name="slide_type">infographic</field>
+        <field name="slide_category">infographic</field>
         <field name="channel_id" ref="website_slides.slide_channel_demo_4_furn1"/>
         <field name="is_published" eval="True"/>
         <field name="date_published" eval="datetime.now() - timedelta(days=4)"/>
@@ -684,7 +679,7 @@
         <field name="name">Drawing 2</field>
         <field name="sequence">12</field>
         <field name="image_1920" type="base64" file="website_slides/static/src/img/slide_demo_furniture_img_1.jpg"/>
-        <field name="slide_type">infographic</field>
+        <field name="slide_category">infographic</field>
         <field name="channel_id" ref="website_slides.slide_channel_demo_4_furn1"/>
         <field name="is_published" eval="True"/>
         <field name="date_published" eval="datetime.now() - timedelta(days=4)"/>
@@ -697,9 +692,9 @@
     <record id="slide_slide_demo_4_12" model="slide.slide">
         <field name="name">Presentation</field>
         <field name="sequence">13</field>
-        <field name="datas" type="base64" file="website_slides/static/src/img/presentation.pdf"/>
+        <field name="binary_content" type="base64" file="website_slides/static/src/img/presentation.pdf"/>
         <field name="image_1920" type="base64" file="website_slides/static/src/img/channel-documentation-default.jpg"/>
-        <field name="slide_type">document</field>
+        <field name="slide_category">document</field>
         <field name="channel_id" ref="website_slides.slide_channel_demo_4_furn1"/>
         <field name="is_published" eval="True"/>
         <field name="date_published" eval="datetime.now() - timedelta(days=4)"/>
@@ -739,9 +734,9 @@
     <record id="slide_slide_demo_5_0" model="slide.slide">
         <field name="name">Unforgettable Tools</field>
         <field name="sequence">1</field>
-        <field name="datas" type="base64" file="website_slides/static/src/img/presentation.pdf"/>
+        <field name="binary_content" type="base64" file="website_slides/static/src/img/presentation.pdf"/>
         <field name="image_1920" type="base64" file="website_slides/static/src/img/channel-training-default.jpg"/>
-        <field name="slide_type">presentation</field>
+        <field name="slide_category">document</field>
         <field name="channel_id" ref="website_slides.slide_channel_demo_5_furn2"/>
         <field name="is_published" eval="True"/>
         <field name="date_published" eval="datetime.now() - timedelta(days=8)"/>
@@ -768,8 +763,7 @@
         <field name="sequence">2</field>
         <field name="image_1920" type="base64" file="website_slides/static/src/img/slide_demo_thumb_5WMqwTnZ-qs.jpg"/>
         <field name="url">https://www.youtube.com/watch?v=5WMqwTnZ-qs</field>
-        <field name="document_id">5WMqwTnZ-qs</field>
-        <field name="slide_type">video</field>
+        <field name="slide_category">video</field>
         <field name="channel_id" ref="website_slides.slide_channel_demo_5_furn2"/>
         <field name="is_published" eval="True"/>
         <field name="date_published" eval="datetime.now() - timedelta(days=8)"/>
@@ -783,8 +777,7 @@
         <field name="sequence">4</field>
         <field name="image_1920" type="base64" file="website_slides/static/src/img/slide_demo_thumb_grrXe1QZNzQ.jpg"/>
         <field name="url">https://www.youtube.com/watch?v=grrXe1QZNzQ</field>
-        <field name="document_id">grrXe1QZNzQ</field>
-        <field name="slide_type">video</field>
+        <field name="slide_category">video</field>
         <field name="channel_id" ref="website_slides.slide_channel_demo_5_furn2"/>
         <field name="is_published" eval="True"/>
         <field name="date_published" eval="datetime.now() - timedelta(days=8)"/>
@@ -797,7 +790,7 @@
         <field name="name">Test your knowledge !</field>
         <field name="sequence">6</field>
         <field name="image_1920" type="base64" file="website_slides/static/src/img/slide_demo_owl.jpg"/>
-        <field name="slide_type">quiz</field>
+        <field name="slide_category">quiz</field>
         <field name="channel_id" ref="website_slides.slide_channel_demo_5_furn2"/>
         <field name="is_published" eval="True"/>
         <field name="date_published" eval="datetime.now() - timedelta(days=8)"/>

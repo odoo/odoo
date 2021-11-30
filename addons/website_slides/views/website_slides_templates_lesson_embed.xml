@@ -71,7 +71,7 @@
                                     </t>
                                 </div>
                             </div>
-                            <t t-if="slide.slide_type in ('presentation', 'document')">
+                            <t t-if="slide.slide_category == 'document'">
                                 <div id="PDFViewerLoader" class="oe_slides_loader mt-3 mx-2 w-100">
                                     <div class="toast show mx-auto">
                                         <div class="toast-header">
@@ -84,12 +84,12 @@
                                 </div>
                                 <canvas id="PDFViewerCanvas" class="mx-auto" style="display: none;"></canvas>
                             </t>
-                            <t t-if="slide.slide_type == 'infographic'">
+                            <t t-if="slide.slide_category == 'infographic'">
                                 <img t-att-src="website.image_url(slide, 'image_1024')" class="img-fluid" style="width: 100%" alt="Slide image"/>
                             </t>
                         </div>
                         <!-- Fixed bottom navbar -->
-                        <div id="PDFViewerNav" class="pt-2 pb-2 bg-light text-white" role="navigation" t-if="slide.slide_type in ('presentation', 'document')">
+                        <div id="PDFViewerNav" class="pt-2 pb-2 bg-light text-white" role="navigation" t-if="slide.slide_category == 'document'">
                             <div class="container-fluid oe_slides_panel_footer">
                                 <div class="row align-items-center">
                                     <div class="col-3 d-flex align-items-center">
@@ -111,7 +111,7 @@
                                         <span id="previous" class="mx-1 mx-sm-2" title="Previous slide" aria-label="Previous slide" role="button"><i class="fa fa-arrow-circle-left"/></span>
                                         <span id="next" class="mx-1 mx-sm-2" title="Next slide" aria-label="Next slide" role="button"><i class="fa fa-arrow-circle-right"/></span>
                                         <span id="last" class="mx-1 mx-sm-2" title="Last slide" aria-label="Last slide" role="button"><i class="fa fa-step-forward"/></span>
-                                        <a t-if="slide.slide_resource_downloadable" id="download" t-attf-href="/web/content/slide.slide/#{slide.id}/datas?download=true"
+                                        <a t-if="slide.slide_resource_downloadable" id="download" t-attf-href="/web/content/slide.slide/#{slide.id}/binary_content?download=true"
                                            class="ml-1 ml-sm-2" title="Download Content" aria-label="Download" role="button">
                                             <i class="fa fa-download" />
                                         </a>
