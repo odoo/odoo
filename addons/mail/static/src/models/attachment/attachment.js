@@ -51,7 +51,12 @@ registerModel({
          * Send the attachment for the browser to download.
          */
         download() {
-            this.env.services.navigate(`/web/content/ir.attachment/${this.id}/datas`, { download: true });
+            const downloadLink = document.createElement('a');
+            downloadLink.setAttribute('href', `/web/content/ir.attachment/${this.id}/datas?download=true`);
+            // Adding 'download' attribute into a link prevents open a new tab or change the current location of the window.
+            // This avoids interrupting the activity in the page such as rtc call.
+            downloadLink.setAttribute('download', '');
+            downloadLink.click();
         },
         /**
          * Handles click on download icon.
