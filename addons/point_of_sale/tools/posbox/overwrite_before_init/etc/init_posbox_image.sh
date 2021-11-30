@@ -94,7 +94,6 @@ PKGS_TO_INSTALL="
     python3-passlib \
     python3-libsass \
     python3-qrcode \
-    python3-html2text \
     python3-unittest2 \
     python3-simplejson"
 
