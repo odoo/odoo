@@ -289,7 +289,7 @@ registerModel({
         /**
          * States the attachment images that are displaying this attachment.
          */
-        attachmentImages: one2many('mail.attachment_image', {
+        attachmentImages: one2many('AttachmentImage', {
             inverse: 'attachment',
             isCausal: true,
         }),

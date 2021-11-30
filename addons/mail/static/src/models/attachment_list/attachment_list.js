@@ -75,7 +75,7 @@ registerModel({
         /**
          * States the attachment images that are displaying this imageAttachments.
          */
-        attachmentImages: one2many('mail.attachment_image', {
+        attachmentImages: one2many('AttachmentImage', {
             compute: '_computeAttachmentImages',
             inverse: 'attachmentList',
             isCausal: true,
