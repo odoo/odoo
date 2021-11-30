@@ -72,26 +72,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
             self._isDirty = self.wysiwyg.isDirty();
             self._doAction();
 
-            // fix outlook image rendering bug (this change will be kept in both
-            // fields)
-            _.each(['width', 'height'], function (attribute) {
-                $editable.find('img').attr(attribute, function () {
-                    return $(this)[attribute]();
-                }).css(attribute, function () {
-                    return $(this).get(0).style[attribute] || attribute === 'width' ? $(this)[attribute]() + 'px' : '';
-                });
-            });
-
-            convertInline.attachmentThumbnailToLinkImg($editable);
-            convertInline.fontToImg($editable);
-            convertInline.classToStyle($editable, self.cssRules);
-            convertInline.bootstrapToTable($editable);
-            convertInline.cardToTable($editable);
-            convertInline.listGroupToTable($editable);
-            convertInline.addTables($editable);
-            convertInline.formatTables($editable);
-            convertInline.normalizeColors($editable);
-            convertInline.normalizeRem($editable);
+            convertInline.toInline($editable, self.cssRules);
 
             self.trigger_up('field_changed', {
                 dataPointID: self.dataPointID,
