@@ -138,6 +138,12 @@ class Intervals(object):
 
         return result
 
+def sum_intervals(intervals):
+    """ Sum the intervals duration (unit : hour)"""
+    return sum(
+        (stop - start).total_seconds() / 3600
+        for start, stop, meta in intervals
+    )
 
 class ResourceCalendar(models.Model):
     """ Calendar model for a resource. It has
@@ -382,13 +388,15 @@ class ResourceCalendar(models.Model):
         """ Return the attendance intervals in the given datetime range.
             The returned intervals are expressed in specified tz or in the resource's timezone.
         """
-        self.ensure_one()
-        resources = self.env['resource.resource'] if not resources else resources
         assert start_dt.tzinfo and end_dt.tzinfo
         self.ensure_one()
         combine = datetime.combine
 
-        resources_list = list(resources) + [self.env['resource.resource']]
+        if not resources:
+            resources = self.env['resource.resource']
+            resources_list = [resources]
+        else:
+            resources_list = list(resources) + [self.env['resource.resource']]
         resource_ids = [r.id for r in resources_list]
         domain = domain if domain is not None else []
         domain = expression.AND([domain, [
@@ -472,15 +480,18 @@ class ResourceCalendar(models.Model):
         """ Return the leave intervals in the given datetime range.
             The returned intervals are expressed in specified tz or in the calendar's timezone.
         """
-        resources = self.env['resource.resource'] if not resources else resources
         assert start_dt.tzinfo and end_dt.tzinfo
         self.ensure_one()
 
-        # for the computation, express all datetimes in UTC
-        resources_list = list(resources) + [self.env['resource.resource']]
+        if not resources:
+            resources = self.env['resource.resource']
+            resources_list = [resources]
+        else:
+            resources_list = list(resources) + [self.env['resource.resource']]
         resource_ids = [r.id for r in resources_list]
         if domain is None:
             domain = [('time_type', '=', 'leave')]
+        # for the computation, express all datetimes in UTC
         domain = domain + [
             ('calendar_id', 'in', [False, self.id]),
             ('resource_id', 'in', resource_ids),
@@ -518,7 +529,7 @@ class ResourceCalendar(models.Model):
             resources = self.env['resource.resource']
             resources_list = [resources]
         else:
-            resources_list = list(resources)
+            resources_list = list(resources) + [self.env['resource.resource']]
 
         attendance_intervals = self._attendance_intervals_batch(start_dt, end_dt, resources, tz=tz)
         if compute_leaves:
@@ -588,8 +599,11 @@ class ResourceCalendar(models.Model):
         @return dict with hours of attendance in each day between `from_datetime` and `to_datetime`
         """
         self.ensure_one()
-        resources = self.env['resource.resource'] if not resources else resources
-        resources_list = list(resources) + [self.env['resource.resource']]
+        if not resources:
+            resources = self.env['resource.resource']
+            resources_list = [resources]
+        else:
+            resources_list = list(resources) + [self.env['resource.resource']]
         # total hours per day:  retrieve attendances with one extra day margin,
         # in order to compute the total hours on the first and last days
         from_full = from_datetime - timedelta(days=1)
@@ -994,7 +1008,6 @@ class ResourceResource(models.Model):
             )
         return result
 
-
     def _get_unavailable_intervals(self, start, end):
         """ Compute the intervals during which employee is unavailable with hour granularity between start and end
             Note: this method is used in enterprise (forecast and planning)
@@ -1012,6 +1025,52 @@ class ResourceResource(models.Model):
             resource_mapping.update(resources_unavailable_intervals)
         return resource_mapping
 
+    def _get_calendars_validity_within_period(self, start, end, default_company=None):
+        """ Gets a dict of dict with resource's id as first key and resource's calendar as secondary key
+            The value is the validity interval of the calendar for the given resource.
+
+            Here the validity interval for each calendar is the whole interval but it's meant to be overriden in further modules
+            handling resource's employee contracts.
+        """
+        assert start.tzinfo and end.tzinfo
+        resource_calendars_within_period = defaultdict(lambda: defaultdict(Intervals))  # keys are [resource id:integer][calendar:self.env['resource.calendar']]
+        default_calendar = default_company and default_company.resource_calendar_id or self.env.company.resource_calendar_id
+        if not self:
+            # if no resource, add the company resource calendar.
+            resource_calendars_within_period[False][default_calendar] = Intervals([(start, end, self.env['resource.calendar.attendance'])])
+        for resource in self:
+            calendar = resource.calendar_id or resource.company_id.resource_calendar_id or default_calendar
+            resource_calendars_within_period[resource.id][calendar] = Intervals([(start, end, self.env['resource.calendar.attendance'])])
+        return resource_calendars_within_period
+
+    def _get_valid_work_intervals(self, start, end, calendars=None):
+        """ Gets the valid work intervals of the resource following their calendars between ``start`` and ``end``
+
+            This methods handle the eventuality of a resource having multiple resource calendars, see _get_calendars_validity_within_period method
+            for further explanation.
+        """
+        assert start.tzinfo and end.tzinfo
+        resource_calendar_validity_intervals = {}
+        calendar_resources = defaultdict(lambda: self.env['resource.resource'])
+        resource_work_intervals = defaultdict(Intervals)
+        calendar_work_intervals = dict()
+
+        resource_calendar_validity_intervals = self._get_calendars_validity_within_period(start, end)
+        for resource in self:
+            # For each resource, retrieve its calendar and their validity intervals
+            for calendar in resource_calendar_validity_intervals[resource.id]:
+                calendar_resources[calendar] |= resource
+        for calendar in (calendars or []):
+            calendar_resources[calendar] |= self.env['resource.resource']
+        for calendar, resources in calendar_resources.items():
+            # For each calendar used by the resources, retrieve the work intervals for every resources using it
+            work_intervals_batch = calendar._work_intervals_batch(start, end, resources=resources)
+            for resource in resources:
+                # Make the conjunction between work intervals and calendar validity
+                resource_work_intervals[resource.id] |= work_intervals_batch[resource.id] & resource_calendar_validity_intervals[resource.id][calendar]
+            calendar_work_intervals[calendar.id] = work_intervals_batch[False]
+
+        return resource_work_intervals, calendar_work_intervals
 
 class ResourceCalendarLeaves(models.Model):
     _name = "resource.calendar.leaves"
