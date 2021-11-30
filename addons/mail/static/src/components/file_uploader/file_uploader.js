@@ -89,7 +89,7 @@ export class FileUploader extends Component {
     async _performUpload({ composer, files, thread }) {
         const uploadingAttachments = new Map();
         for (const file of files) {
-            uploadingAttachments.set(file, this.messaging.models['mail.attachment'].insert({
+            uploadingAttachments.set(file, this.messaging.models['Attachment'].insert({
                 composer: composer && replace(composer),
                 filename: file.name,
                 id: geAttachmentNextTemporaryId(),
@@ -149,7 +149,7 @@ export class FileUploader extends Component {
             });
             return;
         }
-        const attachment = this.messaging.models['mail.attachment'].insert({
+        const attachment = this.messaging.models['Attachment'].insert({
             composer: composer && replace(composer),
             originThread: (!composer && thread) ? replace(thread) : undefined,
             ...attachmentData,

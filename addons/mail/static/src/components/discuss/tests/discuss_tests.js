@@ -2679,7 +2679,7 @@ QUnit.test('composer state: attachments save and restore', async function (asser
     );
     assert.strictEqual(
         document.querySelector(`.o_Composer .o_AttachmentCard`).dataset.id,
-        this.messaging.models['mail.attachment'].findFromIdentifyingData({ id: 1 }).localId,
+        this.messaging.models['Attachment'].findFromIdentifyingData({ id: 1 }).localId,
         "should have correct 1st attachment in the composer"
     );
 
@@ -2693,17 +2693,17 @@ QUnit.test('composer state: attachments save and restore', async function (asser
     );
     assert.strictEqual(
         document.querySelectorAll(`.o_Composer .o_AttachmentCard`)[0].dataset.id,
-        this.messaging.models['mail.attachment'].findFromIdentifyingData({ id: 2 }).localId,
+        this.messaging.models['Attachment'].findFromIdentifyingData({ id: 2 }).localId,
         "should have attachment with id 2 as 1st attachment"
     );
     assert.strictEqual(
         document.querySelectorAll(`.o_Composer .o_AttachmentCard`)[1].dataset.id,
-        this.messaging.models['mail.attachment'].findFromIdentifyingData({ id: 3 }).localId,
+        this.messaging.models['Attachment'].findFromIdentifyingData({ id: 3 }).localId,
         "should have attachment with id 3 as 2nd attachment"
     );
     assert.strictEqual(
         document.querySelectorAll(`.o_Composer .o_AttachmentCard`)[2].dataset.id,
-        this.messaging.models['mail.attachment'].findFromIdentifyingData({ id: 4 }).localId,
+        this.messaging.models['Attachment'].findFromIdentifyingData({ id: 4 }).localId,
         "should have attachment with id 4 as 3rd attachment"
     );
 });

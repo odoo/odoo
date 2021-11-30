@@ -34,7 +34,7 @@ QUnit.test('create', async function (assert) {
         id: 100,
         model: 'mail.channel',
     }));
-    assert.notOk(this.messaging.models['mail.attachment'].findFromIdentifyingData({ id: 750 }));
+    assert.notOk(this.messaging.models['Attachment'].findFromIdentifyingData({ id: 750 }));
     assert.notOk(this.messaging.models['Message'].findFromIdentifyingData({ id: 4000 }));
 
     const thread = this.messaging.models['Thread'].create({
@@ -63,7 +63,7 @@ QUnit.test('create', async function (assert) {
         id: 100,
         model: 'mail.channel',
     }));
-    assert.ok(this.messaging.models['mail.attachment'].findFromIdentifyingData({ id: 750 }));
+    assert.ok(this.messaging.models['Attachment'].findFromIdentifyingData({ id: 750 }));
     assert.ok(this.messaging.models['Message'].findFromIdentifyingData({ id: 4000 }));
 
     assert.ok(message);
@@ -89,7 +89,7 @@ QUnit.test('create', async function (assert) {
     assert.ok(message.threads.includes(this.messaging.inbox));
     // from partnerId being in starred_partner_ids
     assert.ok(message.threads.includes(this.messaging.starred));
-    const attachment = this.messaging.models['mail.attachment'].findFromIdentifyingData({ id: 750 });
+    const attachment = this.messaging.models['Attachment'].findFromIdentifyingData({ id: 750 });
     assert.ok(attachment);
     assert.strictEqual(attachment.filename, "test.txt");
     assert.strictEqual(attachment.id, 750);

@@ -107,7 +107,7 @@ registerModel({
         /**
          * Determines the attachment of this attachment image..
          */
-        attachment: many2one('mail.attachment', {
+        attachment: many2one('Attachment', {
             inverse: 'attachmentImages',
             readonly: true,
             required: true,
