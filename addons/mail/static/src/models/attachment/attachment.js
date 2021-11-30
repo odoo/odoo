@@ -282,7 +282,7 @@ registerModel({
         /**
          * States the attachment cards that are displaying this attachment.
          */
-        attachmentCards: one2many('mail.attachment_card', {
+        attachmentCards: one2many('AttachmentCard', {
             inverse: 'attachment',
             isCausal: true,
         }),
