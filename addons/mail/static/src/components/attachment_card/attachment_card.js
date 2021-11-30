@@ -11,7 +11,7 @@ export class AttachmentCard extends Component {
      */
     setup() {
         super.setup();
-        useComponentToModel({ fieldName: 'component', modelName: 'mail.attachment_card', propNameAsRecordLocalId: 'attachmentCardLocalId' });
+        useComponentToModel({ fieldName: 'component', modelName: 'AttachmentCard', propNameAsRecordLocalId: 'attachmentCardLocalId' });
     }
 
     //--------------------------------------------------------------------------
@@ -19,10 +19,10 @@ export class AttachmentCard extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {mail.attachment_card}
+     * @returns {AttachmentCard}
      */
     get attachmentCard() {
-        return this.messaging && this.messaging.models['mail.attachment_card'].get(this.props.attachmentCardLocalId);
+        return this.messaging && this.messaging.models['AttachmentCard'].get(this.props.attachmentCardLocalId);
     }
 
 }
