@@ -76,9 +76,10 @@ class SaleOrderLine(models.Model):
         product_ids = self.env.registry.populated_models["product.product"]
         # If we want more advanced products with multiple variants
         # add a populate dependency on product template and the following lines
-        product_ids += self.env["product.product"].search([
-            ('product_tmpl_id', 'in', self.env.registry.populated_models["product.template"])
-        ]).ids
+        if 'product.template' in self.env.registry.populated_models:
+            product_ids += self.env["product.product"].search([
+                ('product_tmpl_id', 'in', self.env.registry.populated_models["product.template"])
+            ]).ids
 
         self.env['product.product'].browse(product_ids).read(['uom_id'])  # prefetch all uom_id
 
