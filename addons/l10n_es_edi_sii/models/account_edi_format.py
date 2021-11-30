@@ -562,6 +562,11 @@ class AccountEdiFormat(models.Model):
     # EDI OVERRIDDEN METHODS
     # -------------------------------------------------------------------------
 
+    def _get_invoice_edi_content(self, move):
+        if self.code != 'es_sii':
+            return super()._get_invoice_edi_content(move)
+        return json.dumps(self._l10n_es_edi_get_invoices_info(move)).encode()
+
     def _is_required_for_invoice(self, invoice):
         # OVERRIDE
         if self.code != 'es_sii':
