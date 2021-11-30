@@ -282,7 +282,7 @@ registerModel({
             inverse: 'chatter',
             isCausal: true,
         }),
-        attachmentBoxView: one2one('mail.attachment_box_view', {
+        attachmentBoxView: one2one('AttachmentBoxView', {
             inverse: 'chatter',
             isCausal: true,
         }),
