@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api, fields, models, Command, _
+from odoo import api, fields, models, Command, tools, _
 from odoo.tools import float_compare, float_is_zero
 from odoo.osv.expression import get_unaccent_wrapper
 from odoo.exceptions import UserError, ValidationError
@@ -8,7 +8,6 @@ import re
 from math import copysign
 from collections import defaultdict
 from dateutil.relativedelta import relativedelta
-import html2text
 
 
 class AccountReconcileModelPartnerMapping(models.Model):
@@ -767,7 +766,7 @@ class AccountReconcileModel(models.Model):
 
         for partner_mapping in self.partner_mapping_line_ids:
             match_payment_ref = re.match(partner_mapping.payment_ref_regex, st_line.payment_ref) if partner_mapping.payment_ref_regex else True
-            match_narration = re.match(partner_mapping.narration_regex, html2text.html2text(st_line.narration or '').rstrip()) if partner_mapping.narration_regex else True
+            match_narration = re.match(partner_mapping.narration_regex, tools.html2plaintext(st_line.narration or '').rstrip()) if partner_mapping.narration_regex else True
 
             if match_payment_ref and match_narration:
                 return partner_mapping.partner_id
