@@ -110,7 +110,7 @@
     <t t-name="web.ListRenderer.RecordRow" owl="1">
         <tr class="o_data_row" t-on-click="openRecord(record)">
             <td t-if="props.hasSelectors" class="o_list_record_selector">
-                <CheckBox value="selection.includes(record)" t-on-change="toggleRecordSelection(record)" t-on-click.stop=""/>
+                <CheckBox value="record.selected" t-on-change="toggleRecordSelection(record)" t-on-click.stop=""/>
             </td>
             <t t-foreach="state.columns" t-as="column" t-key="column.name">
                 <t t-if="column.type === 'field'">

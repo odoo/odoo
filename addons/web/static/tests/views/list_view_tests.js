@@ -34,6 +34,7 @@ import {
     toggleMenuItemOption,
     toggleSaveFavorite,
     groupByMenu,
+    getButtons,
 } from "../search/helpers";
 import { createWebClient, doAction } from "../webclient/helpers";
 import { makeView } from "./helpers";
@@ -584,7 +585,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(list, "button.btn.btn-link.btn-danger");
     });
 
-    QUnit.skip("list view: action button in controlPanel basic rendering", async function (assert) {
+    QUnit.test("list view: action button in controlPanel basic rendering", async function (assert) {
         assert.expect(11);
 
         const list = await makeView({
@@ -600,7 +601,7 @@ QUnit.module("Views", (hooks) => {
                     <field name="foo" />
                 </tree>`,
         });
-        let cpButtons = testUtils.controlPanel.getButtons(list);
+        let cpButtons = getButtons(list.el);
         assert.containsNone(cpButtons[0], 'button[name="x"]');
         assert.containsNone(cpButtons[0], ".o_list_selection_box");
         assert.containsNone(cpButtons[0], 'button[name="y"]');
@@ -608,7 +609,7 @@ QUnit.module("Views", (hooks) => {
         await click(
             list.el.querySelector('.o_data_row .o_list_record_selector input[type="checkbox"]')
         );
-        cpButtons = testUtils.controlPanel.getButtons(list);
+        cpButtons = getButtons(list.el);
         assert.containsOnce(cpButtons[0], 'button[name="x"]');
         assert.hasClass(cpButtons[0].querySelector('button[name="x"]'), "btn btn-secondary");
         assert.containsOnce(cpButtons[0], ".o_list_selection_box");
@@ -621,13 +622,13 @@ QUnit.module("Views", (hooks) => {
         await click(
             list.el.querySelector('.o_data_row .o_list_record_selector input[type="checkbox"]')
         );
-        cpButtons = testUtils.controlPanel.getButtons(list);
+        cpButtons = getButtons(list.el);
         assert.containsNone(cpButtons[0], 'button[name="x"]');
         assert.containsNone(cpButtons[0], ".o_list_selection_box");
         assert.containsNone(cpButtons[0], 'button[name="y"]');
     });
 
-    QUnit.skip(
+    QUnit.test(
         "list view: action button executes action on click: buttons are disabled and re-enabled",
         async function (assert) {
             assert.expect(3);
@@ -644,18 +645,16 @@ QUnit.module("Views", (hooks) => {
                     </header>
                     <field name="foo" />
                 </tree>`,
-                intercepts: {
-                    async execute_action(ev) {
-                        const { on_success } = ev.data;
-                        await executeActionDef;
-                        on_success();
-                    },
+            });
+            patchWithCleanup(list.env.services.action, {
+                doActionButton: async () => {
+                    await executeActionDef;
                 },
             });
             await click(
                 list.el.querySelector('.o_data_row .o_list_record_selector input[type="checkbox"]')
             );
-            const cpButtons = testUtils.controlPanel.getButtons(list);
+            const cpButtons = getButtons(list.el);
             assert.ok(
                 Array.from(cpButtons[0].querySelectorAll("button")).every((btn) => !btn.disabled)
             );
@@ -666,7 +665,7 @@ QUnit.module("Views", (hooks) => {
             );
 
             executeActionDef.resolve();
-            await testUtils.nextTick();
+            await nextTick();
             assert.ok(
                 Array.from(cpButtons[0].querySelectorAll("button")).every((btn) => !btn.disabled)
             );
@@ -705,10 +704,10 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.test(
         "list view: action button executes action on click: correct parameters",
         async function (assert) {
-            assert.expect(4);
+            assert.expect(6);
 
             const list = await makeView({
                 type: "list",
@@ -721,45 +720,40 @@ QUnit.module("Views", (hooks) => {
                     </header>
                     <field name="foo" />
                 </tree>`,
-                intercepts: {
-                    async execute_action(ev) {
-                        const {
-                            action_data: { context, name, type },
-                            env,
-                        } = ev.data;
-                        // Action's own properties
-                        assert.strictEqual(name, "x");
-                        assert.strictEqual(type, "object");
+            });
+            patchWithCleanup(list.env.services.action, {
+                doActionButton: async (params) => {
+                    const { buttonContext, context, name, resModel, resIds, type } = params;
+                    // Action's own properties
+                    assert.strictEqual(name, "x");
+                    assert.strictEqual(type, "object");
 
-                        // The action's execution context
-                        assert.deepEqual(context, {
-                            active_domain: [],
-                            active_id: 1,
-                            active_ids: [1],
-                            active_model: "foo",
-                            plouf: "plif",
-                        });
-                        // The current environment (not owl's, but the current action's)
-                        assert.deepEqual(env, {
-                            context: {},
-                            model: "foo",
-                            resIDs: [1],
-                        });
-                    },
+                    // The action's execution context
+                    assert.deepEqual(buttonContext, {
+                        active_domain: [],
+                        active_id: 1,
+                        active_ids: [1],
+                        active_model: "foo",
+                        plouf: "plif",
+                    });
+
+                    assert.strictEqual(resModel, "foo");
+                    assert.deepEqual([...resIds], [1]);
+                    assert.strictEqual(JSON.stringify(context), "{}");
                 },
             });
             await click(
                 list.el.querySelector('.o_data_row .o_list_record_selector input[type="checkbox"]')
             );
-            const cpButtons = testUtils.controlPanel.getButtons(list);
+            const cpButtons = getButtons(list.el);
             await click(cpButtons[0].querySelector('button[name="x"]'));
         }
     );
 
-    QUnit.skip(
+    QUnit.test(
         "list view: action button executes action on click with domain selected: correct parameters",
         async function (assert) {
-            assert.expect(10);
+            assert.expect(12);
 
             const list = await makeView({
                 type: "list",
@@ -772,45 +766,39 @@ QUnit.module("Views", (hooks) => {
                     </header>
                     <field name="foo" />
                 </tree>`,
-                intercepts: {
-                    async execute_action(ev) {
-                        assert.step("execute_action");
-                        const {
-                            action_data: { context, name, type },
-                            env,
-                        } = ev.data;
-                        // Action's own properties
-                        assert.strictEqual(name, "x");
-                        assert.strictEqual(type, "object");
-
-                        // The action's execution context
-                        assert.deepEqual(context, {
-                            active_domain: [],
-                            active_id: 1,
-                            active_ids: [1, 2, 3, 4],
-                            active_model: "foo",
-                        });
-                        // The current environment (not owl's, but the current action's)
-                        assert.deepEqual(env, {
-                            context: {},
-                            model: "foo",
-                            resIDs: [1, 2, 3, 4],
-                        });
-                    },
-                },
                 mockRPC(route, args) {
                     if (args.method === "search") {
                         assert.step("search");
                         assert.strictEqual(args.model, "foo");
                         assert.deepEqual(args.args, [[]]); // empty domain since no domain in searchView
                     }
-                    return this._super.call(this, ...arguments);
+                },
+            });
+            patchWithCleanup(list.env.services.action, {
+                doActionButton: async (params) => {
+                    const { buttonContext, context, name, resModel, resIds, type } = params;
+                    assert.step("execute_action");
+                    // Action's own properties
+                    assert.strictEqual(name, "x");
+                    assert.strictEqual(type, "object");
+
+                    // The action's execution context
+                    assert.deepEqual(buttonContext, {
+                        active_domain: [],
+                        active_id: 1,
+                        active_ids: [1, 2, 3, 4],
+                        active_model: "foo",
+                    });
+
+                    assert.strictEqual(JSON.stringify(context), "{}");
+                    assert.strictEqual(resModel, "foo");
+                    assert.deepEqual([...resIds], [1, 2, 3, 4]);
                 },
             });
             await click(
                 list.el.querySelector('.o_data_row .o_list_record_selector input[type="checkbox"]')
             );
-            const cpButtons = testUtils.controlPanel.getButtons(list);
+            const cpButtons = getButtons(list.el);
 
             await click(cpButtons[0].querySelector(".o_list_select_domain"));
             assert.verifySteps([]);
@@ -1669,14 +1657,15 @@ QUnit.module("Views", (hooks) => {
             serverData,
             arch: "<tree>" + '<field name="foo"/>' + '<field name="date"/>' + "</tree>",
         });
-
+        debugger;
         // Descending order on Foo
-        await click($(list.el).find('th.o_column_sortable:contains("Foo")'));
-        await click($(list.el).find('th.o_column_sortable:contains("Foo")'));
+        await click($(list.el).find('th.o_column_sortable:contains("Foo")')[0]);
+        await click($(list.el).find('th.o_column_sortable:contains("Foo")')[0]);
 
         // Ascending order on Date
-        await click($(list.el).find('th.o_column_sortable:contains("Date")'));
+        await click($(list.el).find('th.o_column_sortable:contains("Date")')[0]);
 
+        debugger;
         var listContext = list.getOwnedQueryParams();
         assert.deepEqual(
             listContext,
@@ -2480,7 +2469,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skip("selection box is displayed after header buttons", async function (assert) {
+    QUnit.test("selection box is displayed after header buttons", async function (assert) {
         assert.expect(5);
 
         const list = await makeView({
@@ -2501,15 +2490,18 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone($(list.el).find(".o_cp_buttons"), ".o_list_selection_box");
 
         // select a record
-        await click($(list.el).find(".o_data_row:first .o_list_record_selector input"));
-        assert.containsOnce($(list.el).find(".o_cp_buttons"), ".o_list_selection_box");
-        const lastElement = $(list.el).find(".o_cp_buttons .o_list_buttons").children(":last")[0];
+        await click(list.el, ".o_data_row:first-child .o_list_record_selector input");
+        assert.containsOnce(list.el.querySelector(".o_cp_buttons"), ".o_list_selection_box");
+        const lastElement = list.el.querySelector(".o_cp_buttons .o_list_buttons").lastChild;
         assert.strictEqual(
             lastElement,
-            $(list.el).find(".o_cp_buttons .o_list_selection_box")[0],
+            list.el.querySelector(".o_cp_buttons .o_list_selection_box"),
             "last element should selection box"
         );
-        assert.strictEqual($(list.el).find(".o_list_selection_box").text().trim(), "1 selected");
+        assert.strictEqual(
+            list.el.querySelector(".o_list_selection_box").textContent.trim(),
+            "1 selected"
+        );
     });
 
     QUnit.skip("selection box is removed after multi record edition", async function (assert) {

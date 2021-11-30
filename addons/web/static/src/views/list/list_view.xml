@@ -4,27 +4,56 @@
     <t t-name="web.ListView" owl="1">
         <Layout viewType="'list'" useSampleModel="model.useSampleModel">
             <t t-set-slot="control-panel-bottom-left">
-                <t t-call="{{ constructor.buttonTemplate }}"/>
+                <div class="o_cp_buttons" role="toolbar" aria-label="Control panel buttons" t-ref="buttons">
+                    <t t-call="{{ constructor.buttonTemplate }}"/>
+                </div>
             </t>
-            <ListRenderer list="model.root" fields="props.fields" info="archInfo" hasSelectors="props.hasSelectors" openRecord="openRecord" />
+            <ListRenderer list="model.root" fields="props.fields" info="archInfo" hasSelectors="props.hasSelectors" openRecord="openRecord" toggleSelection="toggleSelection" toggleRecordSelection="toggleRecordSelection"/>
         </Layout>
     </t>
 
     <t t-name="web.ListView.Buttons" owl="1">
         <div class="o_list_buttons d-flex" role="toolbar" aria-label="Main actions">
-            <button type="button" class="btn btn-primary o_list_button_save" data-tooltip="Save record" aria-label="Save record" accesskey="s">
+            <button type="button" class="btn btn-primary o_list_button_save" data-tooltip="Save record" aria-label="Save record" data-hotkey="s">
                 Save
             </button>
-            <button type="button" class="btn btn-secondary o_list_button_discard" data-tooltip="Discard record" aria-label="Discard record" accesskey="j">
+            <button type="button" class="btn btn-secondary o_list_button_discard" data-tooltip="Discard record" aria-label="Discard record" data-hotkey="j">
                 Discard
             </button>
             <t t-if="activeActions['create']">
-                <button type="button" class="btn btn-primary o_list_button_add" data-tooltip="Create record" aria-label="Create record" accesskey="c" t-on-click="onClickCreate">
+                <button type="button" class="btn btn-primary o_list_button_add" data-tooltip="Create record" aria-label="Create record" data-hotkey="c" t-on-click="onClickCreate">
                     Create
                 </button>
             </t>
             <t t-if="activeActions['exportXlsx'] and isExportEnable">
                 <button type="button" class="btn btn-secondary fa fa-download o_list_export_xlsx" data-tooltip="Export All" aria-label="Export All"/>
+            </t>
+            <t t-if="model.root.selection.length">
+                <t t-foreach="archInfo.headerButtons" t-as="button" t-key="button.id">
+                    <ListViewHeaderButton
+                        classes="[]"
+                        clickParams="button.clickParams"
+                        context="button.context"
+                        defaultRank="button.defaultRank"
+                        domain="props.domain"
+                        icon="button.icon"
+                        getInfo="getInfo"
+                        string="button.string"
+                        title="button.title"/>
+                </t>
+                <t t-call="web.ListView.Selection"/>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="web.ListView.Selection" owl="1">
+        <div class="o_list_selection_box alert alert-info d-inline-flex align-items-center pl-0 px-lg-2 py-0 mb-0 ml-2" role="alert">
+            <span t-if="isDomainSelected">All <span class="text-monospace" t-esc="nbTotal"/> selected</span>
+            <t t-else="">
+                <span class="text-monospace mr-1" t-esc="nbSelected"/> selected
+                <a t-if="isPageSelected and nbTotal > nbSelected" href="#" class="o_list_select_domain ml-2 btn btn-sm btn-info px-2 py-1 border-0 font-weight-normal" t-on-click="onSelectDomain">
+                    <i class="fa fa-arrow-right"/> Select all <span class="text-monospace" t-esc="nbTotal"/>
+                </a>
             </t>
         </div>
     </t>

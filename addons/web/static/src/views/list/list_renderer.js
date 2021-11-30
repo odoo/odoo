@@ -1,7 +1,9 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
+import { Domain } from "@web/core/domain";
 import { CheckBoxDropdownItem } from "@web/core/dropdown/checkbox_dropdown_item";
+import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { Field } from "@web/fields/field";
 import { ViewButton } from "@web/views/view_button/view_button";
@@ -29,17 +31,12 @@ export class ListRenderer extends Component {
         this.getOptionalActiveFields();
         this.activeActions = this.props.info.activeActions;
         this.cellClassByColumn = {};
-        this.selection = [];
         this.groupByButtons = this.props.info.groupBy.buttons;
         this.state = useState({
             columns: this.allColumns.filter(
                 (col) => !col.optional || this.optionalActiveFields[col.name]
             ),
         });
-    }
-
-    willUpdateProps() {
-        this.selection = [];
     }
 
     editGroupRecord(group) {
@@ -108,14 +105,19 @@ export class ListRenderer extends Component {
         }
     }
     get selectAll() {
-        let nbDisplayedRecords = this.props.list.records.length;
-        return nbDisplayedRecords > 0 && this.selection.length === nbDisplayedRecords;
+        const list = this.props.list;
+        let nbDisplayedRecords = list.records.length;
+        if (list.isDomainSelected) {
+            return true;
+        } else {
+            return nbDisplayedRecords > 0 && list.selection.length === nbDisplayedRecords;
+        }
     }
 
     get aggregates() {
         let values;
-        if (this.selection.length) {
-            values = this.selection.map((r) => r.data);
+        if (this.props.list.selection && this.props.list.selection.length) {
+            values = this.props.list.selection.map((r) => r.data);
         } else if (this.props.list.isGrouped) {
             values = this.props.list.groups.map((g) => g.aggregates);
         } else {
@@ -207,8 +209,11 @@ export class ListRenderer extends Component {
             this.cellClassByColumn[column.name] = classNames;
         }
         const modifiersClassNames = [];
-        if (column.invisible && column.invisible.contains(record.data)) {
-            modifiersClassNames.push("o_invisible_modifier");
+        if (column.type === "field") {
+            const invisible = record.activeFields[column.name].modifiers.invisible;
+            if (invisible && new Domain(invisible).contains(record.data)) {
+                modifiersClassNames.push("o_invisible_modifier");
+            }
         }
 
         return [...this.cellClassByColumn[column.name], ...modifiersClassNames].join(" ");
@@ -220,7 +225,7 @@ export class ListRenderer extends Component {
         if (fieldType === "boolean") {
             return "";
         }
-        const formatter = registry.category("formatters").get(fieldType);
+        const formatter = formatterRegistry.get(fieldType, (val) => val);
         const formatOptions = {
             escape: false,
             data: record.data,
@@ -232,7 +237,8 @@ export class ListRenderer extends Component {
 
     getButtonClass(button, record) {
         const classes = [...button.classes];
-        if (button.invisible && button.invisible.contains(record.data)) {
+        const modifiers = evaluateExpr(button.modifiersAttribute, record.data);
+        if (modifiers.invisible && new Domain(modifiers.invisible).contains(record.data)) {
             classes.push("o_invisible_modifier");
         }
         return classes;
@@ -335,22 +341,24 @@ export class ListRenderer extends Component {
     }
 
     toggleSelection() {
-        if (this.selection.length === this.props.list.records.length) {
-            this.selection = [];
+        const list = this.props.list;
+        if (list.selection.length === list.records.length) {
+            list.records.forEach((record) => {
+                record.toggleSelection(false);
+                list.selectDomain(false);
+            });
         } else {
-            this.selection = [...this.props.list.records];
+            list.records.forEach((record) => {
+                record.toggleSelection(true);
+            });
         }
-        this.render();
     }
+
     toggleRecordSelection(record) {
-        const index = this.selection.indexOf(record);
-        if (index > -1) {
-            this.selection.splice(index, 1);
-        } else {
-            this.selection.push(record);
-        }
-        this.render();
+        record.toggleSelection();
+        this.props.list.selectDomain(false);
     }
+
     toggleOptionalField(ev) {
         const fieldName = ev.detail.payload.name;
         this.optionalActiveFields[fieldName] = !this.optionalActiveFields[fieldName];

@@ -113,6 +113,10 @@ export const getMenuItemTexts = (target) => {
     return [...el.querySelectorAll(`.dropdown ul .o_menu_item`)].map((e) => e.innerText.trim());
 };
 
+export const getButtons = (el) => {
+    return [...el.querySelector(`div.o_cp_bottom div.o_cp_buttons`).children];
+};
+
 /** Filter menu */
 
 export const toggleFilterMenu = async (el) => {

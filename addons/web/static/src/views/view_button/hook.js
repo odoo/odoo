@@ -24,9 +24,9 @@ export function useViewButtons(model) {
     async function handler(ev) {
         toggleButtonsDisable(comp.el, false);
         const { clickParams, record } = ev.detail;
-        const { resIds } = model;
 
         const resId = record.resId;
+        const resIds = record.resIds || model.resIds;
         const resModel = record.resModel || model.resModel;
 
         const valuesForEval = Object.assign({}, record.data, {
@@ -34,11 +34,14 @@ export function useViewButtons(model) {
             active_ids: resIds,
         });
 
-        let buttonContext;
+        let buttonContext = {};
         if (clickParams.context) {
             buttonContext = evaluateExpr(clickParams.context, valuesForEval);
         }
-        const envContext = record.context; //LPE FIXME new Context(payload.env.context).eval();
+        if (clickParams.buttonContext) {
+            Object.assign(buttonContext, clickParams.buttonContext);
+        }
+        const envContext = record.context || {}; //LPE FIXME new Context(payload.env.context).eval();
 
         const doActionParams = Object.assign({}, clickParams, {
             resModel,
