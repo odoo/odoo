@@ -22,8 +22,8 @@ class TestIrMailServer(TransactionCase):
             'content',
             'content',
             'content',
-            "test1\n\n**test2**\n\n_test3_\n\n_test4_\n\n~~test5~~\n\ntest6\n\n  * test7\n  * test8\n\n  1. test9\n  2. test10\n\n> test11\n\n> > test12\n>>\n\n>>  \n>\n\n[google](http://google.com) [test link](javascript:alert\('malicious code'\))",
-            'On 01/05/2016 10:24 AM, Raoul Poilvache wrote:  \n\n> **_Test reply. The suite._**  \n>\n>\n>  \n>\n>\n> \--  \n>\n>\n> Raoul Poilvache\n\nTop cool !!!  \n  \n\n    \n    \n    -- \n    Raoul Poilvache\n    ',
+            "test1\n*test2*\ntest3\ntest4\ntest5\ntest6   test7\ntest8    test9\ntest10\ntest11\ntest12\ngoogle [1]\ntest link [2]\n\n\n[1] http://google.com\n[2] javascript:alert('malicious code')",
+            'On 01/05/2016 10:24 AM, Raoul\nPoilvache wrote:\n\n* Test reply. The suite. *\n\n--\nRaoul Poilvache\n\nTop cool !!!\n\n--\nRaoul Poilvache',
         ]
         for body, expected in zip(bodies, expected_list):
             message = self.env['ir.mail_server'].build_email(
