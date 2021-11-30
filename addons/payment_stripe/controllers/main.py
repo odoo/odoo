@@ -92,31 +92,31 @@ class StripeController(http.Controller):
                 tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_feedback_data(
                     'stripe', data
                 )
-                if not self._verify_webhook_signature(tx_sudo.acquirer_id.stripe_webhook_secret):
-                    raise Forbidden()
-                else:
-                    # Fetch the PaymentIntent, Charge and PaymentMethod objects from Stripe
-                    if checkout_session.get('payment_intent'):  # Can be None
-                        payment_intent = tx_sudo.acquirer_id._stripe_make_request(
-                            f'payment_intents/{tx_sudo.stripe_payment_intent}', method='GET'
-                        )
-                        _logger.info(
-                            "received payment_intents response:\n%s", pprint.pformat(payment_intent)
-                        )
-                        self._include_payment_intent_in_feedback_data(payment_intent, data)
-                    # Fetch the SetupIntent and PaymentMethod objects from Stripe
-                    if checkout_session.get('setup_intent'):  # Can be None
-                        setup_intent = tx_sudo.acquirer_id._stripe_make_request(
-                            f'setup_intents/{checkout_session.get("setup_intent")}',
-                            payload={'expand[]': 'payment_method'},
-                            method='GET'
-                        )
-                        _logger.info(
-                            "received setup_intents response:\n%s", pprint.pformat(setup_intent)
-                        )
-                        self._include_setup_intent_in_feedback_data(setup_intent, data)
-                    # Handle the feedback data crafted with Stripe API objects as a regular feedback
-                    request.env['payment.transaction'].sudo()._handle_feedback_data('stripe', data)
+
+                self._verify_webhook_signature(tx_sudo.acquirer_id.stripe_webhook_secret)
+
+                # Fetch the PaymentIntent, Charge and PaymentMethod objects from Stripe
+                if checkout_session.get('payment_intent'):  # Can be None
+                    payment_intent = tx_sudo.acquirer_id._stripe_make_request(
+                        f'payment_intents/{tx_sudo.stripe_payment_intent}', method='GET'
+                    )
+                    _logger.info(
+                        "received payment_intents response:\n%s", pprint.pformat(payment_intent)
+                    )
+                    self._include_payment_intent_in_feedback_data(payment_intent, data)
+                # Fetch the SetupIntent and PaymentMethod objects from Stripe
+                if checkout_session.get('setup_intent'):  # Can be None
+                    setup_intent = tx_sudo.acquirer_id._stripe_make_request(
+                        f'setup_intents/{checkout_session.get("setup_intent")}',
+                        payload={'expand[]': 'payment_method'},
+                        method='GET'
+                    )
+                    _logger.info(
+                        "received setup_intents response:\n%s", pprint.pformat(setup_intent)
+                    )
+                    self._include_setup_intent_in_feedback_data(setup_intent, data)
+                # Handle the feedback data crafted with Stripe API objects as a regular feedback
+                request.env['payment.transaction'].sudo()._handle_feedback_data('stripe', data)
         except ValidationError:  # Acknowledge the notification to avoid getting spammed
             _logger.exception("unable to handle the event data; skipping to acknowledge")
         return ''
@@ -144,12 +144,11 @@ class StripeController(http.Controller):
         See https://stripe.com/docs/webhooks/signatures#verify-manually.
 
         :param str webhook_secret: The secret webhook key of the acquirer handling the transaction
-        :return: Whether the signatures match
-        :rtype: str
+        :return: None
         """
         if not webhook_secret:
             _logger.warning("ignored webhook event due to undefined webhook secret")
-            return False
+            raise Forbidden()
 
         notification_payload = request.httprequest.data.decode('utf-8')
         signature_entries = request.httprequest.headers.get('Stripe-Signature').split(',')
@@ -159,7 +158,7 @@ class StripeController(http.Controller):
         event_timestamp = int(signature_data['t'])
         if datetime.utcnow().timestamp() - event_timestamp > self.WEBHOOK_AGE_TOLERANCE:
             _logger.warning("ignored webhook event due to age tolerance: %s", event_timestamp)
-            return False
+            raise Forbidden()
 
         # Compare signatures
         received_signature = signature_data['v1']
@@ -169,8 +168,8 @@ class StripeController(http.Controller):
             signed_payload.encode('utf-8'),
             hashlib.sha256
         ).hexdigest()
+        print('received_signature', received_signature)
+        print('expected_signature', expected_signature)
         if not consteq(received_signature, expected_signature):
             _logger.warning("ignored event with invalid signature")
-            return False
-
-        return True
+            raise Forbidden()
