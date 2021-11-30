@@ -21,8 +21,8 @@ export class AttachmentBox extends Component {
          * Useful to programmatically prompts the browser file uploader.
          */
         this._fileUploaderRef = useRef('fileUploader');
-        useComponentToModel({ fieldName: 'component', modelName: 'mail.attachment_box_view', propNameAsRecordLocalId: 'attachmentBoxViewLocalId' });
-        useRefToModel({ fieldName: 'fileUploaderRef', modelName: 'mail.attachment_box_view', propNameAsRecordLocalId: 'attachmentBoxViewLocalId', refName: 'fileUploader' });
+        useComponentToModel({ fieldName: 'component', modelName: 'AttachmentBoxView', propNameAsRecordLocalId: 'attachmentBoxViewLocalId' });
+        useRefToModel({ fieldName: 'fileUploaderRef', modelName: 'AttachmentBoxView', propNameAsRecordLocalId: 'attachmentBoxViewLocalId', refName: 'fileUploader' });
         this._onDropZoneFilesDropped = this._onDropZoneFilesDropped.bind(this);
     }
 
@@ -31,10 +31,10 @@ export class AttachmentBox extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {mail.attachement_box_view|undefined}
+     * @returns {AttachmentBoxView|undefined}
      */
     get attachmentBoxView() {
-        return this.messaging && this.messaging.models['mail.attachment_box_view'].get(this.props.attachmentBoxViewLocalId);
+        return this.messaging && this.messaging.models['AttachmentBoxView'].get(this.props.attachmentBoxViewLocalId);
     }
 
     //--------------------------------------------------------------------------
