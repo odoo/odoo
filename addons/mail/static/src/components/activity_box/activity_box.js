@@ -14,7 +14,7 @@ export class ActivityBox extends Component {
      * @returns {Chatter}
      */
     get activityBoxView() {
-        return this.messaging.models['mail.activity_box_view'].get(this.props.activityBoxViewLocalId);
+        return this.messaging.models['ActivityBoxView'].get(this.props.activityBoxViewLocalId);
     }
 
 }
