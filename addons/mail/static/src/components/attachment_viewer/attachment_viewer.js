@@ -136,8 +136,7 @@ export class AttachmentViewer extends Component {
      * @private
      */
     _download() {
-        const id = this.attachmentViewer.attachment.id;
-        this.env.services.navigate(`/web/content/ir.attachment/${id}/datas`, { download: true });
+        this.attachmentViewer.attachment.download();
     }
 
     /**
