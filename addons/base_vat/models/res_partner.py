@@ -232,7 +232,7 @@ class ResPartner(models.Model):
             )
 
         return '\n' + _(
-            'The VAT number [%(wrong_vat)s] for record_label does not seem to be valid. \nNote: the expected format is %(expected_format)s',
+            'The VAT number [%(wrong_vat)s] for %(record_label)s does not seem to be valid. \nNote: the expected format is %(expected_format)s',
             wrong_vat=wrong_vat,
             record_label=record_label,
             expected_format=expected_format,
