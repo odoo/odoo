@@ -55,7 +55,7 @@ class SlidesCase(common.TransactionCase):
         cls.slide = cls.env['slide.slide'].with_user(cls.user_officer).create({
             'name': 'How To Cook Humans',
             'channel_id': cls.channel.id,
-            'slide_type': 'presentation',
+            'slide_category': 'document',
             'is_published': True,
             'completion_time': 2.0,
             'sequence': 1,
@@ -70,7 +70,7 @@ class SlidesCase(common.TransactionCase):
         cls.slide_2 = cls.env['slide.slide'].with_user(cls.user_officer).create({
             'name': 'How To Cook For Humans',
             'channel_id': cls.channel.id,
-            'slide_type': 'presentation',
+            'slide_category': 'document',
             'is_published': True,
             'completion_time': 3.0,
             'sequence': 3,
@@ -78,7 +78,7 @@ class SlidesCase(common.TransactionCase):
         cls.slide_3 = cls.env['slide.slide'].with_user(cls.user_officer).create({
             'name': 'How To Cook Humans For Humans',
             'channel_id': cls.channel.id,
-            'slide_type': 'document',
+            'slide_category': 'document',
             'is_published': True,
             'completion_time': 1.5,
             'sequence': 4,

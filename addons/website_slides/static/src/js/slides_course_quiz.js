@@ -18,7 +18,7 @@
      * This widget is responsible of displaying quiz questions and propositions. Submitting the quiz will fetch the
      * correction and decorate the answers according to the result. Error message or modal can be displayed.
      *
-     * This widget can be attached to DOM rendered server-side by `website_slides.slide_type_quiz` or
+     * This widget can be attached to DOM rendered server-side by `website_slides.slide_category_quiz` or
      * used client side (Fullscreen).
      *
      * Triggered events are :
