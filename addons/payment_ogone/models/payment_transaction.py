@@ -204,6 +204,17 @@ class PaymentTransaction(models.Model):
             self._set_done()
         elif payment_status in const.PAYMENT_STATUS_MAPPING['cancel']:
             self._set_canceled()
+        elif payment_status in const.PAYMENT_STATUS_MAPPING['declined']:
+            if data.get("NCERRORPLUS"):
+                reason = data.get("NCERRORPLUS")
+            elif data.get("NCERROR"):
+                reason = "Error code: %s" % data.get("NCERROR")
+            else:
+                reason = "Unknown reason"
+            _logger.info("the payment has been declined: %s.", reason)
+            self._set_error(
+                "Ogone: " + _("The payment has been declined: %s", reason)
+            )
         else:  # Classify unknown payment statuses as `error` tx state
             _logger.info(
                 "received data with invalid payment status (%s) for transaction with reference %s",
