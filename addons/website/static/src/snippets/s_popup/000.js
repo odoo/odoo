@@ -111,22 +111,63 @@ const PopupWidget = publicWidget.Widget.extend({
 
 publicWidget.registry.popup = PopupWidget;
 
+// Try to update the scrollbar based on the current context (modal state)
+// and only if the modal overflowing has changed
+
+function _updateScrollbar(ev) {
+    const context = ev.data;
+    const modalContent = context._element.querySelector('.modal-content');
+    const currentOverflow = modalContent.offsetHeight >= window.innerHeight;
+    if (modalContent && context._isOverflowingWindow !== currentOverflow) {
+        context._isOverflowingWindow = currentOverflow;
+        context._checkScrollbar();
+        context._setScrollbar();
+        if (context._element.classList.contains('s_popup_overflow_page')) {
+            $(document.body).addClass('modal-open');
+        } else {
+            $(document.body).removeClass('modal-open');
+            context._resetScrollbar();
+        }
+    }
+}
+
 // Prevent bootstrap to prevent scrolling and to add the strange body
 // padding-right they add if the popup does not use a backdrop (especially
 // important for default cookie bar).
+
+const _baseShowElement = $.fn.modal.Constructor.prototype._showElement;
+$.fn.modal.Constructor.prototype._showElement = function () {
+    _baseShowElement.apply(this, arguments);
+    // Update the scrollbar if the content changes or if the window has been
+    // resized
+    $(this._element).on('content_changed.update_scrollbar', this, _updateScrollbar);
+    $(window).on('resize.update_scrollbar', this, _updateScrollbar);
+    _updateScrollbar({ data: this });
+};
+
+const _baseHideModal = $.fn.modal.Constructor.prototype._hideModal;
+$.fn.modal.Constructor.prototype._hideModal = function () {
+    _baseHideModal.apply(this, arguments);
+    $(this._element).off('content_changed.update_scrollbar');
+    $(window).off('resize.update_scrollbar');
+};
+
 const _baseSetScrollbar = $.fn.modal.Constructor.prototype._setScrollbar;
 $.fn.modal.Constructor.prototype._setScrollbar = function () {
-    if (this._element.classList.contains('s_popup_no_backdrop')) {
+    if (this._element.classList.contains('s_popup_no_backdrop') && !this._isOverflowingWindow) {
+        this._element.classList.remove('s_popup_overflow_page');
         return;
     }
-    return _baseSetScrollbar.apply(this, ...arguments);
+    this._element.classList.add('s_popup_overflow_page');
+    return _baseSetScrollbar.apply(this, arguments);
 };
+
 const _baseGetScrollbarWidth = $.fn.modal.Constructor.prototype._getScrollbarWidth;
 $.fn.modal.Constructor.prototype._getScrollbarWidth = function () {
-    if (this._element.classList.contains('s_popup_no_backdrop')) {
+    if (this._element.classList.contains('s_popup_no_backdrop') && !this._isOverflowingWindow) {
         return 0;
     }
-    return _baseGetScrollbarWidth.apply(this, ...arguments);
+    return _baseGetScrollbarWidth.apply(this, arguments);
 };
 
 return PopupWidget;
