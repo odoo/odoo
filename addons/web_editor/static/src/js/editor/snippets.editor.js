@@ -2257,6 +2257,11 @@ var SnippetsMenu = Widget.extend({
      * @return {Promise}
      */
     async _scrollToSnippet($el) {
+        // Don't scroll if $el is added to a visible popup that does not fill
+        // the page (otherwise the page would scroll to a random location).
+        if ($el.closest('div.modal:not(.s_popup_overflow_page)').length) {
+            return;
+        }
         return dom.scrollTo($el[0], {extraOffset: 50});
     },
     /**

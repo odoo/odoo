@@ -79,6 +79,12 @@ options.registry.SnippetPopup = options.Class.extend({
             this.$target.modal('hide');
         });
     },
+    /**
+     * @override
+     */
+    cleanForSave: function () {
+        this.$target.removeClass("s_popup_overflow_page");
+    },
 
     //--------------------------------------------------------------------------
     // Options
