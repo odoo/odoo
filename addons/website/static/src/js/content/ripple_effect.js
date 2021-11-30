@@ -13,15 +13,6 @@ publicWidget.registry.RippleEffect = publicWidget.Widget.extend({
     /**
      * @override
      */
-    start: async function () {
-        this.diameter = Math.max(this.$el.outerWidth(), this.$el.outerHeight());
-        this.offsetX = this.$el.offset().left;
-        this.offsetY = this.$el.offset().top;
-        return this._super(...arguments);
-    },
-    /**
-     * @override
-     */
     destroy: function () {
         this._super(...arguments);
         if (this.rippleEl) {
@@ -54,16 +45,22 @@ publicWidget.registry.RippleEffect = publicWidget.Widget.extend({
             this.rippleEl = document.createElement('span');
             this.rippleEl.classList.add('o_ripple_item');
             this.rippleEl.style.animationDuration = `${this.duration}ms`;
-            this.rippleEl.style.width = `${this.diameter}px`;
-            this.rippleEl.style.height = `${this.diameter}px`;
             this.el.appendChild(this.rippleEl);
         }
 
         clearTimeout(this.timeoutID);
         this._toggleRippleEffect(false);
 
-        this.rippleEl.style.top = `${ev.pageY - this.offsetY - this.diameter / 2}px`;
-        this.rippleEl.style.left = `${ev.pageX - this.offsetX - this.diameter / 2}px`;
+        const offsetY = this.$el.offset().top;
+        const offsetX = this.$el.offset().left;
+        // The diameter need to be recomputed because a change of window width
+        // can affect the size of a button (e.g. media queries).
+        const diameter = Math.max(this.$el.outerWidth(), this.$el.outerHeight());
+
+        this.rippleEl.style.width = `${diameter}px`;
+        this.rippleEl.style.height = `${diameter}px`;
+        this.rippleEl.style.top = `${ev.pageY - offsetY - diameter / 2}px`;
+        this.rippleEl.style.left = `${ev.pageX - offsetX - diameter / 2}px`;
 
         this._toggleRippleEffect(true);
         this.timeoutID = setTimeout(() => this._toggleRippleEffect(false), this.duration);
