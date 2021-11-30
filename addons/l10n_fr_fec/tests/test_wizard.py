@@ -41,7 +41,8 @@ class TestAccountFrFec(AccountTestInvoicingCommon):
         cls.wizard = cls.env['account.fr.fec'].create({
             'date_from': fields.Date.today() - timedelta(days=1),
             'date_to': fields.Date.today(),
-            'export_type': 'official'
+            'export_type': 'official',
+            'test_file': True,
         })
 
     def test_generate_fec_sanitize_pieceref(self):
