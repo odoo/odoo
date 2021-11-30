@@ -110,14 +110,7 @@ export function _fieldsViewGet(params) {
         modifiersNames.forEach((attr) => {
             const mod = node.getAttribute(attr);
             if (mod) {
-                // TODO
-                // const pyevalContext = window.py.dict.fromJSON(context || {});
-                // var v = pyUtils.py_eval(mod, {context: pyevalContext}) ? true : false;
-                console.info(
-                    "MockServer: naive parse of modifier value in",
-                    QUnit.config.current.testName
-                );
-                const v = JSON.parse(mod);
+                const v = evaluateExpr(mod, { context });
                 if (inTreeView && !inListHeader && attr === "invisible") {
                     modifiers.column_invisible = v;
                 } else if (v || !(attr in modifiers) || !Array.isArray(modifiers[attr])) {

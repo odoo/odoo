@@ -47,20 +47,16 @@ export const getIds = (idsList) => {
     }
 };
 
-export function processButton(node, fields, viewType) {
-    const modifiers = evaluateExpr(node.getAttribute("modifiers") || "{}");
-    if (modifiers.invisible == true) {
-        modifiers.invisible = [[]];
-    }
+export function processButton(node) {
     return {
         classes: (node.getAttribute("class") || "").split(" "),
         icon: node.getAttribute("icon") || false,
         title: node.getAttribute("title") || undefined,
         string: node.getAttribute("string") || undefined,
-        options: evaluateExpr(node.getAttribute("options") || "{}"),
-        invisible: modifiers.invisible ? new Domain(modifiers.invisible) : false, // || modifiers.column_invisible === true;
-        readonly: modifiers.readonly == true,
+        optionsAttribute: node.getAttribute("options") || "{}",
+        modifiersAttribute: node.getAttribute("modifiers") || "{}",
         clickParams: {
+            context: node.getAttribute("context") || "{}",
             name: node.getAttribute("name"),
             type: node.getAttribute("type"),
         },

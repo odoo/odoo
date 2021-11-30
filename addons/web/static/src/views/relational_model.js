@@ -117,6 +117,7 @@ export class Record extends DataPoint {
         this._changes = {};
         this.data = { ...this._values };
         this.preloadedData = {};
+        this.selected = false;
     }
 
     get evalContext() {
@@ -283,6 +284,15 @@ export class Record extends DataPoint {
         this.model.notify();
     }
 
+    toggleSelection(selected) {
+        if (typeof selected === "boolean") {
+            this.selected = selected;
+        } else {
+            this.selected = !this.selected;
+        }
+        this.model.notify();
+    }
+
     discard() {
         this.data = { ...this._values };
         this._changes = {};
@@ -352,6 +362,11 @@ class DynamicList extends DataPoint {
         this.offset = 0;
         this.count = 0;
         this.limit = params.limit || state.limit || this.constructor.DEFAULT_LIMIT;
+        this.isDomainSelected = false;
+    }
+
+    get selection() {
+        return this.records.filter((r) => r.selected);
     }
 
     exportState() {
@@ -387,6 +402,11 @@ class DynamicList extends DataPoint {
         }
 
         await this.load();
+        this.model.notify();
+    }
+
+    selectDomain(value) {
+        this.isDomainSelected = value;
         this.model.notify();
     }
 }
