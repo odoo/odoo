@@ -67,7 +67,7 @@ registerModel({
         /**
          * States the attachment cards that are displaying this nonImageAttachments.
          */
-        attachmentCards: one2many('mail.attachment_card', {
+        attachmentCards: one2many('AttachmentCard', {
             compute: '_computeAttachmentCards',
             inverse: 'attachmentList',
             isCausal: true,
