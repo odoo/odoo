@@ -47,7 +47,7 @@ class TestPERF(common.TransactionCase):
             ],
         } for i in range(self.ENTITIES)]
 
-        with self.assertQueryCount(admin=2753):
+        with self.assertQueryCount(admin=1100):
             t0 = time.time()
             self.env["sale.order"].create(vals_list)
             t1 = time.time()
