@@ -63,7 +63,12 @@
 
     // No backdrop
     .s_popup_no_backdrop {
-        pointer-events: none;
+        // If the popup is taller than the page you should not be able to
+        // interact with the elements behind, otherwise you should (when there
+        // is no backdrop).
+        &:not(.s_popup_overflow_page) {
+            pointer-events: none;
+        }
 
         .modal-content {
             pointer-events: auto;
