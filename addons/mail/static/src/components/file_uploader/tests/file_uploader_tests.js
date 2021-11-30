@@ -56,7 +56,7 @@ QUnit.test('no conflicts between file uploaders', async function (assert) {
     );
     await nextAnimationFrame(); // we can't use afterNextRender as fileInput are display:none
     assert.strictEqual(
-        this.messaging.models['mail.attachment'].all().length,
+        this.messaging.models['Attachment'].all().length,
         1,
         'Uploaded file should be the only attachment created'
     );
@@ -72,7 +72,7 @@ QUnit.test('no conflicts between file uploaders', async function (assert) {
     );
     await nextAnimationFrame();
     assert.strictEqual(
-        this.messaging.models['mail.attachment'].all().length,
+        this.messaging.models['Attachment'].all().length,
         2,
         'Uploaded file should be the only attachment added'
     );

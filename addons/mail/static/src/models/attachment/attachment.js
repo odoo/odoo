@@ -5,7 +5,7 @@ import { attr, many2many, many2one, one2many } from '@mail/model/model_field';
 import { clear, insert } from '@mail/model/model_field_command';
 
 registerModel({
-    name: 'mail.attachment',
+    name: 'Attachment',
     identifyingFields: ['id'],
     lifecycleHooks: {
         _created() {

@@ -161,7 +161,7 @@ registerModel({
         },
         /**
          * @param {Object} param0
-         * @param {mail.attachment[]} [param0.attachments=[]]
+         * @param {Attachment[]} [param0.attachments=[]]
          * @param {string|boolean} [param0.feedback=false]
          */
         async markAsDone({ attachments = [], feedback = false }) {
@@ -233,7 +233,7 @@ registerModel({
     },
     fields: {
         assignee: many2one('User'),
-        attachments: many2many('mail.attachment', {
+        attachments: many2many('Attachment', {
             inverse: 'activities',
         }),
         canWrite: attr({

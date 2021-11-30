@@ -14,10 +14,10 @@ export class AttachmentDeleteConfirmDialog extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {mail.attachment}
+     * @returns {Attachment}
      */
     get attachment() {
-        return this.messaging && this.messaging.models['mail.attachment'].get(this.props.attachmentLocalId);
+        return this.messaging && this.messaging.models['Attachment'].get(this.props.attachmentLocalId);
     }
 
     /**

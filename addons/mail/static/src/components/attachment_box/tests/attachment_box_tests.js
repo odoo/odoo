@@ -240,7 +240,7 @@ QUnit.test('view attachments', async function (assert) {
         id: 100,
         model: 'res.partner',
     });
-    const firstAttachment = this.messaging.models['mail.attachment'].findFromIdentifyingData({ id: 143 });
+    const firstAttachment = this.messaging.models['Attachment'].findFromIdentifyingData({ id: 143 });
     await this.createAttachmentBoxComponent(thread);
 
     await afterNextRender(() =>
