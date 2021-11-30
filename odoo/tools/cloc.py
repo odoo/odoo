@@ -159,11 +159,16 @@ class Cloc(object):
         for a in env['ir.actions.server'].browse(data.keys()):
             self.book(data[a.id] or "odoo/studio", "ir.actions.server/%s: %s" % (a.id, a.name), self.parse_py(a.code))
 
-        query = """
+        query = r"""
             SELECT f.id, m.name FROM ir_model_fields AS f
                 LEFT JOIN ir_model_data AS d ON (d.res_id = f.id AND d.model = 'ir.model.fields')
                 LEFT JOIN ir_module_module AS m ON m.name = d.module
-            WHERE f.compute IS NOT null AND (m.name IS null {})
+            WHERE f.compute IS NOT null AND (
+                -- Do not count studio field
+                (m.name IS null AND (d.module != 'studio_customization' or d.module is NULL))
+                -- Unless they start with x_studio
+                OR (d.module = 'studio_customization' AND f.name ilike 'x\_studio%')
+                {})
         """.format(imported_module)
         env.cr.execute(query)
         data = {r[0]: r[1] for r in env.cr.fetchall()}
