@@ -23,7 +23,7 @@ registerModel({
             }));
         },
         /**
-         * @returns {mail.attachment[]}
+         * @returns {Attachment[]}
          */
         _computeAttachments() {
             if (this.message) {
@@ -38,19 +38,19 @@ registerModel({
             return clear();
         },
         /**
-         * @returns {mail.attachment[]}
+         * @returns {Attachment[]}
          */
         _computeImageAttachments() {
             return replace(this.attachments.filter(attachment => attachment.isImage));
         },
         /**
-         * @returns {mail.attachment[]}
+         * @returns {Attachment[]}
          */
         _computeNonImageAttachments() {
             return replace(this.attachments.filter(attachment => !attachment.isImage));
         },
         /**
-         * @returns {mail.attachment[]}
+         * @returns {Attachment[]}
          */
         _computeViewableAttachments() {
             return replace(this.attachments.filter(attachment => attachment.isViewable));
@@ -60,7 +60,7 @@ registerModel({
         /**
          * States the attachments to be displayed by this attachment list.
          */
-        attachments: many2many('mail.attachment', {
+        attachments: many2many('Attachment', {
             compute: '_computeAttachments',
             inverse: 'attachmentLists',
         }),
@@ -104,7 +104,7 @@ registerModel({
         /**
          * States the attachment that are an image.
          */
-        imageAttachments: many2many('mail.attachment', {
+        imageAttachments: many2many('Attachment', {
             compute: '_computeImageAttachments',
         }),
         message: many2one('Message', {
@@ -120,13 +120,13 @@ registerModel({
         /**
          * States the attachment that are not an image.
          */
-        nonImageAttachments: many2many('mail.attachment', {
+        nonImageAttachments: many2many('Attachment', {
             compute: '_computeNonImageAttachments',
         }),
         /**
          * States the attachments that can be viewed inside the browser.
          */
-        viewableAttachments: many2many('mail.attachment', {
+        viewableAttachments: many2many('Attachment', {
             compute: '_computeViewableAttachments',
         }),
     },

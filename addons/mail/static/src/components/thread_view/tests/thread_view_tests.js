@@ -1015,7 +1015,7 @@ QUnit.test("delete all attachments of message without content should no longer d
 
     await afterNextRender(() => {
         document.querySelector(`.o_AttachmentCard[data-id="${
-            this.messaging.models['mail.attachment'].findFromIdentifyingData({ id: 143 }).localId
+            this.messaging.models['Attachment'].findFromIdentifyingData({ id: 143 }).localId
         }"] .o_AttachmentCard_asideItemUnlink`).click();
     });
     await afterNextRender(() =>
@@ -1075,7 +1075,7 @@ QUnit.test('delete all attachments of a message with some text content should st
 
     await afterNextRender(() => {
         document.querySelector(`.o_AttachmentCard[data-id="${
-            this.messaging.models['mail.attachment'].findFromIdentifyingData({ id: 143 }).localId
+            this.messaging.models['Attachment'].findFromIdentifyingData({ id: 143 }).localId
         }"] .o_AttachmentCard_asideItemUnlink`).click();
     });
     await afterNextRender(() =>
@@ -1142,7 +1142,7 @@ QUnit.test('delete all attachments of a message with tracking fields should stil
 
     await afterNextRender(() => {
         document.querySelector(`.o_AttachmentCard[data-id="${
-            this.messaging.models['mail.attachment'].findFromIdentifyingData({ id: 143 }).localId
+            this.messaging.models['Attachment'].findFromIdentifyingData({ id: 143 }).localId
         }"] .o_AttachmentCard_asideItemUnlink`).click();
     });
     await afterNextRender(() =>

@@ -25,7 +25,7 @@ registerModel({
                     data2.attachments = unlinkAll();
                 } else {
                     data2.attachments = insertAndReplace(data.attachment_ids.map(attachmentData =>
-                        this.messaging.models['mail.attachment'].convertData(attachmentData)
+                        this.messaging.models['Attachment'].convertData(attachmentData)
                     ));
                 }
             }
@@ -535,7 +535,7 @@ registerModel({
         authorName: attr({
             compute: '_computeAuthorName',
         }),
-        attachments: many2many('mail.attachment', {
+        attachments: many2many('Attachment', {
             inverse: 'messages',
         }),
         author: many2one('Partner'),

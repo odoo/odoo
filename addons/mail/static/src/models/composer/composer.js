@@ -128,7 +128,7 @@ registerModel({
         /**
          * States which attachments are currently being created in this composer.
          */
-        attachments: one2many('mail.attachment', {
+        attachments: one2many('Attachment', {
             inverse: 'composer',
         }),
         canPostMessage: attr({

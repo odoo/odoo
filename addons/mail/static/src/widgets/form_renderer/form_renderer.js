@@ -176,7 +176,7 @@ FormRenderer.include({
      * @private
      * @param {OdooEvent} ev
      * @param {Object} ev.data
-     * @param {mail.attachment[]} ev.data.attachments
+     * @param {Attachment[]} ev.data.attachments
      * @param {Thread} ev.data.thread
      */
     _onChatterRendered(ev) {},

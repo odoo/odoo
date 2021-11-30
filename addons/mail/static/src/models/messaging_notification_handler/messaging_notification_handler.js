@@ -136,7 +136,7 @@ registerModel({
          * @param {integer} [payload.id]
          */
         _handleNotificationAttachmentDelete(payload) {
-            const attachment = this.messaging.models['mail.attachment'].findFromIdentifyingData(payload);
+            const attachment = this.messaging.models['Attachment'].findFromIdentifyingData(payload);
             if (attachment) {
                 attachment.delete();
             }

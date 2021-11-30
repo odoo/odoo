@@ -33,7 +33,7 @@ QUnit.test('auto layout with image', async function (assert) {
     assert.expect(3);
 
     const { createMessageComponent } = await this.start();
-    const attachment = this.messaging.models['mail.attachment'].create({
+    const attachment = this.messaging.models['Attachment'].create({
         filename: "test.png",
         id: 750,
         mimetype: 'image/png',

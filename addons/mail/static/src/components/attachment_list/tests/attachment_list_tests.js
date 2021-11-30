@@ -35,7 +35,7 @@ QUnit.test('simplest layout', async function (assert) {
     assert.expect(8);
 
     const { createMessageComponent } = await this.start();
-    const attachment = this.messaging.models['mail.attachment'].create({
+    const attachment = this.messaging.models['Attachment'].create({
         filename: "test.txt",
         id: 750,
         mimetype: 'text/plain',
@@ -57,7 +57,7 @@ QUnit.test('simplest layout', async function (assert) {
     const attachmentEl = document.querySelector('.o_AttachmentList .o_AttachmentCard');
     assert.strictEqual(
         attachmentEl.dataset.id,
-        this.messaging.models['mail.attachment'].findFromIdentifyingData({ id: 750 }).localId,
+        this.messaging.models['Attachment'].findFromIdentifyingData({ id: 750 }).localId,
         "attachment component should be linked to attachment store model"
     );
     assert.strictEqual(
@@ -107,7 +107,7 @@ QUnit.test('simplest layout + editable', async function (assert) {
             return this._super(...arguments);
         },
     });
-    const attachment = this.messaging.models['mail.attachment'].create({
+    const attachment = this.messaging.models['Attachment'].create({
         filename: "test.txt",
         id: 750,
         mimetype: 'text/plain',
@@ -163,7 +163,7 @@ QUnit.test('layout with card details and filename and extension', async function
     assert.expect(2);
 
     const { createMessageComponent } = await this.start();
-    const attachment = this.messaging.models['mail.attachment'].create({
+    const attachment = this.messaging.models['Attachment'].create({
         filename: "test.txt",
         id: 750,
         mimetype: 'text/plain',
@@ -195,7 +195,7 @@ QUnit.test('view attachment', async function (assert) {
     const { createMessageComponent } = await this.start({
         hasDialog: true,
     });
-    const attachment = this.messaging.models['mail.attachment'].create({
+    const attachment = this.messaging.models['Attachment'].create({
         filename: "test.png",
         id: 750,
         mimetype: 'image/png',
@@ -231,7 +231,7 @@ QUnit.test('close attachment viewer', async function (assert) {
     assert.expect(3);
 
     const { createMessageComponent } = await this.start({ hasDialog: true });
-    const attachment = this.messaging.models['mail.attachment'].create({
+    const attachment = this.messaging.models['Attachment'].create({
         filename: "test.png",
         id: 750,
         mimetype: 'image/png',
@@ -280,7 +280,7 @@ QUnit.test('clicking on the delete attachment button multiple times should do th
             return this._super(...arguments);
         },
     });
-    const attachment = this.messaging.models['mail.attachment'].create({
+    const attachment = this.messaging.models['Attachment'].create({
         filename: "test.txt",
         id: 750,
         mimetype: 'text/plain',
@@ -322,7 +322,7 @@ QUnit.test('[technical] does not crash when the viewer is closed before image lo
     assert.expect(1);
 
     const { createMessageComponent } = await this.start({ hasDialog: true });
-    const attachment = this.messaging.models['mail.attachment'].create({
+    const attachment = this.messaging.models['Attachment'].create({
         filename: "test.png",
         id: 750,
         mimetype: 'image/png',
@@ -356,7 +356,7 @@ QUnit.test('plain text file is viewable', async function (assert) {
     assert.expect(1);
 
     const { createMessageComponent } = await this.start();
-    const attachment = this.messaging.models['mail.attachment'].create({
+    const attachment = this.messaging.models['Attachment'].create({
         filename: "test.txt",
         id: 750,
         mimetype: 'text/plain',
@@ -381,7 +381,7 @@ QUnit.test('HTML file is viewable', async function (assert) {
     assert.expect(1);
 
     const { createMessageComponent } = await this.start();
-    const attachment = this.messaging.models['mail.attachment'].create({
+    const attachment = this.messaging.models['Attachment'].create({
         filename: "test.html",
         id: 750,
         mimetype: 'text/html',
@@ -405,7 +405,7 @@ QUnit.test('ODT file is not viewable', async function (assert) {
     assert.expect(1);
 
     const { createMessageComponent } = await this.start();
-    const attachment = this.messaging.models['mail.attachment'].create({
+    const attachment = this.messaging.models['Attachment'].create({
         filename: "test.odt",
         id: 750,
         mimetype: 'application/vnd.oasis.opendocument.text',
@@ -429,7 +429,7 @@ QUnit.test('DOCX file is not viewable', async function (assert) {
     assert.expect(1);
 
     const { createMessageComponent } = await this.start();
-    const attachment = this.messaging.models['mail.attachment'].create({
+    const attachment = this.messaging.models['Attachment'].create({
         filename: "test.docx",
         id: 750,
         mimetype: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
