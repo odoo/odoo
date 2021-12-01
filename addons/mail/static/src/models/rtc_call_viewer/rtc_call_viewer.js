@@ -205,6 +205,14 @@ function factory(dependencies) {
 
         /**
          * @private
+         * @returns {string}
+         */
+         _computeLayoutSettingsTitle() {
+            return this.env._t("Change Layout");
+        }
+
+        /**
+         * @private
          */
         _computeMainParticipantCard() {
             if (!this.messaging || !this.threadView) {
@@ -218,6 +226,14 @@ function factory(dependencies) {
                 });
             }
             return unlink();
+        }
+
+        /**
+         * @private
+         * @returns {string}
+         */
+        _computeSettingsTitle() {
+            return this.env._t("Settings");
         }
 
         /**
@@ -370,6 +386,12 @@ function factory(dependencies) {
             compute: '_computeLayout',
         }),
         /**
+         * Text content that is displayed on title of the layout settings dialog.
+         */
+        layoutSettingsTitle: attr({
+            compute: '_computeLayoutSettingsTitle',
+        }),
+        /**
          * If set, the card to be displayed as the "main/spotlight" card.
          */
         mainParticipantCard: one2one('mail.rtc_call_participant_card', {
@@ -392,6 +414,12 @@ function factory(dependencies) {
         rtcLayoutMenu: one2one('mail.rtc_layout_menu', {
             inverse: 'callViewer',
             isCausal: true,
+        }),
+        /**
+         * Text content that is displayed on title of the settings dialog.
+         */
+        settingsTitle: attr({
+            compute: '_computeSettingsTitle',
         }),
         /**
          * Determines if we show the overlay with the control buttons.
