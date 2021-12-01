@@ -86,3 +86,21 @@ class TestMultiCompanyFlows(PaymentMultiCompanyCommon, PaymentHttpCommon):
         self.assertEqual(manage_context['acquirer_ids'], self.acquirer.ids)
         self.assertIn(token.id, manage_context['token_ids'])
         self.assertIn(token_company_b.id, manage_context['token_ids'])
+
+    def test_archive_token_logged_in_another_company(self):
+        """User archives his token from another company."""
+        # get user's token from company A
+        token = self.create_token(partner_id=self.portal_partner.id)
+
+        # assign user to another company
+        company_b = self.env['res.company'].create({'name': 'Company B'})
+        self.portal_user.write({'company_ids': [company_b.id], 'company_id': company_b.id})
+
+        # Log in as portal user
+        self.authenticate(self.portal_user.login, self.portal_user.login)
+
+        # Archive token in company A
+        url = self._build_url('/payment/archive_token')
+        self._make_json_request(url, {'token_id': token.id})
+
+        self.assertFalse(token.active)
