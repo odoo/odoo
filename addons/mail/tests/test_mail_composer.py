@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests import users
+from odoo.exceptions import UserError
 from odoo.addons.mail.tests.common import MailCommon
 
 
@@ -69,6 +70,8 @@ class TestMailComposer(MailCommon):
 
         values = composer.get_mail_values(self.partner_employee.ids)
 
-        self.assertIn(self.body_html,
+        self.assertIn('',
             values[self.partner_employee.id]['body_html'],
             'We must preserve (mso) comments in email html')
+        with self.assertRaises(UserError):
+            pass  # should definatly fail.
