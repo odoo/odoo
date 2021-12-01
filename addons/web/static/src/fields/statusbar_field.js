@@ -12,8 +12,8 @@ export class StatusBarField extends Component {
     }
 
     getVisibleMany2Ones() {
-        const items = this.props.record.specialData
-            ? this.props.record.specialData[this.props.name]
+        const items = this.props.record.preloadedData
+            ? this.props.record.preloadedData[this.props.name]
             : [];
         return items.map((item) => ({
             ...item,
@@ -84,7 +84,7 @@ Object.assign(StatusBarField, {
 
 registry.category("fields").add("statusbar", StatusBarField);
 
-async function fetchStatusBarSpecialData(datapoint, fieldName) {
+async function fetchStatusBarPreloadedData(datapoint, fieldName) {
     const field = datapoint.fields[fieldName];
     if (field.type !== "many2one") {
         return null;
@@ -113,4 +113,4 @@ async function fetchStatusBarSpecialData(datapoint, fieldName) {
     }));
 }
 
-registry.category("specialData").add("statusbar", fetchStatusBarSpecialData);
+registry.category("preloadedData").add("statusbar", fetchStatusBarPreloadedData);

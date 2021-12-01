@@ -7,7 +7,7 @@ const { Component } = owl;
 
 export class Many2ManyCheckboxesField extends Component {
     get items() {
-        return this.props.record.specialData[this.props.name];
+        return this.props.record.preloadedData[this.props.name];
     }
 
     isSelected(item) {
@@ -31,10 +31,12 @@ Object.assign(Many2ManyCheckboxesField, {
 
 registry.category("fields").add("many2many_checkboxes", Many2ManyCheckboxesField);
 
-function fetchMany2ManyCheckboxesSpecialData(datapoint, fieldName) {
+function fetchMany2ManyCheckboxesPreloadedData(datapoint, fieldName) {
     const field = datapoint.fields[fieldName];
     const domain = [];
     return datapoint.model.orm.call(field.relation, "name_search", ["", domain]);
 }
 
-registry.category("specialData").add("many2many_checkboxes", fetchMany2ManyCheckboxesSpecialData);
+registry
+    .category("preloadedData")
+    .add("many2many_checkboxes", fetchMany2ManyCheckboxesPreloadedData);
