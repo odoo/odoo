@@ -155,25 +155,23 @@ class PaymentPortal(portal.CustomerPortal):
         :return: The rendered manage form
         :rtype: str
         """
-        partner = request.env.user.partner_id
+        partner_sudo = request.env.user.partner_id  # env.user is always sudoed
         acquirers_sudo = request.env['payment.acquirer'].sudo()._get_compatible_acquirers(
-            request.env.company.id, partner.id, force_tokenization=True, is_validation=True
+            request.env.company.id, partner_sudo.id, force_tokenization=True, is_validation=True
         )
 
         # Get all partner's tokens for which acquirers are not disabled.
-        tokens = request.env['payment.token'].search([
-            ('partner_id', 'in', [partner.id, partner.commercial_partner_id.id]),
-            ('acquirer_id', 'in', request.env['payment.acquirer'].sudo()._search([
-                ('state', 'in', ['enabled', 'test'])
-            ])
-        )])
+        tokens_sudo = request.env['payment.token'].sudo().search([
+            ('partner_id', 'in', [partner_sudo.id, partner_sudo.commercial_partner_id.id]),
+            ('acquirer_id.state', 'in', ['enabled', 'test']),
+        ])
 
-        access_token = payment_utils.generate_access_token(partner.id, None, None)
+        access_token = payment_utils.generate_access_token(partner_sudo.id, None, None)
         rendering_context = {
             'acquirers': acquirers_sudo,
-            'tokens': tokens,
+            'tokens': tokens_sudo,
             'reference_prefix': payment_utils.singularize_reference_prefix(prefix='validation'),
-            'partner_id': partner.id,
+            'partner_id': partner_sudo.id,
             'access_token': access_token,
             'transaction_route': '/payment/transaction',
             'landing_route': '/my/payment_method',
