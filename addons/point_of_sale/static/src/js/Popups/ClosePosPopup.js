@@ -115,6 +115,14 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
         canCloseSession() {
             return !this.cashControl || !this.hasDifference() || this.state.acceptClosing;
         }
+        canCancel() {
+            return true;
+        }
+        cancelPopup() {
+            if (this.canCancel()) {
+                this.cancel();
+            }
+        }
         closePos() {
             this.trigger('close-pos');
         }
