@@ -277,26 +277,28 @@ class HrEmployeePrivate(models.Model):
             vals['tz'] = user.tz
         return vals
 
-    @api.model
-    def create(self, vals):
-        if vals.get('user_id'):
-            user = self.env['res.users'].browse(vals['user_id'])
-            vals.update(self._sync_user(user, bool(vals.get('image_1920'))))
-            vals['name'] = vals.get('name', user.name)
-        employee = super(HrEmployeePrivate, self).create(vals)
-        if employee.department_id:
-            self.env['mail.channel'].sudo().search([
-                ('subscription_department_ids', 'in', employee.department_id.id)
-            ])._subscribe_users_automatically()
-        # Launch onboarding plans
-        url = '/web#%s' % url_encode({
-            'action': 'hr.plan_wizard_action',
-            'active_id': employee.id,
-            'active_model': 'hr.employee',
-            'menu_id': self.env.ref('hr.menu_hr_root').id,
-        })
-        employee._message_log(body=_('<b>Congratulations!</b> May I recommend you to setup an <a href="%s">onboarding plan?</a>') % (url))
-        return employee
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('user_id'):
+                user = self.env['res.users'].browse(vals['user_id'])
+                vals.update(self._sync_user(user, bool(vals.get('image_1920'))))
+                vals['name'] = vals.get('name', user.name)
+        employees = super().create(vals_list)
+        for employee in employees:
+            if employee.department_id:
+                self.env['mail.channel'].sudo().search([
+                    ('subscription_department_ids', 'in', employee.department_id.id)
+                ])._subscribe_users_automatically()
+            # Launch onboarding plans
+            url = '/web#%s' % url_encode({
+                'action': 'hr.plan_wizard_action',
+                'active_id': employee.id,
+                'active_model': 'hr.employee',
+                'menu_id': self.env.ref('hr.menu_hr_root').id,
+            })
+            employee._message_log(body=_('<b>Congratulations!</b> May I recommend you to setup an <a href="%s">onboarding plan?</a>') % (url))
+        return employees
 
     def write(self, vals):
         if 'address_home_id' in vals:

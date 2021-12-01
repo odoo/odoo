@@ -481,14 +481,15 @@ class Project(models.Model):
             self.browse(res[0]).type_ids += self.env['project.task.type'].sudo().create({'name': _('New')})
         return res
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         # Prevent double project creation
         self = self.with_context(mail_create_nosubscribe=True)
-        project = super(Project, self).create(vals)
-        if project.privacy_visibility == 'portal' and project.partner_id:
-            project.message_subscribe(project.partner_id.ids)
-        return project
+        projects = super().create(vals_list)
+        for project in projects:
+            if project.privacy_visibility == 'portal' and project.partner_id:
+                project.message_subscribe(project.partner_id.ids)
+        return projects
 
     def write(self, vals):
         # directly compute is_favorite to dodge allow write access right

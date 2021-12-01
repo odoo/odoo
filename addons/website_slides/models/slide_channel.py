@@ -447,23 +447,26 @@ class Channel(models.Model):
             """ % {'table_name': self._table}
             self.env.cr.execute(query)
 
-    @api.model
-    def create(self, vals):
-        # Ensure creator is member of its channel it is easier for him to manage it (unless it is odoobot)
-        if not vals.get('channel_partner_ids') and not self.env.is_superuser():
-            vals['channel_partner_ids'] = [(0, 0, {
-                'partner_id': self.env.user.partner_id.id
-            })]
-        if not is_html_empty(vals.get('description')) and  is_html_empty(vals.get('description_short')):
-            vals['description_short'] = vals['description']
-        channel = super(Channel, self.with_context(mail_create_nosubscribe=True)).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            # Ensure creator is member of its channel it is easier for him to manage it (unless it is odoobot)
+            if not vals.get('channel_partner_ids') and not self.env.is_superuser():
+                vals['channel_partner_ids'] = [(0, 0, {
+                    'partner_id': self.env.user.partner_id.id
+                })]
+            if not is_html_empty(vals.get('description')) and is_html_empty(vals.get('description_short')):
+                vals['description_short'] = vals['description']
 
-        if channel.user_id:
-            channel._action_add_members(channel.user_id.partner_id)
-        if 'enroll_group_ids' in vals:
-            channel._add_groups_members()
+        channels = super(Channel, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
 
-        return channel
+        for channel in channels:
+            if channel.user_id:
+                channel._action_add_members(channel.user_id.partner_id)
+            if channel.enroll_group_ids:
+                channel._add_groups_members()
+
+        return channels
 
     def write(self, vals):
         # If description_short wasn't manually modified, there is an implicit link between this field and description.

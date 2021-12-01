@@ -199,52 +199,52 @@ class PosSession(models.Model):
                                                          ['%s - %s' % (invoice.name, invoice.state) for invoice in
                                                           unposted_invoices]))
 
-    @api.model
-    def create(self, values):
-        config_id = values.get('config_id') or self.env.context.get('default_config_id')
-        if not config_id:
-            raise UserError(_("You should assign a Point of Sale to your session."))
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            config_id = vals.get('config_id') or self.env.context.get('default_config_id')
+            if not config_id:
+                raise UserError(_("You should assign a Point of Sale to your session."))
 
-        # journal_id is not required on the pos_config because it does not
-        # exists at the installation. If nothing is configured at the
-        # installation we do the minimal configuration. Impossible to do in
-        # the .xml files as the CoA is not yet installed.
-        pos_config = self.env['pos.config'].browse(config_id)
-        ctx = dict(self.env.context, company_id=pos_config.company_id.id)
+            # journal_id is not required on the pos_config because it does not
+            # exists at the installation. If nothing is configured at the
+            # installation we do the minimal configuration. Impossible to do in
+            # the .xml files as the CoA is not yet installed.
+            pos_config = self.env['pos.config'].browse(config_id)
+            ctx = dict(self.env.context, company_id=pos_config.company_id.id)
 
-        pos_name = self.env['ir.sequence'].with_context(ctx).next_by_code('pos.session')
-        if values.get('name'):
-            pos_name += ' ' + values['name']
+            pos_name = self.env['ir.sequence'].with_context(ctx).next_by_code('pos.session')
+            if vals.get('name'):
+                pos_name += ' ' + vals['name']
 
-        cash_payment_methods = pos_config.payment_method_ids.filtered(lambda pm: pm.is_cash_count)
-        statement_ids = self.env['account.bank.statement']
-        if self.user_has_groups('point_of_sale.group_pos_user'):
-            statement_ids = statement_ids.sudo()
-        for cash_journal in cash_payment_methods.mapped('journal_id'):
-            ctx['journal_id'] = cash_journal.id if pos_config.cash_control and cash_journal.type == 'cash' else False
-            st_values = {
-                'journal_id': cash_journal.id,
-                'user_id': self.env.user.id,
+            cash_payment_methods = pos_config.payment_method_ids.filtered(lambda pm: pm.is_cash_count)
+            statement_ids = self.env['account.bank.statement']
+            if self.user_has_groups('point_of_sale.group_pos_user'):
+                statement_ids = statement_ids.sudo()
+            for cash_journal in cash_payment_methods.mapped('journal_id'):
+                ctx['journal_id'] = cash_journal.id if pos_config.cash_control and cash_journal.type == 'cash' else False
+                st_vals = {
+                    'journal_id': cash_journal.id,
+                    'user_id': self.env.user.id,
+                    'name': pos_name,
+                }
+                statement_ids |= statement_ids.with_context(ctx).create(st_vals)
+
+            update_stock_at_closing = pos_config.company_id.point_of_sale_update_stock_quantities == "closing"
+
+            vals.update({
                 'name': pos_name,
-            }
-            statement_ids |= statement_ids.with_context(ctx).create(st_values)
-
-        update_stock_at_closing = pos_config.company_id.point_of_sale_update_stock_quantities == "closing"
-
-        values.update({
-            'name': pos_name,
-            'statement_ids': [(6, 0, statement_ids.ids)],
-            'config_id': config_id,
-            'update_stock_at_closing': update_stock_at_closing,
-        })
+                'statement_ids': [(6, 0, statement_ids.ids)],
+                'config_id': config_id,
+                'update_stock_at_closing': update_stock_at_closing,
+            })
 
         if self.user_has_groups('point_of_sale.group_pos_user'):
-            res = super(PosSession, self.with_context(ctx).sudo()).create(values)
+            sessions = super(PosSession, self.with_context(ctx).sudo()).create(vals_list)
         else:
-            res = super(PosSession, self.with_context(ctx)).create(values)
-        res.action_pos_session_open()
-
-        return res
+            sessions = super(PosSession, self.with_context(ctx)).create(vals_list)
+        sessions.action_pos_session_open()
+        return sessions
 
     def unlink(self):
         for session in self.filtered(lambda s: s.statement_ids):

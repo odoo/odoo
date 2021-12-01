@@ -1162,13 +1162,13 @@ class UsersImplied(models.Model):
 class GroupsView(models.Model):
     _inherit = 'res.groups'
 
-    @api.model
-    def create(self, values):
-        user = super(GroupsView, self).create(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        groups = super().create(vals_list)
         self._update_user_groups_view()
         # actions.get_bindings() depends on action records
         self.env['ir.actions.actions'].clear_caches()
-        return user
+        return groups
 
     def write(self, values):
         # determine which values the "user groups view" depends on

@@ -88,12 +88,14 @@ class Mailing(models.Model):
     # ORM OVERRIDES
     # --------------------------------------------------
 
-    @api.model
-    def create(self, values):
-        # Get subject from "sms_subject" field when SMS installed (used to build the name of record in the super 'create' method)
-        if values.get('mailing_type') == 'sms' and values.get('sms_subject'):
-            values['subject'] = values['sms_subject']
-        return super(Mailing, self).create(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            # Get subject from "sms_subject" field when SMS installed (used to
+            # build the name of record in the super 'create' method)
+            if vals.get('mailing_type') == 'sms' and vals.get('sms_subject'):
+                vals['subject'] = vals['sms_subject']
+        return super().create(vals_list)
 
     # --------------------------------------------------
     # BUSINESS / VIEWS ACTIONS

@@ -435,26 +435,27 @@ class PosConfig(models.Model):
                 result.append((config.id, "%s (%s)" % (config.name, last_session.user_id.name)))
         return result
 
-    @api.model
-    def create(self, values):
-        IrSequence = self.env['ir.sequence'].sudo()
-        val = {
-            'name': _('POS Order %s', values['name']),
-            'padding': 4,
-            'prefix': "%s/" % values['name'],
-            'code': "pos.order",
-            'company_id': values.get('company_id', False),
-        }
-        # force sequence_id field to new pos.order sequence
-        values['sequence_id'] = IrSequence.create(val).id
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            IrSequence = self.env['ir.sequence'].sudo()
+            val = {
+                'name': _('POS Order %s', vals['name']),
+                'padding': 4,
+                'prefix': "%s/" % vals['name'],
+                'code': "pos.order",
+                'company_id': vals.get('company_id', False),
+            }
+            # force sequence_id field to new pos.order sequence
+            vals['sequence_id'] = IrSequence.create(val).id
 
-        val.update(name=_('POS order line %s', values['name']), code='pos.order.line')
-        values['sequence_line_id'] = IrSequence.create(val).id
-        pos_config = super(PosConfig, self).create(values)
-        pos_config.sudo()._check_modules_to_install()
-        pos_config.sudo()._check_groups_implied()
+            val.update(name=_('POS order line %s', vals['name']), code='pos.order.line')
+            vals['sequence_line_id'] = IrSequence.create(val).id
+        pos_configs = super().create(vals_list)
+        pos_configs.sudo()._check_modules_to_install()
+        pos_configs.sudo()._check_groups_implied()
         # If you plan to add something after this, use a new environment. The one above is no longer valid after the modules install.
-        return pos_config
+        return pos_configs
 
     def write(self, vals):
         opened_session = self.mapped('session_ids').filtered(lambda s: s.state != 'closed')

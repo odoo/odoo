@@ -229,11 +229,12 @@ class BlogPost(models.Model):
             return True
         return False
 
-    @api.model
-    def create(self, vals):
-        post_id = super(BlogPost, self.with_context(mail_create_nolog=True)).create(vals)
-        post_id._check_for_publication(vals)
-        return post_id
+    @api.model_create_multi
+    def create(self, vals_list):
+        posts = super(BlogPost, self.with_context(mail_create_nolog=True)).create(vals_list)
+        for post, vals in zip(posts, vals_list):
+            post._check_for_publication(vals)
+        return posts
 
     def write(self, vals):
         result = True

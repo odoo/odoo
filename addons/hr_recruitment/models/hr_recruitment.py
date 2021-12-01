@@ -340,31 +340,30 @@ class Applicant(models.Model):
             if not applicant.stage_id.hired_stage:
                 applicant.date_closed = False
 
-    @api.model
-    def create(self, vals):
-        if vals.get('department_id') and not self._context.get('default_department_id'):
-            self = self.with_context(default_department_id=vals.get('department_id'))
-        if vals.get('user_id'):
-            vals['date_open'] = fields.Datetime.now()
-        if vals.get('email_from'):
-            vals['email_from'] = vals['email_from'].strip()
-        res = super().create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('user_id'):
+                vals['date_open'] = fields.Datetime.now()
+            if vals.get('email_from'):
+                vals['email_from'] = vals['email_from'].strip()
+        applicants = super().create(vals_list)
         # Record creation through calendar, creates the calendar event directly, it will also create the activity.
         if 'default_activity_date_deadline' in self.env.context:
             deadline = fields.Datetime.to_datetime(self.env.context.get('default_activity_date_deadline'))
-            partners = res.partner_id | res.user_id.partner_id | res.department_id.manager_id.user_id.partner_id
-
             category = self.env.ref('hr_recruitment.categ_meet_interview')
-            self.env['calendar.event'].sudo().with_context(default_applicant_id=res.id).create({
-                'applicant_id': res.id,
-                'partner_ids': [(6, 0, partners.ids)],
-                'user_id': self.env.uid,
-                'name': res.name,
-                'categ_ids': [category.id],
-                'start': deadline,
-                'stop': deadline + relativedelta(minutes=30),
-            })
-        return res
+            for applicant in applicants:
+                partners = applicant.partner_id | applicant.user_id.partner_id | applicant.department_id.manager_id.user_id.partner_id
+                self.env['calendar.event'].sudo().with_context(default_applicant_id=applicant.id).create({
+                    'applicant_id': applicant.id,
+                    'partner_ids': [(6, 0, partners.ids)],
+                    'user_id': self.env.uid,
+                    'name': applicant.name,
+                    'categ_ids': [category.id],
+                    'start': deadline,
+                    'stop': deadline + relativedelta(minutes=30),
+                })
+        return applicants
 
     def write(self, vals):
         # user_id change: update date_open

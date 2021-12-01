@@ -156,10 +156,11 @@ class AccountPaymentMethodLine(models.Model):
                 account.reconcile = True
         return super().write(vals)
 
-    @api.model
+    @api.model_create_multi
     def create(self, vals_list):
-        if 'payment_account_id' in vals_list:
-            account = self.env['account.account'].browse(vals_list['payment_account_id'])
-            if not account.reconcile:
-                account.reconcile = True
+        for vals in vals_list:
+            if 'payment_account_id' in vals:
+                account = self.env['account.account'].browse(vals['payment_account_id'])
+                if not account.reconcile:
+                    account.reconcile = True
         return super().create(vals_list)

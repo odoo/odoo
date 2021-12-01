@@ -191,17 +191,18 @@ class Company(models.Model):
     def _create_per_company_rules(self):
         self.ensure_one()
 
-    @api.model
-    def create(self, vals):
-        company = super(Company, self).create(vals)
-        company.sudo()._create_per_company_locations()
-        company.sudo()._create_per_company_sequences()
-        company.sudo()._create_per_company_picking_types()
-        company.sudo()._create_per_company_rules()
-        self.env['stock.warehouse'].sudo().create({
+    @api.model_create_multi
+    def create(self, vals_list):
+        companies = super().create(vals_list)
+        for company in companies:
+            company.sudo()._create_per_company_locations()
+            company.sudo()._create_per_company_sequences()
+            company.sudo()._create_per_company_picking_types()
+            company.sudo()._create_per_company_rules()
+        self.env['stock.warehouse'].sudo().create([{
             'name': company.name,
             'code': self.env.context.get('default_code') or company.name[:5],
             'company_id': company.id,
             'partner_id': company.partner_id.id
-        })
-        return company
+        } for company in companies])
+        return companies

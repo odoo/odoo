@@ -108,11 +108,11 @@ class WebsiteRewrite(models.Model):
             result.append((rewrite.id, name))
         return result
 
-    @api.model
-    def create(self, vals):
-        res = super(WebsiteRewrite, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        rewrites = super().create(vals_list)
         self._invalidate_routing()
-        return res
+        return rewrites
 
     def write(self, vals):
         res = super(WebsiteRewrite, self).write(vals)

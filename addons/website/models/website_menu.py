@@ -61,8 +61,8 @@ class Menu(models.Model):
             res.append((menu.id, menu_name))
         return res
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         ''' In case a menu without a website_id is trying to be created, we duplicate
             it for every website.
             Note: Particulary useful when installing a module that adds a menu like
@@ -72,27 +72,32 @@ class Menu(models.Model):
         '''
         self.clear_caches()
         # Only used when creating website_data.xml default menu
-        if vals.get('url') == '/default-main-menu':
-            return super(Menu, self).create(vals)
-
-        if 'website_id' in vals:
-            return super(Menu, self).create(vals)
-        elif self._context.get('website_id'):
-            vals['website_id'] = self._context.get('website_id')
-            return super(Menu, self).create(vals)
-        else:
-            # create for every site
-            for website in self.env['website'].search([]):
-                w_vals = dict(vals, **{
+        menus = self.env['website.menu']
+        for vals in vals_list:
+            if vals.get('url') == '/default-main-menu':
+                menus |= super().create(vals)
+                continue
+            if 'website_id' in vals:
+                menus |= super().create(vals)
+                continue
+            elif self._context.get('website_id'):
+                vals['website_id'] = self._context.get('website_id')
+                menus |= super().create(vals)
+                continue
+            else:
+                # create for every site
+                w_vals = [dict(vals, **{
                     'website_id': website.id,
                     'parent_id': website.menu_id.id,
-                })
-                res = super(Menu, self).create(w_vals)
-            # if creating a default menu, we should also save it as such
-            default_menu = self.env.ref('website.main_menu', raise_if_not_found=False)
-            if default_menu and vals.get('parent_id') == default_menu.id:
-                res = super(Menu, self).create(vals)
-        return res  # Only one record is returned but multiple could have been created
+                }) for website in self.env['website'].search([])]
+                new_menu = super().create(w_vals)[-1:] # take the last one
+                # if creating a default menu, we should also save it as such
+                default_menu = self.env.ref('website.main_menu', raise_if_not_found=False)
+                if default_menu and vals.get('parent_id') == default_menu.id:
+                    new_menu = super().create(vals)
+                menus |= new_menu
+        # Only one record per vals is returned but multiple could have been created
+        return menus
 
     def write(self, values):
         res = super().write(values)

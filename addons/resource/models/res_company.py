@@ -23,12 +23,14 @@ class ResCompany(models.Model):
                 'company_id': company.id
             }).id
 
-    @api.model
-    def create(self, values):
-        company = super(ResCompany, self).create(values)
-        if not company.resource_calendar_id:
-            company.sudo()._create_resource_calendar()
+    @api.model_create_multi
+    def create(self, vals_list):
+        companies = super().create(vals_list)
+        companies_without_calendar = companies.filtered(lambda c: not c.resource_calendar_id)
+        if companies_without_calendar:
+            companies_without_calendar.sudo()._create_resource_calendar()
         # calendar created from form view: no company_id set because record was still not created
-        if not company.resource_calendar_id.company_id:
-            company.resource_calendar_id.company_id = company.id
-        return company
+        for company in companies:
+            if not company.resource_calendar_id.company_id:
+                company.resource_calendar_id.company_id = company.id
+        return companies
