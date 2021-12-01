@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
-    <!-- Salgsmoms -->
-    <!-- DK salgsmoms -->
+    <!-- Salgsmoms (VAT) -->
+    <!-- DK salgsmoms (taxes to set on Sales in DK) -->
     <record id="tax110" model="account.tax.template">
         <field name="chart_template_id" ref="dk_chart_template"/>
         <field name="sequence">110</field>
@@ -68,188 +68,83 @@
             }),
         ]"/>
     </record>
-    <record id="tax140" model="account.tax.template">
-        <field name="chart_template_id" ref="dk_chart_template"/>
-        <field name="sequence">140</field>
-        <field name="name">Salg omvendt betalingspligt</field>
-        <field name="description"></field>
-        <field name="price_include" eval="0"/>
-        <field name="amount">100</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">sale</field>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('a8758'),
-                'plus_report_line_ids': [ref('l10n_dk.account_tax_report_line_section_c')],
-            }),
-            (0,0, {
-                'factor_percent': -100,
-                'repartition_type': 'tax',
-                'account_id': ref('a8769'),
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('a8758'),
-                'minus_report_line_ids': [ref('l10n_dk.account_tax_report_line_section_c')],
-            }),
-            (0,0, {
-                'factor_percent': -100,
-                'repartition_type': 'tax',
-                'account_id': ref('a8769'),
-            }),
-        ]"/>
-    </record>
 
-    <!-- EU salgsmoms-->
+    <!-- EU salgsmoms (taxes to set on Sales in EU when outside of DK) -->
     <record id="tax210" model="account.tax.template">
         <field name="chart_template_id" ref="dk_chart_template"/>
         <field name="sequence">210</field>
-        <field name="name">EU Varesalg (Virksomheder)</field>
-        <field name="description"></field>
-        <field name="price_include" eval="0"/>
-        <field name="amount">100</field>
+        <field name="name">EU Varesalg (Virksomheder) - momsfritaget</field>
+        <field name="amount">0</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('a8754'),
                 'plus_report_line_ids': [ref('l10n_dk.account_tax_report_line_section_b_product_eu')],
-            }),
-            (0,0, {
-                'factor_percent': -100,
-                'repartition_type': 'tax',
-                'account_id': ref('a8769'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('a8754'),
                 'minus_report_line_ids': [ref('l10n_dk.account_tax_report_line_section_b_product_eu')],
-            }),
-            (0,0, {
-                'factor_percent': -100,
-                'repartition_type': 'tax',
-                'account_id': ref('a8769'),
             }),
         ]"/>
     </record>
     <record id="tax220" model="account.tax.template">
         <field name="chart_template_id" ref="dk_chart_template"/>
         <field name="sequence">220</field>
-        <field name="name">EU Ydelsessalg (Virksomheder)</field>
-        <field name="description"></field>
-        <field name="price_include" eval="0"/>
-        <field name="amount">100</field>
+        <field name="name">EU Ydelsessalg (Virksomheder) - momsfritaget</field>
+        <field name="amount">0</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('a8755'),
                 'plus_report_line_ids': [ref('l10n_dk.account_tax_report_line_section_b_services')],
-            }),
-            (0,0, {
-                'factor_percent': -100,
-                'repartition_type': 'tax',
-                'account_id': ref('a8769'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('a8755'),
                 'minus_report_line_ids': [ref('l10n_dk.account_tax_report_line_section_b_services')],
-            }),
-            (0,0, {
-                'factor_percent': -100,
-                'repartition_type': 'tax',
-                'account_id': ref('a8769'),
             }),
         ]"/>
     </record>
 
-    <!-- 3. Lande salgsmoms-->
+    <!-- 3. Lande salgsmoms (taxes to set on Sales outside of EU) -->
     <record id="tax310" model="account.tax.template">
         <field name="chart_template_id" ref="dk_chart_template"/>
         <field name="sequence">310</field>
         <field name="name">3. Land Salg Vare / Ydelser</field>
-        <field name="description"></field>
-        <field name="amount">100</field>
+        <field name="amount">0</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('a8758'),
                 'plus_report_line_ids': [ref('l10n_dk.account_tax_report_line_section_c')],
-            }),
-            (0,0, {
-                'factor_percent': -100,
-                'repartition_type': 'tax',
-                'account_id': ref('a8769'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('a8758'),
                 'minus_report_line_ids': [ref('l10n_dk.account_tax_report_line_section_c')],
-            }),
-            (0,0, {
-                'factor_percent': -100,
-                'repartition_type': 'tax',
-                'account_id': ref('a8769'),
             }),
         ]"/>
     </record>
 
-    <!-- Købsmoms -->
-    <!-- DK købsmoms -->
+    <!-- Købsmoms (VAT on purchase) -->
+
+    <!-- DK købsmoms (taxes to set on purchase inside DK) -->
+    <!-- 2 different taxes for merchandises and services isn't required for local taxes but is required -->
+    <!-- for EU related taxes and with fiscal position and we can't map one tax to 2 other taxes because it's  -->
+    <!-- a one on one relation. Thus, we set 2 taxes locally. -->
     <record id="tax400" model="account.tax.template">
         <field name="chart_template_id" ref="dk_chart_template"/>
         <field name="sequence">400</field>
@@ -350,12 +245,44 @@
             }),
         ]"/>
     </record>
+    <record id="tax425" model="account.tax.template">
+        <field name="chart_template_id" ref="dk_chart_template"/>
+        <field name="sequence">420</field>
+        <field name="name">Købsmoms 25% indeholdt, ydelser</field>
+        <field name="description">25%</field>
+        <field name="amount">25</field>
+        <field name="amount_type">percent</field>
+        <field name="price_include" eval="True"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('a8740'),
+                'plus_report_line_ids': [ref('l10n_dk.account_tax_report_line_deduction_purchase_tax')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('a8740'),
+                'minus_report_line_ids': [ref('l10n_dk.account_tax_report_line_deduction_purchase_tax')],
+            }),
+        ]"/>
+    </record>
     <record id="tax430" model="account.tax.template">
         <field name="chart_template_id" ref="dk_chart_template"/>
         <field name="sequence">430</field>
         <field name="name">Køb omvendt betalingspligt</field>
-        <field name="description"></field>
-        <field name="price_include" eval="0"/>
         <field name="amount">25</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -430,72 +357,50 @@
         ]"/>
     </record>
 
-    <!-- EU købsmoms-->
+    <!-- EU købsmoms (taxes to set on purchase in EU outside DK) -->
     <record id="tax510" model="account.tax.template">
         <field name="chart_template_id" ref="dk_chart_template"/>
         <field name="sequence">510</field>
         <field name="name">EU Varekøb</field>
-        <field name="description"></field>
-        <field name="price_include" eval="0"/>
-        <field name="amount">100</field>
+        <field name="amount">25</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': -25,
-                'repartition_type': 'tax',
-                'account_id': ref('a8730'),
-                'minus_report_line_ids': [ref('l10n_dk.account_tax_report_line_international_purchase_services')],
-            }),
-            (0,0, {
-                'factor_percent': 25,
-                'repartition_type': 'tax',
-                'account_id': ref('a8740'),
-                'minus_report_line_ids': [ref('l10n_dk.account_tax_report_line_deduction_purchase_tax')],
+                'plus_report_line_ids': [ref('l10n_dk.account_tax_report_line_section_a_products')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('a8750'),
-                'plus_report_line_ids': [ref('l10n_dk.account_tax_report_line_section_a_products')],
+                'account_id': ref('a8740'),
+                'plus_report_line_ids': [ref('l10n_dk.account_tax_report_line_deduction_purchase_tax')],
             }),
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
-                'account_id': ref('a8769'),
+                'account_id': ref('a8730'),
+                'minus_report_line_ids': [ref('l10n_dk.account_tax_report_line_international_purchase_products')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': -25,
-                'repartition_type': 'tax',
-                'account_id': ref('a8730'),
-                'plus_report_line_ids': [ref('l10n_dk.account_tax_report_line_international_purchase_services')],
-            }),
-            (0,0, {
-                'factor_percent': 25,
-                'repartition_type': 'tax',
-                'account_id': ref('a8740'),
-                'plus_report_line_ids': [ref('l10n_dk.account_tax_report_line_deduction_purchase_tax')],
+                'minus_report_line_ids': [ref('l10n_dk.account_tax_report_line_section_a_products')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('a8750'),
-                'minus_report_line_ids': [ref('l10n_dk.account_tax_report_line_section_a_products')],
+                'account_id': ref('a8740'),
+                'minus_report_line_ids': [ref('l10n_dk.account_tax_report_line_deduction_purchase_tax')],
             }),
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
-                'account_id': ref('a8769'),
+                'account_id': ref('a8730'),
+                'plus_report_line_ids': [ref('l10n_dk.account_tax_report_line_international_purchase_products')],
             }),
         ]"/>
     </record>
@@ -504,78 +409,55 @@
         <field name="chart_template_id" ref="dk_chart_template"/>
         <field name="sequence">520</field>
         <field name="name">EU Ydelseskøb</field>
-        <field name="description"></field>
-        <field name="price_include" eval="0"/>
-        <field name="amount">100</field>
+        <field name="amount">25</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': -25,
-                'repartition_type': 'tax',
-                'account_id': ref('a8731'),
-                'minus_report_line_ids': [ref('l10n_dk.account_tax_report_line_international_purchase_services')],
-            }),
-            (0,0, {
-                'factor_percent': 25,
-                'repartition_type': 'tax',
-                'account_id': ref('a8740'),
-                'minus_report_line_ids': [ref('l10n_dk.account_tax_report_line_deduction_purchase_tax')],
+                'plus_report_line_ids': [ref('l10n_dk.account_tax_report_line_section_a_services')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('a8751'),
-                'plus_report_line_ids': [ref('l10n_dk.account_tax_report_line_section_a_services')],
+                'account_id': ref('a8740'),
+                'plus_report_line_ids': [ref('l10n_dk.account_tax_report_line_deduction_purchase_tax')],
             }),
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
-                'account_id': ref('a8769'),
+                'account_id': ref('a8731'),
+                'minus_report_line_ids': [ref('l10n_dk.account_tax_report_line_international_purchase_services')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': -25,
-                'repartition_type': 'tax',
-                'account_id': ref('a8731'),
-                'plus_report_line_ids': [ref('l10n_dk.account_tax_report_line_international_purchase_services')],
-            }),
-            (0,0, {
-                'factor_percent': 25,
-                'repartition_type': 'tax',
-                'account_id': ref('a8740'),
-                'plus_report_line_ids': [ref('l10n_dk.account_tax_report_line_deduction_purchase_tax')],
+                'minus_report_line_ids': [ref('l10n_dk.account_tax_report_line_section_a_services')],
             }),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'account_id': ref('a8751'),
-                'minus_report_line_ids': [ref('l10n_dk.account_tax_report_line_section_a_services')],
+                'account_id': ref('a8740'),
+                'minus_report_line_ids': [ref('l10n_dk.account_tax_report_line_deduction_purchase_tax')],
             }),
             (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
-                'account_id': ref('a8769'),
+                'account_id': ref('a8731'),
+                'plus_report_line_ids': [ref('l10n_dk.account_tax_report_line_international_purchase_services')],
             }),
         ]"/>
     </record>
 
-    <!-- 3. Lande købsmoms-->
+
+    <!-- 3. Lande købsmoms (taxes to set on purchase outside of EU) -->
     <record id="tax610" model="account.tax.template">
         <field name="chart_template_id" ref="dk_chart_template"/>
         <field name="sequence">610</field>
         <field name="name">3. Land Varekøb</field>
-        <field name="description"></field>
-        <field name="price_include" eval="0"/>
         <field name="amount">25</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -588,7 +470,7 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('a8740'),
-                'minus_report_line_ids': [ref('l10n_dk.account_tax_report_line_international_purchase_services')],
+                'plus_report_line_ids': [ref('l10n_dk.account_tax_report_line_international_purchase_products')],
             }),
             (0,0, {
                 'factor_percent': -100,
@@ -606,7 +488,7 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('a8740'),
-                'plus_report_line_ids': [ref('l10n_dk.account_tax_report_line_international_purchase_services')],
+                'minus_report_line_ids': [ref('l10n_dk.account_tax_report_line_international_purchase_products')],
             }),
             (0,0, {
                 'factor_percent': -100,
@@ -620,7 +502,6 @@
         <field name="chart_template_id" ref="dk_chart_template"/>
         <field name="sequence">620</field>
         <field name="name">3. Land Ydelseskøb</field>
-        <field name="description"></field>
         <field name="amount">25</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -630,16 +511,16 @@
                 'repartition_type': 'base',
             }),
             (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('a8740'),
+                'plus_report_line_ids': [ref('l10n_dk.account_tax_report_line_deduction_purchase_tax')],
+            }),
+            (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
                 'account_id': ref('a8731'),
                 'minus_report_line_ids': [ref('l10n_dk.account_tax_report_line_international_purchase_services')],
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('a8740'),
-                'minus_report_line_ids': [ref('l10n_dk.account_tax_report_line_deduction_purchase_tax')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -648,26 +529,30 @@
                 'repartition_type': 'base',
             }),
             (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('a8740'),
+                'minus_report_line_ids': [ref('l10n_dk.account_tax_report_line_deduction_purchase_tax')],
+            }),
+            (0,0, {
                 'factor_percent': -100,
                 'repartition_type': 'tax',
                 'account_id': ref('a8731'),
                 'plus_report_line_ids': [ref('l10n_dk.account_tax_report_line_international_purchase_services')],
             }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('a8740'),
-                'plus_report_line_ids': [ref('l10n_dk.account_tax_report_line_deduction_purchase_tax')],
-            }),
         ]"/>
     </record>
 
+    <!--  All Energy and water taxes  -->
+
+    <!--  oil and bottled gas tax  -->
+    <!--  92.83% of the tax is deductible  -->
+    <!--  https://skat.dk/data.aspx?oid=2246453  -->
     <record id="tax710" model="account.tax.template">
         <field name="chart_template_id" ref="dk_chart_template"/>
         <field name="sequence">710</field>
         <field name="name">Olie- og flaskegasafgift</field>
-        <field name="description"></field>
-        <field name="amount">92.1400</field>
+        <field name="amount">100</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
@@ -676,61 +561,44 @@
                 'repartition_type': 'base',
             }),
             (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('a8775'),
-                'minus_report_line_ids': [ref('l10n_dk.account_tax_report_line_deduction_oil_bottle_tax')],
-            }),
-            (0,0, {
-                'factor_percent': -100,
-                'repartition_type': 'tax',
-                'account_id': ref('a4275'),
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
+                'factor_percent': 92.83,
                 'repartition_type': 'tax',
                 'account_id': ref('a8775'),
                 'plus_report_line_ids': [ref('l10n_dk.account_tax_report_line_deduction_oil_bottle_tax')],
             }),
             (0,0, {
-                'factor_percent': -100,
+                'factor_percent': -92.83,
                 'repartition_type': 'tax',
-                'account_id': ref('a4275'),
             }),
         ]"/>
-    </record>
-    <record id="tax720" model="account.tax.template">
-        <field name="chart_template_id" ref="dk_chart_template"/>
-        <field name="sequence">720</field>
-        <field name="name">Elafgift</field>
-        <field name="description"></field>
-        <field name="amount">0.8880</field>
-        <field name="amount_type">fixed</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
             }),
             (0,0, {
-                'factor_percent': 100,
+                'factor_percent': 92.83,
                 'repartition_type': 'tax',
                 'account_id': ref('a8775'),
-                'minus_report_line_ids': [ref('l10n_dk.account_tax_report_line_deduction_electrical_tax')],
+                'minus_report_line_ids': [ref('l10n_dk.account_tax_report_line_deduction_oil_bottle_tax')],
             }),
             (0,0, {
-                'factor_percent': -100,
+                'factor_percent': -92.83,
                 'repartition_type': 'tax',
-                'account_id': ref('a4275'),
             }),
         ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+    </record>
+    <!-- 0.896 cent per kilowatt (to set as quantity) can be deduced -->
+    <!-- https://skat.dk/data.aspx?oid=2246453 -->
+    <record id="tax720" model="account.tax.template">
+        <field name="chart_template_id" ref="dk_chart_template"/>
+        <field name="sequence">720</field>
+        <field name="name">Elafgift</field>
+        <field name="amount">0.896</field>
+        <field name="amount_type">fixed</field>
+        <field name="price_include" eval="True"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
@@ -741,37 +609,6 @@
                 'account_id': ref('a8775'),
                 'plus_report_line_ids': [ref('l10n_dk.account_tax_report_line_deduction_electrical_tax')],
             }),
-            (0,0, {
-                'factor_percent': -100,
-                'repartition_type': 'tax',
-                'account_id': ref('a4275'),
-            }),
-        ]"/>
-    </record>
-    <record id="tax730" model="account.tax.template">
-        <field name="chart_template_id" ref="dk_chart_template"/>
-        <field name="sequence">730</field>
-        <field name="name">Naturgas- og bygasafgift</field>
-        <field name="description"></field>
-        <field name="amount">4.4490</field>
-        <field name="amount_type">fixed</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('a8780'),
-                'minus_report_line_ids': [ref('l10n_dk.account_tax_report_line_deduction_gas_tax')],
-            }),
-            (0,0, {
-                'factor_percent': -100,
-                'repartition_type': 'tax',
-                'account_id': ref('a4271'),
-            }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
@@ -780,40 +617,37 @@
             }),
             (0,0, {
                 'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('a8775'),
+                'minus_report_line_ids': [ref('l10n_dk.account_tax_report_line_deduction_electrical_tax')],
+            }),
+        ]"/>
+    </record>
+    <!--  city gas and oil tax: same than bottled but appears on a different report line  -->
+    <!--  92.83% of the tax is deductible  -->
+    <!--  https://skat.dk/data.aspx?oid=2246453  -->
+    <record id="tax730" model="account.tax.template">
+        <field name="chart_template_id" ref="dk_chart_template"/>
+        <field name="sequence">730</field>
+        <field name="name">Naturgas- og bygasafgift</field>
+        <field name="active" eval="False"/>
+        <field name="amount">100</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 92.83,
                 'repartition_type': 'tax',
                 'account_id': ref('a8780'),
                 'plus_report_line_ids': [ref('l10n_dk.account_tax_report_line_deduction_gas_tax')],
             }),
             (0,0, {
-                'factor_percent': -100,
+                'factor_percent': -92.83,
                 'repartition_type': 'tax',
-                'account_id': ref('a4271'),
-            }),
-        ]"/>
-    </record>
-    <record id="tax740" model="account.tax.template">
-        <field name="chart_template_id" ref="dk_chart_template"/>
-        <field name="sequence">740</field>
-        <field name="name">Kulafgift</field>
-        <field name="description"></field>
-        <field name="amount">92.1400</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('a8785'),
-                'minus_report_line_ids': [ref('l10n_dk.account_tax_report_line_deduction_coal_tax')],
-            }),
-            (0,0, {
-                'factor_percent': -100,
-                'repartition_type': 'tax',
-                'account_id': ref('a4271'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -822,46 +656,68 @@
                 'repartition_type': 'base',
             }),
             (0,0, {
+                'factor_percent': 92.83,
+                'repartition_type': 'tax',
+                'account_id': ref('a8780'),
+                'minus_report_line_ids': [ref('l10n_dk.account_tax_report_line_deduction_gas_tax')],
+            }),
+            (0,0, {
+                'factor_percent': -92.83,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+    <!--  Coal tax: percentage is the same as oil and bottled gas but with it ends up in its own report line  -->
+    <record id="tax740" model="account.tax.template">
+        <field name="chart_template_id" ref="dk_chart_template"/>
+        <field name="sequence">740</field>
+        <field name="name">Kulafgift</field>
+        <field name="amount">100</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
                 'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 92.83,
                 'repartition_type': 'tax',
                 'account_id': ref('a8785'),
                 'plus_report_line_ids': [ref('l10n_dk.account_tax_report_line_deduction_coal_tax')],
             }),
             (0,0, {
-                'factor_percent': -100,
+                'factor_percent': -92.83,
                 'repartition_type': 'tax',
-                'account_id': ref('a4271'),
             }),
         ]"/>
-    </record>
-    <!-- CO2-afgift is rarely used anymore, but we indclude it as archived so that it can be customized when the need comes -->
-    <record id="tax750" model="account.tax.template">
-        <field name="chart_template_id" ref="dk_chart_template"/>
-        <field name="sequence">750</field>
-        <field name="name">CO2-afgift</field>
-        <field name="description"></field>
-        <field name="active">0</field>
-        <field name="amount">0</field>
-        <field name="amount_type">percent</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
             }),
             (0,0, {
-                'factor_percent': 100,
+                'factor_percent': 92.83,
                 'repartition_type': 'tax',
                 'account_id': ref('a8785'),
-                'minus_report_line_ids': [ref('l10n_dk.account_tax_report_line_deduction_co2_tax')],
+                'minus_report_line_ids': [ref('l10n_dk.account_tax_report_line_deduction_coal_tax')],
             }),
             (0,0, {
-                'factor_percent': -100,
+                'factor_percent': -92.83,
                 'repartition_type': 'tax',
-                'account_id': ref('a4271'),
             }),
         ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+    </record>
+    <!-- CO2-afgift is rarely used anymore, but we include it as inactive so that it can be customized when the need comes -->
+    <record id="tax750" model="account.tax.template">
+        <field name="chart_template_id" ref="dk_chart_template"/>
+        <field name="sequence">750</field>
+        <field name="name">CO2-afgift</field>
+        <field name="active" eval="False"/>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
@@ -878,14 +734,33 @@
                 'account_id': ref('a4271'),
             }),
         ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('a8785'),
+                'minus_report_line_ids': [ref('l10n_dk.account_tax_report_line_deduction_co2_tax')],
+            }),
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('a4271'),
+            }),
+        ]"/>
     </record>
+    <!-- water tax: 6.18 per cubic meter -->
+    <!-- https://skat.dk/data.aspx?oid=2246453 -->
     <record id="tax760" model="account.tax.template">
         <field name="chart_template_id" ref="dk_chart_template"/>
         <field name="sequence">760</field>
         <field name="name">Vandafgift</field>
-        <field name="description"></field>
         <field name="amount">6.1800</field>
         <field name="amount_type">fixed</field>
+        <field name="price_include" eval="True"/>
         <field name="type_tax_use">purchase</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
@@ -896,12 +771,7 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('a8795'),
-                'minus_report_line_ids': [ref('l10n_dk.account_tax_report_line_deduction_water_tax')],
-            }),
-            (0,0, {
-                'factor_percent': -100,
-                'repartition_type': 'tax',
-                'account_id': ref('a4275'),
+                'plus_report_line_ids': [ref('l10n_dk.account_tax_report_line_deduction_water_tax')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -913,12 +783,7 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('a8795'),
-                'plus_report_line_ids': [ref('l10n_dk.account_tax_report_line_deduction_water_tax')],
-            }),
-            (0,0, {
-                'factor_percent': -100,
-                'repartition_type': 'tax',
-                'account_id': ref('a4275'),
+                'minus_report_line_ids': [ref('l10n_dk.account_tax_report_line_deduction_water_tax')],
             }),
         ]"/>
     </record>
