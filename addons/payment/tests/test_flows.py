@@ -359,8 +359,7 @@ class TestFlows(PaymentCommon, PaymentHttpCommon):
         acquirer_b.state = 'test'
         token_b = self.create_token(acquirer_id=acquirer_b.id)
 
-        # A partner should see all his tokens on the /my/payment_method route,
-        # even if they are in other companies otherwise he won't ever see them.
+        # User must see both enabled acquirers and tokens
         manage_context = self.get_tx_manage_context()
         self.assertEqual(manage_context['partner_id'], self.partner.id)
         self.assertIn(self.acquirer.id, manage_context['acquirer_ids'])
@@ -374,3 +373,10 @@ class TestFlows(PaymentCommon, PaymentHttpCommon):
         self.assertEqual(manage_context['partner_id'], self.partner.id)
         self.assertEqual(manage_context['acquirer_ids'], [acquirer_b.id])
         self.assertEqual(manage_context['token_ids'], [token_b.id])
+
+        # Archived tokens must be hidden from the user
+        token_b.active = False
+        manage_context = self.get_tx_manage_context()
+        self.assertEqual(manage_context['partner_id'], self.partner.id)
+        self.assertEqual(manage_context['acquirer_ids'], [acquirer_b.id])
+        self.assertEqual(manage_context['token_ids'], [])

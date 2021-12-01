@@ -69,3 +69,20 @@ class TestMultiCompanyFlows(PaymentMultiCompanyCommon, PaymentHttpCommon):
         self.assertEqual(processing_values['currency_id'], self.currency.id)
         self.assertEqual(processing_values['partner_id'], self.user_company_a.partner_id.id)
         self.assertEqual(processing_values['reference'], self.reference)
+
+    def test_full_access_to_partner_tokens(self):
+        self.partner = self.portal_partner
+
+        # Log in as user from Company A
+        self.authenticate(self.portal_user.login, self.portal_user.login)
+
+        token = self.create_token()
+        token_company_b = self.create_token(acquirer_id=self.acquirer_company_b.id)
+
+        # A partner should see all his tokens on the /my/payment_method route,
+        # even if they are in other companies otherwise he won't ever see them.
+        manage_context = self.get_tx_manage_context()
+        self.assertEqual(manage_context['partner_id'], self.partner.id)
+        self.assertEqual(manage_context['acquirer_ids'], self.acquirer.ids)
+        self.assertIn(token.id, manage_context['token_ids'])
+        self.assertIn(token_company_b.id, manage_context['token_ids'])
