@@ -14,9 +14,9 @@
                              else ('background-image: url(' + page.background_image_url + ');')
                              if page and page.background_image_url
                              else ('background-image: url(' + survey.background_image_url + ');')
-                             if survey.background_image_url
+                             if survey and survey.background_image_url
                              else '')"/>
-            <attribute name="t-att-class" add="'o_survey_background'"/>
+            <attribute name="t-attf-class" add="o_survey_background" separator=" "/>
         </xpath>
         <xpath expr="//head/t[@t-call-assets][last()]" position="after">
             <t t-call-assets="survey.survey_assets" lazy_load="True"/>
