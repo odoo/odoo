@@ -478,7 +478,15 @@
         .note-editable .oe_structure > div.o_mail_snippet_general .o_cc,
         .note-editable .oe_structure > div.o_mail_snippet_general .btn:not(.btn-link),
         td, td.o_mail_no_colorpicker div:first-child, th"
-        data-exclude=".o_mail_no_colorpicker, .o_mail_no_options">
+        data-exclude=".o_mail_no_colorpicker, .o_mail_no_options, .s_mail_color_blocks_2, .s_mail_color_blocks_2 .row > div">
+        <we-colorpicker string="Background Color"
+            data-select-style="true"
+            data-no-transparency="true"
+            data-css-property="background-color"
+            data-color-prefix="bg-"/>
+    </div>
+
+    <div data-selector=".s_mail_color_blocks_2 .row > div">
         <we-colorpicker string="Background Color"
             data-select-style="true"
             data-no-transparency="true"
