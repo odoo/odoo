@@ -22,6 +22,9 @@ class PosOrderInherit(models.Model):
     x_ext_source = fields.Char("Source")
 
 
+    x_receipt_note = fields.Char("Receipt Note")
+
+
 class FgImportOrders(models.TransientModel):
     _name = 'fg.custom.import.order'
     _description = 'Order Import from Files'
@@ -155,6 +158,7 @@ class FgImportOrders(models.TransientModel):
                     if sku == 'Payment': #default Cash
                         type = 'Cash'
                         amountPaid = orderLine[17]
+                        notes = orderLine[18]
                         cardNumber = None
                         if orderLine[15] == 'Gift Card':
                             type=orderLine[15]
@@ -183,7 +187,8 @@ class FgImportOrders(models.TransientModel):
                                 "type": type,
                                 "cardNumber": cardNumber,
                                 "amountPaid": amountPaid,
-                                "paymentMethod": paymentMethod
+                                "paymentMethod": paymentMethod,
+                                "notes": notes
                             }
                             paymentList.append(payment)
                     else:
@@ -302,6 +307,7 @@ class FgImportOrders(models.TransientModel):
                             if taxes:
                                 tax = taxes[0].id
 
+                            notes = orderLine[14]
                             jsonOrder = {
                                             "company": company.id,
                                             "session": session_id,
@@ -452,7 +458,7 @@ class FgImportOrders(models.TransientModel):
         total = self._compute_total(orderLines)
 
         amountPaid = 0
-
+        notes = ''
         # get paymenlist
         statementIds = []
         dateNow = str(fields.Datetime.now())
@@ -471,6 +477,7 @@ class FgImportOrders(models.TransientModel):
                     "transaction_id": "",
                     "x_gift_card_number": payment['cardNumber']
                 }
+                notes = payment['notes']
                 amountPaid += float(payment['amountPaid'])
                 statementIds.append([0, 0, statementId])
                 paymentIndexes.append(paymentIndex)
@@ -498,6 +505,7 @@ class FgImportOrders(models.TransientModel):
             "x_ext_order_ref": order['orderRef'],
             "x_ext_source": order['orderSource'],
             "x_total_so_pwd": 0,
+            "x_receipt_note": notes,
             "pricelist_id": order['priceList'].id,
             "fiscal_position_id": order['fiscalPositionId'],
             "partner_id": order['customerId'],
