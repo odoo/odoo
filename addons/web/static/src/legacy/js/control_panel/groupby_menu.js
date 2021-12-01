@@ -53,12 +53,11 @@ odoo.define('web.GroupByMenu', function (require) {
         //---------------------------------------------------------------------
 
         /**
-         * @private
-         * @param {OwlEvent} ev
+         * @param {Object} param0
+         * @param {number} param0.itemId
+         * @param {number} [param0.optionId]
          */
-        onGroupBySelected(ev) {
-            ev.stopPropagation();
-            const { itemId, optionId } = ev.detail.payload;
+        onGroupBySelected({ itemId, optionId }) {
             if (optionId) {
                 this.model.dispatch('toggleFilterWithOptions', itemId, optionId);
             } else {

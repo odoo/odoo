@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.FilterMenu" owl="1">
-        <Dropdown class="o_filter_menu btn-group" togglerClass="'btn btn-light'" t-on-dropdown-item-selected="onFilterSelected">
+        <Dropdown class="o_filter_menu btn-group" togglerClass="'btn btn-light'">
             <t t-set-slot="toggler">
                 <i class="small mr-1" t-att-class="icon"/>
                 <span class="o_dropdown_title">Filters</span>
@@ -24,9 +24,9 @@
                             </t>
                             <DropdownItem class="o_item_option"
                                 t-att-class="{ selected: option.isActive }"
-                                payload="{ itemId: item.id, optionId: option.id }"
                                 parentClosingMode="'none'"
                                 t-esc="option.description"
+                                onSelected="() => this.onFilterSelected({ itemId: item.id, optionId: option.id })"
                             />
                             <t t-set="subGroup" t-value="option.groupNumber"/>
                         </t>
@@ -35,9 +35,9 @@
                 <t t-else="">
                     <DropdownItem class="o_menu_item"
                         t-att-class="{ selected: item.isActive }"
-                        payload="{ itemId: item.id }"
                         parentClosingMode="'none'"
                         t-esc="item.description"
+                        onSelected="() => this.onFilterSelected({ itemId: item.id })"
                     />
                 </t>
                 <t t-set="currentGroup" t-value="item.groupNumber"/>

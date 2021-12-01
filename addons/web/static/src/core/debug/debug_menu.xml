@@ -12,7 +12,7 @@
             <t t-foreach="elements" t-as="element" t-key="element_index">
                 <DropdownItem
                     t-if="element.type == 'item'"
-                    t-on-dropdown-item-selected.stop="element.callback"
+                    onSelected="element.callback"
                     href="element.href"
                     t-esc="element.description"
                 />

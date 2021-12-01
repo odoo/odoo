@@ -36,14 +36,14 @@ export function useDropdownNavigation() {
 
     // As this navigation hook relies on clicking ".dropdown-toggle" elements,
     // it is incompatible with a toggler="parent" strategy for subdropdowns.
-    if (comp.hasParentDropdown && comp.props.toggler === "parent") {
+    if (comp.parentDropdown && comp.props.toggler === "parent") {
         throw new Error("A nested Dropdown must use its standard toggler");
     }
 
     // Needed to avoid unwanted mouseclick behavior on a subdropdown toggler.
     const originalOnTogglerClick = comp.onTogglerClick.bind(comp);
     comp.onTogglerClick = (ev) => {
-        if (comp.hasParentDropdown && !ev.__fromDropdownNavigation) {
+        if (comp.parentDropdown && !ev.__fromDropdownNavigation) {
             return;
         }
         originalOnTogglerClick();
@@ -52,7 +52,7 @@ export function useDropdownNavigation() {
     // Needed to avoid unwanted mouseenter behavior on a subdropdown toggler.
     const originalOnTogglerMouseEnter = comp.onTogglerMouseEnter.bind(comp);
     comp.onTogglerMouseEnter = () => {
-        if (comp.hasParentDropdown) {
+        if (comp.parentDropdown) {
             return;
         }
         originalOnTogglerMouseEnter();
@@ -192,7 +192,7 @@ export function useDropdownNavigation() {
     useEffect(
         (open) => {
             // If we just opened and we are a subdropdown, make active our first menu element.
-            if (open && comp.hasParentDropdown) {
+            if (open && comp.parentDropdown) {
                 setActiveMenuElement("FIRST");
             }
         },
@@ -201,7 +201,7 @@ export function useDropdownNavigation() {
 
     // Set up keyboard navigation ----------------------------------------------
     const hotkeyService = useService("hotkey");
-    const closeSubDropdown = comp.hasParentDropdown ? comp.close : () => {};
+    const closeSubDropdown = comp.parentDropdown ? comp.close : () => {};
     const openSubDropdown = () => {
         const menuElement = getActiveMenuElement();
         // Active menu element is a sub dropdown

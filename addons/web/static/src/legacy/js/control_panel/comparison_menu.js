@@ -22,10 +22,9 @@ odoo.define("web.ComparisonMenu", function (require) {
 
         /**
          * @private
-         * @param {OwlEvent} ev
+         * @param {number} itemId
          */
-        onComparisonSelected(ev) {
-            const { itemId } = ev.detail.payload;
+        onComparisonSelected(itemId) {
             this.model.dispatch("toggleComparison", itemId);
         }
     }

@@ -44,13 +44,17 @@ export class PivotGroupByMenu extends GroupByMenu {
     }
     /**
      * @override
-     * @param {CustomEvent} ev
+     * @param {Object} param0
+     * @param {number} param0.itemId
+     * @param {number} [param0.optionId]
      */
-    onGroupBySelected(ev) {
-        const { itemId, optionId } = ev.detail.payload;
+    onGroupBySelected({ itemId, optionId }) {
+        // Here, we purposely do not call super.onGroupBySelected as we don't want
+        // to change the group-by on the model, only inside the pivot
         const item = this.items.find(({ id }) => id === itemId);
-        // Augment payload data
-        Object.assign(ev.detail.payload, {
+        this.props.onItemSelected({
+            itemId,
+            optionId,
             fieldName: item.fieldName,
             interval: optionId,
             groupId: this.props.cell.groupId,
