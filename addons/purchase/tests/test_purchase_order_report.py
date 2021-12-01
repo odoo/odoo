@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from odoo.tests import common, Form, tagged
 
 
@@ -78,3 +78,25 @@ class TestPurchaseOrderReport(common.TransactionCase):
         self.assertEquals(res_product2.qty_ordered, 12.0, 'UoM conversion is not working')
         # report should show in company currency (amount/rate) = (200/2)
         self.assertEquals(res_product2.price_total, 100.0, 'Currency conversion is not working')
+
+    def test_01_delay_and_delay_pass(self):
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_id
+        po_form.date_order = datetime.now() + timedelta(days=10)
+        with po_form.order_line.new() as line:
+            line.product_id = self.product1
+        with po_form.order_line.new() as line:
+            line.product_id = self.product2
+        po_form.date_planned = datetime.now() + timedelta(days=15)
+        po = po_form.save()
+
+        po.button_confirm()
+
+        po.flush()
+        report = self.env['purchase.report'].read_group(
+            [('order_id', '=', po.id)],
+            ['order_id', 'delay', 'delay_pass'],
+            ['order_id'],
+        )
+        self.assertEqual(round(report[0]['delay']), -10, msg="The PO has been confirmed 10 days in advance")
+        self.assertEqual(round(report[0]['delay_pass']), 5, msg="There are 5 days between the order date and the planned date")
