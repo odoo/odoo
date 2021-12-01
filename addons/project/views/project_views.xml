@@ -702,7 +702,7 @@
                                     </div>
                                     <div class="oe_kanban_bottom_right">
                                         <span t-att-class="'o_status_bubble mx-0 o_color_bubble_' + record.last_update_color.value" t-att-title="record.last_update_status.value"></span>
-                                        <field name="user_id" widget="many2one_avatar_user"/>
+                                        <field name="user_id" widget="many2one_avatar_user" t-if="record.user_id.raw_value"/>
                                     </div>
                                 </div>
                             </div>
