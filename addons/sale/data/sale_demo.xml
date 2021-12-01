@@ -49,28 +49,22 @@
 
         <record id="sale_order_line_1" model="sale.order.line">
             <field name="order_id" ref="sale_order_1"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_25').get_product_multiline_description_sale()"/>
             <field name="product_id" ref="product.product_product_25"/>
             <field name="product_uom_qty">3</field>
-            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">295.00</field>
         </record>
 
         <record id="sale_order_line_2" model="sale.order.line">
             <field name="order_id" ref="sale_order_1"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_delivery_02').get_product_multiline_description_sale()"/>
             <field name="product_id" ref="product.product_delivery_02"/>
             <field name="product_uom_qty">5</field>
-            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">145.00</field>
         </record>
 
         <record id="sale_order_line_3" model="sale.order.line">
             <field name="order_id" ref="sale_order_1"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_delivery_01').get_product_multiline_description_sale()"/>
             <field name="product_id" ref="product.product_delivery_01"/>
             <field name="product_uom_qty">2</field>
-            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">65.00</field>
         </record>
 
@@ -90,19 +84,15 @@
 
         <record id="sale_order_line_4" model="sale.order.line">
             <field name="order_id" ref="sale_order_2"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_1').get_product_multiline_description_sale()"/>
             <field name="product_id" ref="product.product_product_1"/>
             <field name="product_uom_qty">24</field>
-            <field name="product_uom" ref="uom.product_uom_hour"/>
             <field name="price_unit">75.00</field>
         </record>
 
         <record id="sale_order_line_5" model="sale.order.line">
             <field name="order_id" ref="sale_order_2"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_2').get_product_multiline_description_sale()"/>
             <field name="product_id" ref="product.product_product_2"/>
             <field name="product_uom_qty">30</field>
-            <field name="product_uom" ref="uom.product_uom_hour"/>
             <field name="price_unit">38.25</field>
         </record>
 
@@ -121,20 +111,14 @@
 
         <record id="sale_order_line_6" model="sale.order.line">
             <field name="order_id" ref="sale_order_3"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_1').get_product_multiline_description_sale()"/>
             <field name="product_id" ref="product.product_product_1"/>
             <field name="product_uom_qty">10</field>
-            <field name="product_uom" ref="uom.product_uom_hour"/>
             <field name="price_unit">30.75</field>
         </record>
 
         <record id="sale_order_line_7" model="sale.order.line">
             <field name="order_id" ref="sale_order_3"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_delivery_01').get_product_multiline_description_sale()"/>
             <field name="product_id" ref="product.product_delivery_01"/>
-            <field name="product_uom_qty">1</field>
-            <field name="product_uom" ref="uom.product_uom_unit"/>
-            <field name="price_unit">70.00</field>
         </record>
 
         <record id="sale_order_4" model="sale.order">
@@ -151,38 +135,29 @@
 
         <record id="sale_order_line_8" model="sale.order.line">
             <field name="order_id" ref="sale_order_4"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_1').get_product_multiline_description_sale()"/>
             <field name="product_id" ref="product.product_product_1"/>
             <field name="product_uom_qty">16</field>
-            <field name="product_uom" ref="uom.product_uom_hour"/>
             <field name="price_unit">75.00</field>
         </record>
 
         <record id="sale_order_line_9" model="sale.order.line">
             <field name="order_id" ref="sale_order_4"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_delivery_02').get_product_multiline_description_sale()"/>
             <field name="product_id" ref="product.product_delivery_02"/>
             <field name="product_uom_qty">10</field>
-            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">45.00</field>
         </record>
 
         <record id="sale_order_line_10" model="sale.order.line">
             <field name="order_id" ref="sale_order_4"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.consu_delivery_02').get_product_multiline_description_sale()"/>
             <field name="product_id" ref="product.consu_delivery_02"/>
             <field name="product_uom_qty">3</field>
-            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">150.00</field>
         </record>
 
         <record id="sale_order_line_11" model="sale.order.line">
             <field name="order_id" ref="sale_order_4"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_delivery_01').get_product_multiline_description_sale()"/>
             <field name="product_id" ref="product.product_delivery_01"/>
             <field name="product_uom_qty">2</field>
-            <field name="product_uom" ref="uom.product_uom_unit"/>
-            <field name="price_unit">70.00</field>
         </record>
 
         <record id="sale_order_5" model="sale.order">
@@ -200,10 +175,7 @@
 
         <record id="sale_order_line_12" model="sale.order.line">
             <field name="order_id" ref="sale_order_5"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_delivery_02').get_product_multiline_description_sale()"/>
             <field name="product_id" ref="product.product_delivery_02"/>
-            <field name="product_uom_qty">1</field>
-            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">405.00</field>
         </record>
 
@@ -222,10 +194,7 @@
 
         <record id="sale_order_line_15" model="sale.order.line">
             <field name="order_id" ref="sale_order_6"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_4').get_product_multiline_description_sale()"/>
             <field name="product_id" ref="product.product_product_4"/>
-            <field name="product_uom_qty">1</field>
-            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">750.00</field>
         </record>
 
@@ -244,37 +213,26 @@
 
         <record id="sale_order_line_16" model="sale.order.line">
             <field name="order_id" ref="sale_order_7"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_25').get_product_multiline_description_sale()"/>
             <field name="product_id" ref="product.product_product_25"/>
             <field name="product_uom_qty">5</field>
-            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">295.00</field>
         </record>
 
         <record id="sale_order_line_17" model="sale.order.line">
             <field name="order_id" ref="sale_order_7"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.consu_delivery_01').get_product_multiline_description_sale()"/>
             <field name="product_id" ref="product.consu_delivery_01"/>
-            <field name="product_uom_qty">1</field>
-            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">173.00</field>
         </record>
 
         <record id="sale_order_line_18" model="sale.order.line">
             <field name="order_id" ref="sale_order_7"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_delivery_02').get_product_multiline_description_sale()"/>
             <field name="product_id" ref="product.product_delivery_02"/>
-            <field name="product_uom_qty">1</field>
-            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">40.00</field>
         </record>
 
         <record id="sale_order_line_19" model="sale.order.line">
             <field name="order_id" ref="sale_order_7"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_delivery_01').get_product_multiline_description_sale()"/>
             <field name="product_id" ref="product.product_delivery_01"/>
-            <field name="product_uom_qty">1</field>
-            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">18.00</field>
         </record>
 
@@ -293,19 +251,15 @@
 
         <record id="sale_order_line_20" model="sale.order.line">
             <field name="order_id" ref="sale_order_8"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_27').get_product_multiline_description_sale()"/>
             <field name="product_id" ref="product.product_product_27"/>
             <field name="product_uom_qty">2</field>
-            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">110.50</field>
         </record>
 
         <record id="sale_order_line_21" model="sale.order.line">
             <field name="order_id" ref="sale_order_8"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_12').get_product_multiline_description_sale()"/>
             <field name="product_id" ref="product.product_product_12"/>
             <field name="product_uom_qty">2</field>
-            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">120.50</field>
         </record>
 
@@ -326,19 +280,15 @@
 
         <record id="sale_order_line_22" model="sale.order.line">
             <field name="order_id" ref="sale_order_9"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_27').get_product_multiline_description_sale()"/>
             <field name="product_id" ref="product.product_product_27"/>
             <field name="product_uom_qty">3</field>
-            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">97.50</field>
         </record>
 
         <record id="sale_order_line_23" model="sale.order.line">
             <field name="order_id" ref="sale_order_9"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_12').get_product_multiline_description_sale()"/>
             <field name="product_id" ref="product.product_product_12"/>
             <field name="product_uom_qty">3</field>
-            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">120.50</field>
         </record>
 
@@ -358,19 +308,15 @@
 
         <record id="sale_order_line_24" model="sale.order.line">
             <field name="order_id" ref="sale_order_10"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_25').get_product_multiline_description_sale()"/>
             <field name="product_id" ref="product.product_product_25"/>
             <field name="product_uom_qty">2</field>
-            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">255.00</field>
         </record>
 
         <record id="sale_order_line_25" model="sale.order.line">
             <field name="order_id" ref="sale_order_10"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_12').get_product_multiline_description_sale()"/>
             <field name="product_id" ref="product.product_product_12"/>
             <field name="product_uom_qty">2</field>
-            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">120.50</field>
         </record>
 
@@ -390,19 +336,15 @@
 
         <record id="sale_order_line_26" model="sale.order.line">
             <field name="order_id" ref="sale_order_11"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_25').get_product_multiline_description_sale()"/>
             <field name="product_id" ref="product.product_product_25"/>
             <field name="product_uom_qty">3</field>
-            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">245.00</field>
         </record>
 
         <record id="sale_order_line_27" model="sale.order.line">
             <field name="order_id" ref="sale_order_11"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_12').get_product_multiline_description_sale()"/>
             <field name="product_id" ref="product.product_product_12"/>
             <field name="product_uom_qty">3</field>
-            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">120.50</field>
         </record>
 
@@ -422,19 +364,14 @@
 
         <record id="sale_order_line_28" model="sale.order.line">
             <field name="order_id" ref="sale_order_12"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_25').get_product_multiline_description_sale()"/>
             <field name="product_id" ref="product.product_product_25"/>
-            <field name="product_uom_qty">1</field>
-            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">315.00</field>
         </record>
 
         <record id="sale_order_line_29" model="sale.order.line">
             <field name="order_id" ref="sale_order_12"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_12').get_product_multiline_description_sale()"/>
             <field name="product_id" ref="product.product_product_12"/>
             <field name="product_uom_qty">2</field>
-            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">120.50</field>
         </record>
 
@@ -453,19 +390,13 @@
 
         <record id="sale_order_line_30" model="sale.order.line">
             <field name="order_id" ref="sale_order_13"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_25').get_product_multiline_description_sale()"/>
             <field name="product_id" ref="product.product_product_25"/>
-            <field name="product_uom_qty">1</field>
-            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">295.00</field>
         </record>
 
         <record id="sale_order_line_31" model="sale.order.line">
             <field name="order_id" ref="sale_order_13"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_12').get_product_multiline_description_sale()"/>
             <field name="product_id" ref="product.product_product_12"/>
-            <field name="product_uom_qty">1</field>
-            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">120.50</field>
         </record>
 
@@ -484,19 +415,15 @@
 
         <record id="sale_order_line_32" model="sale.order.line">
             <field name="order_id" ref="sale_order_14"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_25').get_product_multiline_description_sale()"/>
             <field name="product_id" ref="product.product_product_25"/>
             <field name="product_uom_qty">4</field>
-            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">275.00</field>
         </record>
 
         <record id="sale_order_line_33" model="sale.order.line">
             <field name="order_id" ref="sale_order_14"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_12').get_product_multiline_description_sale()"/>
             <field name="product_id" ref="product.product_product_12"/>
             <field name="product_uom_qty">4</field>
-            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">120.50</field>
         </record>
 
@@ -515,19 +442,15 @@
 
         <record id="sale_order_line_34" model="sale.order.line">
             <field name="order_id" ref="sale_order_15"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_25').get_product_multiline_description_sale()"/>
             <field name="product_id" ref="product.product_product_25"/>
             <field name="product_uom_qty">4</field>
-            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">295.00</field>
         </record>
 
         <record id="sale_order_line_35" model="sale.order.line">
             <field name="order_id" ref="sale_order_15"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_12').get_product_multiline_description_sale()"/>
             <field name="product_id" ref="product.product_product_12"/>
             <field name="product_uom_qty">3</field>
-            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">120.50</field>
         </record>
 
@@ -546,19 +469,15 @@
 
         <record id="sale_order_line_36" model="sale.order.line">
             <field name="order_id" ref="sale_order_16"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_25').get_product_multiline_description_sale()"/>
             <field name="product_id" ref="product.product_product_25"/>
             <field name="product_uom_qty">3</field>
-            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">275.00</field>
         </record>
 
         <record id="sale_order_line_37" model="sale.order.line">
             <field name="order_id" ref="sale_order_16"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_12').get_product_multiline_description_sale()"/>
             <field name="product_id" ref="product.product_product_12"/>
             <field name="product_uom_qty">3</field>
-            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">120.50</field>
         </record>
 
@@ -577,19 +496,15 @@
 
         <record id="sale_order_line_38" model="sale.order.line">
             <field name="order_id" ref="sale_order_17"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_25').get_product_multiline_description_sale()"/>
             <field name="product_id" ref="product.product_product_25"/>
             <field name="product_uom_qty">2</field>
-            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">355.00</field>
         </record>
 
         <record id="sale_order_line_39" model="sale.order.line">
             <field name="order_id" ref="sale_order_17"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_12').get_product_multiline_description_sale()"/>
             <field name="product_id" ref="product.product_product_12"/>
             <field name="product_uom_qty">2</field>
-            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">120.50</field>
         </record>
 
@@ -608,19 +523,15 @@
 
         <record id="sale_order_line_40" model="sale.order.line">
             <field name="order_id" ref="sale_order_18"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_25').get_product_multiline_description_sale()"/>
             <field name="product_id" ref="product.product_product_25"/>
             <field name="product_uom_qty">2</field>
-            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">295.00</field>
         </record>
 
         <record id="sale_order_line_41" model="sale.order.line">
             <field name="order_id" ref="sale_order_18"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_12').get_product_multiline_description_sale()"/>
             <field name="product_id" ref="product.product_product_12"/>
             <field name="product_uom_qty">2</field>
-            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">120.50</field>
         </record>
 
@@ -729,28 +640,22 @@ Thanks!</field>
 
         <record id="portal_sale_order_line_1" model="sale.order.line">
             <field name="order_id" ref="portal_sale_order_1"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_25').get_product_multiline_description_sale()"/>
             <field name="product_id" ref="product.product_product_25"/>
             <field name="product_uom_qty">3</field>
-            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">295.00</field>
         </record>
 
         <record id="portal_sale_order_line_2" model="sale.order.line">
             <field name="order_id" ref="portal_sale_order_1"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_delivery_02').get_product_multiline_description_sale()"/>
             <field name="product_id" ref="product.product_delivery_02"/>
             <field name="product_uom_qty">5</field>
-            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">145.00</field>
         </record>
 
         <record id="portal_sale_order_line_3" model="sale.order.line">
             <field name="order_id" ref="portal_sale_order_1"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_delivery_01').get_product_multiline_description_sale()"/>
             <field name="product_id" ref="product.product_delivery_01"/>
             <field name="product_uom_qty">2</field>
-            <field name="product_uom" ref="uom.product_uom_unit"/>
             <field name="price_unit">65.00</field>
         </record>
 
@@ -767,19 +672,15 @@ Thanks!</field>
 
         <record id="portal_sale_order_line_4" model="sale.order.line">
             <field name="order_id" ref="portal_sale_order_2"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_1').get_product_multiline_description_sale()"/>
             <field name="product_id" ref="product.product_product_1"/>
             <field name="product_uom_qty">24</field>
-            <field name="product_uom" ref="uom.product_uom_hour"/>
             <field name="price_unit">75.00</field>
         </record>
 
         <record id="portal_sale_order_line_5" model="sale.order.line">
             <field name="order_id" ref="portal_sale_order_2"/>
-            <field name="name" model="sale.order.line" eval="obj().env.ref('product.product_product_2').get_product_multiline_description_sale()"/>
             <field name="product_id" ref="product.product_product_2"/>
             <field name="product_uom_qty">30</field>
-            <field name="product_uom" ref="uom.product_uom_hour"/>
             <field name="price_unit">38.25</field>
         </record>
 

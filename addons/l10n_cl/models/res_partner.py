@@ -47,11 +47,12 @@ class ResPartner(models.Model):
         n_vat, n_dv = vat_l[0], vat_l[1]
         return '%s-%s' % (format(int(n_vat), ',d').replace(',', '.'), n_dv)
 
-    @api.model
-    def create(self, values):
-        if values.get('vat'):
-            values['vat'] = self._format_vat_cl(values)
-        return super().create(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('vat'):
+                vals['vat'] = self._format_vat_cl(vals)
+        return super().create(vals_list)
 
     def write(self, values):
         if any(field in values for field in ['vat', 'l10n_latam_identification_type_id', 'country_id']):

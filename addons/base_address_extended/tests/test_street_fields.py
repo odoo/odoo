@@ -53,21 +53,22 @@ class TestStreetFields(TransactionCase):
 
         # test street -> street values (compute)
         for idx, (company_values, expected_vals) in enumerate(zip(input_values, expected)):
-            company_values['name'] = 'Test-%2d' % idx
-            company = self.env['res.company'].create(company_values)
+            values = dict(company_values, name='Test-%2d' % idx)
+            company = self.env['res.company'].create(values)
             self.assertStreetVals(company, expected_vals)
             self.assertStreetVals(company.partner_id, expected_vals)
 
         # test street_values -> street (inverse)
         for idx, (company_values, expected_vals) in enumerate(zip(input_values, expected)):
-            company_values['name'] = 'TestNew-%2d' % idx
-            expected_street = company_values.pop('street')
-            company_values.update(expected_vals)
-            company = self.env['res.company'].create(company_values)
+            values = dict(company_values)
+            values['name'] = 'TestNew-%2d' % idx
+            expected_street = values.pop('street')
+            values.update(expected_vals)
+            company = self.env['res.company'].create(values)
             self.assertEqual(company.street, expected_street)
-            self.assertStreetVals(company, company_values)
+            self.assertStreetVals(company, values)
             self.assertEqual(company.partner_id.street, expected_street)
-            self.assertStreetVals(company.partner_id, company_values)
+            self.assertStreetVals(company.partner_id, values)
 
     def test_company_write(self):
         """ Will test the compute and inverse methods of street fields when updating partner records. """

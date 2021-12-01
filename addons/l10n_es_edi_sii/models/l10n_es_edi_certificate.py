@@ -61,27 +61,28 @@ class Certificate(models.Model):
     # LOW-LEVEL METHODS
     # -------------------------------------------------------------------------
 
-    @api.model
-    def create(self, vals):
-        record = super().create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        certificates = super().create(vals_list)
 
         spain_tz = timezone('Europe/Madrid')
         spain_dt = self._get_es_current_datetime()
-        try:
-            _pem_certificate, _pem_private_key, certificate = record._decode_certificate()
-            cert_date_start = spain_tz.localize(certificate.not_valid_before)
-            cert_date_end = spain_tz.localize(certificate.not_valid_after)
-        except Exception:
-            raise ValidationError(_(
-                "There has been a problem with the certificate, some usual problems can be:\n"
-                "- The password given or the certificate are not valid.\n"
-                "- The certificate content is invalid."
-            ))
-        # Assign extracted values from the certificate
-        record.write({
-            'date_start': fields.Datetime.to_string(cert_date_start),
-            'date_end': fields.Datetime.to_string(cert_date_end),
-        })
-        if spain_dt > cert_date_end:
-            raise ValidationError(_("The certificate is expired since %s", record.date_end))
-        return record
+        for certificate in certificates:
+            try:
+                _pem_certificate, _pem_private_key, certif = certificate._decode_certificate()
+                cert_date_start = spain_tz.localize(certif.not_valid_before)
+                cert_date_end = spain_tz.localize(certif.not_valid_after)
+            except Exception:
+                raise ValidationError(_(
+                    "There has been a problem with the certificate, some usual problems can be:\n"
+                    "- The password given or the certificate are not valid.\n"
+                    "- The certificate content is invalid."
+                ))
+            # Assign extracted values from the certificate
+            certificate.write({
+                'date_start': fields.Datetime.to_string(cert_date_start),
+                'date_end': fields.Datetime.to_string(cert_date_end),
+            })
+            if spain_dt > cert_date_end:
+                raise ValidationError(_("The certificate is expired since %s", certificate.date_end))
+        return certificates

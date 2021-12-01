@@ -276,13 +276,14 @@ class ProjectTaskRecurrence(models.Model):
             recurrence.recurrence_left -= 1
         recurring_today._set_next_recurrence_date()
 
-    @api.model
-    def create(self, vals):
-        if vals.get('repeat_number'):
-            vals['recurrence_left'] = vals.get('repeat_number')
-        res = super(ProjectTaskRecurrence, self).create(vals)
-        res._set_next_recurrence_date()
-        return res
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('repeat_number'):
+                vals['recurrence_left'] = vals.get('repeat_number')
+        recurrences = super().create(vals_list)
+        recurrences._set_next_recurrence_date()
+        return recurrences
 
     def write(self, vals):
         if vals.get('repeat_number'):

@@ -106,44 +106,47 @@ class Warehouse(models.Model):
                 }
             }
 
-    @api.model
-    def create(self, vals):
-        # create view location for warehouse then create all locations
-        loc_vals = {'name': vals.get('code'), 'usage': 'view',
-                    'location_id': self.env.ref('stock.stock_location_locations').id}
-        if vals.get('company_id'):
-            loc_vals['company_id'] = vals.get('company_id')
-        vals['view_location_id'] = self.env['stock.location'].create(loc_vals).id
-        sub_locations = self._get_locations_values(vals)
-
-        for field_name, values in sub_locations.items():
-            values['location_id'] = vals['view_location_id']
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            # create view location for warehouse then create all locations
+            loc_vals = {'name': vals.get('code'), 'usage': 'view',
+                        'location_id': self.env.ref('stock.stock_location_locations').id}
             if vals.get('company_id'):
-                values['company_id'] = vals.get('company_id')
-            vals[field_name] = self.env['stock.location'].with_context(active_test=False).create(values).id
+                loc_vals['company_id'] = vals.get('company_id')
+            vals['view_location_id'] = self.env['stock.location'].create(loc_vals).id
+            sub_locations = self._get_locations_values(vals)
+
+            for field_name, values in sub_locations.items():
+                values['location_id'] = vals['view_location_id']
+                if vals.get('company_id'):
+                    values['company_id'] = vals.get('company_id')
+                vals[field_name] = self.env['stock.location'].with_context(active_test=False).create(values).id
 
         # actually create WH
-        warehouse = super(Warehouse, self).create(vals)
-        # create sequences and operation types
-        new_vals = warehouse._create_or_update_sequences_and_picking_types()
-        warehouse.write(new_vals)  # TDE FIXME: use super ?
-        # create routes and push/stock rules
-        route_vals = warehouse._create_or_update_route()
-        warehouse.write(route_vals)
+        warehouses = super().create(vals_list)
 
-        # Update global route with specific warehouse rule.
-        warehouse._create_or_update_global_routes_rules()
+        for warehouse, vals in zip(warehouses, vals_list):
+            # create sequences and operation types
+            new_vals = warehouse._create_or_update_sequences_and_picking_types()
+            warehouse.write(new_vals)  # TDE FIXME: use super ?
+            # create routes and push/stock rules
+            route_vals = warehouse._create_or_update_route()
+            warehouse.write(route_vals)
 
-        # create route selectable on the product to resupply the warehouse from another one
-        warehouse.create_resupply_routes(warehouse.resupply_wh_ids)
+            # Update global route with specific warehouse rule.
+            warehouse._create_or_update_global_routes_rules()
 
-        # update partner data if partner assigned
-        if vals.get('partner_id'):
-            self._update_partner_data(vals['partner_id'], vals.get('company_id'))
+            # create route selectable on the product to resupply the warehouse from another one
+            warehouse.create_resupply_routes(warehouse.resupply_wh_ids)
+
+            # update partner data if partner assigned
+            if vals.get('partner_id'):
+                self._update_partner_data(vals['partner_id'], vals.get('company_id'))
 
         self._check_multiwarehouse_group()
 
-        return warehouse
+        return warehouses
 
     def write(self, vals):
         if 'company_id' in vals:

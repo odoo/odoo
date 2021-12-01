@@ -237,26 +237,30 @@ class FleetVehicle(models.Model):
         res.append(('id', search_operator, res_ids))
         return res
 
-    @api.model
-    def create(self, vals):
-        # Fleet administrator may not have rights to create the plan_to_change_car value when the driver_id is a res.user
+    @api.model_create_multi
+    def create(self, vals_list):
+        # Fleet administrator may not have rights to create the plan_to_change_car
+        # value when the driver_id is a res.user.
         # This trick is used to prevent access right error.
-        ptc_value = 'plan_to_change_car' in vals.keys() and {'plan_to_change_car': vals.pop('plan_to_change_car')}
-        res = super(FleetVehicle, self).create(vals)
-        if ptc_value:
-            res.sudo().write(ptc_value)
-        if 'driver_id' in vals and vals['driver_id']:
-            res.create_driver_history(vals)
-        if 'future_driver_id' in vals and vals['future_driver_id']:
-            state_waiting_list = self.env.ref('fleet.fleet_vehicle_state_waiting_list', raise_if_not_found=False)
-            states = res.mapped('state_id').ids
-            if not state_waiting_list or state_waiting_list.id not in states:
-                future_driver = self.env['res.partner'].browse(vals['future_driver_id'])
-                if self.vehicle_type == 'bike':
-                    future_driver.sudo().write({'plan_to_change_bike': True})
-                if self.vehicle_type == 'car':
-                    future_driver.sudo().write({'plan_to_change_car': True})
-        return res
+        ptc_values = [
+            'plan_to_change_car' in vals.keys() and {'plan_to_change_car': vals.pop('plan_to_change_car')} for vals in vals_list
+        ]
+        vehicles = super().create(vals_list)
+        for vehicle, vals, ptc_value in zip(vehicles, vals_list, ptc_values):
+            if ptc_value:
+                vehicle.sudo().write(ptc_value)
+            if 'driver_id' in vals and vals['driver_id']:
+                vehicle.create_driver_history(vals)
+            if 'future_driver_id' in vals and vals['future_driver_id']:
+                state_waiting_list = self.env.ref('fleet.fleet_vehicle_state_waiting_list', raise_if_not_found=False)
+                states = vehicle.mapped('state_id').ids
+                if not state_waiting_list or state_waiting_list.id not in states:
+                    future_driver = self.env['res.partner'].browse(vals['future_driver_id'])
+                    if self.vehicle_type == 'bike':
+                        future_driver.sudo().write({'plan_to_change_bike': True})
+                    if self.vehicle_type == 'car':
+                        future_driver.sudo().write({'plan_to_change_car': True})
+        return vehicles
 
     def write(self, vals):
         if 'driver_id' in vals and vals['driver_id']:

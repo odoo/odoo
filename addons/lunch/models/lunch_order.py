@@ -116,18 +116,22 @@ class LunchOrder(models.Model):
                     if not check:
                         raise ValidationError(errors[quantity] % label)
 
-    @api.model
-    def create(self, values):
-        lines = self._find_matching_lines({
-            **values,
-            'toppings': self._extract_toppings(values),
-        })
-        if lines:
-            # YTI FIXME This will update multiple lines in the case there are multiple
-            # matching lines which should not happen through the interface
-            lines.update_quantity(1)
-            return lines[:1]
-        return super().create(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        orders = self.env['lunch.order']
+        for vals in vals_list:
+            lines = self._find_matching_lines({
+                **vals,
+                'toppings': self._extract_toppings(vals),
+            })
+            if lines:
+                # YTI FIXME This will update multiple lines in the case there are multiple
+                # matching lines which should not happen through the interface
+                lines.update_quantity(1)
+                orders |= lines[:1]
+            else:
+                orders |= super().create(vals)
+        return orders
 
     def write(self, values):
         merge_needed = 'note' in values or 'topping_ids_1' in values or 'topping_ids_2' in values or 'topping_ids_3' in values

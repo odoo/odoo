@@ -75,11 +75,12 @@ class ProjectUpdate(models.Model):
     # ---------------------------------
     # ORM Override
     # ---------------------------------
-    @api.model
-    def create(self, vals):
-        update = super().create(vals)
-        update.project_id.sudo().last_update_id = update
-        return update
+    @api.model_create_multi
+    def create(self, vals_list):
+        updates = super().create(vals_list)
+        for update in updates:
+            update.project_id.sudo().last_update_id = update
+        return updates
 
     def unlink(self):
         projects = self.project_id

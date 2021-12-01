@@ -65,12 +65,13 @@ class ir_cron(models.Model):
     lastcall = fields.Datetime(string='Last Execution Date', help="Previous time the cron ran successfully, provided to the job through the context on the `lastcall` key")
     priority = fields.Integer(default=5, help='The priority of the job, as an integer: 0 means higher priority, 10 means lower priority.')
 
-    @api.model
-    def create(self, values):
-        values['usage'] = 'ir_cron'
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            vals['usage'] = 'ir_cron'
         if os.getenv('ODOO_NOTIFY_CRON_CHANGES'):
             self._cr.postcommit.add(self._notifydb)
-        return super(ir_cron, self).create(values)
+        return super().create(vals_list)
 
     @api.model
     def default_get(self, fields_list):

@@ -8,27 +8,6 @@ from odoo.tests.common import TransactionCase, HttpCase
 from odoo import Command
 
 
-class PerformanceCommon(TransactionCase):
-
-    def assertModelCreateMulti(self, model_name, vals_list=None):
-        """Ensures model_name records can be created in batch.
-
-        :param str model_name: name of the model on which batch record creation should be verified
-        :param list vals_list: example list of values, if needed
-        """
-        vals_list = vals_list or [dict(), dict()]
-        if not isinstance(vals_list, list):
-            raise ValueError("Invalid arguments for assertModelCreateMulti")
-        assert len(vals_list) > 1, "Batch creation cannot be tested with only one value."
-        def patched_create(self, values_list):
-            if len(values_list) != len(vals_list):
-                raise ValueError(f"Model {model_name} doesn't support batch records creation.")
-            # Do not create anything
-            return self
-        with patch('odoo.models.BaseModel.create', patched_create):
-            self.env[model_name].create(vals_list)
-
-
 class TransactionCaseWithUserDemo(TransactionCase):
 
     def setUp(self):

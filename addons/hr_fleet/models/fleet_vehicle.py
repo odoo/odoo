@@ -90,10 +90,11 @@ class FleetVehicle(models.Model):
                     employee = employee_ids[0].id
             vals['future_driver_employee_id'] = employee
 
-    @api.model
-    def create(self, vals):
-        self._update_create_write_vals(vals)
-        return super().create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            self._update_create_write_vals(vals)
+        return super().create(vals_list)
 
     def write(self, vals):
         self._update_create_write_vals(vals)

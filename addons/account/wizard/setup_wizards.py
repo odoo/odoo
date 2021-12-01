@@ -87,21 +87,22 @@ class SetupBarBankConfigWizard(models.TransientModel):
         for record in self:
             record.new_journal_name = record.acc_number
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         """ This wizard is only used to setup an account for the current active
         company, so we always inject the corresponding partner when creating
         the model.
         """
-        vals['partner_id'] = self.env.company.partner_id.id
-        vals['new_journal_name'] = vals['acc_number']
+        for vals in vals_list:
+            vals['partner_id'] = self.env.company.partner_id.id
+            vals['new_journal_name'] = vals['acc_number']
 
-        # If no bank has been selected, but we have a bic, we are using it to find or create the bank
-        if not vals['bank_id'] and vals['bank_bic']:
-            vals['bank_id'] = self.env['res.bank'].search([('bic', '=', vals['bank_bic'])], limit=1).id \
-                              or self.env['res.bank'].create({'name': vals['bank_bic'], 'bic': vals['bank_bic']}).id
+            # If no bank has been selected, but we have a bic, we are using it to find or create the bank
+            if not vals['bank_id'] and vals['bank_bic']:
+                vals['bank_id'] = self.env['res.bank'].search([('bic', '=', vals['bank_bic'])], limit=1).id \
+                                  or self.env['res.bank'].create({'name': vals['bank_bic'], 'bic': vals['bank_bic']}).id
 
-        return super(SetupBarBankConfigWizard, self).create(vals)
+        return super().create(vals_list)
 
     @api.onchange('linked_journal_id')
     def _onchange_new_journal_related_data(self):

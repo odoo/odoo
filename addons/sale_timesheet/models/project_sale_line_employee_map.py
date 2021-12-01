@@ -65,11 +65,11 @@ class ProjectProductEmployeeMap(models.Model):
         for map_entry in self:
             map_entry.is_cost_changed = map_entry.employee_id and map_entry.cost != map_entry.employee_id.timesheet_cost
 
-    @api.model
-    def create(self, values):
-        res = super(ProjectProductEmployeeMap, self).create(values)
-        res._update_project_timesheet()
-        return res
+    @api.model_create_multi
+    def create(self, vals_list):
+        maps = super().create(vals_list)
+        maps._update_project_timesheet()
+        return maps
 
     def write(self, values):
         res = super(ProjectProductEmployeeMap, self).write(values)

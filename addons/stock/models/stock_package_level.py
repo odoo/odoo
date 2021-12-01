@@ -139,13 +139,14 @@ class StockPackageLevel(models.Model):
                         'company_id': package_level.company_id.id,
                     })
 
-    @api.model
-    def create(self, vals):
-        result = super(StockPackageLevel, self).create(vals)
-        if vals.get('location_dest_id'):
-            result.mapped('move_line_ids').write({'location_dest_id': vals['location_dest_id']})
-            result.mapped('move_ids').write({'location_dest_id': vals['location_dest_id']})
-        return result
+    @api.model_create_multi
+    def create(self, vals_list):
+        package_levels = super().create(vals_list)
+        for package_level, vals in zip(package_levels, vals_list):
+            if vals.get('location_dest_id'):
+                package_level.move_line_ids.write({'location_dest_id': vals['location_dest_id']})
+                package_level.move_ids.write({'location_dest_id': vals['location_dest_id']})
+        return package_levels
 
     def write(self, vals):
         result = super(StockPackageLevel, self).write(vals)

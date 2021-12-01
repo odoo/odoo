@@ -108,11 +108,12 @@ class MrpUnbuild(models.Model):
             if unbuild.product_qty <= 0:
                 raise ValueError(_('Unbuild Order product quantity has to be strictly positive.'))
 
-    @api.model
-    def create(self, vals):
-        if not vals.get('name') or vals['name'] == _('New'):
-            vals['name'] = self.env['ir.sequence'].next_by_code('mrp.unbuild') or _('New')
-        return super(MrpUnbuild, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if not vals.get('name') or vals['name'] == _('New'):
+                vals['name'] = self.env['ir.sequence'].next_by_code('mrp.unbuild') or _('New')
+        return super().create(vals_list)
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_done(self):

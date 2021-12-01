@@ -43,20 +43,21 @@ class StockPickingType(models.Model):
             ir_seq_prefix = sequence_code + '/DDT'
         return ir_seq_name, ir_seq_prefix
 
-    @api.model
-    def create(self, vals):
-        company = self.env['res.company'].browse(vals['company_id'])
-        if 'l10n_it_ddt_sequence_id' not in vals or not vals['l10n_it_ddt_sequence_id'] and vals['code'] == 'outgoing' \
-                and company.country_id.code == 'IT':
-            ir_seq_name, ir_seq_prefix = self._get_dtt_ir_seq_vals(vals.get('warehouse_id'), vals['sequence_code'])
-            vals['l10n_it_ddt_sequence_id'] = self.env['ir.sequence'].create({
-                    'name': ir_seq_name,
-                    'prefix': ir_seq_prefix,
-                    'padding': 5,
-                    'company_id': vals['company_id'],
-                    'implementation': 'no_gap',
-                }).id
-        return super(StockPickingType, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            company = self.env['res.company'].browse(vals['company_id'])
+            if 'l10n_it_ddt_sequence_id' not in vals or not vals['l10n_it_ddt_sequence_id'] and vals['code'] == 'outgoing' \
+                    and company.country_id.code == 'IT':
+                ir_seq_name, ir_seq_prefix = self._get_dtt_ir_seq_vals(vals.get('warehouse_id'), vals['sequence_code'])
+                vals['l10n_it_ddt_sequence_id'] = self.env['ir.sequence'].create({
+                        'name': ir_seq_name,
+                        'prefix': ir_seq_prefix,
+                        'padding': 5,
+                        'company_id': vals['company_id'],
+                        'implementation': 'no_gap',
+                    }).id
+        return super().create(vals_list)
 
     def write(self, vals):
         if 'sequence_code' in vals:

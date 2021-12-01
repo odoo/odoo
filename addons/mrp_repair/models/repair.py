@@ -6,11 +6,11 @@ from odoo import api, models
 class Repair(models.Model):
     _inherit = 'repair.order'
 
-    @api.model
-    def create(self, vals):
-        res = super().create(vals)
-        res.action_explode()
-        return res
+    @api.model_create_multi
+    def create(self, vals_list):
+        orders = super().create(vals_list)
+        orders.action_explode()
+        return orders
 
     def write(self, vals):
         res = super().write(vals)
