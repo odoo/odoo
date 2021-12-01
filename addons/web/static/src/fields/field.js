@@ -1,5 +1,4 @@
 /** @odoo-module **/
-import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { useEffect } from "@web/core/utils/hooks";
 import { archParseBoolean } from "@web/views/helpers/utils";
@@ -106,6 +105,7 @@ Field.parseFieldNode = function (node, fields, viewType) {
         string: node.getAttribute("string") || field.string,
         widget,
         options: {}, // can be already used to add options like 'group_by_tooltip'
+        modifiers: {}, // a lot of code is easier if it always exists.
         onChange: archParseBoolean(node.getAttribute("on_change")),
         optionsAttribute: node.getAttribute("options") || "{}",
         modifiersAttribute: node.getAttribute("modifiers") || "{}",
