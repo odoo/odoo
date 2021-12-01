@@ -195,9 +195,24 @@ class Field(MetaField('DummyField', (object,), {})):
 
         .. warning::
 
-            Precompute only happens if no explicit value and no default value is
-            provided to create(). This means that a default value disables the
-            precomputation, even if the field is specified as precompute=True.
+            Precomputation only happens when no explicit value and no default
+            value is provided to create().  This means that a default value
+            disables the precomputation, even if the field is specified as
+            precompute=True.
+
+            Precomputing a field can be counterproductive if the records of the
+            given model are not created in batch.  Consider the situation were
+            many records are created one by one.  If the field is not
+            precomputed, it will normally be computed in batch at the flush(),
+            and the prefetching mechanism will help making the computation
+            efficient.  On the other hand, if the field is precomputed, the
+            computation will be made one by one, and will therefore not be able
+            to take advantage of the prefetching mechanism.
+
+            Following the remark above, precomputed fields can be interesting on
+            the lines of a one2many, which are usually created in batch by the
+            ORM itself, provided that they are created by writing on the record
+            that contains them.
 
     :param bool compute_sudo: whether the field should be recomputed as superuser
         to bypass access rights (by default ``True`` for stored fields, ``False``
