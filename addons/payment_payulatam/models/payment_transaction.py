@@ -75,6 +75,7 @@ class PaymentTransaction(models.Model):
             'buyerFullName': self.partner_name,
             'buyerEmail': self.partner_email,
             'responseUrl': urls.url_join(self.get_base_url(), PayuLatamController._return_url),
+            'confirmationUrl': urls.url_join(self.get_base_url(), PayuLatamController._webhook_url),
             'api_url': api_url,
         }
         if self.acquirer_id.state != 'enabled':
@@ -113,16 +114,6 @@ class PaymentTransaction(models.Model):
         if not tx:
             raise ValidationError(
                 "PayU Latam: " + _("No transaction found matching reference %s.", reference)
-            )
-
-        # Verify signature
-        sign_check = tx.acquirer_id._payulatam_generate_sign(notification_data, incoming=True)
-        if not hmac.compare_digest(sign_check, sign):
-            raise ValidationError(
-                "PayU Latam: " + _(
-                    "Invalid sign: received %(sign)s, computed %(check)s.",
-                    sign=sign, check=sign_check
-                )
             )
 
         return tx
