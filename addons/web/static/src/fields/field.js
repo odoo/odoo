@@ -27,31 +27,10 @@ export class Field extends Component {
         return this.props.type || this.props.record.fields[this.props.name].type;
     }
 
-    evaluateExpressions(activeField, context) {
-        activeField.modifiers = evaluateExpr(activeField.modifiersAttribute, context);
-        activeField.options = Object.assign(
-            evaluateExpr(activeField.optionsAttribute, context),
-            activeField.options
-        );
-        if (activeField.decorationAttributes) {
-            activeField.decorations = {};
-            for (const decorationName in activeField.decorationAttributes) {
-                activeField.decorations[decorationName] = evaluateExpr(
-                    activeField.decorationAttributes[decorationName],
-                    context
-                );
-            }
-        }
-    }
-
     get effectiveFieldComponentProps() {
         const record = this.props.record;
         const field = record.fields[this.props.name];
         const activeField = record.activeFields[this.props.name];
-
-        // At this stage, plenty of data have been extracted from the field node,
-        // but some need to be evaluated with the record.data context.
-        this.evaluateExpressions(activeField, record.data);
 
         const readonyFromModifiers = activeField.modifiers.readonly == true;
         const readonlyFromViewMode = this.props.readonly;
