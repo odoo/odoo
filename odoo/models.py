@@ -2848,9 +2848,10 @@ class BaseModel(metaclass=MetaModel):
                 # added to the database
                 cr.execute('SELECT id FROM "{}"'.format(self._table))
                 records = self.browse(row[0] for row in cr.fetchall())
-                for field in fields_to_compute:
-                    _logger.info("Prepare computation of %s", field)
-                    self.env.add_to_compute(field, records)
+                if records:
+                    for field in fields_to_compute:
+                        _logger.info("Prepare computation of %s", field)
+                        self.env.add_to_compute(field, records)
 
         if self._auto:
             self._add_sql_constraints()
