@@ -684,6 +684,7 @@ class TestQWebBasic(TransactionCase):
             ("fn(a=11, b=22) or a",                     {'a': 1, 'fn': lambda a,b: b},  22),
             ("(lambda a: a)(5)",                        {},                             5),
             ("(lambda a: a[0])([5])",                   {},                             5),
+            ("(lambda test: len(test))('aaa')",         {},                             3),
             ("{'a': lambda a: a[0], 'b': 3}['a']([5])", {},                             5),
             ("list(map(lambda a: a[0], r))",            {'r': [(1,11), (2,22)]},        [1, 2]),
             ("z + (head or 'z')",                       {'z': 'a'},                     "az"),
@@ -693,8 +694,10 @@ class TestQWebBasic(TransactionCase):
             ("any({x == 5 for x in [1,2,3]})",          {},                             False),
             ("{x:y for x,y in [('a', 11),('b', 22)]}",  {},                             {'a': 11, 'b': 22}),
             ("[(y,x) for x,y in [(1, 11),(2, 22)]]",    {},                             [(11, 1), (22, 2)]),
-            ("(lambda a: a + 5)(a=x)",                  {'x': 10},                      15),
+            ("(lambda a: a + 5)(x)",                    {'x': 10},                      15),
+            ("(lambda a: a + x)(5)",                    {'x': 10},                      15),
             ("sum(x for x in range(4)) + ((x))",        {'x': 10},                      16),
+            ("['test_' + x for x in ['a', 'b']]",       {},                             ['test_a', 'test_b'])
         ]
 
         IrQweb = self.env['ir.qweb']
