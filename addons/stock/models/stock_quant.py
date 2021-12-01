@@ -170,40 +170,43 @@ class StockQuant(models.Model):
             domain_operator = 'in'
         return [('id', domain_operator, quant_query)]
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         """ Override to handle the "inventory mode" and create a quant as
         superuser the conditions are met.
         """
-        if self._is_inventory_mode() and any(f in vals for f in ['inventory_quantity', 'inventory_quantity_auto_apply']):
-            allowed_fields = self._get_inventory_fields_create()
-            if any(field for field in vals.keys() if field not in allowed_fields):
-                raise UserError(_("Quant's creation is restricted, you can't do this operation."))
+        quants = self.env['stock.quant']
+        is_inventory_mode = self._is_inventory_mode()
+        allowed_fields = self._get_inventory_fields_create()
+        for vals in vals_list:
+            if is_inventory_mode and any(f in vals for f in ['inventory_quantity', 'inventory_quantity_auto_apply']):
+                if any(field for field in vals.keys() if field not in allowed_fields):
+                    raise UserError(_("Quant's creation is restricted, you can't do this operation."))
+                inventory_quantity = vals.pop('inventory_quantity', False) or vals.pop(
+                    'inventory_quantity_auto_apply', False) or 0
+                # Create an empty quant or write on a similar one.
+                product = self.env['product.product'].browse(vals['product_id'])
+                location = self.env['stock.location'].browse(vals['location_id'])
+                lot_id = self.env['stock.lot'].browse(vals.get('lot_id'))
+                package_id = self.env['stock.quant.package'].browse(vals.get('package_id'))
+                owner_id = self.env['res.partner'].browse(vals.get('owner_id'))
+                quant = self._gather(product, location, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
 
-            inventory_quantity = vals.pop('inventory_quantity', False) or vals.pop(
-                'inventory_quantity_auto_apply', False) or 0
-            # Create an empty quant or write on a similar one.
-            product = self.env['product.product'].browse(vals['product_id'])
-            location = self.env['stock.location'].browse(vals['location_id'])
-            lot_id = self.env['stock.lot'].browse(vals.get('lot_id'))
-            package_id = self.env['stock.quant.package'].browse(vals.get('package_id'))
-            owner_id = self.env['res.partner'].browse(vals.get('owner_id'))
-            quant = self._gather(product, location, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
-
-            if quant:
-                quant = quant[0].sudo()
+                if quant:
+                    quant = quant[0].sudo()
+                else:
+                    quant = self.sudo().create(vals)
+                # Set the `inventory_quantity` field to create the necessary move.
+                quant.inventory_quantity = inventory_quantity
+                quant.user_id = vals.get('user_id', self.env.user.id)
+                quant.inventory_date = fields.Date.today()
+                quants |= quant
             else:
-                quant = self.sudo().create(vals)
-            # Set the `inventory_quantity` field to create the necessary move.
-            quant.inventory_quantity = inventory_quantity
-            quant.user_id = vals.get('user_id', self.env.user.id)
-            quant.inventory_date = fields.Date.today()
-
-            return quant
-        res = super(StockQuant, self).create(vals)
-        if self._is_inventory_mode():
-            res._check_company()
-        return res
+                quant = super().create(vals)
+                quants |= quant
+                if self._is_inventory_mode():
+                    quant._check_company()
+        return quants
 
     def _load_records_create(self, values):
         """ Add default location if import file did not fill it"""

@@ -88,25 +88,24 @@ class PickingType(models.Model):
         'res.company', 'Company', required=True,
         default=lambda s: s.env.company.id, index=True)
 
-    @api.model
-    def create(self, vals):
-        if 'sequence_id' not in vals or not vals['sequence_id']:
-            if vals['warehouse_id']:
-                wh = self.env['stock.warehouse'].browse(vals['warehouse_id'])
-                vals['sequence_id'] = self.env['ir.sequence'].sudo().create({
-                    'name': wh.name + ' ' + _('Sequence') + ' ' + vals['sequence_code'],
-                    'prefix': wh.code + '/' + vals['sequence_code'] + '/', 'padding': 5,
-                    'company_id': wh.company_id.id,
-                }).id
-            else:
-                vals['sequence_id'] = self.env['ir.sequence'].sudo().create({
-                    'name': _('Sequence') + ' ' + vals['sequence_code'],
-                    'prefix': vals['sequence_code'], 'padding': 5,
-                    'company_id': vals.get('company_id') or self.env.company.id,
-                }).id
-
-        picking_type = super(PickingType, self).create(vals)
-        return picking_type
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if 'sequence_id' not in vals or not vals['sequence_id']:
+                if vals['warehouse_id']:
+                    wh = self.env['stock.warehouse'].browse(vals['warehouse_id'])
+                    vals['sequence_id'] = self.env['ir.sequence'].sudo().create({
+                        'name': wh.name + ' ' + _('Sequence') + ' ' + vals['sequence_code'],
+                        'prefix': wh.code + '/' + vals['sequence_code'] + '/', 'padding': 5,
+                        'company_id': wh.company_id.id,
+                    }).id
+                else:
+                    vals['sequence_id'] = self.env['ir.sequence'].sudo().create({
+                        'name': _('Sequence') + ' ' + vals['sequence_code'],
+                        'prefix': vals['sequence_code'], 'padding': 5,
+                        'company_id': vals.get('company_id') or self.env.company.id,
+                    }).id
+        return super().create(vals_list)
 
     def write(self, vals):
         if 'company_id' in vals:
@@ -724,32 +723,37 @@ class Picking(models.Model):
             "location_dest_id": self.location_dest_id
         })
 
-    @api.model
-    def create(self, vals):
-        defaults = self.default_get(['name', 'picking_type_id'])
-        picking_type = self.env['stock.picking.type'].browse(vals.get('picking_type_id', defaults.get('picking_type_id')))
-        if vals.get('name', '/') == '/' and defaults.get('name', '/') == '/' and vals.get('picking_type_id', defaults.get('picking_type_id')):
-            if picking_type.sequence_id:
-                vals['name'] = picking_type.sequence_id.next_by_id()
+    @api.model_create_multi
+    def create(self, vals_list):
+        scheduled_dates = []
+        for vals in vals_list:
+            defaults = self.default_get(['name', 'picking_type_id'])
+            picking_type = self.env['stock.picking.type'].browse(vals.get('picking_type_id', defaults.get('picking_type_id')))
+            if vals.get('name', '/') == '/' and defaults.get('name', '/') == '/' and vals.get('picking_type_id', defaults.get('picking_type_id')):
+                if picking_type.sequence_id:
+                    vals['name'] = picking_type.sequence_id.next_by_id()
 
-        # make sure to write `schedule_date` *after* the `stock.move` creation in
-        # order to get a determinist execution of `_set_scheduled_date`
-        scheduled_date = vals.pop('scheduled_date', False)
-        res = super(Picking, self).create(vals)
-        if scheduled_date:
-            res.with_context(mail_notrack=True).write({'scheduled_date': scheduled_date})
-        res._autoconfirm_picking()
+            # make sure to write `schedule_date` *after* the `stock.move` creation in
+            # order to get a determinist execution of `_set_scheduled_date`
+            scheduled_dates.append(vals.pop('scheduled_date', False))
 
-        # set partner as follower
-        if vals.get('partner_id'):
-            for picking in res.filtered(lambda p: p.location_id.usage == 'supplier' or p.location_dest_id.usage == 'customer'):
-                picking.message_subscribe([vals.get('partner_id')])
-        if vals.get('picking_type_id'):
-            for move in res.move_ids:
-                if not move.description_picking:
-                    move.description_picking = move.product_id.with_context(lang=move._get_lang())._get_description(move.picking_id.picking_type_id)
+        pickings = super().create(vals_list)
 
-        return res
+        for picking, scheduled_date in zip(pickings, scheduled_dates):
+            if scheduled_date:
+                picking.with_context(mail_notrack=True).write({'scheduled_date': scheduled_date})
+        pickings._autoconfirm_picking()
+
+        for picking, vals in zip(pickings, vals_list):
+            # set partner as follower
+            if vals.get('partner_id'):
+                if picking.location_id.usage == 'supplier' or picking.location_dest_id.usage == 'customer':
+                    picking.message_subscribe([vals.get('partner_id')])
+            if vals.get('picking_type_id'):
+                for move in picking.move_ids:
+                    if not move.description_picking:
+                        move.description_picking = move.product_id.with_context(lang=move._get_lang())._get_description(move.picking_id.picking_type_id)
+        return pickings
 
     def write(self, vals):
         if vals.get('picking_type_id') and any(picking.state != 'draft' for picking in self):

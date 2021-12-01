@@ -33,17 +33,24 @@ class ResourceMixin(models.AbstractModel):
         string='Timezone', related='resource_id.tz', readonly=False,
         help="This field is used in order to define in which timezone the resources will work.")
 
-    @api.model
-    def create(self, values):
-        if not values.get('resource_id'):
-            resource_vals = {'name': values.get(self._rec_name)}
-            tz = (values.pop('tz', False) or
-                  self.env['resource.calendar'].browse(values.get('resource_calendar_id')).tz)
-            if tz:
-                resource_vals['tz'] = tz
-            resource = self.env['resource.resource'].create(resource_vals)
-            values['resource_id'] = resource.id
-        return super(ResourceMixin, self).create(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        resources_vals_list = []
+        calendar_ids = [vals['resource_calendar_id'] for vals in vals_list if vals.get('resource_calendar_id')]
+        calendars_tz = {calendar.id: calendar.tz for calendar in self.env['resource.calendar'].browse(calendar_ids)}
+        for vals in vals_list:
+            if not vals.get('resource_id'):
+                resource_vals = {'name': vals.get(self._rec_name)}
+                tz = vals.pop('tz', False) or calendars_tz.get(vals.get('resource_calendar_id'))
+                if tz:
+                    resource_vals['tz'] = tz
+                resources_vals_list.append(resource_vals)
+        resources = self.env['resource.resource'].create(resources_vals_list)
+        resources_iter = iter(resources.ids)
+        for vals in vals_list:
+            if not vals.get('resource_id'):
+                vals['resource_id'] = next(resources_iter)
+        return super().create(vals_list)
 
     def copy_data(self, default=None):
         if default is None:

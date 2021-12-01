@@ -300,7 +300,7 @@ class TestInventory(TransactionCase):
         after an adjustment.
         """
         # Set product quantity to 42.
-        inventory_quant = self.env['stock.quant'].create(vals={
+        inventory_quant = self.env['stock.quant'].create({
             'product_id': self.product1.id,
             'location_id': self.stock_location.id,
             'inventory_quantity': 42,

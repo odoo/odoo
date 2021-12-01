@@ -738,10 +738,10 @@ class TestAssetsBundleWithIRAMock(FileTouchable):
         origin_create = IrAttachment.create
         origin_unlink = IrAttachment.unlink
 
-        @api.model
-        def create(self, vals):
-            counter.update(['create'])
-            return origin_create(self, vals)
+        @api.model_create_multi
+        def create(self, vals_list):
+            counter.update(['create'] * len(vals_list))
+            return origin_create(self, vals_list)
 
         def unlink(self):
             counter.update(['unlink'])

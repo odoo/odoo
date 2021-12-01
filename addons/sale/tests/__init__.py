@@ -5,7 +5,6 @@ from . import test_access_rights
 from . import test_accrued_sale_orders
 from . import test_onchange
 from . import test_payment_flow
-from . import test_performance
 from . import test_reinvoice
 from . import test_sale_flow
 from . import test_sale_order

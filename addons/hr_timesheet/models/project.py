@@ -167,13 +167,13 @@ class Project(models.Model):
             Note: create it before calling super() to avoid raising the ValidationError from _check_allow_timesheet
         """
         defaults = self.default_get(['allow_timesheets', 'analytic_account_id'])
-        for values in vals_list:
-            allow_timesheets = values.get('allow_timesheets', defaults.get('allow_timesheets'))
-            analytic_account_id = values.get('analytic_account_id', defaults.get('analytic_account_id'))
+        for vals in vals_list:
+            allow_timesheets = vals.get('allow_timesheets', defaults.get('allow_timesheets'))
+            analytic_account_id = vals.get('analytic_account_id', defaults.get('analytic_account_id'))
             if allow_timesheets and not analytic_account_id:
-                analytic_account = self._create_analytic_account_from_values(values)
-                values['analytic_account_id'] = analytic_account.id
-        return super(Project, self).create(vals_list)
+                analytic_account = self._create_analytic_account_from_values(vals)
+                vals['analytic_account_id'] = analytic_account.id
+        return super().create(vals_list)
 
     def write(self, values):
         # create the AA for project still allowing timesheet

@@ -211,11 +211,12 @@ class Repair(models.Model):
             if order.state not in ('draft', 'cancel'):
                 raise UserError(_('You can not delete a repair order once it has been confirmed. You must first cancel it.'))
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         # We generate a standard reference
-        vals['name'] = self.env['ir.sequence'].next_by_code('repair.order') or '/'
-        return super(Repair, self).create(vals)
+        for vals in vals_list:
+            vals['name'] = self.env['ir.sequence'].next_by_code('repair.order') or '/'
+        return super().create(vals_list)
 
     def button_dummy(self):
         # TDE FIXME: this button is very interesting

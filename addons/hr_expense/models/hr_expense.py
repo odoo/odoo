@@ -946,16 +946,16 @@ class HrExpenseSheet(models.Model):
             if any(expense.company_id != sheet.company_id for expense in sheet.expense_line_ids):
                 raise ValidationError(_('An expense report must contain only lines from the same company.'))
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         context = clean_context(self.env.context)
         context.update({
             'mail_create_nosubscribe': True,
             'mail_auto_subscribe_no_notify': True
         })
-        sheet = super(HrExpenseSheet, self.with_context(context)).create(vals)
-        sheet.activity_update()
-        return sheet
+        sheets = super(HrExpenseSheet, self.with_context(context)).create(vals_list)
+        sheets.activity_update()
+        return sheets
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_posted_or_paid(self):
@@ -1134,12 +1134,21 @@ class HrExpenseSheet(models.Model):
         return self.env['res.users']
 
     def activity_update(self):
-        for expense_report in self.filtered(lambda hol: hol.state == 'submit'):
-            self.activity_schedule(
-                'hr_expense.mail_act_expense_approval',
-                user_id=expense_report.sudo()._get_responsible_for_approval().id or self.env.user.id)
-        self.filtered(lambda hol: hol.state == 'approve').activity_feedback(['hr_expense.mail_act_expense_approval'])
-        self.filtered(lambda hol: hol.state in ('draft', 'cancel')).activity_unlink(['hr_expense.mail_act_expense_approval'])
+        reports_requiring_feedback = self.env['hr.expense.sheet']
+        reports_activity_unlink = self.env['hr.expense.sheet']
+        for expense_report in self:
+            if expense_report.state == 'submit':
+                expense_report.activity_schedule(
+                    'hr_expense.mail_act_expense_approval',
+                    user_id=expense_report.sudo()._get_responsible_for_approval().id or self.env.user.id)
+            elif expense_report.state == 'approve':
+                reports_requiring_feedback |= expense_report
+            elif expense_report.state in ('draft', 'cancel'):
+                reports_activity_unlink |= expense_report
+        if reports_requiring_feedback:
+            reports_requiring_feedback.activity_feedback(['hr_expense.mail_act_expense_approval'])
+        if reports_activity_unlink:
+            reports_activity_unlink.activity_unlink(['hr_expense.mail_act_expense_approval'])
 
     def action_register_payment(self):
         ''' Open the account.payment.register wizard to pay the selected journal entries.

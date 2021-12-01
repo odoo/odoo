@@ -150,12 +150,13 @@ class ResPartnerBank(models.Model):
             else:
                 record.l10n_ch_qr_iban = None
 
-    @api.model
-    def create(self, vals):
-        if vals.get('l10n_ch_qr_iban'):
-            validate_qr_iban(vals['l10n_ch_qr_iban'])
-            vals['l10n_ch_qr_iban'] = pretty_iban(normalize_iban(vals['l10n_ch_qr_iban']))
-        return super().create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('l10n_ch_qr_iban'):
+                validate_qr_iban(vals['l10n_ch_qr_iban'])
+                vals['l10n_ch_qr_iban'] = pretty_iban(normalize_iban(vals['l10n_ch_qr_iban']))
+        return super().create(vals_list)
 
     def write(self, vals):
         if vals.get('l10n_ch_qr_iban'):

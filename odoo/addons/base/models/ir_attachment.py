@@ -621,7 +621,7 @@ class IrAttachment(models.Model):
         for record_tuple in record_tuple_set:
             (res_model, res_id) = record_tuple
             self.check('create', values={'res_model':res_model, 'res_id':res_id})
-        return super(IrAttachment, self).create(vals_list)
+        return super().create(vals_list)
 
     def _post_add_create(self):
         pass

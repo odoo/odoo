@@ -200,12 +200,13 @@ class MaintenanceEquipment(models.Model):
         ('serial_no', 'unique(serial_no)', "Another asset already exists with this serial number!"),
     ]
 
-    @api.model
-    def create(self, vals):
-        equipment = super(MaintenanceEquipment, self).create(vals)
-        if equipment.owner_user_id:
-            equipment.message_subscribe(partner_ids=[equipment.owner_user_id.partner_id.id])
-        return equipment
+    @api.model_create_multi
+    def create(self, vals_list):
+        equipments = super().create(vals_list)
+        for equipment in equipments:
+            if equipment.owner_user_id:
+                equipment.message_subscribe(partner_ids=[equipment.owner_user_id.partner_id.id])
+        return equipments
 
     def write(self, vals):
         if vals.get('owner_user_id'):
@@ -331,16 +332,17 @@ class MaintenanceRequest(models.Model):
         if not self.user_id or not self.equipment_id or (self.user_id and not self.equipment_id.technician_user_id):
             self.user_id = self.category_id.technician_user_id
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         # context: no_log, because subtype already handle this
-        request = super(MaintenanceRequest, self).create(vals)
-        if request.owner_user_id or request.user_id:
-            request._add_followers()
-        if request.equipment_id and not request.maintenance_team_id:
-            request.maintenance_team_id = request.equipment_id.maintenance_team_id
-        request.activity_update()
-        return request
+        maintenance_requests = super().create(vals_list)
+        for request in maintenance_requests:
+            if request.owner_user_id or request.user_id:
+                request._add_followers()
+            if request.equipment_id and not request.maintenance_team_id:
+                request.maintenance_team_id = request.equipment_id.maintenance_team_id
+        maintenance_requests.activity_update()
+        return maintenance_requests
 
     def write(self, vals):
         # Overridden to reset the kanban_state to normal whenever

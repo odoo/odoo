@@ -57,12 +57,11 @@ class AccountJournal(models.Model):
                 journal.check_sequence_id.sudo().number_next_actual = int(journal.check_next_number)
                 journal.check_sequence_id.sudo().padding = len(journal.check_next_number)
 
-    @api.model
-    def create(self, vals):
-        rec = super(AccountJournal, self).create(vals)
-        if not rec.check_sequence_id:
-            rec._create_check_sequence()
-        return rec
+    @api.model_create_multi
+    def create(self, vals_list):
+        journals = super().create(vals_list)
+        journals.filtered(lambda j: not j.check_sequence_id)._create_check_sequence()
+        return journals
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):

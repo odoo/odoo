@@ -27,20 +27,18 @@ class ResPartner(models.Model):
                 partner.iap_enrich_info = False
                 partner.iap_search_domain = False
 
-    @api.model
-    def create(self, vals):
-        partner = super(ResPartner, self).create(vals)
-
-        if vals.get('iap_enrich_info') or vals.get('iap_search_domain'):
-            # Not done with inverse method so we do not need to search
-            # for existing <res.partner.iap>
-            self.env['res.partner.iap'].sudo().create({
-                'partner_id': partner.id,
-                'iap_enrich_info': vals.get('iap_enrich_info'),
-                'iap_search_domain': vals.get('iap_search_domain'),
-            })
-
-        return partner
+    @api.model_create_multi
+    def create(self, vals_list):
+        partners = super().create(vals_list)
+        # Not done with inverse method so we do not need to search
+        # for existing <res.partner.iap>
+        partner_iap_vals_list = [{
+            'partner_id': partner.id,
+            'iap_enrich_info': vals.get('iap_enrich_info'),
+            'iap_search_domain': vals.get('iap_search_domain'),
+        } for partner, vals in zip(partners, vals_list) if vals.get('iap_enrich_info') or vals.get('iap_search_domain')]
+        self.env['res.partner.iap'].sudo().create(partner_iap_vals_list)
+        return partners
 
     def write(self, vals):
         super(ResPartner, self).write(vals)

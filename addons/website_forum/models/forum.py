@@ -532,28 +532,31 @@ class Post(models.Model):
         if not self._check_recursion():
             raise ValidationError(_('You cannot create recursive forum posts.'))
 
-    @api.model
-    def create(self, vals):
-        if 'content' in vals and vals.get('forum_id'):
-            vals['content'] = self._update_content(vals['content'], vals['forum_id'])
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if 'content' in vals and vals.get('forum_id'):
+                vals['content'] = self._update_content(vals['content'], vals['forum_id'])
 
-        post = super(Post, self.with_context(mail_create_nolog=True)).create(vals)
-        # deleted or closed questions
-        if post.parent_id and (post.parent_id.state == 'close' or post.parent_id.active is False):
-            raise UserError(_('Posting answer on a [Deleted] or [Closed] question is not possible.'))
-        # karma-based access
-        if not post.parent_id and not post.can_ask:
-            raise AccessError(_('%d karma required to create a new question.', post.forum_id.karma_ask))
-        elif post.parent_id and not post.can_answer:
-            raise AccessError(_('%d karma required to answer a question.', post.forum_id.karma_answer))
-        if not post.parent_id and not post.can_post:
-            post.sudo().state = 'pending'
+        posts = super(Post, self.with_context(mail_create_nolog=True)).create(vals_list)
 
-        # add karma for posting new questions
-        if not post.parent_id and post.state == 'active':
-            self.env.user.sudo().add_karma(post.forum_id.karma_gen_question_new)
-        post.post_notification()
-        return post
+        for post in posts:
+            # deleted or closed questions
+            if post.parent_id and (post.parent_id.state == 'close' or post.parent_id.active is False):
+                raise UserError(_('Posting answer on a [Deleted] or [Closed] question is not possible.'))
+            # karma-based access
+            if not post.parent_id and not post.can_ask:
+                raise AccessError(_('%d karma required to create a new question.', post.forum_id.karma_ask))
+            elif post.parent_id and not post.can_answer:
+                raise AccessError(_('%d karma required to answer a question.', post.forum_id.karma_answer))
+            if not post.parent_id and not post.can_post:
+                post.sudo().state = 'pending'
+
+            # add karma for posting new questions
+            if not post.parent_id and post.state == 'active':
+                self.env.user.sudo().add_karma(post.forum_id.karma_gen_question_new)
+        posts.post_notification()
+        return posts
 
     @api.model
     def _get_mail_message_access(self, res_ids, operation, model_name=None):
@@ -1077,20 +1080,22 @@ class Vote(models.Model):
         }
         return _karma_upd[old_vote][new_vote]
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         # can't modify owner of a vote
         if not self.env.is_admin():
-            vals.pop('user_id', None)
+            for vals in vals_list:
+                vals.pop('user_id', None)
 
-        vote = super(Vote, self).create(vals)
+        votes = super(Vote, self).create(vals_list)
 
-        vote._check_general_rights()
-        vote._check_karma_rights(vote.vote == '1')
+        for vote in votes:
+            vote._check_general_rights()
+            vote._check_karma_rights(vote.vote == '1')
 
-        # karma update
-        vote._vote_update_karma('0', vote.vote)
-        return vote
+            # karma update
+            vote._vote_update_karma('0', vote.vote)
+        return votes
 
     def write(self, values):
         # can't modify owner of a vote
@@ -1160,9 +1165,10 @@ class Tags(models.Model):
         for tag in self:
             tag.posts_count = len(tag.post_ids)
 
-    @api.model
-    def create(self, vals):
-        forum = self.env['forum.forum'].browse(vals.get('forum_id'))
-        if self.env.user.karma < forum.karma_tag_create:
-            raise AccessError(_('%d karma required to create a new Tag.', forum.karma_tag_create))
-        return super(Tags, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            forum = self.env['forum.forum'].browse(vals.get('forum_id'))
+            if self.env.user.karma < forum.karma_tag_create:
+                raise AccessError(_('%d karma required to create a new Tag.', forum.karma_tag_create))
+        return super(Tags, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(vals_list)

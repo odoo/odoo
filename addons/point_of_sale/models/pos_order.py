@@ -406,11 +406,12 @@ class PosOrder(models.Model):
         for pos_order in self.filtered(lambda pos_order: pos_order.state not in ['draft', 'cancel']):
             raise UserError(_('In order to delete a sale, it must be new or cancelled.'))
 
-    @api.model
-    def create(self, values):
-        session = self.env['pos.session'].browse(values['session_id'])
-        values = self._complete_values_from_session(session, values)
-        return super(PosOrder, self).create(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            session = self.env['pos.session'].browse(vals['session_id'])
+            vals = self._complete_values_from_session(session, vals)
+        return super().create(vals_list)
 
     @api.model
     def _complete_values_from_session(self, session, values):
@@ -936,17 +937,18 @@ class PosOrderLine(models.Model):
             'refunded_orderline_id': self.id,
         }
 
-    @api.model
-    def create(self, values):
-        if values.get('order_id') and not values.get('name'):
-            # set name based on the sequence specified on the config
-            config = self.env['pos.order'].browse(values['order_id']).session_id.config_id
-            if config.sequence_line_id:
-                values['name'] = config.sequence_line_id._next()
-        if not values.get('name'):
-            # fallback on any pos.order sequence
-            values['name'] = self.env['ir.sequence'].next_by_code('pos.order.line')
-        return super(PosOrderLine, self).create(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('order_id') and not vals.get('name'):
+                # set name based on the sequence specified on the config
+                config = self.env['pos.order'].browse(vals['order_id']).session_id.config_id
+                if config.sequence_line_id:
+                    vals['name'] = config.sequence_line_id._next()
+            if not vals.get('name'):
+                # fallback on any pos.order sequence
+                vals['name'] = self.env['ir.sequence'].next_by_code('pos.order.line')
+        return super().create(vals_list)
 
     def write(self, values):
         if values.get('pack_lot_line_ids'):

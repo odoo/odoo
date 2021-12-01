@@ -183,19 +183,20 @@ class PurchaseRequisitionLine(models.Model):
     schedule_date = fields.Date(string='Scheduled Date')
     supplier_info_ids = fields.One2many('product.supplierinfo', 'purchase_requisition_line_id')
 
-    @api.model
-    def create(self,vals):
-        res = super(PurchaseRequisitionLine, self).create(vals)
-        if res.requisition_id.state not in ['draft', 'cancel', 'done'] and res.requisition_id.is_quantity_copy == 'none':
-            supplier_infos = self.env['product.supplierinfo'].search([
-                ('product_id', '=', vals.get('product_id')),
-                ('partner_id', '=', res.requisition_id.vendor_id.id),
-            ])
-            if not any(s.purchase_requisition_id for s in supplier_infos):
-                res.create_supplier_info()
-            if vals['price_unit'] <= 0.0:
-                raise UserError(_('You cannot confirm the blanket order without price.'))
-        return res
+    @api.model_create_multi
+    def create(self, vals_list):
+        lines = super().create(vals_list)
+        for line, vals in zip(lines, vals_list):
+            if line.requisition_id.state not in ['draft', 'cancel', 'done'] and line.requisition_id.is_quantity_copy == 'none':
+                supplier_infos = self.env['product.supplierinfo'].search([
+                    ('product_id', '=', vals.get('product_id')),
+                    ('partner_id', '=', line.requisition_id.vendor_id.id),
+                ])
+                if not any(s.purchase_requisition_id for s in supplier_infos):
+                    line.create_supplier_info()
+                if vals['price_unit'] <= 0.0:
+                    raise UserError(_('You cannot confirm the blanket order without price.'))
+        return lines
 
     def write(self, vals):
         res = super(PurchaseRequisitionLine, self).write(vals)

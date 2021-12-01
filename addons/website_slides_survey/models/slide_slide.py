@@ -64,14 +64,13 @@ class Slide(models.Model):
             if slide.slide_category == 'certification':
                 slide.slide_type = 'certification'
 
-    @api.model
-    def create(self, values):
-        rec = super(Slide, self).create(values)
-        if rec.survey_id:
-            rec.slide_category = 'certification'
-        if 'survey_id' in values:
-            rec._ensure_challenge_category()
-        return rec
+    @api.model_create_multi
+    def create(self, vals_list):
+        slides = super().create(vals_list)
+        slides_with_survey = slides.filtered('survey_id')
+        slides_with_survey.slide_category = 'certification'
+        slides_with_survey._ensure_challenge_category()
+        return slides
 
     def write(self, values):
         old_surveys = self.mapped('survey_id')
@@ -94,7 +93,7 @@ class Slide(models.Model):
             old_certification_challenges = old_surveys.mapped('certification_badge_id').challenge_ids
             old_certification_challenges.write({'challenge_category': 'certification'})
         if not unlink:
-            certification_challenges = self.mapped('survey_id').mapped('certification_badge_id').challenge_ids
+            certification_challenges = self.survey_id.certification_badge_id.challenge_ids
             certification_challenges.write({'challenge_category': 'slides'})
 
     def _generate_certification_url(self):
