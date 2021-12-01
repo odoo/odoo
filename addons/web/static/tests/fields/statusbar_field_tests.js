@@ -489,7 +489,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.test(
         "statusbar fold_field option and statusbar_visible attribute",
         async function (assert) {
             assert.expect(2);
