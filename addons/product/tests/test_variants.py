@@ -14,17 +14,18 @@ from odoo.tests.common import TransactionCase, Form
 
 class TestVariantsSearch(TransactionCase):
 
-    def setUp(self):
-        res = super(TestVariantsSearch, self).setUp()
-        self.size_attr = self.env['product.attribute'].create({'name': 'Size'})
-        self.size_attr_value_s = self.env['product.attribute.value'].create({'name': 'S', 'attribute_id': self.size_attr.id})
-        self.size_attr_value_m = self.env['product.attribute.value'].create({'name': 'M', 'attribute_id': self.size_attr.id})
-        self.size_attr_value_l = self.env['product.attribute.value'].create({'name': 'L', 'attribute_id': self.size_attr.id})
-        self.product_shirt_template = self.env['product.template'].create({
+    @classmethod
+    def setUpClass(cls):
+        res = super().setUpClass()
+        cls.size_attr = cls.env['product.attribute'].create({'name': 'Size'})
+        cls.size_attr_value_s = cls.env['product.attribute.value'].create({'name': 'S', 'attribute_id': cls.size_attr.id})
+        cls.size_attr_value_m = cls.env['product.attribute.value'].create({'name': 'M', 'attribute_id': cls.size_attr.id})
+        cls.size_attr_value_l = cls.env['product.attribute.value'].create({'name': 'L', 'attribute_id': cls.size_attr.id})
+        cls.product_shirt_template = cls.env['product.template'].create({
             'name': 'Shirt',
             'attribute_line_ids': [(0, 0, {
-                'attribute_id': self.size_attr.id,
-                'value_ids': [(6, 0, [self.size_attr_value_l.id])],
+                'attribute_id': cls.size_attr.id,
+                'value_ids': [(6, 0, [cls.size_attr_value_l.id])],
             })]
         })
         return res
@@ -60,12 +61,13 @@ class TestVariantsSearch(TransactionCase):
 
 class TestVariants(common.TestProductCommon):
 
-    def setUp(self):
-        res = super(TestVariants, self).setUp()
-        self.size_attr = self.env['product.attribute'].create({'name': 'Size'})
-        self.size_attr_value_s = self.env['product.attribute.value'].create({'name': 'S', 'attribute_id': self.size_attr.id})
-        self.size_attr_value_m = self.env['product.attribute.value'].create({'name': 'M', 'attribute_id': self.size_attr.id})
-        self.size_attr_value_l = self.env['product.attribute.value'].create({'name': 'L', 'attribute_id': self.size_attr.id})
+    @classmethod
+    def setUpClass(cls):
+        res = super().setUpClass()
+        cls.size_attr = cls.env['product.attribute'].create({'name': 'Size'})
+        cls.size_attr_value_s = cls.env['product.attribute.value'].create({'name': 'S', 'attribute_id': cls.size_attr.id})
+        cls.size_attr_value_m = cls.env['product.attribute.value'].create({'name': 'M', 'attribute_id': cls.size_attr.id})
+        cls.size_attr_value_l = cls.env['product.attribute.value'].create({'name': 'L', 'attribute_id': cls.size_attr.id})
         return res
 
     def test_variants_is_product_variant(self):
@@ -288,16 +290,17 @@ class TestVariants(common.TestProductCommon):
 
 class TestVariantsNoCreate(common.TestProductCommon):
 
-    def setUp(self):
-        super(TestVariantsNoCreate, self).setUp()
-        self.size = self.env['product.attribute'].create({
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.size = cls.env['product.attribute'].create({
             'name': 'Size',
             'create_variant': 'no_variant',
             'value_ids': [(0, 0, {'name': 'S'}), (0, 0, {'name': 'M'}), (0, 0, {'name': 'L'})],
         })
-        self.size_S = self.size.value_ids[0]
-        self.size_M = self.size.value_ids[1]
-        self.size_L = self.size.value_ids[2]
+        cls.size_S = cls.size.value_ids[0]
+        cls.size_M = cls.size.value_ids[1]
+        cls.size_L = cls.size.value_ids[2]
 
     def test_create_mono(self):
         """ create a product with a 'nocreate' attribute with a single value """
@@ -581,41 +584,42 @@ class TestVariantsManyAttributes(common.TestAttributesCommon):
 
 class TestVariantsImages(common.TestProductCommon):
 
-    def setUp(self):
-        res = super(TestVariantsImages, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        res = super().setUpClass()
 
-        self.colors = OrderedDict([('none', ''), ('red', '#FF0000'), ('green', '#00FF00'), ('blue', '#0000FF')])
-        self.images = {}
+        cls.colors = OrderedDict([('none', ''), ('red', '#FF0000'), ('green', '#00FF00'), ('blue', '#0000FF')])
+        cls.images = {}
 
-        product_attribute = self.env['product.attribute'].create({'name': 'Color'})
+        product_attribute = cls.env['product.attribute'].create({'name': 'Color'})
 
-        self.template = self.env['product.template'].create({
+        cls.template = cls.env['product.template'].create({
             'name': 'template',
         })
 
-        color_values = self.env['product.attribute.value'].create([{
+        color_values = cls.env['product.attribute.value'].create([{
             'name': color,
             'attribute_id': product_attribute.id,
             'sequence': i,
-        } for i, color in enumerate(self.colors)])
+        } for i, color in enumerate(cls.colors)])
 
-        ptal = self.env['product.template.attribute.line'].create({
+        ptal = cls.env['product.template.attribute.line'].create({
             'attribute_id': product_attribute.id,
-            'product_tmpl_id': self.template.id,
+            'product_tmpl_id': cls.template.id,
             'value_ids': [(6, 0, color_values.ids)],
         })
 
         for color_value in ptal.product_template_value_ids[1:]:
             f = io.BytesIO()
-            Image.new('RGB', (800, 500), self.colors[color_value.name]).save(f, 'PNG')
+            Image.new('RGB', (800, 500), cls.colors[color_value.name]).save(f, 'PNG')
             f.seek(0)
-            self.images.update({color_value.name: base64.b64encode(f.read())})
+            cls.images.update({color_value.name: base64.b64encode(f.read())})
 
-            self.template._get_variant_for_combination(color_value).write({
-                'image_variant_1920': self.images[color_value.name],
+            cls.template._get_variant_for_combination(color_value).write({
+                'image_variant_1920': cls.images[color_value.name],
             })
         # the first one has no image
-        self.variants = self.template.product_variant_ids
+        cls.variants = cls.template.product_variant_ids
 
         return res
 

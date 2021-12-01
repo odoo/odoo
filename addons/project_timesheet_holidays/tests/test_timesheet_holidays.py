@@ -38,28 +38,29 @@ class TestTimesheetHolidaysCreate(common.TransactionCase):
 
 class TestTimesheetHolidays(TestCommonTimesheet):
 
-    def setUp(self):
-        super(TestTimesheetHolidays, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
-        self.employee_working_calendar = self.empl_employee.resource_calendar_id
+        cls.employee_working_calendar = cls.empl_employee.resource_calendar_id
         # leave dates : from next monday to next wednesday (to avoid crashing tests on weekend, when
         # there is no work days in working calendar)
         # NOTE: second and millisecond can add a working days
-        self.leave_start_datetime = datetime(2018, 2, 5, 7, 0, 0, 0)  # this is monday
-        self.leave_end_datetime = self.leave_start_datetime + relativedelta(days=3)
+        cls.leave_start_datetime = datetime(2018, 2, 5, 7, 0, 0, 0)  # this is monday
+        cls.leave_end_datetime = cls.leave_start_datetime + relativedelta(days=3)
 
         # all company have those internal project/task (created by default)
-        self.internal_project = self.env.company.internal_project_id
-        self.internal_task_leaves = self.env.company.leave_timesheet_task_id
+        cls.internal_project = cls.env.company.internal_project_id
+        cls.internal_task_leaves = cls.env.company.leave_timesheet_task_id
 
-        self.hr_leave_type_with_ts = self.env['hr.leave.type'].create({
+        cls.hr_leave_type_with_ts = cls.env['hr.leave.type'].create({
             'name': 'Leave Type with timesheet generation',
             'requires_allocation': 'no',
             'timesheet_generate': True,
-            'timesheet_project_id': self.internal_project.id,
-            'timesheet_task_id': self.internal_task_leaves.id,
+            'timesheet_project_id': cls.internal_project.id,
+            'timesheet_task_id': cls.internal_task_leaves.id,
         })
-        self.hr_leave_type_no_ts = self.env['hr.leave.type'].create({
+        cls.hr_leave_type_no_ts = cls.env['hr.leave.type'].create({
             'name': 'Leave Type without timesheet generation',
             'requires_allocation': 'no',
             'timesheet_generate': False,
@@ -68,28 +69,28 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         })
 
         # HR Officer allocates some leaves to the employee 1
-        self.Requests = self.env['hr.leave'].with_context(mail_create_nolog=True, mail_notrack=True)
-        self.Allocations = self.env['hr.leave.allocation'].with_context(mail_create_nolog=True, mail_notrack=True)
-        self.hr_leave_allocation_with_ts = self.Allocations.sudo().create({
+        cls.Requests = cls.env['hr.leave'].with_context(mail_create_nolog=True, mail_notrack=True)
+        cls.Allocations = cls.env['hr.leave.allocation'].with_context(mail_create_nolog=True, mail_notrack=True)
+        cls.hr_leave_allocation_with_ts = cls.Allocations.sudo().create({
             'name': 'Days for limited category with timesheet',
-            'employee_id': self.empl_employee.id,
-            'holiday_status_id': self.hr_leave_type_with_ts.id,
+            'employee_id': cls.empl_employee.id,
+            'holiday_status_id': cls.hr_leave_type_with_ts.id,
             'number_of_days': 10,
             'state': 'confirm',
             'date_from': time.strftime('%Y-01-01'),
             'date_to': time.strftime('%Y-12-31'),
         })
-        self.hr_leave_allocation_with_ts.action_validate()
-        self.hr_leave_allocation_no_ts = self.Allocations.sudo().create({
+        cls.hr_leave_allocation_with_ts.action_validate()
+        cls.hr_leave_allocation_no_ts = cls.Allocations.sudo().create({
             'name': 'Days for limited category without timesheet',
-            'employee_id': self.empl_employee.id,
-            'holiday_status_id': self.hr_leave_type_no_ts.id,
+            'employee_id': cls.empl_employee.id,
+            'holiday_status_id': cls.hr_leave_type_no_ts.id,
             'number_of_days': 10,
             'state': 'confirm',
             'date_from': time.strftime('%Y-01-01'),
             'date_to': time.strftime('%Y-12-31'),
         })
-        self.hr_leave_allocation_no_ts.action_validate()
+        cls.hr_leave_allocation_no_ts.action_validate()
 
     def test_validate_with_timesheet(self):
         # employee creates a leave request

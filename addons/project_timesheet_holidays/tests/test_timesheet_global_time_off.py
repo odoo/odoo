@@ -10,12 +10,13 @@ from odoo.tests import common
 
 class TestTimesheetGlobalTimeOff(common.TransactionCase):
 
-    def setUp(self):
-        super(TestTimesheetGlobalTimeOff, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
         # Creates 1 test company and a calendar for employees that
         # work part time. Then creates an employee per calendar (one
         # for the standard calendar and one for the one we created)
-        self.test_company = self.env['res.company'].create({
+        cls.test_company = cls.env['res.company'].create({
             'name': 'My Test Company',
         })
 
@@ -30,29 +31,29 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
             Command.create({'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 16, 'day_period': 'afternoon'})
         ]
 
-        self.part_time_calendar = self.env['resource.calendar'].create({
+        cls.part_time_calendar = cls.env['resource.calendar'].create({
             'name': 'Part Time Calendar',
-            'company_id': self.test_company.id,
+            'company_id': cls.test_company.id,
             'hours_per_day': 6,
             'attendance_ids': attendance_ids,
         })
 
-        self.full_time_employee = self.env['hr.employee'].create({
+        cls.full_time_employee = cls.env['hr.employee'].create({
             'name': 'John Doe',
-            'company_id': self.test_company.id,
-            'resource_calendar_id': self.test_company.resource_calendar_id.id,
+            'company_id': cls.test_company.id,
+            'resource_calendar_id': cls.test_company.resource_calendar_id.id,
         })
 
-        self.full_time_employee_2 = self.env['hr.employee'].create({
+        cls.full_time_employee_2 = cls.env['hr.employee'].create({
             'name': 'John Smith',
-            'company_id': self.test_company.id,
-            'resource_calendar_id': self.test_company.resource_calendar_id.id,
+            'company_id': cls.test_company.id,
+            'resource_calendar_id': cls.test_company.resource_calendar_id.id,
         })
 
-        self.part_time_employee = self.env['hr.employee'].create({
+        cls.part_time_employee = cls.env['hr.employee'].create({
             'name': 'Jane Doe',
-            'company_id': self.test_company.id,
-            'resource_calendar_id': self.part_time_calendar.id,
+            'company_id': cls.test_company.id,
+            'resource_calendar_id': cls.part_time_calendar.id,
         })
 
     # This tests that timesheets are created for every employee with the same calendar

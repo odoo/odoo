@@ -10,10 +10,11 @@ from odoo.tools import mute_logger
 @tagged('functional')
 class TestKarmaGain(common.SlidesCase):
 
-    def setUp(self):
-        super(TestKarmaGain, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
-        self.channel_2 = self.env['slide.channel'].with_user(self.user_officer).create({
+        cls.channel_2 = cls.env['slide.channel'].with_user(cls.user_officer).create({
             'name': 'Test Channel 2',
             'channel_type': 'training',
             'promote_strategy': 'most_voted',
@@ -25,16 +26,16 @@ class TestKarmaGain(common.SlidesCase):
             'karma_gen_channel_rank': 10,
         })
 
-        self.slide_2_0 = self.env['slide.slide'].with_user(self.user_officer).create({
+        cls.slide_2_0 = cls.env['slide.slide'].with_user(cls.user_officer).create({
             'name': 'How to travel through space and time',
-            'channel_id': self.channel_2.id,
+            'channel_id': cls.channel_2.id,
             'slide_type': 'presentation',
             'is_published': True,
             'completion_time': 2.0,
         })
-        self.slide_2_1 = self.env['slide.slide'].with_user(self.user_officer).create({
+        cls.slide_2_1 = cls.env['slide.slide'].with_user(cls.user_officer).create({
             'name': 'How to duplicate yourself',
-            'channel_id': self.channel_2.id,
+            'channel_id': cls.channel_2.id,
             'slide_type': 'presentation',
             'is_published': True,
             'completion_time': 2.0,

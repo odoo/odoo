@@ -6,19 +6,20 @@ from odoo.tests.common import TransactionCase
 
 class TestSeller(TransactionCase):
 
-    def setUp(self):
-        super(TestSeller, self).setUp()
-        self.product_service = self.env['product.product'].create({
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.product_service = cls.env['product.product'].create({
             'name': 'Virtual Home Staging',
         })
-        self.product_service.default_code = 'DEFCODE'
-        self.product_consu = self.env['product.product'].create({
+        cls.product_service.default_code = 'DEFCODE'
+        cls.product_consu = cls.env['product.product'].create({
             'name': 'Boudin',
             'type': 'consu',
         })
-        self.product_consu.default_code = 'DEFCODE'
-        self.asustec = self.env['res.partner'].create({'name': 'Wood Corner'})
-        self.camptocamp = self.env['res.partner'].create({'name': 'Azure Interior'})
+        cls.product_consu.default_code = 'DEFCODE'
+        cls.asustec = cls.env['res.partner'].create({'name': 'Wood Corner'})
+        cls.camptocamp = cls.env['res.partner'].create({'name': 'Azure Interior'})
 
     def test_10_sellers(self):
         self.product_service.write({'seller_ids': [

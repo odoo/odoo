@@ -15,9 +15,10 @@ GROUP_SYSTEM = 'base.group_system'
 
 class TestACL(TransactionCaseWithUserDemo):
 
-    def setUp(self):
-        super(TestACL, self).setUp()
-        self.erp_system_group = self.env.ref(GROUP_SYSTEM)
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.erp_system_group = cls.env.ref(GROUP_SYSTEM)
 
     def _set_field_groups(self, model, field_name, groups):
         field = model._fields[field_name]

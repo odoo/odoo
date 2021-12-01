@@ -8,31 +8,32 @@ from odoo import Command
 
 class TestCompanyCheck(common.TransactionCase):
 
-    def setUp(self):
-        super(TestCompanyCheck, self).setUp()
-        self.company_a = self.env['res.company'].create({
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.company_a = cls.env['res.company'].create({
             'name': 'Company A'
         })
-        self.company_b = self.env['res.company'].create({
+        cls.company_b = cls.env['res.company'].create({
             'name': 'Company B'
         })
-        self.parent_company_a_id = self.env['test_new_api.model_parent'].create({
+        cls.parent_company_a_id = cls.env['test_new_api.model_parent'].create({
             'name': 'M1',
-            'company_id': self.company_a.id,
+            'company_id': cls.company_a.id,
         })
-        self.parent_company_b_id = self.env['test_new_api.model_parent'].create({
+        cls.parent_company_b_id = cls.env['test_new_api.model_parent'].create({
             'name': 'M2',
-            'company_id': self.company_b.id,
+            'company_id': cls.company_b.id,
         })
-        self.company_c = self.env['res.company'].create({
+        cls.company_c = cls.env['res.company'].create({
             'name': 'Company C'
         })
 
-        self.test_user = self.env['res.users'].create({
+        cls.test_user = cls.env['res.users'].create({
             'name': 'Test',
             'login': 'test',
-            'company_id': self.company_a.id,
-            'company_ids': (self.company_a | self.company_c).ids,
+            'company_id': cls.company_a.id,
+            'company_ids': (cls.company_a | cls.company_c).ids,
         })
 
     def test_company_check_0(self):

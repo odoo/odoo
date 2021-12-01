@@ -6,16 +6,17 @@ from odoo.tests import TransactionCase
 
 class TestViews(TransactionCase):
 
-    def setUp(self):
-        super().setUp()
-        View = self.env['ir.ui.view']
-        self.first_view = View.create({
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        View = cls.env['ir.ui.view']
+        cls.first_view = View.create({
             'name': 'Test View 1',
             'type': 'qweb',
             'arch': '<div>Hello World</div>',
             'key': 'web_editor.test_first_view',
         })
-        self.second_view = View.create({
+        cls.second_view = View.create({
             'name': 'Test View 2',
             'type': 'qweb',
             'arch': '<div><t t-call="web_editor.test_first_view"/></div>',

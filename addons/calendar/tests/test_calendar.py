@@ -12,12 +12,13 @@ import re
 
 class TestCalendar(SavepointCaseWithUserDemo):
 
-    def setUp(self):
-        super(TestCalendar, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
-        self.CalendarEvent = self.env['calendar.event']
+        cls.CalendarEvent = cls.env['calendar.event']
         # In Order to test calendar, I will first create One Simple Event with real data
-        self.event_tech_presentation = self.CalendarEvent.create({
+        cls.event_tech_presentation = cls.CalendarEvent.create({
             'privacy': 'private',
             'start': '2011-04-30 16:00:00',
             'stop': '2011-04-30 18:30:00',

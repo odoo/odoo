@@ -13,49 +13,50 @@ from odoo import Command
 
 class TestServerActionsBase(common.TransactionCase):
 
-    def setUp(self):
-        super(TestServerActionsBase, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
         # Data on which we will run the server action
-        self.test_country = self.env['res.country'].create({
+        cls.test_country = cls.env['res.country'].create({
             'name': 'TestingCountry',
             'code': 'TY',
             'address_format': 'SuperFormat',
         })
-        self.test_partner = self.env['res.partner'].create({
+        cls.test_partner = cls.env['res.partner'].create({
             'name': 'TestingPartner',
             'city': 'OrigCity',
-            'country_id': self.test_country.id,
+            'country_id': cls.test_country.id,
         })
-        self.context = {
+        cls.context = {
             'active_model': 'res.partner',
-            'active_id': self.test_partner.id,
+            'active_id': cls.test_partner.id,
         }
 
         # Model data
-        Model = self.env['ir.model']
-        Fields = self.env['ir.model.fields']
-        self.comment_html = '<p>MyComment</p>'
-        self.res_partner_model = Model.search([('model', '=', 'res.partner')])
-        self.res_partner_name_field = Fields.search([('model', '=', 'res.partner'), ('name', '=', 'name')])
-        self.res_partner_city_field = Fields.search([('model', '=', 'res.partner'), ('name', '=', 'city')])
-        self.res_partner_country_field = Fields.search([('model', '=', 'res.partner'), ('name', '=', 'country_id')])
-        self.res_partner_parent_field = Fields.search([('model', '=', 'res.partner'), ('name', '=', 'parent_id')])
-        self.res_partner_children_field = Fields.search([('model', '=', 'res.partner'), ('name', '=', 'child_ids')])
-        self.res_partner_category_field = Fields.search([('model', '=', 'res.partner'), ('name', '=', 'category_id')])
-        self.res_country_model = Model.search([('model', '=', 'res.country')])
-        self.res_country_name_field = Fields.search([('model', '=', 'res.country'), ('name', '=', 'name')])
-        self.res_country_code_field = Fields.search([('model', '=', 'res.country'), ('name', '=', 'code')])
-        self.res_partner_category_model = Model.search([('model', '=', 'res.partner.category')])
-        self.res_partner_category_name_field = Fields.search([('model', '=', 'res.partner.category'), ('name', '=', 'name')])
+        Model = cls.env['ir.model']
+        Fields = cls.env['ir.model.fields']
+        cls.comment_html = '<p>MyComment</p>'
+        cls.res_partner_model = Model.search([('model', '=', 'res.partner')])
+        cls.res_partner_name_field = Fields.search([('model', '=', 'res.partner'), ('name', '=', 'name')])
+        cls.res_partner_city_field = Fields.search([('model', '=', 'res.partner'), ('name', '=', 'city')])
+        cls.res_partner_country_field = Fields.search([('model', '=', 'res.partner'), ('name', '=', 'country_id')])
+        cls.res_partner_parent_field = Fields.search([('model', '=', 'res.partner'), ('name', '=', 'parent_id')])
+        cls.res_partner_children_field = Fields.search([('model', '=', 'res.partner'), ('name', '=', 'child_ids')])
+        cls.res_partner_category_field = Fields.search([('model', '=', 'res.partner'), ('name', '=', 'category_id')])
+        cls.res_country_model = Model.search([('model', '=', 'res.country')])
+        cls.res_country_name_field = Fields.search([('model', '=', 'res.country'), ('name', '=', 'name')])
+        cls.res_country_code_field = Fields.search([('model', '=', 'res.country'), ('name', '=', 'code')])
+        cls.res_partner_category_model = Model.search([('model', '=', 'res.partner.category')])
+        cls.res_partner_category_name_field = Fields.search([('model', '=', 'res.partner.category'), ('name', '=', 'name')])
 
         # create server action to
-        self.action = self.env['ir.actions.server'].create({
+        cls.action = cls.env['ir.actions.server'].create({
             'name': 'TestAction',
-            'model_id': self.res_partner_model.id,
+            'model_id': cls.res_partner_model.id,
             'model_name': 'res.partner',
             'state': 'code',
-            'code': 'record.write({"comment": "%s"})' % self.comment_html,
+            'code': 'record.write({"comment": "%s"})' % cls.comment_html,
         })
 
 

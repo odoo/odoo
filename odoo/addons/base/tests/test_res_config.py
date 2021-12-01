@@ -11,31 +11,32 @@ _logger = logging.getLogger(__name__)
 
 class TestResConfig(TransactionCase):
 
-    def setUp(self):
-        super(TestResConfig, self).setUp()
-        self.ResConfig = self.env['res.config.settings']
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.ResConfig = cls.env['res.config.settings']
 
         # Define the test values
-        self.menu_xml_id = 'base.menu_action_res_users'
-        self.full_field_name = 'res.partner.lang'
-        self.error_msg = "WarningRedirect test string: %(field:res.partner.lang)s - %(menu:base.menu_action_res_users)s."
-        self.error_msg_wo_menu = "WarningRedirect test string: %(field:res.partner.lang)s."
+        cls.menu_xml_id = 'base.menu_action_res_users'
+        cls.full_field_name = 'res.partner.lang'
+        cls.error_msg = "WarningRedirect test string: %(field:res.partner.lang)s - %(menu:base.menu_action_res_users)s."
+        cls.error_msg_wo_menu = "WarningRedirect test string: %(field:res.partner.lang)s."
         # Note: see the get_config_warning() doc for a better example
 
         # Fetch the expected values
-        menu = self.env.ref(self.menu_xml_id)
+        menu = cls.env.ref(cls.menu_xml_id)
 
-        model_name, field_name = self.full_field_name.rsplit('.', 1)
+        model_name, field_name = cls.full_field_name.rsplit('.', 1)
 
-        self.expected_path = menu.complete_name
-        self.expected_action_id = menu.action.id
-        self.expected_name = self.env[model_name].fields_get([field_name])[field_name]['string']
-        self.expected_final_error_msg = self.error_msg % {
-            'field:res.partner.lang': self.expected_name,
-            'menu:base.menu_action_res_users': self.expected_path
+        cls.expected_path = menu.complete_name
+        cls.expected_action_id = menu.action.id
+        cls.expected_name = cls.env[model_name].fields_get([field_name])[field_name]['string']
+        cls.expected_final_error_msg = cls.error_msg % {
+            'field:res.partner.lang': cls.expected_name,
+            'menu:base.menu_action_res_users': cls.expected_path
         }
-        self.expected_final_error_msg_wo_menu = self.error_msg_wo_menu % {
-            'field:res.partner.lang': self.expected_name,
+        cls.expected_final_error_msg_wo_menu = cls.error_msg_wo_menu % {
+            'field:res.partner.lang': cls.expected_name,
         }
 
     def test_00_get_option_path(self):

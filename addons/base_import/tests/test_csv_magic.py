@@ -8,8 +8,9 @@ from odoo.tests import common
 
 
 class ImportCase(common.TransactionCase):
-    def _make_import(self, contents):
-        return self.env['base_import.import'].create({
+    @classmethod
+    def _make_import(cls, contents):
+        return cls.env['base_import.import'].create({
             'res_model': 'base_import.tests.models.complex',
             'file_name': 'f',
             'file_type': 'text/csv',
@@ -72,9 +73,10 @@ class TestEncoding(ImportCase):
 
 class TestFileSeparator(ImportCase):
 
-    def setUp(self):
-        super().setUp()
-        self.imp = self._make_import(
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.imp = cls._make_import(
 """c|f
 a|1
 b|2

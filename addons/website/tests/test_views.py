@@ -34,9 +34,10 @@ class TestViewSaving(TestViewSavingCommon):
         for ca, cb in zip_longest(a, b):
             self.eq(ca, cb)
 
-    def setUp(self):
-        super(TestViewSaving, self).setUp()
-        self.arch = h.DIV(
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.arch = h.DIV(
             h.DIV(
                 h.H3("Column 1"),
                 h.UL(
@@ -51,11 +52,11 @@ class TestViewSaving(TestViewSavingCommon):
                     h.LI(h.SPAN("+00 00 000 00 0 000", attrs(model='res.company', id=1, field='phone', type='char')))
                 ))
         )
-        self.view_id = self.env['ir.ui.view'].create({
+        cls.view_id = cls.env['ir.ui.view'].create({
             'name': "Test View",
             'type': 'qweb',
             'key': 'website.test_view',
-            'arch': ET.tostring(self.arch, encoding='unicode')
+            'arch': ET.tostring(cls.arch, encoding='unicode')
         })
 
     def test_embedded_extraction(self):
@@ -284,21 +285,22 @@ class TestViewSaving(TestViewSavingCommon):
 
 @tagged('-at_install', 'post_install')
 class TestCowViewSaving(TestViewSavingCommon):
-    def setUp(self):
-        super(TestCowViewSaving, self).setUp()
-        View = self.env['ir.ui.view']
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        View = cls.env['ir.ui.view']
 
-        self.base_view = View.create({
+        cls.base_view = View.create({
             'name': 'Base',
             'type': 'qweb',
             'arch': '<div>base content</div>',
             'key': 'website.base_view',
         }).with_context(load_all_views=True)
 
-        self.inherit_view = View.create({
+        cls.inherit_view = View.create({
             'name': 'Extension',
             'mode': 'extension',
-            'inherit_id': self.base_view.id,
+            'inherit_id': cls.base_view.id,
             'arch': '<div position="inside">, extended content</div>',
             'key': 'website.extension_view',
         })

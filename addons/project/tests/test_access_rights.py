@@ -232,9 +232,10 @@ class TestAllowedUsers(TestAccessRights):
 
 class TestProjectPortalCommon(TestProjectCommon):
 
-    def setUp(self):
-        super(TestProjectPortalCommon, self).setUp()
-        self.user_noone = self.env['res.users'].with_context({'no_reset_password': True, 'mail_create_nosubscribe': True}).create({
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.user_noone = cls.env['res.users'].with_context({'no_reset_password': True, 'mail_create_nosubscribe': True}).create({
             'name': 'Noemie NoOne',
             'login': 'noemie',
             'email': 'n.n@example.com',
@@ -242,14 +243,14 @@ class TestProjectPortalCommon(TestProjectCommon):
             'notification_type': 'email',
             'groups_id': [(6, 0, [])]})
 
-        self.task_3 = self.env['project.task'].with_context({'mail_create_nolog': True}).create({
-            'name': 'Test3', 'user_ids': self.user_portal, 'project_id': self.project_pigs.id})
-        self.task_4 = self.env['project.task'].with_context({'mail_create_nolog': True}).create({
-            'name': 'Test4', 'user_ids': self.user_public, 'project_id': self.project_pigs.id})
-        self.task_5 = self.env['project.task'].with_context({'mail_create_nolog': True}).create({
-            'name': 'Test5', 'user_ids': False, 'project_id': self.project_pigs.id})
-        self.task_6 = self.env['project.task'].with_context({'mail_create_nolog': True}).create({
-            'name': 'Test5', 'user_ids': False, 'project_id': self.project_pigs.id})
+        cls.task_3 = cls.env['project.task'].with_context({'mail_create_nolog': True}).create({
+            'name': 'Test3', 'user_ids': cls.user_portal, 'project_id': cls.project_pigs.id})
+        cls.task_4 = cls.env['project.task'].with_context({'mail_create_nolog': True}).create({
+            'name': 'Test4', 'user_ids': cls.user_public, 'project_id': cls.project_pigs.id})
+        cls.task_5 = cls.env['project.task'].with_context({'mail_create_nolog': True}).create({
+            'name': 'Test5', 'user_ids': False, 'project_id': cls.project_pigs.id})
+        cls.task_6 = cls.env['project.task'].with_context({'mail_create_nolog': True}).create({
+            'name': 'Test5', 'user_ids': False, 'project_id': cls.project_pigs.id})
 
 class TestPortalProject(TestProjectPortalCommon):
 

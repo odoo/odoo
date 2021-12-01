@@ -10,33 +10,34 @@ import datetime
 class TestEquipment(TransactionCase):
     """ Test used to check that when doing equipment/maintenance_request/equipment_category creation."""
 
-    def setUp(self):
-        super(TestEquipment, self).setUp()
-        self.equipment = self.env['maintenance.equipment']
-        self.maintenance_request = self.env['maintenance.request']
-        self.res_users = self.env['res.users']
-        self.maintenance_team = self.env['maintenance.team']
-        self.main_company = self.env.ref('base.main_company')
-        res_user = self.env.ref('base.group_user')
-        res_manager = self.env.ref('maintenance.group_equipment_manager')
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.equipment = cls.env['maintenance.equipment']
+        cls.maintenance_request = cls.env['maintenance.request']
+        cls.res_users = cls.env['res.users']
+        cls.maintenance_team = cls.env['maintenance.team']
+        cls.main_company = cls.env.ref('base.main_company')
+        res_user = cls.env.ref('base.group_user')
+        res_manager = cls.env.ref('maintenance.group_equipment_manager')
 
-        self.user = self.res_users.create(dict(
+        cls.user = cls.res_users.create(dict(
             name="Normal User/Employee",
-            company_id=self.main_company.id,
+            company_id=cls.main_company.id,
             login="emp",
             email="empuser@yourcompany.example.com",
             groups_id=[(6, 0, [res_user.id])]
         ))
 
-        self.manager = self.res_users.create(dict(
+        cls.manager = cls.res_users.create(dict(
             name="Equipment Manager",
-            company_id=self.main_company.id,
+            company_id=cls.main_company.id,
             login="hm",
             email="eqmanager@yourcompany.example.com",
             groups_id=[(6, 0, [res_manager.id])]
         ))
 
-        self.equipment_monitor = self.env['maintenance.equipment.category'].create({
+        cls.equipment_monitor = cls.env['maintenance.equipment.category'].create({
             'name': 'Monitors - Test',
         })
 

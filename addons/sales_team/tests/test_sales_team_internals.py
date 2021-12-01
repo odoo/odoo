@@ -10,20 +10,21 @@ from odoo.tools import mute_logger
 
 class TestCornerCases(TransactionCase):
 
-    def setUp(self):
-        super(TestCornerCases, self).setUp()
-        self.user_sales_leads = mail_new_test_user(
-            self.env, login='user_sales_leads',
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.user_sales_leads = mail_new_test_user(
+            cls.env, login='user_sales_leads',
             name='Laetitia Sales Leads', email='crm_leads@test.example.com',
-            company_id=self.env.user.company_id.id,
+            company_id=cls.env.user.company_id.id,
             notification_type='inbox',
             groups='sales_team.group_sale_salesman_all_leads,base.group_partner_manager',
         )
-        self.sales_team_1 = self.env['crm.team'].create({
+        cls.sales_team_1 = cls.env['crm.team'].create({
             'name': 'Test Sales Team',
             'sequence': 5,
             'company_id': False,
-            'user_id': self.env.user.id,
+            'user_id': cls.env.user.id,
         })
 
     def test_unicity(self):

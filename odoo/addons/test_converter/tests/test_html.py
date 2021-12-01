@@ -105,12 +105,14 @@ class TestFloatExport(TestBasicExport):
 class TestCurrencyExport(TestExport):
     _model = 'test_converter.monetary'
 
-    def setUp(self):
-        super(TestCurrencyExport, self).setUp()
-        self.Currency = self.env['res.currency']
-        self.base = self.create(self.Currency, name="Source", symbol=u'source')
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.Currency = cls.env['res.currency']
+        cls.base = cls.create(cls.Currency, name="Source", symbol=u'source')
 
-    def create(self, model, **values):
+    @classmethod
+    def create(cls, model, **values):
         return model.create(values)
 
     def convert(self, obj, dest):

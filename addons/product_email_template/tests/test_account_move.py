@@ -4,19 +4,20 @@ from odoo.tests import tagged
 
 @tagged('post_install', '-at_install')
 class TestAccountMove(AccountTestInvoicingCommon):
-    def setUp(self):
-        super().setUp()
-        Template = self.env['mail.template']
-        self.template = Template.create({
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        Template = cls.env['mail.template']
+        cls.template = Template.create({
             'name': 'Product Template',
             'subject': 'YOUR PRODUCT',
-            'model_id': self.env['ir.model']._get_id('product.template')
+            'model_id': cls.env['ir.model']._get_id('product.template')
         })
-        self.customer = self.env['res.partner'].create({
+        cls.customer = cls.env['res.partner'].create({
             'name': 'James Bond',
             'email': 'james.bond@yopmail.com'
         })
-        self.product_a.email_template_id = self.template.id
+        cls.product_a.email_template_id = cls.template.id
 
     def test_send_product_template_email_on_invoice_post(self):
         id_max = self.env['mail.message'].search([], order='id desc', limit=1)

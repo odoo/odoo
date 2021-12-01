@@ -1432,10 +1432,11 @@ class TestMany2one(TransactionCase):
 
 
 class TestOne2many(TransactionCase):
-    def setUp(self):
-        super().setUp()
-        self.Partner = self.env['res.partner'].with_context(active_test=False)
-        self.partner = self.Partner.create({
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.Partner = cls.env['res.partner'].with_context(active_test=False)
+        cls.partner = cls.Partner.create({
             'name': 'Foo',
             'bank_ids': [
                 Command.create({'acc_number': '123', 'acc_type': 'bank'}),

@@ -10,8 +10,9 @@ from odoo.tools import mute_logger
 
 class TestIrMailServer(TransactionCase, MockSmtplibCase):
 
-    def setUp(self):
-        self._init_mail_servers()
+    @classmethod
+    def setUpClass(cls):
+        cls._init_mail_servers()
 
     def _build_email(self, mail_from, return_path=None):
         return self.env['ir.mail_server'].build_email(

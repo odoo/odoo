@@ -7,32 +7,33 @@ from odoo.tests.common import users
 
 
 class TestPortalWizard(MailCommon):
-    def setUp(self):
-        super(TestPortalWizard, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
-        self.partner = self.env['res.partner'].create({
+        cls.partner = cls.env['res.partner'].create({
             'name': 'Testing Partner',
             'email': 'testing_partner@example.com',
         })
 
-        self.public_user = mail_new_test_user(
-            self.env,
+        cls.public_user = mail_new_test_user(
+            cls.env,
             name='Public user',
             login='public_user',
             email='public_user@example.com',
             groups='base.group_public',
         )
 
-        self.portal_user = mail_new_test_user(
-            self.env,
+        cls.portal_user = mail_new_test_user(
+            cls.env,
             name='Portal user',
             login='portal_user',
             email='portal_user@example.com',
             groups='base.group_portal',
         )
 
-        self.internal_user = mail_new_test_user(
-            self.env,
+        cls.internal_user = mail_new_test_user(
+            cls.env,
             name='Internal user',
             login='internal_user',
             email='internal_user@example.com',

@@ -8,9 +8,10 @@ from odoo.tests.common import TransactionCase
 class TestAvatarMixin(TransactionCase):
 
     """ tests the avatar mixin """
-    def setUp(self):
-        super().setUp()
-        self.user_without_image = self.env['res.users'].create({
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.user_without_image = cls.env['res.users'].create({
             'name': 'Marc Demo',
             'email': 'mark.brown23@example.com',
             'image_1920': False,
@@ -18,16 +19,16 @@ class TestAvatarMixin(TransactionCase):
             'login': 'demo_1',
             'password': 'demo_1'
         })
-        self.user_without_image.partner_id.create_date = '2015-11-12 00:00:00'
+        cls.user_without_image.partner_id.create_date = '2015-11-12 00:00:00'
 
-        self.user_without_name = self.env['res.users'].create({
+        cls.user_without_name = cls.env['res.users'].create({
             'name': '',
             'email': 'marc.grey25@example.com',
             'image_1920': False,
             'login': 'marc_1',
             'password': 'marc_1',
         })
-        self.external_partner = self.env['res.partner'].create({
+        cls.external_partner = cls.env['res.partner'].create({
             'name': 'Josh Demo',
             'email': 'josh.brown23@example.com',
             'image_1920': False

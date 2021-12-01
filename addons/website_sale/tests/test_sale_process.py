@@ -111,14 +111,15 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo):
         the checkout (new/edit billing/shipping, company_id, website_id..).
     '''
 
-    def setUp(self):
-        super(TestWebsiteSaleCheckoutAddress, self).setUp()
-        self.website = self.env.ref('website.default_website')
-        self.country_id = self.env.ref('base.be').id
-        self.WebsiteSaleController = WebsiteSale()
-        self.default_address_values = {
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.website = cls.env.ref('website.default_website')
+        cls.country_id = cls.env.ref('base.be').id
+        cls.WebsiteSaleController = WebsiteSale()
+        cls.default_address_values = {
             'name': 'a res.partner address', 'email': 'email@email.email', 'street': 'ooo',
-            'city': 'ooo', 'zip': '1200', 'country_id': self.country_id, 'submitted': 1,
+            'city': 'ooo', 'zip': '1200', 'country_id': cls.country_id, 'submitted': 1,
         }
 
     def _create_so(self, partner_id=None):

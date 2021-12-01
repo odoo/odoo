@@ -5,20 +5,21 @@ from odoo import Command
 
 
 class One2manyCase(TransactionCase):
-    def setUp(self):
-        super(One2manyCase, self).setUp()
-        self.Line = self.env["test_new_api.multi.line"]
-        self.multi = self.env["test_new_api.multi"].create({
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.Line = cls.env["test_new_api.multi.line"]
+        cls.multi = cls.env["test_new_api.multi"].create({
             "name": "What is up?"
         })
 
         # data for One2many with inverse field Integer
-        self.Edition = self.env["test_new_api.creativework.edition"]
-        self.Book = self.env["test_new_api.creativework.book"]
-        self.Movie = self.env["test_new_api.creativework.movie"]
+        cls.Edition = cls.env["test_new_api.creativework.edition"]
+        cls.Book = cls.env["test_new_api.creativework.book"]
+        cls.Movie = cls.env["test_new_api.creativework.movie"]
 
-        book_model_id = self.env['ir.model'].search([('model', '=', self.Book._name)]).id
-        movie_model_id = self.env['ir.model'].search([('model', '=', self.Movie._name)]).id
+        book_model_id = cls.env['ir.model'].search([('model', '=', cls.Book._name)]).id
+        movie_model_id = cls.env['ir.model'].search([('model', '=', cls.Movie._name)]).id
 
         books_data = (
             ('Imaginary book', ()),
@@ -33,14 +34,14 @@ class One2manyCase(TransactionCase):
         )
 
         for name, editions in books_data:
-            book_id = self.Book.create({'name': name}).id
+            book_id = cls.Book.create({'name': name}).id
             for edition in editions:
-                self.Edition.create({'res_model_id': book_model_id, 'name': edition, 'res_id': book_id})
+                cls.Edition.create({'res_model_id': book_model_id, 'name': edition, 'res_id': book_id})
 
         for name, editions in movies_data:
-            movie_id = self.Movie.create({'name': name}).id
+            movie_id = cls.Movie.create({'name': name}).id
             for edition in editions:
-                self.Edition.create({'res_model_id': movie_model_id, 'name': edition, 'res_id': movie_id})
+                cls.Edition.create({'res_model_id': movie_model_id, 'name': edition, 'res_id': movie_id})
 
     def operations(self):
         """Run operations on o2m fields to check all works fine."""

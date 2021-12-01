@@ -527,12 +527,13 @@ class TestBase(TransactionCase):
 
 class TestPartnerRecursion(TransactionCase):
 
-    def setUp(self):
-        super(TestPartnerRecursion,self).setUp()
-        res_partner = self.env['res.partner']
-        self.p1 = res_partner.browse(res_partner.name_create('Elmtree')[0])
-        self.p2 = res_partner.create({'name': 'Elmtree Child 1', 'parent_id': self.p1.id})
-        self.p3 = res_partner.create({'name': 'Elmtree Grand-Child 1.1', 'parent_id': self.p2.id})
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        res_partner = cls.env['res.partner']
+        cls.p1 = res_partner.browse(res_partner.name_create('Elmtree')[0])
+        cls.p2 = res_partner.create({'name': 'Elmtree Child 1', 'parent_id': cls.p1.id})
+        cls.p3 = res_partner.create({'name': 'Elmtree Grand-Child 1.1', 'parent_id': cls.p2.id})
 
     def test_100_res_partner_recursion(self):
         self.assertTrue(self.p3._check_recursion())

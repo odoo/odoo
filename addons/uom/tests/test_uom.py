@@ -7,14 +7,15 @@ from odoo.exceptions import ValidationError
 
 class TestUom(TransactionCase):
 
-    def setUp(self):
-        super(TestUom, self).setUp()
-        self.uom_gram = self.env.ref('uom.product_uom_gram')
-        self.uom_kgm = self.env.ref('uom.product_uom_kgm')
-        self.uom_ton = self.env.ref('uom.product_uom_ton')
-        self.uom_unit = self.env.ref('uom.product_uom_unit')
-        self.uom_dozen = self.env.ref('uom.product_uom_dozen')
-        self.categ_unit_id = self.ref('uom.product_uom_categ_unit')
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.uom_gram = cls.env.ref('uom.product_uom_gram')
+        cls.uom_kgm = cls.env.ref('uom.product_uom_kgm')
+        cls.uom_ton = cls.env.ref('uom.product_uom_ton')
+        cls.uom_unit = cls.env.ref('uom.product_uom_unit')
+        cls.uom_dozen = cls.env.ref('uom.product_uom_dozen')
+        cls.categ_unit_id = cls.env.ref('uom.product_uom_categ_unit').id
 
     def test_10_conversion(self):
         qty = self.uom_gram._compute_quantity(1020000, self.uom_ton)

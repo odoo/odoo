@@ -7,20 +7,21 @@ from datetime import datetime
 
 class TestSaleMargin(common.TransactionCase):
 
-    def setUp(self):
-        super(TestSaleMargin, self).setUp()
-        self.SaleOrder = self.env['sale.order']
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.SaleOrder = cls.env['sale.order']
 
-        self.product_uom_id = self.ref('uom.product_uom_unit')
-        self.product = self.env['product.product'].create({'name': 'Individual Workplace'})
-        self.product_id = self.product.id
-        self.partner_id = self.env['res.partner'].create({'name': 'A test partner'}).id
-        self.partner_invoice_address_id = self.env['res.partner'].create({
+        cls.product_uom_id = cls.env.ref('uom.product_uom_unit').id
+        cls.product = cls.env['product.product'].create({'name': 'Individual Workplace'})
+        cls.product_id = cls.product.id
+        cls.partner_id = cls.env['res.partner'].create({'name': 'A test partner'}).id
+        cls.partner_invoice_address_id = cls.env['res.partner'].create({
             'name': 'A test partner address',
-            'parent_id': self.partner_id,
+            'parent_id': cls.partner_id,
         }).id
-        self.pricelist_id = self.ref('product.list0')
-        self.pricelist = self.env.ref('product.list0')
+        cls.pricelist_id = cls.env.ref('product.list0').id
+        cls.pricelist = cls.env.ref('product.list0')
 
     def test_sale_margin(self):
         """ Test the sale_margin module in Odoo. """

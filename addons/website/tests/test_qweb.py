@@ -95,15 +95,16 @@ class TestQweb(TransactionCaseWithUserDemo):
 
 
 class TestQwebProcessAtt(TransactionCase):
-    def setUp(self):
-        super(TestQwebProcessAtt, self).setUp()
-        self.website = self.env.ref('website.default_website')
-        self.env['res.lang']._activate_lang('fr_FR')
-        self.website.language_ids = self.env.ref('base.lang_en') + self.env.ref('base.lang_fr')
-        self.website.default_lang_id = self.env.ref('base.lang_en')
-        self.website.cdn_activated = True
-        self.website.cdn_url = "http://test.cdn"
-        self.website.cdn_filters = "\n".join(["^(/[a-z]{2}_[A-Z]{2})?/a$", "^(/[a-z]{2})?/a$", "^/b$"])
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.website = cls.env.ref('website.default_website')
+        cls.env['res.lang']._activate_lang('fr_FR')
+        cls.website.language_ids = cls.env.ref('base.lang_en') + cls.env.ref('base.lang_fr')
+        cls.website.default_lang_id = cls.env.ref('base.lang_en')
+        cls.website.cdn_activated = True
+        cls.website.cdn_url = "http://test.cdn"
+        cls.website.cdn_filters = "\n".join(["^(/[a-z]{2}_[A-Z]{2})?/a$", "^(/[a-z]{2})?/a$", "^/b$"])
 
     def _test_att(self, url, expect, tag='a', attribute='href'):
         self.assertEqual(

@@ -248,61 +248,62 @@ class SurveyCase(common.TransactionCase):
 
 
 class TestSurveyCommon(SurveyCase):
-    def setUp(self):
-        super(TestSurveyCommon, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
         """ Create test data: a survey with some pre-defined questions and various test users for ACL """
-        self.survey_manager = mail_new_test_user(
-            self.env, name='Gustave Doré', login='survey_manager', email='survey.manager@example.com',
+        cls.survey_manager = mail_new_test_user(
+            cls.env, name='Gustave Doré', login='survey_manager', email='survey.manager@example.com',
             groups='survey.group_survey_manager,base.group_user'
         )
 
-        self.survey_user = mail_new_test_user(
-            self.env, name='Lukas Peeters', login='survey_user', email='survey.user@example.com',
+        cls.survey_user = mail_new_test_user(
+            cls.env, name='Lukas Peeters', login='survey_user', email='survey.user@example.com',
             groups='survey.group_survey_user,base.group_user'
         )
 
-        self.user_emp = mail_new_test_user(
-            self.env, name='Eglantine Employee', login='user_emp', email='employee@example.com',
+        cls.user_emp = mail_new_test_user(
+            cls.env, name='Eglantine Employee', login='user_emp', email='employee@example.com',
             groups='base.group_user', password='user_emp'
         )
 
-        self.user_portal = mail_new_test_user(
-            self.env, name='Patrick Portal', login='user_portal', email='portal@example.com',
+        cls.user_portal = mail_new_test_user(
+            cls.env, name='Patrick Portal', login='user_portal', email='portal@example.com',
             groups='base.group_portal'
         )
 
-        self.user_public = mail_new_test_user(
-            self.env, name='Pauline Public', login='user_public', email='public@example.com',
+        cls.user_public = mail_new_test_user(
+            cls.env, name='Pauline Public', login='user_public', email='public@example.com',
             groups='base.group_public'
         )
 
-        self.customer = self.env['res.partner'].create({
+        cls.customer = cls.env['res.partner'].create({
             'name': 'Caroline Customer',
             'email': 'customer@example.com',
         })
 
-        self.survey = self.env['survey.survey'].with_user(self.survey_manager).create({
+        cls.survey = cls.env['survey.survey'].with_user(cls.survey_manager).create({
             'title': 'Test Survey',
             'access_mode': 'public',
             'users_login_required': True,
             'users_can_go_back': False,
         })
-        self.page_0 = self.env['survey.question'].with_user(self.survey_manager).create({
+        cls.page_0 = cls.env['survey.question'].with_user(cls.survey_manager).create({
             'title': 'First page',
-            'survey_id': self.survey.id,
+            'survey_id': cls.survey.id,
             'sequence': 1,
             'is_page': True,
         })
-        self.question_ft = self.env['survey.question'].with_user(self.survey_manager).create({
+        cls.question_ft = cls.env['survey.question'].with_user(cls.survey_manager).create({
             'title': 'Test Free Text',
-            'survey_id': self.survey.id,
+            'survey_id': cls.survey.id,
             'sequence': 2,
             'question_type': 'text_box',
         })
-        self.question_num = self.env['survey.question'].with_user(self.survey_manager).create({
+        cls.question_num = cls.env['survey.question'].with_user(cls.survey_manager).create({
             'title': 'Test NUmerical Box',
-            'survey_id': self.survey.id,
+            'survey_id': cls.survey.id,
             'sequence': 3,
             'question_type': 'numerical_box',
         })

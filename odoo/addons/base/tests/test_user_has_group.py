@@ -7,30 +7,31 @@ from odoo import Command
 
 
 class TestHasGroup(TransactionCase):
-    def setUp(self):
-        super(TestHasGroup, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
-        self.group0 = 'test_user_has_group.group0'
-        self.group1 = 'test_user_has_group.group1'
-        group0, group1 = self.env['res.groups']._load_records([
-            dict(xml_id=self.group0, values={'name': 'group0'}),
-            dict(xml_id=self.group1, values={'name': 'group1'}),
+        cls.group0 = 'test_user_has_group.group0'
+        cls.group1 = 'test_user_has_group.group1'
+        group0, group1 = cls.env['res.groups']._load_records([
+            dict(xml_id=cls.group0, values={'name': 'group0'}),
+            dict(xml_id=cls.group1, values={'name': 'group1'}),
         ])
 
-        self.test_user = self.env['res.users'].create({
+        cls.test_user = cls.env['res.users'].create({
             'login': 'testuser',
-            'partner_id': self.env['res.partner'].create({
+            'partner_id': cls.env['res.partner'].create({
                 'name': "Strawman Test User"
             }).id,
             'groups_id': [Command.set([group0.id])]
         })
 
-        self.grp_internal_xml_id = 'base.group_user'
-        self.grp_internal = self.env.ref(self.grp_internal_xml_id)
-        self.grp_portal_xml_id = 'base.group_portal'
-        self.grp_portal = self.env.ref(self.grp_portal_xml_id)
-        self.grp_public_xml_id = 'base.group_public'
-        self.grp_public = self.env.ref(self.grp_public_xml_id)
+        cls.grp_internal_xml_id = 'base.group_user'
+        cls.grp_internal = cls.env.ref(cls.grp_internal_xml_id)
+        cls.grp_portal_xml_id = 'base.group_portal'
+        cls.grp_portal = cls.env.ref(cls.grp_portal_xml_id)
+        cls.grp_public_xml_id = 'base.group_public'
+        cls.grp_public = cls.env.ref(cls.grp_public_xml_id)
 
     def test_env_uid(self):
         Users = self.env['res.users'].with_user(self.test_user)

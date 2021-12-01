@@ -4,35 +4,36 @@ from odoo.tests import common, HttpCase, tagged
 
 @tagged('-at_install', 'post_install')
 class TestPage(common.TransactionCase):
-    def setUp(self):
-        super(TestPage, self).setUp()
-        View = self.env['ir.ui.view']
-        Page = self.env['website.page']
-        Menu = self.env['website.menu']
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        View = cls.env['ir.ui.view']
+        Page = cls.env['website.page']
+        Menu = cls.env['website.menu']
 
-        self.base_view = View.create({
+        cls.base_view = View.create({
             'name': 'Base',
             'type': 'qweb',
             'arch': '<div>content</div>',
             'key': 'test.base_view',
         })
 
-        self.extension_view = View.create({
+        cls.extension_view = View.create({
             'name': 'Extension',
             'mode': 'extension',
-            'inherit_id': self.base_view.id,
+            'inherit_id': cls.base_view.id,
             'arch': '<div position="inside">, extended content</div>',
             'key': 'test.extension_view',
         })
 
-        self.page_1 = Page.create({
-            'view_id': self.base_view.id,
+        cls.page_1 = Page.create({
+            'view_id': cls.base_view.id,
             'url': '/page_1',
         })
 
-        self.page_1_menu = Menu.create({
+        cls.page_1_menu = Menu.create({
             'name': 'Page 1 menu',
-            'page_id': self.page_1.id,
+            'page_id': cls.page_1.id,
             'website_id': 1,
         })
 

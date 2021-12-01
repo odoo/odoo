@@ -14,13 +14,14 @@ class TestBaseDocumentLayoutHelpers(TransactionCase):
     #
     #   Public
     #
-    def setUp(self):
-        super(TestBaseDocumentLayoutHelpers, self).setUp()
-        self.color_fields = ['primary_color', 'secondary_color']
-        self.company = self.env.company
-        self.css_color_error = 0
-        self._set_templates_and_layouts()
-        self._set_images()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.color_fields = ['primary_color', 'secondary_color']
+        cls.company = cls.env.company
+        cls.css_color_error = 0
+        cls._set_templates_and_layouts()
+        cls._set_images()
 
     def assertColors(self, checked_obj, expected):
         _expected_getter = expected.get if isinstance(expected, dict) else partial(getattr, expected)
@@ -45,16 +46,18 @@ class TestBaseDocumentLayoutHelpers(TransactionCase):
         for i in range(len(color1)):
             self.assertAlmostEqual(color1[i], color2[i], delta=self.css_color_error)
 
-    def _get_images_for_test(self):
+    @classmethod
+    def _get_images_for_test(cls):
         return ['sweden.png', 'odoo.png']
 
-    def _set_images(self):
-        for fname in self._get_images_for_test():
+    @classmethod
+    def _set_images(cls):
+        for fname in cls._get_images_for_test():
             fname_split = fname.split('.')
             if not fname_split[0] in _file_cache:
                 with Image.open(os.path.join(dir_path, fname), 'r') as img:
                     base64_img = image_to_base64(img, 'PNG')
-                    primary, secondary = self.env['base.document.layout'].extract_image_primary_secondary_colors(base64_img)
+                    primary, secondary = cls.env['base.document.layout'].extract_image_primary_secondary_colors(base64_img)
                     _img = frozendict({
                         'img': base64_img,
                         'colors': {
@@ -63,44 +66,45 @@ class TestBaseDocumentLayoutHelpers(TransactionCase):
                         },
                     })
                     _file_cache[fname_split[0]] = _img
-        self.company_imgs = frozendict(_file_cache)
+        cls.company_imgs = frozendict(_file_cache)
 
-    def _set_templates_and_layouts(self):
-        self.layout_template1 = self.env['ir.ui.view'].create({
+    @classmethod
+    def _set_templates_and_layouts(cls):
+        cls.layout_template1 = cls.env['ir.ui.view'].create({
             'name': 'layout_template1',
             'key': 'web.layout_template1',
             'type': 'qweb',
             'arch': '''<div></div>''',
         })
-        self.env['ir.model.data'].create({
-            'name': self.layout_template1.name,
+        cls.env['ir.model.data'].create({
+            'name': cls.layout_template1.name,
             'model': 'ir.ui.view',
             'module': 'web',
-            'res_id': self.layout_template1.id,
+            'res_id': cls.layout_template1.id,
         })
-        self.default_colors = {
+        cls.default_colors = {
             'primary_color': '#000000',
             'secondary_color': '#000000',
         }
-        self.report_layout1 = self.env['report.layout'].create({
-            'view_id': self.layout_template1.id,
-            'name': 'report_%s' % self.layout_template1.name,
+        cls.report_layout1 = cls.env['report.layout'].create({
+            'view_id': cls.layout_template1.id,
+            'name': 'report_%s' % cls.layout_template1.name,
         })
-        self.layout_template2 = self.env['ir.ui.view'].create({
+        cls.layout_template2 = cls.env['ir.ui.view'].create({
             'name': 'layout_template2',
             'key': 'web.layout_template2',
             'type': 'qweb',
             'arch': '''<div></div>''',
         })
-        self.env['ir.model.data'].create({
-            'name': self.layout_template2.name,
+        cls.env['ir.model.data'].create({
+            'name': cls.layout_template2.name,
             'model': 'ir.ui.view',
             'module': 'web',
-            'res_id': self.layout_template2.id,
+            'res_id': cls.layout_template2.id,
         })
-        self.report_layout2 = self.env['report.layout'].create({
-            'view_id': self.layout_template2.id,
-            'name': 'report_%s' % self.layout_template2.name,
+        cls.report_layout2 = cls.env['report.layout'].create({
+            'view_id': cls.layout_template2.id,
+            'name': 'report_%s' % cls.layout_template2.name,
         })
 
 

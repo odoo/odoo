@@ -6,30 +6,31 @@ from odoo.tests.common import TransactionCase
 
 class TestPricelist(TransactionCase):
 
-    def setUp(self):
-        super(TestPricelist, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
-        self.datacard = self.env['product.product'].create({'name': 'Office Lamp'})
-        self.usb_adapter = self.env['product.product'].create({'name': 'Office Chair'})
-        self.uom_ton = self.env.ref('uom.product_uom_ton')
-        self.uom_unit_id = self.ref('uom.product_uom_unit')
-        self.uom_dozen_id = self.ref('uom.product_uom_dozen')
-        self.uom_kgm_id = self.ref('uom.product_uom_kgm')
+        cls.datacard = cls.env['product.product'].create({'name': 'Office Lamp'})
+        cls.usb_adapter = cls.env['product.product'].create({'name': 'Office Chair'})
+        cls.uom_ton = cls.env.ref('uom.product_uom_ton')
+        cls.uom_unit_id = cls.env.ref('uom.product_uom_unit').id
+        cls.uom_dozen_id = cls.env.ref('uom.product_uom_dozen').id
+        cls.uom_kgm_id = cls.env.ref('uom.product_uom_kgm').id
 
-        self.public_pricelist = self.env.ref('product.list0')
-        self.sale_pricelist_id = self.env['product.pricelist'].create({
+        cls.public_pricelist = cls.env.ref('product.list0')
+        cls.sale_pricelist_id = cls.env['product.pricelist'].create({
             'name': 'Sale pricelist',
             'item_ids': [(0, 0, {
                     'compute_price': 'formula',
                     'base': 'list_price',  # based on public price
                     'price_discount': 10,
-                    'product_id': self.usb_adapter.id,
+                    'product_id': cls.usb_adapter.id,
                     'applied_on': '0_product_variant',
                 }), (0, 0, {
                     'compute_price': 'formula',
                     'base': 'list_price',  # based on public price
                     'price_surcharge': -0.5,
-                    'product_id': self.datacard.id,
+                    'product_id': cls.datacard.id,
                     'applied_on': '0_product_variant',
                 })]
         })

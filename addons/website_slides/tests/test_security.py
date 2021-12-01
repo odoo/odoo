@@ -155,17 +155,18 @@ class TestAccess(common.SlidesCase):
 @tagged('functional', 'security')
 class TestRemoveMembership(common.SlidesCase):
 
-    def setUp(self):
-        super(TestRemoveMembership, self).setUp()
-        self.channel_partner = self.env['slide.channel.partner'].create({
-            'channel_id': self.channel.id,
-            'partner_id': self.customer.id,
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.channel_partner = cls.env['slide.channel.partner'].create({
+            'channel_id': cls.channel.id,
+            'partner_id': cls.customer.id,
         })
 
-        self.slide_partner = self.env['slide.slide.partner'].create({
-            'slide_id': self.slide.id,
-            'channel_id': self.channel.id,
-            'partner_id': self.customer.id
+        cls.slide_partner = cls.env['slide.slide.partner'].create({
+            'slide_id': cls.slide.id,
+            'channel_id': cls.channel.id,
+            'partner_id': cls.customer.id
         })
 
     def test_security_unlink(self):

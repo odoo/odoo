@@ -86,13 +86,14 @@ class TestCommonTimesheet(TransactionCase):
 
 class TestTimesheet(TestCommonTimesheet):
 
-    def setUp(self):
-        super(TestTimesheet, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
         # Crappy hack to disable the rule from timesheet grid, if it exists
         # The registry doesn't contain the field timesheet_manager_id.
         # but there is an ir.rule about it, crashing during its evaluation
-        rule = self.env.ref('timesheet_grid.timesheet_line_rule_user_update-unlink', raise_if_not_found=False)
+        rule = cls.env.ref('timesheet_grid.timesheet_line_rule_user_update-unlink', raise_if_not_found=False)
         if rule:
             rule.active = False
 

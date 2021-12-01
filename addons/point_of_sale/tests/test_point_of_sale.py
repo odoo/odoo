@@ -5,29 +5,30 @@ from odoo.tests.common import TransactionCase
 
 
 class TestPointOfSale(TransactionCase):
-    def setUp(self):
-        super(TestPointOfSale, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
         # ignore pre-existing pricelists for the purpose of this test
-        self.env["product.pricelist"].search([]).write({"active": False})
+        cls.env["product.pricelist"].search([]).write({"active": False})
 
-        self.currency = self.env.ref("base.USD")
-        self.company1 = self.env["res.company"].create({
+        cls.currency = cls.env.ref("base.USD")
+        cls.company1 = cls.env["res.company"].create({
             "name": "company 1",
-            "currency_id": self.currency.id
+            "currency_id": cls.currency.id
         })
-        self.company2 = self.env["res.company"].create({
+        cls.company2 = cls.env["res.company"].create({
             "name": "company 2",
-            "currency_id": self.currency.id
+            "currency_id": cls.currency.id
         })
-        self.company2_pricelist = self.env["product.pricelist"].create({
+        cls.company2_pricelist = cls.env["product.pricelist"].create({
             "name": "company 2 pricelist",
-            "currency_id": self.currency.id,
-            "company_id": self.company2.id,
+            "currency_id": cls.currency.id,
+            "company_id": cls.company2.id,
             "sequence": 1,  # force this pricelist to be first
         })
 
-        self.env.user.company_id = self.company1
+        cls.env.user.company_id = cls.company1
 
     def test_default_pricelist_with_company(self):
         """ Verify that the default pricelist belongs to the same company as the config """

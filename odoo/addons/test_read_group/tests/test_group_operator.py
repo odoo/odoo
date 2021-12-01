@@ -199,17 +199,18 @@ class TestGroupBooleans(common.TransactionCase):
 
 
 class TestAggregate(common.TransactionCase):
-    def setUp(self):
-        super(TestAggregate, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
-        self.foo = self.env['res.partner'].create({'name': 'Foo'})
-        self.bar = self.env['res.partner'].create({'name': 'Bar'})
+        cls.foo = cls.env['res.partner'].create({'name': 'Foo'})
+        cls.bar = cls.env['res.partner'].create({'name': 'Bar'})
 
-        self.Model = self.env['test_read_group.aggregate']
-        self.Model.create({'key': 1, 'value': 1, 'partner_id': False})
-        self.Model.create({'key': 1, 'value': 2, 'partner_id': self.foo.id})
-        self.Model.create({'key': 1, 'value': 3, 'partner_id': self.foo.id})
-        self.Model.create({'key': 1, 'value': 4, 'partner_id': self.bar.id})
+        cls.Model = cls.env['test_read_group.aggregate']
+        cls.Model.create({'key': 1, 'value': 1, 'partner_id': False})
+        cls.Model.create({'key': 1, 'value': 2, 'partner_id': cls.foo.id})
+        cls.Model.create({'key': 1, 'value': 3, 'partner_id': cls.foo.id})
+        cls.Model.create({'key': 1, 'value': 4, 'partner_id': cls.bar.id})
 
     def test_agg_default(self):
         """ test default aggregation on fields """

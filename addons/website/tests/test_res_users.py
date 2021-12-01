@@ -11,13 +11,14 @@ from odoo.tools import mute_logger
 
 class TestWebsiteResUsers(TransactionCase):
 
-    def setUp(self):
-        super().setUp()
-        websites = self.env['website'].create([
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        websites = cls.env['website'].create([
             {'name': 'Test Website'},
             {'name': 'Test Website 2'},
         ])
-        self.website_1, self.website_2 = websites
+        cls.website_1, cls.website_2 = websites
 
     def test_no_website(self):
         new_test_user(self.env, login='Pou', website_id=False)

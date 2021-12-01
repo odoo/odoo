@@ -6,25 +6,26 @@ from odoo.tests import TransactionCase, tagged
 
 @tagged('post_install', '-at_install')
 class TestDisableSnippetsAssets(TransactionCase):
-    def setUp(self):
-        super().setUp()
-        self.View = self.env['ir.ui.view']
-        self.WebsiteMenu = self.env['website.menu']
-        self.Website = self.env['website']
-        self.IrAsset = self.env['ir.asset']
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.View = cls.env['ir.ui.view']
+        cls.WebsiteMenu = cls.env['website.menu']
+        cls.Website = cls.env['website']
+        cls.IrAsset = cls.env['ir.asset']
 
-        self.homepage = self.View.create({
+        cls.homepage = cls.View.create({
             'name': 'Home',
             'type': 'qweb',
             'arch_db': HOMEPAGE_WITH_OUTDATED_S_WEBSITE_FORM,
             'key': 'website.homepage',
         })
-        self.mega_menu = self.WebsiteMenu.create({
+        cls.mega_menu = cls.WebsiteMenu.create({
             'name': 'Image Gallery V001',
             'mega_menu_content': MEGA_MENU_CONTENT_IMAGE_GALLERY_V001,
         })
 
-        self.initial_active_snippets_assets = self._get_active_snippets_assets()
+        cls.initial_active_snippets_assets = cls._get_active_snippets_assets()
 
     def test_homepage_with_outdated_s_website_form(self):
         self.Website._disable_unused_snippets_assets()
@@ -66,8 +67,9 @@ class TestDisableSnippetsAssets(TransactionCase):
     def _get_snippet_asset(self, snippet_id, asset_version, asset_type):
         return self.IrAsset.search([('path', '=', 'website/static/src/snippets/' + snippet_id + '/' + asset_version + '.' + asset_type)], limit=1)
 
-    def _get_active_snippets_assets(self):
-        return self.IrAsset.search([('path', 'like', 'snippets'), ('active', '=', True)]).mapped('path')
+    @classmethod
+    def _get_active_snippets_assets(cls):
+        return cls.IrAsset.search([('path', 'like', 'snippets'), ('active', '=', True)]).mapped('path')
 
 HOMEPAGE_WITH_S_WEBSITE_FORM_V001 = """
 <t name="Homepage" t-name="website.homepage1">

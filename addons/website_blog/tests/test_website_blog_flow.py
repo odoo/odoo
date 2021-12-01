@@ -9,10 +9,11 @@ from odoo.addons.portal.controllers.mail import PortalChatter
 
 
 class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
-    def setUp(self):
-        super(TestWebsiteBlogFlow, self).setUp()
-        group_portal = self.env.ref('base.group_portal')
-        self.user_portal = self.env['res.users'].with_context({'no_reset_password': True}).create({
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        group_portal = cls.env.ref('base.group_portal')
+        cls.user_portal = cls.env['res.users'].with_context({'no_reset_password': True}).create({
             'name': 'Dorian Portal',
             'login': 'portal_user',
             'email': 'portal_user@example.com',

@@ -5,16 +5,17 @@ from odoo.tests import common, TransactionCase
 
 
 class Feedback(TransactionCase):
-    def setUp(self):
-        super().setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
-        self.group0 = self.env['res.groups'].create({'name': "Group 0"})
-        self.group1 = self.env['res.groups'].create({'name': "Group 1"})
-        self.group2 = self.env['res.groups'].create({'name': "Group 2"})
-        self.user = self.env['res.users'].create({
+        cls.group0 = cls.env['res.groups'].create({'name': "Group 0"})
+        cls.group1 = cls.env['res.groups'].create({'name': "Group 1"})
+        cls.group2 = cls.env['res.groups'].create({'name': "Group 2"})
+        cls.user = cls.env['res.users'].create({
             'login': 'bob',
             'name': "Bob Bobman",
-            'groups_id': [Command.set(self.group2.ids)],
+            'groups_id': [Command.set(cls.group2.ids)],
         })
 
 
@@ -87,25 +88,26 @@ class TestSudo(Feedback):
 class TestACLFeedback(Feedback):
     """ Tests that proper feedback is returned on ir.model.access errors
     """
-    def setUp(self):
-        super().setUp()
-        ACL = self.env['ir.model.access']
-        m = self.env['ir.model'].search([('model', '=', 'test_access_right.some_obj')])
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        ACL = cls.env['ir.model.access']
+        m = cls.env['ir.model'].search([('model', '=', 'test_access_right.some_obj')])
         ACL.search([('model_id', '=', m.id)]).unlink()
         ACL.create({
             'name': "read",
             'model_id': m.id,
-            'group_id': self.group1.id,
+            'group_id': cls.group1.id,
             'perm_read': True,
         })
         ACL.create({
             'name':  "create-and-read",
             'model_id': m.id,
-            'group_id': self.group0.id,
+            'group_id': cls.group0.id,
             'perm_read': True,
             'perm_create': True,
         })
-        self.record = self.env['test_access_right.some_obj'].create({'val': 5})
+        cls.record = cls.env['test_access_right.some_obj'].create({'val': 5})
         # values are in cache, clear them up for the test
         ACL.flush()
         ACL.invalidate_cache()
@@ -156,12 +158,13 @@ Contact your administrator to request access if necessary."""
 class TestIRRuleFeedback(Feedback):
     """ Tests that proper feedback is returned on ir.rule errors
     """
-    def setUp(self):
-        super().setUp()
-        self.model = self.env['ir.model'].search([('model', '=', 'test_access_right.some_obj')])
-        self.record = self.env['test_access_right.some_obj'].create({
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.model = cls.env['ir.model'].search([('model', '=', 'test_access_right.some_obj')])
+        cls.record = cls.env['test_access_right.some_obj'].create({
             'val': 0,
-        }).with_user(self.user)
+        }).with_user(cls.user)
 
     def _make_rule(self, name, domain, global_=False, attr='write'):
         res = self.env['ir.rule'].create({
@@ -365,11 +368,12 @@ Contact your administrator to request access if necessary.""" % (self.record.dis
 
 class TestFieldGroupFeedback(Feedback):
 
-    def setUp(self):
-        super().setUp()
-        self.record = self.env['test_access_right.some_obj'].create({
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.record = cls.env['test_access_right.some_obj'].create({
             'val': 0,
-        }).with_user(self.user)
+        }).with_user(cls.user)
 
 
     def test_read(self):

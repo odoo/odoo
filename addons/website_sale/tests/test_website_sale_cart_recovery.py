@@ -22,44 +22,45 @@ class TestWebsiteSaleCartRecovery(HttpCaseWithUserPortal):
 @tagged('post_install', '-at_install')
 class TestWebsiteSaleCartRecoveryServer(TransactionCase):
 
-    def setUp(self):
-        res = super(TestWebsiteSaleCartRecoveryServer, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        res = super().setUpClass()
 
-        self.customer = self.env['res.partner'].create({
+        cls.customer = cls.env['res.partner'].create({
             'name': 'a',
             'email': 'a@example.com',
         })
-        self.recovery_template_default = self.env.ref('website_sale.mail_template_sale_cart_recovery')
-        self.recovery_template_custom1 = self.recovery_template_default.copy()
-        self.recovery_template_custom2 = self.recovery_template_default.copy()
+        cls.recovery_template_default = cls.env.ref('website_sale.mail_template_sale_cart_recovery')
+        cls.recovery_template_custom1 = cls.recovery_template_default.copy()
+        cls.recovery_template_custom2 = cls.recovery_template_default.copy()
 
-        self.website0 = self.env['website'].create({
+        cls.website0 = cls.env['website'].create({
             'name': 'web0',
-            'cart_recovery_mail_template_id': self.recovery_template_default.id,
+            'cart_recovery_mail_template_id': cls.recovery_template_default.id,
         })
-        self.website1 = self.env['website'].create({
+        cls.website1 = cls.env['website'].create({
             'name': 'web1',
-            'cart_recovery_mail_template_id': self.recovery_template_custom1.id,
+            'cart_recovery_mail_template_id': cls.recovery_template_custom1.id,
         })
-        self.website2 = self.env['website'].create({
+        cls.website2 = cls.env['website'].create({
             'name': 'web2',
-            'cart_recovery_mail_template_id': self.recovery_template_custom2.id,
+            'cart_recovery_mail_template_id': cls.recovery_template_custom2.id,
         })
-        self.so0 = self.env['sale.order'].create({
-            'partner_id': self.customer.id,
-            'website_id': self.website0.id,
+        cls.so0 = cls.env['sale.order'].create({
+            'partner_id': cls.customer.id,
+            'website_id': cls.website0.id,
             'is_abandoned_cart': True,
             'cart_recovery_email_sent': False,
         })
-        self.so1 = self.env['sale.order'].create({
-            'partner_id': self.customer.id,
-            'website_id': self.website1.id,
+        cls.so1 = cls.env['sale.order'].create({
+            'partner_id': cls.customer.id,
+            'website_id': cls.website1.id,
             'is_abandoned_cart': True,
             'cart_recovery_email_sent': False,
         })
-        self.so2 = self.env['sale.order'].create({
-            'partner_id': self.customer.id,
-            'website_id': self.website2.id,
+        cls.so2 = cls.env['sale.order'].create({
+            'partner_id': cls.customer.id,
+            'website_id': cls.website2.id,
             'is_abandoned_cart': True,
             'cart_recovery_email_sent': False,
         })

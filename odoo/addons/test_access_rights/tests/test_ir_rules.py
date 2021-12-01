@@ -8,26 +8,27 @@ from odoo import Command
 
 
 class TestRules(TransactionCase):
-    def setUp(self):
-        super(TestRules, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
-        ObjCateg = self.env['test_access_right.obj_categ']
-        SomeObj = self.env['test_access_right.some_obj']
-        self.categ1 = ObjCateg.create({'name': 'Food'}).id
-        self.id1 = SomeObj.create({'val': 1, 'categ_id': self.categ1}).id
-        self.id2 = SomeObj.create({'val': -1, 'categ_id': self.categ1}).id
+        ObjCateg = cls.env['test_access_right.obj_categ']
+        SomeObj = cls.env['test_access_right.some_obj']
+        cls.categ1 = ObjCateg.create({'name': 'Food'}).id
+        cls.id1 = SomeObj.create({'val': 1, 'categ_id': cls.categ1}).id
+        cls.id2 = SomeObj.create({'val': -1, 'categ_id': cls.categ1}).id
         # create a global rule forbidding access to records with a negative
         # (or zero) val
-        self.env['ir.rule'].create({
+        cls.env['ir.rule'].create({
             'name': 'Forbid negatives',
-            'model_id': self.browse_ref('test_access_rights.model_test_access_right_some_obj').id,
+            'model_id': cls.env.ref('test_access_rights.model_test_access_right_some_obj').id,
             'domain_force': "[('val', '>', 0)]"
         })
         # create a global rule that forbid access to records without
         # categories, the search is part of the test
-        self.env['ir.rule'].create({
+        cls.env['ir.rule'].create({
             'name': 'See all categories',
-            'model_id': self.browse_ref('test_access_rights.model_test_access_right_some_obj').id,
+            'model_id': cls.env.ref('test_access_rights.model_test_access_right_some_obj').id,
             'domain_force': "[('categ_id', 'in', user.env['test_access_right.obj_categ'].search([]).ids)]"
         })
 

@@ -11,14 +11,15 @@ def just_raise(*args):
 
 class TestResConfig(TransactionCase):
 
-    def setUp(self):
-        super(TestResConfig, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
-        self.user = self.env.ref('base.user_admin')
-        self.company = self.env['res.company'].create({'name': 'oobO'})
-        self.user.write({'company_ids': [(4, self.company.id)], 'company_id': self.company.id})
-        Settings = self.env['res.config.settings'].with_user(self.user.id)
-        self.config = Settings.create({})
+        cls.user = cls.env.ref('base.user_admin')
+        cls.company = cls.env['res.company'].create({'name': 'oobO'})
+        cls.user.write({'company_ids': [(4, cls.company.id)], 'company_id': cls.company.id})
+        Settings = cls.env['res.config.settings'].with_user(cls.user.id)
+        cls.config = Settings.create({})
 
     def test_multi_company_res_config_group(self):
         # Enable/Disable a group in a multi-company environment

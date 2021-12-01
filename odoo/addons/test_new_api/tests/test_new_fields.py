@@ -2739,8 +2739,9 @@ class TestMagicFields(common.TransactionCase):
 
 class TestParentStore(common.TransactionCase):
 
-    def setUp(self):
-        super(TestParentStore, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
         # make a tree of categories:
         #   0
         #  /|\
@@ -2749,7 +2750,7 @@ class TestParentStore(common.TransactionCase):
         #   4 5 6
         #      /|\
         #     7 8 9
-        Cat = self.env['test_new_api.category']
+        Cat = cls.env['test_new_api.category']
         cat0 = Cat.create({'name': '0'})
         cat1 = Cat.create({'name': '1', 'parent': cat0.id})
         cat2 = Cat.create({'name': '2', 'parent': cat0.id})
@@ -2760,7 +2761,7 @@ class TestParentStore(common.TransactionCase):
         cat7 = Cat.create({'name': '7', 'parent': cat6.id})
         cat8 = Cat.create({'name': '8', 'parent': cat6.id})
         cat9 = Cat.create({'name': '9', 'parent': cat6.id})
-        self._cats = Cat.concat(cat0, cat1, cat2, cat3, cat4,
+        cls._cats = Cat.concat(cat0, cat1, cat2, cat3, cat4,
                                 cat5, cat6, cat7, cat8, cat9)
 
     def cats(self, *indexes):
