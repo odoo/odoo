@@ -93,6 +93,7 @@
         ],
         'web.qunit_suite_tests': [
             'project/static/tests/burndown_chart_tests.js',
+            'project/static/tests/project_form_tests.js',
         ],
         'web.assets_tests': [
             'project/static/tests/tours/**/*',
