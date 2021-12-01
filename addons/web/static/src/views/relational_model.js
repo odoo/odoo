@@ -422,6 +422,7 @@ export class DynamicRecordList extends DynamicList {
                     fields: this.fields,
                     activeFields: this.activeFields,
                 });
+                record.evaluateActiveFields();
                 await record.loadRelationalData();
                 await record.loadPreloadedData();
                 return record;
