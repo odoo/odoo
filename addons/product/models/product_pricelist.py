@@ -95,7 +95,17 @@ class Pricelist(models.Model):
         # Load all rules
         self.env['product.pricelist.item'].flush(['price', 'currency_id', 'company_id', 'active'])
         self.env.cr.execute(
-            """
+            self._query_price_rule_get_items(),
+            (prod_tmpl_ids, prod_ids, categ_ids, self.id, date, date))
+
+        item_ids = [x[0] for x in self.env.cr.fetchall()]
+        return self.env['product.pricelist.item'].browse(item_ids)
+
+    def _query_price_rule_get_items(self):
+        """Query used to retrieve pricelist items"""
+        # NOTE: if you change `order by` on the following query, make sure it matches
+        # _order from model to avoid inconsistencies and undeterministic issues.
+        return """
             SELECT
                 item.id
             FROM
@@ -111,13 +121,7 @@ class Pricelist(models.Model):
                 AND (item.active = TRUE)
             ORDER BY
                 item.applied_on, item.min_quantity desc, categ.complete_name desc, item.id desc
-            """,
-            (prod_tmpl_ids, prod_ids, categ_ids, self.id, date, date))
-        # NOTE: if you change `order by` on that query, make sure it matches
-        # _order from model to avoid inconstencies and undeterministic issues.
-
-        item_ids = [x[0] for x in self.env.cr.fetchall()]
-        return self.env['product.pricelist.item'].browse(item_ids)
+        """
 
     def _compute_price_rule(self, products_qty_partner, date=False, uom_id=False):
         """ Low-level method - Mono pricelist, multi products
@@ -371,8 +375,8 @@ class PricelistItem(models.Model):
     _order = "applied_on, min_quantity desc, categ_id desc, id desc"
     _check_company_auto = True
     # NOTE: if you change _order on this model, make sure it matches the SQL
-    # query built in _compute_price_rule() above in this file to avoid
-    # inconstencies and undeterministic issues.
+    # query built in _query_price_rule_get_items() above in this file to avoid
+    # inconsistencies and undeterministic issues.
 
     def _default_pricelist_id(self):
         return self.env['product.pricelist'].search([
