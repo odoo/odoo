@@ -161,3 +161,64 @@ class TestSaleOrder(TestSaleCommon):
                 else:  # no discount for the rest
                     self.assertEqual(line.discount, 0.0, 'Pricelist of SO should not be applied on an order line')
                     self.assertEqual(line.price_unit, line.product_id.list_price, 'Unit price of order line should be a sale price as the pricelist not applied on the other category\'s product')
+
+    def test_sale_change_of_pricelists_excluded_value_discount(self):
+        """ Test SO with the pricelist 'discount displayed' and check displayed percentage value after multiple changes of pricelist """
+
+        # Create a pricelist without discount policy: percentage on all products
+        pricelist_discount_excl_global = self.env['product.pricelist'].create({
+            'name': 'Pricelist C',
+            'discount_policy': 'without_discount',
+            'company_id': self.env.company.id,
+            'item_ids': [(0, 0, {
+                'applied_on': '3_global',
+                'compute_price': 'percentage',
+                'percent_price': 54,
+            })],
+        })
+
+        # Create a product with a very low price
+        amazing_product = self.env['product.product'].create({
+            'name': 'Amazing Product',
+            'lst_price': 0.03,
+        })
+
+        # create a simple Sale Order with a unique line
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+            'pricelist_id': self.company_data['default_pricelist'].id,
+            'order_line': [(0, 0, {
+                'name': amazing_product.name,
+                'product_id': amazing_product.id,
+                'product_uom_qty': 1,
+                'product_uom': amazing_product.uom_id.id,
+                'price_unit': 0.03,
+                'tax_id': False,
+            })],
+        })
+
+        # Change the pricelist
+        sale_order.write({'pricelist_id': pricelist_discount_excl_global.id})
+        # Update Prices
+        sale_order.update_prices()
+
+        # Check that the discount displayed is the correct one
+        self.assertEqual(
+            sale_order.order_line.discount, 54,
+            "Wrong discount computed for specified product & pricelist"
+        )
+        # Additional to check for overall consistency
+        self.assertEqual(
+            sale_order.order_line.price_unit, 0.03,
+            "Wrong unit price computed for specified product & pricelist"
+        )
+        self.assertEqual(
+            sale_order.order_line.price_subtotal, 0.01,
+            "Wrong subtotal price computed for specified product & pricelist"
+        )
+        self.assertFalse(
+            sale_order.order_line.tax_id,
+            "Wrong tax applied for specified product & pricelist"
+        )
