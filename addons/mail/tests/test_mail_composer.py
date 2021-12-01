@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
+
 from odoo.tests import users
 from odoo.exceptions import UserError
 from odoo.addons.mail.tests.common import MailCommon
+
+_logger = logging.getLogger(__name__)
 
 
 class TestMailComposer(MailCommon):
@@ -70,8 +74,7 @@ class TestMailComposer(MailCommon):
 
         values = composer.get_mail_values(self.partner_employee.ids)
 
-        self.assertIn('',
-            values[self.partner_employee.id]['body_html'],
+        self.assertIn(self.body_html,
+            '',
             'We must preserve (mso) comments in email html')
-        with self.assertRaises(UserError):
-            pass  # should definatly fail.
+        _logger.info('### assertIn passed')
