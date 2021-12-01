@@ -17,7 +17,6 @@ const MassMailingFullWidthFormController = FormController.extend({
      */
     init() {
         this._super(...arguments);
-        this._boundOnDomUpdated = this._onDomUpdated.bind(this);
         bus.on('DOM_updated', this, this._onDomUpdated);
         this._resizeObserver =  new ResizeObserver(entries => {
             // We wrap this in requestAnimationFrame to greatly mitigate
@@ -34,7 +33,7 @@ const MassMailingFullWidthFormController = FormController.extend({
      * @override
      */
     destroy() {
-        bus.off('DOM_updated', this, this._boundOnDomUpdated);
+        bus.off('DOM_updated', this, this._onDomUpdated);
         this._super(...arguments);
     },
 

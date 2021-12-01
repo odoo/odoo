@@ -8,18 +8,21 @@ import { device } from 'web.config';
 import viewRegistry from 'web.view_registry';
 
 const ProjectFormController = FormController.extend({
-    init() {
-        this._super(...arguments);
+    on_attach_callback() {
         if (!device.isMobile) {
-            bus.on("DOM_updated", this, () => {
-                const $editable = this.$el.find('.note-editable');
-                if ($editable.length) {
-                    const resizerHeight = this.$el.find('.o_wysiwyg_resizer').outerHeight();
-                    const newHeight = window.innerHeight - $editable.offset().top - resizerHeight - 1;
-                    $editable.outerHeight(newHeight);
-                }
-            });
+            bus.on("DOM_updated", this, this._onDomUpdated);
         }
+    },
+    _onDomUpdated() {
+        const $editable = this.$el.find('.note-editable');
+        if ($editable.length) {
+            const resizerHeight = this.$el.find('.o_wysiwyg_resizer').outerHeight();
+            const newHeight = window.innerHeight - $editable.offset().top - resizerHeight - 1;
+            $editable.outerHeight(newHeight);
+        }
+    },
+    on_detach_callback() {
+        bus.off('DOM_updated', this._onDomUpdated);
     },
     _getActionMenuItems(state) {
         if (!this.archiveEnabled || !state.data['recurrence_id']) {
