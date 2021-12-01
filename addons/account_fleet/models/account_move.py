@@ -39,7 +39,7 @@ class AccountMove(models.Model):
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
-    vehicle_id = fields.Many2one('fleet.vehicle', string='Vehicle')
+    vehicle_id = fields.Many2one('fleet.vehicle', string='Vehicle', index=True)
     need_vehicle = fields.Boolean(compute='_compute_need_vehicle',
         help="Technical field to decide whether the vehicle_id field is editable")
 
