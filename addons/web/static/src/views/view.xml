@@ -16,8 +16,8 @@
                 <div t-if="!measure_first and measure == '__count'" role="separator" class="dropdown-divider"/>
                 <DropdownItem class="o_menu_item dropdown-item"
                     t-att-class="{ selected: activeMeasures.includes(measure) }"
-                    payload="{ measure: measure_value.name }"
                     parentClosingMode="'none'"
+                    onSelected="() => this.onMeasureSelected({ measure: measure_value.name })"
                     >
                     <t t-esc="measures[measure].string"/>
                 </DropdownItem>

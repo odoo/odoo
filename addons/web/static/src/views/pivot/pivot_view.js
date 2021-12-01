@@ -108,10 +108,11 @@ export class PivotView extends Component {
     /**
      * Toggles the given measure
      *
-     * @param {CustomEvent} ev
+     * @param {Object} param0
+     * @param {string} param0.measure
      */
-    onMeasureSelected(ev) {
-        this.model.toggleMeasure(ev.detail.payload.measure);
+    onMeasureSelected({ measure }) {
+        this.model.toggleMeasure(measure);
     }
     /**
      * @param {CustomEvent} ev

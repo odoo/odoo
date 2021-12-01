@@ -192,13 +192,13 @@ QUnit.module("Components", ({ beforeEach }) => {
 
     QUnit.test("payload received on item selection", async (assert) => {
         class Parent extends owl.Component {
-            onItemSelected(ev) {
-                assert.deepEqual(ev.detail.payload, { answer: 42 });
+            onItemSelected(value) {
+                assert.equal(value, 42);
             }
         }
         Parent.template = owl.tags.xml`
-        <Dropdown t-on-dropdown-item-selected="onItemSelected">
-            <DropdownItem payload="{ answer: 42 }"/>
+        <Dropdown>
+            <DropdownItem onSelected="() => onItemSelected(42)"/>
         </Dropdown>
       `;
         env = await makeTestEnv();
@@ -321,29 +321,6 @@ QUnit.module("Components", ({ beforeEach }) => {
         // Select item (default should be parentClosingMode=all)
         await click(parent.el, ".item4");
         assert.containsNone(parent.el, ".dropdown-menu");
-    });
-
-    QUnit.test("multi-level dropdown: payload bubbles on item selection", async (assert) => {
-        assert.expect(2);
-        class Parent extends owl.Component {
-            onItemSelected(ev) {
-                assert.deepEqual(ev.detail.payload, { answer: 42 });
-            }
-        }
-        Parent.template = owl.tags.xml`
-        <Dropdown t-on-dropdown-item-selected="onItemSelected">
-            <Dropdown t-on-dropdown-item-selected="onItemSelected">
-                <DropdownItem payload="{ answer: 42 }" />
-            </Dropdown>
-        </Dropdown>
-      `;
-        env = await makeTestEnv();
-        parent = await mount(Parent, { env, target });
-        await click(parent.el, "button.dropdown-toggle:last-child");
-        await mouseEnter(parent.el, "button.dropdown-toggle:last-child");
-        // As two listeners are defined in the template,
-        // clicking once the item would execute the handler twice.
-        await click(parent.el, ".dropdown-menu > .dropdown-item");
     });
 
     QUnit.test("multi-level dropdown: recursive template can be rendered", async (assert) => {
@@ -572,16 +549,15 @@ QUnit.module("Components", ({ beforeEach }) => {
     QUnit.test("dropdowns keynav", async (assert) => {
         assert.expect(26);
         class Parent extends owl.Component {
-            onItemSelected(ev) {
-                const { payload } = ev.detail;
-                assert.step(payload.val.toString());
+            onItemSelected(value) {
+                assert.step(value.toString());
             }
         }
         Parent.template = owl.tags.xml`
-        <Dropdown hotkey="'m'" t-on-dropdown-item-selected="onItemSelected">
-            <DropdownItem class="item1" payload="{val:1}">item1</DropdownItem>
-            <DropdownItem class="item2" hotkey="'2'" payload="{val:2}">item2</DropdownItem>
-            <DropdownItem class="item3" payload="{val:3}">item3</DropdownItem>
+        <Dropdown hotkey="'m'">
+            <DropdownItem class="item1" onSelected="() => onItemSelected(1)">item1</DropdownItem>
+            <DropdownItem class="item2" hotkey="'2'" onSelected="() => onItemSelected(2)">item2</DropdownItem>
+            <DropdownItem class="item3" onSelected="() => onItemSelected(3)">item3</DropdownItem>
         </Dropdown>
       `;
         env = await makeTestEnv();
@@ -689,23 +665,22 @@ QUnit.module("Components", ({ beforeEach }) => {
     QUnit.test("multi-level dropdown: keynav", async (assert) => {
         assert.expect(125);
         class Parent extends owl.Component {
-            onItemSelected(ev) {
-                const { payload } = ev.detail;
-                assert.step(payload.val);
+            onItemSelected(value) {
+                assert.step(value);
             }
         }
         Parent.template = owl.tags.xml`
-            <Dropdown class="first" hotkey="'1'" t-on-dropdown-item-selected="onItemSelected">
-                <DropdownItem class="first-first" payload="{val:'first-first'}">O</DropdownItem>
+            <Dropdown class="first" hotkey="'1'">
+                <DropdownItem class="first-first" onSelected="() => onItemSelected('first-first')">O</DropdownItem>
                 <Dropdown class="second">
-                    <DropdownItem class="second-first" payload="{val:'second-first'}">O</DropdownItem>
+                    <DropdownItem class="second-first" onSelected="() => onItemSelected('second-first')">O</DropdownItem>
                     <Dropdown class="third">
-                        <DropdownItem class="third-first" payload="{val:'third-first'}">O</DropdownItem>
-                        <DropdownItem class="third-last" payload="{val:'third-last'}">O</DropdownItem>
+                        <DropdownItem class="third-first" onSelected="() => onItemSelected('third-first')">O</DropdownItem>
+                        <DropdownItem class="third-last" onSelected="() => onItemSelected('third-last')">O</DropdownItem>
                     </Dropdown>
-                    <DropdownItem class="second-last" payload="{val:'second-last'}">O</DropdownItem>
+                    <DropdownItem class="second-last" onSelected="() => onItemSelected('second-last')">O</DropdownItem>
                 </Dropdown>
-                <DropdownItem class="first-last" payload="{val:'first-last'}">O</DropdownItem>
+                <DropdownItem class="first-last" onSelected="() => onItemSelected('first-last')">O</DropdownItem>
             </Dropdown>
         `;
         env = await makeTestEnv();

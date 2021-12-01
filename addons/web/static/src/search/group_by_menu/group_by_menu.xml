@@ -5,7 +5,6 @@
         <Dropdown class="o_group_by_menu btn-group"
             togglerClass="'btn btn-light'"
             t-props="dropdownProps"
-            t-on-dropdown-item-selected="onGroupBySelected"
         >
             <t t-set-slot="toggler">
                 <i class="small mr-1" t-att-class="icon"/>
@@ -28,9 +27,9 @@
                             </t>
                             <DropdownItem class="o_item_option"
                                 t-att-class="{ selected: option.isActive }"
-                                payload="{ itemId: item.id, optionId: option.id }"
                                 parentClosingMode="'none'"
                                 t-esc="option.description"
+                                onSelected="() => this.onGroupBySelected({ itemId: item.id, optionId: option.id})"
                             />
                             <t t-set="subGroup" t-value="option.groupNumber"/>
                         </t>
@@ -39,9 +38,9 @@
                 <t t-else="">
                     <DropdownItem class="o_menu_item"
                         t-att-class="{ selected: item.isActive }"
-                        payload="{ itemId: item.id }"
                         parentClosingMode="'none'"
                         t-esc="item.description"
+                        onSelected="() => this.onGroupBySelected({ itemId: item.id })"
                     />
                 </t>
                 <t t-set="currentGroup" t-value="item.groupNumber"/>

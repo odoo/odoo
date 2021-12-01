@@ -84,10 +84,10 @@ export class PivotRenderer extends Component {
      * Handle the selection of a groupby dropdown item.
      *
      * @param {"col"|"row"} type
-     * @param {CustomEvent} ev
+     * @param {Object} payload
      */
-    onDropdownItemSelected(type, ev) {
-        this.model.addGroupBy({ ...ev.detail.payload, type });
+    onGroupBySelected(type, payload) {
+        this.model.addGroupBy({ ...payload, type });
     }
     /**
      * Handle a click on a header cell.

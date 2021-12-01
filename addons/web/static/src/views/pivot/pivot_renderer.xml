@@ -73,7 +73,7 @@
                     customGroupBys="model.metaData.customGroupBys"
                     showActiveItems="false"
                     t-on-click.stop=""
-                    t-on-dropdown-item-selected="onDropdownItemSelected(isXAxis ? 'col' : 'row')"
+                    onItemSelected="payload => this.onGroupBySelected(isXAxis ? 'col' : 'row', payload)"
                     t-on-add-custom-group-by="onAddCustomGroupBy(isXAxis ? 'col' : 'row')"
                 />
             </t>
