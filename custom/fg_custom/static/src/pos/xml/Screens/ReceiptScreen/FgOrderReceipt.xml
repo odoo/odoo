@@ -81,5 +81,8 @@
 
             <div>----------------------------------------------------</div>
     	</xpath>
+        <xpath expr="//div[hasclass('before-footer')]" position="inside">
+            <b>Notes:</b> <t t-esc='receipt.x_receipt_note'/>
+        </xpath>
     </t>
 </templates>
