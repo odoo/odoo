@@ -3,13 +3,15 @@
 from odoo.exceptions import ValidationError
 from odoo.tools import mute_logger
 from odoo.tests import tagged
+from werkzeug.exceptions import Forbidden
 
 from .common import PaypalCommon
 from ..controllers.main import PaypalController
+from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 
 
 @tagged('post_install', '-at_install')
-class PaypalForm(PaypalCommon):
+class PaypalForm(PaypalCommon, PaymentHttpCommon):
 
     def _get_expected_values(self):
         return_url = self._build_url(PaypalController._return_url)
@@ -153,3 +155,60 @@ class PaypalForm(PaypalCommon):
         })
         total_fee = self.paypal._compute_fees(100, False, False)
         self.assertEqual(round(total_fee, 2), 3.3, 'Wrong computation of the Paypal fees')
+
+    def test_webhook(self):
+        webhook_url = self._build_url(PaypalController._notify_url)
+
+        self.reference = 'INV/2021/00022-1'
+        paypal_post_data = {'address_city': 'Scranton',
+             'address_country': 'United States',
+             'address_country_code': 'US',
+             'address_name': 'Mitchell Admin',
+             'address_state': 'Pennsylvania',
+             'address_status': 'confirmed',
+             'address_street': '215 Vine St',
+             'address_zip': '18503',
+             'charset': 'windows-1252',
+             'custom': '',
+             'discount': '0.00',
+             'first_name': 'Norbert',
+             'insurance_amount': '0.00',
+             'ipn_track_id': '7ab3189e9ca9f',
+             'item_name': 'YourCompany: INV/2021/00022-1',
+             'item_number': self.reference,
+             'last_name': 'Buyer',
+             'mc_currency': 'USD',
+             'mc_gross': '1.15',
+             'notify_version': '3.9',
+             'payer_email': 'test-buyer@mail.odoo.com',
+             'payer_id': '59XDVNACRAZZJ',
+             'payer_status': 'verified',
+             'payment_date': '06:42:28 Dec 01, 2021 PST',
+             'payment_gross': '1.15',
+             'payment_status': 'Pending',
+             'payment_type': 'instant',
+             'pending_reason': 'unilateral',
+             'protection_eligibility': 'Ineligible',
+             'quantity': '1',
+             'receiver_email': 'payment-test+2@mail.odoo.com',
+             'residence_country': 'BE',
+             'shipping_discount': '0.00',
+             'shipping_method': 'Default',
+             'test_ipn': '1',
+             'transaction_subject': '',
+             'txn_id': '7DS106200X784780T',
+             'txn_type': 'web_accept',
+         }
+
+        self.create_transaction(flow='redirect')
+
+        # Raise Forbidden due to invalid payload
+        self.assertEqual(self._make_http_post_request(webhook_url, paypal_post_data).status_code, Forbidden().code)
+
+        paypal_post_data['verify_sign'] = 'AcwcWTJXFg5M-Ij-NkYq.jllTHSiAmTtI.i9ce4hHOaequHGsAqFcslH'
+        self._assert_not_raises(
+            Forbidden,
+            self._make_http_post_request,
+            webhook_url,
+            paypal_post_data
+        )

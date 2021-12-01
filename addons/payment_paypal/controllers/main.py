@@ -4,6 +4,7 @@ import logging
 import pprint
 
 import requests
+from werkzeug.exceptions import Forbidden
 
 from odoo import _, http
 from odoo.exceptions import ValidationError
@@ -26,7 +27,7 @@ class PaypalController(http.Controller):
         _logger.info("beginning DPN with post data:\n%s", pprint.pformat(data))
         try:
             self._validate_data_authenticity(**data)
-        except ValidationError:
+        except Forbidden:
             pass  # The transaction has been moved to state 'error'. Redirect to /payment/status.
         else:
             if data:
@@ -90,13 +91,4 @@ class PaypalController(http.Controller):
         if response_code == 'VERIFIED':
             _logger.info("authenticity of notification data verified")
         else:
-            if response_code == 'INVALID':
-                error_message = "PayPal: " + _("Notification data were not acknowledged.")
-            else:
-                error_message = "PayPal: " + _(
-                    "Received unrecognized authentication check response code: received %s, "
-                    "expected VERIFIED or INVALID.",
-                    response_code
-                )
-            tx_sudo._set_error(error_message)
-            raise ValidationError(error_message)
+            raise Forbidden()
