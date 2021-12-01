@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.FavoriteMenu" owl="1">
-        <Dropdown class="o_favorite_menu btn-group" togglerClass="'btn btn-light'" t-on-dropdown-item-selected="onFavoriteSelected">
+        <Dropdown class="o_favorite_menu btn-group" togglerClass="'btn btn-light'">
             <t t-set-slot="toggler">
                 <i class="small mr-1" t-att-class="icon"/>
                 <span class="o_dropdown_title">Favorites</span>
@@ -15,8 +15,8 @@
                 <t t-if="item.type ==='favorite'">
                     <DropdownItem class="o_menu_item"
                         t-att-class="{ selected: item.isActive }"
-                        payload="{ itemId: item.id }"
                         parentClosingMode="'none'"
+                        onSelected="() => this.onFavoriteSelected(item.id)"
                     >
                         <span class="d-flex p-0 align-items-center justify-content-between">
                             <t t-esc="item.description"/>
@@ -28,7 +28,7 @@
                     </DropdownItem>
                 </t>
                 <t t-else="">
-                    <t t-component="item.Component" t-on-dropdown-item-selected.stop=""/>
+                    <t t-component="item.Component"/>
                 </t>
                 <t t-set="currentGroup" t-value="item.groupNumber"/>
             </t>

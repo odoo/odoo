@@ -31,23 +31,6 @@ MenuDropdown.props.xmlid = {
     optional: true,
 };
 
-export class MenuItem extends DropdownItem {
-    setup() {
-        super.setup();
-        useEffect(
-            () => {
-                if (this.props.payload.id) {
-                    this.el.dataset.section = this.props.payload.id;
-                }
-                if (this.props.payload.xmlid) {
-                    this.el.dataset.menuXmlid = this.props.payload.xmlid;
-                }
-            },
-            () => []
-        );
-    }
-}
-
 export class NavBar extends Component {
     setup() {
         this.currentAppSectionsExtra = [];
@@ -68,7 +51,12 @@ export class NavBar extends Component {
         useBus(this.env.bus, "MENUS:APP-CHANGED", renderAndAdapt);
         // We don't want to adapt every time we are patched
         // rather, we adapt only when menus or systrays have changed.
-        useEffect(() => {this.adapt();}, () => [adaptCounter]);
+        useEffect(
+            () => {
+                this.adapt();
+            },
+            () => [adaptCounter]
+        );
     }
 
     handleItemError(error, item) {
@@ -140,7 +128,10 @@ export class NavBar extends Component {
         // use getBoundingClientRect to get unrounded values for width in order to avoid rounding problem
         // with offsetWidth.
         const sectionsAvailableWidth = getBoundingClientRect.call(sectionsMenu).width;
-        const sectionsTotalWidth = sections.reduce((sum, s) => sum + getBoundingClientRect.call(s).width, 0);
+        const sectionsTotalWidth = sections.reduce(
+            (sum, s) => sum + getBoundingClientRect.call(s).width,
+            0
+        );
         if (sectionsAvailableWidth < sectionsTotalWidth) {
             // Sections are overflowing
             // Initial width is harcoded to the width the more menu dropdown will take
@@ -180,8 +171,7 @@ export class NavBar extends Component {
         return this.render();
     }
 
-    onNavBarDropdownItemSelection(ev) {
-        const { payload: menu } = ev.detail;
+    onNavBarDropdownItemSelection(menu) {
         if (menu) {
             this.menuService.selectMenu(menu);
         }
@@ -196,4 +186,4 @@ export class NavBar extends Component {
     }
 }
 NavBar.template = "web.NavBar";
-NavBar.components = { MenuDropdown, MenuItem, NotUpdatable, ErrorHandler };
+NavBar.components = { MenuDropdown, DropdownItem, NotUpdatable, ErrorHandler };

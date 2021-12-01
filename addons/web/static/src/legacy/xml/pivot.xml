@@ -98,20 +98,14 @@
                             <t t-esc="item.description"/>
                         </t>
                         <t t-foreach="Object.values(intervalOptions)" t-as="option" t-key="option.id">
-                            <DropdownItem
-                                class="o_item_option dropdown-item"
-                                t-on-dropdown-item-selected.stop="_onClickMenuGroupBy(item.fieldName, option.id)"
-                            >
+                            <DropdownItem class="o_item_option dropdown-item" onSelected="() => this._onClickMenuGroupBy(item.fieldName, option.id)">
                                 <t t-esc="option.description"/>
                             </DropdownItem>
                         </t>
                     </Dropdown>
                 </t>
                 <t t-else="">
-                    <DropdownItem
-                        class="o_menu_item dropdown-item"
-                        t-on-dropdown-item-selected.stop="_onClickMenuGroupBy(item.fieldName, null)"
-                    >
+                    <DropdownItem class="o_menu_item dropdown-item" onSelected="() => this._onClickMenuGroupBy(item.fieldName, null)">
                         <t t-esc="item.description"/>
                     </DropdownItem>
                 </t>

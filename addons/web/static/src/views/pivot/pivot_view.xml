@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.PivotView.Buttons" owl="1">
-        <div class="btn-group" role="toolbar" aria-label="Main actions"  t-on-dropdown-item-selected="onMeasureSelected">
+        <div class="btn-group" role="toolbar" aria-label="Main actions">
             <t t-call="web.ReportViewMeasures">
                 <t t-set="measures" t-value="model.metaData.measures"/>
                 <t t-set="activeMeasures" t-value="model.metaData.activeMeasures"/>

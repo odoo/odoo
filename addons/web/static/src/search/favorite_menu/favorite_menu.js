@@ -39,10 +39,9 @@ export class FavoriteMenu extends Component {
     }
 
     /**
-     * @param {CustomEvent} ev
+     * @param {number} itemId
      */
-    onFavoriteSelected(ev) {
-        const { itemId } = ev.detail.payload;
+    onFavoriteSelected(itemId) {
         this.env.searchModel.toggleSearchItem(itemId);
     }
 

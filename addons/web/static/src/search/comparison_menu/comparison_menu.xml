@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.ComparisonMenu" owl="1">
-        <Dropdown class="o_comparison_menu btn-group" togglerClass="'btn btn-light'" t-on-dropdown-item-selected="onComparisonSelected">
+        <Dropdown class="o_comparison_menu btn-group" togglerClass="'btn btn-light'">
             <t t-set-slot="toggler">
                 <i class="small mr-1" t-att-class="icon"/>
                 <span class="o_dropdown_title">Comparison</span>
@@ -11,7 +11,7 @@
                 <DropdownItem
                     class="o_menu_item"
                     t-att-class="{ selected: item.isActive }"
-                    payload="{ itemId: item.id }"
+                    onSelected="() => this.onComparisonSelected(item.id)"
                     parentClosingMode="'none'"
                     t-esc="item.description"
                 />
