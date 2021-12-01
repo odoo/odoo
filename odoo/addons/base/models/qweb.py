@@ -952,7 +952,7 @@ class QWeb(object):
         if el.getchildren():
             for item in el:
                 if isinstance(item, etree._Comment):
-                    if self.env.context.get('preserve_comments'):
+                    if self._context.get('preserve_comments', False):
                         self._appendText("<!--%s-->" % item.text, options)
                 else:
                     body.extend(self._compile_node(item, options, indent))
