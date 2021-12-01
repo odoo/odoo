@@ -36,7 +36,7 @@ class ResConfigSettings(models.TransientModel):
     ], string='Customer Account', default='b2b', config_parameter='auth_signup.invitation_scope')
 
     module_delivery = fields.Boolean("Delivery Methods")
-    module_delivery_dhl = fields.Boolean("DHL USA Connector")
+    module_delivery_dhl = fields.Boolean("DHL Express Connector")
     module_delivery_fedex = fields.Boolean("FedEx Connector")
     module_delivery_ups = fields.Boolean("UPS Connector")
     module_delivery_usps = fields.Boolean("USPS Connector")
