@@ -13,7 +13,7 @@ class TestHasGroup(TransactionCase):
 
         cls.group0 = 'test_user_has_group.group0'
         cls.group1 = 'test_user_has_group.group1'
-        group0, group1 = cls.env['res.groups']._load_records([
+        group0, __ = cls.env['res.groups']._load_records([
             dict(xml_id=cls.group0, values={'name': 'group0'}),
             dict(xml_id=cls.group1, values={'name': 'group1'}),
         ])

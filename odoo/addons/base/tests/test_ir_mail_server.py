@@ -12,6 +12,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
 
     @classmethod
     def setUpClass(cls):
+        super().setUpClass()
         cls._init_mail_servers()
 
     def _build_email(self, mail_from, return_path=None):
