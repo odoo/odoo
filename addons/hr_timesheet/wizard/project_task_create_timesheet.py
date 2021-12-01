@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
-from datetime import datetime
+from odoo import fields, models
 
 
 class ProjectTaskCreateTimesheet(models.TransientModel):
@@ -20,16 +19,10 @@ class ProjectTaskCreateTimesheet(models.TransientModel):
     )
 
     def save_timesheet(self):
-        values = {
-            'task_id': self.task_id.id,
-            'project_id': self.task_id.project_id.id,
-            'date': fields.Date.context_today(self),
-            'name': self.description,
-            'user_id': self.env.uid,
-            'unit_amount': self.time_spent,
-        }
-        self.task_id.user_timer_id.unlink()
-        return self.env['account.analytic.line'].create(values)
+        # Deprecated the method in hr_timesheet and overridden in timesheet_grid as config has moved to timesheet_grid.
+        # Move the whole wizard to timesheet_grid in master.
+        return self.env['account.analytic.line']
 
     def action_delete_timesheet(self):
-        self.task_id.user_timer_id.unlink()
+        # Deprecated the method in hr_timesheet and overridden in timesheet_grid as timer mixin has moved to enterprise.
+        return True
