@@ -12,6 +12,16 @@
           <field name="name">Research &amp; Development</field>
       </record>
 
+      <record id="dep_rd_be" model="hr.department">
+          <field name="name">R&amp;D Belgium</field>
+          <field name="parent_id" ref="dep_rd"/>
+      </record>
+
+      <record id="dep_rd_ltp" model="hr.department">
+          <field name="name">Long Term Projects</field>
+          <field name="parent_id" ref="dep_rd_be"/>
+      </record>
+
       <record id="dep_ps" model="hr.department">
           <field name="name">Professional Services</field>
       </record>
@@ -189,7 +199,7 @@ If you have development competencies, we can propose you specific traineeships</
 
       <record id="employee_mit" model="hr.employee">
           <field name="name">Anita Oliver</field>
-          <field name="department_id" ref="dep_rd"/>
+          <field name="department_id" ref="dep_rd_be"/>
           <field name="parent_id" ref="employee_al"/>
           <field name="job_id" ref="hr.job_developer"/>
           <field name="job_title">Experienced Developer</field>
@@ -333,7 +343,7 @@ If you have development competencies, we can propose you specific traineeships</
 
       <record id="employee_jve" model="hr.employee">
           <field name="name">Paul Williams</field>
-          <field name="department_id" ref="dep_management"/>
+          <field name="department_id" ref="dep_rd_ltp"/>
           <field name="job_id" ref="hr.job_developer"/>
           <field name="job_title">Experienced Developer</field>
           <field name="work_location_id" ref="work_location_1"/>
