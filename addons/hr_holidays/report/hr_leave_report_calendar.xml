@@ -37,7 +37,9 @@
                 <field name="department_id"/>
                 <field name="job_id"/>
                 <filter name="my_team" string="My Team" domain="['|', ('employee_id.user_id', '=', uid), ('employee_id.parent_id.user_id', '=', uid)]"/>
-                <filter string="My Department" name="department" domain="['|', ('department_id.member_ids.user_id', '=', uid), ('employee_id.user_id', '=', uid)]" help="My Department"/>
+                <filter string="My Department" name="department"
+                        domain="[('employee_id.member_of_department', '=', True)]"
+                        help="My Department"/>
                 <separator/>
                 <filter string="Off Today" name="off_today" domain="[('start_datetime', '&lt;=', context_today().strftime('%Y-%m-%d')), ('stop_datetime', '&gt;=', context_today().strftime('%Y-%m-%d'))]" help="My Department"/>
                 <separator/>
