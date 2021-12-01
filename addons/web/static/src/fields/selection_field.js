@@ -9,7 +9,7 @@ export class SelectionField extends Component {
     get options() {
         switch (this.props.type) {
             case "many2one":
-                return this.props.record.specialData[this.props.name];
+                return this.props.record.preloadedData[this.props.name];
             case "selection":
                 return this.props.record.fields[this.props.name].selection;
             default:
@@ -68,7 +68,7 @@ Object.assign(SelectionField, {
 
 registry.category("fields").add("selection", SelectionField);
 
-export function fetchSelectionSpecialData(datapoint, fieldName) {
+export function fetchSelectionPreloadedData(datapoint, fieldName) {
     const field = datapoint.fields[fieldName];
     if (field.type !== "many2one") {
         return null;
@@ -79,4 +79,4 @@ export function fetchSelectionSpecialData(datapoint, fieldName) {
     return orm.call(field.relation, "name_search", ["", domain]);
 }
 
-registry.category("specialData").add("selection", fetchSelectionSpecialData);
+registry.category("preloadedData").add("selection", fetchSelectionPreloadedData);

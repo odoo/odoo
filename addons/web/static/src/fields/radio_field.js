@@ -15,8 +15,8 @@ export class RadioField extends Component {
             case "selection":
                 return this.props.record.fields[this.props.name].selection;
             case "many2one":
-                return this.props.record.specialData
-                    ? this.props.record.specialData[this.props.name]
+                return this.props.record.preloadedData
+                    ? this.props.record.preloadedData[this.props.name]
                     : [];
             default:
                 return [];
@@ -61,7 +61,7 @@ Object.assign(RadioField, {
 
 registry.category("fields").add("radio", RadioField);
 
-export async function fetchRadioSpecialData(datapoint, fieldName) {
+export async function fetchRadioPreloadedData(datapoint, fieldName) {
     const field = datapoint.fields[fieldName];
     if (field.type !== "many2one") {
         return null;
@@ -72,4 +72,4 @@ export async function fetchRadioSpecialData(datapoint, fieldName) {
     return await orm.call(field.relation, "name_get", [records.map((record) => record.id)]);
 }
 
-registry.category("specialData").add("radio", fetchRadioSpecialData);
+registry.category("preloadedData").add("radio", fetchRadioPreloadedData);

@@ -8,7 +8,7 @@ import { isX2Many } from "@web/views/helpers/view_utils";
 import { registry } from "../core/registry";
 import { evaluateExpr } from "@web/core/py_js/py";
 
-const specialDataRegistry = registry.category("specialData");
+const preloadedDataRegistry = registry.category("preloadedData");
 
 class RequestBatcherORM extends ORM {
     constructor() {
@@ -112,7 +112,7 @@ export class Record extends DataPoint {
         this._values = params.values || {};
         this._changes = {};
         this.data = { ...this._values };
-        this.specialData = {};
+        this.preloadedData = {};
     }
 
     get evalContext() {
@@ -145,7 +145,7 @@ export class Record extends DataPoint {
 
         // Relational data
         await this.loadRelationalData();
-        await this.loadSpecialData();
+        await this.loadPreloadedData();
     }
 
     evaluateActiveFields() {
@@ -173,9 +173,9 @@ export class Record extends DataPoint {
         }
     }
 
-    loadSpecialData() {
-        const fetchSpecialData = async (fetchFn, fieldName) => {
-            this.specialData[fieldName] = await fetchFn(this, fieldName);
+    loadPreloadedData() {
+        const fetchPreloadedData = async (fetchFn, fieldName) => {
+            this.preloadedData[fieldName] = await fetchFn(this, fieldName);
         };
 
         const proms = [];
@@ -183,8 +183,8 @@ export class Record extends DataPoint {
             const activeField = this.activeFields[fieldName];
             // @FIXME type should not be get like this
             const type = activeField.widget || this.fields[fieldName].type;
-            if (!activeField.invisible && specialDataRegistry.contains(type)) {
-                proms.push(fetchSpecialData(specialDataRegistry.get(type), fieldName));
+            if (!activeField.invisible && preloadedDataRegistry.contains(type)) {
+                proms.push(fetchPreloadedData(preloadedDataRegistry.get(type), fieldName));
             }
         }
         return Promise.all(proms);
@@ -423,7 +423,7 @@ export class DynamicRecordList extends DynamicList {
                     activeFields: this.activeFields,
                 });
                 await record.loadRelationalData();
-                await record.loadSpecialData();
+                await record.loadPreloadedData();
                 return record;
             })
         );
