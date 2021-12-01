@@ -6,6 +6,7 @@ import { Deferred, KeepLast } from "@web/core/utils/concurrency";
 import { Model } from "@web/views/helpers/model";
 import { isX2Many } from "@web/views/helpers/view_utils";
 import { registry } from "../core/registry";
+import { evaluateExpr } from "@web/core/py_js/py";
 
 const specialDataRegistry = registry.category("specialData");
 
@@ -140,9 +141,36 @@ export class Record extends DataPoint {
         this._changes = {};
         this.data = { ...data };
 
+        this.evaluateActiveFields();
+
         // Relational data
         await this.loadRelationalData();
         await this.loadSpecialData();
+    }
+
+    evaluateActiveFields() {
+        const context = this.data;
+        for (const fieldName of this.fieldNames) {
+            const activeField = this.activeFields[fieldName];
+            if (activeField.modifiersAttribute) {
+                activeField.modifiers = evaluateExpr(activeField.modifiersAttribute, context);
+            }
+            if (activeField.optionsAttribute) {
+                activeField.options = Object.assign(
+                    evaluateExpr(activeField.optionsAttribute, context),
+                    activeField.options
+                );
+            }
+            if (activeField.decorationAttributes) {
+                activeField.decorations = {};
+                for (const decorationName in activeField.decorationAttributes) {
+                    activeField.decorations[decorationName] = evaluateExpr(
+                        activeField.decorationAttributes[decorationName],
+                        context
+                    );
+                }
+            }
+        }
     }
 
     loadSpecialData() {
