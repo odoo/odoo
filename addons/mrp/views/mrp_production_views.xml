@@ -197,8 +197,11 @@
                                     context="{'default_product_id': product_id, 'default_company_id': company_id}" attrs="{'invisible': [('product_tracking', 'in', ('none', False))]}"/>
                                 <button name="action_generate_serial" type="object" class="btn btn-primary fa fa-plus-square-o" aria-label="Creates a new serial/lot number" title="Creates a new serial/lot number" role="img" attrs="{'invisible': ['|', ('product_tracking', 'in', ('none', False)), ('lot_producing_id', '!=', False)]}"/>
                             </div>
-                            <field name="bom_id"
-                                context="{'default_product_tmpl_id': product_tmpl_id}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <label for="bom_id" name="bom_label"/>
+                            <div class='o_row d-flex' name="bom_div">
+                                <field name="bom_id"
+                                    context="{'default_product_tmpl_id': product_tmpl_id}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            </div>
                         </group>
                         <group name="group_extra_info">
                             <label for="date_planned_start"/>
