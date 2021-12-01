@@ -4,7 +4,7 @@
   <t t-name="web.ColorPicker" owl="1">
     <div class="o_colorpicker_widget" t-on-mouseup="unfocusPickers"  t-on-mouseleave="unfocusPickers">
         <div class="d-flex justify-content-between align-items-stretch mb-2">
-            <div t-ref="colorPickArea" t-on-mousedown="onMouseDownColorPickArea" t-on-mousemove="onMouseMoveColorPickArea" class="o_color_pick_area position-relative w-75" t-attf-style="background-color: hsl({{ state.latentHue }}, {{ state.latentSaturation }}%, {{ state.latentLightness }}%); width: {{ props.transparency ? 89 : 100 }}%;">
+            <div t-ref="colorPickArea" t-on-mousedown="onMouseDownColorPickArea" t-on-mousemove="onMouseMoveColorPickArea" class="o_color_pick_area position-relative w-75" t-attf-style="background-color: hsl({{ state.latentHue }}, 50%, 50%); width: {{ props.transparency ? 89 : 100 }}%;">
                 <div t-ref="colorPickAreaPointer" class="o_picker_pointer rounded-circle p-1 position-absolute" tabindex="-1"/>
             </div>
             <div t-ref="colorSlider" t-on-mousedown="onMouseDownColorSlider" t-on-mousemove="onMouseMoveColorSlider" class="o_color_slider position-relative">
