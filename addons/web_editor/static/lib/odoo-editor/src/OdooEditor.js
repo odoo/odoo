@@ -2817,7 +2817,7 @@ export class OdooEditor extends EventTarget {
         if (cursorDestination) {
             setSelection(...startPos(cursorDestination), ...endPos(cursorDestination), true);
         } else if (direction === DIRECTIONS.RIGHT) {
-            this._addRowBelow();
+            this.execCommand('addRowBelow');
             this._onTabulationInTable(ev);
         }
     }
