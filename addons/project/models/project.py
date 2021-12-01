@@ -937,7 +937,7 @@ class Task(models.Model):
         copy=False,
         readonly=True)
     project_id = fields.Many2one('project.project', string='Project', recursive=True,
-        compute='_compute_project_id', store=True, readonly=False, precompute=True,
+        compute='_compute_project_id', store=True, readonly=False,
         index=True, tracking=True, check_company=True, change_default=True)
     # Defines in which project the task will be displayed / taken into account in statistics.
     # Example: 1 task A with 1 subtask B in project P
@@ -968,7 +968,7 @@ class Task(models.Model):
         help="The current user's personal task stage.")
     partner_id = fields.Many2one('res.partner',
         string='Customer', recursive=True, tracking=True,
-        compute='_compute_partner_id', store=True, readonly=False, precompute=True,
+        compute='_compute_partner_id', store=True, readonly=False,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     partner_is_company = fields.Boolean(related='partner_id.is_company', readonly=True)
     commercial_partner_id = fields.Many2one(related='partner_id.commercial_partner_id')

@@ -224,7 +224,7 @@ class SaleOrderLine(models.Model):
         ('invoiced', 'Fully Invoiced'),
         ('to invoice', 'To Invoice'),
         ('no', 'Nothing to Invoice')
-        ], string='Invoice Status', compute='_compute_invoice_status', store=True, precompute=True)
+        ], string='Invoice Status', compute='_compute_invoice_status', store=True)
     price_unit = fields.Float(
         'Unit Price', required=True, digits='Product Price',
         compute='_compute_price_unit', store=True, readonly=False, precompute=True)
@@ -287,21 +287,21 @@ class SaleOrderLine(models.Model):
              "  - Stock Moves: the quantity comes from confirmed pickings\n")
     qty_delivered = fields.Float(
         'Delivered Quantity', copy=False,
-        compute='_compute_qty_delivered', store=True, readonly=False, precompute=True,
+        compute='_compute_qty_delivered', store=True, readonly=False,
         digits='Product Unit of Measure')
     qty_to_invoice = fields.Float(
-        compute='_compute_qty_to_invoice', string='To Invoice Quantity', store=True, precompute=True,
+        compute='_compute_qty_to_invoice', string='To Invoice Quantity', store=True,
         digits='Product Unit of Measure')
     qty_invoiced = fields.Float(
-        compute='_compute_qty_invoiced', string='Invoiced Quantity', store=True, precompute=True,
+        compute='_compute_qty_invoiced', string='Invoiced Quantity', store=True,
         digits='Product Unit of Measure')
 
     untaxed_amount_invoiced = fields.Monetary(
         "Untaxed Invoiced Amount",
-        compute='_compute_untaxed_amount_invoiced', store=True, precompute=True)
+        compute='_compute_untaxed_amount_invoiced', store=True)
     untaxed_amount_to_invoice = fields.Monetary(
         "Untaxed Amount To Invoice",
-        compute='_compute_untaxed_amount_to_invoice', store=True, precompute=True)
+        compute='_compute_untaxed_amount_to_invoice', store=True)
 
     analytic_tag_ids = fields.Many2many(
         'account.analytic.tag', string='Analytic Tags',
