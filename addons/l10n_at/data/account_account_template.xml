@@ -20,7 +20,6 @@
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
         </record>
 
-
         <record id="chart_at_template_0010" model="account.account.template">
           <field name="name">Aufwendungen für das Ingangsetzen und Erweitern eines Betriebes</field>
           <field name="code">0010</field>
@@ -1033,7 +1032,6 @@
           <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PCVIII1')])]" />
         </record>
-        
         <record id="chart_at_template_3530" model="account.account.template">
           <field name="name">Verrechnungskonto Finanzamt</field>
           <field name="code">3530</field>
@@ -1041,9 +1039,7 @@
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
           <field name="user_type_id" ref="account.data_account_type_payable" />
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PCVIII1')])]" />
-          <field eval="[(6,0,[])]" name="tax_ids"/>
         </record>
-        
         <record id="chart_at_template_3540" model="account.account.template">
           <field name="name">Verrechnung Lohnsteuer</field>
           <field name="code">3540</field>
@@ -1051,7 +1047,6 @@
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
           <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PCVIII1')])]" />
-          <field eval="[(6,0,[])]" name="tax_ids"/>
         </record>
         <record id="chart_at_template_3541" model="account.account.template">
           <field name="name">Verrechnung Dienstgeberbeitrag</field>
@@ -1060,14 +1055,12 @@
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
           <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PCVIII1')])]" />
-          <field eval="[(6,0,[])]" name="tax_ids"/>
         </record>
         <record id="chart_at_template_3542" model="account.account.template">
           <field name="name">Verrechnung Dienstgeberzuschlag</field>
           <field name="code">3542</field>
           <field name="reconcile" eval="True"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field eval="[(6,0,[])]" name="tax_ids"/>
           <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PCVIII1')])]" />
         </record>
@@ -1076,7 +1069,6 @@
           <field name="code">3550</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field eval="[(6,0,[])]" name="tax_ids"/>
           <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PCVIII1')])]" />
         </record>
@@ -1085,7 +1077,6 @@
           <field name="code">3551</field>
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field eval="[(6,0,[])]" name="tax_ids"/>
           <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PCVIII1')])]" />
         </record>
@@ -1096,14 +1087,12 @@
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
           <field name="user_type_id" ref="account.data_account_type_payable" />
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PCVIII2')])]" />
-          <field eval="[(6,0,[])]" name="tax_ids"/>
         </record>
         <record id="chart_at_template_3610" model="account.account.template">
           <field name="name">Verrechnungskonto Magistrat/Gemeinde (KoSt, U-Bahn, etc.)</field>
           <field name="code">3610</field>
           <field name="reconcile" eval="True"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field eval="[(6,0,[])]" name="tax_ids"/>
           <field name="user_type_id" ref="account.data_account_type_payable" />
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PCVIII2')])]" />
         </record>
@@ -1112,7 +1101,6 @@
           <field name="code">3740</field>
           <field name="reconcile" eval="True"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field eval="[(6,0,[])]" name="tax_ids"/>
           <field name="user_type_id" ref="account.data_account_type_payable" />
           <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PD')])]" />
         </record>
@@ -1123,7 +1111,6 @@
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
           <field name="user_type_id" ref="account.data_account_type_revenue" />
           <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT1')])]" />
-
         </record>
         <record id="chart_at_template_4001" model="account.account.template">
           <field name="name">Brutto-Umsatzerlöse im Inland (10%)</field>
@@ -1224,8 +1211,7 @@
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
           <field name="user_type_id" ref="account.data_account_type_expenses" />
-          <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_EBIT6I')])]" />
-          <field eval="[(6,0,[])]" name="tax_ids"/>
+          <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT6I')])]" />
         </record>
         <record id="chart_at_template_6205" model="account.account.template">
           <field name="name">Geschäftsführerbezug</field>
@@ -1233,8 +1219,7 @@
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
           <field name="user_type_id" ref="account.data_account_type_expenses" />
-          <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_EBIT6I')])]" />
-          <field eval="[(6,0,[])]" name="tax_ids"/>
+          <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT6I')])]" />
         </record>
         <record id="chart_at_template_6242" model="account.account.template">
           <field name="name">Urlaubsabfindung (Angestellte)</field>
@@ -1242,8 +1227,7 @@
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
           <field name="user_type_id" ref="account.data_account_type_expenses" />
-          <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_EBIT6I')])]" />
-          <field eval="[(6,0,[])]" name="tax_ids"/>
+          <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT6I')])]" />
         </record>
         <record id="chart_at_template_6260" model="account.account.template">
           <field name="name">Sonstige Bezüge (Angestellte)</field>
@@ -1251,8 +1235,7 @@
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
           <field name="user_type_id" ref="account.data_account_type_expenses" />
-          <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_EBIT6I')])]" />
-          <field eval="[(6,0,[])]" name="tax_ids"/>
+          <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT6I')])]" />
         </record>
         <record id="chart_at_template_6270" model="account.account.template">
           <field name="name">Sachbezug (Angestellte)</field>
@@ -1260,8 +1243,7 @@
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
           <field name="user_type_id" ref="account.data_account_type_expenses" />
-          <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_EBIT6I')])]" />
-          <field eval="[(6,0,[])]" name="tax_ids"/>
+          <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT6I')])]" />
         </record>
         <record id="chart_at_template_6271" model="account.account.template">
           <field name="name">Sachbezug (Geschäftsführer)</field>
@@ -1269,8 +1251,7 @@
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
           <field name="user_type_id" ref="account.data_account_type_expenses" />
-          <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_EBIT6I')])]" />
-          <field eval="[(6,0,[])]" name="tax_ids"/>
+          <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT6I')])]" />
         </record>
         <record id="chart_at_template_6310" model="account.account.template">
           <field name="name">Grundgehälter (Überstunden)</field>
@@ -1278,8 +1259,7 @@
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
           <field name="user_type_id" ref="account.data_account_type_expenses" />
-          <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_EBIT6I')])]" />
-          <field eval="[(6,0,[])]" name="tax_ids"/>
+          <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT6I')])]" />
         </record>
         <record id="chart_at_template_6330" model="account.account.template">
           <field name="name">Gehälter (Überstundenzuschläge)</field>
@@ -1287,8 +1267,7 @@
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
           <field name="user_type_id" ref="account.data_account_type_expenses" />
-          <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_EBIT6I')])]" />
-          <field eval="[(6,0,[])]" name="tax_ids"/>
+          <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT6I')])]" />
         </record>
         <record id="chart_at_template_6340" model="account.account.template">
           <field name="name">Veränderung noch nicht konsumierter Urlaub</field>
@@ -1296,8 +1275,7 @@
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
           <field name="user_type_id" ref="account.data_account_type_expenses" />
-          <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_EBIT6I')])]" />
-          <field eval="[(6,0,[])]" name="tax_ids"/>
+          <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT6I')])]" />
         </record>
         <record id="chart_at_template_6400" model="account.account.template">
           <field name="name">Beiträge für betriebliche Mitarbeitervorsorgekasse</field>
@@ -1305,8 +1283,7 @@
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
           <field name="user_type_id" ref="account.data_account_type_expenses" />
-          <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_EBIT6II')])]" />
-          <field eval="[(6,0,[])]" name="tax_ids"/>
+          <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT6II')])]" />
         </record>
 
         <record id="chart_at_template_6560" model="account.account.template">
@@ -1315,8 +1292,7 @@
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
           <field name="user_type_id" ref="account.data_account_type_expenses" />
-          <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_EBIT6II')])]" />
-          <field eval="[(6,0,[])]" name="tax_ids"/>
+          <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT6II')])]" />
         </record>
 
         <record id="chart_at_template_6660" model="account.account.template">
@@ -1325,8 +1301,7 @@
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
           <field name="user_type_id" ref="account.data_account_type_expenses" />
-          <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_EBIT6II')])]" />
-          <field eval="[(6,0,[])]" name="tax_ids"/>
+          <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT6II')])]" />
         </record>
         <record id="chart_at_template_6661" model="account.account.template">
           <field name="name">Dienstgeberbeitrag zum Familienlastenausgleichsfonds (DB)</field>
@@ -1334,8 +1309,7 @@
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
           <field name="user_type_id" ref="account.data_account_type_expenses" />
-          <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_EBIT6II')])]" />
-          <field eval="[(6,0,[])]" name="tax_ids"/>
+          <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT6II')])]" />
         </record>
         <record id="chart_at_template_6662" model="account.account.template">
           <field name="name">Zuschlag zum Dienstnehmerbeitrag (DZ)</field>
@@ -1343,8 +1317,7 @@
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
           <field name="user_type_id" ref="account.data_account_type_expenses" />
-          <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_EBIT6II')])]" />
-          <field eval="[(6,0,[])]" name="tax_ids"/>
+          <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT6II')])]" />
         </record>
         <record id="chart_at_template_6640" model="account.account.template">
           <field name="name">Dienstgeberabgabe der Gemeinde Wien (U-Bahn Steuer)</field>
@@ -1352,8 +1325,7 @@
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
           <field name="user_type_id" ref="account.data_account_type_expenses" />
-          <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_EBIT6II')])]" />
-          <field eval="[(6,0,[])]" name="tax_ids"/>
+          <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT6II')])]" />
         </record>
 
         <record id="chart_at_template_6700" model="account.account.template">
@@ -1362,8 +1334,7 @@
           <field name="user_type_id" ref="account.data_account_type_expenses" />
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
-          <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_EBIT6II')])]" />
-          <field eval="[(6,0,[])]" name="tax_ids"/>
+          <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT6II')])]" />
         </record>
 
         <record id="chart_at_template_6900" model="account.account.template">
@@ -1397,7 +1368,7 @@
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
           <field name="user_type_id" ref="account.data_account_type_expenses" />
-          <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_EBIT8')])]" />
+          <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT8')])]" />
         </record>
         <record id="chart_at_template_763" model="account.account.template">
           <field name="name">Fachliteratur und Zeitungen</field>
@@ -1405,7 +1376,7 @@
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
           <field name="user_type_id" ref="account.data_account_type_expenses" />
-          <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_EBIT8')])]" />
+          <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT8')])]" />
         </record>
         <record id="chart_at_template_7690" model="account.account.template">
           <field name="name">Spenden und Trinkgelder</field>
@@ -1414,7 +1385,7 @@
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
           <field name="user_type_id" ref="account.data_account_type_expenses" />
-          <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_EBIT8')])]" />
+          <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT8')])]" />
         </record>
         <record id="chart_at_template_7770" model="account.account.template">
           <field name="name">Aus- und Fortbildung</field>
@@ -1422,7 +1393,7 @@
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
           <field name="user_type_id" ref="account.data_account_type_expenses" />
-          <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_EBIT8')])]" />
+          <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT8')])]" />
         </record>
         <record id="chart_at_template_7780" model="account.account.template">
           <field name="name">Mitgliedsbeiträge</field>
@@ -1430,7 +1401,7 @@
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
           <field name="user_type_id" ref="account.data_account_type_expenses" />
-          <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_EBIT8')])]" />
+          <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT8')])]" />
         </record>
         <record id="chart_at_template_7790" model="account.account.template">
           <field name="name">Spesen des Geldverkehrs</field>
@@ -1438,7 +1409,7 @@
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
           <field name="user_type_id" ref="account.data_account_type_expenses" />
-          <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_EBIT8')])]" />
+          <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT8')])]" />
         </record>
         <record id="chart_at_template_7820" model="account.account.template">
           <field name="name">Buchwert abgegangener Anlagen, ausgenommen Finanzanlagen</field>
@@ -1447,7 +1418,7 @@
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
           <field name="user_type_id" ref="account.data_account_type_expenses" />
-          <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_EBIT8')])]" />
+          <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT8')])]" />
         </record>
         <record id="chart_at_template_7830" model="account.account.template">
           <field name="name">Verluste aus dem Abgang vom Anlagevermögen, ausgenommen Finanzanlagen</field>
@@ -1455,7 +1426,7 @@
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
           <field name="user_type_id" ref="account.data_account_type_expenses" />
-          <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_EBIT8')])]" />
+          <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT8')])]" />
         </record>
         <record id="chart_at_template_7860" model="account.account.template">
           <field name="name">Kursverluste aus Fremdwährungstransaktionen</field>
@@ -1463,7 +1434,7 @@
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
           <field name="user_type_id" ref="account.data_account_type_expenses" />
-          <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_EBIT8')])]" />
+          <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT8')])]" />
         </record>
         <record id="chart_at_template_7890" model="account.account.template">
           <field name="name">Skontoerträge auf sonstige betriebliche Aufwendungen</field>
@@ -1471,7 +1442,7 @@
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
           <field name="user_type_id" ref="account.data_account_type_expenses" />
-          <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_EBIT8')])]" />
+          <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT8')])]" />
         </record>
         <record id="chart_at_template_7900" model="account.account.template">
           <field name="name">Aufwandsstellenrechnung</field>
@@ -1507,7 +1478,7 @@
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
           <field name="user_type_id" ref="account.data_account_type_expenses" />
-          <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_FIN10')])]" />
+          <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_operating'), ref('l10n_at.account_tag_l10n_at_EBIT8')])]" />
         </record>
         <record id="chart_at_template_8140" model="account.account.template">
           <field name="name">Erlöse aus dem Abgang von Beteiligungen</field>
@@ -1515,7 +1486,7 @@
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
           <field name="user_type_id" ref="account.data_account_type_other_income" />
-          <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_FIN10')])]" />
+          <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_financing'), ref('l10n_at.account_tag_l10n_at_FIN10')])]" />
         </record>
         <record id="chart_at_template_8150" model="account.account.template">
           <field name="name">Erlöse aus dem Abgang von sonstigen Finanzanlagen</field>
@@ -1523,7 +1494,7 @@
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
           <field name="user_type_id" ref="account.data_account_type_other_income" />
-          <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_FIN10')])]" />
+          <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_financing'), ref('l10n_at.account_tag_l10n_at_FIN10')])]" />
         </record>
         <record id="chart_at_template_8160" model="account.account.template">
           <field name="name">Erlöse aus dem Abgang von Wertpapieren des Umlaufvermögens</field>
@@ -1531,7 +1502,7 @@
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
           <field name="user_type_id" ref="account.data_account_type_other_income" />
-          <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_FIN10')])]" />
+          <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_financing'), ref('l10n_at.account_tag_l10n_at_FIN10')])]" />
         </record>
         <record id="chart_at_template_8170" model="account.account.template">
           <field name="name">Buchwert abgegangener Beteiligungen</field>
@@ -1539,7 +1510,7 @@
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
           <field name="user_type_id" ref="account.data_account_type_other_income" />
-          <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_FIN10')])]" />
+          <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_financing'), ref('l10n_at.account_tag_l10n_at_FIN10')])]" />
         </record>
         <record id="chart_at_template_8180" model="account.account.template">
           <field name="name">Buchwert abgegangener sonstiger Finanzanlagen</field>
@@ -1547,7 +1518,7 @@
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
           <field name="user_type_id" ref="account.data_account_type_other_income" />
-          <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_FIN11')])]" />
+          <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_financing'), ref('l10n_at.account_tag_l10n_at_FIN11')])]" />
         </record>
         <record id="chart_at_template_8190" model="account.account.template">
           <field name="name">Buchwert abgegangener Wertpapiere des Umlaufvermögens</field>
@@ -1555,7 +1526,7 @@
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
           <field name="user_type_id" ref="account.data_account_type_other_income" />
-          <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_FIN11')])]" />
+          <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_financing'), ref('l10n_at.account_tag_l10n_at_FIN11')])]" />
         </record>
         <record id="chart_at_template_8200" model="account.account.template">
           <field name="name">Erträge aus dem Abgang von und der Zuschreibung zu Finanzanlagen</field>
@@ -1563,7 +1534,7 @@
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
           <field name="user_type_id" ref="account.data_account_type_other_income" />
-          <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_FIN10')])]" />
+          <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_financing'), ref('l10n_at.account_tag_l10n_at_FIN10')])]" />
         </record>
         <record id="chart_at_template_8210" model="account.account.template">
           <field name="name">Erträge aus dem Abgang von und der Zuschreibung zu Wertpapieren des Umlaufvermögens</field>
@@ -1571,7 +1542,7 @@
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
           <field name="user_type_id" ref="account.data_account_type_other_income" />
-          <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_FIN11')])]" />
+          <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_financing'), ref('l10n_at.account_tag_l10n_at_FIN11')])]" />
         </record>
         <record id="chart_at_template_8350" model="account.account.template">
           <field name="name">Nicht ausgenützte Lieferantenskonti</field>
@@ -1579,7 +1550,7 @@
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
           <field name="user_type_id" ref="account.data_account_type_other_income" />
-          <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_FIN12')])]" />
+          <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_financing'), ref('l10n_at.account_tag_l10n_at_FIN12')])]" />
         </record>
         <record id="chart_at_template_8990" model="account.account.template">
           <field name="name">Gewinnabfuhr bzw. Verlustüberrechnung aus Ergebnisabführungsverträgen</field>
@@ -1587,7 +1558,7 @@
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
           <field name="user_type_id" ref="account.data_account_type_other_income" />
-          <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_FIN12')])]" />
+          <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_financing'), ref('l10n_at.account_tag_l10n_at_FIN12')])]" />
         </record>
         <record id="chart_at_template_9190" model="account.account.template">
           <field name="name">Nicht eingeforderte ausstehende Einlagen</field>
@@ -1595,7 +1566,7 @@
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
           <field name="user_type_id" ref="account.data_account_type_equity" />
-          <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PAI')])]" />
+          <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_financing'), ref('l10n_at.account_tag_l10n_at_PAI')])]" />
         </record>
         <record id="chart_at_template_9390" model="account.account.template">
           <field name="name">Bilanzgewinn (-verlust)</field>
@@ -1603,7 +1574,7 @@
           <field name="reconcile" eval="False"/>
           <field name="chart_template_id" ref="l10n_at_chart_template"/>
           <field name="user_type_id" ref="account.data_account_type_equity" />
-          <field name="tag_ids" eval="[(6, 0, [ref('l10n_at.account_tag_l10n_at_PAIV')])]" />
+          <field name="tag_ids" eval="[(6, 0, [ref('account.account_tag_financing'), ref('l10n_at.account_tag_l10n_at_PAIV')])]" />
         </record>
         <record id="chart_at_template_9800" model="account.account.template">
           <field name="name">Eröffnungsbilanz</field>

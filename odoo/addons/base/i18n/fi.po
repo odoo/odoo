@@ -28,12 +28,13 @@
 # Juha Torkkeli <juha.torkkeli@labaduu.com>, 2020
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2020
 # Martin Trigaux, 2020
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2020
 # Timo Koukkari <ti.ko@netikka.fi>, 2020
 # Mikko Virtanen <mikko.virtanen2013@gmail.com>, 2021
 # Antti Oksman <antti.oksman@web-veistamo.fi>, 2021
 # Miika Nissi <miika.nissi@tawasta.fi>, 2021
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2021
+# Katja Tuomas-Ahponen, 2021
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2021
 # 
 msgid ""
 msgstr ""
@@ -41,7 +42,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-23 15:12+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2021\n"
+"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2021\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4558,7 +4559,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Näytä yrityken/kumppann osoite Google Mapsissa. Aseta API avain verkkosivun asetukissa.\n"
+"Näytä yrityksen/kumppanin osoite Google Mapsissa. Aseta API-avain verkkosivun asetuksissa.\n"
 "    "
 
 #. module: base
@@ -6589,6 +6590,12 @@ msgid ""
 "                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Private Address</b>\n"
 "                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Address</b>"
 msgstr ""
+"<b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">Yrityksen osoite</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">Laskutusosoite</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">Toimitusosoite</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">Muu osoite</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">Kotiosoite</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', False)]}\">Osoite</b>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_short_form
@@ -19333,7 +19340,7 @@ msgstr "Muu"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__type__other
 msgid "Other Address"
-msgstr ""
+msgstr "Muu osoite"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_extra
@@ -21439,7 +21446,7 @@ msgstr "Myynti"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Sales & Purchase"
-msgstr ""
+msgstr "Myynti ja ostot"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_expense
@@ -24500,7 +24507,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_unsplash
 msgid "Unsplash Image Library"
-msgstr "Unsplash kuvakirjasto"
+msgstr "Unsplash-kuvakirjasto"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_translation_search

@@ -101,8 +101,9 @@ class PurchaseOrder(models.Model):
                 res = False
                 self.update(dict(order_line=new_lines))
                 for line in self.order_line.filtered(lambda line: line.product_template_id == product_template):
-                    res = line._product_id_change() or res
+                    line._product_id_change()
                     line._onchange_quantity()
+                    res = line.onchange_product_id_warning() or res
                 return res
 
     def _get_matrix(self, product_template):

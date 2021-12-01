@@ -9,6 +9,7 @@ import io
 from odoo import api, fields, models, _
 from odoo.exceptions import Warning
 from odoo.tools import float_is_zero, pycompat
+from odoo.tools.misc import get_lang
 
 
 class AccountFrFec(models.TransientModel):
@@ -293,12 +294,12 @@ class AccountFrFec(models.TransientModel):
         # LINES
         sql_query = '''
         SELECT
-            replace(replace(aj.code, '|', '/'), '\t', '') AS JournalCode,
-            replace(replace(aj.name, '|', '/'), '\t', '') AS JournalLib,
-            replace(replace(am.name, '|', '/'), '\t', '') AS EcritureNum,
+            REGEXP_REPLACE(replace(aj.code, '|', '/'), '[\\t\\r\\n]', ' ', 'g') AS JournalCode,
+            REGEXP_REPLACE(replace(COALESCE(aj__name.value, aj.name), '|', '/'), '[\\t\\r\\n]', ' ', 'g') AS JournalLib,
+            REGEXP_REPLACE(replace(am.name, '|', '/'), '[\\t\\r\\n]', ' ', 'g') AS EcritureNum,
             TO_CHAR(am.date, 'YYYYMMDD') AS EcritureDate,
             aa.code AS CompteNum,
-            replace(replace(aa.name, '|', '/'), '\t', '') AS CompteLib,
+            REGEXP_REPLACE(replace(aa.name, '|', '/'), '[\\t\\r\\n]', ' ', 'g') AS CompteLib,
             CASE WHEN aat.type IN ('receivable', 'payable')
             THEN
                 CASE WHEN rp.ref IS null OR rp.ref = ''
@@ -309,18 +310,18 @@ class AccountFrFec(models.TransientModel):
             END
             AS CompAuxNum,
             CASE WHEN aat.type IN ('receivable', 'payable')
-            THEN COALESCE(replace(replace(rp.name, '|', '/'), '\t', ''), '')
+            THEN COALESCE(REGEXP_REPLACE(replace(rp.name, '|', '/'), '[\\t\\r\\n]', ' ', 'g'), '')
             ELSE ''
             END AS CompAuxLib,
             CASE WHEN am.ref IS null OR am.ref = ''
             THEN '-'
-            ELSE replace(replace(am.ref, '|', '/'), '\t', '')
+            ELSE REGEXP_REPLACE(replace(am.ref, '|', '/'), '[\\t\\r\\n]', ' ', 'g')
             END
             AS PieceRef,
             TO_CHAR(am.date, 'YYYYMMDD') AS PieceDate,
             CASE WHEN aml.name IS NULL OR aml.name = '' THEN '/'
-                WHEN aml.name SIMILAR TO '[\t|\s|\n]*' THEN '/'
-                ELSE replace(replace(replace(replace(aml.name, '|', '/'), '\t', ''), '\n', ''), '\r', '') END AS EcritureLib,
+                WHEN aml.name SIMILAR TO '[\\t|\\s|\\n]*' THEN '/'
+                ELSE REGEXP_REPLACE(replace(aml.name, '|', '/'), '[\\t\\n\\r]', ' ', 'g') END AS EcritureLib,
             replace(CASE WHEN aml.debit = 0 THEN '0,00' ELSE to_char(aml.debit, '000000000000000D99') END, '.', ',') AS Debit,
             replace(CASE WHEN aml.credit = 0 THEN '0,00' ELSE to_char(aml.credit, '000000000000000D99') END, '.', ',') AS Credit,
             CASE WHEN rec.name IS NULL THEN '' ELSE rec.name END AS EcritureLet,
@@ -336,6 +337,11 @@ class AccountFrFec(models.TransientModel):
             LEFT JOIN account_move am ON am.id=aml.move_id
             LEFT JOIN res_partner rp ON rp.id=aml.partner_id
             JOIN account_journal aj ON aj.id = am.journal_id
+            LEFT JOIN ir_translation aj__name ON aj__name.res_id = aj.id
+                                             AND aj__name.type = 'model'
+                                             AND aj__name.name = 'account.journal,name'
+                                             AND aj__name.lang = %s
+                                             AND aj__name.value != ''
             JOIN account_account aa ON aa.id = aml.account_id
             LEFT JOIN account_account_type aat ON aa.user_type_id = aat.id
             LEFT JOIN res_currency rc ON rc.id = aml.currency_id
@@ -359,8 +365,9 @@ class AccountFrFec(models.TransientModel):
             am.name,
             aml.id
         '''
+        lang = self.env.user.lang or get_lang(self.env).code
         self._cr.execute(
-            sql_query, (self.date_from, self.date_to, company.id))
+            sql_query, (lang, self.date_from, self.date_to, company.id))
 
         for row in self._cr.fetchall():
             rows_to_write.append(list(row))

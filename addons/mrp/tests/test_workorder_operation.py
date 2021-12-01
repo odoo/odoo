@@ -424,6 +424,36 @@ class TestWorkOrderProcess(TestMrpCommon):
         door_wo_2.record_production()
         self.assertEqual(door_wo_2.state, 'done', "Workorder should be in done state.")
 
+    def test_unlink_workorder(self):
+        laptop = self.env.ref("product.product_product_25")
+        bom = self.env['mrp.bom'].browse(self.ref("mrp.mrp_bom_desk"))
+        bom.routing_id = self.env.ref("mrp.mrp_routing_1")
+
+        production_table_form = Form(self.env['mrp.production'])
+        production_table_form.product_id = laptop
+        production_table_form.bom_id = bom
+        production_table_form.product_qty = 2.0
+        production_table_form.product_uom_id = laptop.uom_id
+        production_table = production_table_form.save()
+        production_table.action_confirm()
+
+        production_table.button_plan()
+
+        self.assertEqual(len(production_table.workorder_ids), 3)
+
+        workorders = production_table.workorder_ids
+
+        for i in range(len(workorders)-1):
+            self.assertEqual(workorders[i].next_work_order_id, workorders[i+1])
+
+        production_table.workorder_ids[1].unlink()
+
+        self.assertEqual(len(production_table.workorder_ids), 2)
+
+        workorders = production_table.workorder_ids
+        for i in range(len(workorders)-1):
+            self.assertEqual(workorders[i].next_work_order_id, workorders[i+1])
+
 
     def test_01_without_workorder(self):
         """ Testing consume quants and produced quants without workorder """
