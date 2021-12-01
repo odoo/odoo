@@ -306,3 +306,20 @@ class TestTimesheet(TestCommonTimesheet):
         self.task1.write({'partner_id': partner2})
 
         self.assertEqual(timesheet_entry.partner_id, partner2, "The timesheet entry's partner should still be equal to the task's partner/customer, after the change")
+
+    def test_add_time_from_wizard(self):
+        config = self.env["res.config.settings"].create({
+                "timesheet_min_duration": 60,
+                "timesheet_rounding": 15,
+            })
+        config.execute()
+        wizard_min = self.env['project.task.create.timesheet'].create({
+                'time_spent': 0.7,
+                'task_id': self.task1.id,
+            })
+        wizard_round = self.env['project.task.create.timesheet'].create({
+                'time_spent': 1.15,
+                'task_id': self.task1.id,
+            })
+        self.assertEqual(wizard_min.save_timesheet().unit_amount, 1, "The timesheet's duration should be 1h (Minimum Duration = 60').")
+        self.assertEqual(wizard_round.save_timesheet().unit_amount, 1.25, "The timesheet's duration should be 1h15 (Rounding = 15').")
