@@ -768,7 +768,7 @@ var StatementModel = BasicModel.extend({
                 this._computeReconcileModels(handle, prop.reconcileModelId);
             }
         }
-        if ('force_tax_included' in values || 'amount' in values || 'account_id' in values) {
+        if ('label' in values || 'force_tax_included' in values || 'amount' in values || 'account_id' in values) {
             prop.__tax_to_recompute = true;
         }
         line.createForm = _.pick(prop, this.quickCreateFields);

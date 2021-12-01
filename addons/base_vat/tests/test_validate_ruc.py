@@ -50,11 +50,6 @@ class TestStructure(common.TransactionCase):
             "vat": "ATU12345675",
             "company_type": "company",
         })
-        contact = self.env["res.partner"].create({
-            "name": "Sylvestre",
-            "parent_id": company.id,
-            "company_type": "person",
-        })
 
         def mock_check_vies(vat_number):
             """ Fake vatnumber method that will only allow one number """

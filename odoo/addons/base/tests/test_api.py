@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models
+from odoo import api, models
 from odoo.tools import mute_logger
 from odoo.tests import common
 from odoo.exceptions import AccessError
@@ -513,3 +513,14 @@ class TestAPI(common.TransactionCase):
         # sort by inverse name, with a field name
         by_name_ids.reverse()
         self.assertEqual(ps.sorted('name', reverse=True).ids, by_name_ids)
+
+
+class TestExternalAPI(common.TransactionCase):
+
+    def test_call_kw(self):
+        """kwargs is not modified by the execution of the call"""
+        partner = self.env['res.partner'].create({'name': 'MyPartner1'})
+        args = (partner.ids, ['name'])
+        kwargs = {'context': {'test': True}}
+        api.call_kw(self.env['res.partner'], 'read', args, kwargs)
+        self.assertEqual(kwargs, {'context': {'test': True}})

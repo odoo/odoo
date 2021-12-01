@@ -178,15 +178,17 @@ class ResPartner(models.Model):
             company = self.env['res.company'].browse(self.env.context['company_id'])
         else:
             company = self.env.company
-        if company.vat_check_vies:
-            # force full VIES online check
-            check_func = self.vies_vat_check
-        else:
-            # quick and partial off-line checksum validation
-            check_func = self.simple_vat_check
+        eu_countries = self.env.ref('base.europe').country_ids
         for partner in self:
             if not partner.vat:
                 continue
+            is_eu_country = partner.commercial_partner_id.country_id in eu_countries
+            if company.vat_check_vies and is_eu_country and partner.is_company:
+                # force full VIES online check
+                check_func = self.vies_vat_check
+            else:
+                # quick and partial off-line checksum validation
+                check_func = self.simple_vat_check
             #check with country code as prefix of the TIN
             failed_check = False
             vat_country_code, vat_number = self._split_vat(partner.vat)

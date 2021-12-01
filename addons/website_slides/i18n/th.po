@@ -12,6 +12,7 @@
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2020
 # Martin Trigaux, 2020
 # Odoo Thaidev <odoothaidev@gmail.com>, 2020
+# Wichanon Jamwutthipreecha, 2021
 # 
 msgid ""
 msgstr ""
@@ -19,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Odoo Thaidev <odoothaidev@gmail.com>, 2020\n"
+"Last-Translator: Wichanon Jamwutthipreecha, 2021\n"
 "Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -401,7 +402,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_card
 msgid "<span class=\"badge badge-danger\">Unpublished</span>"
-msgstr ""
+msgstr "<span class=\"badge badge-danger\">ไม่ได้เผยแพร่</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_card
@@ -536,6 +537,7 @@ msgstr ""
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_course_fullscreen_player.js:0
+#: code:addons/website_slides/static/src/js/slides_share.js:0
 #, python-format
 msgid "<strong>Thank you!</strong> Mail has been sent."
 msgstr ""
@@ -721,7 +723,7 @@ msgstr ""
 #: code:addons/website_slides/static/src/js/slides_course_quiz.js:0
 #, python-format
 msgid "All questions must be answered !"
-msgstr ""
+msgstr "ต้องตอบทุกคำถาม !"
 
 #. module: website_slides
 #: model:slide.channel,description:website_slides.slide_channel_demo_5_furn2
@@ -778,7 +780,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer__text_value
 #: model:ir.model.fields,field_description:website_slides.field_slide_question__answer_ids
 msgid "Answer"
-msgstr ""
+msgstr "ตอบ"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_answer
@@ -1028,14 +1030,14 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #, python-format
 msgid "Check answers"
-msgstr ""
+msgstr "ตรวจคำตอบ"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #, python-format
 msgid "Check your answers"
-msgstr ""
+msgstr "ตรวจสอบคำตอบของคุณ"
 
 #. module: website_slides
 #. openerp-web
@@ -1225,7 +1227,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_question
 msgid "Content Quiz Question"
-msgstr ""
+msgstr "คำถามแบบทดสอบเนื้อหา"
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.action_slide_tag
@@ -1285,7 +1287,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Course"
-msgstr ""
+msgstr "คอร์ส"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_res_partner__slide_channel_count
@@ -1868,7 +1870,7 @@ msgstr ""
 #: model:gamification.challenge.line,name:website_slides.badge_data_register_challenge_line_0
 #: model:gamification.goal.definition,name:website_slides.badge_data_register_goal
 msgid "Get started"
-msgstr ""
+msgstr "เริ่มเลย"
 
 #. module: website_slides
 #. openerp-web
@@ -2050,13 +2052,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__image_128
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__image_128
 msgid "Image 128"
-msgstr ""
+msgstr "รูปภาพ 128"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__image_256
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__image_256
 msgid "Image 256"
-msgstr ""
+msgstr "รูปภาพ 256"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__image_512
@@ -2126,7 +2128,7 @@ msgstr ""
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_category_demo_4_0
 msgid "Introduction"
-msgstr ""
+msgstr "บทนำ"
 
 #. module: website_slides
 #. openerp-web
@@ -2317,7 +2319,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.toggle_leaderboard
 msgid "Leaderboard"
-msgstr ""
+msgstr "กระดานผู้นำ"
 
 #. module: website_slides
 #: model:slide.channel,description:website_slides.slide_channel_demo_1_gard1
@@ -2489,7 +2491,7 @@ msgstr "นาที"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
 msgid "Mobile sub-nav"
-msgstr ""
+msgstr "การนำทางย่อยบนมือถือ"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
@@ -2821,7 +2823,7 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/website_slides_channel.xml:0
 #, python-format
 msgid "Please fill in this field"
-msgstr ""
+msgstr "กรุณากรอกข้อมูลในช่องนี้"
 
 #. module: website_slides
 #: model:gamification.badge,name:website_slides.badge_data_course
@@ -2892,7 +2894,7 @@ msgstr "เผยแพร่"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Published Date"
-msgstr ""
+msgstr "วันที่เผยแพร่แล้ว"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_channel.py:0
@@ -2947,7 +2949,7 @@ msgstr "คำถาม"
 #: model:slide.channel.tag,name:website_slides.slide_channel_tag_other_0
 #, python-format
 msgid "Quiz"
-msgstr ""
+msgstr "ควิซ"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_partner__quiz_attempts_count
@@ -2962,7 +2964,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_question_view_tree_report
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Quizzes"
-msgstr ""
+msgstr "ควิซ"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -2975,7 +2977,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__rating_ids
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Rating"
-msgstr ""
+msgstr "การให้คะแนน"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__rating_avg
@@ -3155,7 +3157,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "Search courses"
-msgstr ""
+msgstr "ค้นหาหลักสูตร"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
@@ -3281,7 +3283,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_share
 #, python-format
 msgid "Share on Facebook"
-msgstr ""
+msgstr "แชร์บน Facebook"
 
 #. module: website_slides
 #. openerp-web
@@ -3289,7 +3291,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_share
 #, python-format
 msgid "Share on LinkedIn"
-msgstr ""
+msgstr "แชร์บน LinkedIn"
 
 #. module: website_slides
 #. openerp-web
@@ -3306,7 +3308,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_share
 #, python-format
 msgid "Share on Twitter"
-msgstr ""
+msgstr "แชร์บน Twitter"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__description
@@ -3604,7 +3606,7 @@ msgstr ""
 #: code:addons/website_slides/static/src/js/slides_course_quiz.js:0
 #, python-format
 msgid "There was an error validating this quiz."
-msgstr ""
+msgstr "เกิดข้อผิดพลาดในการตรวจสอบควิซนี้"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed__url
@@ -3633,7 +3635,7 @@ msgstr ""
 #: code:addons/website_slides/static/src/js/slides_course_quiz.js:0
 #, python-format
 msgid "This quiz is already done. Retaking it is not possible."
-msgstr ""
+msgstr "แบบทดสอบนี้ได้ทำไปแล้ว ไม่สามารถนำกลับมาใช้ใหม่ได้"
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:0
@@ -3888,7 +3890,7 @@ msgstr "มุมมอง"
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 #: model_terms:ir.ui.view,arch_db:website_slides.toggle_leaderboard
 msgid "View all"
-msgstr ""
+msgstr "ดูทั้งหมด"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
@@ -4058,7 +4060,7 @@ msgstr ""
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_category_demo_2_1
 msgid "Wood"
-msgstr ""
+msgstr "ไม้"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_3_1
@@ -4348,7 +4350,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_training_category
 #: model_terms:ir.ui.view,arch_db:website_slides.user_quickkarma_card
 msgid "xp"
-msgstr ""
+msgstr "xp"
 
 #. module: website_slides
 #. openerp-web

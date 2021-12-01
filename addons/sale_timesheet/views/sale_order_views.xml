@@ -12,7 +12,7 @@
                            class="oe_stat_button"
                            icon="fa-puzzle-piece"
                            string="Project Overview"
-                           attrs="{'invisible': [('project_ids', '=', [])]}"
+                           attrs="{'invisible': ['|', ('state', 'in', ['draft', 'sent']), ('project_ids', '=', [])]}"
                            groups="project.group_project_manager">
                           <field name="project_ids" invisible="1"/>
                        </button>

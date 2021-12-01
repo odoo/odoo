@@ -176,8 +176,8 @@ class BaseAutomation(models.Model):
     def _filter_post_export_domain(self, records):
         """ Filter the records that satisfy the postcondition of action ``self``. """
         if self.filter_domain and records:
-            domain = [('id', 'in', records.ids)] + safe_eval(self.filter_domain, self._get_eval_context())
-            return records.sudo().search(domain).with_env(records.env), domain
+            domain = safe_eval(self.filter_domain, self._get_eval_context())
+            return records.sudo().filtered_domain(domain).with_env(records.env), domain
         else:
             return records, None
 
