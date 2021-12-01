@@ -220,7 +220,10 @@ class SaleOrder(models.Model):
     tax_totals_json = fields.Char(compute='_compute_tax_totals_json')
     amount_tax = fields.Monetary(string='Taxes', store=True, compute='_amount_all')
     amount_total = fields.Monetary(string='Total', store=True, compute='_amount_all', tracking=4)
-    currency_rate = fields.Float("Currency Rate", compute='_compute_currency_rate', store=True, digits=(12, 6), help='The rate of the currency to the currency of rate 1 applicable at the date of the order')
+    currency_rate = fields.Float(
+        string="Currency Rate",
+        compute='_compute_currency_rate', store=True, digits=(12, 6), precompute=True,
+        help='The rate of the currency to the currency of rate 1 applicable at the date of the order')
 
     payment_term_id = fields.Many2one(
         'account.payment.term', string='Payment Terms', check_company=True,  # Unrequired company
@@ -292,16 +295,26 @@ class SaleOrder(models.Model):
                     bad_products=', '.join(bad_products.mapped('display_name')),
                 ))
 
-    @api.depends('pricelist_id', 'date_order', 'company_id')
+    @api.depends('currency_id', 'date_order', 'company_id')
     def _compute_currency_rate(self):
+        cache = {}
         for order in self:
+            order_date = order.date_order.date()
             if not order.company_id:
-                order.currency_rate = order.currency_id.with_context(date=order.date_order).rate or 1.0
+                order.currency_rate = order.currency_id.with_context(date=order_date).rate or 1.0
                 continue
-            elif order.company_id.currency_id and order.currency_id:  # the following crashes if any one is undefined
-                order.currency_rate = self.env['res.currency']._get_conversion_rate(order.company_id.currency_id, order.currency_id, order.company_id, order.date_order)
-            else:
+            elif not order.currency_id:
                 order.currency_rate = 1.0
+            else:
+                key = (order.company_id.id, order_date, order.currency_id.id)
+                if key not in cache:
+                    cache[key] = self.env['res.currency']._get_conversion_rate(
+                        from_currency=order.company_id.currency_id,
+                        to_currency=order.currency_id,
+                        company=order.company_id,
+                        date=order_date,
+                    )
+                order.currency_rate = cache[key]
 
     def _compute_access_url(self):
         super(SaleOrder, self)._compute_access_url()
