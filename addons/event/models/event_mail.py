@@ -73,27 +73,13 @@ class EventMailScheduler(models.Model):
     configuration allowing to send emails on events since Odoo 9. A cron exists
     that periodically checks for mailing to run. """
     _name = 'event.mail'
+    _inherit = 'event.type.mail'
     _rec_name = 'event_id'
     _description = 'Event Automated Mailing'
 
-    @api.model
-    def _selection_template_model(self):
-        return [('mail.template', 'Mail')]
-
     event_id = fields.Many2one('event.event', string='Event', required=True, ondelete='cascade')
+    event_type_id = fields.Many2one('event.type', related='event_id.event_type_id', string='Event Type')
     sequence = fields.Integer('Display order')
-    notification_type = fields.Selection([('mail', 'Mail')], string='Send', default='mail', required=True)
-    interval_nbr = fields.Integer('Interval', default=1)
-    interval_unit = fields.Selection([
-        ('now', 'Immediately'),
-        ('hours', 'Hours'), ('days', 'Days'),
-        ('weeks', 'Weeks'), ('months', 'Months')],
-        string='Unit', default='hours', required=True)
-    interval_type = fields.Selection([
-        ('after_sub', 'After each registration'),
-        ('before_event', 'Before the event'),
-        ('after_event', 'After the event')],
-        string='Trigger ', default="before_event", required=True)
     scheduled_date = fields.Datetime('Schedule Date', compute='_compute_scheduled_date', store=True)
     # contact and status
     mail_registration_ids = fields.One2many(
@@ -104,14 +90,6 @@ class EventMailScheduler(models.Model):
         [('running', 'Running'), ('scheduled', 'Scheduled'), ('sent', 'Sent')],
         string='Global communication Status', compute='_compute_mail_state')
     mail_count_done = fields.Integer('# Sent', copy=False, readonly=True)
-    template_model_id = fields.Many2one('ir.model', string='Template Model', compute='_compute_template_model_id', compute_sudo=True)
-    template_ref = fields.Reference(string='Template', selection='_selection_template_model', required=True)
-
-    @api.depends('notification_type')
-    def _compute_template_model_id(self):
-        mail_model = self.env['ir.model']._get('mail.template')
-        for mail in self:
-            mail.template_model_id = mail_model if mail.notification_type == 'mail' else False
 
     @api.depends('event_id.date_begin', 'event_id.date_end', 'interval_type', 'interval_unit', 'interval_nbr')
     def _compute_scheduled_date(self):
