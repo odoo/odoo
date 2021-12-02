@@ -1431,7 +1431,9 @@ const Wysiwyg = Widget.extend({
                 if (!this.showTooltip || $target.attr('title') !== undefined) {
                     return;
                 }
+                this.odooEditor.observerUnactive();
                 $target.tooltip({title: _t('Double-click to edit'), trigger: 'manual', container: 'body'}).tooltip('show');
+                this.odooEditor.observerActive();
                 setTimeout(() => $target.tooltip('dispose'), 800);
             }, 400);
         }
