@@ -12,7 +12,7 @@ from lxml.builder import E
 
 from odoo.modules import get_module_resource
 from odoo.tests.common import TransactionCase
-from odoo.addons.base.models.qweb import QWebException
+from odoo.addons.base.models.ir_qweb import QWebException
 from odoo.tools import misc, mute_logger
 from odoo.tools.json import scriptsafe as json_scriptsafe
 
@@ -697,7 +697,9 @@ class TestQWebBasic(TransactionCase):
             ("(lambda a: a + 5)(x)",                    {'x': 10},                      15),
             ("(lambda a: a + x)(5)",                    {'x': 10},                      15),
             ("sum(x for x in range(4)) + ((x))",        {'x': 10},                      16),
-            ("['test_' + x for x in ['a', 'b']]",       {},                             ['test_a', 'test_b'])
+            ("['test_' + x for x in ['a', 'b']]",       {},                             ['test_a', 'test_b']),
+            ("""1 and 2 and 0
+                or 9""",                                {},                             9),
         ]
 
         IrQweb = self.env['ir.qweb']
@@ -880,6 +882,16 @@ class TestQWebBasic(TransactionCase):
                 <div class="a2">[ &lt;span a=&#34;b&#34;&gt; toto &lt;/span&gt; ]</div>
             """
         rendered = self.env['ir.qweb']._render(t.id)
+        self.assertEqual(rendered.strip(), result.strip())
+
+    def test_out(self):
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<t t-name="out-format"><div t-out="a">Default</div></t>'''
+        })
+        result = """<div>1</div>"""
+        rendered = self.env['ir.qweb']._render(t.id, {'a': 1})
         self.assertEqual(rendered.strip(), result.strip())
 
     def test_out_format_1(self):
@@ -1161,7 +1173,7 @@ class TestQWebStaticXml(TransactionCase):
 
         return lambda: self.run_test_file(os.path.join(path, f))
 
-    @mute_logger('odoo.addons.base.models.qweb') # tests t-raw which is deprecated
+    @mute_logger('odoo.addons.base.models.ir_qweb') # tests t-raw which is deprecated
     def run_test_file(self, path):
         self.env.user.tz = 'Europe/Brussels'
         doc = etree.parse(path).getroot()

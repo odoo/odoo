@@ -313,7 +313,7 @@ class QwebTracker():
     def wrap_compile_directive(cls, method_compile_directive):
         @functools.wraps(method_compile_directive)
         def _tracked_compile_directive(self, el, options, directive, indent):
-            if not options.get('profile') or directive in ('content', 'tag'):
+            if not options.get('profile') or directive in ('inner-content', 'tag'):
                 return method_compile_directive(self, el, options, directive, indent)
 
             enter = self._indent(f"self.env.context['qweb_tracker'].enter_directive({directive!r}, {el.attrib!r}, {options['last_path_node']!r})", indent)

@@ -3,7 +3,7 @@
 
 from odoo.tests import Form
 from odoo.addons.hr.tests.common import TestHrCommon
-from odoo.addons.base.models.qweb import QWebException
+from odoo.addons.base.models.ir_qweb import QWebException
 
 
 class TestMultiCompany(TestHrCommon):

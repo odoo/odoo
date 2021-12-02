@@ -19,7 +19,7 @@ import odoo
 from odoo import api, models, registry, exceptions, tools, http
 from odoo.addons.base.models import ir_http
 from odoo.addons.base.models.ir_http import RequestUID
-from odoo.addons.base.models.qweb import QWebException
+from odoo.addons.base.models.ir_qweb import QWebException
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import config, ustr, pycompat
