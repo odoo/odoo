@@ -35,6 +35,8 @@ class RatingParentMixin(models.AbstractModel):
     rating_count = fields.Integer(string='# Ratings', compute="_compute_rating_percentage_satisfaction", compute_sudo=True)
     rating_avg = fields.Float('Average Rating', groups='base.group_user',
         compute='_compute_rating_percentage_satisfaction', compute_sudo=True, search='_search_rating_avg')
+    rating_avg_percentage = fields.Float('Average Rating (%)', groups='base.group_user',
+        compute='_compute_rating_percentage_satisfaction', compute_sudo=True)
     rating_last_value = fields.Float('Rating Last Value', groups='base.group_user', related='rating_ids.rating')
 
     @api.depends('rating_ids.rating', 'rating_ids.consumed')
@@ -67,6 +69,7 @@ class RatingParentMixin(models.AbstractModel):
             record.rating_count = rating_count
             record.rating_percentage_satisfaction = repartition['great'] * 100 / rating_count if rating_count else -1
             record.rating_avg = rating_scores_per_parent[record.id] / rating_count if rating_count else 0
+            record.rating_avg_percentage = record.rating_avg / 5
 
     def _search_rating_avg(self, operator, value):
         if operator not in OPERATOR_MAPPING:
@@ -93,7 +96,7 @@ class RatingMixin(models.AbstractModel):
     rating_last_feedback = fields.Text('Rating Last Feedback', groups='base.group_user', related='rating_ids.feedback')
     rating_last_image = fields.Binary('Rating Last Image', groups='base.group_user', related='rating_ids.rating_image')
     rating_count = fields.Integer('Rating count', compute="_compute_rating_stats", compute_sudo=True)
-    rating_avg = fields.Float("Average Rating",
+    rating_avg = fields.Float("Average Rating", groups='base.group_user',
         compute='_compute_rating_stats', compute_sudo=True, search='_search_rating_avg')
     rating_percentage_satisfaction = fields.Float("Rating Satisfaction", compute='_compute_rating_satisfaction', compute_sudo=True)
     rating_last_text = fields.Selection(string="Rating Text", groups='base.group_user', related="rating_ids.rating_text")
