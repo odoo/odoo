@@ -18,20 +18,6 @@ MAPPED_RATES = {
 
 class Rating(http.Controller):
 
-    @http.route('/rating/<string:token>/<int:rate>', type='http', auth="public", website=True)
-    def open_rating(self, token, rate, **kwargs):
-        _logger.warning('/rating is deprecated, use /rate instead')
-        assert rate in (1, 5, 10), "Incorrect rating"
-        return self.action_open_rating(token, MAPPED_RATES.get(rate), **kwargs)
-
-    @http.route(['/rating/<string:token>/submit_feedback'], type="http", auth="public", methods=['post'], website=True)
-    def submit_rating(self, token, **kwargs):
-        _logger.warning('/rating is deprecated, use /rate instead')
-        rate = int(kwargs.get('rate'))
-        assert rate in (1, 5, 10), "Incorrect rating"
-        kwargs['rate'] = MAPPED_RATES.gate(rate)
-        return self.action_submit_rating(token, **kwargs)
-
     @http.route('/rate/<string:token>/<int:rate>', type='http', auth="public", website=True)
     def action_open_rating(self, token, rate, **kwargs):
         assert rate in (1, 3, 5), "Incorrect rating"
