@@ -24,17 +24,6 @@ models.PosModel = models.PosModel.extend({
       }
       return _.contains(french_countries, this.company.country.code);
     },
-    delete_current_order: function () {
-        if (this.is_french_country() && this.get_order().get_orderlines().length) {
-            Gui.showPopup("ErrorPopup", {
-                'title': _t("Fiscal Data Module error"),
-                'body':  _t("Deleting of orders is not allowed."),
-            });
-        } else {
-            _super_posmodel.delete_current_order.apply(this, arguments);
-        }
-    },
-
     disallowLineQuantityChange() {
         let result = _super_posmodel.disallowLineQuantityChange.bind(this)();
         return this.is_french_country() || result;
@@ -64,7 +53,19 @@ models.Order = models.Order.extend({
       var result = _super_order.wait_for_push_order.apply(this,arguments);
       result = Boolean(result || this.pos.is_french_country());
       return result;
-    }
+    },
+    destroy: function(reason) {
+        // SUGGESTION: It's probably more appropriate to apply this restriction
+        // in the TicketScreen.
+        if (this.pos.is_french_country() && this.get_orderlines().length) {
+            Gui.showPopup("ErrorPopup", {
+                'title': _t("Fiscal Data Module error"),
+                'body':  _t("Deleting of orders is not allowed."),
+            });
+        } else {
+            _super_order.destroy.apply(this, arguments);
+        }
+    },
 });
 
 var orderline_super = models.Orderline.prototype;
