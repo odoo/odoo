@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="web.DomainSelectorRootNode" owl="1">
+        <div
+            class="o_domain_node o_domain_tree o_domain_selector"
+            aria-atomic="true"
+            t-att-class="props.readonly ? 'o_read_mode' : 'o_edit_mode'"
+        >
+            <t t-if="!hasNode">
+                <span>Match <strong>All records</strong></span>
+                <t t-if="!props.readonly">
+                    <button
+                        class="btn btn-sm btn-primary o_domain_add_first_node_button"
+                        t-on-click="insertNode('leaf')"
+                    >
+                        <i class="fa fa-plus"/> Add filter
+                    </button>
+                </t>
+            </t>
+            <t t-else="">
+                <t t-if="node.type === 'leaf'">
+                    Match records with the following rule:
+                    <div class="o_domain_node_children_container">
+                        <DomainSelectorLeafNode t-props="{ ...props, node }" />
+                    </div>
+                </t>
+                <t t-else="">
+                    <span>Match records with </span>
+                    <DomainSelectorBranchOperator node="node" readonly="props.readonly" />
+                    <span> of the following rules:</span>
+                    <div class="o_domain_node_children_container">
+                        <t t-foreach="node.operands" t-as="subNode" t-key="subNode.id">
+                            <t t-if="subNode.type === 'branch'">
+                                <DomainSelectorBranchNode t-props="{ ...props, node: subNode }" />
+                            </t>
+                            <t t-elif="subNode.type === 'leaf'">
+                                <DomainSelectorLeafNode t-props="{ ...props, node: subNode }" />
+                            </t>
+                        </t>
+                    </div>
+                </t>
+            </t>
+            <t t-if="props.isDebugMode and !props.readonly">
+                <label class="o_domain_debug_container">
+                    <span class="small"># Code editor</span>
+                    <textarea type="text" class="o_domain_debug_input" t-att-value="props.value" t-on-change="onChange" />
+                </label>
+            </t>
+        </div>
+    </t>
+
+</templates>

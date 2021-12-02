@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="web.DomainSelectorBranchNode" owl="1">
+        <div class="o_domain_node o_domain_tree">
+            <div class="o_domain_tree_header o_domain_selector_row">
+                <t t-if="!props.readonly">
+                    <DomainSelectorControlPanel node="props.node" />
+                </t>
+                <DomainSelectorBranchOperator node="props.node" readonly="props.readonly" />
+                <span class="ml4">of:</span>
+            </div>
+            <div class="o_domain_node_children_container">
+                <t t-foreach="props.node.operands" t-as="subNode" t-key="subNode.id">
+                    <t t-if="subNode.type === 'branch'">
+                        <DomainSelectorBranchNode t-props="{ ...props, node: subNode }" />
+                    </t>
+                    <t t-elif="subNode.type === 'leaf'">
+                        <DomainSelectorLeafNode t-props="{ ...props, node: subNode }" />
+                    </t>
+                </t>
+            </div>
+        </div>
+    </t>
+
+</templates>

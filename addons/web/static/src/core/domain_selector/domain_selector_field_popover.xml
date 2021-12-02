@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="web.DomainSelectorFieldPopover" owl="1">
+        <div class="o_field_selector_popover" tabindex="0">
+            <div class="o_field_selector_popover_header text-center">
+                <i class="fa fa-arrow-left o_field_selector_popover_option o_field_selector_prev_page" title="Previous" role="img" aria-label="Previous" />
+                <div class="o_field_selector_title" t-esc="props.title" />
+                <i
+                    class="fa fa-times o_field_selector_popover_option o_field_selector_close"
+                    title="Close"
+                    role="img"
+                    aria-label="Close"
+                    t-on-click="trigger('popover-closed')"
+                />
+
+                <!--
+                <div t-if="widget.options.showSearchInput" class="o_field_selector_search mt-2">
+                    <input type="text" placeholder='Search...' class="o_input"/>
+                </div>
+                -->
+            </div>
+            <div class="o_field_selector_popover_body">
+                <ul class="o_field_selector_page">
+                    <t t-foreach="state.currentFields" t-as="field" t-key="field">
+                        <li class="o_field_selector_item">
+                            <t t-esc="field_value.string" />
+                        </li>
+                    </t>
+                </ul>
+            </div>
+            <!--
+            <div t-if="widget.options.debugMode" class="o_field_selector_popover_footer">
+                <input type="text" class="o_input o_field_selector_debug"/>
+            </div>
+            -->
+        </div>
+    </t>
+
+</templates>
