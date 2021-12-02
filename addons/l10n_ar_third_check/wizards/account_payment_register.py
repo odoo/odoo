@@ -29,7 +29,7 @@ class AccountPaymentRegister(models.TransientModel):
         vals = super()._create_payment_vals_from_wizard()
         vals.update({
             'check_id': self.check_id.id,
-            'third_check_bank_id': self.third_check_bank_id,
+            'third_check_bank_id': self.third_check_bank_id.id,
             'third_check_issuer_vat': self.third_check_issuer_vat,
         })
         return vals
