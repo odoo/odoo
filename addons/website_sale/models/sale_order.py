@@ -30,11 +30,11 @@ class SaleOrder(models.Model):
                                  help='Website through which this order was placed.')
 
     @api.model
-    def _default_note_url(self):
+    def _get_note_url(self):
         website = self.env['website'].get_current_website()
         if website:
             return website.get_base_url()
-        return super()._default_note_url()
+        return super()._get_note_url()
 
     @api.depends('order_line')
     def _compute_website_order_line(self):
@@ -116,7 +116,7 @@ class SaleOrder(models.Model):
         discount = 0
 
         if order.pricelist_id.discount_policy == 'without_discount':
-            # This part is pretty much a copy-paste of the method '_onchange_discount' of
+            # This part is pretty much a copy-paste of the method '_compute_discount' of
             # 'sale.order.line'.
             price, rule_id = order.pricelist_id.with_context(product_context).get_product_price_rule(product, qty or 1.0, order.partner_id)
             pu, currency = request.env['sale.order.line'].with_context(product_context)._get_real_price_currency(product, rule_id, qty, product.uom_id, order.pricelist_id.id)

@@ -17,12 +17,6 @@ _logger = logging.getLogger(__name__)
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    @api.model
-    def _default_warehouse_id(self):
-        # !!! Any change to the default value may have to be repercuted
-        # on _init_column() below.
-        return self.env.user._get_default_warehouse_id()
-
     incoterm = fields.Many2one(
         'account.incoterms', 'Incoterm',
         help="International Commercial Terms are a series of predefined commercial terms used in international transactions.")
@@ -30,13 +24,14 @@ class SaleOrder(models.Model):
         ('direct', 'As soon as possible'),
         ('one', 'When all products are ready')],
         string='Shipping Policy', required=True, readonly=True, default='direct',
-        states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}
-        ,help="If you deliver all products at once, the delivery order will be scheduled based on the greatest "
+        states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
+        help="If you deliver all products at once, the delivery order will be scheduled based on the greatest "
         "product lead time. Otherwise, it will be based on the shortest.")
     warehouse_id = fields.Many2one(
-        'stock.warehouse', string='Warehouse',
-        required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
-        default=_default_warehouse_id, check_company=True)
+        'stock.warehouse', string='Warehouse', required=True,
+        compute='_compute_warehouse_id', store=True, readonly=False, precompute=True,
+        states={'sale': [('readonly', True)], 'done': [('readonly', False)], 'cancel': [('readonly', False)]},
+        check_company=True)
     picking_ids = fields.One2many('stock.picking', 'sale_id', string='Transfers')
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
     procurement_group_id = fields.Many2one('procurement.group', 'Procurement Group', copy=False)
@@ -87,13 +82,6 @@ class SaleOrder(models.Model):
             if dates_list:
                 expected_date = min(dates_list) if order.picking_policy == 'direct' else max(dates_list)
                 order.expected_date = fields.Datetime.to_string(expected_date)
-
-    @api.model
-    def create(self, vals):
-        if 'warehouse_id' not in vals and 'company_id' in vals:
-            user = self.env['res.users'].browse(vals.get('user_id', False))
-            vals['warehouse_id'] = user.with_company(vals.get('company_id'))._get_default_warehouse_id().id
-        return super().create(vals)
 
     def write(self, values):
         if values.get('order_line') and self.state == 'sale':
@@ -153,17 +141,20 @@ class SaleOrder(models.Model):
         for order in self:
             order.delivery_count = len(order.picking_ids)
 
-    @api.onchange('company_id')
-    def _onchange_company_id(self):
-        if self.company_id:
-            warehouse_id = self.env['ir.default'].get_model_defaults('sale.order').get('warehouse_id')
-            self.warehouse_id = warehouse_id or self.user_id.with_company(self.company_id.id)._get_default_warehouse_id().id
-
-    @api.onchange('user_id')
-    def onchange_user_id(self):
-        super().onchange_user_id()
-        if self.state in ['draft', 'sent']:
-            self.warehouse_id = self.user_id.with_company(self.company_id.id)._get_default_warehouse_id().id
+    @api.depends('user_id', 'company_id')
+    def _compute_warehouse_id(self):
+        for order in self:
+            default_warehouse_id = self.env['ir.default'].with_company(
+                order.company_id.id).get_model_defaults('sale.order').get('warehouse_id')
+            if order.company_id and order.company_id != order._origin.company_id:
+                warehouse = default_warehouse_id
+            else:
+                warehouse = self.env['stock.warehouse']
+            if order.state in ['draft', 'sent']:
+                order.warehouse_id = warehouse or order.user_id.with_company(order.company_id.id)._get_default_warehouse_id()
+            # In case we create a record in another state (eg: demo data, or business code)
+            if not order.warehouse_id:
+                order.warehouse_id = self.env.user._get_default_warehouse_id()
 
     @api.onchange('partner_shipping_id')
     def _onchange_partner_shipping_id(self):
@@ -234,11 +225,6 @@ class SaleOrder(models.Model):
         invoice_vals['invoice_incoterm_id'] = self.incoterm.id
         return invoice_vals
 
-    @api.model
-    def _get_customer_lead(self, product_tmpl_id):
-        super(SaleOrder, self)._get_customer_lead(product_tmpl_id)
-        return product_tmpl_id.sale_delay
-
     def _log_decrease_ordered_quantity(self, documents, cancel=False):
 
         def _render_note_exception_quantity_so(rendering_context):
@@ -281,6 +267,9 @@ class SaleOrderLine(models.Model):
     qty_to_deliver = fields.Float(compute='_compute_qty_to_deliver', digits='Product Unit of Measure')
     is_mto = fields.Boolean(compute='_compute_is_mto')
     display_qty_widget = fields.Boolean(compute='_compute_qty_to_deliver')
+    customer_lead = fields.Float(
+        compute='_compute_customer_lead', store=True, readonly=False, precompute=True,
+        inverse='_inverse_customer_lead')
 
     @api.depends('product_type', 'product_uom_qty', 'qty_delivered', 'state', 'move_ids', 'product_uom')
     def _compute_qty_to_deliver(self):
@@ -434,9 +423,6 @@ class SaleOrderLine(models.Model):
         res = super(SaleOrderLine, self).write(values)
         if lines:
             lines._action_launch_stock_rule(previous_product_uom_qty)
-        if 'customer_lead' in values and self.state == 'sale' and not self.order_id.commitment_date:
-            # Propagate deadline on related stock move
-            self.move_ids.date_deadline = self.order_id.date_order + timedelta(days=self.customer_lead or 0.0)
         return res
 
     @api.depends('order_id.state')
@@ -471,9 +457,17 @@ class SaleOrderLine(models.Model):
             else:
                 line.product_updatable = False
 
-    @api.onchange('product_id')
-    def _onchange_product_id_set_customer_lead(self):
-        self.customer_lead = self.product_id.sale_delay
+    @api.depends('product_id')
+    def _compute_customer_lead(self):
+        super()._compute_customer_lead() # Reset customer_lead when the product is modified
+        for line in self:
+            line.customer_lead = line.product_id.sale_delay
+
+    def _inverse_customer_lead(self):
+        for line in self:
+            if line.state == 'sale' and not line.order_id.commitment_date:
+                # Propagate deadline on related stock move
+                line.move_ids.date_deadline = line.order_id.date_order + timedelta(days=line.customer_lead or 0.0)
 
     def _prepare_procurement_values(self, group_id=False):
         """ Prepare specific key for moves or other components that will be created from a stock rule

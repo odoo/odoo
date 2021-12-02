@@ -27,8 +27,6 @@ class TestSaleService(TestCommonSaleTimesheet):
             'name': self.product_delivery_timesheet2.name,
             'product_id': self.product_delivery_timesheet2.id,
             'product_uom_qty': 50,
-            'product_uom': self.product_delivery_timesheet2.uom_id.id,
-            'price_unit': self.product_delivery_timesheet2.list_price
         })
 
         self.sale_order.order_line._compute_product_updatable()
@@ -79,11 +77,8 @@ class TestSaleService(TestCommonSaleTimesheet):
         })
 
         self.env['sale.order.line'].create({
-            'name': product_service_task.name,
             'product_id': product_service_task.id,
             'product_uom_qty': 10,
-            'product_uom': product_service_task.uom_id.id,
-            'price_unit': product_service_task.list_price,
             'order_id': self.sale_order.id,
         })
 
@@ -102,11 +97,9 @@ class TestSaleService(TestCommonSaleTimesheet):
         uom_days = self.env.ref('uom.product_uom_day')
         sale_order_line = self.env['sale.order.line'].create({
             'order_id': self.sale_order.id,
-            'name': self.product_delivery_timesheet3.name,
             'product_id': self.product_delivery_timesheet3.id,
             'product_uom_qty': 5,
             'product_uom': uom_days.id,
-            'price_unit': self.product_delivery_timesheet3.list_price
         })
         self.sale_order.action_confirm()
         task = self.env['project.task'].search([('sale_line_id', '=', sale_order_line.id)])
@@ -134,14 +127,10 @@ class TestSaleService(TestCommonSaleTimesheet):
     def test_task_so_line_assignation(self):
         # create SO line and confirm it
         so_line_deliver_global_project = self.env['sale.order.line'].create({
-            'name': self.product_delivery_timesheet2.name,
             'product_id': self.product_delivery_timesheet2.id,
             'product_uom_qty': 10,
-            'product_uom': self.product_delivery_timesheet2.uom_id.id,
-            'price_unit': self.product_delivery_timesheet2.list_price,
             'order_id': self.sale_order.id,
         })
-        so_line_deliver_global_project.product_id_change()
         self.sale_order.action_confirm()
         task_serv2 = self.env['project.task'].search([('sale_line_id', '=', so_line_deliver_global_project.id)])
 
@@ -180,14 +169,10 @@ class TestSaleService(TestCommonSaleTimesheet):
     def test_delivered_quantity(self):
         # create SO line and confirm it
         so_line_deliver_new_task_project = self.env['sale.order.line'].create({
-            'name': self.product_delivery_timesheet3.name,
             'product_id': self.product_delivery_timesheet3.id,
             'product_uom_qty': 10,
-            'product_uom': self.product_delivery_timesheet3.uom_id.id,
-            'price_unit': self.product_delivery_timesheet3.list_price,
             'order_id': self.sale_order.id,
         })
-        so_line_deliver_new_task_project.product_id_change()
         self.sale_order.action_confirm()
         task_serv2 = self.env['project.task'].search([('sale_line_id', '=', so_line_deliver_new_task_project.id)])
 
@@ -231,11 +216,8 @@ class TestSaleService(TestCommonSaleTimesheet):
             the ordered quantity of a SO line that have created a task should update the planned hours of this task.
         """
         so_line1 = self.env['sale.order.line'].create({
-            'name': self.product_delivery_timesheet3.name,
             'product_id': self.product_delivery_timesheet3.id,
             'product_uom_qty': 7,
-            'product_uom': self.product_delivery_timesheet3.uom_id.id,
-            'price_unit': self.product_delivery_timesheet3.list_price,
             'order_id': self.sale_order.id,
         })
 
@@ -318,43 +300,28 @@ class TestSaleService(TestCommonSaleTimesheet):
 
         # create 5 so lines
         so_line1 = self.env['sale.order.line'].create({
-            'name': self.product_delivery_timesheet5.name,
             'product_id': self.product_delivery_timesheet5.id,
             'product_uom_qty': 11,
-            'product_uom': self.product_delivery_timesheet5.uom_id.id,
-            'price_unit': self.product_delivery_timesheet5.list_price,
             'order_id': self.sale_order.id,
         })
         so_line2 = self.env['sale.order.line'].create({
-            'name': self.product_order_timesheet4.name,
             'product_id': self.product_order_timesheet4.id,
             'product_uom_qty': 10,
-            'product_uom': self.product_order_timesheet4.uom_id.id,
-            'price_unit': self.product_order_timesheet4.list_price,
             'order_id': self.sale_order.id,
         })
         so_line3 = self.env['sale.order.line'].create({
-            'name': self.product_delivery_timesheet5.name,
             'product_id': self.product_delivery_timesheet5.id,
             'product_uom_qty': 5,
-            'product_uom': self.product_delivery_timesheet5.uom_id.id,
-            'price_unit': self.product_delivery_timesheet5.list_price,
             'order_id': self.sale_order.id,
         })
         so_line4 = self.env['sale.order.line'].create({
-            'name': self.product_delivery_manual3.name,
             'product_id': self.product_delivery_manual3.id,
             'product_uom_qty': 4,
-            'product_uom': self.product_delivery_manual3.uom_id.id,
-            'price_unit': self.product_delivery_manual3.list_price,
             'order_id': self.sale_order.id,
         })
         so_line5 = self.env['sale.order.line'].create({
-            'name': product_deli_ts_tmpl.name,
             'product_id': product_deli_ts_tmpl.id,
             'product_uom_qty': 8,
-            'product_uom': product_deli_ts_tmpl.uom_id.id,
-            'price_unit': product_deli_ts_tmpl.list_price,
             'order_id': self.sale_order.id,
         })
 
@@ -412,27 +379,18 @@ class TestSaleService(TestCommonSaleTimesheet):
         self.assertEqual(self.sale_order.analytic_account_id, self.analytic_account_sale, "Changing the project on the SO should set the analytic account accordingly.")
 
         so_line1 = self.env['sale.order.line'].create({
-            'name': self.product_order_timesheet3.name,
             'product_id': self.product_order_timesheet3.id,
             'product_uom_qty': 11,
-            'product_uom': self.product_order_timesheet3.uom_id.id,
-            'price_unit': self.product_order_timesheet3.list_price,
             'order_id': self.sale_order.id,
         })
         so_line2 = self.env['sale.order.line'].create({
-            'name': self.product_order_timesheet3.name,
             'product_id': self.product_order_timesheet3.id,
             'product_uom_qty': 10,
-            'product_uom': self.product_order_timesheet3.uom_id.id,
-            'price_unit': self.product_order_timesheet3.list_price,
             'order_id': self.sale_order.id,
         })
         so_line3 = self.env['sale.order.line'].create({
-            'name': self.product_order_timesheet4.name,
             'product_id': self.product_order_timesheet4.id,
             'product_uom_qty': 5,
-            'product_uom': self.product_order_timesheet4.uom_id.id,
-            'price_unit': self.product_order_timesheet4.list_price,
             'order_id': self.sale_order.id,
         })
 
@@ -469,11 +427,8 @@ class TestSaleService(TestCommonSaleTimesheet):
         """
 
         so_line1 = self.env['sale.order.line'].create({
-            'name': self.product_order_timesheet3.name,
             'product_id': self.product_order_timesheet3.id,
             'product_uom_qty': 10,
-            'product_uom': self.product_order_timesheet3.uom_id.id,
-            'price_unit': self.product_order_timesheet3.list_price,
             'order_id': self.sale_order.id,
         })
 
@@ -495,23 +450,16 @@ class TestSaleService(TestCommonSaleTimesheet):
         """ Test if subtasks and tasks are billed on the correct SO line """
         # create SO line and confirm it
         so_line_deliver_new_task_project = self.env['sale.order.line'].create({
-            'name': self.product_delivery_timesheet3.name,
             'product_id': self.product_delivery_timesheet3.id,
             'product_uom_qty': 10,
-            'product_uom': self.product_delivery_timesheet3.uom_id.id,
-            'price_unit': self.product_delivery_timesheet3.list_price,
             'order_id': self.sale_order.id,
         })
         so_line_deliver_new_task_project_2 = self.env['sale.order.line'].create({
             'name': self.product_delivery_timesheet3.name + "(2)",
             'product_id': self.product_delivery_timesheet3.id,
             'product_uom_qty': 10,
-            'product_uom': self.product_delivery_timesheet3.uom_id.id,
-            'price_unit': self.product_delivery_timesheet3.list_price,
             'order_id': self.sale_order.id,
         })
-        so_line_deliver_new_task_project.product_id_change()
-        so_line_deliver_new_task_project_2.product_id_change()
         self.sale_order.action_confirm()
 
         project = so_line_deliver_new_task_project.project_id
@@ -556,11 +504,8 @@ class TestSaleService(TestCommonSaleTimesheet):
         """ Changing the ordered quantity of a SO line that have created a task should update the planned hours of this task """
         sale_order_line = self.env['sale.order.line'].create({
             'order_id': self.sale_order.id,
-            'name': self.product_delivery_timesheet2.name,
             'product_id': self.product_delivery_timesheet2.id,
             'product_uom_qty': 50,
-            'product_uom': self.product_delivery_timesheet2.uom_id.id,
-            'price_unit': self.product_delivery_timesheet2.list_price
         })
 
         self.sale_order.action_confirm()
@@ -580,11 +525,8 @@ class TestSaleService(TestCommonSaleTimesheet):
     def test_copy_billable_project_and_task(self):
         sale_order_line = self.env['sale.order.line'].create({
             'order_id': self.sale_order.id,
-            'name': self.product_delivery_timesheet3.name,
             'product_id': self.product_delivery_timesheet3.id,
             'product_uom_qty': 5,
-            'product_uom': self.product_delivery_timesheet3.uom_id.id,
-            'price_unit': self.product_delivery_timesheet3.list_price
         })
         self.sale_order.action_confirm()
         task = self.env['project.task'].search([('sale_line_id', '=', sale_order_line.id)])

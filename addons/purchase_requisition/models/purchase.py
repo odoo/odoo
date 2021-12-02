@@ -24,7 +24,7 @@ class PurchaseOrder(models.Model):
         payment_term = partner.property_supplier_payment_term_id
 
         FiscalPosition = self.env['account.fiscal.position']
-        fpos = FiscalPosition.with_company(self.company_id).get_fiscal_position(partner.id)
+        fpos = FiscalPosition.with_company(self.company_id)._get_fiscal_position(partner)
 
         self.partner_id = partner.id
         self.fiscal_position_id = fpos.id

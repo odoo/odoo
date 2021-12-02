@@ -50,11 +50,12 @@ class SaleOrder(models.Model):
             default['validity_date'] = fields.Date.context_today(self) + timedelta(self.sale_order_template_id.number_of_days)
         return super(SaleOrder, self).copy(default=default)
 
-    @api.onchange('partner_id')
-    def onchange_partner_id(self):
-        super(SaleOrder, self).onchange_partner_id()
-        template = self.sale_order_template_id.with_context(lang=self.partner_id.lang)
-        self.note = template.note if not is_html_empty(template.note) else self.note
+    @api.depends('partner_id', 'sale_order_template_id')
+    def _compute_note(self):
+        super()._compute_note()
+        for order in self.filtered('sale_order_template_id'):
+            template = order.sale_order_template_id.with_context(lang=order.partner_id.lang)
+            order.note = template.note if not is_html_empty(template.note) else order.note
 
     def _compute_line_data_for_template_change(self, line):
         return {
@@ -124,13 +125,11 @@ class SaleOrder(models.Model):
                     'product_uom_qty': line.product_uom_qty,
                     'product_id': line.product_id.id,
                     'product_uom': line.product_uom_id.id,
-                    'customer_lead': self._get_customer_lead(line.product_id.product_tmpl_id),
                 })
 
             order_lines.append((0, 0, data))
 
         self.order_line = order_lines
-        self.order_line._compute_tax_id()
 
         # then, process the list of optional products from the template
         option_lines = [(5, 0, 0)]
@@ -177,16 +176,16 @@ class SaleOrderLine(models.Model):
 
     sale_order_option_ids = fields.One2many('sale.order.option', 'line_id', 'Optional Products Lines')
 
-    # Take the description on the order template if the product is present in it
-    @api.onchange('product_id')
-    def product_id_change(self):
-        domain = super(SaleOrderLine, self).product_id_change()
-        if self.product_id and self.order_id.sale_order_template_id:
-            for line in self.order_id.sale_order_template_id.sale_order_template_line_ids:
-                if line.product_id == self.product_id:
-                    self.name = line.with_context(lang=self.order_id.partner_id.lang).name + self._get_sale_order_line_multiline_description_variants()
-                    break
-        return domain
+    @api.depends('product_id')
+    def _compute_name(self):
+        # Take the description on the order template if the product is present in it
+        super()._compute_name()
+        for line in self:
+            if line.product_id and line.order_id.sale_order_template_id:
+                for line in line.order_id.sale_order_template_id.sale_order_template_line_ids:
+                    if line.product_id == line.product_id:
+                        line.name = line.with_context(lang=line.order_id.partner_id.lang).name + line._get_sale_order_line_multiline_description_variants()
+                        break
 
 
 class SaleOrderOption(models.Model):
@@ -239,7 +238,7 @@ class SaleOrderOption(models.Model):
         # To compute the discount a so line is created in cache
         values = self._get_values_to_add_to_order()
         new_sol = self.env['sale.order.line'].new(values)
-        new_sol._onchange_discount()
+        new_sol._compute_discount()
         self.discount = new_sol.discount
         if self.order_id.pricelist_id and self.order_id.partner_id:
             self.price_unit = new_sol._get_display_price(product)
@@ -257,7 +256,6 @@ class SaleOrderOption(models.Model):
 
         values = self._get_values_to_add_to_order()
         order_line = self.env['sale.order.line'].create(values)
-        order_line._compute_tax_id()
 
         self.write({'line_id': order_line.id})
         if sale_order:

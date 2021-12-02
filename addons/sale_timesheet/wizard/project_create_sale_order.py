@@ -117,11 +117,8 @@ class ProjectCreateSalesOrder(models.TransientModel):
             'client_order_ref': self.project_id.name,
             'company_id': self.project_id.company_id.id,
         })
-        sale_order.onchange_partner_id()
-        sale_order.onchange_partner_shipping_id()
         # rewrite the user as the onchange_partner_id erases it
         sale_order.write({'user_id': self.project_id.user_id.id})
-        sale_order.onchange_user_id()
 
         # create the sale lines, the map (optional), and assign existing timesheet to sale lines
         self._make_billable(sale_order)
@@ -173,6 +170,8 @@ class ProjectCreateSalesOrder(models.TransientModel):
             sale_order_line.with_context({'no_update_planned_hours': True}).write({
                 'product_uom_qty': sale_order_line.qty_delivered
             })
+            # Avoid recomputing price_unit
+            self.env.remove_to_compute(self.env['sale.order.line']._fields['price_unit'], sale_order_line)
 
         self.project_id.write({
             'sale_order_id': sale_order.id,
@@ -245,9 +244,10 @@ class ProjectCreateSalesOrder(models.TransientModel):
                 'so_line': map_entry.sale_line_id.id
             })
             map_entry.sale_line_id.with_context({'no_update_planned_hours': True}).write({
-                'product_uom_qty': map_entry.sale_line_id.qty_delivered
+                'product_uom_qty': map_entry.sale_line_id.qty_delivered,
             })
-
+            # Avoid recomputing price_unit
+            self.env.remove_to_compute(self.env['sale.order.line']._fields['price_unit'], map_entry.sale_line_id)
         return map_entries
 
 

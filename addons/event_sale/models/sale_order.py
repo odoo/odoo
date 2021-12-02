@@ -57,14 +57,15 @@ class SaleOrder(models.Model):
 
 
 class SaleOrderLine(models.Model):
-
     _inherit = 'sale.order.line'
 
     event_id = fields.Many2one(
         'event.event', string='Event',
+        compute="_compute_event_id", store=True, readonly=False, precompute=True,
         help="Choose an event and it will automatically create a registration for this event.")
     event_ticket_id = fields.Many2one(
         'event.event.ticket', string='Event Ticket',
+        compute="_compute_event_ticket_id", store=True, readonly=False, precompute=True,
         help="Choose an event ticket and it will automatically create a registration for this event ticket.")
     event_ok = fields.Boolean(compute='_compute_event_ok')
 
@@ -110,28 +111,44 @@ class SaleOrderLine(models.Model):
             RegistrationSudo.create(registrations_vals)
         return True
 
-    @api.onchange('product_id')
-    def _onchange_product_id(self):
-        # We reset the event when keeping it would lead to an inconstitent state.
-        # We need to do it this way because the only relation between the product and the event is through the corresponding tickets.
-        if self.event_id and (not self.product_id or self.product_id.id not in self.event_id.mapped('event_ticket_ids.product_id.id')):
-            self.event_id = None
+    @api.depends('product_id')
+    def _compute_event_id(self):
+        event_lines = self.filtered(lambda line: line.product_id and line.product_id.detailed_type == 'event')
+        (self - event_lines).event_id = False
+        for line in event_lines:
+            if line.product_id not in line.event_id.event_ticket_ids.product_id:
+                line.event_id = False
 
-    @api.onchange('event_id')
-    def _onchange_event_id(self):
-        # We reset the ticket when keeping it would lead to an inconstitent state.
-        if self.event_ticket_id and (not self.event_id or self.event_id != self.event_ticket_id.event_id):
-            self.event_ticket_id = None
+    @api.depends('event_id')
+    def _compute_event_ticket_id(self):
+        event_lines = self.filtered('event_id')
+        (self - event_lines).event_ticket_id = False
+        for line in event_lines:
+            if line.event_id != line.event_ticket_id.event_id:
+                line.event_ticket_id = False
 
-    @api.onchange('product_uom', 'product_uom_qty')
-    def product_uom_change(self):
-        if not self.event_ticket_id:
-            super(SaleOrderLine, self).product_uom_change()
+    @api.depends('event_ticket_id')
+    def _compute_price_unit(self):
+        """Do not update the price on qty/uom change"""
+        event_lines = self.filtered('event_ticket_id')
+        super(SaleOrderLine, self-event_lines)._compute_price_unit()
+        for line in event_lines:
+            if not line.product_id or line._origin.product_id != line.product_id:
+                super(SaleOrderLine, line)._compute_price_unit()
 
-    @api.onchange('event_ticket_id')
-    def _onchange_event_ticket_id(self):
-        # we call this to force update the default name
-        self.product_id_change()
+    @api.depends('event_ticket_id')
+    def _compute_discount(self):
+        """Do not compute the discount on event lines, it's always included in the price."""
+        event_lines = self.filtered('event_ticket_id')
+        super(SaleOrderLine, self-event_lines)._compute_discount()
+
+    @api.depends('event_ticket_id')
+    def _compute_name(self):
+        """Override to add the compute dependency.
+
+        The custom name logic can be found below in get_sale_order_line_multiline_description_sale.
+        """
+        super()._compute_name()
 
     def unlink(self):
         self._unlink_associated_registrations()
@@ -160,6 +177,12 @@ class SaleOrderLine(models.Model):
 
     def _get_display_price(self, product):
         if self.event_ticket_id and self.event_id:
-            return self.event_ticket_id.with_context(pricelist=self.order_id.pricelist_id.id, uom=self.product_uom.id).price_reduce
+            # FIXME this is strange
+            # price_reduce is the price after discount
+            # shouldn't we leave the discount computation to sale
+            # and use the non reduced price here (aka price field)
+            return self.event_ticket_id.with_context(
+                pricelist=self.order_id.pricelist_id.id,
+                uom=self.product_uom.id).price_reduce
         else:
             return super()._get_display_price(product)

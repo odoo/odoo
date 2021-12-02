@@ -835,7 +835,6 @@ class WebsiteSale(http.Controller):
                 partner_id = self._checkout_form_save(mode, post, kw)
                 if mode[1] == 'billing':
                     order.partner_id = partner_id
-                    order.with_context(not_self_saleperson=True).onchange_partner_id()
                     # This is the *only* thing that the front end user will see/edit anyway when choosing billing address
                     order.partner_invoice_id = partner_id
                     if not kw.get('use_same'):
@@ -925,7 +924,6 @@ class WebsiteSale(http.Controller):
         if redirection:
             return redirection
 
-        order.onchange_partner_shipping_id()
         order.order_line._compute_tax_id()
         request.session['sale_last_order_id'] = order.id
         request.website.sale_get_order(update_pricelist=True)

@@ -6,7 +6,7 @@ from odoo.tests import tagged
 from odoo.addons.website.tools import MockRequest
 
 
-@tagged('post_install', '-at_install')
+@tagged('post_install', '-at_install', 'product_attribute')
 class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCommon):
 
     def test_get_combination_info(self):
@@ -132,7 +132,7 @@ class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCo
         self.assertEqual(round(combination_info['price'], 2), 434.78, "434.78$ + 0% tax (mapped from fp 15% -> 0% for BE)")
         self.assertEqual(round(combination_info['list_price'], 2), 434.78, "434.78$ + 0% tax (mapped from fp 15% -> 0% for BE)")
 
-@tagged('post_install', '-at_install')
+@tagged('post_install', '-at_install', 'product_pricelist')
 class TestWebsiteSaleProductPricelist(TestSaleProductAttributeValueCommon):
     def test_cart_update_with_fpos(self):
         # We will test that the mapping of an 10% included tax by a 0% by a fiscal position is taken into account when updating the cart
@@ -174,18 +174,14 @@ class TestWebsiteSaleProductPricelist(TestSaleProductAttributeValueCommon):
             'partner_id': self.env.user.partner_id.id,
         })
         sol = self.env['sale.order.line'].create({
-            'name': test_product.name,
             'product_id': test_product.product_variant_id.id,
-            'product_uom_qty': 1,
-            'product_uom': test_product.uom_id.id,
-            'price_unit': test_product.list_price,
             'order_id': so.id,
             'tax_id': [(6, 0, [tax10.id])],
         })
         self.assertEqual(round(sol.price_total), 110.0, "110$ with 10% included tax")
         so.pricelist_id = pricelist
         so.fiscal_position_id = fpos
-        sol.product_id_change()
+        sol._compute_tax_id()
         with MockRequest(self.env, website=current_website, sale_order_id=so.id):
             so._cart_update(product_id=test_product.product_variant_id.id, line_id=sol.id, set_qty=1)
         self.assertEqual(round(sol.price_total), 50, "100$ with 50% discount + 0% tax (mapped from fp 10% -> 0%)")

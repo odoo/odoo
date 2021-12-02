@@ -80,11 +80,13 @@ class ResConfigSettings(models.TransientModel):
     group_show_line_subtotals_tax_excluded = fields.Boolean(
         "Show line subtotals without taxes (B2B)",
         implied_group='account.group_show_line_subtotals_tax_excluded',
-        group='base.group_portal,base.group_user,base.group_public')
+        group='base.group_portal,base.group_user,base.group_public',
+        compute='_compute_group_show_line_subtotals', store=True, readonly=False)
     group_show_line_subtotals_tax_included = fields.Boolean(
         "Show line subtotals with taxes (B2C)",
         implied_group='account.group_show_line_subtotals_tax_included',
-        group='base.group_portal,base.group_user,base.group_public')
+        group='base.group_portal,base.group_user,base.group_public',
+        compute='_compute_group_show_line_subtotals', store=True, readonly=False)
     group_show_sale_receipts = fields.Boolean(string='Sale Receipt',
         implied_group='account.group_sale_receipts')
     group_show_purchase_receipts = fields.Boolean(string='Purchase Receipt',
@@ -154,18 +156,11 @@ class ResConfigSettings(models.TransientModel):
         self.has_chart_of_accounts = bool(self.company_id.chart_template_id)
         self.has_accounting_entries = self.env['account.chart.template'].existing_accounting(self.company_id)
 
-    @api.onchange('show_line_subtotals_tax_selection')
-    def _onchange_sale_tax(self):
-        if self.show_line_subtotals_tax_selection == "tax_excluded":
-            self.update({
-                'group_show_line_subtotals_tax_included': False,
-                'group_show_line_subtotals_tax_excluded': True,
-            })
-        else:
-            self.update({
-                'group_show_line_subtotals_tax_included': True,
-                'group_show_line_subtotals_tax_excluded': False,
-            })
+    @api.depends('show_line_subtotals_tax_selection')
+    def _compute_group_show_line_subtotals(self):
+        for wizard in self:
+            wizard.group_show_line_subtotals_tax_included = wizard.show_line_subtotals_tax_selection == "tax_included"
+            wizard.group_show_line_subtotals_tax_excluded = wizard.show_line_subtotals_tax_selection == "tax_excluded"
 
     @api.onchange('group_analytic_accounting')
     def onchange_analytic_accounting(self):

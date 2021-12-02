@@ -4,6 +4,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
+
 class AccountMove(models.Model):
     _name = 'account.move'
     _inherit = ['account.move', 'utm.mixin']
@@ -14,6 +15,7 @@ class AccountMove(models.Model):
 
     team_id = fields.Many2one(
         'crm.team', string='Sales Team', default=_get_invoice_default_sale_team,
+        compute='_compute_team_id', store=True, readonly=False,
         ondelete="set null", tracking=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     partner_shipping_id = fields.Many2one(
@@ -23,22 +25,25 @@ class AccountMove(models.Model):
         states={'draft': [('readonly', False)]},
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         help="Delivery address for current invoice.")
+
     # UTMs - enforcing the fact that we want to 'set null' when relation is unlinked
     campaign_id = fields.Many2one(ondelete='set null')
     medium_id = fields.Many2one(ondelete='set null')
     source_id = fields.Many2one(ondelete='set null')
 
-    @api.onchange('partner_shipping_id', 'company_id')
-    def _onchange_partner_shipping_id(self):
-        """
-        Trigger the change of fiscal position when the shipping address is modified.
-        """
-        delivery_partner_id = self._get_invoice_delivery_partner_id()
-        fiscal_position = self.env['account.fiscal.position'].with_company(self.company_id).get_fiscal_position(
-            self.partner_id.id, delivery_id=delivery_partner_id)
+    fiscal_position_id = fields.Many2one(
+        compute='_compute_fiscal_position_id', store=True)
 
-        if fiscal_position:
-            self.fiscal_position_id = fiscal_position
+
+    @api.depends('partner_shipping_id', 'company_id')
+    def _compute_fiscal_position_id(self):
+        # Trigger the change of fiscal position when the shipping address is modified.
+        for move in self:
+            delivery_partner = self.env['res.partner'].browse(move._get_invoice_delivery_partner_id())
+            fiscal_position = self.env['account.fiscal.position'].with_company(
+                move.company_id)._get_fiscal_position(move.partner_id, delivery=delivery_partner)
+            if fiscal_position:
+                move.fiscal_position_id = fiscal_position
 
     def unlink(self):
         downpayment_lines = self.mapped('line_ids.sale_line_ids').filtered(lambda line: line.is_downpayment and line.invoice_lines <= self.mapped('line_ids'))
@@ -58,10 +63,14 @@ class AccountMove(models.Model):
 
         return res
 
-    @api.onchange('invoice_user_id')
-    def onchange_user_id(self):
-        if self.invoice_user_id and self.invoice_user_id.sale_team_id:
-            self.team_id = self.env['crm.team']._get_default_team_id(user_id=self.invoice_user_id.id, domain=[('company_id', '=', self.company_id.id)])
+    @api.depends('invoice_user_id')
+    def _compute_team_id(self):
+        for move in self:
+            if not move.invoice_user_id.sale_team_id:
+                continue
+            move.team_id = self.env['crm.team']._get_default_team_id(
+                user_id=move.invoice_user_id.id,
+                domain=[('company_id', '=', move.company_id.id)])
 
     def _reverse_moves(self, default_values_list=None, cancel=False):
         # OVERRIDE

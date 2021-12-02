@@ -56,6 +56,5 @@ class ChooseDeliveryCarrier(models.TransientModel):
             })
             if partner_shipping != self.order_id.partner_shipping_id:
                 self.order_id.partner_shipping_id = partner_shipping
-                self.order_id.onchange_partner_shipping_id()
 
         return super().button_confirm()

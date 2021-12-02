@@ -420,11 +420,8 @@ class TestReporting(TestCommonReporting):
 
         # simulate the auto creation of the SO line for expense, like we confirm a vendor bill.
         so_line_expense = self.env['sale.order.line'].create({
-            'name': self.product_expense.name,
             'product_id': self.product_expense.id,
             'product_uom_qty': 0.0,
-            'product_uom': self.product_expense.uom_id.id,
-            'price_unit': self.product_expense.list_price,  # reinvoice at sales price
             'order_id': self.sale_order_1.id,
             'is_expense': True,
         })
@@ -575,11 +572,8 @@ class TestReporting(TestCommonReporting):
 
         # simulate the auto creation of the SO line for expense, like we confirm a vendor bill.
         so_line_expense = self.env['sale.order.line'].create({
-            'name': self.product_expense.name,
             'product_id': self.product_expense.id,
             'product_uom_qty': 0.0,
-            'product_uom': self.product_expense.uom_id.id,
-            'price_unit': self.product_expense.list_price,  # reinvoice at sales price
             'order_id': self.sale_order_2.id,
             'is_expense': True,
         })
@@ -701,11 +695,8 @@ class TestReporting(TestCommonReporting):
         currency = self.env.company.currency_id
         rounding = currency.rounding
         so_line_deliver_no_task = self.env['sale.order.line'].create({
-            'name': self.product_delivery_manual1.name,
             'product_id': self.product_delivery_manual1.id,
             'product_uom_qty': 50,
-            'product_uom': self.product_delivery_manual1.uom_id.id,
-            'price_unit': self.product_delivery_manual1.list_price,
             'order_id': self.sale_order_2.id,
         })
         so_line_deliver_no_task.write({'qty_delivered': 1.0})

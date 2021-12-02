@@ -33,6 +33,13 @@ class ResConfigSettings(models.TransientModel):
     cart_add_on_page = fields.Boolean("Stay on page after adding to cart", related='website_id.cart_add_on_page', readonly=False)
     terms_url = fields.Char(compute='_compute_terms_url', string="URL", help="A preview will be available at this URL.")
 
+    module_delivery = fields.Boolean(
+        compute='_compute_module_delivery', store=True, readonly=False)
+    module_website_sale_delivery = fields.Boolean(
+        compute='_compute_module_delivery', store=True, readonly=False)
+    group_product_pricelist = fields.Boolean(
+        compute='_compute_group_product_pricelist', store=True, readonly=False)
+
     @api.depends('website_id')
     def _compute_terms_url(self):
         for record in self:
@@ -53,30 +60,17 @@ class ResConfigSettings(models.TransientModel):
         )
         return res
 
-    @api.onchange('sale_delivery_settings')
-    def _onchange_sale_delivery_settings(self):
-        if self.sale_delivery_settings == 'none':
-            self.update({
-                'module_delivery': False,
-                'module_website_sale_delivery': False,
-            })
-        elif self.sale_delivery_settings == 'internal':
-            self.update({
-                'module_delivery': True,
-                'module_website_sale_delivery': False,
-            })
-        else:
-            self.update({
-                'module_delivery': True,
-                'module_website_sale_delivery': True,
-            })
+    @api.depends('sale_delivery_settings')
+    def _compute_module_delivery(self):
+        for wizard in self:
+            wizard.module_delivery = wizard.sale_delivery_settings in ['internal', 'website']
+            wizard.module_website_sale_delivery = wizard.sale_delivery_settings == 'website'
 
-    @api.onchange('group_discount_per_so_line')
-    def _onchange_group_discount_per_so_line(self):
-        if self.group_discount_per_so_line:
-            self.update({
-                'group_product_pricelist': True,
-            })
+    @api.depends('group_discount_per_so_line')
+    def _compute_group_product_pricelist(self):
+        self.filtered(lambda w: w.group_discount_per_so_line).update({
+            'group_product_pricelist': True,
+        })
 
     def action_update_terms(self):
         self.ensure_one()
