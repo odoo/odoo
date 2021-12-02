@@ -849,7 +849,9 @@ section, .oe_img_bg, [data-oe-shape-data] {
 
 // Smaller container
 .o_container_small {
-    @extend .container;
+    @include make-container();
+    @include make-container-max-widths();
+
     @include media-breakpoint-up(lg) {
         max-width: map-get($container-max-widths, md);
     }

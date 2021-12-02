@@ -25,6 +25,19 @@ $spacer: 1rem !default; // Need to predefine as used below
 $body-bg: if(o-website-value('layout') != 'full', o-color('body'), o-color('o-cc1-bg')) !default;
 $body-color: o-color('o-cc1-text') or color-yiq(o-color('o-cc1-bg')) !default;
 
+// Container max-width
+//
+// __
+@mixin make-container-max-widths($max-widths: $container-max-widths, $breakpoints: $grid-breakpoints) {
+    @if(o-website-value('layout') != 'fluid') {
+        @each $breakpoint, $container-max-width in $max-widths {
+            @include media-breakpoint-up($breakpoint, $breakpoints) {
+                max-width: $container-max-width;
+            }
+        }
+    }
+}
+
 // Links
 //
 // Style anchor elements.

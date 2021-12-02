@@ -108,7 +108,7 @@ $-seen-urls: ();
         }
     }
 
-    @if o-website-value('layout') != 'full' {
+    @if o-website-value('layout') != 'full' and o-website-value('layout') != 'fluid' {
         > main {
             background-color: o-color('o-cc1-bg');
         }
@@ -181,6 +181,32 @@ $-seen-urls: ();
                     @include border-bottom-radius($-inner-border-radius);
                 }
             }
+        }
+    } @else if o-website-value('layout') == 'fluid' {
+        header#top > nav {
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        #top_menu_container, footer#bottom .container {
+            max-width: none;
+        }
+
+        .o_container_small {
+            @include media-breakpoint-up(md) {
+                max-width: 75%;
+            }
+        }
+
+        .container {
+            @include media-breakpoint-up(md) {
+                max-width: 90%;
+            }
+        }
+
+        .container-fluid > .row {
+            margin-right: -$grid-gutter-width;
+            margin-left: -$grid-gutter-width;
         }
     }
 }
@@ -352,9 +378,10 @@ font[class*='bg-'] {
 }
 // Smaller container
 .o_container_small {
-    @extend .container;
-    @include media-breakpoint-up(lg) {
-        max-width: map-get($container-max-widths, md);
+    @if o-website-value('layout') != 'fluid' {
+        @include media-breakpoint-up(lg) {
+            max-width: map-get($container-max-widths, md);
+        }
     }
 }
 
