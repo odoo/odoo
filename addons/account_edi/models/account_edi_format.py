@@ -305,7 +305,7 @@ class AccountEdiFormat(models.Model):
         """
         # TO OVERRIDE
         self.ensure_one()
-        if self._is_embedding_to_invoice_pdf_needed():
+        if self._is_embedding_to_invoice_pdf_needed() and edi_document.attachment_id:
             pdf_writer.embed_odoo_attachment(edi_document.attachment_id)
 
     ####################################################

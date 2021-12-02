@@ -161,6 +161,7 @@ class OdooPdfFileWriter(PdfFileWriter):
             })
 
     def embed_odoo_attachment(self, attachment):
+        assert attachment, "embed_odoo_attachment cannot be called without attachment."
         self.addAttachment(attachment.name, attachment.raw, attachment.mimetype)
 
     def cloneReaderDocumentRoot(self, reader):
