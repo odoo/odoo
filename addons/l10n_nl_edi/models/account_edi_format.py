@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, _
-
-import base64
 import markupsafe
+from odoo.addons.account_edi_ubl_bis3.models.account_edi_format import COUNTRY_EAS
+
+from odoo import models, _
 
 
 class AccountEdiFormat(models.Model):
@@ -100,6 +100,8 @@ class AccountEdiFormat(models.Model):
             errors.append(_("Customer's address must include street, zip and city (%s).", customer.display_name))
         if customer.country_code == 'NL' and not customer.l10n_nl_kvk and not customer.l10n_nl_oin:
             errors.append(_("The customer %s must have a KvK-nummer or OIN.", customer.display_name))
+        if customer.country_code not in COUNTRY_EAS:
+            errors.append(_("Customer's country must belong to the EAS (Electronic Address Scheme) code list."))
 
         if not invoice.partner_bank_id:
             errors.append(_("The supplier %s must have a bank account.", supplier.display_name))

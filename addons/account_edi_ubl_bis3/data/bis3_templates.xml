@@ -11,6 +11,7 @@
                 xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
                 <t t-set="partner" t-value="partner_vals['partner']"/>
                 <cbc:EndpointID
+                        t-if="partner_vals.get('bis3_endpoint')"
                         t-att-schemeID="partner_vals['bis3_endpoint_scheme']"
                         t-esc="partner_vals['bis3_endpoint']"/>
                 <cac:PartyIdentification t-if="partner_vals.get('partner_identification')">
