@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="web.DomainField" owl="1">
+        <div t-att-class="{
+            o_read_mode: props.readonly,
+            o_edit_mode: !props.readonly,
+            o_inline_mode: !env.inDialog,
+        }">
+            <t t-if="resModel">
+                <DomainSelector
+                    resModel="resModel"
+                    value="props.value"
+                    readonly="props.readonly"
+                    update="(newDomain) => props.update(newDomain)"
+                    isDebugMode="!!env.debug"
+                />
+                <div class="o_field_domain_panel">
+                    <t t-if="recordCount !== null">
+                        <i class="fa fa-arrow-right" role="img" aria-label="Domain" title="Domain" />
+                        <t t-if="true">
+                            <button class="btn btn-sm btn-secondary o_domain_show_selection_button" type="button">
+                                <t t-esc="recordCount" /> record(s)
+                            </button>
+                        </t>
+                        <t t-else="">
+                            <span class="text-warning" role="alert">
+                                <i class="fa fa-exclamation-triangle" role="img" aria-label="Warning" title="Warning" /> Invalid domain
+                            </span>
+                        </t>
+                        <t t-if="!!env.debug and !props.readonly">
+                            <button
+                                class="btn btn-sm btn-icon fa fa-refresh o_refresh_count"
+                                role="img"
+                                aria-label="Refresh"
+                                title="Refresh"
+                            />
+                        </t>
+                    </t>
+                    <t t-else="">
+                        <i class="fa fa-circle-o-notch fa-spin" role="img" aria-label="Loading" title="Loading" />
+                    </t>
+                </div>
+            </t>
+            <t t-else="">
+                <div>Select a model to add a filter.</div>
+            </t>
+        </div>
+    </t>
+
+</templates>
