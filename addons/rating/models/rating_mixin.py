@@ -173,40 +173,57 @@ class RatingMixin(models.AbstractModel):
                 subtype_id=subtype_id
             )
 
-    def rating_apply(self, rate, token=None, feedback=None, subtype_xmlid=None):
-        """ Apply a rating given a token. If the current model inherits from
-        mail.thread mixin, a message is posted on its chatter. User going through
-        this method should have at least employee rights because of rating
-        manipulation (either employee, either sudo-ed in public controllers after
-        security check granting access).
+    def rating_apply(self, rate, token=None, rating=None, feedback=None, subtype_xmlid=None):
+        """ Apply a rating to the record. This rating can either be linked to a
+        token (customer flow) or directly a rating record (code flow).
 
-        :param float rate : the rating value to apply
-        :param string token : access token
-        :param string feedback : additional feedback
-        :param string subtype_xmlid : xml id of a valid mail.message.subtype
+        If the current model inherits from mail.thread mixin a message is posted
+        on its chatter. User going through this method should have at least
+        employee rights as well as rights on the current record because of rating
+        manipulation and chatter post (either employee, either sudo-ed in public
+        controllers after security check granting access).
 
-        :returns rating.rating record
+        :param float rate: the rating value to apply (from 0 to 5);
+        :param string token: access token to fetch the rating to apply (optional);
+        :param record rating: rating.rating to apply (if no token);
+        :param string feedback: additional feedback (plaintext);
+        :param string subtype_xmlid: xml id of a valid mail.message.subtype used
+          to post the message (if it applies). If not given a classic comment is
+          posted;
+
+        :returns rating: rating.rating record
         """
-        rating = None
+        if rate < 0 or rate > 5:
+            raise ValueError('Wrong rating value. A rate should be between 0 and 5 (received %d).' % rate)
         if token:
             rating = self.env['rating.rating'].search([('access_token', '=', token)], limit=1)
-        else:
-            rating = self.env['rating.rating'].search([('res_model', '=', self._name), ('res_id', '=', self.ids[0])], limit=1)
-        if rating:
-            rating.write({'rating': rate, 'feedback': feedback, 'consumed': True})
-            if hasattr(self, 'message_post'):
-                feedback = tools.plaintext2html(feedback or '')
+        if not rating:
+            raise ValueError('Invalid token or rating.')
+
+        rating.write({'rating': rate, 'feedback': feedback, 'consumed': True})
+        if hasattr(self, 'message_post'):
+            subtype_xmlid = subtype_xmlid if subtype_xmlid is not None else "mail.mt_comment"
+            subtype_id = self.env['ir.model.data']._xmlid_to_res_id(subtype_xmlid)
+            feedback = tools.plaintext2html(feedback or '')
+            # if we don't have a message -> create a new one
+            # if a message has been notified -> create a new one as old content has
+            # already been notified (new message will own the rating)
+            if not rating.message_id or rating.message_id.notification_ids:
                 self.message_post(
-                    body="<img src='/rating/static/src/img/rating_%s.png' alt=':%s/5' style='width:18px;height:18px;float:left;margin-right: 5px;'/>%s"
-                    % (rate, rate, feedback),
-                    subtype_xmlid=subtype_xmlid or "mail.mt_comment",
-                    author_id=rating.partner_id and rating.partner_id.id or None  # None will set the default author in mail_thread.py
+                    author_id=rating.partner_id.id or None,  # None will set the default author in mail_thread.py
+                    body="<img src='%s' alt=':%s/5' style='width:18px;height:18px;float:left;margin-right: 5px;'/>%s"
+                    % (rating.rating_image_url, rate, feedback),
+                    rating_id=rating.id,
+                    subtype_id=subtype_id,
                 )
-            if hasattr(self, 'stage_id') and self.stage_id and hasattr(self.stage_id, 'auto_validation_kanban_state') and self.stage_id.auto_validation_kanban_state:
-                if rating.rating > 2:
-                    self.write({'kanban_state': 'done'})
-                else:
-                    self.write({'kanban_state': 'blocked'})
+            else:
+                self._message_update_content(
+                    rating.message_id,
+                    notify_thread=True,
+                    body="<img src='%s' alt=':%s/5' style='width:18px;height:18px;float:left;margin-right: 5px;'/>%s"
+                    % (rating.rating_image_url, rate, feedback),
+                    subtype_id=subtype_id,
+                )
         return rating
 
     def _rating_get_repartition(self, add_stats=False, domain=None):

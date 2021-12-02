@@ -9,6 +9,7 @@ from datetime import timedelta, datetime, time
 from random import randint
 
 from odoo import api, Command, fields, models, tools, SUPERUSER_ID, _, _lt
+from odoo.addons.rating.models.rating_data import RATING_LIMIT_OK
 from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.tools import format_amount
 from odoo.osv.expression import OR, AND
@@ -2256,8 +2257,14 @@ class Task(models.Model):
             return self.project_id.partner_id
         return res
 
-    def rating_apply(self, rate, token=None, feedback=None, subtype_xmlid=None):
-        return super(Task, self).rating_apply(rate, token=token, feedback=feedback, subtype_xmlid="project.mt_task_rating")
+    def rating_apply(self, rate, token=None, rating=None, feedback=None, subtype_xmlid=None):
+        if subtype_xmlid is None:
+            subtype_xmlid = "project.mt_task_rating"
+        rating = super(Task, self).rating_apply(rate, token=token, rating=rating, feedback=feedback, subtype_xmlid=subtype_xmlid)
+        if self.stage_id and self.stage_id.auto_validation_kanban_state:
+            kanban_state = 'done' if rating.rating >= RATING_LIMIT_OK else 'blocked'
+            self.write({'kanban_state': kanban_state})
+        return rating
 
     def _rating_get_parent_field_name(self):
         return 'project_id'

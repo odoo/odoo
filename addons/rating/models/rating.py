@@ -42,6 +42,7 @@ class Rating(models.Model):
     partner_id = fields.Many2one('res.partner', string='Customer', help="Author of the rating")
     rating = fields.Float(string="Rating Value", group_operator="avg", default=0, help="Rating value: 0=Unhappy, 5=Happy")
     rating_image = fields.Binary('Image', compute='_compute_rating_image')
+    rating_image_url = fields.Char('Image URL', compute='_compute_rating_image')
     rating_text = fields.Selection(rating_data.RATING_TEXT, string='Rating', store=True, compute='_compute_rating_text', readonly=True)
     feedback = fields.Text('Comment', help="Reason of the rating")
     message_id = fields.Many2one(
@@ -91,13 +92,17 @@ class Rating(models.Model):
         self.ensure_one()
         return 'rating_%s.png' % rating_data._rating_to_threshold(self.rating)
 
+    @api.depends('rating')
     def _compute_rating_image(self):
+        self.rating_image_url = False
+        self.rating_image = False
         for rating in self:
             try:
                 image_path = get_resource_path('rating', 'static/src/img', rating._get_rating_image_filename())
+                rating.rating_image_url = '/rating/static/src/img/%s' % rating._get_rating_image_filename()
                 rating.rating_image = base64.b64encode(open(image_path, 'rb').read()) if image_path else False
             except (IOError, OSError):
-                rating.rating_image = False
+                pass
 
     @api.depends('rating')
     def _compute_rating_text(self):

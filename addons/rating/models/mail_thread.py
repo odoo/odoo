@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models
+from odoo import api, models, _
 
 
 class MailThread(models.AbstractModel):
@@ -9,6 +9,7 @@ class MailThread(models.AbstractModel):
 
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, **kwargs):
+        rating_id = kwargs.pop('rating_id', False)
         rating_value = kwargs.pop('rating_value', False)
         rating_feedback = kwargs.pop('rating_feedback', False)
         message = super(MailThread, self).message_post(**kwargs)
@@ -25,4 +26,17 @@ class MailThread(models.AbstractModel):
                 'consumed': True,
                 'partner_id': self.env.user.partner_id.id,
             })
+        elif rating_id:
+            self.env['rating.rating'].sudo().browse(rating_id).write({'message_id': message.id})
+
         return message
+
+    def _message_create(self, values_list):
+        """ Force usage of rating-specific methods and API allowing to delegate
+        computation to records. Keep methods optimized and skip rating_ids
+        support to simplify MailThrad main API. """
+        if not isinstance(values_list, (list)):
+            values_list = [values_list]
+        if any(values.get('rating_ids') for values in values_list):
+            raise ValueError(_("Posting a rating should be done using message post API."))
+        return super()._message_create(values_list)
