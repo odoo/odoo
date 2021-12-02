@@ -2,6 +2,7 @@
 
 from . import common
 from . import test_odoobot
+from . import test_mail_performance
 from . import test_phone_blacklist
 from . import test_mass_mailing
 from . import test_mass_mailing_statistics
