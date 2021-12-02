@@ -2555,7 +2555,7 @@ var PriorityWidget = AbstractField.extend({
         const isReadonly = this.record.evalModifiers(this.attrs.modifiers).readonly;
         _.each(this.field.selection.slice(1), function (choice, index) {
             const tag = isReadonly ? '<span>' : '<a href="#">';
-            self.$el.append(self._renderStar(tag, index_value >= index + 1, index + 1, choice[1], index_value));
+            self.$el.append(self._renderStar(tag, index_value >= index + 1, index + 1, `${self.string}: ${choice[1]}`, index_value));
         });
     },
 
