@@ -7,4 +7,5 @@ from odoo import models, fields, api
 class Stock(models.Model):
     _inherit = 'stock.warehouse'
 
-    l10n_in_purchase_journal_id = fields.Many2one('account.journal', string="Purchase Journal")
+    #Deprecated field, use multi-company instead of this field
+    l10n_in_purchase_journal_id = fields.Many2one('account.journal', deprecated=True, string="Purchase Journal (Deprecated)")
