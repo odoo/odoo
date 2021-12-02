@@ -35,7 +35,6 @@ class StockPicking(models.Model):
     # -------------------------------------------------------------------------
     def _action_done(self):
         res = super(StockPicking, self)._action_done()
-
         for move in self.move_ids.filtered(lambda move: move.is_subcontract):
             # Auto set qty_producing/lot_producing_id of MO wasn't recorded
             # manually (if the flexible + record_component or has tracked component)
@@ -62,7 +61,7 @@ class StockPicking(models.Model):
                 production._set_qty_producing()
                 production.subcontracting_has_been_recorded = True
                 if move_line != move.move_line_ids[-1]:
-                    backorder = production._generate_backorder_productions(close_mo=False)
+                    backorder = production._split_productions()[1:]
                     # The move_dest_ids won't be set because the _split filter out done move
                     backorder.move_finished_ids.filtered(lambda mo: mo.product_id == move.product_id).move_dest_ids = production.move_finished_ids.filtered(lambda mo: mo.product_id == move.product_id).move_dest_ids
                     production.product_qty = production.qty_producing

@@ -55,7 +55,7 @@ class MrpProduction(models.Model):
 
         quantity_issues = self._get_quantity_produced_issues()
         if quantity_issues:
-            backorder = self._generate_backorder_productions(close_mo=False)
+            backorder = self._split_productions()[1:]
             # No qty to consume to avoid propagate additional move
             # TODO avoid : stock move created in backorder with 0 as qty
             backorder.move_raw_ids.filtered(lambda m: m.additional).product_uom_qty = 0.0
