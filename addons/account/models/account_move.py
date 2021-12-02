@@ -1514,7 +1514,7 @@ class AccountMove(models.Model):
 
             domain = [
                 ('account_id', 'in', pay_term_lines.account_id.ids),
-                ('move_id.state', '=', 'posted'),
+                ('parent_state', '=', 'posted'),
                 ('partner_id', '=', move.commercial_partner_id.id),
                 ('reconciled', '=', False),
                 '|', ('amount_residual', '!=', 0.0), ('amount_residual_currency', '!=', 0.0),
@@ -5044,7 +5044,7 @@ class AccountMoveLine(models.Model):
 
         state = context.get('state')
         if state and state.lower() != 'all':
-            domain += [('move_id.state', '=', state)]
+            domain += [('parent_state', '=', state)]
 
         if context.get('company_id'):
             domain += [('company_id', '=', context['company_id'])]
@@ -5079,7 +5079,7 @@ class AccountMoveLine(models.Model):
         tables = ''
         if domain:
             domain.append(('display_type', 'not in', ('line_section', 'line_note')))
-            domain.append(('move_id.state', '!=', 'cancel'))
+            domain.append(('parent_state', '!=', 'cancel'))
 
             query = self._where_calc(domain)
 
