@@ -84,6 +84,7 @@ tour.register('edit_menus', {
     clickOnSave,
     clickOnSave,
     wTourUtils.clickOnEdit(),
+    // Edit the new menu item from the "edit link" popover button
     wTourUtils.clickOnExtraMenuItem({extra_trigger: '#oe_snippets.o_loaded'}),
     {
         content: "Menu should have a new link item",
@@ -99,9 +100,37 @@ tour.register('edit_menus', {
         run: 'text Modnar',
     },
     clickOnSave,
+    ...wTourUtils.clickOnSave(),
+    // Edit the menu item from the "edit menu" popover button
+    wTourUtils.clickOnEdit(),
+    wTourUtils.clickOnExtraMenuItem({extra_trigger: '#oe_snippets.o_loaded'}),
     {
         content: "Label should have changed",
         trigger: '#top_menu .nav-item a:contains("Modnar")',
+    },
+    {
+        content: "Click on the popover Edit Menu button",
+        trigger: '.o_edit_menu_popover a.js_edit_menu',
+    },
+    {
+        content: "Click on the dialog Edit Menu button",
+        trigger: '.oe_menu_editor .js_menu_label:contains("Modnar")',
+        run: function () {
+            const liEl = this.$anchor[0].closest('[data-menu-id]');
+            liEl.querySelector('button.js_edit_menu').click();
+        },
+    },
+    {
+        content: "Change the label",
+        trigger: '.o_link_dialog #o_link_dialog_label_input',
+        run: 'text Modnar !!',
+    },
+    clickOnSave,
+    clickOnSave,
+    wTourUtils.clickOnExtraMenuItem({extra_trigger: 'a[data-action=edit]'}),
+    {
+        content: "Label should have changed",
+        trigger: '#top_menu .nav-item a:contains("Modnar !!")',
         run: () => {}, // It's a check.
     },
 ]);
