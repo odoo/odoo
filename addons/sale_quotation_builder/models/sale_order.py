@@ -10,6 +10,7 @@ class SaleOrder(models.Model):
 
     website_description = fields.Html('Website Description', sanitize_attributes=False, translate=html_translate, sanitize_form=False)
 
+    # YTI TODO: This should be converted
     @api.onchange('partner_id')
     def onchange_update_description_lang(self):
         if not self.sale_order_template_id:
@@ -42,14 +43,14 @@ class SaleOrderLine(models.Model):
 
     website_description = fields.Html('Website Description', sanitize=False, translate=html_translate, sanitize_form=False)
 
-    @api.model
-    def create(self, values):
-        values = self._inject_quotation_description(values)
-        return super(SaleOrderLine, self).create(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        vals_list = [self._inject_quotation_description(vals) for vals in vals_list]
+        return super().create(vals_list)
 
     def write(self, values):
         values = self._inject_quotation_description(values)
-        return super(SaleOrderLine, self).write(values)
+        return super().write(values)
 
     def _inject_quotation_description(self, values):
         values = dict(values or {})

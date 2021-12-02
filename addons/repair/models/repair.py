@@ -342,7 +342,7 @@ class Repair(models.Model):
             current_invoices_list = grouped_invoices_vals[(partner_invoice.id, currency.id, company.id)]
 
             if not group or len(current_invoices_list) == 0:
-                fpos = self.env['account.fiscal.position'].get_fiscal_position(partner_invoice.id, delivery_id=repair.address_id.id)
+                fpos = self.env['account.fiscal.position']._get_fiscal_position(partner_invoice, delivery=repair.address_id)
                 invoice_vals = {
                     'move_type': 'out_invoice',
                     'partner_id': partner_invoice.id,
@@ -717,7 +717,7 @@ class RepairLine(models.Model):
         self.product_uom = product.uom_id.id
         if self.type != 'remove':
             if partner:
-                fpos = self.env['account.fiscal.position'].get_fiscal_position(partner_invoice.id, delivery_id=self.repair_id.address_id.id)
+                fpos = self.env['account.fiscal.position']._get_fiscal_position(partner_invoice, delivery=self.repair_id.address_id)
                 taxes = self.product_id.taxes_id.filtered(lambda x: x.company_id == self.repair_id.company_id)
                 self.tax_id = fpos.map_tax(taxes)
             warning = False
@@ -795,7 +795,7 @@ class RepairFee(models.Model):
         pricelist = self.repair_id.pricelist_id
 
         if partner and self.product_id:
-            fpos = self.env['account.fiscal.position'].get_fiscal_position(partner_invoice.id, delivery_id=self.repair_id.address_id.id)
+            fpos = self.env['account.fiscal.position']._get_fiscal_position(partner_invoice, delivery=self.repair_id.address_id)
             taxes = self.product_id.taxes_id.filtered(lambda x: x.company_id == self.repair_id.company_id)
             self.tax_id = fpos.map_tax(taxes)
         if partner:

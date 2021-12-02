@@ -45,7 +45,6 @@ class SaleOrder(models.Model):
         if self.grid and self.grid_update:
             grid = json.loads(self.grid)
             product_template = self.env['product.template'].browse(grid['product_template_id'])
-            product_ids = set()
             dirty_cells = grid['changes']
             Attrib = self.env['product.template.attribute.value']
             default_so_line_vals = {}
@@ -68,8 +67,6 @@ class SaleOrder(models.Model):
 
                 if not diff:
                     continue
-
-                product_ids.add(product.id)
 
                 # TODO keep qty check? cannot be 0 because we only get cell changes ...
                 if order_lines:
@@ -115,18 +112,9 @@ class SaleOrder(models.Model):
                         product_uom_qty=qty,
                         product_no_variant_attribute_value_ids=no_variant_attribute_values.ids)
                     ))
-            if product_ids:
-                res = False
-                if new_lines:
-                    # Add new SO lines
-                    self.update(dict(order_line=new_lines))
-
-                # Recompute prices for new/modified lines
-                for line in self.order_line.filtered(lambda line: line.product_id.id in product_ids):
-                    res = line.product_id_change() or res
-                    line._onchange_discount()
-                    line._onchange_product_id_set_customer_lead()
-                return res
+            if new_lines:
+                # Add new SO lines
+                self.update(dict(order_line=new_lines))
 
     def _get_matrix(self, product_template):
         """Return the matrix of the given product, updated with current SOLines quantities.

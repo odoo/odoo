@@ -284,9 +284,9 @@ class AccountMove(models.Model):
     # =========================================================
 
     # ==== Business fields ====
-    fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position', readonly=True,
-        states={'draft': [('readonly', False)]},
-        check_company=True,
+    fiscal_position_id = fields.Many2one(
+        'account.fiscal.position', string='Fiscal Position', readonly=True,
+        states={'draft': [('readonly', False)]}, check_company=True,
         domain="[('company_id', '=', company_id)]", ondelete="restrict",
         help="Fiscal positions are used to adapt taxes and accounts for particular customers or sales orders/invoices. "
              "The default value comes from the customer.")
@@ -502,9 +502,9 @@ class AccountMove(models.Model):
         self.partner_bank_id = bank_ids and bank_ids[0]
 
         # Find the new fiscal position.
-        delivery_partner_id = self._get_invoice_delivery_partner_id()
-        self.fiscal_position_id = self.env['account.fiscal.position'].get_fiscal_position(
-            self.partner_id.id, delivery_id=delivery_partner_id)
+        delivery_partner = self.env['res.partner'].browse(self._get_invoice_delivery_partner_id())
+        self.fiscal_position_id = self.env['account.fiscal.position']._get_fiscal_position(
+            self.partner_id, delivery=delivery_partner)
         self._recompute_dynamic_lines()
         if warning:
             return {'warning': warning}

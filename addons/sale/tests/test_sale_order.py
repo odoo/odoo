@@ -4,6 +4,7 @@ from datetime import timedelta
 from freezegun import freeze_time
 
 from odoo import fields
+from odoo.fields import Command
 from odoo.exceptions import UserError, AccessError
 from odoo.tests import tagged, Form
 from odoo.tools import float_compare
@@ -49,41 +50,83 @@ class TestSaleOrder(TestSaleCommon):
             'pricelist_id': cls.company_data['default_pricelist'].id,
         })
         cls.sol_product_order = cls.env['sale.order.line'].create({
-            'name': cls.company_data['product_order_no'].name,
             'product_id': cls.company_data['product_order_no'].id,
             'product_uom_qty': 2,
-            'product_uom': cls.company_data['product_order_no'].uom_id.id,
-            'price_unit': cls.company_data['product_order_no'].list_price,
             'order_id': cls.sale_order.id,
             'tax_id': False,
         })
         cls.sol_serv_deliver = cls.env['sale.order.line'].create({
-            'name': cls.company_data['product_service_delivery'].name,
             'product_id': cls.company_data['product_service_delivery'].id,
             'product_uom_qty': 2,
-            'product_uom': cls.company_data['product_service_delivery'].uom_id.id,
-            'price_unit': cls.company_data['product_service_delivery'].list_price,
             'order_id': cls.sale_order.id,
             'tax_id': False,
         })
         cls.sol_serv_order = cls.env['sale.order.line'].create({
-            'name': cls.company_data['product_service_order'].name,
             'product_id': cls.company_data['product_service_order'].id,
             'product_uom_qty': 2,
-            'product_uom': cls.company_data['product_service_order'].uom_id.id,
-            'price_unit': cls.company_data['product_service_order'].list_price,
             'order_id': cls.sale_order.id,
             'tax_id': False,
         })
         cls.sol_product_deliver = cls.env['sale.order.line'].create({
-            'name': cls.company_data['product_delivery_no'].name,
             'product_id': cls.company_data['product_delivery_no'].id,
             'product_uom_qty': 2,
-            'product_uom': cls.company_data['product_delivery_no'].uom_id.id,
-            'price_unit': cls.company_data['product_delivery_no'].list_price,
             'order_id': cls.sale_order.id,
             'tax_id': False,
         })
+
+    def test_computes_auto_fill(self):
+        free_product = self.env['product.product'].create({
+            'name': 'Free product',
+            'list_price': 0.0,
+        })
+        dummy_product = self.env['product.product'].create({
+            'name': 'Dummy product',
+            'list_price': 0.0,
+        })
+        # Test pre-computes of lines with order
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'display_type': 'line_section',
+                    'name': 'Dummy section',
+                }),
+                Command.create({
+                    'display_type': 'line_section',
+                    'name': 'Dummy section',
+                }),
+                Command.create({
+                    'product_id': free_product.id,
+                }),
+                Command.create({
+                    'product_id': dummy_product.id,
+                })
+            ]
+        })
+
+        # Test pre-computes of lines creation alone
+        # Ensures the creation works fine even if the computes
+        # are triggered after the defaults
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+        })
+        self.env['sale.order.line'].create([
+            {
+                'display_type': 'line_section',
+                'name': 'Dummy section',
+                'order_id': order.id,
+            }, {
+                'display_type': 'line_section',
+                'name': 'Dummy section',
+                'order_id': order.id,
+            }, {
+                'product_id': free_product.id,
+                'order_id': order.id,
+            }, {
+                'product_id': dummy_product.id,
+                'order_id': order.id,
+            }
+        ])
 
     def test_sale_order(self):
         """ Test the sales order flow (invoicing and quantity updates)
@@ -281,11 +324,6 @@ class TestSaleOrder(TestSaleCommon):
         self.sol_serv_order.write({'tax_id': [(4, tax_exclude.id)]})
         self.sol_product_deliver.write({'tax_id': [(4, tax_exclude.id)]})
 
-        # Trigger onchange to reset discount, unit price, subtotal, ...
-        for line in self.sale_order.order_line:
-            line.product_id_change()
-            line._onchange_discount()
-
         for line in self.sale_order.order_line:
             if line.tax_id.price_include:
                 price = line.price_unit * line.product_uom_qty - line.price_tax
@@ -294,9 +332,10 @@ class TestSaleOrder(TestSaleCommon):
 
             self.assertEqual(float_compare(line.price_subtotal, price, precision_digits=2), 0)
 
-        self.assertEqual(self.sale_order.amount_total,
-                          self.sale_order.amount_untaxed + self.sale_order.amount_tax,
-                          'Taxes should be applied')
+        self.assertAlmostEqual(
+            self.sale_order.amount_total,
+            self.sale_order.amount_untaxed + self.sale_order.amount_tax,
+            places=2)
 
     def test_so_create_multicompany(self):
         """Check that only taxes of the right company are applied on the lines."""
@@ -314,8 +353,9 @@ class TestSaleOrder(TestSaleCommon):
             'company_id': self.company_data['company'].id,
         })
         so_1.write({
-            'order_line': [(0, False, {'product_id': product_shared.product_variant_id.id, 'order_id': so_1.id})],
+            'order_line': [Command.create({'product_id': product_shared.product_variant_id.id, 'order_id': so_1.id})],
         })
+        self.assertEqual(so_1.order_line.product_uom_qty, 1)
 
         self.assertEqual(so_1.order_line.tax_id, self.company_data['default_tax_sale'],
             'Only taxes from the right company are put by default')
@@ -461,9 +501,6 @@ class TestSaleOrder(TestSaleCommon):
                 })
             ]
         })
-        for line in sales_order.order_line:
-            # Create values autofill does not compute discount.
-            line._onchange_discount()
 
         so_line_1 = sales_order.order_line[0]
         so_line_2 = sales_order.order_line[1]
@@ -492,8 +529,6 @@ class TestSaleOrder(TestSaleCommon):
                 })
             ]
         })
-        for line in sales_order.order_line:
-            line._onchange_discount()
 
         so_line_1 = sales_order.order_line[0]
         so_line_2 = sales_order.order_line[1]
@@ -512,7 +547,6 @@ class TestSaleOrder(TestSaleCommon):
         sale_order = self.env['sale.order'].create({
             'partner_id': partner.id,
         })
-        sale_order.onchange_partner_id()
         self.assertEqual(sale_order.team_id.id, self.crm_team0.id, 'Should assign to team of sales person')
 
     def test_assign_sales_team_from_partner_team(self):
@@ -525,7 +559,6 @@ class TestSaleOrder(TestSaleCommon):
         sale_order = self.env['sale.order'].create({
             'partner_id': partner.id,
         })
-        sale_order.onchange_partner_id()
         self.assertEqual(sale_order.team_id.id, self.crm_team1.id, 'Should assign to team of partner')
 
     def test_assign_sales_team_when_changing_user(self):
@@ -536,7 +569,6 @@ class TestSaleOrder(TestSaleCommon):
             'team_id': self.crm_team1.id
         })
         sale_order.user_id = self.user_in_team
-        sale_order.onchange_user_id()
         self.assertEqual(sale_order.team_id.id, self.crm_team0.id, 'Should assign to team of sales person')
 
     def test_keep_sales_team_when_changing_user_with_no_team(self):
@@ -546,7 +578,6 @@ class TestSaleOrder(TestSaleCommon):
             'team_id': self.crm_team1.id
         })
         sale_order.user_id = self.user_not_in_team
-        sale_order.onchange_user_id()
         self.assertEqual(sale_order.team_id.id, self.crm_team1.id, 'Should not reset the team to default')
 
     def test_onchange_packaging_00(self):
@@ -736,3 +767,42 @@ class TestSaleOrder(TestSaleCommon):
         # (541,26 / 1,15) * ,98 * 38 = 17527,410782609 ~= 17527.41
         self.assertEqual(line.price_subtotal, 17527.41)
         self.assertEqual(line.untaxed_amount_to_invoice, line.price_subtotal)
+
+    def test_so_tax_mapping(self):
+        uom = self.env['uom.uom'].search([('name', '=', 'Units')], limit=1)
+        pricelist = self.env['product.pricelist'].search([('name', '=', 'Public Pricelist')], limit=1)
+
+        partner = self.env['res.partner'].create(dict(name="George"))
+        tax_include = self.env['account.tax'].create(dict(name="Include tax",
+                                                    amount='21.00',
+                                                    price_include=True,
+                                                    type_tax_use='sale'))
+        tax_exclude = self.env['account.tax'].create(dict(name="Exclude tax",
+                                                    amount='0.00',
+                                                    type_tax_use='sale'))
+
+        product_tmpl = self.env['product.template'].create(dict(name="Voiture",
+                                                              list_price=121,
+                                                              taxes_id=[(6, 0, [tax_include.id])]))
+
+        product = product_tmpl.product_variant_id
+
+        fpos = self.env['account.fiscal.position'].create(dict(name="fiscal position", sequence=1))
+        self.env['account.fiscal.position.tax'].create({
+            'position_id': fpos.id,
+            'tax_src_id': tax_include.id,
+            'tax_dest_id': tax_exclude.id,
+        })
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': partner.id,
+            'pricelist_id': pricelist.id,
+            'fiscal_position_id': fpos.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_uom': uom.id,
+            })]
+        })
+
+        # Check the unit price of SO line
+        self.assertEqual(100, sale_order.order_line[0].price_unit, "The included tax must be subtracted to the price")

@@ -270,7 +270,7 @@ class StockRule(models.Model):
         partner = values['supplier'].partner_id
         purchase_date = procurement_date_planned - relativedelta(days=supplier_delay)
 
-        fpos = self.env['account.fiscal.position'].with_company(company_id).get_fiscal_position(partner.id)
+        fpos = self.env['account.fiscal.position'].with_company(company_id)._get_fiscal_position(partner)
 
         gpo = self.group_propagation_option
         group = (gpo == 'fixed' and self.group_id.id) or \

@@ -118,8 +118,6 @@ class AccountMoveLine(models.Model):
 
         # create the sale lines in batch
         new_sale_lines = self.env['sale.order.line'].create(sale_line_values_to_create)
-        for sol in new_sale_lines:
-            sol._onchange_discount()
 
         # build result map by replacing index with newly created record of sale.order.line
         result = {}
@@ -158,7 +156,7 @@ class AccountMoveLine(models.Model):
         last_so_line = self.env['sale.order.line'].search([('order_id', '=', order.id)], order='sequence desc', limit=1)
         last_sequence = last_so_line.sequence + 1 if last_so_line else 100
 
-        fpos = order.fiscal_position_id or order.fiscal_position_id.get_fiscal_position(order.partner_id.id)
+        fpos = order.fiscal_position_id or order.fiscal_position_id._get_fiscal_position(order.partner_id)
         taxes = fpos.map_tax(self.product_id.taxes_id)
 
         return {

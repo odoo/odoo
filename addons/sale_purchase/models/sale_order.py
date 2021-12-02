@@ -193,7 +193,7 @@ class SaleOrderLine(models.Model):
         """
         self.ensure_one()
         partner_supplier = supplierinfo.partner_id
-        fpos = self.env['account.fiscal.position'].sudo().get_fiscal_position(partner_supplier.id)
+        fpos = self.env['account.fiscal.position'].sudo()._get_fiscal_position(partner_supplier)
         date_order = self._purchase_get_date_order(supplierinfo)
         return {
             'partner_id': partner_supplier.id,

@@ -91,38 +91,26 @@ class TestSaleProject(TransactionCase):
             'partner_shipping_id': partner.id,
         })
         so_line_order_no_task = SaleOrderLine.create({
-            'name': self.product_order_service1.name,
             'product_id': self.product_order_service1.id,
             'product_uom_qty': 10,
-            'product_uom': self.product_order_service1.uom_id.id,
-            'price_unit': self.product_order_service1.list_price,
             'order_id': sale_order.id,
         })
 
         so_line_order_task_in_global = SaleOrderLine.create({
-            'name': self.product_order_service2.name,
             'product_id': self.product_order_service2.id,
             'product_uom_qty': 10,
-            'product_uom': self.product_order_service2.uom_id.id,
-            'price_unit': self.product_order_service2.list_price,
             'order_id': sale_order.id,
         })
 
         so_line_order_new_task_new_project = SaleOrderLine.create({
-            'name': self.product_order_service3.name,
             'product_id': self.product_order_service3.id,
             'product_uom_qty': 10,
-            'product_uom': self.product_order_service3.uom_id.id,
-            'price_unit': self.product_order_service3.list_price,
             'order_id': sale_order.id,
         })
 
         so_line_order_only_project = SaleOrderLine.create({
-            'name': self.product_order_service4.name,
             'product_id': self.product_order_service4.id,
             'product_uom_qty': 10,
-            'product_uom': self.product_order_service4.uom_id.id,
-            'price_unit': self.product_order_service4.list_price,
             'order_id': sale_order.id,
         })
         sale_order.action_confirm()

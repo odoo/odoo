@@ -139,8 +139,10 @@ class ProjectTask(models.Model):
 
     sale_order_id = fields.Many2one('sale.order', 'Sales Order', compute='_compute_sale_order_id', store=True, help="Sales order to which the task is linked.")
     sale_line_id = fields.Many2one(
-        'sale.order.line', 'Sales Order Item', domain="[('company_id', '=', company_id), ('is_service', '=', True), ('order_partner_id', 'child_of', commercial_partner_id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done'])]",
-        compute='_compute_sale_line', recursive=True, store=True, readonly=False, copy=False, tracking=True, index=True,
+        'sale.order.line', 'Sales Order Item',
+        copy=False, tracking=True, index=True, recursive=True,
+        compute='_compute_sale_line', store=True, readonly=False,
+        domain="[('company_id', '=', company_id), ('is_service', '=', True), ('order_partner_id', 'child_of', commercial_partner_id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done'])]",
         help="Sales Order Item to which the time spent on this task will be added, in order to be invoiced to your customer.")
     project_sale_order_id = fields.Many2one('sale.order', string="Project's sale order", related='project_id.sale_order_id')
     invoice_count = fields.Integer("Number of invoices", related='sale_order_id.invoice_count')
@@ -164,7 +166,7 @@ class ProjectTask(models.Model):
                 task.partner_id = sale_order_id.partner_id
             task.sale_order_id = sale_order_id
 
-    @api.depends('commercial_partner_id', 'sale_line_id.order_partner_id.commercial_partner_id', 'parent_id.sale_line_id', 'project_id.sale_line_id')
+    @api.depends('commercial_partner_id', 'sale_line_id.order_partner_id', 'parent_id.sale_line_id', 'project_id.sale_line_id')
     def _compute_sale_line(self):
         for task in self:
             if not task.sale_line_id:

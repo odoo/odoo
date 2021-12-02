@@ -22,29 +22,20 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
             'pricelist_id': cls.company_data['default_pricelist'].id,
         })
         cls.sol1_service_deliver = cls.env['sale.order.line'].create({
-            'name': cls.company_data['product_service_delivery'].name,
             'product_id': cls.company_data['product_service_delivery'].id,
             'product_uom_qty': 1,
-            'product_uom': cls.company_data['product_service_delivery'].uom_id.id,
-            'price_unit': cls.company_data['product_service_delivery'].list_price,
             'order_id': cls.sale_order_1.id,
             'tax_id': False,
         })
         cls.sol1_product_order = cls.env['sale.order.line'].create({
-            'name': cls.company_data['product_order_no'].name,
             'product_id': cls.company_data['product_order_no'].id,
             'product_uom_qty': 2,
-            'product_uom': cls.company_data['product_order_no'].uom_id.id,
-            'price_unit': cls.company_data['product_order_no'].list_price,
             'order_id': cls.sale_order_1.id,
             'tax_id': False,
         })
         cls.sol1_service_purchase_1 = cls.env['sale.order.line'].create({
-            'name': cls.service_purchase_1.name,
             'product_id': cls.service_purchase_1.id,
             'product_uom_qty': 4,
-            'product_uom': cls.service_purchase_1.uom_id.id,
-            'price_unit': cls.service_purchase_1.list_price,
             'order_id': cls.sale_order_1.id,
             'tax_id': False,
         })
@@ -56,29 +47,20 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
             'pricelist_id': cls.company_data['default_pricelist'].id,
         })
         cls.sol2_product_deliver = cls.env['sale.order.line'].create({
-            'name': cls.company_data['product_delivery_no'].name,
             'product_id': cls.company_data['product_delivery_no'].id,
             'product_uom_qty': 5,
-            'product_uom': cls.company_data['product_delivery_no'].uom_id.id,
-            'price_unit': cls.company_data['product_delivery_no'].list_price,
             'order_id': cls.sale_order_2.id,
             'tax_id': False,
         })
         cls.sol2_service_order = cls.env['sale.order.line'].create({
-            'name': cls.company_data['product_service_order'].name,
             'product_id': cls.company_data['product_service_order'].id,
             'product_uom_qty': 6,
-            'product_uom': cls.company_data['product_service_order'].uom_id.id,
-            'price_unit': cls.company_data['product_service_order'].list_price,
             'order_id': cls.sale_order_2.id,
             'tax_id': False,
         })
         cls.sol2_service_purchase_2 = cls.env['sale.order.line'].create({
-            'name': cls.service_purchase_2.name,
             'product_id': cls.service_purchase_2.id,
             'product_uom_qty': 7,
-            'product_uom': cls.service_purchase_2.uom_id.id,
-            'price_unit': cls.service_purchase_2.list_price,
             'order_id': cls.sale_order_2.id,
             'tax_id': False,
         })

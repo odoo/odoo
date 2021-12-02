@@ -9,6 +9,16 @@ class TestCommonReporting(TestCommonSaleTimesheet):
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
 
+        # Note: According to the installed module, a default pricelist is set
+        # on the created company (see create override on product module)
+        # Force the pricelist on the company to avoid having a random one
+        # with advanced discount configuration, etc...
+        cls.env['ir.property']._set_default(
+            'property_product_pricelist', 'res.partner',
+            cls.company_data['default_pricelist'],
+            cls.company_data['company'],
+        )
+
         # expense product
         cls.product_expense = cls.env['product.product'].with_context(mail_notrack=True, mail_create_nolog=True).create({
             'name': "Expense service",
@@ -52,19 +62,13 @@ class TestCommonReporting(TestCommonSaleTimesheet):
             'analytic_account_id': cls.analytic_account_1.id,
         })
         cls.so_line_deliver_project = cls.env['sale.order.line'].create({
-            'name': cls.product_delivery_timesheet3.name,
             'product_id': cls.product_delivery_timesheet3.id,
             'product_uom_qty': 5,
-            'product_uom': cls.product_delivery_timesheet3.uom_id.id,
-            'price_unit': cls.product_delivery_timesheet3.list_price,
             'order_id': cls.sale_order_1.id,
         })
         cls.so_line_deliver_task = cls.env['sale.order.line'].create({
-            'name': cls.product_delivery_timesheet2.name,
             'product_id': cls.product_delivery_timesheet2.id,
             'product_uom_qty': 7,
-            'product_uom': cls.product_delivery_timesheet2.uom_id.id,
-            'price_unit': cls.product_delivery_timesheet2.list_price,
             'order_id': cls.sale_order_1.id,
         })
 
@@ -75,19 +79,13 @@ class TestCommonReporting(TestCommonSaleTimesheet):
             'analytic_account_id': cls.analytic_account_2.id,
         })
         cls.so_line_order_project = cls.env['sale.order.line'].create({
-            'name': cls.product_order_timesheet3.name,
             'product_id': cls.product_order_timesheet3.id,
             'product_uom_qty': 5,
-            'product_uom': cls.product_order_timesheet3.uom_id.id,
-            'price_unit': cls.product_order_timesheet3.list_price,
             'order_id': cls.sale_order_2.id,
         })
         cls.so_line_order_task = cls.env['sale.order.line'].create({
-            'name': cls.product_order_timesheet2.name,
             'product_id': cls.product_order_timesheet2.id,
             'product_uom_qty': 7,
-            'product_uom': cls.product_order_timesheet2.uom_id.id,
-            'price_unit': cls.product_order_timesheet2.list_price,
             'order_id': cls.sale_order_2.id,
         })
 
@@ -98,11 +96,8 @@ class TestCommonReporting(TestCommonSaleTimesheet):
             'analytic_account_id': cls.analytic_account_3.id,
         })
         cls.so_line_deliver_manual_project = cls.env['sale.order.line'].create({
-            'name': cls.product_delivery_manual3.name,
             'product_id': cls.product_delivery_manual3.id,
             'product_uom_qty': 11,
-            'product_uom': cls.product_delivery_manual3.uom_id.id,
-            'price_unit': cls.product_delivery_manual3.list_price,
             'order_id': cls.sale_order_3.id,
         })
 

@@ -37,10 +37,8 @@ class TestUpsellWarning(TestCommonSaleTimesheet):
 
         self.env['sale.order.line'].create({
             'order_id': so.id,
-            'name': self.product_order_timesheet1.name,
             'product_id': self.product_order_timesheet1.id,
             'product_uom_qty': 10,
-            'price_unit': self.product_order_timesheet1.list_price,
         })
         so.action_confirm()
 

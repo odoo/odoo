@@ -308,7 +308,6 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
         # activate b2c
         config = self.env['res.config.settings'].create({})
         config.show_line_subtotals_tax_selection = "tax_included"
-        config._onchange_sale_tax()
         config.execute()
 
         self.start_tour("/", 'shop_list_view_b2c', login="admin")

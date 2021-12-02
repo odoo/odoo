@@ -21,38 +21,26 @@ class TestSaleToInvoice(TestSaleCommon):
         })
         SaleOrderLine = cls.env['sale.order.line'].with_context(tracking_disable=True)
         cls.sol_prod_order = SaleOrderLine.create({
-            'name': cls.company_data['product_order_no'].name,
             'product_id': cls.company_data['product_order_no'].id,
             'product_uom_qty': 5,
-            'product_uom': cls.company_data['product_order_no'].uom_id.id,
-            'price_unit': cls.company_data['product_order_no'].list_price,
             'order_id': cls.sale_order.id,
             'tax_id': False,
         })
         cls.sol_serv_deliver = SaleOrderLine.create({
-            'name': cls.company_data['product_service_delivery'].name,
             'product_id': cls.company_data['product_service_delivery'].id,
             'product_uom_qty': 4,
-            'product_uom': cls.company_data['product_service_delivery'].uom_id.id,
-            'price_unit': cls.company_data['product_service_delivery'].list_price,
             'order_id': cls.sale_order.id,
             'tax_id': False,
         })
         cls.sol_serv_order = SaleOrderLine.create({
-            'name': cls.company_data['product_service_order'].name,
             'product_id': cls.company_data['product_service_order'].id,
             'product_uom_qty': 3,
-            'product_uom': cls.company_data['product_service_order'].uom_id.id,
-            'price_unit': cls.company_data['product_service_order'].list_price,
             'order_id': cls.sale_order.id,
             'tax_id': False,
         })
         cls.sol_prod_deliver = SaleOrderLine.create({
-            'name': cls.company_data['product_delivery_no'].name,
             'product_id': cls.company_data['product_delivery_no'].id,
             'product_uom_qty': 2,
-            'product_uom': cls.company_data['product_delivery_no'].uom_id.id,
-            'price_unit': cls.company_data['product_delivery_no'].list_price,
             'order_id': cls.sale_order.id,
             'tax_id': False,
         })
@@ -329,11 +317,8 @@ class TestSaleToInvoice(TestSaleCommon):
             'pricelist_id': self.company_data['default_pricelist'].id,
         })
         sol_product = self.env['sale.order.line'].create({
-            'name': self.company_data['product_order_no'].name,
             'product_id': self.company_data['product_order_no'].id,
             'product_uom_qty': 5,
-            'product_uom': self.company_data['product_order_no'].uom_id.id,
-            'price_unit': self.company_data['product_order_no'].list_price,
             'order_id': sale_order_refund.id,
             'tax_id': False,
         })
