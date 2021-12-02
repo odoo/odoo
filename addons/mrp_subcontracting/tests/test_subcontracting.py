@@ -435,7 +435,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         self.assertEqual(backorder_mo.qty_produced, 0)
         backorder.move_ids.quantity_done = 2
         backorder._action_done()
-        self.assertTrue(picking_receipt.move_ids.move_orig_ids.production_id.state == 'done')
+        self.assertTrue(picking_receipt.move_ids.move_orig_ids[0].production_id.state == 'done')
 
     def test_flow_9(self):
         """Ensure that cancel the subcontract moves will also delete the

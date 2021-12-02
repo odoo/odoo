@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, Command, fields, models
 from odoo.osv import expression
 from odoo.tools import float_compare, float_round, float_is_zero, OrderedSet
 
@@ -353,6 +353,15 @@ class StockMove(models.Model):
         res = super()._consuming_picking_types()
         res.append('mrp_operation')
         return res
+
+    def _get_backorder_move_vals(self):
+        self.ensure_one()
+        return {
+            'state': 'confirmed',
+            'reservation_date': self.reservation_date,
+            'move_orig_ids': [Command.link(m.id) for m in self.mapped('move_orig_ids')],
+            'move_dest_ids': [Command.link(m.id) for m in self.mapped('move_dest_ids')]
+        }
 
     def _get_source_document(self):
         res = super()._get_source_document()
