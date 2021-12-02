@@ -39,8 +39,8 @@ REMOTE_CONNECTION_TIMEOUT = 2.5
 logger = logging.getLogger(__name__)
 
 
-class QWeb(models.AbstractModel):
-    """ QWeb object for rendering editor stuff
+class IrQWeb(models.AbstractModel):
+    """ IrQWeb object for rendering editor stuff
     """
     _inherit = 'ir.qweb'
 
@@ -114,12 +114,12 @@ class QWeb(models.AbstractModel):
     def _compile_directive_tag(self, el, options, indent):
         if el.get('t-placeholder'):
             el.set('t-att-placeholder', el.attrib.pop('t-placeholder'))
-        return super(QWeb, self)._compile_directive_tag(el, options, indent)
+        return super(IrQWeb, self)._compile_directive_tag(el, options, indent)
 
     # order and ignore
 
     def _directives_eval_order(self):
-        directives = super(QWeb, self)._directives_eval_order()
+        directives = super(IrQWeb, self)._directives_eval_order()
         directives.insert(directives.index('call'), 'snippet')
         directives.insert(directives.index('call'), 'snippet-call')
         directives.insert(directives.index('call'), 'install')

@@ -34,8 +34,8 @@ class AssetsBundleMultiWebsite(AssetsBundle):
         extra = website_id_path + extra
         return super(AssetsBundleMultiWebsite, self).get_debug_asset_url(extra, name, extension)
 
-class QWeb(models.AbstractModel):
-    """ QWeb object for rendering stuff in the website context """
+class IrQWeb(models.AbstractModel):
+    """ IrQWeb object for rendering stuff in the website context """
 
     _inherit = 'ir.qweb'
 
@@ -47,14 +47,14 @@ class QWeb(models.AbstractModel):
         'img':    'src',
     }
 
-    def get_asset_bundle(self, xmlid, files, env=None, css=True, js=True):
+    def _get_asset_bundle(self, xmlid, files, env=None, css=True, js=True):
         return AssetsBundleMultiWebsite(xmlid, files, env=env)
 
     def _post_processing_att(self, tagName, atts, options):
         if atts.get('data-no-post-process'):
             return atts
 
-        atts = super(QWeb, self)._post_processing_att(tagName, atts, options)
+        atts = super(IrQWeb, self)._post_processing_att(tagName, atts, options)
 
         if tagName == 'img' and 'loading' not in atts:
             atts['loading'] = 'lazy'  # default is auto

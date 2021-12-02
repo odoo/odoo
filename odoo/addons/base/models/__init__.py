@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import assetsbundle
-from . import qweb
 
 from . import ir_model
 from . import ir_sequence
