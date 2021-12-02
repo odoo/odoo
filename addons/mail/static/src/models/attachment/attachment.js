@@ -52,7 +52,7 @@ registerModel({
          */
         download() {
             const downloadLink = document.createElement('a');
-            downloadLink.setAttribute('href', `/web/content/ir.attachment/${this.id}/datas?download=true`);
+            downloadLink.setAttribute('href', this.downloadUrl);
             // Adding 'download' attribute into a link prevents open a new tab or change the current location of the window.
             // This avoids interrupting the activity in the page such as rtc call.
             downloadLink.setAttribute('download', '');
@@ -143,10 +143,10 @@ registerModel({
          */
         _computeDownloadUrl() {
             if (!this.accessToken && this.originThread && this.originThread.model === 'mail.channel') {
-                return `/mail/channel/${this.originThread.id}/attachment/${this.id}`;
+                return `/mail/channel/${this.originThread.id}/attachment/${this.id}?download=true`;
             }
-            const accessToken = this.accessToken ? `?access_token=${this.accessToken}` : '';
-            return `/web/content/ir.attachment/${this.id}/datas${accessToken}`;
+            const accessToken = this.accessToken ? `access_token=${this.accessToken}&` : '';
+            return `/web/content/ir.attachment/${this.id}/datas?${accessToken}download=true`;
         },
         /**
          * @private
