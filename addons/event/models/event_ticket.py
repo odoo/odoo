@@ -55,7 +55,7 @@ class EventTicket(models.Model):
         return res
 
     # description
-    event_type_id = fields.Many2one(ondelete='set null', required=False)
+    event_type_id = fields.Many2one('event.type', related='event_id.event_type_id')
     event_id = fields.Many2one(
         'event.event', string="Event",
         ondelete='cascade', required=True)
