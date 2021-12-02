@@ -39,7 +39,7 @@
                             />
                         </div>
                     </t>
-                    <t t-foreach="category.categoryItems" t-as="item" t-key="item.localId">
+                    <t t-foreach="category.filteredCategoryItems" t-as="item" t-key="item.localId">
                         <DiscussSidebarCategoryItem
                             class="o_DiscussSidebarCategory_item"
                             categoryItemLocalId="item.localId"
