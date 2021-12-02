@@ -5,6 +5,7 @@
         <field name="model">rating.rating</field>
         <field name="inherit_id" ref="rating.rating_rating_view_tree"/>
         <field name="mode">primary</field>
+        <field name="priority">64</field>
         <field name="arch" type="xml">
             <field name="res_name" position="attributes">
                 <attribute name="string">Task</attribute>
@@ -21,8 +22,9 @@
     <record id="rating_rating_view_form_project" model="ir.ui.view">
         <field name="name">rating.rating.form.project</field>
         <field name="model">rating.rating</field>
-        <field name="inherit_id" ref="rating.rating_rating_view_form"/>
+        <field name="inherit_id" ref="rating.rating_rating_view_form_text"/>
         <field name="mode">primary</field>
+        <field name="priority">64</field>
         <field name="arch" type="xml">
             <xpath expr="//form" position="attributes">
                 <attribute name="edit">0</attribute>
@@ -52,9 +54,6 @@
             <field name="feedback" position="attributes">
                 <attribute name="readonly">1</attribute>
             </field>
-            <div name="rating_image_container" position="replace">
-                <field name="rating_text" string="Rating" decoration-danger="rating_text == 'ko'" decoration-warning="rating_text == 'ok'" decoration-success="rating_text == 'top'" widget='badge'/>
-            </div>
             <field name="write_date" position="after">
                 <field name="partner_id" position="move"/>
             </field>
@@ -69,6 +68,7 @@
         <field name="model">rating.rating</field>
         <field name="inherit_id" ref="rating.rating_rating_view_pivot"/>
         <field name="mode">primary</field>
+        <field name="priority">64</field>
         <field name="arch" type="xml">
             <xpath expr="//pivot" position="attributes">
                 <attribute name="js_class">project_rating_pivot</attribute>
@@ -84,6 +84,7 @@
         <field name="model">rating.rating</field>
         <field name="inherit_id" ref="rating.rating_rating_view_graph"/>
         <field name="mode">primary</field>
+        <field name="priority">64</field>
         <field name="arch" type="xml">
             <xpath expr="//graph" position="attributes">
                 <attribute name="js_class">project_rating_graph</attribute>
@@ -96,6 +97,7 @@
         <field name="model">rating.rating</field>
         <field name="inherit_id" ref="rating.rating_rating_view_kanban"/>
         <field name="mode">primary</field>
+        <field name="priority">64</field>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='create_date']" position="replace">
                 <field name="write_date"/>
@@ -108,6 +110,7 @@
         <field name="model">rating.rating</field>
         <field name="inherit_id" ref="rating.rating_rating_view_search"/>
         <field name="mode">primary</field>
+        <field name="priority">64</field>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='rated_partner_id']" position="after">
                 <field name="parent_res_name" position="move"/>
