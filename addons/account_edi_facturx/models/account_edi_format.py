@@ -45,6 +45,29 @@ class AccountEdiFormat(models.Model):
             values['name'] = 'factur-x.xml'
         return values
 
+<<<<<<< HEAD
+=======
+    def _prepare_invoice_report(self, pdf_writer, edi_document):
+        self.ensure_one()
+        if self.code != 'facturx_1_0_05':
+            return super()._prepare_invoice_report(pdf_writer, edi_document)
+        if not edi_document.attachment_id:
+            return
+
+        pdf_writer.embed_odoo_attachment(edi_document.attachment_id)
+        if not pdf_writer.is_pdfa and str2bool(self.env['ir.config_parameter'].sudo().get_param('edi.use_pdfa', 'False')):
+            try:
+                pdf_writer.convert_to_pdfa()
+            except Exception as e:
+                _logger.exception("Error while converting to PDF/A: %s", e)
+            metadata_template = self.env.ref('account_edi_facturx.account_invoice_pdfa_3_facturx_metadata', raise_if_not_found=False)
+            if metadata_template:
+                pdf_writer.add_file_metadata(metadata_template._render({
+                    'title': edi_document.move_id.name,
+                    'date': fields.Date.context_today(self),
+                }))
+
+>>>>>>> 3d20c653e8e... temp
     def _export_facturx(self, invoice):
 
         def format_date(dt):

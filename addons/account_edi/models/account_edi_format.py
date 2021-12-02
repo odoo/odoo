@@ -296,6 +296,20 @@ class AccountEdiFormat(models.Model):
         self.ensure_one()
         return self.env['account.move']
 
+<<<<<<< HEAD
+=======
+    def _prepare_invoice_report(self, pdf_writer, edi_document):
+        """
+        Prepare invoice report to be printed.
+        :param pdf_writer: The pdf writer with the invoice pdf content loaded.
+        :param edi_document: The edi document to be added to the pdf file.
+        """
+        # TO OVERRIDE
+        self.ensure_one()
+        if self._is_embedding_to_invoice_pdf_needed() and edi_document.attachment_id:
+            pdf_writer.embed_odoo_attachment(edi_document.attachment_id)
+
+>>>>>>> 3d20c653e8e... temp
     ####################################################
     # Export Internal methods (not meant to be overridden)
     ####################################################
