@@ -201,6 +201,9 @@ class LunchOrder(models.Model):
                 raise ValidationError(_('Your wallet does not contain enough money to order that. To add some money to your wallet, please contact your lunch manager.'))
 
     def action_order(self):
+        for order in self:
+            if not order.supplier_id.available_today:
+                raise UserError(_('The vendor related to this order is not available today.'))
         if self.filtered(lambda line: not line.product_id.active):
             raise ValidationError(_('Product is no longer available.'))
         self.write({
