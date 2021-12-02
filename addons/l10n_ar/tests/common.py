@@ -663,6 +663,8 @@ class TestAr(AccountTestInvoicingCommon):
                         invoice_line_form.product_id = line.get('product', self.product_iva_21)
                         invoice_line_form.quantity = line.get('quantity', 1)
                         invoice_line_form.price_unit = line.get('price_unit', 100)
+                        for tax in line.get('extra_taxes', []):
+                            invoice_line_form.tax_ids.add(tax)
             invoice_form.invoice_date = invoice_form.date
         invoice = invoice_form.save()
         return invoice
