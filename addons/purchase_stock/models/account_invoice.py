@@ -149,6 +149,7 @@ class AccountMove(models.Model):
                         'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],
                         'exclude_from_invoice_tab': True,
                         'is_anglo_saxon_line': True,
+                        'ref': move.ref,
                     }
                     vals.update(line._get_fields_onchange_subtotal(price_subtotal=vals['price_subtotal']))
                     lines_vals_list.append(vals)
@@ -168,6 +169,7 @@ class AccountMove(models.Model):
                         'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],
                         'exclude_from_invoice_tab': True,
                         'is_anglo_saxon_line': True,
+                        'ref': move.ref,
                     }
                     vals.update(line._get_fields_onchange_subtotal(price_subtotal=vals['price_subtotal']))
                     lines_vals_list.append(vals)
