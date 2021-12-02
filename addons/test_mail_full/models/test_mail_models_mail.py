@@ -51,5 +51,8 @@ class MailTestRating(models.Model):
             elif not rating.phone_nbr:
                 rating.phone_nbr = False
 
+    def _rating_apply_get_default_subtype_id(self):
+        return self.env['ir.model.data']._xmlid_to_res_id("test_mail_full.mt_mail_test_rating_rating_done")
+
     def rating_get_partner_id(self):
         return self.customer_id

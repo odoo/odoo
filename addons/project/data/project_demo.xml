@@ -1227,36 +1227,44 @@ Send it ASAP, its urgent.</field>
 
         <!-- Rating Demo Data -->
         <record id="rating_task_1" model="rating.rating">
+            <field name="access_token">PROJECT_1</field>
             <field name="res_model_id" ref="project.model_project_task"/>
             <field name="rated_partner_id" ref="base.partner_root"/>
             <field name="partner_id" ref="base.partner_demo_portal"/>
             <field name="res_id" ref="project.project_1_task_3"/>
         </record>
-        <function model="project.task" name="rating_apply" eval="([ref('project.project_1_task_3')], 5, None, 'Good Job')"/>
+        <function model="project.task" name="rating_apply"
+            eval="([ref('project.project_1_task_3')], 5, 'PROJECT_1', None, 'Good Job')"/>
 
         <record id="rating_task_2" model="rating.rating">
+            <field name="access_token">PROJECT_2</field>
             <field name="res_model_id" ref="project.model_project_task"/>
             <field name="rated_partner_id" ref="base.partner_demo"/>
             <field name="partner_id" ref="base.partner_demo"/>
             <field name="res_id" ref="project.project_2_task_7"/>
         </record>
-        <function model="project.task" name="rating_apply" eval="([ref('project.project_2_task_7')], 1, 'Not as good as expected')"/>
+        <function model="project.task" name="rating_apply"
+            eval="([ref('project.project_2_task_7')], 1, 'PROJECT_2', None, 'Not as good as expected')"/>
 
         <record id="rating_task_3" model="rating.rating">
+            <field name="access_token">PROJECT_3</field>
             <field name="res_model_id" ref="project.model_project_task"/>
             <field name="rated_partner_id" ref="base.partner_root"/>
             <field name="partner_id" ref="base.partner_demo_portal"/>
             <field name="res_id" ref="project.project_1_task_4"/>
         </record>
-        <function model="project.task" name="rating_apply" eval="([ref('project.project_1_task_4')], 5, None, 'Exactly what I asked for, thank you!')"/>
+        <function model="project.task" name="rating_apply"
+            eval="([ref('project.project_1_task_4')], 5, 'PROJECT_3', None, 'Exactly what I asked for, thank you!')"/>
 
         <record id="rating_task_4" model="rating.rating">
+            <field name="access_token">PROJECT_4</field>
             <field name="res_model_id" ref="project.model_project_task"/>
             <field name="rated_partner_id" ref="base.partner_root"/>
             <field name="partner_id" ref="base.partner_demo_portal"/>
             <field name="res_id" ref="project.project_1_task_2"/>
         </record>
-        <function model="project.task" name="rating_apply" eval="([ref('project.project_1_task_2')], 1, None, 'There must have been some miscomunication, because the result is not quite what I had in mind. I would like to request some modifications.')"/>
+        <function model="project.task" name="rating_apply"
+            eval="([ref('project.project_1_task_2')], 1, 'PROJECT_4', None, 'There must have been some miscomunication, because the result is not quite what I had in mind. I would like to request some modifications.')"/>
 
 
         <!-- add the email template as value for the project stage 2 -->
