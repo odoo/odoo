@@ -54,7 +54,9 @@ class AccountEdiFormat(models.Model):
     def _prepare_invoice_report(self, pdf_writer, edi_document):
         self.ensure_one()
         if self.code != 'facturx_1_0_05':
-            super()._prepare_invoice_report(pdf_writer, edi_document)
+            return super()._prepare_invoice_report(pdf_writer, edi_document)
+        if not edi_document.attachment_id:
+            return
 
         pdf_writer.embed_odoo_attachment(edi_document.attachment_id)
         if not pdf_writer.is_pdfa and str2bool(self.env['ir.config_parameter'].sudo().get_param('edi.use_pdfa', 'False')):
