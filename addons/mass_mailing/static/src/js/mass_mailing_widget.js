@@ -391,8 +391,8 @@ var MassMailingFieldHtml = FieldHtml.extend({
         if (!odoo.debug) {
             $snippetsSideBar.find('.o_codeview_btn').hide();
         }
-        const $codeview = this.wysiwyg.$iframe.contents().find('textarea.o_codeview');
-        $snippetsSideBar.on('click', '.o_codeview_btn', () => this._toggleCodeView($codeview));
+        this._$codeview = this.wysiwyg.$iframe.contents().find('textarea.o_codeview');
+        $snippetsSideBar.on('click', '.o_codeview_btn', () => this._toggleCodeView(this._$codeview));
 
         if ($themes.length === 0) {
             return;

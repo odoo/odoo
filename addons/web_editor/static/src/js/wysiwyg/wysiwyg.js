@@ -756,7 +756,7 @@ const Wysiwyg = Widget.extend({
     setValue: function (value) {
         this.$editable.html(value);
         this.odooEditor.sanitize();
-        this.odooEditor.historyStep();
+        this.odooEditor.historyStep(true);
     },
     /**
      * Undo one step of change in the editor.
