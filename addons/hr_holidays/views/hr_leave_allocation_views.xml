@@ -102,7 +102,10 @@
                             <field name="allocation_type" invisible="1" widget="radio"
                                 attrs="{'readonly': ['|', ('is_officer', '=', False), ('state', 'not in', ('draft', 'confirm'))]}"/>
                             <field name="is_officer" invisible="1"/>
-                            <field name="accrual_plan_id" attrs="{'invisible': [('allocation_type', '=', 'regular')], 'readonly': ['|', ('is_officer', '=', False), ('state', 'not in', ('draft', 'confirm'))]}"/>
+                            <field name="accrual_plan_id" attrs="{'invisible': [('allocation_type', '=', 'regular')],
+                                'readonly': ['|', ('is_officer', '=', False), ('state', 'not in', ('draft', 'confirm'))],
+                                'required': [('allocation_type', '=', 'accrual')],
+                            }"/>
                             <div class="o_td_label">
                                 <label for="date_from" string="Validity Period" attrs="{'invisible': ['|', ('allocation_type', '=', 'accrual'), ('state', 'not in', ('draft', 'confirm'))]}"/>
                                 <label for="date_from" string="Start Date" attrs="{'invisible': [('allocation_type', '=', 'regular')]}"/>

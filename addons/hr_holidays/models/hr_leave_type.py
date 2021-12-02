@@ -69,6 +69,7 @@ class HolidaysType(models.Model):
         compute='_compute_leaves', string='Virtual Time Off Already Taken',
         help='Sum of validated and non validated time off requests.')
     closest_allocation_to_expire = fields.Many2one('hr.leave.allocation', 'Allocation', compute='_compute_leaves')
+    employee_accrual = fields.Boolean(compute='_compute_employee_accrual', search='_search_employee_accrual')
     allocation_count = fields.Integer(
         compute='_compute_allocation_count', string='Allocations')
     group_days_leave = fields.Float(
@@ -113,6 +114,8 @@ class HolidaysType(models.Model):
     support_document = fields.Boolean(string='Supporting Document')
     accruals_ids = fields.One2many('hr.leave.accrual.plan', 'time_off_type_id')
     accrual_count = fields.Float(compute="_compute_accrual_count", string="Accruals count")
+
+    additional_leaves = fields.Float(compute='_compute_additional_leaves')
 
 
     @api.model
@@ -220,6 +223,18 @@ class HolidaysType(models.Model):
 
         return [('id', 'in', valid_leave_types.ids)]
 
+    def _search_employee_accrual(self, operator, value):
+        employee_id = self._get_contextual_employee_id()
+        employee_allocations = self.env['hr.leave.allocation'].search([
+            ('employee_id', '=', employee_id),
+            ('accrual_plan_id', '!=', False),
+        ])
+
+        op = 'in'
+        if operator == '!=' and value or operator == '=' and not value:
+            op = 'not in'
+        return [('id', op, employee_allocations.holiday_status_id.ids)]
+
     def get_employees_days(self, employee_ids, date=None):
         result = {
             employee_id: {
@@ -303,14 +318,60 @@ class HolidaysType(models.Model):
         return result
 
     @api.model
-    def get_days_all_request(self):
-        leave_types = sorted(self.search([]).filtered(lambda x: ((x.virtual_remaining_leaves > 0 or x.max_leaves))), key=self._model_sorting_key, reverse=True)
-        return [lt._get_days_request() for lt in leave_types]
+    def get_days_all_request(self, date=None):
+        date = fields.Date.to_date(date) if date else fields.Date.today()
+        future = date > fields.Date.today()
+
+        leave_types = self.with_context(future_accrual_date=date).search([])
+        accrual_allocations = bool(leave_types.filtered('employee_accrual'))
+        leave_types_filtered = leave_types.filtered(lambda x: (x.virtual_remaining_leaves > 0 or x.max_leaves or (future and x.employee_accrual)))
+
+        return {
+            'accrual_allocations': accrual_allocations,
+            'accrual_date': date,
+            'allocations': [x._get_days_request() for x in leave_types_filtered],
+        }
+
+    @api.depends_context('default_employee_id', 'employee_id', 'future_accrual_date')
+    @api.depends('employee_accrual')
+    def _compute_additional_leaves(self):
+        employee_id = self._get_contextual_employee_id()
+        accrual_date = fields.Date.to_date(self.env.context.get('future_accrual_date'))
+
+        if not accrual_date or not employee_id or accrual_date <= fields.Date.today():
+            self.additional_leaves = 0
+            return
+
+        with_accrual = self.filtered('employee_accrual')
+        (self - with_accrual).additional_leaves = 0
+
+        accrual_allocations = self.env['hr.leave.allocation'].search([
+            ('allocation_type', '=', 'accrual'),
+            ('state', '=', 'validate'),
+            ('accrual_plan_id', '!=', False),
+            ('employee_id', '=', employee_id),
+            ('holiday_status_id', 'in', with_accrual.ids),
+            '|',
+                ('date_to', '=', False), ('date_to', '>', accrual_date),
+            '|',
+                ('nextcall', '=', False), ('nextcall', '<=', accrual_date)
+        ])
+
+        fake_allocations = self.env['hr.leave.allocation']
+        for allocation in accrual_allocations:
+            fake_allocations |= self.env['hr.leave.allocation'].new(origin=allocation)
+        fake_allocations.sudo()._process_accrual_plans(accrual_date)
+
+        for lt in with_accrual:
+            lt.additional_leaves = float_round(sum(fake_allocations.filtered(lambda a: a.holiday_status_id.id == lt.id).mapped('number_of_days')), precision_digits=2)
 
     def _get_days_request(self):
         self.ensure_one()
+        accrual_date = self.env.context.get('future_accrual_date', fields.Date.today())
+        future_leaves = self.employee_accrual and accrual_date > fields.Date.today()
+
         closest_allocation_remaining = (self.closest_allocation_to_expire.max_leaves - self.closest_allocation_to_expire.leaves_taken) if self.closest_allocation_to_expire else False
-        return (self.name, {
+        data = (self.name, {
                 'remaining_leaves': ('%.2f' % self.remaining_leaves).rstrip('0').rstrip('.'),
                 'virtual_remaining_leaves': ('%.2f' % self.virtual_remaining_leaves).rstrip('0').rstrip('.'),
                 'max_leaves': ('%.2f' % self.max_leaves).rstrip('0').rstrip('.'),
@@ -322,7 +383,11 @@ class HolidaysType(models.Model):
                 'closest_allocation_expire': format_date(self.env, self.closest_allocation_to_expire.date_to, date_format="MM/dd/yyyy") if self.closest_allocation_to_expire.date_to else False,
                 'request_unit': self.request_unit,
                 'icon': self.sudo().icon_id.url,
+                'employee_accrual': self.employee_accrual,
+                'future_leaves': future_leaves,
+                'additional_leaves': ('%.2f' % self.additional_leaves).rstrip('0').rstrip('.'),
                 }, self.requires_allocation, self.id)
+        return data
 
     def _get_contextual_employee_id(self):
         if 'employee_id' in self._context:
@@ -350,6 +415,21 @@ class HolidaysType(models.Model):
             holiday_status.virtual_remaining_leaves = result.get('virtual_remaining_leaves', 0)
             holiday_status.virtual_leaves_taken = result.get('virtual_leaves_taken', 0)
             holiday_status.closest_allocation_to_expire = result.get('closest_allocation_to_expire', 0)
+
+    @api.depends_context('employee_id', 'default_employee_id')
+    def _compute_employee_accrual(self):
+        allocations = self.env['hr.leave.allocation'].read_group([
+                ('employee_id', '=', self._get_contextual_employee_id()),
+                ('holiday_status_id', 'in', self.ids),
+                ('accrual_plan_id', '!=', False),
+                ('state', '=', 'validate'),
+            ],
+            ['holiday_status_id'], ['holiday_status_id'],
+        )
+        accrual_allocations = tuple(map(lambda a: a['holiday_status_id'][0], allocations))
+
+        for leave_type in self:
+            leave_type.employee_accrual = leave_type.id in accrual_allocations
 
     def _compute_allocation_count(self):
         min_datetime = fields.Datetime.to_string(datetime.datetime.now().replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0))
@@ -407,15 +487,28 @@ class HolidaysType(models.Model):
             # leave counts is based on employee_id, would be inaccurate if not based on correct employee
             return super(HolidaysType, self).name_get()
         res = []
+        # TODO hack-ish
+        self = self.with_context(future_accrual_date=self.env.context.get('default_date_from'))
+        accrual_date = self.env.context.get('future_accrual_date')
+        future_accrual = accrual_date and fields.Date.to_date(accrual_date) > fields.Date.today()
         for record in self:
             name = record.name
-            if record.requires_allocation == "yes" and not self._context.get('from_manager_leave_form'):
-                name = "%(name)s (%(count)s)" % {
+            if record.requires_allocation == "yes" and not self.env.context.get('from_manager_leave_form'):
+                remaining = record.virtual_remaining_leaves
+                max_leaves = record.max_leaves
+                accrual = ''
+                # TODO better looking
+                if future_accrual and record.employee_accrual:
+                    remaining = remaining + record.additional_leaves
+                    max_leaves = max_leaves + record.additional_leaves
+                    accrual = _(' incl. %g accruals', record.additional_leaves)
+                name = "%(name)s (%(count)s%(accrual)s)" % {
                     'name': name,
                     'count': _('%g remaining out of %g') % (
-                        float_round(record.virtual_remaining_leaves, precision_digits=2) or 0.0,
-                        float_round(record.max_leaves, precision_digits=2) or 0.0,
-                    ) + (_(' hours') if record.request_unit == 'hour' else _(' days'))
+                        float_round(remaining, precision_digits=2) or 0.0,
+                        float_round(max_leaves, precision_digits=2) or 0.0,
+                    ) + (_(' hours') if record.request_unit == 'hour' else _(' days')),
+                    'accrual': accrual,
                 }
             res.append((record.id, name))
         return res

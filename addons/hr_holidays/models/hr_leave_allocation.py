@@ -426,7 +426,9 @@ class HolidaysAllocation(models.Model):
                 if len(level_ids) > 1:
                     second_level_start_date = allocation.date_from + get_timedelta(level_ids[1].start_count, level_ids[1].start_type)
                     allocation.nextcall = min(second_level_start_date - relativedelta(days=1), allocation.nextcall)
-                allocation._message_log(body=first_allocation)
+                # Do not log the message on accrual simulations
+                if 'future_accrual_date' not in self.env.context:
+                    allocation._message_log(body=first_allocation)
             days_added_per_level = defaultdict(lambda: 0)
             while allocation.nextcall <= date_to:
                 (current_level, current_level_idx) = allocation._get_current_accrual_plan_level_id(allocation.nextcall)
@@ -498,6 +500,37 @@ class HolidaysAllocation(models.Model):
             '|', ('date_to', '=', False), ('date_to', '>', fields.Datetime.now()),
             '|', ('nextcall', '=', False), ('nextcall', '<=', today)])
         allocations._process_accrual_plans()
+        allocations._cancel_leaves()
+
+    def _cancel_leaves(self):
+        if not self:
+            return
+
+        max_date = max(self.mapped('nextcall') or [fields.Date.today()])
+        all_leaves = self.env['hr.leave'].search([
+            ('future_accrual', '=', True),
+            ('date_from', '>=', fields.Date.today()),
+            ('date_from', '<=', max_date),
+            ('holiday_allocation_id', 'in', self.ids),
+            ('state', '=', 'validate'),
+        ])
+
+        leaves_to_refuse = self.env['hr.leave']
+        for allocation in self:
+            accrual_leaves = all_leaves.filtered(lambda l: l.holiday_allocation_id == allocation and l.date_from.date() <= allocation.nextcall)
+            taken_leaves = allocation.taken_leave_ids.filtered(lambda l: l.state == 'validate' and l.date_from.date() <= allocation.nextcall)
+
+            # Refuse leaves until there are enough accrued days
+            hours_diff = sum(taken_leaves.mapped('number_of_days')) - allocation.number_of_days
+            if hours_diff:
+                for leave in accrual_leaves.sorted('date_from', reverse=True):
+                    hours_diff -= leave.number_of_days
+                    leaves_to_refuse |= leave
+
+                    if hours_diff <= 0:
+                        break
+
+        leaves_to_refuse.action_refuse()
 
     ####################################################
     # ORM Overrides methods

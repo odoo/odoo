@@ -5,6 +5,7 @@ from freezegun import freeze_time
 from dateutil.relativedelta import relativedelta
 
 from odoo import fields
+from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
@@ -635,3 +636,111 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time('2022-1-10'):
             allocation._update_accrual()
         self.assertAlmostEqual(allocation.number_of_days, 30.79, 2, "Invalid number of days")
+
+    def test_future_accrual(self):
+        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            'name': 'Accrual Plan For Test',
+            'level_ids': [(0, 0, {
+                'start_count': 1,
+                'start_type': 'day',
+                'added_value': 1,
+                'added_value_type': 'days',
+                'frequency': 'weekly',
+                'maximum_leave': 10000
+            })],
+        })
+
+        allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            'name': 'Accrual allocation for employee',
+            'accrual_plan_id': accrual_plan.id,
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.leave_type.id,
+            'number_of_days': 0,
+            'allocation_type': 'accrual',
+            'date_from': '2021-09-03',
+        })
+
+        with freeze_time(datetime.date(2021, 9, 5)):
+            allocation.action_confirm()
+            allocation.action_validate()
+
+            self.assertFalse(allocation.nextcall)
+            self.assertEqual(allocation.number_of_days, 0)
+
+            self.assertEqual(allocation.holiday_status_id.additional_leaves, 0)
+            self.assertEqual(allocation.holiday_status_id.remaining_leaves, 0)
+
+            with_future_accrual = allocation.with_context(employee_id=self.employee_emp.id, future_accrual_date=datetime.date(2021, 9, 30))
+            self.assertAlmostEqual(with_future_accrual.holiday_status_id.additional_leaves, 3.29, 2, 'Should show 3.29 future leaves')
+            self.assertEqual(with_future_accrual.holiday_status_id.remaining_leaves, 0, 'Remaining leaves should stay')
+
+            self.assertFalse(with_future_accrual.nextcall, 'Allocation should not change')
+            self.assertEqual(with_future_accrual.number_of_days, 0, 'Allocation should not change')
+
+            self.assertFalse(allocation.nextcall, 'Allocation should not change')
+            self.assertEqual(allocation.number_of_days, 0, 'Allocation should not change')
+
+    def test_cancel_future_accrual(self):
+        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            'name': 'Accrual Plan For Test',
+            'level_ids': [(0, 0, {
+                'start_count': 1,
+                'start_type': 'day',
+                'added_value': 1,
+                'added_value_type': 'days',
+                'frequency': 'weekly',
+                'maximum_leave': 10000
+            })],
+        })
+
+        allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            'name': 'Accrual allocation for employee',
+            'accrual_plan_id': accrual_plan.id,
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.leave_type.id,
+            'number_of_days': 0,
+            'allocation_type': 'accrual',
+            'date_from': '2021-09-03',
+        })
+
+        with freeze_time(datetime.date(2021, 9, 5)):
+            allocation.action_confirm()
+            allocation.action_validate()
+
+            self.assertEqual(allocation.number_of_days, 0)
+
+            with self.assertRaises(ValidationError):
+                self.env['hr.leave'].with_user(self.user_employee).create({
+                    'name': 'future leave',
+                    'employee_id': self.employee_emp.id,
+                    'holiday_status_id': self.leave_type.id,
+                    'date_from': '2021-09-06',
+                    'date_to': '2021-09-07',
+                    'number_of_days': 1,
+                    'state': 'confirm',
+                })
+
+            with_future_accrual = allocation.with_context(employee_id=self.employee_emp.id, future_accrual_date=datetime.date(2021, 9, 13))
+            self.assertAlmostEqual(with_future_accrual.holiday_status_id.additional_leaves, 1.29, 2, 'Should return 1.29 future leaves')
+
+            # The Time Off can be requested / validated using future accrued leave
+            leave = self.env['hr.leave'].with_user(self.user_employee).create({
+                'name': 'future leave',
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'date_from': '2021-09-14',
+                'date_to': '2021-09-15',
+                'number_of_days': 1,
+                'state': 'confirm',
+            })
+            leave.with_user(self.user_hrmanager_id).action_validate()
+
+            accrual_plan.level_ids[0].added_value_type = 'hours'
+            self.assertAlmostEqual(with_future_accrual.holiday_status_id.additional_leaves, 0.16, 2, 'Should return 0.16 future leaves')
+
+        self.assertEqual(leave.state, 'validate', 'The leave should be validated')
+
+        with freeze_time(datetime.date(2021, 9, 13)):
+            allocation._update_accrual()
+
+            self.assertEqual(leave.state, 'refuse', 'The leave should be refused')

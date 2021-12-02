@@ -339,7 +339,8 @@
                                             'invisible': [('request_unit_hours', '=', False)]}"/>
                                 </div>
                             </div>
-
+                            <field name="future_accrual"/>
+                            <field name="accrual_message" attrs="{'invisible': [('accrual_message', '=', False)]}"/>
                             <!-- When the user is leave manager, he should always see `number_of_days` to allow
                             him to edit the value. `number_of_hours_display` is only an informative field -->
                             <label for="number_of_days" string="Duration" attrs="{'invisible': [('request_unit_half', '=', True), ('leave_type_request_unit', '!=', 'hour')]}"/>
