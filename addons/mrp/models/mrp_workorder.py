@@ -312,23 +312,32 @@ class MrpWorkorder(models.Model):
             return minutes * 60 + seconds
 
         for order in self:
-            old_order_duation = sum(order.time_ids.mapped('duration'))
+            old_order_duration = sum(order.time_ids.mapped('duration'))
             new_order_duration = order.duration
-            if new_order_duration == old_order_duation:
+            if new_order_duration == old_order_duration:
                 continue
 
-            delta_duration = new_order_duration - old_order_duation
+            delta_duration = new_order_duration - old_order_duration
 
             if delta_duration > 0:
-                date_start = datetime.now() - timedelta(seconds=_float_duration_to_second(delta_duration))
-                self.env['mrp.workcenter.productivity'].create(
-                    order._prepare_timeline_vals(delta_duration, date_start, datetime.now())
-                )
+                enddate = datetime.now()
+                date_start = enddate - timedelta(seconds=_float_duration_to_second(delta_duration))
+                if order.duration_expected >= new_order_duration or old_order_duration >= order.duration_expected:
+                    # either only productive or only performance (i.e. reduced speed) time respectively
+                    self.env['mrp.workcenter.productivity'].create(
+                        order._prepare_timeline_vals(new_order_duration, date_start, enddate)
+                    )
+                else:
+                    # split between productive and performance (i.e. reduced speed) times
+                    maxdate = fields.Datetime.from_string(enddate) - relativedelta(minutes=new_order_duration - order.duration_expected)
+                    self.env['mrp.workcenter.productivity'].create([
+                        order._prepare_timeline_vals(order.duration_expected, date_start, maxdate),
+                        order._prepare_timeline_vals(new_order_duration, maxdate, enddate)
+                    ])
             else:
                 duration_to_remove = abs(delta_duration)
-                timelines = order.time_ids.sorted(lambda t: t.date_start)
                 timelines_to_unlink = self.env['mrp.workcenter.productivity']
-                for timeline in timelines:
+                for timeline in order.time_ids.sorted():
                     if duration_to_remove <= 0.0:
                         break
                     if timeline.duration <= duration_to_remove:
@@ -758,7 +767,7 @@ class MrpWorkorder(models.Model):
 
     def _prepare_timeline_vals(self, duration, date_start, date_end=False):
         # Need a loss in case of the real time exceeding the expected
-        if not self.duration_expected or duration < self.duration_expected:
+        if not self.duration_expected or duration <= self.duration_expected:
             loss_id = self.env['mrp.workcenter.productivity.loss'].search([('loss_type', '=', 'productive')], limit=1)
             if not len(loss_id):
                 raise UserError(_("You need to define at least one productivity loss in the category 'Productivity'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
