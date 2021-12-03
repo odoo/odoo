@@ -147,6 +147,7 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
                         order: this.env.pos.get_order(),
                         product: this.env.pos.db.get_product_by_id(line.product_id[0]),
                         price: line.price_unit,
+                        tax_ids: orderFiscalPos ? undefined : line.tax_id,
                         price_manually_set: true,
                         sale_order_origin_id: clickedOrder,
                         sale_order_line_id: line,
