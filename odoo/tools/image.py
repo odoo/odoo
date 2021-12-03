@@ -7,6 +7,7 @@ import io
 from PIL import Image, ImageOps
 # We can preload Ico too because it is considered safe
 from PIL import IcoImagePlugin
+from PIL import UnidentifiedImageError
 
 from random import randrange
 
@@ -74,7 +75,10 @@ class ImageProcess():
         if not self.source or self.source[:1] in (b'<', '<'):
             self.image = False
         elif self.source:
-            self.image = Image.open(io.BytesIO(self.source))
+            try:
+                self.image = Image.open(io.BytesIO(self.source))
+            except (UnidentifiedImageError, TypeError):
+                raise UserError
             self.original_format = (self.image.format or '').upper()
 
             self.image = image_fix_orientation(self.image)

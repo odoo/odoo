@@ -20,7 +20,9 @@ class TestImage(TransactionCase):
 
         self.base64_1x1_png = b'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGNgYGAAAAAEAAH2FzhVAAAAAElFTkSuQmCC'
         self.base64_svg = base64.b64encode(b'<svg></svg>')
+        self.svg = b'<svg></svg>'
         self.base64_1920x1080_jpeg = tools.image_to_base64(Image.new('RGB', (1920, 1080)), 'JPEG')
+        self.image_1920x1080_jpeg = Image.new('RGB', (1920, 1080))
         # The following image contains a tag `Lens Info` with a value of `3.99mm f/1.8`
         # This particular tag 0xa432 makes the `exif_transpose` method fail in 5.4.1 < Pillow < 7.2.0
         self.base64_exif_jpg = b"""/9j/4AAQSkZJRgABAQAAAQABAAD/4QDQRXhpZgAATU0AKgAAAAgABgESAAMAAAABAAYAAAEaAAUA
@@ -45,6 +47,7 @@ class TestImage(TransactionCase):
 
         # horizontal image (border is left/right)
         image = Image.new('RGB', (1920, 1080), color=self.bg_color)
+        self.image_1920_1080 = image
         offset = (image.size[0] - image.size[1]) / 2
         draw = ImageDraw.Draw(image)
         draw.rectangle(xy=[
@@ -117,25 +120,25 @@ class TestImage(TransactionCase):
 
     def test_10_image_process_base64_source(self):
         """Test the base64_source parameter of image_process."""
-        wrong_base64 = b'oazdazpodazdpok'
+        wrong_image = b'oazdazpodazdpok'
 
-        self.assertFalse(tools.image_process(False), "return False if base64_source is falsy")
-        self.assertEqual(tools.image_process(self.base64_svg), self.base64_svg, "return base64_source if format is SVG")
+        self.assertFalse(tools.image_process(False), "return False if source is falsy")
+        self.assertEqual(tools.image_process(source=self.svg), self.svg, "return source if format is SVG")
 
         # in the following tests, pass `quality` to force the processing
         with self.assertRaises(UserError, msg="This file could not be decoded as an image file. Please try with a different file."):
-            tools.image_process(wrong_base64, quality=95)
+            tools.image_process(source=wrong_image, quality=95)
 
         with self.assertRaises(UserError, msg="This file could not be decoded as an image file. Please try with a different file."):
             tools.image_process(b'oazdazpodazdpokd', quality=95)
 
-        image = tools.base64_to_image(tools.image_process(self.base64_1920x1080_jpeg, quality=95))
+        image = tools.image_process(self.image_1920x1080_jpeg, quality=95)
         self.assertEqual(image.size, (1920, 1080), "OK return the image")
 
         # test that nothing happens if no operation has been requested
         # (otherwise those would raise because of wrong base64)
-        self.assertEqual(tools.image_process(wrong_base64), wrong_base64)
-        self.assertEqual(tools.image_process(wrong_base64, size=False), wrong_base64)
+        self.assertEqual(tools.image_process(wrong_image), wrong_image)
+        self.assertEqual(tools.image_process(wrong_image, size=False), wrong_image)
 
     def test_11_image_process_size(self):
         """Test the size parameter of image_process."""
