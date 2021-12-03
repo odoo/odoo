@@ -6,7 +6,7 @@ import dialogs from "web.view_dialogs";
 import { ComponentAdapter } from "web.OwlCompatibility";
 
 function runJSTestsItem({ env }) {
-    const runTestsURL = browser.location.origin + "/web/tests?mod=*";
+    const runTestsURL = browser.location.origin + "/web/tests?debug=assets";
     return {
         type: "item",
         description: env._t("Run JS Tests"),
@@ -19,7 +19,7 @@ function runJSTestsItem({ env }) {
 }
 
 function runJSTestsMobileItem({ env }) {
-    const runTestsMobileURL = browser.location.origin + "/web/tests/mobile?mod=*";
+    const runTestsMobileURL = browser.location.origin + "/web/tests/mobile?debug=assets";
     return {
         type: "item",
         description: env._t("Run JS Mobile Tests"),

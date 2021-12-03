@@ -11,7 +11,7 @@ function runPoSJSTests({ env }) {
                 name: env._t("JS Tests"),
                 target: "new",
                 type: "ir.actions.act_url",
-                url: "/pos/ui/tests?mod=*",
+                url: "/pos/ui/tests?debug=assets",
             });
         },
         sequence: 35,
