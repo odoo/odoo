@@ -3795,7 +3795,7 @@ var FieldDomain = AbstractField.extend({
         // we don't want to recompute the count if the domain has been edited
         // from the debug textarea (for performance reasons, as it might be costly)
         this.debugEdition = !!e.data.debug;
-        this._setValue(Domain.prototype.arrayToString(e.data.domain));
+        this._setValue(e.data.domain);
     },
     /**
      * Called when the in-dialog domain selector value is confirmed
