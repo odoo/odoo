@@ -220,9 +220,9 @@ class MaintenanceEquipment(models.Model):
         category_ids = categories._search([], order=order, access_rights_uid=SUPERUSER_ID)
         return categories.browse(category_ids)
 
-    def _create_new_request(self, date):
+    def _prepare_maintenance_request_vals(self, date):
         self.ensure_one()
-        self.env['maintenance.request'].create({
+        return {
             'name': _('Preventive Maintenance - %s', self.name),
             'request_date': date,
             'schedule_date': date,
@@ -234,7 +234,13 @@ class MaintenanceEquipment(models.Model):
             'maintenance_team_id': self.maintenance_team_id.id,
             'duration': self.maintenance_duration,
             'company_id': self.company_id.id or self.env.company.id
-            })
+        }
+
+    def _create_new_request(self, date):
+        self.ensure_one()
+        vals = self._prepare_maintenance_request_vals(date)
+        maintenance_requests = self.env['maintenance.request'].create(vals)
+        return maintenance_requests
 
     @api.model
     def _cron_generate_requests(self):
