@@ -28,6 +28,23 @@ commandProviderRegistry.add("debug", {
                 category: "debug",
                 name: env._t("Deactivate debug mode"),
             });
+            result.push({
+                action() {
+                    const runTestsURL = browser.location.origin + "/web/tests?debug=assets&mod=*";
+                    browser.open(runTestsURL);
+                },
+                category: "debug",
+                name: env._t("Run JS Tests"),
+            });
+            result.push({
+                action() {
+                    const runTestsURL =
+                        browser.location.origin + "/web/tests/mobile?debug=assets&mod=*";
+                    browser.open(runTestsURL);
+                },
+                category: "debug",
+                name: env._t("Run JS Mobile Tests"),
+            });
         } else {
             if (options.searchValue.toLowerCase() === "debug") {
                 result.push({
