@@ -1103,6 +1103,10 @@ class SaleOrder(models.Model):
         self.ensure_one()
         return self.env.ref('sale.action_quotations_with_onboarding')
 
+    def _get_additional_order_page_values(self):
+        """ Return a dict of additional order page values for a sale.order."""
+        return {}
+
     @api.model
     def _prepare_down_payment_section_line(self, **optional_values):
         """
