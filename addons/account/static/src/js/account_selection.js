@@ -14,39 +14,61 @@ odoo.define('account.hierarchy.selection', function (require) {
     var HierarchySelection = FieldSelection.extend({
         _renderEdit: function () {
             var self = this;
-            var prom = Promise.resolve()
+            var selectSuper = this._super;
+            var prom = Promise.resolve();
             if (!self.hierarchy_groups) {
                 prom = this._rpc({
                     model: 'account.account.type',
                     method: 'search_read',
                     kwargs: {
-                        domain: [],
+                        domain: self.record.context && self.record.context.account_type_domain || [],
                         fields: ['id', 'internal_group', 'display_name'],
                     },
                 }).then(function(arg) {
-                    self.values = _.map(arg, v => [v['id'], v['display_name']])
-                    self.hierarchy_groups = [
-                        {
-                            'name': _t('Balance Sheet'),
-                            'children': [
-                                {'name': _t('Assets'), 'ids': _.map(_.filter(arg, v => v['internal_group'] == 'asset'), v => v['id'])},
-                                {'name': _t('Liabilities'), 'ids': _.map(_.filter(arg, v => v['internal_group'] == 'liability'), v => v['id'])},
-                                {'name': _t('Equity'), 'ids': _.map(_.filter(arg, v => v['internal_group'] == 'equity'), v => v['id'])},
-                            ],
-                        },
-                        {
-                            'name': _t('Profit & Loss'),
-                            'children': [
-                                {'name': _t('Income'), 'ids': _.map(_.filter(arg, v => v['internal_group'] == 'income'), v => v['id'])},
-                                {'name': _t('Expense'), 'ids': _.map(_.filter(arg, v => v['internal_group'] == 'expense'), v => v['id'])},
-                            ],
-                        },
-                        {'name': _t('Other'), 'ids': _.map(_.filter(arg, v => !['asset', 'liability', 'equity', 'income', 'expense'].includes(v['internal_group'])), v => v['id'])},
-                    ]
+                    self.values = _.map(arg, v => [v['id'], v['display_name']]);
+                    var unique_groups = _.uniq(_.map(arg, v => v['internal_group']));
+                    if (unique_groups.length > 1) {
+                        var parent_lookup = {
+                            'bs': {'name': _t('Balance Sheet'), 'index': 0},
+                            'pl': {'name': _t('Profit & Loss'), 'index': 1},
+                        }
+                        var lookup = {
+                            'asset': {'parent': 'bs', 'name': _t('Assets')},
+                            'liability': {'parent': 'bs', 'name': _t('Liabilities')},
+                            'equity': {'parent': 'bs', 'name': _t('Equity')},
+                            'income': {'parent': 'pl', 'name': _t('Income')},
+                            'expense': {'parent': 'pl', 'name': _t('Expense')},
+                        }
+                        var unique_parents = _.uniq(_.map(_.filter(unique_groups, u => u in lookup), g => lookup[g].parent));
+                        self.hierarchy_groups = [];
+                        _.each(unique_parents, parent_id => {
+                            var parent = parent_lookup[parent_id];
+                            self.hierarchy_groups.splice(parent.index, 0, {'name': parent.name, 'children': []});
+                        });
+                        var other_accounts_added = false;
+                        _.each(unique_groups, g => {
+                            if (g in lookup){
+                                var rec = lookup[g];
+                                self.hierarchy_groups[parent_lookup[rec.parent].index].children.push({
+                                    'name': rec['name'],
+                                    'ids': _.map(_.filter(arg, v => v['internal_group'] == g), v => v['id'])
+                                });
+                            } else if (!other_accounts_added){
+                                self.hierarchy_groups.push({
+                                    'name': _t('Other'),
+                                    'ids': _.map(_.filter(arg, v => !_.keys(lookup).includes(v['internal_group'])), v => v['id'])
+                                });
+                                other_accounts_added = true;
+                            }
+                        })
+                    }
                 });
             }
 
             Promise.resolve(prom).then(function() {
+                if (!self.hierarchy_groups) {
+                    return selectSuper.apply(self, arguments);
+                }
                 self.$el.empty();
                 self._addHierarchy(self.$el, self.hierarchy_groups, 0);
                 var value = self.value;
