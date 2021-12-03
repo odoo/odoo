@@ -26,13 +26,11 @@ const legacyViewRegistry = require('web.view_registry');
 var _t = core._t;
 var createView = testUtils.createView;
 
-const { registerCleanup } = require("@web/../tests/helpers/cleanup");
 const { getFixture, legacyExtraNextTick, patchWithCleanup } = require("@web/../tests/helpers/utils");
 const { createWebClient, doAction } = require('@web/../tests/webclient/helpers');
 const { makeTestEnv } = require("@web/../tests/helpers/mock_env");
 const makeTestEnvironment = require("web.test_env");
 const { mapLegacyEnvToWowlEnv } = require("@web/legacy/utils");
-const { registry } = require("@web/core/registry");
 const { scrollerService } = require("@web/core/scroller_service");
 
 let serverData;
