@@ -276,7 +276,9 @@ class Project(models.Model):
         action = self.env["ir.actions.actions"]._for_xml_id("hr_timesheet.timesheet_action_all")
         action.update({
             'context': {
-                'search_default_groupby_task': True,
+                'grid_range': 'week',
+                'search_default_groupby_timesheet_invoice_type': True,
+                'pivot_row_groupby': ['date:month'],
                 'default_project_id': self.id,
             },
             'domain': [('project_id', '=', self.id)],
@@ -284,7 +286,7 @@ class Project(models.Model):
             'views': [
                 [self.env.ref('hr_timesheet.timesheet_view_tree_user').id, 'tree'],
                 [self.env.ref('hr_timesheet.view_kanban_account_analytic_line').id, 'kanban'],
-                [self.env.ref('hr_timesheet.view_hr_timesheet_line_pivot').id, 'pivot'],
+                [self.env.ref('sale_timesheet.view_hr_timesheet_line_pivot_billing_rate').id, 'pivot'],
                 [self.env.ref('hr_timesheet.view_hr_timesheet_line_graph_all').id, 'graph'],
                 [self.env.ref('hr_timesheet.timesheet_view_form_user').id, 'form'],
             ],

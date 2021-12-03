@@ -25,13 +25,16 @@
                     <field name="parent_id"/>
                     <field name="rating_last_text"/>
                     <filter string="My Tasks" name="my_tasks" domain="[('user_ids', 'in', uid)]"/>
+                    <filter string="Followed Tasks" name="followed_by_me" domain="[('message_is_follower', '=', True)]"/>
                     <filter string="Unassigned" name="unassigned" domain="[('user_ids', '=', False)]"/>
                     <separator/>
-                    <filter string="Starred" name="starred" domain="[('priority', 'in', [0, 1])]"/>
+                    <filter string="Starred" name="starred" domain="[('priority', '=', 1)]"/>
+                    <filter string="Not Starred" name="not_starred" domain="[('priority', '=', 0)]"/>
+                    <separator/>
+                    <filter string="Open" name="open_tasks" domain="[('is_closed', '=', False)]"/>
+                    <filter string="Closed" name="closed_tasks" domain="[('is_closed', '!=', False)]"/>
                     <separator/>
                     <filter string="Late Tasks" name="late" domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
-                    <separator/>
-                    <filter string="Open Tasks" name="open_tasks" domain="[('is_closed', '=', False)]"/>
                     <separator/>
                     <filter name="rating_satisfied" string="Satisfied" domain="[('rating_avg', '&gt;=', 3.66)]" groups="project.group_project_rating"/>
                     <filter name="rating_okay" string="Okay" domain="[('rating_avg', '&lt;', 3.66), ('rating_avg', '&gt;=', 2.33)]" groups="project.group_project_rating"/>
@@ -73,7 +76,6 @@
                     <separator/>
                     <filter string="My Projects" name="my_projects" domain="[('project_id.user_id', '=', uid)]"/>
                     <filter string="My Favorite Projects" name="my_favorite_projects" domain="[('project_id.favorite_user_ids', 'in', [uid])]"/>
-                    <filter string="Followed Projects" name="my_followed_projects" domain="[('project_id.message_is_follower', '=', True)]"/>
                 </xpath>
             </field>
         </record>
@@ -123,6 +125,9 @@
             <field name="arch" type="xml">
                 <search string="Tasks Stages">
                    <field name="name" string="Name"/>
+                   <field name="project_ids" string="Project"/>
+                   <field name="mail_template_id"/>
+                   <field name="rating_template_id"/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                 </search>
             </field>
@@ -320,7 +325,8 @@
                             </div>
                         </button>
                         <field name="rating_avg" invisible="1"/>
-                        <button name="action_view_all_rating" type="object" attrs="{'invisible': [('rating_active', '=', False)]}" class="oe_stat_button" groups="project.group_project_rating">
+                        <field name="rating_count" invisible="1"/>
+                        <button name="action_view_all_rating" type="object" attrs="{'invisible': ['|', ('rating_active', '=', False), ('rating_count', '=', 0)]}" class="oe_stat_button" groups="project.group_project_rating">
                             <i class="fa fa-fw o_button_icon fa-smile-o text-success" attrs="{'invisible': [('rating_avg', '&lt;', 3.66)]}" title="Satisfied"/>
                             <i class="fa fa-fw o_button_icon fa-meh-o text-warning" attrs="{'invisible': ['|', ('rating_avg', '&lt;', 2.33), ('rating_avg', '&gt;=', 3.66)]}" title="Okay"/>
                             <i class="fa fa-fw o_button_icon fa-frown-o text-danger" attrs="{'invisible': [('rating_avg', '&gt;=', 2.33)]}" title="Dissatisfied"/>
@@ -505,6 +511,9 @@
                     <filter string="Unassigned" name="unassigned_projects" domain="[('user_id', '=', False)]"/>
                     <separator/>
                     <filter string="Late Milestones" name="late_milestones" domain="[('is_milestone_exceeded', '=', True)]"/>
+                    <separator/>
+                    <filter string="Open" name="open_project" domain="[('stage_id.fold', '=', False)]" groups="project.group_project_stages"/>
+                    <filter string="Closed" name="closed_project" domain="[('stage_id.fold', '=', True)]" groups="project.group_project_stages"/>
                     <separator/>
                     <filter string="Start Date" name="start_date" date="date_start"/>
                     <filter string="End Date" name="end_date" date="date"/>
@@ -827,8 +836,8 @@
                     <field name="rating_last_value" invisible="1"/>
                     <field name="rating_count" invisible="1"/>
                     <header>
-                        <button name="action_assign_to_me" string="Assign to Me" type="object" class="oe_highlight"
-                            attrs="{'invisible' : &quot;[('user_ids', 'in', uid)]&quot;}" data-hotkey="q"/>
+                        <button name="action_assign_to_me" string="Assign to Me" type="object" attrs="{'invisible': &quot;['|', ('user_ids', 'in', uid), ('user_ids', '=', [])]&quot;}" data-hotkey="q"/>
+                        <button name="action_assign_to_me" string="Assign to Me" type="object" class="oe_highlight" attrs="{'invisible' : &quot;['|', ('user_ids', 'in', uid), ('user_ids', '!=', [])]&quot;}" data-hotkey="q"/>
                         <field name="stage_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" attrs="{'invisible': [('project_id', '=', False), ('stage_id', '=', False)]}"/>
                     </header>
                     <div class="alert alert-info oe_edit_only mb-0" role="status" attrs="{'invisible': ['|', ('recurring_task', '=', False), ('recurrence_id', '=', False)]}">
@@ -1191,6 +1200,7 @@
                     <field name="allow_subtasks" invisible="1" />
                     <field name="sequence" invisible="1" readonly="1"/>
                     <field name="priority" widget="priority" optional="show" nolabel="1"/>
+                    <field name="id" optional="hide"/>
                     <field name="name" widget="name_with_subtask_count"/>
                     <field name="child_text" invisible="1"/>
                     <field name="project_id" widget="project_private_task" optional="show" readonly="1"/>
