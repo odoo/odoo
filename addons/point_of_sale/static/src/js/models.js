@@ -1814,6 +1814,7 @@ exports.Orderline = Backbone.Model.extend({
             return;
         }
         this.product = options.product;
+        this.tax_ids = options.tax_ids;
         this.set_product_lot(this.product);
         this.set_quantity(1);
         this.discount = 0;
