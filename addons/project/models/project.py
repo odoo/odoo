@@ -151,6 +151,12 @@ class Project(models.Model):
     _rating_satisfaction_days = 30  # takes 30 days by default
     _check_company_auto = True
 
+    def _default_rating_status(self):
+        return self.env['ir.config_parameter'].sudo().get_param('project.rating_status') or 'stage'
+
+    def _default_rating_status_period(self):
+        return self.env['ir.config_parameter'].sudo().get_param('project.rating_status_period') or 'monthly'
+
     def _compute_attached_docs_count(self):
         Attachment = self.env['ir.attachment']
         for project in self:
@@ -282,7 +288,7 @@ class Project(models.Model):
     rating_status = fields.Selection(
         [('stage', 'Rating when changing stage'),
          ('periodic', 'Periodic rating')
-        ], 'Customer Ratings Status', default="stage", required=True,
+        ], 'Customer Ratings Status', default=_default_rating_status, required=True,
         help="How to get customer feedback?\n"
              "- Rating when changing stage: an email will be sent when a task is pulled to another stage.\n"
              "- Periodic rating: an email will be sent periodically.\n\n"
@@ -293,7 +299,7 @@ class Project(models.Model):
         ('bimonthly', 'Twice a Month'),
         ('monthly', 'Once a Month'),
         ('quarterly', 'Quarterly'),
-        ('yearly', 'Yearly')], 'Rating Frequency', required=True, default='monthly')
+        ('yearly', 'Yearly')], 'Rating Frequency', required=True, default=_default_rating_status_period)
 
     # Not `required` since this is an option to enable in project settings.
     stage_id = fields.Many2one('project.project.stage', string='Stage', ondelete='restrict', groups="project.group_project_stages",
@@ -660,7 +666,7 @@ class Project(models.Model):
         if self.rating_count == 1:
             action.update({
                 'view_mode': 'form',
-                'views': [(False, 'form')],
+                'views': [(view_id, view_type) for view_id, view_type in action['views'] if view_type == 'form'],
                 'res_id': self.rating_ids[0].id, # [0] since rating_ids might be > then rating_count
             })
         return dict(action, context=action_context)
@@ -936,7 +942,8 @@ class Task(models.Model):
     write_date = fields.Datetime("Last Updated On", readonly=True)
     date_end = fields.Datetime(string='Ending Date', index=True, copy=False)
     date_assign = fields.Datetime(string='Assigning Date', copy=False, readonly=True)
-    date_deadline = fields.Date(string='Deadline', index=True, copy=False, tracking=True, task_dependency_tracking=True)
+    date_deadline = fields.Date(string='Deadline', index=True, copy=False, tracking=True, task_dependency_tracking=True, help="The deadline for the task, which appears in the calendar view.")
+
     date_last_stage_update = fields.Datetime(string='Last Stage Update',
         index=True,
         copy=False,
