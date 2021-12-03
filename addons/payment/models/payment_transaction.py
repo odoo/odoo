@@ -599,6 +599,7 @@ class PaymentTransaction(models.Model):
             'reference': self._compute_reference(self.provider, prefix=f'R-{self.reference}'),
             'amount': -(amount_to_refund or self.amount),
             'currency_id': self.currency_id.id,
+            'token_id': self.token_id.id,
             'operation': 'refund',
             'source_transaction_id': self.id,
             'partner_id': self.partner_id.id,
