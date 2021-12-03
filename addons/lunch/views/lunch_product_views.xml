@@ -12,6 +12,8 @@
                 <separator/>
                 <filter name="available_today" string="Available Today" domain="[('supplier_id.available_today', '=', True)]"/>
                 <separator/>
+                <filter name="favorites" string="My Favorites" domain="[('is_favorite', '=', True)]"/>
+                <separator/>
                 <filter name="available_on_mon" string="Monday" domain="[('supplier_id.mon', '=', True)]"/>
                 <filter name="available_on_tue" string="Tuesday" domain="[('supplier_id.tue', '=', True)]"/>
                 <filter name="available_on_wed" string="Wednesday" domain="[('supplier_id.wed', '=', True)]"/>
