@@ -905,7 +905,7 @@ class Survey(models.Model):
         return {
             'type': 'ir.actions.act_url',
             'name': "Results of the Survey",
-            'target': 'self',
+            'target': 'new',
             'url': '/survey/results/%s' % self.id
         }
 
@@ -915,7 +915,7 @@ class Survey(models.Model):
         return {
             'type': 'ir.actions.act_url',
             'name': "Test Survey",
-            'target': '_blank',
+            'target': 'new',
             'url': '/survey/test/%s' % self.access_token,
         }
 
@@ -949,7 +949,7 @@ class Survey(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_url',
-            'target': '_blank',
+            'target': 'new',
             'url': '/survey/%s/certification_preview' % (self.id)
         }
 
@@ -976,7 +976,7 @@ class Survey(models.Model):
         return {
             'type': 'ir.actions.act_url',
             'name': "Open Session Manager",
-            'target': '_blank',
+            'target': 'new',
             'url': '/survey/session/manage/%s' % self.access_token
         }
 
