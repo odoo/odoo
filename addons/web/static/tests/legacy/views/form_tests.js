@@ -32,7 +32,6 @@ const { createWebClient, doAction } = require('@web/../tests/webclient/helpers')
 const { makeTestEnv } = require("@web/../tests/helpers/mock_env");
 const makeTestEnvironment = require("web.test_env");
 const { mapLegacyEnvToWowlEnv } = require("@web/legacy/utils");
-const { registry } = require("@web/core/registry");
 const { scrollerService } = require("@web/core/scroller_service");
 const { LegacyComponent } = require("@web/legacy/legacy_component");
 
