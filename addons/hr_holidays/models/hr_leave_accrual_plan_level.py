@@ -5,25 +5,19 @@ import datetime
 import calendar
 
 from dateutil.relativedelta import relativedelta
-from num2words import num2words
 
 from odoo import _, api, fields, models
 from odoo.tools.date_utils import get_timedelta
-from odoo.tools.misc import get_lang
 
 
 DAYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
 MONTHS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
 # Used for displaying the days and reversing selection -> integer
 DAY_SELECT_VALUES = [str(i) for i in range(1, 29)] + ['last']
+DAY_SELECT_SELECTION_NO_LAST = tuple(zip(DAY_SELECT_VALUES, (str(i) for i in range(1, 29))))
 
 def _get_selection_days(self):
-    lang = get_lang(self.env).code
-    return [
-        (DAY_SELECT_VALUES[i - 1],
-        num2words(i, lang=lang, to='ordinal_num') if i < 29 else _('last day'))
-        for i in range(1, 30)
-    ]
+    return DAY_SELECT_SELECTION_NO_LAST + (("last", _("last day")),)
 
 class AccrualPlanLevel(models.Model):
     _name = "hr.leave.accrual.level"
