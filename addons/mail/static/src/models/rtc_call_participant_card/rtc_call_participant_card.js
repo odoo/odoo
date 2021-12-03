@@ -3,6 +3,7 @@
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one, one2one } from '@mail/model/model_field';
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
+import { clear, link } from '@mail/model/model_field_command';
 
 function factory(dependencies) {
 
@@ -16,6 +17,16 @@ function factory(dependencies) {
             this.onChangeVolume = this.onChangeVolume.bind(this);
             this.onClick = this.onClick.bind(this);
             this.onClickVolumeAnchor = this.onClickVolumeAnchor.bind(this);
+        }
+
+        /**
+         * @override
+         */
+        _willDelete() {
+            if (this.rtcCallViewerOfMainCard) {
+                this.rtcCallViewerOfMainCard.toggleFocusedRtcSession();
+            }
+            return super._willDelete(...arguments);
         }
 
         //----------------------------------------------------------------------
@@ -38,7 +49,7 @@ function factory(dependencies) {
             }
             if (!this.invitedPartner && !this.invitedGuest) {
                 if (!this.isMinimized) {
-                    this.messaging.toggleFocusedRtcSession(this.rtcSession.id);
+                    this.callViewer.toggleFocusedRtcSession(this.rtcSession);
                 }
                 return;
             }
@@ -91,11 +102,23 @@ function factory(dependencies) {
 
         /**
          * @private
+         * @returns {mail.rtcCallViewer}
+         */
+        _computeCallViewer() {
+            const callViewer = this.rtcCallViewerOfMainCard || this.rtcCallViewerOfTile;
+            if (callViewer) {
+                return link(callViewer);
+            } else {
+                return clear();
+            }
+        }
+
+        /**
+         * @private
          * @returns {boolean}
          */
         _computeIsMinimized() {
-            const callViewer = this.rtcCallViewerOfMainCard || this.rtcCallViewerOfTile;
-            return Boolean(callViewer && callViewer.isMinimized);
+            return Boolean(this.callViewer && this.callViewer.isMinimized);
         }
 
         /**
@@ -189,6 +212,13 @@ function factory(dependencies) {
             required: true,
         }),
         /**
+         * The callViewer that displays this card.
+         */
+        callViewer: many2one('mail.rtc_call_viewer', {
+            compute: '_computeCallViewer',
+            inverse: 'participantCards',
+        }),
+        /**
          * The callViewer for which this card is the spotlight.
          */
         rtcCallViewerOfMainCard: one2one('mail.rtc_call_viewer', {
@@ -203,7 +233,9 @@ function factory(dependencies) {
         /**
          * If set, this card represents a rtcSession.
          */
-        rtcSession: many2one('mail.rtc_session'),
+        rtcSession: many2one('mail.rtc_session', {
+            inverse: 'callParticipantCards',
+        }),
     };
     RtcCallParticipantCard.identifyingFields = ['relationalId'];
     RtcCallParticipantCard.modelName = 'mail.rtc_call_participant_card';

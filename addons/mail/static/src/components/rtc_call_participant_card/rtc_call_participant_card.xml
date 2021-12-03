@@ -4,7 +4,7 @@
     <t t-name="mail.RtcCallParticipantCard" owl="1">
         <div class="o_RtcCallParticipantCard"
              t-att-class="{
-                'o-isClickable': callParticipantCard.invitedGuest or callParticipantCard.invitedPartner or !callParticipantCard.isMinimized,
+                'o-isClickable': callParticipantCard and (callParticipantCard.isInvitation or !callParticipantCard.isMinimized),
                 'o-isTalking': callParticipantCard and !callParticipantCard.isMinimized and callParticipantCard.isTalking,
                 'o-isInvitation': callParticipantCard and callParticipantCard.isInvitation,
             }"

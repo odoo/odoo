@@ -155,25 +155,6 @@ function factory(dependencies) {
             this.update({ isNotificationPermissionDefault: this._computeIsNotificationPermissionDefault() });
         }
 
-        /**
-         * @param {String} sessionId
-         */
-        toggleFocusedRtcSession(sessionId) {
-            const rtcSession = this.messaging.models['mail.rtc_session'].findFromIdentifyingData({
-                id: sessionId,
-            });
-            const focusedSessionId = this.focusedRtcSession && this.focusedRtcSession.id;
-            if (!sessionId || focusedSessionId === sessionId) {
-                this.update({ focusedRtcSession: unlink() });
-                return;
-            }
-            this.update({ focusedRtcSession: link(rtcSession) });
-            if (this.userSetting.rtcLayout !== 'tiled') {
-                return;
-            }
-            this.userSetting.update({ rtcLayout: 'sidebar' });
-        }
-
         //----------------------------------------------------------------------
         // Private
         //----------------------------------------------------------------------
@@ -235,13 +216,6 @@ function factory(dependencies) {
             }
         }
 
-        /**
-         * @private
-         */
-        _onChangeFocusedRtcSession() {
-            this.rtc.filterIncomingVideoTraffic(this.focusedRtcSession && [this.focusedRtcSession.peerToken]);
-        }
-
     }
 
     Messaging.fields = {
@@ -292,7 +266,6 @@ function factory(dependencies) {
             isCausal: true,
             readonly: true,
         }),
-        focusedRtcSession: one2one('mail.rtc_session'),
         /**
          * Mailbox History.
          */
@@ -410,10 +383,6 @@ function factory(dependencies) {
         new OnChange({
             dependencies: ['ringingThreads'],
             methodName: '_onChangeRingingThreads',
-        }),
-        new OnChange({
-            dependencies: ['focusedRtcSession'],
-            methodName: '_onChangeFocusedRtcSession',
         }),
     ];
     Messaging.modelName = 'mail.messaging';

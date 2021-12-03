@@ -1,5 +1,10 @@
 /** @odoo-module **/
 
+// TODO only show this one when in either spotlight or sidebar
+// make one boolean for the sidebar and one boolean for the layout.
+// it will make the setLayout logic easier.
+
+
 import { browser } from "@web/core/browser/browser";
 
 import { registerNewModel } from '@mail/model/model_core';
@@ -20,7 +25,10 @@ function factory(dependencies) {
             super._created();
             this._timeoutId = undefined;
             this.onClick = this.onClick.bind(this);
+            this.onClickHideSidebar = this.onClickHideSidebar.bind(this);
+            this.onClickShowSidebar = this.onClickShowSidebar.bind(this);
             this.onLayoutSettingsDialogClosed = this.onLayoutSettingsDialogClosed.bind(this);
+            this.onMouseLeave = this.onMouseLeave.bind(this);
             this.onMouseMove = this.onMouseMove.bind(this);
             this.onMouseMoveOverlay = this.onMouseMoveOverlay.bind(this);
             this.onRtcSettingsDialogClosed = this.onRtcSettingsDialogClosed.bind(this);
@@ -51,8 +59,28 @@ function factory(dependencies) {
         /**
          * @param {MouseEvent} ev
          */
+        onClickHideSidebar(ev) {
+            this.setLayout('spotlight');
+        }
+        /**
+         * @param {MouseEvent} ev
+         */
+        onClickShowSidebar(ev) {
+            this.setLayout('sidebar');
+        }
+
+        /**
+         * @param {MouseEvent} ev
+         */
         onLayoutSettingsDialogClosed(ev) {
             this.toggleLayoutMenu();
+        }
+
+        /**
+         * @param {MouseEvent} ev
+         */
+        onMouseLeave(ev) {
+            this.update({ showOverlay: false });
         }
 
         /**
@@ -129,12 +157,57 @@ function factory(dependencies) {
             }
         }
 
+        /**
+         * @param {String} layout
+         */
+        setLayout(layout) {
+            if (layout === 'tiled') {
+                this.update({ focusedRtcSession: unlink() });
+            } else if (!this.focusedRtcSession) {
+                // as we need a focus to have a non tiled layout, focus the first suitable session
+                for (const session of this.threadView.thread.rtcSessions) {
+                    if (!this.filterVideoGrid || (this.filterVideoGrid && session.videoStream)) {
+                        this.toggleFocusedRtcSession(session);
+                        break;
+                    }
+                }
+            }
+            this.update({ layout: this.focusedRtcSession ? layout : 'tiled' });
+        }
+
+        /**
+         * @param {Boolean} filterVideoGrid
+         */
+        setVideoFilter(filterVideoGrid) {
+            this.update({ filterVideoGrid });
+            if (this.focusedRtcSession && !this.focusedRtcSession.videoStream) {
+                this.update({ focusedRtcSession: clear() });
+            }
+        }
+
         toggleLayoutMenu() {
             if (!this.rtcLayoutMenu) {
                 this.update({ rtcLayoutMenu: insertAndReplace() });
                 return;
             }
             this.update({ rtcLayoutMenu: unlink() });
+        }
+
+        /**
+         * @param {mail.rtc_session} [rtcSession]
+         */
+        toggleFocusedRtcSession(rtcSession) {
+            if (!rtcSession || this.focusedRtcSession === rtcSession) {
+                this.update({
+                    focusedRtcSession: unlink(),
+                    layout: 'tiled',
+                 });
+            } else {
+                this.update({
+                    focusedRtcSession: link(rtcSession),
+                    layout: this.layout === 'tiled' ? 'sidebar' : undefined,
+                 });
+            }
         }
 
         //----------------------------------------------------------------------
@@ -171,36 +244,10 @@ function factory(dependencies) {
             if (this.isFullScreen || this.threadView.compact) {
                 return false;
             }
+            if (this.mainParticipantCard) {
+                return false;
+            }
             return !this.threadView.thread.rtc || this.threadView.thread.videoCount === 0;
-        }
-
-        /**
-         * @private
-         */
-        _computeLayout() {
-            if (!this.threadView) {
-                return 'tiled';
-            }
-            if (this.isMinimized) {
-                return 'tiled';
-            }
-            if (!this.threadView.thread.rtc) {
-                return 'tiled';
-            }
-            if (!this.mainParticipantCard) {
-                return 'tiled';
-            }
-            if (
-                this.threadView.thread.rtcSessions.length +
-                this.threadView.thread.invitedPartners.length +
-                this.threadView.thread.invitedGuests.length < 2
-            ) {
-                return "tiled";
-            }
-            if (this.threadView.compact && this.messaging.userSetting.rtcLayout === 'sidebar') {
-                return 'spotlight';
-            }
-            return this.messaging.userSetting.rtcLayout;
         }
 
         /**
@@ -215,17 +262,14 @@ function factory(dependencies) {
          * @private
          */
         _computeMainParticipantCard() {
-            if (!this.messaging || !this.threadView) {
+            if (!this.messaging || !this.focusedRtcSession || !this.threadView || this.layout === 'tiled') {
                 return unlink();
             }
-            if (this.messaging.focusedRtcSession && this.messaging.focusedRtcSession.channel === this.threadView.thread) {
-                return insert({
-                    relationalId: `rtc_session_${this.messaging.focusedRtcSession.localId}_${this.threadView.thread.localId}`,
-                    rtcSession: link(this.messaging.focusedRtcSession),
-                    channel: link(this.threadView.thread),
-                });
-            }
-            return unlink();
+            return insert({
+                relationalId: `rtc_session_${this.focusedRtcSession.localId}_${this.threadView.thread.localId}_main_card`,
+                rtcSession: link(this.focusedRtcSession),
+                channel: link(this.threadView.thread),
+            });
         }
 
         /**
@@ -240,7 +284,7 @@ function factory(dependencies) {
          * @private
          */
         _computeTileParticipantCards() {
-            if (!this.threadView) {
+            if (!this.threadView || this.layout === 'spotlight') {
                 return clear();
             }
             const tileCards = [];
@@ -357,6 +401,7 @@ function factory(dependencies) {
         filterVideoGrid: attr({
             default: false,
         }),
+        focusedRtcSession: one2one('mail.rtc_session'),
         /**
          * Determines if the controller is an overlay or a bottom bar.
          */
@@ -379,11 +424,11 @@ function factory(dependencies) {
             compute: '_computeIsMinimized',
         }),
         /**
-         * Determines the layout use for the tiling of the participant cards.
+         * Layout of the tiles.
+         * Possible values: tiled, spotlight, sidebar.
          */
         layout: attr({
             default: 'tiled',
-            compute: '_computeLayout',
         }),
         /**
          * Text content that is displayed on title of the layout settings dialog.
@@ -397,6 +442,14 @@ function factory(dependencies) {
         mainParticipantCard: one2one('mail.rtc_call_participant_card', {
             compute: '_computeMainParticipantCard',
             inverse: 'rtcCallViewerOfMainCard',
+            isCausal: true,
+        }),
+        /**
+         * All the participant cards of the call viewer (main card and tile cards).
+         * this is a technical inverse to distinguish from the other relation 'tileParticipantCards'.
+         */
+        participantCards: one2many('mail.rtc_call_participant_card', {
+            inverse: 'callViewer',
         }),
         /**
          * The model for the controller (buttons).
@@ -441,6 +494,7 @@ function factory(dependencies) {
         tileParticipantCards: one2many('mail.rtc_call_participant_card', {
             compute: '_computeTileParticipantCards',
             inverse: 'rtcCallViewerOfTile',
+            isCausal: true,
         }),
     };
     RtcCallViewer.identifyingFields = ['threadView'];

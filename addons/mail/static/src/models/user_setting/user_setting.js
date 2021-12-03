@@ -186,10 +186,6 @@ function factory(dependencies) {
             }
         }
 
-        toggleLayoutSettingsWindow() {
-            this.update({ isRtcLayoutSettingDialogOpen: !this.isRtcLayoutSettingDialogOpen });
-        }
-
         /**
          * toggles the display of the option window
          */
@@ -270,12 +266,6 @@ function factory(dependencies) {
             required: true,
         }),
         /**
-         * true if the dialog for the call viewer layout is open
-         */
-        isRtcLayoutSettingDialogOpen: attr({
-            default: false,
-        }),
-        /**
          * Formatted string that represent the push to talk key with its modifiers.
          */
         pushToTalkKey: attr({
@@ -289,13 +279,6 @@ function factory(dependencies) {
             inverse: 'userSetting',
             isCausal: true,
             required: true,
-        }),
-        /**
-         * layout of the rtc session display chosen by the user
-         * possible values: tiled, spotlight, sidebar
-         */
-        rtcLayout: attr({
-            default: 'tiled',
         }),
         /**
          * true if the user wants to use push to talk (over voice activation)

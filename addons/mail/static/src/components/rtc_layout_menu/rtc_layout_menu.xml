@@ -21,7 +21,7 @@
                 </t>
                 <label class="o_RtcLayoutMenu_radio">
                     <div class="o_RtcLayoutMenu_radioInputContainer">
-                        <input class="o_RtcLayoutMenu_radioInput" type="radio" name="layout" value="tiled" t-on-click="layoutMenu.onClickLayout" t-att-checked="messaging.userSetting.rtcLayout === 'tiled'"/>
+                        <input class="o_RtcLayoutMenu_radioInput" type="radio" name="layout" value="tiled" t-on-click="layoutMenu.onClickLayout" t-att-checked="layoutMenu.callViewer.layout === 'tiled'"/>
                         <span class="o_RtcLayoutMenu_inputText">Tiled</span>
                     </div>
                     <span class="o_RtcLayoutMenu_radioIcon">
@@ -30,7 +30,7 @@
                 </label>
                 <label class="o_RtcLayoutMenu_radio">
                     <div class="o_RtcLayoutMenu_radioInputContainer">
-                        <input class="o_RtcLayoutMenu_radioInput" type="radio" name="layout" value="spotlight" t-on-click="layoutMenu.onClickLayout" t-att-checked="messaging.userSetting.rtcLayout === 'spotlight'"/>
+                        <input class="o_RtcLayoutMenu_radioInput" type="radio" name="layout" value="spotlight" t-on-click="layoutMenu.onClickLayout" t-att-checked="layoutMenu.callViewer.layout === 'spotlight'"/>
                         <span class="o_RtcLayoutMenu_inputText">Spotlight</span>
                     </div>
                     <span class="o_RtcLayoutMenu_radioIcon">
@@ -39,7 +39,7 @@
                 </label>
                 <label class="o_RtcLayoutMenu_radio">
                     <div class="o_RtcLayoutMenu_radioInputContainer">
-                        <input class="o_RtcLayoutMenu_radioInput" type="radio" name="layout" value="sidebar" t-on-click="layoutMenu.onClickLayout" t-att-checked="messaging.userSetting.rtcLayout === 'sidebar'"/>
+                        <input class="o_RtcLayoutMenu_radioInput" type="radio" name="layout" value="sidebar" t-on-click="layoutMenu.onClickLayout" t-att-checked="layoutMenu.callViewer.layout === 'sidebar'"/>
                         <span class="o_RtcLayoutMenu_inputText">Sidebar</span>
                     </div>
                     <span class="o_RtcLayoutMenu_radioIcon">

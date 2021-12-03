@@ -5,6 +5,7 @@ import { browser } from "@web/core/browser/browser";
 import { registerNewModel } from '@mail/model/model_core';
 import { attr, many2one, one2one, one2many } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
+import { OnChange } from '@mail/model/model_onchange';
 
 function factory(dependencies) {
 
@@ -283,6 +284,25 @@ function factory(dependencies) {
         }
 
         /**
+         * Ensures that we do not download the stream of videos we are not viewing.
+         * TODO remove console logs
+         *
+         * @private
+         */
+        _onChangeCallParticipantCards() {
+            if (!this.channel || !this.channel.rtc) {
+                return;
+            }
+            if (this.callParticipantCards && this.callParticipantCards.length === 0) {
+                this.channel.rtc.disallowVideoReceiverActivity(this.id);
+                console.log(`disallow video receiver activity for ${this.name}`);
+            } else {
+                this.channel.rtc.allowVideoReceiverActivity(this.id);
+                console.log(`allow video receiver activity for ${this.name}`);
+            }
+        }
+
+        /**
          * cleanly removes the audio stream of the session
          *
          * @private
@@ -356,6 +376,13 @@ function factory(dependencies) {
          */
         calledChannels: one2many('mail.thread', {
             inverse: 'rtcInvitingSession',
+        }),
+        /**
+         * The participant cards that are displaying this session.
+         */
+        callParticipantCards: one2many('mail.rtc_call_participant_card', {
+            inverse: 'rtcSession',
+            isCausal: true,
         }),
         /**
          * States whether there is currently an error with the audio element.
@@ -454,6 +481,12 @@ function factory(dependencies) {
         }),
     };
     RtcSession.identifyingFields = ['id'];
+    RtcSession.onChanges = [
+        new OnChange({
+            dependencies: ['callParticipantCards'],
+            methodName: '_onChangeCallParticipantCards',
+        }),
+    ];
     RtcSession.modelName = 'mail.rtc_session';
 
     return RtcSession;

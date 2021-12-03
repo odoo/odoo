@@ -51,7 +51,7 @@
         width: 0.3vw;
     }
 
-    &.o-isTiled {
+    &:not(.o-isSidebar) {
         flex-direction: row;
         width: 100%;
         overflow-y: hidden;
@@ -90,6 +90,13 @@
     justify-content: space-between;
 }
 
+.o_RtcCallViewer_sidebarButton {
+    position: absolute;
+    padding: map-get($spacers, 2);
+    top: 0;
+    right: 0;
+}
+
 // ------------------------------------------------------------------
 // Style
 // ------------------------------------------------------------------
@@ -106,4 +113,11 @@
     &::-webkit-scrollbar-thumb {
         background: gray('700');
     }
+}
+
+.o_RtcCallViewer_sidebarButton {
+    color: white;
+    border: 1px solid gray('500');
+    background-color: gray('900');
+    border-radius: 5px;
 }

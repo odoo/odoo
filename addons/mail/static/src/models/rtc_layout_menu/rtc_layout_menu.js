@@ -28,17 +28,10 @@ function factory(dependencies) {
             ev.preventDefault();
             switch (ev.target.value) {
                 case 'all':
-                    this.callViewer.update({
-                        filterVideoGrid: false,
-                    });
+                    this.callViewer.setVideoFilter(false);
                     break;
                 case 'video':
-                    this.callViewer.update({
-                        filterVideoGrid: true,
-                    });
-                    if (this.messaging.focusedRtcSession && !this.messaging.focusedRtcSession.videoStream) {
-                        this.messaging.update({ focusedRtcSession: clear() });
-                    }
+                    this.callViewer.setVideoFilter(true);
                     break;
             }
         }
@@ -48,9 +41,7 @@ function factory(dependencies) {
          */
         onClickLayout(ev) {
             ev.preventDefault();
-            this.messaging.userSetting.update({
-                rtcLayout: ev.target.value,
-            });
+            this.callViewer.setLayout(ev.target.value);
             this.component.trigger('dialog-closed');
         }
 
