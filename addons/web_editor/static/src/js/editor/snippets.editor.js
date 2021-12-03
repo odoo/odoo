@@ -1528,6 +1528,13 @@ var SnippetsMenu = Widget.extend({
                     }
                 }
 
+                // TODO mentioning external app snippet but done as a stable fix
+                // that will be adapted in master: if popup snippet, do not
+                // allow to add it in another snippet
+                if ($baseBody[0].matches('.o_newsletter_popup')) {
+                    $selectorChildren = $selectorChildren.not('.oe_structure *, [data-oe-type=html] *');
+                }
+
                 $toInsert = $baseBody.clone();
 
                 if (!$selectorSiblings.length && !$selectorChildren.length) {
