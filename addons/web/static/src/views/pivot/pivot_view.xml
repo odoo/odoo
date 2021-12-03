@@ -34,7 +34,7 @@
                 <t t-else="" t-call="web.NoContentHelper"/>
             </t>
             <t t-if="model.hasData() and model.metaData.activeMeasures.length">
-                <Renderer model="model" onCellClicked="cell => onOpenView(cell)"/>
+                <Renderer model="model" onCellClicked="cell => this.onOpenView(cell)"/>
             </t>
         </Layout>
     </t>

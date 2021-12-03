@@ -58,7 +58,7 @@
                     class="o_renderer"
                     model="model"
                     t-att-class="{ o_sample_data_disabled: model.useSampleModel }"
-                    onGraphClicked="(domain) => onGraphClicked(domain)"
+                    onGraphClicked="(domain) => this.onGraphClicked(domain)"
                 />
             </t>
             <t t-else="" t-call="web.NoContentHelper">

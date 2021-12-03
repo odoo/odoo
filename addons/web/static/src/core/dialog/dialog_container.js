@@ -27,7 +27,7 @@ DialogContainer.template = tags.xml`
     <div class="o_dialog_container" t-att-class="{'modal-open': Object.keys(props.dialogs).length > 0}">
       <t t-foreach="Object.values(props.dialogs)" t-as="dialog" t-key="dialog.id">
         <NotUpdatable>
-            <ErrorHandler onError="(error) => handleError(error, dialog.id)">
+            <ErrorHandler onError="(error) => this.handleError(error, dialog.id)">
                 <t t-component="dialog.class" t-props="dialog.props"
                     t-on-dialog-closed="dialog.props.close()" 
                     t-att-class="{o_inactive_modal: !dialog_last}"/>

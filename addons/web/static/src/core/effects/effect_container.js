@@ -19,6 +19,6 @@ export class EffectContainer extends Component {
 EffectContainer.template = tags.xml`
   <div class="o_effects_manager">
     <t t-if="effect">
-        <t t-component="effect.Component" t-props="effect.props" t-key="effect.id" close="() => removeEffect()"/>
+        <t t-component="effect.Component" t-props="effect.props" t-key="effect.id" close="() => this.removeEffect()"/>
     </t>
   </div>`;
