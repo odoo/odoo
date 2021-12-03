@@ -1326,7 +1326,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.test(
+    QUnit.skip(
         "form views are restored with the correct id in its url when coming back in breadcrumbs",
         async function (assert) {
             assert.expect(3);
@@ -2283,7 +2283,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps(["web_search_read"]);
     });
 
-    QUnit.test("pushState also changes the title of the tab", async (assert) => {
+    QUnit.skip("pushState also changes the title of the tab", async (assert) => {
         assert.expect(3);
 
         const webClient = await createWebClient({ serverData });
