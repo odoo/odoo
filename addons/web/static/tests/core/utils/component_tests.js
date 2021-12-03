@@ -52,7 +52,7 @@ QUnit.module("utils", () => {
         Parent.template = owl.tags.xml`
         <div>
           <t t-if="flag">
-            <ErrorHandler onError="() => handleError()">
+            <ErrorHandler onError="() => this.handleError()">
               <Boom />
             </ErrorHandler>
           </t>

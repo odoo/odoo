@@ -28,7 +28,7 @@ MainComponentsContainer.template = tags.xml`
 <div>
     <t t-foreach="Components" t-as="C" t-key="C[0]">
         <NotUpdatable>
-            <ErrorHandler onError="error => handleComponentError(error, C)">
+            <ErrorHandler onError="error => this.handleComponentError(error, C)">
                 <t t-component="C[1].Component" t-props="C[1].props"/>
             </ErrorHandler>
         </NotUpdatable>
