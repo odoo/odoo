@@ -2375,6 +2375,13 @@ var SnippetsMenu = Widget.extend({
                         }
                     }
 
+                    // TODO mentioning external app snippet but done as a stable fix
+                    // that will be adapted in master: if popup snippet, do not
+                    // allow to add it in another snippet
+                    if ($baseBody[0].matches('.s_popup, .o_newsletter_popup')) {
+                        $selectorChildren = $selectorChildren.not('[data-snippet] *');
+                    }
+
                     $toInsert = $baseBody.clone();
                     // Color-customize dynamic SVGs in dropped snippets with current theme colors.
                     [...$toInsert.find('img[src^="/web_editor/shape/"]')].forEach(dynamicSvg => {
