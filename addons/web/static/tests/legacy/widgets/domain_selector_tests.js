@@ -272,15 +272,13 @@ QUnit.module('DomainSelector', {
         assert.expect(5);
 
         const $target = $("#qunit-fixture");
+        let newValue;
 
         // Create the domain selector and its mock environment
         const Parent = Widget.extend({
             custom_events: {
                 domain_changed: (e) => {
-                    assert.deepEqual(e.data.domain, [
-                        ["product_id", "ilike", 1],
-                        ["id", "=", 0]
-                    ]);
+                    assert.deepEqual(e.data.domain, newValue);
                     assert.ok(e.data.debug);
                 },
             },
@@ -294,7 +292,7 @@ QUnit.module('DomainSelector', {
         await domainSelector.appendTo($target);
 
         assert.containsOnce(domainSelector, ".o_domain_node", "should have a single domain node");
-        const newValue = `
+        newValue = `
 [
     ['product_id', 'ilike', 1],
     ['id', '=', 0]
