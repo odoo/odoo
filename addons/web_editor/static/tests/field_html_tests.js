@@ -721,21 +721,21 @@ QUnit.module('web_editor', {}, function () {
                 res_id: 1,
             });
 
-            assert.containsOnce(form, '.o_form_view.o_form_readonly');
+            assert.containsOnce(form, '.o_legacy_form_view.o_form_readonly');
 
             await testUtils.dom.click(form.$('.oe_form_field[name="body"] a'));
             await testUtils.nextTick();
             assert.strictEqual(quickEditCB, undefined, "no quickEdit callback should have been set");
-            assert.containsOnce(form, '.o_form_view.o_form_readonly');
+            assert.containsOnce(form, '.o_legacy_form_view.o_form_readonly');
 
             await testUtils.dom.click(form.$('.oe_form_field[name="body"] p'));
             await testUtils.nextTick();
-            assert.containsOnce(form, '.o_form_view.o_form_readonly');
+            assert.containsOnce(form, '.o_legacy_form_view.o_form_readonly');
             assert.ok(quickEditCB, "quickEdit callback should have been set");
             quickEditCB();
             await testUtils.nextTick();
             await legacyExtraNextTick();
-            assert.containsOnce(form, '.o_form_view.o_form_editable');
+            assert.containsOnce(form, '.o_legacy_form_view.o_form_editable');
 
             form.destroy();
         });
