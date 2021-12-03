@@ -107,13 +107,42 @@ class DataPoint {
     load() {
         throw new Error("load must be implemented");
     }
+
+    _parseServerValue(field, value) {
+        let parsedValue = value;
+        if (field.type === "char") {
+            parsedValue = value || "";
+        } else if (field.type === "date" || field.type === "datetime") {
+            // process date(time): convert into a Luxon DateTime object
+            const parser = registry.category("parsers").get(field.type);
+            parsedValue = parser(value, { isUTC: true });
+        } else if (field.type === "selection" && value === false) {
+            // process selection: convert false to 0, if 0 is a valid key
+            const hasKey0 = field.selection.find((option) => option[0] === 0);
+            parsedValue = hasKey0 ? 0 : value;
+        }
+        return parsedValue;
+    }
+
+    _parseServerValues(values) {
+        const parsedValues = {};
+        if (!values) {
+            return parsedValues;
+        }
+        for (const fieldName in values) {
+            const value = values[fieldName];
+            const field = this.fields[fieldName];
+            parsedValues[fieldName] = this._parseServerValue(field, value);
+        }
+        return parsedValues;
+    }
 }
 export class Record extends DataPoint {
     constructor(model, params) {
         super(...arguments);
 
         this.resId = params.resId;
-        this._values = this.parseServerValues(params.values);
+        this._values = params.values;
         this._changes = {};
         this.data = { ...this._values };
         this.preloadedData = {};
@@ -142,7 +171,6 @@ export class Record extends DataPoint {
         } else {
             data = await this._performOnchange();
         }
-        data = this.parseServerValues(data);
         this._values = data; // FIXME: don't update internal state directly
         this._changes = {};
         this.data = { ...data };
@@ -227,39 +255,12 @@ export class Record extends DataPoint {
     }
 
     async update(fieldName, value) {
-        this.data[fieldName] = this.parseServerValue(this.fields[fieldName], value);
+        this.data[fieldName] = value;
         this._changes[fieldName] = this.data[fieldName];
         const onChangeValues = await this._performOnchange(fieldName);
         Object.assign(this.data, onChangeValues);
         Object.assign(this._changes, onChangeValues);
         this.model.notify();
-    }
-
-    parseServerValue(field, value) {
-        let parsedValue = value;
-        if (field.type === "date" || field.type === "datetime") {
-            // process date(time): convert into a Luxon DateTime object
-            const parser = registry.category("parsers").get(field.type);
-            parsedValue = parser(value, { isUTC: true });
-        } else if (field.type === "selection" && value === false) {
-            // process selection: convert false to 0, if 0 is a valid key
-            const hasKey0 = field.selection.find((option) => option[0] === 0);
-            parsedValue = hasKey0 ? 0 : value;
-        }
-        return parsedValue;
-    }
-
-    parseServerValues(values) {
-        const parsedValues = {};
-        if (!values) {
-            return parsedValues;
-        }
-        Object.keys(values).forEach((fieldName) => {
-            const value = values[fieldName];
-            const field = this.fields[fieldName];
-            parsedValues[fieldName] = this.parseServerValue(field, value);
-        });
-        return parsedValues;
     }
 
     async save() {
@@ -307,7 +308,7 @@ export class Record extends DataPoint {
         const result = await this.model.orm.read(this.resModel, [this.resId], this.fieldNames, {
             bin_size: true,
         });
-        return this._sanitizeValues(result[0]);
+        return this._parseServerValues(result[0]);
     }
 
     async _performOnchange(fieldName) {
@@ -317,24 +318,11 @@ export class Record extends DataPoint {
             fieldName ? [fieldName] : [],
             this._getOnchangeSpec(),
         ]);
-        return this._sanitizeValues(result.value);
+        return this._parseServerValues(result.value);
     }
 
     _getOnchangeSpec() {
         return {};
-    }
-
-    _sanitizeValues(values) {
-        const sanitizedValues = {};
-        for (const fieldName in values) {
-            // TODO: create luxon instance for date(time) fields
-            if (this.fields[fieldName].type === "char") {
-                sanitizedValues[fieldName] = values[fieldName] || "";
-            } else {
-                sanitizedValues[fieldName] = values[fieldName];
-            }
-        }
-        return sanitizedValues;
     }
 
     _getChanges(allFields = false) {
@@ -467,6 +455,7 @@ export class DynamicRecordList extends DynamicList {
 
         return Promise.all(
             records.map(async (data) => {
+                data = this._parseServerValues(data);
                 const record = this.model.createDataPoint("record", {
                     resModel: this.resModel,
                     resId: data.id,
