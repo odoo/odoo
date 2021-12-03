@@ -58,7 +58,7 @@ class TestAccountJournal(AccountTestInvoicingCommon):
         self.env['account.move'].create(move_vals)
 
     def test_account_control_existing_journal_entry(self):
-        self.env['account.move'].create({
+        move = self.env['account.move'].create({
             'line_ids': [
                 (0, 0, {
                     'name': 'debit',
@@ -75,6 +75,7 @@ class TestAccountJournal(AccountTestInvoicingCommon):
             ],
         })
 
+        move.action_post()
         # There is already an other line using the 'default_account_expense' account.
         with self.assertRaises(ValidationError), self.cr.savepoint():
             self.company_data['default_journal_misc'].account_control_ids |= self.company_data['default_account_revenue']
