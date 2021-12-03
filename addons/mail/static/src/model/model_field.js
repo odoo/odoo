@@ -372,7 +372,7 @@ export class ModelField {
                         }
                         break;
                     case 'unlink-all':
-                        if (this._setRelationUnlink(record, this.read(record), options)) {
+                        if (this._setRelationUnlink(record, this.get(record), options)) {
                             hasChanged = true;
                         }
                         break;
