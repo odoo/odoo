@@ -602,6 +602,7 @@ class PaymentTransaction(models.Model):
             'operation': 'refund',
             'source_transaction_id': self.id,
             'partner_id': self.partner_id.id,
+            'token_id': self.token_id.id,
             **custom_create_values,
         })
 
