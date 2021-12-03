@@ -39,7 +39,7 @@ class AccrualPlan(models.Model):
         )
         mapped_count = {group['accrual_plan_id'][0]: group['accrual_plan_id_count'] for group in level_read_group}
         for plan in self:
-            plan.level_count = mapped_count[plan.id]
+            plan.level_count = mapped_count.get(plan.id, 0)
 
     @api.depends('allocation_ids')
     def _compute_employee_count(self):
