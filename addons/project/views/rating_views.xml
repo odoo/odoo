@@ -46,8 +46,8 @@
             <field name="rated_partner_id" position="attributes">
                 <attribute name="string">Assigned to</attribute>
             </field>
-            <field name="create_date" position="attributes">
-                <attribute name="readonly">1</attribute>
+            <field name="create_date" position="replace">
+                <field name="write_date" readonly="1" string="Submitted On"/>
             </field>
             <field name="feedback" position="attributes">
                 <attribute name="readonly">1</attribute>
@@ -55,7 +55,7 @@
             <div name="rating_image_container" position="replace">
                 <field name="rating_text" string="Rating" decoration-danger="rating_text == 'ko'" decoration-warning="rating_text == 'ok'" decoration-success="rating_text == 'top'" widget='badge'/>
             </div>
-            <field name="create_date" position="after">
+            <field name="write_date" position="after">
                 <field name="partner_id" position="move"/>
             </field>
             <xpath expr="//field[@name='is_internal']" position="attributes">
@@ -91,6 +91,18 @@
         </field>
     </record>
 
+    <record id="rating_rating_project_view_kanban" model="ir.ui.view">
+        <field name="name">rating.rating.kanban.project</field>
+        <field name="model">rating.rating</field>
+        <field name="inherit_id" ref="rating.rating_rating_view_kanban"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='create_date']" position="replace">
+                <field name="write_date"/>
+            </xpath>
+        </field>
+    </record>
+
     <record id="rating_rating_view_search_project" model="ir.ui.view">
         <field name="name">rating.rating.search.project</field>
         <field name="model">rating.rating</field>
@@ -117,6 +129,21 @@
                 <attribute name="string">Task</attribute>
             </xpath>
             <xpath expr="//filter[@name='responsible']" position="replace"></xpath>
+            <xpath expr="//filter[@name='filter_create_date']" position="replace">
+                <filter name="filter_write_date" string="Submitted On" date="write_date"/>
+            </xpath>
+            <xpath expr="//filter[@name='month']" position="attributes">
+                <attribute name="context">{'group_by':'write_date:month'}</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='today']" position="attributes">
+                <attribute name="domain">[('write_date', '&gt;', (context_today() - datetime.timedelta(days=1)).strftime('%Y-%m-%d'))]</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='last_7days']" position="attributes">
+                <attribute name="domain">[('write_date','&gt;', (context_today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='last_month']" position="attributes">
+                <attribute name="domain">[('write_date','&gt;', (context_today() - relativedelta(months=1)).strftime('%Y-%m-%d'))]</attribute>
+            </xpath>
         </field>
     </record>
 
@@ -137,7 +164,7 @@
         <field name="sequence" eval="5"/>
         <field name="view_mode">kanban</field>
         <field name="act_window_id" ref="rating_rating_action_view_project_rating"/>
-        <field name="view_id" ref="rating.rating_rating_view_kanban"/>
+        <field name="view_id" ref="rating_rating_project_view_kanban"/>
     </record>
 
     <record id="rating_rating_action_view_project_rating_tree" model="ir.actions.act_window.view">
@@ -187,7 +214,7 @@
         <field name="sequence" eval="5"/>
         <field name="view_mode">kanban</field>
         <field name="act_window_id" ref="rating_rating_action_task"/>
-        <field name="view_id" ref="rating.rating_rating_view_kanban"/>
+        <field name="view_id" ref="rating_rating_project_view_kanban"/>
     </record>
 
     <record id="rating_rating_action_task_tree" model="ir.actions.act_window.view">
@@ -241,7 +268,7 @@
         <field name="sequence" eval="5"/>
         <field name="view_mode">kanban</field>
         <field name="act_window_id" ref="rating_rating_action_project_report"/>
-        <field name="view_id" ref="rating.rating_rating_view_kanban"/>
+        <field name="view_id" ref="rating_rating_project_view_kanban"/>
     </record>
 
     <record id="rating_rating_action_project_report_tree" model="ir.actions.act_window.view">

@@ -126,8 +126,8 @@
                         <group>
                             <group>
                                 <div class="o_td_label">
-                                    <label for="planned_hours" string="Initially Planned Hours" attrs="{'invisible': [('encode_uom_in_days', '=', True)]}"/>
-                                    <label for="planned_hours" string="Initially Planned Days" attrs="{'invisible': [('encode_uom_in_days', '=', False)]}"/>
+                                    <label for="planned_hours" string="Allocated Hours" attrs="{'invisible': [('encode_uom_in_days', '=', True)]}"/>
+                                    <label for="planned_hours" string="Allocated Days" attrs="{'invisible': [('encode_uom_in_days', '=', False)]}"/>
                                 </div>
                                 <field name="planned_hours" widget="timesheet_uom_no_toggle" nolabel="1"/>
                                 <div class="o_td_label" groups="project.group_subtask_project" attrs="{'invisible': ['|', ('allow_subtasks', '=', False), ('subtask_count', '=', 0)]}">
@@ -331,11 +331,22 @@
             <field name="model">project.task</field>
             <field name="inherit_id" ref="project.view_task_search_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//filter[@name='my_tasks']" position='after'>
+                <xpath expr="//filter[@name='followed_by_me']" position='after'>
                     <filter string="My Team's Tasks" name="my_team_tasks" domain="[('user_ids.employee_parent_id.user_id', '=', uid)]"/>
                 </xpath>
                 <xpath expr="//filter[@name='late']" position='after'>
                     <filter string="Tasks in Overtime" name="overtime" domain="[('overtime', '&gt;', 0)]"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_task_search_form_hr_extended" model="ir.ui.view">
+            <field name="name">project.task.view.search.inherit.hr.timesheet</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_search_form_extended"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='my_favorite_projects']" position='after'>
+                    <filter string="My Team's Projects" name="my_teams_projects" domain="[('project_id.user_id.employee_parent_id.user_id', '=', uid)]"/>
                 </xpath>
             </field>
         </record>

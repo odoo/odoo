@@ -229,6 +229,12 @@ class SaleOrderLine(models.Model):
                 'sale_order_id': self.order_id,
             })
         else:
+            project_only_sol_count = self.env['sale.order.line'].search_count([
+                ('order_id', '=', self.order_id.id),
+                ('product_id.service_tracking', 'in', ['project_only', 'task_in_project']),
+            ])
+            if project_only_sol_count == 1:
+                values['name'] = "%s - [%s] %s" % (values['name'], self.product_id.default_code, self.product_id.name) if self.product_id.default_code else "%s - %s" % (values['name'], self.product_id.name)
             project = self.env['project.project'].create(values)
 
         # Avoid new tasks to go to 'Undefined Stage'
@@ -246,7 +252,7 @@ class SaleOrderLine(models.Model):
         title = sale_line_name_parts[0] or self.product_id.name
         description = '<br/>'.join(sale_line_name_parts[1:])
         return {
-            'name': title if project.sale_line_id else '%s: %s' % (self.order_id.name or '', title),
+            'name': title if project.sale_line_id else '%s - %s' % (self.order_id.name or '', title),
             'planned_hours': planned_hours,
             'partner_id': self.order_id.partner_id.id,
             'email_from': self.order_id.partner_id.email,
