@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
-# Jeffery CHEN <jeffery9@gmail.com>, 2021
 # liAnGjiA <liangjia@qq.com>, 2021
 # 黎伟杰 <674416404@qq.com>, 2021
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
@@ -14,6 +13,7 @@
 # 稀饭~~ <wangwhai@qq.com>, 2021
 # xu aaron, 2021
 # wei zhou, 2021
+# Jeffery CHEN <jeffery9@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: wei zhou, 2021\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1780,7 +1780,7 @@ msgstr "添加"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Add Credit Note"
-msgstr "创建退款单"
+msgstr "创建退款通知"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__add_sign
@@ -2703,7 +2703,7 @@ msgid ""
 "Bank Account Number to which the invoice will be paid. A Company bank "
 "account if this is a Customer Invoice or Vendor Credit Note, otherwise a "
 "Partner bank account number."
-msgstr "已支付的结算单将记录银行账号。如果这是客户结算单或供应商退款，则是公司银行账户，否则是合作伙伴银行账号。"
+msgstr "已支付的结算单将记录银行账号。如果这是客户结算单或供应商退款通知，则是公司银行账户，否则是合作伙伴银行账号。"
 
 #. module: account
 #: model:ir.model,name:account.model_res_partner_bank
@@ -3042,7 +3042,7 @@ msgstr "按 国家"
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_refund
 msgid "By Credit Note"
-msgstr "通过退款单"
+msgstr "按退款通知"
 
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_product
@@ -3520,7 +3520,7 @@ msgstr "如果这个科目能够让结算单和付款与日记账的匹配就勾
 msgid ""
 "Check this box if you don't want to share the same sequence for invoices and"
 " credit notes made from this journal"
-msgstr "勾选此框，则此日记账下的会计结算单或退款不使用同一个序列。"
+msgstr "勾选此框，则此日记账下的会计结算单或退款通知不使用同一个序列。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__tax_negate
@@ -4047,7 +4047,7 @@ msgstr "创建银行账户"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_refund_type
 msgid "Create a credit note"
-msgstr "创建退款单"
+msgstr "创建退款通知"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_invoice_type
@@ -4122,7 +4122,7 @@ msgstr "创建一个供应商账单"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_refund_type
 msgid "Create a vendor credit note"
-msgstr "创建供应商退款单"
+msgstr "创建供应商退款通知"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_adjustments_wizard
@@ -4339,13 +4339,13 @@ msgstr "贷方凭证"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #, python-format
 msgid "Credit Note"
-msgstr "退款"
+msgstr "退款通知"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Credit Note Created"
-msgstr "退款已创建"
+msgstr "退款通知已创建"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_out_credit_note_tree
@@ -4358,7 +4358,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Credit Notes"
-msgstr "退款"
+msgstr "退款通知"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__credit_account_id
@@ -4513,7 +4513,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__out_refund
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__out_refund
 msgid "Customer Credit Note"
-msgstr "客户退款"
+msgstr "客户退款通知"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_analytic_line__category__invoice
@@ -4775,7 +4775,7 @@ msgstr "小数分割符"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__refund_sequence
 msgid "Dedicated Credit Note Sequence"
-msgstr "专用的退款序列"
+msgstr "专用的退款通知序列"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__default_account_id
@@ -5200,7 +5200,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
 msgid "Distribution for Credit Notes"
-msgstr "分配贷方票据"
+msgstr "退款通知的分配"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__invoice_repartition_line_ids
@@ -5278,7 +5278,7 @@ msgstr "草稿账单"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Draft Credit Note"
-msgstr "草稿退款"
+msgstr "草稿退款通知"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -5321,7 +5321,7 @@ msgstr "草稿销售收据"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Draft Vendor Credit Note"
-msgstr "供应商退款草稿"
+msgstr "草稿供应商退款通知"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -7013,14 +7013,14 @@ msgstr ""
 msgid ""
 "Invoice and credit note distribution should each contain exactly one line "
 "for the base."
-msgstr "结算单和贷方通知单分配应分别包含一行基数。"
+msgstr "结算单和退款通知分配应分别包含一行基数。"
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid ""
 "Invoice and credit note distribution should have the same number of lines."
-msgstr "结算单和贷方通知单分配应具有相同的行数。"
+msgstr "结算单和退款通知分配应具有相同的行数。"
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -7028,7 +7028,7 @@ msgstr "结算单和贷方通知单分配应具有相同的行数。"
 msgid ""
 "Invoice and credit note distribution should match (same percentages, in the "
 "same order)."
-msgstr "结算单和贷方通知单的分配应该匹配（相同的百分比，以相同的顺序）。"
+msgstr "结算单和退款通知的分配应该匹配（相同的百分比，以相同的顺序）。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_line_ids
@@ -7259,7 +7259,7 @@ msgstr "它指示已发送结算单/付款。"
 msgid ""
 "It seems that the taxes have been modified since the creation of the journal"
 " entry. You should create the credit note manually instead."
-msgstr "自日记帐分录创建以来，税收似乎已经修改。应改为手动创建贷方记录。"
+msgstr "自日记帐分录创建以来，税收似乎已经修改。应改为手动创建退款通知。"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -8692,7 +8692,7 @@ msgid ""
 "Note that the easiest way to create a credit note is to do it directly\n"
 "                from the customer invoice."
 msgstr ""
-"注意创建退款据最简单的方法就是直接做。\n"
+"注意创建退款通知最简单的方法就是直接做。\n"
 "从客户结算单。"
 
 #. module: account
@@ -8700,7 +8700,7 @@ msgstr ""
 msgid ""
 "Note that the easiest way to create a vendor credit note it to do it "
 "directly from the vendor bill."
-msgstr "请注意，创建供应商信用记录的最简单方法是直接从供应商账单上进行。"
+msgstr "请注意，创建供应商退款通知的最简单方法是直接从供应商账单上进行。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__note
@@ -11929,7 +11929,7 @@ msgstr "暂记帐户"
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note
 msgid "Switch into refund/credit note"
-msgstr "切换到退款/退款据"
+msgstr "切换到退款通知/退款通知"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__name
@@ -13032,7 +13032,7 @@ msgstr "使用该公司税务报告的国家/地区"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "The credit note is auto-validated and reconciled with the invoice."
-msgstr "贷方通知单已自动验证并与结算单对账。"
+msgstr "退款通知已自动验证并与结算单对账。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
@@ -13040,14 +13040,14 @@ msgid ""
 "The credit note is auto-validated and reconciled with the invoice.\n"
 "                               The original invoice is duplicated as a new draft."
 msgstr ""
-"贷方通知单已自动验证并与结算单对账。\n"
+"退款通知已自动验证并与结算单对账。\n"
 "                               原始结算单将作为新草稿重复。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid ""
 "The credit note is created in draft and can be edited before being issued."
-msgstr "贷方通知单是在草稿中创建的，可以在发布之前进行编辑。"
+msgstr "退款通知是在草稿中创建的，可以在发布之前进行编辑。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__currency_id
@@ -13359,7 +13359,7 @@ msgid ""
 "The order in which distribution lines are displayed and matched. For refunds"
 " to work properly, invoice distribution lines should be arranged in the same"
 " order as the credit note distribution lines they correspond to."
-msgstr "显示和匹配分布行的顺序。为使退款正常工作，结算单分配行应按与其对应的贷方单分配行相同的顺序排列。"
+msgstr "显示和匹配分布行的顺序。为使退款通知正常工作，结算单分配行应按与其对应的贷方单分配行相同的顺序排列。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_carryover_line__tax_report_id
@@ -14689,7 +14689,7 @@ msgstr "供应商账单"
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__in_refund
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Vendor Credit Note"
-msgstr "供应商退款"
+msgstr "供应商退款通知"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -15411,7 +15411,7 @@ msgid ""
 "You cannot validate an invoice with a negative total amount. You should "
 "create a credit note instead. Use the action menu to transform it into a "
 "credit note or refund."
-msgstr "您无法验证总金额为负的结算单。 您应该创建一个退款据。 使用操作菜单将其转换为贷方通知单或退款。"
+msgstr "您无法验证总金额为负的结算单。 您应该创建一个退款通知。 使用操作菜单将其转换为退款通知或退款通知。"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

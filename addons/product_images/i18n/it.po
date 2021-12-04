@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
+# Friederike Fasterling-Nesselbosch, 2021
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:29+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Martin Trigaux, 2021\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,6 +36,10 @@ msgid ""
 "                            done tomorrow.\n"
 "                        </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('nb_products_selected', '&lt;=', 10000)]}\">\n"
+"                            Poiché possono essere elaborati solo 10.000 prodotti al giorno, il resto sarà\n"
+"fatto domani.\n"
+"                        </span>"
 
 #. module: product_images
 #: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
@@ -43,6 +48,8 @@ msgid ""
 "A task to process products in the background is already running. Please try "
 "againlater."
 msgstr ""
+"Un compito per elaborare i prodotti in background è già in esecuzione. Si "
+"prega di riprovare più tardi."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.res_config_settings_view_form
@@ -90,7 +97,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:product_images.product_product_action_get_pic_with_barcode
 #: model:ir.actions.act_window,name:product_images.product_template_action_get_pic_with_barcode
 msgid "Get Pictures from Google Images"
-msgstr ""
+msgstr "Ottieni immagini da Google Images"
 
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_res_config_settings__google_custom_search_key
@@ -130,7 +137,7 @@ msgstr ""
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__nb_products_to_process
 msgid "Number of products to process"
-msgstr ""
+msgstr "Numero di prodotti da trattare"
 
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__nb_products_selected
@@ -143,6 +150,8 @@ msgid ""
 "Please note that some images might not be royalty-free. You should not\n"
 "                        publish these on your website."
 msgstr ""
+"Si prega di notare che alcune immagini potrebbero non essere gratuite. Non devi\n"
+"pubblicarle sul tuo sito web."
 
 #. module: product_images
 #: model:ir.model,name:product_images.model_product_product
@@ -165,7 +174,7 @@ msgstr ""
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__products_to_process
 msgid "Products To Process"
-msgstr ""
+msgstr "Prodotti da elaborare"
 
 #. module: product_images
 #: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
@@ -174,6 +183,8 @@ msgid ""
 "Products are processed in the background. Images will be updated "
 "progressively."
 msgstr ""
+"I prodotti vengono elaborati nello sfondo. Le immagini saranno aggiornate "
+"gradualmente."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.res_config_settings_view_form
@@ -185,6 +196,8 @@ msgstr ""
 #, python-format
 msgid "The API Key and Search Engine ID must be set in the General Settings."
 msgstr ""
+"La chiave API e l'ID del motore di ricerca devono essere impostati in "
+"Impostazioni generali."
 
 #. module: product_images
 #: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
@@ -221,7 +234,7 @@ msgstr ""
 #: code:addons/product_images/models/ir_cron_trigger.py:0
 #, python-format
 msgid "This action is already scheduled. Please try again later."
-msgstr ""
+msgstr "Questa azione è già programmata. Si prega di riprovare più tardi."
 
 #. module: product_images
 #: model:ir.model,name:product_images.model_ir_cron_trigger
@@ -232,11 +245,13 @@ msgstr ""
 #: model:ir.model.fields,help:product_images.field_product_product__image_fetch_pending
 msgid "Whether an image must be fetched for this product. Handled by a cron."
 msgstr ""
+"Se un'immagine deve essere recuperata per questo prodotto. Gestito da un "
+"cron."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
 msgid "You selected"
-msgstr ""
+msgstr "Hai selezionato"
 
 #. module: product_images
 #: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
@@ -256,8 +271,11 @@ msgid ""
 "                            processed because they either already have an image or their barcode\n"
 "                            number is not set."
 msgstr ""
+"prodotti non saranno\n"
+"elaborati perché o hanno già un'immagine o il loro codice a barre\n"
+"non è impostato."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
 msgid "products,"
-msgstr ""
+msgstr "prodotti,"

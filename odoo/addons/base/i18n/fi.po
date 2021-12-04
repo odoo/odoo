@@ -12,7 +12,6 @@
 # Juha Torkkeli <juha.torkkeli@labaduu.com>, 2021
 # Kari Lindgren <karisatu@gmail.com>, 2021
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2021
-# Antti Oksman <antti.oksman@web-veistamo.fi>, 2021
 # Simo Suurla <simo@suurla.fi>, 2021
 # Retropikzel, 2021
 # Melina Mäntylä <melina.mantyla@web-veistamo.fi>, 2021
@@ -30,11 +29,14 @@
 # Martin Trigaux, 2021
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2021
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2021
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2021
 # Iipponen <erno@web-veistamo.fi>, 2021
 # Kim Asplund <kim.asplund@gmail.com>, 2021
 # Miika Nissi <miika.nissi@tawasta.fi>, 2021
 # Katja Tuomas-Ahponen, 2021
+# Erno Iipponen <erno.iipponen@web-veistamo.fi>, 2021
+# Antti Oksman <antti.oksman@web-veistamo.fi>, 2021
+# Pekka Ikonen, 2021
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2021
 # 
 msgid ""
 msgstr ""
@@ -42,7 +44,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:42+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Katja Tuomas-Ahponen, 2021\n"
+"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2021\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -402,6 +404,9 @@ msgid ""
 "\n"
 "This module adds a custom Sales Team for the Point of Sale. This enables you to view and manage your point of sale sales with more ease.\n"
 msgstr ""
+"\n"
+"\n"
+"Tämä moduuli lisää myyntitiimien mukauttamisen kassapäätteelle. Näin voit tarkastella ja hallita kassapäätteesi myyntiä helpommin.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_restaurant
@@ -1485,6 +1490,14 @@ msgid ""
 "- the portal security settings page if the user is not internal. \n"
 "    "
 msgstr ""
+"\n"
+"2FA kutsusähköposti\n"
+"===============\n"
+"Anna käyttäjien kutsua toisia käyttäjiä käyttämään kaksivaiheista tunnistautumista\n"
+"lähettämällä sähköpostia halutulle käyttäjälle. Tämä sähköposti ohjaa hänet:\n"
+"- käyttäjien turvallisuusasetuksiin, jos käyttäjä on sisäinen.\n"
+"- portaalin turvallisuusasetuksiin, jos käyttäjä ei ole sisäinen. \n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_intrastat
@@ -1725,6 +1738,11 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Suomalaiset kirjanpitoraportit\n"
+"================================\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_reports
@@ -8365,7 +8383,7 @@ msgstr "Lisää"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_language_install
 msgid "Add Language"
-msgstr ""
+msgstr "Lisää kieli"
 
 #. module: base
 #: model:ir.module.module,description:base.module_data_merge_helpdesk
@@ -11796,7 +11814,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_form
 msgid "Create a Contact in your address book"
-msgstr ""
+msgstr "Luo uusi yhteystieto osoitekirjaasi"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_country_group
@@ -16595,7 +16613,7 @@ msgstr "Indonesia - Kirjanpito"
 #. module: base
 #: model:ir.actions.act_window,name:base.res_partner_industry_action
 msgid "Industries"
-msgstr ""
+msgstr "Toimialat"
 
 #. module: base
 #: model:ir.model,name:base.model_res_partner_industry
@@ -20994,6 +21012,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:base.action_partner_form
 msgid "Odoo helps you track all activities related to your contacts."
 msgstr ""
+"Odoo auttaa sinua seuraamaan helposti kaikkia kontaktiisi liittyviä toimia."
 
 #. module: base
 #: code:addons/base/models/ir_module.py:0
@@ -21597,7 +21616,7 @@ msgstr "Lähtevän sähköpostin palvelimet"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_microsoft_calendar
 msgid "Outlook Calendar"
-msgstr ""
+msgstr "Outlook-kalenteri"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__dpi
@@ -22373,7 +22392,7 @@ msgstr "Hinnan täsmällisyys"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__primary_color
 msgid "Primary Color"
-msgstr ""
+msgstr "Pääväri"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_ca_check_printing
@@ -29352,7 +29371,7 @@ msgstr ""
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "hour"
-msgstr ""
+msgstr "tunti"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__html
@@ -29684,7 +29703,7 @@ msgstr "otsikko"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_dashboard
 msgid "web_dashboard"
-msgstr ""
+msgstr "web_dashboard"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_delivery_mondialrelay

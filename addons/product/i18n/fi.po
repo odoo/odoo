@@ -26,8 +26,8 @@
 # Jenni Heikkilä <jenni.heikkila@sv-oy.fi>, 2021
 # Eppu Tuominen <eppu.tuominen@emsystems.fi>, 2021
 # Mikko Virtanen <mikko.virtanen2013@gmail.com>, 2021
-# Antti Oksman <antti.oksman@web-veistamo.fi>, 2021
 # Miika Nissi <miika.nissi@tawasta.fi>, 2021
+# Antti Oksman <antti.oksman@web-veistamo.fi>, 2021
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2021
 # 
 msgid ""
@@ -53,7 +53,7 @@ msgstr "# Tuotevariaatiota"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__product_count
 msgid "# Products"
-msgstr "# Tuotteita"
+msgstr "# Tuotetta"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -152,13 +152,13 @@ msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow "
 "icon\" title=\"Arrow\"/>"
 msgstr ""
+"<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow "
+"icon\" title=\"Arrow\"/>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_kanban
 msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" title=\"Currency\"/>"
-msgstr ""
-"<i class = \"fa fa-money\" rooli = \"img\" aria-label = \"Valuutta\" title ="
-" \"Valuutta\" />"
+msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" title=\"Currency\"/>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -179,12 +179,12 @@ msgstr "<span class=\"o_stat_text\"> Tuotteet</span>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "<span class=\"o_stat_text\">Related Products</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Liittyvät tuotteet</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "<span>%</span>"
-msgstr ""
+msgstr "<span>%</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -243,7 +243,7 @@ msgid ""
 "                This is the perfect tool to handle several pricings, seasonal discounts, etc."
 msgstr ""
 "Hinta on myyntihintojen tai sääntöjen joukko, joka laskee tuotteiden, tuoteryhmien, päivämäärien ja tilattujen määrien mukaiset myyntitilausten hinnat.\n"
-"                 Tämä on täydellinen työkalu useiden hintojen, kausiluonteisten alennusten jne. Käsittelyyn."
+"Tämä on täydellinen työkalu useiden hintojen, kausiluonteisten alennusten jne. käsittelyyn."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__detailed_type
@@ -291,7 +291,7 @@ msgstr "Toimenpiteet"
 #: model:ir.model.fields,field_description:product.field_product_product__activity_exception_decoration
 #: model:ir.model.fields,field_description:product.field_product_template__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Aktiviteettipoikkeuksen tyyli"
+msgstr "Toimenpiteen poikkeuksen tyyli"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__activity_state
@@ -316,7 +316,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_sale_pricelist
 #: model:res.groups,name:product.group_sale_pricelist
 msgid "Advanced Pricelists"
-msgstr "Edistyneet hintaryhmäyt"
+msgstr "Monipuoliset hinnastot ja säännöt"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_pricelist_setting__advanced
@@ -342,8 +342,8 @@ msgid ""
 "Allows to manage different prices based on rules per category of customers.\n"
 "                Example: 10% for retailers, promotion of 5 EUR on this product, etc."
 msgstr ""
-"Mahdollistaa eri hintojen hallinnan sääntöjen perusteella asiakkaiden kategoriaa kohti.\n"
-"                 Esimerkki: 10% vähittäiskauppiaille, 5 euron myynninedistäminen tässä tuotteessa jne."
+"Mahdollistaa eri hintojen hallinnan sääntöjen perusteella asiakaskategorioittain.\n"
+"Esimerkki: 10% vähittäiskauppiaille, 5 euron myynninedistäminen tässä tuotteessa jne."
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_2
@@ -481,7 +481,7 @@ msgstr "Perustuen"
 #. module: product
 #: model:res.groups,name:product.group_product_pricelist
 msgid "Basic Pricelists"
-msgstr "Perus hintaryhmät"
+msgstr "Perushintaryhmät"
 
 #. module: product
 #: model:product.attribute.value,name:product.product_attribute_value_4
@@ -1034,7 +1034,7 @@ msgstr ""
 #: model_terms:product.product,website_description:product.product_product_4d
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid "Ergonomic"
-msgstr ""
+msgstr "Ergonominen"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__exclude_for
@@ -1371,7 +1371,7 @@ msgstr "Sisäiset kommentit"
 #: model:ir.model.fields,field_description:product.field_product_product__default_code
 #: model:ir.model.fields,field_description:product.field_product_template__default_code
 msgid "Internal Reference"
-msgstr "Sisäinen viite"
+msgstr "Tuotekoodi"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__barcode
@@ -1521,7 +1521,7 @@ msgstr "Rivit"
 #: model_terms:product.product,website_description:product.product_product_4d
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid "Locally handmade"
-msgstr ""
+msgstr "Paikallisesti käsintehty"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -1539,6 +1539,8 @@ msgid ""
 "Looking for a custom bamboo stain to match existing furniture? Contact us "
 "for a quote."
 msgstr ""
+"Looking for a custom bamboo stain to match existing furniture? Contact us "
+"for a quote."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_main_attachment_id
@@ -1621,7 +1623,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__my_activity_date_deadline
 #: model:ir.model.fields,field_description:product.field_product_template__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "Toimenpiteeni määräaika"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__name
@@ -1641,7 +1643,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__activity_calendar_event_id
 #: model:ir.model.fields,field_description:product.field_product_template__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "Seuraavan toimenpiteen kalenterimerkintä"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__activity_date_deadline
@@ -1840,6 +1842,8 @@ msgid ""
 "Press a button and watch your desk glide effortlessly from sitting to "
 "standing height in seconds."
 msgstr ""
+"Paina nappia ja katso, kuinka työpöytäsi liukuu vaivattomasti istuma-"
+"asennosta seisoma-asentoon sekunneissa."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price
@@ -2132,7 +2136,7 @@ msgstr "Tuotemallin ominaisuuden arvo"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__product_tmpl_ids
 msgid "Product Tmpl"
-msgstr "Tuotteen Malli"
+msgstr "Tuotemalli"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_tooltip
@@ -2377,7 +2381,7 @@ msgstr "Valitse"
 #: model:ir.model.fields,help:product.field_product_product__categ_id
 #: model:ir.model.fields,help:product.field_product_template__categ_id
 msgid "Select category for the current product"
-msgstr "Valitse nykyiselle tuotteelle ryhmä (kategoria)"
+msgstr "Valitse nykyiselle tuotteelle tuotekategoria"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__sequence
@@ -2599,6 +2603,8 @@ msgid ""
 "The minimum height is 65 cm, and for standing work the maximum height "
 "position is 125 cm."
 msgstr ""
+"The minimum height is 65 cm, and for standing work the maximum height "
+"position is 125 cm."
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -3090,6 +3096,8 @@ msgid ""
 "We pay special attention to detail, which is why our desks are of a superior"
 " quality."
 msgstr ""
+"Kiinnitämme erityistä huomiota yksityiskohtiin, minkä vuoksi työpöytämme "
+"ovat korkealaatuisia."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight

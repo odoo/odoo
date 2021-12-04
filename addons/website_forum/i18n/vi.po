@@ -5,7 +5,6 @@
 # Translators:
 # Minh Nguyen <ndminh210994@gmail.com>, 2021
 # Dao Nguyen <trucdao.uel@gmail.com>, 2021
-# Trần Hà <tranthuha13590@gmail.com>, 2021
 # sao sang <saosangmo@yahoo.com>, 2021
 # Martin Trigaux, 2021
 # fanha99 <fanha99@hotmail.com>, 2021
@@ -1438,7 +1437,7 @@ msgstr "Câu hỏi đáng tin cậy"
 #: model:gamification.challenge.line,name:website_forum.line_critic
 #: model:gamification.goal.definition,name:website_forum.definition_critic
 msgid "Critic"
-msgstr "Phê bình"
+msgstr "Nhà phê bình"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_searchbar_input_snippet_options
@@ -1565,7 +1564,7 @@ msgstr "Hiển thị tiểu sử người dùng chi tiết"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_downvote
 msgid "Downvote"
-msgstr "Hạ cấp"
+msgstr "Vote xuống"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_1
@@ -1697,12 +1696,12 @@ msgstr "Lọc bởi: "
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__relevancy_post_vote
 msgid "First Relevance Parameter"
-msgstr "Thông số liên quan đầu tiên"
+msgstr "Tham số phù hợp đầu tiên"
 
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_5
 msgid "First downvote"
-msgstr "Lần hạ cấp đầu tiên"
+msgstr "Lần đầu bỏ phiếu vote xuống"
 
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_7
@@ -1712,7 +1711,7 @@ msgstr "Lần chỉnh sửa đầu tiên"
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_31
 msgid "First upvote"
-msgstr "Bình chọn đầu tiên"
+msgstr "Lần đầu bỏ phiếu vote lên"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.question_dropdown
@@ -1839,12 +1838,12 @@ msgstr "Diễn đàn"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_website__forums_count
 msgid "Forums Count"
-msgstr ""
+msgstr "Số diễn đàn"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_gamification_challenge
 msgid "Gamification Challenge"
-msgstr "Thử thách Gamification"
+msgstr "Thử thách game hóa"
 
 #. module: website_forum
 #. openerp-web
@@ -1874,13 +1873,13 @@ msgstr "Câu hỏi hay"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_graph
 msgid "Graph of Posts"
-msgstr "Đồ thị của các bài đăng"
+msgstr "Đồ thị các bài đăng"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_4
 #: model:gamification.challenge,name:website_forum.challenge_great_answer
 msgid "Great Answer"
-msgstr "Câu trả lời xuất s"
+msgstr "Câu trả lời xuất sắc"
 
 #. module: website_forum
 #: model:gamification.challenge.line,name:website_forum.line_great_answer
@@ -1989,7 +1988,8 @@ msgstr "Nếu đánh dấu, một số tin nhắn bị lỗi khi gửi. "
 msgid ""
 "If the author has not enough karma, a nofollow attribute is added to links"
 msgstr ""
-"Nếu tác giả không đủ karma, một thuộc tính nofollow được thêm vào liên kết"
+"Nếu tác giả không đủ điểm karma, một thuộc tính nofollow sẽ được thêm vào "
+"liên kết"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -2091,17 +2091,17 @@ msgstr "Yêu thích"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_is_follower
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_is_follower
 msgid "Is Follower"
-msgstr "Trở thành người theo dõi"
+msgstr "Người theo dõi"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__has_validated_answer
 msgid "Is answered"
-msgstr "Đã được trả lời"
+msgstr "Được trả lời"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_display_biography
 msgid "Is the author's biography visible from his post"
-msgstr "Tiểu sử của tác giả có thể nhìn thấy từ bài viết của họ"
+msgstr "Tiểu sử của tác giả có thể nhìn thấy từ bài đăng của họ"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:0
@@ -2113,7 +2113,7 @@ msgstr "Không được phép chỉnh sửa phiếu bầu của người khác. 
 #: code:addons/website_forum/models/forum.py:0
 #, python-format
 msgid "It is not allowed to vote for its own post."
-msgstr "Nó không được phép bỏ phiếu cho bài viết của mình."
+msgstr "Không được phép bỏ phiếu cho bài đăng của mình. "
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
@@ -2174,12 +2174,12 @@ msgstr "Sửa lần cuối vào"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__last_post_id
 msgid "Last Post"
-msgstr ""
+msgstr "Bài đăng cuối"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_options
 msgid "Last Post:"
-msgstr ""
+msgstr "Bài đăng cuối: "
 
 #. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__default_order__write_date_desc
@@ -2252,7 +2252,7 @@ msgstr "Gửi tin nhắn bị lỗi"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_ids
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_ids
 msgid "Messages"
-msgstr "Thông báo"
+msgstr "Tin nhắn"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__mode
@@ -2267,7 +2267,7 @@ msgstr "Kiểm duyệt bài viết"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "Moderation"
-msgstr "Kiểm duyệt"
+msgstr "Điều hành"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
@@ -2362,7 +2362,7 @@ msgstr "Câu trả lời mới"
 #: code:addons/website_forum/static/src/js/website_forum.editor.js:0
 #, python-format
 msgid "New Forum"
-msgstr "Tạo diễn đàn"
+msgstr "Diễn đàn mới"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
@@ -2439,7 +2439,7 @@ msgstr "Bạn chưa vote lần nào!"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_dofollow
 msgid "Nofollow links"
-msgstr "Liên kết không được theo dõi"
+msgstr "Liên kết nofollow"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_4
@@ -2462,7 +2462,7 @@ msgstr "Câu hỏi đáng chú ý"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_needaction_counter
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Số lượng hành động"
+msgstr "Số lượng tác vụ"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__posts_count
@@ -2486,7 +2486,7 @@ msgstr "Số bài đăng bị gắn cờ"
 #: model:ir.model.fields,help:website_forum.field_forum_post__message_needaction_counter
 #: model:ir.model.fields,help:website_forum.field_forum_tag__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "Số thông báo cần xử lý"
+msgstr "Số tin nhắn cần xử lý"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__message_has_error_counter
@@ -2557,7 +2557,7 @@ msgstr "Sắp xếp theo"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_all_oe_structure_forum_all_top
 msgid "Our forums"
-msgstr "Diễn đàn của chúng tôi"
+msgstr "Diễn đàn "
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_23
@@ -2565,7 +2565,7 @@ msgstr "Diễn đàn của chúng tôi"
 #: model:gamification.challenge.line,name:website_forum.line_peer_pressure
 #: model:gamification.goal.definition,name:website_forum.definition_peer_pressure
 msgid "Peer Pressure"
-msgstr "Áp lực ngang hàng"
+msgstr "Cạnh tranh với bạn"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
@@ -2575,7 +2575,7 @@ msgstr "Thành viên"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__plain_content
 msgid "Plain Content"
-msgstr "Nội dung đơn giản"
+msgstr "Nội dung thuần túy"
 
 #. module: website_forum
 #. openerp-web
@@ -2626,7 +2626,7 @@ msgstr "Bình chọn tích cực"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__post_id
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Post"
-msgstr "Vào sổ"
+msgstr "Bài đăng"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answer
@@ -2667,7 +2667,7 @@ msgstr "Đăng câu hỏi"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.close_post
 msgid "Post:"
-msgstr "Đăng: "
+msgstr "Bài đăng: "
 
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_p_2
@@ -2692,7 +2692,7 @@ msgstr "Không thể đăng câu trả lời cho câu hỏi [Đã xóa] hoặc [
 #: model:ir.ui.menu,name:website_forum.menu_forum_posts
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Posts"
-msgstr "Bài viết"
+msgstr "Bài đăng"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_options
@@ -2705,7 +2705,7 @@ msgstr "Bài đăng: "
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__privacy
 #, python-format
 msgid "Privacy"
-msgstr "Tính riêng tư"
+msgstr "Riêng tư"
 
 #. module: website_forum
 #. openerp-web
@@ -2713,7 +2713,7 @@ msgstr "Tính riêng tư"
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__privacy__public
 #, python-format
 msgid "Public"
-msgstr "Chung"
+msgstr "Công khai"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__privacy
@@ -2745,7 +2745,7 @@ msgstr ""
 #: model:gamification.challenge.line,name:website_forum.line_pundit
 #: model:gamification.goal.definition,name:website_forum.definition_pundit
 msgid "Pundit"
-msgstr "Pundit"
+msgstr "Chuyên gia"
 
 #. module: website_forum
 #. openerp-web
@@ -2877,14 +2877,14 @@ msgstr "Phân biệt chủng tộc và ngôn từ thù hận "
 #. module: website_forum
 #: model:ir.ui.menu,name:website_forum.menu_forum_rank_global
 msgid "Ranks"
-msgstr "Ranks"
+msgstr "Thứ hạng"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:0
 #: code:addons/website_forum/models/forum.py:0
 #, python-format
 msgid "Re: %s"
-msgstr "Phản hồi: %s"
+msgstr "Trả lời: %s"
 
 #. module: website_forum
 #. openerp-web
@@ -2937,7 +2937,7 @@ msgstr "Đăng ký"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__relevancy
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__default_order__relevancy_desc
 msgid "Relevance"
-msgstr "Sự liên quan"
+msgstr "Tính liên quan"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
@@ -2954,12 +2954,12 @@ msgstr "Mở lại"
 #: code:addons/website_forum/controllers/main.py:0
 #, python-format
 msgid "Reply should not be empty."
-msgstr ""
+msgstr "Trả lời không được để trống. "
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__self_reply
 msgid "Reply to own question"
-msgstr "Phản hồi cho câu hỏi của bạn"
+msgstr "Trả lời câu hỏi của mình"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__website_id
@@ -3027,12 +3027,12 @@ msgstr "Tìm..."
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__relevancy_time_decay
 msgid "Second Relevance Parameter"
-msgstr "Thông số liên quan thứ hai"
+msgstr "Tham số phù hợp thứ hai"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.tag
 msgid "See"
-msgstr ""
+msgstr "Xem"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
@@ -3054,7 +3054,7 @@ msgstr "Chọn tất cả"
 #: code:addons/website_forum/static/src/xml/website_forum_templates.xml:0
 #, python-format
 msgid "Select Authorized Group"
-msgstr ""
+msgstr "Chọn nhóm được cấp quyền "
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_a_8
@@ -3074,7 +3074,7 @@ msgstr "Tên Seo"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__sequence
 msgid "Sequence"
-msgstr "Quy tắc mã"
+msgstr "Trình tự"
 
 #. module: website_forum
 #. openerp-web
@@ -3136,7 +3136,7 @@ msgstr "Một số người dùng"
 #. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__privacy__private
 msgid "Some users"
-msgstr ""
+msgstr "Một số người dùng"
 
 #. module: website_forum
 #. openerp-web
@@ -3187,7 +3187,7 @@ msgstr "Xin lỗi, bạn không thể bình chọn bài đăng của chính mìn
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "Spam all post"
-msgstr ""
+msgstr "Spam tất cả bài đăng"
 
 #. module: website_forum
 #: model:forum.post.reason,name:website_forum.reason_8
@@ -3203,7 +3203,7 @@ msgstr "Trạng thái"
 #: model:gamification.badge,name:website_forum.badge_q_6
 #: model:gamification.challenge,name:website_forum.challenge_stellar_question_25
 msgid "Stellar Question"
-msgstr "Câu hỏi Stellar"
+msgstr "Câu hỏi nổi bật"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_7
@@ -3223,7 +3223,7 @@ msgstr "Người hỗ trợ"
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_tag_view_form
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Tag"
-msgstr "Tag"
+msgstr "Thẻ"
 
 #. module: website_forum
 #: model:ir.model.constraint,message:website_forum.constraint_forum_tag_name_uniq
@@ -3265,7 +3265,7 @@ msgstr "Giáo viên"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__teaser
 msgid "Teaser"
-msgstr "Người kiểm tra"
+msgstr "Giới thiệu ngắn"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_post__bump_date
@@ -3423,7 +3423,7 @@ msgstr "Tiêu đề không được để trống."
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__recipient_id
 msgid "To"
-msgstr "Đến ngày"
+msgstr "Đến"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
@@ -3458,7 +3458,7 @@ msgstr "Quá chủ quan và gây tranh cãi"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.tag
 msgid "Toolbar with button groups"
-msgstr ""
+msgstr "Thanh công cụ với các nhóm nút"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
@@ -3513,7 +3513,7 @@ msgstr "Hủy liên kết tất cả nhận xét"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_comment_unlink_own
 msgid "Unlink own comments"
-msgstr "Hủy liên kết nhận xét cá nhận"
+msgstr "Hủy liên kết bình luận cá nhân"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answers
@@ -3673,7 +3673,7 @@ msgstr "Website / Diễn đàn"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__website_message_ids
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__website_message_ids
 msgid "Website Messages"
-msgstr "Thông báo Website"
+msgstr "Tin nhắn website"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__website_message_ids
@@ -3751,7 +3751,7 @@ msgstr "Bạn có thể chia sẻ câu hỏi ngay khi câu hỏi được xác n
 #: code:addons/website_forum/models/forum.py:0
 #, python-format
 msgid "You cannot create recursive forum posts."
-msgstr "Bạn không thể tạo bài đăng trên diễn đàn đệ quy."
+msgstr "Bạn không thể tạo bài đăng diễn đàn lặp lại. "
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answer
@@ -3799,7 +3799,7 @@ msgstr "Câu trả lời của bạn"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_reply
 msgid "Your Reply"
-msgstr "Câu trả lời của bạn"
+msgstr "Trả lời của bạn"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
@@ -3824,7 +3824,7 @@ msgstr "[Phản cảm]"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
 msgid "accept any answer"
-msgstr "chấp nhận tất cả câu trả lời"
+msgstr "chấp nhận câu trả lời"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
@@ -3864,7 +3864,7 @@ msgstr "xóa bình luận của chính bạn"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
 msgid "downvote"
-msgstr "hạ cấp"
+msgstr "vote xuống"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
@@ -4086,7 +4086,7 @@ msgstr "chưa giải quyết"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
 msgid "upvote, add comments"
-msgstr "bầu chọn, thêm ý kiến"
+msgstr "vote lên, thêm bình luận"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
