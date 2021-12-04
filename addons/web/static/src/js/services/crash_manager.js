@@ -1,3 +1,11 @@
+odoo.define('web.ErrorDialogRegistry', function (require) {
+"use strict";
+
+var Registry = require('web.Registry');
+
+return new Registry();
+});
+
 odoo.define('web.CrashManager', function (require) {
 "use strict";
 
@@ -5,6 +13,7 @@ const AbstractService = require('web.AbstractService');
 var ajax = require('web.ajax');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
+var ErrorDialogRegistry = require('web.ErrorDialogRegistry');
 var Widget = require('web.Widget');
 
 var _t = core._t;
@@ -17,6 +26,14 @@ window.addEventListener('unhandledrejection', ev =>
 );
 
 let active = true;
+
+// Note: we already have this function in browser_detection.js but browser_detection.js
+// is in assets_backend while crash_managere.js is in common so it will have dependency
+// of file browser_detection.js which will not be available in frontend, so copy function here
+const isBrowserChrome = function () {
+    return $.browser.chrome && // depends on jquery 1.x, removed in jquery 2 and above
+        navigator.userAgent.toLocaleLowerCase().indexOf('edge') === -1; // as far as jquery is concerned, Edge is chrome
+};
 
 /**
  * An extension of Dialog Widget to render the warnings and errors on the website.
@@ -38,6 +55,7 @@ var CrashManagerDialog = Dialog.extend({
         this._super.apply(this, [parent, options]);
         this.message = error.message;
         this.traceback = error.traceback;
+        core.bus.off('close_dialogs', this);
     },
 });
 
@@ -125,7 +143,17 @@ var CrashManager = AbstractService.extend({
         // promise has been rejected due to a crash
         core.bus.on('crash_manager_unhandledrejection', this, function (ev) {
             if (ev.reason && ev.reason instanceof Error) {
-                var traceback = ev.reason.stack;
+                // Error.prototype.stack is non-standard.
+                // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error
+                // However, most engines provide an implementation.
+                // In particular, Chrome formats the contents of Error.stack
+                // https://v8.dev/docs/stack-trace-api#compatibility
+                let traceback;
+                if (isBrowserChrome()) {
+                    traceback = ev.reason.stack;
+                } else {
+                    traceback = `${_t("Error:")} ${ev.reason.message}\n${ev.reason.stack}`;
+                }
                 self.show_error({
                     type: _t("Odoo Client Error"),
                     message: '',
@@ -248,12 +276,11 @@ var CrashManager = AbstractService.extend({
         if (!active) {
             return;
         }
-        var dialog = new ErrorDialog(this, {
+        error.traceback = error.data.debug;
+        var dialogClass = error.data.context && ErrorDialogRegistry.get(error.data.context.exception_class) || ErrorDialog;
+        var dialog = new dialogClass(this, {
             title: _.str.capitalize(error.type) || _t("Odoo Error"),
-        }, {
-            message: error.message,
-            traceback: error.data.debug,
-        });
+        }, error);
 
 
         // When the dialog opens, initialize the copy feature and destroy it when the dialog is closed

@@ -3,19 +3,23 @@
 
 from odoo import api, fields, models
 
+
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     l10n_co_document_type = fields.Selection([('rut', 'NIT'),
-                                              ('id_document', 'Cédula'),
-                                              ('id_card', 'Tarjeta de Identidad'),
-                                              ('passport', 'Pasaporte'),
-                                              ('foreign_id_card', 'Cédula Extranjera'),
-                                              ('external_id', 'ID del Exterior'),
-                                              ('diplomatic_card', 'Carné Diplomatico'),
-                                              ('residence_document', 'Salvoconducto de Permanencia'),
+                                              ('national_citizen_id', 'Cédula de ciudadanía'),
                                               ('civil_registration', 'Registro Civil'),
-                                              ('national_citizen_id', 'Cédula de ciudadanía')], string='Document Type',
+                                              ('id_card', 'Tarjeta de Identidad'),
+                                              ('foreign_colombian_card', 'Tarjeta de extranjería'),
+                                              ('foreign_resident_card', 'Cédula de extranjería'),
+                                              ('passport', 'Pasaporte'),
+                                              ('residence_document', 'Salvoconducto de Permanencia'),
+                                              ('foreign_id_card', 'Cédula Extranjera'),
+                                              ('external_id', 'Nit de otro país'),
+                                              ('niup_id', 'NIUP'),
+                                              ('diplomatic_card', 'INACTIVO - Carné Diplomatico'),
+                                              ('id_document', 'INACTIVO - Cédula')], string='Document Type',
                                              help='Indicates to what document the information in here belongs to.')
     l10n_co_verification_code = fields.Char(compute='_compute_verification_code', string='VC',  # todo remove this field in master
                                             help='Redundancy check to verify the vat number has been typed in correctly.')

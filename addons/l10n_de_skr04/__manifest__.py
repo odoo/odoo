@@ -52,4 +52,5 @@ German accounting chart and localization.
         'data/account_reconcile_model_template.xml',
         'data/account_chart_template_data.xml',
     ],
+    'license': 'LGPL-3',
 }

@@ -4,6 +4,7 @@
 
 import json
 import logging
+import pprint
 import werkzeug
 
 from odoo import http
@@ -30,14 +31,28 @@ class SipsController(http.Controller):
         type='http', auth='public', methods=['POST'], csrf=False)
     def sips_ipn(self, **post):
         """ Sips IPN. """
-        self.sips_validate_data(**post)
+        _logger.info('Beginning Sips IPN form_feedback with post data %s', pprint.pformat(post))  # debug
+        if not post:
+            # SIPS sometimes send empty notification, the reason why is
+            # unclear but they tend to pollute logs and do not provide any
+            # meaningful information; log as a warning instead of a traceback
+            _logger.warning('Sips: received empty notification; skip.')
+        else:
+            self.sips_validate_data(**post)
         return ''
 
     @http.route([
-        '/payment/sips/dpn'], type='http', auth="public", methods=['POST'], csrf=False)
+        '/payment/sips/dpn'], type='http', auth="public", methods=['POST'], csrf=False, save_session=False)
     def sips_dpn(self, **post):
-        """ Sips DPN """
+        """ Sips DPN
+        The session cookie created by Odoo has not the attribute SameSite. Most of browsers will force this attribute
+        with the value 'Lax'. After the payment, Sips will perform a POST request on this route. For all these reasons,
+        the cookie won't be added to the request. As a result, if we want to save the session, the server will create
+        a new session cookie. Therefore, the previous session and all related information will be lost, so it will lead
+        to undesirable behaviors. This is the reason why `save_session=False` is needed.
+        """
         try:
+            _logger.info('Beginning Sips DPN form_feedback with post data %s', pprint.pformat(post))  # debug
             self.sips_validate_data(**post)
         except:
             pass

@@ -19,6 +19,8 @@ var qweb = core.qweb;
 // in the arch)
 var defaultViewTypes = ['kanban', 'tree'];
 
+const SEARCH_PANEL_LIMIT = 200;
+
 /**
  * Given a <searchpanel> arch node, iterate over its children to generate the
  * description of each section (being either a category or a filter).
@@ -83,6 +85,7 @@ var SearchPanel = Widget.extend({
      * @param {Object} params.fields
      * @param {string} params.model
      * @param {Array[]} params.searchDomain domain coming from controlPanel
+     * @param {Array[]} params.viewDomain domain coming from the view (ill advised)
      * @param {Object} params.sections
      * @param {Object} [params.state] state exported by another searchpanel
      *   instance
@@ -110,6 +113,7 @@ var SearchPanel = Widget.extend({
         this.model = params.model;
         this.className = params.classes.concat(['o_search_panel']).join(' ');
         this.searchDomain = params.searchDomain;
+        this.viewDomain = params.viewDomain;
     },
     /**
      * @override
@@ -230,15 +234,17 @@ var SearchPanel = Widget.extend({
      *
      * @param {Object} params
      * @param {Array[]} params.searchDomain domain coming from controlPanel
+     * @param {Array[]} params.viewDomain domain coming from view
      * @returns {Promise}
      */
     update: function (params) {
-        var currentSearchDomainStr = JSON.stringify(this.searchDomain);
-        var newSearchDomainStr = JSON.stringify(params.searchDomain);
+        const currentDomain = JSON.stringify([...this.searchDomain, ...this.viewDomain]);
+        const newDomain = JSON.stringify([...params.searchDomain, ...params.viewDomain]);
         var filtersProm;
-        if (this.needReload || (currentSearchDomainStr !== newSearchDomainStr)) {
+        if (this.needReload || (currentDomain !== newDomain)) {
             this.needReload = false;
             this.searchDomain = params.searchDomain;
+            this.viewDomain = params.viewDomain;
             filtersProm = this._fetchFilters();
         }
         return Promise.resolve(filtersProm).then(this._render.bind(this));
@@ -276,7 +282,15 @@ var SearchPanel = Widget.extend({
      */
     _createCategoryTree: function (categoryId, values) {
         var category = this.categories[categoryId];
-        var parentField = category.parentField;
+
+        let parentField = category.parentField;
+        if (values.length === SEARCH_PANEL_LIMIT) {
+            category.limitAttained = true;
+            if (parentField) {
+                // we do not hierarchize values
+                parentField = false;
+            }
+        }
 
         category.values = {};
         _.each(values, function (value) {
@@ -321,6 +335,10 @@ var SearchPanel = Widget.extend({
     _createFilterTree: function (filterId, values) {
         var filter = this.filters[filterId];
 
+        if (values.length === SEARCH_PANEL_LIMIT) {
+            filter.limitAttained = true;
+        }
+
         // restore checked property
         values.forEach(function (value) {
             var oldValue = filter.values && filter.values[value.id];
@@ -332,9 +350,9 @@ var SearchPanel = Widget.extend({
         if (filter.groupBy) {
             var groups = {};
             values.forEach(function (value) {
-                var groupId = value.group_id;
+                var groupId = JSON.stringify(value.group_id);
                 if (!groups[groupId]) {
-                    if (groupId) {
+                    if (groupId !== 'false') {
                         groupIds.push(groupId);
                     }
                     groups[groupId] = {
@@ -432,7 +450,7 @@ var SearchPanel = Widget.extend({
                     disable_counters: filter.disableCounters,
                     filter_domain: filterDomain,
                     group_by: filter.groupBy || false,
-                    search_domain: self.searchDomain,
+                    search_domain: [...self.searchDomain, ...self.viewDomain],
                 },
             }).then(function (values) {
                 self._createFilterTree(filterId, values);

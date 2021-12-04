@@ -224,6 +224,7 @@ class Company(models.Model):
             'phone': vals.get('phone'),
             'website': vals.get('website'),
             'vat': vals.get('vat'),
+            'country_id': vals.get('country_id'),
         })
         # compute stored fields, for example address dependent fields
         partner.flush()
@@ -313,22 +314,5 @@ class Company(models.Model):
         return main_company
 
     def update_scss(self):
-        """ update the company scss stylesheet """
-        scss_properties = []
-        if self.primary_color:
-            scss_properties.append('$o-company-primary-color:%s;' % self.primary_color)
-        if self.secondary_color:
-            scss_properties.append('$o-company-secondary-color:%s;' % self.secondary_color)
-        if self.font:
-            scss_properties.append('$o-company-font:%s;' % self.font)
-        scss_string = '\n'.join(scss_properties)
-
-        if not len(scss_string):
-            scss_string = ""
-
-        scss_data = base64.b64encode((scss_string).encode('utf-8'))
-
-        attachment = self.env['ir.attachment'].search([('name', '=', 'res.company.scss')])
-        attachment.write({'datas': scss_data})
-
+        # Deprecated, to be deleted in master
         return ''

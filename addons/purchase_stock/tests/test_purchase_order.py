@@ -132,7 +132,7 @@ class TestPurchaseOrder(AccountingTestCase):
 
         # Validate picking
         return_pick.move_line_ids.write({'qty_done': 2})
-        
+
         return_pick.button_validate()
 
         # Check Received quantity
@@ -151,3 +151,114 @@ class TestPurchaseOrder(AccountingTestCase):
         self.invoice.post()
 
         self.assertEqual(self.po.order_line.mapped('qty_invoiced'), [3.0, 3.0], 'Purchase: Billed quantity should be 3.0')
+
+    def test_03_po_return_and_modify(self):
+        """Change the picking code of the delivery to internal. Make a PO for 10 units, go to the
+        picking and return 5, edit the PO line to 15 units.
+        The purpose of the test is to check the consistencies across the received quantities and the
+        procurement quantities.
+        """
+        # Change the code of the picking type delivery
+        self.env['stock.picking.type'].search([('code', '=', 'outgoing')]).write({'code': 'internal'})
+
+        # Sell and deliver 10 units
+        item1 = self.product_id_1
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        po1 = self.env['purchase.order'].create({
+            'partner_id': self.partner_id.id,
+            'order_line': [
+                (0, 0, {
+                    'name': item1.name,
+                    'product_id': item1.id,
+                    'product_qty': 10,
+                    'product_uom': uom_unit.id,
+                    'price_unit': 123.0,
+                    'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                }),
+            ],
+        })
+        po1.button_confirm()
+
+        picking = po1.picking_ids
+        wiz_act = picking.button_validate()
+        wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id'])
+        wiz.process()
+
+        # Return 5 units
+        stock_return_picking_form = Form(self.env['stock.return.picking'].with_context(
+            active_ids=picking.ids,
+            active_id=picking.ids[0],
+            active_model='stock.picking'
+        ))
+        return_wiz = stock_return_picking_form.save()
+        for return_move in return_wiz.product_return_moves:
+            return_move.write({
+                'quantity': 5,
+                'to_refund': True
+            })
+        res = return_wiz.create_returns()
+        return_pick = self.env['stock.picking'].browse(res['res_id'])
+        wiz_act = return_pick.button_validate()
+        wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id'])
+        wiz.process()
+
+        self.assertEqual(po1.order_line.qty_received, 5)
+
+        # Deliver 15 instead of 10.
+        po1.write({
+            'order_line': [
+                (1, po1.order_line[0].id, {'product_qty': 15}),
+            ]
+        })
+
+        # A new move of 10 unit (15 - 5 units)
+        self.assertEqual(po1.order_line.qty_received, 5)
+        self.assertEqual(po1.picking_ids[-1].move_lines.product_qty, 10)
+
+    def test_04_multi_company(self):
+        company_a = self.env.user.company_id
+        company_b = self.env['res.company'].create({
+            "name": "Test Company",
+            "currency_id": self.env['res.currency'].with_context(active_test=False).search([
+                ('id', '!=', company_a.currency_id.id),
+            ], limit=1).id
+        })
+        self.env.user.write({
+            'company_id': company_b.id,
+            'company_ids': [(4, company_b.id), (4, company_a.id)],
+        })
+        po = self.PurchaseOrder.create(dict(company_id=company_a.id, partner_id=self.partner_id.id))
+
+        self.assertEqual(po.company_id, company_a)
+        self.assertEqual(po.picking_type_id.warehouse_id.company_id, company_a)
+        self.assertEqual(po.currency_id, po.company_id.currency_id)
+
+    def test_05_multi_uom(self):
+        yards_uom = self.env['uom.uom'].create({
+            'category_id': self.env.ref('uom.uom_categ_length').id,
+            'name': 'Yards',
+            'factor_inv': 0.9144,
+            'uom_type': 'bigger',
+        })
+        product = self.product_id_2.copy({
+            'uom_id': self.env.ref('uom.product_uom_meter').id,
+            'uom_po_id': yards_uom.id,
+        })
+        po = self.PurchaseOrder.create({
+            'partner_id': self.partner_id.id,
+            'order_line': [
+                (0, 0, {
+                    'name': product.name,
+                    'product_id': product.id,
+                    'product_qty': 4.0,
+                    'product_uom': product.uom_po_id.id,
+                    'price_unit': 1.0,
+                    'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                })
+            ],
+        })
+        po.button_confirm()
+        picking = po.picking_ids[0]
+        picking.move_line_ids.write({'qty_done': 3.66})
+        picking.button_validate()
+        self.assertEqual(po.order_line.mapped('qty_received'), [4.0], 'Purchase: no conversion error on receipt in different uom"')

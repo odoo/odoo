@@ -12,9 +12,7 @@ var _t = core._t;
 
 var MassMailingFieldHtml = FieldHtml.extend({
     xmlDependencies: (FieldHtml.prototype.xmlDependencies || []).concat(["/mass_mailing/static/src/xml/mass_mailing.xml"]),
-    jsLibs: [
-       '/mass_mailing/static/src/js/mass_mailing_snippets.js',
-    ],
+    jsLibs: [],
 
     custom_events: _.extend({}, FieldHtml.prototype.custom_events, {
         snippets_loaded: '_onSnippetsLoaded',
@@ -28,6 +26,13 @@ var MassMailingFieldHtml = FieldHtml.extend({
         if (!this.nodeOptions.snippets) {
             this.nodeOptions.snippets = 'mass_mailing.email_designer_snippets';
         }
+
+        // All the code related to this __extraAssetsForIframe variable is an
+        // ugly hack to restore mass mailing options in stable versions. The
+        // whole logic has to be refactored as soon as possible...
+        this.__extraAssetsForIframe = [{
+            jsLibs: ['/mass_mailing/static/src/js/mass_mailing_snippets.js'],
+        }];
     },
 
     //--------------------------------------------------------------------------
@@ -58,21 +63,33 @@ var MassMailingFieldHtml = FieldHtml.extend({
 
         var $editable = this.wysiwyg.getEditable();
 
-        return this.wysiwyg.save().then(function (result) {
-            self._isDirty = result.isDirty;
+        return this.wysiwyg.saveCroppedImages(this.$content).then(function () {
+            return self.wysiwyg.save().then(function (result) {
+                self._isDirty = result.isDirty;
 
-            convertInline.attachmentThumbnailToLinkImg($editable);
-            convertInline.fontToImg($editable);
-            convertInline.classToStyle($editable);
+                convertInline.attachmentThumbnailToLinkImg($editable);
+                convertInline.fontToImg($editable);
+                convertInline.classToStyle($editable);
 
-            self.trigger_up('field_changed', {
-                dataPointID: self.dataPointID,
-                changes: _.object([fieldName], [self._unWrap($editable.html())])
+                // fix outlook image rendering bug
+                _.each(['width', 'height'], function(attribute) {
+                    $editable.find('img[style*="width"], img[style*="height"]').attr(attribute, function(){
+                        return $(this)[attribute]();
+                    }).css(attribute, function(){
+                        return $(this).get(0).style[attribute] || 'auto';
+                    });
+                });
+
+                self.trigger_up('field_changed', {
+                    dataPointID: self.dataPointID,
+                    changes: _.object([fieldName], [self._unWrap($editable.html())])
+                });
+                self.wysiwyg.setValue(result.html);
+
+                if (self._isDirty && self.mode === 'edit') {
+                    return self._doAction();
+                }
             });
-
-            if (self._isDirty && self.mode === 'edit') {
-                return self._doAction();
-            }
         });
     },
     /**
@@ -135,7 +152,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
      * @override
      */
     _renderEdit: function () {
-        this._isFromInline = !this.value;
+        this._isFromInline = !!this.value;
         if (!this.value) {
             this.value = this.recordData[this.nodeOptions['inline-field']];
         }

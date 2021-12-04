@@ -13,7 +13,6 @@ var Domain = require('web.Domain');
 var DEFAULT_INTERVAL = controlPanelViewParameters.DEFAULT_INTERVAL;
 var DEFAULT_PERIOD = controlPanelViewParameters.DEFAULT_PERIOD;
 var INTERVAL_OPTIONS = controlPanelViewParameters.INTERVAL_OPTIONS;
-var PERIOD_OPTIONS = controlPanelViewParameters.PERIOD_OPTIONS;
 const OPTION_GENERATORS = controlPanelViewParameters.OPTION_GENERATORS;
 
 var Factory = mvc.Factory;
@@ -74,18 +73,28 @@ var ControlPanelView = Factory.extend({
         this.fields = viewInfo.fields;
 
         this.referenceMoment = moment();
-        this.optionGenerators = OPTION_GENERATORS.map(o => {
-            const description = o.description ?
+
+        const setDescriptions = (options) => {
+            return options.map(o => {
+                const oClone = JSON.parse(JSON.stringify(o));
+                const description = o.description ?
                                     o.description.toString () :
-                                    this.referenceMoment.clone().set(o.setParam).add(o.addParam).format(o.format);
-            return _.extend({}, o, {description:  description});
-        });
-        PERIOD_OPTIONS = PERIOD_OPTIONS.map(option =>
-            _.extend({}, option, {description: option.description.toString()})
-        );
-        INTERVAL_OPTIONS = INTERVAL_OPTIONS.map(option =>
-            _.extend({}, option, {description: option.description.toString()})
-        );
+                                    this.referenceMoment.clone().add(o.addParam).format(o.format);
+                return _.extend(oClone, {description:  description});
+            });
+        };
+        const process = (options) => {
+            return options.map(o => {
+                const date = this.referenceMoment.clone().set(o.setParam).add(o.addParam);
+                delete o.addParam;
+                o.setParam[o.granularity] = date[o.granularity]();
+                o.defaultYear = date.year();
+                return o;
+            });
+        }
+
+        this.optionGenerators = process(setDescriptions(OPTION_GENERATORS));
+        this.intervalOptions = setDescriptions(INTERVAL_OPTIONS);
 
         this.controllerParams.modelName = params.modelName;
 
@@ -168,9 +177,6 @@ var ControlPanelView = Factory.extend({
                                 attrs.name ||
                                 attrs.domain ||
                                 'Ω';
-        if (attrs.invisible) {
-            filter.invisible = true;
-        }
         if (filter.type === 'filter') {
             if (filter.isDefault) {
                 filter.defaultRank = -5;
@@ -196,7 +202,7 @@ var ControlPanelView = Factory.extend({
             filter.fieldType = this.fields[attrs.fieldName].type;
             if (_.contains(['date', 'datetime'], filter.fieldType)) {
                 filter.hasOptions = true;
-                filter.options = INTERVAL_OPTIONS;
+                filter.options = this.intervalOptions;
                 filter.defaultOptionId = attrs.defaultInterval ||
                                             DEFAULT_INTERVAL;
                 filter.currentOptionIds = new Set();
@@ -227,10 +233,9 @@ var ControlPanelView = Factory.extend({
      */
     _getDateFilterBasicDomains: function (filter) {
         const _constructBasicDomain = (y, o) => {
-            const addParam = _.extend({}, y.addParam, o ? o.addParam : {});
-            const setParam = _.extend({}, y.setParam, o ? o.setParam : {});
+            const setParam = Object.assign({}, y.setParam, o ? o.setParam : {});
             const granularity = o ? o.granularity : y.granularity;
-            const date = this.referenceMoment.clone().set(setParam).add(addParam);
+            const date = this.referenceMoment.clone().set(setParam);
             let leftBound = date.clone().startOf(granularity).locale('en');
             let rightBound = date.clone().endOf(granularity).locale('en');
 
@@ -319,6 +324,22 @@ var ControlPanelView = Factory.extend({
                 };
                 if (filter.type === 'filter' || filter.type === 'groupBy') {
                     filter.groupNumber = groupNumber;
+                }
+                if (preFilter.attrs && JSON.parse(preFilter.attrs.modifiers || '{}').invisible) {
+                    filter.invisible = true;
+
+                    var preFilterFieldName = null;
+                    if (preFilter.tag == 'filter' && preFilter.attrs.date) {
+                        preFilterFieldName = preFilter.attrs.date;
+                    } else if (preFilter.tag == 'groupBy') {
+                        preFilterFieldName = preFilter.attrs.fieldName;
+                    }
+                    if (preFilterFieldName && !self.fields[preFilterFieldName]) {
+                        // In some case when a field is limited to specific groups
+                        // on the model, we need to ensure to discard related filter
+                        // as it may still be present in the view (in 'invisible' state)
+                        return;
+                    }
                 }
                 self._extractAttributes(filter, preFilter.attrs);
                 currentGroup.push(filter);

@@ -5,6 +5,7 @@ var ChannelSeenMixin = require('mail.model.ChannelSeenMixin');
 var TwoUserChannel = require('mail.model.TwoUserChannel');
 
 var core = require('web.core');
+const { str_to_datetime } = require('web.time');
 
 var _t = core._t;
 
@@ -22,7 +23,7 @@ var DMChat = TwoUserChannel.extend(ChannelSeenMixin, {
      * @param {Object[]} params.data.direct_partner
      * @param {integer} params.data.direct_partner[0].id
      * @param {string} params.data.direct_partner[0].im_status
-     * @param {string} params.data.direct_partner[0].name
+     * @param {string} params.data.direct_partner[0].name server name of partner
      * @param {string} [params.data.direct_partner[0].out_of_office_message]
      * @param {string} [params.data.direct_partner[0].out_of_office_date_end]
      */
@@ -69,7 +70,7 @@ var DMChat = TwoUserChannel.extend(ChannelSeenMixin, {
             return undefined;
         }
         var currentDate = new Date();
-        var date = new Date(this._outOfOfficeDateEnd);
+        var date = str_to_datetime(this._outOfOfficeDateEnd);
         var options = { day: 'numeric', month: 'short' };
         if (currentDate.getFullYear() !== date.getFullYear()) {
             options.year = 'numeric';

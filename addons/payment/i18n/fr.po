@@ -6,7 +6,6 @@
 # Moka Tourisme <hello@mokatourisme.fr>, 2019
 # Antoine Lorence <antoine.lorence@gmail.com>, 2019
 # Fred Gilson <fgi@odoo.com>, 2019
-# Laura Piraux <lap@odoo.com>, 2019
 # Nathan Noël <nathan070@me.com>, 2019
 # Xavier Symons <xsy@openerp.com>, 2019
 # Lucas Deliege <lud@odoo.com>, 2019
@@ -14,7 +13,7 @@
 # Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2019
 # Eloïse Stilmant <est@odoo.com>, 2019
 # William Olhasque <william.olhasque@scopea.fr>, 2019
-# Rémi CAZENAVE <remi@le-filament.com>, 2019
+# Rémi CAZENAVE, 2019
 # Alain van de Werve <avw@openerp.com>, 2019
 # Olivier ANDRE <frsw194@gmail.com>, 2019
 # Mohamed BENKIRANE <benkirane.med.ali@gmail.com>, 2019
@@ -22,16 +21,21 @@
 # thomas quertinmont <tqu@odoo.com>, 2019
 # Martin Trigaux, 2019
 # Vincent Luba <vincent@biz-4-africa.com>, 2019
-# Jonathan <jcs@odoo.com>, 2019
+# Jonathan Castillo <jcs@odoo.com>, 2019
+# Pauline Thiry <pth@odoo.com>, 2020
 # Cécile Collart <cco@odoo.com>, 2020
+# Laura Piraux <lap@odoo.com>, 2020
+# Priscilla (prs) Odoo <prs@odoo.com>, 2020
+# Julien Goergen <jgo@odoo.com>, 2020
+# R HT, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-18 09:47+0000\n"
+"POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2020\n"
+"Last-Translator: R HT, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -340,6 +344,12 @@ msgstr "Montant"
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__amount_max
 msgid "Amount Max"
 msgstr "Montant maximum"
+
+#. module: payment
+#: code:addons/payment/controllers/portal.py:0
+#, python-format
+msgid "An error occured during the processing of this payment"
+msgstr "Une erreur est survenue lors du traitement de ce payement "
 
 #. module: payment
 #. openerp-web
@@ -716,13 +726,14 @@ msgstr "Détermine l'ordre d'affichage"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__state__disabled
+#: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Disabled"
 msgstr "Désactivé"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
 msgid "Dismiss"
-msgstr ""
+msgstr "Annuler"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__display_name
@@ -758,7 +769,7 @@ msgstr "Brouillon"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
 msgid "E-mail"
-msgstr "Courriel"
+msgstr "Email"
 
 #. module: payment
 #: model:account.payment.method,name:payment.account_payment_method_electronic_in
@@ -770,12 +781,12 @@ msgstr "Electronique"
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_email
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "Email"
-msgstr "Courriel"
+msgstr "Email"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__state__enabled
 msgid "Enabled"
-msgstr ""
+msgstr "Activé"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__error
@@ -792,7 +803,7 @@ msgstr "Erreur :"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "Fee"
-msgstr ""
+msgstr "Frais"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__fees
@@ -882,7 +893,7 @@ msgstr "Routage HTTP"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__is_processed
 msgid "Has the payment been post processed"
-msgstr ""
+msgstr "Le paiement a-t-il été post-traité"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__pre_msg
@@ -945,6 +956,10 @@ msgid ""
 "             acquirer. Watch out, test and production modes require\n"
 "             different credentials."
 msgstr ""
+"En mode test, un faux paiement est traité via un test\n"
+"               interface de paiement. Ce mode est conseillé lors de la configuration du\n"
+"             acquéreur. Attention, les modes de test et de production nécessitent\n"
+"             pouvoirs différents."
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_ingenico
@@ -1181,12 +1196,24 @@ msgid "Never"
 msgstr "Jamais"
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
+msgid ""
+"This partner has no email, which may cause issues with some payment "
+"acquirers. Setting an email for this partner is advised."
+msgstr ""
+"Ce partenaire n'a pas d'adresse email, ce qui pourrait causer des erreurs "
+"avec certains intermédiaire de paiement. Il est conseillé de définir une "
+"adresse email pour ce partenaire."
+
+#. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:0
 #, python-format
 msgid ""
 "No manual payment method could be found for this company. Please create one "
 "from the Payment Acquirer menu."
 msgstr ""
+"Aucun mode de paiement manuel n'a pu être trouvé pour cette entreprise. "
+"Veuillez en créer un dans le menu Acquéreur de paiement."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -1252,32 +1279,6 @@ msgstr "Seul les administrateurs peuvent accéder à ces données."
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
 #, python-format
-msgid "Only draft transaction can be authorized."
-msgstr "Seules des transactions brouillon peuvent petre autorisées."
-
-#. module: payment
-#: code:addons/payment/models/payment_acquirer.py:0
-#: code:addons/payment/models/payment_acquirer.py:0
-#, python-format
-msgid "Only draft transaction can be processed."
-msgstr "Seules les transactions en état de brouillon peuvent être traitées."
-
-#. module: payment
-#: code:addons/payment/models/payment_acquirer.py:0
-#, python-format
-msgid "Only draft/authorized transaction can be cancelled."
-msgstr ""
-"Seules des transactions en brouillon/autorisées peuvent être annulées."
-
-#. module: payment
-#: code:addons/payment/models/payment_acquirer.py:0
-#, python-format
-msgid "Only draft/authorized transaction can be posted."
-msgstr "Seules des transactions en brouillon/autorisées peuvent être postées."
-
-#. module: payment
-#: code:addons/payment/models/payment_acquirer.py:0
-#, python-format
 msgid "Only transactions having the capture status can be captured."
 msgstr ""
 "Seules les transactions ayant le statut de capture peuvent être capturées."
@@ -1308,7 +1309,7 @@ msgstr "Autre intermédiaire de Paiement"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__paypal_pdt_token
 msgid "PDT Identity Token"
-msgstr ""
+msgstr "Jeton d'Identité PDT"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__partner_id
@@ -1330,7 +1331,7 @@ msgstr "PayPal"
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_payulatam
 msgid "PayU Latam"
-msgstr ""
+msgstr "PayU Latam"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_payu
@@ -1449,7 +1450,7 @@ msgstr "Transactions de paiement"
 #. module: payment
 #: model:ir.model,name:payment.model_payment_acquirer_onboarding_wizard
 msgid "Payment acquire onboarding wizard"
-msgstr ""
+msgstr "Assistant d'acquisition de paiement"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__payment_flow__s2s
@@ -1514,7 +1515,7 @@ msgstr "Veuillez configurer un intermédiaire de paiement."
 #. module: payment
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
 msgid "Please make a payment to:"
-msgstr ""
+msgstr "Veuillez effectuer un paiement à:"
 
 #. module: payment
 #. openerp-web
@@ -1549,7 +1550,7 @@ msgstr "Veuillez patienter..."
 #: model:ir.cron,cron_name:payment.cron_post_process_payment_tx
 #: model:ir.cron,name:payment.cron_post_process_payment_tx
 msgid "Post process payment transactions"
-msgstr ""
+msgstr "Opérations de paiement post-traitement"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -1612,7 +1613,7 @@ msgstr "Champs obligatoires non renseignés: %s"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__return_url
 msgid "Return URL after payment"
-msgstr ""
+msgstr "URL de retour après paiement"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__registration_view_template_id
@@ -1653,12 +1654,12 @@ msgstr "Enregistrement des données de la carte pris en charge"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Select countries. Leave empty to use everywhere."
-msgstr ""
+msgstr "Choisir les pays. Laisser vide pour utiliser partout."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_onboarding_payment_method
 msgid "Selected onboarding payment method"
-msgstr ""
+msgstr "Mode de paiement d'intégration sélectionné"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__sequence
@@ -1721,7 +1722,7 @@ msgstr "État"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_acquirer_onboarding_state
 msgid "State of the onboarding payment acquirer step"
-msgstr ""
+msgstr "État de l'étape d'acquéreur du paiement d'intégration"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__state
@@ -1756,6 +1757,7 @@ msgstr "Modèle pour une méthode d'enregistrement"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__state__test
+#: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "Test Mode"
 msgstr "Mode test"
@@ -1821,6 +1823,8 @@ msgid ""
 "The transaction %s with %s for %s has return failed with the following error"
 " message: %s"
 msgstr ""
+"La transaction %s avec %s pour %s a échoué avec le message d'erreur suivant "
+": %s"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -1892,6 +1896,18 @@ msgid ""
 "tx_values: transaction values\n"
 "context: the current context dictionary"
 msgstr ""
+"Ce modèle rend le bouton acquéreur avec toutes les valeurs nécessaires.\n"
+"Il est rendu avec qWeb avec le contexte d'évaluation suivant:\n"
+"tx_url : URL de transaction pour poster le formulaire\n"
+"acquéreur : payment.acquirer parcourir l'enregistrement\n"
+"utilisateur : enregistrement de navigation de l'utilisateur actuel\n"
+"référence : le numéro de référence de la transaction\n"
+"devise : l'enregistrement de navigation des devises de transaction\n"
+"montant : le montant de la transaction, un flottant\n"
+"partenaire : l'enregistrement de navigation du partenaire acheteur, pas nécessairement défini\n"
+"valeurs_partenaire : valeurs spécifiques concernant l'acheteur, provenant par exemple d'un formulaire d'expédition\n"
+"tx_values : valeurs de transaction\n"
+"contexte : le dictionnaire de contexte actuel"
 
 #. module: payment
 #. openerp-web
@@ -2074,7 +2090,7 @@ msgstr ""
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:0
 #, python-format
 msgid "You have to set a journal for your payment acquirer %s."
-msgstr ""
+msgstr "Vous devez définir un journal pour votre acquéreur de paiement %s."
 
 #. module: payment
 #. openerp-web
@@ -2082,7 +2098,7 @@ msgstr ""
 #, python-format
 msgid "You should receive an email confirming your payment in a few minutes."
 msgstr ""
-"Vous devriez recevoir un courriel confirmant votre paiement dans quelques "
+"Vous devriez recevoir un email confirmant votre paiement dans quelques "
 "minutes."
 
 #. module: payment

@@ -50,4 +50,5 @@ but you will need set manually account defaults for taxes.
              'data/account_tax_data.xml',
              'data/account_chart_template_data.xml'
     ],
+    'license': 'LGPL-3',
 }

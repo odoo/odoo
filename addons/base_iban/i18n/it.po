@@ -3,8 +3,8 @@
 # 	* base_iban
 # 
 # Translators:
-# Sergio Zanchetta <primes2h@gmail.com>, 2019
 # Petra <bop@odoo.com>, 2019
+# Sergio Zanchetta <primes2h@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-26 08:16+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Petra <bop@odoo.com>, 2019\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,7 +25,7 @@ msgstr ""
 #: code:addons/base_iban/static/src/js/iban_widget.js:0
 #, python-format
 msgid "Account isn't IBAN compliant."
-msgstr ""
+msgstr "Il conto non è conforme IBAN."
 
 #. module: base_iban
 #: model:ir.model,name:base_iban.model_res_partner_bank
@@ -36,8 +36,7 @@ msgstr "Conti bancari"
 #: code:addons/base_iban/models/res_partner_bank.py:0
 #, python-format
 msgid "Cannot compute the BBAN because the account number is not an IBAN."
-msgstr ""
-"Impossibile calcolare il BBAN perché il numero di conto non è un IBAN."
+msgstr "Impossibile calcolare il BBAN, il numero conto non è un IBAN."
 
 #. module: base_iban
 #: code:addons/base_iban/models/res_partner_bank.py:0
@@ -52,14 +51,14 @@ msgid ""
 "The IBAN does not seem to be correct. You should have entered something like this %s\n"
 "Where B = National bank code, S = Branch code, C = Account No, k = Check digit"
 msgstr ""
-"L'IBAN non sembra essere corretto. È necessario inserire un codice di questo tipo %s\n"
+"L'IBAN non sembra essere corretto. È necessario inserire un codice di tipo %s\n"
 "Dove B = Codice banca, S = Codice filiale, C = Numero conto, k = Codice di controllo"
 
 #. module: base_iban
 #: code:addons/base_iban/models/res_partner_bank.py:0
 #, python-format
 msgid "The IBAN is invalid, it should begin with the country code"
-msgstr "Il codice IBAN non è valido: dovrebbe iniziare con il codice nazione"
+msgstr "Il codice IBAN non è valido, deve iniziare con il codice nazione"
 
 #. module: base_iban
 #: code:addons/base_iban/models/res_partner_bank.py:0
@@ -71,4 +70,4 @@ msgstr "Nessun codice IBAN presente."
 #: code:addons/base_iban/models/res_partner_bank.py:0
 #, python-format
 msgid "This IBAN does not pass the validation check, please verify it."
-msgstr "Questo IBAN non ha superato il controllo di validità, verificarlo."
+msgstr "L'IBAN non ha superato il controllo di validità, verificarlo."

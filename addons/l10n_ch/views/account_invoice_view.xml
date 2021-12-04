@@ -40,7 +40,34 @@
                             ('l10n_ch_currency_name', 'not in', ['EUR', 'CHF'])]}"
                         groups="base.group_user"
                         />
+                    <button
+                        name="print_ch_qr_bill"
+                        string="Print QR-bill"
+                        type="object"
+                        attrs="{'invisible':['|', ('state', '!=', 'posted'),
+                                             '|', ('l10n_ch_isr_sent', '=', True),
+                                             '|', ('type', '!=', 'out_invoice'),
+                                             ('l10n_ch_currency_name', 'not in', ['EUR', 'CHF'])]}"
+                        groups="base.group_user"
+                        class="oe_highlight"
+                        />
+                    <button
+                        name="print_ch_qr_bill"
+                        string="Print QR-bill"
+                        type="object"
+                        attrs="{'invisible':['|', ('state', '!=', 'posted'),
+                                             '|', ('l10n_ch_isr_sent', '=', False),
+                                             '|', ('type', '!=', 'out_invoice'),
+                                             ('l10n_ch_currency_name', 'not in', ['EUR', 'CHF'])]}"
+                        groups="base.group_user"
+                        />
                 </xpath>
+                <header position="after">
+                    <field name="l10n_ch_isr_needs_fixing" invisible="1"/>
+                    <div groups="account.group_account_invoice" class="alert alert-warning" role="alert" style="margin-bottom:0px;" attrs="{'invisible': [('l10n_ch_isr_needs_fixing', '=', False)]}">
+                        Please fill in a correct ISR reference in the payment reference.  The banks will refuse your payment file otherwise.
+                    </div>
+                </header>
             </field>
         </record>
 

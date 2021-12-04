@@ -88,10 +88,10 @@ class WebsiteSlides(WebsiteProfile):
             uncategorized_domain = expression.AND([base_domain, [('channel_id', '=', slide.channel_id.id), ('category_id', '=', False)]])
             uncategorized_slides = request.env['slide.slide'].search(uncategorized_domain)
 
-        channel_slides_ids = slide.channel_id.slide_ids.ids
+        channel_slides_ids = slide.channel_id.slide_content_ids.ids
         slide_index = channel_slides_ids.index(slide.id)
-        previous_slide = slide.channel_id.slide_ids[slide_index-1] if slide_index > 0 else None
-        next_slide = slide.channel_id.slide_ids[slide_index+1] if slide_index < len(channel_slides_ids) - 1 else None
+        previous_slide = slide.channel_id.slide_content_ids[slide_index-1] if slide_index > 0 else None
+        next_slide = slide.channel_id.slide_content_ids[slide_index+1] if slide_index < len(channel_slides_ids) - 1 else None
 
         values = {
             # slide
@@ -350,7 +350,7 @@ class WebsiteSlides(WebsiteProfile):
 
         if search:
             domain += [
-                '|', '|', '|',
+                '|', '|',
                 ('name', 'ilike', search),
                 ('description', 'ilike', search),
                 ('html_content', 'ilike', search)]
@@ -428,7 +428,7 @@ class WebsiteSlides(WebsiteProfile):
                 last_message_values = last_message.read(['body', 'rating_value', 'attachment_ids'])[0]
                 last_message_attachment_ids = last_message_values.pop('attachment_ids', [])
                 if last_message_attachment_ids:
-                    last_message_attachment_ids = json.dumps(request.env['ir.attachment'].browse(last_message_attachment_ids).read(
+                    last_message_attachment_ids = json.dumps(request.env['ir.attachment'].browse(last_message_attachment_ids).sudo().read(
                         ['id', 'name', 'mimetype', 'file_size', 'access_token']
                     ))
             else:
@@ -769,7 +769,7 @@ class WebsiteSlides(WebsiteProfile):
             'can_create': can_create,
         }
 
-    @http.route('/slides/category/add', type="http", website=True, auth="user")
+    @http.route('/slides/category/add', type="http", website=True, auth="user", methods=['POST'])
     def slide_category_add(self, channel_id, name):
         """ Adds a category to the specified channel. Slide is added at the end
         of slide list based on sequence. """
@@ -830,19 +830,18 @@ class WebsiteSlides(WebsiteProfile):
             # minutes to hours conversion
             values['completion_time'] = int(post['duration']) / 60
 
+        category = False
         # handle creation of new categories on the fly
         if post.get('category_id'):
-            if post['category_id'][0] == 0:
+            category_id = post['category_id'][0]
+            if category_id == 0:
                 category = request.env['slide.slide'].create(self._get_new_slide_category_values(channel, post['category_id'][1]['name']))
-                values['category_id'] = category.id
                 values['sequence'] = category.sequence + 1
             else:
+                category = request.env['slide.slide'].browse(category_id)
                 values.update({
-                    'category_id': post['category_id'][0],
                     'sequence': request.env['slide.slide'].browse(post['category_id'][0]).sequence + 1
                 })
-        else:
-            values['sequence'] = -1
 
         # create slide itself
         try:
@@ -857,7 +856,7 @@ class WebsiteSlides(WebsiteProfile):
             return {'error': _('Internal server error, please try again later or contact administrator.\nHere is the error message: %s') % e}
 
         # ensure correct ordering by re sequencing slides in front-end (backend should be ok thanks to list view)
-        channel._resequence_slides(slide)
+        channel._resequence_slides(slide, force_category=category)
 
         redirect_url = "/slides/slide/%s" % (slide.id)
         if channel.channel_type == "training" and not slide.slide_type == "webpage":

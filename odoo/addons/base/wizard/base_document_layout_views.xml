@@ -26,7 +26,7 @@
                             <field name="font" widget="font" class="mb-4" />
                             <field name="report_header" widget="char" placeholder="e.g. Global Business Solutions" />
                             <field name="report_footer" string="Footer" placeholder="e.g. Opening hours, bank accounts (one per line)" />
-                            <field name="paperformat_id" />
+                            <field name="paperformat_id" required="1" />
                         </group>
                         <div class="o_document_layout_preview">
                             <field name="preview_logo" widget="image" readonly="1" nolabel="1" class="o_document_layout_preview_logo" />
@@ -115,12 +115,12 @@
                         </tr>
                     </tbody>
                 </table>
-                <div class="clearfix">
+                <div>
                     <div class="row">
-                        <div t-attf-class="col-5 ml-auto">
+                        <div t-attf-class="col-auto ml-auto">
                             <table class="table table-sm"  t-attf-style="border-color: {{table_border_color}}">
                                 <tr class="o_subtotal">
-                                    <td>
+                                    <td class="pr-5">
                                         <strong t-if="company.report_layout_id.name == 'Clean'" t-attf-style="color: {{company.secondary_color}}">Subtotal</strong>
                                         <strong t-else="" t-attf-style="color: {{company.primary_color}}">Subtotal</strong>
                                     </td>

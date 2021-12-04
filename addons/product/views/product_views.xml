@@ -11,7 +11,7 @@
                 <header>
                     <button string="Configure Variants" type="action"
                         name="%(product_attribute_value_action)d"
-                        attrs="{'invisible': [('attribute_line_ids', '&lt;=', 0)]}"
+                        attrs="{'invisible': ['|', ('attribute_line_ids', '&lt;=', 0), ('is_product_variant', '=', True)]}"
                         groups="product.group_product_variant"/>
                 </header>
                 <sheet>
@@ -62,7 +62,7 @@
                                     </div>
                                     <label for="standard_price" groups="base.group_user" attrs="{'invisible': [('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}"/>
                                     <div name="standard_price_uom" groups="base.group_user" attrs="{'invisible': [('product_variant_count', '&gt;', 1), ('is_product_variant', '=', False)]}" class="o_row">
-                                        <field name="standard_price" widget='monetary' options="{'currency_field': 'cost_currency_id'}"/>
+                                        <field name="standard_price" widget='monetary' options="{'currency_field': 'cost_currency_id', 'field_digits': True}"/>
                                         <span groups="uom.group_uom" class="oe_read_only">per
                                             <field name="uom_name"/>
                                         </span>
@@ -96,13 +96,13 @@
                         <page string="Inventory" name="inventory" groups="product.group_stock_packaging" attrs="{'invisible':[('type', '=', 'service')]}">
                             <group name="inventory">
                                 <group name="group_lots_and_weight" string="Logistics" attrs="{'invisible': [('type', 'not in', ['product', 'consu'])]}">
-                                    <label for="weight" attrs="{'invisible':[('product_variant_count', '>', 1)]}"/>
-                                    <div class="o_row" name="weight" attrs="{'invisible':[('product_variant_count', '>', 1)]}">
+                                    <label for="weight" attrs="{'invisible':[('product_variant_count', '>', 1), ('is_product_variant', '=', False)]}"/>
+                                    <div class="o_row" name="weight" attrs="{'invisible':[('product_variant_count', '>', 1), ('is_product_variant', '=', False)]}">
                                         <field name="weight"/>
                                         <span><field name="weight_uom_name"/></span>
                                     </div>
-                                    <label for="volume" attrs="{'invisible':[('product_variant_count', '>', 1)]}"/>
-                                    <div class="o_row" name="volume" attrs="{'invisible':[('product_variant_count', '>', 1)]}">
+                                    <label for="volume" attrs="{'invisible':[('product_variant_count', '>', 1), ('is_product_variant', '=', False)]}"/>
+                                    <div class="o_row" name="volume" attrs="{'invisible':[('product_variant_count', '>', 1), ('is_product_variant', '=', False)]}">
                                         <field name="volume" string="Volume"/>
                                         <span><field name="volume_uom_name"/></span>
                                     </div>
@@ -110,7 +110,7 @@
                             </group>
                             <group name="packaging" string="Packaging"
                                 colspan="4"
-                                attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '>', 1)]}"
+                                attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '>', 1), ('is_product_variant', '=', False)]}"
                                 groups="product.group_stock_packaging">
                                 <field name="packaging_ids" nolabel="1" context="{'tree_view_ref':'product.product_packaging_tree_view2', 'form_view_ref':'product.product_packaging_form_view2'}"/>
                             </group>
@@ -252,7 +252,7 @@
                                 <label for="volume"/>
                                 <div class="o_row">
                                     <field name="volume"/>
-                                    <span>m³</span>
+                                    <span><field name="volume_uom_name"/></span>
                                 </div>
                                 <label for="weight"/>
                                 <div class="o_row">
@@ -449,7 +449,7 @@
                                 name="%(product_template_action_all)d"
                                 icon="fa-th-list"
                                 type="action"
-                                context="{'search_default_categ_id': active_id, 'default_categ_id': active_id}">
+                                context="{'search_default_categ_id': active_id, 'default_categ_id': active_id, 'group_expand': True}">
                                 <div class="o_field_widget o_stat_info">
                                     <span class="o_stat_value"><field name="product_count"/></span>
                                     <span class="o_stat_text"> Products</span>
@@ -608,7 +608,7 @@
                 <search string="Vendor">
                     <field name="name"/>
                     <field name="product_tmpl_id"/>
-                    <filter string="Active" name="active" domain="[('date_end', '&gt;=',  (context_today() - datetime.timedelta(days=1)).strftime('%%Y-%%m-%%d'))]"/>
+                    <filter string="Active" name="active" domain="['|', ('date_end', '=', False), ('date_end', '&gt;=',  (context_today() - datetime.timedelta(days=1)).strftime('%%Y-%%m-%%d'))]"/>
                     <filter string="Archived" name="archived" domain="[('date_end', '&lt;',  (context_today() - datetime.timedelta(days=1)).strftime('%%Y-%%m-%%d'))]"/>
                     <group expand="0" string="Group By">
                         <filter string="Product" name="groupby_product" domain="[]" context="{'group_by': 'product_tmpl_id'}"/>
@@ -664,6 +664,8 @@
                         groups="product.group_product_variant"/>
                     <field name="product_tmpl_id" string="Product" readonly="1"
                         invisible="context.get('visible_product_tmpl_id', True)"/>
+                    <field name="product_name" optional="hide"/>
+                    <field name="product_code" optional="hide"/>
                     <field name="currency_id" groups="base.group_multi_currency"/>
                     <field name="date_start" optional="hide"/>
                     <field name="date_end" optional="hide"/>

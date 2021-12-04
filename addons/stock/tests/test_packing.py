@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.tests import Form, tagged
 from odoo.tests.common import SavepointCase
 from odoo.tools import float_round
 from odoo.exceptions import UserError
 
 
+@tagged('post_install', '-at_install')
 class TestPacking(SavepointCase):
     @classmethod
     def setUpClass(cls):
@@ -355,3 +357,534 @@ class TestPacking(SavepointCase):
         picking.action_confirm()
         with self.assertRaises(UserError):
             picking.action_done()
+
+    def test_pack_in_receipt_two_step_single_putway(self):
+        """ Checks all works right in the following specific corner case:
+
+          * For a two-step receipt, receives two products using the same putaway
+          * Puts these products in a package then valid the receipt.
+          * Cancels the automatically generated internal transfer then create a new one.
+          * In this internal transfer, adds the package then valid it.
+        """
+        grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
+        grp_multi_step_rule = self.env.ref('stock.group_adv_location')
+        grp_pack = self.env.ref('stock.group_tracking_lot')
+        self.env.user.write({'groups_id': [(3, grp_multi_loc.id)]})
+        self.env.user.write({'groups_id': [(3, grp_multi_step_rule.id)]})
+        self.env.user.write({'groups_id': [(3, grp_pack.id)]})
+        self.warehouse.reception_steps = 'two_steps'
+        # Settings of receipt.
+        self.warehouse.in_type_id.show_operations = True
+        self.warehouse.in_type_id.show_entire_packs = True
+        self.warehouse.in_type_id.show_reserved = True
+        # Settings of internal transfer.
+        self.warehouse.int_type_id.show_operations = True
+        self.warehouse.int_type_id.show_entire_packs = True
+        self.warehouse.int_type_id.show_reserved = True
+
+        # Creates two new locations for putaway.
+        location_form = Form(self.env['stock.location'])
+        location_form.name = 'Shelf A'
+        location_form.location_id = self.stock_location
+        loc_shelf_A = location_form.save()
+
+        # Creates a new putaway rule for productA and productB.
+        putaway_A = self.env['stock.putaway.rule'].create({
+            'product_id': self.productA.id,
+            'location_in_id': self.stock_location.id,
+            'location_out_id': loc_shelf_A.id,
+        })
+        putaway_B = self.env['stock.putaway.rule'].create({
+            'product_id': self.productB.id,
+            'location_in_id': self.stock_location.id,
+            'location_out_id': loc_shelf_A.id,
+        })
+        self.stock_location.putaway_rule_ids = [(4, putaway_A.id, 0), (4, putaway_B.id, 0)]
+
+        # Create a new receipt with the two products.
+        receipt_form = Form(self.env['stock.picking'])
+        receipt_form.picking_type_id = self.warehouse.in_type_id
+        # Add 2 lines
+        with receipt_form.move_ids_without_package.new() as move_line:
+            move_line.product_id = self.productA
+            move_line.product_uom_qty = 1
+        with receipt_form.move_ids_without_package.new() as move_line:
+            move_line.product_id = self.productB
+            move_line.product_uom_qty = 1
+        receipt = receipt_form.save()
+        receipt.action_confirm()
+
+        # Adds quantities then packs them and valids the receipt.
+        receipt_form = Form(receipt)
+        with receipt_form.move_line_ids_without_package.edit(0) as move_line:
+            move_line.qty_done = 1
+        with receipt_form.move_line_ids_without_package.edit(1) as move_line:
+            move_line.qty_done = 1
+        receipt = receipt_form.save()
+        receipt.put_in_pack()
+        receipt.button_validate()
+
+        receipt_package = receipt.package_level_ids_details[0]
+        self.assertEqual(receipt_package.location_dest_id.id, receipt.location_dest_id.id)
+        self.assertEqual(
+            receipt_package.move_line_ids[0].location_dest_id.id,
+            receipt.location_dest_id.id)
+        self.assertEqual(
+            receipt_package.move_line_ids[1].location_dest_id.id,
+            receipt.location_dest_id.id)
+
+        # Checks an internal transfer was created following the validation of the receipt.
+        internal_transfer = self.env['stock.picking'].search([
+            ('picking_type_id', '=', self.warehouse.int_type_id.id)
+        ], order='id desc', limit=1)
+        self.assertEqual(internal_transfer.origin, receipt.name)
+        self.assertEqual(
+            len(internal_transfer.package_level_ids_details), 1)
+        internal_package = internal_transfer.package_level_ids_details[0]
+        self.assertNotEqual(
+            internal_package.location_dest_id.id,
+            internal_transfer.location_dest_id.id)
+        self.assertEqual(
+            internal_package.location_dest_id.id,
+            putaway_A.location_out_id.id,
+            "The package destination location must be the one from the putaway.")
+        self.assertEqual(
+            internal_package.move_line_ids[0].location_dest_id.id,
+            putaway_A.location_out_id.id,
+            "The move line destination location must be the one from the putaway.")
+        self.assertEqual(
+            internal_package.move_line_ids[1].location_dest_id.id,
+            putaway_A.location_out_id.id,
+            "The move line destination location must be the one from the putaway.")
+
+        # Cancels the internal transfer and creates a new one.
+        internal_transfer.action_cancel()
+        internal_form = Form(self.env['stock.picking'])
+        internal_form.picking_type_id = self.warehouse.int_type_id
+        internal_form.location_id = self.warehouse.wh_input_stock_loc_id
+        with internal_form.package_level_ids_details.new() as pack_line:
+            pack_line.package_id = receipt_package.package_id
+        internal_transfer = internal_form.save()
+
+        # Checks the package fields have been correctly set.
+        internal_package = internal_transfer.package_level_ids_details[0]
+        self.assertEqual(
+            internal_package.location_dest_id.id,
+            internal_transfer.location_dest_id.id)
+        internal_transfer.action_assign()
+        self.assertNotEqual(
+            internal_package.location_dest_id.id,
+            internal_transfer.location_dest_id.id)
+        self.assertEqual(
+            internal_package.location_dest_id.id,
+            putaway_A.location_out_id.id,
+            "The package destination location must be the one from the putaway.")
+        self.assertEqual(
+            internal_package.move_line_ids[0].location_dest_id.id,
+            putaway_A.location_out_id.id,
+            "The move line destination location must be the one from the putaway.")
+        self.assertEqual(
+            internal_package.move_line_ids[1].location_dest_id.id,
+            putaway_A.location_out_id.id,
+            "The move line destination location must be the one from the putaway.")
+        internal_transfer.button_validate()
+
+    def test_pack_in_receipt_two_step_multi_putaway(self):
+        """ Checks all works right in the following specific corner case:
+
+          * For a two-step receipt, receives two products using two putaways
+          targeting different locations.
+          * Puts these products in a package then valid the receipt.
+          * Cancels the automatically generated internal transfer then create a new one.
+          * In this internal transfer, adds the package then valid it.
+        """
+        grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
+        grp_multi_step_rule = self.env.ref('stock.group_adv_location')
+        grp_pack = self.env.ref('stock.group_tracking_lot')
+        self.env.user.write({'groups_id': [(3, grp_multi_loc.id)]})
+        self.env.user.write({'groups_id': [(3, grp_multi_step_rule.id)]})
+        self.env.user.write({'groups_id': [(3, grp_pack.id)]})
+        self.warehouse.reception_steps = 'two_steps'
+        # Settings of receipt.
+        self.warehouse.in_type_id.show_operations = True
+        self.warehouse.in_type_id.show_entire_packs = True
+        self.warehouse.in_type_id.show_reserved = True
+        # Settings of internal transfer.
+        self.warehouse.int_type_id.show_operations = True
+        self.warehouse.int_type_id.show_entire_packs = True
+        self.warehouse.int_type_id.show_reserved = True
+
+        # Creates two new locations for putaway.
+        location_form = Form(self.env['stock.location'])
+        location_form.name = 'Shelf A'
+        location_form.location_id = self.stock_location
+        loc_shelf_A = location_form.save()
+        location_form = Form(self.env['stock.location'])
+        location_form.name = 'Shelf B'
+        location_form.location_id = self.stock_location
+        loc_shelf_B = location_form.save()
+
+        # Creates a new putaway rule for productA and productB.
+        putaway_A = self.env['stock.putaway.rule'].create({
+            'product_id': self.productA.id,
+            'location_in_id': self.stock_location.id,
+            'location_out_id': loc_shelf_A.id,
+        })
+        putaway_B = self.env['stock.putaway.rule'].create({
+            'product_id': self.productB.id,
+            'location_in_id': self.stock_location.id,
+            'location_out_id': loc_shelf_B.id,
+        })
+        self.stock_location.putaway_rule_ids = [(4, putaway_A.id, 0), (4, putaway_B.id, 0)]
+        # location_form = Form(self.stock_location)
+        # location_form.putaway_rule_ids = [(4, putaway_A.id, 0), (4, putaway_B.id, 0), ],
+        # self.stock_location = location_form.save()
+
+        # Create a new receipt with the two products.
+        receipt_form = Form(self.env['stock.picking'])
+        receipt_form.picking_type_id = self.warehouse.in_type_id
+        # Add 2 lines
+        with receipt_form.move_ids_without_package.new() as move_line:
+            move_line.product_id = self.productA
+            move_line.product_uom_qty = 1
+        with receipt_form.move_ids_without_package.new() as move_line:
+            move_line.product_id = self.productB
+            move_line.product_uom_qty = 1
+        receipt = receipt_form.save()
+        receipt.action_confirm()
+
+        # Adds quantities then packs them and valids the receipt.
+        receipt_form = Form(receipt)
+        with receipt_form.move_line_ids_without_package.edit(0) as move_line:
+            move_line.qty_done = 1
+        with receipt_form.move_line_ids_without_package.edit(1) as move_line:
+            move_line.qty_done = 1
+        receipt = receipt_form.save()
+        receipt.put_in_pack()
+        receipt.button_validate()
+
+        receipt_package = receipt.package_level_ids_details[0]
+        self.assertEqual(receipt_package.location_dest_id.id, receipt.location_dest_id.id)
+        self.assertEqual(
+            receipt_package.move_line_ids[0].location_dest_id.id,
+            receipt.location_dest_id.id)
+        self.assertEqual(
+            receipt_package.move_line_ids[1].location_dest_id.id,
+            receipt.location_dest_id.id)
+
+        # Checks an internal transfer was created following the validation of the receipt.
+        internal_transfer = self.env['stock.picking'].search([
+            ('picking_type_id', '=', self.warehouse.int_type_id.id)
+        ], order='id desc', limit=1)
+        self.assertEqual(internal_transfer.origin, receipt.name)
+        self.assertEqual(
+            len(internal_transfer.package_level_ids_details), 1)
+        internal_package = internal_transfer.package_level_ids_details[0]
+        self.assertEqual(
+            internal_package.location_dest_id.id,
+            internal_transfer.location_dest_id.id)
+        self.assertNotEqual(
+            internal_package.location_dest_id.id,
+            putaway_A.location_out_id.id,
+            "The package destination location must be the one from the picking.")
+        self.assertNotEqual(
+            internal_package.move_line_ids[0].location_dest_id.id,
+            putaway_A.location_out_id.id,
+            "The move line destination location must be the one from the picking.")
+        self.assertNotEqual(
+            internal_package.move_line_ids[1].location_dest_id.id,
+            putaway_A.location_out_id.id,
+            "The move line destination location must be the one from the picking.")
+
+        # Cancels the internal transfer and creates a new one.
+        internal_transfer.action_cancel()
+        internal_form = Form(self.env['stock.picking'])
+        internal_form.picking_type_id = self.warehouse.int_type_id
+        internal_form.location_id = self.warehouse.wh_input_stock_loc_id
+        with internal_form.package_level_ids_details.new() as pack_line:
+            pack_line.package_id = receipt_package.package_id
+        internal_transfer = internal_form.save()
+
+        # Checks the package fields have been correctly set.
+        internal_package = internal_transfer.package_level_ids_details[0]
+        self.assertEqual(
+            internal_package.location_dest_id.id,
+            internal_transfer.location_dest_id.id)
+        internal_transfer.action_assign()
+        self.assertEqual(
+            internal_package.location_dest_id.id,
+            internal_transfer.location_dest_id.id)
+        self.assertNotEqual(
+            internal_package.location_dest_id.id,
+            putaway_A.location_out_id.id,
+            "The package destination location must be the one from the picking.")
+        self.assertNotEqual(
+            internal_package.move_line_ids[0].location_dest_id.id,
+            putaway_A.location_out_id.id,
+            "The move line destination location must be the one from the picking.")
+        self.assertNotEqual(
+            internal_package.move_line_ids[1].location_dest_id.id,
+            putaway_A.location_out_id.id,
+            "The move line destination location must be the one from the picking.")
+        internal_transfer.button_validate()
+
+    def test_partial_put_in_pack(self):
+        """ Create a simple move in a delivery. Reserve the quantity but set as quantity done only a part.
+        Call Put In Pack button. """
+        self.productA.tracking = 'lot'
+        lot1 = self.env['stock.production.lot'].create({
+            'product_id': self.productA.id,
+            'name': '00001',
+            'company_id': self.warehouse.company_id.id
+        })
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 20.0, lot_id=lot1)
+        ship_move_a = self.env['stock.move'].create({
+            'name': 'The ship move',
+            'product_id': self.productA.id,
+            'product_uom_qty': 5.0,
+            'product_uom': self.productA.uom_id.id,
+            'location_id': self.ship_location.id,
+            'location_dest_id': self.customer_location.id,
+            'warehouse_id': self.warehouse.id,
+            'picking_type_id': self.warehouse.out_type_id.id,
+            'procure_method': 'make_to_order',
+            'state': 'draft',
+        })
+        ship_move_a._assign_picking()
+        ship_move_a._action_confirm()
+        pack_move_a = ship_move_a.move_orig_ids[0]
+        pick_move_a = pack_move_a.move_orig_ids[0]
+
+        pick_picking = pick_move_a.picking_id
+
+        pick_picking.picking_type_id.show_entire_packs = True
+
+        pick_picking.action_assign()
+
+        pick_picking.move_line_ids.qty_done = 3
+        first_pack = pick_picking.put_in_pack()
+
+    def test_action_assign_package_level(self):
+        """calling _action_assign on move does not erase lines' "result_package_id"
+        At the end of the method ``StockMove._action_assign()``, the method
+        ``StockPicking._check_entire_pack()`` is called. This method compares
+        the move lines with the quants of their source package, and if the entire
+        package is moved at once in the same transfer, a ``stock.package_level`` is
+        created. On creation of a ``stock.package_level``, the result package of
+        the move lines is directly updated with the entire package.
+        This is good on the first assign of the move, but when we call assign for
+        the second time on a move, for instance because it was made partially available
+        and we want to assign the remaining, it can override the result package we
+        selected before.
+        An override of ``StockPicking._check_move_lines_map_quant_package()`` ensures
+        that we ignore:
+        * picked lines (qty_done > 0)
+        * lines with a different result package already
+        """
+        package = self.env["stock.quant.package"].create({"name": "Src Pack"})
+        dest_package1 = self.env["stock.quant.package"].create({"name": "Dest Pack1"})
+
+        # Create new picking: 120 productA
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.picking_type_id = self.warehouse.pick_type_id
+        with picking_form.move_ids_without_package.new() as move_line:
+            move_line.product_id = self.productA
+            move_line.product_uom_qty = 120
+        picking = picking_form.save()
+
+        # mark as TO-DO
+        picking.action_confirm()
+
+        # Update quantity on hand: 100 units in package
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 100, package_id=package)
+
+        # Check Availability
+        picking.action_assign()
+
+        self.assertEqual(picking.state, "assigned")
+        self.assertEqual(picking.package_level_ids.package_id, package)
+
+        move = picking.move_lines
+        line = move.move_line_ids
+
+        # change the result package and set a qty_done
+        line.qty_done = 100
+        line.result_package_id = dest_package1
+
+        # Update quantity on hand: 20 units in new_package
+        new_package = self.env["stock.quant.package"].create({"name": "New Pack"})
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 20, package_id=new_package)
+
+        # Check Availability
+        picking.action_assign()
+
+        # Check that result package is not changed on first line
+        new_line = move.move_line_ids - line
+        self.assertRecordValues(
+            line + new_line,
+            [
+                {"qty_done": 100, "result_package_id": dest_package1.id},
+                {"qty_done": 0, "result_package_id": new_package.id},
+            ],
+        )
+
+    def test_entire_pack_overship(self):
+        """
+        Test the scenario of overshipping: we send the customer an entire package, even though it might be more than
+        what they initially ordered, and update the quantity on the sales order to reflect what was actually sent.
+        """
+        self.warehouse.delivery_steps = 'ship_only'
+        package = self.env["stock.quant.package"].create({"name": "Src Pack"})
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 100, package_id=package)
+        self.warehouse.out_type_id.show_entire_packs = True
+        picking = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': self.warehouse.out_type_id.id,
+        })
+        with Form(picking) as picking_form:
+            with picking_form.move_ids_without_package.new() as move:
+                move.product_id = self.productA
+                move.product_uom_qty = 75
+        picking.action_confirm()
+        picking.action_assign()
+        with Form(picking) as picking_form:
+            with picking_form.package_level_ids_details.new() as package_level:
+                package_level.package_id = package
+        self.assertEqual(len(picking.move_lines), 1, 'Should have only 1 stock move')
+        self.assertEqual(len(picking.move_lines), 1, 'Should have only 1 stock move')
+        with Form(picking) as picking_form:
+            with picking_form.package_level_ids_details.edit(0) as package_level:
+                package_level.is_done = True
+        action = picking.button_validate()
+
+        self.assertFalse(action, 'Should not open wizard')
+
+        for ml in picking.move_line_ids:
+            self.assertEqual(ml.package_id, package, 'move_line.package')
+            self.assertEqual(ml.result_package_id, package, 'move_line.result_package')
+            self.assertEqual(ml.state, 'done', 'move_line.state')
+        quant = package.quant_ids.filtered(lambda q: q.location_id == self.customer_location)
+        self.assertEqual(len(quant), 1, 'Should have quant at customer location')
+        self.assertEqual(quant.reserved_quantity, 0, 'quant.reserved_quantity should = 0')
+        self.assertEqual(quant.quantity, 100.0, 'quant.quantity should = 100')
+        self.assertEqual(sum(ml.qty_done for ml in picking.move_line_ids), 100.0, 'total move_line.qty_done should = 100')
+        backorders = self.env['stock.picking'].search([('backorder_id', '=', picking.id)])
+        self.assertEqual(len(backorders), 0, 'Should not create a backorder')
+
+    def test_remove_package(self):
+        """
+        In the overshipping scenario, if I remove the package after adding it, we should not remove the associated 
+        stock move.
+        """
+        self.warehouse.delivery_steps = 'ship_only'
+        package = self.env["stock.quant.package"].create({"name": "Src Pack"})
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 100, package_id=package)
+        self.warehouse.out_type_id.show_entire_packs = True
+        picking = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': self.warehouse.out_type_id.id,
+        })
+        with Form(picking) as picking_form:
+            with picking_form.move_ids_without_package.new() as move:
+                move.product_id = self.productA
+                move.product_uom_qty = 75
+        picking.action_assign()
+        with Form(picking) as picking_form:
+            with picking_form.package_level_ids_details.new() as package_level:
+                package_level.package_id = package
+        with Form(picking) as picking_form:
+            picking_form.package_level_ids.remove(0)
+        self.assertEqual(len(picking.move_lines), 1, 'Should have only 1 stock move')
+
+    def test_picking_state_with_null_qty(self):
+        receipt_form = Form(self.env['stock.picking'].with_context(default_immediate_transfer=False))
+        picking_type_id = self.warehouse.out_type_id
+        receipt_form.picking_type_id = picking_type_id
+        with receipt_form.move_ids_without_package.new() as move_line:
+            move_line.product_id = self.productA
+            move_line.product_uom_qty = 10
+        with receipt_form.move_ids_without_package.new() as move_line:
+            move_line.product_id = self.productB
+            move_line.product_uom_qty = 10
+        receipt = receipt_form.save()
+        receipt.action_confirm()
+        self.assertEqual(receipt.state, 'confirmed')
+        receipt.move_ids_without_package[1].product_uom_qty = 0
+        self.assertEqual(receipt.state, 'confirmed')
+
+        receipt_form = Form(self.env['stock.picking'].with_context(default_immediate_transfer=True))
+        picking_type_id = self.warehouse.out_type_id
+        receipt_form.picking_type_id = picking_type_id
+        with receipt_form.move_ids_without_package.new() as move_line:
+            move_line.product_id = self.productA
+            move_line.quantity_done = 10
+        with receipt_form.move_ids_without_package.new() as move_line:
+            move_line.product_id = self.productB
+            move_line.quantity_done = 10
+        receipt = receipt_form.save()
+        receipt.action_confirm()
+        self.assertEqual(receipt.state, 'assigned')
+        receipt.move_ids_without_package[1].product_uom_qty = 0
+        self.assertEqual(receipt.state, 'assigned')
+
+    def test_2_steps_and_backorder(self):
+        """ When creating a backorder with a package, the latter should be reserved in the new picking. Moreover,
+         the initial picking shouldn't have any line about this package """
+        def create_picking(type, from_loc, to_loc):
+            picking = self.env['stock.picking'].create({
+                'picking_type_id': type.id,
+                'location_id': from_loc.id,
+                'location_dest_id': to_loc.id,
+            })
+            move_A, move_B = self.env['stock.move'].create([{
+                'name': self.productA.name,
+                'product_id': self.productA.id,
+                'product_uom_qty': 1,
+                'product_uom': self.productA.uom_id.id,
+                'picking_id': picking.id,
+                'location_id': from_loc.id,
+                'location_dest_id': to_loc.id,
+            }, {
+                'name': self.productB.name,
+                'product_id': self.productB.id,
+                'product_uom_qty': 1,
+                'product_uom': self.productB.uom_id.id,
+                'picking_id': picking.id,
+                'location_id': from_loc.id,
+                'location_dest_id': to_loc.id,
+            }])
+            picking.action_confirm()
+            picking.action_assign()
+            return picking, move_A, move_B
+
+        self.warehouse.delivery_steps = 'pick_ship'
+
+        output_location = self.warehouse.wh_output_stock_loc_id
+        pick_type = self.warehouse.pick_type_id
+        delivery_type = self.warehouse.out_type_id
+
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 1)
+        self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 1)
+
+        picking, moveA, moveB = create_picking(pick_type, pick_type.default_location_src_id, pick_type.default_location_dest_id)
+        moveA.move_line_ids.qty_done = 1
+        picking.put_in_pack()
+        moveB.move_line_ids.qty_done = 1
+        picking.put_in_pack()
+        picking.button_validate()
+
+        picking, _, _ = create_picking(delivery_type, delivery_type.default_location_src_id, self.customer_location)
+        packA, packB = picking.package_level_ids
+        with Form(picking) as picking_form:
+            with picking_form.package_level_ids_details.edit(0) as package_level:
+                package_level.is_done = True
+        action_data = picking.button_validate()
+        backorder_wizard = self.env[action_data['res_model']].browse(action_data['res_id'])
+        backorder_wizard.process()
+        bo = self.env['stock.picking'].search([('backorder_id', '=', picking.id)])
+
+        self.assertNotIn(packB, picking.package_level_ids)
+        self.assertEqual(packB, bo.package_level_ids)
+        self.assertEqual(bo.package_level_ids.state, 'assigned')

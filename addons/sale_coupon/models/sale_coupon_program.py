@@ -84,6 +84,11 @@ class SaleCouponProgram(models.Model):
         if self.reward_product_id:
             self.reward_product_uom_id = self.reward_product_id.uom_id
 
+    @api.onchange('discount_type')
+    def _onchange_discount_type(self):
+        if self.discount_type == 'fixed_amount':
+            self.discount_apply_on = 'on_order'
+
     @api.model
     def create(self, vals):
         program = super(SaleCouponProgram, self).create(vals)
@@ -118,10 +123,10 @@ class SaleCouponProgram(models.Model):
 
     def toggle_active(self):
         super(SaleCouponProgram, self).toggle_active()
-        if not self.active:
-            coupons = self.filtered(lambda p: p.promo_code_usage == 'code_needed').mapped('coupon_ids')
-            coupons.filtered(lambda x: x.state != 'used').write({'state': 'expired'})
-        self.mapped('discount_line_product_id').write({'active': self.active})
+        for program in self:
+            program.discount_line_product_id.active = program.active
+        coupons = self.filtered(lambda p: not p.active and p.promo_code_usage == 'code_needed').mapped('coupon_ids')
+        coupons.filtered(lambda x: x.state != 'used').write({'state': 'expired'})
 
     def action_view_sales_orders(self):
         self.ensure_one()
@@ -130,8 +135,9 @@ class SaleCouponProgram(models.Model):
             'name': _('Sales Orders'),
             'view_mode': 'tree,form',
             'res_model': 'sale.order',
+            'search_view_id': [self.env.ref('sale.sale_order_view_search_inherit_quotation').id],
             'type': 'ir.actions.act_window',
-            'domain': [('id', 'in', orders.ids), ('state', 'not in', ('draft', 'sent', 'cancel'))],
+            'domain': [('id', 'in', orders.ids)],
             'context': dict(self._context, create=False)
         }
 
@@ -157,14 +163,13 @@ class SaleCouponProgram(models.Model):
 
     def _check_promo_code(self, order, coupon_code):
         message = {}
-        applicable_programs = order._get_applicable_programs()
         if self.maximum_use_number != 0 and self.order_count >= self.maximum_use_number:
             message = {'error': _('Promo code %s has been expired.') % (coupon_code)}
         elif not self._filter_on_mimimum_amount(order):
             message = {'error': _('A minimum of %s %s should be purchased to get the reward') % (self.rule_minimum_amount, self.currency_id.name)}
         elif self.promo_code and self.promo_code == order.promo_code:
             message = {'error': _('The promo code is already applied on this order')}
-        elif not self.promo_code and self in order.no_code_promo_program_ids:
+        elif self in order.no_code_promo_program_ids:
             message = {'error': _('The promotional offer is already applied on this order')}
         elif not self.active:
             message = {'error': _('Promo code is invalid')}
@@ -172,6 +177,8 @@ class SaleCouponProgram(models.Model):
             message = {'error': _('Promo code is expired')}
         elif order.promo_code and self.promo_code_usage == 'code_needed':
             message = {'error': _('Promotionals codes are not cumulative.')}
+        elif self.reward_type == 'free_shipping' and order.applied_coupon_ids.filtered(lambda c: c.program_id.reward_type == 'free_shipping'):
+            message = {'error': _('Free shipping has already been applied.')}
         elif self._is_global_discount_program() and order._is_global_discount_already_applied():
             message = {'error': _('Global discounts are not cumulative.')}
         elif self.promo_applicability == 'on_current_order' and self.reward_type == 'product' and not order._is_reward_in_order_lines(self):
@@ -180,8 +187,9 @@ class SaleCouponProgram(models.Model):
             message = {'error': _("The customer doesn't have access to this reward.")}
         elif not self._filter_programs_on_products(order):
             message = {'error': _("You don't have the required product quantities on your sales order. If the reward is same product quantity, please make sure that all the products are recorded on the sales order (Example: You need to have 3 T-shirts on your sales order if the promotion is 'Buy 2, Get 1 Free'.")}
-        else:
-            if self not in applicable_programs and self.promo_applicability == 'on_current_order':
+        elif self.promo_applicability == 'on_current_order' and not self.env.context.get('applicable_coupon'):
+            applicable_programs = order._get_applicable_programs()
+            if self not in applicable_programs:
                 message = {'error': _('At least one of the required conditions is not met to get the reward!')}
         return message
 
@@ -191,25 +199,37 @@ class SaleCouponProgram(models.Model):
 
     @api.model
     def _filter_on_mimimum_amount(self, order):
-        untaxed_amount = order.amount_untaxed
-        tax_amount = order.amount_tax
+        no_effect_lines = order._get_no_effect_on_threshold_lines()
+        order_amount = {
+            'amount_untaxed' : order.amount_untaxed - sum(line.price_subtotal for line in no_effect_lines),
+            'amount_tax' : order.amount_tax - sum(line.price_tax for line in no_effect_lines)
+        }
+        program_ids = list()
+        for program in self:
+            if program.reward_type != 'discount':
+                # avoid the filtered
+                lines = self.env['sale.order.line']
+            else:
+                lines = order.order_line.filtered(lambda line:
+                    line.product_id == program.discount_line_product_id or
+                    line.product_id == program.reward_id.discount_line_product_id or
+                    (program.program_type == 'promotion_program' and line.is_reward_line)
+                )
+            untaxed_amount = order_amount['amount_untaxed'] - sum(line.price_subtotal for line in lines)
+            tax_amount = order_amount['amount_tax'] - sum(line.price_tax for line in lines)
+            program_amount = program._compute_program_amount('rule_minimum_amount', order.currency_id)
+            if program.rule_minimum_amount_tax_inclusion == 'tax_included' and program_amount <= (untaxed_amount + tax_amount) or program_amount <= untaxed_amount:
+                program_ids.append(program.id)
 
-        # Some lines should not be considered when checking if threshold is met like delivery
-        untaxed_amount -= sum([line.price_subtotal for line in order._get_no_effect_on_threshold_lines()])
-        tax_amount -= sum([line.price_tax for line in order._get_no_effect_on_threshold_lines()])
-
-        return self.filtered(lambda program:
-            program.rule_minimum_amount_tax_inclusion == 'tax_included' and
-            program._compute_program_amount('rule_minimum_amount', order.currency_id) <= untaxed_amount + tax_amount or
-            program.rule_minimum_amount_tax_inclusion == 'tax_excluded' and
-            program._compute_program_amount('rule_minimum_amount', order.currency_id) <= untaxed_amount)
+        return self.env['sale.coupon.program'].browse(program_ids)
 
     @api.model
     def _filter_on_validity_dates(self, order):
         return self.filtered(lambda program:
-            program.rule_date_from and program.rule_date_to and
-            program.rule_date_from <= order.date_order and program.rule_date_to >= order.date_order or
-            not program.rule_date_from or not program.rule_date_to)
+            (not program.rule_date_from or program.rule_date_from <= order.date_order)
+            and
+            (not program.rule_date_to or program.rule_date_to >= order.date_order)
+        )
 
     @api.model
     def _filter_promo_programs_with_code(self, order):
@@ -233,17 +253,23 @@ class SaleCouponProgram(models.Model):
         products_qties = dict.fromkeys(products, 0)
         for line in order_lines:
             products_qties[line.product_id] += line.product_uom_qty
-        valid_programs = self.filtered(lambda program: not program.rule_products_domain)
-        for program in self - valid_programs:
+        valid_program_ids = list()
+        for program in self:
+            if not program.rule_products_domain:
+                valid_program_ids.append(program.id)
+                continue
             valid_products = program._get_valid_products(products)
+            if not valid_products:
+                # The program can be directly discarded
+                continue
             ordered_rule_products_qty = sum(products_qties[product] for product in valid_products)
             # Avoid program if 1 ordered foo on a program '1 foo, 1 free foo'
             if program.promo_applicability == 'on_current_order' and \
-               program._is_valid_product(program.reward_product_id) and program.reward_type == 'product':
+               program.reward_type == 'product' and program._get_valid_products(program.reward_product_id):
                 ordered_rule_products_qty -= program.reward_product_quantity
             if ordered_rule_products_qty >= program.rule_min_quantity:
-                valid_programs |= program
-        return valid_programs
+                valid_program_ids.append(program.id)
+        return self.browse(valid_program_ids)
 
     def _filter_not_ordered_reward_programs(self, order):
         """
@@ -269,7 +295,8 @@ class SaleCouponProgram(models.Model):
         # Minimum requirement should not be checked if the coupon got generated by a promotion program (the requirement should have only be checked to generate the coupon)
         if not next_order:
             programs = programs and programs._filter_on_mimimum_amount(order)
-        programs = programs and programs._filter_on_validity_dates(order)
+        if not self.env.context.get("no_outdated_coupons"):
+            programs = programs and programs._filter_on_validity_dates(order)
         programs = programs and programs._filter_unexpired_programs(order)
         programs = programs and programs._filter_programs_on_partners(order)
         # Product requirement should not be checked if the coupon got generated by a promotion program (the requirement should have only be checked to generate the coupon)
@@ -284,14 +311,16 @@ class SaleCouponProgram(models.Model):
         return programs
 
     def _is_valid_partner(self, partner):
-        if self.rule_partners_domain:
+        if self.rule_partners_domain and self.rule_partners_domain != '[]':
             domain = safe_eval(self.rule_partners_domain) + [('id', '=', partner.id)]
             return bool(self.env['res.partner'].search_count(domain))
         else:
             return True
 
     def _is_valid_product(self, product):
+        # VFE TODO remove in master
         # NOTE: if you override this method, think of also overriding _get_valid_products
+        # we also encourage the use of _get_valid_products as its execution is faster
         if self.rule_products_domain:
             domain = safe_eval(self.rule_products_domain) + [('id', '=', product.id)]
             return bool(self.env['product.product'].search_count(domain))
@@ -300,6 +329,6 @@ class SaleCouponProgram(models.Model):
 
     def _get_valid_products(self, products):
         if self.rule_products_domain:
-            domain = safe_eval(self.rule_products_domain) + [('id', 'in', products.ids)]
-            return self.env['product.product'].search(domain)
+            domain = safe_eval(self.rule_products_domain)
+            return products.filtered_domain(domain)
         return products

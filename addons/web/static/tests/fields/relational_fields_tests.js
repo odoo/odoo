@@ -1700,6 +1700,32 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('many2many_tags loads records according to limit defined on widget prototype', async function (assert) {
+        assert.expect(1);
+
+        const M2M_LIMIT = relationalFields.FieldMany2ManyTags.prototype.limit;
+        relationalFields.FieldMany2ManyTags.prototype.limit = 30;
+        this.data.partner.fields.partner_ids = {string: "Partner", type: "many2many", relation: 'partner'};
+        this.data.partner.records[0].partner_ids = [];
+        for (var i = 15; i < 50; i++) {
+            this.data.partner.records.push({id: i, display_name: 'walter' + i});
+            this.data.partner.records[0].partner_ids.push(i);
+        }
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form><field name="partner_ids" widget="many2many_tags"/></form>',
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('.o_field_widget[name="partner_ids"] .badge').length, 30,
+            'should have rendered 30 tags even though 35 records linked');
+
+        relationalFields.FieldMany2ManyTags.prototype.limit = M2M_LIMIT;
+        form.destroy();
+    });
+
     QUnit.test('field many2many_tags keeps focus when being edited', async function (assert) {
         assert.expect(7);
 
@@ -2339,6 +2365,112 @@ QUnit.module('relational_fields', {
 
         assert.containsOnce(form, '.o_field_widget[name=timmy] .custom-checkbox');
         assert.strictEqual(form.$('.o_field_widget[name=timmy] .o_form_label').text(), 'silver');
+
+        form.destroy();
+    });
+
+    QUnit.test('widget many2many_checkboxes with 40+ values', async function (assert) {
+        // 40 is the default limit for x2many fields. However, the many2many_checkboxes is a
+        // special field that fetches its data through the fetchSpecialData mechanism, and it
+        // uses the name_search server-side limit of 100. This test comes with a fix for a bug
+        // that occurred when the user (un)selected a checkbox that wasn't in the 40 first checkboxes,
+        // because the piece of data corresponding to that checkbox hadn't been processed by the
+        // BasicModel, whereas the code handling the change assumed it had.
+        assert.expect(3);
+
+        const records = [];
+        for (let id = 1; id <= 90; id++) {
+            records.push({
+                id,
+                display_name: `type ${id}`,
+                color: id % 7,
+            });
+        }
+        this.data.partner_type.records = records;
+        this.data.partner.records[0].timmy = records.map((r) => r.id);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form><field name="timmy" widget="many2many_checkboxes"/></form>',
+            res_id: 1,
+            async mockRPC(route, args) {
+                if (args.method === 'write') {
+                    const expectedIds = records.map((r) => r.id);
+                    expectedIds.pop();
+                    assert.deepEqual(args.args[1].timmy, [[6, false, expectedIds]]);
+                }
+                return this._super(...arguments);
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        assert.containsN(form, '.o_field_widget[name=timmy] input[type=checkbox]:checked', 90);
+
+        // toggle the last value
+        await testUtils.dom.click(form.$('.o_field_widget[name=timmy] input[type=checkbox]:last'));
+        assert.notOk(form.$('.o_field_widget[name=timmy] input[type=checkbox]:last').is(':checked'));
+
+        await testUtils.form.clickSave(form);
+
+        form.destroy();
+    });
+
+    QUnit.test('widget many2many_checkboxes with 100+ values', async function (assert) {
+        // The many2many_checkboxes widget limits the displayed values to 100 (this is the
+        // server-side name_search limit). This test encodes a scenario where there are more than
+        // 100 records in the co-model, and all values in the many2many relationship aren't
+        // displayed in the widget (due to the limit). If the user (un)selects a checkbox, we don't
+        // want to remove all values that aren't displayed from the relation.
+        assert.expect(5);
+
+        const records = [];
+        for (let id = 1; id < 150; id++) {
+            records.push({
+                id,
+                display_name: `type ${id}`,
+                color: id % 7,
+            });
+        }
+        this.data.partner_type.records = records;
+        this.data.partner.records[0].timmy = records.map((r) => r.id);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form><field name="timmy" widget="many2many_checkboxes"/></form>',
+            res_id: 1,
+            async mockRPC(route, args) {
+                if (args.method === 'write') {
+                    const expectedIds = records.map((r) => r.id);
+                    expectedIds.shift();
+                    assert.deepEqual(args.args[1].timmy, [[6, false, expectedIds]]);
+                }
+                const result = await this._super(...arguments);
+                if (args.method === 'name_search') {
+                    assert.strictEqual(result.length, 100,
+                        "sanity check: name_search automatically sets the limit to 100");
+                }
+                return result;
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        assert.containsN(form, '.o_field_widget[name=timmy] input[type=checkbox]', 100,
+            "should only display 100 checkboxes");
+        assert.ok(form.$('.o_field_widget[name=timmy] input[type=checkbox]:first').is(':checked'));
+
+        // toggle the first value
+        await testUtils.dom.click(form.$('.o_field_widget[name=timmy] input[type=checkbox]:first'));
+        assert.notOk(form.$('.o_field_widget[name=timmy] input[type=checkbox]:first').is(':checked'));
+
+        await testUtils.form.clickSave(form);
 
         form.destroy();
     });

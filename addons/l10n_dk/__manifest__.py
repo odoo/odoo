@@ -102,4 +102,5 @@ Copyright 2018 Odoo House ApS
         'data/account_chart_template_configuration_data.xml',
         'data/menuitem_data.xml'
     ],
+    'license': 'LGPL-3',
 }

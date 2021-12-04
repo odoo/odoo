@@ -2,7 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import unittest
 from odoo.addons.stock_landed_costs.tests.common import TestStockLandedCostsCommon
-from odoo.tests import tagged
+from odoo.addons.stock_landed_costs.tests.test_stockvaluationlayer import TestStockValuationLC
+from odoo.tests import Form, tagged
 
 
 @tagged('post_install', '-at_install')
@@ -300,3 +301,73 @@ class TestLandedCosts(TestStockLandedCostsCommon):
 
     def _error_message(self, actucal_cost, computed_cost):
         return 'Additional Landed Cost should be %s instead of %s' % (actucal_cost, computed_cost)
+
+
+@tagged('post_install', '-at_install')
+class TestLandedCostsWithPurchaseAndInv(TestStockValuationLC):
+    def test_invoice_after_lc(self):
+        self.env.company.anglo_saxon_accounting = True
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
+        self.product1.product_tmpl_id.invoice_policy = 'delivery'
+        self.price_diff_account = self.env['account.account'].create({
+            'name': 'price diff account',
+            'code': 'price diff account',
+            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+        })
+        self.product1.property_account_creditor_price_difference = self.price_diff_account
+
+        # Create PO
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.env['res.partner'].create({'name': 'vendor'})
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product1
+            po_line.product_qty = 1
+            po_line.price_unit = 455.0
+        order = po_form.save()
+        order.button_confirm()
+
+        # Receive the goods
+        receipt = order.picking_ids[0]
+        receipt.move_lines.quantity_done = 1
+        receipt.button_validate()
+
+        # Check SVL and AML
+        svl = self.env['stock.valuation.layer'].search([('stock_move_id', '=', receipt.move_lines.id)])
+        self.assertAlmostEqual(svl.value, 455)
+        aml = self.env['account.move.line'].search([('account_id', '=', self.stock_valuation_account.id)])
+        self.assertAlmostEqual(aml.debit, 455)
+
+        # Create and validate LC
+        lc = self.env['stock.landed.cost'].create(dict(
+            picking_ids=[(6, 0, [receipt.id])],
+            account_journal_id=self.stock_journal.id,
+            cost_lines=[
+                (0, 0, {
+                    'name': 'equal split',
+                    'split_method': 'equal',
+                    'price_unit': 99,
+                    'product_id': self.productlc1.id,
+                }),
+            ],
+        ))
+        lc.compute_landed_cost()
+        lc.button_validate()
+
+        # Check LC, SVL and AML
+        self.assertAlmostEqual(lc.valuation_adjustment_lines.final_cost, 554)
+        svl = self.env['stock.valuation.layer'].search([('stock_move_id', '=', receipt.move_lines.id)], order='id desc', limit=1)
+        self.assertAlmostEqual(svl.value, 99)
+        aml = self.env['account.move.line'].search([('account_id', '=', self.stock_valuation_account.id)], order='id desc', limit=1)
+        self.assertAlmostEqual(aml.debit, 99)
+
+        # Create an invoice with the same price
+        move_form = Form(self.env['account.move'].with_context(default_type='in_invoice'))
+        move_form.partner_id = order.partner_id
+        move_form.purchase_id = order
+        move = move_form.save()
+        move.post()
+
+        # Check nothing was posted in the price difference account
+        price_diff_aml = self.env['account.move.line'].search([('account_id','=', self.price_diff_account.id), ('move_id', '=', move.id)])
+        self.assertEquals(len(price_diff_aml), 0, "No line should have been generated in the price difference account.")

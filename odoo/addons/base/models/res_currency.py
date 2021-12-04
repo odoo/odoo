@@ -8,6 +8,7 @@ import time
 import traceback
 
 from odoo import api, fields, models, tools, _
+from odoo.tools.misc import get_lang
 
 _logger = logging.getLogger(__name__)
 
@@ -110,7 +111,7 @@ class Currency(models.Model):
         integer_value = int(parts[0])
         fractional_value = int(parts[2] or 0)
 
-        lang_code = self.env.context.get('lang') or self.env.user.lang
+        lang_code = self.env.context.get('lang') or self.env.user.lang or get_lang(self.env).code
         lang = self.env['res.lang'].with_context(active_test=False).search([('code', '=', lang_code)])
         amount_words = tools.ustr('{amt_value} {amt_word}').format(
                         amt_value=_num2words(integer_value, lang=lang.iso_code),
@@ -235,7 +236,7 @@ class CurrencyRate(models.Model):
     _order = "name desc"
 
     name = fields.Date(string='Date', required=True, index=True,
-                           default=lambda self: fields.Date.today())
+                           default=fields.Date.context_today)
     rate = fields.Float(digits=0, default=1.0, help='The rate of the currency to the currency of rate 1')
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True)
     company_id = fields.Many2one('res.company', string='Company',

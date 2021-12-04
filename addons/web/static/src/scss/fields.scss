@@ -54,6 +54,10 @@
         > input {
             padding-right: 15px;
             cursor: pointer;
+
+            &::-ms-clear {
+                display: none;
+            }
         }
 
         .o_dropdown_button {
@@ -99,7 +103,6 @@
             flex: 0 0 auto;
             border: 0;
             font-size: 12px;
-            cursor: pointer;
             user-select: none;
             display: flex;
             max-width: 100%;
@@ -161,6 +164,9 @@
         .o_colorpicker > ul {
             @include o-tag-colorpicker;
             white-space: normal;
+            li > .o_hide_in_kanban label {
+                line-height: $o-line-height-base;
+            }
         }
 
         @for $size from 1 through length($o-colors) {
@@ -374,6 +380,7 @@
             background-color: $o-brand-primary;
             opacity: 0;
             transition: opacity ease 400ms;
+            min-width: 35px;
 
             > button.fa {
                 border: none;

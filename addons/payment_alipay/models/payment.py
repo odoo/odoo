@@ -55,7 +55,7 @@ class PaymentAcquirer(models.Model):
         fees = 0.0
         if self.fees_active:
             country = self.env['res.country'].browse(country_id)
-            if country and self.company_id.country_id.id == country.id:
+            if country and self.company_id.sudo().country_id.id == country.id:
                 percentage = self.fees_dom_var
                 fixed = self.fees_dom_fixed
             else:
@@ -134,7 +134,6 @@ class PaymentTransaction(models.Model):
                     """))
         return True
 
-    @api.model
     def write(self, vals):
         if vals.get('currency_id') or vals.get('acquirer_id'):
             for payment in self:

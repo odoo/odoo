@@ -11,16 +11,19 @@
 # Maxim Vandenbroucke <mxv@odoo.com>, 2019
 # Martin Trigaux, 2019
 # Cécile Collart <cco@odoo.com>, 2019
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
+# Camille Demolder <cad@odoo.com>, 2020
+# Antoine Gilard <ang@odoo.com>, 2020
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
+# Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-05 12:32+0000\n"
+"POT-Creation-Date: 2020-10-27 11:49+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2020\n"
+"Last-Translator: Odoo Experts Consultants <consultants@odooexperts.nl>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -218,7 +221,7 @@ msgstr "<span>Kas (USD):</span>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "<span>Cash Balance</span>"
-msgstr "<span>Kassabalans</span>"
+msgstr "<span>Kassaldo</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -237,6 +240,9 @@ msgid ""
 " Are you sure you want to close the session and post the accounting "
 "entries?</span>"
 msgstr ""
+"<span>Er is een verschil tussen de verwachte en de werkelijke afsluiting in "
+"contanten. Weet u zeker dat u de sessie wilt afsluiten en de boekingen door "
+"te boeken?</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -254,15 +260,6 @@ msgstr "= Verwacht in cash"
 #, python-format
 msgid "? Clicking \"Confirm\" will validate the payment."
 msgstr "? Klikken op *Bevestigen* bevestigd de betaling."
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:0
-#, python-format
-msgid ""
-"A Chart of Accounts is not yet installed in your current company. Please "
-"install a Chart of Accounts through the Invoicing/Accounting settings before"
-" launching a PoS session."
-msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
@@ -357,6 +354,8 @@ msgid ""
 "Account used as counterpart of the income account in the accounting entry "
 "representing the pos sales."
 msgstr ""
+"Rekening die wordt gebruikt als tegenrekening van de omzetrekening in de "
+"boekhoudkundige boeking die de verkopen van de pos vertegenwoordigt."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -792,7 +791,7 @@ msgstr "Betaalbewijzen"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.account_cashbox_line_view_tree
 msgid "Cashbox balance"
-msgstr "Kassa balans"
+msgstr "Kassaldo"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_cashdrawer
@@ -1003,7 +1002,7 @@ msgstr "Sluiten ..."
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_session__state__closing_control
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Closing Control"
-msgstr "Afsluit controle"
+msgstr "Afsluitcontrole"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__stop_at
@@ -1970,6 +1969,8 @@ msgid ""
 "If ticked, each payment will generate a separated journal item. Ticking that"
 " option will slow the closing of the PoS."
 msgstr ""
+"Indien aangevinkt, zal elke betaling een afzonderlijk boeking genereren. Als"
+" u die optie aanvinkt, wordt het sluiten van de PoS vertraagd."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__image_128
@@ -2013,6 +2014,8 @@ msgid ""
 "                Invocing/Accounting app will create Bank and Cash payment\n"
 "                methods automatically."
 msgstr ""
+"Het installeren van een rekeningoverzicht vanuit de algemene instellingen van de app voor facturering\n"
+"maakt automatisch bank- en contante betalingen mogelijk."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_mercury
@@ -2698,6 +2701,8 @@ msgid ""
 "Operation type used to record product pickings <br/>\n"
 "                                    Products will be taken from the default source location of this operation type"
 msgstr ""
+"Bewerkingssoorten die wordt gebruikt om productverplaatsing te registreren <br/>\n"
+"De producten zullen worden genomen van de standaard bronlocatie van dit deze bewerkingssoort."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -3100,6 +3105,13 @@ msgstr "Kies een relatie voor deze verkoop"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:0
+#, python-format
+msgid "Please provide valid email"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Please select a payment method."
@@ -3111,6 +3123,13 @@ msgstr "Selecteer een betaaalmethode aub."
 #, python-format
 msgid "Please select the Customer"
 msgstr "Selecteer een klant aub"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:0
+#, python-format
+msgid "Please select the customer"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__pos_categ_id
@@ -3246,6 +3265,7 @@ msgstr "Kassa orders rapport"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_payment_method
+#: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_import_journal_creation__pos_payment_method_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_account_journal__pos_payment_method_ids
 msgid "Point of Sale Payment Methods"
 msgstr "Kassa betaalmethodes"
@@ -3397,16 +3417,12 @@ msgid "Pricing"
 msgstr "Prijzen"
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_details_wizard
-msgid "Print"
-msgstr "Afdrukken"
-
-#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_details_wizard
 #, python-format
-msgid "Print Invoice"
-msgstr "Factuur afdrukken"
+msgid "Print"
+msgstr "Afdrukken"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3636,6 +3652,8 @@ msgstr "Kassabonprinter"
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__use_payment_terminal
 msgid "Record payments with a terminal on this journal."
 msgstr ""
+"Registreer een betaling die uitgevoerd werd met een terminaal op dit "
+"dagboek."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -3736,7 +3754,7 @@ msgstr "Geretourneerd"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Reversal request sent to terminal"
-msgstr ""
+msgstr "Omkeerverzoek verstuurd naar terminal"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3992,7 +4010,7 @@ msgstr "Stel startcategorie in"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Set Starting Cash"
-msgstr "Stel startbalans in"
+msgstr "Stel beginsaldo in"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4131,7 +4149,7 @@ msgstr "Beginsaldo"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Starting Cash"
-msgstr "Startbalans"
+msgstr "Beginsaldo"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4271,6 +4289,7 @@ msgstr "BTW weergave"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/models.js:0
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
@@ -4327,6 +4346,8 @@ msgid ""
 "Technical field which is used to hide use_payment_terminal when no payment "
 "interfaces are installed."
 msgstr ""
+"Dit technische veld wordt gebruikt om use_payment_terminal te verbergen "
+"wanneer geen betalingsinterface geïnstalleerd is. "
 
 #. module: point_of_sale
 #. openerp-web
@@ -4431,6 +4452,17 @@ msgstr ""
 "backend aan te maken voor deze order:"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/pos.xml:0
+#, python-format
+msgid ""
+"The order has been synchronized earlier. To print the invoice please refer "
+"to the order in the backend"
+msgstr ""
+"De bestelling werd eerder gesynchroniseerd. Om de factuur af te drukken "
+"verwijzen wij u naar de bestelling in de backend."
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_precompute_cash
 msgid ""
 "The payment input will behave similarily to bank payment input, and will be "
@@ -4445,6 +4477,17 @@ msgid ""
 "The payment method is of type cash. A cash statement will be automatically "
 "generated."
 msgstr ""
+"De betalingsmiddel is van het type contant geld. Een kassafschrift zal "
+"automatisch gegenereerd worden."
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_payment.py:0
+#, python-format
+msgid ""
+"The payment method selected is not allowed in the config of the POS session."
+msgstr ""
+"De geselecteerde betaalmethode is niet toegestaan in de configuratie van de "
+"POS-sessie."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__config_id
@@ -4558,6 +4601,8 @@ msgid ""
 "The transactions are processed by Adyen. Set your Adyen credentials on the "
 "related payment method."
 msgstr ""
+"De transacties worden verwerkt door Adyen. Stel uw Adyen-gegevens in op de "
+"betreffende betaalmethode."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_mercury
@@ -4566,6 +4611,8 @@ msgid ""
 "The transactions are processed by Vantiv. Set your Vantiv credentials on the"
 " related payment method."
 msgstr ""
+"De transacties worden verwerkt door Vantiv. Stel uw Vantiv-gegevens in op de"
+" betreffende betaalmethode."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_end
@@ -4597,6 +4644,8 @@ msgid ""
 "There are still orders in draft state in the session. Pay or cancel the following orders to validate the session:\n"
 "%s"
 msgstr ""
+"Er zijn nog steeds bestellingen in concept in de sessie. Betaal of verwijder die bestellingen om de sessie de valideren:\n"
+"%s"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4611,6 +4660,8 @@ msgid ""
 "There is no Chart of Accounts configured on the company. Please go to the "
 "invoicing settings to install a Chart of Accounts."
 msgstr ""
+"Er is geen grootboekschema ingesteld voor het bedrijf. Ga naar de facturatie"
+" instellingen om een grootboekschema installeren."
 
 #. module: point_of_sale
 #. openerp-web
@@ -4654,6 +4705,15 @@ msgid ""
 msgstr ""
 "Deze barcode is al toegewezen aan een ander contact. Verzeker u er van dat "
 "de barcode uniek is per contact."
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:0
+#, python-format
+msgid ""
+"This customer does not have a valid email address, define one or do not send"
+" an email."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__amount_authorized_diff
@@ -4762,6 +4822,13 @@ msgstr ""
 " uw eigen nummering samenstellen."
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "This session is already closed."
+msgstr "Deze sessie is al gesloten."
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "This tax is applied to any new product created in the catalog."
 msgstr ""
@@ -4785,6 +4852,9 @@ msgid ""
 "close a session with a too high difference between real and expected closing"
 " balance"
 msgstr ""
+"Deze wizard wordt gebruikt om een waarschuwingsbericht weer te geven als de "
+"manager een sessie wil afsluiten met een te groot verschil tussen het "
+"werkelijke en het verwachte eindsaldo."
 
 #. module: point_of_sale
 #. openerp-web
@@ -4910,6 +4980,11 @@ msgid "Transaction cancelled"
 msgstr "Transactie geannuleerd"
 
 #. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_stock_picking
+msgid "Transfer"
+msgstr "Verplaatsing"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_barcode_rule__type
 msgid "Type"
 msgstr "Soort"
@@ -4932,6 +5007,9 @@ msgid ""
 "Please set corresponding tax account in each repartition line of the following taxes: \n"
 "%s"
 msgstr ""
+"Niet in staat om de sessie te sluiten en te valideren.\n"
+"Gelieve de overeenstemmende fiscale rekening in te stellen in elke repartitieregel van de volgende BTW's:\n"
+"%s"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -4940,6 +5018,8 @@ msgid ""
 "Unable to modify this PoS Configuration because there is an open PoS Session"
 " based on it."
 msgstr ""
+"Kon de kassa configuratie niet aanpassen omdat er al een kassa sessie open "
+"is die hierop gebaseerd is."
 
 #. module: point_of_sale
 #. openerp-web
@@ -5080,13 +5160,6 @@ msgstr "Uuid"
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
-msgid "VAT:"
-msgstr "BTW:"
-
-#. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/xml/pos.xml:0
-#, python-format
 msgid "Valid product lot"
 msgstr "Geldige product partij"
 
@@ -5196,6 +5269,8 @@ msgid ""
 "You are not allowed to change the cash control status while a session is "
 "already opened."
 msgstr ""
+"U mag de status van de kassacontrole niet wijzigen wanneer er al een sessie "
+"geopend is."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/account_bank_statement.py:0
@@ -5213,6 +5288,15 @@ msgstr ""
 msgid "You cannot create a session before the accounting lock date."
 msgstr ""
 "U kan geen sessie aanmaken voor de boekhoudkundige vergrendelingsdatum."
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/account_bank_statement.py:0
+#, python-format
+msgid ""
+"You cannot delete a bank statement used in an open Point of Sale session."
+msgstr ""
+"U kan geen bankafschrift verwijderen die gebruikt wordt in een open Point of"
+" Sale sessie."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/product.py:0
@@ -5270,18 +5354,6 @@ msgid "You have to select a pricelist in the sale form."
 msgstr "U moet een prijslijst selecteren in het verkoopformulier."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/wizard/pos_details.py:0
-#, python-format
-msgid "You have to set a logo or a layout for your company."
-msgstr "U moet een logo of lay-out instellen voor uw bedrijf."
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/wizard/pos_details.py:0
-#, python-format
-msgid "You have to set your reports's header and footer layout."
-msgstr "U moet uw rapporten hun kop en footer lay-out instellen."
-
-#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/gui.js:0
 #, python-format
@@ -5290,6 +5362,19 @@ msgid ""
 "\n"
 "Orders that where not synced before will be synced next time you close an order while connected to the internet or when you close the session."
 msgstr ""
+"U moet verbonden zijn met het internet om uw wijzigingen op te slaan. "
+"Wijzigingen in eerder gesynchroniseerde bestellingen zullen verloren gaan "
+"bij de volgende synchronisatie. Bestellingen die niet eerder "
+"gesynchroniseerd zijn, zullen de volgende keer dat u dezelfde tabel opent en"
+" sluit gesynchroniseerd worden."
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:0
+#, python-format
+msgid ""
+"You must configure an intermediary account for the payment methods: %s."
+msgstr ""
+"Je moet een tussenrekening configureren voor de betalingsmethoden: %s."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_product_action
@@ -5306,6 +5391,14 @@ msgstr ""
 #, python-format
 msgid "You need to select the customer before you can invoice an order."
 msgstr "U moet eerst de klant aanduiden voordat u een order kan factureren."
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/screens.js:0
+#, python-format
+msgid ""
+"You need to select the customer before you can send the receipt via email."
+msgstr ""
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0

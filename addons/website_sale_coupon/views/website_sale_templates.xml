@@ -6,6 +6,16 @@
         <script type="text/javascript" src="/website_sale_coupon/static/tests/tours/website_sale_coupon.js"></script>
     </xpath>
 </template>
+<template id="website_sale_coupon_cart_summary_show_img" inherit_id="website_sale.cart_summary">
+    <xpath expr="//td[hasclass('td-img')]/span" position="attributes">
+        <attribute name="t-if">not line.is_reward_line or not line.sudo().product_id.image_128</attribute>
+    </xpath>
+    <xpath expr="//td[hasclass('td-img')]/span" position="after">
+        <span t-if="line.is_reward_line and line.sudo().product_id.image_128">
+            <img t-att-src="image_data_uri(line.sudo().product_id.image_128)" class="img o_image_64_max rounded"/>
+        </span>
+    </xpath>
+</template>
 <template id="website_sale_coupon_cart_hide_qty" inherit_id="website_sale.cart_lines">
     <xpath expr="//td[hasclass('td-img')]/span" position="replace">
         <t t-if="line.is_reward_line and line.sudo().product_id.image_128">

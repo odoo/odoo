@@ -100,13 +100,12 @@ var WidgetWebsiteButtonIcon = AbstractField.extend({
      * @private
      */
     _onClick: function () {
-        var self = this;
-        this._rpc({
-            model: this.model,
-            method: 'open_website_url',
-            args: [this.res_id],
-        }).then(function (result) {
-            self.do_action(result);
+        this.trigger_up('button_clicked', {
+            attrs: {
+                type: 'object',
+                name: 'open_website_url',
+            },
+            record: this.record,
         });
     },
 });

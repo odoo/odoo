@@ -13,6 +13,7 @@ class ResUsers(models.Model):
         default_digest_emails = self.env['ir.config_parameter'].sudo().get_param('digest.default_digest_emails')
         default_digest_id = self.env['ir.config_parameter'].sudo().get_param('digest.default_digest_id')
         if user.has_group('base.group_user') and default_digest_emails and default_digest_id:
-            digest = self.env['digest.digest'].sudo().browse(int(default_digest_id))
-            digest.user_ids |= user
+            digest = self.env['digest.digest'].sudo().browse(int(default_digest_id)).exists()
+            if digest:
+                digest.user_ids |= user
         return user

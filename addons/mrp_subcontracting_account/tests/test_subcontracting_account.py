@@ -2,15 +2,28 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.mrp_subcontracting.tests.common import TestMrpSubcontractingCommon
+from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounting_data
 from odoo.tests.common import Form
 
 class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
     def test_subcontracting_account_flow_1(self):
+        self.stock_input_account, self.stock_output_account, self.stock_valuation_account, self.expense_account, self.stock_journal = _create_accounting_data(self.env)
+        self.finished.categ_id.property_valuation = 'real_time'
+        self.finished.write({
+            'property_account_expense_id': self.expense_account.id,
+        })
+        self.finished.categ_id.write({
+            'property_stock_account_input_categ_id': self.stock_input_account.id,
+            'property_stock_account_output_categ_id': self.stock_output_account.id,
+            'property_stock_valuation_account_id': self.stock_valuation_account.id,
+            'property_stock_journal': self.stock_journal.id,
+        })
         self.stock_location = self.env.ref('stock.stock_location_stock')
         self.customer_location = self.env.ref('stock.stock_location_customers')
         self.supplier_location = self.env.ref('stock.stock_location_suppliers')
         self.uom_unit = self.env.ref('uom.product_uom_unit')
-        self.env.ref('product.product_category_all').property_cost_method = 'fifo'
+        self.env.ref('product.product_category_all').property_cost_method = 'average'
+        self.env.ref('product.product_category_all').property_valuation = 'real_time'
 
         # IN 10@10 comp1 10@20 comp2
         move1 = self.env['stock.move'].create({
@@ -53,6 +66,25 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         picking_receipt.move_lines.quantity_done = 1.0
         picking_receipt.action_done()
 
-        mo = picking_receipt._get_subcontracted_productions()
-        self.assertEqual(mo.move_finished_ids.stock_valuation_layer_ids.value, 60)
-        self.assertEqual(mo.move_finished_ids.product_id.value_svl, 60)
+        # Finished is made of 1 comp1 and 1 comp2.
+        # Cost of comp1 = 10
+        # Cost of comp2 = 20
+        # --> Cost of finished = 10 + 20 = 30
+        # Additionnal cost = 30 (from the purchase order line or directly set on the stock move here)
+        # Total cost of subcontracting 1 unit of finished = 30 + 30 = 60
+        self.assertEqual(picking_receipt.move_lines.stock_valuation_layer_ids.value, 60)
+        self.assertEqual(picking_receipt.move_lines.product_id.value_svl, 60)
+        self.assertEqual(picking_receipt.move_lines.stock_valuation_layer_ids.account_move_id.amount_total, 60)
+
+        # Do the same without any additionnal cost
+        picking_receipt = picking_receipt.copy()
+        picking_receipt.move_lines.price_unit = 0
+
+        picking_receipt.action_confirm()
+        picking_receipt.move_lines.quantity_done = 1.0
+        picking_receipt.action_done()
+
+        # In this case, since there isn't any additionnal cost, the total cost of the subcontracting
+        # is the sum of the components' costs: 10 + 20 = 30
+        self.assertEqual(picking_receipt.move_lines.stock_valuation_layer_ids.value, 30)
+        self.assertEqual(picking_receipt.move_lines.product_id.value_svl, 90)

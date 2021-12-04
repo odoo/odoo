@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, tools, _
-from odoo.exceptions import UserError
+from odoo import api, fields, models
+from odoo.osv import expression
 
 
 class MassMailingContactListRel(models.Model):
@@ -77,7 +77,7 @@ class MassMailingContact(models.Model):
             contacts = self.env['mailing.contact.subscription'].search([('list_id', '=', active_list_id)])
             return [('id', 'in', [record.contact_id.id for record in contacts if record.opt_out == value])]
         else:
-            raise UserError(_('Search opt out cannot be executed without a unique and valid active mailing list context.'))
+            return expression.FALSE_DOMAIN if value else expression.TRUE_DOMAIN
 
     @api.depends('subscription_list_ids')
     def _compute_opt_out(self):

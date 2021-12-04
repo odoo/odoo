@@ -11,6 +11,7 @@ from odoo.tools.safe_eval import safe_eval
 
 DEFAULT_ENDPOINT = 'https://iap-snailmail.odoo.com'
 PRINT_ENDPOINT = '/iap/snailmail/1/print'
+DEFAULT_TIMEOUT = 30
 
 ERROR_CODES = [
     'MISSING_REQUIRED_FIELDS',
@@ -255,10 +256,10 @@ class SnailmailLetter(models.Model):
     def _get_error_message(self, error):
         if error == 'CREDIT_ERROR':
             link = self.env['iap.account'].get_credits_url(service_name='snailmail')
-            return _('You don\'t have enough credits to perform this operation.<br>Please go to your <a href=%s target="new">iap account</a>.' % link)
+            return _('You don\'t have enough credits to perform this operation.<br>Please go to your <a href=%s target="new">iap account</a>.') % link
         if error == 'TRIAL_ERROR':
             link = self.env['iap.account'].get_credits_url(service_name='snailmail', trial=True)
-            return _('You don\'t have an IAP account registered for this service.<br>Please go to <a href=%s target="new">iap.odoo.com</a> to claim your free credits.' % link)
+            return _('You don\'t have an IAP account registered for this service.<br>Please go to <a href=%s target="new">iap.odoo.com</a> to claim your free credits.') % link
         if error == 'NO_PRICE_AVAILABLE':
             return _('The country of the partner is not covered by Snailmail.')
         if error == 'MISSING_REQUIRED_FIELDS':
@@ -274,8 +275,9 @@ class SnailmailLetter(models.Model):
         invalid_address_letters = self - valid_address_letters
         invalid_address_letters._snailmail_print_invalid_address()
         if valid_address_letters and immediate:
-            valid_address_letters._snailmail_print_valid_address()
-        self.env.cr.commit()
+            for letter in valid_address_letters:
+                letter._snailmail_print_valid_address()
+                self.env.cr.commit()
 
     def _snailmail_print_invalid_address(self):
         for letter in self:
@@ -301,8 +303,9 @@ class SnailmailLetter(models.Model):
         }
         """
         endpoint = self.env['ir.config_parameter'].sudo().get_param('snailmail.endpoint', DEFAULT_ENDPOINT)
+        timeout = int(self.env['ir.config_parameter'].sudo().get_param('snailmail.timeout', DEFAULT_TIMEOUT))
         params = self._snailmail_create('print')
-        response = jsonrpc(endpoint + PRINT_ENDPOINT, params=params)
+        response = jsonrpc(endpoint + PRINT_ENDPOINT, params=params, timeout=timeout)
         for doc in response['request']['documents']:
             if doc.get('sent') and response['request_code'] == 200:
                 note = _('The document was correctly sent by post.<br>The tracking id is %s' % doc['send_id'])
@@ -310,7 +313,7 @@ class SnailmailLetter(models.Model):
             else:
                 error = doc['error'] if response['request_code'] == 200 else response['reason']
 
-                note = _('An error occured when sending the document by post.<br>Error: %s' % self._get_error_message(error))
+                note = _('An error occured when sending the document by post.<br>Error: %s') % self._get_error_message(error)
                 letter_data = {
                     'info_msg': note,
                     'state': 'error',
@@ -331,14 +334,16 @@ class SnailmailLetter(models.Model):
         self.env['bus.bus'].sendmany(notifications)
 
     def snailmail_print(self):
-        self._snailmail_print()
+        self.write({'state': 'pending'})
+        if len(self) == 1:
+            self._snailmail_print()
 
     def cancel(self):
         self.write({'state': 'canceled', 'error_code': False})
         self.send_snailmail_update()
 
     @api.model
-    def _snailmail_cron(self):
+    def _snailmail_cron(self, autocommit=True):
         letters_send = self.search([
             '|',
             ('state', '=', 'pending'),
@@ -346,7 +351,11 @@ class SnailmailLetter(models.Model):
             ('state', '=', 'error'),
             ('error_code', 'in', ['TRIAL_ERROR', 'CREDIT_ERROR', 'ATTACHMENT_ERROR', 'MISSING_REQUIRED_FIELDS'])
         ])
-        letters_send._snailmail_print()
+        for letter in letters_send:
+            letter._snailmail_print()
+            # Commit after every letter sent to avoid to send it again in case of a rollback
+            if autocommit:
+                self.env.cr.commit()
 
     @api.model
     def fetch_failed_letters(self):

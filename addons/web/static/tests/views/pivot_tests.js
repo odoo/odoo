@@ -1369,9 +1369,9 @@ QUnit.module('Views', {
         await testUtils.dom.click(pivot.$('.o_pivot_field_menu .dropdown-item[data-field="customer"]'));
 
         values = [
-            "29", "2", "1", "32",
+            "29", "1", "2", "32",
             "12",           "12",
-            "17", "2", "1", "20",
+            "17", "1", "2", "20",
         ];
         assert.strictEqual(getCurrentValues(pivot), values.join(','));
 
@@ -1380,10 +1380,10 @@ QUnit.module('Views', {
         await testUtils.dom.click(pivot.$('.o_pivot_field_menu .dropdown-item[data-field="other_product_id"]'));
 
         values = [
-            "29", "2", "1", "32",
+            "29", "1", "2", "32",
             "12",           "12",
-            "17", "2", "1", "20",
-            "17", "2", "1", "20",
+            "17", "1", "2", "20",
+            "17", "1", "2", "20",
         ];
         assert.strictEqual(getCurrentValues(pivot), values.join(','));
 
@@ -1397,11 +1397,11 @@ QUnit.module('Views', {
         // sanity check of what the table should look like if all groups are
         // expanded, to ensure that the former asserts are pertinent
         values = [
-            "12", "17", "2", "1", "32",
+            "12", "17", "1", "2", "32",
             "12",                 "12",
             "12",                 "12",
-                  "17", "2", "1", "20",
-                  "17", "2", "1", "20",
+                  "17", "1", "2", "20",
+                  "17", "1", "2", "20",
         ];
         assert.strictEqual(getCurrentValues(pivot), values.join(','));
 
@@ -1478,6 +1478,37 @@ QUnit.module('Views', {
 
         assert.strictEqual(pivot.$('tbody tr:first td:nth(2)').text(), '32',
             "selected measure should be foo, with total 32");
+
+        pivot.destroy();
+    });
+
+    QUnit.test('clear table cells data after closeGroup', async function (assert) {
+        assert.expect(2);
+
+        const pivot = await createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot/>',
+            groupBy: ['product_id'],
+        });
+
+        await testUtils.dom.click(pivot.el.querySelector('thead .o_pivot_header_cell_closed'));
+        await testUtils.dom.click(pivot.el.querySelectorAll('.o_pivot_field_menu .dropdown-item[data-field="date"]')[0]);
+
+        // close and reopen row groupings after changing value
+        this.data.partner.records.find(r => r.product_id === 37).date = '2016-10-27';
+        await testUtils.dom.click(pivot.el.querySelector('tbody .o_pivot_header_cell_opened'));
+        await testUtils.dom.click(pivot.el.querySelector('tbody .o_pivot_header_cell_closed'));
+        await testUtils.dom.click(pivot.el.querySelector('.o_pivot_field_menu .dropdown-item[data-field="product_id"]'));
+        assert.strictEqual(pivot.el.querySelectorAll('.o_pivot_cell_value')[4].innerText, ''); // xphone December 2016
+
+        // invert axis, and reopen column groupings
+        await testUtils.dom.click(pivot.el.querySelector('.o_cp_buttons .o_pivot_flip_button'));
+        await testUtils.dom.click(pivot.el.querySelector('thead .o_pivot_header_cell_opened'));
+        await testUtils.dom.click(pivot.el.querySelector('thead .o_pivot_header_cell_closed'));
+        await testUtils.dom.click(pivot.el.querySelector('.o_pivot_field_menu .dropdown-item[data-field="product_id"]'));
+        assert.strictEqual(pivot.el.querySelectorAll('.o_pivot_cell_value')[3].innerText, ''); // December 2016 xphone
 
         pivot.destroy();
     });
@@ -2273,6 +2304,32 @@ QUnit.module('Views', {
         pivot.destroy();
     });
 
+    QUnit.test('Click on the measure list but not on a menu item', async function (assert) {
+        assert.expect(2);
+
+        const pivot = await createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: `<pivot/>`,
+        });
+
+        // open the "Measures" menu
+        await testUtils.dom.click(pivot.el.querySelector('.o_cp_buttons button'));
+
+        // click on the divider in the "Measures" menu does not crash
+        await testUtils.dom.click(pivot.el.querySelector('.o_pivot_measures_list .dropdown-divider'));
+        // the menu should still be open
+        assert.isVisible(pivot.el.querySelector('.o_pivot_measures_list'));
+
+        // click on the measure list but not on a menu item or the separator
+        await testUtils.dom.click(pivot.el.querySelector('.o_pivot_measures_list'));
+        // the menu should still be open
+        assert.isVisible(pivot.el.querySelector('.o_pivot_measures_list'));
+
+        pivot.destroy();
+    });
+
     QUnit.test('Navigation list view for a group and back with breadcrumbs', async function (assert) {
         assert.expect(16);
         // create an action manager to test the interactions with the search view
@@ -2620,7 +2677,7 @@ QUnit.module('Views', {
             ].join(''),
             "The row headers should be as expected"
         );
-        
+
         // Set a Row groupby
         await testUtils.dom.click(pivot.$('tbody .o_pivot_header_cell_closed').eq(0));
         await testUtils.dom.click(pivot.$('.o_pivot_field_menu .dropdown-item[data-field=product_id]:first'));
@@ -2668,6 +2725,116 @@ QUnit.module('Views', {
             ].join(''),
             "The row headers should be as expected"
         );
+
+        pivot.destroy();
+    });
+
+    QUnit.test('Server order is kept by default', async function (assert) {
+        assert.expect(1);
+
+        let isSecondReadGroup = false;
+
+        var pivot = await createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="customer" type="row"/>' +
+                        '<field name="foo" type="measure"/>' +
+                '</pivot>',
+            mockRPC: function (route, args) {
+                if (args.method === 'read_group' && isSecondReadGroup) {
+                    return Promise.resolve([
+                        {
+                            customer: [2, 'Second'],
+                            foo: 18,
+                            __count: 2,
+                            __domain :[["customer", "=", 2]],
+                        },
+                        {
+                            customer: [1, 'First'],
+                            foo: 14,
+                            __count: 2,
+                            __domain :[["customer", "=", 1]],
+                        }
+                    ]);
+                }
+                var result = this._super.apply(this, arguments);
+                isSecondReadGroup = true;
+                return result;
+            },
+        });
+
+        const values = [
+            "32", // Total Value
+            "18", // Second
+            "14", // First
+        ];
+        assert.strictEqual(getCurrentValues(pivot), values.join());
+
+        pivot.destroy();
+    });
+
+    QUnit.test('comparison with two groupbys: rows from reference period should be displayed', async function (assert) {
+        assert.expect(3);
+
+        const context = {
+            timeRangeMenuData: {
+                timeRange: ["&",["date",">=","2021-01-01"],["date","<","2022-01-01"]],
+                timeRangeDescription: 'This Year',
+                comparisonTimeRange: ["&",["date",">=","2020-01-01"],["date","<","2021-01-01"]],
+                comparisonTimeRangeDescription: "Previous Period",
+            }
+        };
+
+        this.data.partner.records = [
+            { id: 1, date: "2021-10-10", product_id: 1, customer: 1 },
+            { id: 2, date: "2020-10-10", product_id: 2, customer: 1 },
+        ]
+        this.data.product.records = [
+            { id: 1, display_name: "A" },
+            { id: 2, display_name: "B" },
+        ]
+        this.data.customer.records = [
+            { id: 1, display_name: "P" },
+        ]
+
+        const pivot = await createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot><field name="customer" type="row"/><field name="product_id" type="row"/></pivot>',
+            viewOptions: { context },
+        });
+
+        assert.strictEqual(
+            pivot.$('th').slice(0, 6).text(),
+            [
+                        "Total",
+                        "Count",
+                "This Year", "Previous Period", "Variation"
+            ].join(''),
+            "The col headers should be as expected"
+        );
+
+        assert.strictEqual(
+            pivot.$('th').slice(6).text(),
+            [
+                'Total',
+                    'P',
+                        'A',
+                        'B',
+            ].join(''),
+            "The row headers should be as expected"
+        );
+
+        const values = [
+            "1", "1", "0%",
+            "1", "1", "0%",
+            "1", "0", "100%",
+            "0", "1", "-100%",
+        ];
+        assert.strictEqual(getCurrentValues(pivot), values.join());
 
         pivot.destroy();
     });

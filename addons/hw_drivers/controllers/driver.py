@@ -2,6 +2,8 @@
 import logging
 import time
 from threading import Thread, Event, Lock
+from traceback import format_exc
+
 from usb import core
 from gatt import DeviceManager as Gatt_DeviceManager
 import subprocess
@@ -18,12 +20,15 @@ from cups import Connection as cups_connection
 from glob import glob
 from base64 import b64decode
 from pathlib import Path
+import requests
 import socket
 import ctypes
+from datetime import datetime, timedelta
 
 from odoo import http, _
 from odoo.modules.module import get_resource_path
 from odoo.addons.hw_drivers.tools import helpers
+from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
@@ -62,6 +67,18 @@ class StatusController(http.Controller):
         listener is a dict in witch there are a sessions_id and a dict of device_id to listen
         """
         req = event_manager.add_request(listener)
+
+        # Search for previous events and remove events older than 5 seconds
+        oldest_time = time.time() - 5
+        for event in list(event_manager.events):
+            if event['time'] < oldest_time:
+                del event_manager.events[0]
+                continue
+            if event['device_id'] in listener['devices'] and event['time'] > listener['last_event']:
+                event['session_id'] = req['session_id']
+                return event
+
+        # Wait for new event
         if req['event'].wait(50):
             req['event'].clear()
             req['result']['session_id'] = req['session_id']
@@ -77,7 +94,7 @@ class StatusController(http.Controller):
         """
         server = helpers.get_odoo_server_url()
         image = get_resource_path('hw_drivers', 'static/img', 'False.jpg')
-        if server == '':
+        if not server:
             credential = b64decode(token).decode('utf-8').split('|')
             url = credential[0]
             token = credential[1]
@@ -88,10 +105,9 @@ class StatusController(http.Controller):
                 helpers.add_credential(db_uuid, enterprise_code)
             try:
                 subprocess.check_call([get_resource_path('point_of_sale', 'tools/posbox/configuration/connect_to_server.sh'), url, '', token, 'noreboot'])
-                helpers.check_certificate()
                 m.send_alldevices()
-                m.load_drivers()
                 image = get_resource_path('hw_drivers', 'static/img', 'True.jpg')
+                helpers.odoo_restart(3)
             except subprocess.CalledProcessError as e:
                 _logger.error('A error encountered : %s ' % e.output)
         if os.path.isfile(image):
@@ -112,7 +128,7 @@ class ExceptionLogger:
 
     def write(self, message):
         if message != '\n':
-            self.logger.err(message)
+            self.logger.error(message)
 
     def flush(self):
         pass
@@ -209,6 +225,7 @@ class Driver(Thread, metaclass=DriverMetaClass):
 
 class EventManager(object):
     def __init__(self):
+        self.events = []
         self.sessions = {}
 
     def _delete_expired_sessions(self, max_time=70):
@@ -235,10 +252,16 @@ class EventManager(object):
         return self.sessions[listener['session_id']]
 
     def device_changed(self, device):
+        event = {
+            **device.data,
+            'device_id': device.device_identifier,
+            'time': time.time(),
+            'request_data': json.loads(request.params['data']) if request else None,
+        }
+        self.events.append(event)
         for session in self.sessions:
-            if device.device_identifier in self.sessions[session]['devices']:
-                self.sessions[session]['result'] = device.data
-                self.sessions[session]['result']['device_id'] = device.device_identifier
+            if device.device_identifier in self.sessions[session]['devices'] and not self.sessions[session]['event'].isSet():
+                self.sessions[session]['result'] = event
                 self.sessions[session]['event'].set()
 
 
@@ -250,6 +273,63 @@ class IoTDevice(object):
 
 event_manager = EventManager()
 
+#----------------------------------------------------------
+# ConnectionManager
+#----------------------------------------------------------
+
+class ConnectionManager(Thread):
+    def __init__(self):
+        super(ConnectionManager, self).__init__()
+        self.pairing_code = False
+        self.pairing_uuid = False
+
+    def run(self):
+        if not helpers.get_odoo_server_url():
+            end_time = datetime.now() + timedelta(minutes=5)
+            while (datetime.now() < end_time):
+                self._connect_box()
+                time.sleep(10)
+            self.pairing_code = False
+            self.pairing_uuid = False
+            self._refresh_displays()
+
+    def _connect_box(self):
+        data = {
+            'jsonrpc': 2.0,
+            'params': {
+                'pairing_code': self.pairing_code,
+                'pairing_uuid': self.pairing_uuid,
+            }
+        }
+
+        urllib3.disable_warnings()
+        req = requests.post('https://iot-proxy.odoo.com/odoo-enterprise/iot/connect-box', json=data, verify=False)
+        result = req.json().get('result', {})
+
+        if all(key in result for key in ['pairing_code', 'pairing_uuid']):
+            self.pairing_code = result['pairing_code']
+            self.pairing_uuid = result['pairing_uuid']
+        elif all(key in result for key in ['url', 'token', 'db_uuid', 'enterprise_code']):
+            self._connect_to_server(result['url'], result['token'], result['db_uuid'], result['enterprise_code'])
+
+    def _connect_to_server(self, url, token, db_uuid, enterprise_code):
+        if db_uuid and enterprise_code:
+            helpers.add_credential(db_uuid, enterprise_code)
+
+        # Save DB URL and token
+        subprocess.check_call([get_resource_path('point_of_sale', 'tools/posbox/configuration/connect_to_server.sh'), url, '', token, 'noreboot'])
+        # Notify the DB, so that the kanban view already shows the IoT Box
+        m.send_alldevices()
+        # Restart to checkout the git branch, get a certificate, load the IoT handlers...
+        subprocess.check_call(["sudo", "service", "odoo", "restart"])
+
+    def _refresh_displays(self):
+        """Refresh all displays to hide the pairing code"""
+        for d in iot_devices:
+            if iot_devices[d].device_type == 'display':
+                iot_devices[d].action({
+                    'action': 'display_refresh'
+                })
 
 #----------------------------------------------------------
 # Manager
@@ -272,6 +352,8 @@ class Manager(Thread):
             if spec:
                 module = util.module_from_spec(spec)
                 spec.loader.exec_module(module)
+        http.addons_manifest = {}
+        http.root = http.Root()
 
     def send_alldevices(self):
         """
@@ -329,15 +411,17 @@ class Manager(Thread):
         x_screen = 0
         for match in finditer('Display Number (\d), type HDMI (\d)', displays):
             display_id, hdmi_id = match.groups()
-            display_name = subprocess.check_output(['tvservice', '-nv', display_id]).decode().rstrip().split('=')[1]
-            display_identifier = sub('[^a-zA-Z0-9 ]+', '', display_name).replace(' ', '_') + "_" + str(hdmi_id)
-            iot_device = IoTDevice({
-                'identifier': display_identifier,
-                'name': display_name,
-                'x_screen': str(x_screen),
-            }, 'display')
-            display_devices[display_identifier] = iot_device
-            x_screen += 1
+            tvservice_output = subprocess.check_output(['tvservice', '-nv', display_id]).decode().rstrip()
+            if tvservice_output:
+                display_name = tvservice_output.split('=')[1]
+                display_identifier = sub('[^a-zA-Z0-9 ]+', '', display_name).replace(' ', '_') + "_" + str(hdmi_id)
+                iot_device = IoTDevice({
+                    'identifier': display_identifier,
+                    'name': display_name,
+                    'x_screen': str(x_screen),
+                }, 'display')
+                display_devices[display_identifier] = iot_device
+                x_screen += 1
 
         if not len(display_devices):
             # No display connected, create "fake" device to be accessed from another computer
@@ -423,39 +507,50 @@ class Manager(Thread):
         display_devices = self.get_connected_displays()
         cpt = 0
         while 1:
-            updated_devices = self.usb_loop()
-            updated_devices.update(self.video_loop())
-            updated_devices.update(mpdm.devices)
-            updated_devices.update(display_devices)
-            updated_devices.update(bt_devices)
-            updated_devices.update(socket_devices)
-            updated_devices.update(self.serial_loop())
-            if cpt % 40 == 0:
-                printer_devices = self.printer_loop()
-                cpt = 0
-            updated_devices.update(printer_devices)
-            cpt += 1
-            added = updated_devices.keys() - self.devices.keys()
-            removed = self.devices.keys() - updated_devices.keys()
-            self.devices = updated_devices
-            send_devices = False
-            for path in [device_rm for device_rm in removed if device_rm in iot_devices]:
-                iot_devices[path].disconnect()
-                _logger.info('Device %s is now disconnected', path)
-                send_devices = True
-            for path in [device_add for device_add in added if device_add not in iot_devices]:
-                for driverclass in [d for d in drivers if d.connection_type == self.devices[path].connection_type]:
-                    if driverclass.supported(device = updated_devices[path].dev):
-                        _logger.info('Device %s is now connected', path)
-                        d = driverclass(device = updated_devices[path].dev)
-                        d.daemon = True
-                        d.start()
-                        iot_devices[path] = d
-                        send_devices = True
-                        break
-            if send_devices:
-                self.send_alldevices()
-            time.sleep(3)
+            try:
+                updated_devices = self.usb_loop()
+                updated_devices.update(self.video_loop())
+                updated_devices.update(mpdm.devices)
+                updated_devices.update(display_devices)
+                updated_devices.update(bt_devices)
+                updated_devices.update(socket_devices)
+                updated_devices.update(self.serial_loop())
+                if cpt % 40 == 0:
+                    printer_devices = self.printer_loop()
+                    cpt = 0
+                updated_devices.update(printer_devices)
+                cpt += 1
+                added = updated_devices.keys() - self.devices.keys()
+                removed = self.devices.keys() - updated_devices.keys()
+                self.devices = updated_devices
+                send_devices = False
+                for path in [device_rm for device_rm in removed if device_rm in iot_devices]:
+                    iot_devices[path].disconnect()
+                    _logger.info('Device %s is now disconnected', path)
+                    send_devices = True
+                for path in [device_add for device_add in added if device_add not in iot_devices]:
+                    for driverclass in [d for d in drivers if d.connection_type == self.devices[path].connection_type]:
+                        if driverclass.supported(device = updated_devices[path].dev):
+                            _logger.info('Device %s is now connected', path)
+                            d = driverclass(device = updated_devices[path].dev)
+                            d.daemon = True
+                            iot_devices[path] = d
+                            # Start the thread after creating the iot_devices entry so the
+                            # thread can assume the iot_devices entry will exist while it's
+                            # running, at least until the `disconnect` above gets triggered
+                            # when `removed` is not empty. Threads are currently not
+                            # explicitly terminated when that happens, so the results can
+                            # be undefined.
+                            d.start()
+                            send_devices = True
+                            break
+                if send_devices:
+                    self.send_alldevices()
+                time.sleep(3)
+            except:
+                # No matter what goes wrong, the Manager loop needs to keep running
+                _logger.error(format_exc())
+
 
 class GattBtManager(Gatt_DeviceManager):
 
@@ -478,19 +573,96 @@ class BtManager(Thread):
 
 class SocketManager(Thread):
 
+    def __init__(self):
+        super(SocketManager, self).__init__()
+        self.open_socket(9000)
+
+    def open_socket(self, port):
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.sock.bind(('', port))
+        self.sock.listen()
+
+    @staticmethod
+    def create_socket_device(dev, addr):
+        """Creates a socket_devices entry that wraps the socket.
+
+        The Manager thread will detect it being added and instantiate a corresponding
+        Driver in iot_devices based on the results of the `supported` call.
+        """
+        _logger.debug("Creating new socket_device")
+        iot_device = IoTDevice(type('', (), {'dev': dev}), 'socket')
+        socket_devices[addr] = iot_device
+
+    @staticmethod
+    def replace_socket_device(dev, addr):
+        """Replaces an existing socket_devices entry.
+
+        The socket contained in the socket_devices entry is also used by the Driver
+        thread defined in iot_devices that's reading and writing from it. The Driver
+        thread can modify both socket_devices and iot_devices. The Manager thread can
+        update iot_devices based on changes in socket_devices. In order to clean up
+        the existing connection, it'll be necessary to actively close it at the TCP
+        level, wait for the Driver thread to terminate in response to that, and for the
+        Manager to do any iot_devices related cleanup in response.
+
+        After this the new connection can replace the old one.
+        """
+        driver_thread = iot_devices.get(addr)
+
+        if not driver_thread:
+            _logger.warning("Found socket_device entry {} with no corresponding iot_device".format(addr))
+            dev.close()
+            return
+
+        old_dev = socket_devices[addr].dev.dev
+        _logger.debug("Closing socket: {}".format(old_dev))
+        # Actively close the existing connection and do not allow receiving further
+        # data. This will result in a currently blocking recv call returning b'' and
+        # subsequent recv calls raising an OSError about a bad file descriptor.
+        old_dev.shutdown(socket.SHUT_RD)
+        old_dev.close()
+
+        _logger.debug("Waiting for driver thread to finish")
+        driver_thread.join()
+        _logger.debug("Driver thread finished")
+
+        # Shutting down the socket will result in the corresponding IngenicoDriver
+        # thread terminating and removing the corresponding entries in socket_devices
+        # and iot_devices. However, if we create a new socket device too soon,
+        # the `devices` attribute of the Manager thread will not have registered that
+        # the old socket device is gone yet. As a result, the keys of `updated_devices`
+        # and `devices` might be exactly the same, which means no difference will be
+        # detected and no new IngenicoDriver thread will be created. To avoid this, we
+        # wait for `devices` to update first, and only after that do we create a new
+        # socket device.
+        _logger.debug("Waiting for Manager.devices to be updated")
+        while addr in m.devices:
+            time.sleep(1)
+        _logger.debug("Manager.devices is updated")
+
+        SocketManager.create_socket_device(dev, addr)
+
     def run(self):
         while True:
             try:
-                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-                sock.bind(('', 9000))
-                sock.listen(1)
-                dev, addr = sock.accept()
-                if addr and addr[0] not in socket_devices:
-                    iot_device = IoTDevice(type('', (), {'dev': dev}), 'socket')
-                    socket_devices[addr[0]] = iot_device
-            except OSError as e:
-                _logger.error(_('Error in SocketManager: %s') % (e.strerror))
+                dev, addr = self.sock.accept()
+                _logger.debug("Accepted new socket connection")
+                if not addr:
+                    _logger.warning("Socket accept returned no address")
+                    continue
+
+                if addr[0] not in socket_devices:
+                    self.create_socket_device(dev, addr[0])
+                else:
+                    # This can happen if the device power cycled or a network cable
+                    # was temporarily unplugged: if the device tries to connect again
+                    # we might still have the old connection open and it needs to be
+                    # cleaned up.
+                    self.replace_socket_device(dev, addr[0])
+            except OSError:
+                pass
+
 
 class MPDManager(Thread):
     def __init__(self):
@@ -536,6 +708,10 @@ else:
         subprocess.check_call(["pkill", "-9", "eftdvs"])  # Check if MPD server is running
     except subprocess.CalledProcessError:
         pass
+
+cm = ConnectionManager()
+cm.daemon = True
+cm.start()
 
 m = Manager()
 m.daemon = True

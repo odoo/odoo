@@ -134,9 +134,9 @@
                                 <div class="col-2"/>
                                 <div class="col-10">
                                     <span class="text-muted">from </span>
-                                    <t t-esc="moment(record.date_from.raw_value).format('L')"/>
+                                    <field name="date_from" widget="date"/>
                                     <span class="text-muted">to </span>
-                                    <t t-esc="moment(record.date_to.raw_value).format('L')"/>
+                                    <field name="date_to" widget="date"/>
                                 </div>
                             </div>
                             <div class="row no-gutters" t-if="['validate', 'refuse'].includes(record.state.raw_value)">
@@ -207,6 +207,20 @@
                 <field name="state" widget="statusbar" statusbar_visible="confirm,validate"/>
             </header>
             <sheet>
+                <div class="alert alert-info" role="alert" attrs="{'invisible': ['|', ('tz_mismatch', '=', False), ('holiday_type', '=', 'category')]}">
+                    <span attrs="{'invisible': [('holiday_type', '!=', 'employee')]}">
+                        The employee has a different timezone than yours! Here dates and times are displayed in the employee's timezone
+                    </span>
+                    <span attrs="{'invisible': [('holiday_type', '!=', 'department')]}">
+                        The department's company has a different timezone than yours! Here dates and times are displayed in the company's timezone
+                    </span>
+                    <span attrs="{'invisible': [('holiday_type', '!=', 'company')]}">
+                        The company has a different timezone than yours! Here dates and times are displayed in the company's timezone
+                    </span>
+                    (<field name="tz"/>).
+                </div>
+                <field name="tz_mismatch" invisible="1"/>
+                <field name="holiday_type" invisible="1"/>
                 <field name="leave_type_request_unit" invisible="1"/>
                 <div class="oe_title oe_read_only" attrs="{'invisible': [('display_name', '=', False)]}" name="title">
                     <h1>
@@ -237,7 +251,7 @@
                                         'readonly': [('state', 'not in', ('draft', 'confirm'))],
                                         'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)]
                                     }"/>
-                                <field name="request_date_from_period" class="oe_inline oe_edit_only"
+                                <field name="request_date_from_period" class="oe_inline"
                                     string="In"
                                     options="{'horizontal': True}"
                                     attrs="{
@@ -470,7 +484,7 @@
                 <button string="Approve" name="action_approve" type="object"
                     icon="fa-check text-success"
                     states="confirm"
-                    groups="hr_holidays.group_hr_holidays_user"/>
+                    groups="hr_holidays.group_hr_holidays_responsible"/>
                 <button string="Validate" name="action_validate" type="object"
                     icon="fa-check text-success"
                     states="validate1"
@@ -524,6 +538,7 @@
         }</field>
         <field name="domain">[('holiday_type','=','employee'), ('state', '!=', 'refuse')]</field>
         <field name="search_view_id" ref="view_hr_holidays_filter"/>
+        <field name="view_id" />
     </record>
 
     <record id="hr_leave_action_new_request" model="ir.actions.act_window">
@@ -611,7 +626,13 @@
         <field name="res_model">hr.leave</field>
         <field name="binding_model_id" eval="False"/>
         <field name="view_mode">tree,kanban,form,calendar,activity</field>
-        <field name="context">{'form_view_ref': 'hr_holidays.hr_leave_view_form_manager'}</field>
+        <field name="context">{}</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'tree'}),
+            (0, 0, {'view_mode': 'kanban'}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('hr_holidays.hr_leave_view_form_manager')}),
+            (0, 0, {'view_mode': 'calendar'}),
+            (0, 0, {'view_mode': 'activity'})]"/>
         <field name="domain">[]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
@@ -625,11 +646,10 @@
         <field name="res_model">hr.leave</field>
         <field name="view_mode">tree,kanban,form,calendar,activity</field>
         <field name="context">{
-            'search_default_managed_people':1,
             'search_default_my_team_leaves':1,
             'search_default_approve':1}
         </field>
-        <field name="domain">[]</field>
+        <field name="domain">['|', '|', '&amp;', ('employee_id.leave_manager_id', '=', uid), ('holiday_status_id.validation_type', '=', 'manager'), '&amp;', ('holiday_status_id.responsible_id', '=', uid), ('holiday_status_id.validation_type', '=', 'hr'), '&amp;', '|', ('holiday_status_id.responsible_id', '=', uid), ('employee_id.leave_manager_id', '=', uid), ('holiday_status_id.validation_type', '=', 'both')]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new time off request

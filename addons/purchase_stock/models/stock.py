@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.tools.float_utils import float_round
 
 
 class StockPicking(models.Model):
@@ -36,11 +37,14 @@ class StockMove(models.Model):
         """ Returns the unit price for the move"""
         self.ensure_one()
         if self.purchase_line_id and self.product_id.id == self.purchase_line_id.product_id.id:
+            price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
             line = self.purchase_line_id
             order = line.order_id
             price_unit = line.price_unit
             if line.taxes_id:
-                price_unit = line.taxes_id.with_context(round=False).compute_all(price_unit, currency=line.order_id.currency_id, quantity=1.0)['total_void']
+                qty = line.product_qty or 1
+                price_unit = line.taxes_id.with_context(round=False).compute_all(price_unit, currency=line.order_id.currency_id, quantity=qty)['total_void']
+                price_unit = float_round(price_unit / qty, precision_digits=price_unit_prec)
             if line.product_uom.id != line.product_id.uom_id.id:
                 price_unit *= line.product_uom.factor / line.product_id.uom_id.factor
             if order.currency_id != order.company_id.currency_id:
@@ -163,8 +167,17 @@ class Orderpoint(models.Model):
 
     def _quantity_in_progress(self):
         res = super(Orderpoint, self)._quantity_in_progress()
-        for poline in self.env['purchase.order.line'].search([('state','in',('draft','sent','to approve')),('orderpoint_id','in',self.ids)]):
-            res[poline.orderpoint_id.id] += poline.product_uom._compute_quantity(poline.product_qty, poline.orderpoint_id.product_uom, round=False)
+        purchase_lines_in_progress = self.env['purchase.order.line'].search([
+            ('state','in',('draft','sent','to approve')),
+            '|',
+                ('orderpoint_id','in',self.ids),
+                ('move_dest_ids.product_id', 'in', self.mapped('product_id.id'))
+        ])
+        for poline in purchase_lines_in_progress:
+            orderpoints = self.filtered(lambda x: x.product_id == poline.product_id)
+            for orderpoint in orderpoints:
+                if poline.product_uom.category_id == orderpoint.product_uom.category_id:
+                    res[orderpoint.id] += poline.product_uom._compute_quantity(poline.product_qty, orderpoint.product_uom, round=False)
         return res
 
     def action_view_purchase(self):
@@ -182,6 +195,12 @@ class Orderpoint(models.Model):
         result['domain'] = "[('id','in',%s)]" % (purchase_ids.ids)
 
         return result
+
+    def write(self, vals):
+        if vals.get('product_id'):
+            po_lines = self.env['purchase.order.line'].search([('state','in',('draft','sent','to approve')),('orderpoint_id','in',self.ids)])
+            po_lines.write({'orderpoint_id': False})
+        return super(Orderpoint, self).write(vals)
 
 
 class ProductionLot(models.Model):

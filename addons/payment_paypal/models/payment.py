@@ -73,13 +73,13 @@ class AcquirerPaypal(models.Model):
         if not self.fees_active:
             return 0.0
         country = self.env['res.country'].browse(country_id)
-        if country and self.company_id.country_id.id == country.id:
+        if country and self.company_id.sudo().country_id.id == country.id:
             percentage = self.fees_dom_var
             fixed = self.fees_dom_fixed
         else:
             percentage = self.fees_int_var
             fixed = self.fees_int_fixed
-        fees = (percentage / 100.0 * amount) + fixed / (1 - percentage / 100.0)
+        fees = (percentage / 100.0 * amount + fixed) / (1 - percentage / 100.0)
         return fees
 
     def paypal_form_generate_values(self, values):
@@ -157,7 +157,7 @@ class TxPaypal(models.Model):
             invalid_parameters.append(('txn_id', data.get('txn_id'), self.acquirer_reference))
         # check what is buyed
         if float_compare(float(data.get('mc_gross', '0.0')), (self.amount + self.fees), 2) != 0:
-            invalid_parameters.append(('mc_gross', data.get('mc_gross'), '%.2f' % self.amount + self.fees))  # mc_gross is amount + fees
+            invalid_parameters.append(('mc_gross', data.get('mc_gross'), '%.2f' % (self.amount + self.fees)))  # mc_gross is amount + fees
         if data.get('mc_currency') != self.currency_id.name:
             invalid_parameters.append(('mc_currency', data.get('mc_currency'), self.currency_id.name))
         if 'handling_amount' in data and float_compare(float(data.get('handling_amount')), self.fees, 2) != 0:

@@ -3,7 +3,6 @@
 
 from odoo import models
 from odoo.http import request
-from odoo.osv import expression
 
 
 class IrHttp(models.AbstractModel):
@@ -22,6 +21,6 @@ class IrHttp(models.AbstractModel):
         return super(IrHttp, cls)._dispatch()
 
     @classmethod
-    def _get_translation_frontend_modules_domain(cls):
-        domain = super(IrHttp, cls)._get_translation_frontend_modules_domain()
-        return expression.OR([domain, [('name', '=', 'web_editor')]])
+    def _get_translation_frontend_modules_name(cls):
+        mods = super(IrHttp, cls)._get_translation_frontend_modules_name()
+        return mods + ['web_editor']

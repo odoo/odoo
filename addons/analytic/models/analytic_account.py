@@ -146,7 +146,7 @@ class AccountAnalyticAccount(models.Model):
             name = analytic.name
             if analytic.code:
                 name = '[' + analytic.code + '] ' + name
-            if analytic.partner_id:
+            if analytic.partner_id.commercial_partner_id.name:
                 name = name + ' - ' + analytic.partner_id.commercial_partner_id.name
             res.append((analytic.id, name))
         return res

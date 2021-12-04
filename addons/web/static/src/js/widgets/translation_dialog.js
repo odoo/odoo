@@ -57,13 +57,16 @@ odoo.define('web.TranslationDialog', function (require) {
                 this._super(),
                 this._loadLanguages().then((l) => {
                     this.languages = l;
+                    return this._loadTranslations().then((t) => {
+                        this.translations = t;
+                    });
                 }),
-                this._loadTranslations().then((t) => {
-                    this.translations = t;
-                })
             ]).then(() => {
                 this.data = this.translations.map((term) => {
                     let relatedLanguage = this.languages.find((language) => language[0] === term.lang);
+                    if (!term.value && !this.showSrc) {
+                        term.value = term.src;
+                    }
                     return {
                         id: term.id,
                         lang: term.lang,
@@ -91,11 +94,12 @@ odoo.define('web.TranslationDialog', function (require) {
          * @private
          */
         _loadTranslations: function () {
+            const domain = [...this.domain, ['lang', 'in', this.languages.map(l => l[0])]];
             return this._rpc({
                 model: 'ir.translation',
                 method: 'search_read',
                 fields: ['lang', 'src', 'value'],
-                domain: this.domain,
+                domain: domain,
             });
         },
         /**

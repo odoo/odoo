@@ -194,7 +194,12 @@ class IrHttp(models.AbstractModel):
                 return serve
 
         # Don't handle exception but use werkzeug debugger if server in --dev mode
-        if 'werkzeug' in tools.config['dev_mode'] and not isinstance(exception, werkzeug.exceptions.NotFound):
+        # Don't intercept JSON request to respect the JSON Spec and return exception as JSON
+        # "The Response is expressed as a single JSON Object, with the following members:
+        #   jsonrpc, result, error, id"
+        if ('werkzeug' in tools.config['dev_mode']
+                and not isinstance(exception, werkzeug.exceptions.NotFound)
+                and request._request_type != 'json'):
             raise exception
 
         try:
@@ -310,13 +315,13 @@ class IrHttp(models.AbstractModel):
                 # eg: Allow to download an attachment on a task from /my/task/task_id
                 record.check('read')
                 record = record_sudo
+
+        # check read access
+        try:
             # We have prefetched some fields of record, among which the field
             # 'write_date' used by '__last_update' below. In order to check
             # access on record, we have to invalidate its cache first.
             record._cache.clear()
-
-        # check read access
-        try:
             record['__last_update']
         except AccessError:
             return None, 403

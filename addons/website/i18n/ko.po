@@ -12,15 +12,15 @@
 # Link Up링크업 <linkup.way@gmail.com>, 2019
 # Seongseok Shin <shinss61@hotmail.com>, 2019
 # Linkup <link-up@naver.com>, 2019
-# JH CHOI <hwangtog@gmail.com>, 2020
+# JH CHOI <hwangtog@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-18 09:46+0000\n"
+"POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2020\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2021\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,6 +40,18 @@ msgstr "이미지 추가"
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "\" alert with a"
 msgstr "\" 다음으로 경고 "
+
+#. module: website
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL to\" can not be empty."
+msgstr "'URL'은 비워 둘 수 없습니다."
+
+#. module: website
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL to\" must start with a leading slash."
+msgstr "\"URL\"은 슬래시로 시작해야 합니다."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__page_count
@@ -365,6 +377,15 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-arrow-right\"/>\n"
 "                                            Google 프로젝트를 만들고 키를 얻으십시오"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                                            Enable billing on your Google Project"
+msgstr ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                                            Google 프로젝트에서 청구 활성화"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1285,7 +1306,7 @@ msgstr "상자화"
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Breadcrumb"
-msgstr "이동 경로"
+msgstr "사이트 이동 경로"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
@@ -1379,6 +1400,13 @@ msgstr "표지 변경"
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
 msgid "Change Icons"
 msgstr "아이콘 변경"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/widgets/theme.js:0
+#, python-format
+msgid "Changing this color will regenerate the default theme color scheme"
+msgstr "이 색을 변경하면 기본 테마 색 구성표가 재생성됩니다"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__field_parent
@@ -1496,6 +1524,7 @@ msgstr "이 페이지 복사"
 #. openerp-web
 #: code:addons/website/static/src/js/editor/wysiwyg_multizone_translate.js:0
 #: code:addons/website/static/src/xml/website.gallery.xml:0
+#: code:addons/website/static/src/xml/website.xml:0
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
 #, python-format
@@ -1618,7 +1647,7 @@ msgstr "콘텐츠 전송 네트워크 (CDN)"
 #: code:addons/website/static/src/xml/translator.xml:0
 #, python-format
 msgid "Content to translate"
-msgstr "내용 번역"
+msgstr "번역할 내용"
 
 #. module: website
 #. openerp-web
@@ -2810,7 +2839,7 @@ msgid ""
 "In this mode, you can only translate texts. To change the structure of the page, you must edit the master page.\n"
 "        Each modification on the master page is automatically applied to all translated versions."
 msgstr ""
-"이 모드에서는 텍스트 만 번역 할 수 있습니다. 페이지 구조를 변경하려면 마스터 페이지를 편집해야 합니다. \n"
+"이 모드에서는 텍스트만 번역 할 수 있습니다. 페이지 구조를 변경하려면 마스터 페이지를 편집해야 합니다. \n"
 "      마스터 페이지의 각 수정 사항은 모든 번역된 버전에 자동으로 적용됩니다."
 
 #. module: website
@@ -2829,7 +2858,10 @@ msgid "Indexed"
 msgstr "색인화"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.pageProperties.xml:0
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
+#, python-format
 msgid "Info"
 msgstr "정보"
 
@@ -3291,7 +3323,7 @@ msgstr "웹사이트 페이지 관리"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Manage multiple websites"
-msgstr "다중 웹사이트 관리"
+msgstr "다중 웹사이트"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
@@ -3349,7 +3381,7 @@ msgstr "메뉴 항목 %s"
 #: code:addons/website/static/src/js/menu/content.js:0
 #, python-format
 msgid "Menu Label"
-msgstr "메뉴 이름표"
+msgstr "메뉴 꼬리표"
 
 #. module: website
 #: code:addons/website/models/website.py:0
@@ -3721,7 +3753,7 @@ msgstr "확인"
 #: code:addons/website/static/src/js/editor/editor_menu_translate.js:0
 #, python-format
 msgid "Ok, never show me this again"
-msgstr "좋습니다. 다시는 보여주지 마십시오"
+msgstr "알겠습니다. 다시 보여주지 않아도 됩니다."
 
 #. module: website
 #. openerp-web
@@ -4048,12 +4080,12 @@ msgstr "프로필"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "Promote"
-msgstr "홍보"
+msgstr "프로모션"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "Promote page on the web"
-msgstr "웹페이지에 홍보 페이지"
+msgstr "웹페이지에 프로모션 페이지"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__partner_id
@@ -4605,7 +4637,7 @@ msgstr "성공"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "TRANSLATE"
-msgstr "이주"
+msgstr "번역"
 
 #. module: website
 #. openerp-web
@@ -5715,6 +5747,12 @@ msgid "White"
 msgstr "흰색"
 
 #. module: website
+#: model:ir.model.fields,help:website.field_res_config_settings__website_domain
+#: model:ir.model.fields,help:website.field_website__domain
+msgid "Will be prefixed by http in canonical URLs if no scheme is specified"
+msgstr "구성표가 지정되지 않은 경우 표준 URL에서 http로 접두사가 지정됩니다."
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
 #: model_terms:ir.ui.view,arch_db:website.s_tabs
 msgid ""
@@ -5805,6 +5843,12 @@ msgid ""
 msgstr "검색 결과에서 이 페이지를 숨겼습니다. 검색 엔진에 의해 색인이 생성되지 않습니다."
 
 #. module: website
+#: code:addons/website/models/website.py:162
+#, python-format
+msgid "You must keep at least one website."
+msgstr "하나 이상의 웹 사이트를 유지해야 합니다."
+
+#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.backend.xml:0
 #, python-format
@@ -5883,7 +5927,7 @@ msgstr "그리고 임베드 코드를 여기에 복사하여 붙여 넣으십시
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "breadcrumb"
-msgstr "이동 경로"
+msgstr "사이트 이동 경로"
 
 #. module: website
 #. openerp-web
@@ -5953,11 +5997,6 @@ msgstr "px"
 #, python-format
 msgid "signs to get your website ready in no time."
 msgstr "곧 웹사이트를 준비할 수 있습니다."
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.robots
-msgid "sitemap.xml"
-msgstr "sitemap.xml"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.menu_search

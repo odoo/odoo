@@ -5,7 +5,7 @@ from lxml import etree
 import re
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 class AccountAnalyticLine(models.Model):
@@ -23,13 +23,22 @@ class AccountAnalyticLine(models.Model):
     task_id = fields.Many2one('project.task', 'Task', index=True, domain="[('company_id', '=', company_id)]")
     project_id = fields.Many2one('project.project', 'Project', domain=[('allow_timesheets', '=', True)])
 
-    employee_id = fields.Many2one('hr.employee', "Employee", check_company=True)
+    employee_id = fields.Many2one('hr.employee', "Employee")
     department_id = fields.Many2one('hr.department', "Department", compute='_compute_department_id', store=True, compute_sudo=True)
     encoding_uom_id = fields.Many2one('uom.uom', compute='_compute_encoding_uom_id')
 
     def _compute_encoding_uom_id(self):
         for analytic_line in self:
             analytic_line.encoding_uom_id = self.env.company.timesheet_encode_uom_id
+
+    @api.constrains('task_id', 'project_id')
+    def _check_task_project(self):
+        for line in self:
+            if line.task_id and line.project_id and line.task_id.project_id != line.project_id:
+                raise ValidationError(_(
+                    "The project and the task's project are inconsistent. " +
+                    "The selected task must be in the selected project."
+                ))
 
     @api.onchange('project_id')
     def onchange_project_id(self):
@@ -113,11 +122,10 @@ class AccountAnalyticLine(models.Model):
     # ----------------------------------------------------
 
     def _timesheet_get_portal_domain(self):
-        return ['|', '&',
+        return ['&',
                 ('task_id.project_id.privacy_visibility', '=', 'portal'),
+                '|',
                 ('task_id.project_id.message_partner_ids', 'child_of', [self.env.user.partner_id.commercial_partner_id.id]),
-                '&',
-                ('task_id.project_id.privacy_visibility', '=', 'portal'),
                 ('task_id.message_partner_ids', 'child_of', [self.env.user.partner_id.commercial_partner_id.id])]
 
     def _timesheet_preprocess(self, vals):
@@ -129,7 +137,7 @@ class AccountAnalyticLine(models.Model):
         if vals.get('project_id') and not vals.get('account_id'):
             project = self.env['project.project'].browse(vals.get('project_id'))
             vals['account_id'] = project.analytic_account_id.id
-            vals['company_id'] = project.analytic_account_id.company_id.id
+            vals['company_id'] = project.analytic_account_id.company_id.id or project.company_id.id
             if not project.analytic_account_id.active:
                 raise UserError(_('The project you are timesheeting on is not linked to an active analytic account. Set one on the project configuration.'))
         # employee implies user

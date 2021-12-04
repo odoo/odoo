@@ -2,6 +2,8 @@ odoo.define('web.search_view_tests', function (require) {
 "use strict";
 
 var FormView = require('web.FormView');
+var GraphView = require('web.GraphView');
+const ListView = require('web.ListView');
 var testUtils = require('web.test_utils');
 
 var createActionManager = testUtils.createActionManager;
@@ -24,13 +26,14 @@ QUnit.module('Search View', {
                     foo: {string: "Foo", type: "char", store: true, sortable: true},
                     bar: {string: "Bar", type: "many2one", relation: 'partner'},
                     float_field: {string: "Float", type: "float", group_operator: 'sum'},
+                    bool: {string: "Boolean", type: 'boolean'},
                 },
                 records: [
-                    {id: 1, display_name: "First record", foo: "yop", bar: 2, date_field: "2017-01-25", birthday: "1983-07-15", float_field: 1},
-                    {id: 2, display_name: "Second record", foo: "blip", bar: 1, date_field: "2017-01-24", birthday: "1982-06-04",float_field: 2},
-                    {id: 3, display_name: "Third record", foo: "gnap", bar: 1, date_field: "2017-01-13", birthday: "1985-09-13",float_field: 1.618},
-                    {id: 4, display_name: "Fourth record", foo: "plop", bar: 2, date_field: "2017-02-25", birthday: "1983-05-05",float_field: -1},
-                    {id: 5, display_name: "Fifth record", foo: "zoup", bar: 2, date_field: "2016-01-25", birthday: "1800-01-01",float_field: 13},
+                    {id: 1, display_name: "First record", foo: "yop", bar: 2, bool: true, date_field: "2017-01-25", birthday: "1983-07-15", float_field: 1},
+                    {id: 2, display_name: "Second record", foo: "blip", bar: 1, bool: false, date_field: "2017-01-24", birthday: "1982-06-04", float_field: 2},
+                    {id: 3, display_name: "Third record", foo: "gnap", bar: 1, bool: false, date_field: "2017-01-13", birthday: "1985-09-13", float_field: 1.618},
+                    {id: 4, display_name: "Fourth record", foo: "plop", bar: 2, bool: true, date_field: "2017-02-25", birthday: "1983-05-05", float_field: -1},
+                    {id: 5, display_name: "Fifth record", foo: "zoup", bar: 2, bool: true, date_field: "2016-01-25", birthday: "1800-01-01", float_field: 13},
                 ],
             },
             pony: {
@@ -590,7 +593,71 @@ QUnit.module('Search View', {
         // data should be grouped by the field 'Birthday' using the interval 'year'
         assert.strictEqual($('div.o_facet_values span').text().trim(),'Birthday: Year');
         assert.strictEqual($('.o_content tr.o_group_header').length, 4);
+
         actionManager.destroy();
+    });
+
+    QUnit.test('group by a date field using interval works', async function (assert) {
+        assert.expect(8);
+
+        var pivot = await createView({
+            View: GraphView,
+            model: "partner",
+            groupBy:['bar'],
+            data: this.data,
+            arch: '<graph/>',
+            archs: {
+                'partner,false,search': `<search>
+                <filter string="Bar" name="superName" context="{'group_by': 'bar'}"/>
+                    <filter string="Date" name="coolName" context="{'group_by': 'date_field'}"/>
+                    <filter string="Foo" name="superName" context="{'group_by': 'foo'}"/>
+                </search>`
+            },
+        });
+
+        function getFacetTexts() {
+            return [...pivot.el.querySelectorAll('div.o_facet_values span')].map(
+                e => e.innerText
+            ).join(' ');
+        };
+
+        // open menu 'Group By'
+        await testUtils.dom.click(pivot.el.querySelector('.o_search_options .fa-bars'));
+        // select 'Bar'
+        await testUtils.dom.click(pivot.el.querySelectorAll('.o_group_by_menu .o_menu_item')[0]);
+        assert.strictEqual(getFacetTexts(), 'Bar');
+
+        // Open the groupby 'Date'
+        await testUtils.dom.click(pivot.el.querySelectorAll('.o_group_by_menu .o_menu_item')[1]);
+        // select option 'week'
+        await testUtils.dom.click(pivot.el.querySelector('.o_group_by_menu .o_menu_item .o_item_option[data-option_id="week"]'));
+        assert.strictEqual(getFacetTexts(), 'Bar > Date: Week');
+
+        // select option 'day'
+        await testUtils.dom.click(pivot.el.querySelector('.o_group_by_menu .o_menu_item .o_item_option[data-option_id="day"]'));
+        assert.strictEqual(getFacetTexts(), 'Bar > Date: Week > Date: Day');
+
+        // select option 'year'
+        await testUtils.dom.click(pivot.el.querySelector('.o_group_by_menu .o_menu_item .o_item_option[data-option_id="year"]'));
+        assert.strictEqual(getFacetTexts(), 'Bar > Date: Year > Date: Week > Date: Day');
+
+        // select 'Foo'
+        await testUtils.dom.click(pivot.el.querySelectorAll('.o_group_by_menu .o_menu_item')[2]);
+        assert.strictEqual(getFacetTexts(), 'Bar > Date: Year > Date: Week > Date: Day > Foo');
+
+        // select option 'quarter'
+        await testUtils.dom.click(pivot.el.querySelector('.o_group_by_menu .o_menu_item .o_item_option[data-option_id="quarter"]'));
+        assert.strictEqual(getFacetTexts(), 'Bar > Date: Year > Date: Quarter > Date: Week > Date: Day > Foo');
+
+        // unselect 'Bar'
+        await testUtils.dom.click(pivot.el.querySelectorAll('.o_group_by_menu .o_menu_item')[0]);
+        assert.strictEqual(getFacetTexts(), 'Date: Year > Date: Quarter > Date: Week > Date: Day > Foo');
+
+        // unselect option 'week'
+        await testUtils.dom.click(pivot.el.querySelector('.o_group_by_menu .o_menu_item .o_item_option[data-option_id="week"]'));
+        assert.strictEqual(getFacetTexts(), 'Date: Year > Date: Quarter > Date: Day > Foo');
+
+        pivot.destroy();
     });
 
     QUnit.test('a separator in groupbys does not cause problems', async function (assert) {
@@ -627,7 +694,7 @@ QUnit.module('Search View', {
     QUnit.module('FilterMenu');
 
     QUnit.test('Search date and datetime fields. Support of timezones', async function (assert) {
-        assert.expect(4);
+        assert.expect(6);
 
         this.data.partner.fields.birth_datetime = {string: "Birth DateTime", type: "datetime", store: true, sortable: true};
         this.data.partner.records = this.data.partner.records.slice(0,-1); // exclude wrong date record
@@ -642,6 +709,7 @@ QUnit.module('Search View', {
             }
         }
 
+        var TZOffset = 360;
         var searchReadSequence = 0;
         var actionManager = await createActionManager({
             actions: [{
@@ -667,15 +735,16 @@ QUnit.module('Search View', {
             data: this.data,
             session: {
                 getTZOffset: function() {
-                    return 360;
+                    return TZOffset;
                 }
             },
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/search_read') {
-                    if (searchReadSequence === 1) { // The 0th time is at loading
+                    if (searchReadSequence === 1 || searchReadSequence === 3) {
+                        // The 0th time is at loading and 2nd time at closing of first facet
                         assert.deepEqual(args.domain, [["birthday", "=", "1983-07-15"]],
                             'A date should stay what the user has input, but transmitted in server\'s format');
-                    } else if (searchReadSequence === 3) { // the 2nd time is at closing the first facet
+                    } else if (searchReadSequence === 5) { // the 4th time is at closing the first facet
                         assert.deepEqual(args.domain, [["birth_datetime", "=", "1983-07-14 18:00:00"]],
                             'A datetime should be transformed in UTC and transmitted in server\'s format');
                     }
@@ -698,7 +767,19 @@ QUnit.module('Search View', {
         // Close Facet
         await testUtils.dom.click($('.o_searchview_facet .o_facet_remove'));
 
+        TZOffset = -360;
+        $autocomplete = $('.o_searchview_input');
+        await stringToEvent($autocomplete, '07/15/1983');
+        await testUtils.fields.triggerKey('up', $autocomplete, 'enter');
+
+        assert.equal($('.o_searchview_facet .o_facet_values').text().trim(), '07/15/1983',
+            'The format of the date in the facet should be in locale');
+
+        // Close Facet
+        await testUtils.dom.click($('.o_searchview_facet .o_facet_remove'));
+
         // DateTime case
+        TZOffset = 360;
         $autocomplete = $('.o_searchview_input');
         await stringToEvent($autocomplete, '07/15/1983 00:00:00');
         await testUtils.fields.triggerKey('down', $autocomplete, 'down');
@@ -753,7 +834,7 @@ QUnit.module('Search View', {
         var self = this;
 
         this.archs['partner,4,search'] = '<search>'+
-            '<filter string="AAA" name="some_filter" date="date_field" default_period="this_week"></filter>' +
+            '<filter string="AAA" name="some_filter" date="date_field"></filter>' +
         '</search>';
 
         var unpatchDate = patchDate(2017,2,22,1,0,0);
@@ -799,6 +880,45 @@ QUnit.module('Search View', {
         await testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="last_year"]'));
         await testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="antepenultimate_year"]'));
         await testUtils.dom.click($('.o_menu_item .o_item_option[data-option_id="this_month"]'));
+        actionManager.destroy();
+        unpatchDate();
+    });
+
+    QUnit.test('filter by a date field using period works even in January', async function (assert) {
+        assert.expect(3);
+
+        this.archs['partner,4,search'] = '<search>'+
+            '<filter string="AAA" name="some_filter" date="date_field" default_period="last_month"></filter>' +
+        '</search>';
+
+        var unpatchDate = patchDate(2017,0,7,3,0,0);
+
+        var actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function(route, args) {
+                if (route === '/web/dataset/search_read' && args.domain.length) {
+                    assert.deepEqual(args.domain,
+                        ['&', ["date_field", ">=", "2016-12-01"], ["date_field", "<=", "2016-12-31"]]
+                    );
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        this.actions[4].context = {search_default_some_filter: true};
+
+        await actionManager.doAction(5);
+
+        // open menu 'Filter'
+        await testUtils.dom.click($('.o_search_options .fa-filter'));
+        // open menu options
+        await testUtils.dom.click($('.o_menu_item'));
+
+        assert.hasClass($('.o_item_option[data-option_id="last_month"] a'), 'selected');
+        assert.hasClass($('.o_item_option[data-option_id="last_year"] a'), 'selected');
+
         actionManager.destroy();
         unpatchDate();
     });
@@ -999,6 +1119,47 @@ QUnit.module('Search View', {
             'Label of Filter is correct');
 
         actionManager.destroy();
+    });
+
+    QUnit.test('Custom Filter search on datetime field without value', async function (assert) {
+        assert.expect(3);
+
+        this.data.partner.fields.date_time_field = { string: "DateTime", type: "datetime", store: true, searchable: true };
+
+        let searchReadCount = 0;
+        const list = await createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: `<list string="Partners">
+                    <field name="bar"/>
+                    <field name="date_time_field"/>
+                </list>`,
+            res_id: 1,
+            mockRPC: async function (route, args) {
+                if (route === '/web/dataset/search_read') {
+                    if (searchReadCount === 1) {
+                        assert.deepEqual(args.domain, [['date_time_field', '=', false]],
+                            'domain is correct');
+                    }
+                }
+                return this._super(...arguments);
+            },
+        });
+
+        await testUtils.dom.click(list.$('button:contains(Filters)'));
+        await testUtils.dom.click(list.$('.o_dropdown_menu .o_add_custom_filter'));
+        assert.strictEqual(list.$('.o_dropdown_menu select.o_searchview_extended_prop_field').val(), 'date_time_field',
+            'the date_time_field should be selected in the custom filter');
+        assert.strictEqual(list.$('.o_dropdown_menu select.o_searchview_extended_prop_op').val(), 'between',
+            'The between operator is selected');
+
+        await testUtils.fields.editSelect(list.$('.o_dropdown_menu select.o_searchview_extended_prop_op'), '=');
+        await testUtils.fields.editAndTrigger(list.$('.o_searchview_extended_prop_value input:first'), '', ['change']);
+        searchReadCount = 1;
+        await testUtils.dom.click(list.$('.o_dropdown_menu .o_apply_filter'));
+
+        list.destroy();
     });
 
     QUnit.module('Favorites Menu');
@@ -1534,6 +1695,191 @@ QUnit.module('Search View', {
         assert.containsNone(actionManager, '.o_searchview_facet_label');
         assert.strictEqual(actionManager.$('.o_searchview_input').val(), "",
             "the search input should be re-rendered");
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('update suggested filters in autocomplete menu with Japanese IME', async function (assert) {
+        assert.expect(4);
+
+        this.actions.push({
+            id: 13,
+            name: 'Partners Action 11',
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            views: [[false, 'list']],
+            search_view_id: [13, 'search'],
+        });
+        this.archs['partner,13,search'] = `
+            <search>
+                <field name="foo"/>
+                <field name="bar"/>
+            </search>`;
+
+        const actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+        actionManager.doAction(13);
+        await testUtils.nextTick();
+
+        // Simulate typing "Test" on search view.
+        const TEST = "TEST";
+        $('.o_searchview_input').val(TEST);
+        for (const char of TEST) {
+            $('.o_searchview_input').trigger($.Event('keypress', {
+                which: char.charCodeAt(0),
+                keyCode: char.charCodeAt(0),
+            }));
+        }
+        $('.o_searchview_input').trigger($.Event('keyup'));
+        await testUtils.nextTick();
+        assert.containsOnce(
+            $,
+            '.o_searchview_autocomplete',
+            "should display autocomplete dropdown menu on typing something in search view"
+        );
+        assert.strictEqual(
+            $('.o_searchview_autocomplete li:first').text(),
+            "Search Foo for: TEST",
+            `1st filter suggestion should be based on typed word "TEST"`
+        );
+
+        // Simulate soft-selection of another suggestion from IME.
+        const テスト = "テスト";
+        $('.o_searchview_input').val(テスト);
+        for (const char of テスト) {
+            $('.o_searchview_input').trigger($.Event('keypress', {
+                which: char.charCodeAt(0),
+                keyCode: char.charCodeAt(0),
+            }));
+        }
+        $('.o_searchview_input').trigger($.Event('keyup'));
+        await testUtils.nextTick();
+        assert.strictEqual(
+            $('.o_searchview_autocomplete li:first').text(),
+            "Search Foo for: テスト",
+            `1st filter suggestion should be updated with soft-selection typed word "テスト"`
+        );
+
+        // Simulate selection on suggestion item "Test" from IME.
+        $('.o_searchview_input').val("TEST");
+        const nativeInputEvent = new window.InputEvent('input', { inputType: 'insertCompositionText' });
+        const jqueryInputEvent = $.Event('input', { bubbles: true });
+        jqueryInputEvent.originalEvent = nativeInputEvent;
+        $('.o_searchview_input').trigger(jqueryInputEvent);
+        await testUtils.nextTick();
+        assert.strictEqual(
+            $('.o_searchview_autocomplete li:first').text(),
+            "Search Foo for: TEST",
+            `1st filter suggestion should finally be updated with click selection on word "TEST" from IME`
+        );
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('open seach view autocomplete on paste value using mouse', async function (assert) {
+        assert.expect(1);
+
+        const actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+
+        await actionManager.doAction(11);
+
+        // Simulate paste text through the mouse.
+        $('.o_searchview_input').val("ABC");
+        const nativeInputEvent = new window.InputEvent('input', { inputType: 'insertFromPaste' });
+        const jqueryInputEvent = $.Event('input', { bubbles: true });
+        jqueryInputEvent.originalEvent = nativeInputEvent;
+        $('.o_searchview_input').trigger(jqueryInputEvent);
+        await testUtils.nextTick();
+        assert.containsOnce(
+            $,
+            '.o_searchview_autocomplete',
+            "should display autocomplete dropdown menu on paste in search view"
+        );
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('"null" as autocomplete value', async function (assert) {
+        assert.expect(4);
+
+        var actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/search_read') {
+                    assert.step(JSON.stringify(args.domain));
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        await actionManager.doAction(11);
+
+        actionManager.$('.o_searchview_input').val('null');
+        testUtils.fields.triggerKey('press', $('.o_searchview_input'), 'n');
+        testUtils.fields.triggerKey('press', $('.o_searchview_input'), 'u');
+        testUtils.fields.triggerKey('press', $('.o_searchview_input'), 'l');
+        testUtils.fields.triggerKey('press', $('.o_searchview_input'), 'l');
+        await testUtils.nextTick();
+
+        assert.strictEqual(actionManager.$('.o_searchview_autocomplete .o-selection-focus').text(),
+            "Search Foo for: null");
+
+        actionManager.$('.o_searchview_input').trigger($.Event('keydown', { which: $.ui.keyCode.ENTER, keyCode: $.ui.keyCode.ENTER }));
+        await testUtils.nextTick();
+
+        assert.verifySteps([
+            JSON.stringify([]), // initial search
+            JSON.stringify([["foo", "ilike", "null"]]),
+        ]);
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('autocomplete a boolean value', async function (assert) {
+        assert.expect(5);
+
+        this.archs['partner,8,search'] = '<search><field name="bool"/></search>';
+
+        var actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/search_read') {
+                    assert.step(JSON.stringify(args.domain));
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        await actionManager.doAction(11);
+
+        actionManager.$('.o_searchview_input').val('y');
+        testUtils.fields.triggerKey('press', $('.o_searchview_input'), 'y');
+        await testUtils.nextTick();
+
+        assert.containsN(actionManager, '.o_searchview_autocomplete li', 2);
+
+        // select "Yes" and validate
+        actionManager.$('.o_searchview_input').trigger($.Event('keydown', { which: $.ui.keyCode.DOWN, keyCode: $.ui.keyCode.DOWN }));
+        await testUtils.nextTick();
+        assert.strictEqual(actionManager.$('.o_searchview_autocomplete .o-indent.o-selection-focus').text(), "Yes");
+        actionManager.$('.o_searchview_input').trigger($.Event('keydown', { which: $.ui.keyCode.ENTER, keyCode: $.ui.keyCode.ENTER }));
+        await testUtils.nextTick();
+
+        assert.verifySteps([
+            JSON.stringify([]), // initial search
+            JSON.stringify([["bool", "=", true]]),
+        ]);
 
         actionManager.destroy();
     });

@@ -4,10 +4,11 @@
 # 
 # Translators:
 # Martin Trigaux, 2019
-# Bole <bole@dajmi5.com>, 2019
 # Đurđica Žarković <durdica.zarkovic@storm.hr>, 2019
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2019
 # Tina Milas, 2019
+# Hrvoje Sić <hrvoje.sic@gmail.com>, 2021
+# Bole <bole@dajmi5.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-26 08:16+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Tina Milas, 2019\n"
+"Last-Translator: Bole <bole@dajmi5.com>, 2021\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +27,7 @@ msgstr ""
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
 msgid "<span class=\"o_form_label oe_edit_only\">Allowed Employees </span>"
-msgstr ""
+msgstr "<span class=\"o_form_label oe_edit_only\">Dozvoljeni djelatnici </span>"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_order__cashier
@@ -48,7 +49,7 @@ msgstr "Promijeni blagajnika"
 #: code:addons/pos_hr/static/src/xml/pos.xml:0
 #, python-format
 msgid "Close session"
-msgstr ""
+msgstr "Zatvori sesiju"
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_hr_employee
@@ -62,17 +63,18 @@ msgstr "Zaposlenik"
 #: code:addons/pos_hr/models/hr_employee.py:0
 #, python-format
 msgid "Employee: %s - PoS Config(s): %s \n"
-msgstr ""
+msgstr "Djelatnik: %s - PoS Config(a): %s \n"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_config__employee_ids
 msgid "Employees with access"
-msgstr ""
+msgstr "Djelatnici sa pristupom"
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_config__employee_ids
 msgid "If left empty, all employees can log in to the PoS session"
 msgstr ""
+"Ako je ostavljeno prazno, svi djelatnici se mogu prijaviti u PoS sesiju"
 
 #. module: pos_hr
 #. openerp-web
@@ -93,7 +95,7 @@ msgstr "Zaključaj"
 #: code:addons/pos_hr/static/src/xml/pos.xml:0
 #, python-format
 msgid "Log in to"
-msgstr ""
+msgstr "Prijava u"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
@@ -101,6 +103,8 @@ msgid ""
 "Only users with Manager access rights for PoS app can modify the product "
 "prices on orders."
 msgstr ""
+"Samo korisnici s upraviteljskim pravima pristupa za PoS aplikaciju mogu "
+"mijenjati cijene proizvoda po narudžbama."
 
 #. module: pos_hr
 #. openerp-web
@@ -129,17 +133,17 @@ msgstr "Nalozi POS-a"
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_report_pos_order
 msgid "Point of Sale Orders Report"
-msgstr ""
+msgstr "Izvješće o narudžbama na prodajnim mjestima"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
 msgid "Price Control"
-msgstr ""
+msgstr "Kontrola cijene"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
 msgid "Restrict price modification to managers"
-msgstr ""
+msgstr "Ograniči modificiranje cijena na managere"
 
 #. module: pos_hr
 #. openerp-web
@@ -153,7 +157,7 @@ msgstr "Skenirajte svoju značku"
 #: code:addons/pos_hr/static/src/xml/pos.xml:0
 #, python-format
 msgid "Select Cashier"
-msgstr ""
+msgstr "Odaberi blagajnika"
 
 #. module: pos_hr
 #. openerp-web
@@ -169,6 +173,8 @@ msgid ""
 "You cannot delete an employee that may be used in an active PoS session, "
 "close the session(s) first: \n"
 msgstr ""
+"Nije moguće brisati djelatnika koji koristi otvorenu PoS sessiju, prvo "
+"zatvorite sesiju(e):\n"
 
 #. module: pos_hr
 #. openerp-web

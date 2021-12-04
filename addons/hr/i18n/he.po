@@ -9,19 +9,19 @@
 # ExcaliberX <excaliberx@gmail.com>, 2019
 # yacov mosbacher <ymosba@gmail.com>, 2019
 # שהאב חוסיין <shhab89@gmail.com>, 2019
-# Martin Trigaux, 2019
 # Yihya Hugirat <hugirat@gmail.com>, 2019
 # hed shefetr <hed@laylinetech.com>, 2019
 # דודי מלכה <Dudimalka6@gmail.com>, 2019
 # Amit Spilman <amit@laylinetech.com>, 2019
 # Nis bar <nisim60@gmail.com>, 2019
+# Martin Trigaux, 2020
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-05 12:32+0000\n"
+"POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
 "Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2020\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
@@ -46,7 +46,7 @@ msgstr "%s (העתק)"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_job_view_kanban
 msgid "&amp;nbsp;"
-msgstr "ו"
+msgstr "&amp;nbsp;"
 
 #. module: hr
 #: model:ir.actions.report,print_report_name:hr.hr_employee_print_badge
@@ -647,7 +647,7 @@ msgstr "אזרחות"
 #: model:ir.model.fields,field_description:hr.field_res_users__coach_id
 #: model:ir.model.fields.selection,name:hr.selection__hr_plan_activity_type__responsible__coach
 msgid "Coach"
-msgstr "מדריך"
+msgstr "מנהל"
 
 #. module: hr
 #: code:addons/hr/models/hr_plan.py:0
@@ -924,12 +924,12 @@ msgstr "ערוץ דיון"
 #: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__display_name
 msgid "Display Name"
-msgstr "הצג שם"
+msgstr "שם תצוגה"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__divorced
 msgid "Divorced"
-msgstr "גרוש"
+msgstr "גרוש/ה"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1012,7 +1012,7 @@ msgstr "רשימת עובדים"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_employee_self_edit
 msgid "Employee Edition"
-msgstr "מהדורת עובדים"
+msgstr "עריכת פרטי עובדים"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
@@ -1383,7 +1383,7 @@ msgstr "ייבא תבנית לעובדים"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "In Position"
-msgstr "במשרה"
+msgstr "בתפקיד"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
@@ -1547,7 +1547,7 @@ msgstr "התחל תוכנית"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__cohabitant
 msgid "Legal Cohabitant"
-msgstr "ידוע בציבור"
+msgstr "ידוע/ה בציבור"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_job
@@ -1618,7 +1618,7 @@ msgstr "מנהל שיווק וקהילה"
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__married
 msgid "Married"
-msgstr "נשוי"
+msgstr "נשוי/אה"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__master
@@ -1693,7 +1693,7 @@ msgstr "מועד אחרון לפעילות הבאה"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_summary
 msgid "Next Activity Summary"
-msgstr "תקציר הפעילות הבאה "
+msgstr "תיאור הפעילות הבאה "
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_type_id
@@ -1937,7 +1937,7 @@ msgstr "מקום לידה"
 #: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__plan_id
 #: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_search
 msgid "Plan"
-msgstr "תכנן"
+msgstr "תוכנית"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_plan_wizard
@@ -1960,7 +1960,7 @@ msgstr "תכנון"
 #: model:ir.actions.act_window,name:hr.hr_plan_activity_type_action
 #: model:ir.ui.menu,name:hr.menu_config_plan_types
 msgid "Planning Types"
-msgstr "סוגי תכנון"
+msgstr "סוגי פעילויות"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_config_plan_plan
@@ -2184,6 +2184,7 @@ msgstr "עובד קשור"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__user_id
+#: model:ir.model.fields,help:hr.field_resource_resource__user_id
 msgid "Related user name for the resource to manage its access."
 msgstr "שם משתמש קשור למשאב לניהול הגישה שלו."
 
@@ -2227,6 +2228,11 @@ msgstr "משאב"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__resource_calendar_id
 msgid "Resource Calendar"
 msgstr "לוח שנה של משאב"
+
+#. module: hr
+#: model:ir.model,name:hr.model_resource_resource
+msgid "Resources"
+msgstr "משאבים"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2410,7 +2416,7 @@ msgstr "עצור גיוס"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__summary
 msgid "Summary"
-msgstr "תקציר"
+msgstr "שם"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__name
@@ -2574,6 +2580,7 @@ msgstr "מספר הודעות שלא נקראו"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__user_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__user_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__user_id
+#: model:ir.model.fields,field_description:hr.field_resource_resource__user_id
 msgid "User"
 msgstr "משתמש"
 
@@ -2679,7 +2686,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__widower
 msgid "Widower"
-msgstr "אלמן/ה"
+msgstr "אלמן/נה"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.act_employee_from_department

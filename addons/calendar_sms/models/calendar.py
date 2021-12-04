@@ -42,9 +42,14 @@ class AlarmManager(models.AbstractModel):
         """ Cron method, overridden here to send SMS reminders as well
         """
         result = super(AlarmManager, self).get_next_mail()
+
+        cron = self.env.ref('calendar.ir_cron_scheduler_alarm', raise_if_not_found=False)
+        if not cron:
+            # Like the super method, do nothing if cron doesn't exist anymore
+            return result
+
         now = fields.Datetime.to_string(fields.Datetime.now())
-        last_sms_cron = self.env['ir.config_parameter'].get_param('calendar_sms.last_sms_cron', default=now)
-        cron = self.env['ir.model.data'].get_object('calendar', 'ir_cron_scheduler_alarm')
+        last_sms_cron = cron.lastcall
 
         interval_to_second = {
             "weeks": 7 * 24 * 60 * 60,
@@ -74,5 +79,4 @@ class AlarmManager(models.AbstractModel):
                 event_start = fields.Datetime.from_string(event.start)
                 for alert in self.do_check_alarm_for_one_date(event_start, event, max_delta, 0, 'sms', after=last_sms_cron, missing=True):
                     event.browse(alert['event_id'])._do_sms_reminder()
-        self.env['ir.config_parameter'].set_param('calendar_sms.last_sms_cron', now)
         return result

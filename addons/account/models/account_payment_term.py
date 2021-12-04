@@ -54,6 +54,9 @@ class AccountPaymentTerm(models.Model):
                 if line.day_of_the_month > 0:
                     months_delta = (line.day_of_the_month < next_date.day) and 1 or 0
                     next_date += relativedelta(day=line.day_of_the_month, months=months_delta)
+            elif line.option == 'after_invoice_month':
+                next_first_date = next_date + relativedelta(day=1, months=1)  # Getting 1st of next month
+                next_date = next_first_date + relativedelta(days=line.days - 1)
             elif line.option == 'day_following_month':
                 next_date += relativedelta(day=line.days, months=1)
             elif line.option == 'day_current_month':
@@ -92,6 +95,7 @@ class AccountPaymentTermLine(models.Model):
     day_of_the_month = fields.Integer(string='Day of the month', help="Day of the month on which the invoice must come to its term. If zero or negative, this value will be ignored, and no specific day will be set. If greater than the last day of a month, this number will instead select the last day of this month.")
     option = fields.Selection([
             ('day_after_invoice_date', "days after the invoice date"),
+            ('after_invoice_month', "days after the end of the invoice month"),
             ('day_following_month', "of the following month"),
             ('day_current_month', "of the current month"),
         ],

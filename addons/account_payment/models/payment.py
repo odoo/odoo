@@ -15,12 +15,13 @@ class PaymentTransaction(models.Model):
     def render_invoice_button(self, invoice, submit_txt=None, render_values=None):
         values = {
             'partner_id': invoice.partner_id.id,
+            'type': self.type,
         }
         if render_values:
             values.update(render_values)
         return self.acquirer_id.with_context(submit_class='btn btn-primary', submit_txt=submit_txt or _('Pay Now')).sudo().render(
             self.reference,
-            invoice.amount_residual_signed,
+            invoice.amount_residual,
             invoice.currency_id.id,
             values=values,
         )

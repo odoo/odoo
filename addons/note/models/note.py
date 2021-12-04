@@ -52,6 +52,14 @@ class Note(models.Model):
     date_done = fields.Date('Date done')
     color = fields.Integer(string='Color Index')
     tag_ids = fields.Many2many('note.tag', 'note_tags_rel', 'note_id', 'tag_id', string='Tags')
+    message_partner_ids = fields.Many2many(
+        comodel_name='res.partner', string='Followers (Partners)',
+        compute='_get_followers', search='_search_follower_partners',
+        compute_sudo=True)
+    message_channel_ids = fields.Many2many(
+        comodel_name='mail.channel', string='Followers (Channels)',
+        compute='_get_followers', search='_search_follower_channels',
+        compute_sudo=True)
 
     @api.depends('memo')
     def _compute_name(self):
@@ -79,7 +87,7 @@ class Note(models.Model):
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        if groupby and groupby[0] == "stage_id":
+        if groupby and groupby[0] == "stage_id" and (len(groupby) == 1 or lazy):
             stages = self.env['note.stage'].search([('user_id', '=', self.env.uid)])
             if stages:  # if the user has some stages
                 result = [{  # notes by stage for stages user

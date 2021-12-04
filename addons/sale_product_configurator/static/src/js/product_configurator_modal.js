@@ -219,20 +219,27 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, {
                  this.rootProduct.no_variant_attribute_values)) {
             var $productDescription = $modalContent
                 .find('.main_product')
-                .find('td.td-product_name div.text-muted.small');
-            var description = $productDescription.html();
+                .find('td.td-product_name div.text-muted.small > div:first');
+            var $updatedDescription = $('<div/>');
+            $updatedDescription.append($('<p>', {
+                text: $productDescription.text()
+            }));
 
-            $.each(this.rootProduct.product_custom_attribute_values, function () {
-                description += '<br/>' + this.attribute_value_name + ': ' + this.custom_value;
+            $.each(this.rootProduct.product_custom_attribute_values, function (){
+                $updatedDescription.append($('<div>', {
+                    text: this.attribute_value_name + ': ' + this.custom_value
+                }));
             });
 
-            $.each(this.rootProduct.no_variant_attribute_values, function () {
-                if (this.is_custom !== 'True') {
-                    description += '<br/>' + this.attribute_name + ': ' + this.attribute_value_name;
+            $.each(this.rootProduct.no_variant_attribute_values, function (){
+                if (this.is_custom !== 'True'){
+                    $updatedDescription.append($('<div>', {
+                        text: this.attribute_name + ': ' + this.attribute_value_name
+                    }));
                 }
             });
 
-            $productDescription.html(description);
+            $productDescription.replaceWith($updatedDescription);
         }
 
         return $modalContent;
@@ -310,20 +317,25 @@ var OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, {
             var $productDescription = $parent
                 .find('td.td-product_name div.float-left');
 
-            var description = '';
-            $.each(productCustomVariantValues, function () {
-                description += '<br/>' + this.attribute_value_name + ': ' + this.custom_value;
-            });
-
-            $.each(noVariantAttributeValues, function () {
-                if (this.is_custom !== 'True') {
-                    description += '<br/>' + this.attribute_name + ': ' + this.attribute_value_name;
-                }
-            });
-
             var $customAttributeValuesDescription = $('<div>', {
-                class: 'custom_attribute_values_description text-muted small',
-                html: description
+                class: 'custom_attribute_values_description text-muted small'
+            });
+            if (productCustomVariantValues.length !== 0 || noVariantAttributeValues.length !== 0) {
+                $customAttributeValuesDescription.append($('<br/>'));
+            }
+
+            $.each(productCustomVariantValues, function (){
+                $customAttributeValuesDescription.append($('<div>', {
+                    text: this.attribute_value_name + ': ' + this.custom_value
+                }));
+            });
+
+            $.each(noVariantAttributeValues, function (){
+                if (this.is_custom !== 'True'){
+                    $customAttributeValuesDescription.append($('<div>', {
+                        text: this.attribute_name + ': ' + this.attribute_value_name
+                    }));
+                }
             });
 
             $productDescription.append($customAttributeValuesDescription);

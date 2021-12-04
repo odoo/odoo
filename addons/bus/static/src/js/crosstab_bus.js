@@ -327,9 +327,7 @@ var CrossTabBus = Longpolling.extend({
         }
         // update channels
         else if (key === this._generateKey('channels')) {
-            var channels = value;
-            _.each(_.difference(this._channels, channels), this.deleteChannel.bind(this));
-            _.each(_.difference(channels, this._channels), this.addChannel.bind(this));
+            this._channels = value;
         }
         // update options
         else if (key === this._generateKey('options')) {
@@ -348,7 +346,7 @@ var CrossTabBus = Longpolling.extend({
      */
     _onUnload: function () {
         // unload peer
-        var peers = this._callLocalStorage('getItem', 'peers', {});
+        var peers = this._callLocalStorage('getItem', 'peers') || {};
         delete peers[this._id];
         this._callLocalStorage('setItem', 'peers', peers);
 

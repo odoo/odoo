@@ -2,6 +2,8 @@ odoo.define('website_slides.course.slides.list', function (require) {
 'use strict';
 
 var publicWidget = require('web.public.widget');
+var core = require('web.core');
+var _t = core._t;
 
 publicWidget.registry.websiteSlidesCourseSlidesList = publicWidget.Widget.extend({
     selector: '.o_wslides_slides_list',
@@ -52,12 +54,18 @@ publicWidget.registry.websiteSlidesCourseSlidesList = publicWidget.Widget.extend
      * @private
      */
     _checkForEmptySections: function (){
-        this.$('.o_wslides_js_slides_list_container ul').each(function (){
-            var $emptyCategory = $(this).find('.o_wslides_js_slides_list_empty');
-            if ($(this).find('li.o_wslides_slides_list_slide[data-slide-id]').length === 0) {
-                $emptyCategory.removeClass('d-none').addClass('d-flex');
-            } else {
-                $emptyCategory.addClass('d-none').removeClass('d-flex');
+        this.$('.o_wslides_slide_list_category').each(function (){
+            var $categoryHeader = $(this).find('.o_wslides_slide_list_category_header');
+            var categorySlideCount = $(this).find('.o_wslides_slides_list_slide:not(.o_not_editable)').length;
+            var $emptyFlagContainer = $categoryHeader.find('.o_wslides_slides_list_drag').first();
+            var $emptyFlag = $emptyFlagContainer.find('small');
+            if (categorySlideCount === 0 && $emptyFlag.length === 0){
+                $emptyFlagContainer.append($('<small>', {
+                    'class': "ml-1 text-muted font-weight-bold",
+                    text: _t("(empty)")
+                }));
+            } else if (categorySlideCount > 0 && $emptyFlag.length > 0){
+                $emptyFlag.remove();
             }
         });
     },
@@ -77,6 +85,8 @@ publicWidget.registry.websiteSlidesCourseSlidesList = publicWidget.Widget.extend
                 model: "slide.slide",
                 ids: self._getSlides()
             }
+        }).then(function (res) {
+            self._checkForEmptySections();
         });
     },
 

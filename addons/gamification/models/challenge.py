@@ -251,7 +251,7 @@ class Challenge(models.Model):
                          AND gg.user_id = ru.id
                          AND ru.id = log.create_uid
                          AND gg.write_date < log.create_date
-                         AND gg.closed IS false
+                         AND gg.closed IS NOT TRUE
                          AND gc.id IN %s
                          AND (gg.state = 'inprogress'
                               OR (gg.state = 'reached'
@@ -473,7 +473,7 @@ class Challenge(models.Model):
                 ('state', '!=', 'draft'),
             ]
             if restrict_goals:
-                domain.append(('ids', 'in', restrict_goals.ids))
+                domain.append(('id', 'in', restrict_goals.ids))
             else:
                 # if no subset goals, use the dates for restriction
                 if start_date:

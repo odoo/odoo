@@ -111,5 +111,21 @@ QUnit.module('core', {}, function () {
         assert.strictEqual(typeof(actual),typeof([]));
         assert.strictEqual(actual.length, 0);
     });
+
+    QUnit.test("arrayToString", function (assert) {
+        assert.expect(7);
+
+        const arrayToString = Domain.prototype.arrayToString;
+
+        // domains containing null, false or true
+        assert.strictEqual(arrayToString([['name', '=', null]]), '[["name","=",None]]');
+        assert.strictEqual(arrayToString([['name', '=', false]]), '[["name","=",False]]');
+        assert.strictEqual(arrayToString([['name', '=', true]]), '[["name","=",True]]');
+        assert.strictEqual(arrayToString([['name', '=', 'null']]), '[["name","=","null"]]');
+        assert.strictEqual(arrayToString([['name', '=', 'false']]), '[["name","=","false"]]');
+        assert.strictEqual(arrayToString([['name', '=', 'true']]), '[["name","=","true"]]');
+
+        assert.strictEqual(arrayToString(), '[]');
+    });
 });
 });

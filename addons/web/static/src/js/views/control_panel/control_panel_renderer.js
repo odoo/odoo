@@ -185,8 +185,8 @@ var ControlPanelRenderer = Renderer.extend({
      * @private
      */
     _focusSearchInput: function () {
-        if (this.withSearchBar && !config.device.isMobile) {
-            // in mobile mode, we would rather not focus manually the
+        if (this.withSearchBar && !config.device.isMobileDevice) {
+            // in mobile device, we would rather not focus manually the
             // input, because it opens up the integrated keyboard, which is
             // not what you expect when you just selected a filter.
             this.searchBar.focus();

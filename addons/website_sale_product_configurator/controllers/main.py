@@ -28,7 +28,7 @@ class WebsiteSale(WebsiteSale):
     def _prepare_product_values(self, product, category, search, **kwargs):
         values = super(WebsiteSale, self)._prepare_product_values(product, category, search, **kwargs)
 
-        values['optional_product_ids'] = [p.with_context({'active_id': p.id}) for p in product.optional_product_ids]
+        values['optional_product_ids'] = [p.with_context(active_id=p.id) for p in product.optional_product_ids]
         return values
 
     @http.route(['/shop/cart/update_option'], type='http', auth="public", methods=['POST'], website=True, multilang=False)

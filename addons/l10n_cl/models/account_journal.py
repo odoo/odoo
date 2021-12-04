@@ -13,7 +13,11 @@ class AccountJournal(models.Model):
     def button_create_new_sequences(self):
         self.ensure_one()
         internal_types = ['invoice', 'debit_note', 'credit_note']
-        domain = [('country_id.code', '=', 'CL'), ('internal_type', 'in', internal_types), ('active', '=', True)]
+        domain = [('country_id.code', '=', 'CL'), ('internal_type', 'in', internal_types)]
+        if self.company_id.partner_id.l10n_cl_sii_taxpayer_type in ['1', False]:
+            domain += [('code', 'not in', ['70', '71'])]
+        elif self.company_id.partner_id.l10n_cl_sii_taxpayer_type == '2':
+            domain += [('code', 'not in', ['33', '34'])]
         documents = self.env['l10n_latam.document.type'].search(domain)
         sequences = self.env['ir.sequence']
         for document in documents:

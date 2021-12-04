@@ -94,6 +94,16 @@ class BaseAutomation(models.Model):
                 }
             }}
 
+        MAIL_STATES = ('email', 'followers', 'next_activity')
+        if self.trigger == 'on_unlink' and self.state in MAIL_STATES:
+            return {'warning': {
+                'title': _("Warning"),
+                'message': _(
+                    "You cannot send an email, add followers or create an activity "
+                    "for a deleted record.  It simply does not work."
+                ),
+            }}
+
     @api.model
     def create(self, vals):
         vals['usage'] = 'base_automation'
@@ -155,8 +165,8 @@ class BaseAutomation(models.Model):
     def _filter_pre(self, records):
         """ Filter the records that satisfy the precondition of action ``self``. """
         if self.filter_pre_domain and records:
-            domain = [('id', 'in', records.ids)] + safe_eval(self.filter_pre_domain, self._get_eval_context())
-            return records.search(domain)
+            domain = safe_eval(self.filter_pre_domain, self._get_eval_context())
+            return records.sudo().filtered_domain(domain).with_env(records.env)
         else:
             return records
 
@@ -166,10 +176,20 @@ class BaseAutomation(models.Model):
     def _filter_post_export_domain(self, records):
         """ Filter the records that satisfy the postcondition of action ``self``. """
         if self.filter_domain and records:
-            domain = [('id', 'in', records.ids)] + safe_eval(self.filter_domain, self._get_eval_context())
-            return records.search(domain), domain
+            domain = safe_eval(self.filter_domain, self._get_eval_context())
+            return records.sudo().filtered_domain(domain).with_env(records.env), domain
         else:
             return records, None
+
+    @api.model
+    def _add_postmortem_action(self, e):
+        if self.user_has_groups('base.group_user'):
+            e.context = {}
+            e.context['exception_class'] = 'base_automation'
+            e.context['base_automation'] = {
+                'id': self.id,
+                'name': self.name,
+            }
 
     def _process(self, records, domain_post=None):
         """ Process action ``self`` on the ``records`` that have not been done yet. """
@@ -204,7 +224,11 @@ class BaseAutomation(models.Model):
                         'active_id': record.id,
                         'domain_post': domain_post,
                     }
-                    self.action_server_id.with_context(**ctx).run()
+                    try:
+                        self.action_server_id.with_context(**ctx).run()
+                    except Exception as e:
+                        self._add_postmortem_action(e)
+                        raise e
 
     def _check_trigger_fields(self, record):
         """ Return whether any of the trigger fields has been modified on ``record``. """
@@ -328,8 +352,18 @@ class BaseAutomation(models.Model):
             def base_automation_onchange(self):
                 action_rule = self.env['base.automation'].browse(action_rule_id)
                 result = {}
-                server_action = action_rule.action_server_id.with_context(active_model=self._name, onchange_self=self)
-                res = server_action.run()
+                server_action = action_rule.action_server_id.with_context(
+                    active_model=self._name,
+                    active_id=self._origin.id,
+                    active_ids=self._origin.ids,
+                    onchange_self=self,
+                )
+                try:
+                    res = server_action.run()
+                except Exception as e:
+                    action_rule._add_postmortem_action(e)
+                    raise e
+
                 if res:
                     if 'value' in res:
                         res['value'].pop('id', None)

@@ -19,7 +19,7 @@
                 <field name="signature" position="replace" />
                 <xpath expr="//group[@name='preference_contact']" position="before">
                     <group>
-                        <field name="signature" />
+                        <field name="signature" options="{'style-inline': true}"/>
                     </group>
                 </xpath>
                 <xpath expr="//field[@name='company_id']" position="attributes">
@@ -138,8 +138,8 @@
                                                 'form_view_ref': 'base.res_partner_view_form_private'}"
                                             options='{"always_reload": True, "highlight_first_line": True}'
                                             attrs="{'readonly': [('can_edit', '=', False)]}"/>
-                                        <field name="private_email" string="Email" attrs="{'readonly': [('can_edit', '=', False)]}"/>
-                                        <field name="employee_phone" string="Phone" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                        <field name="private_email" string="Email" attrs="{'readonly': [('can_edit', '=', False)], 'invisible': [('address_home_id', '=', False)]}"/>
+                                        <field name="employee_phone" string="Phone" class="o_force_ltr" attrs="{'readonly': [('can_edit', '=', False)], 'invisible': [('address_home_id', '=', False)]}"/>
                                         <field name="employee_bank_account_id" attrs="{'readonly': [('can_edit', '=', False)]}"/>
                                         <field name="km_home_work" attrs="{'readonly': [('can_edit', '=', False)]}"/>
                                     </group>
@@ -167,7 +167,7 @@
                                     </group>
                                     <group string="Emergency">
                                         <field name="emergency_contact" attrs="{'readonly': [('can_edit', '=', False)]}"/>
-                                        <field name="emergency_phone" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                        <field name="emergency_phone" class="o_force_ltr" attrs="{'readonly': [('can_edit', '=', False)]}"/>
                                     </group>
                                     <group string="Work Permit" name="work_permit">
                                         <field name="visa_no" attrs="{'readonly': [('can_edit', '=', False)]}"/>
@@ -216,9 +216,10 @@
                 <xpath expr="//header" position="inside">
                     <field name="share" invisible="1"/>
                     <field name="employee_ids" invisible="1"/>
+                    <field name="employee_id" invisible="1"/>
                     <button string="Create employee"
                             type="object" name="action_create_employee"
-                            attrs="{'invisible': ['|', '|', ('id', '=', False), ('share', '=', True), ('employee_count', '>', 0)]}"/>
+                            attrs="{'invisible': ['|', '|', ('id', '=', False), ('share', '=', True), ('employee_id', '!=', False)]}"/>
                             <!-- share is not correctly recomputed because it depends on fields of reified view => invisible before saving (id=False) -->
                 </xpath>
                 <xpath expr="//div[@name='button_box']" position="inside">

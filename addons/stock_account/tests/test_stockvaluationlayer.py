@@ -261,6 +261,44 @@ class TestStockValuationStandard(TestStockValuationCommon):
         self.assertEqual(self.product1.value_svl, 0)
         self.assertEqual(self.product1.quantity_svl, 0)
 
+    def test_empty_stock_move_valorisation(self):
+        product1 = self.env['product.product'].create({
+            'name': 'p1',
+            'type': 'product',
+        })
+        product2 = self.env['product.product'].create({
+            'name': 'p2',
+            'type': 'product',
+        })
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': self.picking_type_in.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+        })
+        for product in (product1, product2):
+            product.unit_cost = 10
+            in_move = self.env['stock.move'].create({
+                'name': 'in %s units @ %s per unit' % (2, str(10)),
+                'product_id': product.id,
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.stock_location.id,
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 2,
+                'price_unit': 10,
+                'picking_type_id': self.picking_type_in.id,
+                'picking_id': picking.id
+            })
+
+        picking.action_confirm()
+        # set quantity done only on one move
+        in_move.move_line_ids.qty_done = 2
+        res_dict = picking.button_validate()
+        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
+        res_dict_for_back_order = wizard.process()
+
+        self.assertTrue(product2.stock_valuation_layer_ids)
+        self.assertFalse(product1.stock_valuation_layer_ids)
+
 
 class TestStockValuationAVCO(TestStockValuationCommon):
     def setUp(self):
@@ -446,6 +484,36 @@ class TestStockValuationAVCO(TestStockValuationCommon):
         self.assertEqual(self.product1.value_svl, 30)
         self.assertEqual(self.product1.quantity_svl, 2)
         self.assertEqual(self.product1.standard_price, 15)
+
+    def test_rounding_slv_1(self):
+        move1 = self._make_in_move(self.product1, 1, unit_cost=1.00)
+        move2 = self._make_in_move(self.product1, 1, unit_cost=1.00)
+        move3 = self._make_in_move(self.product1, 1, unit_cost=1.01)
+
+        self.assertAlmostEqual(self.product1.value_svl, 3.01)
+
+        move_out = self._make_out_move(self.product1, 3, create_picking=True)
+
+        self.assertIn('Rounding Adjustment: -0.01', move_out.stock_valuation_layer_ids.description)
+
+        self.assertEqual(self.product1.value_svl, 0)
+        self.assertEqual(self.product1.quantity_svl, 0)
+        self.assertEqual(self.product1.standard_price, 1.00)
+
+    def test_rounding_slv_2(self):
+        self._make_in_move(self.product1, 1, unit_cost=1.02)
+        self._make_in_move(self.product1, 1, unit_cost=1.00)
+        self._make_in_move(self.product1, 1, unit_cost=1.00)
+
+        self.assertAlmostEqual(self.product1.value_svl, 3.02)
+
+        move_out = self._make_out_move(self.product1, 3, create_picking=True)
+
+        self.assertIn('Rounding Adjustment: +0.01', move_out.stock_valuation_layer_ids.description)
+
+        self.assertEqual(self.product1.value_svl, 0)
+        self.assertEqual(self.product1.quantity_svl, 0)
+        self.assertEqual(self.product1.standard_price, 1.01)
 
 
 class TestStockValuationFIFO(TestStockValuationCommon):
@@ -779,7 +847,10 @@ class TestStockValuationChangeValuation(TestStockValuationCommon):
             'property_stock_journal': self.stock_journal.id,
         })
 
-        self.product1.categ_id = cat2
+        # Try to change the product category with a `default_type` key in the context and
+        # check it doesn't break the account move generation.
+        self.product1.with_context(default_type='product').categ_id = cat2
+        self.assertEqual(self.product1.categ_id, cat2)
 
         self.assertEqual(self.product1.value_svl, 100)
         self.assertEqual(self.product1.quantity_svl, 10)

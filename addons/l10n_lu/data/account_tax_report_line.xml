@@ -4,6 +4,7 @@
       <field name="name">II. ASSESSMENT OF TAX DUE (output tax)</field>
       <field name="sequence">2</field>
       <field name="country_id" ref="base.lu"/>
+      <field name="formula">None</field>
     </record>
 
     <record id="account_tax_report_line_2b_intra_community_acqui_of_goods_base" model="account.tax.report.line">
@@ -173,8 +174,8 @@
     <record id="account_tax_report_line_2e_1_b_exempt" model="account.tax.report.line">
       <field name="name">II.E.1.b) exempt within the territory: exempt (435)</field>
       <field name="tag_name">II.E.1.b) exempt within the territory: exempt (435)</field>
-      <field name="sequence">10</field>
-      <field name="parent_id" ref="account_tax_report_line_2e_1_base"/>
+      <field name="sequence">2</field>
+      <field name="parent_id" ref="account_tax_report_line_2e_supply_of_service_for_customer"/>
       <field name="country_id" ref="base.lu"/>
     </record>
 
@@ -204,7 +205,7 @@
 
     <record id="account_tax_report_line_2e_2_base" model="account.tax.report.line">
       <field name="name">II.E.2. base (463)</field>
-      <field name="sequence">2</field>
+      <field name="sequence">3</field>
       <field name="parent_id" ref="account_tax_report_line_2e_supply_of_service_for_customer"/>
       <field name="country_id" ref="base.lu"/>
     </record>
@@ -251,7 +252,7 @@
 
     <record id="account_tax_report_line_2e_3_base" model="account.tax.report.line">
       <field name="name">II.E.3. base (765)</field>
-      <field name="sequence">3</field>
+      <field name="sequence">4</field>
       <field name="parent_id" ref="account_tax_report_line_2e_supply_of_service_for_customer"/>
       <field name="country_id" ref="base.lu"/>
     </record>
@@ -268,6 +269,7 @@
       <field name="name">I. ASSESSMENT OF TAXABLE TURNOVER</field>
       <field name="sequence">1</field>
       <field name="country_id" ref="base.lu"/>
+      <field name="formula">None</field>
     </record>
 
     <record id="account_tax_report_line_1a_overall_turnover" model="account.tax.report.line">
@@ -275,6 +277,7 @@
       <field name="sequence">1</field>
       <field name="parent_id" ref="account_tax_report_line_1_assessment_taxable_turnover"/>
       <field name="country_id" ref="base.lu"/>
+      <field name="formula">LUTAX_471 + LUTAX_021 + LUTAX_037 + LUTAX_455 + LUTAX_456</field>
     </record>
 
     <record id="account_tax_report_line_1a_vat_acc_scheme" model="account.tax.report.line">
@@ -289,13 +292,16 @@
         <field name="sequence" eval="2"/>
         <field name="parent_id" ref="account_tax_report_line_1a_overall_turnover"/>
         <field name="country_id" ref="base.lu"/>
+        <field name="formula">LUTAX_471 + LUTAX_021 + LUTAX_037</field>
     </record>
 
+    <!-- 471 not managed, only 472 is filled in -->
     <record id="account_tax_report_line_1a_telecom_service" model="account.tax.report.line">
         <field name="name">I.A.2.a). Telecommunications services, radio and television broadcasting services... (471)</field>
         <field name="sequence" eval="1"/>
         <field name="parent_id" ref="account_tax_report_line_1a_total_sale"/>
         <field name="country_id" ref="base.lu"/>
+        <field name="code">LUTAX_471</field>
     </record>
 
     <record id="account_tax_report_line_1a_other_sales" model="account.tax.report.line">
@@ -303,6 +309,7 @@
         <field name="sequence" eval="2"/>
         <field name="parent_id" ref="account_tax_report_line_1a_total_sale"/>
         <field name="country_id" ref="base.lu"/>
+        <field name="formula">LUTAX_021 + LUTAX_037 - LUTAX_456</field>
     </record>
 
     <record id="account_tax_report_line_1a_app_goods_non_bus" model="account.tax.report.line">
@@ -310,13 +317,16 @@
         <field name="sequence" eval="3"/>
         <field name="parent_id" ref="account_tax_report_line_1a_overall_turnover"/>
         <field name="country_id" ref="base.lu"/>
+        <field name="code">LUTAX_455</field>
     </record>
 
     <record id="account_tax_report_line_1a_non_bus_gs" model="account.tax.report.line">
         <field name="name">I.A.4. Non-business use of goods and supply of services free of charge (Art.16) (456)</field>
+        <field name="tag_name">I.A.4. Non-business use of goods and supply of services free of charge (Art.16) (456)</field>
         <field name="sequence" eval="4"/>
         <field name="parent_id" ref="account_tax_report_line_1a_overall_turnover"/>
         <field name="country_id" ref="base.lu"/>
+        <field name="code">LUTAX_456</field>
     </record>
 
     <record id="account_tax_report_line_1b_exemptions_deductible_amounts" model="account.tax.report.line">
@@ -324,6 +334,7 @@
       <field name="sequence">2</field>
       <field name="parent_id" ref="account_tax_report_line_1_assessment_taxable_turnover"/>
       <field name="country_id" ref="base.lu"/>
+      <field name="code">LUTAX_021</field>
     </record>
 
     <record id="account_tax_report_line_1b_2_export" model="account.tax.report.line">
@@ -419,6 +430,8 @@
       <field name="sequence">3</field>
       <field name="parent_id" ref="account_tax_report_line_1_assessment_taxable_turnover"/>
       <field name="country_id" ref="base.lu"/>
+      <field name="code">LUTAX_022</field>
+      <field name="formula">LUTAX_037</field>
     </record>
 
     <record id="account_tax_report_line_2a_breakdown_taxable_turnover_base" model="account.tax.report.line">
@@ -426,6 +439,7 @@
       <field name="sequence">1</field>
       <field name="parent_id" ref="account_tax_report_line_2_assesment_of_tax_due"/>
       <field name="country_id" ref="base.lu"/>
+      <field name="code">LUTAX_037</field>
     </record>
 
     <record id="account_tax_report_line_2a_base_3" model="account.tax.report.line">
@@ -437,10 +451,11 @@
     </record>
 
     <record id="account_tax_report_line_2a_base_0" model="account.tax.report.line">
-      <field name="name">II.A. base 0%</field>
-      <field name="tag_name">II.A. base 0%</field>
+      <field name="name">II.A. base 0% (033)</field>
+      <field name="tag_name">II.A. base 0% (033)</field>
       <field name="sequence">10</field>
       <field name="parent_id" ref="account_tax_report_line_2a_breakdown_taxable_turnover_base"/>
+      <field name="code">LUTAX_033</field>
       <field name="country_id" ref="base.lu"/>
     </record>
 
@@ -472,13 +487,14 @@
       <field name="name">IV. TAX TO BE PAID OR TO BE RECLAIMED</field>
       <field name="sequence">4</field>
       <field name="country_id" ref="base.lu"/>
+      <field name="formula">None</field>
     </record>
 
     <record id="account_tax_report_line_4c_exceeding_amount" model="account.tax.report.line">
       <field name="name">IV.C. Exceeding amount (105)</field>
       <field name="sequence">3</field>
       <field name="parent_id" ref="account_tax_report_line_4_tax_tobe_paid_or_reclaimed"/>
-      <field name="formula">(LUTAX_702+LUTAX_704+LUTAX_706+LUTAX_040+LUTAX_IIA+LUTAX_712+LUTAX_714+LUTAX_716+LUTAX_054+LUTAX_722+LUTAX_724+LUTAX_726+LUTAX_068+LUTAX_732+LUTAX_734+LUTAX_736+LUTAX_073+LUTAX_742+LUTAX_744+LUTAX_746+LUTAX_432+LUTAX_752+LUTAX_754+LUTAX_756+LUTAX_442+LUTAX_762+LUTAX_764+LUTAX_227)-(LUTAX_458+LUTAX_459+LUTAX_460+LUTAX_090+LUTAX_461+LUTAX_092+LUTAX_228+LUTAX_094+LUTAX_095)</field>
+      <field name="formula">(LUTAX_702+LUTAX_704+LUTAX_706+LUTAX_040+LUTAX_042+LUTAX_712+LUTAX_714+LUTAX_716+LUTAX_054+LUTAX_722+LUTAX_724+LUTAX_726+LUTAX_068+LUTAX_732+LUTAX_734+LUTAX_736+LUTAX_073+LUTAX_742+LUTAX_744+LUTAX_746+LUTAX_432+LUTAX_752+LUTAX_754+LUTAX_756+LUTAX_442+LUTAX_762+LUTAX_764+LUTAX_227)-(LUTAX_458+LUTAX_459+LUTAX_460+LUTAX_090+LUTAX_461+LUTAX_092+LUTAX_228+LUTAX_094+LUTAX_095)</field>
       <field name="country_id" ref="base.lu"/>
     </record>
 
@@ -487,7 +503,7 @@
       <field name="name">IV.A. Total tax due (103)</field>
       <field name="sequence">1</field>
       <field name="parent_id" ref="account_tax_report_line_4_tax_tobe_paid_or_reclaimed"/>
-      <field name="formula">LUTAX_702+LUTAX_704+LUTAX_706+LUTAX_040+LUTAX_IIA+LUTAX_712+LUTAX_714+LUTAX_716+LUTAX_054+LUTAX_722+LUTAX_724+LUTAX_726+LUTAX_068+LUTAX_732+LUTAX_734+LUTAX_736+LUTAX_073+LUTAX_742+LUTAX_744+LUTAX_746+LUTAX_432+LUTAX_752+LUTAX_754+LUTAX_756+LUTAX_442+LUTAX_762+LUTAX_764+LUTAX_227</field>
+      <field name="formula">LUTAX_702+LUTAX_704+LUTAX_706+LUTAX_040+LUTAX_042+LUTAX_712+LUTAX_714+LUTAX_716+LUTAX_054+LUTAX_722+LUTAX_724+LUTAX_726+LUTAX_068+LUTAX_732+LUTAX_734+LUTAX_736+LUTAX_073+LUTAX_742+LUTAX_744+LUTAX_746+LUTAX_432+LUTAX_752+LUTAX_754+LUTAX_756+LUTAX_442+LUTAX_762+LUTAX_764+LUTAX_227</field>
       <field name="country_id" ref="base.lu"/>
     </record>
 
@@ -535,7 +551,7 @@
       <field name="name">II.H. Total tax due (076)</field>
       <field name="sequence">13</field>
       <field name="parent_id" ref="account_tax_report_line_2_assesment_of_tax_due"/>
-      <field name="formula">LUTAX_702+LUTAX_704+LUTAX_706+LUTAX_040+LUTAX_IIA+LUTAX_712+LUTAX_714+LUTAX_716+LUTAX_054+LUTAX_722+LUTAX_724+LUTAX_726+LUTAX_068+LUTAX_732+LUTAX_734+LUTAX_736+LUTAX_073+LUTAX_742+LUTAX_744+LUTAX_746+LUTAX_432+LUTAX_752+LUTAX_754+LUTAX_756+LUTAX_442+LUTAX_762+LUTAX_764+LUTAX_227</field>
+      <field name="formula">LUTAX_702+LUTAX_704+LUTAX_706+LUTAX_040+LUTAX_042+LUTAX_712+LUTAX_714+LUTAX_716+LUTAX_054+LUTAX_722+LUTAX_724+LUTAX_726+LUTAX_068+LUTAX_732+LUTAX_734+LUTAX_736+LUTAX_073+LUTAX_742+LUTAX_744+LUTAX_746+LUTAX_432+LUTAX_752+LUTAX_754+LUTAX_756+LUTAX_442+LUTAX_762+LUTAX_764+LUTAX_227</field>
       <field name="country_id" ref="base.lu"/>
     </record>
 
@@ -556,11 +572,11 @@
     </record>
 
     <record id="account_tax_report_line_2a_tax_0" model="account.tax.report.line">
-      <field name="name">II.A. tax 0%</field>
-      <field name="tag_name">II.A. tax 0%</field>
+      <field name="name">II.A. tax 0% (042)</field>
+      <field name="tag_name">II.A. tax 0% (042)</field>
       <field name="sequence">10</field>
       <field name="parent_id" ref="account_tax_report_line_2a_breakdown_taxable_turnover_tax"/>
-      <field name="code">LUTAX_IIA</field>
+      <field name="code">LUTAX_042</field>
       <field name="country_id" ref="base.lu"/>
     </record>
 
@@ -835,6 +851,7 @@
       <field name="name">III. ASSESSMENT OF DEDUCTIBLE TAX (input tax)</field>
       <field name="sequence">3</field>
       <field name="country_id" ref="base.lu"/>
+      <field name="formula">None</field>
     </record>
 
     <record id="account_tax_report_line_3a_total_input_tax" model="account.tax.report.line">

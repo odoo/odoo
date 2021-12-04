@@ -16,4 +16,5 @@ Aarón Henríquez ahenriquez@forgeflow.com https://github.com/AaronHForgeFlow
 Lois Rilo lois.rilo@forgeflow.com https://github.com/LoisRForgeFlow
 Miquel Raich miquel.raich@forgeflow.com https://github.com/MiquelRForgeFlow
 Jordi Ballester jordi.ballester@forgeflow.com https://github.com/JordiBForgeFlow
+Jordi Masvidal jordi.masvidal@forgeflow.com https://github.com/JordiMForgeFlow
 Hector Villarreal hector.villarreal@forgeflow.com https://github.com/HviorForgeFlow

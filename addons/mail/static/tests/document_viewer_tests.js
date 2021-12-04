@@ -19,7 +19,7 @@ var createViewer = function (params) {
     var viewer = new DocumentViewer(parent, params.attachments, params.attachmentID);
 
     var mockRPC = function (route) {
-        if (route === '/web/static/lib/pdfjs/web/viewer.html?file=/web/content/1?model%3Dir.attachment') {
+        if (route === '/web/static/lib/pdfjs/web/viewer.html?file=/web/content/1?model%3Dir.attachment%26filename%3DfilePdf.pdf') {
             return Promise.resolve();
         }
         if (route === 'https://www.youtube.com/embed/FYqW0Gdwbzk') {

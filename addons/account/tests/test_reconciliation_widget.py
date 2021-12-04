@@ -16,10 +16,19 @@ class TestUi(odoo.tests.HttpCase):
         bank_stmt_name = 'BNK/%s/0001' % time.strftime('%Y')
         bank_stmt_line = self.env['account.bank.statement'].search([('name', '=', bank_stmt_name)]).mapped('line_ids')
         if not bank_stmt_line:
-             _logger.exception('Could not find bank statement %s' % bank_stmt_name)
+            _logger.info("Tour bank_statement_reconciliation skipped: bank statement %s not found." % bank_stmt_name)
+            return
+
+        admin = self.env.ref('base.user_admin')
+
+        # Tour can't be run if the setup if not the generic one.
+        generic_coa = self.env.ref('l10n_generic_coa.configurable_chart_template', raise_if_not_found=False)
+        if not admin.company_id.chart_template_id or admin.company_id.chart_template_id != generic_coa:
+            _logger.info("Tour bank_statement_reconciliation skipped: generic coa not found.")
+            return
 
         # To be able to test reconciliation, admin user must have access to accounting features, so we give him the right group for that
-        self.env.ref('base.user_admin').write({'groups_id': [(4, self.env.ref('account.group_account_user').id)]})
+        admin.write({'groups_id': [(4, self.env.ref('account.group_account_user').id)]})
 
         payload = {'action':'bank_statement_reconciliation_view', 'statement_line_ids[]': bank_stmt_line.ids}
         prep = requests.models.PreparedRequest()

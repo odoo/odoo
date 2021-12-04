@@ -21,5 +21,6 @@
     ],
     'qweb': [
         'static/src/xml/leads_tree_generate_leads_views.xml',
-    ]
+    ],
+    'license': 'LGPL-3',
 }

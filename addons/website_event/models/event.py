@@ -43,8 +43,9 @@ class Event(models.Model):
         if self.env.user != self.env['website'].get_current_website().user_id:
             email = self.env.user.partner_id.email
             for event in self:
-                domain = ['&', '|', ('email', '=', email), ('partner_id', '=', self.env.user.partner_id.id), ('event_id', '=', event.id)]
-                event.is_participating = self.env['event.registration'].search_count(domain)
+                domain = ['&','&', '|', ('email', '=', email), ('partner_id', '=', self.env.user.partner_id.id),
+                          ('event_id', '=', event.id), ('state', '!=', 'cancel')]
+                event.is_participating = self.env['event.registration'].sudo().search_count(domain)
         else:
             self.is_participating = False
 
@@ -96,6 +97,7 @@ class Event(models.Model):
 
     def _create_menu(self, sequence, name, url, xml_id):
         if not url:
+            self.env['ir.ui.view'].with_context(_force_unlink=True).search([('name', '=', name + ' ' + self.name)]).unlink()
             newpath = self.env['website'].new_page(name + ' ' + self.name, template=xml_id, ispage=False)['url']
             url = "/event/" + slug(self) + "/page/" + newpath[1:]
         menu = self.env['website.menu'].create({
@@ -155,7 +157,8 @@ class Event(models.Model):
     def _default_website_meta(self):
         res = super(Event, self)._default_website_meta()
         event_cover_properties = json.loads(self.cover_properties)
-        res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = event_cover_properties.get('background-image', 'none')[4:-1]
+        # background-image might contain single quotes eg `url('/my/url')`
+        res['default_opengraph']['og:image'] = res['default_twitter']['twitter:image'] = event_cover_properties.get('background-image', 'none')[4:-1].strip("'")
         res['default_opengraph']['og:title'] = res['default_twitter']['twitter:title'] = self.name
         res['default_opengraph']['og:description'] = res['default_twitter']['twitter:description'] = self.subtitle
         res['default_twitter']['twitter:card'] = 'summary'

@@ -5,6 +5,7 @@ import requests
 import pprint
 from requests.exceptions import HTTPError
 from werkzeug import urls
+from collections import namedtuple
 
 from odoo import api, fields, models, _
 from odoo.tools.float_utils import float_round
@@ -38,20 +39,61 @@ class PaymentAcquirerStripe(models.Model):
 
         base_url = self.get_base_url()
         stripe_session_data = {
-            'payment_method_types[]': 'card',
             'line_items[][amount]': int(tx_values['amount'] if tx_values['currency'].name in INT_CURRENCIES else float_round(tx_values['amount'] * 100, 2)),
             'line_items[][currency]': tx_values['currency'].name,
             'line_items[][quantity]': 1,
             'line_items[][name]': tx_values['reference'],
             'client_reference_id': tx_values['reference'],
-            'success_url': urls.url_join(base_url, StripeController._success_url) + '?reference=%s' % tx_values['reference'],
-            'cancel_url': urls.url_join(base_url, StripeController._cancel_url) + '?reference=%s' % tx_values['reference'],
+            'success_url': urls.url_join(base_url, StripeController._success_url) + '?reference=%s' % urls.url_quote_plus(tx_values['reference']),
+            'cancel_url': urls.url_join(base_url, StripeController._cancel_url) + '?reference=%s' % urls.url_quote_plus(tx_values['reference']),
             'payment_intent_data[description]': tx_values['reference'],
             'customer_email': tx_values.get('partner_email') or tx_values.get('billing_partner_email'),
         }
-        tx_values['session_id'] = self._create_stripe_session(stripe_session_data)
+        if tx_values['type'] == 'form_save':
+            stripe_session_data['payment_intent_data[setup_future_usage]'] = 'off_session'
+
+        self._add_available_payment_method_types(stripe_session_data, tx_values)
+
+        tx_values['session_id'] = self.with_context(stripe_manual_payment=True)._create_stripe_session(stripe_session_data)
 
         return tx_values
+
+    @api.model
+    def _add_available_payment_method_types(self, stripe_session_data, tx_values):
+        """
+        Add payment methods available for the given transaction
+
+        :param stripe_session_data: dictionary to add the payment method types to
+        :param tx_values: values of the transaction to consider the payment method types for
+        """
+        PMT = namedtuple('PaymentMethodType', ['name', 'countries', 'currencies', 'recurrence'])
+        all_payment_method_types = [
+            PMT('card', [], [], 'recurring'),
+            PMT('ideal', ['nl'], ['eur'], 'punctual'),
+            PMT('bancontact', ['be'], ['eur'], 'punctual'),
+            PMT('eps', ['at'], ['eur'], 'punctual'),
+            PMT('giropay', ['de'], ['eur'], 'punctual'),
+            PMT('p24', ['pl'], ['eur', 'pln'], 'punctual'),
+        ]
+
+        existing_icons = [(icon.name or '').lower() for icon in self.env['payment.icon'].search([])]
+        linked_icons = [(icon.name or '').lower() for icon in self.payment_icon_ids]
+
+        # We don't filter out pmt in the case the icon doesn't exist at all as it would be **implicit** exclusion
+        icon_filtered = filter(lambda pmt: pmt.name == 'card' or
+                                           pmt.name in linked_icons or
+                                           pmt.name not in existing_icons, all_payment_method_types)
+        country = (tx_values['billing_partner_country'].code or 'no_country').lower()
+        pmt_country_filtered = filter(lambda pmt: not pmt.countries or country in pmt.countries, icon_filtered)
+        currency = (tx_values.get('currency').name or 'no_currency').lower()
+        pmt_currency_filtered = filter(lambda pmt: not pmt.currencies or currency in pmt.currencies, pmt_country_filtered)
+        pmt_recurrence_filtered = filter(lambda pmt: tx_values.get('type') != 'form_save' or pmt.recurrence == 'recurring',
+                                    pmt_currency_filtered)
+
+        available_payment_method_types = map(lambda pmt: pmt.name, pmt_recurrence_filtered)
+
+        for idx, payment_method_type in enumerate(available_payment_method_types):
+            stripe_session_data[f'payment_method_types[{idx}]'] = payment_method_type
 
     def _stripe_request(self, url, data=False, method='POST'):
         self.ensure_one()
@@ -66,7 +108,11 @@ class PaymentAcquirerStripe(models.Model):
         # cfr https://stripe.com/docs/error-codes
         # these can be made customer-facing, as they usually indicate a problem with the payment
         # (e.g. insufficient funds, expired card, etc.)
-        if not resp.ok and not (400 <= resp.status_code < 500 and resp.json().get('error', {}).get('code')):
+        # if the context key `stripe_manual_payment` is set then these errors will be raised as ValidationError,
+        # otherwise, they will be silenced, and the will be returned no matter the status.
+        # This key should typically be set for payments in the present and unset for automated payments
+        # (e.g. through crons)
+        if not resp.ok and self._context.get('stripe_manual_payment') and (400 <= resp.status_code < 500 and resp.json().get('error', {}).get('code')):
             try:
                 resp.raise_for_status()
             except HTTPError:
@@ -82,6 +128,8 @@ class PaymentAcquirerStripe(models.Model):
         if resp.get('payment_intent') and kwargs.get('client_reference_id'):
             tx = self.env['payment.transaction'].sudo().search([('reference', '=', kwargs['client_reference_id'])])
             tx.stripe_payment_intent = resp['payment_intent']
+        if 'id' not in resp and 'error' in resp:
+            _logger.error(resp['error']['message'])
         return resp['id']
 
     def _create_setup_intent(self, kwargs):
@@ -102,6 +150,13 @@ class PaymentAcquirerStripe(models.Model):
 
     @api.model
     def stripe_s2s_form_process(self, data):
+        if 'card' in data and not data.get('card'):
+            # coming back from a checkout payment and iDeal (or another non-card pm)
+            # can't save the token if it's not a card
+            # note that in the case of a s2s payment, 'card' wont be
+            # in the data dict because we need to fetch it from the stripe server
+            _logger.info('unable to save card info from Stripe since the payment was not done with a card')
+            return self.env['payment.token']
         last4 = data.get('card', {}).get('last4')
         if not last4:
             # PM was created with a setup intent, need to get last4 digits through
@@ -152,8 +207,9 @@ class PaymentTransactionStripe(models.Model):
         return res
 
     def form_feedback(self, data, acquirer_name):
-        if data.get('reference') and acquirer_name == 'stripe':
-            transaction = self.env['payment.transaction'].search([('reference', '=', data['reference'])])
+        reference = data.get('metadata', {}).get("reference") or data.get("reference")
+        if reference and acquirer_name == 'stripe':
+            transaction = self.env['payment.transaction'].search([('reference', '=', reference)])
 
             url = 'payment_intents/%s' % transaction.stripe_payment_intent
             resp = transaction.acquirer_id._stripe_request(url)
@@ -161,6 +217,8 @@ class PaymentTransactionStripe(models.Model):
                 resp = resp.get('charges').get('data')[0]
 
             data.update(resp)
+            if 'metadata' in data and not data.get('metadata').get('reference'):
+                data['metadata']['reference'] = reference
             _logger.info('Stripe: entering form_feedback with post data %s' % pprint.pformat(data))
         return super(PaymentTransactionStripe, self).form_feedback(data, acquirer_name)
 
@@ -217,7 +275,7 @@ class PaymentTransactionStripe(models.Model):
     def _stripe_form_get_tx_from_data(self, data):
         """ Given a data dict coming from stripe, verify it and find the related
         transaction record. """
-        reference = data.get('reference')
+        reference = data.get('metadata', {}).get("reference") or data.get("reference")
         if not reference:
             stripe_error = data.get('error', {}).get('message', '')
             _logger.error('Stripe: invalid reply received from stripe API, looks like '
@@ -277,6 +335,10 @@ class PaymentTransactionStripe(models.Model):
             self.write(vals)
             self._set_transaction_pending()
             return True
+        if status == 'requires_payment_method':
+            self._set_transaction_cancel()
+            self.acquirer_id._stripe_request('payment_intents/%s/cancel' % self.stripe_payment_intent)
+            return False
         else:
             error = tree.get("failure_message") or tree.get('error', {}).get('message')
             self._set_transaction_error(error)
@@ -286,7 +348,7 @@ class PaymentTransactionStripe(models.Model):
         invalid_parameters = []
         if data.get('amount') != int(self.amount if self.currency_id.name in INT_CURRENCIES else float_round(self.amount * 100, 2)):
             invalid_parameters.append(('Amount', data.get('amount'), self.amount * 100))
-        if data.get('currency').upper() != self.currency_id.name:
+        if data.get('currency') and data.get('currency').upper() != self.currency_id.name:
             invalid_parameters.append(('Currency', data.get('currency'), self.currency_id.name))
         if data.get('payment_intent') and data.get('payment_intent') != self.stripe_payment_intent:
             invalid_parameters.append(('Payment Intent', data.get('payment_intent'), self.stripe_payment_intent))

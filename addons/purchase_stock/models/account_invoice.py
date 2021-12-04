@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
-from odoo.tools.float_utils import float_compare
+from odoo import api, fields, models, _
+from odoo.tools.float_utils import float_compare, float_is_zero
+from odoo.exceptions import UserError
 
 
 class AccountMove(models.Model):
@@ -35,6 +36,7 @@ class AccountMove(models.Model):
         :return: A list of Python dictionary to be passed to env['account.move.line'].create.
         '''
         lines_vals_list = []
+        price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
 
         for move in self:
             if move.type not in ('in_invoice', 'in_refund', 'in_receipt') or not move.company_id.anglo_saxon_accounting:
@@ -50,6 +52,8 @@ class AccountMove(models.Model):
                 debit_pdiff_account = line.product_id.property_account_creditor_price_difference \
                                 or line.product_id.categ_id.property_account_creditor_price_difference_categ
                 debit_pdiff_account = move.fiscal_position_id.map_account(debit_pdiff_account)
+                if not debit_pdiff_account:
+                    continue
 
                 if line.product_id.cost_method != 'standard' and line.purchase_line_id:
                     po_currency = line.purchase_line_id.currency_id
@@ -73,13 +77,16 @@ class AccountMove(models.Model):
                             # In case val_stock_move is a return move, its valuation entries have been made with the
                             # currency rate corresponding to the original stock move
                             valuation_date = val_stock_move.origin_returned_move_id.date or val_stock_move.date
-                            layers_qty = sum(val_stock_move.mapped('stock_valuation_layer_ids.quantity'))
-                            layers_values = sum(val_stock_move.mapped('stock_valuation_layer_ids.value'))
+                            svl = val_stock_move.with_context(active_test=False).mapped('stock_valuation_layer_ids').filtered(lambda l: l.quantity)
+                            layers_qty = sum(svl.mapped('quantity'))
+                            layers_values = sum(svl.mapped('value'))
                             valuation_price_unit_total += line.company_currency_id._convert(
                                 layers_values, move.currency_id,
                                 move.company_id, valuation_date, round=False,
                             )
                             valuation_total_qty += layers_qty
+                        if float_is_zero(valuation_total_qty, precision_rounding=line.product_uom_id.rounding or line.product_id.uom_id.rounding):
+                            raise UserError(_('Odoo is not able to generate the anglo saxon entries. The total valuation of %s is zero.') % _(line.product_id.display_name))
                         valuation_price_unit = valuation_price_unit_total / valuation_total_qty
                         valuation_price_unit = line.product_id.uom_id._compute_price(valuation_price_unit, line.product_uom_id)
 
@@ -105,61 +112,72 @@ class AccountMove(models.Model):
                         move.company_id, fields.Date.today(), round=False
                     )
 
-                invoice_cur_prec = move.currency_id.decimal_places
-
                 price_unit = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-                if line.tax_ids:
-                    price_unit = line.tax_ids.compute_all(
+                if line.tax_ids and line.quantity:
+                    # We do not want to round the price unit since :
+                    # - It does not follow the currency precision
+                    # - It may include a discount
+                    # Since compute_all still rounds the total, we use an ugly workaround:
+                    # multiply then divide the price unit.
+                    price_unit *= line.quantity
+                    price_unit = line.tax_ids.with_context(round=False, force_sign=move._get_tax_force_sign()).compute_all(
                         price_unit, currency=move.currency_id, quantity=1.0, is_refund=move.type == 'in_refund')['total_excluded']
+                    price_unit /= line.quantity
 
-                if float_compare(valuation_price_unit, price_unit, precision_digits=invoice_cur_prec) != 0 \
-                        and float_compare(line['price_unit'], line.price_unit, precision_digits=invoice_cur_prec) == 0:
+                price_unit_val_dif = price_unit - valuation_price_unit
+                price_subtotal = line.quantity * price_unit_val_dif
 
-                    price_unit_val_dif = price_unit - valuation_price_unit
+                # We consider there is a price difference if the subtotal is not zero. In case a
+                # discount has been applied, we can't round the price unit anymore, and hence we
+                # can't compare them.
+                if (
+                    not move.currency_id.is_zero(price_subtotal)
+                    and float_compare(line["price_unit"], line.price_unit, precision_digits=price_unit_prec) == 0
+                ):
+                    # Add price difference account line.
+                    vals = {
+                        'name': line.name[:64],
+                        'move_id': move.id,
+                        'currency_id': line.currency_id.id,
+                        'product_id': line.product_id.id,
+                        'product_uom_id': line.product_uom_id.id,
+                        'quantity': line.quantity,
+                        'price_unit': price_unit_val_dif,
+                        'price_subtotal': line.quantity * price_unit_val_dif,
+                        'account_id': debit_pdiff_account.id,
+                        'analytic_account_id': line.analytic_account_id.id,
+                        'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],
+                        'exclude_from_invoice_tab': True,
+                        'is_anglo_saxon_line': True,
+                    }
+                    vals.update(line._get_fields_onchange_subtotal(price_subtotal=vals['price_subtotal']))
+                    lines_vals_list.append(vals)
 
-                    if move.currency_id.compare_amounts(price_unit, valuation_price_unit) != 0 and debit_pdiff_account:
-                        # Add price difference account line.
-                        vals = {
-                            'name': line.name[:64],
-                            'move_id': move.id,
-                            'currency_id': line.currency_id.id,
-                            'product_id': line.product_id.id,
-                            'product_uom_id': line.product_uom_id.id,
-                            'quantity': line.quantity,
-                            'price_unit': price_unit_val_dif,
-                            'price_subtotal': line.quantity * price_unit_val_dif,
-                            'account_id': debit_pdiff_account.id,
-                            'analytic_account_id': line.analytic_account_id.id,
-                            'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],
-                            'exclude_from_invoice_tab': True,
-                            'is_anglo_saxon_line': True,
-                        }
-                        vals.update(line._get_fields_onchange_subtotal(price_subtotal=vals['price_subtotal']))
-                        lines_vals_list.append(vals)
-
-                        # Correct the amount of the current line.
-                        vals = {
-                            'name': line.name[:64],
-                            'move_id': move.id,
-                            'currency_id': line.currency_id.id,
-                            'product_id': line.product_id.id,
-                            'product_uom_id': line.product_uom_id.id,
-                            'quantity': line.quantity,
-                            'price_unit': -price_unit_val_dif,
-                            'price_subtotal': line.quantity * -price_unit_val_dif,
-                            'account_id': line.account_id.id,
-                            'analytic_account_id': line.analytic_account_id.id,
-                            'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],
-                            'exclude_from_invoice_tab': True,
-                            'is_anglo_saxon_line': True,
-                        }
-                        vals.update(line._get_fields_onchange_subtotal(price_subtotal=vals['price_subtotal']))
-                        lines_vals_list.append(vals)
+                    # Correct the amount of the current line.
+                    vals = {
+                        'name': line.name[:64],
+                        'move_id': move.id,
+                        'currency_id': line.currency_id.id,
+                        'product_id': line.product_id.id,
+                        'product_uom_id': line.product_uom_id.id,
+                        'quantity': line.quantity,
+                        'price_unit': -price_unit_val_dif,
+                        'price_subtotal': line.quantity * -price_unit_val_dif,
+                        'account_id': line.account_id.id,
+                        'analytic_account_id': line.analytic_account_id.id,
+                        'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],
+                        'exclude_from_invoice_tab': True,
+                        'is_anglo_saxon_line': True,
+                    }
+                    vals.update(line._get_fields_onchange_subtotal(price_subtotal=vals['price_subtotal']))
+                    lines_vals_list.append(vals)
         return lines_vals_list
 
     def post(self):
         # OVERRIDE
         # Create additional price difference lines for vendor bills.
+        if self._context.get('move_reverse_cancel'):
+            return super(AccountMove, self).post()
         self.env['account.move.line'].create(self._stock_account_prepare_anglo_saxon_in_lines_vals())
         return super(AccountMove, self).post()
 

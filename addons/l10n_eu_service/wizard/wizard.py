@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.exceptions import Warning
+from odoo.exceptions import UserError, Warning
 
 
 class l10n_eu_service(models.TransientModel):
@@ -70,12 +70,17 @@ class l10n_eu_service(models.TransientModel):
         'res.country', 'l10n_eu_service_country_rel_todo', default=_default_todo_country_ids,
         string='EU Customers From', required=True)
 
+    @api.model
+    def load_views(self, views, options=None):
+        # This wizard is outdated; it shouldn't be used anymore. Users might still be able to open it using the
+        # link in the settings if they didn't update the module. If they try, we tell them.
+        raise UserError(_("Starting July 1st 2021, OSS regulation has replaced MOSS. Please first upgrade 'l10n_eu_service' module in the Apps menu, then go back to this setting and click on 'Refresh tax mapping'."))
+
     def _get_repartition_line_copy_values(self, original_rep_lines):
         return [(0, 0, {
             'factor_percent': line.factor_percent,
             'repartition_type': line.repartition_type,
             'account_id': line.repartition_type == 'tax' and (self.account_collected_id.id or line.account_id.id) or None,
-            'tag_ids': [(6, 0, line.tag_ids.ids)],
             'company_id': line.company_id.id,
             'sequence': line.sequence,
         }) for line in original_rep_lines]

@@ -215,7 +215,7 @@
                                         <ul>
                                             <li><span>Accepted on the behalf of:</span> <b t-field="sale_order.partner_id.commercial_partner_id"/></li>
                                             <li><span>For an amount of:</span> <b data-id="total_amount" t-field="sale_order.amount_total"/></li>
-                                            <li t-if="sale_order.payment_term_id"><span>With payment terms:</span> <b t-field="sale_order.payment_term_id"/></li>
+                                            <li t-if="sale_order.payment_term_id"><span>With payment terms:</span> <b t-field="sale_order.payment_term_id.note"/></li>
                                         </ul>
                                     </p>
                                     <t t-call="portal.signature_form">
@@ -238,7 +238,7 @@
                                         <ul>
                                             <li><span>Accepted on the behalf of:</span> <b t-field="sale_order.partner_id.commercial_partner_id"/></li>
                                             <li><span>For an amount of:</span> <b data-id="total_amount" t-field="sale_order.amount_total"/></li>
-                                            <li t-if="sale_order.payment_term_id"><span>With payment terms:</span> <b t-field="sale_order.payment_term_id"/></li>
+                                            <li t-if="sale_order.payment_term_id"><span>With payment terms:</span> <b t-field="sale_order.payment_term_id.note"/></li>
                                         </ul>
                                     </p>
                                     <div t-if="pms or acquirers" id="payment_method" class="text-left">
@@ -376,11 +376,11 @@
                 </div>
                 <div class="row" id="so_date">
                     <div class="mb-3 col-6">
-                      <t t-if="sale_order.state == 'draft'">
-                        <strong>Quotation Date:</strong> 
-                      </t>
                       <t t-if="sale_order.state in ['sale', 'done', 'cancel']">
                         <strong>Order Date:</strong> 
+                      </t>
+                      <t t-else="">
+                         <strong>Quotation Date:</strong>
                       </t>
                       <span t-field="sale_order.date_order" t-options='{"widget": "date"}'/>
                     </div>

@@ -69,12 +69,37 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
             'default_journal_id': cls.journal_sale.id,
         }
 
+    def _check_order_search(self, orders, domain, expected_result):
+        domain += [('id', 'in', orders.ids)]
+        result = self.env['sale.order'].search(domain)
+        self.assertEqual(result, expected_result, "Unexpected result on search orders")
+
+    def test_search_invoice_ids(self):
+        """Test searching on computed fields invoice_ids"""
+
+        # Make qty zero to have a line without invoices
+        self.sol_prod_order.product_uom_qty = 0
+        self.sale_order.action_confirm()
+
+        # Tests before creating an invoice
+        self._check_order_search(self.sale_order, [('invoice_ids', '=', False)], self.sale_order)
+        self._check_order_search(self.sale_order, [('invoice_ids', '!=', False)], self.env['sale.order'])
+
+        # Create invoice
+        moves = self.sale_order._create_invoices()
+
+        # Tests after creating the invoice
+        self._check_order_search(self.sale_order, [('invoice_ids', 'in', moves.ids)], self.sale_order)
+        self._check_order_search(self.sale_order, [('invoice_ids', '=', False)], self.env['sale.order'])
+        self._check_order_search(self.sale_order, [('invoice_ids', '!=', False)], self.sale_order)
+
     def test_downpayment(self):
         """ Test invoice with a way of downpayment and check downpayment's SO line is created
             and also check a total amount of invoice is equal to a respective sale order's total amount
         """
         # Confirm the SO
         self.sale_order.action_confirm()
+        self._check_order_search(self.sale_order, [('invoice_ids', '=', False)], self.sale_order)
         # Let's do an invoice for a deposit of 100
         payment = self.env['sale.advance.payment.inv'].with_context(self.context).create({
             'advance_payment_method': 'fixed',
@@ -82,6 +107,7 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
             'deposit_account_id': self.account_income.id
         })
         payment.create_invoices()
+        self._check_order_search(self.sale_order, [('invoice_ids', '=', False)], self.env['sale.order'])
 
         self.assertEquals(len(self.sale_order.invoice_ids), 1, 'Invoice should be created for the SO')
         downpayment_line = self.sale_order.order_line.filtered(lambda l: l.is_downpayment)
@@ -133,7 +159,9 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
         payment = self.env['sale.advance.payment.inv'].with_context(self.context).create({
             'advance_payment_method': 'delivered'
         })
+        self._check_order_search(self.sale_order, [('invoice_ids', '=', False)], self.sale_order)
         payment.create_invoices()
+        self._check_order_search(self.sale_order, [('invoice_ids', '=', False)], self.env['sale.order'])
         invoice = self.sale_order.invoice_ids[0]
         invoice.post()
 
@@ -215,3 +243,113 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
                     self.assertEquals(line.qty_invoiced, 2.0, "The ordered (serv) sale line are totally invoiced (qty invoiced = the invoice lines)")
                 self.assertEquals(line.untaxed_amount_to_invoice, line.price_unit * line.qty_to_invoice, "Amount to invoice is now set as qty to invoice * unit price since no price change on invoice, for ordered products")
                 self.assertEquals(line.untaxed_amount_invoiced, line.price_unit * line.qty_invoiced, "Amount invoiced is now set as qty invoiced * unit price since no price change on invoice, for ordered products")
+
+    def test_invoice_with_sections(self):
+        """ Test create and invoice with sections from the SO, and check qty invoice/to invoice, and the related amounts """
+
+        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+            'partner_id': self.partner_customer_usd.id,
+            'partner_invoice_id': self.partner_customer_usd.id,
+            'partner_shipping_id': self.partner_customer_usd.id,
+            'pricelist_id': self.pricelist_usd.id,
+        })
+
+        SaleOrderLine = self.env['sale.order.line'].with_context(tracking_disable=True)
+        SaleOrderLine.create({
+            'name': 'Section',
+            'display_type': 'line_section',
+            'order_id': sale_order.id,
+        })
+        sol_prod_deliver = SaleOrderLine.create({
+            'name': self.product_order.name,
+            'product_id': self.product_order.id,
+            'product_uom_qty': 5,
+            'product_uom': self.product_order.uom_id.id,
+            'price_unit': self.product_order.list_price,
+            'order_id': sale_order.id,
+            'tax_id': False,
+        })
+
+        # Confirm the SO
+        sale_order.action_confirm()
+
+        sol_prod_deliver.write({'qty_delivered': 5.0})
+
+        # Context
+        self.context = {
+            'active_model': 'sale.order',
+            'active_ids': [sale_order.id],
+            'active_id': sale_order.id,
+            'default_journal_id': self.journal_sale.id,
+        }
+
+        # Let's do an invoice with invoiceable lines
+        payment = self.env['sale.advance.payment.inv'].with_context(self.context).create({
+            'advance_payment_method': 'delivered'
+        })
+        payment.create_invoices()
+
+        invoice = sale_order.invoice_ids[0]
+
+        self.assertEqual(invoice.line_ids[0].display_type, 'line_section')
+
+    def test_qty_invoiced(self):
+        """Verify uom rounding is correctly considered during qty_invoiced compute"""
+        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+            'partner_id': self.partner_customer_usd.id,
+            'partner_invoice_id': self.partner_customer_usd.id,
+            'partner_shipping_id': self.partner_customer_usd.id,
+            'pricelist_id': self.pricelist_usd.id,
+        })
+
+        SaleOrderLine = self.env['sale.order.line'].with_context(tracking_disable=True)
+        sol_prod_deliver = SaleOrderLine.create({
+            'name': self.product_order.name,
+            'product_id': self.product_order.id,
+            'product_uom_qty': 5,
+            'product_uom': self.product_order.uom_id.id,
+            'price_unit': self.product_order.list_price,
+            'order_id': sale_order.id,
+            'tax_id': False,
+        })
+
+        # Confirm the SO
+        sale_order.action_confirm()
+
+        sol_prod_deliver.write({'qty_delivered': 5.0})
+        # Context
+        self.context = {
+            'active_model': 'sale.order',
+            'active_ids': [sale_order.id],
+            'active_id': sale_order.id,
+            'default_journal_id': self.journal_sale.id,
+        }
+
+        # Let's do an invoice with invoiceable lines
+        invoicing_wizard = self.env['sale.advance.payment.inv'].with_context(self.context).create({
+            'advance_payment_method': 'delivered'
+        })
+        invoicing_wizard.create_invoices()
+
+        self.assertEqual(sol_prod_deliver.qty_invoiced, 5.0)
+        # We would have to change the digits of the field to
+        # test a greater decimal precision.
+        quantity = 5.003
+        move_form = Form(sale_order.invoice_ids)
+        with move_form.invoice_line_ids.edit(0) as line_form:
+            line_form.quantity = quantity
+        move_form.save()
+
+        # Default uom rounding to 0.001
+        qty_invoiced_field = sol_prod_deliver._fields.get('qty_invoiced')
+        sol_prod_deliver.env.add_to_compute(qty_invoiced_field, sol_prod_deliver)
+        self.assertEqual(sol_prod_deliver.qty_invoiced, quantity)
+
+        # Rounding to 0.01, should be rounded with UP (ceil) rounding_method
+        # Not floor or half up rounding.
+        sol_prod_deliver.product_uom.rounding *= 10
+        sol_prod_deliver.product_uom.flush(['rounding'])
+        expected_qty = 5.01
+        qty_invoiced_field = sol_prod_deliver._fields.get('qty_invoiced')
+        sol_prod_deliver.env.add_to_compute(qty_invoiced_field, sol_prod_deliver)
+        self.assertEqual(sol_prod_deliver.qty_invoiced, expected_qty)

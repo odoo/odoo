@@ -465,8 +465,16 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
      */
     _onClickAdd: function (ev) {
         ev.preventDefault();
-        this.isBuyNow = $(ev.currentTarget).attr('id') === 'buy_now';
-        return this._handleAdd($(ev.currentTarget).closest('form'));
+        var def = () => {
+            this.isBuyNow = $(ev.currentTarget).attr('id') === 'buy_now';
+            return this._handleAdd($(ev.currentTarget).closest('form'));
+        };
+        if ($('.js_add_cart_variants').children().length) {
+            return this._getCombinationInfo(ev).then(() => {
+                return !$(ev.target).closest('.js_product').hasClass("css_not_available") ? def() : Promise.resolve();
+            });
+        }
+        return def();
     },
     /**
      * Initializes the optional products modal
@@ -925,12 +933,12 @@ publicWidget.registry.productsSearchBar = publicWidget.Widget.extend({
                 this._render();
                 break;
             case $.ui.keyCode.UP:
-                ev.preventDefault();
-                this.$menu.children().last().focus();
-                break;
             case $.ui.keyCode.DOWN:
                 ev.preventDefault();
-                this.$menu.children().first().focus();
+                if (this.$menu) {
+                    let $element = ev.which === $.ui.keyCode.UP ? this.$menu.children().last() : this.$menu.children().first();
+                    $element.focus();
+                }
                 break;
         }
     },

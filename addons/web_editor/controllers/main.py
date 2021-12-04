@@ -38,7 +38,7 @@ class Web_Editor(http.Controller):
             :returns PNG image converted from given font
         """
         # Make sure we have at least size=1
-        size = max(1, size)
+        size = max(1, min(size, 512))
         # Initialize font
         addons_path = http.addons_manifest['web']['addons_path']
         font_obj = ImageFont.truetype(addons_path + font, size)
@@ -160,16 +160,22 @@ class Web_Editor(http.Controller):
             data = tools.image_process(data, size=(width, height), quality=quality, verify_resolution=True)
         except UserError:
             pass  # not an image
+        self._clean_context()
         attachment = self._attachment_create(name=name, data=data, res_id=res_id, res_model=res_model, filters=filters)
         return attachment._get_media_info()
 
     @http.route('/web_editor/attachment/add_url', type='json', auth='user', methods=['POST'], website=True)
     def add_url(self, url, res_id=False, res_model='ir.ui.view', filters=False, **kwargs):
+        self._clean_context()
         attachment = self._attachment_create(url=url, res_id=res_id, res_model=res_model, filters=filters)
         return attachment._get_media_info()
 
-    @http.route('/web_editor/attachment/<model("ir.attachment"):attachment>/update', type='json', auth='user', methods=['POST'], website=True)
+    @http.route(['/web_editor/attachment/<int:attachment>/update','/web_editor/attachment/<model("ir.attachment"):attachment>/update'], type='json', auth='user', methods=['POST'], website=True)
     def attachment_update(self, attachment, name=None, width=0, height=0, quality=0, copy=False, **kwargs):
+        self._clean_context()
+        # avoid error on dispatch (caused by slug computation in route) by prioritized int route
+        if isinstance(attachment, int):
+            attachment = request.env['ir.attachment'].browse(attachment)
         if attachment.type == 'url':
             raise UserError(_("You cannot change the quality, the width or the name of an URL attachment."))
         if copy:
@@ -191,6 +197,7 @@ class Web_Editor(http.Controller):
         Returns a dict mapping attachments which would not be removed (if any)
         mapped to the views preventing their removal
         """
+        self._clean_context()
         Attachment = attachments_to_remove = request.env['ir.attachment']
         Views = request.env['ir.ui.view']
 
@@ -238,6 +245,10 @@ class Web_Editor(http.Controller):
 
     def _attachment_create(self, name='', data=False, url=False, res_id=False, res_model='ir.ui.view', filters=None):
         """Create and return a new attachment."""
+        if name.lower().endswith('.bmp'):
+            # Avoid mismatch between content type and mimetype, see commit msg
+            name = name[:-4]
+
         if not name and url:
             name = url.split("/").pop()
 
@@ -268,6 +279,12 @@ class Web_Editor(http.Controller):
 
         attachment = request.env['ir.attachment'].create(attachment_data)
         return attachment
+
+    def _clean_context(self):
+        # avoid allowed_company_ids which may erroneously restrict based on website
+        context = dict(request.context)
+        context.pop('allowed_company_ids', None)
+        request.context = context
 
     @http.route("/web_editor/get_assets_editor_resources", type="json", auth="user", website=True)
     def get_assets_editor_resources(self, key, get_views=True, get_scss=True, get_js=True, bundles=False, bundles_restriction=[], only_user_custom_files=True):
@@ -450,3 +467,21 @@ class Web_Editor(http.Controller):
                 be found
         """
         request.env['web_editor.assets'].reset_asset(url, bundle_xmlid)
+
+    @http.route("/web_editor/public_render_template", type="json", auth="public", website=True)
+    def public_render_template(self, args):
+        # args[0]: xml id of the template to render
+        # args[1]: optional dict of rendering values, only trusted keys are supported
+        len_args = len(args)
+        assert len_args >= 1 and len_args <= 2, 'Need a xmlID and potential rendering values to render a template'
+
+        trusted_value_keys = ('debug',)
+
+        xmlid = args[0]
+        values = len_args > 1 and args[1] or {}
+
+        View = request.env['ir.ui.view']
+        if request.env.user._is_public() \
+                and xmlid in request.env['web_editor.assets']._get_public_asset_xmlids():
+            View = View.sudo()
+        return View.render_template(xmlid, {k: values[k] for k in values if k in trusted_value_keys})

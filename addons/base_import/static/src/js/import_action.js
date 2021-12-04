@@ -196,7 +196,6 @@ var DataImport = AbstractAction.extend({
         this.$buttons = $(QWeb.render("ImportView.buttons", this));
         this.$buttons.filter('.o_import_validate').on('click', this.validate.bind(this));
         this.$buttons.filter('.o_import_import').on('click', this.import.bind(this));
-        this.$buttons.filter('.o_import_file_reload').on('click', this.loaded_file.bind(this, null));
         this.$buttons.filter('.oe_import_file').on('click', function () {
             self.$('.o_content .oe_import_file').click();
         });
@@ -330,7 +329,7 @@ var DataImport = AbstractAction.extend({
             this.toggle_partial(null);
         }
 
-        this.$buttons.filter('.o_import_import, .o_import_validate, .o_import_file_reload').addClass('d-none');
+        this.$buttons.filter('.o_import_import, .o_import_validate').addClass('d-none');
         if (!this.$('input.oe_import_file').val()) { return this['settings_changed'](); }
         this.$('.oe_import_date_format').select2('val', '');
         this.$('.oe_import_datetime_format').val('');
@@ -349,13 +348,18 @@ var DataImport = AbstractAction.extend({
     },
     onpreviewing: function () {
         var self = this;
-        this.$buttons.filter('.o_import_import, .o_import_validate, .o_import_file_reload').addClass('d-none');
+        this.$buttons.filter('.o_import_import, .o_import_validate').addClass('d-none');
         this.$form.addClass('oe_import_with_file');
         // TODO: test that write // succeeded?
         this.$form.removeClass('oe_import_preview_error oe_import_error');
         this.$form.toggleClass(
             'oe_import_noheaders text-muted',
             !this.$('input.oe_import_has_header').prop('checked'));
+
+        // Clear the input value to allow onchange to be triggered
+        // if the file is the same (for all browsers)
+        self.$('input.oe_import_file').val('');
+
         this._rpc({
                 model: 'base_import.import',
                 method: 'parse_preview',
@@ -368,7 +372,6 @@ var DataImport = AbstractAction.extend({
     },
     onpreview_error: function (event, from, to, result) {
         this.$('.oe_import_options').show();
-        this.$buttons.filter('.o_import_file_reload').removeClass('d-none');
         this.$form.addClass('oe_import_preview_error oe_import_error');
         this.$form.find('.oe_import_box, .oe_import_with_file').removeClass('d-none');
         this.$form.find('.o_view_nocontent').addClass('d-none');
@@ -381,7 +384,7 @@ var DataImport = AbstractAction.extend({
             .text(_t('Load New File'))
             .removeClass('btn-primary').addClass('btn-secondary')
             .blur();
-        this.$buttons.filter('.o_import_import, .o_import_validate, .o_import_file_reload').removeClass('d-none');
+        this.$buttons.filter('.o_import_import, .o_import_validate').removeClass('d-none');
         this.$form.find('.oe_import_box, .oe_import_with_file').removeClass('d-none');
         this.$form.find('.o_view_nocontent').addClass('d-none');
         this.$form.addClass('oe_import_preview');

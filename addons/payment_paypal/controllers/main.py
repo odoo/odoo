@@ -60,6 +60,11 @@ class PaypalController(http.Controller):
         tx = None
         if reference:
             tx = request.env['payment.transaction'].sudo().search([('reference', '=', reference)])
+        if not tx:
+            # we have seemingly received a notification for a payment that did not come from
+            # odoo, acknowledge it otherwise paypal will keep trying
+            _logger.warning('received notification for unknown payment reference')
+            return False
         paypal_url = tx.acquirer_id.paypal_get_form_action_url()
         pdt_request = bool(post.get('amt'))  # check for specific pdt param
         if pdt_request:

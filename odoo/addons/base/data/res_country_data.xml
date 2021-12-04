@@ -84,9 +84,10 @@
             <field name="name">Austria</field>
             <field name="code">at</field>
             <field file="base/static/img/country_flags/at.png" name="image" type="base64" />
+            <field eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="EUR" />
             <field eval="43" name="phone_code" />
-            <field name="vat_label">VAT</field>
+            <field name="vat_label">USt</field>
         </record>
         <record id="au" model="res.country">
             <field name="name">Australia</field>
@@ -273,7 +274,7 @@
             <field eval="'%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="CAD" />
             <field eval="1" name="phone_code" />
-            <field name="vat_label">HST</field>            
+            <field name="vat_label">HST</field>
         </record>
         <record id="cc" model="res.country">
             <field name="name">Cocos (Keeling) Islands</field>
@@ -343,7 +344,7 @@
             <field name="name">China</field>
             <field name="code">cn</field>
             <field file="base/static/img/country_flags/cn.png" name="image" type="base64" />
-            <field eval="'%(country_name)s%(state_name)s%(city)s%(street)s%(street2)s %(zip)s'" name="address_format" />
+            <field eval="'%(country_name)s, %(zip)s\n%(state_name)s %(city)s %(street)s %(street2)s'" name="address_format" />
             <field name="currency_id" ref="CNY" />
             <field eval="86" name="phone_code" />
         </record>
@@ -697,13 +698,14 @@
             <field file="base/static/img/country_flags/hn.png" name="image" type="base64" />
             <field name="currency_id" ref="HNL" />
             <field eval="504" name="phone_code" />
+            <field name="vat_label">RTN</field>
         </record>
         <record id="hr" model="res.country">
             <field name="name">Croatia</field>
             <field name="code">hr</field>
             <field file="base/static/img/country_flags/hr.png" name="image" type="base64" />
             <field name="currency_id" ref="HRK" />
-            <field eval="'%(street)s \n%(street2)s \n%(zip)s %(city)s \n%(country_name)s'" name="address_format" />
+            <field eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s \n%(country_name)s'" name="address_format" />
             <field eval="385" name="phone_code" />
             <field name="vat_label">VAT</field>
         </record>
@@ -728,6 +730,7 @@
             <field file="base/static/img/country_flags/id.png" name="image" type="base64" />
             <field name="currency_id" ref="IDR" />
             <field eval="62" name="phone_code" />
+            <field name="vat_label">NPWP</field>
         </record>
         <record id="ie" model="res.country">
             <field name="name">Ireland</field>
@@ -1203,6 +1206,7 @@
             <field name="name">Norway</field>
             <field name="code">no</field>
             <field file="base/static/img/country_flags/no.png" name="image" type="base64" />
+            <field eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="NOK" />
             <field eval="47" name="phone_code" />
         </record>
@@ -1262,6 +1266,7 @@
             <field file="base/static/img/country_flags/pf.png" name="image" type="base64" />
             <field name="currency_id" ref="XPF" />
             <field eval="689" name="phone_code" />
+            <field name="vat_label">N° Tahiti</field>
         </record>
         <record id="pg" model="res.country">
             <field name="name">Papua New Guinea</field>
@@ -1453,7 +1458,7 @@
             <field name="name">Slovakia</field>
             <field name="code">sk</field>
             <field file="base/static/img/country_flags/sk.png" name="image" type="base64" />
-            <field name="currency_id" ref="SKK" />
+            <field name="currency_id" ref="EUR" />
             <field eval="421" name="phone_code" />
             <field name="vat_label">VAT</field>
         </record>
@@ -1810,7 +1815,7 @@
                 ref('de'),ref('gr'),ref('hu'),ref('ie'),ref('it'),
                 ref('lv'),ref('lt'),ref('lu'),ref('mt'),ref('nl'),
                 ref('pl'),ref('pt'),ref('ro'),ref('sk'),ref('si'),
-                ref('es'),ref('se'),ref('uk')])]"/>
+                ref('es'),ref('se')])]"/>
         </record>
 
         <record id="south_america" model="res.country.group">

@@ -15,6 +15,7 @@ QUnit.module('widgets', {
                 fields: {
                     foo: {string: "Foo", type: "char"},
                     bar: {string: "Bar", type: "char"},
+                    unexportable: {string: "Unexportable", type: "boolean", exportable: false},
                 },
                 records: [
                     {
@@ -126,6 +127,53 @@ QUnit.module('widgets', {
             '/web/export/csv',
             'unblock UI',
         ]);
+    });
+
+    QUnit.test('exporting view with non-exportable field', async function (assert) {
+        assert.expect(0);
+
+        var list = await createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: '<tree><field name="unexportable"/></tree>',
+            viewOptions: {
+                hasSidebar: true,
+            },
+            mockRPC: function (route) {
+                if (route === '/web/export/formats') {
+                    return Promise.resolve([
+                        {tag: 'csv', label: 'CSV'},
+                        {tag: 'xls', label: 'Excel'},
+                    ]);
+                }
+                if (route === '/web/export/get_fields') {
+                    return Promise.resolve([
+                        {
+                            children: false,
+                            field_type: 'boolean',
+                            relation_field: null,
+                            required: false,
+                            string: 'Unexportable',
+                            exportable: false,
+                        }
+                    ]);
+                }
+                return this._super.apply(this, arguments);
+            },
+            session: {
+                get_file: function (params) {
+                    assert.step(params.url);
+                    params.complete();
+                },
+            },
+        });
+
+        await testUtils.dom.click(list.$('thead th.o_list_record_selector input'));
+        await testUtils.dom.click(list.sidebar.$('.o_dropdown_toggler_btn:contains(Action)'));
+        await testUtils.dom.click(list.sidebar.$('a:contains(Export)'));
+
+        list.destroy();
     });
 
     QUnit.test('saving fields list when exporting data', async function (assert) {
@@ -308,9 +356,11 @@ QUnit.module('widgets', {
                         fields: [{
                             name: 'foo',
                             label: 'Foo',
+                            type: 'char',
                         }, {
                             name: 'bar',
                             label: 'Bar',
+                            type: 'char',
                         }]
                     }, "should be called with correct params")
                     args.complete();
@@ -355,9 +405,11 @@ QUnit.module('widgets', {
                         fields: [{
                             name: 'foo',
                             label: 'Foo',
+                            type: 'char',
                         }, {
                             name: 'bar',
                             label: 'Bar',
+                            type: 'char',
                         }]
                     }, "should be called with correct params")
                     args.complete();

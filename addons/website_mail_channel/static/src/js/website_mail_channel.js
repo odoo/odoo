@@ -60,9 +60,9 @@ publicWidget.registry.websiteMailChannel = publicWidget.Widget.extend({
             if ($threadContainer) {
                 var $lastMsg = $threadContainer.find('li.media').last();
                 $(data).find('li.media').insertAfter($lastMsg);
-                $(data).find('p.well').appendTo($threadContainer);
+                $(data).find('.o_mg_read_more').parent().appendTo($threadContainer);
             }
-            var $showMore = $link.parents('p.well').first();
+            var $showMore = $link.parent();
             $showMore.remove();
             return;
         });

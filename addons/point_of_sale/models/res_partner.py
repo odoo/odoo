@@ -41,7 +41,7 @@ class ResPartner(models.Model):
         return partner_id
 
     def unlink(self):
-        running_sessions = self.env['pos.session'].search([('state', '!=', 'closed')])
+        running_sessions = self.env['pos.session'].sudo().search([('state', '!=', 'closed')])
         if running_sessions:
             raise UserError(
                 _("You cannot delete contacts while there are active PoS sessions. Close the session(s) %s first.")

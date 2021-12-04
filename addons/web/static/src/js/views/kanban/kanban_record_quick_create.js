@@ -8,6 +8,7 @@ odoo.define('web.kanban_record_quick_create', function (require) {
 
 var core = require('web.core');
 var QuickCreateFormView = require('web.QuickCreateFormView');
+const session = require('web.session');
 var Widget = require('web.Widget');
 
 var qweb = core.qweb;
@@ -22,7 +23,9 @@ var RecordQuickCreate = Widget.extend({
         'click .o_kanban_add': '_onAddClicked',
         'click .o_kanban_edit': '_onEditClicked',
         'click .o_kanban_cancel': '_onCancelClicked',
+        'mousedown': '_onMouseDown',
     },
+    mouseDownInside: false,
 
     /**
      * @override
@@ -71,7 +74,7 @@ var RecordQuickCreate = Widget.extend({
             var formView = new QuickCreateFormView(fieldsViews.form, {
                 context: self.context,
                 modelName: self.model,
-                userContext: self.getSession().user_context,
+                userContext: session.user_context,
             });
             return formView.getController(self).then(function (controller) {
                 self.controller = controller;
@@ -256,6 +259,9 @@ var RecordQuickCreate = Widget.extend({
      * @param {MouseEvent} ev
      */
     _onWindowClicked: function (ev) {
+        var mouseDownInside = this.mouseDownInside;
+
+        this.mouseDownInside = false;
         // ignore clicks if the quick create is not in the dom
         if (!document.contains(this.el)) {
             return;
@@ -277,6 +283,11 @@ var RecordQuickCreate = Widget.extend({
             return;
         }
 
+        // ignore clicks while a modal is just about to open
+        if ($(document.body).hasClass('modal-open')) {
+            return;
+        }
+
         // ignore clicks if target is no longer in dom (e.g., a click on the
         // 'delete' trash icon of a m2m tag)
         if (!document.contains(ev.target)) {
@@ -284,12 +295,21 @@ var RecordQuickCreate = Widget.extend({
         }
 
         // ignore clicks if target is inside the quick create
-        if (this.el.contains(ev.target) && this.el !== ev.target) {
+        if (this.el.contains(ev.target) || this.el === ev.target || mouseDownInside) {
             return;
         }
 
         this.cancel();
     },
+    /**
+     * Detects if the click is originally from the quick create
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onMouseDown: function(ev){
+        this.mouseDownInside = true;
+    }
 });
 
 return RecordQuickCreate;

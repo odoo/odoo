@@ -134,7 +134,7 @@ class MailActivity(models.Model):
     activity_decoration = fields.Selection(related='activity_type_id.decoration_type', readonly=True)
     icon = fields.Char('Icon', related='activity_type_id.icon', readonly=True)
     summary = fields.Char('Summary')
-    note = fields.Html('Note')
+    note = fields.Html('Note', sanitize_style=True)
     date_deadline = fields.Date('Due Date', index=True, required=True, default=fields.Date.context_today)
     automated = fields.Boolean(
         'Automated activity', readonly=True,
@@ -210,15 +210,20 @@ class MailActivity(models.Model):
     @api.onchange('activity_type_id')
     def _onchange_activity_type_id(self):
         if self.activity_type_id:
-            self.summary = self.activity_type_id.summary
-            # Date.context_today is correct because date_deadline is a Date and is meant to be
-            # expressed in user TZ
-            base = fields.Date.context_today(self)
-            if self.activity_type_id.delay_from == 'previous_activity' and 'activity_previous_deadline' in self.env.context:
-                base = fields.Date.from_string(self.env.context.get('activity_previous_deadline'))
-            self.date_deadline = base + relativedelta(**{self.activity_type_id.delay_unit: self.activity_type_id.delay_count})
+            if self.activity_type_id.summary:
+                self.summary = self.activity_type_id.summary
+            self.date_deadline = self._calculate_date_deadline(self.activity_type_id)
             self.user_id = self.activity_type_id.default_user_id or self.env.user
-            self.note = self.activity_type_id.default_description
+            if self.activity_type_id.default_description:
+                self.note = self.activity_type_id.default_description
+
+    def _calculate_date_deadline(self, activity_type):
+        # Date.context_today is correct because date_deadline is a Date and is meant to be
+        # expressed in user TZ
+        base = fields.Date.context_today(self)
+        if activity_type.delay_from == 'previous_activity' and 'activity_previous_deadline' in self.env.context:
+            base = fields.Date.from_string(self.env.context.get('activity_previous_deadline'))
+        return base + relativedelta(**{activity_type.delay_unit: activity_type.delay_count})
 
     @api.onchange('recommended_activity_type_id')
     def _onchange_recommended_activity_type_id(self):
@@ -293,7 +298,7 @@ class MailActivity(models.Model):
         assigned user should be able to at least read the document. We therefore
         raise an UserError if the assigned user has no access to the document. """
         for activity in self:
-            model = self.env[activity.res_model].with_user(activity.user_id)
+            model = self.env[activity.res_model].with_user(activity.user_id).with_context(allowed_company_ids=activity.user_id.company_ids.ids)
             try:
                 model.check_access_rights('read')
             except exceptions.AccessError:
@@ -381,6 +386,13 @@ class MailActivity(models.Model):
                     {'type': 'activity_updated', 'activity_deleted': True})
         return super(MailActivity, self).unlink()
 
+    def name_get(self):
+        res = []
+        for record in self:
+            name = record.summary or record.activity_type_id.display_name
+            res.append((record.id, name))
+        return res
+
     # ------------------------------------------------------
     # Business Methods
     # ------------------------------------------------------
@@ -388,8 +400,14 @@ class MailActivity(models.Model):
     def action_notify(self):
         if not self:
             return
+        original_context = self.env.context
         body_template = self.env.ref('mail.message_activity_assigned')
         for activity in self:
+            if activity.user_id.lang:
+                # Send the notification in the assigned user's language
+                self = self.with_context(lang=activity.user_id.lang)
+                body_template = body_template.with_context(lang=activity.user_id.lang)
+                activity = activity.with_context(lang=activity.user_id.lang)
             model_description = self.env['ir.model']._get(activity.res_model).display_name
             body = body_template.render(
                 dict(activity=activity, model_description=model_description),
@@ -406,6 +424,8 @@ class MailActivity(models.Model):
                     model_description=model_description,
                     email_layout_xmlid='mail.mail_notification_light',
                 )
+            body_template = body_template.with_context(original_context)
+            self = self.with_context(original_context)
 
     def action_done(self):
         """ Wrapper without feedback because web button add context as
@@ -456,6 +476,19 @@ class MailActivity(models.Model):
         # marking as 'done'
         messages = self.env['mail.message']
         next_activities_values = []
+
+        # Search for all attachments linked to the activities we are about to unlink. This way, we
+        # can link them to the message posted and prevent their deletion.
+        attachments = self.env['ir.attachment'].search_read([
+            ('res_model', '=', self._name),
+            ('res_id', 'in', self.ids),
+        ], ['id', 'res_id'])
+
+        activity_attachments = defaultdict(list)
+        for attachment in attachments:
+            activity_id = attachment['res_id']
+            activity_attachments[activity_id].append(attachment['id'])
+
         for activity in self:
             # extract value to generate next activities
             if activity.force_next:
@@ -486,7 +519,19 @@ class MailActivity(models.Model):
                 mail_activity_type_id=activity.activity_type_id.id,
                 attachment_ids=[(4, attachment_id) for attachment_id in attachment_ids] if attachment_ids else [],
             )
-            messages |= record.message_ids[0]
+
+            # Moving the attachments in the message
+            # TODO: Fix void res_id on attachment when you create an activity with an image
+            # directly, see route /web_editor/attachment/add
+            activity_message = record.message_ids[0]
+            message_attachments = self.env['ir.attachment'].browse(activity_attachments[activity.id])
+            if message_attachments:
+                message_attachments.write({
+                    'res_id': activity_message.id,
+                    'res_model': activity_message._name,
+                })
+                activity_message.attachment_ids = message_attachments
+            messages |= activity_message
 
         next_activities = self.env['mail.activity'].create(next_activities_values)
         self.unlink()  # will unlink activity, dont access `self` after that
@@ -688,6 +733,76 @@ class MailActivityMixin(models.AbstractModel):
             [('res_model', '=', self._name), ('res_id', 'in', record_ids)]
         ).unlink()
         return result
+
+    def _read_progress_bar(self, domain, group_by, progress_bar):
+        group_by_fname = group_by.partition(':')[0]
+        if not (progress_bar['field'] == 'activity_state' and self._fields[group_by_fname].store):
+            return super()._read_progress_bar(domain, group_by, progress_bar)
+
+        # optimization for 'activity_state'
+
+        # explicitly check access rights, since we bypass the ORM
+        self.check_access_rights('read')
+        self._flush_search(domain, fields=[group_by_fname], order='id')
+        self.env['mail.activity'].flush(['res_model', 'res_id', 'user_id', 'date_deadline'])
+
+        query = self._where_calc(domain)
+        self._apply_ir_rules(query, 'read')
+        gb = group_by.partition(':')[0]
+        annotated_groupbys = [
+            self._read_group_process_groupby(gb, query)
+            for gb in [group_by, 'activity_state']
+        ]
+        groupby_dict = {gb['groupby']: gb for gb in annotated_groupbys}
+        for gb in annotated_groupbys:
+            if gb['field'] == 'activity_state':
+                gb['qualified_field'] = '"_last_activity_state"."activity_state"'
+        groupby_terms, orderby_terms = self._read_group_prepare('activity_state', [], annotated_groupbys, query)
+        select_terms = [
+            '%s as "%s"' % (gb['qualified_field'], gb['groupby'])
+            for gb in annotated_groupbys
+        ]
+        from_clause, where_clause, where_params = query.get_sql()
+        tz = self._context.get('tz') or self.env.user.tz or 'UTC'
+        select_query = """
+            SELECT 1 AS id, count(*) AS "__count", {fields}
+            FROM {from_clause}
+            JOIN (
+                SELECT res_id,
+                CASE
+                    WHEN min(date_deadline - (now() AT TIME ZONE COALESCE(res_partner.tz, %s))::date) > 0 THEN 'planned'
+                    WHEN min(date_deadline - (now() AT TIME ZONE COALESCE(res_partner.tz, %s))::date) < 0 THEN 'overdue'
+                    WHEN min(date_deadline - (now() AT TIME ZONE COALESCE(res_partner.tz, %s))::date) = 0 THEN 'today'
+                    ELSE null
+                END AS activity_state
+                FROM mail_activity
+                JOIN res_users ON (res_users.id = mail_activity.user_id)
+                JOIN res_partner ON (res_partner.id = res_users.partner_id)
+                WHERE res_model = '{model}'
+                GROUP BY res_id
+            ) AS "_last_activity_state" ON ("{table}".id = "_last_activity_state".res_id)
+            WHERE {where_clause}
+            GROUP BY {group_by}
+        """.format(
+            fields=', '.join(select_terms),
+            from_clause=from_clause,
+            model=self._name,
+            table=self._table,
+            where_clause=where_clause or '1=1',
+            group_by=', '.join(groupby_terms),
+        )
+        self.env.cr.execute(select_query, [tz] * 3 + where_params)
+        fetched_data = self.env.cr.dictfetchall()
+        self._read_group_resolve_many2one_fields(fetched_data, annotated_groupbys)
+        data = [
+            {key: self._read_group_prepare_data(key, val, groupby_dict)
+             for key, val in row.items()}
+            for row in fetched_data
+        ]
+        return [
+            self._read_group_format_result(vals, annotated_groupbys, [group_by], domain)
+            for vals in data
+        ]
 
     def toggle_active(self):
         """ Before archiving the record we should also remove its ongoing

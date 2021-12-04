@@ -43,6 +43,7 @@ QUnit.module('Views', {
                     date: {string: "Some Date", type: "date"},
                     datetime: {string: "Datetime Field", type: 'datetime'},
                     product_ids: {string: "one2many product", type: "one2many", relation: "product"},
+                    reference: {string: "Reference Field", type: 'reference', selection: [["product", "Product"], ["partner_type", "Partner Type"], ["partner", "Partner"]]},
                 },
                 records: [{
                     id: 1,
@@ -115,6 +116,20 @@ QUnit.module('Views', {
                     res_id: 12,
                     value: '',
                     lang_code: 'en_US'
+                }]
+            },
+            user: {
+                fields: {
+                    name: {string: "Name", type: "char"},
+                    partner_ids: {string: "one2many partners field", type: "one2many", relation: 'partner', relation_field: 'user_id'},
+                },
+                records: [{
+                    id: 17,
+                    name: "Aline",
+                    partner_ids: [1],
+                }, {
+                    id: 19,
+                    name: "Christine",
                 }]
             },
         };
@@ -691,6 +706,57 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('notebook: pages with invisible modifiers', async function (assert) {
+        assert.expect(10);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `<form string="Partners">
+                    <sheet>
+                        <field name="bar"/>
+                        <notebook>
+                            <page string="First" attrs='{"invisible": [["bar", "=", false]]}'>
+                                <field name="foo"/>
+                            </page>
+                            <page string="Second" attrs='{"invisible": [["bar", "=", true]]}'>
+                                <field name="int_field"/>
+                            </page>
+                            <page string="Third">
+                                <field name="qux"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>`,
+            res_id: 1,
+        });
+
+        await testUtils.form.clickEdit(form);
+
+        assert.containsOnce(form, ".o_notebook .nav .nav-link.active",
+            "There should be only one active tab"
+        );
+        assert.isVisible(form.$(".o_notebook .nav .nav-item:first"));
+        assert.hasClass(form.$(".o_notebook .nav .nav-link:first"), "active");
+
+        assert.isNotVisible(form.$(".o_notebook .nav .nav-item:eq(1)"));
+        assert.doesNotHaveClass(form.$(".o_notebook .nav .nav-link:eq(1)"), "active");
+
+        await testUtils.dom.click(form.$(".o_field_widget[name=bar] input"));
+
+        assert.containsOnce(form, ".o_notebook .nav .nav-link.active",
+            "There should be only one active tab"
+        );
+        assert.isNotVisible(form.$(".o_notebook .nav .nav-item:first"));
+        assert.doesNotHaveClass(form.$(".o_notebook .nav .nav-link:first"), "active");
+
+        assert.isVisible(form.$(".o_notebook .nav .nav-item:eq(1)"));
+        assert.hasClass(form.$(".o_notebook .nav .nav-link:eq(1)"), "active");
+
+        form.destroy();
+    });
+
     QUnit.test('invisible attrs on first notebook page', async function (assert) {
         assert.expect(6);
 
@@ -724,6 +790,44 @@ QUnit.module('Views', {
         assert.hasClass(form.$('.o_notebook .nav .nav-item:first()'), 'o_invisible_modifier');
         assert.hasClass(form.$('.o_notebook .nav .nav-link:nth(1)'), 'active');
         assert.hasClass(form.$('.o_notebook .tab-content .tab-pane:nth(1)'), 'active');
+        form.destroy();
+    });
+
+    QUnit.test('invisible attrs on notebook page which has only one page', async function (assert) {
+        assert.expect(4);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="bar"/>' +
+                        '<notebook>' +
+                            '<page string="Foo" attrs=\'{"invisible": [["bar", "!=", false]]}\'>' +
+                                '<field name="foo"/>' +
+                            '</page>' +
+                        '</notebook>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        assert.notOk(form.$('.o_notebook .nav .nav-link:first()').hasClass('active'),
+            'first tab should not be active');
+        assert.ok(form.$('.o_notebook .nav .nav-item:first()').hasClass('o_invisible_modifier'),
+            'first tab should be invisible');
+
+        // enable checkbox
+        await testUtils.dom.click(form.$('.o_field_boolean input'));
+        assert.ok(form.$('.o_notebook .nav .nav-link:first()').hasClass('active'),
+            'first tab should be active');
+        assert.notOk(form.$('.o_notebook .nav .nav-item:first()').hasClass('o_invisible_modifier'),
+            'first tab should be visible');
+
         form.destroy();
     });
 
@@ -928,6 +1032,60 @@ QUnit.module('Views', {
         await testUtils.dom.click(form.$('.o_field_boolean input'));
         assert.containsOnce(form, 'input[name="foo"]',
             "the foo field widget should have been rerendered to now be editable again");
+
+        form.destroy();
+    });
+
+    QUnit.test('readonly attrs on lines are re-evaluated on field change 2', async function (assert) {
+        assert.expect(4);
+
+        this.data.partner.records[0].product_ids = [37];
+        this.data.partner.records[0].trululu = false;
+        this.data.partner.onchanges = {
+            trululu(record) {
+                // when trululu changes, push another record in product_ids.
+                // only push a second record once.
+                if (record.product_ids.map(command => command[1]).includes(41)) {
+                    return;
+                }
+                // copy the list to force it as different from the original
+                record.product_ids = record.product_ids.slice();
+                record.product_ids.push([4,41,false]);
+            }
+        };
+
+        this.data.product.records[0].name = 'test';
+        // This one is necessary to have a valid, rendered widget
+        this.data.product.fields.int_field = { type:"integer", string: "intField" };
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+            <form>
+                <field name="trululu"/>
+                <field name="product_ids" attrs="{'readonly': [['trululu', '=', False]]}">
+                    <tree editable="top"><field name="int_field" widget="handle" /><field name="name"/></tree>
+                </field>
+            </form>
+            `,
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        for (let value of [true, false, true, false]) {
+            if (value) {
+                await testUtils.fields.many2one.clickOpenDropdown('trululu')
+                await testUtils.fields.many2one.clickHighlightedItem('trululu')
+                assert.notOk($('.o_field_one2many[name="product_ids"]').hasClass("o_readonly_modifier"), 'lines should not be readonly')
+            } else {
+                await testUtils.fields.editAndTrigger(form.$('.o_field_many2one[name="trululu"] input'), '', ['keyup'])
+                assert.ok($('.o_field_one2many[name="product_ids"]').hasClass("o_readonly_modifier"), 'lines should be readonly')
+            }
+        }
 
         form.destroy();
     });
@@ -1338,6 +1496,64 @@ QUnit.module('Views', {
         assert.hasAttrValue(form.$('button[name="13"]'), 'class', 'btn btn-link');
         assert.hasAttrValue(form.$('button[name="14"]'), 'class', 'btn btn-success');
         assert.hasAttrValue(form.$('button[name="15"]'), 'class', 'btn o_this_is_a_button');
+
+        form.destroy();
+    });
+
+    QUnit.test('button in form view and long willStart', async function (assert) {
+        assert.expect(6);
+
+        var rpcCount = 0;
+
+        var FieldChar = fieldRegistry.get('char');
+        fieldRegistry.add('asyncwidget', FieldChar.extend({
+            willStart: function () {
+                assert.step('load '+rpcCount);
+                if (rpcCount === 2) {
+                    return $.Deferred();
+                }
+                return $.Deferred().resolve();
+            },
+        }));
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="state" invisible="1"/>' +
+                    '<header>' +
+                        '<button name="post" class="p" string="Confirm" type="object"/>' +
+                    '</header>' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="foo" widget="asyncwidget"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 2,
+            mockRPC: function () {
+                rpcCount++;
+                return this._super.apply(this, arguments);
+            },
+        });
+        assert.verifySteps(['load 1']);
+
+        await testUtils.mock.intercept(form, 'execute_action', function (ev) {
+            ev.data.on_success();
+            ev.data.on_closed();
+        });
+
+        await testUtils.dom.click('.o_form_statusbar button.p', form);
+        assert.verifySteps(['load 2']);
+
+        testUtils.mock.intercept(form, 'execute_action', function (ev) {
+            ev.data.on_success();
+            ev.data.on_closed();
+        });
+
+        await testUtils.dom.click('.o_form_statusbar button.p', form);
+        assert.verifySteps(['load 3']);
 
         form.destroy();
     });
@@ -1790,6 +2006,51 @@ QUnit.module('Views', {
             },
         });
         assert.verifySteps(['default_get', 'onchange']);
+        form.destroy();
+    });
+
+    QUnit.test('reference field in one2many list', async function (assert) {
+        assert.expect(1);
+
+        this.data.partner.records[0].reference = 'partner,2';
+
+        var form = await createView({
+            View: FormView,
+            model: 'user',
+            data: this.data,
+            arch: `<form>
+                        <field name="name"/>
+                        <field name="partner_ids">
+                            <tree editable="bottom">
+                                <field name="display_name"/>
+                                <field name="reference"/>
+                            </tree>
+                       </field>
+                   </form>`,
+            archs: {
+                'partner,false,form': '<form><field name="display_name"/></form>',
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'get_formview_id') {
+                    return Promise.resolve(false);
+                }
+                return this._super(route, args);
+            },
+            res_id: 17,
+        });
+        // current form
+        await testUtils.form.clickEdit(form);
+
+        // open the modal form view of the record pointed by the reference field
+        await testUtils.dom.click(form.$('table td[title="first record"]'));
+        await testUtils.dom.click(form.$('table td button.o_external_button'));
+
+        // edit the record in the modal
+        await testUtils.fields.editInput($('.modal-body input[name="display_name"]'), 'New name');
+        await testUtils.dom.click($('.modal-dialog footer button:first-child'));
+
+        assert.containsOnce(form, '.o_field_cell[title="New name"]', 'should not crash and value must be edited');
+
         form.destroy();
     });
 
@@ -4326,6 +4587,52 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('navigation with tab key selects a value in form view', async function (assert) {
+        assert.expect(5);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <field name="display_name"/>
+                    <field name="int_field"/>
+                    <field name="qux"/>
+                    <field name="trululu"/>
+                    <field name="date"/>
+                    <field name="datetime"/>
+                </form>`,
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        await testUtils.dom.click(form.$('input[name="display_name"]'));
+        await testUtils.fields.triggerKeydown($(document.activeElement), 'tab');
+        assert.strictEqual(document.getSelection().toString(), "10",
+            "int_field value should be selected");
+
+        await testUtils.fields.triggerKeydown($(document.activeElement), 'tab');
+        assert.strictEqual(document.getSelection().toString(), "0.4",
+            "qux field value should be selected");
+
+        await testUtils.fields.triggerKeydown($(document.activeElement), 'tab');
+        assert.strictEqual(document.getSelection().toString(), "aaa",
+            "trululu field value should be selected");
+
+        await testUtils.fields.triggerKeydown($(document.activeElement), 'tab');
+        assert.strictEqual(document.getSelection().toString(), "01/25/2017",
+            "date field value should be selected");
+
+        await testUtils.fields.triggerKeydown($(document.activeElement), 'tab');
+        assert.strictEqual(document.getSelection().toString(), "12/12/2016 10:55:05",
+            "datetime field value should be selected");
+
+        form.destroy();
+    });
+
     QUnit.test('clicking on a stat button with a context', async function (assert) {
         assert.expect(1);
 
@@ -4638,6 +4945,66 @@ QUnit.module('Views', {
             "the cell should contains the number of record: 1");
 
         await testUtils.form.clickSave(form);
+
+        form.destroy();
+    });
+
+    QUnit.test('one2manys (list editable) inside one2manys discard and edit o2m again', async function (assert) {
+        assert.expect(3);
+
+        this.data.partner.records[0].p = [2]; // one2many
+        this.data.partner.records[1].p = [4]; // one2many
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="p">' +
+                            '<tree>' +
+                                '<field name="p"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</sheet>' +
+                '</form>',
+            archs: {
+                "partner,false,form": '<form>' +
+                        '<field name="p">' +
+                            '<tree editable="top">' +
+                                '<field name="display_name"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</form>'
+            },
+            res_id: 1,
+        });
+
+        await testUtils.form.clickEdit(form);
+
+        // add a o2m subrecord
+        await testUtils.dom.click(form.$('.o_field_one2many tbody tr:eq(0) td.o_data_cell:first'));
+        await testUtils.dom.click($('.modal-body .o_field_one2many tbody tr:eq(0) td.o_data_cell:first'));
+        await testUtils.fields.editInput($('.modal-body input'), 'xtv');
+        await testUtils.dom.click($('.modal-footer button:first'));
+        assert.strictEqual($('.modal').length, 0,
+            "dialog should be closed");
+
+        // Discard record and edit record again
+        await testUtils.form.clickDiscard(form);
+        await testUtils.dom.click($('.modal .modal-footer .btn-primary:first'));
+        await testUtils.form.clickEdit(form);
+
+        await testUtils.dom.click(form.$('.o_field_one2many tbody tr:eq(0) td.o_data_cell:first'));
+        await testUtils.dom.click($('.modal-body .o_field_one2many tbody tr:eq(0) td.o_data_cell:first'));
+        await testUtils.fields.editInput($('.modal-body input'), 'xtv');
+        await testUtils.dom.click($('.modal-footer button:first'));
+        assert.strictEqual($('.modal').length, 0,
+            "dialog should be closed");
+
+        var row = form.$('.o_field_one2many .o_list_view .o_data_row');
+        assert.strictEqual(row.children()[0].textContent, '1 record',
+            "the cell should contains the number of record: 1");
 
         form.destroy();
     });
@@ -4971,6 +5338,44 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('open new record even with warning message', async function (assert) {
+        assert.expect(3);
+
+        this.data.partner.onchanges = { foo: true };
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group><field name="foo"/></group>' +
+                '</form>',
+            res_id: 2,
+            mockRPC: function (route, args) {
+                if (args.method === 'onchange') {
+                    return Promise.resolve({
+                        warning: {
+                            title: "Warning",
+                            message: "Any warning."
+                        }
+                    });
+                }
+                return this._super.apply(this, arguments);
+            },
+
+        });
+        await testUtils.dom.click(form.$buttons.find('.o_form_button_edit'));
+        assert.strictEqual(form.$('input').val(), 'blip', 'input should contain record value');
+        form.$('input').first().val("tralala").trigger('input');
+        assert.strictEqual(form.$('input').val(), 'tralala', 'input should contain new value');
+
+        await form.reload({ currentId: false });
+        assert.strictEqual(form.$('input').val(), 'My little Foo Value',
+            'input should contain default value after reload');
+
+        form.destroy();
+    });
+
     QUnit.test('render stat button with string inline', async function (assert) {
         assert.expect(1);
 
@@ -5159,6 +5564,29 @@ QUnit.module('Views', {
         await assertFormContainsNButtonsWithSizeClass(4, 7);
         await assertFormContainsNButtonsWithSizeClass(5, 7);
         await assertFormContainsNButtonsWithSizeClass(6, 7);
+    });
+
+    QUnit.test('can set bin_size to false in context', async function (assert){
+        assert.expect(1);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="foo"/>' +
+                  '</form>',
+            res_id: 1,
+            context: {
+                bin_size: false,
+            },
+            mockRPC: function (route, args) {
+                assert.strictEqual(args.kwargs.context.bin_size, false,
+                    "bin_size should always be in the context and should be false");
+                return this._super(route, args);
+            }
+        });
+        form.destroy();
     });
 
     QUnit.module('focus and scroll test', async function () {
@@ -6075,13 +6503,13 @@ QUnit.module('Views', {
         await testUtils.form.clickEdit(form);
         await testUtils.fields.editInput(form.$('input[name="foo"]'), "test");
         await testUtils.form.clickSave(form);
-        assert.containsOnce(form, '.o_form_view > .alert > div .oe_field_translate',
+        assert.containsOnce(form, '.o_form_view .alert > div .oe_field_translate',
                             "should have single translation alert");
 
         await testUtils.form.clickEdit(form);
         await testUtils.fields.editInput(form.$('input[name="display_name"]'), "test2");
         await testUtils.form.clickSave(form);
-        assert.containsN(form, '.o_form_view > .alert > div .oe_field_translate', 2,
+        assert.containsN(form, '.o_form_view .alert > div .oe_field_translate', 2,
                          "should have two translate fields in translation alert");
 
         form.destroy();
@@ -6117,24 +6545,23 @@ QUnit.module('Views', {
         await testUtils.fields.editInput(form.$('input[name="foo"]'), "test");
         await testUtils.form.clickSave(form);
 
-        assert.containsOnce(form, '.o_form_view > .alert > div',"should have a translation alert");
-
+        assert.containsOnce(form, '.o_form_view .alert > div',"should have a translation alert");
 
         // click on the pager to switch to the next record
         await testUtils.dom.click(form.pager.$('.o_pager_next'));
-        assert.strictEqual(form.$('.o_form_view > .alert > div').length, 0,
+        assert.strictEqual(form.$('.o_form_view .alert > div').length, 0,
             "should not have a translation alert");
 
         // click on the pager to switch back to the previous record
         await testUtils.dom.click(form.pager.$('.o_pager_previous'));
-        assert.containsOnce(form, '.o_form_view > .alert > div',"should have a translation alert");
+        assert.containsOnce(form, '.o_form_view .alert > div',"should have a translation alert");
 
         // remove translation alert by click X and check alert even after form reload
-        await testUtils.dom.click(form.$('.o_form_view > .alert > .close'));
+        await testUtils.dom.click(form.$('.o_form_view .alert > .close'));
         assert.strictEqual(form.$('.o_form_view > .alert > div').length, 0,
             "should not have a translation alert");
         await form.reload();
-        assert.strictEqual(form.$('.o_form_view > .alert > div').length, 0,
+        assert.strictEqual(form.$('.o_form_view .alert > div').length, 0,
             "should not have a translation alert after reload");
 
         form.destroy();
@@ -6199,7 +6626,7 @@ QUnit.module('Views', {
         actionManager.$('input[name="foo"]').val("test").trigger("input");
         await testUtils.dom.click(actionManager.$('.o_form_button_save'));
 
-        assert.strictEqual(actionManager.$('.o_form_view > .alert > div').length, 1,
+        assert.strictEqual(actionManager.$('.o_form_view .alert > div').length, 1,
             "should have a translation alert");
 
         var currentController = actionManager.getCurrentController().widget;
@@ -6213,7 +6640,7 @@ QUnit.module('Views', {
         });
 
         await testUtils.dom.click($('.o_control_panel .breadcrumb a:first'));
-        assert.strictEqual(actionManager.$('.o_form_view > .alert > div').length, 1,
+        assert.strictEqual(actionManager.$('.o_form_view .alert > div').length, 1,
             "should have a translation alert");
 
         actionManager.destroy();
@@ -6621,7 +7048,7 @@ QUnit.module('Views', {
             model: 'partner',
             data: this.data,
             arch: '<form>' +
-                    '<header><field name="trululu" widget="statusbar" clickable="True"/></header>' +
+                    '<header><field name="trululu" widget="statusbar" clickable="true"/></header>' +
                 '</form>',
             res_id: 1,
             mockRPC: function (route, args) {

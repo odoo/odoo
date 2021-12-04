@@ -147,6 +147,8 @@ var FormRenderer = BasicRenderer.extend({
                 }));
             if (this.$('.o_form_statusbar').length) {
                 this.$('.o_form_statusbar').after($notification);
+            } else if (this.$('.o_form_sheet_bg').length) {
+                this.$('.o_form_sheet_bg').prepend($notification);
             } else {
                 this.$el.prepend($notification);
             }
@@ -249,7 +251,7 @@ var FormRenderer = BasicRenderer.extend({
             var $notebook = $(this);
             var name = $notebook.data('name');
             if (name in state) {
-                var $page = $notebook.find('> ul > li').eq(state[name]);
+                var $page = $notebook.find('> .o_notebook_headers > .nav-tabs > .nav-item').eq(state[name]);
                 if (!$page.hasClass('o_invisible_modifier')) {
                     $page.find('a[data-toggle="tab"]').click();
                 }
@@ -281,6 +283,28 @@ var FormRenderer = BasicRenderer.extend({
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
+
+    /**
+     * Activates the first visible tab from a given list of tab objects. The
+     * first tab having an "autofocus" attribute set will be focused in
+     * priority.
+     *
+     * @private
+     * @param {Object[]} tabs
+     */
+    _activateFirstVisibleTab(tabs) {
+        const visibleTabs = tabs.filter(
+            (tab) => !tab.$header.hasClass("o_invisible_modifier")
+        );
+        const autofocusTab = visibleTabs.findIndex(
+            (tab) => tab.node.attrs.autofocus === "autofocus"
+        );
+        const tabToFocus = visibleTabs[Math.max(0, autofocusTab)];
+        if (tabToFocus) {
+            tabToFocus.$header.find('.nav-link').addClass('active');
+            tabToFocus.$page.addClass('active');
+        }
+    },
     /**
      * @override
      */
@@ -338,7 +362,6 @@ var FormRenderer = BasicRenderer.extend({
         }
     },
     /**
-            excludedElements: ".o_notebook .nav.nav-tabs",
      * @private
      * @param {string} name
      * @returns {string}
@@ -859,7 +882,6 @@ var FormRenderer = BasicRenderer.extend({
         var self = this;
         var $headers = $('<ul class="nav nav-tabs">');
         var $pages = $('<div class="tab-content">');
-        var autofocusTab = -1;
         // renderedTabs is used to aggregate the generated $headers and $pages
         // alongside their node, so that their modifiers can be registered once
         // all tabs have been rendered, to ensure that the first visible tab
@@ -868,9 +890,6 @@ var FormRenderer = BasicRenderer.extend({
             var pageID = _.uniqueId('notebook_page_');
             var $header = self._renderTabHeader(child, pageID);
             var $page = self._renderTabPage(child, pageID);
-            if (autofocusTab === -1 && child.attrs.autofocus === 'autofocus') {
-                autofocusTab = index;
-            }
             self._handleAttributes($header, child);
             $headers.append($header);
             $pages.append($page);
@@ -880,11 +899,6 @@ var FormRenderer = BasicRenderer.extend({
                 node: child,
             };
         });
-        if (renderedTabs.length) {
-            var tabToFocus = renderedTabs[Math.max(0, autofocusTab)];
-            tabToFocus.$header.find('.nav-link').addClass('active');
-            tabToFocus.$page.addClass('active');
-        }
         // register the modifiers for each tab
         _.each(renderedTabs, function (tab) {
             self._registerModifiers(tab.node, self.state, tab.$header, {
@@ -894,16 +908,23 @@ var FormRenderer = BasicRenderer.extend({
                     if (modifiers.invisible && $link.hasClass('active')) {
                         $link.removeClass('active');
                         tab.$page.removeClass('active');
-                        var $firstVisibleTab = $headers.find('li:not(.o_invisible_modifier):first() > a');
-                        $firstVisibleTab.addClass('active');
-                        $pages.find($firstVisibleTab.attr('href')).addClass('active');
+                        self.inactiveNotebooks.push(renderedTabs);
+                    }
+                    if (!modifiers.invisible) {
+                        // make first page active if there is only one page to display
+                        var $visibleTabs = $headers.find('li:not(.o_invisible_modifier)');
+                        if ($visibleTabs.length === 1) {
+                            self.inactiveNotebooks.push(renderedTabs);
+                        }
                     }
                 },
             });
         });
+        this._activateFirstVisibleTab(renderedTabs);
+        var $notebookHeaders = $('<div class="o_notebook_headers">').append($headers);
         var $notebook = $('<div class="o_notebook">')
                 .data('name', node.attrs.name || '_default_')
-                .append($headers, $pages);
+                .append($notebookHeaders, $pages);
         this._registerModifiers(node, this.state, $notebook);
         this._handleAttributes($notebook, node);
         return $notebook;
@@ -955,6 +976,7 @@ var FormRenderer = BasicRenderer.extend({
         // render the form and evaluate the modifiers
         var defs = [];
         this.defs = defs;
+        this.inactiveNotebooks = [];
         var $form = this._renderNode(this.arch).addClass(this.className);
         delete this.defs;
 
@@ -975,6 +997,20 @@ var FormRenderer = BasicRenderer.extend({
         }).guardedCatch(function () {
             $form.remove();
         });
+    },
+    /**
+     * This method is overridden to activate the first notebook page if the
+     * current active page is invisible due to modifiers. This is done after
+     * all modifiers are applied on all page elements.
+     *
+     * @override
+     */
+    async _updateAllModifiers() {
+        await this._super(...arguments);
+        for (const tabs of this.inactiveNotebooks) {
+            this._activateFirstVisibleTab(tabs);
+        }
+        this.inactiveNotebooks = [];
     },
     /**
      * Updates the form's $el with new content.

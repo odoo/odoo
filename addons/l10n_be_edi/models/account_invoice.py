@@ -135,7 +135,10 @@ class AccountMove(models.Model):
 
                     # Price Unit
                     elements = eline.xpath('cac:Price/cbc:PriceAmount', namespaces=namespaces)
-                    invoice_line_form.price_unit = elements and float(elements[0].text) or 0.0
+                    price_unit = elements and float(elements[0].text) or 0.0
+                    elements = eline.xpath('cbc:LineExtensionAmount', namespaces=namespaces)
+                    line_extension_amount = elements and float(elements[0].text) or 0.0
+                    invoice_line_form.price_unit = price_unit or line_extension_amount / invoice_line_form.quantity or 0.0
 
                     # Name
                     elements = eline.xpath('cac:Item/cbc:Description', namespaces=namespaces)
@@ -152,7 +155,7 @@ class AccountMove(models.Model):
                     elements = eline.xpath('cac:Item/cac:StandardItemIdentification/cbc:ID[@schemeID=\'GTIN\']', namespaces=namespaces)
                     if elements:
                         product_ean13 = elements[0].text
-                        domains.append([('ean13', '=', product_ean13)])
+                        domains.append([('barcode', '=', product_ean13)])
                     if domains:
                         product = self.env['product.product'].search(expression.OR(domains), limit=1)
                         if product:

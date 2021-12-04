@@ -3,7 +3,7 @@
 import logging
 import pytz
 
-from odoo import _, api, fields, models
+from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.tools import format_datetime
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools.translate import html_translate
@@ -144,7 +144,7 @@ class EventEvent(models.Model):
         store=True, readonly=True, compute='_compute_seats')
     seats_expected = fields.Integer(
         string='Number of Expected Attendees',
-        compute_sudo=True, readonly=True, compute='_compute_seats')
+        compute_sudo=True, readonly=True, compute='_compute_seats_expected')
 
     # Registration fields
     registration_ids = fields.One2many(
@@ -214,6 +214,10 @@ class EventEvent(models.Model):
         for event in self:
             if event.seats_max > 0:
                 event.seats_available = event.seats_max - (event.seats_reserved + event.seats_used)
+
+    @api.depends('seats_unconfirmed', 'seats_reserved', 'seats_used')
+    def _compute_seats_expected(self):
+        for event in self:
             event.seats_expected = event.seats_unconfirmed + event.seats_reserved + event.seats_used
 
     @api.model
@@ -431,6 +435,14 @@ class EventRegistration(models.Model):
         return registration
 
     @api.model
+    def check_access_rights(self, operation, raise_exception=True):
+        if not self.env.is_admin() and not self.user_has_groups('event.group_event_user'):
+            if raise_exception:
+                raise AccessError(_('Only event users or managers are allowed to create or update registrations.'))
+            return False
+        return super(EventRegistration, self).check_access_rights(operation, raise_exception)
+
+    @api.model
     def _prepare_attendee_values(self, registration):
         """ Method preparing the values to create new attendees based on a
         sales order line. It takes some registration data (dict-based) that are
@@ -446,7 +458,11 @@ class EventRegistration(models.Model):
             'partner_id': partner_id.id,
             'event_id': event_id and event_id.id or False,
         }
-        data.update({key: value for key, value in registration.items() if key in self._fields})
+        data.update({
+            key: value for key, value in registration.items()
+            if key in self._fields and key not in data and not self._fields[key].default
+        })
+
         return data
 
     def do_draft(self):
@@ -458,7 +474,7 @@ class EventRegistration(models.Model):
         # auto-trigger after_sub (on subscribe) mail schedulers, if needed
         onsubscribe_schedulers = self.event_id.event_mail_ids.filtered(
             lambda s: s.interval_type == 'after_sub')
-        onsubscribe_schedulers.execute()
+        onsubscribe_schedulers.with_user(SUPERUSER_ID).execute()
 
     def button_reg_close(self):
         """ Close Registration """

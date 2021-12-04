@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.tools.sql import column_exists, create_column
 
 
 class StockLocationRoute(models.Model):
@@ -68,6 +69,17 @@ class StockPicking(models.Model):
 
     sale_id = fields.Many2one(related="group_id.sale_id", string="Sales Order", store=True, readonly=False)
 
+    def _auto_init(self):
+        """
+        Create related field here, too slow
+        when computing it afterwards through _compute_related.
+
+        Since group_id.sale_id is created in this module,
+        no need for an UPDATE statement.
+        """
+        if not column_exists(self.env.cr, 'stock_picking', 'sale_id'):
+            create_column(self.env.cr, 'stock_picking', 'sale_id', 'int4')
+        return super()._auto_init()
 
     def _log_less_quantities_than_expected(self, moves):
         """ Log an activity on sale order that are linked to moves. The
@@ -126,7 +138,10 @@ class ProductionLot(models.Model):
             ]).mapped('move_id')
             stock_moves = stock_moves.search([('id', 'in', stock_moves.ids)]).filtered(
                 lambda move: move.picking_id.location_dest_id.usage == 'customer' and move.state == 'done')
-            lot.sale_order_ids = stock_moves.mapped('sale_line_id.order_id')
+            if self.env.user.has_group('stock.group_stock_user'):
+                lot.sale_order_ids = stock_moves.sudo().mapped('sale_line_id.order_id')
+            else:
+                lot.sale_order_ids = stock_moves.mapped('sale_line_id.order_id')
             lot.sale_order_count = len(lot.sale_order_ids)
 
     def action_view_so(self):

@@ -11,7 +11,6 @@
     'depends': ['mail'],
     'installable': True,
     'application': False,
-    'auto_install': True,
     'data': [
         'views/assets.xml',
         'views/res_users_views.xml',
@@ -23,4 +22,5 @@
     'qweb': [
         'views/discuss.xml',
     ],
+    'license': 'LGPL-3',
 }

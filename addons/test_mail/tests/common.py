@@ -56,6 +56,24 @@ class BaseFunctionalTest(common.SavepointCase):
         cls.email_template = cls.env['mail.template'].create(create_values)
         return cls.email_template
 
+    def _generate_notify_recipients(self, partners):
+        """ Tool method to generate recipients data according to structure used
+        in notification methods. Purpose is to allow testing of internals of
+        some notification methods, notably testing links or group-based notification
+        details.
+
+        See notably ``MailThread._notify_compute_recipients()``.
+        """
+        return [
+            {'id': partner.id,
+             'active': True,
+             'share': partner.partner_share,
+             'groups': partner.user_ids.groups_id.ids,
+             'notif': partner.user_ids.notification_type or 'email',
+             'type': 'user' if partner.user_ids and not partner.partner_share else partner.user_ids and 'portal' or 'customer',
+            } for partner in partners
+        ]
+
     @classmethod
     def _init_mail_gateway(cls):
         cls.alias_domain = 'test.com'
@@ -328,18 +346,51 @@ class MockEmails(common.SingleTransactionCase):
 
     def format(self, template, to='groups@example.com, other@gmail.com', subject='Frogs',
                extra='', email_from='"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>',
-               cc='', msg_id='<1198923581.41972151344608186760.JavaMail@agrolait.com>'):
-        return template.format(to=to, subject=subject, cc=cc, extra=extra, email_from=email_from, msg_id=msg_id)
+               cc='', msg_id='<1198923581.41972151344608186760.JavaMail@agrolait.com>', **kwargs):
+        return template.format(to=to, subject=subject, cc=cc, extra=extra, email_from=email_from, msg_id=msg_id, **kwargs)
 
     def format_and_process(self, template, email_from, to, subject='Frogs', extra='',  cc='', msg_id=False,
-                           model=None, target_model='mail.test.gateway', target_field='name'):
+                           model=None, target_model='mail.test.gateway', target_field='name', **kwargs):
         self.assertFalse(self.env[target_model].search([(target_field, '=', subject)]))
         if not msg_id:
             msg_id = "<%.7f-test@iron.sky>" % (time.time())
 
-        mail = self.format(template, to=to, subject=subject, cc=cc, extra=extra, email_from=email_from, msg_id=msg_id)
+        mail = self.format(template, to=to, subject=subject, cc=cc, extra=extra, email_from=email_from, msg_id=msg_id, **kwargs)
         self.env['mail.thread'].with_context(mail_channel_noautofollow=True).message_process(model, mail)
         return self.env[target_model].search([(target_field, '=', subject)])
+
+    def gateway_reply_wrecord(self, template, record, use_in_reply_to=True):
+        """ Simulate a reply through the mail gateway. Usage: giving a record,
+        find an email sent to him and use its message-ID to simulate a reply.
+
+        Some noise is added in References just to test some robustness. """
+        email = self._find_sent_email_wrecord(record)
+
+        if use_in_reply_to:
+            extra = 'In-Reply-To:\r\n\t%s\n' % email['message_id']
+        else:
+            disturbing_other_msg_id = '<123456.654321@another.host.com>'
+            extra = 'References:\r\n\t%s\n\r%s' % (email['message_id'], disturbing_other_msg_id)
+
+        return self.format_and_process(
+            template, email_from=email['email_to'][0], to=email['reply_to'],
+            subject='Re: %s' % email['subject'],
+            extra=extra,
+            msg_id='<123456.%s.%d@test.example.com>' % (record._name, record.id),
+            target_model=record._name,
+            target_field=record._rec_name,
+        )
+
+    def _find_sent_email_wrecord(self, record):
+        """ Helper to find in outgoing emails (see build_email) an email linked to
+        a given record. It has been introduced with a fix for mass mailing and is
+        not meant to be used widely, proper tools are available in later versions. """
+        for mail in self._mails:
+            if mail['object_id'] == '%d-%s' % (record.id, record._name):
+                break
+        else:
+            raise AssertionError('Sent email not found for record %s' % record)
+        return mail
 
 
 @tagged('moderation')

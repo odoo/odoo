@@ -968,7 +968,8 @@ registry.gallerySlider = publicWidget.Widget.extend({
         }
 
         function update() {
-            index = $lis.index($lis.filter('.active')) || 0;
+            const active = $lis.filter('.active');
+            index = active.length ? $lis.index(active) : 0;
             page = Math.floor(index / realNbPerPage);
             hide();
         }
@@ -1110,6 +1111,7 @@ registry.facebookPage = publicWidget.Widget.extend({
         var src = $.param.querystring('https://www.facebook.com/plugins/page.php', params);
         this.$iframe = $('<iframe/>', {
             src: src,
+            class: 'o_temp_auto_element',
             width: params.width,
             height: params.height,
             css: {

@@ -319,3 +319,56 @@ class TestComposerWTpl(BaseFunctionalTest, MockEmails, TestRecipients):
         # Test: email_template subject, body_html, model
         last_template = self.env['mail.template'].search([('model', '=', 'mail.test.simple'), ('subject', '=', 'Forget me subject')], limit=1)
         self.assertEqual(last_template.body_html, '<p>Dummy body</p>', 'email_template incorrect body_html')
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_message_compose_notification_delete(self):
+        # Mail notification should be deleted after being sent if
+        # no mail template is not set on composer
+        self.env['mail.compose.message'].with_context({
+            'default_model': self.test_record._name,
+            'default_res_id': self.test_record.id,
+        }).with_user(self.user_employee).create({
+            'body': '<p>Body Text</p>',
+            'partner_ids': [(4, self.partner_1.id)]
+        }).send_mail()
+        message = self.test_record.message_ids[0]
+
+        self.assertFalse(message.mail_ids,
+                         'message_post: mail.mail notifications should have been auto-deleted')
+
+        # Mail notification should be deleted after being sent auto_delete
+        # is set to 'True'(which is default value) in mail template
+        mail_template = self.env['mail.template'].create({
+            'name': 'MAIL NOTIFICATION TEST',
+            'subject': 'Test mail notification',
+            'model_id': self.env.ref('test_mail.model_mail_test').id,
+            'body_html': '<p>Body Text 2</p>',
+        })
+
+        self.env['mail.compose.message'].with_context({
+            'default_model': self.test_record._name,
+            'default_res_id': self.test_record.id,
+            'default_template_id': mail_template.id,
+        }).with_user(self.user_employee).create({
+            'partner_ids': [(4, self.partner_1.id)]
+        }).send_mail()
+        message = self.test_record.message_ids[0]
+
+        self.assertFalse(message.mail_ids,
+                         'message_post: mail.mail notifications should have been auto-deleted')
+
+        # Mail notification should not be deleted after being sent
+        # if auto_delete is set to 'False' in mail template
+        mail_template.auto_delete = False
+
+        self.env['mail.compose.message'].with_context({
+            'default_model': self.test_record._name,
+            'default_res_id': self.test_record.id,
+            'default_template_id': mail_template.id,
+        }).with_user(self.user_employee).create({
+            'partner_ids': [(4, self.partner_1.id)]
+        }).send_mail()
+        message = self.test_record.message_ids[0]
+
+        self.assertEqual(len(message.mail_ids), 1,
+                         'message_post: mail.mail notifications should have been kept')

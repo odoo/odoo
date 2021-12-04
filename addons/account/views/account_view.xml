@@ -317,7 +317,7 @@
                                     </group>
                                     <group string="Control-Access" groups="account.group_account_manager">
                                         <div class="text-muted" colspan="2">Keep empty for no control</div>
-                                        <field name="type_control_ids" widget="many2many_tags"/>
+                                        <field name="type_control_ids" widget="many2many_tags" options="{'no_create': True}"/>
                                         <field name="account_control_ids" widget="many2many_tags"/>
                                         <field name="restrict_mode_hash_table" groups="account.group_account_user"/>
                                     </group>
@@ -384,7 +384,32 @@
                             <h1><field name="name"/></h1>
                         </div>
                         <group>
-                            <field name="bank_id"/>
+                            <group>
+                                <field name="company_partner_id" invisible="1"/>
+                                <field name="bank_account_id"/>
+                                <field name="bank_acc_number" attrs="{'readonly': [('bank_account_id', '!=', False)], 'invisible':[('bank_account_id', '=', False)]}"/>
+                                <field name="bank_id" attrs="{'readonly': [('bank_account_id', '!=', False)], 'invisible':[('bank_account_id', '=', False)]}"/>
+                            </group>
+                            <group>
+                                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                                <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
+                            </group>
+                        </group>
+                        <group>
+                            <div name="advanced_info">
+                                <group string="Payment Method Types">
+                                    <field name="inbound_payment_method_ids" widget="many2many_checkboxes"/>
+                                    <field name="outbound_payment_method_ids" widget="many2many_checkboxes"/>
+                                </group>
+                            </div>
+
+                            <group name="bank_statement" string="Bank Statements" groups="account.group_account_user">
+                                <field name="post_at"/>
+                                <label for="bank_statements_source"/>
+                                <div name="bank_source">
+                                    <field name="bank_statements_source" widget="radio" attrs="{'required': [('type', '=', 'bank')]}"/>
+                                </div>
+                            </group>
                         </group>
                     </sheet>
                 </form>
@@ -476,9 +501,9 @@ action = model.setting_init_bank_account_action()
                             <field name="active" invisible="1"/>
                             <field name="name"/>
                             <field name="applicability"/>
-                            <field name="tax_negate" attrs="{'invisible': [('applicability', '!=', 'taxes')]}"/>
-                            <field name="country_id" attrs="{'invisible': [('applicability', '!=', 'taxes')]}"/>
-                            <field name="tax_report_line_ids" attrs="{'invisible': [('applicability', '!=', 'taxes')]}"/>
+                            <field name="tax_negate" readonly="1" attrs="{'invisible': [('applicability', '!=', 'taxes')]}"/>
+                            <field name="country_id" attrs="{'invisible': [('applicability', '!=', 'taxes')], 'readonly': [('tax_report_line_ids', '!=', [])]}"/>
+                            <field name="tax_report_line_ids" readonly="1" attrs="{'invisible': [('applicability', '!=', 'taxes')]}"/>
                         </group>
                     </sheet>
                 </form>
@@ -798,7 +823,7 @@ action = model.setting_init_bank_account_action()
             <field name="model">account.bank.statement.line</field>
             <field name="priority">8</field>
             <field name="arch" type="xml">
-                <tree string="Statement lines" create="false">
+                <tree string="Statement lines" create="false" default_order="date desc, statement_id desc, sequence desc, id desc">
                     <field name="sequence" readonly="1" invisible="1"/>
                     <field name="statement_id" />
                     <field name="journal_id" invisible="1" />
@@ -913,8 +938,8 @@ action = model.setting_init_bank_account_action()
                                 </div>
                                 <field name="match_same_currency" attrs="{'invisible': [('rule_type', '!=', 'invoice_matching')]}"/>
                                 <label for="match_total_amount"
-                                       attrs="{'invisible': ['|', '|', ('rule_type', '!=', 'invoice_matching'), ('match_same_currency', '=', False), ('match_partner', '=', False)]}"/>
-                                <div attrs="{'invisible': ['|', '|', ('rule_type', '!=', 'invoice_matching'), ('match_same_currency', '=', False), ('match_partner', '=', False)]}">
+                                       attrs="{'invisible': [('rule_type', '!=', 'invoice_matching')]}"/>
+                                <div attrs="{'invisible': [('rule_type', '!=', 'invoice_matching')]}">
                                     <field name="match_total_amount" class="oe_inline"/>
                                     <field name="match_total_amount_param" class="oe_inline"
                                            attrs="{'invisible': [('match_total_amount', '=', False)]}"/>
@@ -1856,7 +1881,7 @@ action = model.setting_init_bank_account_action()
 
         <menuitem id="menu_account_supplier" name="Vendors"
             parent="account.menu_finance_payables"
-            action="base.action_partner_supplier_form" sequence="200"/>
+            action="account.res_partner_action_supplier" sequence="200"/>
 
         <!-- Manual reconciliation -->
         <record id="action_manual_reconciliation" model="ir.actions.client">

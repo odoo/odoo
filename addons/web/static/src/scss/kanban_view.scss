@@ -142,8 +142,14 @@
 
             .o_kanban_image_fill_left {
                 position: relative;
-                margin: $o-kanban-inside-vgutter*-1 $o-kanban-inside-hgutter*-1;
                 margin-right: $o-kanban-inside-hgutter*2;
+                @include media-breakpoint-up(sm) {
+                    margin: {
+                        top: $o-kanban-inside-vgutter*-1;
+                        bottom: $o-kanban-inside-vgutter*-1;
+                        left: $o-kanban-inside-hgutter*-1;
+                    }
+                }
                 flex: 1 0 $o-kanban-image-fill-width;
                 min-height: 95px;
                 background: {
@@ -165,7 +171,7 @@
                 margin-right: $o-kanban-inside-hgutter*2;
                 flex: 0 0 $o-kanban-image-width;
                 min-height: $o-kanban-image-width;
-                align-self: baseline;
+                align-self: center;
                 background: {
                     size: cover;
                     repeat: no-repeat;
@@ -176,7 +182,11 @@
                 @include media-breakpoint-up(md) {
                     $fill-notfill-gap: ($o-kanban-image-fill-width - $o-kanban-inside-hgutter*2) - $o-kanban-image-width;
                     margin: { left: $fill-notfill-gap*0.5; right: $fill-notfill-gap*2;}
-                    align-self: center;
+                }
+
+                @include media-breakpoint-down(sm) {
+                    flex-basis: $o-kanban-image-fill-width;
+                    min-height: $o-kanban-image-fill-width;
                 }
 
                 // Reset immedialy after div padding
@@ -241,6 +251,7 @@
             display: block;
             margin-bottom: $o-kanban-inner-hmargin;
             line-height: 1.2;
+            word-break: break-all;
 
             .o_tag {
                 display: inline-block;
@@ -544,6 +555,8 @@
 
     // Kanban UN-grouped Layout
     &.o_kanban_ungrouped {
+        min-height: 100%;
+        align-content: flex-start;
         flex-flow: row wrap;
         justify-content: flex-start;
 

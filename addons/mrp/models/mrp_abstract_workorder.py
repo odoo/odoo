@@ -44,7 +44,6 @@ class MrpAbstractWorkorder(models.AbstractModel):
         )
 
     def _workorder_line_ids(self):
-        self.ensure_one()
         return self.raw_workorder_line_ids | self.finished_workorder_line_ids
 
     @api.onchange('qty_producing')
@@ -174,7 +173,7 @@ class MrpAbstractWorkorder(models.AbstractModel):
         serial number.
         """
         lines = []
-        is_tracked = move.product_id.tracking != 'none'
+        is_tracked = move.product_id.tracking == 'serial'
         if move in self.move_raw_ids._origin:
             # Get the inverse_name (many2one on line) of raw_workorder_line_ids
             initial_line_values = {self.raw_workorder_line_ids._get_raw_workorder_inverse_name(): self.id}
@@ -240,64 +239,76 @@ class MrpAbstractWorkorder(models.AbstractModel):
         """ Update the finished move & move lines in order to set the finished
         product lot on it as well as the produced quantity. This method get the
         information either from the last workorder or from the Produce wizard."""
-        production_move = self.production_id.move_finished_ids.filtered(
-            lambda move: move.product_id == self.product_id and
-            move.state not in ('done', 'cancel')
-        )
-        if production_move and production_move.product_id.tracking != 'none':
-            if not self.finished_lot_id:
-                raise UserError(_('You need to provide a lot for the finished product.'))
-            move_line = production_move.move_line_ids.filtered(
-                lambda line: line.lot_id.id == self.finished_lot_id.id
+        move_line_vals = []
+        for abstract_wo in self:
+            production_move = abstract_wo.production_id.move_finished_ids.filtered(
+                lambda move: move.product_id == abstract_wo.product_id and
+                move.state not in ('done', 'cancel')
             )
-            if move_line:
-                if self.product_id.tracking == 'serial':
-                    raise UserError(_('You cannot produce the same serial number twice.'))
-                move_line.product_uom_qty += self.qty_producing
-                move_line.qty_done += self.qty_producing
+            if not production_move:
+                continue
+            if production_move.product_id.tracking != 'none':
+                if not abstract_wo.finished_lot_id:
+                    raise UserError(_('You need to provide a lot for the finished product.'))
+                move_line = production_move.move_line_ids.filtered(
+                    lambda line: line.lot_id.id == abstract_wo.finished_lot_id.id
+                )
+                if move_line:
+                    if abstract_wo.product_id.tracking == 'serial':
+                        raise UserError(_('You cannot produce the same serial number twice.'))
+                    move_line.product_uom_qty += abstract_wo.qty_producing
+                    move_line.qty_done += abstract_wo.qty_producing
+                else:
+                    location_dest_id = production_move.location_dest_id._get_putaway_strategy(abstract_wo.product_id).id or production_move.location_dest_id.id
+                    move_line_vals.append({
+                        'move_id': production_move.id,
+                        'product_id': production_move.product_id.id,
+                        'lot_id': abstract_wo.finished_lot_id.id,
+                        'product_uom_qty': abstract_wo.qty_producing,
+                        'product_uom_id': abstract_wo.product_uom_id.id,
+                        'qty_done': abstract_wo.qty_producing,
+                        'location_id': production_move.location_id.id,
+                        'location_dest_id': location_dest_id,
+                    })
             else:
-                location_dest_id = production_move.location_dest_id._get_putaway_strategy(self.product_id).id or production_move.location_dest_id.id
-                move_line.create({
-                    'move_id': production_move.id,
-                    'product_id': production_move.product_id.id,
-                    'lot_id': self.finished_lot_id.id,
-                    'product_uom_qty': self.qty_producing,
-                    'product_uom_id': self.product_uom_id.id,
-                    'qty_done': self.qty_producing,
-                    'location_id': production_move.location_id.id,
-                    'location_dest_id': location_dest_id,
-                })
-        else:
-            rounding = production_move.product_uom.rounding
-            production_move._set_quantity_done(
-                float_round(self.qty_producing, precision_rounding=rounding)
-            )
+                rounding = production_move.product_uom.rounding
+                production_move._set_quantity_done(
+                    float_round(abstract_wo.qty_producing, precision_rounding=rounding)
+                )
+        self.env['stock.move.line'].create(move_line_vals)
 
     def _update_moves(self):
         """ Once the production is done. Modify the workorder lines into
         stock move line with the registered lot and quantity done.
         """
         # Before writting produce quantities, we ensure they respect the bom strictness
-        self._strict_consumption_check()
         vals_list = []
-        workorder_lines_to_process = self._workorder_line_ids().filtered(lambda line: line.product_id != self.product_id and line.qty_done > 0)
-        for line in workorder_lines_to_process:
-            line._update_move_lines()
-            if float_compare(line.qty_done, 0, precision_rounding=line.product_uom_id.rounding) > 0:
-                vals_list += line._create_extra_move_lines()
+        line_to_unlink = self._workorder_line_ids().browse()
+        self._strict_consumption_check()
+        for abstract_wo in self:
+            workorder_lines_to_process = abstract_wo._workorder_line_ids().filtered(lambda line: line.product_id != abstract_wo.product_id and line.qty_done > 0)
+            for line in workorder_lines_to_process:
+                line._update_move_lines()
+                if float_compare(line.qty_done, 0, precision_rounding=line.product_uom_id.rounding) > 0:
+                    vals_list += line._create_extra_move_lines()
 
-        self._workorder_line_ids().filtered(lambda line: line.product_id != self.product_id).unlink()
+            line_to_unlink |= abstract_wo._workorder_line_ids().filtered(lambda line: line.product_id != abstract_wo.product_id)
+        line_to_unlink.unlink()
         self.env['stock.move.line'].create(vals_list)
 
     def _strict_consumption_check(self):
-        if self.consumption == 'strict':
-            for move in self.move_raw_ids:
-                lines = self._workorder_line_ids().filtered(lambda l: l.move_id == move)
-                qty_done = sum(lines.mapped('qty_done'))
-                qty_to_consume = sum(lines.mapped('qty_to_consume'))
-                rounding = self.product_uom_id.rounding
-                if float_compare(qty_done, qty_to_consume, precision_rounding=rounding) != 0:
-                    raise UserError(_('You should consume the quantity of %s defined in the BoM. If you want to consume more or less components, change the consumption setting on the BoM.') % lines[0].product_id.name)
+        for abstract_wo in self:
+            if abstract_wo.consumption == 'strict':
+                for move in abstract_wo.move_raw_ids:
+                    lines = abstract_wo._workorder_line_ids().filtered(lambda l: l.move_id == move)
+                    qty_done = 0.0
+                    qty_to_consume = 0.0
+                    for line in lines:
+                        qty_done += line.product_uom_id._compute_quantity(line.qty_done, line.product_id.uom_id)
+                        qty_to_consume += line.product_uom_id._compute_quantity(line.qty_to_consume, line.product_id.uom_id)
+                    rounding = abstract_wo.product_uom_id.rounding
+                    if float_compare(qty_done, qty_to_consume, precision_rounding=rounding) != 0:
+                        raise UserError(_('You should consume the quantity of %s defined in the BoM. If you want to consume more or less components, change the consumption setting on the BoM.') % lines[0].product_id.name)
 
 
 class MrpAbstractWorkorderLine(models.AbstractModel):
@@ -318,14 +329,6 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
     qty_done = fields.Float('Consumed', digits='Product Unit of Measure')
     qty_reserved = fields.Float('Reserved', digits='Product Unit of Measure')
     company_id = fields.Many2one('res.company', compute='_compute_company_id')
-
-    @api.onchange('lot_id')
-    def _onchange_lot_id(self):
-        """ When the user is encoding a produce line for a tracked product, we apply some logic to
-        help him. This onchange will automatically switch `qty_done` to 1.0.
-        """
-        if self.product_id.tracking == 'serial':
-            self.qty_done = 1
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
@@ -377,7 +380,7 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
             # in different lots,
             # we create different component_move_lines to record which one was used
             # on which lot of finished product
-            if float_compare(new_quantity_done, ml.product_uom_qty, precision_rounding=rounding) >= 0:
+            if float_compare(ml.product_uom_id._compute_quantity(new_quantity_done, ml.product_id.uom_id), ml.product_qty, precision_rounding=rounding) >= 0:
                 ml.write({
                     'qty_done': new_quantity_done,
                     'lot_produced_ids': self._get_produced_lots(),
@@ -398,6 +401,8 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
     def _create_extra_move_lines(self):
         """Create new sml if quantity produced is bigger than the reserved one"""
         vals_list = []
+        # apply putaway
+        location_dest_id = self.move_id.location_dest_id._get_putaway_strategy(self.product_id) or self.move_id.location_dest_id
         quants = self.env['stock.quant']._gather(self.product_id, self.move_id.location_id, lot_id=self.lot_id, strict=False)
         # Search for a sub-locations where the product is available.
         # Loop on the quants to get the locations. If there is not enough
@@ -414,7 +419,7 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
                 'move_id': self.move_id.id,
                 'product_id': self.product_id.id,
                 'location_id': quant.location_id.id,
-                'location_dest_id': self.move_id.location_dest_id.id,
+                'location_dest_id': location_dest_id.id,
                 'product_uom_qty': 0,
                 'product_uom_id': self.product_uom_id.id,
                 'qty_done': min(quantity, self.qty_done),
@@ -434,7 +439,7 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
                 'move_id': self.move_id.id,
                 'product_id': self.product_id.id,
                 'location_id': self.move_id.location_id.id,
-                'location_dest_id': self.move_id.location_dest_id.id,
+                'location_dest_id': location_dest_id.id,
                 'product_uom_qty': 0,
                 'product_uom_id': self.product_uom_id.id,
                 'qty_done': self.qty_done,

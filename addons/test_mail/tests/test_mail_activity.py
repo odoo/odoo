@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from unittest.mock import patch
 from unittest.mock import DEFAULT
 
 import pytz
 
-from odoo import exceptions, tests
+from odoo import fields, exceptions, tests
 from odoo.addons.test_mail.tests.common import BaseFunctionalTest
 from odoo.addons.test_mail.models.test_mail_models import MailTestActivity
 from odoo.tools import mute_logger
+from odoo.tests.common import Form
 
 
 class TestActivityCommon(BaseFunctionalTest):
@@ -150,6 +151,75 @@ class TestActivityFlow(TestActivityCommon):
             activity.with_user(self.user_admin).write({'user_id': self.user_employee.id})
         self.assertEqual(activity.user_id, self.user_employee)
 
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_activity_summary_sync(self):
+        """ Test summary from type is copied on activities if set (currently only in form-based onchange) """
+        ActivityType = self.env['mail.activity.type']
+        email_activity_type = ActivityType.create({
+            'name': 'email',
+            'summary': 'Email Summary',
+        })
+        call_activity_type = ActivityType.create({'name': 'call'})
+        with Form(self.env['mail.activity'].with_context(default_res_model_id=self.env.ref('base.model_res_partner'))) as ActivityForm:
+            ActivityForm.res_model_id = self.env.ref('base.model_res_partner')
+
+            ActivityForm.activity_type_id = call_activity_type
+            # activity summary should be empty
+            self.assertEqual(ActivityForm.summary, False)
+
+            ActivityForm.activity_type_id = email_activity_type
+            # activity summary should be replaced with email's default summary
+            self.assertEqual(ActivityForm.summary, email_activity_type.summary)
+
+            ActivityForm.activity_type_id = call_activity_type
+            # activity summary remains unchanged from change of activity type as call activity doesn't have default summary
+            self.assertEqual(ActivityForm.summary, email_activity_type.summary)
+
+    def test_action_feedback_attachment(self):
+        Partner = self.env['res.partner']
+        Activity = self.env['mail.activity']
+        Attachment = self.env['ir.attachment']
+        Message = self.env['mail.message']
+
+        partner = self.env['res.partner'].create({
+            'name': 'Tester',
+        })
+
+        activity = Activity.create({
+            'summary': 'Test',
+            'activity_type_id': 1,
+            'res_model_id': self.env.ref('base.model_res_partner').id,
+            'res_id': partner.id,
+        })
+
+        attachments = Attachment
+        attachments += Attachment.create({
+            'name': 'test',
+            'res_name': 'test',
+            'res_model': 'mail.activity',
+            'res_id': activity.id,
+            'datas': 'test',
+        })
+        attachments += Attachment.create({
+            'name': 'test2',
+            'res_name': 'test',
+            'res_model': 'mail.activity',
+            'res_id': activity.id,
+            'datas': 'testtest',
+        })
+
+        # Adding the attachments to the activity
+        activity.attachment_ids = attachments
+
+        # Checking if the attachment has been forwarded to the message
+        # when marking an activity as "Done"
+        activity.action_feedback()
+        activity_message = Message.search([], order='id desc', limit=1)
+        self.assertEqual(set(activity_message.attachment_ids.ids), set(attachments.ids))
+        for attachment in attachments:
+            self.assertEqual(attachment.res_id, activity_message.id)
+            self.assertEqual(attachment.res_model, activity_message._name)
+
 
 @tests.tagged('mail_activity')
 class TestActivityMixin(TestActivityCommon):
@@ -269,3 +339,70 @@ class TestActivityMixin(TestActivityCommon):
             user_id=self.user_admin.id,
             new_user_id=self.user_employee.id)
         self.assertEqual(rec.activity_ids[0].user_id, self.user_employee)
+
+
+class TestReadProgressBar(tests.TransactionCase):
+    """Test for read_progress_bar"""
+
+    def test_week_grouping(self):
+        """The labels associated to each record in read_progress_bar should match
+        the ones from read_group, even in edge cases like en_US locale on sundays
+        """
+        model = self.env['mail.test.activity'].with_context(lang='en_US')
+
+        # Don't mistake fields date and date_deadline:
+        # * date is just a random value
+        # * date_deadline defines activity_state
+        model.create({
+            'date': '2021-05-02',
+            'name': "Yesterday, all my troubles seemed so far away",
+        }).activity_schedule(
+            'test_mail.mail_act_test_todo',
+            summary="Make another test super asap (yesterday)",
+            date_deadline=fields.Date.context_today(model) - timedelta(days=7),
+        )
+        model.create({
+            'date': '2021-05-09',
+            'name': "Things we said today",
+        }).activity_schedule(
+            'test_mail.mail_act_test_todo',
+            summary="Make another test asap",
+            date_deadline=fields.Date.context_today(model),
+        )
+        model.create({
+            'date': '2021-05-16',
+            'name': "Tomorrow Never Knows",
+        }).activity_schedule(
+            'test_mail.mail_act_test_todo',
+            summary="Make a test tomorrow",
+            date_deadline=fields.Date.context_today(model) + timedelta(days=7),
+        )
+
+        domain = [('date', "!=", False)]
+        groupby = "date:week"
+        progress_bar = {
+            'field': 'activity_state',
+            'colors': {
+                "overdue": 'danger',
+                "today": 'warning',
+                "planned": 'success',
+            }
+        }
+
+        # call read_group to compute group names
+        groups = model.read_group(domain, fields=['date'], groupby=[groupby])
+        progressbars = model.read_progress_bar(domain, group_by=groupby, progress_bar=progress_bar)
+        self.assertEqual(len(groups), 3)
+        self.assertEqual(len(progressbars), 3)
+
+        # format the read_progress_bar result to get a dictionary under this
+        # format: {activity_state: group_name}; the original format
+        # (after read_progress_bar) is {group_name: {activity_state: count}}
+        pg_groups = {
+            next(state for state, count in data.items() if count): group_name
+            for group_name, data in progressbars.items()
+        }
+
+        self.assertEqual(groups[0][groupby], pg_groups["overdue"])
+        self.assertEqual(groups[1][groupby], pg_groups["today"])
+        self.assertEqual(groups[2][groupby], pg_groups["planned"])

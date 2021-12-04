@@ -14,4 +14,5 @@ United States - Chart of accounts.
         'data/res_company_data.xml',
         'views/res_partner_bank_views.xml'
     ],
+    'license': 'LGPL-3',
 }

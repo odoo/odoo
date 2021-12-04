@@ -15,6 +15,7 @@ from odoo.tools.translate import translate, translate_sql_constraint
 from odoo.tools.translate import _
 
 from . import security
+from ..tools import traverse_containers, lazy
 
 _logger = logging.getLogger(__name__)
 
@@ -161,7 +162,12 @@ def execute_cr(cr, uid, obj, method, *args, **kw):
     recs = odoo.api.Environment(cr, uid, {}).get(obj)
     if recs is None:
         raise UserError(_("Object %s doesn't exist") % obj)
-    return odoo.api.call_kw(recs, method, args, kw)
+    result = odoo.api.call_kw(recs, method, args, kw)
+    # force evaluation of lazy values before the cursor is closed, as it would
+    # error afterwards if the lazy isn't already evaluated (and cached)
+    for l in traverse_containers(result, lazy):
+        _0 = l._value
+    return result
 
 
 def execute_kw(db, uid, obj, method, args, kw=None):

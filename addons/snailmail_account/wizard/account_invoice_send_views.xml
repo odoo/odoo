@@ -23,7 +23,7 @@
                                     <i class="fa fa-info-circle" role="img" aria-label="Warning" title="Make sure you have enough Stamps on your account."/>
                                 )</b>
                             </span>
-                            <span attrs="{'invisible': ['|', ('composition_mode', '=', 'mass_mail'), ('partner_id', '=', False)]}">
+                            <span attrs="{'invisible': [('composition_mode', '=', 'mass_mail')]}">
                                 <span attrs="{'invisible': [('invalid_addresses', '!=', 0)]}">
                                     <div class="text-right text-muted d-inline-block" name="address">
                                         <span> to: </span>

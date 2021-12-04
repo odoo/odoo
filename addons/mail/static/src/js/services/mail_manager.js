@@ -864,6 +864,19 @@ var MailManager =  AbstractService.extend({
         this._pinnedDmPartners = [];
         // all threads, including channels, DM, mailboxes, document threads, ...
         this._threads = [];
+
+        this._addMailbox({
+            id: 'inbox',
+            name: _t("Inbox"),
+        });
+        this._addMailbox({
+            id: 'starred',
+            name: _t("Starred"),
+        });
+        this._addMailbox({
+            id: 'history',
+            name: _t("History"),
+        });
     },
     /**
      * State whether discuss app is open or not
@@ -1019,7 +1032,7 @@ var MailManager =  AbstractService.extend({
         this._rpc({
                 model: resModel,
                 method: 'get_formview_id',
-                args: [[resID], session.user_context],
+                args: [[resID], session.user_context.uid],
             })
             .then(function (viewID) {
                 self._redirectToDocument(resModel, resID, viewID);
@@ -1052,7 +1065,7 @@ var MailManager =  AbstractService.extend({
      */
     _redirectPartner: function (resModel, resID, dmRedirection) {
         var self = this;
-        var domain = [['partner_id', '=', resID]];
+        var domain = [['partner_id', '=', resID], ['share', '=', false]];
         this._rpc({
                 model: 'res.users',
                 method: 'search',
@@ -1139,7 +1152,7 @@ var MailManager =  AbstractService.extend({
             if (values.length < limit) {
                 values = values.concat(_.filter(partners, function (partner) {
                     return (session.partner_id !== partner.id) &&
-                            searchRegexp.test(partner.name);
+                            searchRegexp.test(utils.unaccent(partner.name));
                 })).splice(0, limit);
             }
         });
@@ -1215,9 +1228,11 @@ var MailManager =  AbstractService.extend({
     _updateChannelsFromServer: function (data) {
         var self = this;
         var proms = [];
+        const options = {};
+
         _.each(data.channel_slots, function (channels) {
             _.each(channels, function (channel) {
-                proms.push(self._addChannel(channel));
+                proms.push(self._addChannel(channel, options));
             });
         });
         return Promise.all(proms);
@@ -1274,20 +1289,8 @@ var MailManager =  AbstractService.extend({
      *   set to 'Starred'
      */
     _updateMailboxesFromServer: function (data) {
-        this._addMailbox({
-            id: 'inbox',
-            name: _t("Inbox"),
-            mailboxCounter: data.needaction_inbox_counter || 0,
-        });
-        this._addMailbox({
-            id: 'starred',
-            name: _t("Starred"),
-            mailboxCounter: data.starred_counter || 0,
-        });
-        this._addMailbox({
-            id: 'history',
-            name: _t("History"),
-        });
+        this.getMailbox('inbox').setMailboxCounter(data.needaction_inbox_counter || 0);
+        this.getMailbox('starred').setMailboxCounter(data.starred_counter || 0);
 
         if (data.is_moderator) {
             this._addMailbox({

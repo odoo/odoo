@@ -22,6 +22,7 @@ class AutoVacuum(models.AbstractModel):
                 try:
                     with self._cr.savepoint():
                         model._transient_vacuum(force=True)
+                    self._cr.commit()
                 except Exception as e:
                     _logger.warning("Failed to clean transient model %s\n%s", model, str(e))
 

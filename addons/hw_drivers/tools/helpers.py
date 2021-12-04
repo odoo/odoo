@@ -12,6 +12,8 @@ import logging
 import os
 import subprocess
 import zipfile
+from threading import Thread
+import time
 
 from odoo import _
 from odoo.modules.module import get_resource_path
@@ -21,6 +23,18 @@ _logger = logging.getLogger(__name__)
 #----------------------------------------------------------
 # Helper
 #----------------------------------------------------------
+
+class IoTRestart(Thread):
+    """
+    Thread to restart odoo server in IoT Box when we must return a answer before
+    """
+    def __init__(self, delay):
+        Thread.__init__(self)
+        self.delay = delay
+
+    def run(self):
+        time.sleep(self.delay)
+        subprocess.check_call(["sudo", "service", "odoo", "restart"])
 
 def access_point():
     return get_ip() == '10.11.12.1'
@@ -79,6 +93,7 @@ def check_git_branch():
 
                 if db_branch != local_branch:
                     subprocess.check_call(["sudo", "mount", "-o", "remount,rw", "/"])
+                    subprocess.check_call(["rm", "-rf", "/home/pi/odoo/addons/hw_drivers/drivers/*"])
                     subprocess.check_call(git + ['branch', '-m', db_branch])
                     subprocess.check_call(git + ['remote', 'set-branches', 'origin', db_branch])
                     os.system('/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/posbox_update.sh')
@@ -89,31 +104,82 @@ def check_git_branch():
             _logger.error('Could not reach configured server')
             _logger.error('A error encountered : %s ' % e)
 
+def check_image():
+    """
+    Check if the current image of IoT Box is up to date
+    """
+    url = 'http://nightly.odoo.com/master/posbox/iotbox/SHA1SUMS.txt'
+    urllib3.disable_warnings()
+    http = urllib3.PoolManager(cert_reqs='CERT_NONE')
+    response = http.request('GET', url)
+    checkFile = {}
+    valueActual = ''
+    for line in response.data.decode().split('\n'):
+        if line:
+            value, name = line.split('  ')
+            checkFile.update({value: name})
+            if name == 'iotbox-latest.zip':
+                valueLastest = value
+            elif name == get_img_name():
+                valueActual = value
+    if valueActual == valueLastest:
+        return False
+    version = checkFile.get(valueLastest, 'Error').replace('iotboxv', '').replace('.zip', '').split('_')
+    return {'major': version[0], 'minor': version[1]}
+
+def get_img_name():
+    major, minor = get_version().split('.')
+    return 'iotboxv%s_%s.zip' % (major, minor)
+
 def get_ip():
-    try:
-        return netifaces.ifaddresses('eth0')[netifaces.AF_INET][0]['addr']
-    except:
-        return netifaces.ifaddresses('wlan0')[netifaces.AF_INET][0]['addr']
+    while True:
+        try:
+            return netifaces.ifaddresses('eth0')[netifaces.AF_INET][0]['addr']
+        except KeyError:
+            pass
+
+        try:
+            return netifaces.ifaddresses('wlan0')[netifaces.AF_INET][0]['addr']
+        except KeyError:
+            pass
+
+        _logger.warning("Couldn't get IP, sleeping and retrying.")
+        time.sleep(5)
 
 def get_mac_address():
-    try:
-        return netifaces.ifaddresses('eth0')[netifaces.AF_LINK][0]['addr']
-    except:
-        return netifaces.ifaddresses('wlan0')[netifaces.AF_LINK][0]['addr']
+    while True:
+        try:
+            return netifaces.ifaddresses('eth0')[netifaces.AF_LINK][0]['addr']
+        except KeyError:
+            pass
+
+        try:
+            return netifaces.ifaddresses('wlan0')[netifaces.AF_LINK][0]['addr']
+        except KeyError:
+            pass
+
+        _logger.warning("Couldn't get MAC address, sleeping and retrying.")
+        time.sleep(5)
 
 def get_ssid():
+    ap = subprocess.call(['systemctl', 'is-active', '--quiet', 'hostapd']) # if service is active return 0 else inactive
+    if not ap:
+        return subprocess.check_output(['grep', '-oP', '(?<=ssid=).*', '/etc/hostapd/hostapd.conf']).decode('utf-8').rstrip()
     process_iwconfig = subprocess.Popen(['iwconfig'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     process_grep = subprocess.Popen(['grep', 'ESSID:"'], stdin=process_iwconfig.stdout, stdout=subprocess.PIPE)
     return subprocess.check_output(['sed', 's/.*"\\(.*\\)"/\\1/'], stdin=process_grep.stdout).decode('utf-8').rstrip()
 
 def get_odoo_server_url():
+    ap = subprocess.call(['systemctl', 'is-active', '--quiet', 'hostapd']) # if service is active return 0 else inactive
+    if not ap:
+        return False
     return read_file_first_line('odoo-remote-server.conf')
 
 def get_token():
     return read_file_first_line('token')
 
 def get_version():
-    return '19.12'
+    return subprocess.check_output(['cat', '/home/pi/iotbox_version']).decode().rstrip()
 
 def get_wifi_essid():
     wifi_options = []
@@ -174,13 +240,18 @@ def download_drivers(auto=True):
             resp = pm.request('POST', server, fields={'mac': get_mac_address(), 'auto': auto})
             if resp.data:
                 subprocess.check_call(["sudo", "mount", "-o", "remount,rw", "/"])
+                drivers_path = Path.home() / 'odoo/addons/hw_drivers/drivers'
                 zip_file = zipfile.ZipFile(io.BytesIO(resp.data))
-                zip_file.extractall(get_resource_path('hw_drivers', 'drivers'))
+                zip_file.extractall(drivers_path)
                 subprocess.check_call(["sudo", "mount", "-o", "remount,ro", "/"])
                 subprocess.check_call(["sudo", "mount", "-o", "remount,rw", "/root_bypass_ramdisks/etc/cups"])
         except Exception as e:
             _logger.error('Could not reach configured server')
             _logger.error('A error encountered : %s ' % e)
+
+def odoo_restart(delay):
+    IR = IoTRestart(delay)
+    IR.start()
 
 def read_file_first_line(filename):
     path = Path.home() / filename

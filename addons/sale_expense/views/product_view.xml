@@ -8,8 +8,8 @@
         <field name="arch" type="xml">
             <xpath expr="//group[@name='product_details']" position="inside">
                 <group string="Invoicing">
-                    <field name="invoice_policy"/>
-                    <field name="expense_policy"/>
+                    <field name="invoice_policy" widget="radio"/>
+                    <field name="expense_policy" widget="radio"/>
                 </group>
             </xpath>
             <xpath expr="//field[@name='list_price']" position="replace">

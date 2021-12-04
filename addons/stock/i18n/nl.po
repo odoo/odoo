@@ -12,16 +12,19 @@
 # Maxim Vandenbroucke <mxv@odoo.com>, 2019
 # Charles Vervaecke <cvk@odoo.com>, 2019
 # Martin Trigaux, 2019
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
+# Antoine Gilard <ang@odoo.com>, 2020
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
+# Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
+# Cécile Collart <cco@odoo.com>, 2020
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-05 12:32+0000\n"
+"POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2020\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -261,7 +264,14 @@ msgid ""
 "            Your tracking reference is\n"
 "            <strong>\n"
 "            %if object.carrier_tracking_url:\n"
-"                <a href=\"${object.carrier_tracking_url}\" target=\"_blank\">${object.carrier_tracking_ref}</a>.\n"
+"                % set multiple_carrier_tracking = object.get_multiple_carrier_tracking()\n"
+"                %if multiple_carrier_tracking:\n"
+"                    % for line in multiple_carrier_tracking:\n"
+"                        <br/><a href=\"${line[1]}\" target=\"_blank\">${line[0]}</a>\n"
+"                    % endfor\n"
+"                %else:\n"
+"                    <a href=\"${object.carrier_tracking_url}\" target=\"_blank\">${object.carrier_tracking_ref}</a>.\n"
+"                %endif\n"
 "            %else:\n"
 "                ${object.carrier_tracking_ref}.\n"
 "            %endif\n"
@@ -285,21 +295,27 @@ msgstr ""
 "            Uw tracking-referentie is\n"
 "            <strong>\n"
 "            %if object.carrier_tracking_url:\n"
+"% set multiple_carrier_tracking = object.get_multiple_carrier_tracking()\n"
+" %if multiple_carrier_tracking:\n"
+"% for line in multiple_carrier_tracking:\n"
+"<br/><a href=\"${line[1]}\" target=\"_blank\">${line[0]}</a>\n"
+"% endfor\n"
+"%else:\n"
 "                <a href=\"${object.carrier_tracking_url}\" target=\"_blank\">${object.carrier_tracking_ref}</a>.\n"
-"            %else:\n"
+"%endif\n"
+" %else:\n"
 "                ${object.carrier_tracking_ref}.\n"
 "            %endif\n"
 "            </strong>\n"
 "        %endif\n"
 "        <br/><br/>\n"
 "        In de bijlage vindt u uw bestelling met de details.<br/><br/>\n"
-"        Bedankt,<br/>\n"
+"        Hartelijk dankt,<br/>\n"
 "        % if user and user.signature:\n"
 "          ${user.signature | safe}\n"
 "        % endif\n"
 "    </p>\n"
-"</div>\n"
-"        "
+"</div>        "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_view_kanban
@@ -471,7 +487,7 @@ msgstr "<strong>Min hvh:</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>On Hand Quantity</strong>"
-msgstr "<strong>Beschikbare hoeveelheid</strong>"
+msgstr "<strong>Hoeveelheid in stock</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -883,6 +899,14 @@ msgid "Available Products"
 msgstr "Beschikbare producten"
 
 #. module: stock
+#: code:addons/stock/models/product.py:581
+#, python-format
+msgid "Available quantity should be set to zero before changing type"
+msgstr ""
+"De beschikbare hoeveelheid moet op nul worden gezet voordat je van type "
+"verandert."
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__backorder_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking__backorder_id
 msgid "Back Order of"
@@ -1129,6 +1153,12 @@ msgstr ""
 "toegestaan."
 
 #. module: stock
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid "Changing the product is only allowed in 'Draft' state."
+msgstr "Het product wijzigen is alleen toegestaan in de 'concept' fase."
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Check Availability"
 msgstr "Controleer beschikbaarheid"
@@ -1174,6 +1204,13 @@ msgstr "Kies bestemmingslocatie"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quantity_history
 msgid "Choose your date"
 msgstr "Kies uw datum"
+
+#. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/xml/stock_traceability_report_backend.xml:0
+#, python-format
+msgid "Close"
+msgstr "Sluiten"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__sequence_code
@@ -1612,8 +1649,8 @@ msgstr "Klantlocaties"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
-msgid "DHL Connector"
-msgstr "DHL connector"
+msgid "DHL Express Connector"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__date
@@ -1835,7 +1872,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Demand"
-msgstr "Vraag"
+msgstr "Gevraagd"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__route_ids
@@ -3165,7 +3202,7 @@ msgstr "Laatst bijgewerkt op"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory_line__inventory_date
 msgid "Last date at which the On Hand Quantity has been computed."
-msgstr "Laatste datum waarop de beschikbare hoeveelheid is berekend."
+msgstr "Laatste datum waarop de hoeveelheid in stock is berekend."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -3380,7 +3417,7 @@ msgstr "Partijen & serienummers"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Lots &amp; Serial numbers will appear on the delivery slip"
-msgstr "Partij- &amp; Serienummers worden afgedrukt op de pakbon"
+msgstr "Partij- &amp; Serienummers worden afgedrukt op de pakbonnen"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__lots_visible
@@ -3827,6 +3864,8 @@ msgid "Number of unread messages"
 msgstr "Aantal ongelezen berichten"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_quant__on_hand
+#: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_tree2
 msgid "On Hand"
 msgstr "Beschikbaar"
@@ -3834,7 +3873,7 @@ msgstr "Beschikbaar"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
 msgid "On Hand Quantity"
-msgstr "Beschikbare hoeveelheid"
+msgstr "Hoeveelheid in stock"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
@@ -3882,6 +3921,12 @@ msgstr "Bewerkingssoort voor retouren"
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 msgid "Operation Types"
 msgstr "Bewerkingsoorten"
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr "Bewerking niet ondersteund"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_picking_type_label
@@ -4292,6 +4337,12 @@ msgstr ""
 #, python-format
 msgid "Please add some items to move."
 msgstr "Voeg een aantal items toe om te verplaatsen."
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:92
+#, python-format
+msgid "Please check the following serial number (name, id): "
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:0
@@ -4954,7 +5005,7 @@ msgstr "Ontvangen aantal"
 #. module: stock
 #: model:ir.actions.server,name:stock.model_stock_inventory_line_action_recompute_quantity
 msgid "Recompute On Hand Quantity"
-msgstr "Herbereken de beschikbare hoeveelheid"
+msgstr "Herbereken de hoeveelheid in stock"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group__name
@@ -5877,7 +5928,7 @@ msgstr "Voorraad traceer bevestiging"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_track_line
 msgid "Stock Track Line"
-msgstr "Voorraad traceerlijn"
+msgstr "Voorraad traceerregel"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_ids_without_package
@@ -6456,6 +6507,20 @@ msgstr ""
 " aanmaken)"
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product has been used in at least one inventory movement. It is not "
+"advised to change the Product Type since it can lead to inconsistencies. A "
+"better solution could be to archive the product and create a new one "
+"instead."
+msgstr ""
+"Dit product is in minstens één voorraadbeweging gebruikt. Het wordt niet "
+"aangeraden om het producttype te wijzigen, aangezien dit tot inconsistenties"
+" kan leiden. Een betere oplossing zou kunnen zijn om het product te "
+"archiveren en in plaats daarvan een nieuw product te maken."
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
 msgid ""
 "This quantity is expressed in the Default Unit of Measure of the product."
@@ -6613,6 +6678,7 @@ msgstr "Traceerregel"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking
+#: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Transfer"
@@ -6679,6 +6745,11 @@ msgstr "Tussenlocaties"
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
 msgid "Trigger Another Rule"
 msgstr "Trigger een andere regel"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
+msgid "Trigger Another Rule If No Stock"
+msgstr "Activeer een andere regel als er geen voorraad is"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_barcode_rule__type
@@ -6820,6 +6891,13 @@ msgid "Unreserve"
 msgstr "Reservering ongedaan maken"
 
 #. module: stock
+#: code:addons/stock/models/stock_inventory.py:0
+#: code:addons/stock/models/stock_inventory.py:0
+#, python-format
+msgid "Unsupported search on %s outside of an Inventory Adjustment"
+msgstr "Niet-ondersteunde zoekopdracht %s buiten een voorraadaanpassing"
+
+#. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_tree2
 msgid "UoM"
@@ -6837,6 +6915,7 @@ msgstr "Producthoeveelheid bijwerken"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
+#: model:ir.actions.act_window,name:stock.dashboard_open_quants
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_product_view_form_easy_inherit_stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
@@ -7102,15 +7181,10 @@ msgstr "Gewogen product"
 #: model:ir.model.fields,help:stock.field_stock_location_route__warehouse_selectable
 msgid ""
 "When a warehouse is selected for this route, this route should be seen as "
-"the default route when products pass through this warehouse.  This behaviour"
-" can be overridden by the routes on the Product/Product Categories or by the"
-" Preferred Routes on the Procurement"
+"the default route when products pass through this warehouse."
 msgstr ""
-"Wanneer een magazijn is geselecteerd voor deze productieroute zal deze "
-"productieroute gezien worden als de standaard route wanneer producten door "
-"uw magazijn passeren. Dit gedrag kan overschreven worden door de "
-"productieroutes op de Product/Productcategorieën of door de verkozen "
-"productieroutes op de verwerving"
+"Als er een magazijn is geselecteerd voor deze route, moet deze route worden "
+"gezien als de standaardroute wanneer producten door dit magazijn gaan."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__one
@@ -7121,20 +7195,17 @@ msgstr "Wanneer alle producten klaar zijn"
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_selectable
 msgid ""
 "When checked, the route will be selectable in the Inventory tab of the "
-"Product form.  It will take priority over the Warehouse route. "
+"Product form."
 msgstr ""
-"Indien aangevinkt, zal de productieroute selecteerbaar zijn in het voorraad "
-"tabblad op het productformulier. Het heeft prioriteit boven de magazijn "
-"route."
+"Als deze optie is aangevinkt, kan de route worden geselecteerd op het "
+"tabblad Inventaris van het productformulier."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_categ_selectable
-msgid ""
-"When checked, the route will be selectable on the Product Category.  It will"
-" take priority over the Warehouse route. "
+msgid "When checked, the route will be selectable on the Product Category."
 msgstr ""
-"Indien aangevinkt, zal de productieroute selecteerbaar zijn op de "
-"productiecategorie. Het heeft prioriteit boven de magazijn route."
+"Als deze optie is aangevinkt, kan de route worden geselecteerd in de "
+"productcategorie."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__location_in_id
@@ -7148,7 +7219,7 @@ msgid ""
 "When products are needed in <b>%s</b>, <br/> <b>%s</b> are created from "
 "<b>%s</b> to fulfill the need."
 msgstr ""
-"Wanneer producten nodig zijn in <b>%s</b>,<br/> <b> worden %s</b> aangemaakt"
+"Wanneer producten nodig zijn in <b>%s</b>,worden<br/> <b>  %s</b> aangemaakt"
 " in <b>%s</b> om de voorraad aan te vullen."
 
 #. module: stock
@@ -7158,8 +7229,8 @@ msgid ""
 "When products arrive in <b>%s</b>, <br/> <b>%s</b> are created to send them "
 "in <b>%s</b>."
 msgstr ""
-"Wanneer producten nodig zijn in <b>%s</b>, <br/> <b>%s</b> worden deze "
-"aangemaakt om te worden verzonden in <b>%s</b>."
+"Wanneer producten nodig zijn in <b>%s</b>, wordt een <br/> <b>%s</b> "
+"aangemaakt om deze te verplaatsen naar <b>%s</b>."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__is_locked
@@ -7230,7 +7301,7 @@ msgid "Wizard"
 msgstr "Wizard"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree_lot_name_as_textarea
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree
 msgid "Write your SN/LN one by one or copy paste a list."
 msgstr "Schrijf uw serienummer één voor één of kopieer en plak een lijst."
 
@@ -7722,9 +7793,3 @@ msgstr "verwerkt in plaats van"
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_view_graph
 msgid "report_stock_quantity_graph"
 msgstr "report_stock_quantity_graph"
-
-#. module: stock
-#: code:addons/stock/models/stock_move_line.py:223
-#, python-format
-msgid "Changing the product is only allowed in 'Draft' state."
-msgstr ""

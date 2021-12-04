@@ -27,4 +27,5 @@ a dependency towards website edition and customization capabilities.""",
         'static/src/xml/portal_chatter.xml',
         'static/src/xml/portal_signature.xml',
     ],
+    'license': 'LGPL-3',
 }

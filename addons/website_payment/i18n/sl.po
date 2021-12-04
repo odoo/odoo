@@ -1,13 +1,18 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_payment
+# 	* website_payment
+# 
+# Translators:
+# Martin Trigaux, 2020
+# Matjaz Mozetic <m.mozetic@matmoz.si>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
+"POT-Creation-Date: 2019-09-23 13:50+0000\n"
+"PO-Revision-Date: 2019-08-26 09:16+0000\n"
+"Last-Translator: Matjaz Mozetic <m.mozetic@matmoz.si>, 2020\n"
 "Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16,21 +21,11 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.website_settings_payment
-msgid "Configure payment acquirers"
-msgstr ""
+#: model:ir.model,name:website_payment.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "Ponudnik plačilne storitve"
 
 #. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.website_settings_payment
-msgid "E-Commerce"
-msgstr ""
-
-#. module: website_payment
-#: model_terms:ir.ui.view,arch_db:website_payment.header_footer_custom_payment
-msgid "Payment Icons"
-msgstr ""
-
-#. module: website_payment
-#: model:ir.model,name:website_payment.model_website
+#: model:ir.model.fields,field_description:website_payment.field_payment_acquirer__website_id
 msgid "Website"
-msgstr ""
+msgstr "Spletna stran"

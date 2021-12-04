@@ -122,7 +122,15 @@ var TimeCounter = AbstractField.extend({
         } else {
             clearTimeout(this.timer);
         }
-        this.$el.html($('<span>' + moment.utc(this.duration).format("HH:mm:ss") + '</span>'));
+
+        const duration = moment.duration(this.duration, 'milliseconds');
+        const hours = Math.floor(duration.asHours());
+        const minutes = duration.minutes();
+        const seconds = duration.seconds();
+        //display the variables in two-character format, e.g: 09 intead of 9
+        const text = _.str.sprintf("%02d:%02d:%02d", hours, minutes, seconds);
+        const $mrpTimeText = $('<span>', { text });
+        this.$el.empty().append($mrpTimeText);
     },
 });
 

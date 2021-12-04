@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-05 12:34+0000\n"
+"POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
 "Last-Translator: JH CHOI <hwangtog@gmail.com>, 2020\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
@@ -428,8 +428,8 @@ msgstr "<i class=\"fa fa-check-square-o fa-fw\"/> 승인"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
-msgid "<i class=\"fa fa-chevron-left mr-1\"/>All Forums"
-msgstr "<i class=\"fa fa-chevron-left mr-1\"/>모든 게시판"
+msgid "<i class=\"fa fa-chevron-left mr-1\"/>Back"
+msgstr "<i class=\"fa fa-chevron-left mr-1\"/> 뒤로"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
@@ -728,6 +728,11 @@ msgid "All"
 msgstr "전체"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
+msgid "All Forums"
+msgstr "모든 포럼"
+
+#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "All Tags"
 msgstr "모든 태그"
@@ -863,7 +868,7 @@ msgstr "다음에 표시"
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_form
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Archived"
-msgstr "보관"
+msgstr "보존"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
@@ -949,6 +954,11 @@ msgstr "자서전 작가"
 #: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
 msgid "Avatar"
 msgstr "아바타"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
+msgid "Back"
+msgstr "뒤로"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
@@ -1116,8 +1126,12 @@ msgid "Click to post your question."
 msgstr "질문을 게시하려면 클릭하십시오."
 
 #. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:0
+#: code:addons/website_forum/static/src/xml/website_forum_share_templates.xml:0
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_post__state__close
 #: model_terms:ir.ui.view,arch_db:website_forum.question_dropdown
+#, python-format
 msgid "Close"
 msgstr "닫기"
 
@@ -1252,7 +1266,7 @@ msgstr "정답 또는 답변이 채택됨"
 #: code:addons/website_forum/static/src/js/website_forum.editor.js:0
 #, python-format
 msgid "Create"
-msgstr "작성"
+msgstr "만들기"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__create_date
@@ -1775,7 +1789,7 @@ msgstr "전문가(15)"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__uid_has_answered
 msgid "Has Answered"
-msgstr "답변 완료 여부"
+msgstr "답변 완료됨"
 
 #. module: website_forum
 #: model:forum.forum,name:website_forum.forum_help
@@ -2595,6 +2609,7 @@ msgstr "등급"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:0
+#: code:addons/website_forum/models/forum.py:0
 #, python-format
 msgid "Re: %s"
 msgstr "회신 : %s"
@@ -2702,7 +2717,7 @@ msgstr "SEO 최적화"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_has_sms_error
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "SMS메시지 전송 에러"
+msgstr "SMS 전송 에러"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
@@ -3004,8 +3019,8 @@ msgid ""
 "services. Share and discuss the best content and new marketing ideas, build "
 "your professional profile and become a better marketer together."
 msgstr ""
-"이 커뮤니티는 NAT 제품 및 서비스의 전문가와 매니아를 위한 커뮤니티입니다. 최고의 컨텐츠와 새로운 마케팅 아이디어를 공유하고 "
-"토론하고, 프로페셔널 프로필을 구축하고, 함께 더 나은 마케팅 전문가가 될 수 있습니다."
+"이 커뮤니티는 NAT 제품 및 서비스의 전문가와 매니아를 위한 커뮤니티입니다. 최고의 컨텐츠와 새로운 마케팅 아이디어를 공유하고 업무 "
+"협의하고, 프로페셔널 프로필을 구축하고, 함께 더 나은 마케팅 전문가가 될 수 있습니다."
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__relevancy_post_vote
@@ -3020,7 +3035,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "This forum has been archived."
-msgstr "이 게시판은 보관 처리되었습니다."
+msgstr "이 게시판은 보존 처리되었습니다."
 
 #. module: website_forum
 #. openerp-web
@@ -3426,7 +3441,7 @@ msgstr "활동 날짜"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "breadcrumb"
-msgstr "이동 경로"
+msgstr "사이트 이동 경로"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full

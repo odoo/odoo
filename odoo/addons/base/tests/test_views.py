@@ -239,6 +239,32 @@ class TestViewInheritance(ViewCase):
                 'arch': self.arch_for('itself', parent=True),
             })
 
+    def test_write_arch(self):
+        self.env['res.lang'].load_lang('fr_FR')
+
+        v = self.makeView("T", arch='<form string="Foo">Bar</form>')
+        self.env['ir.translation']._upsert_translations([{
+            'type': 'model_terms',
+            'name': 'ir.ui.view,arch_db',
+            'lang': 'fr_FR',
+            'res_id': v.id,
+            'src': 'Foo',
+            'value': 'Fou',
+        }, {
+            'type': 'model_terms',
+            'name': 'ir.ui.view,arch_db',
+            'lang': 'fr_FR',
+            'res_id': v.id,
+            'src': 'Bar',
+            'value': 'Barre',
+        }])
+        self.assertEqual(v.arch, '<form string="Foo">Bar</form>')
+
+        # modify v to discard translations; this should not invalidate 'arch'!
+        v.arch = '<form></form>'
+        self.assertEqual(v.arch, '<form></form>')
+
+
 class TestApplyInheritanceSpecs(ViewCase):
     """ Applies a sequence of inheritance specification nodes to a base
     architecture. IO state parameters (cr, uid, model, context) are used for
@@ -785,6 +811,79 @@ class TestTemplating(ViewCase):
             initial.get('data-oe-xpath'),
             "The node's xpath position should be correct")
 
+    def test_branding_inherit_top_t_field(self):
+        view1 = self.View.create({
+            'name': "Base view",
+            'type': 'qweb',
+            'arch': """
+                <hello>
+                    <world></world>
+                    <world t-field="a"/>
+                    <world></world>
+                    <world></world>
+                </hello>
+            """
+        })
+        self.View.create({
+            'name': "Extension",
+            'type': 'qweb',
+            'inherit_id': view1.id,
+            'arch': """
+                <xpath expr="/hello/world[3]" position="after">
+                    <world t-field="b"/>
+                </xpath>
+            """
+        })
+        arch_string = view1.with_context(inherit_branding=True).read_combined(['arch'])['arch']
+        arch = etree.fromstring(arch_string)
+        self.View.distribute_branding(arch)
+
+        # First t-field should have an indication of xpath
+        [node] = arch.xpath('//*[@t-field="a"]')
+        self.assertEqual(
+            node.get('data-oe-field-xpath'),
+            '/hello[1]/world[2]',
+            'First t-field has indication of xpath through dedicated attribute')
+
+        # Second t-field, from inheritance, should also have an indication of xpath
+        [node] = arch.xpath('//*[@t-field="b"]')
+        self.assertEqual(
+            node.get('data-oe-field-xpath'),
+            '/xpath/world',
+            'Inherited t-field has indication of xpath through dedicated attribute')
+
+        # The most important assert
+        # The last world xpath should not have been impacted by the t-field from inheritance
+        [node] = arch.xpath('//world[last()]')
+        self.assertEqual(
+            node.get('data-oe-xpath'),
+            '/hello[1]/world[4]',
+            "The node's xpath position should be correct")
+
+        # Also test inherit via non-xpath t-field node, direct children of data,
+        # is not impacted by the feature
+        self.View.create({
+            'name': "Extension",
+            'type': 'qweb',
+            'inherit_id': view1.id,
+            'arch': """
+                <data>
+                    <world t-field="a" position="replace">
+                        <world t-field="z"/>
+                    </world>
+                </data>
+            """
+        })
+        arch_string = view1.with_context(inherit_branding=True).read_combined(['arch'])['arch']
+        arch = etree.fromstring(arch_string)
+        self.View.distribute_branding(arch)
+
+        node = arch.xpath('//world')[1]
+        self.assertEqual(
+            node.get('t-field'),
+            'z',
+            "The node has properly been replaced")
+
     def test_branding_primary_inherit(self):
         view1 = self.View.create({
             'name': "Base view",
@@ -879,6 +978,27 @@ class TestTemplating(ViewCase):
                 })
             )
         )
+
+    def test_branding_attribute_groups(self):
+        view = self.View.create({
+            'name': "Base View",
+            'type': 'qweb',
+            'arch': """<root>
+                <item groups="base.group_no_one"/>
+            </root>""",
+        })
+
+        arch_string = view.with_context(inherit_branding=True).read_combined(['arch'])['arch']
+        arch = etree.fromstring(arch_string)
+        self.View.distribute_branding(arch)
+
+        self.assertEqual(arch, E.root(E.item({
+            'groups': 'base.group_no_one',
+            'data-oe-model': 'ir.ui.view',
+            'data-oe-id': str(view.id),
+            'data-oe-field': 'arch',
+            'data-oe-xpath': '/root[1]/item[1]',
+        })))
 
     def test_call_no_branding(self):
         view = self.View.create({
@@ -1805,6 +1925,164 @@ class TestViews(ViewCase):
                 'model': 'ir.ui.view',
                 'arch': arch % ('', '<field name="noupdate"/><field name="fake_field"/>'),
             })
+
+    @mute_logger('odoo.addons.base.models.ir_ui_view')
+    def test_check_xml_on_reenable(self):
+        view1 = self.View.create({
+            'name': 'valid _check_xml',
+            'model': 'ir.ui.view',
+            'arch': """
+                <form string="View">
+                    <field name="name"/>
+                </form>
+            """,
+        })
+        view2 = self.View.create({
+            'name': 'valid _check_xml',
+            'model': 'ir.ui.view',
+            'inherit_id': view1.id,
+            'active': False,
+            'arch': """
+                <field name="foo" position="after">
+                    <field name="bar"/>
+                </field>
+            """
+        })
+        with self.assertRaises(ValueError):
+            view2.active = True
+
+        # Re-enabling the view and correcting it at the same time should not raise the `_check_xml` constraint.
+        view2.write({
+            'active': True,
+            'arch': """
+                <field name="name" position="after">
+                    <span>bar</span>
+                </field>
+            """,
+        })
+
+
+class TestViewTranslations(common.SavepointCase):
+    # these tests are essentially the same as in test_translate.py, but they use
+    # the computed field 'arch' instead of the translated field 'arch_db'
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env['ir.translation']._load_module_terms(['base'], ['fr_FR', 'nl_NL'])
+
+    def create_view(self, archf, terms, **kwargs):
+        view = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'model': 'res.partner',
+            'arch': archf % terms,
+        })
+        # DLE P70: `_sync_terms_translations`, which delete translations for which there is no value, is called sooner than before
+        # because it's called in `_write`, which is called by `flush`, which is called by the `search`.
+        # `arch_db` is in `_write` instead of `create` because `arch_db` is the inverse of `arch`.
+        # We need to flush `arch_db` before creating the translations otherwise the translation for which there is no value will be deleted,
+        # while the `test_sync_update` specifically needs empty translations
+        view.flush()
+        self.env['ir.translation'].create([
+            {
+                'type': 'model_terms',
+                'name': 'ir.ui.view,arch_db',
+                'lang': lang,
+                'res_id': view.id,
+                'src': src,
+                'value': val,
+                'state': 'translated',
+            }
+            for lang, trans_terms in kwargs.items()
+            for src, val in zip(terms, trans_terms)
+        ])
+        return view
+
+    def test_sync(self):
+        """ Check translations of 'arch' after minor change in source terms. """
+        archf = '<form string="X">%s</form>'
+        terms_en = ('Bread and cheeze',)
+        terms_fr = ('Pain et fromage',)
+        terms_nl = ('Brood and kaas',)
+        view = self.create_view(archf, terms_en, en_US=terms_en, fr_FR=terms_fr, nl_NL=terms_nl)
+
+        env_nolang = self.env(context={})
+        env_en = self.env(context={'lang': 'en_US'})
+        env_fr = self.env(context={'lang': 'fr_FR'})
+        env_nl = self.env(context={'lang': 'nl_NL'})
+
+        self.assertEqual(view.with_env(env_nolang).arch, archf % terms_en)
+        self.assertEqual(view.with_env(env_en).arch, archf % terms_en)
+        self.assertEqual(view.with_env(env_fr).arch, archf % terms_fr)
+        self.assertEqual(view.with_env(env_nl).arch, archf % terms_nl)
+
+        # modify source term in view (fixed type in 'cheeze')
+        terms_en = ('Bread and cheese',)
+        view.with_env(env_en).write({'arch': archf % terms_en})
+
+        # check whether translations have been synchronized
+        self.assertEqual(view.with_env(env_nolang).arch, archf % terms_en)
+        self.assertEqual(view.with_env(env_en).arch, archf % terms_en)
+        self.assertEqual(view.with_env(env_fr).arch, archf % terms_fr)
+        self.assertEqual(view.with_env(env_nl).arch, archf % terms_nl)
+
+        view = self.create_view(archf, terms_fr, en_US=terms_en, fr_FR=terms_fr, nl_NL=terms_nl)
+        # modify source term in view in another language with close term
+        new_terms_fr = ('Pains et fromage',)
+        view.with_env(env_fr).write({'arch': archf % new_terms_fr})
+
+        # check whether translations have been synchronized
+        self.assertEqual(view.with_env(env_nolang).arch, archf % new_terms_fr)
+        self.assertEqual(view.with_env(env_en).arch, archf % terms_en)
+        self.assertEqual(view.with_env(env_fr).arch, archf % new_terms_fr)
+        self.assertEqual(view.with_env(env_nl).arch, archf % terms_nl)
+
+    def test_sync_update(self):
+        """ Check translations after major changes in source terms. """
+        archf = '<form string="X"><div>%s</div><div>%s</div></form>'
+        terms_src = ('Subtotal', 'Subtotal:')
+        terms_en = ('', 'Sub total:')
+        view = self.create_view(archf, terms_src, en_US=terms_en)
+
+        translations = self.env['ir.translation'].search([
+            ('type', '=', 'model_terms'),
+            ('name', '=', "ir.ui.view,arch_db"),
+            ('res_id', '=', view.id),
+        ])
+        self.assertEqual(len(translations), 2)
+
+        # modifying the arch should sync existing translations without errors
+        new_arch = archf % ('Subtotal', 'Subtotal:<br/>')
+        view.write({"arch": new_arch})
+        self.assertEqual(view.arch, new_arch)
+
+        translations = self.env['ir.translation'].search([
+            ('type', '=', 'model_terms'),
+            ('name', '=', "ir.ui.view,arch_db"),
+            ('res_id', '=', view.id),
+        ])
+        # 'Subtotal' being src==value, it will be discared
+        # 'Subtotal:' will be discarded as it match 'Subtotal' instead of 'Subtotal:<br/>'
+        self.assertEqual(len(translations), 0)
+
+    def test_cache_consistency(self):
+        view = self.env["ir.ui.view"].create({
+            "name": "test_translate_xml_cache_invalidation",
+            "model": "res.partner",
+            "arch": "<form><b>content</b></form>",
+        })
+        view_fr = view.with_context({"lang": "fr_FR"})
+        self.assertIn("<b>", view.arch_db)
+        self.assertIn("<b>", view.arch)
+        self.assertIn("<b>", view_fr.arch_db)
+        self.assertIn("<b>", view_fr.arch)
+
+        # write with no lang, and check consistency in other languages
+        view.write({"arch": "<form><i>content</i></form>"})
+        self.assertIn("<i>", view.arch_db)
+        self.assertIn("<i>", view.arch)
+        self.assertIn("<i>", view_fr.arch_db)
+        self.assertIn("<i>", view_fr.arch)
 
 
 class ViewModeField(ViewCase):

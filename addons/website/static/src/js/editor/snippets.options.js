@@ -275,8 +275,14 @@ options.registry.carousel = options.Class.extend({
     onClone: function () {
         var id = 'myCarousel' + new Date().getTime();
         this.$target.attr('id', id);
-        this.$target.find('[data-slide]').attr('href', '#' + id);
-        this.$target.find('[data-slide-to]').attr('data-target', '#' + id);
+        _.each(this.$target.find('[data-slide], [data-slide-to]'), function (el) {
+            var $el = $(el);
+            if ($el.attr('data-target')) {
+                $el.attr('data-target', '#' + id);
+            } else if ($el.attr('href')) {
+                $el.attr('href', '#' + id);
+            }
+        });
     },
     /**
      * @override
@@ -305,9 +311,12 @@ options.registry.carousel = options.Class.extend({
         var $active = this.$inner.find('.carousel-item.active, .carousel-item.prev, .carousel-item.next').first();
         var index = $active.index();
         this.$('.carousel-control-prev, .carousel-control-next, .carousel-indicators').removeClass('d-none');
-        this.$indicators.append('<li data-target="#' + this.id + '" data-slide-to="' + cycle + '"></li>');
-        var $clone = $active.clone(true);
-        $clone.removeClass('active').insertAfter($active);
+        // we added a space after the <li> in the line below to keep the same space between the indicators
+        this.$indicators.append('<li data-target="#' + this.id + '" data-slide-to="' + cycle + '"></li> ');
+        // Need to remove editor data from the clone so it gets its own.
+        $active.clone(false)
+            .removeClass('active')
+            .insertAfter($active);
         _.defer(function () {
             self.$target.carousel().carousel(++index);
             self._rebindEvents();
@@ -589,6 +598,7 @@ options.registry.layout_column = options.Class.extend({
 
         this.trigger_up('request_history_undo_record', {$target: this.$target});
 
+        var colsLength = this.$target.children().length + count;
         if (count > 0) {
             var $lastColumn = this.$target.children().last();
             for (var i = 0; i < count; i++) {
@@ -601,17 +611,18 @@ options.registry.layout_column = options.Class.extend({
             });
         }
 
-        this._resizeColumns();
+        this._resizeColumns(colsLength);
         this.trigger_up('cover_update');
     },
     /**
      * Resizes the columns so that they are kept on one row.
      *
      * @private
+     * @param {number} [colsLength] (default to the actual number of columns)
      */
-    _resizeColumns: function () {
+    _resizeColumns: function (colsLength) {
         var $columns = this.$target.children();
-        var colsLength = $columns.length;
+        colsLength = colsLength || $columns.length;
         var colSize = Math.floor(12 / colsLength) || 1;
         var colOffset = Math.floor((12 - colSize * colsLength) / 2);
         var colClass = 'col-lg-' + colSize;
@@ -623,6 +634,9 @@ options.registry.layout_column = options.Class.extend({
         if (colOffset) {
             $columns.first().addClass('offset-lg-' + colOffset);
         }
+        // TODO: remove in master. This is used to keep the UI in sync, but
+        // won't be needed once option methods are properly asynchronous.
+        this.colsLength = colsLength;
     },
     /**
      * @override
@@ -630,7 +644,7 @@ options.registry.layout_column = options.Class.extend({
     _setActive: function () {
         this._super.apply(this, arguments);
         this.$el.find('[data-select-count]').removeClass('active')
-            .filter('[data-select-count=' + this.$target.children().length + ']').addClass('active');
+            .filter('[data-select-count=' + (this.colsLength || this.$target.children().length) + ']').addClass('active');
     },
 });
 
@@ -954,6 +968,7 @@ options.registry.collapse = options.Class.extend({
         var self = this;
         this.$target.on('shown.bs.collapse hidden.bs.collapse', '[role="tabpanel"]', function () {
             self.trigger_up('cover_update');
+            self.$target.trigger('content_changed');
         });
         return this._super.apply(this, arguments);
     },
@@ -967,8 +982,6 @@ options.registry.collapse = options.Class.extend({
      * @override
      */
     onClone: function () {
-        this.$target.find('[data-toggle="collapse"]').removeAttr('data-target').removeData('target');
-        this.$target.find('.collapse').removeAttr('id');
         this._createIDs();
     },
     /**
@@ -997,30 +1010,30 @@ options.registry.collapse = options.Class.extend({
      * @private
      */
     _createIDs: function () {
-        var time = new Date().getTime();
-        var $tab = this.$target.find('[data-toggle="collapse"]');
+        let time = new Date().getTime();
+        const $tablist = this.$target.closest('[role="tablist"]');
+        const $tab = this.$target.find('[role="tab"]');
+        const $panel = this.$target.find('[role="tabpanel"]');
 
-        // link to the parent group
-        var $tablist = this.$target.closest('.accordion');
-        var tablist_id = $tablist.attr('id');
-        if (!tablist_id) {
-            tablist_id = 'myCollapse' + time;
-            $tablist.attr('id', tablist_id);
-        }
-        $tab.attr('data-parent', '#'+tablist_id);
-        $tab.data('parent', '#'+tablist_id);
-
-        // link to the collapse
-        var $panel = this.$target.find('.collapse');
-        var panel_id = $panel.attr('id');
-        if (!panel_id) {
-            while ($('#'+(panel_id = 'myCollapseTab' + time)).length) {
-                time++;
+        const setUniqueId = ($elem, label) => {
+            let elemId = $elem.attr('id');
+            if (!elemId || $('[id="' + elemId + '"]').length > 1) {
+                do {
+                    time++;
+                    elemId = label + time;
+                } while ($('#' + elemId).length);
+                $elem.attr('id', elemId);
             }
-            $panel.attr('id', panel_id);
-        }
-        $tab.attr('data-target', '#'+panel_id);
-        $tab.data('target', '#'+panel_id);
+            return elemId;
+        };
+
+        const tablistId = setUniqueId($tablist, 'myCollapse');
+        $panel.attr('data-parent', '#' + tablistId);
+        $panel.data('parent', '#' + tablistId);
+
+        const panelId = setUniqueId($panel, 'myCollapseTab');
+        $tab.attr('data-target', '#' + panelId);
+        $tab.data('target', '#' + panelId);
     },
 });
 
@@ -1072,9 +1085,13 @@ options.registry.gallery = options.Class.extend({
      * @override
      */
     onBuilt: function () {
-        var uuid = new Date().getTime();
-        this.$target.find('.carousel').attr('id', 'slideshow_' + uuid);
-        this.$target.find('[data-target]').attr('data-target', '#slideshow_' + uuid);
+        this._adaptNavigationIDs();
+    },
+    /**
+     * @override
+     */
+    onClone: function () {
+        this._adaptNavigationIDs();
     },
     /**
      * @override
@@ -1215,10 +1232,10 @@ options.registry.gallery = options.Class.extend({
      */
     mode: function (previewMode, value, $opt) {
         this.$target.css('height', '');
-        this[value]();
         this.$target
             .removeClass('o_nomode o_masonry o_grid o_slideshow')
             .addClass('o_' + value);
+        this[value]();
         this.trigger_up('cover_update');
     },
     /**
@@ -1247,7 +1264,7 @@ options.registry.gallery = options.Class.extend({
      */
     removeAllImages: function (previewMode) {
         var $addImg = $('<div>', {
-            class: 'alert alert-info css_editable_mode_display text-center',
+            class: 'alert alert-info css_non_editable_mode_hidden text-center',
         });
         var $text = $('<span>', {
             class: 'o_add_images',
@@ -1346,6 +1363,21 @@ options.registry.gallery = options.Class.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     */
+    _adaptNavigationIDs: function () {
+        var uuid = new Date().getTime();
+        this.$target.find('.carousel').attr('id', 'slideshow_' + uuid);
+        _.each(this.$target.find('[data-slide], [data-slide-to]'), function (el) {
+            var $el = $(el);
+            if ($el.attr('data-target')) {
+                $el.attr('data-target', '#slideshow_' + uuid);
+            } else if ($el.attr('href')) {
+                $el.attr('href', '#slideshow_' + uuid);
+            }
+        });
+    },
     /**
      * Returns the images, sorted by index.
      *
@@ -1552,6 +1584,9 @@ options.registry.topMenuColor = options.registry.colorpicker.extend({
             params: ['header_overlay'],
             onSuccess: value => {
                 this.$el.toggleClass('d-none', !value);
+                if (!value) {
+                    this.$el.find('button.selected').removeClass('selected');
+                }
             },
         });
     },
@@ -1573,6 +1608,16 @@ options.registry.topMenuColor = options.registry.colorpicker.extend({
             params: [{name: 'header_color', value: color}],
         });
     },
+    /**
+     * @override
+     */
+    _onColorResetButtonClick: function () {
+        this._super.apply(this, arguments);
+        this.trigger_up('action_demand', {
+            actionName: 'toggle_page_option',
+            params: [{name: 'header_color', value: ''}],
+        });
+    },
 });
 
 /**
@@ -1589,7 +1634,8 @@ options.registry.anchorName = options.Class.extend({
      * @override
      */
     onClone: function () {
-        this.$target.removeAttr('id data-anchor');
+        this.$target.removeAttr('data-anchor');
+        this.$target.filter(':not(.carousel)').removeAttr('id');
     },
 
     //--------------------------------------------------------------------------
@@ -1721,7 +1767,6 @@ options.registry.CoverProperties = options.Class.extend({
         var editor = new weWidgets.MediaDialog(this, {
             mediaWidth: 1920,
             onlyImages: true,
-            firstFilters: ['background']
         }, $image[0]).open();
         editor.on('save', this, function (image) {
             var src = image.src;

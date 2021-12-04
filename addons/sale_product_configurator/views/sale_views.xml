@@ -8,7 +8,7 @@
             <xpath expr="//group[@name='sale']" position="after">
                 <group name="options" groups="product.group_product_variant">
                     <group string="Options">
-                        <field name="optional_product_ids" widget="many2many_tags" options="{'color_field': 'color'}" domain="[('id', '!=', active_id)]" />
+                        <field name="optional_product_ids" widget="many2many_tags" options="{'color_field': 'color'}" domain="[('id', '!=', active_id), '|', ('company_id', '=', company_id), ('company_id', '=', False)]" />
                     </group>
                 </group>
             </xpath>

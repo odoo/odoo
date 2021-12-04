@@ -43,7 +43,6 @@ if (!_.contains(urlHistory, page)) {
 }
 
 var LivechatButton = Widget.extend({
-    className:'openerp o_livechat_button d-print-none',
     custom_events: {
         'close_chat_window': '_onCloseChatWindow',
         'post_message_chat_window': '_onPostMessageChatWindow',
@@ -52,8 +51,10 @@ var LivechatButton = Widget.extend({
         'updated_unread_counter': '_onUpdatedUnreadCounter',
     },
     events: {
-        'click': '_openChat'
+        'click': '_openChat',
+        'click .o_livechat_hide': '_hideChat',
     },
+    template: 'im_livechat.OpenChatButton',
     init: function (parent, serverURL, options) {
         this._super(parent);
         this.options = _.defaults(options || {}, {
@@ -93,7 +94,6 @@ var LivechatButton = Widget.extend({
         return ready.then(this._loadQWebTemplate.bind(this));
     },
     start: function () {
-        this.$el.text(this.options.button_text);
         if (this._history) {
             _.each(this._history.reverse(), this._addMessage.bind(this));
             this._openChat();
@@ -152,6 +152,13 @@ var LivechatButton = Widget.extend({
 
         feedback.on('send_message', this, this._sendMessage);
         feedback.on('feedback_sent', this, this._closeChat);
+    },
+    /**
+     * @private
+     */
+    _hideChat: function (ev) {
+        ev.stopPropagation();
+        this.$el.hide();
     },
     /**
      * @private
@@ -247,7 +254,7 @@ var LivechatButton = Widget.extend({
                     self.call('bus_service', 'addChannel', self._livechat.getUUID());
                     self.call('bus_service', 'startPolling');
 
-                    utils.set_cookie('im_livechat_session', JSON.stringify(self._livechat.toData()), 60*60);
+                    utils.set_cookie('im_livechat_session', utils.unaccent(JSON.stringify(self._livechat.toData())), 60*60);
                     utils.set_cookie('im_livechat_auto_popup', JSON.stringify(false), 60*60);
                     if (livechatData.operator_pid[0]) {
                         // livechatData.operator_pid contains a tuple (id, name)
@@ -392,7 +399,7 @@ var LivechatButton = Widget.extend({
      */
     _onSaveChatWindow: function (ev) {
         ev.stopPropagation();
-        utils.set_cookie('im_livechat_session', JSON.stringify(this._livechat.toData()), 60*60);
+        utils.set_cookie('im_livechat_session', utils.unaccent(JSON.stringify(this._livechat.toData())), 60*60);
     },
     /**
      * @private

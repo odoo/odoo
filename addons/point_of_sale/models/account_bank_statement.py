@@ -17,6 +17,11 @@ class AccountBankStatement(models.Model):
                 raise UserError(_("You can't validate a bank statement that is used in an opened Session of a Point of Sale."))
         return super( AccountBankStatement, self).check_confirm_bank()
 
+    def unlink(self):
+        for bs in self:
+            if bs.pos_session_id:
+                raise UserError(_("You cannot delete a bank statement used in an open Point of Sale session."))
+        return super( AccountBankStatement, self).unlink()
 
 class AccountBankStatementLine(models.Model):
     _inherit = 'account.bank.statement.line'

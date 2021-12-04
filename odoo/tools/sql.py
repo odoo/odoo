@@ -24,7 +24,7 @@ def existing_tables(cr, tablenames):
           JOIN pg_namespace n ON (n.oid = c.relnamespace)
          WHERE c.relname IN %s
            AND c.relkind IN ('r', 'v', 'm')
-           AND n.nspname = 'public'
+           AND n.nspname = current_schema
     """
     cr.execute(query, [tuple(tablenames)])
     return [row[0] for row in cr.fetchall()]
@@ -43,7 +43,7 @@ def table_kind(cr, tablename):
           FROM pg_class c
           JOIN pg_namespace n ON (n.oid = c.relnamespace)
          WHERE c.relname = %s
-           AND n.nspname = 'public'
+           AND n.nspname = current_schema
     """
     cr.execute(query, (tablename,))
     return cr.fetchone()[0] if cr.rowcount else None
@@ -109,12 +109,10 @@ def set_not_null(cr, tablename, columnname):
     query = 'ALTER TABLE "{}" ALTER COLUMN "{}" SET NOT NULL'.format(tablename, columnname)
     try:
         with cr.savepoint(flush=False):
-            cr.execute(query)
+            cr.execute(query, log_exceptions=False)
             _schema.debug("Table %r: column %r: added constraint NOT NULL", tablename, columnname)
     except Exception:
-        msg = "Table %r: unable to set NOT NULL on column %r!\n" \
-              "If you want to have it, you should update the records and execute manually:\n%s"
-        _schema.warning(msg, tablename, columnname, query, exc_info=True)
+        raise Exception("Table %r: unable to set NOT NULL on column %r", tablename, columnname)
 
 def drop_not_null(cr, tablename, columnname):
     """ Drop the NOT NULL constraint on the given column. """
@@ -138,13 +136,11 @@ def add_constraint(cr, tablename, constraintname, definition):
     query2 = 'COMMENT ON CONSTRAINT "{}" ON "{}" IS %s'.format(constraintname, tablename)
     try:
         with cr.savepoint(flush=False):
-            cr.execute(query1)
-            cr.execute(query2, (definition,))
+            cr.execute(query1, log_exceptions=False)
+            cr.execute(query2, (definition,), log_exceptions=False)
             _schema.debug("Table %r: added constraint %r as %s", tablename, constraintname, definition)
     except Exception:
-        msg = "Table %r: unable to add constraint %r!\n" \
-              "If you want to have it, you should update the records and execute manually:\n%s"
-        _schema.warning(msg, tablename, constraintname, query1, exc_info=True)
+        raise Exception("Table %r: unable to add constraint %r as %s", tablename, constraintname, definition)
 
 def drop_constraint(cr, tablename, constraintname):
     """ drop the given constraint. """
@@ -197,7 +193,8 @@ def create_index(cr, indexname, tablename, expressions):
     if index_exists(cr, indexname):
         return
     args = ', '.join(expressions)
-    cr.execute('CREATE INDEX "{}" ON "{}" ({})'.format(indexname, tablename, args))
+    with cr.savepoint(flush=False):
+        cr.execute('CREATE INDEX "{}" ON "{}" ({})'.format(indexname, tablename, args))
     _schema.debug("Table %r: created index %r (%s)", tablename, indexname, args)
 
 def create_unique_index(cr, indexname, tablename, expressions):

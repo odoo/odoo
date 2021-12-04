@@ -246,6 +246,38 @@ class TestBoM(TestMrpCommon):
             # Check consumed materials in production order.
             self.assertEqual(mrp_order.move_raw_ids.product_id, consumed_products)
 
+    def test_13_bom_kit_qty(self):
+        self.env['mrp.bom'].create({
+            'product_id': self.product_7_3.id,
+            'product_tmpl_id': self.product_7_template.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 4.0,
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {
+                    'product_id': self.product_2.id,
+                    'product_qty': 2,
+                }),
+                (0, 0, {
+                    'product_id': self.product_3.id,
+                    'product_qty': 2,
+                })
+            ]
+        })
+        location = self.env.ref('stock.stock_location_stock')
+        self.env['stock.quant']._update_available_quantity(self.product_2, location, 4.0)
+        self.env['stock.quant']._update_available_quantity(self.product_3, location, 8.0)
+        # Force the kit product available qty to be computed at the same time than its component quantities
+        # Because `qty_available` of a bom kit "recurse" on `qty_available` of its component,
+        # and this is a tricky thing for the ORM:
+        # `qty_available` gets called for `product_7_3`, `product_2` and `product_3`
+        # which then recurse on calling `qty_available` for `product_2` and `product_3` to compute the quantity of
+        # the kit `product_7_3`. `product_2` and `product_3` gets protected at the first call of the compute method,
+        # ending the recurse call to not call the compute method and just left the Falsy value `0.0`
+        # for the components available qty.
+        kit_product_qty, _, _ = (self.product_7_3 + self.product_2 + self.product_3).mapped("qty_available")
+        self.assertEqual(kit_product_qty, 2)
+
     def test_20_bom_report(self):
         """ Simulate a crumble receipt with mrp and open the bom structure
         report and check that data insde are correct.
@@ -728,3 +760,72 @@ class TestBoM(TestMrpCommon):
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_finished.id, searchQty=80)
 
         self.assertAlmostEqual(report_values['lines']['total'], 2.92)
+
+    def test_validate_no_bom_line_with_same_product(self):
+        """
+        Cannot set a BOM line on a BOM with the same product as the BOM itself
+        """
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        finished = self.env['product.product'].create({
+            'name': 'Finished',
+            'type': 'product',
+            'uom_id': uom_unit.id,
+            'uom_po_id': uom_unit.id,
+        })
+        bom_finished = Form(self.env['mrp.bom'])
+        bom_finished.product_tmpl_id = finished.product_tmpl_id
+        bom_finished.product_qty = 100
+        with bom_finished.bom_line_ids.new() as line:
+            line.product_id = finished
+            line.product_uom_id = uom_unit
+            line.product_qty = 5
+        with self.assertRaises(exceptions.ValidationError), self.cr.savepoint():
+            bom_finished = bom_finished.save()
+
+    def test_validate_no_bom_line_with_same_product_variant(self):
+        """
+        Cannot set a BOM line on a BOM with the same product variant as the BOM itself
+        """
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        bom_finished = Form(self.env['mrp.bom'])
+        bom_finished.product_tmpl_id = self.product_7_template
+        bom_finished.product_id = self.product_7_3
+        bom_finished.product_qty = 100
+        with bom_finished.bom_line_ids.new() as line:
+            line.product_id = self.product_7_3
+            line.product_uom_id = uom_unit
+            line.product_qty = 5
+        with self.assertRaises(exceptions.ValidationError), self.cr.savepoint():
+            bom_finished = bom_finished.save()
+        
+    def test_validate_bom_line_with_different_product_variant(self):
+        """
+        Can set a BOM line on a BOM with a different product variant as the BOM itself (same product)
+        Usecase for example A black T-shirt made  from a white T-shirt and
+        black color.
+        """
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        bom_finished = Form(self.env['mrp.bom'])
+        bom_finished.product_tmpl_id = self.product_7_template
+        bom_finished.product_id = self.product_7_3
+        bom_finished.product_qty = 100
+        with bom_finished.bom_line_ids.new() as line:
+            line.product_id = self.product_7_2
+            line.product_uom_id = uom_unit
+            line.product_qty = 5
+        bom_finished = bom_finished.save()
+
+    def test_validate_bom_line_with_variant_of_bom_product(self):
+        """
+        Can set a BOM line on a BOM with a product variant when the BOM has no variant selected
+        """
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        bom_finished = Form(self.env['mrp.bom'])
+        bom_finished.product_tmpl_id = self.product_6.product_tmpl_id
+        # no product_id
+        bom_finished.product_qty = 100
+        with bom_finished.bom_line_ids.new() as line:
+            line.product_id = self.product_7_2
+            line.product_uom_id = uom_unit
+            line.product_qty = 5
+        bom_finished = bom_finished.save()

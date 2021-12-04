@@ -16,4 +16,5 @@
         'static/description/bootswatch_screenshot.jpg',
     ],
     'application': False,
+    'license': 'LGPL-3',
 }

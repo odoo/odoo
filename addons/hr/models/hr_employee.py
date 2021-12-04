@@ -95,7 +95,7 @@ class HrEmployeePrivate(models.Model):
     km_home_work = fields.Integer(string="Km Home-Work", groups="hr.group_hr_user", tracking=True)
 
     image_1920 = fields.Image(default=_default_image)
-    phone = fields.Char(related='address_home_id.phone', related_sudo=False, string="Private Phone", groups="hr.group_hr_user")
+    phone = fields.Char(related='address_home_id.phone', related_sudo=False, readonly=False, string="Private Phone", groups="hr.group_hr_user")
     # employee in company
     child_ids = fields.One2many('hr.employee', 'parent_id', string='Direct subordinates')
     category_ids = fields.Many2many(
@@ -230,6 +230,7 @@ class HrEmployeePrivate(models.Model):
         vals = dict(
             image_1920=user.image_1920,
             work_email=user.email,
+            user_id=user.id,
         )
         if user.tz:
             vals['tz'] = user.tz
@@ -242,7 +243,12 @@ class HrEmployeePrivate(models.Model):
             vals.update(self._sync_user(user))
             vals['name'] = vals.get('name', user.name)
         employee = super(HrEmployeePrivate, self).create(vals)
-        url = '/web#%s' % url_encode({'action': 'hr.plan_wizard_action', 'active_id': employee.id, 'active_model': 'hr.employee'})
+        url = '/web#%s' % url_encode({
+            'action': 'hr.plan_wizard_action',
+            'active_id': employee.id,
+            'active_model': 'hr.employee',
+            'menu_id': self.env.ref('hr.menu_hr_root').id,
+        })
         employee._message_log(body=_('<b>Congratulations!</b> May I recommend you to setup an <a href="%s">onboarding plan?</a>') % (url))
         if employee.department_id:
             self.env['mail.channel'].sudo().search([

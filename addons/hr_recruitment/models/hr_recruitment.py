@@ -186,7 +186,7 @@ class Applicant(models.Model):
 
     @api.depends('email_from')
     def _compute_application_count(self):
-        application_data = self.env['hr.applicant'].read_group([
+        application_data = self.env['hr.applicant'].with_context(active_test=False).read_group([
             ('email_from', 'in', list(set(self.mapped('email_from'))))], ['email_from'], ['email_from'])
         application_data_mapped = dict((data['email_from'], data['email_from_count']) for data in application_data)
         applicants = self.filtered(lambda applicant: applicant.email_from)
@@ -228,6 +228,7 @@ class Applicant(models.Model):
 
     def _onchange_job_id_internal(self, job_id):
         department_id = False
+        company_id = False
         user_id = False
         company_id = False
         stage_id = self.stage_id.id or self._context.get('default_stage_id')
@@ -300,12 +301,16 @@ class Applicant(models.Model):
             vals['date_open'] = fields.Datetime.now()
         if 'stage_id' in vals:
             vals.update(self._onchange_stage_id_internal(vals.get('stage_id'))['value'])
+        if vals.get('email_from'):
+            vals['email_from'] = vals['email_from'].strip()
         return super(Applicant, self).create(vals)
 
     def write(self, vals):
         # user_id change: update date_open
         if vals.get('user_id'):
             vals['date_open'] = fields.Datetime.now()
+        if vals.get('email_from'):
+            vals['email_from'] = vals['email_from'].strip()
         # stage_id: track last stage before update
         if 'stage_id' in vals:
             vals['date_last_stage_update'] = fields.Datetime.now()
@@ -335,6 +340,7 @@ class Applicant(models.Model):
         category = self.env.ref('hr_recruitment.categ_meet_interview')
         res = self.env['ir.actions.act_window'].for_xml_id('calendar', 'action_calendar_event')
         res['context'] = {
+            'default_applicant_id': self.id,
             'default_partner_ids': partners.ids,
             'default_user_id': self.env.uid,
             'default_name': self.name,
@@ -357,6 +363,9 @@ class Applicant(models.Model):
             'res_model': self._name,
             'view_mode': 'kanban,tree,form,pivot,graph,calendar,activity',
             'domain': [('email_from', 'in', self.mapped('email_from'))],
+            'context': {
+                'active_test': False
+            },
         }
 
     def _track_template(self, changes):
@@ -431,6 +440,8 @@ class Applicant(models.Model):
             # suggested recipients. This heuristic allows to avoid ugly hacks in JS.
             new_partner = message.partner_ids.filtered(lambda partner: partner.email == self.email_from)
             if new_partner:
+                if new_partner.create_date.date() == fields.Date.today():
+                    new_partner.type = 'private'
                 self.search([
                     ('partner_id', '=', False),
                     ('email_from', '=', new_partner.email),
@@ -450,6 +461,7 @@ class Applicant(models.Model):
                     raise UserError(_('You must define a Contact Name for this applicant.'))
                 new_partner_id = self.env['res.partner'].create({
                     'is_company': False,
+                    'type': 'private',
                     'name': applicant.partner_name,
                     'email': applicant.email_from,
                     'phone': applicant.partner_phone,

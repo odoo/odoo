@@ -67,6 +67,8 @@ class ProviderGrid(models.Model):
 
     def _get_price_available(self, order):
         self.ensure_one()
+        self = self.sudo()
+        order = order.sudo()
         total = weight = volume = quantity = 0
         total_delivery = 0.0
         for line in order.order_line:
@@ -87,10 +89,23 @@ class ProviderGrid(models.Model):
 
         return self._get_price_from_picking(total, weight, volume, quantity)
 
+    def _get_price_dict(self, total, weight, volume, quantity):
+        '''Hook allowing to retrieve dict to be used in _get_price_from_picking() function.
+        Hook to be overridden when we need to add some field to product and use it in variable factor from price rules. '''
+        return {
+            'price': total,
+            'volume': volume,
+            'weight': weight,
+            'wv': volume * weight,
+            'quantity': quantity
+        }
+
     def _get_price_from_picking(self, total, weight, volume, quantity):
         price = 0.0
         criteria_found = False
-        price_dict = {'price': total, 'volume': volume, 'weight': weight, 'wv': volume * weight, 'quantity': quantity}
+        price_dict = self._get_price_dict(total, weight, volume, quantity)
+        if self.free_over and total >= self.amount:
+            return 0
         for line in self.price_rule_ids:
             test = safe_eval(line.variable + line.operator + str(line.max_value), price_dict)
             if test:

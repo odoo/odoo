@@ -1,19 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_mail
+# 	* website_mail
 # 
 # Translators:
-# Martin Trigaux, 2018
-# RGB Consulting <odoo@rgbconsulting.com>, 2018
-# Quim - eccit <quim@eccit.com>, 2018
+# Martin Trigaux, 2020
+# Carles Antoli <carlesantoli@hotmail.com>, 2020
+# RGB Consulting <odoo@rgbconsulting.com>, 2020
+# Quim - eccit <quim@eccit.com>, 2020
+# M Palau <mpalau@tda.ad>, 2020
+# Arnau Ros, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-08-24 09:34+0000\n"
-"Last-Translator: Quim - eccit <quim@eccit.com>, 2018\n"
+"POT-Creation-Date: 2019-10-07 07:13+0000\n"
+"PO-Revision-Date: 2019-08-26 09:16+0000\n"
+"Last-Translator: Arnau Ros, 2020\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,17 +25,20 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_mail
-#: model:ir.model.fields,field_description:website_mail.field_account_invoice_send__description
-#: model:ir.model.fields,field_description:website_mail.field_mail_compose_message__description
+#: model_terms:ir.ui.view,arch_db:website_mail.follow
+msgid "<small>Follow</small><i class=\"fa fa-fw ml-1\"/>"
+msgstr ""
+
+#. module: website_mail
+#: model_terms:ir.ui.view,arch_db:website_mail.follow
+msgid "<small>Unfollow</small><i class=\"fa fa-fw ml-1\"/>"
+msgstr ""
+
+#. module: website_mail
 #: model:ir.model.fields,field_description:website_mail.field_mail_mail__description
 #: model:ir.model.fields,field_description:website_mail.field_mail_message__description
 msgid "Description"
 msgstr "Descripció"
-
-#. module: website_mail
-#: model:mail.channel,name:website_mail.channel_public
-msgid "Discussion Group"
-msgstr "Grup de debat"
 
 #. module: website_mail
 #: model:ir.model,name:website_mail.model_mail_message
@@ -40,18 +46,14 @@ msgid "Message"
 msgstr "Missatge"
 
 #. module: website_mail
-#: model:ir.model.fields,help:website_mail.field_account_invoice_send__description
-#: model:ir.model.fields,help:website_mail.field_mail_compose_message__description
 #: model:ir.model.fields,help:website_mail.field_mail_mail__description
 #: model:ir.model.fields,help:website_mail.field_mail_message__description
 msgid "Message description: either the subject, or the beginning of the body"
-msgstr ""
+msgstr "Descripció del missatge: Ja sigui l'assumpte o l'inici del cos"
 
 #. module: website_mail
 #. openerp-web
-#: code:addons/website_mail/static/src/xml/website_mail.xml:7
-#: model:ir.model.fields,field_description:website_mail.field_account_invoice_send__website_published
-#: model:ir.model.fields,field_description:website_mail.field_mail_compose_message__website_published
+#: code:addons/website_mail/static/src/xml/portal_chatter.xml:0
 #: model:ir.model.fields,field_description:website_mail.field_mail_mail__website_published
 #: model:ir.model.fields,field_description:website_mail.field_mail_message__website_published
 #, python-format
@@ -61,15 +63,21 @@ msgstr "Publicat"
 #. module: website_mail
 #: model:ir.model,name:website_mail.model_publisher_warranty_contract
 msgid "Publisher Warranty Contract"
-msgstr ""
+msgstr "Contracte de garantia de l'editor"
+
+#. module: website_mail
+#: code:addons/website_mail/models/mail_message.py:0
+#, python-format
+msgid "Records:"
+msgstr "Registres:"
 
 #. module: website_mail
 #: model_terms:ir.ui.view,arch_db:website_mail.follow
 msgid "Subscribe"
-msgstr "Subscriure"
+msgstr "Subscriure's"
 
 #. module: website_mail
-#: code:addons/website_mail/models/mail_message.py:57
+#: code:addons/website_mail/models/mail_message.py:0
 #, python-format
 msgid ""
 "The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n"
@@ -82,7 +90,7 @@ msgstr ""
 
 #. module: website_mail
 #. openerp-web
-#: code:addons/website_mail/static/src/xml/website_mail.xml:6
+#: code:addons/website_mail/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Unpublished"
 msgstr "No publicat"
@@ -93,8 +101,12 @@ msgid "Unsubscribe"
 msgstr "Donar-se de baixa"
 
 #. module: website_mail
-#: model:ir.model.fields,help:website_mail.field_account_invoice_send__website_published
-#: model:ir.model.fields,help:website_mail.field_mail_compose_message__website_published
+#: code:addons/website_mail/models/mail_message.py:0
+#, python-format
+msgid "User:"
+msgstr "Usuari:"
+
+#. module: website_mail
 #: model:ir.model.fields,help:website_mail.field_mail_mail__website_published
 #: model:ir.model.fields,help:website_mail.field_mail_message__website_published
 msgid "Visible on the website as a comment"
@@ -103,4 +115,4 @@ msgstr "Visible al lloc web com a comentari"
 #. module: website_mail
 #: model_terms:ir.ui.view,arch_db:website_mail.follow
 msgid "your email..."
-msgstr ""
+msgstr "correu electrònic"

@@ -115,3 +115,36 @@ class TestTestCursor(common.TransactionCase):
 
         self.cr.rollback()
         self.check(self.record, 'A')
+
+
+class TestCursorHooks(common.TransactionCase):
+    def test_hooks(self):
+        log = []
+
+        def make_hook(msg):
+            def hook():
+                log.append(msg)
+            return hook
+
+        cr = self.registry.cursor()
+
+        # check hook on commit()
+        cr.after('commit', make_hook('C1'))
+        cr.after('rollback', make_hook('R1'))
+        self.assertEqual(log, [])
+        cr.commit()
+        self.assertEqual(log, ['C1'])
+
+        # check hook on rollback()
+        cr.after('commit', make_hook('C2'))
+        cr.after('rollback', make_hook('R2'))
+        self.assertEqual(log, ['C1'])
+        cr.rollback()
+        self.assertEqual(log, ['C1', 'R2'])
+
+        # check hook on close()
+        cr.after('commit', make_hook('C3'))
+        cr.after('rollback', make_hook('R3'))
+        self.assertEqual(log, ['C1', 'R2'])
+        cr.close()
+        self.assertEqual(log, ['C1', 'R2', 'R3'])

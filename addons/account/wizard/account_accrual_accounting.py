@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.tools.misc import format_date
 
 
 class AccrualAccountingWizard(models.TransientModel):
@@ -65,8 +66,8 @@ class AccrualAccountingWizard(models.TransientModel):
         # Generate journal entries.
         move_data = {}
         for aml in self.active_move_line_ids:
-            ref1 = _('Accrual Adjusting Entry (%s recognized) for invoice: %s') % (self.percentage, aml.move_id.name)
-            ref2 = _('Accrual Adjusting Entry (%s recognized) for invoice: %s') % (100 - self.percentage, aml.move_id.name)
+            ref1 = _('Accrual Adjusting Entry (%s%% recognized) for invoice: %s') % (self.percentage, aml.move_id.name)
+            ref2 = _('Accrual Adjusting Entry (%s%% recognized) for invoice: %s') % (100 - self.percentage, aml.move_id.name)
             move_data.setdefault(aml.move_id, (
                 [
                     # Values to create moves.
@@ -93,6 +94,10 @@ class AccrualAccountingWizard(models.TransientModel):
                         percent=100 - self.percentage,
                         id=aml.move_id.id,
                         name=aml.move_id.name,
+                    ),
+                    (_('Accrual Adjusting Entries ({percent}%% recognized) have been created for this invoice on {date}') + ' <a href=# data-oe-model=account.move data-oe-id=%(first_id)d>%(first_name)s</a> and <a href=# data-oe-model=account.move data-oe-id=%(second_id)d>%(second_name)s</a>').format(
+                        percent=self.percentage,
+                        date=format_date(self.env, self.date),
                     ),
                 ]
             ))
@@ -128,37 +133,29 @@ class AccrualAccountingWizard(models.TransientModel):
             move_data[aml.move_id][0][1]['line_ids'] += [
                 (0, 0, {
                     'name': aml.name,
-                    'debit': aml.debit - reported_debit,
-                    'credit': aml.credit - reported_credit,
-                    'amount_currency': aml.amount_currency - reported_amount_currency,
+                    'debit': reported_credit,
+                    'credit': reported_debit,
+                    'amount_currency': -reported_amount_currency,
                     'currency_id': aml.currency_id.id,
                     'account_id': aml.account_id.id,
                     'partner_id': aml.partner_id.id,
                 }),
                 (0, 0, {
                     'name': ref2,
-                    'debit': aml.credit - reported_credit,
-                    'credit': aml.debit - reported_debit,
-                    'amount_currency': reported_amount_currency - aml.amount_currency,
+                    'debit': reported_debit,
+                    'credit': reported_credit,
+                    'amount_currency': reported_amount_currency,
                     'currency_id': aml.currency_id.id,
                     'account_id': accrual_account.id,
                     'partner_id': aml.partner_id.id,
                 }),
             ]
 
-        # Update the account of selected journal items.
-        self.active_move_line_ids.write({'account_id': accrual_account.id})
-
-        # When the percentage is 100%, the second move is not needed.
-        if self.percentage < 100:
-            move_vals = []
-            log_messages = []
-            for v in move_data.values():
-                move_vals += v[0]
-                log_messages += v[1]
-        else:
-            move_vals = [v[0][0] for k, v in move_data.items()]
-            log_messages = [v[1][0] for k, v in move_data.items()]
+        move_vals = []
+        log_messages = []
+        for v in move_data.values():
+            move_vals += v[0]
+            log_messages += v[1]
 
         created_moves = self.env['account.move'].create(move_vals)
         created_moves.post()
@@ -166,20 +163,19 @@ class AccrualAccountingWizard(models.TransientModel):
         # Reconcile.
         index = 0
         for move in self.active_move_line_ids.mapped('move_id'):
-            if self.percentage < 100:
-                accrual_moves = created_moves[index:index + 2]
-                index += 2
-            else:
-                accrual_moves = created_moves[index:index + 1]
-                index += 1
+            accrual_moves = created_moves[index:index + 2]
 
-            to_reconcile = self.active_move_line_ids.filtered(lambda line: line.move_id == move)
-            to_reconcile += accrual_moves.mapped('line_ids').filtered(lambda line: line.account_id == accrual_account and not line.reconciled)
+            to_reconcile = accrual_moves.mapped('line_ids').filtered(lambda line: line.account_id == accrual_account)
             to_reconcile.reconcile()
-
-        # Log messages.
-        for created_move, log_message in zip(created_moves, log_messages):
-            created_move.message_post(body=log_message)
+            move.message_post(body=log_messages[index//2 + 2] % {
+                'first_id': accrual_moves[0].id,
+                'first_name': accrual_moves[0].name,
+                'second_id': accrual_moves[1].id,
+                'second_name': accrual_moves[1].name,
+            })
+            accrual_moves[0].message_post(body=log_messages[index//2 + 0])
+            accrual_moves[1].message_post(body=log_messages[index//2 + 1])
+            index += 2
 
         # open the generated entries
         action = {

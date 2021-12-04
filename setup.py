@@ -26,7 +26,6 @@ setup(
         'babel >= 1.0',
         'decorator',
         'docutils',
-        'feedparser',
         'gevent',
         'html2text',
         'Jinja2',
@@ -59,7 +58,7 @@ setup(
     ],
     python_requires='>=3.6',
     extras_require={
-        'ldap': ['pyldap'],
+        'ldap': ['python-ldap'],
         'SSL': ['pyopenssl'],
     },
     tests_require=[

@@ -21,3 +21,16 @@ class SaleCouponProgram(models.Model):
                 domain += program.website_id.website_domain()
             if self.search(domain):
                 raise ValidationError(_('The program code must be unique by website!'))
+
+    def _filter_programs_on_website(self, order):
+        return self.filtered(lambda program: not program.website_id or program.website_id.id == order.website_id.id)
+
+    @api.model
+    def _filter_programs_from_common_rules(self, order, next_order=False):
+        programs = self._filter_programs_on_website(order)
+        return super(SaleCouponProgram, programs)._filter_programs_from_common_rules(order, next_order)
+
+    def _check_promo_code(self, order, coupon_code):
+        if self.website_id and self.website_id != order.website_id:
+            return {'error': 'This promo code is not valid on this website.'}
+        return super()._check_promo_code(order, coupon_code)

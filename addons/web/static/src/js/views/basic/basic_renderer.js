@@ -52,8 +52,10 @@ var BasicRenderer = AbstractRenderer.extend({
             if (!canBeSaved) {
                 invalidFields.push(widget.name);
             }
-            widget.$el.toggleClass('o_field_invalid', !canBeSaved);
-            widget.$el.attr('aria-invalid', !canBeSaved);
+            if (widget.el) { // widget may not be started yet
+                widget.$el.toggleClass('o_field_invalid', !canBeSaved);
+                widget.$el.attr('aria-invalid', !canBeSaved);
+            }
         });
         return invalidFields;
     },
@@ -418,9 +420,10 @@ var BasicRenderer = AbstractRenderer.extend({
 
         // determine if we need to reorder all records
         _.each(records, function (record, index) {
-            if ((index < lowerIndex || index >= upperIndex) &&
+            if (((index < lowerIndex || index >= upperIndex) &&
                 ((asc && sequence >= record.data[self.handleField]) ||
-                 (!asc && sequence <= record.data[self.handleField]))) {
+                 (!asc && sequence <= record.data[self.handleField]))) ||
+                (index >= lowerIndex && index < upperIndex && sequence === record.data[self.handleField])) {
                 reorderAll = true;
             }
             sequence = record.data[self.handleField];
@@ -746,13 +749,22 @@ var BasicRenderer = AbstractRenderer.extend({
     _rerenderFieldWidget: function (widget, record, options) {
         // Render the new field widget
         var $el = this._renderFieldWidget(widget.__node, record, options);
-        widget.$el.replaceWith($el);
 
-        // Destroy the old widget and position the new one at the old one's
-        var oldIndex = this._destroyFieldWidget(record.id, widget);
+        // get the new widget that has just been pushed in allFieldWidgets
         var recordWidgets = this.allFieldWidgets[record.id];
-        var newWidget = recordWidgets.pop();
-        recordWidgets.splice(oldIndex, 0, newWidget);
+        var newWidget = recordWidgets[recordWidgets.length - 1];
+        const def = this.defs[this.defs.length - 1]; // this is the widget's def, resolved when it is ready
+        const $div = $('<div>');
+        $div.append($el); // $el will be replaced when widget is ready (see _renderFieldWidget)
+        def.then(() => {
+            widget.$el.replaceWith($div.children());
+
+            // Destroy the old widget and position the new one at the old one's
+            // (it has been temporarily inserted at the end of the list)
+            recordWidgets.splice(recordWidgets.indexOf(newWidget), 1);
+            var oldIndex = this._destroyFieldWidget(record.id, widget);
+            recordWidgets.splice(oldIndex, 0, newWidget);
+        })
     },
     /**
      * Unregisters an element of the modifiers data associated to the given

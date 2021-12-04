@@ -142,7 +142,7 @@ class ReportStockForecat(models.Model):
             date(final.date) as date,
             sum(final.product_qty) AS quantity,
             sum(sum(final.product_qty)) OVER (PARTITION BY final.product_id, final.company_id ORDER BY final.date) AS cumulative_quantity,
-            reference,
+            final.reference,
             sp.id as picking_id,
             final.company_id
         """

@@ -1,19 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_event_questions
+# 	* website_event_questions
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2018
-# gsong <gsong2014@foxmail.com>, 2018
+# Martin Trigaux, 2020
+# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2020
+# gsong <gsong2014@foxmail.com>, 2020
+# Wichanon Jamwutthipreecha, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-08-24 09:34+0000\n"
-"Last-Translator: gsong <gsong2014@foxmail.com>, 2018\n"
+"POT-Creation-Date: 2020-04-27 09:22+0000\n"
+"PO-Revision-Date: 2019-08-26 09:15+0000\n"
+"Last-Translator: Wichanon Jamwutthipreecha, 2021\n"
 "Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,23 +23,18 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_event_questions
-#: model_terms:ir.ui.view,arch_db:website_event_questions.registration_attendee_details_questions
-msgid "<strong>Questions</strong>"
-msgstr ""
-
-#. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_answer__name
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_report__answer_id
 #: model_terms:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
 msgid "Answer"
-msgstr ""
+msgstr "ตอบ"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__answer_ids
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration__answer_ids
 #: model_terms:ir.ui.view,arch_db:website_event_questions.view_registration_search_inherit_question
 msgid "Answers"
-msgstr ""
+msgstr "ตอบ"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__is_individual
@@ -89,7 +85,7 @@ msgstr ""
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_question
 msgid "Event Question"
-msgstr ""
+msgstr "คำถามอีเวนต์"
 
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_question_report
@@ -100,12 +96,12 @@ msgstr ""
 #: model:ir.model,name:website_event_questions.model_event_registration
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__event_registration_id
 msgid "Event Registration"
-msgstr ""
+msgstr "การลงทะเบียนอีเวนต์"
 
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_registration_answer
 msgid "Event Registration Answer"
-msgstr ""
+msgstr "คำตอบการลงทะเบียนอีเวนต์"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__event_type_id
@@ -113,9 +109,14 @@ msgid "Event Type"
 msgstr "ชนิดเหตุการณ์"
 
 #. module: website_event_questions
+#: model_terms:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
+msgid "Exclude cancelled registrations"
+msgstr ""
+
+#. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_event__general_question_ids
 msgid "General Questions"
-msgstr ""
+msgstr "คำถามทั่วไป"
 
 #. module: website_event_questions
 #: model_terms:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
@@ -169,10 +170,10 @@ msgid "Question"
 msgstr "คำถาม"
 
 #. module: website_event_questions
-#: code:addons/website_event_questions/models/event.py:80
+#: code:addons/website_event_questions/models/event.py:0
 #, python-format
 msgid "Question cannot belong to both the event category and itself."
-msgstr ""
+msgstr "คำถามต้องไม่อยู่ในทั้งหมวดหมู่อีเวนต์และตัวมันเอง"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_event__question_ids
@@ -199,7 +200,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_report__attendee_id
 #: model_terms:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
 msgid "Registration"
-msgstr ""
+msgstr "การลงทะเบียน"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_answer__sequence
@@ -210,7 +211,7 @@ msgstr "ลำดับ"
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_event__specific_question_ids
 msgid "Specific Questions"
-msgstr ""
+msgstr "คำถามเฉพาะ"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__title

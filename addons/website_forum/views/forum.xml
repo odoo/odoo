@@ -118,6 +118,7 @@
             <field name="model">forum.forum</field>
             <field name="arch" type="xml">
                 <search string="Forum">
+                    <field name="name"/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 </search>
             </field>

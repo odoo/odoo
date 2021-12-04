@@ -8,6 +8,7 @@ from odoo.addons.stock_account.tests.test_stockvaluationlayer import TestStockVa
 from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounting_data
 
 
+@tagged('post_install', '-at_install')
 class TestStockValuationLC(TestStockValuationCommon):
     @classmethod
     def setUpClass(cls):
@@ -76,6 +77,7 @@ class TestStockValuationLC(TestStockValuationCommon):
         return lc
 
 
+@tagged('post_install', '-at_install')
 class TestStockValuationLCFIFO(TestStockValuationLC):
     def setUp(self):
         super(TestStockValuationLCFIFO, self).setUp()
@@ -191,6 +193,7 @@ class TestStockValuationLCFIFO(TestStockValuationLC):
         self.assertEqual(move2.stock_valuation_layer_ids.value, -115)
 
 
+@tagged('post_install', '-at_install')
 class TestStockValuationLCAVCO(TestStockValuationLC):
     def setUp(self):
         super(TestStockValuationLCAVCO, self).setUp()
@@ -233,13 +236,14 @@ class TestStockValuationLCAVCO(TestStockValuationLC):
         self.assertEqual(self.product1.quantity_svl, 19)
 
 
+@tagged('post_install', '-at_install')
 class TestStockValuationLCFIFOVB(TestStockValuationLC):
     @classmethod
     def setUpClass(cls):
         super(TestStockValuationLCFIFOVB, cls).setUpClass()
-        cls.vendor1 = cls.env['res.partner'].search([], limit=1)
+        cls.vendor1 = cls.  env['res.partner'].create({'name': 'vendor1'})
         cls.vendor1.property_account_payable_id = cls.payable_account
-        cls.vendor2 = cls.env['res.partner'].search([], limit=2)[-1]
+        cls.vendor2 = cls.env['res.partner'].create({'name': 'vendor2'})
         cls.vendor2.property_account_payable_id = cls.payable_account
         cls.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
         cls.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
@@ -331,6 +335,58 @@ class TestStockValuationLCFIFOVB(TestStockValuationLC):
 
         self.assertEqual(self.product1.quantity_svl, 10)
         self.assertEqual(self.product1.value_svl, 150)
+
+    def test_vendor_bill_flow_anglo_saxon_2(self):
+        """In anglo saxon accounting, receive 10@10 and invoice with the addition of 1@50 as a
+        landed costs and create a linked landed costs record.
+        """
+        self.env.company.anglo_saxon_accounting = True
+
+        # Create an RFQ for self.product1, 10@10
+        rfq = Form(self.env['purchase.order'])
+        rfq.partner_id = self.vendor1
+
+        with rfq.order_line.new() as po_line:
+            po_line.product_id = self.product1
+            po_line.price_unit = 10
+            po_line.product_qty = 10
+            po_line.taxes_id.clear()
+
+        rfq = rfq.save()
+        rfq.button_confirm()
+
+        # Process the receipt
+        receipt = rfq.picking_ids
+        wiz = receipt.button_validate()
+        wiz = self.env['stock.immediate.transfer'].browse(wiz['res_id']).process()
+        self.assertEqual(rfq.order_line.qty_received, 10)
+
+        input_aml = self._get_stock_input_move_lines()[-1]
+        self.assertEqual(input_aml.debit, 0)
+        self.assertEqual(input_aml.credit, 100)
+        valuation_aml = self._get_stock_valuation_move_lines()[-1]
+        self.assertEqual(valuation_aml.debit, 100)
+        self.assertEqual(valuation_aml.credit, 0)
+
+        # Create a vebdor bill for the RFQ and add to it the landed cost
+        action = rfq.action_view_invoice()
+        vb = Form(self.env['account.move'].with_context(action['context']))
+        with vb.invoice_line_ids.new() as inv_line:
+            inv_line.product_id = self.productlc1
+            inv_line.price_unit = 50
+            inv_line.is_landed_costs_line = True
+        vb = vb.save()
+        vb.post()
+
+        action = vb.button_create_landed_costs()
+        lc = Form(self.env[action['res_model']].browse(action['res_id']))
+        lc.picking_ids.add(receipt)
+        lc = lc.save()
+        lc.button_validate()
+
+        # Check reconciliation of input aml of lc
+        lc_input_aml = lc.account_move_id.line_ids.filtered(lambda aml: aml.account_id == self.stock_input_account)
+        self.assertTrue(len(lc_input_aml.full_reconcile_id), 1)
 
     def test_vendor_bill_flow_continental_1(self):
         """In continental accounting, receive 10@10 and invoice. Then invoice 1@50 as a landed costs

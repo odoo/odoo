@@ -3,11 +3,12 @@
 # 	* base_import
 # 
 # Translators:
-# Gabriel Umana <gabriel.umana@delfixcr.com>, 2019
+# gabriumaa <gabriel.umana@delfixcr.com>, 2019
 # Miguel Orueta <mo@landoo.es>, 2019
 # Emilio Silva <efsilvay@gmail.com>, 2019
 # Jon Perez <jop@odoo.com>, 2019
 # Martin Trigaux, 2019
+# Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-09-23 11:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"Last-Translator: Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,14 +29,14 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "%d records successfully imported..."
-msgstr ""
+msgstr "%d registros importados con éxito..."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "%d records tested..."
-msgstr ""
+msgstr "%d registros probados..."
 
 #. module: base_import
 #. openerp-web
@@ -91,14 +92,14 @@ msgstr "Importar Base"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_mapping
 msgid "Base Import Mapping"
-msgstr ""
+msgstr "Mapeo de importación base"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Batch limit"
-msgstr ""
+msgstr "Límite de lote"
 
 #. module: base_import
 #. openerp-web
@@ -120,6 +121,8 @@ msgstr "Cancelar"
 #, python-format
 msgid "Click 'Resume' to proceed with the import, resuming at line"
 msgstr ""
+"Haga clic en 'Reanudar' para continuar con la importación, reanudando en la "
+"línea"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -304,7 +307,7 @@ msgstr "Dt"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Due to its large size, the file will be imported by batches."
-msgstr ""
+msgstr "Debido a su gran tamaño, el archivo se importará por lotes."
 
 #. module: base_import
 #. openerp-web
@@ -397,6 +400,8 @@ msgid ""
 "Found invalid image data, images should be imported as either URLs or "
 "base64-encoded data."
 msgstr ""
+"Se encontraron datos de imagen no válidos, las imágenes deben importarse "
+"como URL o datos codificados en base64."
 
 #. module: base_import
 #. openerp-web
@@ -448,6 +453,9 @@ msgid ""
 "If the model uses openchatter, history tracking will set up subscriptions "
 "and send notifications during the import, but lead to a slower import."
 msgstr ""
+"Si el modelo usa openchatter, el seguimiento del historial configurará "
+"suscripciones y enviará notificaciones durante la importación, pero dará "
+"lugar a una importación más lenta."
 
 #. module: base_import
 #. openerp-web
@@ -612,7 +620,7 @@ msgstr "¿Necesitas ayuda?"
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "No Separator"
-msgstr ""
+msgstr "Sin separador"
 
 #. module: base_import
 #. openerp-web
@@ -717,7 +725,7 @@ msgstr "Espacio"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Start at line"
-msgstr ""
+msgstr "Empezar en la línea"
 
 #. module: base_import
 #. openerp-web
@@ -736,77 +744,80 @@ msgstr "Test"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_preview
 msgid "Tests : Base Import Model Preview"
-msgstr ""
+msgstr "Pruebas: Vista previa del modelo de importación base"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char
 msgid "Tests : Base Import Model, Character"
-msgstr ""
+msgstr "Pruebas: modelo de importación base, personaje"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_noreadonly
 msgid "Tests : Base Import Model, Character No readonly"
-msgstr ""
+msgstr "Pruebas: modelo de importación base, carácter no solo lectura"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_readonly
 msgid "Tests : Base Import Model, Character readonly"
-msgstr ""
+msgstr "Pruebas: modelo de importación base, solo lectura de caracteres"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_required
 msgid "Tests : Base Import Model, Character required"
-msgstr ""
+msgstr "Pruebas: Modelo de importación base, se requiere personaje"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_states
 msgid "Tests : Base Import Model, Character states"
-msgstr ""
+msgstr "Pruebas: modelo de importación base, estados de caracteres"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_stillreadonly
 msgid "Tests : Base Import Model, Character still readonly"
 msgstr ""
+"Pruebas: Modelo de importación base, el personaje sigue siendo de solo "
+"lectura"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o
 msgid "Tests : Base Import Model, Many to One"
-msgstr ""
+msgstr "Pruebas: Modelo de importación de base, muchos a uno"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_related
 msgid "Tests : Base Import Model, Many to One related"
-msgstr ""
+msgstr "Pruebas: modelo base de importación, muchos a uno relacionados"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required
 msgid "Tests : Base Import Model, Many to One required"
-msgstr ""
+msgstr "Pruebas: modelo de importación base, se requieren muchos a uno"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required_related
 msgid "Tests : Base Import Model, Many to One required related"
 msgstr ""
+"Pruebas: modelo de importación base, muchos a uno requerido relacionado"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_o2m
 msgid "Tests : Base Import Model, One to Many"
-msgstr ""
+msgstr "Pruebas: Modelo de importación base, uno a muchos"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_o2m_child
 msgid "Tests : Base Import Model, One to Many child"
-msgstr ""
+msgstr "Pruebas: Modelo de importación base, uno a muchos niños"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_complex
 msgid "Tests: Base Import Model Complex"
-msgstr ""
+msgstr "Pruebas: complejo de modelo de importación base"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_float
 msgid "Tests: Base Import Model Float"
-msgstr ""
+msgstr "Pruebas: flotante de modelo de importación base"
 
 #. module: base_import
 #. openerp-web
@@ -823,13 +834,15 @@ msgid ""
 "The first row\n"
 "                         contains the label of the column"
 msgstr ""
+"La primera fila\n"
+"                         contiene la etiqueta de la columna"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "This file has been successfully imported up to line %d."
-msgstr ""
+msgstr "Este archivo se ha importado correctamente hasta la línea %d."
 
 #. module: base_import
 #. openerp-web
@@ -895,6 +908,8 @@ msgid ""
 "Warning: ignores the labels line, empty lines and"
 "                             lines composed only of empty cells"
 msgstr ""
+"Advertencia: ignora la línea de etiquetas, líneas vacías y líneas compuestas"
+" solo de celdas vacías"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -912,6 +927,7 @@ msgstr ""
 #, python-format
 msgid "You can test or reload your file before resuming the import."
 msgstr ""
+"Puede probar o volver a cargar su archivo antes de reanudar la importación."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0

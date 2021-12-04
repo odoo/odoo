@@ -5,6 +5,7 @@
 # Translators:
 # Miku Laitinen <miku.laitinen@gmail.com>, 2019
 # Jussi Heikkilä <jussi.heikkila@panimo.com>, 2019
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-12 11:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Jussi Heikkilä <jussi.heikkila@panimo.com>, 2019\n"
+"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2020\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,19 +29,20 @@ msgstr "Konfiguraatioasetukset"
 #. module: auth_password_policy
 #: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__minlength
 msgid "Minimum Password Length"
-msgstr ""
+msgstr "Salasanan minimipituus"
 
 #. module: auth_password_policy
 #: model:ir.model.fields,help:auth_password_policy.field_res_config_settings__minlength
 msgid ""
 "Minimum number of characters passwords must contain, set to 0 to disable."
 msgstr ""
+"Salasanan merkkien vähimmäismäärä. Aseta 0 jos haluat tämän pois käytöstä."
 
 #. module: auth_password_policy
 #: code:addons/auth_password_policy/models/res_users.py:30
 #, python-format
 msgid "Passwords must have at least %d characters, got %d."
-msgstr ""
+msgstr "Salasanassa on oltava ainakin %d merkkiä, saatiin %d."
 
 #. module: auth_password_policy
 #. openerp-web
@@ -51,6 +53,9 @@ msgid ""
 "\n"
 "Hint: increase length, use multiple words and use non-letter characters to increase your password's strength."
 msgstr ""
+"Vaaditaan: %s.\n"
+"\n"
+"Vinkki: kasvata pituutta, käytä useita sanoja ja muita merkkejä kuin kirjaimia parantaaksesi salasanan vahvuutta."
 
 #. module: auth_password_policy
 #: model:ir.model,name:auth_password_policy.model_res_users
@@ -62,25 +67,25 @@ msgstr "Käyttäjät"
 #: code:addons/auth_password_policy/static/src/js/password_gauge.js:28
 #, python-format
 msgid "at least %d character classes"
-msgstr ""
+msgstr "vähintään %d merkkityyppiä"
 
 #. module: auth_password_policy
 #. openerp-web
 #: code:addons/auth_password_policy/static/src/js/password_gauge.js:22
 #, python-format
 msgid "at least %d characters"
-msgstr ""
+msgstr "vähintään %d merkkiä"
 
 #. module: auth_password_policy
 #. openerp-web
 #: code:addons/auth_password_policy/static/src/js/password_gauge.js:25
 #, python-format
 msgid "at least %d words"
-msgstr ""
+msgstr "vähintään %d sanaa"
 
 #. module: auth_password_policy
 #. openerp-web
 #: code:addons/auth_password_policy/static/src/js/password_gauge.js:125
 #, python-format
 msgid "no requirements"
-msgstr ""
+msgstr "ei vaatimuksia"

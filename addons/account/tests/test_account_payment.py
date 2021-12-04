@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
-from odoo.addons.account.tests.invoice_test_common import InvoiceTestCommon
+from odoo.addons.account.tests.account_test_savepoint import AccountTestInvoicingCommon
 from odoo.tests import tagged, new_test_user
 from odoo.tests.common import Form
 from odoo import fields
 
 
 @tagged('post_install', '-at_install')
-class TestAccountMovePayment(InvoiceTestCommon):
+class TestAccountMovePayment(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super(TestAccountMovePayment, cls).setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         cls.bank_journal = cls.company_data['default_journal_bank']
         cls.bank_journal.default_credit_account_id = cls.bank_journal.default_debit_account_id.copy()

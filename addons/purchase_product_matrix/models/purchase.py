@@ -88,6 +88,9 @@ class PurchaseOrder(models.Model):
                     if not default_po_line_vals:
                         OrderLine = self.env['purchase.order.line']
                         default_po_line_vals = OrderLine.default_get(OrderLine._fields.keys())
+                    last_sequence = self.order_line[-1:].sequence
+                    if last_sequence:
+                        default_po_line_vals['sequence'] = last_sequence
                     new_lines.append((0, 0, dict(
                         default_po_line_vals,
                         product_id=product.id,
@@ -95,10 +98,13 @@ class PurchaseOrder(models.Model):
                         product_no_variant_attribute_value_ids=no_variant_attribute_values.ids)
                     ))
             if new_lines:
+                res = False
                 self.update(dict(order_line=new_lines))
                 for line in self.order_line.filtered(lambda line: line.product_template_id == product_template):
                     line._product_id_change()
                     line._onchange_quantity()
+                    res = line.onchange_product_id_warning() or res
+                return res
 
     def _get_matrix(self, product_template):
         def has_ptavs(line, sorted_attr_ids):

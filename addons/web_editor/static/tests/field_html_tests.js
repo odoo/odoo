@@ -22,6 +22,11 @@ QUnit.module('web_editor', {}, function () {
                             string: "Displayed name",
                             type: "char"
                         },
+                        header: {
+                            string: "Header",
+                            type: "html",
+                            required: true,
+                        },
                         body: {
                             string: "Message",
                             type: "html"
@@ -30,6 +35,7 @@ QUnit.module('web_editor', {}, function () {
                     records: [{
                         id: 1,
                         display_name: "first record",
+                        header: "<p>  &nbsp;&nbsp;  <br>   </p>",
                         body: "<p>toto toto toto</p><p>tata</p>",
                     }],
                 },
@@ -122,6 +128,38 @@ QUnit.module('web_editor', {}, function () {
             assert.strictEqual($field.find('.note-editable').html(),
                 '<p>toto toto toto</p><p>tata</p>',
                 "should have rendered the field correctly in edit");
+
+            form.destroy();
+        });
+
+        QUnit.test('check if required field is set', async function (assert) {
+            assert.expect(1);
+
+            var form = await testUtils.createView({
+                View: FormView,
+                model: 'note.note',
+                data: this.data,
+                arch: '<form>' +
+                        '<field name="header" widget="html" style="height: 100px" />' +
+                      '</form>',
+                res_id: 1,
+            });
+
+            testUtils.mock.intercept(form, 'call_service', function (ev) {
+                if (ev.data.service === 'notification') {
+                    assert.deepEqual(ev.data.args[0], {
+                        "className": undefined,
+                        "message": "<ul><li>Header</li></ul>",
+                        "sticky": undefined,
+                        "title": "The following fields are invalid:",
+                        "type": "danger"
+                      });
+                }
+            }, true);
+
+            await testUtils.form.clickEdit(form);
+            await testUtils.nextTick();
+            await testUtils.dom.click(form.$('.o_form_button_save'));
 
             form.destroy();
         });

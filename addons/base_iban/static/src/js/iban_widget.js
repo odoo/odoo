@@ -86,6 +86,7 @@ var IbanWidget = FieldChar.extend({
             } else {
                 $span = $('<span class="fa fa-check o_iban text-success"/>');
             }
+            this.$el.addClass('o_iban_input_with_validator');
             $span.insertAfter(this.$el);
             this.$el = this.$el.add($span);
         }

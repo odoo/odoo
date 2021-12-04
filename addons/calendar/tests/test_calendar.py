@@ -226,7 +226,8 @@ class TestCalendar(TransactionCase):
         })
         now = datetime.now()
         test_user = self.env.ref('base.user_demo')
-        test_name, test_description, test_description2 = 'Test-Meeting', '<p>Test-Description</p>', '<p>NotTest</p>'
+        test_name, test_description, test_description2 = 'Test-Meeting', 'Test-Description', 'NotTest'
+        test_note, test_note2 = '<p>Test-Description</p>', '<p>NotTest</p>'
 
         # create using default_* keys
         test_event = self.env['calendar.event'].with_user(test_user).with_context(
@@ -243,7 +244,7 @@ class TestCalendar(TransactionCase):
         self.assertEqual(test_event.res_id, test_record.id)
         self.assertEqual(len(test_record.activity_ids), 1)
         self.assertEqual(test_record.activity_ids.summary, test_name)
-        self.assertEqual(test_record.activity_ids.note, test_description)
+        self.assertEqual(test_record.activity_ids.note, test_note)
         self.assertEqual(test_record.activity_ids.user_id, self.env.user)
         self.assertEqual(test_record.activity_ids.date_deadline, (now + timedelta(days=-1)).date())
 
@@ -255,9 +256,18 @@ class TestCalendar(TransactionCase):
             'user_id': test_user.id,
         })
         self.assertEqual(test_record.activity_ids.summary, '%s2' % test_name)
-        self.assertEqual(test_record.activity_ids.note, test_description2)
+        self.assertEqual(test_record.activity_ids.note, test_note2)
         self.assertEqual(test_record.activity_ids.user_id, test_user)
         self.assertEqual(test_record.activity_ids.date_deadline, (now + timedelta(days=-2)).date())
+
+        # update event with a description that have a special character and a new line
+        test_description3 = 'Test & \n Description'
+        test_note3 = '<p>Test &amp; <br> Description</p>'
+        test_event.write({
+            'description': test_description3,
+        })
+
+        self.assertEqual(test_record.activity_ids.note, test_note3)
 
         # deleting meeting should delete its activity
         test_record.activity_ids.unlink()
@@ -442,3 +452,31 @@ class TestCalendar(TransactionCase):
         # since the detach actually create an event in the backend
         # we check that no mail notifications are sent to the attendees
         _test_one_mail_per_attendee(self, m, partners)
+
+    def test_event_creation_mail_with_different_owner(self):
+        admin = self.env.ref('base.user_admin')
+        demo = self.env.ref('base.user_demo')
+        now = fields.Datetime.now()
+        partners = [
+           self.env['res.partner'].create({'name': 'testuser0', 'email': u'bob@example.com'}),
+           self.env['res.partner'].create({'name': 'testuser1', 'email': u'alice@example.com'}),
+           ]
+        partner_ids = [(6, False, [p.id for p in partners]), ]
+
+        m = self.CalendarEvent.with_user(admin).create({
+            'name': "mailTest1",
+            'partner_ids': partner_ids,
+            'allday': False,
+            'duration': 0.5,
+            'user_id': demo.id,
+            'start': fields.Datetime.to_string(now + timedelta(days=10)),
+            'stop': fields.Datetime.to_string(now + timedelta(days=15)),
+            })
+
+        for partner in partners:
+            mail = self.env['mail.mail'].search([
+                ('recipient_ids', 'in', partner.id),
+                ('subject', 'like', m.name),
+                ])
+            self.assertEqual(len(mail), 1)
+            self.assertEqual(mail.author_id.id, demo.partner_id.id)

@@ -8,7 +8,7 @@ from werkzeug.exceptions import NotFound, Forbidden
 from odoo import http
 from odoo.http import request
 from odoo.addons.portal.controllers.mail import _check_special_access, PortalChatter
-from odoo.tools import plaintext2html
+from odoo.tools import plaintext2html, html2plaintext
 
 
 class SlidesPortalChatter(PortalChatter):
@@ -27,7 +27,7 @@ class SlidesPortalChatter(PortalChatter):
     @http.route([
         '/slides/mail/update_comment',
         '/mail/chatter_update',
-        ], type='http', auth="user")
+        ], type='http', auth="user", methods=['POST'])
     def mail_update_message(self, res_model, res_id, message, message_id, redirect=None, attachment_ids='', attachment_tokens='', **post):
         # keep this mecanism intern to slide currently (saas 12.5) as it is
         # considered experimental
@@ -67,7 +67,8 @@ class SlidesPortalChatter(PortalChatter):
             domain = [('res_model', '=', res_model), ('res_id', '=', res_id), ('website_published', '=', True), ('message_id', '=', message.id)]
             rating = request.env['rating.rating'].search(domain, order='write_date DESC', limit=1)
             rating.write({
-                'rating': float(post['rating_value'])
+                'rating': float(post['rating_value']),
+                'feedback': html2plaintext(message.body),
             })
 
         # redirect to specified or referrer or simply channel page as fallback

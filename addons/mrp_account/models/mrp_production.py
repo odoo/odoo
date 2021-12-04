@@ -63,7 +63,7 @@ class MrpProduction(models.Model):
         AccountAnalyticLine = self.env['account.analytic.line'].sudo()
         for wc_line in self.workorder_ids.filtered('workcenter_id.costs_hour_account_id'):
             vals = self._prepare_wc_analytic_line(wc_line)
-            precision_rounding = wc_line.workcenter_id.costs_hour_account_id.currency_id.rounding
+            precision_rounding = (wc_line.workcenter_id.costs_hour_account_id.currency_id or self.company_id.currency_id).rounding
             if not float_is_zero(vals.get('amount', 0.0), precision_rounding=precision_rounding):
                 # we use SUPERUSER_ID as we do not guarantee an mrp user
                 # has access to account analytic lines but still should be

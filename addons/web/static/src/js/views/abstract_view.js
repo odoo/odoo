@@ -125,10 +125,15 @@ var AbstractView = Factory.extend({
         // button when the graph view is embedded.
         var isEmbedded = params.isEmbedded || false;
 
+        // The noContentHelper's message can be empty, i.e. either a real empty string
+        // or an empty html tag. In both cases, we consider the helper empty.
+        var help = params.noContentHelp || "";
+        var htmlHelp = document.createElement("div");
+        htmlHelp.innerHTML = help;
         this.rendererParams = {
             arch: this.arch,
             isEmbedded: isEmbedded,
-            noContentHelp: params.noContentHelp,
+            noContentHelp: htmlHelp.innerText.trim() ? help : "",
         };
 
         this.controllerParams = {
@@ -297,9 +302,11 @@ var AbstractView = Factory.extend({
             }
         });
         var controlPanelDomain = this.loadParams.domain;
+        const viewDomain = await this._getViewDomain(parent);
         var spParams = _.extend({}, this.searchPanelParams, {
             defaultValues: defaultValues,
             searchDomain: controlPanelDomain,
+            viewDomain,
             classes: params.classes || [],
         });
         var searchPanel = new this.config.SearchPanel(parent, spParams);
@@ -351,6 +358,17 @@ var AbstractView = Factory.extend({
             withSearchBar: inline ? false : this.withSearchBar,
             withSearchPanel: this.withSearchPanel,
         };
+    },
+    /**
+     * Get the domain defined by the view. It is meant to be overridden. The parent
+     * is provided in case some subcomponents need to be retrieved.
+     *
+     * @private
+     * @param {Object} parent
+     * @returns {Promise<Array[]>}
+     */
+    _getViewDomain: async function (parent) {
+        return [];
     },
     /**
      * Processes a fieldsView. In particular, parses its arch.

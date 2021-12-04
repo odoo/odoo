@@ -1,0 +1,10 @@
+[Unit]
+Description=Led Status
+After=sysinit.target local-fs.target
+
+[Service]
+Type=simple
+ExecStart=/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/led_status.sh
+
+[Install]
+WantedBy=basic.target

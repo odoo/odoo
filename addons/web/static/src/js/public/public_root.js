@@ -114,15 +114,25 @@ var PublicRoot = publicWidget.RootWidget.extend(ServiceProviderMixin, {
             if (_.str.startsWith(route, '/web/dataset/call_kw/')) {
                 var params = ev.data.args[1];
                 var options = ev.data.args[2];
-                params.kwargs.context = _.extend({}, this._getContext(), params.kwargs.context || {});
+                var noContextKeys = undefined;
                 if (options) {
-                    params.kwargs.context = _.omit(params.kwargs.context, options.noContextKeys);
+                    noContextKeys = options.noContextKeys;
                     ev.data.args[2] = _.omit(options, 'noContextKeys');
                 }
-                params.kwargs.context = JSON.parse(JSON.stringify(params.kwargs.context));
+                params.kwargs.context = _computeContext.call(this, params.kwargs.context, noContextKeys);
             }
+        } else if (ev.data.service === 'ajax' && ev.data.method === 'loadLibs') {
+            ev.data.args[1] = _computeContext.call(this, ev.data.args[1]);
         }
         return ServiceProviderMixin._call_service.apply(this, arguments);
+
+        function _computeContext(context, noContextKeys) {
+            context = _.extend({}, this._getContext(), context);
+            if (noContextKeys) {
+                context = _.omit(context, noContextKeys);
+            }
+            return JSON.parse(JSON.stringify(context));
+        }
     },
     /**
      * Retrieves the global context of the public environment. This is the

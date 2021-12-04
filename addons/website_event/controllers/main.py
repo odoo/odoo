@@ -117,7 +117,7 @@ class WebsiteEventController(http.Controller):
             'country_id': ("all", _("All Countries"))
         })
 
-        step = 10  # Number of events per page
+        step = 12  # Number of events per page
         event_count = Event.search_count(dom_without("none"))
         pager = website.pager(
             url="/event",
@@ -176,7 +176,7 @@ class WebsiteEventController(http.Controller):
             # page not found
             values['path'] = re.sub(r"^website_event\.", '', page)
             values['from_template'] = 'website_event.default_page'  # .strip('website_event.')
-            page = 'website.%s' % (request.website.is_publisher() and 'page_404' or '404')
+            page = request.website.is_publisher() and 'website.page_404' or 'http_routing.404'
 
         return request.render(page, values)
 
@@ -263,9 +263,16 @@ class WebsiteEventController(http.Controller):
     @http.route(['/event/<model("event.event"):event>/registration/new'], type='json', auth="public", methods=['POST'], website=True)
     def registration_new(self, event, **post):
         tickets = self._process_tickets_details(post)
+        availability_check = True
+        if event.seats_availability == 'limited':
+            ordered_seats = 0
+            for ticket in tickets:
+                ordered_seats += ticket['quantity']
+            if event.seats_available < ordered_seats:
+                availability_check = False
         if not tickets:
             return False
-        return request.env['ir.ui.view'].render_template("website_event.registration_attendee_details", {'tickets': tickets, 'event': event})
+        return request.env['ir.ui.view'].render_template("website_event.registration_attendee_details", {'tickets': tickets, 'event': event, 'availability_check': availability_check})
 
     def _process_registration_details(self, details):
         ''' Process data posted from the attendee details form. '''

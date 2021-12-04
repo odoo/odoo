@@ -71,7 +71,7 @@ class StockMove(models.Model):
                     float_compare(self.quantity_done, self.product_uom_qty, precision_rounding=rounding) < 0:
                 return self._action_record_components()
         action = super(StockMove, self).action_show_details()
-        if self.is_subcontract:
+        if self.is_subcontract and self._has_tracked_subcontract_components():
             action['views'] = [(self.env.ref('stock.view_stock_move_operations').id, 'form')]
             action['context'].update({
                 'show_lots_m2o': self.has_tracking != 'none',
@@ -96,11 +96,15 @@ class StockMove(models.Model):
     def _action_cancel(self):
         for move in self:
             if move.is_subcontract:
-                move.move_orig_ids.production_id._action_cancel()
+                production = move.move_orig_ids.production_id
+                moves = self.env.context.get('moves_todo')
+                if not moves or production not in moves.move_orig_ids.production_id:
+                    production._action_cancel()
         return super()._action_cancel()
 
     def _action_confirm(self, merge=True, merge_into=False):
         subcontract_details_per_picking = defaultdict(list)
+        move_to_not_merge = self.env['stock.move']
         for move in self:
             if move.location_id.usage != 'supplier' or move.location_dest_id.usage == 'supplier':
                 continue
@@ -117,10 +121,13 @@ class StockMove(models.Model):
                 'is_subcontract': True,
                 'location_id': move.picking_id.partner_id.with_context(force_company=move.company_id.id).property_stock_subcontractor.id
             })
+            move_to_not_merge |= move
         for picking, subcontract_details in subcontract_details_per_picking.items():
             picking._subcontracted_produce(subcontract_details)
 
-        res = super(StockMove, self)._action_confirm(merge=merge, merge_into=merge_into)
+        # We avoid merging move due to complication with stock.rule.
+        res = super(StockMove, move_to_not_merge)._action_confirm(merge=False)
+        res |= super(StockMove, self - move_to_not_merge)._action_confirm(merge=merge, merge_into=merge_into)
         if subcontract_details_per_picking:
             self.env['stock.picking'].concat(*list(subcontract_details_per_picking.keys())).action_assign()
         return res
@@ -193,7 +200,7 @@ operations.""") % ('\n'.join(overprocessed_moves.mapped('product_id.display_name
     def _update_subcontract_order_qty(self, quantity):
         for move in self:
             quantity_change = quantity - move.product_uom_qty
-            production = move.move_orig_ids.production_id
+            production = move.move_orig_ids.production_id.filtered(lambda p: p.state != 'cancel')
             if production:
                 self.env['change.production.qty'].with_context(skip_activity=True).create({
                     'mo_id': production.id,

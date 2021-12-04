@@ -10,10 +10,25 @@ class TestWebsiteSequence(odoo.tests.TransactionCase):
         super(TestWebsiteSequence, self).setUp()
 
         ProductTemplate = self.env['product.template']
-        product_templates = ProductTemplate.search([])
+        to_remove = []
+
+        #We have to remove those ids because you're unable to modify them.
+        if self.env['ir.model.data'].xmlid_to_object('pos_blackbox_be.product_product_work_in'):
+            to_remove.append(self.env['ir.model.data'].xmlid_to_object('pos_blackbox_be.product_product_work_in').product_tmpl_id.id)
+            to_remove.append(self.env['ir.model.data'].xmlid_to_object('pos_blackbox_be.product_product_work_out').product_tmpl_id.id)
+
+        product_templates = ProductTemplate.search([('id', 'not in', to_remove)])
+
         # if stock is installed we can't archive since there is orderpoints
         if hasattr(self.env['product.product'], 'orderpoint_ids'):
             product_templates.mapped('product_variant_ids.orderpoint_ids').write({'active': False})
+        # if pos loyalty is installed we can't archive since there are loyalty rules and rewards
+        if 'loyalty.rule' in self.env:
+            rules = self.env['loyalty.rule'].search([])
+            rules.unlink()
+        if 'loyalty.reward' in self.env:
+            rewards = self.env['loyalty.reward'].search([])
+            rewards.unlink()
         product_templates.write({'active': False})
         self.p1, self.p2, self.p3, self.p4 = ProductTemplate.create([{
             'name': 'First Product',
@@ -33,8 +48,14 @@ class TestWebsiteSequence(odoo.tests.TransactionCase):
 
     def _search_website_sequence_order(self, order='ASC'):
         '''Helper method to limit the search only to the setUp products'''
-        return self.env['product.template'].search([
-        ], order='website_sequence %s' % (order))
+
+        # We have to remove those ids because you're unable to modify them.
+        to_remove = []
+        if self.env['ir.model.data'].xmlid_to_object('pos_blackbox_be.product_product_work_in'):
+            to_remove.append(self.env['ir.model.data'].xmlid_to_object('pos_blackbox_be.product_product_work_in').product_tmpl_id.id)
+            to_remove.append(self.env['ir.model.data'].xmlid_to_object('pos_blackbox_be.product_product_work_out').product_tmpl_id.id)
+
+        return self.env['product.template'].search([('id', 'not in', to_remove)], order='website_sequence %s' % (order))
 
     def _check_correct_order(self, products):
         product_ids = self._search_website_sequence_order().ids

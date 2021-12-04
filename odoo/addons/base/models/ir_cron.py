@@ -70,10 +70,18 @@ class ir_cron(models.Model):
         values['usage'] = 'ir_cron'
         return super(ir_cron, self).create(values)
 
+    @api.model
+    def default_get(self, fields_list):
+        # only 'code' state is supported for cron job so set it as default
+        if not self._context.get('default_state'):
+            self = self.with_context(default_state='code')
+        return super(ir_cron, self).default_get(fields_list)
+
     def method_direct_trigger(self):
         self.check_access_rights('write')
         for cron in self:
-            self.with_user(cron.user_id).ir_actions_server_id.run()
+            cron.with_user(cron.user_id).with_context(lastcall=cron.lastcall).ir_actions_server_id.run()
+            cron.lastcall = fields.Datetime.now()
         return True
 
     @api.model

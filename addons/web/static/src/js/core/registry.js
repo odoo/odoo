@@ -68,7 +68,12 @@ var Registry = Class.extend({
      * @returns {Object}
      */
     entries: function () {
-        return Object.create(this.map);
+        var entries = {};
+        var keys = this.keys();
+        for (var i = 0; i < keys.length; i++) {
+            entries[keys[i]] = this.map[keys[i]];
+        }
+        return entries;
     },
     /**
      * Returns the value associated to the given key.
@@ -105,7 +110,11 @@ var Registry = Class.extend({
     keys: function () {
         var self = this;
         if (!this._sortedKeys) {
-            this._sortedKeys = _.sortBy(Object.keys(this.map), function (key) {
+            var keys = [];
+            for (var key in this.map) {
+                keys.push(key);
+            }
+            this._sortedKeys = _.sortBy(keys, function (key) {
                 return self._scoreMapping[key] || 0;
             });
         }

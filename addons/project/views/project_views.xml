@@ -459,7 +459,7 @@
                     <div class="oe_title pr-0">
                         <h1 class="d-flex flex-row justify-content-between">
                             <field name="priority" widget="priority" class="mr-3"/>
-                            <field name="name" class="o_task_name text-truncate" placeholder="Task Title..."/>
+                            <field name="name" class="o_task_name text-truncate" placeholder="Task Title..." default_focus="1" />
                             <field name="kanban_state" widget="state_selection" class="ml-auto"/>
                         </h1>
                     </div>
@@ -482,7 +482,7 @@
                     <notebook>
                         <page name="description_page" string="Description">
                             <field name="description" type="html"/>
-                            <div class="oe_clear"/>
+                            <div class="d-none oe_clear"/>
                         </page>
                         <page name="extra_info" string="Extra Info">
                             <group>

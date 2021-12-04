@@ -88,7 +88,7 @@ td:not([align]) {
         background-color: $o-mm-def-btn-bg;
     }
 
-    a, .btn.btn-link {
+    a:not(.btn), .btn.btn-link {
         color: $o-mm-def-color-epsilon;
         font-weight: bold;
         text-decoration: none !important;
@@ -118,7 +118,7 @@ td:not([align]) {
             background-color: $o-mm-def-color-eta;
         }
 
-        a, .btn.btn-link {
+        a:not(.btn), .btn.btn-link {
             color: $o-mm-def-color-eta;
         }
     }
@@ -137,7 +137,8 @@ td:not([align]) {
     }
     .o_mail_header_social {
         margin-right: 20px;
-        a {
+
+        a:not(.btn), .btn.btn-link {
             display: inline-block;
         }
     }

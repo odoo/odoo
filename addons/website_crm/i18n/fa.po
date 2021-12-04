@@ -1,20 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_crm
+# 	* website_crm
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Hamid Darabi, 2018
-# Arash Tarighati <arash.tgi@gmail.com>, 2018
-# Faraz Sadri Alamdari <ifarazir@gmail.com>, 2018
-# Hamed Mohammadi <hamed@dehongi.com>, 2018
+# Martin Trigaux, 2020
+# Hamid Darabi, 2020
+# Arash Tarighati <arash.tgi@gmail.com>, 2020
+# Hamed Mohammadi <hamed@dehongi.com>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2018\n"
+"POT-Creation-Date: 2019-09-23 11:31+0000\n"
+"PO-Revision-Date: 2019-08-26 09:15+0000\n"
+"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2020\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,10 +23,14 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_thanks_ir_ui_view
-#: model_terms:website.page,arch_db:website_crm.contactus_thanks
-msgid "&amp;times;"
-msgstr "&amp;times;"
+#: model:ir.model.fields,field_description:website_crm.field_website_visitor__lead_count
+msgid "# Leads"
+msgstr "# سرنخ‌ها"
+
+#. module: website_crm
+#: model:ir.model.fields,field_description:website_crm.field_crm_lead__visitor_page_count
+msgid "# Page Views"
+msgstr "# بازدید صفحه"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
@@ -34,14 +38,28 @@ msgid "Add a contact form in the"
 msgstr "افزودن فرم تماس در"
 
 #. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/js/website_crm_editor.js:0
+#, python-format
+msgid "Assign leads/opportunities to a sales channel."
+msgstr "محول کردن سرنخ‌ها/فرصت‌ها به یک کانال فروش"
+
+#. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/js/website_crm_editor.js:0
+#, python-format
+msgid "Assign leads/opportunities to a salesperson."
+msgstr "محول کردن سرنخ‌ها/فرصت‌ها به فروشنده"
+
+#. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "Communication"
-msgstr "رسانگرش"
+msgstr "ارتباطات"
 
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "تنظیمات پیکربندی"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
@@ -62,12 +80,12 @@ msgstr "تیم فروش اصلی"
 #: model:ir.model.fields,help:website_crm.field_res_config_settings__crm_default_team_id
 #: model:ir.model.fields,help:website_crm.field_website__crm_default_team_id
 msgid "Default Sales Team for new leads created through the Contact Us form."
-msgstr ""
+msgstr "تیم فروش پیشفرض برای سرنخ‌های جدید ایجاد شده از طریق فرم تماس با ما"
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_website__crm_default_team_id
 msgid "Default Sales Teams"
-msgstr ""
+msgstr "تیم‌های فروش پیشفرض"
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_res_config_settings__crm_default_user_id
@@ -79,10 +97,13 @@ msgstr "فروشنده پیشفرض"
 #: model:ir.model.fields,help:website_crm.field_res_config_settings__crm_default_user_id
 #: model:ir.model.fields,help:website_crm.field_website__crm_default_user_id
 msgid "Default salesperson for new leads created through the Contact Us form."
-msgstr ""
+msgstr "فروشنده پیشفرض برای سرنخ‌های جدید ایجاد شده از طریق فرم تماس با ما"
 
 #. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm.xml:0
 #: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+#, python-format
 msgid "Email"
 msgstr "پست الکترونیک"
 
@@ -92,12 +113,39 @@ msgid "Lead/Opportunity"
 msgstr "سرنخ / فرصت"
 
 #. module: website_crm
+#: model:ir.actions.act_window,name:website_crm.website_visitor_crm_lead_action
+#: model:ir.model.fields,field_description:website_crm.field_website_visitor__lead_ids
+#: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_form
+#: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_search
+msgid "Leads"
+msgstr "سرنخ ها"
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_kanban
+msgid "Leads/Opportunities"
+msgstr "سرنخ ها / فرصت ها"
+
+#. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "New messages are managed as leads or opportunities in your CRM app."
 msgstr ""
+"پیام‌های جدید به عنوان سرنخ‌های جدید در برنامه CRM شما مدیریت می‌شوند."
 
 #. module: website_crm
+#: model_terms:ir.actions.act_window,help:website_crm.website_visitor_crm_lead_action
+msgid "No lead linked for this visitor"
+msgstr "هیچ سرنخی به این بازدید کننده لینک نشده"
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.crm_lead_view_form
+msgid "Page views"
+msgstr "بازدیدهای صفحه"
+
+#. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm.xml:0
 #: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+#, python-format
 msgid "Phone Number"
 msgstr "شماره تلفن"
 
@@ -107,6 +155,15 @@ msgid ""
 "Please set a Sales Team for the website. Otherwise you can't follow related "
 "events."
 msgstr ""
+"لطفا یک تیم فروش برای وبسایت تعیین کنید. در غیر اینصورت نمی‌توانید رویدادهای"
+" مرتبط را دنبال کنید."
+
+#. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/js/website_crm_editor.js:0
+#, python-format
+msgid "Sales Channel"
+msgstr "کانال فروش"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
@@ -114,7 +171,10 @@ msgid "Sales Team"
 msgstr "تیم فروش"
 
 #. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/js/website_crm_editor.js:0
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
+#, python-format
 msgid "Salesperson"
 msgstr "فروشنده"
 
@@ -124,26 +184,27 @@ msgid "Send"
 msgstr "ارسال"
 
 #. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm.xml:0
 #: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+#, python-format
 msgid "Subject"
 msgstr "موضوع"
 
 #. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_thanks_ir_ui_view
-#: model_terms:website.page,arch_db:website_crm.contactus_thanks
-msgid "Thanks!"
-msgstr "با تشکر!"
+#: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_search
+msgid "Visitors"
+msgstr "بازدید کنندگان"
 
 #. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_thanks_ir_ui_view
-#: model_terms:website.page,arch_db:website_crm.contactus_thanks
-msgid "We will get back to you shortly."
-msgstr "به زودی با شما تماس خواهیم گرفت."
+#: model:ir.model.fields,field_description:website_crm.field_crm_lead__visitor_ids
+msgid "Web Visitors"
+msgstr "بازدید کنندگان وب"
 
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_website
 msgid "Website"
-msgstr "تارنما"
+msgstr "وبسایت"
 
 #. module: website_crm
 #: model:ir.actions.act_url,name:website_crm.action_open_website
@@ -151,25 +212,33 @@ msgid "Website Contact Form"
 msgstr "فرم ارتباط با ما در وب‌سایت"
 
 #. module: website_crm
+#: model:ir.model,name:website_crm.model_website_visitor
+msgid "Website Visitor"
+msgstr "بازدید کننده وبسایت"
+
+#. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm.xml:0
 #: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+#, python-format
 msgid "Your Company"
 msgstr "شرکت شما"
 
 #. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm.xml:0
 #: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+#, python-format
 msgid "Your Name"
-msgstr "نام"
+msgstr "نام شما"
 
 #. module: website_crm
+#. openerp-web
+#: code:addons/website_crm/static/src/xml/website_crm.xml:0
 #: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
+#, python-format
 msgid "Your Question"
-msgstr "پرسش"
-
-#. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_thanks_ir_ui_view
-#: model_terms:website.page,arch_db:website_crm.contactus_thanks
-msgid "Your message has been sent successfully."
-msgstr "پیام شما با موفقیت ارسال شد."
+msgstr "پرسش شما"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form

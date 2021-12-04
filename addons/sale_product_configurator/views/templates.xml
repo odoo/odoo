@@ -37,7 +37,7 @@
                                     "display_currency": (pricelist or product).currency_id
                                 }'/>
                         </h2>
-                        <div class="css_quantity input-group">
+                        <div class="css_quantity input-group" t-if="product.visible_qty_configurator">
                             <div class="input-group-prepend">
                                 <button t-attf-href="#" class="btn btn-primary js_add_cart_json d-none d-md-inline-block" aria-label="Remove one" title="Remove one">
                                     <i class="fa fa-minus"></i>

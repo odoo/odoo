@@ -24,6 +24,25 @@ class TestSaleOrder(TestCommonSaleNoChart):
         group_employee = cls.env.ref('base.group_user')
         cls.user_manager.write({'groups_id': [(6, 0, [group_salemanager.id, group_employee.id])]})
         cls.user_employee.write({'groups_id': [(6, 0, [group_salesman.id, group_employee.id])]})
+        cls.crm_team0 = cls.env['crm.team'].create({
+            'name': 'crm team 0',
+            'company_id': cls.env.user.company_id.id,
+        })
+        cls.crm_team1 = cls.env['crm.team'].create({
+            'name': 'crm team 1',
+            'company_id': cls.env.user.company_id.id,
+        })
+        cls.user_in_team = cls.env['res.users'].create({
+            'email': 'team0user@example.com',
+            'login': 'team0user',
+            'name': 'User in Team 0',
+            'sale_team_id': cls.crm_team0.id
+        })
+        cls.user_not_in_team = cls.env['res.users'].create({
+            'email': 'noteamuser@example.com',
+            'login': 'noteamuser',
+            'name': 'User Not In Team',
+        })
 
         # set up accounts and products and journals
         cls.setUpAdditionalAccounts()
@@ -272,6 +291,7 @@ class TestSaleOrder(TestCommonSaleNoChart):
             'name': 'company 2',
             'parent_id': company_1.id,
         })
+        user_demo.company_ids = (company_1 | company_2).ids
 
         tax_company_1 = self.env['account.tax'].create({
             'name': 'T1',
@@ -288,6 +308,7 @@ class TestSaleOrder(TestCommonSaleNoChart):
         product_shared = self.env['product.template'].create({
             'name': 'shared product',
             'taxes_id': [(6, False, [tax_company_1.id, tax_company_2.id])],
+            'property_account_income_id': self.account_receivable.id,
         })
 
         so_1 = self.env['sale.order'].with_user(user_demo.id).create({
@@ -300,6 +321,14 @@ class TestSaleOrder(TestCommonSaleNoChart):
 
         self.assertEqual(set(so_1.order_line.tax_id.ids), set([tax_company_1.id]),
             'Only taxes from the right company are put by default')
+        so_1.action_confirm()
+        # i'm not interested in groups/acls, but in the multi-company flow only
+        # the sudo is there for that and does not impact the invoice that gets created
+        # the goal here is to invoice in company 1 (because the order is in company 1) while being
+        # 'mainly' in company 2 (through the context), the invoice should be in company 1
+        inv=so_1.sudo().with_context(allowed_company_ids=[company_2.id, company_1.id])._create_invoices()
+        self.assertEqual(inv.company_id, company_1, 'invoices should be created in the company of the SO, not the main company of the context')
+
 
     def test_reconciliation_with_so(self):
         # create SO
@@ -373,3 +402,219 @@ class TestSaleOrder(TestCommonSaleNoChart):
         res = wiz.create_invoices()
         # Check that exactly 2 invoices are generated
         self.assertEqual(len(res['domain'][0][2]),2, "Grouping invoicing 3 orders for the same partner with 2 currencies should create exactly 2 invoices")
+
+    def test_multi_currency_discount(self):
+        """Verify the currency used for pricelist price & discount computation."""
+        products = self.env["product.product"].search([], limit=2)
+        product_1 = products[0]
+        product_2 = products[1]
+
+        # Make sure the company is in USD
+        main_company = self.env.ref('base.main_company')
+        main_curr = main_company.currency_id
+        other_curr = (self.env.ref('base.USD') + self.env.ref('base.EUR')) - main_curr
+        # main_company.currency_id = other_curr # product.currency_id when no company_id set
+        other_company = self.env["res.company"].create({
+            "name": "Test",
+            "currency_id": other_curr.id
+        })
+        user_in_other_company = self.env["res.users"].create({
+            "company_id": other_company.id,
+            "company_ids": [(6, 0, [other_company.id])],
+            "name": "E.T",
+            "login": "hohoho",
+        })
+        user_in_other_company.groups_id |= self.env.ref('product.group_discount_per_so_line')
+        self.env['res.currency.rate'].search([]).unlink()
+        self.env['res.currency.rate'].create({
+            'name': '2010-01-01',
+            'rate': 2.0,
+            'currency_id': main_curr.id,
+            "company_id": False,
+        })
+
+        product_1.company_id = False
+        product_2.company_id = False
+
+        self.assertEqual(product_1.currency_id, main_curr)
+        self.assertEqual(product_2.currency_id, main_curr)
+        self.assertEqual(product_1.cost_currency_id, main_curr)
+        self.assertEqual(product_2.cost_currency_id, main_curr)
+
+        product_1_ctxt = product_1.with_env(self.env(user=user_in_other_company.id))
+        product_2_ctxt = product_2.with_env(self.env(user=user_in_other_company.id))
+        self.assertEqual(product_1_ctxt.currency_id, main_curr)
+        self.assertEqual(product_2_ctxt.currency_id, main_curr)
+        self.assertEqual(product_1_ctxt.cost_currency_id, other_curr)
+        self.assertEqual(product_2_ctxt.cost_currency_id, other_curr)
+
+        product_1.lst_price = 100.0
+        product_2_ctxt.standard_price = 10.0 # cost is company_dependent
+
+        pricelist = self.env["product.pricelist"].create({
+            "name": "Test multi-currency",
+            "discount_policy": "without_discount",
+            "currency_id": other_curr.id,
+            "item_ids": [
+                (0, 0, {
+                    "base": "list_price",
+                    "product_id": product_1.id,
+                    "compute_price": "percentage",
+                    "percent_price": 20,
+                }),
+                (0, 0, {
+                    "base": "standard_price",
+                    "product_id": product_2.id,
+                    "compute_price": "percentage",
+                    "percent_price": 10,
+                })
+            ]
+        })
+
+        # Create a SO in the other company
+        ##################################
+        # product_currency = main_company.currency_id when no company_id on the product
+
+        # CASE 1:
+        # company currency = so currency
+        # product_1.currency != so currency
+        # product_2.cost_currency_id = so currency
+        sales_order = product_1_ctxt.with_context(mail_notrack=True, mail_create_nolog=True).env["sale.order"].create({
+            "partner_id": self.env.user.partner_id.id,
+            "pricelist_id": pricelist.id,
+            "order_line": [
+                (0, 0, {
+                    "product_id": product_1.id,
+                    "product_uom_qty": 1.0
+                }),
+                (0, 0, {
+                    "product_id": product_2.id,
+                    "product_uom_qty": 1.0
+                })
+            ]
+        })
+        for line in sales_order.order_line:
+            # Create values autofill does not compute discount.
+            line._onchange_discount()
+
+        so_line_1 = sales_order.order_line[0]
+        so_line_2 = sales_order.order_line[1]
+        self.assertEqual(so_line_1.discount, 20)
+        self.assertEqual(so_line_1.price_unit, 50.0)
+        self.assertEqual(so_line_2.discount, 10)
+        self.assertEqual(so_line_2.price_unit, 10)
+
+        # CASE 2
+        # company currency != so currency
+        # product_1.currency == so currency
+        # product_2.cost_currency_id != so currency
+        pricelist.currency_id = main_curr
+        sales_order = product_1_ctxt.with_context(mail_notrack=True, mail_create_nolog=True).env["sale.order"].create({
+            "partner_id": self.env.user.partner_id.id,
+            "pricelist_id": pricelist.id,
+            "order_line": [
+                # Verify discount is considered in create hack
+                (0, 0, {
+                    "product_id": product_1.id,
+                    "product_uom_qty": 1.0
+                }),
+                (0, 0, {
+                    "product_id": product_2.id,
+                    "product_uom_qty": 1.0
+                })
+            ]
+        })
+        for line in sales_order.order_line:
+            line._onchange_discount()
+
+        so_line_1 = sales_order.order_line[0]
+        so_line_2 = sales_order.order_line[1]
+        self.assertEqual(so_line_1.discount, 20)
+        self.assertEqual(so_line_1.price_unit, 100.0)
+        self.assertEqual(so_line_2.discount, 10)
+        self.assertEqual(so_line_2.price_unit, 20)
+
+    def test_assign_sales_team_from_partner_user(self):
+        """Use the team from the customer's sales person, if it is set"""
+        partner = self.env['res.partner'].create({
+            'name': 'Customer of User In Team',
+            'user_id': self.user_in_team.id,
+            'team_id': self.crm_team1.id,
+        })
+        sale_order = self.env['sale.order'].create({
+            'partner_id': partner.id,
+        })
+        sale_order.onchange_partner_id()
+        self.assertEqual(sale_order.team_id.id, self.crm_team0.id, 'Should assign to team of sales person')
+
+    def test_assign_sales_team_from_partner_team(self):
+        """If no team set on the customer's sales person, fall back to the customer's team"""
+        partner = self.env['res.partner'].create({
+            'name': 'Customer of User Not In Team',
+            'user_id': self.user_not_in_team.id,
+            'team_id': self.crm_team1.id,
+        })
+        sale_order = self.env['sale.order'].create({
+            'partner_id': partner.id,
+        })
+        sale_order.onchange_partner_id()
+        self.assertEqual(sale_order.team_id.id, self.crm_team1.id, 'Should assign to team of partner')
+
+    def test_assign_sales_team_when_changing_user(self):
+        """When we assign a sales person, change the team on the sales order to their team"""
+        sale_order = self.env['sale.order'].create({
+            'user_id': self.user_not_in_team.id,
+            'partner_id': self.partner_customer_usd.id,
+            'team_id': self.crm_team1.id
+        })
+        sale_order.user_id = self.user_in_team
+        sale_order.onchange_user_id()
+        self.assertEqual(sale_order.team_id.id, self.crm_team0.id, 'Should assign to team of sales person')
+
+    def test_keep_sales_team_when_changing_user_with_no_team(self):
+        """When we assign a sales person that has no team, do not reset the team to default"""
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_customer_usd.id,
+            'team_id': self.crm_team1.id
+        })
+        sale_order.user_id = self.user_not_in_team
+        sale_order.onchange_user_id()
+        self.assertEqual(sale_order.team_id.id, self.crm_team1.id, 'Should not reset the team to default')
+
+    def test_discount_and_untaxed_subtotal(self):
+        """When adding a discount on a SO line, this test ensures that the untaxed amount to invoice is
+        equal to the untaxed subtotal"""
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_customer_usd.id,
+            'order_line': [(0, 0, {
+                'product_id': self.product_deliver.id,
+                'product_uom_qty': 38,
+                'price_unit': 541.26,
+                'discount': 2.00,
+            })]
+        })
+        sale_order.action_confirm()
+        line = sale_order.order_line
+        self.assertEqual(line.untaxed_amount_to_invoice, 0)
+
+        line.qty_delivered = 38
+        # (541.26 - 0.02 * 541.26) * 38 = 20156.5224 ~= 20156.52
+        self.assertEqual(line.price_subtotal, 20156.52)
+        self.assertEqual(line.untaxed_amount_to_invoice, line.price_subtotal)
+
+        # Same with an included-in-price tax
+        sale_order = sale_order.copy()
+        line = sale_order.order_line
+        line.tax_id = [(0, 0, {
+            'name': 'Super Tax',
+            'amount_type': 'percent',
+            'amount': 15.0,
+            'price_include': True,
+        })]
+        sale_order.action_confirm()
+        self.assertEqual(line.untaxed_amount_to_invoice, 0)
+
+        line.qty_delivered = 38
+        # (541,26 / 1,15) * ,98 * 38 = 17527,410782609 ~= 17527.41
+        self.assertEqual(line.price_subtotal, 17527.41)
+        self.assertEqual(line.untaxed_amount_to_invoice, line.price_subtotal)

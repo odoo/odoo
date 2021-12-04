@@ -77,7 +77,7 @@
     <!-- Date Field -->
     <t t-name="website_form.field_date">
         <t t-call="website_form.field">
-            <t t-set="datepickerID" t-value="_.uniqueId('datepicker')"/>
+            <t t-set="datepickerID" t-value="'datepicker' + Math.random().toString().substring(2)"/>
             <div class="o_website_form_date input-group date" t-att-id="datepickerID" data-target-input="nearest">
                 <input
                         type="text"
@@ -96,7 +96,7 @@
     <!-- Datetime Field -->
     <t t-name="website_form.field_datetime">
         <t t-call="website_form.field">
-            <t t-set="datetimepickerID" t-value="_.uniqueId('datetimepicker')"/>
+            <t t-set="datetimepickerID" t-value="'datetimepicker' + Math.random().toString().substring(2)"/>
             <div class="o_website_form_datetime input-group date" t-att-id="datetimepickerID" data-target-input="nearest">
                 <input
                         type="text"

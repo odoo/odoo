@@ -59,7 +59,7 @@ var Wysiwyg = Widget.extend({
      * @override
      **/
     willStart: function () {
-        new SummernoteManager(this);
+        this._summernoteManager = new SummernoteManager(this);
         this.$target = this.$el;
         return this._super();
     },
@@ -130,7 +130,9 @@ var Wysiwyg = Widget.extend({
         $editable.find('[title=""]').removeAttr('title');
         $editable.find('[alt=""]').removeAttr('alt');
         $editable.find('[data-original-title=""]').removeAttr('data-original-title');
-        $editable.find('a.o_image, span.fa, i.fa').html('');
+        if (!options || !options['style-inline']) {
+            $editable.find('a.o_image, span.fa, i.fa').html('');
+        }
         $editable.find('[aria-describedby]').removeAttr('aria-describedby').removeAttr('data-original-title');
         return $editable.html();
     },
@@ -142,15 +144,24 @@ var Wysiwyg = Widget.extend({
      * @returns {Promise}
      *      - resolve with true if the content was dirty
      */
-    save: function () {
+    save: function (options) {
         var isDirty = this.isDirty();
-        var html = this.getValue();
+        var html = this.getValue(options);
         if (this.$target.is('textarea')) {
             this.$target.val(html);
         } else {
             this.$target.html(html);
         }
         return Promise.resolve({isDirty:isDirty, html:html});
+    },
+    /**
+     * Create/Update cropped attachments.
+     *
+     * @param {jQuery} $editable
+     * @returns {Promise}
+     */
+    saveCroppedImages: function ($editable) {
+        return this._summernoteManager.saveCroppedImages($editable);
     },
     /**
      * @param {String} value

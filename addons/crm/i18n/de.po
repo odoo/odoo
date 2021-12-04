@@ -6,20 +6,24 @@
 # Marco Tarsia <marco.y.tarsia@gmail.com>, 2019
 # Ralf Hilgenstock <rh@dialoge.info>, 2019
 # Wolfgang Taferner, 2019
-# Ermin Trevisan <trevi@twanda.com>, 2019
 # JackTheHunter <Maximilian.N98@gmail.com>, 2019
 # Mathias Markl <mathias.markl@mukit.at>, 2019
 # Andreas Stauder <andreas.stauder@brain-tec.ch>, 2019
-# darenkster <inactive+darenkster@transifex.com>, 2019
+# f91684c3ff9ec3e650d5c8461e534581_686eae3 <449b96d9f63071f94d89e129677b83de_366193>, 2019
 # Jan Meyer, 2019
 # Johannes Croe <jcr@odoo.com>, 2019
 # Chris Egal <sodaswed@web.de>, 2019
 # Bettina Pfeifer <betzilla@web.de>, 2019
 # Sebastian <shu@odoo.com>, 2019
-# Martin Trigaux, 2019
 # Thorsten Vocks <thorsten.vocks@openbig.org>, 2019
 # Leon Grill <leg@odoo.com>, 2019
 # Patrick Heuel <patrick.heuel@odoo-bs.com>, 2019
+# Jérôme JEK <jek@odoo.com>, 2020
+# Martin Trigaux, 2020
+# EugenBrodskiSAMSAIT <eugen.brodski@samsa-it.de>, 2020
+# Ermin Trevisan <trevi@twanda.com>, 2021
+# Andreas Schmidt <schmigo@gmail.com>, 2021
+# Friederike Fasterling-Nesselbosch, 2021
 # 
 msgid ""
 msgstr ""
@@ -27,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Patrick Heuel <patrick.heuel@odoo-bs.com>, 2019\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -202,6 +206,16 @@ msgstr ""
 "Antworten, die automatisch an diesen Fall angehängt werden.</p><p "
 "class=\"mb0\">Tippe<i>'@'</i> um Personen zu erwähnen - genauso einfach wie "
 "in deinem E-Mail Programm "
+
+#. module: crm
+#: code:addons/crm/models/crm_team.py:0
+#, python-format
+msgid ""
+"<p>As you don't belong to any Sales Team, Odoo opens the first one by "
+"default.</p>"
+msgstr ""
+"<p>Da Sie keinem Verkaufsteam angehören, öffnet Odoo standardmäßig das erste"
+" Team.</p>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -982,7 +996,7 @@ msgstr "Alle Interessenten automatisch anreichern"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__lead_enrich_auto
 msgid "Enrich lead automatically"
-msgstr ""
+msgstr "Interessenten automatisch anreichern"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__lead_enrich_auto__manual
@@ -1424,17 +1438,17 @@ msgstr "Interessenten Scoring Frequenzfelder"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_fields_str
 msgid "Lead Scoring Frequency Fields in String"
-msgstr ""
+msgstr "Interessenten Scoring Frequenzfelder in String"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_start_date
 msgid "Lead Scoring Starting Date"
-msgstr ""
+msgstr "Interessenten Scoring Startdatum"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_start_date_str
 msgid "Lead Scoring Starting Date in String"
-msgstr ""
+msgstr "Interessenten Scoring Startdatum in String"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_tag
@@ -1583,7 +1597,7 @@ msgstr "Verloren"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_scoring_frequency__lost_count
 msgid "Lost Count"
-msgstr ""
+msgstr "Verloren Anzahl"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_lost_action
@@ -1756,6 +1770,11 @@ msgid "My Pipeline"
 msgstr "Meine Pipeline"
 
 #. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
+msgid "Name"
+msgstr "Name"
+
+#. module: crm
 #: model:crm.stage,name:crm.stage_lead1
 msgid "New"
 msgstr "Neu"
@@ -1825,7 +1844,7 @@ msgstr "Kein Verkäufer"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_normalized
 msgid "Normalized Email"
-msgstr ""
+msgstr "Normalisierte E-Mail"
 
 #. module: crm
 #: model:crm.lost.reason,name:crm.lost_reason_3
@@ -1938,6 +1957,12 @@ msgstr ""
 "Kanälen der Vertriebspipeline zu erstellen."
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_partner__opportunity_count_ids
+#: model:ir.model.fields,field_description:crm.field_res_users__opportunity_count_ids
+msgid "Opportunities Count"
+msgstr "Anzahl Chancen"
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_amount
 msgid "Opportunities Revenues"
 msgstr "Verkaufschancen Umsatz"
@@ -1971,7 +1996,7 @@ msgstr "Chance"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_utm_campaign__opportunity_count
 msgid "Opportunity Count"
-msgstr ""
+msgstr "Chance-Anzahl"
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_create
@@ -1989,7 +2014,7 @@ msgstr "Verlorene Chance "
 #: model:mail.message.subtype,name:crm.mt_lead_restored
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead_restored
 msgid "Opportunity Restored"
-msgstr ""
+msgstr "Chance restauriert"
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead_stage
@@ -2015,7 +2040,7 @@ msgstr "Verlorene Chance"
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_restored
 msgid "Opportunity restored"
-msgstr ""
+msgstr "Chance restauriert"
 
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_won
@@ -2030,6 +2055,7 @@ msgstr "Andere"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_team_overdue_opportunity
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Overdue Opportunities"
 msgstr "Überfällige Chancen"
 
@@ -2083,7 +2109,7 @@ msgstr "Telefon"
 #: model:crm.lead.scoring.frequency.field,name:crm.frequency_field_phone_state
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone_state
 msgid "Phone Quality"
-msgstr ""
+msgstr "Telefon-Qualität"
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
@@ -2139,7 +2165,7 @@ msgstr ""
 #: model:ir.cron,cron_name:crm.website_crm_score_cron
 #: model:ir.cron,name:crm.website_crm_score_cron
 msgid "Predictive Lead Scoring: Rebuild Frequencies table"
-msgstr ""
+msgstr "Prädiktive Interessenten Scoring: Frequenztabelle wieder erstellen"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__priority
@@ -2159,7 +2185,7 @@ msgstr "Produkt"
 #. module: crm
 #: model:crm.stage,name:crm.stage_lead3
 msgid "Proposition"
-msgstr "Umsatzprognose"
+msgstr "Angebot"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__expected_revenue
@@ -2229,7 +2255,7 @@ msgstr "Verkäufe"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_leads
 msgid "Sales Person"
-msgstr ""
+msgstr "Verkäufer"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_team
@@ -2500,6 +2526,12 @@ msgid "Team Pipelines"
 msgstr "Team Pipelines"
 
 #. module: crm
+#: model:ir.model.fields,help:crm.field_res_partner__opportunity_count_ids
+#: model:ir.model.fields,help:crm.field_res_users__opportunity_count_ids
+msgid "Technical field used for stat button"
+msgstr ""
+
+#. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_id
 msgid ""
 "The email address associated with this channel. New emails received will "
@@ -2619,6 +2651,16 @@ msgstr "Diese Zielvorgabe existiert nicht."
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Title"
 msgstr "Titel"
+
+#. module: crm
+#: code:addons/crm/models/crm_lead.py:0
+#, python-format
+msgid ""
+"To prevent data loss, Leads and Opportunities can only be merged by groups "
+"of 5."
+msgstr ""
+"Um Datenverlust zu vermeiden, können Leads und Opportunities nur in 5er-"
+"Gruppen zusammengeführt werden."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -2852,7 +2894,7 @@ msgstr "Erfolgreich"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_scoring_frequency__won_count
 msgid "Won Count"
-msgstr ""
+msgstr "Erfolgreich Anzahl"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_users__target_sales_won

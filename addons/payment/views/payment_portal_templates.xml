@@ -51,8 +51,11 @@
                             <p><b>Amount:</b> <t t-esc="amount" t-options="{'widget': 'monetary', 'display_currency': currency}"/></p>
                             <t t-call="payment.payment_tokens_list" t-if="reference and amount and currency">
                                 <t t-set="mode" t-value="'payment'"/>
-                                <t t-set="prepare_tx_url" t-value="'/website_payment/transaction/v2/' + str(amount) + '/' + str(currency.id) + '/' + reference + '/' + str(partner_id)"/>
-                                <t t-set="form_action" t-value="'/website_payment/token/v2/' + str(amount) + '/' + str(currency.id) + '/' + reference + '/' + str(partner_id)"/>
+                                <t t-set="_overriden_reference" t-value="reference"/>
+                                <t t-set="reference" t-value="quote_plus(reference).replace('+','%20')"/>
+                                <t t-set="prepare_tx_url" t-value="'/website_payment/transaction/v2/' + str(amount) + '/' + str(currency.id) + '/' + reference + (('/' + str(partner_id)) if partner_id else '')"/>
+                                <t t-set="form_action" t-value="'/website_payment/token/v2/' + str(amount) + '/' + str(currency.id) + '/' + reference + (('/' + str(partner_id)) if partner_id else '')"/>
+                                <t t-set="reference" t-value="_overriden_reference"/>
                             </t>
                             <div t-if="not acquirers" class="alert alert-danger" role="alert">
                                 <p>No payment acquirer found.</p>
@@ -96,18 +99,18 @@
                                 <div t-if="(tx.acquirer_id.qr_code == True) and (tx.currency_id.name == 'EUR')">
                                     <div t-if="tx.acquirer_id.journal_id.bank_account_id.qr_code_valid">
                                         <h3>Or scan me with your banking app.</h3>
-                                        <img class="border border-dark rounded" t-att-src="tx.acquirer_id.journal_id.bank_account_id.build_qr_code_url(tx.amount,tx.reference)"/>
+                                        <img class="border border-dark rounded" t-att-src="tx.acquirer_id.journal_id.bank_account_id.build_qr_code_base64(tx.amount,tx.reference)"/>
                                     </div>
                                     <div t-if="(tx.acquirer_id.journal_id.bank_account_id.qr_code_valid == False)">
                                         <h3>The SEPA QR Code informations are not set correctly.</h3>
                                     </div>
                                 </div>
-                                <div>
-                                    <a role="button" t-attf-class="btn btn-#{status} float-right" href="/my/home"><i class="fa fa-arrow-circle-right"/> Back to My Account</a>
-                                </div>
-                                <div class="col-md-6 offset-md-6 text-muted mt16"><!-- FIXME should be in a row... -->
+                                <div class="col-md-9 offset-md-3 text-muted mt16 pl-md-2 pl-0"><!-- FIXME should be in a row... -->
                                     <span t-field="tx.acquirer_id.image_128" t-att-title="tx.acquirer_id.name" role="img" t-att-aria-label="tx.acquirer_id.name" t-options='{"widget": "image", "style":"max-width: 60px; display: inline-block"}'/>
                                     <span>Processed by <t t-esc="tx.acquirer_id.name"/>.</span>
+                                </div>
+                                <div>
+                                    <a role="button" t-attf-class="btn btn-#{status} float-right" href="/my/home"><i class="fa fa-arrow-circle-right"/> Back to My Account</a>
                                 </div>
                             </div>
                         </div>
@@ -133,7 +136,7 @@
             <div t-if="(payment_tx_id.acquirer_id.qr_code == True) and (payment_tx_id.currency_id.name == 'EUR')">
                 <div t-if="payment_tx_id.acquirer_id.journal_id.bank_account_id.qr_code_valid">
                     <h3>Or scan me with your banking app.</h3>
-                    <img class="border border-dark rounded" t-att-src="payment_tx_id.acquirer_id.journal_id.bank_account_id.build_qr_code_url(payment_tx_id.amount,payment_tx_id.reference)"/>
+                    <img class="border border-dark rounded" t-att-src="payment_tx_id.acquirer_id.journal_id.bank_account_id.build_qr_code_base64(payment_tx_id.amount,payment_tx_id.reference)"/>
                 </div>
                 <div t-if="(payment_tx_id.acquirer_id.journal_id.bank_account_id.qr_code_valid == False)">
                     <h3>The SEPA QR Code informations are not set correctly.</h3>

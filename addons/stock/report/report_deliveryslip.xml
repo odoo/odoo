@@ -18,25 +18,25 @@
                         <span t-field="o.name"/>
                     </h2>
                     <div class="row mt32 mb32">
-                        <div t-if="o.origin" class="col-auto">
+                        <div t-if="o.origin" class="col-auto" name="div_origin">
                             <strong>Order:</strong>
                             <p t-field="o.origin"/>
                         </div>
                         <div t-if="o.state" class="col-auto" name="div_sched_date">
                             <strong>Shipping Date:</strong>
                             <t t-if="o.state == 'done'">
-                                <p t-field="o.date_done" t-options='{"widget": "date"}'/>
+                                <p t-field="o.date_done"/>
                             </t>
                             <t t-if="o.state != 'done'">
-                                <p t-field="o.scheduled_date" t-options='{"widget": "date"}'/>
+                                <p t-field="o.scheduled_date"/>
                            </t>
                         </div>
                     </div>
                     <table class="table table-sm" t-if="o.state!='done'" name="stock_move_table">
                         <thead>
                             <tr>
-                                <th><strong>Product</strong></th>
-                                <th><strong>Quantity</strong></th>
+                                <th name="th_sm_product"><strong>Product</strong></th>
+                                <th name="th_sm_quantity"><strong>Quantity</strong></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -44,11 +44,8 @@
                             <tr t-foreach="lines" t-as="move">
                                 <td>
                                     <span t-field="move.product_id"/>
-                                    <p t-if="o.picking_type_code == 'outgoing'">
-                                        <span t-field="move.product_id.sudo().description_pickingout"/>
-                                    </p>
-                                    <p t-if="o.picking_type_code == 'incoming'">
-                                        <span t-field="move.product_id.sudo().description_pickingin"/>
+                                    <p t-if="move.description_picking != move.product_id.name">
+                                        <span t-field="move.description_picking"/>
                                     </p>
                                 </td>
                                 <td>
@@ -62,29 +59,26 @@
                         <t t-set="has_serial_number" t-value="o.move_line_ids.mapped('lot_id')" />
                         <thead>
                             <tr>
-                                <th><strong>Product</strong></th>
+                                <th name="th_sml_product"><strong>Product</strong></th>
                                 <th name="lot_serial" t-if="has_serial_number" groups="stock.group_lot_on_delivery_slip">
                                     Lot/Serial Number
                                 </th>
-                                <th class="text-center"><strong>Quantity</strong></th>
+                                <th name="th_sml_quantity" class="text-center"><strong>Quantity</strong></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr t-foreach="o.move_line_ids" t-as="move_line">
                                 <td>
                                     <span t-field="move_line.product_id"/>
-                                    <p t-if="o.picking_type_code == 'outgoing'">
-                                        <span t-field="move_line.product_id.sudo().description_pickingout"/>
-                                    </p>
-                                    <p t-if="o.picking_type_code == 'incoming'">
-                                        <span t-field="move_line.product_id.sudo().description_pickingin"/>
+                                    <p t-if="move_line.move_id.description_picking != move_line.product_id.name">
+                                        <span t-field="move_line.move_id.description_picking"/>
                                     </p>
                                 </td>
-                                <td t-if="has_serial_number and move_line.lot_name" groups="stock.group_lot_on_delivery_slip">
-                                    <span t-field="move_line.lot_name"/>
+                                <td t-if="has_serial_number and move_line.lot_id.name" groups="stock.group_lot_on_delivery_slip">
+                                    <span t-field="move_line.lot_id.name"/>
                                 </td>
                                 <td t-elif="has_serial_number" groups="stock.group_lot_on_delivery_slip">
-                                    <span t-field="move_line.lot_id.name"/>
+                                    <span t-field="move_line.lot_name"/>
                                 </td>
                                 <td class="text-center">
                                     <span t-field="move_line.qty_done"/>

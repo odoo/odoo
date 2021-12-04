@@ -15,5 +15,5 @@
     'depends': ['point_of_sale'],
     'qweb': ['static/src/xml/pos.xml'],
     'installable': True,
-    'license': 'OEEL-1',
+    'license': 'LGPL-3',
 }

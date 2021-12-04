@@ -5,12 +5,14 @@
 # Translators:
 # Ediz Duman <neps1192@gmail.com>, 2019
 # Martin Trigaux, 2019
+# Murat Kaplan <muratk@projetgrup.com>, 2019
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2019
 # Cem Uygur <cemuygur.beb@gmail.com>, 2019
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2019
 # Umur Akın <umura@projetgrup.com>, 2019
 # Levent Karakaş <levent@mektup.at>, 2019
-# Murat Kaplan <muratk@projetgrup.com>, 2019
+# Tugay Hatıl <tugayh@projetgrup.com>, 2020
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -18,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-09-23 11:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Murat Kaplan <muratk@projetgrup.com>, 2019\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,21 +33,21 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "%d records successfully imported..."
-msgstr ""
+msgstr "%d kayıtlar başarıyla içe aktarıldı ..."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "%d records tested..."
-msgstr ""
+msgstr "%d kayıtlar test edildi..."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "%d records were successfully imported"
-msgstr "%d kayıtlar başarıyla içe aktarıldı"
+msgstr "%d kayıt başarıyla içe aktarıldı"
 
 #. module: base_import
 #. openerp-web
@@ -100,14 +102,14 @@ msgstr "İçe Aktarım Haritalaması"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Batch limit"
-msgstr ""
+msgstr "Parti limiti"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Between rows %d and %d"
-msgstr ""
+msgstr "Satırların arasında %d ve %d"
 
 #. module: base_import
 #. openerp-web
@@ -122,12 +124,13 @@ msgstr "İptal"
 #, python-format
 msgid "Click 'Resume' to proceed with the import, resuming at line"
 msgstr ""
+"Satırda devam ederek, içe aktarımı sürdürmek için 'Devam Et' e tıklayın."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Column %s contains incorrect values (value: %s)"
-msgstr "Sütun %s yanlış değerler içeriyor (değer: %s)"
+msgstr "%s.sütun yanlış değerler içeriyor (değer: %s)"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -304,7 +307,7 @@ msgstr "Dt"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Due to its large size, the file will be imported by batches."
-msgstr ""
+msgstr "Büyük boyutu nedeniyle dosya gruplar halinde içe aktarılacaktır."
 
 #. module: base_import
 #. openerp-web
@@ -394,6 +397,8 @@ msgid ""
 "Found invalid image data, images should be imported as either URLs or "
 "base64-encoded data."
 msgstr ""
+"Geçersiz resim verileri bulundu, resimler URL veya base64 kodlu veri olarak "
+"içe aktarılmalıdır."
 
 #. module: base_import
 #. openerp-web
@@ -446,6 +451,9 @@ msgid ""
 "If the model uses openchatter, history tracking will set up subscriptions "
 "and send notifications during the import, but lead to a slower import."
 msgstr ""
+"Model openchatter kullanıyorsa, geçmiş izleme abonelikler kuracak ve içe "
+"aktarma sırasında bildirim gönderecek, ancak daha yavaş bir içe aktarmaya "
+"yol açacaktır."
 
 #. module: base_import
 #. openerp-web
@@ -492,12 +500,16 @@ msgid ""
 "may be too big for the system's configuration, try to split it (import less "
 "records per file)."
 msgstr ""
+"İçe aktarma zaman aşımına uğradı. Lütfen tekrar deneyiniz. Bu sorunla "
+"karşılaşmaya devam ediyorsanız, dosya sistem yapılandırması için çok büyük "
+"olabilir, bölmeyi deneyin (dosya başına daha az kayıt alın)."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
 msgstr ""
+"%(col)s.sütun %(row)s.satırdaki hücre değeri geçersiz : %(cell_value)s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import____last_update
@@ -518,7 +530,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child____last_update
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview____last_update
 msgid "Last Modified on"
-msgstr "Son Güncelleme"
+msgstr "Son Düzenleme"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__write_uid
@@ -656,7 +668,7 @@ msgstr "Devam Et"
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Row %d%s"
-msgstr ""
+msgstr "Satır %d%s"
 
 #. module: base_import
 #. openerp-web
@@ -664,7 +676,7 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "See possible values"
-msgstr ""
+msgstr "Olası değerleri görün"
 
 #. module: base_import
 #. openerp-web
@@ -711,7 +723,7 @@ msgstr "Boşluk"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Start at line"
-msgstr ""
+msgstr "Satırda çalıştır."
 
 #. module: base_import
 #. openerp-web
@@ -725,7 +737,7 @@ msgstr "Sekme"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Test"
-msgstr "Test Adı"
+msgstr "Test"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_preview
@@ -745,62 +757,62 @@ msgstr "Testler: Temel İçe Aktarım Testi, Salt Okunuru Olmayan Karakter"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_readonly
 msgid "Tests : Base Import Model, Character readonly"
-msgstr ""
+msgstr "Testler: Temel Aktarım Modeli, Salt okunur karakter"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_required
 msgid "Tests : Base Import Model, Character required"
-msgstr ""
+msgstr "Testler: Temel Aktarım Modeli, Zorunlu karakter"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_states
 msgid "Tests : Base Import Model, Character states"
-msgstr ""
+msgstr "Testler: Temel Aktarım Modeli, Karakter durumları"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_stillreadonly
 msgid "Tests : Base Import Model, Character still readonly"
-msgstr ""
+msgstr "Testler: Temel Aktarım Modeli, Karakter hala salt okunur"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o
 msgid "Tests : Base Import Model, Many to One"
-msgstr ""
+msgstr "Testler: Temel İçe Aktarım Modeli, One to Many"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_related
 msgid "Tests : Base Import Model, Many to One related"
-msgstr ""
+msgstr "Testler: Temel İçe Aktarım Modeli, One to Many ile ilişkili"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required
 msgid "Tests : Base Import Model, Many to One required"
-msgstr ""
+msgstr "Testler: Temel İçe Aktarım Modeli, zorunlu One to Many"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required_related
 msgid "Tests : Base Import Model, Many to One required related"
-msgstr ""
+msgstr "Testler: Temel İçe Aktarım Modeli, zorunlu One to Many ile ilişkili"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_o2m
 msgid "Tests : Base Import Model, One to Many"
-msgstr ""
+msgstr "Testler: Temel İçe Aktarım Modeli, One to Many"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_o2m_child
 msgid "Tests : Base Import Model, One to Many child"
-msgstr ""
+msgstr "Testler: Temel İçe Aktarım Modeli, One to Many"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_complex
 msgid "Tests: Base Import Model Complex"
-msgstr ""
+msgstr "Testler: Temel İçe Aktarım Modeli Kompleks"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_float
 msgid "Tests: Base Import Model Float"
-msgstr ""
+msgstr "Testler: Temel İçe Aktarım Modeli Float"
 
 #. module: base_import
 #. openerp-web
@@ -817,13 +829,15 @@ msgid ""
 "The first row\n"
 "                         contains the label of the column"
 msgstr ""
+"İlk satır\n"
+"                         sütunun etiketini içerir"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "This file has been successfully imported up to line %d."
-msgstr ""
+msgstr "%dsatır başarılı olarak içeri aktarıldı ."
 
 #. module: base_import
 #. openerp-web
@@ -891,6 +905,8 @@ msgid ""
 "Warning: ignores the labels line, empty lines and"
 "                             lines composed only of empty cells"
 msgstr ""
+"Uyarı: etiket satırını, boş satırları ve yalnızca boş hücrelerden oluşan "
+"satırları yok sayar"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -899,6 +915,8 @@ msgid ""
 "You can not import images via URL, check with your administrator or support "
 "for the reason."
 msgstr ""
+"URL yolu ile görüntüleri içeri aktaramazsınız, nedeni için yöneticinizle ya "
+"da destek ekibi ile kontrol edin."
 
 #. module: base_import
 #. openerp-web
@@ -906,6 +924,8 @@ msgstr ""
 #, python-format
 msgid "You can test or reload your file before resuming the import."
 msgstr ""
+"İçe aktarmaya devam etmeden önce dosyanızı test edebilir veya yeniden "
+"yükleyebilirsiniz."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -918,14 +938,14 @@ msgstr "İçeri aktarım yapabilmek için en az bir alanı yapılandırmalısın
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "at %d different rows:"
-msgstr ""
+msgstr " %d farklı satırlarda:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "at row %d%s"
-msgstr ""
+msgstr "satırda %d%s"
 
 #. module: base_import
 #. openerp-web
@@ -938,4 +958,4 @@ msgstr "sıralar %d ve %d arasında"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "unknown error code %s"
-msgstr ""
+msgstr "bilinmeyen hata kodu %s"

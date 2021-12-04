@@ -7,23 +7,23 @@
 # ilan kl <ilan@qaroads.co.il>, 2019
 # Itzik Ephraim <oranja@gmail.com>, 2019
 # Fishfur A Banter <fishfurbanter@gmail.com>, 2019
-# Moshe Flam <pashute@gmail.com>, 2019
 # ExcaliberX <excaliberx@gmail.com>, 2019
 # שהאב חוסיין <shhab89@gmail.com>, 2019
 # דודי מלכה <Dudimalka6@gmail.com>, 2019
 # Martin Trigaux, 2019
-# Yihya Hugirat <hugirat@gmail.com>, 2019
 # Amit Spilman <amit@laylinetech.com>, 2019
 # hed shefetr <hed@laylinetech.com>, 2019
+# Yihya Hugirat <hugirat@gmail.com>, 2020
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2020
+# Lilach Gilliam <lilach.gilliam@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-25 15:03+0000\n"
+"POT-Creation-Date: 2020-04-27 10:17+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2020\n"
+"Last-Translator: Lilach Gilliam <lilach.gilliam@gmail.com>, 2021\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,21 +36,21 @@ msgstr ""
 #: code:addons/web/static/src/js/views/calendar/calendar_model.js:0
 #, python-format
 msgid " [Me]"
-msgstr ""
+msgstr " [אני]"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
 #, python-format
 msgid " and "
-msgstr ""
+msgstr "ו"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/control_panel/search/search_facet.js:0
 #, python-format
 msgid " or "
-msgstr ""
+msgstr "או"
 
 #. module: web
 #. openerp-web
@@ -64,7 +64,7 @@ msgstr "רשומות"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "# Code editor"
-msgstr ""
+msgstr "מס' עורך קוד"
 
 #. module: web
 #. openerp-web
@@ -72,14 +72,14 @@ msgstr ""
 #: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
 #, python-format
 msgid "%(field)s %(operator)s"
-msgstr ""
+msgstr "%(field)s %(operator)s"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
 #, python-format
 msgid "%(field)s %(operator)s \"%(value)s\""
-msgstr ""
+msgstr "%(field)s %(operator)s \"%(value)s\""
 
 #. module: web
 #. openerp-web
@@ -123,41 +123,44 @@ msgid ""
 "                        &lt;body class=\"ie9\"&gt;\n"
 "                    &lt;![endif]--&gt;"
 msgstr ""
+"&lt;!--[if lt IE 10]&gt;\n"
+"                        &lt;body class=\"ie9\"&gt;\n"
+"                    &lt;![endif]--&gt;"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/notification.xml:0
 #, python-format
 msgid "&times;"
-msgstr "&פעמים;"
+msgstr "&times;"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/field_utils.js:0
 #, python-format
 msgid "'%s' is not a correct date"
-msgstr "'%s' אינו מידע תקין"
+msgstr "'%s' אינו תאריך תקין"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/core/time.js:0
 #, python-format
 msgid "'%s' is not a correct date, datetime nor time"
-msgstr "'%s' אינו מידע תקין, במבנה או זמן"
+msgstr "'%s' אינו תאריך במבנה תקין"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/field_utils.js:0
 #, python-format
 msgid "'%s' is not a correct datetime"
-msgstr "'%s' אינו בתצורת תאריך וזמן תקינה"
+msgstr "'%s' אינו במבנה תקין של תאריך ושעה"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/field_utils.js:0
 #, python-format
 msgid "'%s' is not a correct float"
-msgstr ""
+msgstr "'%s' אינו מספר עשרוני תקין"
 
 #. module: web
 #. openerp-web
@@ -171,14 +174,14 @@ msgstr "'%s' אינו מספר שלם תקין"
 #: code:addons/web/static/src/js/fields/field_utils.js:0
 #, python-format
 msgid "'%s' is not a correct monetary field"
-msgstr ""
+msgstr "'%s' אינו שדה כספי תקין"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/core/time.js:0
 #, python-format
 msgid "'%s' is not convertible to date, datetime nor time"
-msgstr "'%s' אינו ניתן להמרה לתאריך, ,תאריך וזמן או זמן"
+msgstr "'%s' אינו ניתן להמרה לתאריך, תאריך ושעה או לשעה"
 
 #. module: web
 #. openerp-web
@@ -193,60 +196,60 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "(count)"
-msgstr ""
+msgstr "(כמות)"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "(no string)"
-msgstr ""
+msgstr "(ללא מחרוזת)"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "(nolabel)"
-msgstr ""
+msgstr "(ללא תווית)"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/field_utils.js:0
 #, python-format
 msgid "1 record"
-msgstr ""
+msgstr "1 רשומה"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_background
 msgid "<i class=\"fa fa-at\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-at\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_background
 msgid "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Fiscal number\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Fiscal number\"/>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_background
 msgid "<i class=\"fa fa-globe\" role=\"img\" aria-label=\"Website\" title=\"Website\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-globe\" role=\"img\" aria-label=\"Website\" title=\"Website\"/>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_background
 msgid "<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Phone\" title=\"Phone\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Phone\" title=\"Phone\"/>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.frontend_layout
 msgid "<span>Copyright &amp;copy;</span>"
-msgstr ""
+msgstr "<span>כל הזכויות שמורות &amp;copy;</span>"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/control_panel/search/add_new_favorite_menu.js:0
 #, python-format
 msgid "A name for your favorite is required."
-msgstr ""
+msgstr "דרוש שם למועדף שלך."
 
 #. module: web
 #. openerp-web
@@ -256,6 +259,8 @@ msgid ""
 "A popup window has been blocked. You may need to change your browser "
 "settings to allow popup windows for this page."
 msgstr ""
+"חלון קופץ נחסם. יתכן שתצטרך לשנות את הגדרות הדפדפן שלך כדי לאפשר חלונות "
+"קופצים לדף זה."
 
 #. module: web
 #. openerp-web
@@ -265,20 +270,22 @@ msgid ""
 "A popup window with your report was blocked. You may need to change your "
 "browser settings to allow popup windows for this page."
 msgstr ""
+"חלון קופץ עם הדוח שלך נחסם. יתכן שתצטרך לשנות את הגדרות הדפדפן שלך כדי לאפשר"
+" חלונות קופצים לדף זה."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "ALL"
-msgstr ""
+msgstr "הכל"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "ANY"
-msgstr ""
+msgstr "כל"
 
 #. module: web
 #. openerp-web
@@ -313,7 +320,7 @@ msgstr "פעולה"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Action ID:"
-msgstr "פעולה מספר:"
+msgstr "מזהה פעולה:"
 
 #. module: web
 #: model:ir.model,name:web.model_ir_actions_act_window_view
@@ -325,7 +332,7 @@ msgstr "תצוגת חלון פעולה"
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "Activate Assets Debugging"
-msgstr ""
+msgstr "הפעל איתור באגים על נכסים"
 
 #. module: web
 #. openerp-web
@@ -348,7 +355,7 @@ msgstr "הוסף"
 #: code:addons/web/static/src/js/views/calendar/calendar_renderer.js:0
 #, python-format
 msgid "Add %s"
-msgstr ""
+msgstr "הוסף %s"
 
 #. module: web
 #. openerp-web
@@ -391,10 +398,11 @@ msgstr "הוסף שורה"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Add branch"
-msgstr ""
+msgstr "הוספת מעבר עמוד"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/kanban.xml:0
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Add column"
@@ -405,35 +413,35 @@ msgstr "הוסף עמודה"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Add filter"
-msgstr ""
+msgstr "הוסף מסנן"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Add new value"
-msgstr ""
+msgstr "הוסף ערך חדש"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Add node"
-msgstr ""
+msgstr "הוסף: "
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Add tag"
-msgstr ""
+msgstr "הוסף תגית"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Add to Favorites"
-msgstr ""
+msgstr "הוסף למועדפים"
 
 #. module: web
 #. openerp-web
@@ -454,14 +462,14 @@ msgstr "הוסף: "
 #: code:addons/web/static/src/js/fields/signature.js:0
 #, python-format
 msgid "Adopt Your Signature"
-msgstr ""
+msgstr "הגדר את חתימתך"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/signature.js:0
 #, python-format
 msgid "Adopt and Sign"
-msgstr ""
+msgstr "קבל וחתום"
 
 #. module: web
 #. openerp-web
@@ -475,7 +483,7 @@ msgstr "חיפוש מתקדם..."
 #: code:addons/web/static/src/js/core/dialog.js:0
 #, python-format
 msgid "Alert"
-msgstr "אזהרה"
+msgstr "התראה"
 
 #. module: web
 #. openerp-web
@@ -521,21 +529,21 @@ msgstr "כל המשתמשים"
 #: code:addons/web/static/src/xml/menu.xml:0
 #, python-format
 msgid "Alt"
-msgstr ""
+msgstr "Alt"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Among the"
-msgstr ""
+msgstr "בין ה"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/crash_manager.xml:0
 #, python-format
 msgid "An error occurred"
-msgstr ""
+msgstr "התרחשה שגיאה"
 
 #. module: web
 #. openerp-web
@@ -552,7 +560,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "And more"
-msgstr "הוסף עוד"
+msgstr "ועוד"
 
 #. module: web
 #. openerp-web
@@ -584,7 +592,7 @@ msgstr "ארכיון"
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Archive All"
-msgstr ""
+msgstr "העבר הכל לארכיון"
 
 #. module: web
 #. openerp-web
@@ -592,28 +600,28 @@ msgstr ""
 #, python-format
 msgid ""
 "Are you sure that you want to archive all the records from this column?"
-msgstr ""
+msgstr "האם אתה בטוח שאתה רוצה להעביר לארכיון את כל הרשומות מעמודה זו?"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/list/list_controller.js:0
 #, python-format
 msgid "Are you sure that you want to archive all the selected records?"
-msgstr ""
+msgstr "האם אתה בטוח שאתה רוצה להעביר לארכיון את כל הרשומות שנבחרו?"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/form/form_controller.js:0
 #, python-format
 msgid "Are you sure that you want to archive this record?"
-msgstr ""
+msgstr "האם אתה בטוח שברצונך להעביר רשומה זו לארכיון ?"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/kanban/kanban_column.js:0
 #, python-format
 msgid "Are you sure that you want to remove this column ?"
-msgstr "האם אתה בטוח להסיר עמודה זו?"
+msgstr "האם אתה בטוח שברצונך להסיר עמודה זו?"
 
 #. module: web
 #. openerp-web
@@ -635,14 +643,14 @@ msgstr "האם אתה בטוח שברצונך למחוק רשומה זו?"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Are you sure you want to perform the following update on those"
-msgstr ""
+msgstr "האם אתה בטוח שברצונך לבצע את העדכון על אלה"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Attach"
-msgstr ""
+msgstr "צרף"
 
 #. module: web
 #. openerp-web
@@ -664,7 +672,7 @@ msgstr "קובץ מצורף:"
 #: code:addons/web/static/src/xml/name_and_signature.xml:0
 #, python-format
 msgid "Auto"
-msgstr ""
+msgstr "אוטומטי"
 
 #. module: web
 #. openerp-web
@@ -675,7 +683,6 @@ msgstr "שדות זמינים"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/kanban.xml:0
 #: code:addons/web/static/src/xml/kanban.xml:0
 #: code:addons/web/static/src/xml/web_calendar.xml:0
@@ -689,14 +696,14 @@ msgstr "אווטר"
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #, python-format
 msgid "Badges"
-msgstr ""
+msgstr "תגים"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Bar Chart"
-msgstr ""
+msgstr "תרשים עמודות"
 
 #. module: web
 #: model:ir.model,name:web.model_base
@@ -715,7 +722,7 @@ msgstr "מבוסס על"
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "Become Superuser"
-msgstr ""
+msgstr "הפוך למשתמש על"
 
 #. module: web
 #: code:addons/web/controllers/main.py:0
@@ -760,7 +767,7 @@ msgstr "כפתור"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Button Type:"
-msgstr "סוג הכפתור:"
+msgstr "סוג כפתור:"
 
 #. module: web
 #. openerp-web
@@ -773,6 +780,9 @@ msgid ""
 "for all purposes when it is used on documents, including legally binding "
 "contracts."
 msgstr ""
+"בלחיצה על קבל וחתום, אני מסכים כי החתימה / ראשי התיבות שנבחרו יהיו ייצוג "
+"אלקטרוני תקף של החתימה / ראשי התיבות שנכתבו בכתב היד שלי לכל מטרה לשימוש "
+"במסמכים, כולל חוזים מחייבים מבחינה משפטית."
 
 #. module: web
 #. openerp-web
@@ -786,7 +796,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "CLEAR"
-msgstr ""
+msgstr "נקה"
 
 #. module: web
 #. openerp-web
@@ -797,10 +807,17 @@ msgstr "לוח שנה"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/web_calendar.xml:0
+#, python-format
+msgid "Calendar toolbar"
+msgstr "לוח שנה"
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/views/calendar/calendar_view.js:0
 #, python-format
 msgid "Calendar view has not defined 'date_start' attribute."
-msgstr ""
+msgstr "לתצוגת יומן אין תכונת  \"date_start\" מוגדרת."
 
 #. module: web
 #. openerp-web
@@ -824,14 +841,14 @@ msgstr "בטל"
 #: code:addons/web/static/src/js/views/graph/graph_renderer.js:0
 #, python-format
 msgid "Cannot render chart with mode : "
-msgstr ""
+msgstr "לא ניתן להציג תרשים עם מצב:"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/kanban/kanban_record.js:0
 #, python-format
 msgid "Card color: %s"
-msgstr ""
+msgstr "צבע כרטיס: %s"
 
 #. module: web
 #. openerp-web
@@ -841,7 +858,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Change Password"
-msgstr "שנה סיסמא"
+msgstr "שנה סיסמה"
 
 #. module: web
 #. openerp-web
@@ -852,24 +869,32 @@ msgstr "שנה ברירת מחדל:"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Change graph"
+msgstr "שנה תרשים"
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Checkbox"
-msgstr ""
+msgstr "תיבת סימון"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #, python-format
 msgid "Checkboxes"
-msgstr ""
+msgstr "תיבת סימון"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/widgets/colorpicker_dialog.js:0
 #, python-format
 msgid "Choose"
-msgstr ""
+msgstr "בחר"
 
 #. module: web
 #. openerp-web
@@ -893,7 +918,7 @@ msgstr "נקה אירועים"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Clear Signature"
-msgstr ""
+msgstr "נקה חתימה"
 
 #. module: web
 #. openerp-web
@@ -902,6 +927,9 @@ msgstr ""
 #: code:addons/web/static/src/js/widgets/data_export.js:0
 #: code:addons/web/static/src/js/widgets/domain_selector_dialog.js:0
 #: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/dialog.xml:0
+#: code:addons/web/static/src/xml/notification.xml:0
 #, python-format
 msgid "Close"
 msgstr "סגור"
@@ -911,7 +939,7 @@ msgstr "סגור"
 #: code:addons/web/static/src/js/views/kanban/kanban_renderer.js:0
 #, python-format
 msgid "Column %s"
-msgstr ""
+msgstr "עמודה %s"
 
 #. module: web
 #. openerp-web
@@ -921,9 +949,14 @@ msgid "Column title"
 msgstr "שם עמודה"
 
 #. module: web
+#: model:ir.model,name:web.model_res_company
+msgid "Companies"
+msgstr "חברות"
+
+#. module: web
 #: model_terms:ir.ui.view,arch_db:web.frontend_layout
 msgid "Company name"
-msgstr "שם החברה"
+msgstr "שם חברה"
 
 #. module: web
 #. openerp-web
@@ -944,7 +977,7 @@ msgstr "תנאי:"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Confirm New Password"
-msgstr "אימות הסיסמה החדשה"
+msgstr "אמת סיסמה חדשה"
 
 #. module: web
 #. openerp-web
@@ -993,11 +1026,19 @@ msgstr "בקרה"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Control panel toolbar"
+msgstr "סרגל הכלים של לוח הבקרה"
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #: code:addons/web/static/src/js/services/crash_manager.js:0
 #, python-format
 msgid "Copied !"
-msgstr ""
+msgstr "הועתק !"
 
 #. module: web
 #. openerp-web
@@ -1005,14 +1046,14 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Copy Text"
-msgstr ""
+msgstr "העתק טקסט"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/crash_manager.xml:0
 #, python-format
 msgid "Copy the full error to clipboard"
-msgstr ""
+msgstr "העתק את השגיאה המלאה ללוח"
 
 #. module: web
 #. openerp-web
@@ -1020,14 +1061,14 @@ msgstr ""
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Copy to Clipboard"
-msgstr ""
+msgstr "העתק ללוח"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/core/ajax.js:0
 #, python-format
 msgid "Could not connect to the server"
-msgstr ""
+msgstr "לא היה ניתן להתחבר לשרת"
 
 #. module: web
 #. openerp-web
@@ -1035,7 +1076,7 @@ msgstr ""
 #: code:addons/web/static/src/js/fields/signature.js:0
 #, python-format
 msgid "Could not display the selected image."
-msgstr "לא ניתן להציג את התמונה שנבחרה"
+msgstr "לא ניתן להציג את התמונה שנבחרה."
 
 #. module: web
 #. openerp-web
@@ -1098,7 +1139,7 @@ msgstr "צור \"<strong>%s</strong>\""
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #, python-format
 msgid "Create a %s"
-msgstr "יצירת %s"
+msgstr "צור %s"
 
 #. module: web
 #. openerp-web
@@ -1119,7 +1160,7 @@ msgstr "צור וערוך..."
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #, python-format
 msgid "Create and edit"
-msgstr "יצירה ועריכה"
+msgstr "צור וערוך"
 
 #. module: web
 #. openerp-web
@@ -1154,14 +1195,14 @@ msgstr "תאריך יצירה:"
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "Creation User:"
-msgstr ""
+msgstr "משתמש היצירה"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Current state"
-msgstr ""
+msgstr "מצב נוכחי"
 
 #. module: web
 #. openerp-web
@@ -1170,7 +1211,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Dark blue"
-msgstr ""
+msgstr "כחול כהה"
 
 #. module: web
 #. openerp-web
@@ -1179,7 +1220,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Dark purple"
-msgstr ""
+msgstr "סגול כהה"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login
@@ -1198,7 +1239,7 @@ msgstr "תאריך"
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Date & Time"
-msgstr ""
+msgstr "תאריך ושעה"
 
 #. module: web
 #. openerp-web
@@ -1220,7 +1261,7 @@ msgstr ""
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Decimal"
-msgstr ""
+msgstr "עשרוני"
 
 #. module: web
 #. openerp-web
@@ -1254,7 +1295,7 @@ msgstr ""
 #: code:addons/web/static/src/js/views/list/list_editable_renderer.js:0
 #, python-format
 msgid "Delete row "
-msgstr ""
+msgstr "מחק שורה"
 
 #. module: web
 #. openerp-web
@@ -1289,21 +1330,21 @@ msgstr "בטל"
 #: code:addons/web/static/src/xml/menu.xml:0
 #, python-format
 msgid "Discard a record modification"
-msgstr ""
+msgstr "מחק שינוי הרשומה"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/widgets/data_export.js:0
 #, python-format
 msgid "Do you really want to delete this export template?"
-msgstr ""
+msgstr "האם באמת ברצונך למחוק את תבנית הייצוא?"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/calendar/calendar_renderer.js:0
 #, python-format
 msgid "Do you really want to delete this filter from favorites ?"
-msgstr ""
+msgstr "האם אתה באמת רוצה למחוק את המסנן הזה מהמועדפים?"
 
 #. module: web
 #. openerp-web
@@ -1325,6 +1366,13 @@ msgstr "דומיין"
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
 msgid "Domain error"
+msgstr "שגיאת דומיין"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Domain node"
 msgstr ""
 
 #. module: web
@@ -1339,14 +1387,21 @@ msgstr "דומיין:"
 #: code:addons/web/static/src/js/core/misc.js:0
 #, python-format
 msgid "Don't leave yet,<br />it's still loading..."
-msgstr "לא לעזובה עדייך,<br />הטעינה בפעולה..."
+msgstr "אל תעזוב,<br />הטעינה עדיין נמשכת..."
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Download"
+msgstr "להוריד"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Download xls"
-msgstr "הורד xls"
+msgstr "הורד לאקסל"
 
 #. module: web
 #. openerp-web
@@ -1354,7 +1409,7 @@ msgstr "הורד xls"
 #: code:addons/web/static/src/xml/name_and_signature.xml:0
 #, python-format
 msgid "Draw"
-msgstr ""
+msgstr "צייר"
 
 #. module: web
 #. openerp-web
@@ -1362,7 +1417,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Dropdown menu"
-msgstr "תפריט נשלף"
+msgstr "תפריט נפתח"
 
 #. module: web
 #. openerp-web
@@ -1394,42 +1449,42 @@ msgstr "ערוך פעולה"
 #: code:addons/web/static/src/js/views/kanban/kanban_column.js:0
 #, python-format
 msgid "Edit Column"
-msgstr ""
+msgstr "ערוך עמודה"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "Edit ControlPanelView"
-msgstr ""
+msgstr "ערוך סרגל בקרה"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Edit Domain"
-msgstr ""
+msgstr "ערוך דומיין"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Edit Stage"
-msgstr ""
+msgstr "ערוך שלב"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "Edit View:"
-msgstr ""
+msgstr "ערוך תצוגה:"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/menu.xml:0
 #, python-format
 msgid "Edit a record"
-msgstr ""
+msgstr "ערוך רשומה"
 
 #. module: web
 #. openerp-web
@@ -1471,21 +1526,21 @@ msgstr "לחץ על Esc לביטול"
 #: code:addons/web/static/src/js/views/calendar/calendar_model.js:0
 #, python-format
 msgid "Everybody's calendars"
-msgstr "היומנים של כולם"
+msgstr "לוחות השנה של כולם"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/calendar/calendar_model.js:0
 #, python-format
 msgid "Everything"
-msgstr ""
+msgstr "הכל"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Expand all"
-msgstr "הגדל הכל"
+msgstr "הרחב הכל"
 
 #. module: web
 #. openerp-web
@@ -1493,7 +1548,7 @@ msgstr "הגדל הכל"
 #: code:addons/web/static/src/js/widgets/data_export.js:0
 #, python-format
 msgid "Export"
-msgstr "ייצוא"
+msgstr "ייצא"
 
 #. module: web
 #. openerp-web
@@ -1507,14 +1562,14 @@ msgstr "ייבא הכל"
 #: code:addons/web/static/src/js/widgets/data_export.js:0
 #, python-format
 msgid "Export Data"
-msgstr "ייצוא נתונים"
+msgstr "ייצא נתונים"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Export Format:"
-msgstr ""
+msgstr "תצורות ייצוא :"
 
 #. module: web
 #: code:addons/web/controllers/main.py:0
@@ -1535,28 +1590,28 @@ msgstr "מזהה חיצוני"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "External link"
-msgstr ""
+msgstr "קישור חיצוני"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "FILTER"
-msgstr ""
+msgstr "מסנן"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/control_panel/control_panel_model.js:0
 #, python-format
 msgid "Failed to evaluate search criterions"
-msgstr "בקשת החיפוש נכשלה"
+msgstr "נכשל בהערכת קריטריוני החיפוש"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/field_utils.js:0
 #, python-format
 msgid "False"
-msgstr "לא\\ כבוי"
+msgstr "לא נכון"
 
 #. module: web
 #. openerp-web
@@ -1586,7 +1641,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Fields to export"
-msgstr "שדות שיש לייצא"
+msgstr "שדות לייצוא"
 
 #. module: web
 #. openerp-web
@@ -1614,7 +1669,7 @@ msgstr "העלאת קובץ"
 #: code:addons/web/static/src/js/views/control_panel/search/search_bar_autocomplete_sources.js:0
 #, python-format
 msgid "Filter on: %s"
-msgstr "מסנן על: %s"
+msgstr "סנן לפי: %s"
 
 #. module: web
 #. openerp-web
@@ -1635,7 +1690,7 @@ msgstr "מסננים"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Flip axis"
-msgstr ""
+msgstr "הפוך ציר"
 
 #. module: web
 #. openerp-web
@@ -1649,7 +1704,7 @@ msgstr "קפל"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Followed by"
-msgstr ""
+msgstr "עוקבים"
 
 #. module: web
 #. openerp-web
@@ -1660,6 +1715,8 @@ msgid ""
 "\n"
 "Tip: try to flip axis, filter further or reduce the number of measures."
 msgstr ""
+"לתאימות Excel, לא ניתן לייצא נתונים אם יש יותר מ 256 עמודות. עצה: נסה להפוך "
+"את הציר, לסנן עוד יותר או להקטין את מספר המדדים."
 
 #. module: web
 #. openerp-web
@@ -1673,7 +1730,7 @@ msgstr "טופס"
 #: code:addons/web/static/src/js/views/qweb/qweb_view.js:0
 #, python-format
 msgid "Freedom View"
-msgstr ""
+msgstr "תצורה חופשית"
 
 #. module: web
 #. openerp-web
@@ -1689,7 +1746,7 @@ msgstr "שם מלא"
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Fushia"
-msgstr ""
+msgstr "ורוד כהה"
 
 #. module: web
 #. openerp-web
@@ -1710,7 +1767,7 @@ msgstr ""
 #: code:addons/web/static/src/js/views/kanban/kanban_column_quick_create.js:0
 #, python-format
 msgid "Got it"
-msgstr ""
+msgstr "התקבל"
 
 #. module: web
 #. openerp-web
@@ -1760,7 +1817,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Hide in Kanban"
-msgstr ""
+msgstr "הסתר בקנבן"
 
 #. module: web
 #. openerp-web
@@ -1774,49 +1831,49 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Hit ENTER to"
-msgstr ""
+msgstr "הקש ENTER כדי"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Hit ENTER to CREATE"
-msgstr ""
+msgstr "הקש ENTER כדי ליצור"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Hit ENTER to SAVE"
-msgstr ""
+msgstr "הקש ENTER כדי לשמור"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Hit ESCAPE to DISCARD"
-msgstr ""
+msgstr "הקש ESC כדי לבטל"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/colorpicker_dialog.xml:0
 #, python-format
 msgid "Hue"
-msgstr ""
+msgstr "גוון"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/core/dialog.js:0
 #, python-format
 msgid "I am sure about this."
-msgstr ""
+msgstr "אני בטוח בעניין זה."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "I want to update data (import-compatible export)"
-msgstr ""
+msgstr "אני רוצה לעדכן נתונים (ייצוא תואם ייבוא)"
 
 #. module: web
 #. openerp-web
@@ -1848,7 +1905,7 @@ msgstr "מספר שלם"
 #: code:addons/web/static/src/js/views/graph/graph_renderer.js:0
 #, python-format
 msgid "Invalid data"
-msgstr "מידע לא חוקי"
+msgstr "נתונים לא חוקיים"
 
 #. module: web
 #: code:addons/web/controllers/main.py:0 code:addons/web/controllers/main.py:0
@@ -1857,6 +1914,8 @@ msgid ""
 "Invalid database name. Only alphanumerical characters, underscore, hyphen "
 "and dot are allowed."
 msgstr ""
+"שם בסיס נתונים לא חוקי. מותר להשתמש רק בתווים אלפא-נומריים, קו תחתון, מקף "
+"ונקודה."
 
 #. module: web
 #. openerp-web
@@ -1905,14 +1964,14 @@ msgstr "בדיקות JS"
 #: code:addons/web/static/src/js/views/kanban/kanban_view.js:0
 #, python-format
 msgid "Kanban"
-msgstr ""
+msgstr "קנבן"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/chrome/user_menu.js:0
 #, python-format
 msgid "Keyboard Shortcuts"
-msgstr "קיצורי דרך במקלדת"
+msgstr "קיצורי מקלדת"
 
 #. module: web
 #: code:addons/web/controllers/main.py:0
@@ -1995,7 +2054,7 @@ msgstr "שינוי אחרון על ידי:"
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "Leave the Developer Tools"
-msgstr ""
+msgstr "עזוב את כלי המפתחים"
 
 #. module: web
 #. openerp-web
@@ -2004,21 +2063,21 @@ msgstr ""
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Light blue"
-msgstr ""
+msgstr "כחול בהיר"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/colorpicker_dialog.xml:0
 #, python-format
 msgid "Lightness %"
-msgstr ""
+msgstr " % בהירות "
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Line Chart"
-msgstr ""
+msgstr "תרשים רציף"
 
 #. module: web
 #. openerp-web
@@ -2040,7 +2099,7 @@ msgstr "טען"
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Load more... ("
-msgstr ""
+msgstr "טען עוד... ("
 
 #. module: web
 #. openerp-web
@@ -2061,7 +2120,7 @@ msgstr "טוען (%d)"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Loading, please wait..."
-msgstr ""
+msgstr "טוען, המתן בבקשה..."
 
 #. module: web
 #. openerp-web
@@ -2081,7 +2140,7 @@ msgstr "התחבר"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login
 msgid "Log in as superuser"
-msgstr ""
+msgstr "התחבר כמשתמש על"
 
 #. module: web
 #. openerp-web
@@ -2110,6 +2169,17 @@ msgstr ""
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_boxed
 msgid "Mail:"
+msgstr "דואר:"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Main actions"
 msgstr ""
 
 #. module: web
@@ -2118,12 +2188,12 @@ msgstr ""
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "Manage Attachments"
-msgstr ""
+msgstr "נהל קבצים מצורפים"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login_layout
 msgid "Manage Databases"
-msgstr "ניהול מסדי נתונים"
+msgstr "נהל מסדי נתונים"
 
 #. module: web
 #. openerp-web
@@ -2131,49 +2201,49 @@ msgstr "ניהול מסדי נתונים"
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "Manage Filters"
-msgstr "ניהול מסננים"
+msgstr "נהל מסננים"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #, python-format
 msgid "Many2many"
-msgstr ""
+msgstr "רבים לרבים"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #, python-format
 msgid "Many2one"
-msgstr ""
+msgstr "רבים ליחיד"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Match"
-msgstr ""
+msgstr "התאם"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Match records with"
-msgstr ""
+msgstr "התאם רשומות עם"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Match records with the following rule:"
-msgstr ""
+msgstr "התאם רשומות עם הכלל הבא:"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/core/misc.js:0
 #, python-format
 msgid "Maybe you should consider reloading the application by pressing F5..."
-msgstr "מומלץ לנסות לטעון מחדש על ידי לחיצה על F5..."
+msgstr "אולי כדאי לשקול לטעון מחדש את היישום על ידי לחיצה על F5..."
 
 #. module: web
 #. openerp-web
@@ -2190,7 +2260,7 @@ msgstr "מדדים"
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Medium blue"
-msgstr ""
+msgstr "כחול בינוני"
 
 #. module: web
 #. openerp-web
@@ -2218,7 +2288,7 @@ msgstr "רשומה חסרה"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Mobile support"
-msgstr ""
+msgstr "תמיכה בנייד"
 
 #. module: web
 #. openerp-web
@@ -2233,7 +2303,7 @@ msgstr "שונה על ידי:"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Modifiers:"
-msgstr ""
+msgstr "מגדירים:"
 
 #. module: web
 #: code:addons/web/controllers/main.py:0
@@ -2248,7 +2318,7 @@ msgstr ""
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Monetary"
-msgstr ""
+msgstr "כספי"
 
 #. module: web
 #. openerp-web
@@ -2272,14 +2342,14 @@ msgstr "עוד"
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Multiline Text"
-msgstr ""
+msgstr "טקסט מרובה שורות"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "My Odoo.com account"
-msgstr "החשבון Odoo שלי"
+msgstr "חשבון Odoo.com שלי"
 
 #. module: web
 #. openerp-web
@@ -2322,7 +2392,7 @@ msgstr "עיצוב חדש"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "New template"
-msgstr ""
+msgstr "תבנית חדשה"
 
 #. module: web
 #. openerp-web
@@ -2344,14 +2414,14 @@ msgstr "לא"
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "No Update:"
-msgstr ""
+msgstr "אין עדכון:"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/tools/debug_manager_backend.js:0
 #, python-format
 msgid "No attachment available"
-msgstr ""
+msgstr "אין קובץ מצורף זמין"
 
 #. module: web
 #. openerp-web
@@ -2366,35 +2436,35 @@ msgstr "ללא צבע"
 #: code:addons/web/static/src/js/views/graph/graph_renderer.js:0
 #, python-format
 msgid "No data"
-msgstr ""
+msgstr "אין נתונים"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "No data to display"
-msgstr "אין מידע להצגה"
+msgstr "אין נתונים להצגה"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/widgets/data_export.js:0
 #, python-format
 msgid "No match found."
-msgstr ""
+msgstr "לא נמצאה התאמה."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/tools/debug_manager_backend.js:0
 #, python-format
 msgid "No metadata available"
-msgstr ""
+msgstr "אין נתונים זמינים."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/field_utils.js:0
 #, python-format
 msgid "No records"
-msgstr ""
+msgstr "אין רשומות"
 
 #. module: web
 #. openerp-web
@@ -2408,13 +2478,13 @@ msgstr "לא נמצאו רשומות!"
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #, python-format
 msgid "No results to show..."
-msgstr "אין תוצאות להציג"
+msgstr "אין תוצאות להצגה..."
 
 #. module: web
 #: code:addons/web/controllers/main.py:0
 #, python-format
 msgid "No template found to inherit from. Module %s and template name %s"
-msgstr ""
+msgstr "לא נמצאה תבנית לרשת ממנה. מודול %s ושם תבנית%s"
 
 #. module: web
 #. openerp-web
@@ -2422,7 +2492,7 @@ msgstr ""
 #: code:addons/web/static/src/js/views/list/list_controller.js:0
 #, python-format
 msgid "No valid record to save"
-msgstr ""
+msgstr "אין רשומות ולידיות לשמירה"
 
 #. module: web
 #. openerp-web
@@ -2443,7 +2513,7 @@ msgstr "אף אחד"
 #: code:addons/web/models/models.py:0
 #, python-format
 msgid "Not Set"
-msgstr ""
+msgstr "לא מוגדר"
 
 #. module: web
 #. openerp-web
@@ -2457,7 +2527,7 @@ msgstr "מצב לא פעיל"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Not active state, click to change it"
-msgstr "מצב לא פעיל, לחץ על מנת לשנות זאת"
+msgstr "מצב לא פעיל, לחץ כדי לשנות זאת"
 
 #. module: web
 #. openerp-web
@@ -2480,7 +2550,7 @@ msgstr "Odoo"
 #: code:addons/web/static/src/js/apps.js:0
 #, python-format
 msgid "Odoo Apps will be available soon"
-msgstr ""
+msgstr "אפליקציות Odoo יהיו זמינות בקרוב"
 
 #. module: web
 #. openerp-web
@@ -2490,35 +2560,35 @@ msgstr ""
 #: code:addons/web/static/src/js/services/crash_manager.js:0
 #, python-format
 msgid "Odoo Client Error"
-msgstr ""
+msgstr "שגיאת Odoo"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/upgrade_fields.js:0
 #, python-format
 msgid "Odoo Enterprise"
-msgstr "Odoo אנטרפרייז"
+msgstr "Odoo Enterprise"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/services/crash_manager.js:0
 #, python-format
 msgid "Odoo Error"
-msgstr ""
+msgstr "שגיאת Odoo"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/services/crash_manager.js:0
 #, python-format
 msgid "Odoo Session Expired"
-msgstr ""
+msgstr "תם זמן הפעולה של אפליקציית Odoo !"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/services/crash_manager.js:0
 #, python-format
 msgid "Odoo Warning"
-msgstr ""
+msgstr "אזהרת Odoo"
 
 #. module: web
 #. openerp-web
@@ -2530,7 +2600,7 @@ msgstr ""
 #: code:addons/web/static/src/js/views/list/list_confirm_dialog.js:0
 #, python-format
 msgid "Ok"
-msgstr "אישור"
+msgstr "בסדר"
 
 #. module: web
 #. openerp-web
@@ -2551,21 +2621,21 @@ msgstr "בשינוי:"
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #, python-format
 msgid "One2many"
-msgstr ""
+msgstr "יחיד לרבים"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Only Integer or Float Value should be valid."
-msgstr ""
+msgstr "רק ערך מספר שלם אמור להיות חוקי."
 
 #. module: web
 #: code:addons/web/controllers/main.py:0
 #, python-format
 msgid ""
 "Only employee can access this database. Please contact the administrator."
-msgstr ""
+msgstr "רק עובד יכול לגשת למסד נתונים זה. אנא צור קשר עם מנהל המערכת."
 
 #. module: web
 #: code:addons/web/models/models.py:0
@@ -2574,6 +2644,7 @@ msgid ""
 "Only types %(supported_types)s are supported for category (found type "
 "%(field_type)s)"
 msgstr ""
+"רק סוגים %(supported_types)s נתמכים עבור הקטגוריה (סוג שנמצא %(field_type)s)"
 
 #. module: web
 #: code:addons/web/models/models.py:0
@@ -2582,6 +2653,7 @@ msgid ""
 "Only types %(supported_types)s are supported for filter (found type "
 "%(field_type)s)"
 msgstr ""
+"רק סוגים %(supported_types)s נתמכים עבור המסנן (סוג שנמצא %(field_type)s)"
 
 #. module: web
 #. openerp-web
@@ -2601,36 +2673,50 @@ msgstr ""
 #. openerp-web
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
+msgid "Open Developer Tools"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/debug.xml:0
+#, python-format
+msgid "Open Developer Tools#{widget.debug_mode_help}"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/debug.xml:0
+#, python-format
 msgid "Open View"
-msgstr "פתח עם"
+msgstr "פתח תצוגה"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/menu.xml:0
 #, python-format
 msgid "Open the next record"
-msgstr ""
+msgstr "פתח את הרשומה הבאה"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/menu.xml:0
 #, python-format
 msgid "Open the previous record"
-msgstr ""
+msgstr "פתח את הרשומה הקודמת"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/menu.xml:0
 #, python-format
 msgid "Open to kanban view"
-msgstr ""
+msgstr "פתח לתצוגת קנבן"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/menu.xml:0
 #, python-format
 msgid "Open to list view"
-msgstr ""
+msgstr "פתח לתצוגת רשימה"
 
 #. module: web
 #. openerp-web
@@ -2642,6 +2728,13 @@ msgstr ""
 #, python-format
 msgid "Open: "
 msgstr "פתח:"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/views/list/list_renderer.js:0
+#, python-format
+msgid "Optional columns"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -2664,7 +2757,14 @@ msgstr "אחר"
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "PDF Viewer"
-msgstr ""
+msgstr "מציג PDF"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "PDF controls"
+msgstr "בקרה PDF"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_background
@@ -2674,11 +2774,23 @@ msgid ""
 "                    of\n"
 "                    <span class=\"topage\"/>"
 msgstr ""
+"עמוד:\n"
+"                    <span class=\"page\"/>\n"
+"                    מ\n"
+"                    <span class=\"topage\"/>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_boxed
 #: model_terms:ir.ui.view,arch_db:web.external_layout_standard
 msgid "Page: <span class=\"page\"/> / <span class=\"topage\"/>"
+msgstr "עמוד: <span class=\"page\"/> / <span class=\"topage\"/>"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Pager"
 msgstr ""
 
 #. module: web
@@ -2698,7 +2810,7 @@ msgstr "אחוז"
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Percentage Pie"
-msgstr ""
+msgstr "תרשים עוגה"
 
 #. module: web
 #. openerp-web
@@ -2717,14 +2829,14 @@ msgstr "טלפון:"
 #: code:addons/web/static/src/js/widgets/colorpicker_dialog.js:0
 #, python-format
 msgid "Pick a color"
-msgstr ""
+msgstr "בחר צבע"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Pie Chart"
-msgstr ""
+msgstr "תרשים עוגה"
 
 #. module: web
 #. openerp-web
@@ -2734,6 +2846,8 @@ msgid ""
 "Pie chart cannot display all zero numbers.. Try to change your domain to "
 "display positive results"
 msgstr ""
+"תרשים עוגה לא יכול להציג את כל המספרים האפסיים. נסה לשנות את התחום כדי להציג"
+" תוצאות חיוביות"
 
 #. module: web
 #. openerp-web
@@ -2743,6 +2857,8 @@ msgid ""
 "Pie chart cannot mix positive and negative numbers. Try to change your "
 "domain to only display positive results"
 msgstr ""
+"תרשים עוגה לא יכול לערבב מספרים חיוביים ושליליים. נסה לשנות את התחום כך "
+"שיציג תוצאות חיוביות בלבד"
 
 #. module: web
 #. openerp-web
@@ -2753,39 +2869,46 @@ msgstr "ציר"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Pivot settings"
+msgstr "הגדרות Pivot"
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #: code:addons/web/static/src/js/views/list/list_renderer.js:0
 #, python-format
 msgid "Please click on the \"save\" button first."
-msgstr ""
+msgstr "אנא לחץ תחילה על כפתור \"שמור\"."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/widgets/data_export.js:0
 #, python-format
 msgid "Please enter save field list name"
-msgstr ""
+msgstr "אנא הכנס שם שדה מבסיס נתונים:"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/widgets/data_export.js:0
 #, python-format
 msgid "Please select fields to export..."
-msgstr "נא לבחור שדות לייצוא"
+msgstr "אנא בחר שדות לייצוא..."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/widgets/data_export.js:0
 #, python-format
 msgid "Please select fields to save export list..."
-msgstr "נא לבחור שדות לשמירה ברשימת ייצוא"
+msgstr "נא בחר שדות לשמירת רשימת הייצוא ..."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Please update translations of :"
-msgstr ""
+msgstr "אנא עדכן תרגומים של:"
 
 #. module: web
 #. openerp-web
@@ -2793,17 +2916,17 @@ msgstr ""
 #, python-format
 msgid ""
 "Please use the copy button to report the error to your support service."
-msgstr ""
+msgstr "אנא השתמש בלחצן ההעתקה כדי לדווח על השגיאה לשירות התמיכה שלך."
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.brand_promotion_message
 msgid "Powered by %s%s"
-msgstr ""
+msgstr "מופעל ע\"י %s%s"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login_layout
 msgid "Powered by <span>Odoo</span>"
-msgstr ""
+msgstr "מופעל ע\"י <span>Odoo</span>"
 
 #. module: web
 #. openerp-web
@@ -2815,12 +2938,12 @@ msgstr "העדפות"
 #. module: web
 #: model:ir.actions.report,name:web.action_report_externalpreview
 msgid "Preview External Report"
-msgstr ""
+msgstr "תצוגה מקדימה של דוח חיצוני"
 
 #. module: web
 #: model:ir.actions.report,name:web.action_report_internalpreview
 msgid "Preview Internal Report"
-msgstr ""
+msgstr "תצוגה מקדימה של דוח פנימי"
 
 #. module: web
 #. openerp-web
@@ -2843,7 +2966,7 @@ msgstr "תקופה קודמת"
 #: code:addons/web/static/src/js/views/control_panel/search/control_panel_view_parameters.js:0
 #, python-format
 msgid "Previous Year"
-msgstr ""
+msgstr "שנה קודמת"
 
 #. module: web
 #. openerp-web
@@ -2865,7 +2988,7 @@ msgstr "עדיפות"
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Progress Bar"
-msgstr ""
+msgstr "סרגל התקדמות"
 
 #. module: web
 #. openerp-web
@@ -2922,14 +3045,14 @@ msgstr "רבעון"
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Quick add"
-msgstr ""
+msgstr "הוספה מהירה"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #, python-format
 msgid "Quick search: %s"
-msgstr ""
+msgstr "חיפוש מהיר: %s"
 
 #. module: web
 #: model:ir.model,name:web.model_ir_qweb_field_image
@@ -2972,21 +3095,21 @@ msgstr ""
 #: code:addons/web/static/src/js/widgets/model_field_selector.js:0
 #, python-format
 msgid "Relation not allowed"
-msgstr ""
+msgstr "יחס לא מורשה"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Relation to follow"
-msgstr ""
+msgstr "יחס למעקב"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Relation:"
-msgstr "יחס:"
+msgstr "קשר:"
 
 #. module: web
 #. openerp-web
@@ -3008,28 +3131,28 @@ msgstr "הסר תמונת כריכה"
 #: code:addons/web/static/src/js/widgets/data_export.js:0
 #, python-format
 msgid "Remove field"
-msgstr ""
+msgstr "הסר שדה"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Remove from Favorites"
-msgstr ""
+msgstr "הסר מהמועדפים"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Remove tag"
-msgstr ""
+msgstr "הסר תגית"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/web_calendar.xml:0
 #, python-format
 msgid "Remove this favorite from the list"
-msgstr ""
+msgstr "הסר את המועדף הזה מהרשימה"
 
 #. module: web
 #. openerp-web
@@ -3043,7 +3166,7 @@ msgstr "דוח"
 #: code:addons/web/static/src/js/services/crash_manager.js:0
 #, python-format
 msgid "Request timeout"
-msgstr ""
+msgstr "הבקשה אינה בתוקף"
 
 #. module: web
 #. openerp-web
@@ -3071,14 +3194,14 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "SEE RESULT"
-msgstr ""
+msgstr "ראה תוצאה"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/signature.js:0
 #, python-format
 msgid "SIGNATURE"
-msgstr ""
+msgstr "חתימה"
 
 #. module: web
 #. openerp-web
@@ -3087,14 +3210,14 @@ msgstr ""
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Salmon pink"
-msgstr ""
+msgstr "ורוד בהיר"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/colorpicker_dialog.xml:0
 #, python-format
 msgid "Saturation %"
-msgstr ""
+msgstr "% רוויה"
 
 #. module: web
 #. openerp-web
@@ -3127,7 +3250,7 @@ msgstr "שמור וצור חדש"
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Save As..."
-msgstr "שמירה בשם..."
+msgstr "שמור בשם..."
 
 #. module: web
 #. openerp-web
@@ -3148,14 +3271,14 @@ msgstr "שמור רשומה"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Save as :"
-msgstr ""
+msgstr "שמור כ :"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/tools/debug_manager_backend.js:0
 #, python-format
 msgid "Save default"
-msgstr "שמירת ברירת מחדל"
+msgstr "שמור ברירת מחדל"
 
 #. module: web
 #. openerp-web
@@ -3163,7 +3286,7 @@ msgstr "שמירת ברירת מחדל"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Search"
-msgstr "חיפוש"
+msgstr "חפש"
 
 #. module: web
 #. openerp-web
@@ -3192,21 +3315,21 @@ msgstr "חפש עוד..."
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Search..."
-msgstr "חיפוש…"
+msgstr "חפש…"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #, python-format
 msgid "Search: "
-msgstr "חיפוש: "
+msgstr "חפש:"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/crash_manager.xml:0
 #, python-format
 msgid "See details"
-msgstr ""
+msgstr "ראה פרטים"
 
 #. module: web
 #. openerp-web
@@ -3233,34 +3356,36 @@ msgid ""
 "Select <i class=\"fa fa-database\" role=\"img\" aria-label=\"Database\" "
 "title=\"Database\"/>"
 msgstr ""
+"בחר <i class=\"fa fa-database\" role=\"img\" aria-label=\"Database\" "
+"title=\"Database\"/>"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Select Signature Style"
-msgstr ""
+msgstr "בחר סגנון חתימה"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Select a model to add a filter."
-msgstr ""
+msgstr "בחר מודל כדי להוסיף מסנן."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/tools/debug_manager_backend.js:0
 #, python-format
 msgid "Select a view"
-msgstr ""
+msgstr "בחר תצוגה"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Select field"
-msgstr ""
+msgstr "בחר שדה"
 
 #. module: web
 #. openerp-web
@@ -3288,14 +3413,14 @@ msgstr "בחירה:"
 #: code:addons/web/static/src/js/tools/debug_manager_backend.js:0
 #, python-format
 msgid "Set Default"
-msgstr "קבע כברירת מחדל"
+msgstr "הגדר ברירת מחדל"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "Set Defaults"
-msgstr "הגדר ברירת מחדל"
+msgstr "הגדר ברירות מחדל"
 
 #. module: web
 #. openerp-web
@@ -3309,7 +3434,7 @@ msgstr "הגדר תמונת כריכה"
 #: code:addons/web/static/src/js/fields/special_fields.js:0
 #, python-format
 msgid "Set a timezone on your user"
-msgstr ""
+msgstr "הגדר אזור זמן למשתמש שלך"
 
 #. module: web
 #. openerp-web
@@ -3323,7 +3448,7 @@ msgstr "הגדרות"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Share with all users"
-msgstr "שתף עם משתמשים אחרים"
+msgstr "שתף עם כל המשתמשים"
 
 #. module: web
 #. openerp-web
@@ -3337,14 +3462,14 @@ msgstr "קיצורי דרך"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Show sub-fields"
-msgstr ""
+msgstr "הצגת תת-שדה"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/apps.js:0
 #, python-format
 msgid "Showing locally available modules"
-msgstr ""
+msgstr "מציג מודולים זמינים מקומיים"
 
 #. module: web
 #. openerp-web
@@ -3399,7 +3524,7 @@ msgstr "עדיין טוען..."
 #: code:addons/web/static/src/js/core/misc.js:0
 #, python-format
 msgid "Still loading...<br />Please be patient."
-msgstr "עדיין טוען...<br />נא להמתין."
+msgstr "עדיין טוען...<br />אנא היה סבלני."
 
 #. module: web
 #. openerp-web
@@ -3421,14 +3546,14 @@ msgstr "סגנונות"
 #: code:addons/web/static/src/js/views/calendar/calendar_quick_create.js:0
 #, python-format
 msgid "Summary"
-msgstr "תקציר"
+msgstr "תיאור"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/web_calendar.xml:0
 #, python-format
 msgid "Summary:"
-msgstr "סיכום:"
+msgstr "תיאור:"
 
 #. module: web
 #. openerp-web
@@ -3439,10 +3564,17 @@ msgstr "תמיכה"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "Switch to this company"
+msgstr "עבור לחברה זו,"
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
 msgid "Syntax error"
-msgstr ""
+msgstr "שגיאת תחביר"
 
 #. module: web
 #. openerp-web
@@ -3456,14 +3588,7 @@ msgstr "תגיות"
 #: code:addons/web/static/src/js/core/misc.js:0
 #, python-format
 msgid "Take a minute to get a coffee,<br />because it's loading..."
-msgstr "קחו רגע לנשימה והתמתחות,<br /> הטעינה מתבצעת..."
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:0
-#, python-format
-msgid "Tap on the list to change company"
-msgstr ""
+msgstr "קח רגע לשתות קפה,<br /> הטעינה מתבצעת..."
 
 #. module: web
 #. openerp-web
@@ -3482,14 +3607,14 @@ msgstr "טלפון:"
 #: code:addons/web/controllers/main.py:0
 #, python-format
 msgid "Template %s already exists in module %s"
-msgstr ""
+msgstr "תבנית %s קיימת כבר במודול %s"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Template:"
-msgstr ""
+msgstr "תבנית:"
 
 #. module: web
 #. openerp-web
@@ -3512,7 +3637,7 @@ msgstr ""
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
 msgid "The domain you entered is not properly formed"
-msgstr ""
+msgstr "הדומיין שהוזן אינו נתמך."
 
 #. module: web
 #. openerp-web
@@ -3535,7 +3660,7 @@ msgstr "השדה ריק, אין מה לשמור !"
 #: code:addons/web/static/src/js/views/calendar/calendar_quick_create.js:0
 #, python-format
 msgid "The following field is invalid:"
-msgstr ""
+msgstr "השדה הבא אינו חוקי:"
 
 #. module: web
 #. openerp-web
@@ -3549,14 +3674,14 @@ msgstr "השדות הבאים אינם תקינים:"
 #: code:addons/web/controllers/main.py:0
 #, python-format
 msgid "The new password and its confirmation must be identical."
-msgstr "הסיסמה והאישור סיסמה צריכים להיות זהים"
+msgstr "הסיסמה החדשה ואישורה חייבים להיות זהים."
 
 #. module: web
 #: code:addons/web/controllers/main.py:0
 #, python-format
 msgid ""
 "The old password you provided is incorrect, your password was not changed."
-msgstr "הסיסמה הישנה שהזמנת אינה נכונה, סיסמתך לא הוחלפה."
+msgstr "הסיסמה הישנה שסיפקת אינה נכונה, הסיסמה שלך לא שונתה."
 
 #. module: web
 #. openerp-web
@@ -3565,7 +3690,7 @@ msgstr "הסיסמה הישנה שהזמנת אינה נכונה, סיסמתך �
 msgid ""
 "The operation was interrupted. This usually means that the current operation"
 " is taking too much time."
-msgstr ""
+msgstr "הפעולה הופסקה. פירוש הדבר בדרך כלל שהפעולה הנוכחית אורכת זמן רב מדי."
 
 #. module: web
 #. openerp-web
@@ -3581,7 +3706,7 @@ msgstr "הרשומה שונתה, השינויים שביצעת יבוטלו. ה�
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "The selected file exceed the maximum file size of %s."
-msgstr "הקובץ שנבחר עולה על גודל מותר של %s."
+msgstr "הקובץ שנבחר עולה על גודל הקובץ המרבי של %s."
 
 #. module: web
 #. openerp-web
@@ -3590,7 +3715,7 @@ msgstr "הקובץ שנבחר עולה על גודל מותר של %s."
 msgid ""
 "The type of the field '%s' must be a many2many field with a relation to "
 "'ir.attachment' model."
-msgstr ""
+msgstr "סוג השדה '%s' חייב להיות שדה רבים לרבים עם קשר למודל 'ir.attachment'."
 
 #. module: web
 #: code:addons/web/controllers/main.py:0
@@ -3599,27 +3724,29 @@ msgid ""
 "There are too many rows (%s rows, limit: %s) to export as Excel 2007-2013 "
 "(.xlsx) format. Consider splitting the export."
 msgstr ""
+"יש יותר מדי שורות (%s שורות, מגבלה: %s) לייצא כפורמט Excel 2007-2013 "
+"(.xlsx). שקול לפצל את הייצוא."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "There is no available image to be set as cover."
-msgstr ""
+msgstr "אין תמונה זמינה להגדרה ככריכה."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "There was a problem while uploading your file"
-msgstr "היתה בעיה בהעלאת הקובץ"
+msgstr "הייתה בעיה במהלך העלאת הקובץ שלך"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/control_panel/search/control_panel_view_parameters.js:0
 #, python-format
 msgid "This Month"
-msgstr "חודש זה"
+msgstr "חודש נוכחי"
 
 #. module: web
 #. openerp-web
@@ -3647,21 +3774,21 @@ msgstr "שנה נוכחית"
 #: code:addons/web/static/src/js/widgets/date_picker.js:0
 #, python-format
 msgid "This date is on the future. Make sure it is what you expected."
-msgstr ""
+msgstr "תאריך זה עתידי. וודא שזה מה שציפית."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
 msgid "This domain is not supported."
-msgstr ""
+msgstr "הדומיין אינו נתמך."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/name_and_signature.xml:0
 #, python-format
 msgid "This file is invalid. Please select an image."
-msgstr ""
+msgstr "קובץ זה אינו חוקי. אנא בחר תמונה."
 
 #. module: web
 #. openerp-web
@@ -3669,17 +3796,17 @@ msgstr ""
 #, python-format
 msgid ""
 "This filter is global and will be removed for everybody if you continue."
-msgstr "פילטר התצוגה הזה הוא גלובלי. אם תמשיכו, הסרתו תשפיע על כולם."
+msgstr "מסנן זה הוא כללי ויוסר עבור כולם אם תמשיך."
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.preview_externalreport
 msgid "This is a sample of an external report."
-msgstr ""
+msgstr "זוהי דוגמה של דוח חיצוני."
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.preview_internalreport
 msgid "This is a sample of an internal report."
-msgstr ""
+msgstr "זוהי דוגמה של דוח פנימי."
 
 #. module: web
 #. openerp-web
@@ -3718,14 +3845,14 @@ msgstr "היום"
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Toggle"
-msgstr ""
+msgstr "החלף"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "Toggle Timelines"
-msgstr ""
+msgstr "החלף צירי זמן"
 
 #. module: web
 #. openerp-web
@@ -3749,14 +3876,14 @@ msgstr ""
 #: code:addons/web/static/src/js/widgets/translation_dialog.js:0
 #, python-format
 msgid "Translate: "
-msgstr ""
+msgstr "תרגם:"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/field_utils.js:0
 #, python-format
 msgid "True"
-msgstr ""
+msgstr "נכון"
 
 #. module: web
 #. openerp-web
@@ -3784,7 +3911,7 @@ msgstr ""
 #: code:addons/web/static/src/js/chrome/abstract_web_client.js:0
 #, python-format
 msgid "Trying to reconnect..."
-msgstr ""
+msgstr "מנסה להתחבר מחדש ..."
 
 #. module: web
 #. openerp-web
@@ -3798,7 +3925,7 @@ msgstr "סוג:"
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "URL"
-msgstr "URL"
+msgstr "כתובת אתר אינטרנט"
 
 #. module: web
 #. openerp-web
@@ -3806,7 +3933,7 @@ msgstr "URL"
 #, python-format
 msgid ""
 "Unable to find Wkhtmltopdf on this system. The report will be shown in html."
-msgstr ""
+msgstr "לא ניתן למצוא Wkhtmltopdf במערכת זו. הדוח יוצג ב- html."
 
 #. module: web
 #. openerp-web
@@ -3821,7 +3948,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Unarchive All"
-msgstr ""
+msgstr "הוצא הכל מהארכיון"
 
 #. module: web
 #. openerp-web
@@ -3851,7 +3978,7 @@ msgstr "פרוס"
 #: code:addons/web/static/src/js/services/crash_manager.js:0
 #, python-format
 msgid "Unknown CORS error"
-msgstr ""
+msgstr "שגיאת CORS לא ידועה"
 
 #. module: web
 #. openerp-web
@@ -3872,21 +3999,21 @@ msgstr ""
 #: code:addons/web/static/src/js/_deprecated/data.js:0
 #, python-format
 msgid "Unnamed"
-msgstr ""
+msgstr "ללא שם"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/pivot/pivot_view.js:0
 #, python-format
 msgid "Untitled"
-msgstr ""
+msgstr "ללא כותרת"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Update to:"
-msgstr ""
+msgstr "עדכן ל:"
 
 #. module: web
 #. openerp-web
@@ -3907,14 +4034,14 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Upgrade to future versions"
-msgstr ""
+msgstr "שדרג לגרסאות עתידיות"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/kanban/kanban_record.js:0
 #, python-format
 msgid "Upload and Set"
-msgstr ""
+msgstr "העלה והגדר"
 
 #. module: web
 #. openerp-web
@@ -3929,14 +4056,14 @@ msgstr "העלה את הקובץ שלך"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Uploaded"
-msgstr ""
+msgstr "הועלה"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Uploading"
-msgstr ""
+msgstr "מעלה"
 
 #. module: web
 #. openerp-web
@@ -3959,14 +4086,21 @@ msgstr "מעלה..."
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Use by default"
-msgstr "שימוש בזה כברירת מחדל"
+msgstr "השתמש כברירת מחדל"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "User"
+msgstr "משתמש"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/services/crash_manager.js:0
 #, python-format
 msgid "User Error"
-msgstr ""
+msgstr "שגיאת משתמש"
 
 #. module: web
 #. openerp-web
@@ -3980,7 +4114,7 @@ msgstr "משתמשים"
 #: code:addons/web/static/src/js/services/crash_manager.js:0
 #, python-format
 msgid "Validation Error"
-msgstr ""
+msgstr "שגיאת אימות"
 
 #. module: web
 #. openerp-web
@@ -4011,6 +4145,13 @@ msgstr "סוג תצוגה"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
+msgid "View switcher"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/chrome/action_manager.js:0
 #: code:addons/web/static/src/js/chrome/action_manager_report.js:0
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
@@ -4029,7 +4170,7 @@ msgstr "אזהרה"
 #: code:addons/web/static/src/js/widgets/attach_document.js:0
 #, python-format
 msgid "Warning : You have to save first before attaching a file."
-msgstr ""
+msgstr "אזהרה: עליך לשמור תחילה לפני שתצרף קובץ."
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.benchmark_suite
@@ -4067,7 +4208,7 @@ msgstr "שבוע"
 #: code:addons/web/static/src/js/widgets/rainbow_man.js:0
 #, python-format
 msgid "Well Done!"
-msgstr ""
+msgstr "כל הכבוד!"
 
 #. module: web
 #. openerp-web
@@ -4081,13 +4222,13 @@ msgstr "יישומון:"
 #: code:addons/web/static/src/xml/menu.xml:0
 #, python-format
 msgid "Windows/Linux"
-msgstr ""
+msgstr "חלונות / לינוקס"
 
 #. module: web
 #: code:addons/web/controllers/main.py:0
 #, python-format
 msgid "Wrong login/password"
-msgstr ""
+msgstr "שם משתמש / סיסמה שגויים"
 
 #. module: web
 #. openerp-web
@@ -4101,7 +4242,7 @@ msgstr "הוכנס ערך שגוי!"
 #: code:addons/web/static/src/xml/debug.xml:0
 #, python-format
 msgid "XML ID:"
-msgstr ""
+msgstr "מזהה XML:"
 
 #. module: web
 #. openerp-web
@@ -4140,14 +4281,14 @@ msgstr "אתמול"
 #: code:addons/web/static/src/js/chrome/abstract_web_client.js:0
 #, python-format
 msgid "You are back online"
-msgstr ""
+msgstr "אתה שוב מחובר"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #, python-format
 msgid "You are creating a new %s, are you sure it does not exist yet?"
-msgstr "ביקשת ליצור %s חדש, בטוח שהוא לא קיים כבר?"
+msgstr "ביקשת ליצור %s חדש,אתה בטוח שהוא לא קיים כבר?"
 
 #. module: web
 #. openerp-web
@@ -4160,7 +4301,7 @@ msgstr ""
 #: code:addons/web/controllers/main.py:0
 #, python-format
 msgid "You cannot leave any password empty."
-msgstr "לא ניתן להשאיר סיסמא כלשהי ריקה."
+msgstr "לא ניתן להשאיר סיסמה ריקה."
 
 #. module: web
 #. openerp-web
@@ -4168,7 +4309,7 @@ msgstr "לא ניתן להשאיר סיסמא כלשהי ריקה."
 #, python-format
 msgid ""
 "You may not believe it,<br />but the application is actually loading..."
-msgstr "אולי קשה להאמין,<br />אבל היישום הזה טוען את עצמו כרגע..."
+msgstr "אולי קשה להאמין,<br />אבל היישום הזה נטען כרגע..."
 
 #. module: web
 #. openerp-web
@@ -4177,7 +4318,7 @@ msgstr "אולי קשה להאמין,<br />אבל היישום הזה טוען �
 msgid ""
 "You need to save this new record before editing the translation. Do you want"
 " to proceed?"
-msgstr ""
+msgstr "עליך לשמור רשומה חדשה זו לפני עריכת התרגום. האם אתה רוצה להמשיך?"
 
 #. module: web
 #. openerp-web
@@ -4187,6 +4328,8 @@ msgid ""
 "You need to start Odoo with at least two workers to print a pdf version of "
 "the reports."
 msgstr ""
+"אתה צריך להתחיל את Odoo עם לפחות שני שטחי עבודה כדי להדפיס גרסת PDF של "
+"הדוחות."
 
 #. module: web
 #. openerp-web
@@ -4203,7 +4346,7 @@ msgstr ""
 #: code:addons/web/static/src/js/services/crash_manager.js:0
 #, python-format
 msgid "Your Odoo session expired. Please refresh the current web page."
-msgstr "נותקת מהחשבון עקב אי-שימוש. נא לרענן את דף האינטרנט f5."
+msgstr "פג תוקפו של דף זה. נא רענן את דף האינטרנט הנוכחי."
 
 #. module: web
 #. openerp-web
@@ -4212,7 +4355,7 @@ msgstr "נותקת מהחשבון עקב אי-שימוש. נא לרענן את �
 msgid ""
 "Your installation of Wkhtmltopdf seems to be broken. The report will be "
 "shown in html."
-msgstr ""
+msgstr "לא ניתן למצוא Wkhtmltopdf במערכת זו. הדוח יוצג ב- html."
 
 #. module: web
 #. openerp-web
@@ -4220,7 +4363,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/name_and_signature.xml:0
 #, python-format
 msgid "Your name"
-msgstr ""
+msgstr "השם שלך"
 
 #. module: web
 #. openerp-web
@@ -4269,21 +4412,21 @@ msgstr "לפני כשעה"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "all records"
-msgstr ""
+msgstr "כל הרשומות"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "are valid for this update."
-msgstr ""
+msgstr "תקפים לעדכון זה."
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
 msgid "child of"
-msgstr ""
+msgstr "בן של "
 
 #. module: web
 #. openerp-web
@@ -4298,7 +4441,7 @@ msgstr "מכיל"
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
 msgid "does not contain"
-msgstr ""
+msgstr "לא מכיל"
 
 #. module: web
 #. openerp-web
@@ -4321,7 +4464,7 @@ msgstr "גדול מ־"
 #: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
 #, python-format
 msgid "greater than or equal to"
-msgstr ""
+msgstr "גדול מ- או שווה ל-"
 
 #. module: web
 #. openerp-web
@@ -4346,7 +4489,7 @@ msgstr "הוא"
 #: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
 #, python-format
 msgid "is after"
-msgstr ""
+msgstr "אחרי"
 
 #. module: web
 #. openerp-web
@@ -4354,7 +4497,7 @@ msgstr ""
 #: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
 #, python-format
 msgid "is after or equal to"
-msgstr ""
+msgstr "אחרי או שווה ל-"
 
 #. module: web
 #. openerp-web
@@ -4362,7 +4505,7 @@ msgstr ""
 #: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
 #, python-format
 msgid "is before"
-msgstr ""
+msgstr "לפני"
 
 #. module: web
 #. openerp-web
@@ -4370,7 +4513,7 @@ msgstr ""
 #: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
 #, python-format
 msgid "is before or equal to"
-msgstr ""
+msgstr "לפני או שווה ל-"
 
 #. module: web
 #. openerp-web
@@ -4378,7 +4521,7 @@ msgstr ""
 #: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
 #, python-format
 msgid "is between"
-msgstr ""
+msgstr "בין"
 
 #. module: web
 #. openerp-web
@@ -4389,7 +4532,7 @@ msgstr ""
 #: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
 #, python-format
 msgid "is equal to"
-msgstr "שווה ל"
+msgstr "שווה ל-"
 
 #. module: web
 #. openerp-web
@@ -4411,7 +4554,7 @@ msgstr "אינו"
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
 msgid "is not ="
-msgstr ""
+msgstr "לא ="
 
 #. module: web
 #. openerp-web
@@ -4422,7 +4565,7 @@ msgstr ""
 #: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
 #, python-format
 msgid "is not equal to"
-msgstr "אינו שווה ל-"
+msgstr "לא שווה ל-"
 
 #. module: web
 #. openerp-web
@@ -4435,7 +4578,7 @@ msgstr "אינו שווה ל-"
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
 msgid "is not set"
-msgstr "אינו מוגדר"
+msgstr "לא מוגדר"
 
 #. module: web
 #. openerp-web
@@ -4470,7 +4613,7 @@ msgstr ""
 #: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
 #, python-format
 msgid "less than"
-msgstr "פחות מ-"
+msgstr "קטן מ-"
 
 #. module: web
 #. openerp-web
@@ -4485,21 +4628,21 @@ msgstr "לפני פחות מדקה"
 #: code:addons/web/static/src/js/views/control_panel/search/search_filters.js:0
 #, python-format
 msgid "less than or equal to"
-msgstr ""
+msgstr "קטן מ- או שווה ל-"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "not"
-msgstr ""
+msgstr "לא"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/control_panel/search/search_bar_autocomplete_sources.js:0
 #, python-format
 msgid "not a valid integer"
-msgstr "אינו מספר שלם"
+msgstr "אינו מספר שלם תקין"
 
 #. module: web
 #. openerp-web
@@ -4513,7 +4656,7 @@ msgstr "אינו מספר תקין"
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
 msgid "not in"
-msgstr ""
+msgstr "לא ב"
 
 #. module: web
 #. openerp-web
@@ -4527,14 +4670,14 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "of the following rules:"
-msgstr ""
+msgstr "מהכללים הבאים:"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "of:"
-msgstr ""
+msgstr "של:"
 
 #. module: web
 #. openerp-web
@@ -4551,7 +4694,7 @@ msgstr "או"
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
 msgid "parent of"
-msgstr ""
+msgstr "הורה של"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.brand_promotion
@@ -4563,14 +4706,14 @@ msgstr "פורטל"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "record(s)"
-msgstr ""
+msgstr "רשומות"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "records ?"
-msgstr ""
+msgstr "רשומות ?"
 
 #. module: web
 #. openerp-web
@@ -4583,15 +4726,22 @@ msgstr "נותרו)"
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
+msgid "search"
+msgstr "חיפוש"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:0
+#, python-format
 msgid "selected records,"
-msgstr ""
+msgstr "רשומות שנבחרו,"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "set"
-msgstr ""
+msgstr "מוגדר"
 
 #. module: web
 #. openerp-web

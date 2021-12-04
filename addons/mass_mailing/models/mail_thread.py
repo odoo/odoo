@@ -3,8 +3,7 @@
 
 import datetime
 
-from odoo import api, models, fields
-from odoo.tools import decode_smtp_header
+from odoo import api, models, fields, tools
 
 BLACKLIST_MAX_BOUNCED_LIMIT = 5
 
@@ -18,10 +17,14 @@ class MailThread(models.AbstractModel):
         """ Override to update the parent mailing traces. The parent is found
         by using the References header of the incoming message and looking for
         matching message_id in mailing.trace. """
-        if message.get('References') and routes:
-            message_ids = [x.strip() for x in decode_smtp_header(message['References']).split()]
-            self.env['mailing.trace'].set_opened(mail_message_ids=message_ids)
-            self.env['mailing.trace'].set_replied(mail_message_ids=message_ids)
+        if routes:
+            # even if 'reply_to' in ref (cfr mail/mail_thread) that indicates a new thread redirection
+            # (aka bypass alias configuration in gateway) consider it as a reply for statistics purpose
+            thread_references = message_dict['references'] or message_dict['in_reply_to']
+            msg_references = tools.mail_header_msgid_re.findall(thread_references)
+            if msg_references:
+                self.env['mailing.trace'].set_opened(mail_message_ids=msg_references)
+                self.env['mailing.trace'].set_replied(mail_message_ids=msg_references)
         return super(MailThread, self)._message_route_process(message, message_dict, routes)
 
     def message_post_with_template(self, template_id, **kwargs):
@@ -54,7 +57,7 @@ class MailThread(models.AbstractModel):
         if bounced_email:
             three_months_ago = fields.Datetime.to_string(datetime.datetime.now() - datetime.timedelta(weeks=13))
             stats = self.env['mailing.trace'].search(['&', ('bounced', '>', three_months_ago), ('email', '=ilike', bounced_email)]).mapped('bounced')
-            if len(stats) >= BLACKLIST_MAX_BOUNCED_LIMIT and (not bounced_partner or bounced_partner.message_bounce >= BLACKLIST_MAX_BOUNCED_LIMIT):
+            if len(stats) >= BLACKLIST_MAX_BOUNCED_LIMIT and (not bounced_partner or any(p.message_bounce >= BLACKLIST_MAX_BOUNCED_LIMIT for p in bounced_partner)):
                 if max(stats) > min(stats) + datetime.timedelta(weeks=1):
                     blacklist_rec = self.env['mail.blacklist'].sudo()._add(bounced_email)
                     blacklist_rec._message_log(

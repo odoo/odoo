@@ -118,6 +118,7 @@ class TestBaseDocumentLayout(TestBaseDocumentLayoutHelpers):
             'secondary_color': False,
             'logo': False,
             'external_report_layout_id': self.env.ref('base.layout_template1').id,
+            'paperformat_id': self.env.ref('base.paperformat_us').id,
         })
         default_colors = self.default_colors
         with Form(self.env['base.document.layout']) as doc_layout:
@@ -138,6 +139,7 @@ class TestBaseDocumentLayout(TestBaseDocumentLayoutHelpers):
             'primary_color': '#ff0080',
             'secondary_color': '#00ff00',
             'logo': self.company_imgs['overwatch']['img'],
+            'paperformat_id': self.env.ref('base.paperformat_us').id,
         })
 
         with Form(self.env['base.document.layout']) as doc_layout:
@@ -151,6 +153,7 @@ class TestBaseDocumentLayout(TestBaseDocumentLayoutHelpers):
             'primary_color': '#ff0080',
             'secondary_color': '#00ff00',
             'logo': False,
+            'paperformat_id': self.env.ref('base.paperformat_us').id,
         })
 
         with Form(self.env['base.document.layout']) as doc_layout:
@@ -166,6 +169,7 @@ class TestBaseDocumentLayout(TestBaseDocumentLayoutHelpers):
             'primary_color': '#ff0080',
             'secondary_color': '#00ff00',
             'logo': self.company_imgs['overwatch']['img'],
+            'paperformat_id': self.env.ref('base.paperformat_us').id,
         })
 
         with Form(self.env['base.document.layout']) as doc_layout:
@@ -181,6 +185,7 @@ class TestBaseDocumentLayout(TestBaseDocumentLayoutHelpers):
             'primary_color': '#ff0080',
             'secondary_color': '#00ff00',
             'logo': self.company_imgs['overwatch']['img'],
+            'paperformat_id': self.env.ref('base.paperformat_us').id,
         })
 
         with Form(self.env['base.document.layout']) as doc_layout:
@@ -188,6 +193,21 @@ class TestBaseDocumentLayout(TestBaseDocumentLayoutHelpers):
             doc_layout.primary_color = doc_layout.logo_primary_color
             doc_layout.secondary_color = doc_layout.logo_secondary_color
             self.assertColors(doc_layout, self.company_imgs['overwatch']['colors'])
+
+    def test_parse_company_colors_grayscale(self):
+        """Grayscale images with transparency - make sure the color extraction does not crash"""
+        self.company.write({
+            'primary_color': '#ff0080',
+            'secondary_color': '#00ff00',
+            'logo': self.company_imgs['overwatch']['img'],
+            'paperformat_id': self.env.ref('base.paperformat_us').id,
+        })
+        with Form(self.env['base.document.layout']) as doc_layout:
+            with Image.open(os.path.join(dir_path, 'logo_ci.png'), 'r') as img:
+                base64_img = image_to_base64(img, 'PNG')
+                doc_layout.logo = base64_img
+            self.assertNotEqual(None, doc_layout.primary_color)
+
 
     # /!\ This case is NOT supported, and probably not supportable
     # res.partner resizes manu-militari the image it is given

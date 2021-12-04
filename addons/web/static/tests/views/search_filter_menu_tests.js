@@ -136,6 +136,46 @@ QUnit.module('FilterMenu', {
         filterMenu.destroy();
     });
 
+    QUnit.test('filtering by ID interval works', async function (assert) {
+        assert.expect(2);
+        this.fields['id_field'] = {string: "ID", type: "id", searchable: true};
+
+        var expectedDomains = [
+            [['id_field','>', 10]],
+            [['id_field','<=', 20]],
+        ];
+
+        var filterMenu = await createFilterMenu([], this.fields, {
+            intercepts: {
+                new_filters: function (ev) {
+                    var filter = ev.data.filters[0];
+                    // this step combine a tokenization/parsing followed by a string formatting
+                    var domain = pyUtils.assembleDomains([filter.domain]);
+                    domain = Domain.prototype.stringToArray(domain);
+                    assert.deepEqual(domain, expectedDomains.shift());
+                },
+            }
+        });
+
+        // open menu dropdown and custom filter submenu, select id field, choose option "greater than" and enter value `10`, then click apply
+        await testUtils.dom.click(filterMenu.$('span.fa-filter'));
+        await testUtils.dom.click(filterMenu.$('.o_add_custom_filter'));
+        await testUtils.fields.editSelect(filterMenu.$('.o_filter_condition select.o_input.o_searchview_extended_prop_field'), 'id_field');
+        await testUtils.fields.editSelect(filterMenu.$('.o_filter_condition select.o_input.o_searchview_extended_prop_op'), '>');
+
+        await testUtils.fields.editInput(filterMenu.$('.o_filter_condition .o_searchview_extended_prop_value input'), `10`);
+        await testUtils.dom.click(filterMenu.$('.o_apply_filter'));
+
+        // open custom filter submenu, select id field, choose option "less or equal than" and enter value `20`, then click apply
+        await testUtils.dom.click(filterMenu.$('.o_add_custom_filter'));
+        await testUtils.fields.editSelect(filterMenu.$('.o_filter_condition select.o_input.o_searchview_extended_prop_field'), 'id_field');
+        await testUtils.fields.editSelect(filterMenu.$('.o_filter_condition select.o_input.o_searchview_extended_prop_op'), '<=');
+        await testUtils.fields.editInput(filterMenu.$('.o_filter_condition .o_searchview_extended_prop_value input'), `20`);
+        await testUtils.dom.click(filterMenu.$('.o_apply_filter'));
+
+        filterMenu.destroy();
+    });
+
     QUnit.test('commit search with an extended proposition with field char does not cause a crash', async function (assert) {
         assert.expect(6);
 

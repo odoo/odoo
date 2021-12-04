@@ -78,6 +78,7 @@ class account_journal(models.Model):
     # Below method is used to get data of bank and cash statemens
     def get_line_graph_datas(self):
         """Computes the data used to display the graph for bank and cash journals in the accounting dashboard"""
+        currency = self.currency_id or self.company_id.currency_id
 
         def build_graph_data(date, amount):
             #display date in locale format
@@ -117,7 +118,7 @@ class account_journal(models.Model):
             date = val['date']
             if date != today.strftime(DF):  # make sure the last point in the graph is today
                 data[:0] = [build_graph_data(date, amount)]
-            amount -= val['amount']
+            amount = currency.round(amount - val['amount'])
 
         # make sure the graph starts 1 month ago
         if date.strftime(DF) != last_month.strftime(DF):
@@ -265,7 +266,7 @@ class account_journal(models.Model):
                     company_id
                 FROM account_move move
                 WHERE journal_id = %s
-                AND date <= %s
+                AND invoice_date_due <= %s
                 AND state = 'posted'
                 AND invoice_payment_state = 'not_paid'
                 AND type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt');
@@ -422,7 +423,15 @@ class account_journal(models.Model):
     def action_open_reconcile(self):
         if self.type in ['bank', 'cash']:
             # Open reconciliation view for bank statements belonging to this journal
-            bank_stmt = self.env['account.bank.statement'].search([('journal_id', 'in', self.ids)]).mapped('line_ids')
+            limit = int(self.env["ir.config_parameter"].sudo().get_param("account.reconcile.batch", 1000))
+            bank_stmt = self.env['account.bank.statement.line'].search([
+                ('journal_id', 'in', self.ids),
+                # take not reconciled lines only. See _check_lines_reconciled method
+                ('account_id', '=', False),
+                ('journal_entry_ids', '=', False),
+                ('amount', '!=', 0),
+            ], limit=limit)
+
             return {
                 'type': 'ir.actions.client',
                 'tag': 'bank_statement_reconciliation_view',
@@ -495,10 +504,13 @@ class account_journal(models.Model):
 
         domain_type_field = action['res_model'] == 'account.move.line' and 'move_id.type' or 'type' # The model can be either account.move or account.move.line
 
-        if self.type == 'sale':
-            action['domain'] = [(domain_type_field, 'in', ('out_invoice', 'out_refund', 'out_receipt'))]
-        elif self.type == 'purchase':
-            action['domain'] = [(domain_type_field, 'in', ('in_invoice', 'in_refund', 'in_receipt'))]
+        # Override the domain only if the action was not explicitly specified in order to keep the
+        # original action domain.
+        if not self._context.get('action_name'):
+            if self.type == 'sale':
+                action['domain'] = [(domain_type_field, 'in', ('out_invoice', 'out_refund', 'out_receipt'))]
+            elif self.type == 'purchase':
+                action['domain'] = [(domain_type_field, 'in', ('in_invoice', 'in_refund', 'in_receipt'))]
 
         return action
 

@@ -35,4 +35,5 @@ Including the following data in the Accounting Standards for Business Enterprise
         'data/account_tax_template_data.xml',
         'data/account_chart_template_data.xml',
     ],
+    'license': 'LGPL-3',
 }

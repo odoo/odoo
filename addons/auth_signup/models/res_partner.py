@@ -91,10 +91,10 @@ class ResPartner(models.Model):
                 if fragment:
                     query['redirect'] = base + werkzeug.urls.url_encode(fragment)
 
-            url = "/web/%s?%s" % (route, werkzeug.urls.url_encode(query))
+            signup_url = "/web/%s?%s" % (route, werkzeug.urls.url_encode(query))
             if not self.env.context.get('relative_url'):
-                url = werkzeug.urls.url_join(base_url, url)
-            res[partner.id] = url
+                signup_url = werkzeug.urls.url_join(base_url, signup_url)
+            res[partner.id] = signup_url
 
         return res
 
@@ -105,12 +105,15 @@ class ResPartner(models.Model):
         """ Get a signup token related to the partner if signup is enabled.
             If the partner already has a user, get the login parameter.
         """
+        if not self.env.user.has_group('base.group_user') and not self.env.is_admin():
+            raise exceptions.AccessDenied()
+
         res = defaultdict(dict)
 
         allow_signup = self.env['res.users']._get_signup_invitation_scope() == 'b2c'
         for partner in self:
-            if allow_signup and not partner.sudo().user_ids:
-                partner = partner.sudo()
+            partner = partner.sudo()
+            if allow_signup and not partner.user_ids:
                 partner.signup_prepare()
                 res[partner.id]['auth_signup_token'] = partner.signup_token
             elif partner.user_ids:

@@ -18,6 +18,7 @@ var ActivityMenu = Widget.extend({
         'click .o_mail_activity_action': '_onActivityActionClick',
         'click .o_mail_preview': '_onActivityFilterClick',
         'show.bs.dropdown': '_onActivityMenuShow',
+        'hide.bs.dropdown': '_onActivityMenuHide',
     },
     start: function () {
         this._$activitiesPreview = this.$('.o_mail_systray_dropdown_items');
@@ -114,7 +115,7 @@ var ActivityMenu = Widget.extend({
             this.do_action({
                 type: 'ir.actions.act_window',
                 name: targetAction.data('model_name'),
-                views: [[false, 'activity'], [false, 'kanban'], [false, 'list']],
+                views: [[false, 'activity'], [false, 'kanban'], [false, 'list'], [false, 'form']],
                 view_mode: 'activity',
                 res_model: targetAction.data('res_model'),
                 domain: [['activity_ids.user_id', '=', session.uid]],
@@ -148,13 +149,22 @@ var ActivityMenu = Widget.extend({
             search_view_id: [false],
             domain: [['activity_user_id', '=', session.uid]],
             context:context,
+        }, {
+            clear_breadcrumbs: true,
         });
     },
     /**
      * @private
      */
     _onActivityMenuShow: function () {
+        document.body.classList.add('modal-open');
          this._updateActivityPreview();
+    },
+    /**
+     * @private
+     */
+    _onActivityMenuHide: function () {
+        document.body.classList.remove('modal-open');
     },
 });
 

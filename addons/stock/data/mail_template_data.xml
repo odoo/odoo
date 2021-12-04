@@ -14,7 +14,14 @@
             Your tracking reference is
             <strong>
             %if object.carrier_tracking_url:
-                <a href="${object.carrier_tracking_url}" target="_blank">${object.carrier_tracking_ref}</a>.
+                % set multiple_carrier_tracking = object.get_multiple_carrier_tracking()
+                %if multiple_carrier_tracking:
+                    % for line in multiple_carrier_tracking:
+                        <br/><a href="${line[1]}" target="_blank">${line[0]}</a>
+                    % endfor
+                %else:
+                    <a href="${object.carrier_tracking_url}" target="_blank">${object.carrier_tracking_ref}</a>.
+                %endif
             %else:
                 ${object.carrier_tracking_ref}.
             %endif

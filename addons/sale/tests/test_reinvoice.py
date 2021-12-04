@@ -229,3 +229,44 @@ class TestReInvoice(TestCommonSaleNoChart):
         self.assertEquals(len(self.sale_order.order_line), 1, "No SO line should have been created (or removed) when validating vendor bill")
         self.assertEquals(sale_order_line.qty_delivered, 1, "The delivered quantity of SO line should not have been incremented")
         self.assertTrue(invoice_a.mapped('line_ids.analytic_line_ids'), "Analytic lines should be generated")
+
+    def test_not_reinvoicing_invoiced_so_lines(self):
+        """ Test that invoiced SO lines are not re-invoiced. """
+        so_line1 = self.env['sale.order.line'].create({
+            'name': self.product_deliver_cost.name,
+            'product_id': self.product_deliver_cost.id,
+            'product_uom_qty': 1,
+            'qty_delivered': 1,
+            'product_uom': self.product_deliver_cost.uom_id.id,
+            'price_unit': self.product_deliver_sales_price.list_price,
+            'discount': 100.00,
+            'order_id': self.sale_order.id,
+        })
+        so_line1.product_id_change()
+        so_line2 = self.env['sale.order.line'].create({
+            'name': self.product_deliver_sales_price.name,
+            'product_id': self.product_deliver_sales_price.id,
+            'product_uom_qty': 1,
+            'qty_delivered': 1,
+            'product_uom': self.product_deliver_sales_price.uom_id.id,
+            'price_unit': self.product_deliver_sales_price.list_price,
+            'discount': 100.00,
+            'order_id': self.sale_order.id,
+        })
+        so_line2.product_id_change()
+
+        self.sale_order.onchange_partner_id()
+        self.sale_order._compute_tax_id()
+        self.sale_order.action_confirm()
+
+        # create invoice and validate it
+        invoice = self.sale_order._create_invoices()
+        invoice.post()
+
+        so_line3 = self.sale_order.order_line.filtered(lambda sol: sol != so_line1 and sol.product_id == self.product_deliver_cost)
+        so_line4 = self.sale_order.order_line.filtered(lambda sol: sol != so_line2 and sol.product_id == self.product_deliver_sales_price)
+
+        self.assertFalse(so_line3, "No re-invoicing should have created a new sale line with product #1")
+        self.assertFalse(so_line4, "No re-invoicing should have created a new sale line with product #2")
+        self.assertEqual(so_line1.qty_delivered, 1, "No re-invoicing should have impacted exising SO line 1")
+        self.assertEqual(so_line2.qty_delivered, 1, "No re-invoicing should have impacted exising SO line 2")

@@ -47,6 +47,7 @@ var FormView = BasicView.extend({
         this.controllerParams.mode = mode;
 
         this.rendererParams.mode = mode;
+        this.rendererParams.isFromFormViewDialog = params.isFromFormViewDialog;
     },
 
     //--------------------------------------------------------------------------
@@ -156,11 +157,8 @@ var FormView = BasicView.extend({
      */
     _setSubViewLimit: function (attrs) {
         var view = attrs.views && attrs.views[attrs.mode];
-        var limit = view && view.arch.attrs.limit && parseInt(view.arch.attrs.limit);
-        if (!limit && attrs.widget === 'many2many_tags') {
-            limit = 1000;
-        }
-        attrs.limit = limit || 40;
+        var limit = view && view.arch.attrs.limit && parseInt(view.arch.attrs.limit, 10);
+        attrs.limit = limit || attrs.Widget.prototype.limit || 40;
     },
 });
 

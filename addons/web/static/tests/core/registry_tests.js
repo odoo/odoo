@@ -19,6 +19,27 @@ QUnit.module('core', {}, function () {
         assert.strictEqual(registry.get('foo'), foo);
     });
 
+    QUnit.test('get initial keys', function (assert) {
+        assert.expect(1);
+
+        var registry = new Registry({ a: 1, });
+        assert.deepEqual(
+            registry.keys(),
+            ['a'],
+            "keys on prototype should be returned"
+        );
+    });
+
+    QUnit.test('get initial entries', function (assert) {
+        assert.expect(1);
+
+        var registry = new Registry({ a: 1, });
+        assert.deepEqual(
+            registry.entries(),
+            { a: 1, },
+            "entries on prototype should be returned"
+        );
+    });
 
     QUnit.test('multiget', function (assert) {
         assert.expect(1);

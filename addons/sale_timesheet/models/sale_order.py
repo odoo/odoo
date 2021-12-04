@@ -6,6 +6,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
 from odoo.tools.safe_eval import safe_eval
+from odoo.tools.sql import column_exists, create_column
 
 
 class SaleOrder(models.Model):
@@ -42,7 +43,7 @@ class SaleOrder(models.Model):
     @api.depends('order_line.product_id.project_id')
     def _compute_tasks_ids(self):
         for order in self:
-            order.tasks_ids = self.env['project.task'].search([('sale_line_id', 'in', order.order_line.ids)])
+            order.tasks_ids = self.env['project.task'].search(['|', ('sale_line_id', 'in', order.order_line.ids), ('sale_order_id', '=', order.id)])
             order.tasks_count = len(order.tasks_ids)
 
     @api.depends('order_line.product_id.service_tracking')
@@ -67,11 +68,7 @@ class SaleOrder(models.Model):
         for sale_order in self:
             duration_list = []
             for timesheet in sale_order.timesheet_ids:
-                timesheet_uom = timesheet.product_uom_id or timesheet.company_id.project_time_mode_id
-                if timesheet_uom != sale_order.timesheet_encode_uom_id and timesheet_uom.category_id == sale_order.timesheet_encode_uom_id.category_id:
-                    duration_list.append(timesheet_uom._compute_quantity(timesheet.unit_amount, sale_order.timesheet_encode_uom_id))
-                else:
-                    duration_list.append(timesheet.unit_amount)
+                duration_list.append(timesheet.unit_amount)
             sale_order.timesheet_total_duration = sum(duration_list)
 
     @api.onchange('project_id')
@@ -83,9 +80,10 @@ class SaleOrder(models.Model):
     def _action_confirm(self):
         """ On SO confirmation, some lines should generate a task or a project. """
         result = super(SaleOrder, self)._action_confirm()
-        self.mapped('order_line').sudo().with_context(
-            force_company=self.company_id.id,
-        )._timesheet_service_generation()
+        for order in self:
+            order.mapped('order_line').sudo().with_context(
+                force_company=order.company_id.id,
+            )._timesheet_service_generation()
         return result
 
     def action_view_task(self):
@@ -139,9 +137,7 @@ class SaleOrder(models.Model):
     def action_view_timesheet(self):
         self.ensure_one()
         action = self.env.ref('sale_timesheet.timesheet_action_from_sales_order').read()[0]
-        ctx = dict(self.env.context or {})
-        ctx.pop('group_by', None)
-        action['context'] = ctx  # erase default filters
+        action['context'] = {}  # erase default filters
         if self.timesheet_count > 0:
             action['domain'] = [('so_line', 'in', self.order_line.ids)]
         else:
@@ -197,6 +193,21 @@ class SaleOrderLine(models.Model):
             else:
                 super(SaleOrderLine, line)._compute_product_updatable()
 
+    def _auto_init(self):
+        """
+        Create column to stop ORM from computing it himself (too slow)
+        """
+        if not column_exists(self.env.cr, 'sale_order_line', 'is_service'):
+            create_column(self.env.cr, 'sale_order_line', 'is_service', 'bool')
+            self.env.cr.execute("""
+                UPDATE sale_order_line line
+                SET is_service = (pt.type = 'service')
+                FROM product_product pp
+                LEFT JOIN product_template pt ON pt.id = pp.product_tmpl_id
+                WHERE pp.id = line.product_id
+            """)
+        return super()._auto_init()
+
     @api.model_create_multi
     def create(self, vals_list):
         lines = super(SaleOrderLine, self).create(vals_list)
@@ -235,21 +246,15 @@ class SaleOrderLine(models.Model):
             planned_hours = self.product_uom_qty
         return planned_hours
 
-    def _timesheet_create_project(self):
-        """ Generate project for the given so line, and link it.
-            :param project: record of project.project in which the task should be created
-            :return task: record of the created task
-        """
-        self.ensure_one()
+    def _timesheet_create_project_prepare_values(self):
+        """Generate project values"""
         account = self.order_id.analytic_account_id
         if not account:
             self.order_id._create_analytic_account(prefix=self.product_id.default_code or None)
             account = self.order_id.analytic_account_id
 
-        # create the project or duplicate one
-        values = {
+        return {
             'name': '%s - %s' % (self.order_id.client_order_ref, self.order_id.name) if self.order_id.client_order_ref else self.order_id.name,
-            'allow_timesheets': True,
             'analytic_account_id': account.id,
             'partner_id': self.order_id.partner_id.id,
             'sale_line_id': self.id,
@@ -257,6 +262,15 @@ class SaleOrderLine(models.Model):
             'active': True,
             'company_id': self.company_id.id,
         }
+
+    def _timesheet_create_project(self):
+        """ Generate project for the given so line, and link it.
+            :param project: record of project.project in which the task should be created
+            :return task: record of the created task
+        """
+        self.ensure_one()
+        # create the project or duplicate one
+        values = self._timesheet_create_project_prepare_values()
         if self.product_id.project_template_id:
             values['name'] = "%s - %s" % (values['name'], self.product_id.project_template_id.name)
             project = self.product_id.project_template_id.copy(values)

@@ -34,7 +34,7 @@
                     <li class="nav-header nav-item"><h3>Filter by Level</h3></li>
                     <t t-foreach="grades" t-as="grade">
                         <li class="nav-item">
-                            <a t-attf-href="/partners#{ grade['grade_id'][0] and '/grade/%s' % grade['grade_id'][0] or '' }#{ current_country and '/country/%s' % slug(current_country) or '' }#{ '?' + (search_path or '') }"
+                            <a t-attf-href="/partners#{ grade['grade_id'][0] and '/grade/%s' % grade['grade_id'][0] or '' }#{ current_country and '/country/%s' % slug(current_country) or '' }#{ '?' + (search_path or '') + '&amp;' + keep_query('country_all') }"
                                t-attf-class="nav-link#{grade['active'] and ' active' or ''}">
                                 <span class="badge badge-pill float-right" t-esc="grade['grade_id_count'] or ''"/>
                                 <t t-esc="grade['grade_id'][1]"/>
@@ -63,6 +63,7 @@
                     <t t-call="website.pager"/>
                     <form action="" method="get" class="form-inline ml-auto">
                         <div class="form-group">
+                            <input t-if="country_all" type="hidden" name="country_all" value="True" />
                             <input type="text" name="search" class="search-query form-control" placeholder="Search" t-att-value="searches.get('search', '')"/>
                         </div>
                     </form>
@@ -83,7 +84,8 @@
                         <div class="media mt-3">
                             <a t-attf-href="/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}"
                                t-field="partner.image_128"
-                               t-options='{"widget": "image", "class": "mr-3"}'
+                               class="mr-3 text-center o_width_128"
+                               t-options='{"widget": "image", "qweb_img_responsive": False, "class": "o_image_128_max"}'
                             ></a>
                             <div class="media-body o_partner_body" style="min-height: 64px;">
                                 <a t-attf-href="/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}">
@@ -164,7 +166,7 @@
     <t t-if="any([p.website_published for p in partner.implemented_partner_ids])">
         <h3 id="references">References</h3>
         <div t-foreach="partner.implemented_partner_ids" t-if="reference.website_published" t-as="reference" class="media mt-3">
-            <span t-field="reference.image_128" t-options='{"widget": "image", "class": "d-block mr-3"}'/>
+            <span t-field="reference.image_128" class="d-block mr-3 text-center o_width_128" t-options='{"widget": "image", "qweb_img_responsive": False, "class": "o_image_128_max"}'/>
             <div class="media-body" style="min-height: 64px;">
                 <span t-field="reference.self"/>
                 <div t-field='reference.website_short_description'/>
@@ -318,7 +320,10 @@
                         </td>
                         <td><span t-field="opp.contact_name" /></td>
                         <td>
-                            <span class="text-nowrap" t-esc="opp.planned_revenue" t-options="{'widget': 'monetary', 'display_currency': opp.company_currency}"/> at <span t-field="opp.probability" />%
+                            <span t-if="opp.company_currency" class="text-nowrap" t-esc="opp.planned_revenue" t-options="{'widget': 'monetary', 'display_currency': opp.company_currency}"/>
+                            <span t-else="" class="text-nowrap" t-esc="opp.planned_revenue"/>
+                            <span> at </span>
+                            <span t-field="opp.probability" />%
                         </td>
                         <td>
                             <span class="badge badge-info badge-pill" title="Current stage of the opportunity" t-esc="opp.stage_id.name" />
@@ -527,7 +532,9 @@
                         <div class="col-lg-5 mb-4 mb-lg-0">
                             <div class="border-bottom d-flex justify-content-between py-2 mb-3 align-items-center">
                                 <h5 class="mb-0">
-                                    <span class="text-nowrap" t-esc="opportunity.planned_revenue" t-options="{'widget': 'monetary', 'display_currency': opportunity.company_currency}"/> at
+                                    <span t-if="opportunity.company_currency" class="text-nowrap" t-esc="opportunity.planned_revenue" t-options="{'widget': 'monetary', 'display_currency': opportunity.company_currency}"/>
+                                    <span t-else="" class="text-nowrap" t-esc="opportunity.planned_revenue"/>
+                                    <span> at </span>
                                     <span class="badge badge-info badge-pill"><span t-field="opportunity.probability"/>%</span>
                                 </h5>
                                 <button type="button" data-toggle="modal" data-target=".modal_edit_opp" class="btn btn-link btn-sm"><i class="fa fa-pencil mr-1"/>Edit</button>
@@ -647,7 +654,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <div class="row">
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-5">
                                                         <label>Priority:</label>
                                                         <div class="input-group">
                                                             <label class="radio-inline">
@@ -671,11 +678,11 @@
                                                             </label>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-7">
                                                         <label>Expected Closing:</label>
                                                         <div class="input-group date" id="exp_closing_div" data-target-input="nearest">
                                                             <t t-set='date_formatted'><t t-options='{"widget": "date"}' t-esc="opportunity.date_deadline"/></t>
-                                                            <input type="date" min="1900-01-01" name="date_deadline" t-att-value="date_formatted" class="datetimepicker-input form-control date_deadline" data-date-format="YYYY-MM-DD" t-att-name="prefix" placeholder="YYYY-MM-DD"/>
+                                                            <input type="text" name="date_deadline" data-target="#exp_closing_div" t-att-value="date_formatted" class="datetimepicker-input form-control date_deadline" t-att-name="prefix"/>
                                                             <div class="input-group-append" data-target="#exp_closing_div" data-toggle="datetimepicker">
                                                                 <span class="input-group-text">
                                                                     <span class="fa fa-calendar" role="img" aria-label="Calendar"></span>
@@ -701,7 +708,7 @@
                                                 <label class="col-form-label" for="activity_date_deadline">Next Activity Date</label>
                                                 <div class="input-group date" id="next_activity_div" data-target-input="nearest">
                                                     <t t-set='date_formatted'><t t-options='{"widget": "date"}' t-esc="user_activity.date_deadline"/></t>
-                                                    <input type="date" min="1900-01-01" name="activity_date_deadline" t-att-value="date_formatted" class="form-control activity_date_deadline datetimepicker-input" data-date-format="YYYY-MM-DD" t-att-name="prefix" placeholder="YYYY-MM-DD"/>
+                                                    <input type="text" name="activity_date_deadline" data-target="#next_activity_div" t-att-value="date_formatted" class="form-control activity_date_deadline datetimepicker-input" t-att-name="prefix"/>
                                                     <div class="input-group-append" data-target="#next_activity_div" data-toggle="datetimepicker">
                                                         <span class="input-group-text">
                                                             <span class="fa fa-calendar" role="img" aria-label="Calendar" title="Calendar"></span>

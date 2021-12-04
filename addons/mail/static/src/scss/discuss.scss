@@ -113,9 +113,7 @@
         height: 100%;
         margin-left: $o-mail-chat-sidebar-width;
         position: relative;
-        @include media-breakpoint-up(md) {
-            overflow: auto;
-        }
+        overflow: auto;
 
         @include media-breakpoint-up(xl) {
             margin-left: $o-mail-chat-sidebar-width + 50px;
@@ -360,6 +358,9 @@
         align-items: center;
         flex: 0 0 auto;
         position: relative;
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
         > img {
             max-width: 100%;
             max-height: 100%;
@@ -447,10 +448,6 @@
 
     .o_mail_preview {
         padding: $o-mail-chatter-mobile-gap;
-
-        .o_mail_preview_image:not(img) {
-            width: $o-mail-chatter-mobile-gap*6;
-        }
 
         .o_preview_info, .o_last_message_date {
             margin-left: $o-mail-chatter-mobile-gap;

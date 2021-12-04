@@ -48,11 +48,6 @@
                 <field name="l10n_latam_document_number"
                     attrs="{'invisible': ['|', ('l10n_latam_sequence_id', '!=', False), ('l10n_latam_use_documents', '=', False)], 'required': [('l10n_latam_sequence_id', '=', False), ('l10n_latam_use_documents', '=', True)], 'readonly': [('state', '!=', 'draft')]}"/>
             </field>
-
-            <field name="journal_id" position="attributes">
-                <attribute name="context">{'default_type': type}</attribute>
-            </field>
-
         </field>
     </record>
 

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo.addons.account.tests.invoice_test_common import InvoiceTestCommon
+from odoo.addons.account.tests.account_test_savepoint import AccountTestInvoicingCommon
 from odoo.tests import tagged, new_test_user
 from odoo.tests.common import Form
 from odoo import fields
@@ -7,13 +7,13 @@ from odoo.exceptions import ValidationError, UserError
 
 
 @tagged('post_install', '-at_install')
-class TestAccountMove(InvoiceTestCommon):
+class TestAccountMove(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super(TestAccountMove, cls).setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
-        tax_repartition_line = cls.company_data['default_tax_sale'].invoice_repartition_line_ids\
+        tax_repartition_line = cls.company_data['default_tax_sale'].refund_repartition_line_ids\
             .filtered(lambda line: line.repartition_type == 'tax')
         cls.test_move = cls.env['account.move'].create({
             'type': 'entry',
@@ -310,6 +310,23 @@ class TestAccountMove(InvoiceTestCommon):
         with self.assertRaises(UserError), self.cr.savepoint():
             draft_moves.unlink()
 
+    def test_misc_always_balanced_move(self):
+        ''' Ensure there is no way to make '''
+        # You can't remove a journal item making the journal entry unbalanced.
+        with self.assertRaises(UserError), self.cr.savepoint():
+            self.test_move.line_ids[0].unlink()
+
+        # Same check using write instead of unlink.
+        with self.assertRaises(UserError), self.cr.savepoint():
+            balance = self.test_move.line_ids[0].balance + 5
+            self.test_move.line_ids[0].write({
+                'debit': balance if balance > 0.0 else 0.0,
+                'credit': -balance if balance < 0.0 else 0.0,
+            })
+
+        # You can remove journal items if the related journal entry is still balanced.
+        self.test_move.line_ids.unlink()
+
     def test_misc_unique_sequence_number(self):
         ''' Ensure two journal entries can't share the same name when using the same sequence. '''
         self.test_move.post()
@@ -338,12 +355,10 @@ class TestAccountMove(InvoiceTestCommon):
 
         move = self.test_move.with_user(user)
         partner = self.env['res.partner'].create({'name': 'Belouga'})
-        commercial_partner = self.env['res.partner'].create({'name': 'Rorqual'})
         move.partner_id = partner
-        move.commercial_partner_id = commercial_partner
 
         move.post()
-        self.assertEqual(move.message_partner_ids, self.env.user.partner_id | existing_partners | partner | commercial_partner)
+        self.assertEqual(move.message_partner_ids, self.env.user.partner_id | existing_partners | partner)
 
     def test_misc_move_onchange(self):
         ''' Test the behavior on onchanges for account.move having 'entry' as type. '''
@@ -407,3 +422,66 @@ class TestAccountMove(InvoiceTestCommon):
                 },
             ],
         )
+
+    def test_included_tax(self):
+        '''
+        Test an account.move.line is created automatically when adding a tax.
+        This test uses the following scenario:
+            - Create manually a debit line of 1000 having an included tax.
+            - Assume a line containing the tax amount is created automatically.
+            - Create manually a credit line to balance the two previous lines.
+            - Save the move.
+
+        included tax = 20%
+
+        Name                   | Debit     | Credit    | Tax_ids       | Tax_line_id's name
+        -----------------------|-----------|-----------|---------------|-------------------
+        debit_line_1           | 1000      |           | tax           |
+        included_tax_line      | 200       |           |               | included_tax_line
+        credit_line_1          |           | 1200      |               |
+        '''
+
+        self.included_percent_tax = self.env['account.tax'].create({
+            'name': 'included_tax_line',
+            'amount_type': 'percent',
+            'amount': 20,
+            'price_include': True,
+            'include_base_amount': False,
+        })
+        self.account = self.company_data['default_account_revenue']
+
+        move_form = Form(self.env['account.move'].with_context(default_move_type='entry'))
+
+        # Create a new account.move.line with debit amount.
+        with move_form.line_ids.new() as debit_line:
+            debit_line.name = 'debit_line_1'
+            debit_line.account_id = self.account
+            debit_line.debit = 1000
+            debit_line.tax_ids.clear()
+            debit_line.tax_ids.add(self.included_percent_tax)
+
+            self.assertTrue(debit_line.recompute_tax_line)
+
+        # Create a third account.move.line with credit amount.
+        with move_form.line_ids.new() as credit_line:
+            credit_line.name = 'credit_line_1'
+            credit_line.account_id = self.account
+            credit_line.credit = 1200
+
+        move = move_form.save()
+
+        self.assertRecordValues(move.line_ids, [
+            {'name': 'debit_line_1',             'debit': 1000.0,    'credit': 0.0,      'tax_ids': [self.included_percent_tax.id],      'tax_line_id': False},
+            {'name': 'included_tax_line',        'debit': 200.0,     'credit': 0.0,      'tax_ids': [],                                  'tax_line_id': self.included_percent_tax.id},
+            {'name': 'credit_line_1',            'debit': 0.0,       'credit': 1200.0,   'tax_ids': [],                                  'tax_line_id': False},
+        ])
+
+    def test_misc_prevent_unlink_posted_items(self):
+        # You cannot remove journal items if the related journal entry is posted.
+        self.test_move.action_post()
+        with self.assertRaises(UserError), self.cr.savepoint():
+            self.test_move.line_ids.unlink()
+
+        # You can remove journal items if the related journal entry is draft.
+        self.test_move.button_draft()
+        self.test_move.line_ids.unlink()

@@ -8,6 +8,7 @@ var _t = core._t;
 var PrinterMixin = {
     init: function () {
         this.receipt_queue = [];
+        this.htmlToImgLetterRendering = false; // Whether to render each letter seperately. Necessary if letter-spacing is used.
     },
 
     /**
@@ -22,14 +23,14 @@ var PrinterMixin = {
         function process_next_job() {
             if (self.receipt_queue.length > 0) {
                 var r = self.receipt_queue.shift();
-                self.htmlToImg(r)
+                return self.htmlToImg(r)
                     .then(self.send_printing_job.bind(self))
                     .then(self._onIoTActionResult.bind(self))
                     .then(process_next_job)
                     .guardedCatch(self._onIoTActionFail.bind(self));
             }
         }
-        process_next_job();
+        return process_next_job();
     },
 
     /**
@@ -56,7 +57,8 @@ var PrinterMixin = {
                 onrendered: function (canvas) {
                     $('.pos-receipt-print').empty();
                     resolve(self.process_canvas(canvas));
-                } 
+                },
+                letterRendering: self.htmlToImgLetterRendering,
             })
         });
         return promise;
@@ -85,6 +87,7 @@ var Printer = core.Class.extend(PrinterMixin, {
     init: function (url, pos) {
         PrinterMixin.init.call(this, arguments);
         this.pos = pos;
+        this.htmlToImgLetterRendering = pos.htmlToImgLetterRendering();
         this.connection = new Session(undefined, url || 'http://localhost:8069', { use_cors: true});
     },
 

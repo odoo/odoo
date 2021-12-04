@@ -54,21 +54,21 @@ class ProfitabilityAnalysis(models.Model):
                        ELSE 0.0
                     END AS expense_amount_untaxed_to_invoice,
                     CASE
-                       WHEN SOL.qty_delivered_method = 'analytic' AND SOL.invoice_status != 'no'
+                       WHEN SOL.qty_delivered_method = 'analytic' AND SOL.invoice_status = 'invoiced'
                        THEN
                             CASE
                                 WHEN T.expense_policy = 'sales_price'
-                                THEN (SOL.price_reduce / CASE COALESCE(S.currency_rate, 0) WHEN 0 THEN 1.0 ELSE S.currency_rate END) * SOL.qty_invoiced
+                                THEN (SOL.untaxed_amount_invoiced / CASE COALESCE(S.currency_rate, 0) WHEN 0 THEN 1.0 ELSE S.currency_rate END)
                                 ELSE -COST_SUMMARY.expense_cost
                             END
                        ELSE 0.0
                     END AS expense_amount_untaxed_invoiced,
                     CASE
-                       WHEN SOL.qty_delivered_method IN ('timesheet', 'manual') THEN (SOL.untaxed_amount_to_invoice / CASE COALESCE(S.currency_rate, 0) WHEN 0 THEN 1.0 ELSE S.currency_rate END)
+                       WHEN SOL.qty_delivered_method IN ('timesheet', 'manual', 'stock_move') THEN (SOL.untaxed_amount_to_invoice / CASE COALESCE(S.currency_rate, 0) WHEN 0 THEN 1.0 ELSE S.currency_rate END)
                        ELSE 0.0
                     END AS amount_untaxed_to_invoice,
                     CASE
-                       WHEN SOL.qty_delivered_method IN ('timesheet', 'manual') THEN (COALESCE(SOL.untaxed_amount_invoiced, COST_SUMMARY.downpayment_invoiced) / CASE COALESCE(S.currency_rate, 0) WHEN 0 THEN 1.0 ELSE S.currency_rate END)
+                       WHEN SOL.qty_delivered_method IN ('timesheet', 'manual', 'stock_move') THEN (COALESCE(SOL.untaxed_amount_invoiced, COST_SUMMARY.downpayment_invoiced) / CASE COALESCE(S.currency_rate, 0) WHEN 0 THEN 1.0 ELSE S.currency_rate END)
                        ELSE 0.0
                     END AS amount_untaxed_invoiced,
                     COST_SUMMARY.timesheet_unit_amount AS timesheet_unit_amount,
@@ -106,49 +106,64 @@ class ProfitabilityAnalysis(models.Model):
                                 AAL.so_line AS sale_line_id,
                                 0.0 AS timesheet_unit_amount,
                                 0.0 AS timesheet_cost,
-                                SUM(AAL.amount) AS expense_cost,
+                                CASE
+                                  WHEN AAL.product_id != CAST((COALESCE((SELECT value FROM ir_config_parameter WHERE key='sale.default_deposit_product_id'), '-1')) as INT)
+                                  THEN (SUM(AAL.amount))
+                                  ELSE 0.0
+                                END AS expense_cost,
                                 0.0 AS downpayment_invoiced
                             FROM project_project P
                                 LEFT JOIN account_analytic_account AA ON P.analytic_account_id = AA.id
                                 LEFT JOIN account_analytic_line AAL ON AAL.account_id = AA.id
+                                LEFT JOIN account_move_line RINVL ON AAL.move_id = RINVL.id
+                                                                 AND RINVL.parent_state = 'posted'
+                                                                 AND RINVL.exclude_from_invoice_tab = 'f'
+                                -- Check if the AAL is not related to a reversed credit note
+                                LEFT JOIN account_move RINV ON RINV.id = RINVL.move_id
+                                LEFT JOIN account_move_line INVL ON INVL.move_id = RINV.reversed_entry_id
+                                                                AND INVL.parent_state = 'posted'
+                                                                AND INVL.exclude_from_invoice_tab = 'f'
+                                                                AND INVL.product_id = RINVL.product_id
+
+                                -- Check if it's not a bill which has been reversed
+                                -- In this case, RINVL should be considered as a Vendor Bill line, and here below we search for the bill reversal.
+                                LEFT JOIN account_move RBILL ON RBILL.reversed_entry_id = RINVL.move_id
+                                LEFT JOIN account_move_line RBILLL ON RBILLL.move_id = RBILL.id
+                                                                AND RBILLL.parent_state = 'posted'
+                                                                AND RBILLL.exclude_from_invoice_tab = 'f'
+                                                                AND RBILLL.product_id = RINVL.product_id
+
                             WHERE AAL.amount < 0.0 AND AAL.project_id IS NULL AND P.active = 't' AND P.allow_timesheets = 't'
-                            GROUP BY P.id, AA.id, AAL.so_line
+                              AND INVL.id IS NULL -- exclude credit notes from this subquery
+                              AND RBILLL.id IS NULL
+                            GROUP BY P.id, AA.id, AAL.so_line, AAL.product_id
 
                             UNION
 
                             SELECT
                                 P.id AS project_id,
                                 P.analytic_account_id AS analytic_account_id,
-                                MY_SOLS.id AS sale_line_id,
+                                SOLDOWN.id AS sale_line_id,
                                 0.0 AS timesheet_unit_amount,
                                 0.0 AS timesheet_cost,
                                 0.0 AS expense_cost,
-                                CASE WHEN MY_SOLS.invoice_status = 'invoiced' THEN MY_SOLS.price_reduce ELSE 0.0 END AS downpayment_invoiced
+                                CASE WHEN SOLDOWN.invoice_status = 'invoiced' THEN SOLDOWN.price_reduce ELSE 0.0 END AS downpayment_invoiced
                             FROM project_project P
-                                LEFT JOIN sale_order_line MY_SOL ON P.sale_line_id = MY_SOL.id
-                                LEFT JOIN sale_order MY_S ON MY_SOL.order_id = MY_S.id
-                                LEFT JOIN sale_order_line MY_SOLS ON MY_SOLS.order_id = MY_S.id
-                            WHERE MY_SOLS.is_downpayment = 't'
-                            GROUP BY P.id, MY_SOLS.id
-
-                            UNION
-
-                            SELECT
-                                P.id AS project_id,
-                                P.analytic_account_id AS analytic_account_id,
-                                OLIS.id AS sale_line_id,
-                                0.0 AS timesheet_unit_amount,
-                                0.0 AS timesheet_cost,
-                                OLIS.price_reduce AS expense_cost,
-                                0.0 AS downpayment_invoiced
-                            FROM project_project P
-                                LEFT JOIN account_analytic_account ANAC ON P.analytic_account_id = ANAC.id
-                                LEFT JOIN account_analytic_line ANLI ON ANAC.id = ANLI.account_id
-                                LEFT JOIN sale_order_line OLI ON P.sale_line_id = OLI.id
-                                LEFT JOIN sale_order ORD ON OLI.order_id = ORD.id
-                                LEFT JOIN sale_order_line OLIS ON ORD.id = OLIS.order_id
-                            WHERE OLIS.product_id = ANLI.product_id AND OLIS.is_downpayment = 't' AND ANLI.amount < 0.0 AND ANLI.project_id IS NULL AND P.active = 't' AND P.allow_timesheets = 't'
-                            GROUP BY P.id, OLIS.id
+                                INNER JOIN sale_order_line SOL ON P.sale_line_id = SOL.id
+                                INNER JOIN sale_order_line SOLDOWN ON SOLDOWN.order_id = SOL.order_id AND SOLDOWN.is_downpayment = 't'
+                                LEFT JOIN sale_order_line_invoice_rel SOINV ON SOINV.order_line_id = SOLDOWN.id
+                                LEFT JOIN account_move_line INVL ON SOINV.invoice_line_id = INVL.id
+                                                                AND INVL.parent_state = 'posted'
+                                                                AND INVL.exclude_from_invoice_tab = 'f'
+                                LEFT JOIN account_move RINV ON INVL.move_id = RINV.reversed_entry_id
+                                LEFT JOIN account_move_line RINVL ON RINV.id = RINVL.move_id
+                                                                 AND RINVL.parent_state = 'posted'
+                                                                 AND RINVL.exclude_from_invoice_tab = 'f'
+                                                                 AND RINVL.product_id = SOLDOWN.product_id
+                                LEFT JOIN account_analytic_line ANLI ON ANLI.move_id = RINVL.id AND ANLI.amount < 0.0
+                            WHERE ANLI.id IS NULL -- there are no credit note for this downpayment
+                              AND P.active = 't' AND P.allow_timesheets = 't'
+                            GROUP BY P.id, SOLDOWN.id
 
                             UNION
 

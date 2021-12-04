@@ -5,19 +5,22 @@
 # Translators:
 # Martin Trigaux, 2019
 # Levent Karakaş <levent@mektup.at>, 2019
-# Murat Kaplan <muratk@projetgrup.com>, 2019
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2019
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2019
 # Umur Akın <umura@projetgrup.com>, 2019
 # Ediz Duman <neps1192@gmail.com>, 2019
+# abc Def <hdogan1974@gmail.com>, 2020
+# Murat Durmuş <muratd@projetgrup.com>, 2020
+# Murat Kaplan <muratk@projetgrup.com>, 2020
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2019\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,6 +34,7 @@ msgid ""
 "<strong>Newsletter Popup!</strong> The newsletter popup is active on this "
 "page."
 msgstr ""
+"<strong>Bülten Açılır!</strong> Bülten açılır penceresi bu sayfada etkindir."
 
 #. module: website_mass_mailing
 #. openerp-web
@@ -49,17 +53,24 @@ msgstr "E-Bülten Üyelik Popup'ı Ekle"
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block
 msgid "Always First."
-msgstr ""
+msgstr "Daima İlk"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_block
 msgid "Be the first to find out all the latest news, products and trends."
-msgstr ""
+msgstr "Güncel haberler, ürünler ve yönelimlerin tümünü ilk  bulan siz olun"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
 msgid "Change Newsletter"
 msgstr "Bülteni Değiştir"
+
+#. module: website_mass_mailing
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/xml/website_mass_mailing.xml:0
+#, python-format
+msgid "Close"
+msgstr "Kapat"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_mail_block_footer_social
@@ -92,17 +103,12 @@ msgstr "Görünüm Adı"
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
 msgid "Edit Popup"
-msgstr ""
+msgstr "Açılır Pencereyi Düzenle"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.social_links
 msgid "Facebook"
 msgstr "Facebook"
-
-#. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.social_links
-msgid "Google Plus"
-msgstr ""
 
 #. module: website_mass_mailing
 #: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__id
@@ -117,7 +123,7 @@ msgstr "Instagram"
 #. module: website_mass_mailing
 #: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup____last_update
 msgid "Last Modified on"
-msgstr "Son Güncelleme"
+msgstr "Son Düzenleme"
 
 #. module: website_mass_mailing
 #: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__write_uid
@@ -143,7 +149,7 @@ msgstr "E-Posta Grubu"
 #. module: website_mass_mailing
 #: model:ir.model,name:website_mass_mailing.model_website_mass_mailing_popup
 msgid "Mailing list popup"
-msgstr ""
+msgstr "E-posta açılır listesi"
 
 #. module: website_mass_mailing
 #. openerp-web
@@ -172,7 +178,7 @@ msgstr "Teşekkürler"
 #. module: website_mass_mailing
 #: model:ir.model.fields,field_description:website_mass_mailing.field_mailing_list__toast_content
 msgid "Toast Content"
-msgstr ""
+msgstr "Serefe İçerik"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.social_links
@@ -192,11 +198,20 @@ msgstr "Web Sitesi Popup İçeriği"
 #. module: website_mass_mailing
 #: model:ir.model.fields,field_description:website_mass_mailing.field_mailing_list__website_popup_ids
 msgid "Website Popups"
-msgstr ""
+msgstr "Website Açılır Pencereleri"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.mailing_list_view_form
 msgid "Website popups"
+msgstr "Website açılır pencereleri"
+
+#. module: website_mass_mailing
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:0
+#, python-format
+msgid ""
+"Website popups can only be translated through mailing list configuration in "
+"the Email Marketing app."
 msgstr ""
 
 #. module: website_mass_mailing

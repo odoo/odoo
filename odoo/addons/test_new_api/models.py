@@ -170,11 +170,13 @@ class Message(models.Model):
         if operator not in ('=', '!=', '<', '<=', '>', '>=', 'in', 'not in'):
             return []
         # retrieve all the messages that match with a specific SQL query
+        self.flush(['body'])
         query = """SELECT id FROM "%s" WHERE char_length("body") %s %%s""" % \
                 (self._table, operator)
         self.env.cr.execute(query, (value,))
         ids = [t[0] for t in self.env.cr.fetchall()]
-        return [('id', 'in', ids)]
+        # return domain with an implicit AND
+        return [('id', 'in', ids), (1, '=', 1)]
 
     @api.depends('size')
     def _compute_double_size(self):
@@ -343,6 +345,7 @@ class Foo(models.Model):
     name = fields.Char()
     value1 = fields.Integer(change_default=True)
     value2 = fields.Integer()
+    text = fields.Char(trim=False)
 
 
 class Bar(models.Model):
@@ -353,6 +356,8 @@ class Bar(models.Model):
     foo = fields.Many2one('test_new_api.foo', compute='_compute_foo', search='_search_foo')
     value1 = fields.Integer(related='foo.value1', readonly=False)
     value2 = fields.Integer(related='foo.value2', readonly=False)
+    text1 = fields.Char('Text1', related='foo.text', readonly=False)
+    text2 = fields.Char('Text2', related='foo.text', readonly=False, trim=True)
 
     @api.depends('name')
     def _compute_foo(self):
@@ -390,12 +395,14 @@ class ComputeProtected(models.Model):
         for record in self:
             record.bar = record.foo
 
+
 class ComputeInverse(models.Model):
     _name = 'test_new_api.compute.inverse'
     _description = 'Test New API Compute Inversse'
 
     foo = fields.Char()
     bar = fields.Char(compute='_compute_bar', inverse='_inverse_bar', store=True)
+    baz = fields.Char()
 
     @api.depends('foo')
     def _compute_bar(self):
@@ -407,6 +414,11 @@ class ComputeInverse(models.Model):
         self._context.get('log', []).append('inverse')
         for record in self:
             record.foo = record.bar
+
+    @api.constrains('bar', 'baz')
+    def _check_constraint(self):
+        if self._context.get('log_constraint'):
+            self._context.get('log', []).append('constraint')
 
 
 class MultiComputeInverse(models.Model):
@@ -435,6 +447,54 @@ class MultiComputeInverse(models.Model):
         self._context.get('log', []).append('inverse23')
         for record in self:
             record.write({'foo': '/'.join([record.bar1, record.bar2, record.bar3])})
+
+
+class Move(models.Model):
+    _name = 'test_new_api.move'
+    _description = 'Move'
+
+    line_ids = fields.One2many('test_new_api.move_line', 'move_id', domain=[('visible', '=', True)])
+    quantity = fields.Integer(compute='_compute_quantity', store=True)
+
+    @api.depends('line_ids.quantity')
+    def _compute_quantity(self):
+        for record in self:
+            record.quantity = sum(line.quantity for line in record.line_ids)
+
+
+class MoveLine(models.Model):
+    _name = 'test_new_api.move_line'
+    _description = 'Move Line'
+
+    move_id = fields.Many2one('test_new_api.move', required=True, ondelete='cascade')
+    visible = fields.Boolean(default=True)
+    quantity = fields.Integer()
+
+
+class Order(models.Model):
+    _name = _description = 'test_new_api.order'
+
+    line_ids = fields.One2many('test_new_api.order.line', 'order_id')
+
+
+class OrderLine(models.Model):
+    _name = _description = 'test_new_api.order.line'
+
+    order_id = fields.Many2one('test_new_api.order', required=True, ondelete='cascade')
+    product = fields.Char()
+    reward = fields.Boolean()
+
+    def unlink(self):
+        # also delete associated reward lines
+        reward_lines = [
+            other_line
+            for line in self
+            if not line.reward
+            for other_line in line.order_id.line_ids
+            if other_line.reward and other_line.product == line.product
+        ]
+        self = self.union(*reward_lines)
+        return super().unlink()
 
 
 class CompanyDependent(models.Model):
@@ -467,7 +527,16 @@ class ComputeRecursive(models.Model):
 
     name = fields.Char(required=True)
     parent = fields.Many2one('test_new_api.recursive', ondelete='cascade')
+    full_name = fields.Char(compute='_compute_full_name')
     display_name = fields.Char(compute='_compute_display_name', store=True)
+
+    @api.depends('name', 'parent.full_name')
+    def _compute_full_name(self):
+        for rec in self:
+            if rec.parent:
+                rec.full_name = rec.parent.full_name + " / " + rec.name
+            else:
+                rec.full_name = rec.name
 
     @api.depends('name', 'parent.display_name')
     def _compute_display_name(self):
@@ -476,6 +545,22 @@ class ComputeRecursive(models.Model):
                 rec.display_name = rec.parent.display_name + " / " + rec.name
             else:
                 rec.display_name = rec.name
+
+
+class ComputeRecursiveTree(models.Model):
+    _name = 'test_new_api.recursive.tree'
+    _description = 'Test New API Recursive with one2many field'
+
+    name = fields.Char(required=True)
+    parent_id = fields.Many2one('test_new_api.recursive.tree', ondelete='cascade')
+    children_ids = fields.One2many('test_new_api.recursive.tree', 'parent_id')
+    display_name = fields.Char(compute='_compute_display_name', store=True)
+
+    @api.depends('name', 'children_ids.display_name')
+    def _compute_display_name(self):
+        for rec in self:
+            children_names = rec.mapped('children_ids.display_name')
+            rec.display_name = '%s(%s)' % (rec.name, ', '.join(children_names))
 
 
 class ComputeCascade(models.Model):
@@ -516,6 +601,40 @@ class ComputeOnchange(models.Model):
         for record in self:
             if record.active:
                 record.baz = record.foo
+
+
+class ComputeOne2many(models.Model):
+    _name = 'test_new_api.one2many'
+    _description = "A computed editable one2many field with a domain"
+
+    name = fields.Char()
+    line_ids = fields.One2many(
+        'test_new_api.one2many.line', 'container_id',
+        compute='_compute_line_ids', store=True, readonly=False,
+        domain=[('count', '>', 0)],
+    )
+
+    @api.depends('name')
+    def _compute_line_ids(self):
+        # increment counter of line with the same name, or create a new line
+        for record in self:
+            if not record.name:
+                continue
+            for line in record.line_ids:
+                if line.name == record.name:
+                    line.count += 1
+                    break
+            else:
+                record.line_ids = [(0, 0, {'name': record.name})]
+
+
+class ComputeOne2manyLine(models.Model):
+    _name = 'test_new_api.one2many.line'
+    _description = "Line of a computed one2many"
+
+    name = fields.Char()
+    count = fields.Integer(default=1)
+    container_id = fields.Many2one('test_new_api.one2many', required=True)
 
 
 class ModelBinary(models.Model):
@@ -590,6 +709,28 @@ class MonetaryInherits(models.Model):
     currency_id = fields.Many2one('res.currency')
 
 
+class MonetaryOrder(models.Model):
+    _name = 'test_new_api.monetary_order'
+    _description = 'Sales Order'
+
+    currency_id = fields.Many2one('res.currency')
+    line_ids = fields.One2many('test_new_api.monetary_order_line', 'order_id')
+    total = fields.Monetary(compute='_compute_total', store=True)
+
+    @api.depends('line_ids.subtotal')
+    def _compute_total(self):
+        for record in self:
+            record.total = sum(line.subtotal for line in record.line_ids)
+
+
+class MonetaryOrderLine(models.Model):
+    _name = 'test_new_api.monetary_order_line'
+    _description = 'Sales Order Line'
+
+    order_id = fields.Many2one('test_new_api.monetary_order', required=True, ondelete='cascade')
+    subtotal = fields.Float(digits=(10, 2))
+
+
 class FieldWithCaps(models.Model):
     _name = 'test_new_api.field_with_caps'
     _description = 'Model with field defined with capital letters'
@@ -602,6 +743,7 @@ class Selection(models.Model):
     _description = "Selection"
 
     state = fields.Selection([('foo', 'Foo'), ('bar', 'Bar')])
+    other = fields.Selection([('foo', 'Foo'), ('bar', 'Bar')])
 
 
 class RequiredM2O(models.Model):
@@ -634,7 +776,7 @@ class Attachment(models.Model):
             rec.name = self.env[rec.res_model].browse(rec.res_id).display_name
 
     # DLE P55: `test_cache_invalidation`
-    def modified(self, fnames, create=False):
+    def modified(self, fnames, *args, **kwargs):
         if not self:
             return
         comodel = self.env[self.res_model]
@@ -643,7 +785,7 @@ class Attachment(models.Model):
             record = comodel.browse(self.res_id)
             self.env.cache.invalidate([(field, record._ids)])
             record.modified(['attachment_ids'])
-        return super(Attachment, self).modified(fnames, create)
+        return super(Attachment, self).modified(fnames, *args, **kwargs)
 
 
 class AttachmentHost(models.Model):
@@ -815,3 +957,105 @@ class ModelParentM2o(models.Model):
 
     name = fields.Char('Name')
     child_ids = fields.One2many('test_new_api.model_child_m2o', 'parent_id', string="Children")
+
+
+class Country(models.Model):
+    _name = 'test_new_api.country'
+    _description = 'Country, ordered by name'
+    _order = 'name, id'
+
+    name = fields.Char()
+
+
+class City(models.Model):
+    _name = 'test_new_api.city'
+    _description = 'City, ordered by country then name'
+    _order = 'country_id, name, id'
+
+    name = fields.Char()
+    country_id = fields.Many2one('test_new_api.country')
+
+# abstract model with a selection field
+class StateMixin(models.AbstractModel):
+    _name = 'test_new_api.state_mixin'
+    _description = 'Dummy state mixin model'
+
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('confirmed', 'Confirmed'),
+        ('done', 'Done'),
+    ])
+
+# Special classes to ensure the correct usage of a shared cache amongst users.
+# See the method test_shared_cache_computed_field
+class SharedCacheComputeParent(models.Model):
+    _name = 'test_new_api.model_shared_cache_compute_parent'
+    _description = 'model_shared_cache_compute_parent'
+
+    name = fields.Char(string="Task Name")
+    line_ids = fields.One2many(
+        'test_new_api.model_shared_cache_compute_line', 'parent_id', string="Timesheets")
+    total_amount = fields.Integer(compute='_compute_total_amount', store=True, compute_sudo=True)
+
+    @api.depends('line_ids.amount')
+    def _compute_total_amount(self):
+        for parent in self:
+            parent.total_amount = sum(parent.line_ids.mapped('amount'))
+
+
+class ShareCacheComputeLine(models.Model):
+    _name = 'test_new_api.model_shared_cache_compute_line'
+    _description = 'model_shared_cache_compute_line'
+
+    parent_id = fields.Many2one('test_new_api.model_shared_cache_compute_parent')
+    amount = fields.Integer()
+    user_id = fields.Many2one('res.users', default= lambda self: self.env.user)  # Note: There is an ir.rule about this.
+
+
+class ComputeContainer(models.Model):
+    _name = _description = 'test_new_api.compute.container'
+
+    name = fields.Char()
+    member_ids = fields.One2many('test_new_api.compute.member', 'container_id')
+
+
+class ComputeMember(models.Model):
+    _name = _description = 'test_new_api.compute.member'
+
+    name = fields.Char()
+    container_id = fields.Many2one('test_new_api.compute.container', compute='_compute_container', store=True)
+
+    @api.depends('name')
+    def _compute_container(self):
+        container = self.env['test_new_api.compute.container']
+        for member in self:
+            member.container_id = container.search([('name', '=', member.name)], limit=1)
+
+
+class TriggerLeft(models.Model):
+    _name = 'test_new_api.trigger.left'
+    _description = 'model with a related many2one'
+
+    middle_ids = fields.One2many('test_new_api.trigger.middle', 'left_id')
+    right_id = fields.Many2one(related='middle_ids.right_id', store=True)
+
+
+class TriggerMiddle(models.Model):
+    _name = 'test_new_api.trigger.middle'
+    _description = 'model linking test_new_api.trigger.left and test_new_api.trigger.right'
+
+    left_id = fields.Many2one('test_new_api.trigger.left', required=True)
+    right_id = fields.Many2one('test_new_api.trigger.right', required=True)
+
+
+class TriggerRight(models.Model):
+    _name = 'test_new_api.trigger.right'
+    _description = 'model with a dependency on the inverse of the related many2one'
+
+    left_ids = fields.One2many('test_new_api.trigger.left', 'right_id')
+    left_size = fields.Integer(compute='_compute_left_size', store=True)
+
+    @api.depends('left_ids')
+    def _compute_left_size(self):
+        for record in self:
+            record.left_size = len(record.left_ids)

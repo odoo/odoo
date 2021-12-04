@@ -5,6 +5,7 @@
 # Translators:
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2019
 # Sanne Kristensen <sanne@vkdata.dk>, 2019
+# Mads Søndergaard, 2020
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-26 08:16+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2019\n"
+"Last-Translator: Mads Søndergaard, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,11 +28,13 @@ msgid ""
 " If you don't have any account, ask your salesperson to grant you a portal "
 "access. "
 msgstr ""
+"Hvis du ikke har nogen konto, skal du spørge din salgsperson om at tildele "
+"dig portal adgang."
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_client_key
 msgid "API Client Key"
-msgstr ""
+msgstr "API Klient nøgle"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_login
@@ -41,7 +44,7 @@ msgstr "API Log ind ID"
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_signature_key
 msgid "API Signature Key"
-msgstr ""
+msgstr "API Signatur nøgle"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_transaction_key
@@ -61,11 +64,14 @@ msgid ""
 "Code: %s\n"
 "Message: %s"
 msgstr ""
+"Authorize.net fejl:\n"
+"Kode: %s\n"
+"Besked: %s"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token__authorize_profile
 msgid "Authorize.net Profile ID"
-msgstr ""
+msgstr "Authorize.net Profil ID"
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment.py:0
@@ -74,16 +80,18 @@ msgid ""
 "Authorize: received data with missing reference (%s) or trans_id (%s) or "
 "fingerprint (%s)"
 msgstr ""
+"Authorize: Modtag data med manglende reference (%s) eller trans_id (%s) "
+"eller fingeraftryk (%s)"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.acquirer_form_authorize
 msgid "Generate Client Key"
-msgstr ""
+msgstr "Generer klient nøgle"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.acquirer_form_authorize
 msgid "How to get paid with Authorize.Net"
-msgstr ""
+msgstr "Hvordan man bliver betalt med Authorize.net"
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment.py:0
@@ -92,6 +100,8 @@ msgid ""
 "Invalid token found: the Authorize profile is missing.Please make sure the "
 "token has a valid acquirer reference."
 msgstr ""
+"Ugyldig token fundet: Authorize profilen mangler. Tjek venligst at token'en "
+"har en gyldig modtager reference."
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_acquirer
@@ -112,13 +122,13 @@ msgstr "Betalingstransaktion"
 #: code:addons/payment_authorize/controllers/main.py:0
 #, python-format
 msgid "Please complete your profile. "
-msgstr ""
+msgstr "Vær venlig at fuldføre din profil."
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/controllers/main.py:0
 #, python-format
 msgid "Please sign in to complete the payment."
-msgstr ""
+msgstr "Vær venlig at log in for at fuldføre betalingen."
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__provider
@@ -143,7 +153,7 @@ msgstr "Server fejl"
 #: code:addons/payment_authorize/models/payment.py:0
 #, python-format
 msgid "The Customer Profile creation in Authorize.NET failed."
-msgstr ""
+msgstr "Kundeprofil oprettelsen i Authorize.net mislykkedes."
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/controllers/main.py:0
@@ -152,6 +162,8 @@ msgid ""
 "The transaction cannot be processed because some contact details are missing"
 " or invalid: "
 msgstr ""
+"Transaktionen kunne ikke behandles, fordi visse kontakt detaljer mangler, "
+"eller er ugyldige:"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token__authorize_profile
@@ -159,6 +171,8 @@ msgid ""
 "This contains the unique reference for this partner/payment token "
 "combination in the Authorize.net backend"
 msgstr ""
+"Dette indeholder den unikke reference for denne partner/betalings token "
+"kombination i Authorize.net back-end'en"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token__save_token
@@ -168,6 +182,10 @@ msgid ""
 " invoicing), you need it to automatically charge the customer when you issue"
 " an invoice."
 msgstr ""
+"Denne indstilling gør det muligt for kunder, at gemme deres kreditkort "
+"oplysninger, som en betalings token, og genbruge den ved et senere køb. Hvis"
+" du administrere abonnementer (gentagende fakturering), behøver du den for "
+"automatisk at påregne kunden når du udsteder fakturaen."
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment.py:0
@@ -176,6 +194,8 @@ msgid ""
 "Unable to fetch Client Key, make sure the API Login and Transaction Key are "
 "correct."
 msgstr ""
+"Kunne ikke hente Klient nøgle, tjek at API Login og transaktion nøgle er "
+"korrekte."
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment.py:0
@@ -188,4 +208,4 @@ msgstr "Advarsel"
 #: code:addons/payment_authorize/static/src/js/payment_form.js:0
 #, python-format
 msgid "We are not able to add your payment method at the moment."
-msgstr ""
+msgstr "Vi er i øjeblikket ikke i stand til at tilføje din betalingsmetode."

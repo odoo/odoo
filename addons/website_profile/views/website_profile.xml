@@ -204,7 +204,9 @@
                     <div class="col-12 col-md-4 col-lg-3">
                         <div t-attf-class="d-flex align-items-start h-100 #{'justify-content-between' if (request.env.user == user) else 'justify-content-around' }">
                             <div class="o_wprofile_pict d-inline-block mb-3 mb-md-0" t-attf-style="background-image: url(#{website.image_url(user, 'image_1024')});"/>
-                            <a class="btn btn-primary d-inline-block d-md-none" t-if="request.env.user == user and user.karma != 0" t-attf-href="/profile/edit?url_param=#{edit_button_url_param}">
+                            <a class="btn btn-primary d-inline-block d-md-none"
+                                t-if="request.env.user == user and user.karma != 0"
+                                t-attf-href="/profile/edit?url_param=#{edit_button_url_param}&amp;user_id=#{user.id}">
                                 <i class="fa fa-pencil mr-1"/>EDIT
                             </a>
                         </div>
@@ -216,7 +218,7 @@
                             <h1 class="o_card_people_name">
                                 <span t-field="user.name"/><small t-if="user.karma == 0"> (not verified)</small>
                             </h1>
-                            <a class="btn btn-primary d-none d-md-inline-block" t-if="request.env.user == user and user.karma != 0 or request.env.user._is_admin()" t-attf-href="/profile/edit?url_param=#{edit_button_url_param}">
+                            <a class="btn btn-primary d-none d-md-inline-block" t-if="request.env.user == user and user.karma != 0 or request.env.user._is_admin()" t-attf-href="/profile/edit?url_param=#{edit_button_url_param}&amp;user_id=#{user.id}">
                                 <i class="fa fa-pencil mr-2"/>EDIT PROFILE
                             </a>
                         </div>
@@ -365,7 +367,8 @@
                         <div class="card">
                             <div class="card-body p-2 pr-3">
                                 <div class="media align-items-center">
-                                  <img width="38" height="38" t-att-src="website.image_url(badge.badge_id, 'image_128')" class="o_object_fit_cover mr-0"/>
+                                  <img t-if="not badge.badge_id.image_128 and badge.level" t-attf-src="/website_profile/static/src/img/badge_#{badge.badge_id.level}.svg" class="m-1" style="height:2.5em" t-att-alt="badge.badge_id.name"/>
+                                  <img t-else="" width="38" height="38" t-att-src="website.image_url(badge.badge_id, 'image_128')" class="o_object_fit_cover mr-1"/>
                                   <div class="media-body col-md-10 p-0">
                                     <h6 class="my-0 text-truncate" t-field="badge.badge_id.name"/>
                                   </div>
@@ -392,7 +395,7 @@
                 <div class="row justify-content-between" t-if="ranks">
                     <div class="col-12 col-md-6 col-lg-5">
                         <h1>Ranks</h1>
-                        <p class="lead mb-4">Keep learning with <t t-esc="user.company_id.name"/>. Collect points on the forum or on the eLearning platform. Those points will make you reach new ranks.</p>
+                        <p class="lead mb-4">Keep learning with <t t-esc="website.company_id.name"/>. Collect points on the forum or on the eLearning platform. Those points will make you reach new ranks.</p>
                         <h5>How do I earn badges?</h5>
                         <p>When you finish a course or reach milestones, you're awarded badges.</p>
                         <h5>How do I score more points?</h5>

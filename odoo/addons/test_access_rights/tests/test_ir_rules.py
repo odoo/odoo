@@ -3,6 +3,8 @@
 
 from odoo.exceptions import AccessError
 from odoo.tests.common import TransactionCase
+from odoo.tools import mute_logger
+
 
 class TestRules(TransactionCase):
     def setUp(self):
@@ -28,6 +30,7 @@ class TestRules(TransactionCase):
             'domain_force': "[('categ_id', 'in', user.env['test_access_right.obj_categ'].search([]).ids)]"
         })
 
+    @mute_logger('odoo.addons.base.models.ir_rule')
     def test_basic_access(self):
         env = self.env(user=self.browse_ref('base.public_user'))
 
@@ -44,6 +47,7 @@ class TestRules(TransactionCase):
         with self.assertRaises(AccessError):
             self.assertEqual(browse2.val, -1)
 
+    @mute_logger('odoo.addons.base.models.ir_rule')
     def test_group_rule(self):
         env = self.env(user=self.browse_ref('base.public_user'))
 

@@ -7,6 +7,7 @@ from werkzeug.wrappers import Response
 from odoo.http import Controller, dispatch_rpc, request, route
 from odoo.service import wsgi_server
 from odoo.fields import Date, Datetime
+from odoo.tools import lazy
 
 
 class OdooMarshaller(xmlrpc.client.Marshaller):
@@ -27,6 +28,11 @@ class OdooMarshaller(xmlrpc.client.Marshaller):
         value = Date.to_string(value)
         self.dump_unicode(value, write)
     dispatch[date] = dump_date
+
+    def dump_lazy(self, value, write):
+        v = value._value
+        return self.dispatch[type(v)](self, v, write)
+    dispatch[lazy] = dump_lazy
 
 
 # monkey-patch xmlrpc.client's marshaller

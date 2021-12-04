@@ -10,9 +10,11 @@
 # yacov mosbacher <ymosba@gmail.com>, 2019
 # hed shefetr <hed@laylinetech.com>, 2019
 # ExcaliberX <excaliberx@gmail.com>, 2019
-# Yihya Hugirat <hugirat@gmail.com>, 2019
-# דודי מלכה <Dudimalka6@gmail.com>, 2019
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2020
+# Yihya Hugirat <hugirat@gmail.com>, 2020
+# yotam katzuni, 2020
+# דודי מלכה <Dudimalka6@gmail.com>, 2021
+# Lilach Gilliam <lilach.gilliam@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -20,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2020\n"
+"Last-Translator: Lilach Gilliam <lilach.gilliam@gmail.com>, 2021\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -190,6 +192,15 @@ msgstr ""
 "<p><b>שלח הודעות</b>ללקוח שלך וקבל תשובות המצורפות אוטומטית להזדמנות "
 "זו</p><p class=\"mb0\">הקלד <i>'@'</i> להזכיר אנשים -זה כמו העתק "
 "בדוא\"ל.</p>"
+
+#. module: crm
+#: code:addons/crm/models/crm_team.py:0
+#, python-format
+msgid ""
+"<p>As you don't belong to any Sales Team, Odoo opens the first one by "
+"default.</p>"
+msgstr ""
+"מכיוון שאינך משתייך לאף צוות מכירות, המערכת פותחת את הראשון כברירת מחדל."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -479,7 +490,7 @@ msgid ""
 "Click here to <b>create your first opportunity</b> and add it to your "
 "pipeline."
 msgstr ""
-"לחץ כאן כדי <b>ליצור את ההזדמנות הראשונה שלך</b> והוסף אותה לצינור הפעילות "
+"לחץ כאן כדי <b>ליצור את ההזדמנות הראשונה שלך</b> והוסף אותה לצבר ההזדמנויות "
 "שלך."
 
 #. module: crm
@@ -714,7 +725,7 @@ msgstr "צור הזדמנות חדשה הקשורה ללקוח זה"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Create an opportunity in your pipeline"
-msgstr "צור הזדמנות חדשה עבור צינור הפעילות שלך "
+msgstr "צור הזדמנות חדשה בצבר ההזדמנויות שלך"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -1246,7 +1257,7 @@ msgstr "האם הסתברות אוטומטית?"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__function
 msgid "Job Position"
-msgstr "משרה"
+msgstr "תפקיד"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__kanban_state
@@ -1601,7 +1612,7 @@ msgstr "שיווק"
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Medium"
-msgstr "בינוני"
+msgstr "אופן התקשורת"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
@@ -1702,7 +1713,12 @@ msgstr "ההזדמנויות שלי "
 #: model:ir.ui.menu,name:crm.menu_crm_opportunities
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "My Pipeline"
-msgstr "צינור עיבוד הנתונים שלי"
+msgstr "צבר ההזדמנויות שלי"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
+msgid "Name"
+msgstr "שם"
 
 #. module: crm
 #: model:crm.stage,name:crm.stage_lead1
@@ -1738,7 +1754,7 @@ msgstr "מועד אחרון לפעילות הבאה"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_summary
 msgid "Next Activity Summary"
-msgstr "תקציר הפעילות הבאה "
+msgstr "תיאור הפעילות הבאה "
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_type_id
@@ -1886,6 +1902,12 @@ msgstr ""
 "המכירות."
 
 #. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_partner__opportunity_count_ids
+#: model:ir.model.fields,field_description:crm.field_res_users__opportunity_count_ids
+msgid "Opportunities Count"
+msgstr "ספירת הזדמנויות "
+
+#. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_amount
 msgid "Opportunities Revenues"
 msgstr "הכנסות מהזדמנויות"
@@ -1978,6 +2000,7 @@ msgstr "אחר"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_team_overdue_opportunity
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
+#: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Overdue Opportunities"
 msgstr "הזדמנויות באיחור"
 
@@ -2041,7 +2064,7 @@ msgstr "איכות טלפון"
 #: model:ir.ui.menu,name:crm.menu_crm_config_lead
 #, python-format
 msgid "Pipeline"
-msgstr "צינור עיבוד נתונים"
+msgstr "צבר הזדמנויות "
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_activity_report_action
@@ -2056,7 +2079,7 @@ msgstr "פעולות צינור מידע"
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_graph
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_pivot
 msgid "Pipeline Analysis"
-msgstr "ניתוח צינור עיבוד נתונים"
+msgstr "ניתוח נתונים"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action
@@ -2116,7 +2139,7 @@ msgstr "הכנסות מחושבות"
 #. module: crm
 #: model:crm.stage,name:crm.stage_lead2
 msgid "Qualified"
-msgstr "מוסמך"
+msgstr "מעוניין"
 
 #. module: crm
 #. openerp-web
@@ -2440,7 +2463,13 @@ msgstr "תגיות"
 #. module: crm
 #: model:ir.ui.menu,name:crm.sales_team_menu_team_pipeline
 msgid "Team Pipelines"
-msgstr "צינורות עיבוד נתונים של הצוות"
+msgstr " עיבוד נתונים לפי צוותים"
+
+#. module: crm
+#: model:ir.model.fields,help:crm.field_res_partner__opportunity_count_ids
+#: model:ir.model.fields,help:crm.field_res_users__opportunity_count_ids
+msgid "Technical field used for stat button"
+msgstr "שדה טכני המשמש ללחצן stat"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_id
@@ -2545,7 +2574,17 @@ msgstr "יעד זה לא קיים."
 #: model:ir.model.fields,field_description:crm.field_crm_lead__title
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Title"
-msgstr "שם"
+msgstr "תואר כבוד"
+
+#. module: crm
+#: code:addons/crm/models/crm_lead.py:0
+#, python-format
+msgid ""
+"To prevent data loss, Leads and Opportunities can only be merged by groups "
+"of 5."
+msgstr ""
+"כדי למנוע אובדן נתונים, ניתן למזג לידים והזדמנויות רק על ידי קבוצות של 5 "
+"נפשות."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -2855,7 +2894,7 @@ msgstr "למשל https://www.odoo.com"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "or send an email to %s"
-msgstr "או שלח דוא\"ל ל %s"
+msgstr "או שלח דוא\"ל ל- %s"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__team_count

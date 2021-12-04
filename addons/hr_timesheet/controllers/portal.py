@@ -15,8 +15,8 @@ from odoo.addons.portal.controllers.portal import CustomerPortal, pager as porta
 
 class TimesheetCustomerPortal(CustomerPortal):
 
-    def _prepare_portal_layout_values(self):
-        values = super(TimesheetCustomerPortal, self)._prepare_portal_layout_values()
+    def _prepare_home_portal_values(self):
+        values = super(TimesheetCustomerPortal, self)._prepare_home_portal_values()
         domain = request.env['account.analytic.line']._timesheet_get_portal_domain()
         values['timesheet_count'] = request.env['account.analytic.line'].sudo().search_count(domain)
         return values

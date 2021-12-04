@@ -102,7 +102,11 @@ class TestBom(common.TransactionCase):
     def test_00_compute_price(self):
         """Test multi-level BoM cost"""
         self.assertEqual(self.dining_table.standard_price, 1000, "Initial price of the Product should be 1000")
-        self.dining_table.button_bom_cost()
+        res = self.dining_table.button_bom_cost()
+        std_price_wiz = self.env[res["res_model"]].with_context(
+            active_id=self.dining_table.id, active_model="product.product", **res["context"]
+        ).create({})
+        std_price_wiz.change_price()
         self.assertEqual(self.dining_table.standard_price, 550, "After computing price from BoM price should be 550")
 
     def test_01_compute_price_operation_cost(self):
@@ -176,7 +180,11 @@ class TestBom(common.TransactionCase):
         self.bom_2.routing_id = routing_1.id
 
         self.assertEqual(self.dining_table.standard_price, 1000, "Initial price of the Product should be 1000")
-        self.dining_table.button_bom_cost()
+        res = self.dining_table.button_bom_cost()
+        std_price_wiz = self.env[res["res_model"]].with_context(
+            active_id=self.dining_table.id, active_model="product.product", **res["context"]
+        ).create({})
+        std_price_wiz.change_price()
         # Total cost of Dining Table = (550) + Total cost of operations (125) = 675.0
         self.assertEquals(float_round(self.dining_table.standard_price, precision_digits=2), 675.0, "After computing price from BoM price should be 612.5")
         self.Product.browse([self.dining_table.id, self.table_head.id]).action_bom_cost()

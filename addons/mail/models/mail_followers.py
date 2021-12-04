@@ -49,7 +49,7 @@ class Followers(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        res = super(Followers, self).create(vals_list)
+        res = super(Followers, self).create(vals_list)._check_rights()
         res._invalidate_documents(vals_list)
         return res
 
@@ -57,6 +57,7 @@ class Followers(models.Model):
         if 'res_model' in vals or 'res_id' in vals:
             self._invalidate_documents()
         res = super(Followers, self).write(vals)
+        self._check_rights()
         if any(x in vals for x in ['res_model', 'res_id', 'partner_id']):
             self._invalidate_documents()
         return res
@@ -64,6 +65,21 @@ class Followers(models.Model):
     def unlink(self):
         self._invalidate_documents()
         return super(Followers, self).unlink()
+
+    def _check_rights(self):
+        user_partner = self.env.user.partner_id
+        for record in self:
+            obj = self.env[record.res_model].browse(record.res_id)
+            if record.channel_id or record.partner_id != user_partner:
+                obj.check_access_rights('write')
+                obj.check_access_rule('write')
+                subject = record.channel_id or record.partner_id
+                subject.check_access_rights('read')
+                subject.check_access_rule('read')
+            else:
+                obj.check_access_rights('read')
+                obj.check_access_rule('read')
+        return self
 
     _sql_constraints = [
         ('mail_followers_res_partner_res_model_id_uniq', 'unique(res_model,res_id,partner_id)', 'Error, a partner cannot follow twice the same object.'),
@@ -107,37 +123,40 @@ class Followers(models.Model):
         self.env['mail.channel'].flush(['email_send', 'channel_type'])
         if records and subtype_id:
             query = """
-WITH sub_followers AS (
-    SELECT fol.id, fol.partner_id, fol.channel_id, subtype.internal
-    FROM mail_followers fol
-        RIGHT JOIN mail_followers_mail_message_subtype_rel subrel
-        ON subrel.mail_followers_id = fol.id
-        RIGHT JOIN mail_message_subtype subtype
-        ON subtype.id = subrel.mail_message_subtype_id
-    WHERE subrel.mail_message_subtype_id = %%s AND fol.res_model = %%s AND fol.res_id IN %%s
-)
-SELECT partner.id as pid, NULL AS cid,
-        partner.active as active, partner.partner_share as pshare, NULL as ctype,
-        users.notification_type AS notif, array_agg(groups.id) AS groups
-    FROM res_partner partner
-    LEFT JOIN res_users users ON users.partner_id = partner.id AND users.active
-    LEFT JOIN res_groups_users_rel groups_rel ON groups_rel.uid = users.id
-    LEFT JOIN res_groups groups ON groups.id = groups_rel.gid
-    WHERE EXISTS (
-        SELECT partner_id FROM sub_followers
-        WHERE sub_followers.channel_id IS NULL
-            AND sub_followers.partner_id = partner.id
-            AND (coalesce(sub_followers.internal, false) <> TRUE OR coalesce(partner.partner_share, false) <> TRUE)
-    ) %s
-    GROUP BY partner.id, users.notification_type
-UNION
-SELECT NULL AS pid, channel.id AS cid,
-        TRUE as active, NULL AS pshare, channel.channel_type AS ctype,
-        CASE WHEN channel.email_send = TRUE THEN 'email' ELSE 'inbox' END AS notif, NULL AS groups
-    FROM mail_channel channel
-    WHERE EXISTS (
-        SELECT channel_id FROM sub_followers WHERE partner_id IS NULL AND sub_followers.channel_id = channel.id
-    ) %s
+SELECT DISTINCT ON(pid, cid) * FROM (
+    WITH sub_followers AS (
+        SELECT fol.id, fol.partner_id, fol.channel_id, subtype.internal
+        FROM mail_followers fol
+            RIGHT JOIN mail_followers_mail_message_subtype_rel subrel
+            ON subrel.mail_followers_id = fol.id
+            RIGHT JOIN mail_message_subtype subtype
+            ON subtype.id = subrel.mail_message_subtype_id
+        WHERE subrel.mail_message_subtype_id = %%s AND fol.res_model = %%s AND fol.res_id IN %%s
+    )
+    SELECT partner.id as pid, NULL::int AS cid,
+            partner.active as active, partner.partner_share as pshare, NULL as ctype,
+            users.notification_type AS notif, array_agg(groups.id) AS groups
+        FROM res_partner partner
+        LEFT JOIN res_users users ON users.partner_id = partner.id AND users.active
+        LEFT JOIN res_groups_users_rel groups_rel ON groups_rel.uid = users.id
+        LEFT JOIN res_groups groups ON groups.id = groups_rel.gid
+        WHERE EXISTS (
+            SELECT partner_id FROM sub_followers
+            WHERE sub_followers.channel_id IS NULL
+                AND sub_followers.partner_id = partner.id
+                AND (coalesce(sub_followers.internal, false) <> TRUE OR coalesce(partner.partner_share, false) <> TRUE)
+        ) %s
+        GROUP BY partner.id, users.notification_type
+    UNION
+    SELECT NULL::int AS pid, channel.id AS cid,
+            TRUE as active, NULL AS pshare, channel.channel_type AS ctype,
+            CASE WHEN channel.email_send = TRUE THEN 'email' ELSE 'inbox' END AS notif, NULL AS groups
+        FROM mail_channel channel
+        WHERE EXISTS (
+            SELECT channel_id FROM sub_followers WHERE partner_id IS NULL AND sub_followers.channel_id = channel.id
+        ) %s
+) AS x
+ORDER BY pid, cid, notif
 """ % ('OR partner.id IN %s' if pids else '', 'OR channel.id IN %s' if cids else '')
             params = [subtype_id, records._name, tuple(records.ids)]
             if pids:
@@ -150,16 +169,17 @@ SELECT NULL AS pid, channel.id AS cid,
             params, query_pid, query_cid = [], '', ''
             if pids:
                 query_pid = """
-SELECT partner.id as pid, NULL AS cid,
+SELECT DISTINCT ON (partner.id) partner.id as pid, NULL::int AS cid,
     partner.active as active, partner.partner_share as pshare, NULL as ctype,
     users.notification_type AS notif, NULL AS groups
 FROM res_partner partner
 LEFT JOIN res_users users ON users.partner_id = partner.id AND users.active
-WHERE partner.id IN %s"""
+WHERE partner.id IN %s
+ORDER BY partner.id, users.notification_type"""
                 params.append(tuple(pids))
             if cids:
                 query_cid = """
-SELECT NULL AS pid, channel.id AS cid,
+SELECT NULL::int AS pid, channel.id AS cid,
     TRUE as active, NULL AS pshare, channel.channel_type AS ctype,
     CASE when channel.email_send = TRUE then 'email' else 'inbox' end AS notif, NULL AS groups
 FROM mail_channel channel WHERE channel.id IN %s """
@@ -327,10 +347,14 @@ GROUP BY fol.id%s""" % (
                     fol_id, sids = next(((key, val[3]) for key, val in data_fols.items() if val[0] == res_id and val[1] == partner_id), (False, []))
                     new_sids = set(partner_subtypes[partner_id]) - set(sids)
                     old_sids = set(sids) - set(partner_subtypes[partner_id])
+                    update_cmd = []
                     if fol_id and new_sids:
-                        update[fol_id] = {'subtype_ids': [(4, sid) for sid in new_sids]}
+                        update_cmd += [(4, sid) for sid in new_sids]
                     if fol_id and old_sids and existing_policy == 'replace':
-                        update[fol_id] = {'subtype_ids': [(3, sid) for sid in old_sids]}
+                        update_cmd += [(3, sid) for sid in old_sids]
+                    if update_cmd:
+                        update[fol_id] = {'subtype_ids': update_cmd}
+
             for channel_id in set(channel_ids or []):
                 if channel_id not in doc_cids[res_id]:
                     new.setdefault(res_id, list()).append({
@@ -342,9 +366,12 @@ GROUP BY fol.id%s""" % (
                     fol_id, sids = next(((key, val[3]) for key, val in data_fols.items() if val[0] == res_id and val[2] == channel_id), (False, []))
                     new_sids = set(channel_subtypes[channel_id]) - set(sids)
                     old_sids = set(sids) - set(channel_subtypes[channel_id])
+                    update_cmd = []
                     if fol_id and new_sids:
-                        update[fol_id] = {'subtype_ids': [(4, sid) for sid in new_sids]}
+                        update_cmd += [(4, sid) for sid in new_sids]
                     if fol_id and old_sids and existing_policy == 'replace':
-                        update[fol_id] = {'subtype_ids': [(3, sid) for sid in old_sids]}
+                        update_cmd += [(3, sid) for sid in old_sids]
+                    if update_cmd:
+                        update[fol_id] = {'subtype_ids': update_cmd}
 
         return new, update

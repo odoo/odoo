@@ -63,8 +63,9 @@ class Partner(models.Model):
                 partner.membership_state = 'free' if partner.free_member else 'canceled'
                 continue
             if partner.membership_stop and today > partner.membership_stop:
-                partner.membership_state = 'free' if partner.free_member else 'old'
-                continue
+                if partner.free_member:
+                    partner.membership_state = 'free'
+                    continue
             if partner.associate_member:
                 partner.associate_member._compute_membership_state()
                 partner.membership_state = partner.associate_member.membership_state
@@ -89,11 +90,11 @@ class Partner(models.Model):
                     # if there is an old invoice paid, set the state to 'old'
                     if ((mline.date_from or date.min) < today and (mline.date_to or date.min) < today and \
                             (mline.date_from or date.min) <= (mline.date_to or date.min) and \
-                            mline.account_invoice_id and mline.account_invoice_id.state == 'paid'):
+                            mline.account_invoice_id and mline.account_invoice_id.invoice_payment_state == 'paid'):
                         state = 'old'
                         break
 
-            if partner.free_member and state is not 'paid':
+            if partner.free_member and state != 'paid':
                 state = 'free'
             partner.membership_state = state
 

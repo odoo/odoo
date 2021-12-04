@@ -9,18 +9,19 @@
 # Thijs van Oers <thijsvanoers@yahoo.com>, 2019
 # Maxim Vandenbroucke <mxv@odoo.com>, 2019
 # Charles Vervaecke <cvk@odoo.com>, 2019
-# Martin Trigaux, 2019
 # Cécile Collart <cco@odoo.com>, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
+# Antoine Gilard <ang@odoo.com>, 2020
+# Martin Trigaux, 2020
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-05 12:32+0000\n"
+"POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -291,22 +292,6 @@ msgstr "<i class=\"fa fa-smile-o\"/> Nog geen beoordeling"
 #, python-format
 msgid ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
-"                        Documents are attached to the tasks of your project.</p><p>\n"
-"                        Send messages or log internal notes with attachments to link\n"
-"                        documents to your project.\n"
-"                    </p>"
-msgstr ""
-"<p class=\"o_view_nocontent_smiling_face\">\n"
-"Documenten worden gekoppeld aan de taken van uw project.</p><p>\n"
-"Verzend berichten of log interne notities met bijlages om documenten te linken\n"
-"aan uw project.\n"
-"</p>"
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid ""
-"<p class=\"o_view_nocontent_smiling_face\">\n"
 "                    Create a new project</p>"
 msgstr ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
@@ -536,6 +521,9 @@ msgid ""
 "Analytic account to which this project is linked for financial management. "
 "Use an analytic account to record cost and revenue on your project."
 msgstr ""
+"Kostenplaats waaraan dit project is gekoppeld voor financieel beheer. "
+"Gebruik een kostenplaats g om de kosten en opbrengsten van uw project te "
+"registreren."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -606,12 +594,6 @@ msgstr "Aantal bijlagen"
 #: model:ir.model.fields,help:project.field_project_task__attachment_ids
 msgid "Attachment that don't come from message."
 msgstr "Bijlages die niet van een bericht komen."
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid "Attachments"
-msgstr "Bijlagen"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__auto_validation_kanban_state
@@ -1037,6 +1019,10 @@ msgid ""
 "- Portal users and all employees: employees may see everything.   Portal users may see project and tasks followed by.\n"
 "   them or by someone of their company."
 msgstr ""
+"Definieert de zichtbaarheid van de taken van het project:\n"
+"- Uitgenodigde medewerkers: medewerkers mogen alleen het gevolgde project en de taken zien.\n"
+"- Alle medewerkers: medewerkers mogen alle projecten en taken zien.\n"
+"- Portaal gebruikers en alle medewerkers: medewerkers mogen alles zien. Portaal gebruikers mogen het project en de taken zien en door wie het gevolgd wordt door hen of door iemand van hun bedrijf."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -1369,6 +1355,9 @@ msgid ""
 " in the chatter of the tasks. Use the %s and %s to signalize what is the "
 "current status of your Idea"
 msgstr ""
+"Behandel je ideeënverzameling binnen taken van je nieuwe project en bespreek"
+" ze in het chatter van de taken. Gebruik de %s en %s om aan te geven wat de "
+"huidige status van je Idee is."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_progressbar
@@ -2201,9 +2190,10 @@ msgid ""
 "your colleagues that a task is ready for the next stage.%s Use the %s to "
 "signalize a problem or a need for discussion on a task."
 msgstr ""
-"Prioritiseer taken via het %s icoon. Gebruik de %s knop om uw collega's te "
-"laten weten dat een taak gereed is voor de volgende fase. %s Gebruik de %s "
-"om een probleem aan te geven of omdat er een discussie nodig is op de taak."
+"Prioritiseer taken via het %s icoon. %s Gebruik de %s knop om uw collega's "
+"te laten weten dat een taak gereed is voor de volgende fase. %s Gebruik de "
+"%s om een probleem aan te geven of omdat er een discussie nodig is op de "
+"taak."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__priority
@@ -2878,6 +2868,9 @@ msgstr "Taak is klaar voor volgende fase"
 #: model_terms:ir.ui.view,arch_db:project.view_task_partner_info_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_tree2
+#: model:project.project,label_tasks:project.project_project_1
+#: model:project.project,label_tasks:project.project_project_2
+#: model:project.project,label_tasks:project.project_project_data
 msgid "Tasks"
 msgstr "Taken"
 
@@ -2953,12 +2946,6 @@ msgstr ""
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
-msgid "The parent task belongs to a company you do not have access to."
-msgstr ""
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
 msgid ""
 "The project cannot be shared with the recipient(s) because the privacy of "
 "the project is too restricted. Set the privacy to 'Visible by following "
@@ -2967,12 +2954,6 @@ msgstr ""
 "Het project kan niet worden gedeeld met de ontvanger (s) omdat de privacy "
 "van het project te beperkt is. Stel de privacy in op 'Zichtbaar door klanten"
 " te volgen' om het voor de ontvanger (s) toegankelijk te maken."
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid "The subtasks belong to a company you do not have access to."
-msgstr ""
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -3307,6 +3288,16 @@ msgid ""
 msgstr ""
 "U kan ook een omschrijving toevoegen om uw medewerkers te helpen begrijpen "
 "wat de bedoeling is van de fase."
+
+#. module: project
+#: code:addons/project/models/analytic_account.py:0
+#, python-format
+msgid ""
+"You cannot change the company of an analytical account if it is related to a"
+" project."
+msgstr ""
+"U kunt het bedrijf van een kostenplaats rekening niet wijzigen als deze "
+"gerelateerd is aan een project."
 
 #. module: project
 #: code:addons/project/models/project.py:0

@@ -465,6 +465,41 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('toggle_button in form view with readonly modifiers', async function (assert) {
+        assert.expect(3);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                '<field name="bar" widget="toggle_button" ' +
+                'options="{\'active\': \'Active value\', \'inactive\': \'Inactive value\'}" ' +
+                'readonly="True"/>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'write') {
+                    throw new Error("Should not do a write RPC with readonly toggle_button");
+                }
+                return this._super.apply(this, arguments);
+            },
+            res_id: 2,
+        });
+
+        assert.strictEqual(form.$('.o_field_widget[name=bar] i.o_toggle_button_success:not(.text-muted)').length,
+            1, "should be green");
+        assert.ok(form.$('.o_field_widget[name=bar]').prop('disabled'),
+            "button should be disabled when readonly attribute is given");
+
+        // click on the button to check click doesn't call write as we throw error in write call
+        form.$('.o_field_widget[name=bar]').click();
+
+        assert.strictEqual(form.$('.o_field_widget[name=bar] i.o_toggle_button_success:not(.text-muted)').length,
+            1, "should be green even after click");
+
+        form.destroy();
+    });
+
     QUnit.module('FieldFloat');
 
     QUnit.test('float field when unset', async function (assert) {
@@ -2183,7 +2218,7 @@ QUnit.module('basic_fields', {
     });
 
     QUnit.test('binary fields that are readonly in create mode do not download', async function (assert) {
-        assert.expect(2);
+        assert.expect(4);
 
         // save the session function
         var oldGetFile = session.get_file;
@@ -2215,10 +2250,17 @@ QUnit.module('basic_fields', {
         await testUtils.fields.many2one.clickOpenDropdown('product_id');
         await testUtils.fields.many2one.clickHighlightedItem('product_id');
 
-        assert.containsOnce(form, 'a.o_field_widget[name="document"] > .fa-download',
+        assert.containsOnce(form, 'a.o_field_widget[name="document"]',
             'The link to download the binary should be present');
+        assert.containsNone(form, 'a.o_field_widget[name="document"] > .fa-download',
+            'The download icon should not be present');
 
-        testUtils.dom.click(form.$('a.o_field_widget[name="document"]'));
+        var link = form.$('a.o_field_widget[name="document"]');
+        assert.ok(link.is(':hidden'), "the link element should not be visible");
+
+        // force visibility to test that the clicking has also been disabled
+        link.removeClass('o_hidden');
+        testUtils.dom.click(link);
 
         assert.verifySteps([]); // We shouldn't have passed through steps
 
@@ -3051,6 +3093,97 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('Datetime field manually input value should send utc value to server', async function (assert) {
+        assert.expect(4);
+
+        this.data.partner.fields.datetime_end = { string: 'Datetime End', type: 'datetime' };
+        this.data.partner.records[0].datetime_end = '2017-03-13 00:00:00';
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <field name="datetime" widget="daterange" options="{'related_end_date': 'datetime_end'}"/>
+                    <field name="datetime_end" widget="daterange" options="{'related_start_date': 'datetime'}"/>
+                </form>`,
+            res_id: 1,
+            session: {
+                getTZOffset: function () {
+                    return 330;
+                },
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'write') {
+                    assert.deepEqual(args.args[1], { datetime: '2017-02-08 06:00:00' });
+                }
+                return this._super(...arguments);
+            },
+        });
+
+        // check date display correctly in readonly
+        assert.strictEqual(form.$('.o_field_date_range:first').text(), '02/08/2017 15:30:00',
+            "the start date should be correctly displayed in readonly");
+        assert.strictEqual(form.$('.o_field_date_range:last').text(), '03/13/2017 05:30:00',
+            "the end date should be correctly displayed in readonly");
+
+        // edit form
+        await testUtils.form.clickEdit(form);
+        // update input for Datetime
+        await testUtils.fields.editInput(form.$('.o_field_date_range:first'), '02/08/2017 11:30:00');
+        // save form
+        await testUtils.form.clickSave(form);
+
+        assert.strictEqual(form.$('.o_field_date_range:first').text(), '02/08/2017 11:30:00',
+            "the start date should be correctly displayed in readonly after manual update");
+
+        form.destroy();
+    });
+
+    QUnit.test('Daterange field manually input wrong value should show toaster', async function (assert) {
+        assert.expect(5);
+
+        this.data.partner.fields.date_end = { string: 'Date End', type: 'date' };
+        this.data.partner.records[0].date_end = '2017-02-08';
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+            <form>
+                <field name="date" widget="daterange" options="{'related_end_date': 'date_end'}"/>
+                <field name="date_end" widget="daterange" options="{'related_start_date': 'date'}"/>
+            </form>`,
+            interceptsPropagate: {
+                call_service: function (ev) {
+                    if (ev.data.service === 'notification') {
+                        assert.strictEqual(ev.data.method, 'notify');
+                        assert.strictEqual(ev.data.args[0].title, 'The following fields are invalid:');
+                        assert.strictEqual(ev.data.args[0].message, '<ul><li>A date</li></ul>');
+                    }
+                }
+            },
+        });
+
+        await testUtils.fields.editInput(form.$('.o_field_date_range:first'), 'blabla');
+        // click outside daterange field
+        await testUtils.dom.click(form.$el);
+        assert.hasClass(form.$('input[name=date]'), 'o_field_invalid',
+            "date field should be displayed as invalid");
+        // update input date with right value
+        await testUtils.fields.editInput(form.$('.o_field_date_range:first'), '02/08/2017');
+        assert.doesNotHaveClass(form.$('input[name=date]'), 'o_field_invalid',
+            "date field should not be displayed as invalid now");
+
+        // again enter wrong value and try to save should raise invalid fields value
+        await testUtils.fields.editInput(form.$('.o_field_date_range:first'), 'blabla');
+        await testUtils.form.clickSave(form);
+
+        form.destroy();
+    });
+
     QUnit.module('FieldDate');
 
     QUnit.test('date field: toggle datepicker [REQUIRE FOCUS]', async function (assert) {
@@ -3317,7 +3450,7 @@ QUnit.module('basic_fields', {
 
         assert.containsOnce($('body'), '.bootstrap-datetimepicker-widget', "datepicker should be opened");
 
-        form.el.dispatchEvent(new Event('scroll'));
+        form.el.dispatchEvent(new Event('wheel'));
         assert.containsNone($('body'), '.bootstrap-datetimepicker-widget', "datepicker should be closed");
 
         form.destroy();
@@ -4029,6 +4162,35 @@ QUnit.module('basic_fields', {
         $.each($('.day:not(:last-child()):not(:nth-child(2))'), function (index, value) {
             assert.doesNotHaveClass(value, 'disabled', 'other days must stay clickable');
         });
+        form.destroy();
+    });
+
+    QUnit.test('daterangepicker should disappear on scrolling outside of it', async function (assert) {
+        assert.expect(2);
+
+        this.data.partner.fields.datetime_end = {string: 'Datetime End', type: 'datetime'};
+        this.data.partner.records[0].datetime_end = '2017-03-13 00:00:00';
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <field name="datetime" widget="daterange" options="{'related_end_date': 'datetime_end'}"/>
+                    <field name="datetime_end" widget="daterange" options="{'related_start_date': 'datetime'}"/>
+                </form>`,
+            res_id: 1,
+        });
+
+        await testUtils.form.clickEdit(form);
+        await testUtils.dom.click(form.$('.o_field_date_range:first'));
+
+        assert.isVisible($('.daterangepicker:first'), "date range picker should be opened");
+
+        form.el.dispatchEvent(new Event('scroll'));
+        assert.isNotVisible($('.daterangepicker:first'), "date range picker should be closed");
+
         form.destroy();
     });
 
@@ -5108,6 +5270,25 @@ QUnit.module('basic_fields', {
         list.destroy();
     });
 
+    QUnit.test('priority widget with readonly attribute', async function (assert) {
+        assert.expect(1);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <field name="selection" widget="priority" readonly="1"/>
+                </form>`,
+            res_id: 2,
+        });
+
+        assert.containsN(form, '.o_field_widget.o_priority span', 2,
+            "stars of priority widget should rendered with span tag if readonly");
+
+        form.destroy();
+    });
 
     QUnit.module('StateSelection Widget');
 

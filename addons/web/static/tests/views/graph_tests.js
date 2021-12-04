@@ -629,6 +629,31 @@ QUnit.module('Views', {
         graph.destroy();
     });
 
+    QUnit.test('only process most recent data for concurrent groupby', async function (assert) {
+        assert.expect(4);
+
+        const graph = await createView({
+            View: GraphView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <graph>
+                    <field name="product_id" type="row"/>
+                    <field name="foo" type="measure"/>
+                </graph>`,
+        });
+
+        assert.checkLabels(graph, [['xphone'], ['xpad']]);
+        assert.checkDatasets(graph, 'data', {data: [82, 157]});
+
+        testUtils.graph.reload(graph, {groupBy: ['color_id']});
+        await testUtils.graph.reload(graph, {groupBy: ['date:month']});
+        assert.checkLabels(graph, [['January 2016'], ['March 2016'], ['May 2016'], ['Undefined'], ['April 2016']]);
+        assert.checkDatasets(graph, 'data', {data: [56, 26, 4, 105, 48]});
+
+        graph.destroy();
+    });
+
     QUnit.test('use a many2one as a measure should work (without groupBy)', async function (assert) {
         assert.expect(4);
 
@@ -942,6 +967,35 @@ QUnit.module('Views', {
                 label: '',
                 data: [29, 53, 157],
         });
+
+        graph.destroy();
+    });
+
+    QUnit.test('graph view only keeps finer groupby filter option for a given groupby', async function (assert) {
+        assert.expect(3);
+
+        var graph = await createView({
+            View: GraphView,
+            model: "foo",
+            groupBy:['date:year','product_id', 'date', 'date:quarter'],
+            data: this.data,
+            arch: '<graph string="Partners" type="line">' +
+                        '<field name="bar"/>' +
+                '</graph>',
+        });
+
+        assert.checkLabels(graph, [["January 2016"], ["March 2016"], ["May 2016"], ["April 2016"]]);
+        // mockReadGroup does not always sort groups -> May 2016 is before April 2016 for that reason.
+        assert.checkLegend(graph, ["xphone","xpad"]);
+        assert.checkDatasets(graph, ['label', 'data'], [
+            {
+                label: 'xphone',
+                data: [2, 2, 0, 0],
+            }, {
+                label: 'xpad',
+                data: [0, 0, 1, 1],
+            }
+        ]);
 
         graph.destroy();
     });

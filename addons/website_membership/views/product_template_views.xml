@@ -6,6 +6,7 @@
         <field name="inherit_id" ref="membership.membership_products_form"/>
         <field name="arch" type="xml">
             <field name="active" position="after">
+                <field name="website_published"/>
                 <field name="website_sequence" groups="base.group_no_one"/>
             </field>
         </field>

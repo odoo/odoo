@@ -61,6 +61,26 @@ class StockRule(models.Model):
                                                       subtype_id=self.env.ref('mail.mt_note').id)
         return True
 
+    @api.model
+    def _run_pull(self, procurements):
+        # Override to correctly assign the move generated from the pull
+        # in its production order (pbm_sam only)
+        for procurement, rule in procurements:
+            warehouse_id = rule.warehouse_id
+            if not warehouse_id:
+                warehouse_id = rule.location_id.get_warehouse()
+            if rule.picking_type_id == warehouse_id.sam_type_id:
+                manu_type_id = warehouse_id.manu_type_id
+                if manu_type_id:
+                    name = manu_type_id.sequence_id.next_by_id()
+                else:
+                    name = self.env['ir.sequence'].next_by_code('mrp.production') or _('New')
+                # Create now the procurement group that will be assigned to the new MO
+                # This ensure that the outgoing move PostProduction -> Stock is linked to its MO
+                # rather than the original record (MO or SO)
+                procurement.values['group_id'] = self.env["procurement.group"].create({'name': name})
+        return super()._run_pull(procurements)
+
     def _get_custom_move_fields(self):
         fields = super(StockRule, self)._get_custom_move_fields()
         fields += ['bom_line_id']
@@ -75,7 +95,7 @@ class StockRule(models.Model):
 
     def _prepare_mo_vals(self, product_id, product_qty, product_uom, location_id, name, origin, company_id, values, bom):
         date_deadline = fields.Datetime.to_string(self._get_date_planned(product_id, company_id, values))
-        return {
+        mo_values = {
             'origin': origin,
             'product_id': product_id.id,
             'product_qty': product_qty,
@@ -84,8 +104,8 @@ class StockRule(models.Model):
             'location_dest_id': location_id.id,
             'bom_id': bom.id,
             'date_deadline': date_deadline,
-            'date_planned_finished': date_deadline,
-            'date_planned_start': fields.Datetime.from_string(date_deadline) - relativedelta(hours=1),
+            'date_planned_finished': fields.Datetime.from_string(values['date_planned']),
+            'date_planned_start': date_deadline,
             'procurement_group_id': False,
             'propagate_cancel': self.propagate_cancel,
             'propagate_date': self.propagate_date,
@@ -96,10 +116,24 @@ class StockRule(models.Model):
             'move_dest_ids': values.get('move_dest_ids') and [(4, x.id) for x in values['move_dest_ids']] or False,
             'user_id': False,
         }
+        # Use the procurement group created in _run_pull mrp override
+        # Preserve the origin from the original stock move, if available
+        if location_id.get_warehouse().manufacture_steps == 'pbm_sam':
+            if values.get('move_dest_ids') and values.get('group_id') and values['move_dest_ids'][0].origin != values['group_id'].name:
+                origin = values['move_dest_ids'][0].origin
+                mo_values.update({
+                    'name': values['group_id'].name,
+                    'procurement_group_id': values['group_id'].id,
+                    'origin': origin,
+                })
+        return mo_values
 
     def _get_date_planned(self, product_id, company_id, values):
         format_date_planned = fields.Datetime.from_string(values['date_planned'])
-        date_planned = format_date_planned - relativedelta(days=product_id.produce_delay or 0.0)
+        if product_id.produce_delay:
+            date_planned = format_date_planned - relativedelta(days=product_id.produce_delay)
+        else:
+            date_planned = format_date_planned - relativedelta(hours=1)
         date_planned = date_planned - relativedelta(days=company_id.manufacturing_lead)
         return date_planned
 
@@ -118,7 +152,11 @@ class ProcurementGroup(models.Model):
         """
         procurements_without_kit = []
         for procurement in procurements:
-            bom_kit = self.env['mrp.bom']._bom_find(product=procurement.product_id, bom_type='phantom')
+            bom_kit = self.env['mrp.bom']._bom_find(
+                product=procurement.product_id,
+                company_id=procurement.company_id.id,
+                bom_type='phantom',
+            )
             if bom_kit:
                 order_qty = procurement.product_uom._compute_quantity(procurement.product_qty, bom_kit.product_uom_id, round=False)
                 qty_to_produce = (order_qty / bom_kit.product_qty)
@@ -137,7 +175,7 @@ class ProcurementGroup(models.Model):
                 procurements_without_kit.append(procurement)
         return super(ProcurementGroup, self).run(procurements_without_kit)
 
-    def _get_moves_to_assign_domain(self):
-        domain = super(ProcurementGroup, self)._get_moves_to_assign_domain()
+    def _get_moves_to_assign_domain(self, company_id):
+        domain = super(ProcurementGroup, self)._get_moves_to_assign_domain(company_id)
         domain = expression.AND([domain, [('production_id', '=', False)]])
         return domain

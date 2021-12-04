@@ -16,11 +16,11 @@ from odoo.addons.web.controllers.main import Binary
 
 class CustomerPortal(CustomerPortal):
 
-    def _prepare_portal_layout_values(self):
-        values = super(CustomerPortal, self)._prepare_portal_layout_values()
+    def _prepare_home_portal_values(self):
+        values = super(CustomerPortal, self)._prepare_home_portal_values()
         values['purchase_count'] = request.env['purchase.order'].search_count([
             ('state', 'in', ['purchase', 'done', 'cancel'])
-        ])
+        ]) if request.env['purchase.order'].check_access_rights('read', raise_exception=False) else 0
         return values
 
     def _purchase_order_get_page_view_values(self, order, access_token, **kwargs):
@@ -44,7 +44,7 @@ class CustomerPortal(CustomerPortal):
 
         domain = []
 
-        archive_groups = self._get_archive_groups('purchase.order', domain)
+        archive_groups = self._get_archive_groups('purchase.order', domain) if values.get('my_details') else []
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
 
@@ -110,4 +110,6 @@ class CustomerPortal(CustomerPortal):
             return request.redirect('/my')
 
         values = self._purchase_order_get_page_view_values(order_sudo, access_token, **kw)
+        if order_sudo.company_id:
+            values['res_company'] = order_sudo.company_id
         return request.render("purchase.portal_my_purchase_order", values)

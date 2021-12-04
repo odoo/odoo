@@ -49,10 +49,15 @@ class AccountMoveReversal(models.TransientModel):
             return {'domain': {
                 'l10n_latam_document_type_id': [('id', 'in', refund.l10n_latam_available_document_type_ids.ids)]}}
 
-    def reverse_moves(self):
-        return super(AccountMoveReversal, self.with_context(
-            default_l10n_latam_document_type_id=self.l10n_latam_document_type_id.id,
-            default_l10n_latam_document_number=self.l10n_latam_document_number)).reverse_moves()
+    def _prepare_default_reversal(self, move):
+        """ Set the default document type and number in the new revsersal move taking into account the ones selected in
+        the wizard """
+        res = super()._prepare_default_reversal(move)
+        res.update({
+            'l10n_latam_document_type_id': self.l10n_latam_document_type_id.id,
+            'l10n_latam_document_number': self.l10n_latam_document_number,
+        })
+        return res
 
     @api.depends('l10n_latam_document_type_id')
     def _compute_l10n_latam_sequence(self):
@@ -64,7 +69,7 @@ class AccountMoveReversal(models.TransientModel):
                 'company_id': rec.move_id.company_id.id,
                 'l10n_latam_document_type_id': rec.l10n_latam_document_type_id.id,
             })
-            rec.l10n_latam_sequence_id = refund._get_document_type_sequence()
+            rec.l10n_latam_sequence_id = refund._get_document_type_sequence()[:1]
 
     @api.onchange('l10n_latam_document_number', 'l10n_latam_document_type_id')
     def _onchange_l10n_latam_document_number(self):

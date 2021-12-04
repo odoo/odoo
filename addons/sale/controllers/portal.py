@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import binascii
+from datetime import date
 
 from odoo import fields, http, _
 from odoo.exceptions import AccessError, MissingError
@@ -14,19 +15,19 @@ from odoo.osv import expression
 
 class CustomerPortal(CustomerPortal):
 
-    def _prepare_portal_layout_values(self):
-        values = super(CustomerPortal, self)._prepare_portal_layout_values()
+    def _prepare_home_portal_values(self):
+        values = super(CustomerPortal, self)._prepare_home_portal_values()
         partner = request.env.user.partner_id
 
         SaleOrder = request.env['sale.order']
         quotation_count = SaleOrder.search_count([
             ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
             ('state', 'in', ['sent', 'cancel'])
-        ])
+        ]) if SaleOrder.check_access_rights('read', raise_exception=False) else 0
         order_count = SaleOrder.search_count([
             ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
             ('state', 'in', ['sale', 'done'])
-        ])
+        ]) if SaleOrder.check_access_rights('read', raise_exception=False) else 0
 
         values.update({
             'quotation_count': quotation_count,
@@ -60,7 +61,7 @@ class CustomerPortal(CustomerPortal):
             sortby = 'date'
         sort_order = searchbar_sortings[sortby]['order']
 
-        archive_groups = self._get_archive_groups('sale.order', domain)
+        archive_groups = self._get_archive_groups('sale.order', domain) if values.get('my_details') else []
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
 
@@ -111,7 +112,7 @@ class CustomerPortal(CustomerPortal):
             sortby = 'date'
         sort_order = searchbar_sortings[sortby]['order']
 
-        archive_groups = self._get_archive_groups('sale.order', domain)
+        archive_groups = self._get_archive_groups('sale.order', domain) if values.get('my_details') else []
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
 
@@ -153,13 +154,24 @@ class CustomerPortal(CustomerPortal):
 
         # use sudo to allow accessing/viewing orders for public user
         # only if he knows the private token
-        now = fields.Date.today()
-
         # Log only once a day
-        if order_sudo and request.session.get('view_quote_%s' % order_sudo.id) != now and request.env.user.share and access_token:
-            request.session['view_quote_%s' % order_sudo.id] = now
-            body = _('Quotation viewed by customer %s') % order_sudo.partner_id.name
-            _message_post_helper('sale.order', order_sudo.id, body, token=order_sudo.access_token, message_type='notification', subtype="mail.mt_note")
+        if order_sudo:
+            now = fields.Date.today().isoformat()
+            session_obj_date = request.session.get('view_quote_%s' % order_sudo.id)
+            if isinstance(session_obj_date, date):
+                session_obj_date = session_obj_date.isoformat()
+            if session_obj_date != now and request.env.user.share and access_token:
+                request.session['view_quote_%s' % order_sudo.id] = now
+                body = _('Quotation viewed by customer %s') % order_sudo.partner_id.name
+                _message_post_helper(
+                    "sale.order",
+                    order_sudo.id,
+                    body,
+                    token=order_sudo.access_token,
+                    message_type="notification",
+                    subtype="mail.mt_note",
+                    partner_ids=order_sudo.user_id.sudo().partner_id.ids,
+                )
 
         values = {
             'sale_order': order_sudo,
@@ -214,6 +226,7 @@ class CustomerPortal(CustomerPortal):
                 'signed_on': fields.Datetime.now(),
                 'signature': signature,
             })
+            request.env.cr.commit()
         except (TypeError, binascii.Error) as e:
             return {'error': _('Invalid signature data.')}
 
@@ -281,7 +294,7 @@ class CustomerPortal(CustomerPortal):
         # Create transaction
         vals = {
             'acquirer_id': acquirer_id,
-            'type': order._get_payment_type(),
+            'type': order._get_payment_type(save_token),
             'return_url': order.get_portal_url(),
         }
 
@@ -291,7 +304,7 @@ class CustomerPortal(CustomerPortal):
             order,
             submit_txt=_('Pay & Confirm'),
             render_values={
-                'type': order._get_payment_type(),
+                'type': order._get_payment_type(save_token),
                 'alias_usage': _('If we store your payment information on our server, subscription payments will be made automatically.'),
             }
         )

@@ -26,6 +26,7 @@ Wysiwyg.include({
         if (this.options.inIframe) {
             this._onUpdateIframeId = 'onLoad_' + this.id;
         }
+        this.__extraAssetsForIframe = [];
     },
     /**
      * Load assets to inject into iframe.
@@ -112,7 +113,7 @@ Wysiwyg.include({
                 }
 
                 var iframeContent = qweb.render('wysiwyg.iframeContent', {
-                    assets: assets,
+                    assets: assets.concat(self.__extraAssetsForIframe),
                     updateIframeId: self._onUpdateIframeId,
                     avoidDoubleLoad: _avoidDoubleLoad
                 });

@@ -6,23 +6,30 @@ var Class = require('web.Class');
 var core = require('web.core');
 var ColorpickerDialog = require('web.ColorpickerDialog');
 var mixins = require('web.mixins');
+const session = require('web.session');
 var fonts = require('wysiwyg.fonts');
 var weContext = require('web_editor.context');
 var rte = require('web_editor.rte');
+var ServicesMixin = require('web.ServicesMixin');
 var weWidgets = require('wysiwyg.widgets');
 
 var QWeb = core.qweb;
 var _t = core._t;
 
-ajax.jsonRpc('/web/dataset/call_kw', 'call', {
-    'model': 'ir.ui.view',
-    'method': 'read_template',
-    'args': ['web_editor.colorpicker'],
-    'kwargs': {
-        'context': weContext.get(),
+session.is_bound.then(() => {
+    if (session.is_website_user) {
+        return;
     }
-}).then(function (data) {
-    QWeb.add_template('<templates>' + data + '</templates>');
+    ajax.jsonRpc('/web/dataset/call_kw', 'call', {
+        'model': 'ir.ui.view',
+        'method': 'read_template',
+        'args': ['web_editor.colorpicker'],
+        'kwargs': {
+            'context': weContext.get(),
+        }
+    }).then(function (data) {
+        QWeb.add_template('<templates>' + data + '</templates>');
+    });
 });
 
 // Summernote Lib (neek change to make accessible: method and object)
@@ -30,6 +37,37 @@ var dom = $.summernote.core.dom;
 var range = $.summernote.core.range;
 var eventHandler = $.summernote.eventHandler;
 var renderer = $.summernote.renderer;
+
+// Summernote uses execCommand and, worth, obsolete queryCommandState function
+// to customize the edited content. Here we try to hack the function to solve
+// some problems by making the DOM and style easier to understand for the
+// base function for the duration of their executions. This won't obviously
+// solves all problems but this is an improvement while waiting for the new
+// Odoo editor coming in future versions.
+function protectCommand(callback) {
+    return function () {
+        var rng = range.create();
+        var $sc = (rng && rng.sc) ? $(rng.sc).parents(':o_editable').last() : $();
+        var $ec = (rng && rng.ec) ? $(rng.ec).parents(':o_editable').last() : $();
+        $sc.addClass('o_we_command_protector');
+        $ec.addClass('o_we_command_protector');
+        var restore = function () {
+            $sc.removeClass('o_we_command_protector');
+            $ec.removeClass('o_we_command_protector');
+        };
+        var result;
+        try {
+            result = callback.apply(this, arguments);
+        } catch (err) {
+            restore();
+            throw err;
+        }
+        restore();
+        return result;
+    };
+}
+document.execCommand = protectCommand(document.execCommand);
+document.queryCommandState = protectCommand(document.queryCommandState);
 
 var tplButton = renderer.getTemplate().button;
 var tplIconButton = renderer.getTemplate().iconButton;
@@ -59,11 +97,9 @@ var fn_createPalette = renderer.createPalette;
 renderer.createPalette = function ($container, options) {
     fn_createPalette.call(this, $container, options);
 
-    if (!QWeb.has_template('web_editor.colorpicker')) {
-        return;
-    }
-
-    var $clpicker = $(QWeb.render('web_editor.colorpicker'));
+    const $clpicker = QWeb.has_template('web_editor.colorpicker')
+        ? $(QWeb.render('web_editor.colorpicker'))
+        : $(document.createElement('colorpicker'));
 
     var groups;
     if ($clpicker.is("colorpicker")) {
@@ -74,17 +110,20 @@ renderer.createPalette = function ($container, options) {
         groups = [$clpicker.find("button").empty()];
     }
 
-    var html = "<h6 class='mt-2'>" + _t("Theme colors") + "</h6>" + _.map(groups, function ($group) {
-        var $row = $("<div/>", {"class": "note-color-row mb8"}).append($group);
-        var $after_breaks = $row.find(".o_small + :not(.o_small)");
-        if ($after_breaks.length === 0) {
-            $after_breaks = $row.find(":nth-child(8n+9)");
-        }
-        $after_breaks.addClass("o_clear");
-        return $row[0].outerHTML;
-    }).join("") + "<h6 class='mt-2'>" + _t("Common colors") + "</h6>";
     var $palettes = $container.find(".note-color .note-color-palette");
-    $palettes.prepend(html);
+
+    if (groups.length) {
+        var html = "<h6 class='mt-2'>" + _t("Theme colors") + "</h6>" + _.map(groups, function ($group) {
+            var $row = $("<div/>", {"class": "note-color-row mb8"}).append($group);
+            var $after_breaks = $row.find(".o_small + :not(.o_small)");
+            if ($after_breaks.length === 0) {
+                $after_breaks = $row.find(":nth-child(8n+9)");
+            }
+            $after_breaks.addClass("o_clear");
+            return $row[0].outerHTML;
+        }).join("") + "<h6 class='mt-2'>" + _t("Common colors") + "</h6>";
+        $palettes.prepend(html);
+    }
 
     // Find the custom colors which are used in the page and add them to the color palette
     var colors = [];
@@ -303,6 +342,7 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
             $container.find('button[data-event="resizefa"][data-value="4"]').toggleClass("active", $(oStyle.image).hasClass("fa-4x"));
             $container.find('button[data-event="resizefa"][data-value="5"]').toggleClass("active", $(oStyle.image).hasClass("fa-5x"));
             $container.find('button[data-event="resizefa"][data-value="1"]').toggleClass("active", !$container.find('.active[data-event="resizefa"]').length);
+            $container.find('button[data-event="cropImage"]').addClass('d-none');
 
             $container.find('button[data-event="imageShape"][data-value="fa-spin"]').toggleClass("active", $(oStyle.image).hasClass("fa-spin"));
             $container.find('button[data-event="imageShape"][data-value="shadow"]').toggleClass("active", $(oStyle.image).hasClass("shadow"));
@@ -310,6 +350,7 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
 
         } else {
             $container.find('.d-none:not(.only_fa, .note-recent-color)').removeClass('d-none');
+            $container.find('button[data-event="cropImage"]').removeClass('d-none');
             $container.find('.only_fa').addClass('d-none');
             var width = ($(oStyle.image).attr('style') || '').match(/(^|;|\s)width:\s*([0-9]+%)/);
             if (width) {
@@ -473,7 +514,12 @@ eventHandler.modules.linkDialog.showLinkDialog = function ($editable, $dialog, l
     });
     return def;
 };
+var originalShowImageDialog = eventHandler.modules.imageDialog.showImageDialog;
 eventHandler.modules.imageDialog.showImageDialog = function ($editable) {
+    var options = $editable.closest('.o_editable, .note-editor').data('options');
+    if (options.disableFullMediaDialog) {
+        return originalShowImageDialog.apply(this, arguments);
+    }
     var r = $editable.data('range');
     if (r.sc.tagName && r.sc.childNodes.length) {
         r.sc = r.sc.childNodes[r.so];
@@ -485,14 +531,18 @@ eventHandler.modules.imageDialog.showImageDialog = function ($editable) {
         $editable: $editable,
         media: media,
         options: {
-            lastFilters: ['background'],
             onUpload: $editable.data('callbacks').onUpload,
-            noVideos: $editable.data('oe-model') === "mail.compose.message",
+            noVideos: options && options.noVideos,
         },
-        onSave: function (media) {
-            if(!document.body.contains(media)) {
-            r.insertNode(media);
-            };
+        onSave: function (newMedia) {
+            if (!newMedia) {
+                return;
+            }
+            if (media) {
+                $(media).replaceWith(newMedia);
+            } else {
+                r.insertNode(newMedia);
+            }
         },
     });
     return new $.Deferred().reject();
@@ -889,6 +939,9 @@ eventHandler.attach = function (oLayoutInfo, options) {
     oLayoutInfo.editor().on('dragstart', 'img', function (e) { e.preventDefault(); });
     $(document).on('mousedown', summernote_mousedown).on('mouseup', summernote_mouseup);
     oLayoutInfo.editor().off('click').on('click', function (e) {e.preventDefault();}); // if the content editable is a link
+    oLayoutInfo.editor().find('.note-image-dialog').on('click', '.note-image-input', function (e) {
+        e.stopPropagation(); // let browser default happen for image file input
+    });
 
     /**
      * Open Media Dialog on double click on an image/video/icon.
@@ -1133,7 +1186,7 @@ $.summernote.lang.odoo = {
  * instantiate media, link and alt dialogs outside the main editor: in the
  * simple HTML fields and forum textarea.
  */
-var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
+var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
     /**
      * @constructor
      */
@@ -1158,6 +1211,56 @@ var SummernoteManager = Class.extend(mixins.EventDispatcherMixin, {
         core.bus.off('crop_image_dialog_demand', this, this._onCropImageDialogDemand);
         core.bus.off('link_dialog_demand', this, this._onLinkDialogDemand);
         core.bus.off('media_dialog_demand', this, this._onMediaDialogDemand);
+    },
+
+    /**
+     * Create/Update cropped attachments.
+     *
+     * @param {jQuery} $editable
+     * @returns {Promise}
+     */
+    saveCroppedImages: function ($editable) {
+        var defs = _.map($editable.find('.o_cropped_img_to_save'), async croppedImg => {
+            var $croppedImg = $(croppedImg);
+            $croppedImg.removeClass('o_cropped_img_to_save');
+
+            var resModel = $croppedImg.data('crop:resModel');
+            var resID = $croppedImg.data('crop:resID');
+            var cropID = $croppedImg.data('crop:id');
+            var mimetype = $croppedImg.data('crop:mimetype');
+            var originalSrc = $croppedImg.data('crop:originalSrc');
+
+            var datas = $croppedImg.attr('src').split(',')[1];
+            let attachmentID = cropID;
+            if (!cropID) {
+                var name = originalSrc + '.crop';
+                attachmentID = await this._rpc({
+                    model: 'ir.attachment',
+                    method: 'create',
+                    args: [{
+                        res_model: resModel,
+                        res_id: resID,
+                        name: name,
+                        datas: datas,
+                        mimetype: mimetype,
+                        url: originalSrc, // To save the original image that was cropped
+                    }],
+                });
+            } else {
+                await this._rpc({
+                    model: 'ir.attachment',
+                    method: 'write',
+                    args: [[cropID], {datas: datas}],
+                });
+            }
+            const access_token = await this._rpc({
+                model: 'ir.attachment',
+                method: 'generate_access_token',
+                args: [[attachmentID]],
+            });
+            $croppedImg.attr('src', '/web/image/' + attachmentID + '?access_token=' + access_token[0]);
+        });
+        return Promise.all(defs);
     },
 
     //--------------------------------------------------------------------------
@@ -1305,6 +1408,20 @@ rte.Class.include({
     cancel: function () {
         this._super.apply(this, arguments);
         this._summernoteManager.destroy();
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Create/Update cropped attachments.
+     *
+     * @param {jQuery} $editable
+     * @returns {Deferred}
+     */
+    saveCroppedImages: function ($editable) {
+        return this._summernoteManager.saveCroppedImages($editable);
     },
 });
 return SummernoteManager;

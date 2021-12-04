@@ -22,4 +22,5 @@ Allows users to send documents by post
         'static/src/xml/thread.xml',
     ],
     'auto_install': True,
+    'license': 'LGPL-3',
 }

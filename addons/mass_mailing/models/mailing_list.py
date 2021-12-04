@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 
 
 class MassMailingList(models.Model):
@@ -41,6 +42,19 @@ class MassMailingList(models.Model):
         data = dict(self.env.cr.fetchall())
         for mailing_list in self:
             mailing_list.contact_nbr = data.get(mailing_list.id, 0)
+
+    def write(self, vals):
+        # Prevent archiving used mailing list
+        if 'active' in vals and not vals.get('active'):
+            mass_mailings = self.env['mailing.mailing'].search_count([
+                ('state', '!=', 'done'),
+                ('contact_list_ids', 'in', self.ids),
+            ])
+
+            if mass_mailings > 0:
+                raise UserError(_("At least one of the mailing list you are trying to archive is used in an ongoing mailing campaign."))
+
+        return super(MassMailingList, self).write(vals)
 
     def name_get(self):
         return [(list.id, "%s (%s)" % (list.name, list.contact_nbr)) for list in self]

@@ -688,7 +688,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * @param {OdooEvent} ev
      */
     _onFieldChanged: function (ev) {
-        if (this.mode === 'readonly') {
+        if (this.mode === 'readonly' && !('force_save' in ev.data)) {
             ev.data.force_save = true;
         }
         FieldManagerMixin._onFieldChanged.apply(this, arguments);
@@ -735,6 +735,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * @param {string} ev.data.handleField
      */
     _onResequenceRecords: function (ev) {
+        ev.stopPropagation(); // prevent other controllers from handling this request
         var self = this;
 
         this.trigger_up('mutexify', {

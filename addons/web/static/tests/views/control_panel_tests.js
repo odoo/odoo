@@ -3,6 +3,7 @@ odoo.define('web.control_panel_tests', function (require) {
 
 const AbstractAction = require('web.AbstractAction');
 const ControlPanelView = require('web.ControlPanelView');
+const config = require('web.config');
 const core = require('web.core');
 const testUtils = require('web.test_utils');
 
@@ -396,8 +397,8 @@ QUnit.module('Views', {
         actionManager.destroy();
     });
 
-    QUnit.test('fiels and filters with groups/invisible attribute are not always rendered but activable as search default', async function (assert) {
-        assert.expect(13);
+    QUnit.test('fields and filters with groups/invisible attribute are not always rendered but activable as search default', async function (assert) {
+        assert.expect(15);
         var controlPanel = await createControlPanel({
             model: 'partner',
             arch: "<search>" +
@@ -405,15 +406,19 @@ QUnit.module('Views', {
                         "<field name=\"foo\" string=\"Foo A\"/>" +
                         "<filter name=\"filterA\" string=\"FA\" domain=\"[]\"/>" +
                         "<filter name=\"filterB\" string=\"FB\" invisible=\"1\" domain=\"[]\"/>" +
+                        "<filter name=\"filterC\" string=\"FC\" invisible=\"not context.get('show_filterC')\"/>" +
                         "<filter name=\"groupByA\" string=\"GA\" context=\"{'group_by': 'date_field:day'}\"/>" +
                         "<filter name=\"groupByB\" string=\"GB\" context=\"{'group_by': 'date_field:day'}\" invisible=\"1\"/>" +
                     "</search>",
             data: this.data,
             searchMenuTypes: ['filter', 'groupBy'],
-            context: {
-                search_default_display_name: 'value',
-                search_default_filterB: true,
-                search_default_groupByB: true,
+            viewOptions: {
+                context: {
+                    show_filterC: true,
+                    search_default_display_name: 'value',
+                    search_default_filterB: true,
+                    search_default_groupByB: true,
+                },
             },
         });
 
@@ -424,6 +429,7 @@ QUnit.module('Views', {
         await testUtils.dom.click(controlPanel.$('.o_filters_menu_button'));
         assert.containsOnce(controlPanel, '.o_menu_item a:contains("FA")');
         assert.containsNone(controlPanel, '.o_menu_item a:contains("FB")');
+        assert.containsOnce(controlPanel, '.o_menu_item a:contains("FC")');
         // default filter should be activated even if invisible
         assert.containsOnce(controlPanel, '.o_searchview_facet .o_facet_values:contains(FB)');
 
@@ -450,11 +456,49 @@ QUnit.module('Views', {
         await testUtils.dom.click(controlPanel.$('.o_filters_menu_button'));
         assert.containsOnce(controlPanel, '.o_menu_item a:contains("FA")');
         assert.containsNone(controlPanel, '.o_menu_item a:contains("FB")');
+        assert.containsOnce(controlPanel, '.o_menu_item a:contains("FC")');
 
         await testUtils.dom.click(controlPanel.$('button span.fa-bars'));
         assert.containsOnce(controlPanel, '.o_menu_item a:contains("GA")');
         assert.containsNone(controlPanel, '.o_menu_item a:contains("GB")');
 
+
+        controlPanel.destroy();
+    });
+
+    QUnit.test('invisible fields and filters with unknown related fields should not be rendered', async function (assert) {
+        assert.expect(2);
+
+        // This test case considers that the current user is not a member of
+        // the "base.group_system" group and both "bar" and "date_field" fields
+        // have field-level access control that limit access to them only from
+        // that group.
+        //
+        // As MockServer currently does not support "groups" access control, we:
+        //
+        // - emulate field-level access control of fields_get() by removing
+        //   "bar" and "date_field" from the model fields
+        // - set filters with groups="base.group_system" as `invisible=1` in
+        //   view to emulate the behavior of fields_view_get()
+        //   [see ir.ui.view `_apply_group()`]
+
+        delete this.data['partner'].fields['bar'];
+        delete this.data['partner'].fields['date_field'];
+
+        var controlPanel = await createControlPanel({
+            model: 'partner',
+            arch: "<search>" +
+                        "<field name=\"foo\"/>" +
+                        "<filter name=\"filterDate\" string=\"Date\" date=\"date_field\" default_period=\"last_365_days\" invisible=\"1\" groups=\"base.group_system\"/>" +
+                        "<filter name=\"groupByBar\" string=\"Bar\" context=\"{'group_by': 'bar'}\" invisible=\"1\" groups=\"base.group_system\"/>" +
+                    "</search>",
+            data: this.data,
+        });
+
+        assert.containsNone(controlPanel, '.o_search_options .o_dropdown:contains("Filters")',
+            "there should not be filter dropdown");
+        assert.containsNone(controlPanel, '.o_search_options .o_dropdown:contains("Group By")',
+            "there should not be groupby dropdown");
 
         controlPanel.destroy();
     });
@@ -579,6 +623,113 @@ QUnit.module('Views', {
         });
 
         controlPanel.destroy();
+    });
+
+    QUnit.test('load favorite with group_by', async function (assert) {
+        assert.expect(3);
+
+        var controlPanel = await createControlPanel({
+            model: 'partner',
+            arch: "<search></search>",
+            data: this.data,
+            intercepts: {
+                load_filters: function (ev) {
+                    ev.data.on_success([
+                        {
+                            user_id: [2,"Mitchell Admin"],
+                            name: 'favorite 1',
+                            id: 5,
+                            context: "{'group_by': ['company_id'], 'test': 'test', 'test2': True}",
+                            sort: "[]",
+                            domain: "[('user_id', '=', uid)]",
+                        }
+                    ]);
+                }
+            },
+            session: {
+                user_context: { uid: 2 },
+            },
+            searchMenuTypes: ['favorite'],
+        });
+
+        _.each(controlPanel.exportState().filters, function (filter) {
+            if (filter.type === 'favorite') {
+                assert.deepEqual(filter.context, { test: 'test', test2: true }, 'group_by should not be in context anymore');
+                assert.deepEqual(filter.groupBys, ['company_id'], 'group_by should have been moved from context to groupBys');
+            }
+        });
+
+        await testUtils.dom.click(controlPanel.$('.o_favorites_menu_button'));
+        await testUtils.dom.click(controlPanel.$('.o_menu_item:contains(favorite 1)'));
+
+        assert.strictEqual(controlPanel.$('.o_control_panel .o_facet_values').text().trim(),
+            'favorite 1', 'favorite should be applied with True in its initial context string');
+
+        controlPanel.destroy();
+    });
+
+    QUnit.test('groupby menu is not rendered if searchMenuTypes does not have groupBy', async function (assert) {
+        assert.expect(2);
+
+        const controlPanel = await createControlPanel({
+            model: 'partner',
+            arch: `<search>
+                <filter name="filterA" string="A" domain="[]"/>
+                <groupBy name="groupby" string="Hi"
+                    "context="{'group_by': 'bar'}"/>
+                </search>`,
+            data: this.data,
+            searchMenuTypes: ['filter'],
+        });
+
+        assert.containsN(controlPanel, '.o_search_options .o_dropdown', 1,
+            "there should be 1 dropdown for filter only");
+        assert.containsNone(controlPanel, '.o_search_options .o_dropdown:contains("Group By")',
+            "there should not be groupby dropdown");
+
+        controlPanel.destroy();
+    });
+
+    QUnit.test('search field should be autofocused', async function (assert) {
+        assert.expect(2);
+
+        testUtils.mock.patch(config.device, {
+            isMobileDevice: false,
+        });
+
+        const controlPanel = await createControlPanel({
+            model: 'partner',
+            arch: '<search></search>',
+            data: this.data,
+        });
+
+        assert.containsOnce(controlPanel, '.o_searchview_input', "has a search field");
+        assert.containsOnce(controlPanel, '.o_searchview_input:focus-within',
+            "has autofocused search field");
+
+        controlPanel.destroy();
+        testUtils.mock.unpatch(config.device);
+    });
+
+    QUnit.test("search field's autofocus should be disabled on mobile device", async function (assert) {
+        assert.expect(2);
+
+        testUtils.mock.patch(config.device, {
+            isMobileDevice: true,
+        });
+
+        const controlPanel = await createControlPanel({
+            model: 'partner',
+            arch: '<search></search>',
+            data: this.data,
+        });
+
+        assert.containsOnce(controlPanel, '.o_searchview_input', "has a search field");
+        assert.containsNone(controlPanel, '.o_searchview_input:focus-within',
+            "hasn't autofocused search field");
+
+        controlPanel.destroy();
+        testUtils.mock.unpatch(config.device);
     });
 });
 });

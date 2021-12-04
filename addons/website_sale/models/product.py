@@ -54,7 +54,7 @@ class ProductPricelist(models.Model):
 
     def write(self, data):
         res = super(ProductPricelist, self).write(data)
-        if data.keys() & {'code', 'active', 'website_id', 'selectable'}:
+        if data.keys() & {'code', 'active', 'website_id', 'selectable', 'company_id'}:
             self._check_website_pricelist()
         self.clear_cache()
         return res
@@ -65,8 +65,8 @@ class ProductPricelist(models.Model):
         self.clear_cache()
         return res
 
-    def _get_partner_pricelist_multi_search_domain_hook(self):
-        domain = super(ProductPricelist, self)._get_partner_pricelist_multi_search_domain_hook()
+    def _get_partner_pricelist_multi_search_domain_hook(self, company_id):
+        domain = super(ProductPricelist, self)._get_partner_pricelist_multi_search_domain_hook(company_id)
         website = ir_http.get_request_website()
         if website:
             domain += self._get_website_pricelists_domain(website.id)
@@ -89,6 +89,7 @@ class ProductPricelist(models.Model):
         - Have its `website_id` set to current website (specific pricelist).
         - Have no `website_id` set and should be `selectable` (generic pricelist)
           or should have a `code` (generic promotion).
+        - Have no `company_id` or a `company_id` matching its website one.
 
         Note: A pricelist without a website_id, not selectable and without a
               code is a backend pricelist.
@@ -96,13 +97,17 @@ class ProductPricelist(models.Model):
         Change in this method should be reflected in `_get_website_pricelists_domain`.
         """
         self.ensure_one()
+        if self.company_id and self.company_id != self.env["website"].browse(website_id).company_id:
+            return False
         return self.website_id.id == website_id or (not self.website_id and (self.selectable or self.sudo().code))
 
     def _get_website_pricelists_domain(self, website_id):
         ''' Check above `_is_available_on_website` for explanation.
         Change in this method should be reflected in `_is_available_on_website`.
         '''
+        company_id = self.env["website"].browse(website_id).company_id.id
         return [
+            '&', ('company_id', 'in', [False, company_id]),
             '|', ('website_id', '=', website_id),
             '&', ('website_id', '=', False),
             '|', ('selectable', '=', True), ('code', '!=', False),
@@ -179,20 +184,21 @@ class ProductTemplate(models.Model):
     _inherit = ["product.template", "website.seo.metadata", 'website.published.multi.mixin', 'rating.mixin']
     _name = 'product.template'
     _mail_post_access = 'read'
+    _check_company_auto = True
 
     website_description = fields.Html('Description for the website', sanitize_attributes=False, translate=html_translate)
     alternative_product_ids = fields.Many2many(
-        'product.template', 'product_alternative_rel', 'src_id', 'dest_id',
+        'product.template', 'product_alternative_rel', 'src_id', 'dest_id', check_company=True,
         string='Alternative Products', help='Suggest alternatives to your customer (upsell strategy). '
                                             'Those products show up on the product page.')
     accessory_product_ids = fields.Many2many(
-        'product.product', 'product_accessory_rel', 'src_id', 'dest_id', string='Accessory Products',
+        'product.product', 'product_accessory_rel', 'src_id', 'dest_id', string='Accessory Products', check_company=True,
         help='Accessories show up when the customer reviews the cart before payment (cross-sell strategy).')
     website_size_x = fields.Integer('Size X', default=1)
     website_size_y = fields.Integer('Size Y', default=1)
     website_style_ids = fields.Many2many('product.style', string='Styles')
     website_sequence = fields.Integer('Website Sequence', help="Determine the display order in the Website E-commerce",
-                                      default=lambda self: self._default_website_sequence())
+                                      default=lambda self: self._default_website_sequence(), copy=False)
     public_categ_ids = fields.Many2many(
         'product.public.category', relation='product_public_category_product_template_rel',
         string='Website Product Category',
@@ -285,12 +291,16 @@ class ProductTemplate(models.Model):
             product = self.env['product.product'].browse(combination_info['product_id']) or self
 
             tax_display = self.env.user.has_group('account.group_show_line_subtotals_tax_excluded') and 'total_excluded' or 'total_included'
-            taxes = partner.property_account_position_id.map_tax(product.sudo().taxes_id.filtered(lambda x: x.company_id == company_id), product, partner)
+            Fpos_sudo = self.env['account.fiscal.position'].sudo()
+            fpos_id = Fpos_sudo.with_context(force_company=company_id.id).get_fiscal_position(partner.id)
+            taxes = Fpos_sudo.browse(fpos_id).map_tax(product.sudo().taxes_id.filtered(lambda x: x.company_id == company_id), product, partner)
 
             # The list_price is always the price of one.
             quantity_1 = 1
+            combination_info['price'] = self.env['account.tax']._fix_tax_included_price_company(combination_info['price'], product.sudo().taxes_id, taxes, company_id)
             price = taxes.compute_all(combination_info['price'], pricelist.currency_id, quantity_1, product, partner)[tax_display]
             if pricelist.discount_policy == 'without_discount':
+                combination_info['list_price'] = self.env['account.tax']._fix_tax_included_price_company(combination_info['list_price'], product.sudo().taxes_id, taxes, company_id)
                 list_price = taxes.compute_all(combination_info['list_price'], pricelist.currency_id, quantity_1, product, partner)[tax_display]
             else:
                 list_price = price
@@ -316,6 +326,21 @@ class ProductTemplate(models.Model):
         """
         return self._create_product_variant(self._get_first_possible_combination(), log_warning)
 
+    def _get_image_holder(self):
+        """Returns the holder of the image to use as default representation.
+        If the product template has an image it is the product template,
+        otherwise if the product has variants it is the first variant
+
+        :return: this product template or the first product variant
+        :rtype: recordset of 'product.template' or recordset of 'product.product'
+        """
+        self.ensure_one()
+        if self.image_1920:
+            return self
+        variant = self.env['product.product'].browse(self._get_first_possible_variant_id())
+        # if the variant has no image anyway, spare some queries by using template
+        return variant if variant.image_variant_1920 else self
+
     def _get_current_company_fallback(self, **kwargs):
         """Override: if a website is set on the product or given, fallback to
         the company of the website. Otherwise use the one from parent method."""
@@ -336,12 +361,12 @@ class ProductTemplate(models.Model):
             return 10000
         return max_sequence + 5
 
-    def set_sequence_top(self):
-        min_sequence = self.sudo().search([], order='website_sequence ASC', limit=1)
+    def set_sequence_top(self, to_remove=[]):
+        min_sequence = self.sudo().search([('id', 'not in', to_remove)], order='website_sequence ASC', limit=1)
         self.website_sequence = min_sequence.website_sequence - 5
 
-    def set_sequence_bottom(self):
-        max_sequence = self.sudo().search([], order='website_sequence DESC', limit=1)
+    def set_sequence_bottom(self, to_remove=[]):
+        max_sequence = self.sudo().search([('id', 'not in', to_remove)], order='website_sequence DESC', limit=1)
         self.website_sequence = max_sequence.website_sequence + 5
 
     def set_sequence_up(self):
@@ -409,6 +434,7 @@ class Product(models.Model):
 
     website_url = fields.Char('Website URL', compute='_compute_product_website_url', help='The full URL to access the document through the website.')
 
+    @api.depends_context('lang')
     @api.depends('product_tmpl_id.website_url', 'product_template_attribute_value_ids')
     def _compute_product_website_url(self):
         for product in self:

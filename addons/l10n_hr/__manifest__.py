@@ -57,4 +57,5 @@ Izvori podataka:
         'data/account_chart_template_data.xml',
     ],
     "active": False,
+    'license': 'LGPL-3',
 }

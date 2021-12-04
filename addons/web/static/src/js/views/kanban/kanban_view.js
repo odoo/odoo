@@ -63,7 +63,7 @@ var KanbanView = BasicView.extend({
             editable: activeActions.group_edit,
             deletable: activeActions.group_delete,
             archivable: archAttrs.archivable ? !!JSON.parse(archAttrs.archivable) : true,
-            group_creatable: activeActions.group_create && !config.device.isMobile,
+            group_creatable: activeActions.group_create,
             quickCreateView: archAttrs.quick_create_view || null,
             recordsDraggable: archAttrs.records_draggable ? !!JSON.parse(archAttrs.records_draggable) : true,
             hasProgressBar: !!progressBar,
@@ -117,11 +117,13 @@ var KanbanView = BasicView.extend({
      */
     _updateMVCParams: function () {
         this._super.apply(this, arguments);
-        if (!this.noDefaultGroupby) {
-            var defaultGroupBy = this.arch.attrs.default_group_by;
+        var defaultGroupBy = this.arch.attrs.default_group_by;
+        if (this.searchMenuTypes.includes('groupBy') && !this.noDefaultGroupby) {
             this.loadParams.groupBy = defaultGroupBy ?
                                         [defaultGroupBy] :
                                         (this.loadParams.groupedBy || []);
+        } else {
+            this.loadParams.groupBy = [];
         }
     },
 });

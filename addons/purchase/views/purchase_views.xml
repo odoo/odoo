@@ -88,6 +88,7 @@
             <field name="priority" eval="2"/>
             <field name="arch" type="xml">
                 <calendar string="Calendar View" date_start="date_planned" color="partner_id" hide_time="true" event_limit="5">
+                    <field name="currency_id" invisible="1"/>
                     <field name="name"/>
                     <field name="partner_ref"/>
                     <field name="amount_total" widget="monetary"/>
@@ -163,8 +164,8 @@
                             <field name="currency_id" groups="base.group_multi_currency" force_save="1"/>
                         </group>
                         <group>
-                            <field name="date_order" attrs="{'invisible': [('state','=','purchase')]}"/>
-                            <field name="date_approve" attrs="{'invisible': [('state','!=','purchase')]}"/>
+                            <field name="date_order" attrs="{'invisible': [('state','in',('purchase','done'))]}"/>
+                            <field name="date_approve" attrs="{'invisible': [('state','not in',('purchase','done'))]}"/>
                             <field name="origin" attrs="{'invisible': [('origin','=',False)]}"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                         </group>
@@ -174,6 +175,7 @@
                             <field name="order_line"
                                 widget="section_and_note_one2many"
                                 mode="tree,kanban"
+                                context="{'default_state': 'draft'}"
                                 attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}">
                                 <tree string="Purchase Order Lines" editable="bottom">
                                     <control>
@@ -183,7 +185,7 @@
                                     </control>
                                     <field name="display_type" invisible="1"/>
                                     <field name="currency_id" invisible="1"/>
-                                    <field name="state" invisible="1"/>
+                                    <field name="state" invisible="1" readonly="1"/>
                                     <field name="product_type" invisible="1"/>
                                     <field name="product_uom_category_id" invisible="1"/>
                                     <field name="invoice_lines" invisible="1"/>
@@ -240,7 +242,7 @@
                                             <group>
                                                 <field name="date_planned" widget="date" attrs="{'required': [('display_type', '=', False)]}"/>
                                                 <field name="account_analytic_id" colspan="2" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
-                                                <field name="analytic_tag_ids" groups="analytic.group_analytic_accounting" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                                <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" domain="['|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                             </group>
                                             <group colspan="12">
@@ -434,11 +436,11 @@
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile">
                     <field name="name"/>
-                    <field name="partner_id"/>
+                    <field name="partner_id" readonly="1"/>
                     <field name="amount_total"/>
                     <field name="state"/>
                     <field name="date_order"/>
-                    <field name="currency_id"/>
+                    <field name="currency_id" readonly="1"/>
                     <field name="activity_state"/>
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                     <templates>
@@ -487,7 +489,7 @@
                     <field name="amount_total" sum="Total amount" widget="monetary" optional="show"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="state" optional="show"/>
-                    <field name="invoice_status" attrs="{'column_invisible': [('parent.state', 'not in', ('purchase', 'done'))]}"/>
+                    <field name="invoice_status" optional="hide"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
                 </tree>
             </field>

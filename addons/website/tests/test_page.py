@@ -183,9 +183,9 @@ class TestPage(common.TransactionCase):
         self.assertTrue(website_id not in pages.mapped('website_id').ids, "The website from which we deleted the generic page should not have a specific one.")
         self.assertTrue(website_id not in View.search([('name', 'in', ('Base', 'Extension'))]).mapped('website_id').ids, "Same for views")
 
-
-class Crawler(HttpCase):
-    def test_unpublished_page(self):
+class WithContext(HttpCase):
+    def setUp(self):
+        super().setUp()
         Page = self.env['website.page']
         View = self.env['ir.ui.view']
         base_view = View.create({
@@ -198,14 +198,15 @@ class Crawler(HttpCase):
                     </t>''',
             'key': 'test.base_view',
         })
-        generic_page = Page.create({
+        self.page = Page.create({
             'view_id': base_view.id,
             'url': '/page_1',
             'is_published': True,
         })
 
-        specific_page = generic_page.copy({'website_id': self.env['website'].get_current_website().id})
-        specific_page.write({'is_published': False, 'arch': generic_page.arch.replace('I am a generic page', 'I am a specific page')})
+    def test_unpublished_page(self):
+        specific_page = self.page.copy({'website_id': self.env['website'].get_current_website().id})
+        specific_page.write({'is_published': False, 'arch': self.page.arch.replace('I am a generic page', 'I am a specific page')})
 
         r = self.url_open(specific_page.url)
         self.assertEqual(r.status_code, 404, "Restricted users should see a 404 and not the generic one as we unpublished the specific one")
@@ -214,3 +215,23 @@ class Crawler(HttpCase):
         r = self.url_open(specific_page.url)
         self.assertEqual(r.status_code, 200, "Admin should see the specific unpublished page")
         self.assertEqual('I am a specific page' in r.text, True, "Admin should see the specific unpublished page")
+
+    def test_search(self):
+        dbname = common.get_db_name()
+        admin_uid = self.env.ref('base.user_admin').id
+        website = self.env['website'].get_current_website()
+
+        robot = self.xmlrpc_object.execute(
+            dbname, admin_uid, 'admin',
+            'website', 'search_pages', [website.id], 'info'
+        )
+        self.assertEqual(robot, [{'loc': '/website/info'}])
+
+        pages = self.xmlrpc_object.execute(
+            dbname, admin_uid, 'admin',
+            'website', 'search_pages', [website.id], 'page'
+        )
+        self.assertEqual(
+            [{'loc': p['loc']} for p in pages],
+            [{'loc': '/page_1'}]
+        )

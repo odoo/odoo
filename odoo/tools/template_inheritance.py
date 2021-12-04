@@ -3,9 +3,11 @@ from lxml import etree
 from lxml.builder import E
 import copy
 import itertools
+import logging
 
 from odoo.tools.translate import _
 from odoo.tools import SKIPPED_ELEMENT_TYPES
+_logger = logging.getLogger(__name__)
 
 
 def add_text_before(node, text):
@@ -51,7 +53,13 @@ def locate_node(arch, spec):
     :return: a node in the source matching the spec
     """
     if spec.tag == 'xpath':
-        nodes = etree.ETXPath(spec.get('expr'))(arch)
+        expr = spec.get('expr')
+        try:
+            xPath = etree.ETXPath(expr)
+        except etree.XPathSyntaxError:
+            _logger.error("XPathSyntaxError while parsing xpath %r", expr)
+            raise
+        nodes = xPath(arch)
         return nodes[0] if nodes else None
     elif spec.tag == 'field':
         # Only compare the field name: a field can be only once in a given view

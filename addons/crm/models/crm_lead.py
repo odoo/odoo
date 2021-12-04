@@ -2,7 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-from psycopg2 import sql, extras
+import threading
+from psycopg2 import sql
 from datetime import datetime, timedelta, date
 from dateutil.relativedelta import relativedelta
 
@@ -11,7 +12,7 @@ from odoo.tools.translate import _
 from odoo.tools import email_re, email_split
 from odoo.exceptions import UserError, AccessError
 from odoo.addons.phone_validation.tools import phone_validation
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict
 
 from . import crm_stage
 
@@ -47,6 +48,11 @@ CRM_LEAD_FIELDS_TO_MERGE = [
     'email_cc',
     'website',
     'partner_name']
+
+# Those values have been determined based on benchmark to minimise
+# computation time, number of transaction and transaction time.
+PLS_COMPUTE_BATCH_STEP = 50000  # odoo.models.PREFETCH_MAX = 1000 but larger cluster can speed up global computation
+PLS_UPDATE_BATCH_STEP = 5000
 
 
 class Lead(models.Model):
@@ -194,7 +200,7 @@ class Lead(models.Model):
         others = self - leads
         others.day_open = None
         for lead in leads:
-            date_create = fields.Datetime.from_string(lead.create_date)
+            date_create = fields.Datetime.from_string(lead.create_date).replace(microsecond=0)
             date_open = fields.Datetime.from_string(lead.date_open)
             lead.day_open = abs((date_open - date_create).days)
 
@@ -306,10 +312,9 @@ class Lead(models.Model):
         if optional_field_name and optional_field_name not in self._pls_get_safe_fields():
             return
         lead_probabilities = self._pls_get_naive_bayes_probabilities()
-        if self.id in lead_probabilities:
-            self.automated_probability = lead_probabilities[self.id]
-            if self._origin.is_automated_probability:
-                self.probability = self.automated_probability
+        self.automated_probability = lead_probabilities.get(self.id, 0)
+        if self._origin.is_automated_probability:
+            self.probability = self.automated_probability
 
     @api.onchange('stage_id')
     def _onchange_stage_id(self):
@@ -385,7 +390,9 @@ class Lead(models.Model):
 
     @api.model
     def create(self, vals):
-        # set up context used to find the lead's Sales Team which is needed
+        if vals.get('website'):
+            vals['website'] = self.env['res.partner']._clean_website(vals['website'])
+        # set up context used to find the lead's sales channel which is needed
         # to correctly set the default stage_id
         context = dict(self._context or {})
         if vals.get('type') and not self._context.get('default_type'):
@@ -407,7 +414,9 @@ class Lead(models.Model):
         return result
 
     def write(self, vals):
-        # stage change:
+        if vals.get('website'):
+            vals['website'] = self.env['res.partner']._clean_website(vals['website'])
+        # stage change: update date_last_stage_update
         if 'stage_id' in vals:
             vals['date_last_stage_update'] = fields.Datetime.now()
             stage_id = self.env['crm.stage'].browse(vals['stage_id'])
@@ -432,7 +441,7 @@ class Lead(models.Model):
         return write_result
 
     def _update_probability(self):
-        lead_probabilities = self._pls_get_naive_bayes_probabilities()
+        lead_probabilities = self.sudo()._pls_get_naive_bayes_probabilities()
         for lead in self:
             if lead.id in lead_probabilities:
                 lead_proba = lead_probabilities[lead.id]
@@ -782,6 +791,9 @@ class Lead(models.Model):
         if len(self.ids) <= 1:
             raise UserError(_('Please select more than one element (lead or opportunity) from the list view.'))
 
+        if len(self.ids) > 5 and not self.env.is_superuser():
+            raise UserError(_("To prevent data loss, Leads and Opportunities can only be merged by groups of 5."))
+
         opportunities = self._sort_by_confidence_level(reverse=True)
 
         # get SORTED recordset of head and tail, and complete list
@@ -844,15 +856,15 @@ class Lead(models.Model):
             partner_match_domain.append(('email_from', '=ilike', email))
         if partner_id:
             partner_match_domain.append(('partner_id', '=', partner_id))
-        partner_match_domain = ['|'] * (len(partner_match_domain) - 1) + partner_match_domain
         if not partner_match_domain:
             return self.env['crm.lead']
-        domain = partner_match_domain
+
+        partner_match_domain = ['|'] * (len(partner_match_domain) - 1) + partner_match_domain
         if not include_lost:
-            domain += ['&', ('active', '=', True), ('probability', '<', 100)]
+            partner_match_domain += ['&', ('active', '=', True), ('probability', '<', 100)]
         else:
-            domain += ['|', '&', ('type', '=', 'lead'), ('active', '=', True), ('type', '=', 'opportunity')]
-        return self.search(domain)
+            partner_match_domain += ['|', '&', ('type', '=', 'lead'), ('active', '=', True), ('type', '=', 'opportunity')]
+        return self.search(partner_match_domain)
 
     def _convert_opportunity_data(self, customer, team_id=False):
         """ Extract the data from a lead to create the opportunity
@@ -900,7 +912,7 @@ class Lead(models.Model):
             :returns res.partner record
         """
         email_split = tools.email_split(self.email_from)
-        return {
+        res = {
             'name': name,
             'user_id': self.env.context.get('default_user_id') or self.user_id.id,
             'comment': self.description,
@@ -921,6 +933,9 @@ class Lead(models.Model):
             'is_company': is_company,
             'type': 'contact'
         }
+        if self.lang_id:
+            res['lang'] = self.lang_id.code
+        return res
 
     def _create_lead_partner(self):
         """ Create a partner from lead data
@@ -1185,24 +1200,29 @@ class Lead(models.Model):
             return self.env.ref('crm.mt_lead_restored')
         return super(Lead, self)._track_subtype(init_values)
 
-    def _notify_get_groups(self):
+    def _notify_get_groups(self, msg_vals=None):
         """ Handle salesman recipients that can convert leads into opportunities
         and set opportunities as won / lost. """
-        groups = super(Lead, self)._notify_get_groups()
+        groups = super(Lead, self)._notify_get_groups(msg_vals=msg_vals)
+        local_msg_vals = dict(msg_vals or {})
 
         self.ensure_one()
         if self.type == 'lead':
-            convert_action = self._notify_get_action_link('controller', controller='/lead/convert')
+            convert_action = self._notify_get_action_link('controller', controller='/lead/convert', **local_msg_vals)
             salesman_actions = [{'url': convert_action, 'title': _('Convert to opportunity')}]
         else:
-            won_action = self._notify_get_action_link('controller', controller='/lead/case_mark_won')
-            lost_action = self._notify_get_action_link('controller', controller='/lead/case_mark_lost')
+            won_action = self._notify_get_action_link('controller', controller='/lead/case_mark_won', **local_msg_vals)
+            lost_action = self._notify_get_action_link('controller', controller='/lead/case_mark_lost', **local_msg_vals)
             salesman_actions = [
                 {'url': won_action, 'title': _('Won')},
                 {'url': lost_action, 'title': _('Lost')}]
 
         if self.team_id:
-            salesman_actions.append({'url': self._notify_get_action_link('view', res_id=self.team_id.id, model=self.team_id._name), 'title': _('Sales Team Settings')})
+            custom_params = dict(local_msg_vals, res_id=self.team_id.id, model=self.team_id._name)
+            salesman_actions.append({
+                'url': self._notify_get_action_link('view', **custom_params),
+                'title': _('Sales Team Settings')
+            })
 
         salesman_group_id = self.env.ref('sales_team.group_sale_salesman').id
         new_group = (
@@ -1246,6 +1266,11 @@ class Lead(models.Model):
             through message_process.
             This override updates the document according to the email.
         """
+
+        # remove external users
+        if self.env.user.has_group('base.group_portal'):
+            self = self.with_context(default_user_id=False)
+
         # remove default author when going through the mail gateway. Indeed we
         # do not want to explicitly set user_id to False; however we do not
         # want the gateway user to be responsible if no other responsible is
@@ -1428,14 +1453,27 @@ class Lead(models.Model):
                     total_won = team_won if field == 'stage_id' else field_result['won_total']
                     total_lost = team_lost if field == 'stage_id' else field_result['lost_total']
 
+                    # if one count = 0, we cannot compute lead probability
+                    if not total_won or not total_lost:
+                        continue
                     s_lead_won *= value_result['won'] / total_won
                     s_lead_lost *= value_result['lost'] / total_lost
 
             # 3. Compute Probability to win
-            lead_probabilities[lead_id] = 100 * s_lead_won / (s_lead_won + s_lead_lost)
+            lead_probabilities[lead_id] = round(100 * s_lead_won / (s_lead_won + s_lead_lost), 2)
         return lead_probabilities
 
     def _cron_update_automated_probabilities(self):
+        """ This cron will :
+          - rebuild the lead scoring frequency table
+          - recompute all the automated_probability and align probability if both were aligned
+        """
+        cron_start_date = datetime.now()
+        self._rebuild_pls_frequency_table()
+        self._update_automated_probabilities()
+        _logger.info("Predictive Lead Scoring : Cron duration = %d seconds" % ((datetime.now() - cron_start_date).total_seconds()))
+
+    def _rebuild_pls_frequency_table(self):
         # Clear the frequencies table (in sql to speed up the cron)
         try:
             self.check_access_rights('unlink')
@@ -1458,28 +1496,83 @@ class Lead(models.Model):
         self.env['crm.lead.scoring.frequency'].create(values_to_create)
         _logger.info("Predictive Lead Scoring : crm.lead.scoring.frequency table rebuilt")
 
-        # Recompute all the leads. Won : probability = 100 | Lost : probability = 0 or inactive
-        # Here, inactive won't be returned anyway
-        # Get also all the lead without probability --> These are the new leads. Activate auto probability on them.
-        pls_start_date = self._pls_get_safe_start_date()
-        if pls_start_date:
-            pending_lead_domain = ['&', '&', ('stage_id', '!=', False), ('create_date', '>', pls_start_date),
-                                   '|', ('probability', '=', False), '&', ('probability', '<', 100), ('probability', '>', 0)]
-            leads_to_update = self.env['crm.lead'].search(pending_lead_domain)
-            lead_probabilities = leads_to_update._pls_get_naive_bayes_probabilities(batch_mode=True)
+    def _update_automated_probabilities(self):
+        """ Recompute all the automated_probability (and align probability if both were aligned) for all the leads
+        that are active (not won, nor lost).
 
-            # Update in execute batch to avoid server roundtrips + page_size to 10000 to avoid memory errors
-            # Update both probability and automated_probability if they were equal, else, update only automated_probability
-            sql = """UPDATE crm_lead
+        For performance matter, as there can be a huge amount of leads to recompute, this cron proceed by batch.
+        Each batch is performed into its own transaction, in order to minimise the lock time on the lead table
+        (and to avoid complete lock if there was only 1 transaction that would last for too long -> several minutes).
+        If a concurrent update occurs, it will simply be put in the queue to get the lock.
+        """
+        pls_start_date = self._pls_get_safe_start_date()
+        if not pls_start_date:
+            return
+
+        # 1. Get all the leads to recompute created after pls_start_date that are nor won nor lost
+        # (Won : probability = 100 | Lost : probability = 0 or inactive. Here, inactive won't be returned anyway)
+        # Get also all the lead without probability --> These are the new leads. Activate auto probability on them.
+        pending_lead_domain = [
+            '&',
+                '&',
+                    ('stage_id', '!=', False),
+                    ('create_date', '>', pls_start_date),
+                '|',
+                    ('probability', '=', False),
+                    '&',
+                        ('probability', '<', 100),
+                        ('probability', '>', 0)
+        ]
+        leads_to_update = self.env['crm.lead'].search(pending_lead_domain)
+        leads_to_update_count = len(leads_to_update)
+
+        # 2. Compute by batch to avoid memory error
+        lead_probabilities = {}
+        for i in range(0, leads_to_update_count, PLS_COMPUTE_BATCH_STEP):
+            leads_to_update_part = leads_to_update[i:i + PLS_COMPUTE_BATCH_STEP]
+            lead_probabilities.update(leads_to_update_part._pls_get_naive_bayes_probabilities(batch_mode=True))
+        _logger.info("Predictive Lead Scoring : New automated probabilities computed")
+
+        # 3. Group by new probability to reduce server roundtrips when executing the update
+        probability_leads = defaultdict(list)
+        for lead_id, probability in sorted(lead_probabilities.items()):
+            probability_leads[probability].append(lead_id)
+
+        # 4. Update automated_probability (+ probability if both were equal)
+        update_sql = """UPDATE crm_lead
                         SET automated_probability = %s,
-                            probability = CASE WHEN (ROUND(probability::numeric, 2) = ROUND(automated_probability::numeric, 2) or probability is null)
+                            probability = CASE WHEN (probability = automated_probability OR probability is null)
                                                THEN (%s)
                                                ELSE (probability)
-                                               END
-                        WHERE id = %s"""
-            batch_params = [(lead_probabilities[lead.id], lead_probabilities[lead.id], lead.id) for lead in leads_to_update if lead.id in lead_probabilities]
-            extras.execute_batch(self._cr, sql, batch_params, page_size=10000)
-            _logger.info("Predictive Lead Scoring : all automated probability updated (count: %d)" % (len(leads_to_update)))
+                                          END
+                        WHERE id in %s"""
+
+        # Update by a maximum number of leads at the same time, one batch by transaction :
+        # - avoid memory errors
+        # - avoid blocking the table for too long with a too big transaction
+        transactions_count, transactions_failed_count = 0, 0
+        cron_update_lead_start_date = datetime.now()
+        auto_commit = not getattr(threading.currentThread(), 'testing', False)
+        for probability, probability_lead_ids in probability_leads.items():
+            for lead_ids_current in tools.split_every(PLS_UPDATE_BATCH_STEP, probability_lead_ids):
+                transactions_count += 1
+                try:
+                    self.env.cr.execute(update_sql, (probability, probability, tuple(lead_ids_current)))
+                    # auto-commit except in testing mode
+                    if auto_commit:
+                        self.env.cr.commit()
+                except Exception as e:
+                    _logger.warning("Predictive Lead Scoring : update transaction failed. Error: %s" % e)
+                    transactions_failed_count += 1
+
+        _logger.info(
+            "Predictive Lead Scoring : All automated probabilities updated (%d leads / %d transactions (%d failed) / %d seconds)" % (
+                leads_to_update_count,
+                transactions_count,
+                transactions_failed_count,
+                (datetime.now() - cron_update_lead_start_date).total_seconds(),
+            )
+        )
 
     # ----------------------------
     # Utility Tools for PLS

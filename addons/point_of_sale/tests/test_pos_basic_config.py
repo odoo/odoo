@@ -12,9 +12,11 @@ class TestPoSBasicConfig(TestPoSCommon):
     def setUp(self):
         super(TestPoSBasicConfig, self).setUp()
         self.config = self.basic_config
+        self.product0 = self.create_product('Product 0', self.categ_basic, 0.0, 0.0)
         self.product1 = self.create_product('Product 1', self.categ_basic, 10.0, 5)
         self.product2 = self.create_product('Product 2', self.categ_basic, 20.0, 10)
         self.product3 = self.create_product('Product 3', self.categ_basic, 30.0, 15)
+        self.product4 = self.create_product('Product_4', self.categ_basic, 9.96, 4.98)
         self.adjust_inventory([self.product1, self.product2, self.product3], [100, 50, 50])
 
     def test_orders_no_invoiced(self):
@@ -271,6 +273,21 @@ class TestPoSBasicConfig(TestPoSCommon):
         # matching number of the receivable lines should be the same
         self.assertEqual(receivable_line.full_reconcile_id, invoice_receivable_line.full_reconcile_id)
 
+    def test_orders_with_zero_valued_invoiced(self):
+        """One invoiced order but with zero receivable line balance."""
+
+        self.open_new_session()
+        orders = [self.create_ui_order_data([(self.product0, 1)], payments=[(self.bank_pm, 0)], customer=self.customer, is_invoiced=True)]
+        self.env['pos.order'].create_from_ui(orders)
+        self.pos_session.action_pos_session_validate()
+
+        invoice = self.pos_session.order_ids.account_move
+        invoice_receivable_line = invoice.line_ids.filtered(lambda line: line.account_id == self.receivable_account)
+        receivable_line = self.pos_session.move_id.line_ids.filtered(lambda line: line.account_id == self.receivable_account)
+
+        self.assertTrue(invoice_receivable_line.reconciled)
+        self.assertTrue(receivable_line.reconciled)
+
     def test_return_order(self):
         """ Test return order
 
@@ -435,3 +452,54 @@ class TestPoSBasicConfig(TestPoSCommon):
 
         for line in cash_receivable_lines:
             self.assertTrue(line.full_reconcile_id, msg='Each cash receivable line should be fully-reconciled.')
+
+
+    def test_correct_partner_on_invoice_receivables(self):
+        self.open_new_session()
+
+        # create orders
+        # each order with total amount of 100.
+        orders = []
+        # from 1st to 8th order: use the same customer (self.customer) but varies with is_invoiced and payment method.
+        orders.append(self.create_ui_order_data([(self.product1, 10)], payments=[(self.cash_pm, 100)], customer=self.customer, is_invoiced=True, uid='00100-010-0001'))
+        orders.append(self.create_ui_order_data([(self.product1, 10)], payments=[(self.bank_pm, 100)], customer=self.customer, is_invoiced=True, uid='00100-010-0002'))
+        orders.append(self.create_ui_order_data([(self.product1, 10)], payments=[(self.cash_split_pm, 100)], customer=self.customer, is_invoiced=True, uid='00100-010-0003'))
+        orders.append(self.create_ui_order_data([(self.product1, 10)], payments=[(self.bank_split_pm, 100)], customer=self.customer, is_invoiced=True, uid='00100-010-0004'))
+        orders.append(self.create_ui_order_data([(self.product1, 10)], payments=[(self.cash_pm, 100)], customer=self.customer, uid='00100-010-0005'))
+        orders.append(self.create_ui_order_data([(self.product1, 10)], payments=[(self.bank_pm, 100)], customer=self.customer, uid='00100-010-0006'))
+        orders.append(self.create_ui_order_data([(self.product1, 10)], payments=[(self.cash_split_pm, 100)], customer=self.customer, uid='00100-010-0007'))
+        orders.append(self.create_ui_order_data([(self.product1, 10)], payments=[(self.bank_split_pm, 100)], customer=self.customer, uid='00100-010-0008'))
+        # 9th and 10th orders for self.other_customer, both invoiced and paid by bank
+        orders.append(self.create_ui_order_data([(self.product1, 10)], payments=[(self.bank_pm, 100)], customer=self.other_customer, is_invoiced=True, uid='00100-010-0009'))
+        orders.append(self.create_ui_order_data([(self.product1, 10)], payments=[(self.bank_pm, 100)], customer=self.other_customer, is_invoiced=True, uid='00100-010-0010'))
+        # 11th order: invoiced to self.customer with bank payment method
+        orders.append(self.create_ui_order_data([(self.product1, 10)], payments=[(self.bank_pm, 100)], customer=self.customer, is_invoiced=True, uid='00100-010-0011'))
+
+        # sync orders
+        order = self.env['pos.order'].create_from_ui(orders)
+
+        # close the session
+        self.pos_session.action_pos_session_validate()
+
+        # self.customer's bank split payments
+        customer_pos_receivable_bank = self.pos_session.move_id.line_ids.filtered(lambda line: line.partner_id == self.customer and 'Split (Bank) PM' in line.name)
+        self.assertEqual(len(customer_pos_receivable_bank), 2, msg='there are 2 bank split payments from self.customer')
+        self.assertEqual(bool(customer_pos_receivable_bank.full_reconcile_id), False, msg="the pos (bank) receivable lines shouldn't be reconciled")
+
+        # self.customer's cash split payments
+        customer_pos_receivable_cash = self.pos_session.move_id.line_ids.filtered(lambda line: line.partner_id == self.customer and 'Split (Cash) PM' in line.name)
+        self.assertEqual(len(customer_pos_receivable_cash), 2, msg='there are 2 cash split payments from self.customer')
+        self.assertEqual(bool(customer_pos_receivable_cash.full_reconcile_id), True, msg="cash pos (cash) receivable lines should be reconciled")
+
+        # self.customer's invoice receivable counterpart
+        customer_invoice_receivable_counterpart = self.pos_session.move_id.line_ids.filtered(lambda line: line.partner_id == self.customer and 'From invoiced orders' in line.name)
+        self.assertEqual(len(customer_invoice_receivable_counterpart), 1, msg='there should one aggregated invoice receivable counterpart for self.customer')
+        self.assertEqual(bool(customer_invoice_receivable_counterpart.full_reconcile_id), True, msg='the aggregated receivable for self.customer should be reconciled')
+        self.assertEqual(customer_invoice_receivable_counterpart.balance, -500, msg='aggregated balance should be -500')
+
+        # self.other_customer also made invoiced orders
+        # therefore, it should also have aggregated receivable counterpart in the session's account_move
+        other_customer_invoice_receivable_counterpart = self.pos_session.move_id.line_ids.filtered(lambda line: line.partner_id == self.other_customer and 'From invoiced orders' in line.name)
+        self.assertEqual(len(other_customer_invoice_receivable_counterpart), 1, msg='there should one aggregated invoice receivable counterpart for self.other_customer')
+        self.assertEqual(bool(other_customer_invoice_receivable_counterpart.full_reconcile_id), True, msg='the aggregated receivable for self.other_customer should be reconciled')
+        self.assertEqual(other_customer_invoice_receivable_counterpart.balance, -200, msg='aggregated balance should be -200')

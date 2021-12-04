@@ -44,7 +44,7 @@ class Menu(models.Model):
     group_ids = fields.Many2many('res.groups', string='Visible Groups',
                                  help="User need to be at least in one of these groups to see the menu")
     is_mega_menu = fields.Boolean(compute=_compute_field_is_mega_menu, inverse=_set_field_is_mega_menu)
-    mega_menu_content = fields.Html(translate=html_translate, sanitize=False)
+    mega_menu_content = fields.Html(translate=html_translate, sanitize=False, prefetch=True)
     mega_menu_classes = fields.Char()
 
     def name_get(self):
@@ -68,6 +68,7 @@ class Menu(models.Model):
                   Be careful to return correct record for ir.model.data xml_id in case
                   of default main menus creation.
         '''
+        self.clear_caches()
         # Only used when creating website_data.xml default menu
         if vals.get('url') == '/default-main-menu':
             return super(Menu, self).create(vals)
@@ -91,7 +92,14 @@ class Menu(models.Model):
                 res = super(Menu, self).create(vals)
         return res  # Only one record is returned but multiple could have been created
 
+    def write(self, values):
+        res = super().write(values)
+        if 'website_id' in values or 'group_ids' in values or 'sequence' in values:
+            self.clear_caches()
+        return res
+
     def unlink(self):
+        self.clear_caches()
         default_menu = self.env.ref('website.main_menu', raise_if_not_found=False)
         menus_to_remove = self
         for menu in self.filtered(lambda m: default_menu and m.parent_id.id == default_menu.id):

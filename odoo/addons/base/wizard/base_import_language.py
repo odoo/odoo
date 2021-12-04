@@ -31,6 +31,9 @@ class BaseLanguageImport(models.TransientModel):
     def import_lang(self):
         this = self[0]
         this = this.with_context(overwrite=this.overwrite)
+
+        self.env['res.lang'].load_lang(lang=self.code, lang_name=self.name)
+
         with TemporaryFile('wb+') as buf:
             try:
                 buf.write(base64.decodestring(this.data))
@@ -48,7 +51,7 @@ class BaseLanguageImport(models.TransientModel):
                     raise UserError(_('File %r not imported due to a malformed file.\n\n' +
                                       'This issue can be caused by duplicates entries who are referring to the same field. ' +
                                       'Please check the content of the file you are trying to import.\n\n' +
-                                      'Technical Details:\n%s') % tools.ustr(e))
+                                      'Technical Details:\n%s') % (self.filename, tools.ustr(e)))
             except Exception as e:
                 _logger.exception('File unsuccessfully imported, due to format mismatch.')
                 raise UserError(

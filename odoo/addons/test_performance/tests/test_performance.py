@@ -5,7 +5,7 @@ from collections import defaultdict
 import json
 
 from odoo.tests.common import TransactionCase, users, warmup, tagged
-from odoo.tools import mute_logger
+from odoo.tools import mute_logger, json_default
 
 
 class TestPerformance(TransactionCase):
@@ -31,6 +31,24 @@ class TestPerformance(TransactionCase):
             # value_pc must have been prefetched, too
             for record in records:
                 record.value_pc
+
+    @warmup
+    def test_read_base_depends_context(self):
+        """ Compute in batch even when in cache in another context. """
+        records = self.env['test_performance.base'].search([])
+        self.assertEqual(len(records), 5)
+
+        with self.assertQueryCount(1):
+            for record in records.with_context(key=1):
+                self.assertEqual(record.value_ctx, 1)
+
+        with self.assertQueryCount(1):
+            for record in records.with_context(key=2):
+                self.assertEqual(record.value_ctx, 2)
+
+        with self.assertQueryCount(1):
+            for record in records:
+                self.assertEqual(record.with_context(key=3).value_ctx, 3)
 
     @users('__system__', 'demo')
     @warmup
@@ -61,12 +79,12 @@ class TestPerformance(TransactionCase):
 
         # create N lines on rec1: O(N) queries
         rec1.invalidate_cache()
-        with self.assertQueryCount(4):
+        with self.assertQueryCount(2):
             rec1.write({'line_ids': [(0, 0, {'value': 0})]})
         self.assertEqual(len(rec1.line_ids), 1)
 
         rec1.invalidate_cache()
-        with self.assertQueryCount(17):
+        with self.assertQueryCount(15):
             rec1.write({'line_ids': [(0, 0, {'value': val}) for val in range(1, 12)]})
         self.assertEqual(len(rec1.line_ids), 12)
 
@@ -74,23 +92,23 @@ class TestPerformance(TransactionCase):
 
         # update N lines: O(N) queries
         rec1.invalidate_cache()
-        with self.assertQueryCount(8):
+        with self.assertQueryCount(6):
             rec1.write({'line_ids': [(1, line.id, {'value': 42}) for line in lines[0]]})
         self.assertEqual(rec1.line_ids, lines)
 
         rec1.invalidate_cache()
-        with self.assertQueryCount(28):
+        with self.assertQueryCount(26):
             rec1.write({'line_ids': [(1, line.id, {'value': 42 + line.id}) for line in lines[1:]]})
         self.assertEqual(rec1.line_ids, lines)
 
         # delete N lines: O(1) queries
         rec1.invalidate_cache()
-        with self.assertQueryCount(__system__=18, demo=18):
+        with self.assertQueryCount(__system__=16, demo=16):
             rec1.write({'line_ids': [(2, line.id) for line in lines[0]]})
         self.assertEqual(rec1.line_ids, lines[1:])
 
         rec1.invalidate_cache()
-        with self.assertQueryCount(__system__=16, demo=16):
+        with self.assertQueryCount(__system__=14, demo=14):
             rec1.write({'line_ids': [(2, line.id) for line in lines[1:]]})
         self.assertFalse(rec1.line_ids)
         self.assertFalse(lines.exists())
@@ -100,12 +118,12 @@ class TestPerformance(TransactionCase):
 
         # unlink N lines: O(1) queries
         rec1.invalidate_cache()
-        with self.assertQueryCount(__system__=14, demo=14):
+        with self.assertQueryCount(__system__=13, demo=13):
             rec1.write({'line_ids': [(3, line.id) for line in lines[0]]})
         self.assertEqual(rec1.line_ids, lines[1:])
 
         rec1.invalidate_cache()
-        with self.assertQueryCount(__system__=16, demo=16):
+        with self.assertQueryCount(__system__=14, demo=14):
             rec1.write({'line_ids': [(3, line.id) for line in lines[1:]]})
         self.assertFalse(rec1.line_ids)
         self.assertFalse(lines.exists())
@@ -116,35 +134,35 @@ class TestPerformance(TransactionCase):
 
         # link N lines from rec1 to rec2: O(1) queries
         rec1.invalidate_cache()
-        with self.assertQueryCount(7):
+        with self.assertQueryCount(2):
             rec2.write({'line_ids': [(4, line.id) for line in lines[0]]})
         self.assertEqual(rec1.line_ids, lines[1:])
         self.assertEqual(rec2.line_ids, lines[0])
 
         rec1.invalidate_cache()
-        with self.assertQueryCount(10):
+        with self.assertQueryCount(8):
             rec2.write({'line_ids': [(4, line.id) for line in lines[1:]]})
         self.assertFalse(rec1.line_ids)
         self.assertEqual(rec2.line_ids, lines)
 
         rec1.invalidate_cache()
-        with self.assertQueryCount(7):
+        with self.assertQueryCount(4):
             rec2.write({'line_ids': [(4, line.id) for line in lines[0]]})
         self.assertEqual(rec2.line_ids, lines)
 
         rec1.invalidate_cache()
-        with self.assertQueryCount(7):
+        with self.assertQueryCount(4):
             rec2.write({'line_ids': [(4, line.id) for line in lines[1:]]})
         self.assertEqual(rec2.line_ids, lines)
 
         # empty N lines in rec2: O(1) queries
         rec1.invalidate_cache()
-        with self.assertQueryCount(__system__=17, demo=17):
+        with self.assertQueryCount(__system__=15, demo=15):
             rec2.write({'line_ids': [(5,)]})
         self.assertFalse(rec2.line_ids)
 
         rec1.invalidate_cache()
-        with self.assertQueryCount(5):
+        with self.assertQueryCount(3):
             rec2.write({'line_ids': [(5,)]})
         self.assertFalse(rec2.line_ids)
 
@@ -153,17 +171,17 @@ class TestPerformance(TransactionCase):
 
         # set N lines in rec2: O(1) queries
         rec1.invalidate_cache()
-        with self.assertQueryCount(8):
+        with self.assertQueryCount(4):
             rec2.write({'line_ids': [(6, 0, lines[0].ids)]})
         self.assertEqual(rec1.line_ids, lines[1:])
         self.assertEqual(rec2.line_ids, lines[0])
 
-        with self.assertQueryCount(9):
+        with self.assertQueryCount(5):
             rec2.write({'line_ids': [(6, 0, lines.ids)]})
         self.assertFalse(rec1.line_ids)
         self.assertEqual(rec2.line_ids, lines)
 
-        with self.assertQueryCount(4):
+        with self.assertQueryCount(3):
             rec2.write({'line_ids': [(6, 0, lines.ids)]})
         self.assertEqual(rec2.line_ids, lines)
 
@@ -413,7 +431,7 @@ class TestPerformance(TransactionCase):
                 self.assertEqual(res['value'], exp['value'])
         # now serialize to json, which should force evaluation
         with self.assertQueryCount(__system__=1, demo=1):
-            json.dumps(result)
+            json.dumps(result, default=json_default)
 
 
 @tagged('bacon_and_eggs')
@@ -443,10 +461,10 @@ class TestIrPropertyOptimizations(TransactionCase):
             self.Bacon.create({'property_eggs': False})
 
         # create with another value
-        with self.assertQueryCount(5):
+        with self.assertQueryCount(3):
             self.Bacon.with_context(default_property_eggs=eggs.id).create({})
 
-        with self.assertQueryCount(5):
+        with self.assertQueryCount(3):
             self.Bacon.create({'property_eggs': eggs.id})
 
     def test_with_truthy_default(self):
@@ -477,14 +495,14 @@ class TestIrPropertyOptimizations(TransactionCase):
         eggs = self.Eggs.create({})
         self.Bacon.create({'property_eggs': eggs.id})
 
-        with self.assertQueryCount(5):
+        with self.assertQueryCount(3):
             self.Bacon.with_context(default_property_eggs=eggs.id).create({})
 
-        with self.assertQueryCount(5):
+        with self.assertQueryCount(3):
             self.Bacon.create({'property_eggs': eggs.id})
 
-        with self.assertQueryCount(5):
+        with self.assertQueryCount(3):
             self.Bacon.with_context(default_property_eggs=False).create({})
 
-        with self.assertQueryCount(5):
+        with self.assertQueryCount(3):
             self.Bacon.create({'property_eggs': False})

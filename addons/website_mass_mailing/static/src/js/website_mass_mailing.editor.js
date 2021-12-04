@@ -4,6 +4,7 @@ odoo.define('website_mass_mailing.editor', function (require) {
 var core = require('web.core');
 var rpc = require('web.rpc');
 var WysiwygMultizone = require('web_editor.wysiwyg.multizone');
+var WysiwygTranslate = require('web_editor.wysiwyg.multizone.translate');
 var options = require('web_editor.snippets.options');
 var wUtils = require('website.utils');
 var _t = core._t;
@@ -148,4 +149,17 @@ WysiwygMultizone.include({
         return Promise.all(defs);
     },
 });
+
+WysiwygTranslate.include({
+    /**
+     * @override
+     */
+    start: function () {
+        this.$target.on('click.newsletter_popup_option', '.o_edit_popup', function (ev) {
+            alert(_t('Website popups can only be translated through mailing list configuration in the Email Marketing app.'));
+        });
+        this._super.apply(this, arguments);
+    },
+});
+
 });

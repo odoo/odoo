@@ -89,7 +89,7 @@ class AccountJournal(models.Model):
         ]
         return dict(
             super(AccountJournal, self).get_journal_dashboard_datas(),
-            num_checks_to_print=len(self.env['account.payment'].search(domain_checks_to_print))
+            num_checks_to_print=self.env['account.payment'].search_count(domain_checks_to_print),
         )
 
     def action_checks_to_print(self):

@@ -287,6 +287,9 @@ def split_context(method, args, kwargs):
     """ Extract the context from a pair of positional and keyword arguments.
         Return a triple ``context, args, kwargs``.
     """
+    # altering kwargs is a cause of errors, for instance when retrying a request
+    # after a serialization error: the retry is done without context!
+    kwargs = kwargs.copy()
     return kwargs.pop('context', None), args, kwargs
 
 
@@ -298,14 +301,6 @@ def model(method):
             def method(self, args):
                 ...
 
-        may be called in both record and traditional styles, like::
-
-            # recs = model.browse(cr, uid, ids, context)
-            recs.method(args)
-
-            model.method(cr, uid, args, context=context)
-
-        Notice that no ``ids`` are passed to the method in the traditional style.
     """
     if method.__name__ == 'create':
         return model_create_single(method)
@@ -829,15 +824,26 @@ class Cache(object):
 
     def get_records(self, model, field):
         """ Return the records of ``model`` that have a value for ``field``. """
-        ids = list(self._data[field])
+        field_cache = self._data[field]
+        if field.depends_context:
+            key = field.cache_key(model.env)
+            ids = [id_ for id_, value in field_cache.items() if key in value]
+        else:
+            ids = list(field_cache)
         return model.browse(ids)
 
     def get_missing_ids(self, records, field):
         """ Return the ids of ``records`` that have no value for ``field``. """
         field_cache = self._data[field]
-        for record_id in records._ids:
-            if record_id not in field_cache:
-                yield record_id
+        if field.depends_context:
+            key = field.cache_key(records.env)
+            for record_id in records._ids:
+                if key not in field_cache.get(record_id, ()):
+                    yield record_id
+        else:
+            for record_id in records._ids:
+                if record_id not in field_cache:
+                    yield record_id
 
     def invalidate(self, spec=None):
         """ Invalidate the cache, partially or totally depending on ``spec``. """

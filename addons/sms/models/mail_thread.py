@@ -5,7 +5,7 @@ import logging
 
 from odoo import api, models, fields
 from odoo.addons.phone_validation.tools import phone_validation
-from odoo.tools import html2plaintext
+from odoo.tools import html2plaintext, plaintext2html
 
 _logger = logging.getLogger(__name__)
 
@@ -195,7 +195,7 @@ class MailThread(models.AbstractModel):
             subtype_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note')
 
         return self.message_post(
-            body=body, partner_ids=partner_ids or [],  # TDE FIXME: temp fix otherwise crash mail_thread.py
+            body=plaintext2html(html2plaintext(body)), partner_ids=partner_ids or [],  # TDE FIXME: temp fix otherwise crash mail_thread.py
             message_type='sms', subtype_id=subtype_id,
             sms_numbers=sms_numbers, sms_pid_to_number=sms_pid_to_number,
             **kwargs
@@ -232,7 +232,7 @@ class MailThread(models.AbstractModel):
         # pre-compute SMS data
         body = msg_vals['body'] if msg_vals and msg_vals.get('body') else message.body
         sms_base_vals = {
-            'body': html2plaintext(body).rstrip('\n'),
+            'body': html2plaintext(body),
             'mail_message_id': message.id,
             'state': 'outgoing',
         }

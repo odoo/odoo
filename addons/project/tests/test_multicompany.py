@@ -286,14 +286,6 @@ class TestMultiCompanyProject(TestMultiCompanyCommon):
                 self.assertEqual(task.company_id, task.project_id.subtask_project_id.company_id, "The company of the orphan subtask should be the one from its project.")
                 self.assertEqual(self.task_1.child_ids.ids, [task.id])
 
-                # trying to access the subtask in a company not allowed should raise an error
-                with self.assertRaises(UserError):
-                    self.task_1.with_context(allowed_company_ids=[self.company_a.id]).action_subtask()
-
-                # trying to access the parent task in a company not allowed should raise an error
-                with self.assertRaises(UserError):
-                    task.with_context(allowed_company_ids=[self.company_b.id]).action_open_parent_task()
-
         with self.sudo('employee-a'):
             with self.assertRaises(AccessError):
                 with Form(task) as task_form:

@@ -159,7 +159,7 @@ class ProjectTask(models.Model):
     def _compute_sale_order_id(self):
         for task in self:
             if task.billable_type == 'task_rate':
-                task.sale_order_id = task.sale_line_id.order_id or task.project_id.sale_order_id
+                task.sale_order_id = task.sale_line_id.sudo().order_id or task.project_id.sale_order_id
             elif task.billable_type == 'employee_rate':
                 task.sale_order_id = task.project_id.sale_order_id
             elif task.billable_type == 'no':

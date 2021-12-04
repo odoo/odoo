@@ -48,7 +48,7 @@
                 <field name="quantity" />
                 <field name="uom_id" groups="uom.group_uom" />
                 <field name="currency_id" invisible="1" />
-                <field name="value" />
+                <field name="value" sum="Total Value"/>
                 <field name="company_id" groups="base.group_multi_company" />
             </tree>
         </field>
@@ -59,6 +59,7 @@
         <field name="model">stock.valuation.layer</field>
         <field name="arch" type="xml">
             <search string="Valuation Layer?">
+                <field name="product_id"/>
                 <filter string="Product" name="group_by_product_id" context="{'group_by':'product_id'}"/>
             </search>
         </field>

@@ -75,7 +75,7 @@ class StockPickingBatch(models.Model):
                 picking_type = picking.picking_type_id
                 if (picking_type.use_create_lots or picking_type.use_existing_lots):
                     for ml in picking.move_line_ids:
-                        if ml.product_id.tracking != 'none':
+                        if ml.product_id.tracking != 'none' and not ml.lot_id and not ml.lot_name:
                             raise UserError(_('Some products require lots/serial numbers.'))
                 # Check if we need to set some qty done.
                 picking_without_qty_done |= picking

@@ -4,7 +4,7 @@
         <field name="name">stock.move.line.tree</field>
         <field name="model">stock.move.line</field>
         <field name="arch" type="xml">
-            <tree decoration-muted="state == 'cancel'" decoration-danger="(state not in ('cancel','done'))" string="Move Lines" create="0" default_order="date">
+            <tree decoration-muted="state == 'cancel'" decoration-danger="(state not in ('cancel','done'))" string="Move Lines" default_order="date">
                 <field name="date"/>
                 <field name="reference" string="Reference"
                        invisible="context.get('no_reference', False)"/>
@@ -42,7 +42,7 @@
                         <group>
                             <label for="product_uom_qty" string="Quantity Reserved" attrs="{'invisible': [('state', '=', 'done')]}"/>
                             <div class="o_row" attrs="{'invisible': [('state', '=', 'done')]}">
-                                <field name="product_uom_qty"/>
+                                <field name="product_uom_qty" readonly="1"/>
                                 <field name="product_uom_id" options="{'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
                             </div>
                             <label for="qty_done" string="Quantity Done"/>
@@ -79,7 +79,7 @@
                 <filter string="Incoming" name="incoming" domain="[('picking_id.picking_type_id.code', '=', 'incoming')]"/>
                 <filter string="Outgoing" name="outgoing" domain="[('picking_id.picking_type_id.code', '=', 'outgoing')]"/>
                 <filter string="Internal" name="internal" domain="[('picking_id.picking_type_id.code', '=', 'internal')]"/>
-                <filter string="Manufacturing" name="manufacturing" domain="[('picking_id.picking_type_id.code', '=', 'mrp_operation')]"/>
+                <filter string="Manufacturing" name="manufacturing" domain="[('picking_id.picking_type_id.code', '=', 'mrp_operation')]" invisible="1"/>
                 <separator/>
                 <group expand="0" string="Group By">
                     <filter string="Product" name="groupby_product_id" domain="[]" context="{'group_by': 'product_id'}"/>
@@ -95,6 +95,8 @@
         <field name="model">stock.move.line</field>
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile">
+                <field name="location_id" invisible="1"/>
+                <field name="location_dest_id" invisible="1"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_card oe_kanban_global_click">
@@ -124,7 +126,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="view_mode">tree,kanban,pivot,form</field>
             <field name="view_id" ref="view_move_line_tree"/>
-            <field name="context">{'search_default_done': 1, 'search_default_groupby_product_id': 1}</field>
+            <field name="context">{'search_default_done': 1, 'search_default_groupby_product_id': 1, 'create': 0}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_empty_folder">
                     There's no product move yet

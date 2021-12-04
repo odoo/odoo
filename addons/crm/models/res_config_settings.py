@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import timedelta
+
 from odoo import api, fields, models
-from datetime import date
 
 
 class ResConfigSettings(models.TransientModel):
@@ -62,7 +63,16 @@ class ResConfigSettings(models.TransientModel):
         """ As config_parameters does not accept Date field,
             we get the date back from the Char config field, to ease the configuration in config panel """
         for setting in self:
-            setting.predictive_lead_scoring_start_date = fields.Date.to_date(setting.predictive_lead_scoring_start_date_str)
+            lead_scoring_start_date = setting.predictive_lead_scoring_start_date_str
+            # if config param is deleted / empty, set the date 8 days prior to current date
+            if not lead_scoring_start_date:
+                setting.predictive_lead_scoring_start_date = fields.Date.to_date(fields.Date.today() - timedelta(days=8))
+            else:
+                try:
+                    setting.predictive_lead_scoring_start_date = fields.Date.to_date(lead_scoring_start_date)
+                except ValueError:
+                    # the config parameter is malformed, so set the date 8 days prior to current date
+                    setting.predictive_lead_scoring_start_date = fields.Date.to_date(fields.Date.today() - timedelta(days=8))
 
     def _inverse_pls_start_date_str(self):
         """ As config_parameters does not accept Date field,
@@ -99,3 +109,6 @@ class ResConfigSettings(models.TransientModel):
             self.env['mail.alias'].with_context(
                 alias_model_name='crm.lead',
                 alias_parent_model_name='crm.team').create({'alias_name': self.crm_alias_prefix})
+
+        for team in self.env['crm.team'].search([]):
+            team.alias_id.write(team.get_alias_values())

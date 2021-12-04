@@ -5,7 +5,8 @@
 # Translators:
 # Martin Trigaux, 2019
 # Michal Veselý <michal@veselyberanek.net>, 2019
-# trendspotter <j.podhorecky@volny.cz>, 2019
+# trendspotter <j.podhorecky@volny.cz>, 2020
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-09-23 11:31+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,12 +25,12 @@ msgstr ""
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_website_visitor__lead_count
 msgid "# Leads"
-msgstr ""
+msgstr "# Potenciální zákazníci"
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_crm_lead__visitor_page_count
 msgid "# Page Views"
-msgstr "počet zobrazení strany"
+msgstr "Počet zobrazení stránek"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
@@ -41,14 +42,14 @@ msgstr "Přidat kontaktní formulář do"
 #: code:addons/website_crm/static/src/js/website_crm_editor.js:0
 #, python-format
 msgid "Assign leads/opportunities to a sales channel."
-msgstr ""
+msgstr "Přiřaďte potenciální zákazníky / příležitosti prodejnímu kanálu."
 
 #. module: website_crm
 #. openerp-web
 #: code:addons/website_crm/static/src/js/website_crm_editor.js:0
 #, python-format
 msgid "Assign leads/opportunities to a salesperson."
-msgstr ""
+msgstr "Přiřaďte potenciální zákazníci / příležitosti pro obchodníky."
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
@@ -73,13 +74,15 @@ msgstr "Kontaktujte nás"
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_res_config_settings__crm_default_team_id
 msgid "Default Sales Team"
-msgstr "Výchozí tým prodejců"
+msgstr "Výchozí obchodní tým "
 
 #. module: website_crm
 #: model:ir.model.fields,help:website_crm.field_res_config_settings__crm_default_team_id
 #: model:ir.model.fields,help:website_crm.field_website__crm_default_team_id
 msgid "Default Sales Team for new leads created through the Contact Us form."
 msgstr ""
+"Výchozí prodejní tým pro nové potenciální zákazníky vytvořený "
+"prostřednictvím formuláře Kontaktujte nás."
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_website__crm_default_team_id
@@ -97,6 +100,8 @@ msgstr "Výchozí obchodník"
 #: model:ir.model.fields,help:website_crm.field_website__crm_default_user_id
 msgid "Default salesperson for new leads created through the Contact Us form."
 msgstr ""
+"Výchozí prodejce nových potenciálních zákazníků vytvořený prostřednictvím "
+"formuláře Kontaktujte nás."
 
 #. module: website_crm
 #. openerp-web
@@ -109,7 +114,7 @@ msgstr "E-mail"
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_crm_lead
 msgid "Lead/Opportunity"
-msgstr "zájem / příležitost"
+msgstr "Potenciální zákazník / příležitost"
 
 #. module: website_crm
 #: model:ir.actions.act_window,name:website_crm.website_visitor_crm_lead_action
@@ -117,12 +122,12 @@ msgstr "zájem / příležitost"
 #: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_form
 #: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_search
 msgid "Leads"
-msgstr "Zájemci"
+msgstr "Potenciální zákazníci"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_kanban
 msgid "Leads/Opportunities"
-msgstr "Zájemci / Příležitosti"
+msgstr "Potenciální zákazníci / příležitosti"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
@@ -134,12 +139,12 @@ msgstr ""
 #. module: website_crm
 #: model_terms:ir.actions.act_window,help:website_crm.website_visitor_crm_lead_action
 msgid "No lead linked for this visitor"
-msgstr ""
+msgstr "Pro tohoto návštěvníka není připojen žádný potenciální zákazník"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.crm_lead_view_form
 msgid "Page views"
-msgstr ""
+msgstr "Zobrazení stránek"
 
 #. module: website_crm
 #. openerp-web
@@ -155,8 +160,8 @@ msgid ""
 "Please set a Sales Team for the website. Otherwise you can't follow related "
 "events."
 msgstr ""
-"Nastavte prosím prodejní tým pro web. Jinak nemůžete sledovat související "
-"události."
+"Nastavte prosím prodejní tým pro webstránku. Jinak nemůžete sledovat "
+"související události."
 
 #. module: website_crm
 #. openerp-web
@@ -199,12 +204,12 @@ msgstr "Návštěvníci"
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_crm_lead__visitor_ids
 msgid "Web Visitors"
-msgstr ""
+msgstr "Weboví návštěvníci"
 
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_website
 msgid "Website"
-msgstr "Webová strana"
+msgstr "Webstránka"
 
 #. module: website_crm
 #: model:ir.actions.act_url,name:website_crm.action_open_website
@@ -214,7 +219,7 @@ msgstr "Webový kontaktní formulář"
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_website_visitor
 msgid "Website Visitor"
-msgstr "Návštěvník webu"
+msgstr "Návštěvník webstránky"
 
 #. module: website_crm
 #. openerp-web

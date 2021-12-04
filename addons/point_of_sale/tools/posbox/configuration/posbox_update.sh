@@ -2,6 +2,8 @@
 
 sudo mount -o remount,rw /
 
+sudo service led-status stop
+
 cd /home/pi/odoo
 localbranch=$(git symbolic-ref -q --short HEAD)
 localremote=$(git config branch.$localbranch.remote)
@@ -25,4 +27,7 @@ done
 
 sudo mount -o remount,ro /
 sudo mount -o remount,rw /root_bypass_ramdisks/etc/cups
+
+sudo service led-status start
+
 (sleep 5 && sudo service odoo restart) &

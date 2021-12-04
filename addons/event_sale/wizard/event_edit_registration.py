@@ -7,7 +7,7 @@ class RegistrationEditor(models.TransientModel):
     _name = "registration.editor"
     _description = 'Edit Attendee Details on Sales Confirmation'
 
-    sale_order_id = fields.Many2one('sale.order', 'Sales Order', required=True)
+    sale_order_id = fields.Many2one('sale.order', 'Sales Order', required=True, ondelete='cascade')
     event_registration_ids = fields.One2many('registration.editor.line', 'editor_id', string='Registrations to Edit')
 
     @api.model

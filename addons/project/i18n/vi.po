@@ -10,19 +10,20 @@
 # Martin Trigaux, 2019
 # fanha99 <fanha99@hotmail.com>, 2019
 # Dao Nguyen <trucdao.uel@gmail.com>, 2019
-# Chinh Chinh <trinhttp@trobz.com>, 2019
-# Duy BQ <duybq86@gmail.com>, 2019
+# Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2019
 # Dung Nguyen Thi <dungnt@trobz.com>, 2019
 # Phuc Tran Thanh <phuctran.odoo@gmail.com>, 2019
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
+# Duy BQ <duybq86@gmail.com>, 2020
+# Uyen Vo <uyen@trobz.com>, 2020
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-05 12:32+0000\n"
+"POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019\n"
+"Last-Translator: Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -234,17 +235,6 @@ msgstr "<i class=\"fa fa-smile-o\"/>Chưa có xếp hạng "
 #, python-format
 msgid ""
 "<p class=\"o_view_nocontent_smiling_face\">\n"
-"                        Documents are attached to the tasks of your project.</p><p>\n"
-"                        Send messages or log internal notes with attachments to link\n"
-"                        documents to your project.\n"
-"                    </p>"
-msgstr ""
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid ""
-"<p class=\"o_view_nocontent_smiling_face\">\n"
 "                    Create a new project</p>"
 msgstr ""
 "<p class = \"o_view_nocontent_smiling_face\">\\                     Tạo một "
@@ -275,7 +265,7 @@ msgstr "<span class=\"fa fa-tasks\" role=\"img\" aria-label=\"Tasks\" title=\"Nh
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span class=\"o_label\">Profitability</span>"
-msgstr ""
+msgstr "<span class=\"o_label\">Khả năng sinh lời</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -367,7 +357,7 @@ msgstr "Các hoạt động"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Hành động ngoại lệ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_state
@@ -474,6 +464,8 @@ msgid ""
 "Analytic account to which this project is linked for financial management. "
 "Use an analytic account to record cost and revenue on your project."
 msgstr ""
+"Tài khoản phân tích mà dự án này được liên kết để quản lý tài chính. Sử dụng"
+" tài khoản phân tích để ghi lại chi phí và doanh thu cho dự án của bạn."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -544,12 +536,6 @@ msgstr "Số lượng tập tin đính kèm"
 #: model:ir.model.fields,help:project.field_project_task__attachment_ids
 msgid "Attachment that don't come from message."
 msgstr "Tệp đính kèm không đến từ thông điệp."
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid "Attachments"
-msgstr "Tệp đính kèm"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__auto_validation_kanban_state
@@ -1116,7 +1102,7 @@ msgstr "Mẫu email"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__email_cc
 msgid "Email cc"
-msgstr ""
+msgstr "Email CC"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1212,7 +1198,7 @@ msgstr "Đã theo dõi"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Followed Tasks"
-msgstr ""
+msgstr "Tác vụ theo dõi"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_follower_ids
@@ -1250,7 +1236,7 @@ msgstr "GTD"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Get customer feedback"
-msgstr ""
+msgstr "Nhận phản hồi của khách hàng"
 
 #. module: project
 #. openerp-web
@@ -1337,6 +1323,11 @@ msgid ""
 "\n"
 "Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks."
 msgstr ""
+"Cách nhận phản hồi của khách hàng?\n"
+"- Xếp hạng khi thay đổi giai đoạn: một email sẽ được gửi khi một nhiệm vụ được kéo trong giai đoạn khác.\n"
+"- Xếp hạng định kỳ: email sẽ được gửi định kỳ.\n"
+"\n"
+"Đừng quên thiết lập các mẫu thư theo các giai đoạn mà bạn muốn nhận được phản hồi của khách hàng."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -1370,7 +1361,7 @@ msgstr "Biểu tượng"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Biểu tượng để chỉ ra một hoạt động ngoại lệ."
 
 #. module: project
 #. openerp-web
@@ -1558,12 +1549,12 @@ msgstr "Giải thích hợp lệ của Kanban"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened_value
 msgid "Kpi Project Task Opened Value"
-msgstr ""
+msgstr "Giá trị Kpi của các việc trong dự án đã mở"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__label_tasks
 msgid "Label used for the tasks of the project."
-msgstr ""
+msgstr "Nhãn được dùng cho các công việc trong dự án."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_project_rating_page
@@ -1668,7 +1659,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_cc
 msgid "List of cc from incoming emails."
-msgstr ""
+msgstr "Danh sách CC từ email đến"
 
 #. module: project
 #. openerp-web
@@ -1687,7 +1678,7 @@ msgstr "Ghi nhận thời gian trên nhiệm vụ"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Logo Design"
-msgstr ""
+msgstr "Thiết kế logo"
 
 #. module: project
 #. openerp-web
@@ -2064,7 +2055,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction
 msgid "Percentage of happy ratings"
-msgstr ""
+msgstr "Phần trăm xếp hạng hài lòng"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -2207,6 +2198,8 @@ msgid ""
 "Project in which sub-tasks of the current project will be created. It can be"
 " the current project itself."
 msgstr ""
+"Dự án trong đó các nhiệm vụ phụ của dự án hiện tại sẽ được tạo ra. Nó có thể"
+" là dự án hiện tại của chính nó."
 
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
@@ -2307,7 +2300,7 @@ msgstr "Thời hạn yêu cầu xếp hạng"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_percentage_satisfaction
 msgid "Rating Satisfaction"
-msgstr ""
+msgstr "Đánh giá độ hài lòng"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_count
@@ -2808,6 +2801,9 @@ msgstr "Nhiễm vụ sẵn sàng chuyển giai đoạn tiếp"
 #: model_terms:ir.ui.view,arch_db:project.view_task_partner_info_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_tree2
+#: model:project.project,label_tasks:project.project_project_1
+#: model:project.project,label_tasks:project.project_project_2
+#: model:project.project,label_tasks:project.project_project_data
 msgid "Tasks"
 msgstr "Nhiệm vụ"
 
@@ -2883,12 +2879,6 @@ msgstr ""
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
-msgid "The parent task belongs to a company you do not have access to."
-msgstr ""
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
 msgid ""
 "The project cannot be shared with the recipient(s) because the privacy of "
 "the project is too restricted. Set the privacy to 'Visible by following "
@@ -2897,12 +2887,6 @@ msgstr ""
 "Dự án không thể được chia sẻ với (các) người nhận vì quyền riêng tư củadự án"
 " quá hạn chế. Đặt quyền riêng tư thành 'Hiển thị bằng cách làm theokhách "
 "hàng' để người nhận có thể truy cập được."
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid "The subtasks belong to a company you do not have access to."
-msgstr ""
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -3070,7 +3054,7 @@ msgstr "Chưa được giao"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Unknown Analytic Account"
-msgstr ""
+msgstr "Tài khoản phân tích không xác định"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_unread
@@ -3174,7 +3158,7 @@ msgstr "Hàng tuần"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__is_favorite
 msgid "Whether this project should be displayed on your dashboard."
-msgstr ""
+msgstr "Có hiển thị dự án này ở bảng thông tin hay không."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__resource_calendar_id
@@ -3236,6 +3220,16 @@ msgid ""
 msgstr ""
 "Bạn cũng có thể thêm một mô tả để giúp cộng sự của bạn hiểu về ý nghĩa và "
 "mục đích của giai đoạn."
+
+#. module: project
+#: code:addons/project/models/analytic_account.py:0
+#, python-format
+msgid ""
+"You cannot change the company of an analytical account if it is related to a"
+" project."
+msgstr ""
+"Bạn không thể thay đổi công ty của tài khoản phân tích nếu nó có liên quan "
+"đến một dự án."
 
 #. module: project
 #: code:addons/project/models/project.py:0

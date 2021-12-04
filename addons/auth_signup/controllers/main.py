@@ -37,7 +37,10 @@ class AuthSignupHome(Home):
                 self.do_signup(qcontext)
                 # Send an account creation confirmation email
                 if qcontext.get('token'):
-                    user_sudo = request.env['res.users'].sudo().search([('login', '=', qcontext.get('login'))])
+                    User = request.env['res.users']
+                    user_sudo = User.sudo().search(
+                        User._get_login_domain(qcontext.get('login')), order=User._get_login_order(), limit=1
+                    )
                     template = request.env.ref('auth_signup.mail_template_user_signup_account_created', raise_if_not_found=False)
                     if user_sudo and template:
                         template.sudo().with_context(
@@ -124,7 +127,7 @@ class AuthSignupHome(Home):
         if values.get('password') != qcontext.get('confirm_password'):
             raise UserError(_("Passwords do not match; please retype them."))
         supported_lang_codes = [code for code, _ in request.env['res.lang'].get_installed()]
-        lang = request.context.get('lang', '').split('_')[0]
+        lang = request.context.get('lang', '')
         if lang in supported_lang_codes:
             values['lang'] = lang
         self._signup_with_values(qcontext.get('token'), values)

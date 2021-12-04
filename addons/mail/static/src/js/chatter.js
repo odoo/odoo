@@ -91,6 +91,12 @@ var Chatter = Widget.extend({
      */
     start: function () {
         this._$topbar = this.$('.o_chatter_topbar');
+        if(!this._disableAttachmentBox) {
+            this.$('.o_topbar_right_area').append(QWeb.render('mail.chatter.Attachment.Button', {
+                displayCounter: !!this.fields.thread,
+                count: this.record.data.message_attachment_count || 0,
+            }));
+        }
         // render and append the buttons
         this._$topbar.prepend(this._renderButtons());
         // start and append the widgets
@@ -100,7 +106,7 @@ var Chatter = Widget.extend({
             .then(this._updateMentionSuggestions.bind(this))
             .then(() => {
                 if (this.openAttachments) {
-                    this._openAttachmentBox();
+                    this._fetchAttachments().then(() => this._openAttachmentBox());
                 }
             });
 
@@ -317,17 +323,17 @@ var Chatter = Widget.extend({
                     self.fields.thread.postMessage(messageData).then(function () {
                         self._closeComposer(true);
                         if (self._reloadAfterPost(messageData)) {
-                            self.trigger_up('reload');
+                            self.trigger_up('reload', { keepChanges: true });
                         } else if (messageData.attachment_ids.length) {
                             self._reloadAttachmentBox();
-                            self.trigger_up('reload', {fieldNames: ['message_attachment_count'], keepChanges: true});
+                            self.trigger_up('reload', { fieldNames: ['message_attachment_count'], keepChanges: true });
                         }
                     }).guardedCatch(function () {
                         self._enableComposer();
                     });
                 });
             });
-            self._composer.on('need_refresh', self, self.trigger_up.bind(self, 'reload'));
+            self._composer.on('need_refresh', self, self.trigger_up.bind(self, 'reload', { keepChanges: true }));
             self._composer.on('close_composer', null, self._closeComposer.bind(self, true));
 
             self.$el.addClass('o_chatter_composer_active');
@@ -418,9 +424,6 @@ var Chatter = Widget.extend({
             logNoteButton: this.hasLogButton,
             scheduleActivityButton: !!this.fields.activity,
             isMobile: config.device.isMobile,
-            disableAttachmentBox: this._disableAttachmentBox,
-            displayCounter: !!this.fields.thread,
-            count: this.record.data.message_attachment_count || 0,
         });
     },
     /**
@@ -518,7 +521,7 @@ var Chatter = Widget.extend({
                     if (self.fields.thread) {
                         self.fields.thread.removeAttachments([ev.data.attachmentId]);
                     }
-                    self.trigger_up('reload');
+                    self.trigger_up('reload', { keepChanges: true });
                 });
             }
         };
@@ -599,7 +602,7 @@ var Chatter = Widget.extend({
      */
     _onReloadAttachmentBox: function () {
         if (this.reloadOnUploadAttachment) {
-            this.trigger_up('reload');
+            this.trigger_up('reload', { keepChanges: true });
         }
         this._reloadAttachmentBox();
     },

@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import tests
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysBase
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools import mute_logger
 
 
@@ -184,9 +184,9 @@ class TestAcessRightsStates(TestLeavesRights):
                 'name': 'Random Leave',
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': status.id,
-                'state': 'refuse',
             }
             leave = self.request_leave(1, datetime.today() + relativedelta(days=5 + i), 1, values)
+            leave.action_refuse()
             with self.assertRaises(UserError):
                 leave.with_user(self.user_employee.id).action_draft()
 
@@ -275,9 +275,9 @@ class TestAcessRightsStates(TestLeavesRights):
                 'name': 'Random Leave',
                 'employee_id': self.employee_hruser.id,
                 'holiday_status_id': status.id,
-                'state': 'refuse',
             }
             leave = self.request_leave(1, datetime.today() + relativedelta(days=5 + i), 1, values)
+            leave.action_refuse()
             with self.assertRaises(UserError):
                 leave.with_user(self.user_hruser.id).action_draft()
 
@@ -358,9 +358,9 @@ class TestAcessRightsStates(TestLeavesRights):
                 'name': 'Random Leave',
                 'employee_id': self.employee_hruser.id,
                 'holiday_status_id': status.id,
-                'state': 'refuse',
             }
             leave = self.request_leave(1, datetime.today() + relativedelta(days=5 + i), 1, values)
+            leave.action_refuse()
             leave.with_user(self.user_hrmanager.id).action_draft()
 
     def test_holiday_manager_draft_current_leave(self):
@@ -408,7 +408,7 @@ class TestAccessRightsCreate(TestLeavesRights):
             'holiday_status_id': self.leave_type.id,
             'state': 'validate',
         }
-        with self.assertRaises(AccessError):
+        with self.assertRaises(ValidationError):
             self.request_leave(self.user_employee_id, datetime.today() + relativedelta(days=5), 1, values)
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
@@ -447,17 +447,19 @@ class TestAccessRightsCreate(TestLeavesRights):
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_holidays_user_create_validate(self):
-        """ A holidays user can create a leave in validate state but not for himself """
+        """ A holidays user cannot create a leave in validate state """
         values = {
             'name': 'Hol10',
             'employee_id': self.employee_emp_id,
             'holiday_status_id': self.leave_type.id,
             'state': 'validate',
         }
-        self.request_leave(self.user_hruser_id, datetime.today() + relativedelta(days=5), 1, values)
-        values.update(employee_id=self.employee_hruser_id)
-        with self.assertRaises(AccessError):
+        with self.assertRaises(ValidationError):
             self.request_leave(self.user_hruser_id, datetime.today() + relativedelta(days=5), 1, values)
+        values.update(employee_id=self.employee_hruser_id)
+        with self.assertRaises(ValidationError):
+            self.request_leave(self.user_hruser_id, datetime.today() + relativedelta(days=5), 1, values)
+
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_holidays_user_create_batch(self):
@@ -495,16 +497,18 @@ class TestAccessRightsCreate(TestLeavesRights):
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_holidays_manager_create_validate(self):
-        """ A holidays manager can? create a leave in validate state even for himself """
+        """ A holidays manager cannot create a leave in validate state """
         values = {
             'name': 'Hol10',
             'employee_id': self.employee_emp_id,
             'holiday_status_id': self.leave_type.id,
             'state': 'validate',
         }
-        self.request_leave(self.user_hrmanager_id, datetime.today() + relativedelta(days=5), 1, values)
+        with self.assertRaises(ValidationError):
+            self.request_leave(self.user_hrmanager_id, datetime.today() + relativedelta(days=5), 1, values)
         values.update(employee_id=self.employee_hruser_id)
-        self.request_leave(self.user_hrmanager_id, datetime.today() + relativedelta(days=5), 1, values)
+        with self.assertRaises(ValidationError):
+            self.request_leave(self.user_hrmanager_id, datetime.today() + relativedelta(days=5), 1, values)
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_holidays_manager_create_batch(self):
@@ -524,7 +528,7 @@ class TestAccessRightsRead(TestLeavesRights):
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_leave_read_by_user_other(self):
-        """ Users should be able to read other people requests except name field """
+        """ Users should not be able to read other people requests """
         other_leave = self.env['hr.leave'].with_user(self.user_hruser).create({
             'name': 'Test',
             'holiday_status_id': self.leave_type.id,
@@ -534,15 +538,12 @@ class TestAccessRightsRead(TestLeavesRights):
             'date_to': datetime.now() + relativedelta(days=1),
             'number_of_days': 1,
         })
-        res = other_leave.with_user(self.user_employee_id).read(['number_of_days', 'state', 'name'])
-        self.assertEqual(
-            res[0]['name'], '*****',
-            'Private information should have been stripped, received %s instead' % res[0]['name']
-        )
+        with self.assertRaises(AccessError), self.cr.savepoint():
+            res = other_leave.with_user(self.user_employee_id).read(['number_of_days', 'state', 'name'])
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_leave_read_by_user_other_browse(self):
-        """ Users should be able to browse other people requests except name field """
+        """ Users should not be able to browse other people requests """
         other_leave = self.env['hr.leave'].with_user(self.user_hruser).create({
             'name': 'Test',
             'holiday_status_id': self.leave_type.id,
@@ -552,11 +553,9 @@ class TestAccessRightsRead(TestLeavesRights):
             'date_to': datetime.now() + relativedelta(days=1),
             'number_of_days': 1,
         })
-        other_leave.invalidate_cache(['name'])
-        self.assertEqual(
-            other_leave.with_user(self.user_employee_id).name, '*****',
-            'Private information should have been stripped, received %s instead' % other_leave.with_user(self.user_employee_id).name
-        )
+        with self.assertRaises(AccessError), self.cr.savepoint():
+            other_leave.invalidate_cache(['name'])
+            name = other_leave.with_user(self.user_employee_id).name
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
     def test_leave_read_by_user_own(self):

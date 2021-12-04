@@ -11,10 +11,10 @@
                 </xpath>
                 <xpath expr="//group[@name='email_template_and_project']" position="inside">
                     <field name="email_template_id" string="Email Template" help="Send a product-specific email once the invoice is validated"
-                        domain="[('model','=','product.template')]"
+                        domain="[('model','=','account.move')]"
                         context="{
                             'form_view_ref':'product_email_template.email_template_form_simplified',
-                            'default_model': 'product.template',
+                            'default_model': 'account.move',
                             'default_subject': name,
                             'default_name': name,
                         }"/>

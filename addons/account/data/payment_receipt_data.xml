@@ -36,12 +36,32 @@
             res_model="mail.compose.message"
             binding_model="account.payment"
             view_mode="form"
+            binding_views="form"
             target="new"
             id="account_send_payment_receipt_by_email_action"
             context="{
                 'default_model': 'account.payment',
                 'mail_post_autofollow': True,
                 'default_composition_mode': 'comment',
+                'default_use_template': True,
+                'default_res_id': active_id,
+                'default_template_id': ref('account.mail_template_data_payment_receipt'),
+                'force_email': True,
+                'custom_layout': 'mail.mail_notification_light',
+            }"
+        />
+
+        <act_window name="Send receipts by email"
+            res_model="mail.compose.message"
+            binding_model="account.payment"
+            view_mode="form"
+            binding_views="list"
+            target="new"
+            id="account_send_payment_receipt_by_email_action_multi"
+            context="{
+                'default_model': 'account.payment',
+                'mail_post_autofollow': True,
+                'default_composition_mode': 'mass_mail',
                 'default_use_template': True,
                 'default_res_id': active_id,
                 'default_template_id': ref('account.mail_template_data_payment_receipt'),

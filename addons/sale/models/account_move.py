@@ -50,6 +50,8 @@ class AccountMoveLine(models.Model):
             For Vendor Bill flow, if the product has a 'erinvoice policy' and is a cost, then we will find the SO on which reinvoice the AAL
         """
         self.ensure_one()
+        if self.sale_line_ids:
+            return False
         uom_precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         return float_compare(self.credit or 0.0, self.debit or 0.0, precision_digits=uom_precision_digits) != 1 and self.product_id.expense_policy not in [False, 'no']
 
@@ -116,6 +118,9 @@ class AccountMoveLine(models.Model):
 
         # create the sale lines in batch
         new_sale_lines = self.env['sale.order.line'].create(sale_line_values_to_create)
+        for sol in new_sale_lines:
+            if sol.product_id.expense_policy != 'cost':
+                sol._onchange_discount()
 
         # build result map by replacing index with newly created record of sale.order.line
         result = {}
@@ -180,12 +185,16 @@ class AccountMoveLine(models.Model):
         amount = (self.credit or 0.0) - (self.debit or 0.0)
 
         if self.product_id.expense_policy == 'sales_price':
-            return self.product_id.with_context(
-                partner=order.partner_id.id,
+            product = self.product_id.with_context(
+                partner=order.partner_id,
                 date_order=order.date_order,
                 pricelist=order.pricelist_id.id,
-                uom=self.product_uom_id.id
-            ).price
+                uom=self.product_uom_id.id,
+                quantity=unit_amount
+            )
+            if order.pricelist_id.discount_policy == 'with_discount':
+                return product.price
+            return product.lst_price
 
         uom_precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         if float_is_zero(unit_amount, precision_digits=uom_precision_digits):

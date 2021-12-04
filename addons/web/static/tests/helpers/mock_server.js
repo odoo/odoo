@@ -748,10 +748,12 @@ var MockServer = Class.extend({
      * @param {string} args[0]
      * @param {Array} args[1], search domain
      * @param {Object} _kwargs
+     * @param {number} [_kwargs.limit=100] server-side default limit
      * @returns {Array[]} a list of [id, display_name]
      */
     _mockNameSearch: function (model, args, _kwargs) {
         var str = args && typeof args[0] === 'string' ? args[0] : _kwargs.name;
+        const limit = _kwargs.limit || 100;
         var domain = (args && args[1]) || _kwargs.args || [];
         var records = this._getRecords(model, domain);
         if (str.length) {
@@ -762,10 +764,7 @@ var MockServer = Class.extend({
         var result = _.map(records, function (record) {
             return [record.id, record.display_name];
         });
-        if (_kwargs.limit) {
-            return result.slice(0, _kwargs.limit);
-        }
-        return result;
+        return result.slice(0, limit);
     },
     /**
      * Simulate an 'onchange' rpc
@@ -1028,15 +1027,7 @@ var MockServer = Class.extend({
             kwargs.orderby = kwargs.orderby.split(',')[0];
             var fieldName = kwargs.orderby.split(' ')[0];
             var order = kwargs.orderby.split(' ')[1];
-            result.sort(function (g1, g2) {
-                if (g1[fieldName] < g2[fieldName]) {
-                    return order === 'ASC' ? -1 : 1;
-                }
-                if (g1[fieldName] > g2[fieldName]) {
-                    return order === 'ASC' ? 1 : -1;
-                }
-                return 0;
-            });
+            result = this._sortByField(result, model, fieldName, order);
         }
 
         if (kwargs.limit) {
@@ -1132,7 +1123,7 @@ var MockServer = Class.extend({
             fields: kwargs.fields || args[1],
             offset: kwargs.offset || args[2],
             limit: kwargs.limit || args[3],
-            order: kwargs.order || args[4],
+            sort: kwargs.order || args[4],
             context: kwargs.context,
         });
         return result.records;
@@ -1175,19 +1166,11 @@ var MockServer = Class.extend({
             return result;
         });
         if (args.sort) {
-            // deal with sort on multiple fields (i.e. only consider the first)
+            // warning: only consider first level of sort
             args.sort = args.sort.split(',')[0];
             var fieldName = args.sort.split(' ')[0];
             var order = args.sort.split(' ')[1];
-            processedRecords.sort(function (r1, r2) {
-                if (r1[fieldName] < r2[fieldName]) {
-                    return order === 'ASC' ? -1 : 1;
-                }
-                if (r1[fieldName] > r2[fieldName]) {
-                    return order === 'ASC' ? 1 : -1;
-                }
-                return 0;
-            });
+            processedRecords = this._sortByField(processedRecords, args.model, fieldName, order);
         }
         var result = {
             length: nbRecords,
@@ -1374,6 +1357,41 @@ var MockServer = Class.extend({
         }
 
         throw new Error("Unimplemented route: " + route);
+    },
+    /**
+     * @private
+     * @param {Object[]} records the records to sort
+     * @param {string} model the model of records
+     * @param {string} fieldName the field to sort on
+     * @param {string} [order="DESC"] "ASC" or "DESC"
+     * @returns {Object}
+     */
+    _sortByField: function (records, model, fieldName, order) {
+        const field = this.data[model].fields[fieldName];
+        records.sort((r1, r2) => {
+            let v1 = r1[fieldName];
+            let v2 = r2[fieldName];
+            if (field.type === 'many2one') {
+                const coRecords = this.data[field.relation].records;
+                if (this.data[field.relation].fields.sequence) {
+                    // use sequence field of comodel to sort records
+                    v1 = coRecords.find(r => r.id === v1[0]).sequence;
+                    v2 = coRecords.find(r => r.id === v2[0]).sequence;
+                } else {
+                    // sort by id
+                    v1 = v1[0];
+                    v2 = v2[0];
+                }
+            }
+            if (v1 < v2) {
+                return order === 'ASC' ? -1 : 1;
+            }
+            if (v1 > v2) {
+                return order === 'ASC' ? 1 : -1;
+            }
+            return 0;
+        });
+        return records;
     },
     /**
      * helper function: traverse a tree and apply the function f to each of its

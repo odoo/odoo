@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo.addons.account.tests.invoice_test_common import InvoiceTestCommon
+from odoo.addons.account.tests.account_test_savepoint import AccountTestInvoicingCommon
 from odoo.tests.common import Form
 from odoo.tests import tagged
 from odoo import fields
@@ -8,11 +8,11 @@ from unittest.mock import patch
 
 
 @tagged('post_install', '-at_install')
-class TestAccountInvoiceReport(InvoiceTestCommon):
+class TestAccountInvoiceReport(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super(TestAccountInvoiceReport, cls).setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         cls.invoices = cls.env['account.move'].create([
             {
@@ -24,7 +24,7 @@ class TestAccountInvoiceReport(InvoiceTestCommon):
                     (0, None, {
                         'product_id': cls.product_a.id,
                         'quantity': 3,
-                        'price_unit': 1000,
+                        'price_unit': 750,
                     }),
                     (0, None, {
                         'product_id': cls.product_a.id,
@@ -114,10 +114,10 @@ class TestAccountInvoiceReport(InvoiceTestCommon):
         self.assertInvoiceReportValues([
             # amount_total  price_average   price_subtotal  residual    quantity
             [2000,          2000,           2000,           2000,       1],
-            [2000,          1000,           1000,           2000,       1],
-            [2000,          1000,           1000,           2000,       3],
+            [1000,          1000,           1000,           1000,       1],
+            [750,           250,            750,            750,        3],
             [6,             6,              6,              6,          1],
-            [-20,           -20,            -20,            -20,        1],
-            [-20,           -20,            -20,            -20,        1],
-            [-600,          -600,           -600,           -600,       1],
+            [-20,           -20,            -20,            -20,        -1],
+            [-20,           -20,            -20,            -20,        -1],
+            [-600,          -600,           -600,           -600,       -1],
         ])

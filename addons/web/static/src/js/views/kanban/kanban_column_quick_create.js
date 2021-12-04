@@ -6,6 +6,7 @@ odoo.define('web.kanban_column_quick_create', function (require) {
  * create kanban columns directly from the Kanban view.
  */
 
+var config = require('web.config');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
@@ -34,6 +35,7 @@ var ColumnQuickCreate = Widget.extend({
         this._super.apply(this, arguments);
         this.examples = options.examples;
         this.folded = true;
+        this.isMobile = config.device.isMobile;
     },
     /**
      * @override
@@ -101,9 +103,11 @@ var ColumnQuickCreate = Widget.extend({
      */
     _cancel: function () {
         if (!this.folded) {
-            this.folded = true;
             this.$input.val('');
-            this._update();
+            if (!this.isMobile) {
+                this.folded = true;
+                this._update();
+            }
         }
     },
     /**

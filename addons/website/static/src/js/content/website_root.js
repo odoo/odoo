@@ -102,7 +102,7 @@ var WebsiteRoot = publicRootData.PublicRoot.extend({
     _onLangChangeClick: function (ev) {
         ev.preventDefault();
 
-        var $target = $(ev.target);
+        var $target = $(ev.currentTarget);
         // retrieve the hash before the redirect
         var redirect = {
             lang: $target.data('url_code'),
@@ -148,7 +148,6 @@ var WebsiteRoot = publicRootData.PublicRoot.extend({
     _onPublishBtnClick: function (ev) {
         ev.preventDefault();
 
-        var self = this;
         var $data = $(ev.currentTarget).parents(".js_publish_management:first");
         this._rpc({
             route: $data.data('controller') || '/website/publish',
@@ -161,19 +160,6 @@ var WebsiteRoot = publicRootData.PublicRoot.extend({
             $data.toggleClass("css_unpublished css_published");
             $data.find('input').prop("checked", result);
             $data.parents("[data-publish]").attr("data-publish", +result ? 'on' : 'off');
-        })
-        .guardedCatch(function (err, data) {
-            return new Dialog(self, {
-                title: data.data ? data.data.arguments[0] : "",
-                $content: $('<div/>', {
-                    html: (data.data ? data.data.arguments[1] : data.statusText)
-                        + '<br/>'
-                        + _.str.sprintf(
-                            _t('It might be possible to edit the relevant items or fix the issue in <a href="%s">the classic Odoo interface</a>'),
-                            '/web#model=' + $data.data('object') + '&id=' + $data.data('id')
-                        ),
-                }),
-            }).open();
         });
     },
     /**
@@ -183,12 +169,12 @@ var WebsiteRoot = publicRootData.PublicRoot.extend({
     _onWebsiteSwitch: function (ev) {
         var websiteId = ev.currentTarget.getAttribute('website-id');
         var websiteDomain = ev.currentTarget.getAttribute('domain');
-        var url = window.location.href;
+        let url = `/website/force/${websiteId}`;
         if (websiteDomain && window.location.hostname !== websiteDomain) {
-            var path = window.location.pathname + window.location.search + window.location.hash;
-            url = websiteDomain + path;
+            url = websiteDomain + url;
         }
-        window.location.href = $.param.querystring(url, {'fw': websiteId});
+        const path = window.location.pathname + window.location.search + window.location.hash;
+        window.location.href = $.param.querystring(url, {'path': path});
     },
     /**
      * @private

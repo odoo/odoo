@@ -106,6 +106,17 @@ class TestExpression(TransactionCase):
         test('not ilike', 'B', ['0', 'a'])
         test('not like', 'AB', ['0', 'a', 'b', 'a b'])
 
+    def test_09_hierarchy_filtered_domain(self):
+        Partner = self.env['res.partner']
+        p = Partner.create({'name': 'dummy'})
+
+        # hierarchy without parent
+        self.assertFalse(p.parent_id)
+        p2 = self._search(Partner, [('parent_id', 'child_of', p.id)], [('id', '=', p.id)])
+        self.assertEqual(p2, p)
+        p3 = self._search(Partner, [('parent_id', 'parent_of', p.id)], [('id', '=', p.id)])
+        self.assertEqual(p3, p)
+
     def test_10_hierarchy_in_m2m(self):
         Partner = self.env['res.partner']
         Category = self.env['res.partner.category']
@@ -386,6 +397,24 @@ class TestExpression(TransactionCase):
         menus = self._search(menu, [('sequence', 'in', [1, 2, 10, 20])])
         self.assertTrue(menus)
 
+    def test_in_boolean(self):
+        """ Check the 'in' operator for boolean fields. """
+        Partner = self.env['res.partner']
+        self.assertIn('active', Partner._fields, "I need a model with field 'active'")
+        count_true = Partner.search_count([('active', '=', True)])
+        self.assertTrue(count_true, "I need an active partner")
+        count_false = Partner.search_count([('active', '=', False)])
+        self.assertTrue(count_false, "I need an inactive partner")
+
+        count = Partner.search_count([('active', 'in', [True])])
+        self.assertEqual(count, count_true)
+
+        count = Partner.search_count([('active', 'in', [False])])
+        self.assertEqual(count, count_false)
+
+        count = Partner.search_count([('active', 'in', [True, False])])
+        self.assertEqual(count, count_true + count_false)
+
     def test_15_o2m(self):
         Partner = self.env['res.partner']
 
@@ -550,6 +579,17 @@ class TestExpression(TransactionCase):
         domain = [('x', 'in', ['y', 'z']), ('a.v', '=', 'e'), '|', '|', ('a', '=', 'b'), '!', ('c', '>', 'd'), ('e', '!=', 'f'), ('g', '=', 'h')]
         norm_domain = ['&', '&', '&'] + domain
         self.assertEqual(norm_domain, expression.normalize_domain(domain), "Non-normalized domains should be properly normalized")
+
+    def test_35_negating_thruty_leafs(self):
+        self.assertEqual(expression.distribute_not(['!', '!', expression.TRUE_LEAF]), [expression.TRUE_LEAF], "distribute_not applied wrongly")
+        self.assertEqual(expression.distribute_not(['!', '!', expression.FALSE_LEAF]), [expression.FALSE_LEAF], "distribute_not applied wrongly")
+        self.assertEqual(expression.distribute_not(['!', '!', '!', '!', expression.TRUE_LEAF]), [expression.TRUE_LEAF], "distribute_not applied wrongly")
+        self.assertEqual(expression.distribute_not(['!', '!', '!', '!', expression.FALSE_LEAF]), [expression.FALSE_LEAF], "distribute_not applied wrongly")
+
+        self.assertEqual(expression.distribute_not(['!', expression.TRUE_LEAF]), [expression.FALSE_LEAF], "distribute_not applied wrongly")
+        self.assertEqual(expression.distribute_not(['!', expression.FALSE_LEAF]), [expression.TRUE_LEAF], "distribute_not applied wrongly")
+        self.assertEqual(expression.distribute_not(['!', '!', '!', expression.TRUE_LEAF]), [expression.FALSE_LEAF], "distribute_not applied wrongly")
+        self.assertEqual(expression.distribute_not(['!', '!', '!', expression.FALSE_LEAF]), [expression.TRUE_LEAF], "distribute_not applied wrongly")
 
     def test_40_negating_long_expression(self):
         source = ['!', '&', ('user_id', '=', 4), ('partner_id', 'in', [1, 2])]
@@ -744,6 +784,16 @@ class TestExpression(TransactionCase):
         # AND with OR with single FALSE_LEAF and normal leaf
         expr = expression.AND([expression.OR([false]), normal])
         self.assertEqual(expr, false)
+
+    def test_filtered_domain_order(self):
+        domain = [('name', 'ilike', 'a')]
+        countries = self.env['res.country'].search(domain)
+        self.assertGreater(len(countries), 1)
+        # same ids, same order
+        self.assertEqual(countries.filtered_domain(domain)._ids, countries._ids)
+        # again, trying the other way around
+        countries = countries.browse(reversed(countries._ids))
+        self.assertEqual(countries.filtered_domain(domain)._ids, countries._ids)
 
 
 class TestAutoJoin(TransactionCase):

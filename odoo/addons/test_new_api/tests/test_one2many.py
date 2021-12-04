@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo.tests.common import TransactionCase
-from odoo.exceptions import ValidationError
+from odoo.exceptions import MissingError
 
 
 class One2manyCase(TransactionCase):
@@ -171,7 +171,7 @@ class One2manyCase(TransactionCase):
     def test_cache_invalidation(self):
         """ Cache invalidation for one2many with integer inverse. """
         record0 = self.env['test_new_api.attachment.host'].create({})
-        with self.assertQueryCount(2):
+        with self.assertQueryCount(0):
             self.assertFalse(record0.attachment_ids, "inconsistent cache")
 
         # creating attachment must compute name and invalidate attachment_ids
@@ -180,10 +180,10 @@ class One2manyCase(TransactionCase):
             'res_id': record0.id,
         })
         attachment.flush()
-        with self.assertQueryCount(1):
+        with self.assertQueryCount(0):
             self.assertEqual(attachment.name, record0.display_name,
                              "field should be computed")
-        with self.assertQueryCount(2):
+        with self.assertQueryCount(1):
             self.assertEqual(record0.attachment_ids, attachment, "inconsistent cache")
 
         # creating a host should not attempt to recompute attachment.name
@@ -192,18 +192,18 @@ class One2manyCase(TransactionCase):
         with self.assertQueryCount(0):
             # field res_id should not have been invalidated
             attachment.res_id
-        with self.assertQueryCount(2):
+        with self.assertQueryCount(0):
             self.assertFalse(record1.attachment_ids, "inconsistent cache")
 
         # writing on res_id must recompute name and invalidate attachment_ids
         attachment.res_id = record1.id
         attachment.flush()
-        with self.assertQueryCount(1):
+        with self.assertQueryCount(0):
             self.assertEqual(attachment.name, record1.display_name,
                              "field should be recomputed")
-        with self.assertQueryCount(2):
+        with self.assertQueryCount(1):
             self.assertEqual(record1.attachment_ids, attachment, "inconsistent cache")
-        with self.assertQueryCount(2):
+        with self.assertQueryCount(1):
             self.assertFalse(record0.attachment_ids, "inconsistent cache")
 
     def test_recompute(self):
@@ -247,3 +247,34 @@ class One2manyCase(TransactionCase):
         # delete parent, and check that recomputation ends
         parent.unlink()
         parent.flush()
+
+    def test_compute_stored_many2one_one2many(self):
+        container = self.env['test_new_api.compute.container'].create({'name': 'Foo'})
+        self.assertFalse(container.member_ids)
+        member = self.env['test_new_api.compute.member'].create({'name': 'Foo'})
+        # at this point, member.container_id must be computed for member to
+        # appear in container.member_ids
+        self.assertEqual(container.member_ids, member)
+
+    def test_reward_line_delete(self):
+        order = self.env['test_new_api.order'].create({
+            'line_ids': [
+                (0, 0, {'product': 'a'}),
+                (0, 0, {'product': 'b'}),
+                (0, 0, {'product': 'b', 'reward': True}),
+            ],
+        })
+        line0, line1, line2 = order.line_ids
+
+        # this is what the client sends to delete the 2nd line; it should not
+        # crash when deleting the 2nd line automatically deletes the 3rd line
+        order.write({
+            'line_ids': [(4, line0.id), (2, line1.id), (4, line2.id)],
+        })
+        self.assertEqual(order.line_ids, line0)
+
+        # but linking a missing line on purpose is an error
+        with self.assertRaises(MissingError):
+            order.write({
+                'line_ids': [(4, line0.id), (4, line1.id)],
+            })

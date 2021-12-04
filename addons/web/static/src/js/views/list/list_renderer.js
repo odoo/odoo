@@ -352,7 +352,10 @@ var ListRenderer = BasicRenderer.extend({
                 if (!formatFunc) {
                     formatFunc = field_utils.format[field.type];
                 }
-                var formattedValue = formatFunc(value, field, { escape: true });
+                var formattedValue = formatFunc(value, field, {
+                    escape: true,
+                    digits: column.attrs.digits ? JSON.parse(column.attrs.digits) : undefined,
+                });
                 $cell.addClass('o_list_number').attr('title', help).html(formattedValue);
             }
             return $cell;
@@ -870,7 +873,9 @@ var ListRenderer = BasicRenderer.extend({
             'href': "#",
             'role': "button",
             'data-toggle': "dropdown",
+            'data-display': "static",
             'aria-expanded': false,
+            'aria-label': _t('Optional columns'),
         });
         $a.appendTo($optionalColumnsDropdown);
 
@@ -889,6 +894,7 @@ var ListRenderer = BasicRenderer.extend({
                 (config.isDebug() ? (' (' + col.attrs.name + ')') : '');
             var $checkbox = dom.renderCheckbox({
                 text: txt,
+                role: "menuitemcheckbox",
                 prop: {
                     name: col.attrs.name,
                     checked: _.contains(self.optionalColumnsEnabled, col.attrs.name),
@@ -1034,7 +1040,8 @@ var ListRenderer = BasicRenderer.extend({
         this.selection = [];
         var self = this;
         var $inputs = this.$('tbody .o_list_record_selector input:visible:not(:disabled)');
-        var allChecked = $inputs.length > 0;
+        var $closedHeaders = this.$('tbody .o_group_header.o_group_has_content:not(.o_group_open)');
+        var allChecked = $inputs.length > 0 && $closedHeaders.length === 0;
         $inputs.each(function (index, input) {
             if (input.checked) {
                 self.selection.push($(input).closest('tr').data('id'));
@@ -1095,6 +1102,11 @@ var ListRenderer = BasicRenderer.extend({
     _onToggleOptionalColumn: function (ev) {
         var self = this;
         ev.stopPropagation();
+        // when the input's label is clicked, the click event is also raised on the
+        // input itself (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/label),
+        // so this handler is executed twice (except if the rendering is quick enough,
+        // as when we render, we empty the HTML)
+        ev.preventDefault();
         var input = ev.currentTarget.querySelector('input');
         var fieldIndex = this.optionalColumnsEnabled.indexOf(input.name);
         if (fieldIndex >= 0) {
@@ -1126,6 +1138,13 @@ var ListRenderer = BasicRenderer.extend({
         // default, which is why we need to toggle the dropdown manually.
         ev.stopPropagation();
         this.$('.o_optional_columns .dropdown-toggle').dropdown('toggle');
+        // Explicitly set left of the optional column dropdown as it is pushed inside
+        // this.$el, so we need to position it at the end of top left corner in case of
+        // rtl language direction.
+        if (_t.database.parameters.direction === 'rtl') {
+            var left = this.$('.o_optional_columns .o_optional_columns_dropdown').width();
+            this.$('.o_optional_columns').css("left", left);
+        }
     },
     /**
      * Manages the keyboard events on the list. If the list is not editable, when the user navigates to

@@ -23,3 +23,14 @@ class StockPicking(models.Model):
         if bom.product_tmpl_id.cost_method in ('fifo', 'average'):
             vals = dict(vals, extra_cost=subcontract_move._get_price_unit())
         return vals
+
+
+class StockValuationLayer(models.Model):
+    _inherit = 'stock.valuation.layer'
+
+    def _update_stock_move(self):
+        # if we are subcontracting we want to have the receipt move
+        # on the svl, not the MO
+        super()._update_stock_move()
+        if self.stock_move_id.move_dest_ids and self.stock_move_id.move_dest_ids[0].is_subcontract:
+            self.stock_move_id = self.stock_move_id.move_dest_ids[0].id

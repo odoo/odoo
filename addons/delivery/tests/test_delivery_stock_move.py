@@ -61,8 +61,6 @@ class StockMoveInvoice(AccountingTestCase):
         self.invoice.post()
 
         # I pay the invoice.
-        self.invoice = self.sale_prepaid.invoice_ids
-        self.invoice.post()
         self.journal = self.AccountJournal.search([('type', '=', 'cash'), ('company_id', '=', self.sale_prepaid.company_id.id)], limit=1)
 
         register_payments = self.env['account.payment.register'].with_context(active_ids=self.invoice.ids).create({

@@ -115,6 +115,7 @@
             <field name="model">sale.order</field>
             <field name="arch" type="xml">
                 <calendar string="Sales Orders" date_start="date_order" color="state" hide_time="true" event_limit="5">
+                    <field name="currency_id" invisible="1"/>
                     <field name="partner_id" avatar_field="image_128"/>
                     <field name="amount_total" widget="monetary"/>
                     <field name="payment_term_id"/>
@@ -470,7 +471,7 @@
                                           'pricelist': parent.pricelist_id,
                                           'uom':product_uom,
                                           'company_id': parent.company_id,
-                                          'default_lst_price': price_unit,
+                                          'default_list_price': price_unit,
                                           'default_description_sale': name
                                       }"
                                       domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"
@@ -557,6 +558,7 @@
                                     <field name="product_uom_qty"/>
                                     <field name="product_uom" groups="uom.group_uom"/>
                                     <field name="price_subtotal"/>
+                                    <field name="price_total"/>
                                     <field name="price_tax" invisible="1"/>
                                     <field name="price_total" invisible="1"/>
                                     <field name="price_unit"/>
@@ -578,7 +580,9 @@
                                                         <div class="col-4">
                                                             <strong>
                                                                 <span class="float-right text-right">
-                                                                    <t t-esc="record.price_subtotal.value"/>
+                                                                    <t t-set="line_price" t-value="record.price_subtotal.value" groups="account.group_show_line_subtotals_tax_excluded"/>
+                                                                    <t t-set="line_price" t-value="record.price_total.value" groups="account.group_show_line_subtotals_tax_included"/>
+                                                                    <t t-esc="line_price"/>
                                                                 </span>
                                                             </strong>
                                                         </div>
@@ -636,8 +640,8 @@
                                     <field name="user_id"/>
                                     <field name="team_id" kanban_view_ref="%(sales_team.crm_team_view_kanban)s" options="{'no_create': True}"/>
                                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
-                                    <field name="require_signature" groups="base.group_no_one"/>
-                                    <field name="require_payment" groups="base.group_no_one"/>
+                                    <field name="require_signature"/>
+                                    <field name="require_payment"/>
                                     <field name="reference" readonly="1" attrs="{'invisible': [('reference', '=', False)]}"/>
                                     <field name="client_order_ref"/>
                                 </group>
@@ -847,6 +851,15 @@
                 or check every order and invoice them one by one.
               </p>
             </field>
+        </record>
+
+        <record id="model_sale_order_action_quotation_sent" model="ir.actions.server">
+            <field name="name">Mark Quotation as Sent</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="binding_model_id" ref="sale.model_sale_order"/>
+            <field name="binding_view_types">form,list</field>
+            <field name="state">code</field>
+            <field name="code">action = records.action_quotation_sent()</field>
         </record>
 
         <menuitem id="menu_sale_invoicing"
@@ -1154,7 +1167,7 @@
                     <xpath expr="//field[@name='partner_id']" position="after">
                        <field name="partner_shipping_id"
                               groups="sale.group_delivery_invoice_address"
-                              attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}"/>
+                              attrs="{'invisible': [('type', 'not in', ('out_invoice', 'out_refund', 'out_receipt'))]}"/>
                    </xpath>
                     <xpath expr="//field[@name='invoice_line_ids']//field[@name='discount']" position="attributes">
                         <attribute name="groups">product.group_discount_per_so_line</attribute>
@@ -1278,7 +1291,7 @@
             <field name="res_model">sale.report</field>
             <field name="view_mode">graph</field>
             <field name="domain">[('state','not in',('draft','cancel'))]</field>
-            <field name="context">{'search_default_Sales': 1, 'time_ranges': {'field':'date_order', 'range':'last_30_days'}, 'search_default_team_id': [active_id]}</field>
+            <field name="context">{'search_default_Sales': 1, 'time_ranges': {'field':'date', 'range':'last_30_days'}, 'search_default_team_id': [active_id]}</field>
             <field name="help">This report performs analysis on your sales orders. Analysis check your sales revenues and sort it by different group criteria (salesman, partner, product, etc.) Use this report to perform analysis on sales not having invoiced yet. If you want to analyse your turnover, you should use the Invoice Analysis report in the Accounting application.</field>
         </record>
 

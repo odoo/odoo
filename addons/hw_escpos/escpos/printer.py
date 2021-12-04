@@ -30,6 +30,14 @@ class Usb(Escpos):
         self.interface = interface
         self.in_ep     = in_ep
         self.out_ep    = out_ep
+
+        # pyusb dropped the 'interface' parameter from usb.Device.write() at 1.0.0b2
+        # https://github.com/pyusb/pyusb/commit/20cd8c1f79b24082ec999c022b56c3febedc0964#diff-b5a4f98a864952f0f55d569dd14695b7L293
+        if usb.version_info < (1, 0, 0) or (usb.version_info == (1, 0, 0) and usb.version_info[3] in ("a1", "a2", "a3", "b1")):
+            self.write_kwargs = dict(interface=self.interface)
+        else:
+            self.write_kwargs = {}
+
         self.open()
 
     def open(self):
@@ -83,8 +91,8 @@ class Usb(Escpos):
 
     def _raw(self, msg):
         """ Print any command sent in raw format """
-        if len(msg) != self.device.write(self.out_ep, msg, self.interface, timeout=5000):
-            self.device.write(self.out_ep, self.errorText, self.interface)
+        if len(msg) != self.device.write(self.out_ep, msg, timeout=5000, **self.write_kwargs):
+            self.device.write(self.out_ep, self.errorText, **self.write_kwargs)
             raise TicketNotPrinted()
     
     def __extract_status(self):
@@ -107,13 +115,13 @@ class Usb(Escpos):
             'paper'  : {},
         }
 
-        self.device.write(self.out_ep, DLE_EOT_PRINTER, self.interface)
+        self.device.write(self.out_ep, DLE_EOT_PRINTER, **self.write_kwargs)
         printer = self.__extract_status()    
-        self.device.write(self.out_ep, DLE_EOT_OFFLINE, self.interface)
+        self.device.write(self.out_ep, DLE_EOT_OFFLINE, **self.write_kwargs)
         offline = self.__extract_status()
-        self.device.write(self.out_ep, DLE_EOT_ERROR, self.interface)
+        self.device.write(self.out_ep, DLE_EOT_ERROR, **self.write_kwargs)
         error = self.__extract_status()
-        self.device.write(self.out_ep, DLE_EOT_PAPER, self.interface)
+        self.device.write(self.out_ep, DLE_EOT_PAPER, **self.write_kwargs)
         paper = self.__extract_status()
             
         status['printer']['status_code']     = printer

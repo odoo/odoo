@@ -134,6 +134,7 @@ class TestAccountEntry(TestExpenseCommon):
                     self.assertEquals(len(line.analytic_line_ids), 1, "The debit move line should have 1 analytic lines")
                     self.assertEquals(line.product_id, self.product_expense, "Product of debit move line should be the one from the expense")
                 else:
+                    self.assertEqual(line.tax_base_amount, 318.18)
                     self.assertAlmostEquals(line.debit, 31.82)
                     self.assertAlmostEquals(line.amount_currency, 63.64)
                     self.assertEquals(len(line.analytic_line_ids), 0, "The tax move line should not have analytic lines")
@@ -346,3 +347,134 @@ class TestExpenseRights(TestExpenseCommon):
         with self.assertRaises(AccessError):
             sheet_3.with_user(self.user_officer).refuse_sheet('')
         sheet_3.with_user(self.user_manager).refuse_sheet('')
+
+
+class TestExpenseLinesRights(TestExpenseCommon):
+
+    def setUp(self):
+        super(TestExpenseLinesRights, self).setUp()
+
+        self.setUpAdditionalAccounts()
+
+        self.product_expense = self.env['product.product'].create({
+            'name': "Delivered at cost",
+            'standard_price': 700,
+            'list_price': 700,
+            'type': 'consu',
+            'supplier_taxes_id': [(6, 0, [self.tax.id])],
+            'default_code': 'CONSU-DELI-COST',
+            'taxes_id': False,
+            'property_account_expense_id': self.account_expense.id,
+        })
+
+        self.user_manager.write({
+            'groups_id': [(4, self.env.ref('account.group_account_user').id)],
+        })
+
+    def test_expense_lines_rights(self):
+        expense = self.env['hr.expense.sheet'].with_user(self.user_employee).create({
+            'name': 'Expense for John Smith',
+            'employee_id': self.employee.id,
+        })
+        expense_line = self.env['hr.expense'].with_user(self.user_employee).create({
+            'name': 'Car Travel Expenses',
+            'employee_id': self.employee.id,
+            'product_id': self.product_expense.id,
+            'unit_amount': 700.00,
+            'tax_ids': [(6, 0, [self.tax.id])],
+            'sheet_id': expense.id,
+            'analytic_account_id': self.analytic_account.id,
+        })
+        expense.with_user(self.user_employee).action_submit_sheet()
+
+        # STATE APPROVE
+
+        expense.with_user(self.user_manager).approve_expense_sheets()
+        # Test User without Accountant Rights
+        with self.assertRaises(UserError):
+            expense_line.with_user(self.user_employee).write({'reference': 'Test Reference'})
+        with self.assertRaises(UserError):
+            expense_line.with_user(self.user_employee).write({'tax_ids': [(6, 0, [self.tax.id])]})
+        with self.assertRaises(UserError):
+            expense_line.with_user(self.user_employee).write({'account_id': self.account_expense.id})
+        with self.assertRaises(UserError):
+            expense_line.with_user(self.user_employee).write({'analytic_account_id': self.analytic_account.id})
+        # Test User with Accountant Rights
+        expense_line.with_user(self.user_manager).write({'reference': 'Test Reference'})
+        expense_line.with_user(self.user_manager).write({'tax_ids': [(6, 0, [self.tax.id])]})
+        expense_line.with_user(self.user_manager).write({'account_id': self.account_expense.id})
+        expense_line.with_user(self.user_manager).write({'analytic_account_id': self.analytic_account.id})
+        expense_line.invalidate_cache()
+
+        # STATE POST
+
+        expense.with_user(self.env.user).action_sheet_move_create()
+        # Test User without Accountant Rights
+        with self.assertRaises(UserError):
+            expense_line.with_user(self.user_employee).write({'reference': 'Test Reference'})
+        with self.assertRaises(UserError):
+            expense_line.with_user(self.user_employee).write({'tax_ids': [(6, 0, [self.tax.id])]})
+        with self.assertRaises(UserError):
+            expense_line.with_user(self.user_employee).write({'account_id': self.account_expense.id})
+        with self.assertRaises(UserError):
+            expense_line.with_user(self.user_employee).write({'analytic_account_id': self.analytic_account.id})
+        # Test User with Accountant Rights
+        expense_line.with_user(self.user_manager).write({'reference': 'Test Reference'})
+        expense_line.invalidate_cache()
+        with self.assertRaises(UserError):
+            expense_line.with_user(self.user_manager).write({'tax_ids': [(6, 0, [self.tax.id])]})
+        with self.assertRaises(UserError):
+            expense_line.with_user(self.user_manager).write({'account_id': self.account_expense.id})
+        with self.assertRaises(UserError):
+            expense_line.with_user(self.user_manager).write({'analytic_account_id': self.analytic_account.id})
+
+        # STATE DONE
+
+        expense.set_to_paid()
+        # Test User without Accountant Rights
+        with self.assertRaises(UserError):
+            expense_line.with_user(self.user_employee).write({'reference': 'Test Reference'})
+        with self.assertRaises(UserError):
+            expense_line.with_user(self.user_employee).write({'tax_ids': [(6, 0, [self.tax.id])]})
+        with self.assertRaises(UserError):
+            expense_line.with_user(self.user_employee).write({'account_id': self.account_expense.id})
+        with self.assertRaises(UserError):
+            expense_line.with_user(self.user_employee).write({'analytic_account_id': self.analytic_account.id})
+        # Test User with Accountant Rights
+        expense_line.with_user(self.user_manager).write({'reference': 'Test Reference'})
+        with self.assertRaises(UserError):
+            expense_line.with_user(self.user_manager).write({'tax_ids': [(6, 0, [self.tax.id])]})
+        with self.assertRaises(UserError):
+            expense_line.with_user(self.user_manager).write({'account_id': self.account_expense.id})
+        with self.assertRaises(UserError):
+            expense_line.with_user(self.user_manager).write({'analytic_account_id': self.analytic_account.id})
+
+    def test_expenses_with_tax_and_lockdate(self):
+        ''' Test creating a journal entry for multiple expenses using taxes. A lock date is set in order to trigger
+        the recomputation of the taxes base amount.
+        '''
+        self.env.company.tax_lock_date = '2020-02-01'
+
+        expense = self.env['hr.expense.sheet'].create({
+            'name': 'Expense for John Smith',
+            'employee_id': self.employee.id,
+            'accounting_date': '2020-01-01'
+        })
+
+        for i in range(2):
+            expense_line = self.env['hr.expense'].create({
+                'name': 'Car Travel Expenses',
+                'employee_id': self.employee.id,
+                'product_id': self.product_expense.id,
+                'unit_amount': 350.00,
+                'tax_ids': [(6, 0, [self.tax.id])],
+                'sheet_id': expense.id,
+                'analytic_account_id': self.analytic_account.id,
+            })
+            expense_line._onchange_product_id()
+
+        expense.action_submit_sheet()
+        expense.approve_expense_sheets()
+
+        # Assert not "Cannot create unbalanced journal entry" error.
+        expense.action_sheet_move_create()

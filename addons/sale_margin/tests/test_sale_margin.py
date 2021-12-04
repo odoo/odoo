@@ -46,3 +46,5 @@ class TestSaleMargin(common.TransactionCase):
         sale_order_so11.action_confirm()
         # Verify that margin field gets bind with the value.
         self.assertEqual(sale_order_so11.margin, 6000.00, "Sales order margin should be 6000.00")
+        sale_order_so11.order_line[1].purchase_price = 800
+        self.assertEqual(sale_order_so11.margin, 5000.00, "Sales order margin should be 5000.00")

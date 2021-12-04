@@ -6,7 +6,7 @@ from odoo.tests.common import TransactionCase, Form
 
 class TestItalianElectronicInvoice(TransactionCase):
     def test_state(self):
-        f = Form(self.env['account.move'])
+        f = Form(self.env['account.move'].with_context(default_type='out_invoice'))
         f.partner_id = self.env.ref('base.res_partner_12')
         with f.invoice_line_ids.new() as l:
             l.product_id = self.env.ref('product.product_product_3')

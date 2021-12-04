@@ -10,6 +10,7 @@ odoo.define('mail.Manager.Notification', function (require) {
 var MailManager = require('mail.Manager');
 var MailFailure = require('mail.model.MailFailure');
 
+const config = require('web.config');
 var core = require('web.core');
 var session = require('web.session');
 
@@ -227,9 +228,11 @@ MailManager.include({
      *
      * @private
      * @param {Object} channelData
+     * @param {string} channelData.channel_type
      * @param {integer} channelData.id
      * @param {string} [channelData.info]
      * @param {boolean} channelData.is_minimized
+     * @param {string} channelData.name server name of channel
      * @param {string} channelData.state
      */
     _handlePartnerChannelNotification: function (channelData) {
@@ -245,15 +248,18 @@ MailManager.include({
             ) {
                 this.do_notify(
                     _t("Invitation"),
-                    _t("You have been invited to: ") + channelData.name);
+                    _.str.sprintf(_t("You have been invited to: %s"), _.escape(channelData.name)));
             }
         }
-        var channel = this.getChannel(channelData.id);
-        if (channel && channelData.info !== 'join') {
-            channel.updateWindowState({
-                folded: channelData.state === 'folded' ? true : false,
-                detached: channelData.is_minimized,
-            });
+        // Prevent to open/close a channel on mobile when you open/close it on desktop.
+        if (!config.device.isMobile) {
+            const channel = this.getChannel(channelData.id);
+            if (channel && channelData.info !== 'join') {
+                channel.updateWindowState({
+                    folded: channelData.state === 'folded' ? true : false,
+                    detached: channelData.is_minimized,
+                });
+            }
         }
     },
     /**
@@ -516,12 +522,12 @@ MailManager.include({
             if (_.contains(['public', 'private'], channel.getType())) {
                 message = _.str.sprintf(
                     _t("You unsubscribed from <b>%s</b>."),
-                    channel.getName()
+                    _.escape(channel.getName())
                 );
             } else {
                 message = _.str.sprintf(
                     _t("You unpinned your conversation with <b>%s</b>."),
-                    channel.getName()
+                    _.escape(channel.getName())
                 );
             }
             this._removeChannel(channel);

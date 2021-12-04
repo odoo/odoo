@@ -107,9 +107,16 @@
                     </RappresentanteFiscale>
                     <CessionarioCommittente>
                         <DatiAnagrafici>
-                            <IdFiscaleIVA t-if="record.commercial_partner_id.vat">
+                            <IdFiscaleIVA t-if="record.commercial_partner_id.vat and in_eu(record.commercial_partner_id)">
                                 <IdPaese t-esc="get_vat_country(record.commercial_partner_id.vat)"/>
                                 <IdCodice t-esc="get_vat_number(record.commercial_partner_id.vat)"/>
+                            </IdFiscaleIVA>
+                            <IdFiscaleIVA t-if="record.commercial_partner_id.vat and not in_eu(record.commercial_partner_id)">
+                                <IdPaese t-esc="record.commercial_partner_id.country_id.code"/>
+                                <IdCodice t-esc="'OO99999999999'"/>
+                            </IdFiscaleIVA>
+                            <IdFiscaleIVA t-if="not record.commercial_partner_id.vat and record.commercial_partner_id.country_id.code != 'IT'">
+                                <IdCodice t-esc="'0000000'"/>
                             </IdFiscaleIVA>
                             <CodiceFiscale t-if="not record.commercial_partner_id.vat" t-esc="record.commercial_partner_id.l10n_it_codice_fiscale"/>
                             <CodiceFiscale t-if="not record.commercial_partner_id.vat and not record.commercial_partner_id.l10n_it_codice_fiscale" t-esc="99999999999"/>
@@ -138,6 +145,9 @@
                                 <ImportoBollo t-esc="format_numbers(record.l10n_it_stamp_duty)"/>
                             </DatiBollo>
                         </DatiGeneraliDocumento>
+                        <DatiOrdineAcquisto t-if="record.ref">
+                            <IdDocumento t-esc="record.ref" />
+                        </DatiOrdineAcquisto>
                         <DatiDDT t-if="record.l10n_it_ddt_id">
                             <!--2.1.8-->
                             <NumeroDDT t-esc="record.l10n_it_ddt_id.name"/>
@@ -162,7 +172,17 @@
                                 <RiferimentoNormativo t-if="tax_line.tax_line_id.l10n_it_has_exoneration" t-esc="tax_line.tax_line_id.l10n_it_law_reference"/>
                             </DatiRiepilogo>
                         </t>
-
+                        <!-- 0% tax lines -->
+                        <t t-foreach="tax_map" t-as="tax">
+                            <DatiRiepilogo>
+                                <AliquotaIVA t-esc="format_numbers(tax.amount)"/>
+                                <Natura t-if="tax.l10n_it_has_exoneration" t-esc="tax.l10n_it_kind_exoneration"/>
+                                <ImponibileImporto t-esc="format_monetary(tax_map[tax], currency)"/>
+                                <Imposta t-esc="format_monetary(0.00, currency)"/>
+                                <EsigibilitaIVA t-if="not tax.l10n_it_has_exoneration or tax.l10n_it_kind_exoneration=='N6'" t-esc="tax.l10n_it_vat_due_date"/>
+                                <RiferimentoNormativo t-if="tax.l10n_it_has_exoneration" t-esc="tax.l10n_it_law_reference"/>
+                            </DatiRiepilogo>
+                        </t>
                     </DatiBeniServizi>
                     <DatiPagamento>
                         <t t-set="payments" t-value="record.line_ids.filtered(lambda line: line.account_id.user_type_id.type in ('receivable', 'payable'))"/>

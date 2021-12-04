@@ -49,4 +49,5 @@ This module also uses analytic accounting and is compatible with the invoice on 
     ],
     'installable': True,
     'application': True,
+    'license': 'LGPL-3',
 }

@@ -24,6 +24,12 @@ $o-portal-bg-color: desaturate($gray-200, 100%);
 $o-portal-use-default-colors: $body-bg == $o-portal-default-body-bg;
 
 // Frontend general
+body {
+    // Set frontend direction that will be flipped with
+    // rtlcss for right-to-left text direction.
+    direction: ltr;
+}
+
 #wrapwrap {
     position: relative;
     display: flex;
@@ -416,6 +422,7 @@ img.o_we_custom_image {
 .oe_attachments .o_image_small {
     height: 40px;
     width: 50px;
+    background-repeat: no-repeat;
 }
 
 form label {
@@ -490,6 +497,12 @@ form label {
 
     .o_portal_chatter_messages {
         margin-bottom: 15px;
+
+        .o_portal_chatter_message {
+            div.media-body > p:not(.o_portal_chatter_puslished_date):last-of-type {
+                margin-bottom: 5px;
+            }
+        }
 
         .o_portal_chatter_message_title {
             p {

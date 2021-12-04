@@ -128,6 +128,7 @@ class WebsitePublishedMixin(models.AbstractModel):
     can_publish = fields.Boolean('Can Publish', compute='_compute_can_publish')
     website_url = fields.Char('Website URL', compute='_compute_website_url', help='The full URL to access the document through the website.')
 
+    @api.depends_context('lang')
     def _compute_website_url(self):
         for record in self:
             record.website_url = '#'

@@ -68,6 +68,7 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
             'number': state.valuenow,
             'timePerTransaction': Math.round(dt/1000/state.valuemax),
             'context': state.context,
+            'bank_statement_id': state.bank_statement_id,
         }));
         $done.find('*').addClass('o_reward_subcontent');
         $done.find('.button_close_statement').click(this._onCloseBankStatement.bind(this));
@@ -334,7 +335,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
         var to_check_checked = !!(state.to_check);
         this.$('caption .o_buttons button.o_validate').toggleClass('d-none', !!state.balance.type && !to_check_checked);
         this.$('caption .o_buttons button.o_reconcile').toggleClass('d-none', state.balance.type <= 0 || to_check_checked);
-        this.$('caption .o_buttons .o_no_valid').toggleClass('d-none', state.balance.type >= 0);
+        this.$('caption .o_buttons .o_no_valid').toggleClass('d-none', state.balance.type >= 0 || to_check_checked);
         self.$('caption .o_buttons button.o_validate').toggleClass('text-warning', to_check_checked);
 
         // partner_id
@@ -531,7 +532,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             relation: 'account.journal',
             type: 'many2one',
             name: 'journal_id',
-            domain: [['company_id', '=', state.st_line.company_id]],
+            domain: [['company_id', '=', state.st_line.company_id], ['type', '=', 'general']],
         }, {
             relation: 'account.tax',
             type: 'many2many',
@@ -541,6 +542,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             relation: 'account.analytic.account',
             type: 'many2one',
             name: 'analytic_account_id',
+            domain: ["|", ['company_id', '=', state.st_line.company_id], ['company_id', '=', false]]
         }, {
             relation: 'account.analytic.tag',
             type: 'many2many',

@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <record id="base.group_multi_currency" model="res.groups">
+        <!--
+            Sales multi-currency is based on pricelists, if multi-currency is enabled,
+            enable pricelists.
+        -->
+        <field name="implied_ids" eval="[(4, ref('product.group_product_pricelist'))]"/>
+    </record>
+
      <record id="group_auto_done_setting" model="res.groups">
         <field name="name">Lock Confirmed Sales</field>
         <field name="category_id" ref="base.module_category_hidden"/>
@@ -135,6 +143,34 @@
         <field name="model_id" ref="model_account_invoice_report"/>
         <field name="domain_force">['|', ('invoice_user_id', '=', user.id), ('invoice_user_id', '=', False)]</field>
         <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+    </record>
+
+    <record id="account_move_personal_rule" model="ir.rule">
+        <field name="name">Personal Invoice</field>
+        <field ref="model_account_move" name="model_id"/>
+        <field name="domain_force">[('type', 'in', ('out_invoice', 'out_refund')), '|', ('invoice_user_id', '=', user.id), ('invoice_user_id', '=', False)]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+    </record>
+
+    <record id="account_move_see_all" model="ir.rule">
+        <field name="name">All Invoices</field>
+        <field ref="model_account_move" name="model_id"/>
+        <field name="domain_force">[('type', 'in', ('out_invoice', 'out_refund'))]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
+    </record>
+
+    <record id="account_move_line_personal_rule" model="ir.rule">
+        <field name="name">Personal Invoice Lines</field>
+        <field ref="model_account_move_line" name="model_id"/>
+        <field name="domain_force">[('move_id.type', 'in', ('out_invoice', 'out_refund')), '|', ('move_id.invoice_user_id', '=', user.id), ('move_id.invoice_user_id', '=', False)]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+    </record>
+
+    <record id="account_move_line_see_all" model="ir.rule">
+        <field name="name">All Invoices Lines</field>
+        <field ref="model_account_move_line" name="model_id"/>
+        <field name="domain_force">[('move_id.type', 'in', ('out_invoice', 'out_refund'))]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
     </record>
 
     <record id="account_invoice_report_rule_see_all" model="ir.rule">

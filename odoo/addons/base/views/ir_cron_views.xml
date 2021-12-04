@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="base.view_server_action_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='create_action']" position="replace">
-                    <button name="method_direct_trigger" type="object" string="Run Manually" class="oe_highlight"/>
+                    <button name="method_direct_trigger" type="object" string="Run Manually" class="oe_highlight" attrs="{'invisible': [('state', '!=', 'code')]}"/>
                 </xpath>
                 <xpath expr="//button[@name='unlink_action']" position="replace">
                 </xpath>
@@ -25,6 +25,9 @@
                     <field name="priority"/>
                     <field name="doall"/>
                 </xpath>
+                <field name="state" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </field>
             </field>
         </record>
 
