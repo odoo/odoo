@@ -17,6 +17,7 @@
 # Léonie Bouchat <lbo@odoo.com>, 2020
 # Alessandro Fiorino <alessandro.fiorino@digitaldomus.it>, 2021
 # Sergio Zanchetta <primes2h@gmail.com>, 2021
+# Friederike Fasterling-Nesselbosch, 2021
 # 
 msgid ""
 msgstr ""
@@ -24,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2021\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -611,6 +612,8 @@ msgid ""
 "Amount of time between date planned and order by date for each purchase "
 "order line."
 msgstr ""
+"Tempo tra la data pianificata e l'ordine in base alla data per ogni linea "
+"d'ordine d'acquisto."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_report__avg_days_to_purchase
@@ -625,6 +628,8 @@ msgstr ""
 #: model:ir.model.fields,help:purchase.field_purchase_report__delay
 msgid "Amount of time between purchase approval and order by date."
 msgstr ""
+"Quantità di tempo tra l'approvazione dell'acquisto e l'ordine in base alla "
+"data."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__account_analytic_id
@@ -914,7 +919,7 @@ msgstr "Data conferma"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Confirmation Date Last Year"
-msgstr ""
+msgstr "Data di conferma L'anno scorso"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_lock__lock
@@ -1230,7 +1235,7 @@ msgstr "Raggruppa per"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
 msgid "Hide cancelled lines"
-msgstr "Nascondi righe cancellate"
+msgstr "Nascondi righe annullate"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -3023,6 +3028,13 @@ msgid ""
 " dates and keep you informed in case of any delays. To get the vendor's "
 "performance statistics, click on the OTD rate."
 msgstr ""
+"Quando crei un ordine di acquisto, dai un'occhiata al tasso di <i>On Time "
+"Delivery</i> del venditore: la percentuale di prodotti spediti in tempo. Se "
+"è troppo bassa, attiva i <i>promemoria automatici</i>. Qualche giorno prima "
+"della spedizione prevista, Odoo invierà al venditore una mail per chiedere "
+"conferma delle date di spedizione e tenerti informato in caso di ritardi. "
+"Per ottenere le statistiche di performance del venditore, clicca sul tasso "
+"di OTD."
 
 #. module: purchase
 #: model_terms:digest.tip,tip_description:purchase.digest_tip_purchase_1
@@ -3032,6 +3044,11 @@ msgid ""
 "clicking on a button in the email, the information is added on the purchase "
 "order. Use filters to track orders that have not been acknowledged."
 msgstr ""
+"Quando si invia un ordine di acquisto via e-mail, Odoo chiede al venditore "
+"di confermare la ricezione dell'ordine. Quando il venditore conferma "
+"l'ordine cliccando su un pulsante nell'email, l'informazione viene aggiunta "
+"all'ordine di acquisto. Usa i filtri per rintracciare gli ordini che non "
+"sono stati confermati."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.mail_notification_confirm

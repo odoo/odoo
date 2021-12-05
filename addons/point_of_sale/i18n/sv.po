@@ -12,7 +12,6 @@
 # Kristoffer Grundström <lovaren@gmail.com>, 2021
 # Martin Wilderoth <martin.wilderoth@linserv.se>, 2021
 # Robert Frykelius <robert.frykelius@linserv.se>, 2021
-# Fredrik Arvas <fredrik.arvas@vertel.se>, 2021
 # Martin Trigaux, 2021
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2021
 # STefan Rundgren <stefanrundgren@cellglas.com>, 2021
@@ -4630,7 +4629,7 @@ msgstr "Ingående balans"
 #: code:addons/point_of_sale/static/src/xml/Screens/ClientListScreen/ClientDetailsEdit.xml:0
 #, python-format
 msgid "State"
-msgstr "Stat"
+msgstr "Status"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5707,6 +5706,14 @@ msgstr ""
 msgid ""
 "You can't validate a bank statement that is used in an opened Session of a "
 "Point of Sale."
+msgstr ""
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid ""
+"You cannot close the POS when invoices are not posted.\n"
+"Invoices: %s"
 msgstr ""
 
 #. module: point_of_sale

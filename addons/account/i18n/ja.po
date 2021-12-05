@@ -4338,7 +4338,7 @@ msgstr "日付"
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__day_of_the_month
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_line_tree
 msgid "Day of the month"
-msgstr "月の日"
+msgstr "日払い"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__day_of_the_month
@@ -4897,7 +4897,7 @@ msgstr "仕入先クレジットノートの下書き"
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_line_form
 #, python-format
 msgid "Due"
-msgstr "未払"
+msgstr "期日"
 
 #. module: account
 #: code:addons/account/controllers/portal.py:0
@@ -4927,7 +4927,7 @@ msgstr "条件タイプ"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_line_form
 msgid "Due the"
-msgstr "原因"
+msgstr "支払日"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_duplicate_account
@@ -12212,7 +12212,7 @@ msgstr "選択した日が存在しない場合は、月の最後の日が使用
 #: code:addons/account/models/account_payment_term.py:0
 #, python-format
 msgid "The last line of a Payment Term should have the Balance type."
-msgstr "支払期間の最後の行には、バランス型を持つ必要があります。"
+msgstr "支払条件の最後の行は、条件タイプが残高である必要があります。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
@@ -14287,12 +14287,12 @@ msgstr "コード"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__option__after_invoice_month
 msgid "days after the end of the invoice month"
-msgstr "請求月末日の後日"
+msgstr "日後：請求月の月末から"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__option__day_after_invoice_date
 msgid "days after the invoice date"
-msgstr "請求日の後日"
+msgstr "日以降：請求日から"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
@@ -14354,12 +14354,12 @@ msgstr "税の"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__option__day_current_month
 msgid "of the current month"
-msgstr "今月分"
+msgstr "日：当月"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__option__day_following_month
 msgid "of the following month"
-msgstr "翌月分"
+msgstr "日：翌月"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
