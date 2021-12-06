@@ -51,6 +51,7 @@ class MailGroupMessage(models.Model):
         string='Status', index=True, copy=False,
         required=True, default='pending_moderation')
     moderator_id = fields.Many2one('res.users', string='Moderated By')
+    create_date = fields.Datetime(string='Posted')
 
     @api.depends('email_from')
     def _compute_email_from_normalized(self):
