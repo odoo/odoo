@@ -48,7 +48,8 @@ class PosOrder(models.Model):
             next(order_line for order_line in order_lines if order_line['id'] == order_line_id)['pack_lot_ids'] = list(pack_lots)
 
     def _get_fields_for_order_line(self):
-        return [
+        fields = super(PosOrder, self)._get_fields_for_order_line()
+        fields.extend([
             'id',
             'discount',
             'product_id',
@@ -60,7 +61,8 @@ class PosOrder(models.Model):
             'mp_dirty',
             'full_product_name',
             'customer_note',
-        ]
+        ])
+        return fields
 
     def _get_order_lines(self, orders):
         """Add pos_order_lines to the orders.

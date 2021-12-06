@@ -843,6 +843,10 @@ class PosOrder(models.Model):
             'tip_amount': order.tip_amount,
         }
 
+    def _get_fields_for_order_line(self):
+        """This function is here to be overriden"""
+        return []
+
     def export_for_ui(self):
         """ Returns a list of dict with each item having similar signature as the return of
             `export_as_JSON` of models.Order. This is useful for back-and-forth communication
