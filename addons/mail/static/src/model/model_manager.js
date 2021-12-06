@@ -90,12 +90,6 @@ export class ModelManager {
          */
         this._listenersToNotifyInUpdateCycle = new Map();
         /**
-         * Map between listeners and a set of localId that they are using.
-         * Useful for easily being able to clean up a listener without having to
-         * iterate all localId to be able to find which are using it.
-         */
-        this._localIdsObservedByListener = new Map();
-        /**
          * All generated models. Keys are model name, values are model class.
          */
         this.models = {};
@@ -161,6 +155,7 @@ export class ModelManager {
      */
     all(Model, filterFunc) {
         for (const listener of this._listeners) {
+            listener.lastObservedAllByModel.add(Model);
             const entry = this._listenersObservingAllByModel.get(Model);
             const info = {
                 listener,
@@ -257,8 +252,7 @@ export class ModelManager {
             throw Error(`wrong format of localId ${localId} for ${Model}.`);
         }
         for (const listener of this._listeners) {
-            this._localIdsObservedByListener.get(listener).add(localId);
-            listener.lastObservedLocalIds.add(this.localId);
+            listener.lastObservedLocalIds.add(localId);
             if (!this._listenersObservingLocalId.has(localId)) {
                 this._listenersObservingLocalId.set(localId, new Map());
             }
@@ -347,18 +341,19 @@ export class ModelManager {
         this._listeners.delete(listener);
         this._listenersToNotifyInUpdateCycle.delete(listener);
         this._listenersToNotifyAfterUpdateCycle.delete(listener);
-        for (const localId of this._localIdsObservedByListener.get(listener) || []) {
+        for (const localId of listener.lastObservedLocalIds) {
             this._listenersObservingLocalId.get(localId).delete(listener);
-            if (this._listenersObservingFieldOfLocalId.has(localId)) {
-                for (const [, listenersUsingField] of this._listenersObservingFieldOfLocalId.get(localId)) {
-                    listenersUsingField.delete(listener);
-                }
+            const listenersObservingFieldOfLocalId = this._listenersObservingFieldOfLocalId.get(localId);
+            for (const field of listener.lastObservedFieldsByLocalId.get(localId) || []) {
+                listenersObservingFieldOfLocalId.get(field).delete(listener);
             }
         }
-        this._localIdsObservedByListener.delete(listener);
-        for (const [, listeners] of this._listenersObservingAllByModel) {
-            listeners.delete(listener);
+        for (const Model of listener.lastObservedAllByModel) {
+            this._listenersObservingAllByModel.get(Model).delete(listener);
         }
+        listener.lastObservedLocalIds.clear();
+        listener.lastObservedFieldsByLocalId.clear();
+        listener.lastObservedAllByModel.clear();
     }
 
     /**
@@ -371,9 +366,6 @@ export class ModelManager {
     startListening(listener) {
         this.removeListener(listener);
         this._listeners.add(listener);
-        listener.lastObservedLocalIds.clear();
-        listener.lastObservedFields.clear();
-        this._localIdsObservedByListener.set(listener, new Set());
     }
 
     /**
@@ -1225,7 +1217,6 @@ export class ModelManager {
                 Object.defineProperty(Model.prototype, field.fieldName, {
                     get() { // this is bound to record
                         for (const listener of this.modelManager._listeners) {
-                            this.modelManager._localIdsObservedByListener.get(listener).add(this.localId);
                             listener.lastObservedLocalIds.add(this.localId);
                             if (!this.modelManager._listenersObservingLocalId.has(this.localId)) {
                                 this.modelManager._listenersObservingLocalId.set(this.localId, new Map());
@@ -1241,7 +1232,10 @@ export class ModelManager {
                                 entryLocalId.set(listener, [info]);
                             }
                             const entryField = this.modelManager._listenersObservingFieldOfLocalId.get(this.localId).get(field);
-                            listener.lastObservedFields.add(field);
+                            if (!listener.lastObservedFieldsByLocalId.has(this.localId)) {
+                                listener.lastObservedFieldsByLocalId.set(this.localId, new Set());
+                            }
+                            listener.lastObservedFieldsByLocalId.get(this.localId).add(field);
                             if (entryField.has(listener)) {
                                 entryField.get(listener).push(info);
                             } else {
