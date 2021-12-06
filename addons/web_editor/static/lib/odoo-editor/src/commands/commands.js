@@ -416,8 +416,8 @@ export const editorCommands = {
         // we need to remove the contentEditable isolation of links
         // before we apply the unlink, otherwise the command is not performed
         // because the content editable root is the link
-        const closestEl = closestElement(sel.focusNode);
-        if (closestEl.tagName === 'A' && closestEl.getAttribute('contenteditable') === 'true') {
+        const closestEl = closestElement(sel.focusNode, 'a');
+        if (closestEl && closestEl.getAttribute('contenteditable') === 'true') {
             editor._activateContenteditable();
         }
         if (sel.isCollapsed) {
