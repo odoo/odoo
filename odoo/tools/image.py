@@ -72,7 +72,7 @@ class ImageProcess():
         self.source = source or False
         self.operationsCount = 0
 
-        if not self.source or self.source[:1] in (b'<', '<'):
+        if not self.source or (hasattr(self.source, '__getitem__') and self.source[:1] in (b'<', '<')):
             self.image = False
         elif self.source:
             try:
