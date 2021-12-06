@@ -84,9 +84,14 @@ const Link = Widget.extend({
                 $node = $node.parent();
             }
             const linkNode = this.$link[0] || this.data.range.cloneContents();
-            const linkText = linkNode.innerHTML || linkNode.textContent;
+            const linkText = linkNode.textContent;
             this.data.content = linkText.replace(/[ \t\r\n]+/g, ' ');
             this.data.originalText = this.data.content;
+            if (linkNode instanceof DocumentFragment) {
+                this.data.originalHTML = $('<fakeEl>').append(linkNode).html();
+            } else {
+                this.data.originalHTML = linkNode.innerHTML;
+            }
             this.data.url = this.$link.attr('href') || '';
         } else {
             this.data.content = this.data.content ? this.data.content.replace(/[ \t\r\n]+/g, ' ') : '';
@@ -199,17 +204,7 @@ const Link = Widget.extend({
         if (!this.$link.attr('target')) {
             this.$link[0].removeAttribute('target');
         }
-        if (this._setLinkContent && (data.content !== this.data.originalText || data.url !== this.data.url)) {
-            const content = (data.content && data.content.length) ? data.content : data.url;
-            // If there is a this.data.originalText, it means that we selected
-            // the text and we could not change the content through the text
-            // input.html() is needed in case we selected rich html content.
-            if (this.data.originalText) {
-                this.$link.html(content);
-            } else {
-                this.$link.text(content);
-            }
-        }
+        this._updateLinkContent(this.$link, data);
     },
     /**
      * Return the link element to edit. Create one from selection if none was
@@ -459,6 +454,25 @@ const Link = Widget.extend({
      * @param {boolean} [active]
      */
     _setSelectOption: function ($option, active) {},
+    /**
+     * Update the link content.
+     *
+     * @private
+     * @param {JQuery} $link
+     * @param {object} linkInfos
+     * @param {boolean} force
+     */
+    _updateLinkContent($link, linkInfos, { force = false } = {}) {
+        if (force || (this._setLinkContent && (linkInfos.content !== this.data.originalText || linkInfos.url !== this.data.url))) {
+            if (linkInfos.content === this.data.originalText) {
+                $link.html(this.data.originalHTML);
+            } else if (linkInfos.content && linkInfos.content.length) {
+                $link.text(linkInfos.content);
+            } else {
+                $link.text(linkInfos.url);
+            }
+        }
+    },
     /**
      * @abstract
      * @private
