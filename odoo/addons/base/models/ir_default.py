@@ -43,6 +43,9 @@ class IrDefault(models.Model):
             scope (field, user, company) will be replaced. The value is encoded
             in JSON to be stored to the database.
 
+            :param model_name:
+            :param field_name:
+            :param value:
             :param user_id: may be ``False`` for all users, ``True`` for the
                             current user, or any user id
             :param company_id: may be ``False`` for all companies, ``True`` for
@@ -93,6 +96,8 @@ class IrDefault(models.Model):
         """ Return the default value for the given field, user and company, or
             ``None`` if no default is available.
 
+            :param model_name:
+            :param field_name:
             :param user_id: may be ``False`` for all users, ``True`` for the
                             current user, or any user id
             :param company_id: may be ``False`` for all companies, ``True`` for

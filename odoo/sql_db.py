@@ -569,19 +569,21 @@ class TestCursor(BaseCursor):
         the transaction open across requests, and simulates committing, rolling
         back, and closing:
 
-              test cursor           | queries on actual cursor
-            ------------------------+---------------------------------------
-              cr = TestCursor(...)  | SAVEPOINT test_cursor_N
-                                    |
-              cr.execute(query)     | query
-                                    |
-              cr.commit()           | RELEASE SAVEPOINT test_cursor_N
-                                    | SAVEPOINT test_cursor_N (lazy)
-                                    |
-              cr.rollback()         | ROLLBACK TO SAVEPOINT test_cursor_N (if savepoint)
-                                    |
-              cr.close()            | ROLLBACK TO SAVEPOINT test_cursor_N (if savepoint)
-                                    | RELEASE SAVEPOINT test_cursor_N (if savepoint)
+        +------------------------+---------------------------------------------------+
+        |  test cursor           | queries on actual cursor                          |
+        +========================+===================================================+
+        |``cr = TestCursor(...)``| SAVEPOINT test_cursor_N                           |
+        +------------------------+---------------------------------------------------+
+        | ``cr.execute(query)``  | query                                             |
+        +------------------------+---------------------------------------------------+
+        |  ``cr.commit()``       | RELEASE SAVEPOINT test_cursor_N                   |
+        |                        | SAVEPOINT test_cursor_N (lazy)                    |
+        +------------------------+---------------------------------------------------+
+        |  ``cr.rollback()``     | ROLLBACK TO SAVEPOINT test_cursor_N (if savepoint)|
+        +------------------------+---------------------------------------------------+
+        |  ``cr.close()``        | ROLLBACK TO SAVEPOINT test_cursor_N (if savepoint)|
+        |                        | RELEASE SAVEPOINT test_cursor_N (if savepoint)    |
+        +------------------------+---------------------------------------------------+
     """
     _cursors_stack = []
     def __init__(self, cursor, lock):

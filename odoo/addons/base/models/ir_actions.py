@@ -589,22 +589,21 @@ class IrActionsServer(models.Model):
         :samp:`_run_action_{TYPE}[_multi]` method is called. This allows easy
         overriding of the server actions.
 
-        The `_multi` suffix means the runner can operate on multiple records,
+        The ``_multi`` suffix means the runner can operate on multiple records,
         otherwise if there are multiple records the runner will be called once
-        for each
+        for each.
 
-        :param dict context: context should contain following keys
+        The call context should contain the following keys:
 
-                             - active_id: id of the current object (single mode)
-                             - active_model: current model that should equal the action's model
-
-                             The following keys are optional:
-
-                             - active_ids: ids of the current records (mass mode). If active_ids
-                               and active_id are present, active_ids is given precedence.
-
-        :return: an action_id to be executed, or False is finished correctly without
-                 return action
+        active_id
+            id of the current object (single mode)
+        active_model
+            current model that should equal the action's model
+        active_ids (optional)
+           ids of the current records (mass mode). If ``active_ids`` and
+           ``active_id`` are present, ``active_ids`` is given precedence.
+        :return: an ``action_id`` to be executed, or ``False`` is finished
+                 correctly without return action
         """
         res = False
         for action in self.sudo():

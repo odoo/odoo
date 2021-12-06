@@ -84,6 +84,7 @@ class IrFieldsConverter(models.AbstractModel):
         records matching what :meth:`odoo.osv.orm.Model.write` expects.
 
         :param model: :class:`odoo.osv.orm.Model` for the conversion base
+        :param fromtype:
         :returns: a converter callable
         :rtype: (record: dict, logger: (field, error) -> None) -> dict
         """
@@ -167,11 +168,11 @@ class IrFieldsConverter(models.AbstractModel):
         it returns. The handling of a warning at the upper levels is the same
         as ``ValueError`` above.
 
+        :param model:
         :param field: field object to generate a value for
         :type field: :class:`odoo.fields.Field`
         :param fromtype: type to convert to something fitting for ``field``
         :type fromtype: type | str
-        :param context: odoo request context
         :return: a function (fromtype -> field.write_type), if a converter is found
         :rtype: Callable | None
         """
@@ -345,7 +346,6 @@ class IrFieldsConverter(models.AbstractModel):
                          ``id`` for an external id and ``.id`` for a database
                          id
         :param value: value of the reference to match to an actual record
-        :param context: OpenERP request context
         :return: a pair of the matched database identifier (if any), the
                  translated user-readable name for the field and the list of
                  warnings

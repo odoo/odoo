@@ -57,6 +57,7 @@ class IrFilters(models.Model):
     def get_filters(self, model, action_id=None):
         """Obtain the list of filters available for the user on the given model.
 
+        :param int model: id of model to find filters for
         :param action_id: optional ID of action to restrict filters to this action
             plus global filters. If missing only global filters are returned.
             The action does not have to correspond to the model, it may only be

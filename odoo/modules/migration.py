@@ -27,18 +27,21 @@ def load_script(path, module_name):
 
 
 class MigrationManager(object):
-    """
-        This class manage the migration of modules
-        Migrations files must be python files containing a `migrate(cr, installed_version)`
+    """ Manages the migration of modules.
+
+        Migrations files must be python files containing a ``migrate(cr, installed_version)``
         function. These files must respect a directory tree structure: A 'migrations' folder
         which contains a folder by version. Version can be 'module' version or 'server.module'
         version (in this case, the files will only be processed by this version of the server).
-        Python file names must start by `pre-` or `post-` and will be executed, respectively,
-        before and after the module initialisation. `end-` scripts are run after all modules have
+        Python file names must start by ``pre-`` or ``post-`` and will be executed, respectively,
+        before and after the module initialisation. ``end-`` scripts are run after all modules have
         been updated.
-        A special folder named `0.0.0` can contain scripts that will be run on any version change.
-        In `pre` stage, `0.0.0` scripts are run first, while in `post` and `end`, they are run last.
-        Example:
+
+        A special folder named ``0.0.0`` can contain scripts that will be run on any version change.
+        In `pre` stage, ``0.0.0`` scripts are run first, while in ``post`` and ``end``, they are run last.
+
+        Example::
+
             <moduledir>
             `-- migrations
                 |-- 1.0

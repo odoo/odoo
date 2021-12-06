@@ -358,16 +358,19 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
 
     return html.strip()
 
-def plaintext2html(text, container_tag=False):
-    """ Convert plaintext into html. Content of the text is escaped to manage
-        html entities, using misc.html_escape().
-        - all \n,\r are replaced by <br />
-        - enclose content into <p>
-        - convert url into clickable link
-        - 2 or more consecutive <br /> are considered as paragraph breaks
+def plaintext2html(text, container_tag=None):
+    r"""Convert plaintext into html. Content of the text is escaped to manage
+    html entities, using :func:`~odoo.tools.misc.html_escape`.
 
-        :param string container_tag: container of the html; by default the
-            content is embedded into a <div>
+    - all ``\n``, ``\r`` are replaced by ``<br/>``
+    - enclose content into ``<p>``
+    - convert url into clickable link
+    - 2 or more consecutive ``<br/>`` are considered as paragraph breaks
+
+    :param str text: plaintext to convert
+    :param str container_tag: container of the html; by default the content is
+        embedded into a ``<div>``
+    :rtype: markupsafe.Markup
     """
     text = misc.html_escape(ustr(text))
 
@@ -391,15 +394,18 @@ def plaintext2html(text, container_tag=False):
         final = '<%s>%s</%s>' % (container_tag, final, container_tag)
     return markupsafe.Markup(final)
 
-def append_content_to_html(html, content, plaintext=True, preserve=False, container_tag=False):
+def append_content_to_html(html, content, plaintext=True, preserve=False, container_tag=None):
     """ Append extra content at the end of an HTML snippet, trying
         to locate the end of the HTML document (</body>, </html>, or
         EOF), and converting the provided content in html unless ``plaintext``
         is False.
+
         Content conversion can be done in two ways:
-        - wrapping it into a pre (preserve=True)
-        - use plaintext2html (preserve=False, using container_tag to wrap the
-            whole content)
+
+        - wrapping it into a pre (``preserve=True``)
+        - use plaintext2html (``preserve=False``, using ``container_tag`` to
+          wrap the whole content)
+
         A side-effect of this method is to coerce all HTML tags to
         lowercase in ``html``, and strip enclosing <html> or <body> tags in
         content if ``plaintext`` is False.
@@ -410,6 +416,8 @@ def append_content_to_html(html, content, plaintext=True, preserve=False, contai
             be wrapped in a <pre/> tag.
         :param bool preserve: if content is plaintext, wrap it into a <pre>
             instead of converting it into html
+        :param str container_tag: tag to wrap the content into, defaults to `div`.
+        :rtype: markupsafe.Markup
     """
     html = ustr(html)
     if plaintext and preserve:
@@ -513,7 +521,8 @@ def email_normalize(text):
 def email_domain_extract(email):
     """ Extract the company domain to be used by IAP services notably. Domain
     is extracted from email information e.g:
-        - info@proximus.be -> proximus.be
+
+    - info@proximus.be -> proximus.be
     """
     normalized_email = email_normalize(email)
     if normalized_email:
@@ -530,7 +539,8 @@ def email_domain_normalize(domain):
 def url_domain_extract(url):
     """ Extract the company domain to be used by IAP services notably. Domain
     is extracted from an URL e.g:
-        - www.info.proximus.be -> proximus.be
+
+    - www.info.proximus.be -> proximus.be
     """
     parser_results = urlparse(url)
     company_hostname = parser_results.hostname

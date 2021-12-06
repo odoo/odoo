@@ -162,13 +162,13 @@ def float_compare(value1, value2, precision_digits=None, precision_rounding=None
 
 def float_repr(value, precision_digits):
     """Returns a string representation of a float with the
-       the given number of fractional digits. This should not be
+       given number of fractional digits. This should not be
        used to perform a rounding operation (this is done via
-       :meth:`~.float_round`), but only to produce a suitable
+       :func:`~.float_round`), but only to produce a suitable
        string representation for a float.
 
-        :param int precision_digits: number of fractional digits to
-                                     include in the output
+       :param float value:
+       :param int precision_digits: number of fractional digits to include in the output
     """
     # Can't use str() here because it seems to have an intrinsic
     # rounding to 12 significant digits, which causes a loss of

@@ -717,9 +717,10 @@ class Environment(Mapping):
     @contextmanager
     def protecting(self, what, records=None):
         """ Prevent the invalidation or recomputation of fields on records.
-            The parameters are either:
-             - ``what`` a collection of fields and ``records`` a recordset, or
-             - ``what`` a collection of pairs ``(fields, records)``.
+        The parameters are either:
+
+        - ``what`` a collection of fields and ``records`` a recordset, or
+        - ``what`` a collection of pairs ``(fields, records)``.
         """
         protected = self._protected
         try:
