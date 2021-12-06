@@ -231,6 +231,7 @@ export class ListRenderer extends Component {
             data: record.data,
             isPassword: "password" in column.attrs,
             digits: column.attrs.digits && JSON.parse(column.attrs.digits),
+            field: record.fields[fieldName],
         };
         return formatter(record.data[fieldName], formatOptions);
     }

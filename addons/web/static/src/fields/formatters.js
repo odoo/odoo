@@ -355,6 +355,18 @@ export const formatPercentage = (value, options = {}) => {
     return `${formatted}${options.noSymbol ? "" : "%"}`;
 };
 
+/**
+ * Returns a string of the value of the selection.
+ *
+ * @param {Object} [options]
+ * @param {Object} [options.field] a description of the field
+ * @returns {string}
+ */
+export const formatSelection = (value, options = {}) => {
+    if (!value || !options.field.selection) return "";
+    return Object.fromEntries(options.field.selection)[value] || "";
+};
+
 registry
     .category("formatters")
     .add("char", formatChar)
@@ -368,4 +380,5 @@ registry
     .add("one2many", formatX2many)
     .add("many2many", formatX2many)
     .add("monetary", formatMonetary)
-    .add("percentage", formatPercentage);
+    .add("percentage", formatPercentage)
+    .add("selection", formatSelection);
