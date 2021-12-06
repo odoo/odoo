@@ -5,7 +5,7 @@
         <field name="model">mail.group.message</field>
         <field name="arch" type="xml">
             <tree sample="1">
-                <field name="create_date" string="Date"/>
+                <field name="create_date"/>
                 <field name="author_id"/>
                 <field name="email_from"/>
                 <field name="subject"/>
@@ -81,6 +81,7 @@
                             <field name="author_moderation" invisible="1"/>
                         </div>
                         <field name="mail_group_id"/>
+                        <field name="create_date"/>
                         <field name="attachment_ids" widget="many2many_binary"/>
                         <field name="body" options="{'style-inline': true}"/>
                     </group>
