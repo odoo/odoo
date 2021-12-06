@@ -1268,6 +1268,7 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
             paletteSelectorEl.appendChild(btnEl);
         }
 
+        const presetCollapseEl = uiFragment.querySelector('we-collapse.o_we_theme_presets_collapse');
         for (let i = 1; i <= 5; i++) {
             const collapseEl = document.createElement('we-collapse');
             const ccPreviewEl = $(qweb.render('web_editor.color.combination.preview'))[0];
@@ -1277,7 +1278,7 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
             for (const el of editionEls) {
                 collapseEl.appendChild(el);
             }
-            uiFragment.appendChild(collapseEl);
+            presetCollapseEl.appendChild(collapseEl);
         }
 
         await this._super(...arguments);
