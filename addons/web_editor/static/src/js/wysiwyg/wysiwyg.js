@@ -948,7 +948,9 @@ const Wysiwyg = Widget.extend({
             const linkDialog = new weWidgets.LinkDialog(this, {
                 forceNewWindow: this.options.linkForceNewWindow,
                 wysiwyg: this,
-            }, this.$editable[0], {}, undefined, options.link);
+            }, this.$editable[0], {
+                needLabel: true,
+            }, undefined, options.link);
             const restoreSelection = preserveCursor(this.odooEditor.document);
             linkDialog.open();
             linkDialog.on('save', this, data => {
