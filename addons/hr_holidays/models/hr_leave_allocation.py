@@ -657,14 +657,14 @@ class HolidaysAllocation(models.Model):
                     raise UserError(_('Only a time off Manager can reset other people allocation.'))
                 continue
 
-            if not is_officer and self.env.user != holiday.employee_id.leave_manager_id:
+            if not is_officer and self.env.user != holiday.employee_id.leave_manager_id and not val_type == 'no':
                 raise UserError(_('Only a time off Officer/Responsible or Manager can approve or refuse time off requests.'))
 
             if is_officer or self.env.user == holiday.employee_id.leave_manager_id:
                 # use ir.rule based first access check: department, members, ... (see security.xml)
                 holiday.check_access_rule('write')
 
-            if holiday.employee_id == current_employee and not is_manager:
+            if holiday.employee_id == current_employee and not is_manager and not val_type == 'no':
                 raise UserError(_('Only a time off Manager can approve its own requests.'))
 
             if (state == 'validate1' and val_type == 'both') or (state == 'validate' and val_type == 'manager'):

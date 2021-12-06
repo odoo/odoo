@@ -18,7 +18,7 @@ class TestAllocationRights(TestHrHolidaysCommon):
         cls.employee_emp.parent_id = False
         cls.employee_emp.leave_manager_id = False
 
-        cls.lt_no_validation = cls.env['hr.leave.type'].create({
+        cls.lt_no_allocation = cls.env['hr.leave.type'].create({
             'name': 'Validation = HR',
             'allocation_validation_type': 'officer',
             'requires_allocation': 'no',
@@ -37,6 +37,13 @@ class TestAllocationRights(TestHrHolidaysCommon):
             'allocation_validation_type': 'set',
             'requires_allocation': 'yes',
             'employee_requests': 'no',
+        })
+
+        cls.lt_allocation_no_validation = cls.env['hr.leave.type'].create({
+            'name': 'Validation = user',
+            'allocation_validation_type': 'no',
+            'requires_allocation': 'yes',
+            'employee_requests': 'yes',
         })
 
     def request_allocation(self, user, values={}):
@@ -66,6 +73,24 @@ class TestAccessRightsSimpleUser(TestAllocationRights):
         values = {
             'employee_id': self.employee_emp.id,
             'holiday_status_id': self.lt_allocation_manager.id,
+        }
+        with self.assertRaises(AccessError):
+            self.request_allocation(self.user_employee.id, values)
+
+    def test_simple_user_request_allocation_no_validation(self):
+        """ A simple user can request and automatically validate an allocation with no validation """
+        values = {
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.lt_allocation_no_validation.id,
+        }
+        allocation = self.request_allocation(self.user_employee.id, values)
+        self.assertEqual(allocation.state, 'validate', "It should be validated")
+
+    def test_simple_user_request_allocation_no_validation_other(self):
+        """ A simple user cannot request an other user's allocation with no validation """
+        values = {
+            'employee_id': self.employee_hruser.id,
+            'holiday_status_id': self.lt_allocation_no_validation.id,
         }
         with self.assertRaises(AccessError):
             self.request_allocation(self.user_employee.id, values)
