@@ -189,7 +189,7 @@ QUnit.module("ActionManager", (hooks) => {
         ]);
     });
 
-    QUnit.skip(
+    QUnit.test(
         "orderedBy in context is not propagated when executing another action",
         async function (assert) {
             assert.expect(6);
@@ -212,7 +212,7 @@ QUnit.module("ActionManager", (hooks) => {
             ];
             let searchReadCount = 1;
             const mockRPC = async (route, args) => {
-                if (route === "web_search_read") {
+                if (args.method === "web_search_read") {
                     args = args || {};
                     if (searchReadCount === 1) {
                         assert.strictEqual(args.model, "partner");
@@ -220,7 +220,7 @@ QUnit.module("ActionManager", (hooks) => {
                     }
                     if (searchReadCount === 2) {
                         assert.strictEqual(args.model, "partner");
-                        assert.strictEqual(args.sort, "foo ASC");
+                        assert.strictEqual(args.kwargs.order, "foo ASC");
                     }
                     if (searchReadCount === 3) {
                         assert.strictEqual(args.model, "pony");
@@ -232,14 +232,11 @@ QUnit.module("ActionManager", (hooks) => {
             const webClient = await createWebClient({ serverData, mockRPC });
             await doAction(webClient, 3);
             // Sort records
-            await testUtils.dom.click($(target).find(".o_list_view th.o_column_sortable"));
-            await legacyExtraNextTick();
+            await click(target.querySelector(".o_list_view th.o_column_sortable"));
             // Get to the form view of the model, on the first record
-            await testUtils.dom.click($(target).find(".o_data_cell:first"));
-            await legacyExtraNextTick();
+            await click(target.querySelector(".o_data_cell"));
             // Execute another action by clicking on the button within the form
-            await testUtils.dom.click($(target).find("button[name=8]"));
-            await legacyExtraNextTick();
+            await click(target.querySelector('button[name="8"]'));
         }
     );
 
@@ -424,7 +421,7 @@ QUnit.module("ActionManager", (hooks) => {
             "list should be the active view"
         );
     });
-    QUnit.skip("pager is updated when switching between views", async function (assert) {
+    QUnit.test("pager is updated when switching between views", async function (assert) {
         assert.expect(10);
 
         const webClient = await createWebClient({ serverData });
