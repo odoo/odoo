@@ -56,7 +56,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(target, ".o_list_view");
     });
 
-    QUnit.skip("on close with effect from server", async function (assert) {
+    QUnit.test("on close with effect from server", async function (assert) {
         assert.expect(1);
         patchWithCleanup(session, { show_effect: true });
         const mockRPC = async (route) => {
@@ -78,7 +78,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(target, ".o_reward");
     });
 
-    QUnit.skip("on close with effect in xml", async function (assert) {
+    QUnit.test("on close with effect in xml", async function (assert) {
         assert.expect(2);
         serverData.views["partner,false,form"] = `
             <form>
