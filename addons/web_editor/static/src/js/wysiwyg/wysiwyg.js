@@ -29,6 +29,7 @@ const isBlock = OdooEditorLib.isBlock;
 const rgbToHex = OdooEditorLib.rgbToHex;
 const preserveCursor = OdooEditorLib.preserveCursor;
 const closestElement = OdooEditorLib.closestElement;
+const setSelection = OdooEditorLib.setSelection;
 
 var id = 0;
 const faZoomClassRegex = RegExp('fa-[0-9]x');
@@ -1053,6 +1054,7 @@ const Wysiwyg = Widget.extend({
                 this.linkTools = undefined;
             }
         } else {
+            let link;
             const linkDialog = new weWidgets.LinkDialog(this, {
                 forceNewWindow: this.options.linkForceNewWindow,
                 wysiwyg: this,
@@ -1075,11 +1077,17 @@ const Wysiwyg = Widget.extend({
                 }
                 linkWidget.applyLinkToDom(data);
                 this.odooEditor.historyStep();
-                // At this point, the dialog is still open and prevents the
-                // focus in the editable, even though that is where the
-                // selection is. This waits so the dialog is destroyed when we
-                // set the focus.
-                setTimeout(() => this.odooEditor.document.getSelection().collapseToEnd(), 0);
+                link = linkWidget.$link[0];
+                this.odooEditor.setContenteditableLink(linkWidget.$link[0]);
+                setSelection(link, 0, link, link.childNodes.length, false);
+                // Focus the link after the dialog element is removed because
+                // if the dialog element is still in the DOM at the time of
+                // doing link.focus(), because there is the attribute tabindex
+                // on the dialog element, the focus cannot occurs.
+                // Using a microtask to set the focus is hackish and might break
+                // if another microtask wich focus an elemen in the dom occurs
+                // at the same time (but this case seems unlikely).
+                Promise.resolve().then(() => link.focus());
             });
             linkDialog.on('closed', this, function () {
                 // If the linkDialog content has been saved
