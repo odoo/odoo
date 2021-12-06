@@ -2,7 +2,7 @@
 This code is what let us use ES6-style modules in odoo.
 Classic Odoo modules are composed of a top-level :samp:`odoo.define({name},{body_function})` call.
 This processor will take files starting with an `@odoo-module` annotation (in a comment) and convert them to classic modules.
-If any file has the /** odoo-module */ on top of it, it will get processed by this class.
+If any file has the ``/** odoo-module */`` on top of it, it will get processed by this class.
 It performs several operations to get from ES6 syntax to the usual odoo one with minimal changes.
 This is done on the fly, this not a pre-processing tool.
 
@@ -560,9 +560,10 @@ def remove_index(content):
 
 
 def relative_path_to_module_path(url, path_rel):
-    """
-    Convert the relative path into a module path, which is more generic and fancy.
+    """Convert the relative path into a module path, which is more generic and
+    fancy.
 
+    :param str url:
     :param path_rel: a relative path to the current url.
     :return: module path (@module/...)
     """

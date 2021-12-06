@@ -53,6 +53,7 @@ class ImageProcess():
         """Initialize the `base64_source` image for processing.
 
         :param base64_source: the original image base64 encoded
+
             No processing will be done if the `base64_source` is falsy or if
             the image is SVG.
         :type base64_source: string or bytes
@@ -61,8 +62,6 @@ class ImageProcess():
             excessive before starting to process it. The max allowed resolution is
             defined by `IMAGE_MAX_RESOLUTION`.
         :type verify_resolution: bool
-
-        :return: self
         :rtype: ImageProcess
 
         :raise: ValueError if `verify_resolution` is True and the image is too large
@@ -99,19 +98,16 @@ class ImageProcess():
         and the `output_format` is the same as the original format and the
         quality is not specified.
 
-        :param quality: quality setting to apply. Default to 0.
+        :param int quality: quality setting to apply. Default to 0.
+
             - for JPEG: 1 is worse, 95 is best. Values above 95 should be
-                avoided. Falsy values will fallback to 95, but only if the image
-                was changed, otherwise the original image is returned.
+              avoided. Falsy values will fallback to 95, but only if the image
+              was changed, otherwise the original image is returned.
             - for PNG: set falsy to prevent conversion to a WEB palette.
             - for other formats: no effect.
-        :type quality: int
-
-        :param output_format: the output format. Can be PNG, JPEG, GIF, or ICO.
+        :param str output_format: the output format. Can be PNG, JPEG, GIF, or ICO.
             Default to the format of the original image. BMP is converted to
             PNG, other formats than those mentioned above are converted to JPEG.
-        :type output_format: string
-
         :return: image
         :rtype: bytes or False
         """
@@ -160,19 +156,16 @@ class ImageProcess():
         applied and the `output_format` is the same as the original format and
         the quality is not specified.
 
-        :param quality: quality setting to apply. Default to 0.
+        :param int quality: quality setting to apply. Default to 0.
+
             - for JPEG: 1 is worse, 95 is best. Values above 95 should be
-                avoided. Falsy values will fallback to 95, but only if the image
-                was changed, otherwise the original image is returned.
+              avoided. Falsy values will fallback to 95, but only if the image
+              was changed, otherwise the original image is returned.
             - for PNG: set falsy to prevent conversion to a WEB palette.
             - for other formats: no effect.
-        :type quality: int
-
-        :param output_format: the output format. Can be PNG, JPEG, GIF, or ICO.
+        :param str output_format: the output format. Can be PNG, JPEG, GIF, or ICO.
             Default to the format of the original image. BMP is converted to
             PNG, other formats than those mentioned above are converted to JPEG.
-        :type output_format: string
-
         :return: image base64 encoded or False
         :rtype: bytes or False
         """
@@ -200,12 +193,8 @@ class ImageProcess():
         It is currently not supported for GIF because we do not handle all the
         frames properly.
 
-        :param max_width: max width
-        :type max_width: int
-
-        :param max_height: max height
-        :type max_height: int
-
+        :param int max_width: max width
+        :param int max_height: max height
         :return: self to allow chaining
         :rtype: ImageProcess
         """
@@ -238,20 +227,12 @@ class ImageProcess():
         It is currently not supported for GIF because we do not handle all the
         frames properly.
 
-        :param max_width: max width
-        :type max_width: int
-
-        :param max_height: max height
-        :type max_height: int
-
-        :param center_x: the center of the crop between 0 (left) and 1 (right)
-            Default to 0.5 (center).
-        :type center_x: float
-
-        :param center_y: the center of the crop between 0 (top) and 1 (bottom)
-            Default to 0.5 (center).
-        :type center_y: float
-
+        :param int max_width: max width
+        :param int max_height: max height
+        :param float center_x: the center of the crop between 0 (left) and 1
+            (right). Defaults to 0.5 (center).
+        :param float center_y: the center of the crop between 0 (top) and 1
+            (bottom). Defaults to 0.5 (center).
         :return: self to allow chaining
         :rtype: ImageProcess
         """
@@ -332,25 +313,30 @@ def image_process(base64_source, size=(0, 0), verify_resolution=False, quality=0
 def average_dominant_color(colors, mitigate=175, max_margin=140):
     """This function is used to calculate the dominant colors when given a list of colors
 
-    There are 5 steps :
-        1) Select dominant colors (highest count), isolate its values and remove
-           it from the current color set.
-        2) Set margins according to the prevalence of the dominant color.
-        3) Evaluate the colors. Similar colors are grouped in the dominant set
-           while others are put in the "remaining" list.
-        4) Calculate the average color for the dominant set. This is done by
-           averaging each band and joining them into a tuple.
-        5) Mitigate final average and convert it to hex
+    There are 5 steps:
+
+    1) Select dominant colors (highest count), isolate its values and remove
+       it from the current color set.
+    2) Set margins according to the prevalence of the dominant color.
+    3) Evaluate the colors. Similar colors are grouped in the dominant set
+       while others are put in the "remaining" list.
+    4) Calculate the average color for the dominant set. This is done by
+       averaging each band and joining them into a tuple.
+    5) Mitigate final average and convert it to hex
 
     :param colors: list of tuples having:
-        [0] color count in the image
-        [1] actual color: tuple(R, G, B, A)
-        -> these can be extracted from a PIL image using image.getcolors()
+
+        0. color count in the image
+        1. actual color: tuple(R, G, B, A)
+
+        -> these can be extracted from a PIL image using
+        :meth:`~PIL.Image.Image.getcolors`
     :param mitigate: maximum value a band can reach
     :param max_margin: maximum difference from one of the dominant values
     :returns: a tuple with two items:
-        [0] the average color of the dominant set as: tuple(R, G, B)
-        [1] list of remaining colors, used to evaluate subsequent dominant colors
+
+        0. the average color of the dominant set as: tuple(R, G, B)
+        1. list of remaining colors, used to evaluate subsequent dominant colors
     """
     dominant_color = max(colors)
     dominant_rgb = dominant_color[1][:3]
@@ -409,11 +395,10 @@ def image_fix_orientation(image):
     save the complexity of removing it.
 
     :param image: the source image
-    :type image: PIL.Image
-
+    :type image: ~PIL.Image.Image
     :return: the resulting image, copy of the source, with orientation fixed
         or the source image if no operation was applied
-    :rtype: PIL.Image
+    :rtype: ~PIL.Image.Image
     """
     getexif = getattr(image, 'getexif', None) or getattr(image, '_getexif', None)  # support PIL < 6.0
     if getexif:
@@ -431,10 +416,7 @@ def base64_to_image(base64_source):
 
     :param base64_source: the image base64 encoded
     :type base64_source: string or bytes
-
-    :return: the PIL image
-    :rtype: PIL.Image
-
+    :rtype: ~PIL.Image.Image
     :raise: UserError if the base64 is incorrect or the image can't be identified by PIL
     """
     try:
@@ -446,12 +428,9 @@ def base64_to_image(base64_source):
 def image_apply_opt(image, output_format, **params):
     """Return the given PIL `image` using `params`.
 
-    :param image: the PIL image
-    :type image: PIL.Image
-
-    :param params: params to expand when calling PIL.Image.save()
-    :type params: dict
-
+    :type image: ~PIL.Image.Image
+    :param str output_format: :meth:`~PIL.Image.Image.save`'s ``format`` parameter
+    :param dict params: params to expand when calling :meth:`~PIL.Image.Image.save`
     :return: the image formatted
     :rtype: bytes
     """
@@ -463,12 +442,9 @@ def image_apply_opt(image, output_format, **params):
 def image_to_base64(image, output_format, **params):
     """Return a base64_image from the given PIL `image` using `params`.
 
-    :param image: the PIL image
-    :type image: PIL.Image
-
-    :param params: params to expand when calling PIL.Image.save()
-    :type params: dict
-
+    :type image: ~PIL.Image.Image
+    :param str output_format:
+    :param dict params: params to expand when calling :meth:`~PIL.Image.Image.save`
     :return: the image base64 encoded
     :rtype: bytes
     """
@@ -495,9 +471,7 @@ def image_guess_size_from_field_name(field_name):
 
     If it can't be guessed, return (0, 0) instead.
 
-    :param field_name: the name of a field
-    :type field_name: string
-
+    :param str field_name: the name of a field
     :return: the guessed size
     :rtype: tuple (width, height)
     """

@@ -305,11 +305,10 @@ class MetaCase(type):
 def _normalize_arch_for_assert(arch_string, parser_method="xml"):
     """Takes some xml and normalize it to make it comparable to other xml
     in particular, blank text is removed, and the output is pretty-printed
-    :param arch_string: the string representing an XML arch
-    :type arch_string: str
-    :param parser_method: an string representing which lxml.Parser class to use
+
+    :param str arch_string: the string representing an XML arch
+    :param str parser_method: an string representing which lxml.Parser class to use
         when normalizing both archs. Takes either "xml" or "html"
-    :type parser_method: str
     :return: the normalized arch
     :rtype str:
     """
@@ -671,6 +670,7 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
 
     def _assertXMLEqual(self, original, expected, parser="xml"):
         """Asserts that two xmls archs are equal
+
         :param original: the xml arch to test
         :type original: str
         :param expected: the xml arch of reference
@@ -981,16 +981,24 @@ class ChromeBrowser:
         self._logger.info('Chrome headless temporary user profile dir: %s', self.user_data_dir)
 
     def _json_command(self, command, timeout=3, get_key=None):
-        """
-        Inspect dev tools with get
+        """Queries browser state using JSON
+
         Available commands:
-            '' : return list of tabs with their id
-            list (or json/): list tabs
-            new : open a new tab
-            activate/ + an id: activate a tab
-            close/ + and id: close a tab
-            version : get chrome and dev tools version
-            protocol : get the full protocol
+
+        ``''``
+            return list of tabs with their id
+        ``list`` (or ``json/``)
+            list tabs
+        ``new``
+            open a new tab
+        :samp:`activate/{id}`
+            activate a tab
+        :samp:`close/{id}`
+            close a tab
+        ``version``
+            get chrome and dev tools version
+        ``protocol``
+            get the full protocol
         """
         command = os.path.join('json', command).strip('/')
         url = werkzeug.urls.url_join('http://%s:%s/' % (HOST, self.devtools_port), command)

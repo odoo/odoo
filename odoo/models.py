@@ -507,7 +507,10 @@ class BaseModel(metaclass=MetaModel):
     on the records of the current model using the ``child_of`` and
     ``parent_of`` domain operators.
     """
-    _active_name = None         #: field to use for active records
+    _active_name = None
+    """field to use for active records, automatically set to either ``"active"``
+    or ``"x_active"``.
+    """
     _date_name = 'date'         #: field to use for default calendar view
     _fold_name = 'fold'         #: field to determine folded groups in kanban views
 
@@ -529,7 +532,9 @@ class BaseModel(metaclass=MetaModel):
 
     # default values for _transient_vacuum()
     _transient_max_count = lazy_classproperty(lambda _: config.get('osv_memory_count_limit'))
+    "maximum number of transient records, unlimited if ``0``"
     _transient_max_hours = lazy_classproperty(lambda _: config.get('transient_age_limit'))
+    "maximum idle lifetime (in hours), unlimited if ``0``"
 
     CONCURRENCY_CHECK_FIELD = '__last_update'
 
@@ -1041,7 +1046,6 @@ class BaseModel(metaclass=MetaModel):
         """ Export fields for selected objects
 
             :param fields_to_export: list of fields
-            :param raw_data: True to return value in native Python type
             :rtype: dictionary with a *datas* matrix
 
             This method is used when exporting data via client menu
@@ -1235,6 +1239,7 @@ class BaseModel(metaclass=MetaModel):
         a list of sub-records
 
         The following sub-fields may be set on the record (by key):
+
         * None is the name_get for the record (to use with name_create/name_search)
         * "id" is the External ID for the record
         * ".id" is the Database ID for the record
@@ -1302,10 +1307,10 @@ class BaseModel(metaclass=MetaModel):
     def _convert_records(self, records, log=lambda a: None):
         """ Converts records from the source iterable (recursive dicts of
         strings) into forms which can be written to the database (via
-        self.create or (ir.model.data)._update)
+        ``self.create`` or ``(ir.model.data)._update``)
 
         :returns: a list of triplets of (id, xid, record)
-        :rtype: list((int|None, str|None, dict))
+        :rtype: list[(int|None, str|None, dict)]
         """
         field_names = {name: field.string for name, field in self._fields.items()}
         if self.env.lang:
@@ -1614,12 +1619,19 @@ class BaseModel(metaclass=MetaModel):
     @api.model
     def load_views(self, views, options=None):
         """ Returns the fields_views of given views, along with the fields of
-            the current model, and optionally its filters for the given action.
+        the current model, and optionally its filters for the given action.
 
         :param views: list of [view_id, view_type]
-        :param options['toolbar']: True to include contextual actions when loading fields_views
-        :param options['load_filters']: True to return the model's filters
-        :param options['action_id']: id of the action to get the filters
+        :param dict options: a dict optional boolean flags, set to enable:
+
+            ``toolbar``
+                includes contextual actions when loading fields_views
+            ``load_filters``
+                returns the model's filters
+            ``action_id``
+                id of the action to get the filters, otherwise loads the global
+                filters or the model
+
         :return: dictionary with fields_views, fields and optionally filters
         """
         options = options or {}
@@ -1702,9 +1714,11 @@ class BaseModel(metaclass=MetaModel):
         :return: composition of the requested view (including inherited views and extensions)
         :rtype: dict
         :raise AttributeError:
-                * if the inherited view has unknown position to work with other than 'before', 'after', 'inside', 'replace'
-                * if some tag other than 'position' is found in parent view
-        :raise Invalid ArchitectureError: if there is view type other than form, tree, calendar, search etc defined on the structure
+
+            * if the inherited view has unknown position to work with other than 'before', 'after', 'inside', 'replace'
+            * if some tag other than 'position' is found in parent view
+
+        :raise Invalid ArchitectureError: if there is view type other than form, tree, calendar, search etc... defined on the structure
         """
         self.check_access_rights('read')
         view = self.env['ir.ui.view'].sudo().browse(view_id)
@@ -1739,7 +1753,7 @@ class BaseModel(metaclass=MetaModel):
         return result
 
     def get_formview_id(self, access_uid=None):
-        """ Return an view id to open the document ``self`` with. This method is
+        """ Return a view id to open the document ``self`` with. This method is
             meant to be overridden in addons that want to give specific view ids
             for example.
 
@@ -1770,7 +1784,7 @@ class BaseModel(metaclass=MetaModel):
     def get_access_action(self, access_uid=None):
         """ Return an action to open the document. This method is meant to be
         overridden in addons that want to give specific access to the document.
-        By default it opens the formview of the document.
+        By default, it opens the formview of the document.
 
         An optional access_uid holds the user that will access the document
         that could be different from the current user.
@@ -1804,7 +1818,6 @@ class BaseModel(metaclass=MetaModel):
         :param str order: sort string
         :param bool count: if True, only counts and returns the number of matching records (default: False)
         :returns: at most ``limit`` records matching the search criteria
-
         :raise AccessError: * if user tries to bypass access rules for read on the requested object.
         """
         res = self._search(args, offset=offset, limit=limit, order=order, count=count)
@@ -1842,7 +1855,7 @@ class BaseModel(metaclass=MetaModel):
             :attr:`~.display_name` it is important that it resets to the
             "default" behaviour if the context keys are empty / missing.
 
-        :return: list of pairs ``(id, text_repr)`` for each records
+        :return: list of pairs ``(id, text_repr)`` for each record
         :rtype: list[(int, str)]
         """
         result = []
@@ -1888,8 +1901,8 @@ class BaseModel(metaclass=MetaModel):
         matching the optional search domain (``args``).
 
         This is used for example to provide suggestions based on a partial
-        value for a relational field. Sometimes be seen as the inverse
-        function of :meth:`~.name_get`, but it is not guaranteed to be.
+        value for a relational field. Should usually behave as the reverse of
+        :meth:`~.name_get`, but that is ont guaranteed.
 
         This method is equivalent to calling :meth:`~.search` with a search
         domain based on ``display_name`` and then :meth:`~.name_get` on the
@@ -2068,7 +2081,8 @@ class BaseModel(metaclass=MetaModel):
 
         Assume we group records by month, and we only have data for June,
         September and December. By default, plotting the result gives something
-        like:
+        like::
+
                                                 ___
                                       ___      |   |
                                      |   | ___ |   |
@@ -2077,7 +2091,8 @@ class BaseModel(metaclass=MetaModel):
 
         The problem is that December data immediately follow September data,
         which is misleading for the user. Adding explicit zeroes for missing
-        data gives something like:
+        data gives something like::
+
                                                            ___
                              ___                          |   |
                             |   |           ___           |   |
@@ -2098,7 +2113,8 @@ class BaseModel(metaclass=MetaModel):
         group with data.
 
         If we want to fill groups only between August (fill_from)
-        and October (fill_to):
+        and October (fill_to)::
+
                                                      ___
                                  ___                |   |
                                 |   |      ___      |   |
@@ -2106,9 +2122,9 @@ class BaseModel(metaclass=MetaModel):
                                  Jun  Aug  Sep  Oct  Dec
 
         We still get June and December. To filter them out, we should match
-        `fill_from` and `fill_to` with the domain e.g. ['&',
-            ('date_field', '>=', 'YYYY-08-01'),
-            ('date_field', '<', 'YYYY-11-01')]:
+        `fill_from` and `fill_to` with the domain e.g. ``['&',
+        ('date_field', '>=', 'YYYY-08-01'), ('date_field', '<', 'YYYY-11-01')]``::
+
                                          ___
                                     ___ |___| ___
                                     Aug  Sep  Oct
@@ -2123,7 +2139,8 @@ class BaseModel(metaclass=MetaModel):
         existing group. If neither `fill_from` nor `fill_to` is specified, and
         there is no existing group, no group will be returned.
 
-        If we set min_groups = 4:
+        If we set min_groups = 4::
+
                                          ___
                                     ___ |___| ___ ___
                                     Aug  Sep  Oct Nov
@@ -2210,12 +2227,15 @@ class BaseModel(metaclass=MetaModel):
         """
         Prepares the GROUP BY and ORDER BY terms for the read_group method. Adds the missing JOIN clause
         to the query if order should be computed against m2o field.
+
         :param orderby: the orderby definition in the form "%(field)s %(order)s"
         :param aggregated_fields: list of aggregated fields in the query
-        :param annotated_groupbys: list of dictionaries returned by _read_group_process_groupby
-                These dictionaries contains the qualified name of each groupby
-                (fully qualified SQL name for the corresponding field),
-                and the (non raw) field name.
+        :param annotated_groupbys: list of dictionaries returned by
+            :meth:`_read_group_process_groupby`
+
+            These dictionaries contain the qualified name of each groupby
+            (fully qualified SQL name for the corresponding field),
+            and the (non raw) field name.
         :param osv.Query query: the query under construction
         :return: (groupby_terms, orderby_terms)
         """
@@ -2436,7 +2456,7 @@ class BaseModel(metaclass=MetaModel):
                     * __range: (date/datetime only) dictionary with field names as keys mapping to
                         a dictionary with keys: "from" (inclusive) and "to" (exclusive)
                         mapping to a string representation of the temporal bounds of the group
-        :rtype: [{'field_name_1': value, ...]
+        :rtype: [{'field_name_1': value, ...}, ...]
         :raise AccessError: * if user has no read rights on the requested object
                             * if user tries to bypass access rules for read on the requested object
         """
@@ -2878,10 +2898,8 @@ class BaseModel(metaclass=MetaModel):
             _logger.warning("parent_path field on model %r should have unaccent disabled. Add `unaccent=False` to the field definition.", self._name)
 
     def _add_sql_constraints(self):
-        """
-
-        Modify this model's database table constraints so they match the one in
-        _sql_constraints.
+        """ Modify this model's database table constraints so they match the one
+        in _sql_constraints.
 
         """
         cr = self._cr
@@ -2908,7 +2926,7 @@ class BaseModel(metaclass=MetaModel):
             self._cr.execute(self._sql)
 
     #
-    # Update objects that uses this one to update their _inherits fields
+    # Update objects that use this one to update their _inherits fields
     #
 
     @api.model
@@ -3217,6 +3235,8 @@ Fields:
         method. In Python code, prefer :meth:`~.browse`.
 
         :param fields: list of field names to return (default is all fields)
+        :param load: loading mode, currently the only option is to set to
+            ``None`` to avoid loading the ``name_get`` of m2o fields
         :return: a list of dictionaries mapping field names to their values,
                  with one dictionary per record
         :raise AccessError: if user has no read rights on some of the given
@@ -3436,7 +3456,7 @@ Fields:
         """
         Returns rooturl for a specific given record.
 
-        By default, it return the ir.config.parameter of base_url
+        By default, it returns the ir.config.parameter of base_url
         but it can be overridden by model.
 
         :return: the base url for this record
@@ -3558,7 +3578,7 @@ Fields:
             the current user according to ir.rules.
 
            :param operation: one of ``write``, ``unlink``
-           :raise UserError: * if current ir.rules do not permit this operation.
+           :raise UserError: * if current ``ir.rules`` do not permit this operation.
            :return: None if the operation is allowed
         """
         if self.env.su:
@@ -4503,10 +4523,10 @@ Fields:
     @api.model
     def _where_calc(self, domain, active_test=True):
         """Computes the WHERE clause needed to implement an OpenERP domain.
-        :param domain: the domain to compute
-        :type domain: list
-        :param active_test: whether the default filtering of records with ``active``
-                            field set to ``False`` should be applied.
+
+        :param list domain: the domain to compute
+        :param bool active_test: whether the default filtering of records with
+            ``active`` field set to ``False`` should be applied.
         :return: the query expressing the given domain as provided in domain
         :rtype: osv.query.Query
         """
@@ -5088,8 +5108,9 @@ Fields:
             Defaults to no limit.
         :param order: Columns to sort result, see ``order`` parameter in :meth:`search`.
             Defaults to no sort.
-        :param read_kwargs: All read keywords arguments used to call read(..., **read_kwargs) method
-            E.g. you can use search_read(..., load='') in order to avoid computing name_get
+        :param read_kwargs: All read keywords arguments used to call
+            ``read(..., **read_kwargs)`` method e.g. you can use
+            ``search_read(..., load='')`` in order to avoid computing name_get
         :return: List of dictionaries containing the asked fields.
         :rtype: list(dict).
         """
@@ -5119,20 +5140,20 @@ Fields:
         return [index[record.id] for record in records if record.id in index]
 
     def toggle_active(self):
-        """ Inverse the value of the field ``(x_)active`` on the records in ``self``. """
+        "Inverses the value of :attr:`active` on the records in ``self``."
         active_recs = self.filtered(self._active_name)
         active_recs[self._active_name] = False
         (self - active_recs)[self._active_name] = True
 
     def action_archive(self):
-        """ Set (x_)active=False on a recordset, by calling toggle_active to
-            take the corresponding actions according to the model
+        """Sets :attr:`active` to ``False`` on a recordset, by calling
+         :meth:`toggle_active` on its currently active records.
         """
         return self.filtered(lambda record: record[self._active_name]).toggle_active()
 
     def action_unarchive(self):
-        """ Set (x_)active=True on a recordset, by calling toggle_active to
-            take the corresponding actions according to the model
+        """Sets :attr:`active` to ``True`` on a recordset, by calling
+        :meth:`toggle_active` on its currently inactive records.
         """
         return self.filtered(lambda record: not record[self._active_name]).toggle_active()
 
@@ -5356,7 +5377,7 @@ Fields:
         return self.with_context(allowed_company_ids=allowed_company_ids)
 
     def with_context(self, *args, **kwargs):
-        """ with_context([context][, **overrides]) -> records
+        """ with_context([context][, **overrides]) -> Model
 
         Returns a new version of this recordset attached to an extended
         context.
@@ -5374,7 +5395,7 @@ Fields:
         .. note:
 
             The returned recordset has the same prefetch object as ``self``.
-        """
+        """  # noqa: RST210
         if (args and 'force_company' in args[0]) or 'force_company' in kwargs:
             _logger.warning(
                 "Context key 'force_company' is no longer supported. "
@@ -5684,9 +5705,9 @@ Fields:
         """ Process all the pending computations (on all models), and flush all
         the pending updates to the database.
 
-        :param fnames (list<str>): list of field names to flush.  If given,
+        :param list[str] fnames: list of field names to flush.  If given,
             limit the processing to the given fields of the current model.
-        :param records (Model): if given (together with ``fnames``), limit the
+        :param Model records: if given (together with ``fnames``), limit the
             processing to the given records.
         """
         def process(model, id_vals):
@@ -6080,7 +6101,7 @@ Fields:
                         recursively_marked = self.env.not_to_compute(field, records)
                     self.env.add_to_compute(field, records)
                 else:
-                    # Dont force the recomputation of compute fields which are
+                    # Don't force the recomputation of compute fields which are
                     # not stored as this is not really necessary.
                     if field.recursive:
                         recursively_marked = records & self.env.cache.get_records(records, field)
@@ -6423,7 +6444,7 @@ Fields:
                     names.append(name)
 
         # prefetch x2many lines: this speeds up the initial snapshot by avoiding
-        # to compute fields on new records as much as possible, as that can be
+        # computing fields on new records as much as possible, as that can be
         # costly and is not necessary at all
         for name, subnames in nametree.items():
             if subnames and values.get(name):
@@ -6742,18 +6763,26 @@ class TransientModel(Model):
         """Clean the transient records.
 
         This unlinks old records from the transient model tables whenever the
-        "_transient_max_count" or "_max_age" conditions (if any) are reached.
-        Actual cleaning will happen only once every "_transient_check_time" calls.
-        This means this method can be called frequently called (e.g. whenever
-        a new record is created).
+        :attr:`_transient_max_count` or :attr:`_transient_max_hours` conditions
+        (if any) are reached.
+
+        Actual cleaning will happen only once every 5 minutes. This means this
+        method can be called frequently (e.g. whenever a new record is created).
+
         Example with both max_hours and max_count active:
-        Suppose max_hours = 0.2 (e.g. 12 minutes), max_count = 20, there are 55 rows in the
-        table, 10 created/changed in the last 5 minutes, an additional 12 created/changed between
-        5 and 10 minutes ago, the rest created/changed more then 12 minutes ago.
-        - age based vacuum will leave the 22 rows created/changed in the last 12 minutes
-        - count based vacuum will wipe out another 12 rows. Not just 2, otherwise each addition
-          would immediately cause the maximum to be reached again.
-        - the 10 rows that have been created/changed the last 5 minutes will NOT be deleted
+
+        Suppose max_hours = 0.2 (aka 12 minutes), max_count = 20, there are
+        55 rows in the table, 10 created/changed in the last 5 minutes, an
+        additional 12 created/changed between 5 and 10 minutes ago, the rest
+        created/changed more than 12 minutes ago.
+
+        - age based vacuum will leave the 22 rows created/changed in the last 12
+          minutes
+        - count based vacuum will wipe out another 12 rows. Not just 2,
+          otherwise each addition would immediately cause the maximum to be
+          reached again.
+        - the 10 rows that have been created/changed the last 5 minutes will NOT
+          be deleted
         """
         if self._transient_max_hours:
             # Age-based expiration

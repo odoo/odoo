@@ -76,9 +76,12 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
                 context=None, our_module=None):
     """Take an ir.actions.act_window and follow it until a report is produced
 
+        :param cr:
+        :param uid:
         :param action_id: the integer id of an action, or a reference to xml id
                 of the act_window (can search [our_module.]+xml_id
-        :param active_model, active_ids: call the action as if it had been launched
+        :param active_model:
+        :param active_ids: call the action as if it had been launched
                 from that model+ids (tree/form view action)
         :param wiz_data: a dictionary of values to use in the wizard, if needed.
                 They will override (or complete) the default values of the
@@ -86,6 +89,7 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
         :param wiz_buttons: a list of button names, or button icon strings, which
                 should be preferred to press during the wizard.
                 Eg. 'OK' or 'fa-print'
+        :param context:
         :param our_module: the name of the calling module (string), like 'account'
     """
     if not our_module and isinstance(action_id, str):

@@ -198,7 +198,6 @@ class IrActionsReport(models.Model):
         '''Retrieve an attachment for a specific record.
 
         :param record: The record owning of the attachment.
-        :param attachment_name: The optional name of the attachment.
         :return: A recordset of length <=1 or None
         '''
         attachment_name = safe_eval(self.attachment, {'object': record, 'time': time}) if self.attachment else ''
@@ -211,13 +210,14 @@ class IrActionsReport(models.Model):
         ], limit=1)
 
     def _postprocess_pdf_report(self, record, buffer):
-        '''Hook to handle post processing during the pdf report generation.
-        The basic behavior consists to create a new attachment containing the pdf
-        base64 encoded.
+        '''Hook to handle post-processing during the pdf report generation.
 
-        :param record_id: The record that will own the attachment.
-        :param pdf_content: The optional name content of the file to avoid reading both times.
-        :return: A modified buffer if the previous one has been modified, None otherwise.
+        The basic behavior consists of creating a new attachment containing the
+        pdf base64 encoded.
+
+        :param record: The record that will own the attachment.
+        :param io.BytesIO buffer: The PDF content as a bytes buffer.
+        :return: The input buffer.
         '''
         attachment_name = safe_eval(self.attachment, {'object': record, 'time': time})
         if not attachment_name:

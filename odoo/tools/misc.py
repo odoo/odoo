@@ -181,10 +181,10 @@ def file_open(name, mode="r", filter_ext=None):
 
     Examples::
 
-    >>> file_open('hr/static/description/icon.png')
-    >>> file_open('hr/static/description/icon.png', filter_ext=('.png', '.jpg'))
-    >>> with file_open('/opt/odoo/addons/hr/static/description/icon.png', 'rb') as f:
-    ...     contents = f.read()
+        >>> file_open('hr/static/description/icon.png')
+        >>> file_open('hr/static/description/icon.png', filter_ext=('.png', '.jpg'))
+        >>> with file_open('/opt/odoo/addons/hr/static/description/icon.png', 'rb') as f:
+        ...     contents = f.read()
 
     :param name: absolute or relative path to a file located inside an addon
     :param mode: file open mode, as for `open()`
@@ -240,24 +240,25 @@ def reverse_enumerate(l):
     """Like enumerate but in the other direction
 
     Usage::
-    >>> a = ['a', 'b', 'c']
-    >>> it = reverse_enumerate(a)
-    >>> it.next()
-    (2, 'c')
-    >>> it.next()
-    (1, 'b')
-    >>> it.next()
-    (0, 'a')
-    >>> it.next()
-    Traceback (most recent call last):
-      File "<stdin>", line 1, in <module>
-    StopIteration
+
+        >>> a = ['a', 'b', 'c']
+        >>> it = reverse_enumerate(a)
+        >>> it.next()
+        (2, 'c')
+        >>> it.next()
+        (1, 'b')
+        >>> it.next()
+        (0, 'a')
+        >>> it.next()
+        Traceback (most recent call last):
+          File "<stdin>", line 1, in <module>
+        StopIteration
     """
     return zip(range(len(l)-1, -1, -1), reversed(l))
 
 def partition(pred, elems):
     """ Return a pair equivalent to:
-        ``filter(pred, elems), filter(lambda x: not pred(x), elems)` """
+    ``filter(pred, elems), filter(lambda x: not pred(x), elems)`` """
     yes, nos = [], []
     for elem in elems:
         (yes if pred(elem) else nos).append(elem)
@@ -665,22 +666,6 @@ def split_every(n, iterable, piece_maker=tuple):
         yield piece
         piece = piece_maker(islice(iterator, n))
 
-def get_and_group_by_field(cr, uid, obj, ids, field, context=None):
-    """ Read the values of ``field´´ for the given ``ids´´ and group ids by value.
-
-       :param string field: name of the field we want to read and group by
-       :return: mapping of field values to the list of ids that have it
-       :rtype: dict
-    """
-    res = {}
-    for record in obj.read(cr, uid, ids, [field], context=context):
-        key = record[field]
-        res.setdefault(key[0] if isinstance(key, tuple) else key, []).append(record['id'])
-    return res
-
-def get_and_group_by_company(cr, uid, obj, ids, context=None):
-    return get_and_group_by_field(cr, uid, obj, ids, field='company_id', context=context)
-
 # port of python 2.6's attrgetter with support for dotted notation
 def resolve_attr(obj, attr):
     for name in attr.split("."):
@@ -769,7 +754,8 @@ class UnquoteEvalContext(defaultdict):
 
 class mute_logger(logging.Handler):
     """Temporary suppress the logging.
-    Can be used as context manager or decorator.
+
+    Can be used as context manager or decorator::
 
         @mute_logger('odoo.plic.ploc')
         def do_stuff():
@@ -777,7 +763,6 @@ class mute_logger(logging.Handler):
 
         with mute_logger('odoo.foo.bar'):
             do_suff()
-
     """
     def __init__(self, *loggers):
         super().__init__()
@@ -978,7 +963,9 @@ def freehash(arg):
             return id(arg)
 
 def clean_context(context):
-    """ This function take a dictionary and remove each entry with its key starting with 'default_' """
+    """ This function take a dictionary and remove each entry with its key
+    starting with ``default_``
+    """
     return {k: v for k, v in context.items() if not k.startswith('default_')}
 
 
@@ -1118,6 +1105,8 @@ class Callbacks:
     """ A simple queue of callback functions.  Upon run, every function is
     called (in addition order), and the queue is emptied.
 
+    ::
+
         callbacks = Callbacks()
 
         # add foo
@@ -1141,6 +1130,8 @@ class Callbacks:
     store anything, but is mostly aimed at aggregating data for callbacks.  The
     dictionary is automatically cleared by ``run()`` once all callback functions
     have been called.
+
+    ::
 
         # register foo to process aggregated data
         @callbacks.add
@@ -1258,6 +1249,8 @@ def get_lang(env, lang_code=False):
     Retrieve the first lang object installed, by checking the parameter lang_code,
     the context and then the company. If no lang is installed from those variables,
     fallback on the first lang installed in the system.
+
+    :param env:
     :param str lang_code: the locale (i.e. en_US)
     :return res.lang: the first lang found that is installed on the system.
     """
@@ -1367,10 +1360,12 @@ def parse_date(env, value, lang_code=False):
 def format_datetime(env, value, tz=False, dt_format='medium', lang_code=False):
     """ Formats the datetime in a given format.
 
-        :param {str, datetime} value: naive datetime to format either in string or in datetime
-        :param {str} tz: name of the timezone  in which the given datetime should be localized
-        :param {str} dt_format: one of “full”, “long”, “medium”, or “short”, or a custom date/time pattern compatible with `babel` lib
-        :param {str} lang_code: ISO code of the language to use to render the given datetime
+    :param env:
+    :param str|datetime value: naive datetime to format either in string or in datetime
+    :param str tz: name of the timezone  in which the given datetime should be localized
+    :param str dt_format: one of “full”, “long”, “medium”, or “short”, or a custom date/time pattern compatible with `babel` lib
+    :param str lang_code: ISO code of the language to use to render the given datetime
+    :rtype: str
     """
     if not value:
         return ''
@@ -1407,6 +1402,7 @@ def format_datetime(env, value, tz=False, dt_format='medium', lang_code=False):
 def format_time(env, value, tz=False, time_format='medium', lang_code=False):
     """ Format the given time (hour, minute and second) with the current user preference (language, format, ...)
 
+        :param env:
         :param value: the time to format
         :type value: `datetime.time` instance. Could be timezoned to display tzinfo according to format (e.i.: 'full' format)
         :param tz: name of the timezone  in which the given datetime should be localized
@@ -1604,7 +1600,7 @@ def get_diff(data_from, data_to, custom_style=False):
 
 
 def traverse_containers(val, type_):
-    """ Yields atoms filtered by specified type_ (or type tuple), traverses
+    """ Yields atoms filtered by specified ``type_`` (or type tuple), traverses
     through standard containers (non-string mappings or sequences) *unless*
     they're selected by the type filter
     """

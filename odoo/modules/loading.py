@@ -123,11 +123,15 @@ def force_demo(cr):
 def load_module_graph(cr, graph, status=None, perform_checks=True,
                       skip_modules=None, report=None, models_to_check=None):
     """Migrates+Updates or Installs all module nodes from ``graph``
+
+       :param cr:
        :param graph: graph of module nodes to load
        :param status: deprecated parameter, unused, left to avoid changing signature in 8.0
        :param perform_checks: whether module descriptors should be checked for validity (prints warnings
                               for same cases)
        :param skip_modules: optional list of module names (packages) which have previously been loaded and can be skipped
+       :param report:
+       :param set models_to_check:
        :return: list of modules that were installed or updated
     """
     if models_to_check is None:

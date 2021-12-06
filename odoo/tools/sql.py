@@ -254,7 +254,7 @@ def pg_varchar(size=0):
       'infinite' VARCHAR
     * Otherwise return a VARCHAR(n)
 
-    :type int size: varchar size, optional
+    :param int size: varchar size, optional
     :rtype: str
     """
     if size:

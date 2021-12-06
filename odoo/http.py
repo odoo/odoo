@@ -1096,8 +1096,7 @@ class OpenERPSession(sessions.Session):
         identifying that action. The method get_action() can be used to get
         back the action.
 
-        :param the_action: The action to save in the session.
-        :type the_action: anything
+        :param action: The action to save in the session.
         :return: A key identifying the saved action.
         :rtype: integer
         """

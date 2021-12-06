@@ -30,10 +30,11 @@ def _check_with_xsd(tree_or_str, stream, env=None):
 
     This will raise a UserError if the XML file is not valid according to the
     XSD file.
-    :param tree_or_str (etree, str): representation of the tree to be checked
-    :param stream (io.IOBase, str): the byte stream used to build the XSD schema.
+
+    :param str | etree._Element tree_or_str: representation of the tree to be checked
+    :param io.IOBase | str stream: the byte stream used to build the XSD schema.
         If env is given, it can also be the name of an attachment in the filestore
-    :param env (odoo.api.Environment): If it is given, it enables resolving the
+    :param odoo.api.Environment env: If it is given, it enables resolving the
         imports of the schema in the filestore with ir.attachments.
     """
     if not isinstance(tree_or_str, etree._Element):
@@ -58,10 +59,12 @@ def create_xml_node_chain(first_parent_node, nodes_list, last_node_value=None):
 
     Each new node being the child of the previous one based on the tags contained
     in `nodes_list`, under the given node `first_parent_node`.
-    :param first_parent_node (etree._Element): parent of the created tree/chain
-    :param nodes_list (iterable<str>): tag names to be created
-    :param last_node_value (str): if specified, set the last node's text to this value
-    :returns (list<etree._Element>): the list of created nodes
+
+    :param etree._Element first_parent_node: parent of the created tree/chain
+    :param iterable[str] nodes_list: tag names to be created
+    :param str last_node_value: if specified, set the last node's text to this value
+    :returns: the list of created nodes
+    :rtype: list[etree._Element]
     """
     res = []
     current_node = first_parent_node
@@ -77,9 +80,9 @@ def create_xml_node_chain(first_parent_node, nodes_list, last_node_value=None):
 def create_xml_node(parent_node, node_name, node_value=None):
     """Create a new node.
 
-    :param parent_node (etree._Element): parent of the created node
-    :param node_name (str): name of the created node
-    :param node_value (str): value of the created node (optional)
-    :returns (etree._Element):
+    :param etree._Element parent_node: parent of the created node
+    :param str node_name: name of the created node
+    :param str node_value: value of the created node (optional)
+    :rtype: etree._Element
     """
     return create_xml_node_chain(parent_node, [node_name], node_value)[0]
