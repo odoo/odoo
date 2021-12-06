@@ -356,10 +356,11 @@ registerModel({
          */
         publicPartners: many2many('mail.partner'),
         /**
-         * Threads for which the current partner has a pending invitation
+         * Threads for which the current partner has a pending invitation.
+         * It is computed from the inverse relation for performance reasons.
          */
-        ringingThreads: many2many('mail.thread', {
-            compute: '_computeRingingThreads',
+        ringingThreads: one2many('mail.thread', {
+            inverse: 'messagingAsRingingThread',
         }),
         rtc: one2one('mail.rtc', {
             default: insertAndReplace(),
