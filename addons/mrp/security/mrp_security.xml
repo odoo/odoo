@@ -35,6 +35,10 @@
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
+    <record id="base.group_system" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('mrp.group_mrp_manager'))]"/>
+    </record>
+
 </data>
 <data noupdate="1">
     <record id="base.default_user" model="res.users">
