@@ -419,7 +419,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.skip("change the viewType of the current action", async function (assert) {
+    QUnit.test("change the viewType of the current action", async function (assert) {
         assert.expect(14);
         const mockRPC = async function (route, args) {
             assert.step((args && args.method) || route);
@@ -804,7 +804,7 @@ QUnit.module("ActionManager", (hooks) => {
         ]);
     });
 
-    QUnit.skip("load state: in a form view, remove the id from the state", async function (assert) {
+    QUnit.test("load state: in a form view, remove the id from the state", async function (assert) {
         assert.expect(13);
         serverData.actions[999] = {
             id: 999,
@@ -839,7 +839,7 @@ QUnit.module("ActionManager", (hooks) => {
             id: "",
         });
         assert.verifySteps(["/web/dataset/call_kw/partner/onchange"]);
-        assert.containsOnce(target, ".o_form_view.o_form_editable");
+        assert.containsOnce(target, ".o_form_view .o_form_editable");
         assert.containsN(target, ".breadcrumb-item", 2);
         assert.strictEqual(
             $(target).find(".o_control_panel .breadcrumb-item.active").text(),
@@ -910,7 +910,7 @@ QUnit.module("ActionManager", (hooks) => {
         });
     });
 
-    QUnit.skip(
+    QUnit.test(
         "url form view type switch from list or kanban doesn't timeout",
         async function (assert) {
             assert.expect(3);
@@ -927,7 +927,7 @@ QUnit.module("ActionManager", (hooks) => {
             await loadState(webClient.env, hash);
             assert.containsOnce(
                 target,
-                ".o_form_view.o_form_editable",
+                ".o_form_view .o_form_editable",
                 "should now display the form view in edit mode"
             );
         }

@@ -381,7 +381,10 @@ function makeActionManager(env) {
                 currentController.action.type === "ir.actions.act_window" &&
                 currentActionId === state.action
             ) {
-                const props = { resId: state.id || false };
+                const props = {};
+                if (state.id) {
+                    props.resId = state.id;
+                }
                 const viewType = state.view_type || currentController.view.type;
                 return { viewType, props };
             }

@@ -205,7 +205,7 @@ class ListView extends owl.Component {
     }
 
     onClickCreate() {
-        this.actionService.switchView("form", { resId: undefined });
+        this.actionService.switchView("form");
     }
 
     async getInfo() {
