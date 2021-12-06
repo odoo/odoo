@@ -162,6 +162,13 @@ class BaseFollowersTest(TestMailCommon):
         document._message_subscribe(partner_ids=(self.partner_portal | private_address).ids)
         self.assertEqual(document.message_follower_ids.partner_id, self.partner_portal | private_address)
 
+    @users('employee')
+    def test_create_multi_followers(self):
+        documents = self.env['mail.test.simple'].create([{'name': 'ninja'}] * 5)
+        for document in documents:
+            self.assertEqual(document.message_follower_ids.partner_id, self.env.user.partner_id)
+            self.assertEqual(document.message_follower_ids.subtype_ids, self.default_group_subtypes)
+
 
 @tagged('mail_followers')
 class AdvancedFollowersTest(TestMailCommon):
