@@ -55,10 +55,10 @@ QUnit.module("ActionManager", (hooks) => {
     });
 
     QUnit.skip("handle switching view and switching back on slow network", async function (assert) {
-        // #long-term-skipped-test
         // This scenario isn't supported while we still have the compatibility layer.
         // As soon as the list and kanban views will be written in owl, this test will
         // need to be unskipped.
+        // -> it's time to unskip it
         assert.expect(9);
         let def = testUtils.makeTestPromise();
         const defs = [Promise.resolve(), def, Promise.resolve()];
