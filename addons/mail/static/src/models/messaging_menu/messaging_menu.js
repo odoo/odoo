@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr } from '@mail/model/model_field';
+import { attr, one2many } from '@mail/model/model_field';
 
 registerModel({
     name: 'mail.messaging_menu',
@@ -40,11 +40,7 @@ registerModel({
                 return 0;
             }
             const inboxCounter = this.messaging.inbox ? this.messaging.inbox.counter : 0;
-            const unreadChannelsCounter = this.messaging.models['mail.thread'].all(channel => (
-                channel.model === 'mail.channel' &&
-                channel.isPinned &&
-                channel.localMessageUnreadCounter > 0
-            )).length;
+            const unreadChannelsCounter = this.pinnedAndUnreadChannels.length;
             const notificationGroupsCounter = this.messaging.models['mail.notification_group'].all().reduce(
                 (total, group) => total + group.notifications.length,
                 0
@@ -80,6 +76,13 @@ registerModel({
          */
         isOpen: attr({
             default: false,
+        }),
+        /**
+         * States all the pinned channels that have unread messages.
+         */
+         pinnedAndUnreadChannels: one2many('mail.thread', {
+            inverse: 'messagingMenuAsPinnedAndUnreadChannel',
+            readonly: true,
         }),
     },
 });
