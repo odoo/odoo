@@ -271,10 +271,15 @@ export class Record extends DataPoint {
 
     async save() {
         const changes = this._getChanges();
+        const keys = Object.keys(changes);
+        let reload = true;
         if (this.resId) {
-            await this.model.orm.write(this.resModel, [this.resId], changes);
+            if (keys.length > 0) {
+                await this.model.orm.write(this.resModel, [this.resId], changes);
+            } else {
+                reload = false;
+            }
         } else {
-            const keys = Object.keys(changes);
             if (keys.length === 1 && keys[0] === "display_name") {
                 const [resId] = await this.model.orm.call(
                     this.resModel,
@@ -287,8 +292,10 @@ export class Record extends DataPoint {
                 this.resId = await this.model.orm.create(this.resModel, changes, this.context);
             }
         }
-        await this.load();
-        this.model.notify();
+        if (reload) {
+            await this.load();
+            this.model.notify();
+        }
     }
 
     toggleSelection(selected) {

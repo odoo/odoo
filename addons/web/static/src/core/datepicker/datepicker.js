@@ -177,8 +177,12 @@ export class DatePicker extends Component {
     onDateChange() {
         try {
             const date = this.parse(this.inputRef.el.value, this.options);
-            if (!this.props.date || !date.equals(this.props.date)) {
-                this.state.warning = date > DateTime.local();
+            this.state.warning = date > DateTime.local();
+            const areEqual =
+                date instanceof DateTime && this.props.date instanceof DateTime
+                    ? date.equals(this.props.date)
+                    : date === this.props.date;
+            if (!areEqual) {
                 this.trigger("datetime-changed", { date });
             }
         } catch (err) {
