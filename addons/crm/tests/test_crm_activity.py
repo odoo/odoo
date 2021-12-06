@@ -110,5 +110,7 @@ class TestCrmMailActivity(TestCrmCases):
 
         activity.action_done()
 
-        # Check the next activity on the lead has been removed
-        self.assertFalse(self.lead.activity_type_id)
+        # Comentado pela Multidados
+        # Não se aplica esse teste no uso do MultiERP
+        # # Check the next activity on the lead has been removed
+        # self.assertFalse(self.lead.activity_type_id)
