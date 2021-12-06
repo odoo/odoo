@@ -74,7 +74,7 @@ export class ListArchParser extends XMLParser {
         let headerButtons = [];
         const groupListArchParser = new GroupListArchParser();
         let buttonGroup = undefined;
-        const config = {};
+        const config = {}; // TODO: remove if only for limit
         this.visitXML(arch, (node) => {
             if (node.tagName !== "button") {
                 buttonGroup = undefined;
@@ -167,7 +167,7 @@ class ListView extends owl.Component {
             activeFields: this.archInfo.fields,
             viewMode: "list",
             groupByInfo: this.archInfo.groupBy.fields,
-            limit: this.archInfo.config.limit,
+            limit: this.archInfo.config.limit || this.props.limit,
         });
         useViewButtons(this.model);
 
