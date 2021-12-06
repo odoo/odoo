@@ -78,9 +78,15 @@ class FormView extends Component {
             activeFields.display_name = { name: "display_name", type: "char" };
         }
         const resIds = this.props.resIds || (this.props.resId ? [this.props.resId] : []);
+        let resId;
+        if ("resId" in this.props) {
+            resId = this.props.resId; // could be false, for "create" mode
+        } else {
+            resId = this.props.state ? this.props.state.resId : false;
+        }
         this.model = useModel(RelationalModel, {
             resModel: this.props.resModel,
-            resId: this.props.resId,
+            resId,
             resIds,
             fields: this.props.fields,
             activeFields,
@@ -93,7 +99,7 @@ class FormView extends Component {
         this.canEdit = edit;
 
         this.state = useState({
-            inEditMode: !this.props.resId,
+            inEditMode: !resId,
         });
 
         useEffect(() => {
@@ -102,7 +108,10 @@ class FormView extends Component {
 
         useViewButtons(this.model);
         useSetupView({
-            /** TODO **/
+            getLocalState: () => {
+                // TODO: export the whole model?
+                return { resId: this.model.root.resId };
+            },
         });
 
         // FIXME: handle creation of new records (for now, indicates 0/total)
