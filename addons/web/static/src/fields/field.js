@@ -1,8 +1,8 @@
 /** @odoo-module **/
 import { registry } from "@web/core/registry";
 import { useEffect } from "@web/core/utils/hooks";
-import { archParseBoolean } from "@web/views/helpers/utils";
 import { snakeToCamel } from "@web/core/utils/strings";
+import { isAttr } from "@web/core/utils/xml";
 import { getX2MViewModes, X2M_TYPES } from "@web/views/helpers/view_utils";
 
 const { Component, tags } = owl;
@@ -106,7 +106,7 @@ Field.parseFieldNode = function (node, fields, viewType) {
         widget,
         options: {}, // can be already used to add options like 'group_by_tooltip'
         modifiers: {}, // a lot of code is easier if it always exists.
-        onChange: archParseBoolean(node.getAttribute("on_change")),
+        onChange: isAttr(node, "on_change").truthy(),
         optionsAttribute: node.getAttribute("options") || "{}",
         modifiersAttribute: node.getAttribute("modifiers") || "{}",
         FieldComponent: Field.getEffectiveFieldComponent({ fields, viewType }, widget, name),

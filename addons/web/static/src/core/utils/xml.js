@@ -50,18 +50,8 @@ export class XMLParser {
 export function isAttr(node, attr) {
     const value = node.getAttribute(attr);
     return {
-        truthy: (canBeUndefined) => {
-            if (canBeUndefined && !value) {
-                return true;
-            }
-            return value && /true|1/i.test(value);
-        },
-        falsy: (canBeUndefined) => {
-            if (canBeUndefined && !value) {
-                return true;
-            }
-            return value && /false|0/i.test(value);
-        },
+        truthy: (canBeUndefined) => (value ? !/^false|0$/i.test(value) : canBeUndefined) || false,
+        falsy: (canBeUndefined) => (value ? /^false|0$/i.test(value) : canBeUndefined) || false,
         equalTo: (expected) => value === expected,
         notEqualTo: (expected) => value !== expected,
     };

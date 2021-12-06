@@ -327,8 +327,8 @@ class KanbanView extends owl.Component {
             if (!this.quickCreateInfo) {
                 this.quickCreateInfo = await this._loadQuickCreateView();
             }
-            const { list } = group || root.groups[0];
-            await list.quickCreate(this.quickCreateInfo.fields);
+            const { list, groupByFieldName, value } = group || root.groups[0];
+            await list.quickCreate(this.quickCreateInfo.fields, groupByFieldName, value);
             this.render();
         } else if (onCreate) {
             await this.actionService.doAction(onCreate, { additionalContext: root.context });
