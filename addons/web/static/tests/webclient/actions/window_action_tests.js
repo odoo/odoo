@@ -1220,7 +1220,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(target, ".o_kanban_view", "should be in kanban view");
     });
 
-    QUnit.skip("limit set in action is passed to each created controller", async function (assert) {
+    QUnit.test("limit set in action is passed to each created controller", async function (assert) {
         assert.expect(2);
         serverData.actions[3].limit = 2;
         const webClient = await createWebClient({ serverData });
