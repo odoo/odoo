@@ -257,9 +257,12 @@ export class Record extends DataPoint {
     async update(fieldName, value) {
         this.data[fieldName] = value;
         this._changes[fieldName] = this.data[fieldName];
-        const onChangeValues = await this._performOnchange(fieldName);
-        Object.assign(this.data, onChangeValues);
-        Object.assign(this._changes, onChangeValues);
+        const activeField = this.activeFields[fieldName];
+        if (activeField && activeField.onChange) {
+            const onChangeValues = await this._performOnchange(fieldName);
+            Object.assign(this.data, onChangeValues);
+            Object.assign(this._changes, onChangeValues);
+        }
         this.model.notify();
     }
 
@@ -585,7 +588,7 @@ export class DynamicGroupList extends DynamicList {
                     ...commonGroupParams,
                     aggregates: {},
                     isFolded: !this.openGroupsByDefault,
-                    groupedByFieldName: this.groupByField.name,
+                    groupByFieldName: this.groupByField.name,
                 };
                 for (const key in data) {
                     const value = data[key];
@@ -651,7 +654,7 @@ export class Group extends DataPoint {
         this.aggregates = params.aggregates;
         this.groupDomain = params.groupDomain;
         this.count = params.count;
-        this.groupedByFieldName = params.groupedByFieldName;
+        this.groupByFieldName = params.groupByFieldName;
         this.groupByInfo = params.groupByInfo;
         this.recordParam = params.recordParam;
         if ("isFolded" in state) {

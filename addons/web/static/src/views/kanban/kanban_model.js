@@ -201,12 +201,17 @@ class KanbanDynamicRecordList extends DynamicRecordList {
         }
     }
 
-    async quickCreate(activeFields) {
+    async quickCreate(activeFields, fieldName, value) {
         this.records = this.records.filter((r) => !r.isQuickCreate);
+        const context = { ...this.context };
+        if (fieldName) {
+            context[`default_${fieldName}`] = value;
+        }
         const record = this.model.createDataPoint("record", {
             resModel: this.resModel,
             fields: this.fields,
             activeFields,
+            context,
         });
         record.isQuickCreate = true;
         this.records.unshift(record);
@@ -218,6 +223,7 @@ class KanbanDynamicRecordList extends DynamicRecordList {
         const record = this.records.find((r) => r.isQuickCreate);
         await record.save();
         record.isQuickCreate = false;
+        this.quickCreate(record.activeFields);
         return record;
     }
 }

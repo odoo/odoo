@@ -80,8 +80,8 @@
                 <span t-attf-class="fa {{group.isLoaded ? 'fa-caret-down' : 'fa-caret-right'}}"
                     t-attf-style="padding-left: {{2 + getGroupLevel(group) * 20}}px; padding-right: 5px"/>
                 <t t-esc="group.displayName"/> (<t t-esc="group.count"/>)
-                <div t-if="(groupByButtons[group.groupedByFieldName] and !group.isFolded)" class="o_group_buttons">
-                    <t t-foreach="groupByButtons[group.groupedByFieldName]" t-as="button" t-key="button.id">
+                <div t-if="(groupByButtons[group.groupByFieldName] and !group.isFolded)" class="o_group_buttons">
+                    <t t-foreach="groupByButtons[group.groupByFieldName]" t-as="button" t-key="button.id">
                         <t t-if="button.clickParams.type === 'edit'">
                             <button t-att-title="button.title" class="btn" t-on-click="editGroupRecord(group)">
                                 <i t-attf-class="fa fa-fw {{button.icon}} o_button_icon"/>
