@@ -62,6 +62,10 @@ class PosOrder(models.Model):
             for coupon in self.generated_coupon_ids
         ]
 
+    def _get_fields_for_order_line(self):
+        fields = super(PosOrder, self)._get_fields_for_order_line()
+        fields.append('is_program_reward')
+        return fields
 
 class PosOrderLine(models.Model):
     _inherit = "pos.order.line"
