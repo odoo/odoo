@@ -8,27 +8,32 @@
             <field name="description">IVA23</field>
             <field name="amount">23</field>
             <field name="amount_type">percent</field>
+            <field name="type_tax_use">sale</field>
             <field name="tax_group_id" ref="tax_group_iva_23"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_pt_base_vendas_faturas_normal')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'plus_report_line_ids': [ref('tax_report_pt_tax_vendas_faturas_normal')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_pt_base_vendas_notas_credito_normal')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'plus_report_line_ids': [ref('tax_report_pt_tax_vendas_notas_credito_normal')],
                 }),
             ]"/>
         </record>
@@ -39,27 +44,32 @@
             <field name="description">IVA13</field>
             <field name="amount">13</field>
             <field name="amount_type">percent</field>
+            <field name="type_tax_use">sale</field>
             <field name="tax_group_id" ref="tax_group_iva_13"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_pt_base_vendas_faturas_intermedia')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'plus_report_line_ids': [ref('tax_report_pt_tax_vendas_faturas_intermedia')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_pt_base_vendas_notas_credito_intermedia')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'plus_report_line_ids': [ref('tax_report_pt_tax_vendas_notas_credito_intermedia')],
                 }),
             ]"/>
         </record>
@@ -70,27 +80,32 @@
             <field name="description">IVA6</field>
             <field name="amount">6</field>
             <field name="amount_type">percent</field>
+            <field name="type_tax_use">sale</field>
             <field name="tax_group_id" ref="tax_group_iva_6"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_pt_base_vendas_faturas_reduzida')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'plus_report_line_ids': [ref('tax_report_pt_tax_vendas_faturas_reduzida')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_pt_base_vendas_notas_credito_reduzida')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'plus_report_line_ids': [ref('tax_report_pt_tax_vendas_notas_credito_reduzida')],
                 }),
             ]"/>
         </record>
@@ -101,27 +116,32 @@
             <field name="description">IVA0</field>
             <field name="amount">0</field>
             <field name="amount_type">percent</field>
+            <field name="type_tax_use">sale</field>
             <field name="tax_group_id" ref="tax_group_iva_0"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_pt_base_vendas_faturas_isento')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'plus_report_line_ids': [ref('tax_report_pt_tax_vendas_faturas_isento')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_pt_base_vendas_notas_credito_isento')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'plus_report_line_ids': [ref('tax_report_pt_tax_vendas_notas_credito_isento')],
                 }),
             ]"/>
         </record>
@@ -138,22 +158,26 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_pt_base_despesas_faturas_normal')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'plus_report_line_ids': [ref('tax_report_pt_tax_despesas_faturas_normal')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_pt_base_despesas_notas_credito_normal')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'plus_report_line_ids': [ref('tax_report_pt_tax_despesas_notas_credito_normal')],
                 }),
             ]"/>
         </record>
@@ -170,22 +194,26 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_pt_base_despesas_faturas_intermedia')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'plus_report_line_ids': [ref('tax_report_pt_tax_despesas_faturas_intermedia')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_pt_base_despesas_notas_credito_intermedia')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'plus_report_line_ids': [ref('tax_report_pt_tax_despesas_notas_credito_intermedia')],
                 }),
             ]"/>
         </record>
@@ -202,22 +230,26 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_pt_base_despesas_faturas_reduzida')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'plus_report_line_ids': [ref('tax_report_pt_tax_despesas_faturas_reduzida')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_pt_base_despesas_notas_credito_reduzida')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'plus_report_line_ids': [ref('tax_report_pt_tax_despesas_notas_credito_reduzida')],
                 }),
             ]"/>
         </record>
@@ -234,22 +266,26 @@
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_pt_base_despesas_faturas_isento')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'plus_report_line_ids': [ref('tax_report_pt_tax_despesas_faturas_isento')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
+                    'plus_report_line_ids': [ref('tax_report_pt_base_despesas_notas_credito_isento')],
                 }),
 
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'plus_report_line_ids': [ref('tax_report_pt_tax_despesas_notas_credito_isento')],
                 }),
             ]"/>
         </record>
