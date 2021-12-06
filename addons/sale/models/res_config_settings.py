@@ -75,6 +75,10 @@ class ResConfigSettings(models.TransientModel):
         if self.default_invoice_policy != 'order':
             self.env['ir.config_parameter'].set_param('sale.automatic_invoice', False)
 
+        send_invoice_cron = self.env.ref('sale.send_invoice_cron', raise_if_not_found=False)
+        if send_invoice_cron:
+            send_invoice_cron.active = self.automatic_invoice
+
     @api.onchange('use_quotation_validity_days')
     def _onchange_use_quotation_validity_days(self):
         if self.quotation_validity_days <= 0:
