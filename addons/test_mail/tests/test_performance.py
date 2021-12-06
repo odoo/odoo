@@ -195,6 +195,12 @@ class TestBaseMailPerformance(BaseMailPerformance):
 
     @users('__system__', 'employee')
     @warmup
+    def test_create_mail_simple_multi(self):
+        with self.assertQueryCount(__system__=19, employee=19):
+            self.env['mail.test.simple'].create([{'name': 'Test'}] * 5)
+
+    @users('__system__', 'employee')
+    @warmup
     def test_write_mail_simple(self):
         rec = self.env['mail.test.simple'].create({'name': 'Test'})
         with self.assertQueryCount(__system__=1, employee=1):
