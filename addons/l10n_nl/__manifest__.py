@@ -8,7 +8,6 @@
     'version': '3.0',
     'category': 'Accounting/Localizations/Account Charts',
     'author': 'Onestein',
-    'website': 'http://www.onestein.eu',
     'depends': [
         'account',
         'base_iban',

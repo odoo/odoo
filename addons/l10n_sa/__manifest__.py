@@ -12,7 +12,6 @@ This initially includes chart of accounts of USA translated to Arabic.
 
 In future this module will include some payroll rules for ME .
 """,
-    'website': 'http://www.dvit.me',
     'depends': ['account', 'l10n_multilang'],
     'data': [
         'data/account_data.xml',

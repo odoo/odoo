@@ -5,7 +5,6 @@
     'name': 'Denmark - Accounting',
     'version': '1.0',
     'author': 'Odoo House ApS',
-    'website': 'https://odoohouse.dk',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
 

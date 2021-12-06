@@ -2,7 +2,6 @@
 {
     'name': "l10n_it_stock_ddt",
     'icon': '/l10n_it/static/description/icon.png',
-    'website': 'https://www.odoo.com',
     'category': 'Accounting/Localizations/EDI',
     'version': '0.1',
     'description': """

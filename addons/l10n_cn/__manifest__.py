@@ -13,7 +13,6 @@
     'category': 'Accounting/Localizations/Account Charts',
     'author': 'www.openerp-china.org',
     'maintainer': 'jeff@osbzr.com',
-    'website': 'http://openerp-china.org',
     'description': """
 Includes the following data for the Chinese localization
 ========================================================

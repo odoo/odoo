@@ -4,7 +4,6 @@
     'name': 'Czech - Accounting',
     'version': '1.0',
     'author': '26HOUSE',
-    'website': 'http://www.26house.com',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
 Czech accounting chart and localization.  With Chart of Accounts with taxes and basic fiscal positions.

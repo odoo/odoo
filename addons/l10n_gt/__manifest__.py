@@ -29,7 +29,6 @@ Agrega una nomenclatura contable para Guatemala. También icluye impuestos y
 la moneda del Quetzal. -- Adds accounting chart for Guatemala. It also includes
 taxes and the Quetzal currency.""",
     'author': 'José Rodrigo Fernández Menegazzo',
-    'website': 'http://solucionesprisma.com/',
     'depends': ['base', 'account'],
     'data': [
         'data/l10n_gt_chart_data.xml',

@@ -16,7 +16,6 @@
     """,
 
     'author': "Odoo",
-    'website': "https://www.odoo.com",
     'category': 'Accounting/Localizations/Purchase',
     'version': '1.0',
 

@@ -35,7 +35,6 @@
     'icon': '/l10n_de/static/description/icon.png',
     'version': '3.0',
     'author': 'openbig.org',
-    'website': 'http://www.openbig.org',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
 Dieses  Modul beinhaltet einen deutschen Kontenrahmen basierend auf dem SKR04.
