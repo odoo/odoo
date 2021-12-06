@@ -894,7 +894,7 @@ header {
                     padding-top: 15vh;
                     padding-bottom: 15vh;
                 }
-                text-align: center;
+                text-align: center !important;
             }
         }
     }
@@ -931,6 +931,15 @@ header {
             max-height: 100vh;
             transition: none;
             transform: none;
+
+            @if o-website-value('header-template') == 'magazine' {
+                @include media-breakpoint-up(lg) {
+                    position: fixed;
+                }
+                #top_menu {
+                    align-items: normal !important;
+                }
+            }
 
             &, & > .o_header_collapsed_content_wrapper {
                 // TODO improve: ugly code to reset a potential wrapper
@@ -1022,11 +1031,15 @@ header {
                     padding-top: $o-navbar-height;
                 } @else if $-header-template == 'magazine' {
                     @include media-breakpoint-up(lg) {
-                        position: fixed;
+                        padding-top: $o-navbar-height;
+                    }
+                }
+            }
 
-                        #top_menu {
-                            align-items: normal !important;
-                        }
+            .editor_has_snippets:not(.o_fullscreen) header & {
+                @if (o-website-value('header-template') == 'magazine') {
+                    @include media-breakpoint-up(lg) {
+                        right: $o-we-sidebar-width;
                     }
                 }
             }
