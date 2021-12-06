@@ -84,6 +84,7 @@ class StockMoveLine(models.Model):
             else:
                 line.lots_visible = line.product_id.tracking != 'none'
 
+<<<<<<< HEAD
     @api.depends('picking_id')
     def _compute_picking_type_id(self):
         self.picking_type_id = False
@@ -95,6 +96,9 @@ class StockMoveLine(models.Model):
         return [('picking_id.picking_type_id', operator, value)]
 
     @api.depends('product_id', 'product_uom_id', 'product_uom_qty')
+=======
+    @api.depends('product_id', 'product_id.uom_id', 'product_uom_id', 'product_uom_qty')
+>>>>>>> 5d71f4e4c4c... temp
     def _compute_product_qty(self):
         for line in self:
             line.product_qty = line.product_uom_id._compute_quantity(line.product_uom_qty, line.product_id.uom_id, rounding_method='HALF-UP')
