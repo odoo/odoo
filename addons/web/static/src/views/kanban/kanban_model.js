@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { Domain } from "@web/core/domain";
+import { registry } from "@web/core/registry";
 import { isRelational } from "@web/views/helpers/view_utils";
 import {
     DynamicGroupList,
@@ -8,6 +9,20 @@ import {
     Group,
     RelationalModel,
 } from "@web/views/relational_model";
+
+const DATE_TYPES = ["date", "datetime"];
+const QUICK_CREATE_FIELD_TYPES = ["char", "boolean", "many2one", "selection"];
+const DEFAULT_QUICK_CREATE_VIEW = {
+    form: {
+        arch: /* xml */ `
+            <form>
+                <field name="display_name" placeholder="Title" required="1" />
+            </form>`,
+        fields: {
+            display_name: { string: "Display name", type: "char" },
+        },
+    },
+};
 
 class KanbanGroup extends Group {
     constructor(model, params, state = {}) {
@@ -44,11 +59,37 @@ class KanbanGroup extends Group {
 }
 
 class KanbanDynamicGroupList extends DynamicGroupList {
+    setup() {
+        super.setup(...arguments);
+
+        this.quickCreateInfo = null; // Lazy loaded;
+    }
+
     /**
      * @override
      */
     async load() {
         await this._fetchProgressData(super.load());
+    }
+
+    canQuickCreate() {
+        if (!this.groupByField || this.model.onCreate !== "quick_create") {
+            return false;
+        }
+        const activeField = this.activeFields[this.groupByField.name];
+        if (activeField && !activeField.readonly && DATE_TYPES.includes(this.groupByField.type)) {
+            // TODO: replace this with 'allow_group_range_value' if possible
+            return activeField.attrs.allowGroupRangeValue;
+        }
+        return QUICK_CREATE_FIELD_TYPES.includes(this.groupByField.type);
+    }
+
+    async quickCreate(group) {
+        if (!this.quickCreateInfo) {
+            this.quickCreateInfo = await this._loadQuickCreateView();
+        }
+        const { list, groupByFieldName, value } = group || this.groups[0];
+        await list.quickCreate(this.quickCreateInfo.fields, groupByFieldName, value);
     }
 
     async moveRecord(dataRecordId, dataGroupId, refId, newGroupId) {
@@ -183,6 +224,25 @@ class KanbanDynamicGroupList extends DynamicGroupList {
         }
         await Promise.all(promises);
     }
+
+    async _loadQuickCreateView() {
+        if (this.isLoadingQuickCreate) {
+            return;
+        }
+        this.isLoadingQuickCreate = true;
+        const { quickCreateView: viewRef } = this.model;
+        const { ArchParser } = registry.category("views").get("form");
+        let fieldsView = DEFAULT_QUICK_CREATE_VIEW;
+        if (viewRef) {
+            fieldsView = await this.model.viewService.loadViews({
+                context: { ...this.context, form_view_ref: viewRef },
+                resModel: this.resModel,
+                views: [[false, "form"]],
+            });
+        }
+        this.isLoadingQuickCreate = false;
+        return new ArchParser().parse(fieldsView.form.arch, fieldsView.form.fields);
+    }
 }
 
 class KanbanDynamicRecordList extends DynamicRecordList {
@@ -231,9 +291,13 @@ class KanbanDynamicRecordList extends DynamicRecordList {
 KanbanDynamicRecordList.DEFAULT_LIMIT = 40;
 
 export class KanbanModel extends RelationalModel {
-    setup(params = {}) {
+    setup(params, { view }) {
         super.setup(...arguments);
 
+        this.viewService = view;
+
+        this.onCreate = params.onCreate;
+        this.quickCreateView = params.quickCreateView;
         this.progressAttributes = params.progressAttributes;
         this.defaultGroupBy = params.defaultGroupBy || false;
     }
@@ -253,6 +317,7 @@ export class KanbanModel extends RelationalModel {
     }
 }
 
+KanbanModel.services = [...RelationalModel.services, "view"];
 KanbanModel.DynamicGroupList = KanbanDynamicGroupList;
 KanbanModel.DynamicRecordList = KanbanDynamicRecordList;
 KanbanModel.Group = KanbanGroup;

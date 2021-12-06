@@ -15,7 +15,7 @@ import { useViewButtons } from "@web/views/view_button/hook";
 import { ViewNotFoundError } from "@web/webclient/actions/action_service";
 import { Field } from "@web/fields/field";
 
-const viewRegistry = registry.category("views");
+const { Component } = owl;
 
 const KANBAN_BOX_ATTRIBUTE = "kanban-box";
 const ACTION_TYPES = ["action", "object"];
@@ -37,17 +37,6 @@ const TRANSPILED_EXPRESSIONS = [
 ];
 // These classes determine whether a click on a record should open it.
 const KANBAN_CLICK_CLASSES = ["oe_kanban_global_click", "oe_kanban_global_click_edit"];
-const DEFAULT_QUICK_CREATE_VIEW = {
-    form: {
-        arch: /* xml */ `
-            <form>
-                <field name="display_name" placeholder="Title" required="1" />
-            </form>`,
-        fields: {
-            display_name: { string: "Display name", type: "char" },
-        },
-    },
-};
 
 const hasClass = (node, ...classes) => {
     const classAttribute = node.getAttribute("class") || "";
@@ -103,7 +92,7 @@ export class KanbanArchParser extends XMLParser {
         const onCreate =
             activeActions.create &&
             isAttr(xmlDoc, "quick_create").truthy(true) &&
-            xmlDoc.getAttribute("on_create");
+            (xmlDoc.getAttribute("on_create") || "quick_create");
         const quickCreateView = xmlDoc.getAttribute("quick_create_view");
         const tooltips = {};
         let kanbanBoxTemplate = document.createElement("t");
@@ -268,24 +257,25 @@ export class KanbanArchParser extends XMLParser {
 
 // -----------------------------------------------------------------------------
 
-class KanbanView extends owl.Component {
+class KanbanView extends Component {
     setup() {
         this.actionService = useService("action");
         this.viewService = useService("view");
         this.archInfo = new KanbanArchParser().parse(this.props.arch, this.props.fields);
         const { resModel, fields } = this.props;
-        const { fields: activeFields, defaultGroupBy } = this.archInfo;
+        const { fields: activeFields, defaultGroupBy, onCreate, quickCreateView } = this.archInfo;
         this.model = useModel(KanbanModel, {
             activeFields,
             progressAttributes: this.archInfo.progressAttributes,
             fields,
             resModel,
             limit: this.archInfo.limit || this.props.limit,
+            onCreate,
+            quickCreateView,
             defaultGroupBy,
             viewMode: "kanban",
             openGroupsByDefault: true,
         });
-        this.quickCreateInfo = null; // Lazy loaded
         useViewButtons(this.model);
         useSetupView({
             /** TODO **/
@@ -323,52 +313,13 @@ class KanbanView extends owl.Component {
     async createRecord(group) {
         const { onCreate } = this.archInfo;
         const { root } = this.model;
-        if (this.canQuickCreate()) {
-            if (!this.quickCreateInfo) {
-                this.quickCreateInfo = await this._loadQuickCreateView();
-            }
-            const { list, groupByFieldName, value } = group || root.groups[0];
-            await list.quickCreate(this.quickCreateInfo.fields, groupByFieldName, value);
-            this.render();
+        if (root.canQuickCreate()) {
+            await root.quickCreate(group);
         } else if (onCreate) {
             await this.actionService.doAction(onCreate, { additionalContext: root.context });
         } else {
             await this.actionService.switchView("form");
         }
-    }
-
-    async _loadQuickCreateView() {
-        if (this.isLoadingQuickCreate) {
-            return;
-        }
-        this.isLoadingQuickCreate = true;
-        const { context, resModel } = this.model.root;
-        const { quickCreateView: viewRef } = this.archInfo;
-        const { ArchParser } = viewRegistry.get("form");
-        let fieldsView = DEFAULT_QUICK_CREATE_VIEW;
-        if (viewRef) {
-            fieldsView = await this.viewService.loadViews({
-                context: { ...context, form_view_ref: viewRef },
-                resModel,
-                views: [[false, "form"]],
-            });
-        }
-        this.isLoadingQuickCreate = false;
-        return new ArchParser().parse(fieldsView.form.arch, fieldsView.form.fields);
-    }
-
-    canQuickCreate() {
-        if (!this.model.root.groupByField || this.archInfo.onCreate !== "quick_create") {
-            return false;
-        }
-        const { groupByField } = this.model.root;
-        const activeField = this.archInfo.fields[groupByField.name];
-        const dateTypes = ["date", "datetime"];
-        if (!activeField.readonly && dateTypes.includes(groupByField.type)) {
-            return activeField.allowGroupRangeValue;
-        }
-        const availableTypes = ["char", "boolean", "many2one", "selection"];
-        return availableTypes.includes(groupByField.type);
     }
 }
 
@@ -382,4 +333,4 @@ KanbanView.props = { ...standardViewProps };
 KanbanView.buttonTemplate = "web.KanbanView.Buttons";
 KanbanView.ArchParser = KanbanArchParser;
 
-viewRegistry.add("kanban", KanbanView);
+registry.category("views").add("kanban", KanbanView);
