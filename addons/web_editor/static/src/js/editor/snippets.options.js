@@ -143,6 +143,7 @@ function _buildCollapseElement(title, options) {
     const children = options && options.childNodes || [];
     if (titleEl) {
         titleEl.remove();
+        titleEl.classList.add('o_we_collapse_toggler');
         children.unshift(titleEl);
     }
     let i = 0;
