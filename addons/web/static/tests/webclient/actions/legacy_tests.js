@@ -3,9 +3,16 @@
 import { registry } from "@web/core/registry";
 import testUtils from "web.test_utils";
 import ListController from "web.ListController";
+import FormView from "web.FormView";
 import ListView from "web.ListView";
 import KanbanView from "web.KanbanView";
-import { click, legacyExtraNextTick, patchWithCleanup } from "../../helpers/utils";
+import {
+    click,
+    legacyExtraNextTick,
+    makeDeferred,
+    patchWithCleanup,
+    triggerEvents,
+} from "../../helpers/utils";
 import { registerCleanup } from "../../helpers/cleanup";
 import { makeTestEnv } from "../../helpers/mock_env";
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
@@ -21,7 +28,7 @@ import core from "web.core";
 import AbstractAction from "web.AbstractAction";
 import Widget from "web.Widget";
 import SystrayMenu from "web.SystrayMenu";
-import legacyViewRegistry from 'web.view_registry';
+import legacyViewRegistry from "web.view_registry";
 
 let serverData;
 
@@ -451,7 +458,7 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test("correctly transports legacy Props for doAction", async (assert) => {
         assert.expect(4);
 
-        let ID=0;
+        let ID = 0;
         const MyAction = AbstractAction.extend({
             init() {
                 this._super(...arguments);
@@ -463,21 +470,102 @@ QUnit.module("ActionManager", (hooks) => {
                 const link = document.createElement("a");
                 link.setAttribute("id", `client_${this.ID}`);
                 link.addEventListener("click", () => {
-                    this.do_action("testClientAction", { clear_breadcrumbs: true, props: { chain: "never break"}});
+                    this.do_action("testClientAction", {
+                        clear_breadcrumbs: true,
+                        props: { chain: "never break" },
+                    });
                 });
 
                 this.el.appendChild(link);
                 return res;
-            }
+            },
         });
         core.action_registry.add("testClientAction", MyAction);
         registerCleanup(() => delete core.action_registry.map.testClientAction);
 
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, "testClientAction");
-        assert.verifySteps(["id: 0 props: {\"breadcrumbs\":[]}"]);
+        assert.verifySteps(['id: 0 props: {"breadcrumbs":[]}']);
 
         await click(document.getElementById("client_0"));
-        assert.verifySteps(["id: 1 props: {\"chain\":\"never break\",\"breadcrumbs\":[]}"]);
+        assert.verifySteps(['id: 1 props: {"chain":"never break","breadcrumbs":[]}']);
+    });
+
+    QUnit.test("bootstrap tooltip in dialog action auto destroy", async (assert) => {
+        assert.expect(2);
+
+        registry.category("views").remove("form"); // remove new form from registry
+        legacyViewRegistry.add("form", FormView); // add legacy form -> will be wrapped and added to new registry
+
+        const mockRPC = (route, args) => {
+            if (route === "/web/dataset/call_button") {
+                return false;
+            }
+        };
+
+        serverData.views["partner,3,form"] = /*xml*/ `
+            <form>
+                <field name="display_name" />
+                <footer>
+                    <button name="echoes" type="object" string="Echoes" help="echoes"/>
+                </footer>
+            </form>
+        `;
+        const webClient = await createWebClient({ serverData, mockRPC });
+
+        await doAction(webClient, 25);
+
+        const tooltipProm = makeDeferred();
+        $(webClient.el).one("shown.bs.tooltip", () => {
+            tooltipProm.resolve();
+        });
+
+        triggerEvents(webClient.el, ".modal footer button", ["mouseover", "focusin"]);
+        await tooltipProm;
+        // check on webClient dom
+        assert.containsOnce(webClient.el, ".tooltip");
+        await doAction(webClient, {
+            type: "ir.actions.act_window_close",
+        });
+        // check on the whole DOM
+        assert.containsNone(document.body, ".tooltip");
+    });
+
+    QUnit.test("bootstrap tooltip destroyed on click", async (assert) => {
+        assert.expect(2);
+
+        registry.category("views").remove("form"); // remove new form from registry
+        legacyViewRegistry.add("form", FormView); // add legacy form -> will be wrapped and added to new registry
+
+        const mockRPC = (route, args) => {
+            if (route === "/web/dataset/call_button") {
+                return false;
+            }
+        };
+
+        serverData.views["partner,666,form"] = /*xml*/ `
+            <form>
+                <header>
+                    <button name="echoes" type="object" string="Echoes" help="echoes"/>
+                </header>
+                <field name="display_name" />
+            </form>
+        `;
+        const webClient = await createWebClient({ serverData, mockRPC });
+
+        await doAction(webClient, 24);
+
+        const tooltipProm = makeDeferred();
+        $(webClient.el).one("shown.bs.tooltip", () => {
+            tooltipProm.resolve();
+        });
+
+        triggerEvents(webClient.el, ".o_form_statusbar button", ["mouseover", "focusin"]);
+        await tooltipProm;
+        // check on webClient DOM
+        assert.containsOnce(webClient.el, ".tooltip");
+        await click(webClient.el, ".o_content");
+        // check on the whole DOM
+        assert.containsNone(document.body, ".tooltip");
     });
 });
