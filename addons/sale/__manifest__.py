@@ -73,5 +73,6 @@ This module contains all the common features of Sales Management and eCommerce.
             'sale/static/tests/sales_team_dashboard_tests.js',
         ],
     },
+    'post_init_hook': '_synchronize_cron',
     'license': 'LGPL-3',
 }
