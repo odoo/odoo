@@ -31,7 +31,7 @@ export const standardViewProps = {
     useSampleModel: { type: Boolean },
     state: { type: Object, optional: 1 },
     globalState: { type: Object, optional: 1 },
-    resId: { type: Number, optional: 1 },
+    resId: { type: [Number, false], optional: 1 },
     resIds: { type: Array, optional: 1 },
     bannerRoute: { type: String, optional: 1 },
     className: { type: String, optional: 1 },

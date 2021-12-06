@@ -318,7 +318,7 @@ class KanbanView extends Component {
         } else if (onCreate) {
             await this.actionService.doAction(onCreate, { additionalContext: root.context });
         } else {
-            await this.actionService.switchView("form");
+            await this.actionService.switchView("form", { resId: false });
         }
     }
 }

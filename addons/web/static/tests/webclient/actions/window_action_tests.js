@@ -1232,7 +1232,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 2);
     });
 
-    QUnit.skip("go back to a previous action using the breadcrumbs", async function (assert) {
+    QUnit.test("go back to a previous action using the breadcrumbs", async function (assert) {
         assert.expect(10);
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
