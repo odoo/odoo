@@ -193,12 +193,12 @@ QUnit.module("Fields", (hooks) => {
                     fields: {
                         lang: { type: "char" },
                         value: { type: "char" },
-                        res_id: { type: "integer" },
+                        resId: { type: "integer" },
                     },
                     records: [
                         {
                             id: 99,
-                            res_id: 37,
+                            resId: 37,
                             value: "",
                             lang: "en_US",
                         },
@@ -215,50 +215,46 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("DateField");
 
-    QUnit.skip("DateField: toggle datepicker [REQUIRE FOCUS]", async function (assert) {
+    QUnit.test("DateField: toggle datepicker [REQUIRE FOCUS]", async function (assert) {
         assert.expect(3);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch: '<form><field name="foo"/><field name="date"/></form>',
-            translateParameters: {
-                // Avoid issues due to localization formats
-                date_format: "%m/%d/%Y",
-            },
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="foo" />
+                    <field name="date" />
+                </form>
+            `,
         });
-
-        assert.strictEqual(
-            $(".bootstrap-datetimepicker-widget:visible").length,
-            0,
+        assert.containsNone(
+            document.body,
+            ".bootstrap-datetimepicker-widget",
             "datepicker should be closed initially"
         );
 
-        await testUtils.dom.openDatepicker(form.$(".o_datepicker"));
-
-        assert.strictEqual(
-            $(".bootstrap-datetimepicker-widget:visible").length,
-            1,
+        await click(form.el, ".o_datepicker input");
+        assert.containsOnce(
+            document.body,
+            ".bootstrap-datetimepicker-widget",
             "datepicker should be opened"
         );
 
         // focus another field
-        await testUtils.dom.click(form.$(".o_field_widget[name=foo]").focus().mouseenter());
-
-        assert.strictEqual(
-            $(".bootstrap-datetimepicker-widget:visible").length,
-            0,
+        form.el.querySelector(".o_field_widget[name='foo']").focus();
+        assert.containsNone(
+            document.body,
+            ".bootstrap-datetimepicker-widget",
             "datepicker should close itself when the user clicks outside"
         );
-
-        form.destroy();
     });
 
-    QUnit.skip("DateField: toggle datepicker far in the future", async function (assert) {
+    QUnit.test("DateField: toggle datepicker far in the future", async function (assert) {
         assert.expect(3);
 
-        this.data.partner.records = [
+        serverData.models.partner.records = [
             {
                 id: 1,
                 date: "9999-12-30",
@@ -266,159 +262,166 @@ QUnit.module("Fields", (hooks) => {
             },
         ];
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch: '<form><field name="foo"/><field name="date"/></form>',
-            translateParameters: {
-                // Avoid issues due to localization formats
-                date_format: "%m/%d/%Y",
-            },
-            res_id: 1,
-            viewOptions: {
-                mode: "edit",
-            },
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="foo" />
+                    <field name="date" />
+                </form>
+            `,
         });
 
-        assert.strictEqual(
-            $(".bootstrap-datetimepicker-widget:visible").length,
-            0,
+        await click(form.el, ".o_form_button_edit");
+        assert.containsNone(
+            document.body,
+            ".bootstrap-datetimepicker-widget",
             "datepicker should be closed initially"
         );
 
-        testUtils.dom.openDatepicker(form.$(".o_datepicker"));
-
-        assert.strictEqual(
-            $(".bootstrap-datetimepicker-widget:visible").length,
-            1,
+        await click(form.el, ".o_datepicker input");
+        assert.containsOnce(
+            document.body,
+            ".bootstrap-datetimepicker-widget",
             "datepicker should be opened"
         );
 
         // focus another field
-        form.$(".o_field_widget[name=foo]").click().focus();
-
-        assert.strictEqual(
-            $(".bootstrap-datetimepicker-widget:visible").length,
-            0,
+        form.el.querySelector(".o_field_widget[name='foo']").focus();
+        assert.containsNone(
+            document.body,
+            ".bootstrap-datetimepicker-widget",
             "datepicker should close itself when the user clicks outside"
         );
-
-        form.destroy();
     });
 
-    QUnit.skip("date field is empty if no date is set", async function (assert) {
+    QUnit.test("date field is empty if no date is set", async function (assert) {
         assert.expect(2);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch: '<form string="Partners"><field name="date"/></form>',
-            res_id: 4,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 4,
+            serverData,
+            arch: `
+                <form>
+                    <field name="date" />
+                </form>
+            `,
         });
-        var $span = form.$("span.o_field_widget");
-        assert.strictEqual($span.length, 1, "should have one span in the form view");
-        assert.strictEqual($span.text(), "", "and it should be empty");
-        form.destroy();
+
+        assert.containsOnce(
+            form.el,
+            "span.o_field_widget",
+            "should have one span in the form view"
+        );
+        assert.strictEqual(
+            form.el.querySelector("span.o_field_widget").textContent,
+            "",
+            "and it should be empty"
+        );
     });
 
-    QUnit.skip(
+    QUnit.test(
         "DateField: set an invalid date when the field is already set",
         async function (assert) {
             assert.expect(2);
 
-            var form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
-                arch: '<form string="Partners"><field name="date"/></form>',
-                res_id: 1,
-                viewOptions: {
-                    mode: "edit",
-                },
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
+                    <form>
+                        <field name="date" />
+                    </form>
+                `,
             });
+            await click(form.el, ".o_form_button_edit");
 
-            var $input = form.$(".o_field_widget[name=date] input");
+            const input = form.el.querySelector(".o_field_widget[name='date'] input");
+            assert.strictEqual(input.value, "02/03/2017");
 
-            assert.strictEqual($input.val(), "02/03/2017");
-
-            $input.val("mmmh").trigger("change");
-            assert.strictEqual($input.val(), "02/03/2017", "should have reset the original value");
-
-            form.destroy();
+            input.value = "mmmh";
+            await triggerEvent(input, null, "change");
+            assert.strictEqual(input.value, "02/03/2017", "should have reset the original value");
         }
     );
 
-    QUnit.skip(
+    QUnit.test(
         "DateField: set an invalid date when the field is not set yet",
         async function (assert) {
             assert.expect(2);
 
-            var form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
-                arch: '<form string="Partners"><field name="date"/></form>',
-                res_id: 4,
-                viewOptions: {
-                    mode: "edit",
-                },
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 4,
+                serverData,
+                arch: `
+                    <form>
+                        <field name="date" />
+                    </form>
+                `,
             });
+            await click(form.el, ".o_form_button_edit");
 
-            var $input = form.$(".o_field_widget[name=date] input");
+            const input = form.el.querySelector(".o_field_widget[name='date'] input");
+            assert.strictEqual(input.value, "");
 
-            assert.strictEqual($input.text(), "");
-
-            $input.val("mmmh").trigger("change");
-            assert.strictEqual($input.text(), "", "The date field should be empty");
-
-            form.destroy();
+            input.value = "mmmh";
+            await triggerEvent(input, null, "change");
+            assert.strictEqual(input.value, "", "The date field should be empty");
         }
     );
 
-    QUnit.skip("DateField value should not set on first click", async function (assert) {
+    QUnit.test("DateField value should not set on first click", async function (assert) {
         assert.expect(2);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch: '<form string="Partners"><field name="date"/></form>',
-            res_id: 4,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 4,
+            serverData,
+            arch: `
+                <form>
+                    <field name="date" />
+                </form>
+            `,
         });
+        await click(form.el, ".o_form_button_edit");
 
-        await testUtils.form.clickEdit(form);
-
+        await click(form.el, ".o_datepicker input");
         // open datepicker and select a date
-        testUtils.dom.openDatepicker(form.$(".o_datepicker"));
         assert.strictEqual(
-            form.$(".o_datepicker_input").val(),
+            form.el.querySelector(".o_field_widget[name='date'] input").value,
             "",
             "date field's input should be empty on first click"
         );
-        testUtils.dom.click($(".day:contains(22)"));
+        await click(document.body, ".day[data-day*='/22/']");
 
         // re-open datepicker
-        testUtils.dom.openDatepicker(form.$(".o_datepicker"));
+        await click(form.el, ".o_datepicker input");
         assert.strictEqual(
-            $(".day.active").text(),
+            document.body.querySelector(".day.active").textContent,
             "22",
             "datepicker should be highlight with 22nd day of month"
         );
-
-        form.destroy();
     });
 
     QUnit.skip("DateField in form view (with positive time zone offset)", async function (assert) {
         assert.expect(8);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch: '<form string="Partners"><field name="date"/></form>',
-            res_id: 1,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: '<form><field name="date"/></form>',
+            resId: 1,
             mockRPC: function (route, args) {
                 if (route === "/web/dataset/call_kw/partner/write") {
                     assert.strictEqual(
@@ -487,12 +490,12 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skip("DateField in form view (with negative time zone offset)", async function (assert) {
         assert.expect(2);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch: '<form string="Partners"><field name="date"/></form>',
-            res_id: 1,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: '<form><field name="date"/></form>',
+            resId: 1,
             translateParameters: {
                 // Avoid issues due to localization formats
                 date_format: "%m/%d/%Y",
@@ -521,128 +524,135 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("DateField dropdown disappears on scroll", async function (assert) {
+    QUnit.test("DateField dropdown disappears on scroll", async function (assert) {
         assert.expect(2);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                "<form>" +
-                '<div class="scrollable" style="height: 2000px;">' +
-                '<field name="date"/>' +
-                "</div>" +
-                "</form>",
-            res_id: 1,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <div class="scrollable" style="height: 2000px;">
+                        <field name="date" />
+                    </div>
+                </form>
+            `,
         });
+        await click(form.el, ".o_form_button_edit");
 
-        await testUtils.form.clickEdit(form);
-        await testUtils.dom.openDatepicker(form.$(".o_datepicker"));
-
+        await click(form.el, ".o_datepicker input");
         assert.containsOnce(
-            $("body"),
+            document.body,
             ".bootstrap-datetimepicker-widget",
             "datepicker should be opened"
         );
 
-        form.el.dispatchEvent(new Event("wheel"));
+        await triggerEvent(form.el, null, "scroll");
         assert.containsNone(
-            $("body"),
+            document.body,
             ".bootstrap-datetimepicker-widget",
             "datepicker should be closed"
         );
-
-        form.destroy();
     });
 
-    QUnit.skip("DateField with warn_future option", async function (assert) {
+    QUnit.test("DateField with warn_future option", async function (assert) {
         assert.expect(2);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                "<field name=\"date\" options=\"{'datepicker': {'warn_future': true}}\"/>" +
-                "</form>",
-            res_id: 4,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 4,
+            serverData,
+            arch: `
+                <form>
+                    <field name="date" options="{ 'datepicker': { 'warn_future': true } }" />
+                </form>
+            `,
         });
-
         // switch to edit mode
-        await testUtils.form.clickEdit(form);
+        await click(form.el, ".o_form_button_edit");
+
         // open datepicker and select another value
-        await testUtils.dom.openDatepicker(form.$(".o_datepicker"));
-        await testUtils.dom.click($(".bootstrap-datetimepicker-widget .picker-switch").first());
-        await testUtils.dom.click($(".bootstrap-datetimepicker-widget .picker-switch:eq(1)"));
-        await testUtils.dom.click($(".bootstrap-datetimepicker-widget .year").eq(11));
-        await testUtils.dom.click($(".bootstrap-datetimepicker-widget .month").eq(11));
-        await testUtils.dom.click($(".day:contains(31)"));
+        await click(form.el, ".o_datepicker input");
+        await click(
+            document.body.querySelectorAll(".bootstrap-datetimepicker-widget .picker-switch")[0]
+        );
+        await click(
+            document.body.querySelectorAll(".bootstrap-datetimepicker-widget .picker-switch")[1]
+        );
+        await click(document.body.querySelectorAll(".bootstrap-datetimepicker-widget .year")[11]);
+        await click(document.body.querySelectorAll(".bootstrap-datetimepicker-widget .month")[11]);
+        await click(document.body, ".day[data-day*='/31/']");
 
-        var $warn = form.$(".o_datepicker_warning:visible");
-        assert.strictEqual($warn.length, 1, "should have a warning in the form view");
+        assert.containsOnce(
+            form.el,
+            ".o_datepicker_warning",
+            "should have a warning in the form view"
+        );
 
-        await testUtils.fields.editSelect(form.$(".o_field_widget[name=date] input"), ""); // remove the value
+        const input = form.el.querySelector(".o_field_widget[name='date'] input");
+        input.value = "";
+        await triggerEvent(input, null, "change"); // remove the value
 
-        $warn = form.$(".o_datepicker_warning:visible");
-        assert.strictEqual($warn.length, 0, "the warning in the form view should be hidden");
-
-        form.destroy();
+        assert.containsNone(
+            form.el,
+            ".o_datepicker_warning",
+            "the warning in the form view should be hidden"
+        );
     });
 
-    QUnit.skip(
+    QUnit.test(
         "DateField with warn_future option: do not overwrite datepicker option",
         async function (assert) {
             assert.expect(2);
 
             // Making sure we don't have a legit default value
             // or any onchange that would set the value
-            this.data.partner.fields.date.default = undefined;
-            this.data.partner.onchanges = {};
+            serverData.models.partner.fields.date.default = undefined;
+            serverData.models.partner.onchanges = {};
 
-            var form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
-                arch:
-                    '<form string="Partners">' +
-                    '<field name="foo" />' + // Do not let the date field get the focus in the first place
-                    "<field name=\"date\" options=\"{'datepicker': {'warn_future': true}}\"/>" +
-                    "</form>",
-                res_id: 1,
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
+                    <form>
+                        <field name="foo" /> <!-- Do not let the date field get the focus in the first place -->
+                        <field name="date" options="{ 'datepicker': { 'warn_future': true } }" />
+                    </form>
+                `,
             });
-
             // switch to edit mode
-            await testUtils.form.clickEdit(form);
+            await click(form.el, ".o_form_button_edit");
+
             assert.strictEqual(
-                form.$('input[name="date"]').val(),
+                form.el.querySelector(".o_field_widget[name='date'] input").value,
                 "02/03/2017",
                 "The existing record should have a value for the date field"
             );
 
             // save with no changes
-            await testUtils.form.clickSave(form);
+            await click(form.el, ".o_form_button_save");
 
             //Create a new record
-            await testUtils.form.clickCreate(form);
-
+            await click(form.el, ".o_form_button_create");
             assert.notOk(
-                form.$('input[name="date"]').val(),
+                form.el.querySelector(".o_field_widget[name='date'] input").value,
                 "The new record should not have a value that the framework would have set"
             );
-
-            form.destroy();
         }
     );
 
     QUnit.skip("DateField in editable list view", async function (assert) {
         assert.expect(8);
 
-        var list = await createView({
-            View: ListView,
-            model: "partner",
-            data: this.data,
+        const list = await makeView({
+            type: "list",
+            resModel: "partner",
+            serverData,
             arch: '<tree editable="bottom">' + '<field name="date"/>' + "</tree>",
             translateParameters: {
                 // Avoid issues due to localization formats
@@ -707,143 +717,128 @@ QUnit.module("Fields", (hooks) => {
         list.destroy();
     });
 
-    QUnit.skip("DateField remove value", async function (assert) {
+    QUnit.test("DateField remove value", async function (assert) {
         assert.expect(4);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch: '<form string="Partners"><field name="date"/></form>',
-            res_id: 1,
-            mockRPC: function (route, args) {
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="date" />
+                </form>
+            `,
+            mockRPC(route, { args }) {
                 if (route === "/web/dataset/call_kw/partner/write") {
-                    assert.strictEqual(
-                        args.args[1].date,
-                        false,
-                        "the correct value should be saved"
-                    );
+                    assert.strictEqual(args[1].date, false, "the correct value should be saved");
                 }
-                return this._super.apply(this, arguments);
-            },
-            translateParameters: {
-                // Avoid issues due to localization formats
-                date_format: "%m/%d/%Y",
             },
         });
-
         // switch to edit mode
-        await testUtils.form.clickEdit(form);
+        await click(form.el, ".o_form_button_edit");
+
         assert.strictEqual(
-            form.$(".o_datepicker_input").val(),
+            form.el.querySelector(".o_datepicker_input").value,
             "02/03/2017",
             "the date should be correct in edit mode"
         );
 
-        await testUtils.fields.editAndTrigger(form.$(".o_datepicker_input"), "", [
-            "input",
-            "change",
-            "focusout",
-        ]);
+        const input = form.el.querySelector(".o_datepicker_input");
+        input.value = "";
+        await triggerEvents(input, null, ["input", "change", "focusout"]);
         assert.strictEqual(
-            form.$(".o_datepicker_input").val(),
+            form.el.querySelector(".o_datepicker_input").value,
             "",
             "should have correctly removed the value"
         );
 
         // save
-        await testUtils.form.clickSave(form);
+        await click(form.el, ".o_form_button_save");
         assert.strictEqual(
-            form.$(".o_field_date").text(),
+            form.el.querySelector(".o_field_date").textContent,
             "",
             "the selected date should be displayed after saving"
         );
-
-        form.destroy();
     });
 
-    QUnit.skip(
+    QUnit.test(
         "do not trigger a field_changed for datetime field with date widget",
         async function (assert) {
             assert.expect(3);
 
-            var form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
-                arch: '<form string="Partners"><field name="datetime" widget="date"/></form>',
-                translateParameters: {
-                    // Avoid issues due to localization formats
-                    date_format: "%m/%d/%Y",
-                    time_format: "%H:%M:%S",
-                },
-                res_id: 1,
-                viewOptions: {
-                    mode: "edit",
-                },
-                mockRPC: function (route, args) {
-                    assert.step(args.method);
-                    return this._super.apply(this, arguments);
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
+                    <form>
+                        <field name="datetime" widget="date" />
+                    </form>
+                `,
+                mockRPC(route, { method }) {
+                    assert.step(method);
                 },
             });
+            await click(form.el, ".o_form_button_edit");
 
             assert.strictEqual(
-                form.$(".o_datepicker_input").val(),
+                form.el.querySelector(".o_datepicker_input").value,
                 "02/08/2017",
                 "the date should be correct"
             );
 
-            testUtils.fields.editAndTrigger(form.$('input[name="datetime"]'), "02/08/2017", [
-                "input",
-                "change",
-                "focusout",
-            ]);
-            await testUtils.form.clickSave(form);
+            const input = form.el.querySelector(".o_field_widget[name='datetime'] input");
+            input.value = "02/08/2017";
+            await triggerEvents(input, null, ["input", "change", "focusout"]);
+            await click(form.el, ".o_form_button_save");
 
             assert.verifySteps(["read"]); // should not have save as nothing changed
-
-            form.destroy();
         }
     );
 
-    QUnit.skip(
+    QUnit.test(
         "field date should select its content onclick when there is one",
         async function (assert) {
             assert.expect(3);
-            var done = assert.async();
+            const done = assert.async();
 
-            var form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
-                arch: '<form><field name="date"/></form>',
-                res_id: 1,
-                viewOptions: {
-                    mode: "edit",
-                },
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
+                    <form>
+                        <field name="date" />
+                    </form>
+                `,
+            });
+            await click(form.el, ".o_form_button_edit");
+
+            $(form.el).on("show.datetimepicker", () => {
+                assert.containsOnce(
+                    document.body,
+                    ".bootstrap-datetimepicker-widget",
+                    "bootstrap-datetimepicker is visible"
+                );
+                const active = document.activeElement;
+                assert.strictEqual(
+                    active.tagName,
+                    "INPUT",
+                    "The datepicker input should be focused"
+                );
+                assert.strictEqual(
+                    active.value.slice(active.selectionStart, active.selectionEnd),
+                    "02/03/2017",
+                    "The whole input of the date field should have been selected"
+                );
+                done();
             });
 
-            form.$el.on({
-                "show.datetimepicker": function () {
-                    assert.ok(
-                        $(".bootstrap-datetimepicker-widget").is(":visible"),
-                        "bootstrap-datetimepicker is visible"
-                    );
-                    const active = document.activeElement;
-                    assert.equal(active.tagName, "INPUT", "The datepicker input should be focused");
-                    const sel = active.value.slice(active.selectionStart, active.selectionEnd);
-                    assert.strictEqual(
-                        sel,
-                        "02/03/2017",
-                        "The whole input of the date field should have been selected"
-                    );
-                    done();
-                },
-            });
-
-            testUtils.dom.openDatepicker(form.$(".o_datepicker"));
-
-            form.destroy();
+            await click(form.el, ".o_datepicker input");
         }
     );
 
@@ -864,12 +859,12 @@ QUnit.module("Fields", (hooks) => {
             ordinal: "%d.",
         });
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch: '<form string="Partners"><field name="date"/></form>',
-            res_id: 1,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: '<form><field name="date"/></form>',
+            resId: 1,
         });
 
         var dateViewForm = form.$(".o_field_date").text();
@@ -897,34 +892,39 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("DateField: hit enter should update value", async function (assert) {
+    QUnit.test("DateField: hit enter should update value", async function (assert) {
         assert.expect(2);
 
-        const form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch: '<form string="Partners"><field name="date"/></form>',
-            res_id: 1,
-            translateParameters: {
-                // Avoid issues due to localization formats
-                date_format: "%m/%d/%Y",
-            },
-            viewOptions: {
-                mode: "edit",
-            },
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="date" />
+                </form>
+            `,
         });
+        await click(form.el, ".o_form_button_edit");
 
         const year = new Date().getFullYear();
+        const input = form.el.querySelector(".o_field_widget[name='date'] input");
 
-        await testUtils.fields.editInput(form.el.querySelector('input[name="date"]'), "01/08");
-        await testUtils.fields.triggerKeydown(form.el.querySelector('input[name="date"]'), "enter");
-        assert.strictEqual(form.el.querySelector('input[name="date"]').value, "01/08/" + year);
+        input.value = "01/08";
+        await triggerEvent(input, null, "change");
+        await triggerEvent(input, null, "keydown", { key: "Enter" });
+        assert.strictEqual(
+            form.el.querySelector(".o_field_widget[name='date'] input").value,
+            `01/08/${year}`
+        );
 
-        await testUtils.fields.editInput(form.el.querySelector('input[name="date"]'), "08/01");
-        await testUtils.fields.triggerKeydown(form.el.querySelector('input[name="date"]'), "enter");
-        assert.strictEqual(form.el.querySelector('input[name="date"]').value, "08/01/" + year);
-
-        form.destroy();
+        input.value = "08/01";
+        await triggerEvent(input, null, "change");
+        await triggerEvent(input, null, "keydown", { key: "Enter" });
+        assert.strictEqual(
+            form.el.querySelector(".o_field_widget[name='date'] input").value,
+            `08/01/${year}`
+        );
     });
 });

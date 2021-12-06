@@ -14,9 +14,11 @@
                 t-on-change="() => this.onDateChange()"
                 t-on-click="onInputClick"
             />
-            <span t-if="props.warn_future and state.warning" class="fa fa-exclamation-triangle text-danger o_tz_warning o_datepicker_warning">
-                <t>This date is on the future. Make sure it is what you expected.</t>
-            </span>
+            <span
+                t-if="props.warn_future and state.warning"
+                class="fa fa-exclamation-triangle text-danger o_tz_warning o_datepicker_warning"
+                data-tooltip="This date is on the future. Make sure it is what you expected."
+            />
             <span class="o_datepicker_button" />
         </div>
     </t>

@@ -6,7 +6,11 @@
             <span t-esc="formattedValue" />
         </t>
         <t t-else="">
-            <DatePicker date="props.value or null" t-on-datetime-changed="onChange" />
+            <DatePicker
+                date="value or null"
+                warn_future="warnFuture"
+                t-on-datetime-changed="onChange"
+            />
         </t>
     </t>
 

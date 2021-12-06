@@ -9,8 +9,18 @@ import { standardFieldProps } from "./standard_field_props";
 const { Component } = owl;
 
 export class DateField extends Component {
+    get value() {
+        return this.props.value && this.props.value.startOf("day");
+    }
     get formattedValue() {
-        return this.props.value ? formatDate(this.props.value) : "";
+        return this.props.value ? formatDate(this.value) : "";
+    }
+    get warnFuture() {
+        return !!(
+            this.props.options &&
+            this.props.options.datepicker &&
+            this.props.options.datepicker.warn_future
+        );
     }
 
     /**

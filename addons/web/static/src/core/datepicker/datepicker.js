@@ -238,7 +238,7 @@ export class DatePicker extends Component {
         } catch (_err) {
             // Reset to default (= given) date.
         }
-        if (!date || date.equals(this.date)) {
+        if (!date || (this.date instanceof DateTime && date.equals(this.date))) {
             this.updateInput();
         } else {
             this.state.warning = date > DateTime.local();
