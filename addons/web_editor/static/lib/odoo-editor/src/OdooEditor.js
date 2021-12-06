@@ -1224,6 +1224,27 @@ export class OdooEditor extends EventTarget {
         }
     }
 
+    setContenteditableLink(link) {
+        const editableChildren = link.querySelectorAll('[contenteditable=true]');
+        this._stopContenteditable();
+
+        this._fixLinkMutatedElements = {
+            wasContenteditableTrue: [...editableChildren],
+            wasContenteditableFalse: [],
+            wasContenteditableNull: [],
+        };
+        const contentEditableAttribute = link.getAttribute('contenteditable');
+        if (contentEditableAttribute === 'true') {
+            this._fixLinkMutatedElements.wasContenteditableTrue.push(link);
+        } else if (contentEditableAttribute === 'false') {
+            this._fixLinkMutatedElements.wasContenteditableFalse.push(link);
+        } else {
+            this._fixLinkMutatedElements.wasContenteditableNull.push(link);
+        }
+
+        [...editableChildren, link].forEach(node => node.setAttribute('contenteditable', true));
+    }
+
     /**
      * Same as @see _applyCommand, except that also simulates all the
      * contenteditable behaviors we let happen, e.g. the backspace handling
@@ -1564,7 +1585,7 @@ export class OdooEditor extends EventTarget {
             }
         }
     }
-    _resetContenteditableLinks() {
+    resetContenteditableLink() {
         if (this._fixLinkMutatedElements) {
             for (const element of this._fixLinkMutatedElements.wasContenteditableTrue) {
                 element.setAttribute('contenteditable', 'true');
@@ -2713,31 +2734,14 @@ export class OdooEditor extends EventTarget {
         // except the link. Then when cliking outside the link, reset the
         // editable zones.
         const link = closestElement(ev.target, 'a');
-        this._resetContenteditableLinks();
+        this.resetContenteditableLink();
         if (
             link &&
             !link.querySelector('div') &&
             !closestElement(ev.target, '.o_not_editable') &&
             link.getAttribute('contenteditable') !== 'false'
         ) {
-            const editableChildren = link.querySelectorAll('[contenteditable=true]');
-            this._stopContenteditable();
-
-            this._fixLinkMutatedElements = {
-                wasContenteditableTrue: [...editableChildren],
-                wasContenteditableFalse: [],
-                wasContenteditableNull: [],
-            };
-            const contentEditableAttribute = link.getAttribute('contenteditable');
-            if (contentEditableAttribute === 'true') {
-                this._fixLinkMutatedElements.wasContenteditableTrue.push(link);
-            } else if (contentEditableAttribute === 'false') {
-                this._fixLinkMutatedElements.wasContenteditableFalse.push(link);
-            } else {
-                this._fixLinkMutatedElements.wasContenteditableNull.push(link);
-            }
-
-            [...editableChildren, link].forEach(node => node.setAttribute('contenteditable', true));
+            this.setContenteditableLink(link);
         } else {
             this._activateContenteditable();
         }
