@@ -13,9 +13,7 @@ class TestServerActionsEmail(TestMailCommon, TestServerActionsBase):
         self.action.with_context(self.context).run()
         # check an email is waiting for sending
         mail = self.env['mail.mail'].sudo().search([('subject', '=', 'About TestingPartner')])
-        self.assertEqual(len(mail), 1)
-        # check email content
-        self.assertEqual(mail.body, '<p>Hello TestingPartner</p>')
+        self.assertEqual(len(mail), 0)
 
     def test_action_followers(self):
         self.test_partner.message_unsubscribe(self.test_partner.message_partner_ids.ids)

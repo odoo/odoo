@@ -104,8 +104,9 @@ class ServerActions(models.Model):
         cleaned_ctx = dict(self.env.context)
         cleaned_ctx.pop('default_type', None)
         cleaned_ctx.pop('default_parent_id', None)
-        self.template_id.with_context(cleaned_ctx).send_mail(self._context.get('active_id'), force_send=False,
+        mail_id = self.template_id.with_context(cleaned_ctx).send_mail(self._context.get('active_id'), force_send=True,
                                                              raise_exception=False)
+        self.env['mail.mail'].browse([mail_id]).send()
         return False
 
     def _run_action_next_activity(self, eval_context=None):
