@@ -16,17 +16,21 @@ export class DomainField extends Component {
     }
     async willStart() {
         this.recordCount = await this.orm.call(this.resModel, "search_count", [
-            new Domain(this.props.value).toList(),
+            this.getDomain(this.props.value).toList(),
         ]);
     }
     async willUpdateProps(nextProps) {
         this.recordCount = await this.orm.call(this.resModel, "search_count", [
-            new Domain(nextProps.value).toList(),
+            this.getDomain(nextProps.value).toList(),
         ]);
     }
 
     get resModel() {
         return this.props.options.model || this.props.record.resModel;
+    }
+
+    getDomain(value) {
+        return new Domain(value || "[]");
     }
 }
 

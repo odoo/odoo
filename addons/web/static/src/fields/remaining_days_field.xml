@@ -25,7 +25,7 @@
         </t>
         <t t-else="">
             <div>
-                <t t-component="pickerComponent" date="props.value" t-on-datetime-changed="onChange" />
+                <t t-component="pickerComponent" date="props.value or null" t-on-datetime-changed="onChange" />
             </div>
         </t>
     </t>

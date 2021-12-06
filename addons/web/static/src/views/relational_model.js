@@ -7,6 +7,7 @@ import { Model } from "@web/views/helpers/model";
 import { isX2Many } from "@web/views/helpers/view_utils";
 import { registry } from "../core/registry";
 import { evaluateExpr } from "@web/core/py_js/py";
+import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 
 const preloadedDataRegistry = registry.category("preloadedData");
 
@@ -337,6 +338,12 @@ export class Record extends DataPoint {
                 changes[fieldName] = [];
             } else if (fieldType === "many2one") {
                 changes[fieldName] = changes[fieldName] ? changes[fieldName][0] : false;
+            } else if (fieldType === "date") {
+                changes[fieldName] = changes[fieldName] ? serializeDate(changes[fieldName]) : false;
+            } else if (fieldType === "datetime") {
+                changes[fieldName] = changes[fieldName]
+                    ? serializeDateTime(changes[fieldName])
+                    : false;
             }
         }
         return changes;

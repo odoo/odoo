@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { DatePicker, DateTimePicker } from "@web/core/datepicker/datepicker";
-import { formatDate, serializeDate, serializeDateTime } from "@web/core/l10n/dates";
+import { formatDate } from "@web/core/l10n/dates";
 import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "./standard_field_props";
@@ -33,8 +33,7 @@ export class RemainingDaysField extends Component {
      * @param {CustomEvent} ev
      */
     onChange(ev) {
-        const serializer = this.hasTime ? serializeDateTime : serializeDate;
-        this.props.update(serializer(ev.detail.date));
+        this.props.update(ev.detail.date);
     }
 }
 

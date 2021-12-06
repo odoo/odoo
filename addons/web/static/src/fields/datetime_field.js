@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { DateTimePicker } from "@web/core/datepicker/datepicker";
-import { formatDateTime, parseDateTime, serializeDateTime } from "@web/core/l10n/dates";
+import { formatDateTime } from "@web/core/l10n/dates";
 import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "./standard_field_props";
@@ -17,7 +17,7 @@ export class DateTimeField extends Component {
      * @param {CustomEvent} ev
      */
     onChange(ev) {
-        this.props.update(serializeDateTime(ev.detail.date));
+        this.props.update(ev.detail.date);
     }
 }
 

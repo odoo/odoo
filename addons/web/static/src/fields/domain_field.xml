@@ -10,7 +10,7 @@
             <t t-if="resModel">
                 <DomainSelector
                     resModel="resModel"
-                    value="props.value"
+                    value="getDomain(props.value).toString()"
                     readonly="props.readonly"
                     update="(newDomain) => props.update(newDomain)"
                     isDebugMode="!!env.debug"
