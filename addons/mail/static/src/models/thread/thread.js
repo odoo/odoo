@@ -1548,6 +1548,18 @@ registerModel({
         },
         /**
          * @private
+         * @returns {FieldCommand}
+         */
+        _computeMessagingMenuAsPinnedAndUnreadChannel() {
+            if (!this.messaging.messagingMenu) {
+                return clear();
+            }
+            return (this.model === 'mail.channel' && this.isPinned && this.localMessageUnreadCounter > 0)
+                ? replace(this.messaging.messagingMenu)
+                : clear();
+        },
+        /**
+         * @private
          * @returns {mail.message[]}
          */
         _computeNeedactionMessagesAsOriginThread() {
@@ -2175,6 +2187,11 @@ registerModel({
         messagingAsRingingThread: many2one('mail.messaging', {
             compute: '_computeMessagingAsRingingThread',
             inverse: 'ringingThreads',
+            readonly: true,
+        }),
+        messagingMenuAsPinnedAndUnreadChannel: many2one('mail.messaging_menu', {
+            compute: '_computeMessagingMenuAsPinnedAndUnreadChannel',
+            inverse: 'pinnedAndUnreadChannels',
             readonly: true,
         }),
         model: attr({
