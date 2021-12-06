@@ -24,6 +24,8 @@ odoo.define('pos_hr.LoginScreen', function (require) {
         back() {
             this.props.resolve({ confirmed: false, payload: false });
             this.trigger('close-temp-screen');
+            this.env.pos.hasLoggedIn = true;
+            posbus.trigger('start-cash-control');
         }
         confirm() {
             this.props.resolve({ confirmed: true, payload: true });
@@ -46,8 +48,6 @@ odoo.define('pos_hr.LoginScreen', function (require) {
             if (employee) {
                 this.env.pos.set_cashier(employee);
                 this.back();
-                this.env.pos.hasLoggedIn = true;
-                posbus.trigger('start-cash-control');
             }
         }
         async _barcodeCashierAction(code) {
