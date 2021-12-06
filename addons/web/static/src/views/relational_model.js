@@ -152,11 +152,14 @@ export class Record extends DataPoint {
 
     get evalContext() {
         const evalContext = {};
-        for (const fieldName in this.data) {
-            if (isX2Many(this.fields[fieldName])) {
-                evalContext[fieldName] = this.data[fieldName].records.map((r) => r.resId);
+        for (const fieldName in this.activeFields) {
+            const value = this.data[fieldName];
+            if ([undefined, null, ""].includes(value)) {
+                evalContext[fieldName] = false;
+            } else if (isX2Many(this.fields[fieldName])) {
+                evalContext[fieldName] = value.records.map((r) => r.resId);
             } else {
-                evalContext[fieldName] = this.data[fieldName];
+                evalContext[fieldName] = value;
             }
         }
         return evalContext;

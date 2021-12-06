@@ -58,7 +58,7 @@
                                             </t>
                                         </ul>
                                     </Dropdown>
-                                    <span t-if="props.info.onCreate === 'quick_create'" class="o_kanban_quick_add" t-on-click="quickCreate(group)">
+                                    <span t-if="props.list.canQuickCreate()" class="o_kanban_quick_add" t-on-click="props.list.quickCreate(group)">
                                         <i class="fa fa-plus" role="img" aria-label="Quick add" title="Quick add" />
                                     </span>
                                 </t>
@@ -97,8 +97,8 @@
                         </div>
                         <t t-if="!group.isFolded">
                             <t t-foreach="group.list.records" t-as="record" t-key="record.id">
-                                <div t-if="record.isQuickCreate and props.quickCreateInfo" class="o_kanban_quick_create">
-                                    <FormRenderer class="o_form_view o_xxs_form_view" record="record" fields="props.fields" info="props.quickCreateInfo" />
+                                <div t-if="record.isQuickCreate and props.list.quickCreateInfo" class="o_kanban_quick_create">
+                                    <FormRenderer class="o_form_view o_xxs_form_view" record="record" fields="props.fields" info="props.list.quickCreateInfo" />
                                     <div class="d-flex">
                                         <button class="btn btn-primary o_kanban_add mr-1 text_truncate" t-on-click="validateQuickCreate(group, false)">
                                             Add

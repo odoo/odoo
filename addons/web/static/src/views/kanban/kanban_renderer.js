@@ -245,10 +245,6 @@ export class KanbanRenderer extends Component {
         this.state.quickCreateGroup = false;
     }
 
-    quickCreate(group) {
-        this.props.createRecord(group);
-    }
-
     cancelQuickCreate() {
         for (const group of this.props.list.groups) {
             group.list.cancelQuickCreate();
