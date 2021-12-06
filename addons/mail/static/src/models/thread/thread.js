@@ -1647,6 +1647,17 @@ function factory(dependencies) {
 
         /**
          * @private
+         * @returns {FieldCommand}
+         */
+        _computeMessagingAsRingingThread() {
+            if (this.rtcInvitingSession) {
+                return replace(this.messaging);
+            }
+            return clear();
+        }
+
+        /**
+         * @private
          * @returns {mail.message[]}
          */
         _computeNeedactionMessagesAsOriginThread() {
@@ -2300,6 +2311,11 @@ function factory(dependencies) {
         messageSeenIndicators: one2many('mail.message_seen_indicator', {
             inverse: 'thread',
             isCausal: true,
+        }),
+        messagingAsRingingThread: many2one('mail.messaging', {
+            compute: '_computeMessagingAsRingingThread',
+            inverse: 'ringingThreads',
+            readonly: true,
         }),
         model: attr({
             readonly: true,
