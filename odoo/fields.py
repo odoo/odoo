@@ -861,6 +861,8 @@ class Field(MetaField('DummyField', (object,), {})):
         :meth:`BaseModel.write`. If the value represents a recordset, it should
         be added for prefetching on ``record``.
 
+        :param value:
+        :param record:
         :param bool validate: when True, field-specific validation of ``value``
             will be performed
         """
@@ -886,6 +888,8 @@ class Field(MetaField('DummyField', (object,), {})):
         """ Convert ``value`` from the record format to the format returned by
         method :meth:`BaseModel.read`.
 
+        :param value:
+        :param record:
         :param bool use_name_get: when True, the value's display name will be
             computed using :meth:`BaseModel.name_get`, if relevant for the field
         """
@@ -903,6 +907,8 @@ class Field(MetaField('DummyField', (object,), {})):
         """ Convert ``value`` from the record format to the format returned by
         method :meth:`BaseModel.onchange`.
 
+        :param value:
+        :param record:
         :param names: a tree of field names (for relational fields only)
         """
         return self.convert_to_read(value, record)
@@ -1048,6 +1054,7 @@ class Field(MetaField('DummyField', (object,), {})):
         """ Write the value of ``self`` on ``records``. This method must update
         the cache and prepare database updates.
 
+        :param records:
         :param value: a value in any format
         :return: the subset of `records` that have been modified
         """
@@ -3146,7 +3153,7 @@ class Command(enum.IntEnum):
 
 
 class _RelationalMulti(_Relational):
-    """ Abstract class for relational fields *2many. """
+    r"Abstract class for relational fields \*2many."
     write_sequence = 20
 
     # Important: the cache contains the ids of all the records in the relation,

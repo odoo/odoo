@@ -22,14 +22,16 @@ def _from_table(table, alias):
 
 def _generate_table_alias(src_table_alias, link):
     """ Generate a standard table alias name. An alias is generated as following:
+
         - the base is the source table name (that can already be an alias)
         - then, the joined table is added in the alias using a 'link field name'
           that is used to render unique aliases for a given path
         - the name is shortcut if it goes beyond PostgreSQL's identifier limits
 
-        Examples:
-        - src_table_alias='res_users', link='parent_id'
-            alias = 'res_users__parent_id'
+        .. code-block:: pycon
+
+            >>> _generate_table_alias('res_users', link='parent_id')
+            'res_users__parent_id'
 
         :param str src_table_alias: alias of the source table
         :param str link: field name

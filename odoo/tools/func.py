@@ -50,7 +50,7 @@ class lazy_classproperty(lazy_property):
 def conditional(condition, decorator):
     """ Decorator for a conditionally applied decorator.
 
-        Example:
+        Example::
 
            @conditional(get_config('use_cache'), ormcache)
            def fn():
@@ -118,12 +118,13 @@ def classproperty(func):
 
 
 class lazy(object):
-    """ A proxy to the (memoized) result of a lazy evaluation::
+    """ A proxy to the (memoized) result of a lazy evaluation:
 
-            foo = lazy(func, arg)           # func(arg) is not called yet
-            bar = foo + 1                   # eval func(arg) and add 1
-            baz = foo + 2                   # use result of func(arg) and add 2
+    .. code-block::
 
+        foo = lazy(func, arg)           # func(arg) is not called yet
+        bar = foo + 1                   # eval func(arg) and add 1
+        baz = foo + 2                   # use result of func(arg) and add 2
     """
     __slots__ = ['_func', '_args', '_kwargs', '_cached_value']
 

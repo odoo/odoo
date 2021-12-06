@@ -244,6 +244,7 @@ def combine(operator, unit, zero, domains):
 
        It is guaranteed to return a normalized domain.
 
+       :param operator:
        :param unit: the identity element of the domains "set" with regard to the operation
                     performed by ``operator``, i.e the domain component ``i`` which, when
                     combined with any domain ``x`` via ``operator``, yields ``x``.
@@ -371,12 +372,13 @@ def is_operator(element):
 
 def is_leaf(element, internal=False):
     """ Test whether an object is a valid domain term:
+
         - is a list or tuple
         - with 3 elements
         - second element if a valid op
 
         :param tuple element: a leaf in form (left, operator, right)
-        :param boolean internal: allow or not the 'inselect' internal operator
+        :param bool internal: allow or not the 'inselect' internal operator
             in the term. This should be always left to False.
 
         Note: OLD TODO change the share wizard to use this function.
@@ -470,48 +472,58 @@ class expression(object):
     def parse(self):
         """ Transform the leaves of the expression
 
-            The principle is to pop elements from a leaf stack one at a time.
-            Each leaf is processed. The processing is a if/elif list of various
-            cases that appear in the leafs (many2one, function fields, ...).
-            Three things can happen as a processing result:
-            - the leaf is a logic operator, and updates the result stack
-              accordingly;
-            - the leaf has been modified and/or new leafs have to be introduced
-              in the expression; they are pushed into the leaf stack, to be
-              processed right after;
-            - the leaf is converted to SQL and added to the result stack
+        The principle is to pop elements from a leaf stack one at a time.
+        Each leaf is processed. The processing is a if/elif list of various
+        cases that appear in the leafs (many2one, function fields, ...).
 
-            Here is a suggested execution:
+        Three things can happen as a processing result:
 
-                step                stack               result_stack
+        - the leaf is a logic operator, and updates the result stack
+          accordingly;
+        - the leaf has been modified and/or new leafs have to be introduced
+          in the expression; they are pushed into the leaf stack, to be
+          processed right after;
+        - the leaf is converted to SQL and added to the result stack
 
-                                    ['&', A, B]         []
-                substitute B        ['&', A, B1]        []
-                convert B1 in SQL   ['&', A]            ["B1"]
-                substitute A        ['&', '|', A1, A2]  ["B1"]
-                convert A2 in SQL   ['&', '|', A1]      ["B1", "A2"]
-                convert A1 in SQL   ['&', '|']          ["B1", "A2", "A1"]
-                apply operator OR   ['&']               ["B1", "A1 or A2"]
-                apply operator AND  []                  ["(A1 or A2) and B1"]
+        Example:
 
-            Some internal var explanation:
-                :var list path: left operand seen as a sequence of field names
-                    ("foo.bar" -> ["foo", "bar"])
-                :var obj model: model object, model containing the field
-                    (the name provided in the left operand)
-                :var obj field: the field corresponding to `path[0]`
-                :var obj column: the column corresponding to `path[0]`
-                :var obj comodel: relational model of field (field.comodel)
-                    (res_partner.bank_ids -> res.partner.bank)
+        =================== =================== =====================
+        step                stack               result_stack
+        =================== =================== =====================
+                            ['&', A, B]         []
+        substitute B        ['&', A, B1]        []
+        convert B1 in SQL   ['&', A]            ["B1"]
+        substitute A        ['&', '|', A1, A2]  ["B1"]
+        convert A2 in SQL   ['&', '|', A1]      ["B1", "A2"]
+        convert A1 in SQL   ['&', '|']          ["B1", "A2", "A1"]
+        apply operator OR   ['&']               ["B1", "A1 or A2"]
+        apply operator AND  []                  ["(A1 or A2) and B1"]
+        =================== =================== =====================
+
+        Some internal var explanation:
+
+        :var list path: left operand seen as a sequence of field names
+            ("foo.bar" -> ["foo", "bar"])
+        :var obj model: model object, model containing the field
+            (the name provided in the left operand)
+        :var obj field: the field corresponding to `path[0]`
+        :var obj column: the column corresponding to `path[0]`
+        :var obj comodel: relational model of field (field.comodel)
+            (res_partner.bank_ids -> res.partner.bank)
         """
         def to_ids(value, comodel, leaf):
             """ Normalize a single id or name, or a list of those, into a list of ids
-                :param {int,long,basestring,list,tuple} value:
-                    if int, long -> return [value]
-                    if basestring, convert it into a list of basestrings, then
-                    if list of basestring ->
-                        perform a name_search on comodel for each name
-                        return the list of related ids
+
+            :param comodel:
+            :param leaf:
+            :param int|str|list|tuple value:
+
+                - if int, long -> return [value]
+                - if basestring, convert it into a list of basestrings, then
+                - if list of basestring ->
+
+                    - perform a name_search on comodel for each name
+                    - return the list of related ids
             """
             names = []
             if isinstance(value, str):
