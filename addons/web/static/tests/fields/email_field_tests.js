@@ -417,7 +417,7 @@ QUnit.module("Fields", (hooks) => {
             // edit the phone field, but with the mail in readonly mode
             await click(form.el.querySelector(".o_form_button_edit"));
             const field = form.el.querySelector('input[name="int_field"]');
-            field.value = "3";
+            field.value = 3;
             await triggerEvent(field, null, "change");
             await click(form.el.querySelector(".o_form_button_save"));
 

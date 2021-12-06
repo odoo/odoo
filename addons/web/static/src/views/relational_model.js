@@ -179,10 +179,9 @@ export class Record extends DataPoint {
         this._changes = {};
         this.data = { ...data };
 
-        this.evaluateActiveFields();
-
         // Relational data
         await this.loadRelationalData();
+        this.evaluateActiveFields();
         await this.loadPreloadedData();
     }
 
@@ -479,8 +478,8 @@ export class DynamicRecordList extends DynamicList {
                     fields: this.fields,
                     activeFields: this.activeFields,
                 });
-                record.evaluateActiveFields();
                 await record.loadRelationalData();
+                record.evaluateActiveFields();
                 await record.loadPreloadedData();
                 return record;
             })
