@@ -78,7 +78,7 @@ class ImageProcess():
             try:
                 self.image = Image.open(io.BytesIO(self.source))
             except (UnidentifiedImageError, TypeError):
-                raise UserError
+                raise UserError('Image could not be opened')
             self.original_format = (self.image.format or '').upper()
 
             self.image = image_fix_orientation(self.image)
