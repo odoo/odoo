@@ -741,7 +741,7 @@ QUnit.module("ActionManager", (hooks) => {
         ]);
     });
 
-    QUnit.skip(
+    QUnit.test(
         "requests for execute_action of type object: disable buttons (2)",
         async function (assert) {
             assert.expect(6);
@@ -796,7 +796,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.test(
         "requests for execute_action of type object raises error: re-enables buttons",
         async function (assert) {
             assert.expect(3);
@@ -817,7 +817,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.test(
         "requests for execute_action of type object raises error in modal: re-enables buttons",
         async function (assert) {
             assert.expect(5);
@@ -889,14 +889,14 @@ QUnit.module("ActionManager", (hooks) => {
         ]);
     });
 
-    QUnit.skip("execute smart button and back", async function (assert) {
+    QUnit.test("execute smart button and back", async function (assert) {
         assert.expect(8);
         const mockRPC = async (route, args) => {
             if (args.method === "read") {
                 assert.notOk("default_partner" in args.kwargs.context);
             }
-            if (route === "web_search_read") {
-                assert.strictEqual(args.context.default_partner, 2);
+            if (args.method === "web_search_read") {
+                assert.strictEqual(args.kwargs.context.default_partner, 2);
             }
         };
         const webClient = await createWebClient({ serverData, mockRPC });
@@ -912,11 +912,11 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsN(target, ".o_form_buttons_view button:not([disabled])", 2);
     });
 
-    QUnit.skip("execute smart button and fails", async function (assert) {
-        assert.expect(12);
+    QUnit.test("execute smart button and fails", async function (assert) {
+        assert.expect(13);
         const mockRPC = async (route, args) => {
             assert.step(route);
-            if (route === "web_search_read") {
+            if (args.method === "web_search_read") {
                 return Promise.reject();
             }
         };
@@ -935,7 +935,8 @@ QUnit.module("ActionManager", (hooks) => {
             "/web/dataset/call_kw/partner/read",
             "/web/action/load",
             "/web/dataset/call_kw/partner/get_views",
-            "web_search_read",
+            "/web/dataset/call_kw/partner/web_search_read",
+            "/web/dataset/call_kw/partner/read",
         ]);
     });
 
@@ -2033,7 +2034,7 @@ QUnit.module("ActionManager", (hooks) => {
         // because of how native events are handled in tests
         const searchPromise = testUtils.makeTestPromise();
         const mockRPC = async (route, args) => {
-            if (route === "web_search_read") {
+            if (args.method === "web_search_read") {
                 assert.step("search_read " + args.domain);
                 if (JSON.stringify(args.domain) === JSON.stringify([["foo", "ilike", "m"]])) {
                     await searchPromise;
@@ -2293,7 +2294,7 @@ QUnit.module("ActionManager", (hooks) => {
             sections: [],
         });
         const mockRPC = async (route, args) => {
-            if (route === "web_search_read") {
+            if (args.method === "web_search_read") {
                 assert.deepEqual(args.domain, [["id", "=", 99]]);
             }
         };

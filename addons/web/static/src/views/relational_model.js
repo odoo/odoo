@@ -462,7 +462,10 @@ export class DynamicRecordList extends DynamicList {
                 order,
                 offset: this.offset,
             },
-            { bin_size: true }
+            {
+                bin_size: true,
+                ...this.context,
+            }
         );
         this.count = length;
 
