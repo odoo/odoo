@@ -841,7 +841,6 @@
                                 widget="many2many_avatar_user"
                                 domain="[('share', '=', False), ('active', '=', True)]"/>
                             <field name="parent_id"
-                                domain="[('parent_id', '=', False)]"
                                 attrs="{'invisible' : [('allow_subtasks', '=', False)]}"
                                 groups="base.group_no_one"
                             />
