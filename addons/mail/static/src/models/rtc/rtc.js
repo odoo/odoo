@@ -357,7 +357,7 @@ registerModel({
          * @param {String} [param2.state] current state of the connection
          */
         _addLogEntry(token, entry, { error, step, state } = {}) {
-            if (!this.env.isDebug()) {
+            if (!this.modelManager.isDebug) {
                 return;
             }
             if (!(token in this.logs)) {

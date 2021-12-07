@@ -644,6 +644,14 @@ async function start(param0 = {}) {
                 messagingBus,
             },
             /**
+             * Override to ensure tests run in debug mode to catch all potential
+             * programming errors and provide better message when they happen.
+             */
+            init(...args) {
+                this._super(...args);
+                this.modelManager.isDebug = true;
+            },
+            /**
              * Override:
              * - to ensure the test setup is complete before starting otherwise
              *   for example the mock server might not be ready yet at init

@@ -569,7 +569,8 @@ export class ModelField {
      * @returns {boolean} whether the value changed for the current field
      */
     _setRelationLinkX2Many(record, newValue, { hasToUpdateInverse = true } = {}) {
-        const recordsToLink = this._convertX2ManyValue(newValue);
+        const hasToVerify = record.modelManager.isDebug;
+        const recordsToLink = this._convertX2ManyValue(newValue, { hasToVerify });
         const otherRecords = this.read(record);
 
         let hasChanged = false;
@@ -607,7 +608,9 @@ export class ModelField {
      * @returns {boolean} whether the value changed for the current field
      */
     _setRelationLinkX2One(record, recordToLink, { hasToUpdateInverse = true } = {}) {
-        this._verifyRelationalValue(recordToLink);
+        if (record.modelManager.isDebug) {
+            this._verifyRelationalValue(recordToLink);
+        }
         const prevOtherRecord = this.read(record);
         // other record already linked, avoid linking twice
         if (prevOtherRecord === recordToLink) {
@@ -648,7 +651,8 @@ export class ModelField {
         let hasToReorder = false;
         const otherRecordsSet = this.read(record);
         const otherRecordsList = [...otherRecordsSet];
-        const recordsToReplaceList = [...this._convertX2ManyValue(newValue)];
+        const hasToVerify = record.modelManager.isDebug;
+        const recordsToReplaceList = [...this._convertX2ManyValue(newValue, { hasToVerify })];
         const recordsToReplaceSet = new Set(recordsToReplaceList);
 
         // records to link
