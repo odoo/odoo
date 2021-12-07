@@ -10,7 +10,7 @@ import { KeepLast } from "@web/core/utils/concurrency";
 import { useBus } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { cleanDomFromBootstrap } from "@web/legacy/utils";
-import { View } from "@web/views/view";
+import { View, ViewNotFoundError } from "@web/views/view";
 import { ActionDialog } from "./action_dialog";
 import { CallbackRecorder } from "./action_hook";
 
@@ -60,7 +60,6 @@ function parseActiveIds(ids) {
 // -----------------------------------------------------------------------------
 // Errors
 // -----------------------------------------------------------------------------
-export class ViewNotFoundError extends Error {}
 
 export class ControllerNotFoundError extends Error {}
 

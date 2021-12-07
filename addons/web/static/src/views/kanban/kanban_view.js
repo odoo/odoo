@@ -12,7 +12,7 @@ import { KanbanModel } from "@web/views/kanban/kanban_model";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 import { Layout } from "@web/views/layout";
 import { useViewButtons } from "@web/views/view_button/hook";
-import { ViewNotFoundError } from "@web/webclient/actions/action_service";
+import { ViewNotFoundError } from "@web/views/view";
 import { Field } from "@web/fields/field";
 
 const { Component } = owl;
@@ -318,7 +318,15 @@ class KanbanView extends Component {
         } else if (onCreate) {
             await this.actionService.doAction(onCreate, { additionalContext: root.context });
         } else {
-            await this.actionService.switchView("form", { resId: false });
+            try {
+                await this.actionService.switchView("form", { resId: false });
+            } catch (e) {
+                if (e instanceof ViewNotFoundError) {
+                    // there's no form view in the current action
+                    return;
+                }
+                throw e;
+            }
         }
     }
 }
