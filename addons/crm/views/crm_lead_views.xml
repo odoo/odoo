@@ -239,9 +239,9 @@
                                 <field name="user_id"
                                     context="{'default_sales_team_id': team_id}" widget="many2one_avatar_user"/>
                                 <label for="date_deadline">Expected Closing</label>
-                                <div>
+                                <div class="o_lead_opportunity_form_inline_fields">
                                     <field name="date_deadline" nolabel="1" class="oe_inline"/>
-                                    <field name="priority" widget="priority" nolabel="1" class="oe_inline ml-4"/>
+                                    <field name="priority" widget="priority" nolabel="1" class="oe_inline align-top"/>
                                 </div>
                                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                             </group>
