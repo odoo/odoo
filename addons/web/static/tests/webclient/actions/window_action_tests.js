@@ -1306,44 +1306,45 @@ QUnit.module("ActionManager", (hooks) => {
         );
     });
 
-    QUnit.skip(
+    QUnit.test(
         "form views are restored in readonly when coming back in breadcrumbs",
         async function (assert) {
             assert.expect(2);
             const webClient = await createWebClient({ serverData });
             await doAction(webClient, 3);
             // open a record in form view
-            await testUtils.dom.click($(target).find(".o_list_view .o_data_row:first"));
+            await click(target.querySelector(".o_list_view .o_data_row"));
             await legacyExtraNextTick();
             // switch to edit mode
-            await testUtils.dom.click($(target).find(".o_control_panel .o_form_button_edit"));
+            await click(target.querySelector(".o_control_panel .o_form_button_edit"));
             await legacyExtraNextTick();
-            assert.hasClass($(target).find(".o_form_view")[0], "o_form_editable");
+            assert.containsOnce(target, ".o_form_view .o_form_editable");
             // do some other action
             await doAction(webClient, 4);
             // go back to form view
-            await testUtils.dom.clickLast($(target).find(".o_control_panel .breadcrumb a"));
+            await click(target.querySelectorAll(".o_control_panel .breadcrumb a")[1]);
             await legacyExtraNextTick();
-            assert.hasClass($(target).find(".o_form_view")[0], "o_form_readonly");
+            assert.containsOnce(target, ".o_form_view .o_form_readonly");
         }
     );
 
-    QUnit.skip(
+    QUnit.test(
         "form views are restored with the correct id in its url when coming back in breadcrumbs",
         async function (assert) {
             assert.expect(3);
             const webClient = await createWebClient({ serverData });
             await doAction(webClient, 3);
             // open a record in form view
-            await testUtils.dom.click($(target).find(".o_list_view .o_data_row:first"));
-            await legacyExtraNextTick();
+            await click(target.querySelector(".o_list_view .o_data_row"));
+            await nextTick(); // wait for the router to update its state
             assert.strictEqual(webClient.env.services.router.current.hash.id, 1);
             // do some other action
             await doAction(webClient, 4);
+            await nextTick(); // wait for the router to update its state
             assert.notOk(webClient.env.services.router.current.hash.id);
             // go back to form view
-            await testUtils.dom.clickLast($(target).find(".o_control_panel .breadcrumb a"));
-            await legacyExtraNextTick();
+            await click(target.querySelectorAll(".o_control_panel .breadcrumb a")[1]);
+            await nextTick(); // wait for the router to update its state
             assert.strictEqual(webClient.env.services.router.current.hash.id, 1);
         }
     );

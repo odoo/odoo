@@ -1391,7 +1391,7 @@ function makeActionManager(env) {
             const props = controller.props;
             newState.model = props.resModel;
             newState.view_type = props.type;
-            newState.id = props.resId || (props.state && props.state.currentId) || undefined;
+            newState.id = props.resId || (props.state && props.state.resId) || undefined;
         }
         env.services.router.pushState(newState, { replace: true });
     }
