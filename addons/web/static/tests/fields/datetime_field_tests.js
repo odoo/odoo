@@ -717,35 +717,36 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("datepicker option: daysOfWeekDisabled", async function (assert) {
+    QUnit.test("datepicker option: daysOfWeekDisabled", async function (assert) {
         assert.expect(42);
 
-        this.data.partner.fields.datetime.default = "2017-08-02 12:00:05";
-        this.data.partner.fields.datetime.required = true;
+        serverData.models.partner.fields.datetime.default = "2017-08-02 12:00:05";
+        serverData.models.partner.fields.datetime.required = true;
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                '<field name="datetime" ' +
-                'options=\'{"datepicker": {"daysOfWeekDisabled": [0, 6]}}\'/>' +
-                "</form>",
-            res_id: 1,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="datetime" options="{'datepicker': { 'daysOfWeekDisabled': [0, 6] }}" />
+                </form>
+            `,
         });
 
-        await testUtils.form.clickCreate(form);
-        testUtils.dom.openDatepicker(form.$(".o_datepicker"));
-        $.each($(".day:last-child,.day:nth-child(2)"), function (index, value) {
-            assert.hasClass(value, "disabled", "first and last days must be disabled");
-        });
+        await click(form.el, ".o_datepicker_input");
+
+        for (const el of document.body.querySelectorAll(".day:nth-child(2), .day:last-child")) {
+            assert.hasClass(el, "disabled", "first and last days must be disabled");
+        }
+
         // the assertions below could be replaced by a single hasClass classic on the jQuery set using the idea
         // All not <=> not Exists. But we want to be sure that the set is non empty. We don't have an helper
         // function for that.
-        $.each($(".day:not(:last-child):not(:nth-child(2))"), function (index, value) {
-            assert.doesNotHaveClass(value, "disabled", "other days must stay clickable");
-        });
-        form.destroy();
+        for (const el of document.body.querySelectorAll(
+            ".day:not(:nth-child(2)):not(:last-child)"
+        )) {
+            assert.doesNotHaveClass(el, "disabled", "other days must stay clickable");
+        }
     });
 });
