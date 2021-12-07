@@ -116,7 +116,7 @@ class DataPoint {
         } else if (field.type === "date" || field.type === "datetime") {
             // process date(time): convert into a Luxon DateTime object
             const parser = registry.category("parsers").get(field.type);
-            parsedValue = parser(value, { isUTC: true });
+            parsedValue = parser(value, { timezone: false });
         } else if (field.type === "selection" && value === false) {
             // process selection: convert false to 0, if 0 is a valid key
             const hasKey0 = field.selection.find((option) => option[0] === 0);
@@ -335,7 +335,11 @@ export class Record extends DataPoint {
     }
 
     _getOnchangeSpec() {
-        return {};
+        const specs = {};
+        for (const fieldName of this.fieldNames) {
+            specs[fieldName] = "1";
+        }
+        return specs;
     }
 
     _getChanges(allFields = false) {
