@@ -312,7 +312,7 @@ function classToStyle($editable, cssRules) {
         }
         // Apple Mail
         if (node.nodeName === 'TD' && !node.childNodes.length) {
-            $(node).html('&nbsp;');
+            $(node).append('&nbsp;');
         }
         // Outlook
         if (node.nodeName === 'A' && $target.hasClass('btn') && !$target.hasClass('btn-link') && !$target.children().length) {
