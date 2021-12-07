@@ -396,6 +396,25 @@ class TestSequenceMixin(AccountTestInvoicingCommon):
             account.unlink()
             env0.cr.commit()
 
+    def test_resequence_clash(self):
+        """Resequence doesn't clash when it uses a name set in the same batch
+        but that will be overriden later."""
+        moves = self.env['account.move']
+        for i in range(3):
+            moves += self.create_move(name=str(i))
+        moves.action_post()
+
+        mistake = moves[1]
+        mistake.button_draft()
+        mistake.posted_before = False
+        mistake.unlink()
+        moves -= mistake
+
+        self.env['account.resequence.wizard'].create({
+            'move_ids': moves.ids,
+            'first_name': '2',
+        }).resequence()
+
     @freeze_time('2021-10-01 00:00:00')
     def test_change_journal_on_first_account_move(self):
         """Changing the journal on the first move is allowed"""
