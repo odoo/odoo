@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import io
 import base64
 import binascii
 
@@ -132,7 +133,8 @@ class TestImage(TransactionCase):
         with self.assertRaises(UserError, msg="This file could not be decoded as an image file. Please try with a different file."):
             tools.image_process(b'oazdazpodazdpokd', quality=95)
 
-        image = tools.image_process(self.image_1920x1080_jpeg, quality=95)
+        image = tools.image_process(base64.b64decode(self.base64_1920x1080_jpeg), quality=95)
+        image = Image.open(io.BytesIO(image))
         self.assertEqual(image.size, (1920, 1080), "OK return the image")
 
         # test that nothing happens if no operation has been requested
