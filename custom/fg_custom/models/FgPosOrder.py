@@ -26,7 +26,26 @@ class PosPaymentInherit(models.Model):
     x_gc_voucher_name = fields.Char("Gift Check Voucher Name")
     x_gc_voucher_cust = fields.Char("Gift Check Customer")
 
+    @api.model
+    def _export_for_ui(self, payment):
+        fields = super(PosPaymentInherit, self)._export_for_ui(payment)
+        fields.update({
+            'x_check_number': payment.x_check_number,
+            'x_issuing_bank': payment.x_issuing_bank,
+            'x_check_date': payment.x_check_date,
+            'x_card_number': payment.x_card_number,
+            'x_card_name': payment.x_card_name,
+            'x_approval_no': payment.x_approval_no,
+            'x_batch_num': payment.x_batch_num,
+            'x_gift_card_number': payment.x_gift_card_number,
+            'x_gcash_refnum': payment.x_gcash_refnum,
+            'x_gcash_customer': payment.x_gcash_customer,
+            'x_gc_voucher_no': payment.x_gc_voucher_no,
+            'x_gc_voucher_name': payment.x_gc_voucher_name,
+            'x_gc_voucher_cust': payment.x_gc_voucher_cust
+        })
 
+        return fields
 
 class PosOrder(models.Model):
     _inherit = "pos.order"
@@ -110,7 +129,6 @@ class PosOrder(models.Model):
             'x_gc_voucher_name': ui_paymentline.get('x_gc_voucher_name'),
             'x_gc_voucher_cust': ui_paymentline.get('x_gc_voucher_cust')
         })
-
         return fields
 
     @api.model
@@ -119,27 +137,9 @@ class PosOrder(models.Model):
         fields.update({
            'x_receipt_note': order.x_receipt_note
         })
-
-    @api.model
-    def _export_for_ui(self, payment):
-        fields = super(PosPaymentInherit, self)._export_for_ui(payment)
-        fields.update({
-            'x_check_number': payment.x_check_number,
-            'x_issuing_bank': payment.x_issuing_bank,
-            'x_check_date': payment.x_check_date,
-            'x_card_number': payment.x_card_number,
-            'x_card_name': payment.x_card_name,
-            'x_approval_no': payment.x_approval_no,
-            'x_batch_num': payment.x_batch_num,
-            'x_gift_card_number': payment.x_gift_card_number,
-            'x_gcash_refnum': payment.x_gcash_refnum,
-            'x_gcash_customer': payment.x_gcash_customer,
-            'x_gc_voucher_no': payment.x_gc_voucher_no,
-            'x_gc_voucher_name': payment.x_gc_voucher_name,
-            'x_gc_voucher_cust': payment.x_gc_voucher_cust
-        })
-
         return fields
+
+
 
 class PosOrderLineInherit(models.Model):
     _inherit = "pos.order.line"
