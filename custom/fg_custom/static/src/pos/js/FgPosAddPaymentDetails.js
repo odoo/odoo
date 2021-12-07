@@ -64,9 +64,9 @@ odoo.define('fg_custom.FgPosAddPaymentDetails', function (require) {
 //                for(var i=0; i< this.x_card_number.length-4; i++ ){
 //                    mask+='*';
 //                }
-
-                paymentLines.x_card_number= mask+cardNumberLast4Digits;
-            }
+//
+//                paymentLines.x_card_number= mask+cardNumberLast4Digits;
+//            }
 
             return paymentlines;
 
