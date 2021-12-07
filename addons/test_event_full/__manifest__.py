@@ -25,7 +25,10 @@ automatic lead generation, full Online support, ...
         'website_event_track_live',
         'website_event_track_quiz',
     ],
-    'installable': True,
+    'data': [
+        'data/ir_actions_report_data.xml',
+        'views/event_registration_templates_reports.xml',
+    ],
     'assets': {
         'web.assets_tests': [
             'test_event_full/static/**/*',
