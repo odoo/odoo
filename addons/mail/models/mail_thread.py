@@ -2558,11 +2558,12 @@ class MailThread(models.AbstractModel):
         Groups has a default value that you can find in mail_thread
         ``_notify_get_recipients_classify`` method.
         """
+        is_thread_notification = self._notify_get_recipients_thread_info(msg_vals=msg_vals)['is_thread_notification']
         return [
             [
                 'user',
                 lambda pdata: pdata['type'] == 'user',
-                {'has_button_access': True}
+                {'has_button_access': is_thread_notification}
             ], [
                 'portal',
                 lambda pdata: pdata['type'] == 'portal',
@@ -2624,9 +2625,10 @@ class MailThread(models.AbstractModel):
 
         # fill group_data with default_values if they are not complete
         for group_name, group_func, group_data in groups:
+            is_thread_notification = self._notify_get_recipients_thread_info(msg_vals=msg_vals)['is_thread_notification']
             group_data.setdefault('active', True)
             group_data.setdefault('actions', list())
-            group_data.setdefault('has_button_access', True)
+            group_data.setdefault('has_button_access', is_thread_notification)
             group_data.setdefault('notification_is_customer', False)
             group_data.setdefault('notification_group_name', group_name)
             group_data.setdefault('recipients', list())
@@ -2644,6 +2646,15 @@ class MailThread(models.AbstractModel):
         # filter out groups without recipients
         return [group_data for _group_name, _group_func, group_data in groups
                 if group_data['recipients']]
+
+    def _notify_get_recipients_thread_info(self, msg_vals=None):
+        """ Tool method to compute thread info used in ``_notify_classify_recipients``
+        and its sub-methods. """
+        res_model = msg_vals['model'] if msg_vals and 'model' in msg_vals else self._name
+        res_id = msg_vals['res_id'] if msg_vals and 'res_id' in msg_vals else self.ids[0] if self.ids else False
+        return {
+            'is_thread_notification': res_model and (res_model != 'mail.thread') and res_id
+        }
 
     @api.model
     def _notify_encode_link(self, base_link, params):
