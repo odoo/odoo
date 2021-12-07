@@ -88,16 +88,79 @@ odoo.define('fg_custom.FgAddPaymentDetailsButton', function (require) {
                             this.trigger('delete-payment-line', { cid: currentOrder.selected_paymentline.cid })
                             return;
                         };
-                        const { x_card_number, x_card_name, cardholder_name } = payload;
+                        const { x_card_number, x_card_name, cardholder_name, x_approval_no, x_batch_num  } = payload;
                         currentOrder.selected_paymentline.x_card_number = x_card_number;
                         currentOrder.selected_paymentline.x_card_name = x_card_name;
                         currentOrder.selected_paymentline.cardholder_name = cardholder_name;
+                        currentOrder.selected_paymentline.x_approval_no = x_approval_no;
+                        currentOrder.selected_paymentline.x_batch_num = x_batch_num;
                         currentOrder.trigger('change', currentOrder); // needed so that export_to_JSON gets triggered
                         this.render();
                     }else{
                         Gui.showPopup("ErrorPopup", {
                            title: this.env._t(popupTitle),
                            body: this.env._t('Selected payment should be Debit/Credit Card'),
+                       });
+                    }
+                }else{
+                    Gui.showPopup("ErrorPopup", {
+                       title: this.env._t(popupTitle),
+                       body: this.env._t('No selected payment.'),
+                   });
+                }
+           }
+
+           async AddGCashDetails() {
+                this.trigger('new-payment-line', this.props.paymentMethod)
+                var popupTitle = "GCash Details"
+                var currentOrder = this.env.pos.get_order();this.env.pos.get_order();
+                if(currentOrder.selected_paymentline){
+                    if(currentOrder.selected_paymentline.name == 'GCash'){
+                        const { confirmed, payload } = await this.showPopup('FgGCashDetailsPopup');
+                        if (!confirmed) {
+                            this.trigger('delete-payment-line', { cid: currentOrder.selected_paymentline.cid })
+                            return;
+                        };
+                        const { x_gcash_refnum, x_gcash_customer} = payload;
+                        currentOrder.selected_paymentline.x_gcash_refnum = x_gcash_refnum;
+                        currentOrder.selected_paymentline.x_gcash_customer = x_gcash_customer;
+                        currentOrder.trigger('change', currentOrder); // needed so that export_to_JSON gets triggered
+                        this.render();
+                    }else{
+                        Gui.showPopup("ErrorPopup", {
+                           title: this.env._t(popupTitle),
+                           body: this.env._t('Selected payment should be GCash'),
+                       });
+                    }
+                }else{
+                    Gui.showPopup("ErrorPopup", {
+                       title: this.env._t(popupTitle),
+                       body: this.env._t('No selected payment.'),
+                   });
+                }
+           }
+
+           async AddGiftCheckDetails() {
+                this.trigger('new-payment-line', this.props.paymentMethod)
+                var popupTitle = "Gift Check Details"
+                var currentOrder = this.env.pos.get_order();this.env.pos.get_order();
+                if(currentOrder.selected_paymentline){
+                    if(currentOrder.selected_paymentline.name == 'Gift Check'){
+                        const { confirmed, payload } = await this.showPopup('FgGiftCheckDetailsPopup');
+                        if (!confirmed) {
+                            this.trigger('delete-payment-line', { cid: currentOrder.selected_paymentline.cid })
+                            return;
+                        };
+                        const { x_gc_voucher_no, x_gc_voucher_name, x_gc_voucher_cust } = payload;
+                        currentOrder.selected_paymentline.x_gc_voucher_no = x_gc_voucher_no;
+                        currentOrder.selected_paymentline.x_gc_voucher_name = x_gc_voucher_name;
+                        currentOrder.selected_paymentline.x_gc_voucher_cust = x_gc_voucher_cust;
+                        currentOrder.trigger('change', currentOrder); // needed so that export_to_JSON gets triggered
+                        this.render();
+                    }else{
+                        Gui.showPopup("ErrorPopup", {
+                           title: this.env._t(popupTitle),
+                           body: this.env._t('Selected payment should be Gift Check'),
                        });
                     }
                 }else{

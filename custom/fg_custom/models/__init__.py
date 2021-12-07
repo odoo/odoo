@@ -2,7 +2,7 @@
 # sample import below
 
 from . import FgPosOrder
-#from . import FgCustomerMaster
+from . import FgCustomerMaster
 from . import FgOrderImport
 from . import FgMessageWizard
 

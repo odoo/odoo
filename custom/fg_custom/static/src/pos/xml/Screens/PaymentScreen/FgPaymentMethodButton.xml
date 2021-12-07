@@ -31,6 +31,20 @@
                     </div>
                 </div>
             </t>
+            <t t-elif="props.paymentMethod.name == 'GCash' ">
+                <div class="button paymentmethod" t-on-click="AddGCashDetails">
+                    <div class="payment-name">
+                        <t t-esc="props.paymentMethod.name" />
+                    </div>
+                </div>
+            </t>
+            <t t-elif="props.paymentMethod.name == 'Gift Check' ">
+                <div class="button paymentmethod" t-on-click="AddGiftCheckDetails">
+                    <div class="payment-name">
+                        <t t-esc="props.paymentMethod.name" />
+                    </div>
+                </div>
+            </t>
             <t t-else="">
                <div class="button paymentmethod" t-on-click="trigger('new-payment-line', props.paymentMethod)">
                     <div class="payment-name">

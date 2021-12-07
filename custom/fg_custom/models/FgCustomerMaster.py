@@ -11,13 +11,15 @@ class CustomerInherit(models.Model):
 
 
     x_type_of_business = fields.Char("Type of Business")
+    x_pwd_id = fields.Char("PWD ID")
+    x_senior_id = fields.Char("Senior ID")
 
     #contact
     x_birthdate = fields.Date("Birthdate")
     x_age = fields.Integer("Age")
     x_gender = fields.Selection(selection=[
             ('Male', 'Male'),
-            ('Female', 'Female')
+            ('Fe  male', 'Female')
         ],
     )
 
