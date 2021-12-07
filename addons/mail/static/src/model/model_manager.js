@@ -668,7 +668,7 @@ export class ModelManager {
             __values: {},
         });
         const record = !this.env.isDebug() ? nonProxyRecord : new Proxy(nonProxyRecord, {
-            get: function (record, prop) {
+            get: function getFromProxy(record, prop) {
                 if (
                     !Model.__fieldMap[prop] &&
                     !['_super', 'then'].includes(prop) &&
@@ -1215,7 +1215,7 @@ export class ModelManager {
             // Add field accessors.
             for (const field of Model.__fieldList) {
                 Object.defineProperty(Model.prototype, field.fieldName, {
-                    get() { // this is bound to record
+                    get: function getFieldValue() { // this is bound to record
                         for (const listener of this.modelManager._listeners) {
                             listener.lastObservedLocalIds.add(this.localId);
                             if (!this.modelManager._listenersObservingLocalId.has(this.localId)) {
