@@ -4,6 +4,7 @@ import {
     afterEach,
     afterNextRender,
     beforeEach,
+    insertIntoComposer,
     start,
 } from '@mail/utils/test_utils';
 
@@ -184,7 +185,7 @@ QUnit.test('chat - sorting: should be sorted by last activity time', async funct
 
     // post a new message on the last channel
     await afterNextRender(() => initialChats[1].click());
-    await afterNextRender(() => document.execCommand('insertText', false, "Blabla"));
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', 'Blabla');
     await afterNextRender(() => document.querySelector('.o_Composer_buttonSend').click());
     const newChats = document.querySelectorAll('.o_DiscussSidebar_categoryChat .o_DiscussSidebarCategoryItem');
     assert.strictEqual(

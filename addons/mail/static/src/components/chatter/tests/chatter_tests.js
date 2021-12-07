@@ -5,6 +5,7 @@ import {
     afterNextRender,
     beforeEach,
     createRootMessagingComponent,
+    insertIntoComposer,
     nextAnimationFrame,
     start,
 } from '@mail/utils/test_utils';
@@ -450,13 +451,10 @@ QUnit.test('post message with "CTRL-Enter" keyboard shortcut', async function (a
     await afterNextRender(() =>
         document.querySelector('.o_ChatterTopbar_buttonSendMessage').click()
     );
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "Test");
-    });
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', 'Test');
     await afterNextRender(() => {
         const kevt = new window.KeyboardEvent('keydown', { ctrlKey: true, key: "Enter" });
-        document.querySelector('.o_ComposerTextInput_textarea').dispatchEvent(kevt);
+        document.querySelector('.o_ComposerTextInput_wysiwyg').dispatchEvent(kevt);
     });
     assert.containsOnce(
         document.body,
@@ -485,13 +483,10 @@ QUnit.test('post message with "META-Enter" keyboard shortcut', async function (a
     await afterNextRender(() =>
         document.querySelector('.o_ChatterTopbar_buttonSendMessage').click()
     );
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "Test");
-    });
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', 'Test');
     await afterNextRender(() => {
         const kevt = new window.KeyboardEvent('keydown', { key: "Enter", metaKey: true });
-        document.querySelector('.o_ComposerTextInput_textarea').dispatchEvent(kevt);
+        document.querySelector('.o_ComposerTextInput_wysiwyg').dispatchEvent(kevt);
     });
     assert.containsOnce(
         document.body,
@@ -523,12 +518,9 @@ QUnit.test('do not post message with "Enter" keyboard shortcut', async function 
     await afterNextRender(() =>
         document.querySelector('.o_ChatterTopbar_buttonSendMessage').click()
     );
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "Test");
-    });
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', 'Test');
     const kevt = new window.KeyboardEvent('keydown', { key: "Enter" });
-    document.querySelector('.o_ComposerTextInput_textarea').dispatchEvent(kevt);
+    document.querySelector('.o_ComposerTextInput_wysiwyg').dispatchEvent(kevt);
     await nextAnimationFrame();
     assert.containsNone(
         document.body,

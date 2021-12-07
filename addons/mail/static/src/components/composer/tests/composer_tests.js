@@ -7,6 +7,7 @@ import {
     beforeEach,
     dragenterFiles,
     dropFiles,
+    insertIntoComposer,
     nextAnimationFrame,
     pasteFiles,
     start,
@@ -51,6 +52,9 @@ QUnit.test('composer text input: basic rendering when posting a message', async 
         model: 'res.partner',
     });
     await createComposerComponent(thread.composer);
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).focus();
+    });
     assert.strictEqual(
         document.querySelectorAll('.o_Composer').length,
         1,
@@ -66,12 +70,12 @@ QUnit.test('composer text input: basic rendering when posting a message', async 
         "composer text input of composer should be a ComposerTextIput component"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_ComposerTextInput_textarea`).length,
+        document.querySelectorAll(`.o_ComposerTextInput_wysiwyg`).length,
         1,
         "should have editable part inside composer text input"
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).placeholder,
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).lastElementChild.attributes.placeholder.nodeValue,
         "Send a message to followers...",
         "should have 'Send a message to followers...' as placeholder composer text input"
     );
@@ -87,6 +91,9 @@ QUnit.test('composer text input: basic rendering when logging note', async funct
         model: 'res.partner',
     });
     await createComposerComponent(thread.composer);
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).focus();
+    });
     assert.strictEqual(
         document.querySelectorAll('.o_Composer').length,
         1,
@@ -102,12 +109,12 @@ QUnit.test('composer text input: basic rendering when logging note', async funct
         "composer text input of composer should be a ComposerTextIput component"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_ComposerTextInput_textarea`).length,
+        document.querySelectorAll(`.o_ComposerTextInput_wysiwyg`).length,
         1,
         "should have editable part inside composer text input"
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).placeholder,
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).lastElementChild.attributes.placeholder.nodeValue,
         "Log an internal note...",
         "should have 'Log an internal note...' as placeholder in composer text input if composer is log"
     );
@@ -138,7 +145,7 @@ QUnit.test('composer text input: basic rendering when linked thread is a mail.ch
         "composer text input of composer should be a ComposerTextIput component"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_ComposerTextInput_textarea`).length,
+        document.querySelectorAll(`.o_ComposerTextInput_wysiwyg`).length,
         1,
         "should have editable part inside composer text input"
     );
@@ -158,8 +165,11 @@ QUnit.test('composer text input placeholder should contain channel name when thr
         model: 'mail.channel',
     });
     await createComposerComponent(thread.composer);
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).focus();
+    });
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).placeholder,
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).lastElementChild.attributes.placeholder.nodeValue,
         "Message #General...",
         "should have 'Message #General...' as placeholder for composer text input when thread does not have specific correspondent"
     );
@@ -180,8 +190,11 @@ QUnit.test('composer text input placeholder should contain correspondent name wh
         model: 'mail.channel',
     });
     await createComposerComponent(thread.composer);
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).focus();
+    });
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).placeholder,
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).lastElementChild.attributes.placeholder.nodeValue,
         "Message Marc Demo...",
         "should have 'Message Marc Demo...' as placeholder for composer text input when thread has exactly one correspondent"
     );
@@ -206,7 +219,7 @@ QUnit.test('add an emoji', async function (assert) {
         document.querySelector('.o_EmojisPopover_emoji[data-unicode="😊"]').click()
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent,
         "😊",
         "emoji should be inserted in the composer text input"
     );
@@ -228,12 +241,9 @@ QUnit.test('add an emoji after some text', async function (assert) {
         model: 'mail.channel',
     });
     await createComposerComponent(thread.composer);
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "Blabla");
-    });
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', 'Blabla');
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent,
         "Blabla",
         "composer text input should have text only initially"
     );
@@ -243,7 +253,7 @@ QUnit.test('add an emoji after some text', async function (assert) {
         document.querySelector('.o_EmojisPopover_emoji[data-unicode="😊"]').click()
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent,
         "Blabla😊",
         "emoji should be inserted after the text"
     );
@@ -265,19 +275,16 @@ QUnit.test('add emoji replaces (keyboard) text selection', async function (asser
         model: 'mail.channel',
     });
     await createComposerComponent(thread.composer);
-    const composerTextInputTextArea = document.querySelector(`.o_ComposerTextInput_textarea`);
-    await afterNextRender(() => {
-        composerTextInputTextArea.focus();
-        document.execCommand('insertText', false, "Blabla");
-    });
+    const composerTextInputTextArea = document.querySelector(`.o_ComposerTextInput_wysiwyg`);
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', 'Blabla');
     assert.strictEqual(
-        composerTextInputTextArea.value,
+        composerTextInputTextArea.textContent,
         "Blabla",
         "composer text input should have text only initially"
     );
 
     // simulate selection of all the content by keyboard
-    composerTextInputTextArea.setSelectionRange(0, composerTextInputTextArea.value.length);
+    document.execCommand('selectAll', false, '.o_ComposerTextInput_wysiwyg');
 
     // select emoji
     await afterNextRender(() => document.querySelector('.o_Composer_buttonEmojis').click());
@@ -285,7 +292,7 @@ QUnit.test('add emoji replaces (keyboard) text selection', async function (asser
         document.querySelector('.o_EmojisPopover_emoji[data-unicode="😊"]').click()
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent,
         "😊",
         "whole text selection should have been replaced by emoji"
     );
@@ -319,14 +326,7 @@ QUnit.test('display canned response suggestions on typing ":"', async function (
         '.o_ComposerSuggestionList_list',
         "Canned responses suggestions list should not be present"
     );
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, ":");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', ':');
     assert.hasClass(
         document.querySelector('.o_ComposerSuggestionList_list'),
         'show',
@@ -359,18 +359,11 @@ QUnit.test('use a canned response', async function (assert) {
         "canned response suggestions list should not be present"
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent,
         "",
         "text content of composer should be empty initially"
     );
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, ":");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', ':');
     assert.containsOnce(
         document.body,
         '.o_ComposerSuggestion',
@@ -380,7 +373,7 @@ QUnit.test('use a canned response', async function (assert) {
         document.querySelector('.o_ComposerSuggestion').click()
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent.replace(/\s/, " "),
         "Hello! How are you? ",
         "text content of composer should have canned response + additional whitespace afterwards"
     );
@@ -411,26 +404,17 @@ QUnit.test('use a canned response some text', async function (assert) {
         "canned response suggestions list should not be present"
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent,
         "",
         "text content of composer should be empty initially"
     );
-    document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-    await afterNextRender(() =>
-        document.execCommand('insertText', false, "bluhbluh ")
-    );
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', 'bluhbluh ');
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent.replace(/\s/, " "),
         "bluhbluh ",
         "text content of composer should have content"
     );
-    await afterNextRender(() => {
-        document.execCommand('insertText', false, ":");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', ':');
     assert.containsOnce(
         document.body,
         '.o_ComposerSuggestion',
@@ -440,7 +424,7 @@ QUnit.test('use a canned response some text', async function (assert) {
         document.querySelector('.o_ComposerSuggestion').click()
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent.replace(/\s/, " "),
         "bluhbluh Hello! How are you? ",
         "text content of composer should have previous content + canned response substitution + additional whitespace afterwards"
     );
@@ -471,18 +455,11 @@ QUnit.test('add an emoji after a canned response', async function (assert) {
         "canned response suggestions list should not be present"
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent,
         "",
         "text content of composer should be empty initially"
     );
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, ":");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', ':');
     assert.containsOnce(
         document.body,
         '.o_ComposerSuggestion',
@@ -492,7 +469,7 @@ QUnit.test('add an emoji after a canned response', async function (assert) {
         document.querySelector('.o_ComposerSuggestion').click()
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent.replace(/\s/, " "),
         "Hello! How are you? ",
         "text content of composer should have previous content + canned response substitution + additional whitespace afterwards"
     );
@@ -505,7 +482,7 @@ QUnit.test('add an emoji after a canned response', async function (assert) {
         document.querySelector('.o_EmojisPopover_emoji[data-unicode="😊"]').click()
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent.replace(/\s/, " "),
         "Hello! How are you? 😊",
         "text content of composer should have previous canned response substitution and selected emoji just after"
     );
@@ -534,14 +511,7 @@ QUnit.test('display channel mention suggestions on typing "#"', async function (
         '.o_ComposerSuggestionList_list',
         "channel mention suggestions list should not be present"
     );
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "#");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', '#');
     assert.hasClass(
         document.querySelector('.o_ComposerSuggestionList_list'),
         'show',
@@ -570,18 +540,11 @@ QUnit.test('mention a channel', async function (assert) {
         "channel mention suggestions list should not be present"
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent,
         "",
         "text content of composer should be empty initially"
     );
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "#");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', '#');
     assert.containsOnce(
         document.body,
         '.o_ComposerSuggestion',
@@ -591,7 +554,7 @@ QUnit.test('mention a channel', async function (assert) {
         document.querySelector('.o_ComposerSuggestion').click()
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent.replace(/\s/, " "),
         "#General ",
         "text content of composer should have mentioned channel + additional whitespace afterwards"
     );
@@ -618,26 +581,17 @@ QUnit.test('mention a channel after some text', async function (assert) {
         "channel mention suggestions list should not be present"
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent,
         "",
         "text content of composer should be empty initially"
     );
-    document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-    await afterNextRender(() =>
-        document.execCommand('insertText', false, "bluhbluh ")
-    );
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', 'bluhbluh ');
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent.replace(/\s/, " "),
         "bluhbluh ",
         "text content of composer should have content"
     );
-    await afterNextRender(() => {
-        document.execCommand('insertText', false, "#");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', '#');
     assert.containsOnce(
         document.body,
         '.o_ComposerSuggestion',
@@ -647,7 +601,7 @@ QUnit.test('mention a channel after some text', async function (assert) {
         document.querySelector('.o_ComposerSuggestion').click()
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent.replace(/\s/, " "),
         "bluhbluh #General ",
         "text content of composer should have previous content + mentioned channel + additional whitespace afterwards"
     );
@@ -674,18 +628,11 @@ QUnit.test('add an emoji after a channel mention', async function (assert) {
         "mention suggestions list should not be present"
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent,
         "",
         "text content of composer should be empty initially"
     );
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "#");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', '#');
     assert.containsOnce(
         document.body,
         '.o_ComposerSuggestion',
@@ -695,7 +642,7 @@ QUnit.test('add an emoji after a channel mention', async function (assert) {
         document.querySelector('.o_ComposerSuggestion').click()
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent.replace(/\s/, " "),
         "#General ",
         "text content of composer should have previous content + mentioned channel + additional whitespace afterwards"
     );
@@ -708,7 +655,7 @@ QUnit.test('add an emoji after a channel mention', async function (assert) {
         document.querySelector('.o_EmojisPopover_emoji[data-unicode="😊"]').click()
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent.replace(/\s/, " "),
         "#General 😊",
         "text content of composer should have previous channel mention and selected emoji just after"
     );
@@ -732,14 +679,7 @@ QUnit.test('display command suggestions on typing "/"', async function (assert) 
         '.o_ComposerSuggestionList_list',
         "command suggestions list should not be present"
     );
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "/");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', '/');
     assert.hasClass(
         document.querySelector('.o_ComposerSuggestionList_list'),
         'show',
@@ -765,14 +705,7 @@ QUnit.test('do not send typing notification on typing "/" command', async functi
     });
     await createComposerComponent(thread.composer, { hasThreadTyping: true });
 
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "/");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', '/');
     assert.verifySteps([], "No rpc done");
 });
 
@@ -794,25 +727,11 @@ QUnit.test('do not send typing notification on typing after selecting suggestion
     });
     await createComposerComponent(thread.composer, { hasThreadTyping: true });
 
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "/");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', '/');
     await afterNextRender(() =>
         document.querySelector('.o_ComposerSuggestion').click()
     );
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, " is user?");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', ' is user?');
     assert.verifySteps([], "No rpc done");
 });
 
@@ -833,23 +752,16 @@ QUnit.test('use a command for a specific channel type', async function (assert) 
         "command suggestions list should not be present"
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent,
         "",
         "text content of composer should be empty initially"
     );
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "/");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', '/');
     await afterNextRender(() =>
         document.querySelector('.o_ComposerSuggestion').click()
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent.replace(/\s/, " "),
         "/who ",
         "text content of composer should have used command + additional whitespace afterwards"
     );
@@ -871,26 +783,17 @@ QUnit.test('command suggestion should only open if command is the first characte
         "command suggestions list should not be present"
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent,
         "",
         "text content of composer should be empty initially"
     );
-    document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-    await afterNextRender(() =>
-        document.execCommand('insertText', false, "bluhbluh ")
-    );
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', 'bluhbluh ');
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent.replace(/\s/, " "),
         "bluhbluh ",
         "text content of composer should have content"
     );
-    await afterNextRender(() => {
-        document.execCommand('insertText', false, "/");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', '/');
     assert.containsNone(
         document.body,
         '.o_ComposerSuggestion',
@@ -915,23 +818,16 @@ QUnit.test('add an emoji after a command', async function (assert) {
         "command suggestions list should not be present"
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent,
         "",
         "text content of composer should be empty initially"
     );
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "/");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', '/');
     await afterNextRender(() =>
         document.querySelector('.o_ComposerSuggestion').click()
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent.replace(/\s/, " "),
         "/who ",
         "text content of composer should have previous content + used command + additional whitespace afterwards"
     );
@@ -944,7 +840,7 @@ QUnit.test('add an emoji after a command', async function (assert) {
         document.querySelector('.o_EmojisPopover_emoji[data-unicode="😊"]').click()
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent.replace(/\s/, " "),
         "/who 😊",
         "text content of composer should have previous command and selected emoji just after"
     );
@@ -984,14 +880,7 @@ QUnit.test('display partner mention suggestions on typing "@"', async function (
         '.o_ComposerSuggestionList_list',
         "mention suggestions list should not be present"
     );
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "@");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', '@');
     assert.hasClass(
         document.querySelector('.o_ComposerSuggestionList_list'),
         'show',
@@ -1027,28 +916,13 @@ QUnit.test('mention a partner', async function (assert) {
         "mention suggestions list should not be present"
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent,
         "",
         "text content of composer should be empty initially"
     );
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "@");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-        document.execCommand('insertText', false, "T");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-        document.execCommand('insertText', false, "e");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', '@');
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', 'T');
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', 'e');
     assert.containsOnce(
         document.body,
         '.o_ComposerSuggestion',
@@ -1058,7 +932,7 @@ QUnit.test('mention a partner', async function (assert) {
         document.querySelector('.o_ComposerSuggestion').click()
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent.replace(/\s/, " "),
         "@TestPartner ",
         "text content of composer should have mentioned partner + additional whitespace afterwards"
     );
@@ -1087,37 +961,19 @@ QUnit.test('mention a partner after some text', async function (assert) {
         "mention suggestions list should not be present"
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent,
         "",
         "text content of composer should be empty initially"
     );
-    document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-    await afterNextRender(() =>
-        document.execCommand('insertText', false, "bluhbluh ")
-    );
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', 'bluhbluh ');
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent.replace(/\s/, " "),
         "bluhbluh ",
         "text content of composer should have content"
     );
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "@");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-        document.execCommand('insertText', false, "T");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-        document.execCommand('insertText', false, "e");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', '@');
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', 'T');
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', 'e');
     assert.containsOnce(
         document.body,
         '.o_ComposerSuggestion',
@@ -1127,7 +983,7 @@ QUnit.test('mention a partner after some text', async function (assert) {
         document.querySelector('.o_ComposerSuggestion').click()
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent.replace(/\s/, " "),
         "bluhbluh @TestPartner ",
         "text content of composer should have previous content + mentioned partner + additional whitespace afterwards"
     );
@@ -1156,28 +1012,13 @@ QUnit.test('add an emoji after a partner mention', async function (assert) {
         "mention suggestions list should not be present"
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent,
         "",
         "text content of composer should be empty initially"
     );
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "@");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-        document.execCommand('insertText', false, "T");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-        document.execCommand('insertText', false, "e");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', '@');
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', 'T');
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', 'e');
     assert.containsOnce(
         document.body,
         '.o_ComposerSuggestion',
@@ -1187,7 +1028,7 @@ QUnit.test('add an emoji after a partner mention', async function (assert) {
         document.querySelector('.o_ComposerSuggestion').click()
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent.replace(/\s/, " "),
         "@TestPartner ",
         "text content of composer should have previous content + mentioned partner + additional whitespace afterwards"
     );
@@ -1200,7 +1041,7 @@ QUnit.test('add an emoji after a partner mention', async function (assert) {
         document.querySelector('.o_EmojisPopover_emoji[data-unicode="😊"]').click()
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent.replace(/\s/, " "),
         "@TestPartner 😊",
         "text content of composer should have previous mention and selected emoji just after"
     );
@@ -1367,33 +1208,33 @@ QUnit.test('send message when enter is pressed while holding ctrl key (this shor
         textInputSendShortcuts: ['ctrl-enter'],
     });
     // Type message
-    document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+    document.querySelector(`.o_ComposerTextInput_wysiwyg`).focus();
     document.execCommand('insertText', false, "test message");
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent,
         "test message",
         "should have inserted text content in editable"
     );
 
     await afterNextRender(() => {
         const enterEvent = new window.KeyboardEvent('keydown', { key: 'Enter' });
-        document.querySelector(`.o_ComposerTextInput_textarea`)
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`)
             .dispatchEvent(enterEvent);
     });
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent,
         "test message",
         "should have inserted text content in editable as message has not been posted"
     );
 
     // Send message with ctrl+enter
     await afterNextRender(() =>
-        document.querySelector(`.o_ComposerTextInput_textarea`)
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`)
             .dispatchEvent(new window.KeyboardEvent('keydown', { ctrlKey: true, key: 'Enter' }))
     );
     assert.verifySteps(['message_post']);
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent,
         "",
         "should have no content in composer input as message has been posted"
     );
@@ -1422,33 +1263,33 @@ QUnit.test('send message when enter is pressed while holding meta key (this shor
         textInputSendShortcuts: ['meta-enter'],
     });
     // Type message
-    document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+    document.querySelector(`.o_ComposerTextInput_wysiwyg`).focus();
     document.execCommand('insertText', false, "test message");
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent,
         "test message",
         "should have inserted text content in editable"
     );
 
     await afterNextRender(() => {
         const enterEvent = new window.KeyboardEvent('keydown', { key: 'Enter' });
-        document.querySelector(`.o_ComposerTextInput_textarea`)
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`)
             .dispatchEvent(enterEvent);
     });
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent,
         "test message",
         "should have inserted text content in editable as message has not been posted"
     );
 
     // Send message with meta+enter
     await afterNextRender(() =>
-        document.querySelector(`.o_ComposerTextInput_textarea`)
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`)
             .dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Enter', metaKey: true }))
     );
     assert.verifySteps(['message_post']);
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent,
         "",
         "should have no content in composer input as message has been posted"
     );
@@ -1474,12 +1315,9 @@ QUnit.test('composer text input cleared on message post', async function (assert
     });
     await createComposerComponent(thread.composer);
     // Type message
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "test message");
-    });
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', 'test message');
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent,
         "test message",
         "should have inserted text content in editable"
     );
@@ -1490,7 +1328,7 @@ QUnit.test('composer text input cleared on message post', async function (assert
     );
     assert.verifySteps(['message_post']);
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent,
         "",
         "should have no content in composer input after posting message"
     );
@@ -1540,11 +1378,7 @@ QUnit.test('current partner notify is typing to other thread members', async fun
         model: 'mail.channel',
     });
     await createComposerComponent(thread.composer, { hasThreadTyping: true });
-
-    document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-    document.execCommand('insertText', false, "a");
-    document.querySelector(`.o_ComposerTextInput_textarea`)
-        .dispatchEvent(new window.KeyboardEvent('keydown', { key: 'a' }));
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', 'a');
 
     assert.verifySteps(
         ['notify_typing:true'],
@@ -1573,11 +1407,7 @@ QUnit.test('current partner is typing should not translate on textual typing sta
     });
     await createComposerComponent(thread.composer, { hasThreadTyping: true });
 
-    document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-    document.execCommand('insertText', false, "a");
-    document.querySelector(`.o_ComposerTextInput_textarea`)
-        .dispatchEvent(new window.KeyboardEvent('keydown', { key: 'a' }));
-
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', 'a');
     assert.verifySteps(
         ['notify_typing:true'],
         "should have notified current partner typing status"
@@ -1612,10 +1442,7 @@ QUnit.test('current partner notify no longer is typing to thread members after 5
     });
     await createComposerComponent(thread.composer, { hasThreadTyping: true });
 
-    document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-    document.execCommand('insertText', false, "a");
-    document.querySelector(`.o_ComposerTextInput_textarea`)
-        .dispatchEvent(new window.KeyboardEvent('keydown', { key: 'a' }));
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', 'a');
 
     assert.verifySteps(
         ['notify_typing:true'],
@@ -1650,10 +1477,7 @@ QUnit.test('current partner notify is typing again to other members every 50s of
     });
     await createComposerComponent(thread.composer, { hasThreadTyping: true });
 
-    document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-    document.execCommand('insertText', false, "a");
-    document.querySelector(`.o_ComposerTextInput_textarea`)
-        .dispatchEvent(new window.KeyboardEvent('keydown', { key: 'a' }));
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', 'a');
     assert.verifySteps(
         ['notify_typing:true'],
         "should have notified current partner is typing"
@@ -1663,9 +1487,7 @@ QUnit.test('current partner notify is typing again to other members every 50s of
     let totalTimeElapsed = 0;
     const elapseTickTime = 2.5 * 1000;
     while (totalTimeElapsed < 50 * 1000) {
-        document.execCommand('insertText', false, "a");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown', { key: 'a' }));
+        await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', 'a');
         totalTimeElapsed += elapseTickTime;
         await this.env.testUtils.advanceTime(elapseTickTime);
     }
@@ -1818,7 +1640,7 @@ QUnit.test('warning on send with shortcut when attempting to post message with s
 
     // Try to send message
     document
-        .querySelector(`.o_ComposerTextInput_textarea`)
+        .querySelector(`.o_ComposerTextInput_wysiwyg`)
         .dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Enter' }));
     assert.verifySteps(
         ['notification'],
@@ -2031,10 +1853,7 @@ QUnit.test('send message only once when button send is clicked twice quickly', a
     });
     await createComposerComponent(thread.composer);
     // Type message
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "test message");
-    });
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', 'test message');
 
     await afterNextRender(() => {
         document.querySelector(`.o_Composer_buttonSend`).click();
@@ -2066,15 +1885,12 @@ QUnit.test('send message only once when enter is pressed twice quickly', async f
         textInputSendShortcuts: ['enter'],
     });
     // Type message
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "test message");
-    });
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', 'test message');
     await afterNextRender(() => {
         const enterEvent = new window.KeyboardEvent('keydown', { key: 'Enter' });
-        document.querySelector(`.o_ComposerTextInput_textarea`)
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`)
             .dispatchEvent(enterEvent);
-        document.querySelector(`.o_ComposerTextInput_textarea`)
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`)
             .dispatchEvent(enterEvent);
     });
     assert.verifySteps(

@@ -4,6 +4,7 @@ import {
     afterEach,
     afterNextRender,
     beforeEach,
+    insertIntoComposer,
     nextAnimationFrame,
     start,
 } from '@mail/utils/test_utils';
@@ -305,7 +306,7 @@ QUnit.test('livechats are sorted by last activity time in the sidebar: most rece
 
     // post a new message on the last channel
     await afterNextRender(() => initialLivechats[1].click());
-    await afterNextRender(() => document.execCommand('insertText', false, "Blabla"));
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', 'Blabla');
     await afterNextRender(() => document.querySelector('.o_Composer_buttonSend').click());
 
     const newLivechats = document.querySelectorAll('.o_DiscussSidebar_categoryLivechat .o_DiscussSidebarCategoryItem');

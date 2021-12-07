@@ -4,6 +4,7 @@ import {
     afterEach,
     afterNextRender,
     beforeEach,
+    insertIntoComposer,
     createRootMessagingComponent,
     start,
 } from '@mail/utils/test_utils';
@@ -411,8 +412,7 @@ QUnit.test("suggested recipients should not be notified when posting an internal
     await afterNextRender(() =>
         document.querySelector(`.o_ChatterTopbar_buttonLogNote`).click()
     );
-    document.querySelector('.o_ComposerTextInput_textarea').focus();
-    await afterNextRender(() => document.execCommand('insertText', false, "Dummy Message"));
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', 'Dummy Message');
     await afterNextRender(() => {
         document.querySelector('.o_Composer_buttonSend').click();
     });

@@ -47,16 +47,10 @@ function factory(dependencies) {
          * Starts editing this message.
          */
         startEditing() {
-            const parser = new DOMParser();
-            const htmlDoc = parser.parseFromString(this.message.body.replaceAll('<br>', '\n').replaceAll('</br>', '\n'), "text/html");
-            const textInputContent = htmlDoc.body.textContent;
             this.update({
                 composerForEditing: insertAndReplace({
                     isLastStateChangeProgrammatic: true,
-                    textInputContent,
-                    textInputCursorEnd: textInputContent.length,
-                    textInputCursorStart: textInputContent.length,
-                    textInputSelectionDirection: 'none',
+                    textInputContent: this.message.body,
                 }),
                 composerViewInEditing: insertAndReplace({
                     doFocus: true,

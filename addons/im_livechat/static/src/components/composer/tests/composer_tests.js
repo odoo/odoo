@@ -11,7 +11,8 @@ QUnit.module('composer_tests.js', {
 
         this.start = async params => {
             const res = await start({ ...params, data: this.data });
-            const { env, widget } = res;
+            const { components, env, widget } = res;
+            this.components = components;
             this.env = env;
             this.widget = widget;
             return res;

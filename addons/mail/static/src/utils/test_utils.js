@@ -836,6 +836,25 @@ function pasteFiles(el, files) {
     el.dispatchEvent(ev);
 }
 
+/**
+ * Insert content into the composer
+ * @param {string} composerName
+ * @param {string} command should be 'insertText' or 'insertHTML'
+ * @param {string} content
+ */
+async function insertIntoComposer(composerName, command, content) {
+    const composer = document.querySelector(composerName);
+    const insertCommand = ['insertText', 'insertHTML'];
+    if (composer && insertCommand.includes(command)) {
+        await afterNextRender(() => {
+            composer.focus();
+            document.execCommand(command, false, content);
+            composer.dispatchEvent(new KeyboardEvent('keydown'));
+            composer.dispatchEvent(new KeyboardEvent('keyup'));
+        });
+    }
+}
+
 //------------------------------------------------------------------------------
 // Export
 //------------------------------------------------------------------------------
@@ -847,6 +866,7 @@ export {
     createRootMessagingComponent,
     dragenterFiles,
     dropFiles,
+    insertIntoComposer,
     nextAnimationFrame,
     nextTick,
     pasteFiles,

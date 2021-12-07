@@ -4,6 +4,7 @@ import {
     afterEach,
     afterNextRender,
     beforeEach,
+    insertIntoComposer,
     nextAnimationFrame,
     start,
 } from '@mail/utils/test_utils';
@@ -108,24 +109,9 @@ QUnit.test('reply: discard on pressing escape', async function (assert) {
         "reply composer should still be opened after pressing escape on emojis button"
     );
 
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "@");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-        document.execCommand('insertText', false, "T");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-        document.execCommand('insertText', false, "e");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
-    });
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', '@');
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', 'T');
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', 'e');
     assert.containsOnce(
         document.body,
         '.o_ComposerSuggestion',
@@ -134,7 +120,7 @@ QUnit.test('reply: discard on pressing escape', async function (assert) {
 
     await afterNextRender(() => {
         const ev = new window.KeyboardEvent('keydown', { bubbles: true, key: "Escape" });
-        document.querySelector(`.o_ComposerTextInput_textarea`).dispatchEvent(ev);
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).dispatchEvent(ev);
     });
     assert.containsNone(
         document.body,
@@ -149,7 +135,7 @@ QUnit.test('reply: discard on pressing escape', async function (assert) {
 
     await afterNextRender(() => {
         const ev = new window.KeyboardEvent('keydown', { bubbles: true, key: "Escape" });
-        document.querySelector(`.o_ComposerTextInput_textarea`).dispatchEvent(ev);
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).dispatchEvent(ev);
     });
     assert.containsNone(
         document.body,
@@ -320,7 +306,7 @@ QUnit.test('reply: discard on click away', async function (assert) {
         "should have composer after clicking on reply to message"
     );
 
-    document.querySelector(`.o_ComposerTextInput_textarea`).click();
+    document.querySelector(`.o_ComposerTextInput_wysiwyg`).click();
     await nextAnimationFrame(); // wait just in case, but nothing is supposed to happen
     assert.containsOnce(
         document.body,
@@ -424,9 +410,7 @@ QUnit.test('"reply to" composer should log note if message replied to is a note'
         "Send button text should be 'Log'"
     );
 
-    await afterNextRender(() =>
-        document.execCommand('insertText', false, "Test")
-    );
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', 'Test');
     await afterNextRender(() =>
         document.querySelector('.o_Composer_buttonSend').click()
     );
@@ -496,9 +480,7 @@ QUnit.test('"reply to" composer should send message if message replied to is not
         "Send button text should be 'Send'"
     );
 
-    await afterNextRender(() =>
-        document.execCommand('insertText', false, "Test")
-    );
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', 'Test');
     await afterNextRender(() =>
         document.querySelector('.o_Composer_buttonSend').click()
     );

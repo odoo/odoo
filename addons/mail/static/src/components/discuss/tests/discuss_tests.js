@@ -6,6 +6,7 @@ import {
     afterEach,
     afterNextRender,
     beforeEach,
+    insertIntoComposer,
     nextAnimationFrame,
     start,
 } from '@mail/utils/test_utils';
@@ -1814,7 +1815,7 @@ QUnit.test('new messages separator [REQUIRE FOCUS]', async function (assert) {
         },
     });
     // composer is focused by default, we remove that focus
-    document.querySelector('.o_ComposerTextInput_textarea').blur();
+    document.querySelector('.o_ComposerTextInput_wysiwyg').blur();
     // simulate receiving a message
     await afterNextRender(async () => this.env.services.rpc({
         route: '/mail/chat_post',
@@ -1862,7 +1863,7 @@ QUnit.test('new messages separator [REQUIRE FOCUS]', async function (assert) {
     );
 
     await afterNextRender(() =>
-        document.querySelector('.o_ComposerTextInput_textarea').focus()
+        document.querySelector('.o_ComposerTextInput_wysiwyg').focus()
     );
     assert.containsNone(
         document.body,
@@ -2577,27 +2578,17 @@ QUnit.test('composer state: text save and restore', async function (assert) {
         },
     });
     // Write text in composer for #general
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "A message");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('input'));
-    });
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', 'A message');
     await afterNextRender(() =>
         document.querySelector(`.o_DiscussSidebarCategoryItem[data-thread-name="Special"]`).click()
     );
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "An other message");
-        document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('input'));
-    });
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', 'An other message');
     // Switch back to #general
     await afterNextRender(() =>
         document.querySelector(`.o_DiscussSidebarCategoryItem[data-thread-name="General"]`).click()
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent,
         "A message",
         "should restore the input text"
     );
@@ -2606,7 +2597,7 @@ QUnit.test('composer state: text save and restore', async function (assert) {
         document.querySelector(`.o_DiscussSidebarCategoryItem[data-thread-name="Special"]`).click()
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent,
         "An other message",
         "should restore the input text"
     );
@@ -2737,7 +2728,7 @@ QUnit.test('post a simple message', async function (assert) {
                 );
                 assert.strictEqual(
                     args.post_data.body,
-                    "Test",
+                    "<p>Test</p>",
                     "should post with provided content in composer input"
                 );
                 assert.strictEqual(
@@ -2766,28 +2757,24 @@ QUnit.test('post a simple message', async function (assert) {
         "should display no message initially"
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent,
         "",
         "should have empty content initially"
     );
 
     // insert some HTML in editable
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "Test");
-    });
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertHTML', '<p>Test</p>');
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
-        "Test",
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).innerHTML,
+        "<p>Test</p>",
         "should have inserted text in editable"
     );
-
     await afterNextRender(() =>
         document.querySelector('.o_Composer_buttonSend').click()
     );
     assert.verifySteps(['message_post']);
     assert.strictEqual(
-        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`).textContent,
         "",
         "should have no content in composer input after posting message"
     );
@@ -2834,13 +2821,10 @@ QUnit.test('post message on channel with "Enter" keyboard shortcut', async funct
     );
 
     // insert some HTML in editable
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "Test");
-    });
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', 'Test');
     await afterNextRender(() => {
         const kevt = new window.KeyboardEvent('keydown', { key: "Enter" });
-        document.querySelector('.o_ComposerTextInput_textarea').dispatchEvent(kevt);
+        document.querySelector('.o_ComposerTextInput_wysiwyg').dispatchEvent(kevt);
     });
     assert.containsOnce(
         document.body,
@@ -2872,12 +2856,9 @@ QUnit.test('do not post message on channel with "SHIFT-Enter" keyboard shortcut'
     );
 
     // insert some HTML in editable
-    await afterNextRender(() => {
-        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
-        document.execCommand('insertText', false, "Test");
-    });
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertText', 'Test');
     const kevt = new window.KeyboardEvent('keydown', { key: "Enter", shiftKey: true });
-    document.querySelector('.o_ComposerTextInput_textarea').dispatchEvent(kevt);
+    document.querySelector('.o_ComposerTextInput_wysiwyg').dispatchEvent(kevt);
     await nextAnimationFrame();
     assert.containsNone(
         document.body,
@@ -3193,7 +3174,7 @@ QUnit.test('reply to message from inbox (message linked to document)', async fun
                 );
                 assert.strictEqual(
                     args.post_data.body,
-                    "Test",
+                    "<p>Test</p>",
                     "should post with provided content in composer input"
                 );
                 assert.strictEqual(
@@ -3255,13 +3236,11 @@ QUnit.test('reply to message from inbox (message linked to document)', async fun
     );
     assert.strictEqual(
         document.activeElement,
-        document.querySelector(`.o_ComposerTextInput_textarea`),
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`),
         "composer text input should be auto-focus"
     );
 
-    await afterNextRender(() =>
-        document.execCommand('insertText', false, "Test")
-    );
+    await insertIntoComposer('.o_ComposerTextInput_wysiwyg', 'insertHTML', '<p>Test</p>');
     await afterNextRender(() =>
         document.querySelector('.o_Composer_buttonSend').click()
     );
@@ -3882,13 +3861,13 @@ QUnit.test('auto-focus composer on opening thread', async function (assert) {
     );
     assert.strictEqual(
         document.activeElement,
-        document.querySelector(`.o_ComposerTextInput_textarea`),
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`),
         "composer of channel 'General' should be automatically focused on opening"
     );
 
-    document.querySelector(`.o_ComposerTextInput_textarea`).blur();
+    document.querySelector(`.o_ComposerTextInput_wysiwyg`).blur();
     assert.notOk(
-        document.activeElement === document.querySelector(`.o_ComposerTextInput_textarea`),
+        document.activeElement === document.querySelector(`.o_ComposerTextInput_wysiwyg`),
         "composer of channel 'General' should no longer focused on click away"
     );
 
@@ -3908,7 +3887,7 @@ QUnit.test('auto-focus composer on opening thread', async function (assert) {
     );
     assert.strictEqual(
         document.activeElement,
-        document.querySelector(`.o_ComposerTextInput_textarea`),
+        document.querySelector(`.o_ComposerTextInput_wysiwyg`),
         "composer of chat 'Demo User' should be automatically focused on opening"
     );
 });

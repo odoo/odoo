@@ -3,6 +3,12 @@
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { useUpdate } from '@mail/component_hooks/use_update/use_update';
 import { markEventHandled } from '@mail/utils/utils';
+import wysiwygLoader from 'web_editor.loader';
+import Widget from 'web.Widget';
+import {
+    createRange,
+    setSelection,
+} from '@mail/js/utils';
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
@@ -25,17 +31,29 @@ export class ComposerTextInput extends Component {
          */
         this._textareaLastInputValue = "";
         /**
-         * Reference of the textarea. Useful to set height, selection and content.
+         * Reference of the wysiwygTextarea.
          */
-        this._textareaRef = useRef('textarea');
+        this._wysiwygTextarea = useRef('wysiwyg_textarea');
         /**
-         * This is the invisible textarea used to compute the composer height
-         * based on the text content. We need it to downsize the textarea
-         * properly without flicker.
+         * Reference of the wysiwyg. Get instance in mounted().
          */
-        this._mirroredTextareaRef = useRef('mirroredTextarea');
+        this._wysiwygRef = undefined;
+        this._onClickTextarea = this._onClickTextarea.bind(this);
+        this._onFocusinTextarea = this._onFocusinTextarea.bind(this);
+        this._onFocusoutTextarea = this._onFocusoutTextarea.bind(this);
+        this._onKeydownTextarea = this._onKeydownTextarea.bind(this);
+        this._onKeyupTextarea = this._onKeyupTextarea.bind(this);
     }
 
+    mounted() {
+        this._createWysiwygIntance();
+    }
+
+    willUnmount() {
+        if (this._wysiwygRef) {
+            this._wysiwygRef.destroy();
+        }
+    }
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
@@ -54,14 +72,14 @@ export class ComposerTextInput extends Component {
         if (!this.composerView) {
             return "";
         }
-        if (!this.composerView.composer.thread) {
+        if (!this.composerView.composer.activeThread) {
             return "";
         }
-        if (this.composerView.composer.thread.model === 'mail.channel') {
-            if (this.composerView.composer.thread.correspondent) {
-                return _.str.sprintf(this.env._t("Message %s..."), this.composerView.composer.thread.correspondent.nameOrDisplayName);
+        if (this.composerView.composer.activeThread.model === 'mail.channel') {
+            if (this.composerView.composer.activeThread.correspondent) {
+                return _.str.sprintf(this.env._t("Message %s..."), this.composerView.composer.activeThread.correspondent.nameOrDisplayName);
             }
-            return _.str.sprintf(this.env._t("Message #%s..."), this.composerView.composer.thread.displayName);
+            return _.str.sprintf(this.env._t("Message #%s..."), this.composerView.composer.activeThread.displayName);
         }
         if (this.composerView.composer.isLog) {
             return this.env._t("Log an internal note...");
@@ -70,20 +88,124 @@ export class ComposerTextInput extends Component {
     }
 
     /**
+     * Cleans the content and the history of the wysiwyg.
+     */
+    clear() {
+        if (!this._wysiwygRef) {
+            return;
+        }
+        this._wysiwygRef.setValue("<p><br></p>");
+        this._wysiwygRef.odooEditor.historyReset();
+    }
+
+    /**
+     * Returns whether the given node is self or a children of self.
+     * @param {Node} node
+     * @returns {boolean}
+     */
+    contains(node) {
+        if (!this._wysiwygRef || !this._wysiwygRef.toolbar.el || ! this._wysiwygRef.el) {
+            return false;
+        }
+        return (this._wysiwygRef.toolbar.el.contains(node) || this._wysiwygRef.el.contains(node));
+    }
+
+    focus() {
+        if (!this._wysiwygRef) {
+            return;
+        }
+        this._wysiwygRef.focus();
+        this.saveStateInStore();
+    }
+
+    /**
+     * Provide the getter for composer_view model,
+     * should be refactored when odoo wysiwyg is implmented with OWL.
+     */
+    getContent() {
+        return this._getContent();
+    }
+
+    /**
      * Saves the composer text input state in store
      */
     saveStateInStore() {
         this.composerView.composer.update({
             textInputContent: this._getContent(),
-            textInputCursorEnd: this._getSelectionEnd(),
-            textInputCursorStart: this._getSelectionStart(),
-            textInputSelectionDirection: this._textareaRef.el.selectionDirection,
+            textInputCursorSelection: this._getSelection(),
         });
+    }
+
+    /**
+     * Insert the content into the wysiwyg.
+     */
+    insertIntoTextInput(content) {
+        if (!this._wysiwygRef) {
+            return;
+        }
+        /**
+         * PLace the current cursor after the inserted content.
+         */
+        const range = new Range();
+        const contentNode = document.createTextNode(content);
+        // Replacing the content of the editor while it is empty, preventing unwanted </br>
+        if(this._wysiwygRef.el.innerHTML.trim() === "" || this._wysiwygRef.el.innerText.trim() === ""){
+            this._wysiwygRef.el.lastChild.removeChild(this._wysiwygRef.el.lastChild.lastChild);
+            this._wysiwygRef.el.lastChild.append(contentNode);
+        } else {
+            const replaceRange = createRange(
+                this.composerView.composer.textInputCursorSelection.anchorNode,
+                this.composerView.composer.textInputCursorSelection.anchorOffset,
+                this.composerView.composer.textInputCursorSelection.focusNode,
+                this.composerView.composer.textInputCursorSelection.focusOffset,
+            )
+            replaceRange.deleteContents();
+            replaceRange.insertNode(contentNode);
+        }
+        range.setStartAfter(contentNode);
+        range.collapse();
+        setSelection(range);
+        this.saveStateInStore();
     }
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
+
+    /**
+     * Create the wysiwyg instance.
+     *
+     * @private
+     * @returns {Promise}
+     */
+     async _createWysiwygIntance () {
+        const options = {
+            disableCommandBar: true,
+            disableTab: true,
+            placeholder: this.textareaPlaceholder,
+            resizable: false,
+            toolbarTemplate: 'mail.composer_toolbar',
+            userGeneratedContent: true,
+        };
+        await wysiwygLoader.loadFromTextarea(new Widget(), this._wysiwygTextarea.el, options).then((wys) => {
+            this._wysiwygRef = wys;
+            this._wysiwygRef.$el.addClass('o_ComposerTextInput_wysiwyg');
+            this._wysiwygRef.el.addEventListener('click', this._onClickTextarea);
+            this._wysiwygRef.el.addEventListener('focusin', this._onFocusinTextarea);
+            this._wysiwygRef.el.addEventListener('focusout', this._onFocusoutTextarea);
+            this._wysiwygRef.el.addEventListener('keydown', this._onKeydownTextarea);
+            this._wysiwygRef.el.addEventListener('keyup', this._onKeyupTextarea);
+            if (!this.composerView) {
+                return;
+            }
+            /**
+             * Updates the state of the wysiwyg widget when ready.
+             * Do manully stateChange/focus when wysiwyg is ready,
+             * aiming to prevent unexpected behaviours happen.
+             */
+             this.render();
+        });
+    }
 
     /**
      * Returns textarea current content.
@@ -92,28 +214,33 @@ export class ComposerTextInput extends Component {
      * @returns {string}
      */
     _getContent() {
-        return this._textareaRef.el.value;
+        if(!this._wysiwygRef || this._wysiwygRef.el.innerText.trim() === "") {
+            return "";
+        }
+        return this._wysiwygRef.getValue();
     }
 
     /**
-     * Returns selection end position.
+     * Returns selection.
      *
      * @private
-     * @returns {integer}
+     * @returns {Selection}
      */
-    _getSelectionEnd() {
-        return this._textareaRef.el.selectionEnd;
-    }
-
-    /**
-     * Returns selection start position.
-     *
-     * @private
-     * @returns {integer}
-     *
-     */
-    _getSelectionStart() {
-        return this._textareaRef.el.selectionStart;
+    _getSelection() {
+        if (!this._wysiwygRef) {
+            return "";
+        }
+        let selection = this._wysiwygRef.odooEditor.document.getSelection();
+        if (this.contains(selection.baseNode)) {
+            return {
+                anchorNode: selection.anchorNode,
+                anchorOffset: selection.anchorOffset,
+                focusNode: selection.focusNode,
+                focusOffset: selection.focusOffset,
+                isCollapsed: selection.isCollapsed,
+            };
+        }
+        return this.composerView.composer.textInputCursorSelection;
     }
 
     /**
@@ -127,7 +254,7 @@ export class ComposerTextInput extends Component {
     }
 
     /**
-     * Updates the content and height of a textarea
+     * Updates the content
      *
      * @private
      */
@@ -135,35 +262,35 @@ export class ComposerTextInput extends Component {
         if (!this.composerView) {
             return;
         }
+        if(!this._wysiwygRef) {
+            return ;
+        }
+        const parser = new DOMParser();
+        const htmlDoc = parser.parseFromString(this.composerView.composer.textInputContent, 'text/html');
+        if (this.composerView.composer.isLastStateChangeProgrammatic) {
+            this.composerView.composer.update({ isLastStateChangeProgrammatic: false });
+            if (htmlDoc.body.textContent == '') {
+                this._wysiwygRef.el.innerHTML = '<p></br></p>';
+                return ;
+            }
+            this._wysiwygRef.el.innerHTML = this.composerView.composer.textInputContent;
+            if (this.composerView.hasFocus && this.composerView.composer.textInputCursorSelection) {
+                const range = createRange(
+                    this.composerView.composer.textInputCursorSelection.anchorNode,
+                    this.composerView.composer.textInputCursorSelection.anchorOffset,
+                    this.composerView.composer.textInputCursorSelection.focusNode,
+                    this.composerView.composer.textInputCursorSelection.focusOffset,
+                )
+                setSelection(range);
+            }
+        }
         if (this.composerView.doFocus) {
             this.composerView.update({ doFocus: false });
             if (this.messaging.device.isMobile) {
                 this.el.scrollIntoView();
             }
-            this._textareaRef.el.focus();
+            this._wysiwygRef.focus();
         }
-        if (this.composerView.composer.isLastStateChangeProgrammatic) {
-            this._textareaRef.el.value = this.composerView.composer.textInputContent;
-            if (this.composerView.hasFocus) {
-                this._textareaRef.el.setSelectionRange(
-                    this.composerView.composer.textInputCursorStart,
-                    this.composerView.composer.textInputCursorEnd,
-                    this.composerView.composer.textInputSelectionDirection,
-                );
-            }
-            this.composerView.composer.update({ isLastStateChangeProgrammatic: false });
-        }
-        this._updateHeight();
-    }
-
-    /**
-     * Updates the textarea height.
-     *
-     * @private
-     */
-    _updateHeight() {
-        this._mirroredTextareaRef.el.value = this.composerView.composer.textInputContent;
-        this._textareaRef.el.style.height = (this._mirroredTextareaRef.el.scrollHeight) + "px";
     }
 
     //--------------------------------------------------------------------------
@@ -200,21 +327,6 @@ export class ComposerTextInput extends Component {
         }
         this.saveStateInStore();
         this.composerView.update({ hasFocus: false });
-    }
-
-    /**
-     * @private
-     */
-    _onInputTextarea() {
-        if (!this.composerView) {
-            return;
-        }
-        this.saveStateInStore();
-        if (this._textareaLastInputValue !== this._textareaRef.el.value) {
-            this.composerView.handleCurrentPartnerIsTyping();
-        }
-        this._textareaLastInputValue = this._textareaRef.el.value;
-        this._updateHeight();
     }
 
     /**
@@ -385,10 +497,14 @@ export class ComposerTextInput extends Component {
                 break;
             // Otherwise, check if a mention is typed
             default:
-                this.saveStateInStore();
+                break;
         }
+        this.saveStateInStore();
+        if (this._textareaLastInputValue !== this._wysiwygRef.getValue()) {
+            this.composerView.handleCurrentPartnerIsTyping();
+        }
+        this._textareaLastInputValue = this._wysiwygRef.getValue();
     }
-
 }
 
 Object.assign(ComposerTextInput, {

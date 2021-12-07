@@ -8,7 +8,7 @@
     'summary': 'Chat, mail gateway and private channels',
     'description': "",
     'website': 'https://www.odoo.com/app/discuss',
-    'depends': ['base', 'base_setup', 'bus', 'web_tour'],
+    'depends': ['base', 'base_setup', 'bus', 'web_tour', 'web_editor'],
     'data': [
         'data/mail_groups.xml',
         'wizard/mail_blacklist_remove_views.xml',
@@ -62,6 +62,10 @@
             ('include', 'web.assets_common'),
         ],
         'mail.assets_discuss_public': [
+            # Dependencies of web_editor for public dicuss
+            'web_editor/static/src/js/frontend/loader.js',
+            'web_editor/static/src/js/wysiwyg/dialog.js',
+            'web_editor/static/src/xml/*.xml',
             # SCSS dependencies (the order is important)
             ('include', 'web._assets_helpers'),
             'web/static/src/legacy/scss/bootstrap_overridden.scss',
