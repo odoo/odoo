@@ -25,6 +25,8 @@ class ReSequenceWizard(models.TransientModel):
     @api.model
     def default_get(self, fields_list):
         values = super(ReSequenceWizard, self).default_get(fields_list)
+        if 'move_ids' not in fields_list:
+            return values
         active_move_ids = self.env['account.move']
         if self.env.context['active_model'] == 'account.move' and 'active_ids' in self.env.context:
             active_move_ids = self.env['account.move'].browse(self.env.context['active_ids'])
@@ -133,6 +135,7 @@ class ReSequenceWizard(models.TransientModel):
         if self.move_ids.journal_id and self.move_ids.journal_id.restrict_mode_hash_table:
             if self.ordering == 'date':
                 raise UserError(_('You can not reorder sequence by date when the journal is locked with a hash.'))
+        self.env['account.move'].browse(int(k) for k in new_values.keys()).name = False
         for move_id in self.move_ids:
             if str(move_id.id) in new_values:
                 if self.ordering == 'keep':
