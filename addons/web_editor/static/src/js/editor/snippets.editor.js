@@ -927,6 +927,15 @@ var SnippetsMenu = Widget.extend({
     _activateInsertionZones: function ($selectorSiblings, $selectorChildren) {
         var self = this;
 
+        // If a dropdown is shown, the drop zones must be created only in this
+        // element.
+        const $editableArea = self.getEditableArea();
+        const $dropdown = $editableArea.find('.dropdown-menu.show').addBack('.dropdown-menu.show').parent();
+        if ($dropdown.length) {
+            $selectorSiblings = $dropdown.find($selectorSiblings);
+            $selectorChildren = $dropdown.find($selectorChildren);
+        }
+
         // Check if the drop zone should be horizontal or vertical
         function setDropZoneDirection($elem, $parent, $sibling) {
             var vertical = false;
