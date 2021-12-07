@@ -5,7 +5,6 @@
     'sequence': 210,
     'summary': 'Chat with your website visitors',
     'category': 'Website/Live Chat',
-    'complexity': 'easy',
     'website': 'https://www.odoo.com/app/live-chat',
     'description':
         """
