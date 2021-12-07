@@ -157,8 +157,9 @@ class MailThread(models.AbstractModel):
             'default_res_model': self._name,
             'default_composition_mode': 'mass',
             'default_template_id': template.id if template else False,
-            'default_body': body if body and not template else False,
         }
+        if body and not template:
+            composer_context['default_body'] = body
         if active_domain is not None:
             composer_context['default_use_active_domain'] = True
             composer_context['default_active_domain'] = repr(active_domain)
