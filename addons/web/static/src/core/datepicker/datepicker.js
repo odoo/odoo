@@ -92,7 +92,7 @@ export class DatePicker extends Component {
     get options() {
         return {
             // Fallback to default localization format in `core/l10n/dates.js`.
-            format: this.props.format,
+            format: this.props.format || this.defaultFormat,
             locale: this.props.locale || (this.date && this.date.locale),
             timezone: this.isLocal,
         };
@@ -256,6 +256,10 @@ DatePicker.props = {
     readonly: { type: Boolean, optional: true },
     useCurrent: Boolean,
     widgetParent: String,
+    daysOfWeekDisabled: {
+        optional: true,
+        type: Array,
+    },
 };
 DatePicker.template = "web.DatePicker";
 

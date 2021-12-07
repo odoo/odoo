@@ -7,8 +7,8 @@
         </t>
         <t t-else="">
             <DatePicker
+                t-props="datePickerOptions"
                 date="value or null"
-                warn_future="warnFuture"
                 t-on-datetime-changed="onChange"
             />
         </t>
