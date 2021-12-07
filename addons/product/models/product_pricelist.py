@@ -73,26 +73,52 @@ class Pricelist(models.Model):
                 return pricelist_ids
         return super()._name_search(name, args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
-    def _compute_price_rule_multi(self, products, qty, uom=None, date=False):
-        """ Low-level method - Multi pricelist, multi products
-        Returns: dict{product_id: dict{pricelist_id: (price, suitable_rule)} }"""
-        if not self.ids:
-            pricelists = self.search([])
-        else:
-            pricelists = self
-        results = {}
-        for pricelist in pricelists:
-            subres = pricelist._compute_price_rule(products, qty, uom=uom, date=date)
-            for product_id, price in subres.items():
-                results.setdefault(product_id, {})
-                results[product_id][pricelist.id] = price
-        return results
+    def _get_products_price(self, products, quantity, uom=None, date=False):
+        """Compute the pricelist prices for the specified products, qty & uom.
+
+        Note: self.ensure_one()
+
+        :returns: dict{product_id: product price}, considering the current pricelist
+        :rtype: dict
+        """
+        self.ensure_one()
+        return {
+            product_id: res_tuple[0]
+            for product_id, res_tuple in self._compute_price_rule(
+                products,
+                quantity,
+                uom=uom,
+                date=date,
+            ).items()
+        }
+
+    def _get_product_price(self, product, quantity, uom=None, date=False):
+        """Compute the pricelist price for the specified product, qty & uom.
+
+        Note: self.ensure_one()
+
+        :returns: unit price of the product, considering pricelist rules
+        :rtype: float
+        """
+        self.ensure_one()
+        return self._compute_price_rule(product, quantity, uom=uom, date=date)[product.id][0]
+
+    def _get_product_price_rule(self, product, quantity, uom=None, date=False):
+        """Compute the pricelist price & rule for the specified product, qty & uom.
+
+        Note: self.ensure_one()
+
+        :returns: (product unit price, applied pricelist rule)
+        :rtype: tuple
+        """
+        self.ensure_one()
+        return self._compute_price_rule(product, quantity, uom=uom, date=date)[product.id]
 
     def _compute_price_rule(self, products, qty, uom=None, date=False):
         """ Low-level method - Mono pricelist, multi products
         Returns: dict{product_id: (price, suitable_rule) for the given pricelist}
 
-        :param products: recordset of product (product.product/product.template)
+        :param products: recordset of products (product.product/product.template)
         :param float qty: quantity of products requested (in given uom)
         :param uom: unit of measure (uom.uom record)
             If not specified, prices returned are expressed in product uoms
@@ -210,46 +236,29 @@ class Pricelist(models.Model):
             '|', ('date_end', '=', False), ('date_end', '>=', date),
         ]
 
-    # New methods: product based
-    def _get_products_price(self, products, quantity, uom=None, date=False):
-        """ For a given pricelist, return price for products
-        Returns: dict{product_id: product price}, in the given pricelist """
-        self.ensure_one()
-        return {
-            product_id: res_tuple[0]
-            for product_id, res_tuple in self._compute_price_rule(
-                products,
-                quantity,
-                uom=uom,
-                date=date,
-            ).items()
-        }
-
-    def _get_product_price(self, product, quantity, uom=None, date=False):
-        """ For a given pricelist, return price for a given product """
-        self.ensure_one()
-        return self._compute_price_rule(product, quantity, uom=uom, date=date)[product.id][0]
-
-    def _get_product_price_rule(self, product, quantity, uom=None, date=False):
-        """ For a given pricelist, return price and rule for a given product """
-        self.ensure_one()
-        return self._compute_price_rule(product, quantity, uom=uom, date=date)[product.id]
-
+    # Multi pricelists price|rule computation
     def _price_get(self, product, qty):
         """ Multi pricelist, mono product - returns price per pricelist """
         return {
             key: price[0]
             for key, price in self._compute_price_rule_multi(product, qty)[product.id].items()}
 
-    def _get_partner_pricelist_multi_search_domain_hook(self, company_id):
-        return [
-            ('active', '=', True),
-            ('company_id', 'in', [company_id, False]),
-        ]
+    def _compute_price_rule_multi(self, products, qty, uom=None, date=False):
+        """ Low-level method - Multi pricelist, multi products
+        Returns: dict{product_id: dict{pricelist_id: (price, suitable_rule)} }"""
+        if not self.ids:
+            pricelists = self.search([])
+        else:
+            pricelists = self
+        results = {}
+        for pricelist in pricelists:
+            subres = pricelist._compute_price_rule(products, qty, uom=uom, date=date)
+            for product_id, price in subres.items():
+                results.setdefault(product_id, {})
+                results[product_id][pricelist.id] = price
+        return results
 
-    def _get_partner_pricelist_multi_filter_hook(self):
-        return self.filtered('active')
-
+    # res.partner.property_product_pricelist field computation
     @api.model
     def _get_partner_pricelist_multi(self, partner_ids, company_id=None):
         """ Retrieve the applicable pricelist for given partners in a given company.
@@ -298,6 +307,15 @@ class Pricelist(models.Model):
                     result[pid] = pl
 
         return result
+
+    def _get_partner_pricelist_multi_search_domain_hook(self, company_id):
+        return [
+            ('active', '=', True),
+            ('company_id', 'in', [company_id, False]),
+        ]
+
+    def _get_partner_pricelist_multi_filter_hook(self):
+        return self.filtered('active')
 
     @api.model
     def get_import_templates(self):
