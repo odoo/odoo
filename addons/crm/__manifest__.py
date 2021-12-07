@@ -69,7 +69,6 @@
         'data/mail_activity_demo.xml',
         'data/crm_lead_demo.xml',
     ],
-    'css': ['static/src/css/crm.css'],
     'installable': True,
     'application': True,
     'auto_install': False,
