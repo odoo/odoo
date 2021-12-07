@@ -3,30 +3,15 @@
 
 from datetime import datetime, timedelta
 
-from odoo import fields
-from odoo.addons.event.tests.common import EventCase
+from odoo.addons.test_event_full.tests.common import TestEventFullCommon
 from odoo.exceptions import AccessError
+from odoo.tests import tagged
 from odoo.tests.common import users
 from odoo.tools import mute_logger
 
 
-class TestEventSecurity(EventCase):
-
-    @classmethod
-    def setUpClass(cls):
-        super(TestEventSecurity, cls).setUpClass()
-
-        cls.test_event = cls.env['event.event'].create({
-            'auto_confirm': True,
-            'date_begin': fields.Datetime.to_string(datetime.today() + timedelta(days=1)),
-            'date_end': fields.Datetime.to_string(datetime.today() + timedelta(days=15)),
-            'date_tz': 'Europe/Brussels',
-            'name': 'TestEvent',
-        })
-        cls.test_event_type = cls.env['event.type'].create({
-            'auto_confirm': True,
-            'name': 'Update Type',
-        })
+@tagged('security')
+class TestEventSecurity(TestEventFullCommon):
 
     @users('user_employee')
     @mute_logger('odoo.models.unlink', 'odoo.addons.base.models.ir_model')
@@ -80,9 +65,9 @@ class TestEventSecurity(EventCase):
 
         # Event Registration
         registration = self.env['event.registration'].create({
-            'event_id': self.test_event.id,
+            'event_id': event.id,
         })
-        self.assertEqual(registration.event_id.name, self.test_event.name, 'Registration users should be able to read')
+        self.assertEqual(registration.event_id.name, event.name, 'Registration users should be able to read')
         registration.name = 'Test write'
         with self.assertRaises(AccessError):
             registration.unlink()
