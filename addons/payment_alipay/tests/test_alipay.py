@@ -3,19 +3,23 @@
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 from odoo.tools import mute_logger
+from werkzeug.exceptions import Forbidden
+from unittest.mock import patch
+
 
 from .common import AlipayCommon
 from ..controllers.main import AlipayController
+from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 
 
 @tagged('post_install', '-at_install')
-class AlipayTest(AlipayCommon):
+class AlipayTest(AlipayCommon, PaymentHttpCommon):
 
     def test_compatible_acquirers(self):
         self.alipay.alipay_payment_method = 'express_checkout'
         acquirers = self.env['payment.acquirer']._get_compatible_acquirers(
             partner_id=self.partner.id,
-            currency_id=self.currency_yuan.id, # 'CNY'
+            currency_id=self.currency_yuan.id,  # 'CNY'
             company_id=self.company.id,
         )
         self.assertIn(self.alipay, acquirers)
@@ -29,7 +33,7 @@ class AlipayTest(AlipayCommon):
         self.alipay.alipay_payment_method = 'standard_checkout'
         acquirers = self.env['payment.acquirer']._get_compatible_acquirers(
             partner_id=self.partner.id,
-            currency_id=self.currency_yuan.id, # 'CNY'
+            currency_id=self.currency_yuan.id,  # 'CNY'
             company_id=self.company.id,
         )
         self.assertIn(self.alipay, acquirers)
@@ -49,7 +53,7 @@ class AlipayTest(AlipayCommon):
         self._test_alipay_redirect_form()
 
     def _test_alipay_redirect_form(self):
-        tx = self.create_transaction(flow='redirect') # Only flow implemented
+        tx = self.create_transaction(flow='redirect')  # Only flow implemented
 
         expected_values = {
             '_input_charset': 'utf-8',
@@ -58,7 +62,7 @@ class AlipayTest(AlipayCommon):
             'partner': self.alipay.alipay_merchant_partner_id,
             'return_url': self._build_url(AlipayController._return_url),
             'subject': self.reference,
-            'total_fee': str(self.amount), # Fees disabled by default
+            'total_fee': str(self.amount),  # Fees disabled by default
         }
 
         if self.alipay.alipay_payment_method == 'standard_checkout':
@@ -153,7 +157,7 @@ class AlipayTest(AlipayCommon):
             })
 
         alipay_post_data['sign'] = self.alipay._alipay_build_sign(alipay_post_data)
-        with self.assertRaises(ValidationError): # unknown transactiion
+        with self.assertRaises(ValidationError):  # unknown transaction
             self.env['payment.transaction']._handle_feedback_data('alipay', alipay_post_data)
 
         tx = self.env['payment.transaction'].create({
@@ -182,7 +186,7 @@ class AlipayTest(AlipayCommon):
 
         self.env['payment.transaction']._handle_feedback_data('alipay', alipay_post_data)
         self.assertEqual(tx.acquirer_reference, '2017112321001003690200384552',
-            'Alipay: notification should not go throught since it has already been validated')
+            'Alipay: notification should not go through since it has already been validated')
 
         # this time it should go through since the transaction is not validated yet
         tx.write({'state': 'draft', 'acquirer_reference': False})
@@ -191,3 +195,44 @@ class AlipayTest(AlipayCommon):
             'Alipay: wrong state after receiving a valid pending notification')
         self.assertEqual(tx.acquirer_reference, '2017112321001003690200384552',
             'Alipay: wrong txn_id after receiving a valid pending notification')
+
+    def test_webhook(self):
+        webhook_url = self._build_url(AlipayController._notify_url)
+        # Create dummy payload
+        self.reference = 'Test Transaction'
+        alipay_post_data = {
+            'notify_id': '1234567890123456789012345678901234',
+            'out_trade_no': self.reference,
+            'trade_no': '2021111111111111111111111111',
+            'notify_time': '2021-12-01 01:01:01',
+            'notify_type': 'trade_status_sync',
+            'total_fee': '1111.11',
+            'currency': 'CNY',
+            'trade_status': 'TRADE_FINISHED',
+            'service': 'notify_verify',
+            '_input_charset': 'utf-8',
+            'seller_email': 'dummy@alitest.com',
+            'partner': '2088888888888888',
+            'sign_type': 'MD5'
+        }
+
+        tx = self.create_transaction(flow='redirect')
+        tx.acquirer_id.alipay_payment_method = 'standard_checkout'
+        alipay_post_data['sign'] = self.alipay._alipay_build_sign(alipay_post_data)
+
+        with patch(
+                'odoo.addons.payment_alipay.controllers.main.AlipayController.send_request',
+                return_value='true'
+        ):
+            self._assert_not_raises(
+                Forbidden,
+                self._make_http_post_request,
+                webhook_url,
+                alipay_post_data
+            )
+
+        with patch(
+                'odoo.addons.payment_alipay.controllers.main.AlipayController.send_request',
+                return_value='false'
+        ):
+            self.assertEqual(self._make_http_post_request(webhook_url, alipay_post_data).status_code, Forbidden().code)
