@@ -99,6 +99,12 @@ export class ModelManager {
          * and for which required fields check still has to be executed.
          */
         this._updatedRecordsCheckRequired = new Set();
+        /**
+         * Determines whether this model manager should run in debug mode. Debug
+         * mode adds more integrity checks and more verbose error messages, at
+         * the cost of performance.
+         */
+        this.isDebug = false;
     }
 
     /**
@@ -251,9 +257,11 @@ export class ModelManager {
         if (!localId) {
             return;
         }
-        const modelName = localId.split('(')[0];
-        if (!isCheckingInheritance && modelName !== Model.modelName) {
-            throw Error(`wrong format of localId ${localId} for ${Model}.`);
+        if (!isCheckingInheritance && this.isDebug) {
+            const modelName = localId.split('(')[0];
+            if (modelName !== Model.modelName) {
+                throw Error(`wrong format of localId ${localId} for ${Model}.`);
+            }
         }
         for (const listener of this._listeners) {
             listener.lastObservedLocalIds.add(localId);
@@ -713,7 +721,7 @@ export class ModelManager {
          * expected to be found on every record.
          */
         const nonProxyRecord = new Model({ localId, valid: true });
-        const record = !this.env.isDebug() ? nonProxyRecord : new Proxy(nonProxyRecord, {
+        const record = !this.isDebug ? nonProxyRecord : new Proxy(nonProxyRecord, {
             get: function getFromProxy(record, prop) {
                 if (
                     !Model.__fieldMap[prop] &&
