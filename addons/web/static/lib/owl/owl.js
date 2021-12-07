@@ -359,6 +359,7 @@
      * the list of variables so it does not get replaced by a lookup in the context
      */
     function compileExprToArray(expr, scope) {
+        const localVars = new Set();
         scope = Object.create(scope);
         const tokens = tokenize(expr);
         let i = 0;
@@ -407,12 +408,14 @@
                         if (tokens[j].type === "SYMBOL" && tokens[j].originalValue) {
                             tokens[j].value = tokens[j].originalValue;
                             scope[tokens[j].value] = { id: tokens[j].value, expr: tokens[j].value };
+                            localVars.add(tokens[j].value);
                         }
                         j--;
                     }
                 }
                 else {
                     scope[token.value] = { id: token.value, expr: token.value };
+                    localVars.add(token.value);
                 }
             }
             if (isVar) {
@@ -426,6 +429,13 @@
                 }
             }
             i++;
+        }
+        // Mark all variables that have been used locally.
+        // This assumes the expression has only one scope (incorrect but "good enough for now")
+        for (const token of tokens) {
+            if (token.type === "SYMBOL" && localVars.has(token.value)) {
+                token.isLocal = true;
+            }
         }
         return tokens;
     }
@@ -577,8 +587,24 @@
             const tokens = compileExprToArray(expr, this.variables);
             const done = new Set();
             return tokens
-                .map((tok) => {
-                if (tok.varName) {
+                .map((tok, i) => {
+                // "this" in captured expressions should be the current component
+                if (tok.value === "this") {
+                    if (!done.has("this")) {
+                        done.add("this");
+                        this.addLine(`const this_${argId} = utils.getComponent(context);`);
+                    }
+                    tok.value = `this_${argId}`;
+                }
+                // Variables that should be looked up in the scope. isLocal is for arrow
+                // function arguments that should stay untouched (eg "ev => ev" should
+                // not become "const ev_1 = scope['ev']; ev_1 => ev_1")
+                if (tok.varName &&
+                    !tok.isLocal &&
+                    // HACK: for backwards compatibility, we don't capture bare methods
+                    // this allows them to be called with the rendering context/scope
+                    // as their this value.
+                    (!tokens[i + 1] || tokens[i + 1].type !== "LEFT_PAREN")) {
                     if (!done.has(tok.varName)) {
                         done.add(tok.varName);
                         this.addLine(`const ${tok.varName}_${argId} = ${tok.value};`);
@@ -3176,7 +3202,12 @@ See https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode for mor
                 else if (!name.startsWith("t-")) {
                     if (name !== "class" && name !== "style") {
                         // this is a prop!
-                        props[name] = ctx.formatExpression(value) || "undefined";
+                        if (value.includes("=>")) {
+                            props[name] = ctx.captureExpression(value);
+                        }
+                        else {
+                            props[name] = ctx.formatExpression(value) || "undefined";
+                        }
                     }
                 }
             }
@@ -5546,9 +5577,9 @@ See https://github.com/odoo/owl/blob/master/doc/reference/config.md#mode for mor
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '1.4.8';
-    __info__.date = '2021-11-03T12:45:36.455Z';
-    __info__.hash = '307b936';
+    __info__.version = '1.4.10';
+    __info__.date = '2021-12-07T14:32:29.551Z';
+    __info__.hash = 'bc04f72';
     __info__.url = 'https://github.com/odoo/owl';
 
 
