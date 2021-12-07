@@ -2344,13 +2344,17 @@ class Image(Binary):
 
     def _image_process(self, value):
         if value:
-            return base64.b64encode(
-                image_process(
-                    source=base64.b64decode(value),
-                    size=(self.max_width, self.max_height),
-                    verify_resolution=self.verify_resolution,
+            try:
+                return base64.b64encode(
+                    image_process(
+                        source=base64.b64decode(value),
+                        size=(self.max_width, self.max_height),
+                        verify_resolution=self.verify_resolution,
+                    )
                 )
-            )
+            except (UserError, TypeError):
+                return False
+
 
     def _process_related(self, value):
         """Override to resize the related value before saving it on self."""

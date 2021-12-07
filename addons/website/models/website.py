@@ -246,7 +246,10 @@ class Website(models.Model):
     @api.model
     def _handle_favicon(self, vals):
         if 'favicon' in vals:
-            vals['favicon'] = base64.b64encode(tools.image_process(source=base64.b64decode(vals['favicon']), size=(256, 256), crop='center', output_format='ICO'))
+            try:
+                vals['favicon'] = base64.b64encode(tools.image_process(source=base64.b64decode(vals['favicon']), size=(256, 256), crop='center', output_format='ICO'))
+            except (UserError, TypeError):
+                vals['favicon'] = False
 
     @api.model
     def _handle_domain(self, vals):
