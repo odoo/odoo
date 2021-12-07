@@ -58,15 +58,14 @@ odoo.define('fg_custom.FgPosAddPaymentDetails', function (require) {
             paymentlines.x_gc_voucher_name= this.x_gc_voucher_name;
             paymentlines.x_gc_voucher_cust= this.x_gc_voucher_cust;
 
-//            if(this.x_card_number==null || this.x_card_number == ''){
-//                var cardNumberLast4Digits = this.x_card_number.slice(this.x_card_number.length - 4)
-//                var mask='';
-//                for(var i=0; i< this.x_card_number.length-4; i++ ){
-//                    mask+='*';
-//                }
-//
-//                paymentLines.x_card_number= mask+cardNumberLast4Digits;
-//            }
+            if(this.x_card_number!=null || this.x_card_number != ''){
+                var cardNumberLast4Digits = this.x_card_number.substring(this.x_card_number.length - 4)
+                var mask='';
+                for(var i=0; i< this.x_card_number.length-4; i++ ){
+                    mask+='*';
+                }
+                paymentlines.x_card_number= mask+cardNumberLast4Digits;
+            }
 
             return paymentlines;
 
