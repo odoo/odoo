@@ -304,7 +304,7 @@ class AccountBankStatement(models.Model):
                 self.env['ir.attachment'].create({
                     'name': statement.name and _("Bank Statement %s.pdf") % statement.name or _("Bank Statement.pdf"),
                     'type': 'binary',
-                    'datas': base64.encodestring(content),
+                    'datas': base64.encodebytes(content),
                     'res_model': statement._name,
                     'res_id': statement.id
                 })

@@ -163,7 +163,7 @@ class AccountMove(models.Model):
                 'name': report_name,
                 'res_id': invoice.id,
                 'res_model': invoice._name,
-                'datas': base64.encodestring(data),
+                'datas': base64.encodebytes(data),
                 'description': description,
                 'type': 'binary',
                 })

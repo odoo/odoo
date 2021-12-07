@@ -1531,7 +1531,7 @@ class Binary(http.Controller):
             try:
                 attachment = Model.create({
                     'name': filename,
-                    'datas': base64.encodestring(ufile.read()),
+                    'datas': base64.encodebytes(ufile.read()),
                     'res_model': model,
                     'res_id': int(id)
                 })
