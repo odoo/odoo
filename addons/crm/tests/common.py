@@ -176,6 +176,9 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             'country_id': cls.env.ref('base.us').id,
             'zip': '97648',
         })
+        cls.contact_with_name_only = cls.env['res.partner'].create({
+            'name': 'John Fake',
+        })
 
     def _create_leads_batch(self, lead_type='lead', count=10, partner_ids=None, user_ids=None):
         """ Helper tool method creating a batch of leads, useful when dealing

@@ -180,11 +180,22 @@ class TestCRMLead(TestCrmCommon):
 
     @users('user_sales_manager')
     def test_crm_lead_partner_sync(self):
-        lead, partner = self.lead_1.with_user(self.env.user), self.contact_2
-        partner_email, partner_phone = self.contact_2.email, self.contact_2.phone
-        lead.partner_id = partner
+        lead = self.lead_1.with_user(self.env.user)
+        lead_email_from, lead_phone = lead.email_from, lead.phone
 
-        # email & phone must be automatically set on the lead
+        # Empty email or phone from added partner are not propagated to the lead
+        contact_with_name_only = self.contact_with_name_only
+        lead.partner_id = contact_with_name_only
+        self.assertEqual(lead.email_from, lead_email_from)
+        self.assertEqual(lead.phone, lead_phone)
+        # and the lead's ones are not pushed to the partner either
+        self.assertEqual(contact_with_name_only.email, False)
+        self.assertEqual(contact_with_name_only.phone, False)
+
+        partner = self.contact_2
+        partner_email, partner_phone = self.contact_2.email, self.contact_2.phone
+
+        # Existing email & phone must be automatically set on the lead
         lead.partner_id = partner
         self.assertEqual(lead.email_from, partner_email)
         self.assertEqual(lead.phone, partner_phone)
@@ -304,56 +315,129 @@ class TestCRMLead(TestCrmCommon):
 
     @users('user_sales_manager')
     def test_crm_lead_partner_sync_email_phone_corner_cases(self):
-        """ Test corner cases of email and phone sync (False versus '', formatting
-        differences, wrong input, ...) """
-        test_email = 'amy.wong@test.example.com'
-        lead = self.lead_1.with_user(self.env.user)
-        contact = self.env['res.partner'].create({
-            'name': 'NoContact Partner',
-            'phone': '',
-            'email': '',
-            'mobile': '',
-        })
+        """ Test corner cases of email and phone sync in both directions
+        (False and '', formatting differences, wrong input, ...) """
 
+        # Setup two partners with False or empty strings email and phones
+        contact_1 = self.contact_with_name_only
+        contact_2 = self.env["res.partner"].create({
+            'name': 'Test Partner 2',
+            'email': '',
+            'phone': ''
+        })
+        # Setup a Lead with email and phone number
+        lead = self.lead_1.with_user(self.env.user)
+        lead.phone = '+1 202-555-0888'
         lead_form = Form(lead)
+
+        # Initial form state
+        test_email = 'amy.wong@test.example.com'
+        test_phone = '+1 202-555-0888'
         self.assertEqual(lead_form.email_from, test_email)
+        self.assertEqual(lead_form.phone, test_phone)
         self.assertFalse(lead_form.ribbon_message)
 
-        # email: False versus empty string
-        lead_form.partner_id = contact
+        # Adding a partner with False or empty email/phone strings does not
+        # overwrite lead values nor triggers ribbon to update partner
+        lead_form.partner_id = contact_1
+        self.assertEqual(lead_form.email_from, test_email)
+        self.assertEqual(lead_form.phone, test_phone)
+        self.assertFalse(lead_form.ribbon_message)
+
+        lead_form.partner_id = contact_2
+        self.assertEqual(lead_form.email_from, test_email)
+        self.assertEqual(lead_form.phone, test_phone)
+        self.assertFalse(lead_form.ribbon_message)
+
+        # Email: changing the lead's value does trigger ribbon
+        lead_form.email_from = 'awy.mong@test.example.com'
         self.assertIn('the customer email', lead_form.ribbon_message)
+
+        # While False and empty lead strings do not trigger ribbon
         lead_form.email_from = ''
         self.assertFalse(lead_form.ribbon_message)
         lead_form.email_from = False
         self.assertFalse(lead_form.ribbon_message)
 
-        # phone: False versus empty string
-        lead_form.phone = '+1 202-555-0888'
+        # Phone: changing the lead's value does trigger ribbon
+        lead_form.phone = '+1 202-555-0000'
         self.assertIn('the customer phone', lead_form.ribbon_message)
+        # While False and empty lead strings do not trigger ribbon
         lead_form.phone = ''
         self.assertFalse(lead_form.ribbon_message)
         lead_form.phone = False
         self.assertFalse(lead_form.ribbon_message)
 
-        # email/phone: formatting should not trigger ribbon
+        contact_2.write({
+            'email': '"My Name" <%s>' % test_email,
+            'phone': '1 202 555 0888',
+        })
+        lead_form = Form(lead)
+        lead_form.partner_id = contact_2
+
+        # email/phone: Adding a partner with different formatting does not
+        # trigger ribbon
+        self.assertEqual(lead_form.email_from, test_email)
+        self.assertEqual(lead_form.phone, test_phone)
+        self.assertFalse(lead_form.ribbon_message)
+
+        # email/phone: Changing lead values to empty will propagate to partner
+        lead_form.email_from = ''
+        self.assertIn('the customer email', lead_form.ribbon_message)
+        lead_form.email_from = False
+        self.assertIn('the customer email', lead_form.ribbon_message)
+        lead_form.phone = ''
+        self.assertIn('email and phone', lead_form.ribbon_message)
+        lead_form.phone = False
+        self.assertIn('email and phone', lead_form.ribbon_message)
+        lead_form.save()
+        self.assertEqual(contact_2.email, False)
+        self.assertEqual(contact_2.phone, False)
+
+        # email/phone: Changing format will trigger ribbon and sync
+        # if lead's != partner's
         lead.write({
             'email_from': '"My Name" <%s>' % test_email,
             'phone': '+1 202-555-0888',
         })
-        contact.write({
-            'email': '"My Name" <%s>' % test_email,
-            'phone': '+1 202-555-0888',
+        contact_2.write({
+            'email': '',
+            'phone': '',
         })
 
         lead_form = Form(lead)
-        self.assertFalse(lead_form.ribbon_message)
-        lead_form.partner_id = contact
-        self.assertFalse(lead_form.ribbon_message)
-        lead_form.email_from = '"Another Name" <%s>' % test_email  # same email normalized
-        self.assertFalse(lead_form.ribbon_message, 'Formatting-only change should not trigger write')
+        self.assertEqual(lead_form.email_from, '"My Name" <%s>' % test_email)
+        lead_form.email_from = '"Another Name " <%s>' % test_email
+        self.assertIn('the customer email', lead_form.ribbon_message)
         lead_form.phone = '2025550888'  # same number but another format
-        self.assertFalse(lead_form.ribbon_message, 'Formatting-only change should not trigger write')
+        # todo: this number is automatically reformatted by widget to original
+        #  value, which makes the ribbon disappear (so the next line fails now)
+        #  , but the value will still be sent to write.
+        self.assertIn('email and phone', lead_form.ribbon_message)
+        lead_form.save()
+        self.assertEqual(contact_2.email, '"Another Name " <%s>' % test_email)
+        self.assertEqual(contact_2.phone, '+1 202-555-0888')  # this works todo: remove this comment
 
+        # email/phone: formatting should not trigger ribbon if otherwise equal
+        lead.write({
+            'email_from': '"My Name" <%s>' % test_email,
+            'phone': '+1 202-555-0888',
+        })
+        contact_2.write({
+            'email': '"My Name" <%s>' % test_email,
+            'phone': '+1 202-555-0888',
+        })
+        lead_form = Form(lead)
+        self.assertFalse(lead_form.ribbon_message)
+
+        lead_form.email_from = '"Another Name" <%s>' % test_email  # same email normalized
+        self.assertFalse(
+            lead_form.ribbon_message,
+            'Formatting-only change should not trigger write if normalized emails are equal')
+        lead_form.phone = '2025550888'  # same number but another format
+        self.assertFalse(
+            lead_form.ribbon_message,
+            'Formatting-only change should not trigger write if raw phone numbers are equal')
         # wrong value are also propagated
         lead_form.phone = '666 789456789456789456'
         self.assertIn('the customer phone', lead_form.ribbon_message)
