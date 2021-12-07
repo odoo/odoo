@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, models, fields, tools, _
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, float_repr
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, float_repr, str2bool
 from odoo.tests.common import Form
 from odoo.exceptions import UserError
 
@@ -50,6 +50,26 @@ class AccountEdiFormat(models.Model):
         if values and self.code == 'facturx_1_0_05':
             values['name'] = 'factur-x.xml'
         return values
+
+    def _prepare_invoice_report(self, pdf_writer, edi_document):
+        self.ensure_one()
+        if self.code != 'facturx_1_0_05':
+            return super()._prepare_invoice_report(pdf_writer, edi_document)
+        if not edi_document.attachment_id:
+            return
+
+        pdf_writer.embed_odoo_attachment(edi_document.attachment_id)
+        if not pdf_writer.is_pdfa and str2bool(self.env['ir.config_parameter'].sudo().get_param('edi.use_pdfa', 'False')):
+            try:
+                pdf_writer.convert_to_pdfa()
+            except Exception as e:
+                _logger.exception("Error while converting to PDF/A: %s", e)
+            metadata_template = self.env.ref('account_edi_facturx.account_invoice_pdfa_3_facturx_metadata', raise_if_not_found=False)
+            if metadata_template:
+                pdf_writer.add_file_metadata(metadata_template._render({
+                    'title': edi_document.move_id.name,
+                    'date': fields.Date.context_today(self),
+                }))
 
     def _export_facturx(self, invoice):
 
@@ -114,11 +134,10 @@ class AccountEdiFormat(models.Model):
 
         xml_content = b"<?xml version='1.0' encoding='UTF-8'?>"
         xml_content += self.env.ref('account_edi_facturx.account_invoice_facturx_export')._render(template_values)
-        xml_name = '%s_facturx.xml' % (invoice.name.replace('/', '_'))
         return self.env['ir.attachment'].create({
-            'name': xml_name,
+            'name': 'factur-x.xml',
             'datas': base64.encodebytes(xml_content),
-            'mimetype': 'application/xml'
+            'mimetype': '/application#2Fxml'
         })
 
     def _is_facturx(self, filename, tree):

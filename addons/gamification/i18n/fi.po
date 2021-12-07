@@ -16,8 +16,8 @@
 # Topi Aura <topi@aurat.fi>, 2020
 # Sari Mäyrä <sari.mayra@sv-oy.fi>, 2020
 # Jenni Heikkilä <jenni.heikkila@sv-oy.fi>, 2020
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2021
 # Miika Nissi <miika.nissi@tawasta.fi>, 2021
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -25,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-29 15:48+0000\n"
 "PO-Revision-Date: 2020-09-07 08:12+0000\n"
-"Last-Translator: Miika Nissi <miika.nissi@tawasta.fi>, 2021\n"
+"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2021\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -160,7 +160,7 @@ msgstr ""
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table width=\"590\" border=\"0\" cellpadding=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\">\n"
-"                    <span style=\"font-size: 10px;\">Your Badge</span><br/>\n"
+"                    <span style=\"font-size: 10px;\">Ansiomerkkisi</span><br/>\n"
 "                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
 "                        ${object.badge_id.name}\n"
 "                    </span>\n"
@@ -202,7 +202,7 @@ msgstr ""
 "                            ${object.comment}\n"
 "                        % endif\n"
 "                        <br/><br/>\n"
-"                        Kiitos,,\n"
+"                        Kiitos,\n"
 "                        % if object.sender_id.signature:\n"
 "                            <br/>\n"
 "                            ${object.sender_id.signature | safe}\n"
@@ -339,10 +339,10 @@ msgstr ""
 "                    <span>${object.name or ''}</span>!\n"
 "                </p>\n"
 "                <p>\n"
-"                    Saavutit juuri uuden arvon: <strong>${object.rank_id.name}</strong>\n"
+"                    Saavutit juuri uuden sijan : <strong>${object.rank_id.name}</strong>\n"
 "                </p>\n"
 "                % if object.next_rank_id.name\n"
-"                    <p>Jatka työskentelyä saavuttaksesi arvon <strong>${object.next_rank_id.name}</strong> !</p>\n"
+"                    <p>Jatka työskentelyä saavuttaaksesi sijan <strong>${object.next_rank_id.name}</strong> !</p>\n"
 "                % endif\n"
 "                <div style=\"margin: 16px 0px 16px 0px;\">\n"
 "                    % set gamification_redirection_data = object.get_gamification_redirection_data()\n"
@@ -669,10 +669,10 @@ msgstr ""
 "                            <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"margin-top:30px;color:#666666;\">\n"
 "                                <thead>\n"
 "                                    <tr style=\"color:#9A6C8E; font-size:12px;\">\n"
-"                                        <th align=\"left\" style=\"padding-bottom: 0px;width:40%;text-align:left;\">Goals</th>\n"
-"                                        <th style=\"width:20%;text-align:right;\" align=\"left\">Target</th>\n"
-"                                        <th style=\"width:20%;text-align:right;\" align=\"right\">Current</th>\n"
-"                                        <th style=\"width:20%;text-align:right;\" align=\"right\">Completeness</th>\n"
+"                                        <th align=\"left\" style=\"padding-bottom: 0px;width:40%;text-align:left;\">Tavoitteet</th>\n"
+"                                        <th style=\"width:20%;text-align:right;\" align=\"left\">Kohde</th>\n"
+"                                        <th style=\"width:20%;text-align:right;\" align=\"right\">Tämänhetkinen</th>\n"
+"                                        <th style=\"width:20%;text-align:right;\" align=\"right\">Edistyminen</th>\n"
 "                                    </tr>\n"
 "                                    <tr>\n"
 "                                        <td colspan=\"5\" style=\"height:1px;background-color:#9A6C8E;\"/>\n"
@@ -879,6 +879,8 @@ msgid ""
 "A rank correspond to a fixed karma level. The more you have karma, the more your rank is high.\n"
 "                    This is used to quickly know which user is new or old or highly or not active."
 msgstr ""
+"Sija vastaa kiinteää karmatasoa. Mitä enemmän sinulla on karmaa, sitä korkeampi sija sinulla on.\n"
+"                    Tästä saa nopeasti selville, mikä käyttäjä on uusi tai vanha tai erittäin aktiivinen tai ei aktiivinen."
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_badge__rule_auth__users
@@ -939,6 +941,9 @@ msgid ""
 "                The challenge can use a period (weekly, monthly...) for automatic creation of goals.\n"
 "                The goals are created for the specified users or member of the group."
 msgstr ""
+"Määritä valituille käyttäjille luettelo tavoitteista niiden arvioimiseksi.\n"
+"                Haaste voi käyttää ajanjaksoa (viikoittain, kuukausittain...) tavoitteiden automaattiseen luomiseen.\n"
+"                Tavoitteet luodaan määritetyille käyttäjille tai ryhmän jäsenille."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_attachment_count
@@ -1099,7 +1104,7 @@ msgid ""
 "Challenge that generated the goal, assign challenge to users to generate "
 "goals with a value in this field."
 msgstr ""
-"Haaste, joka loi tavoitteen, anna käyttäjille haaste luoda tavoitteita, "
+"Haaste, joka loi tavoitteen. Anna käyttäjille haaste luoda tavoitteita, "
 "joilla on arvo tässä kentässä."
 
 #. module: gamification
@@ -1113,7 +1118,7 @@ msgstr "Haasteet"
 #: model:ir.model.fields,help:gamification.field_gamification_badge__rule_max
 msgid "Check to set a monthly limit per person of sending this badge"
 msgstr ""
-"Valitse asettaaksesi kuukausittainen raja arvomerkin myöntämismäärille."
+"Valitse asettaaksesi kuukausittainen raja ansiomerkin myöntämismäärille."
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
@@ -1187,7 +1192,7 @@ msgstr "Luo uusi tavoitteen määritelmä"
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.gamification_karma_ranks_action
 msgid "Create a new rank"
-msgstr "Luo uusi taso"
+msgstr "Luo uusi sija"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.action_new_simplified_res_users
@@ -1493,7 +1498,7 @@ msgstr "Pelillistämisen tavoitteen määritelmä"
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_goal_wizard
 msgid "Gamification Goal Wizard"
-msgstr "Pelillistämisen tavoitteen wizardi"
+msgstr "Ohjattu pelillistämistavoitteen luonti"
 
 #. module: gamification
 #: model:ir.ui.menu,name:gamification.gamification_menu
@@ -1508,7 +1513,7 @@ msgstr "Pelillistämisen käyttäjän ansiomerkki"
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_badge_user_wizard
 msgid "Gamification User Badge Wizard"
-msgstr "Pelillistämisen käyttäjän ansiomerkki wizardi"
+msgstr "Ohjattu pelillistämisen ansiomerkkien luonti"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_challenge_line
@@ -1928,7 +1933,7 @@ msgstr "Viestit"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_karma_rank__karma_min
 msgid "Minimum karma needed to reach this rank"
-msgstr "Vähimmäiskarma, joka tarvitaan tämän tason saavuttamiseen"
+msgstr "Vähimmäiskarma, joka tarvitaan tämän sijan saavuttamiseen"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__model_id
@@ -1971,7 +1976,7 @@ msgstr "Motivoiva"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_karma_rank__description_motivational
 msgid "Motivational phrase to reach this rank"
-msgstr "Motivaatiolause tämän tason saavuttamiseksi"
+msgstr "Motivaatiolause tämän sijan saavuttamiseksi"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
@@ -2021,7 +2026,7 @@ msgstr "Uusi ansiomerkki ${object.badge_id.name} myönnetty"
 #. module: gamification
 #: model:mail.template,subject:gamification.mail_template_data_new_rank_reached
 msgid "New rank: ${object.rank_id.name}"
-msgstr "Uusi taso: ${object.rank_id.name}"
+msgstr "Uusi sija: ${object.rank_id.name}"
 
 #. module: gamification
 #: model:gamification.karma.rank,name:gamification.rank_newbie
@@ -2031,7 +2036,7 @@ msgstr "Tulokas"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_res_users__next_rank_id
 msgid "Next Rank"
-msgstr "Seuraava taso"
+msgstr "Seuraava sija"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__next_report_date
@@ -2229,22 +2234,22 @@ msgstr "Sijojen listaus"
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_bachelor
 msgid "Reach the next rank and gain a very magic wand !"
-msgstr "Saavuta seuraava taso ja ansaitse maaginen taikasauva!"
+msgstr "Saavuta seuraava sija ja ansaitse maaginen taikasauva !"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_master
 msgid "Reach the next rank and gain a very nice hat !"
-msgstr "Saavuta seuraava taso ja ansaitse erittäin kiva hattu!"
+msgstr "Saavuta seuraava sija ja ansaitse erittäin kiva hattu !"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_student
 msgid "Reach the next rank and gain a very nice mug !"
-msgstr "Saavuta seuraava taso ja ansaitse todella hieno muki !"
+msgstr "Saavuta seuraava sija ja ansaitse todella hieno muki !"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_doctor
 msgid "Reach the next rank and gain a very nice unicorn !"
-msgstr "Saavuta seuraava taso ja ansaitse erittäin mukava yksisarvinen!"
+msgstr "Saavuta seuraava sija ja ansaitse erittäin mukava yksisarvinen !"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal__state__reached
@@ -2401,7 +2406,7 @@ msgstr "Etsi tavoitteita"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_ranks_view_search
 msgid "Search Ranks"
-msgstr "Etsi tasoa"
+msgstr "Etsi sijaa"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_search
@@ -2697,7 +2702,7 @@ msgstr "Kertojen määrä, jolloin käyttäjä on saanut kyseisen ansiomerkin."
 #: model:ir.model.fields,help:gamification.field_gamification_badge__stat_my_monthly_sending
 msgid "The number of time the current user has sent this badge this month."
 msgstr ""
-"Kerrat tässä kuussa, jolloin käyttäjä on saavuttanut tämän arvomerkin."
+"Kerrat tässä kuussa, jolloin käyttäjä on saavuttanut tämän ansiomerkin."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__granted_users_count
@@ -2750,7 +2755,7 @@ msgid ""
 "badge."
 msgstr ""
 "Käyttäjät, jotka ovat saavuttaneet nämä tavoitteet, saavat automaattisesti "
-"arvomerkin."
+"ansiomerkin."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__batch_user_expression
@@ -2882,7 +2887,7 @@ msgstr "Käyttäjät"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_karma_rank__user_ids
 msgid "Users having this rank"
-msgstr "Käyttäjät, joilla on tämä taso"
+msgstr "Käyttäjät, joilla on tämä sija"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__period__weekly
@@ -2968,7 +2973,7 @@ msgstr "Olet löytänyt piilotetun ansiomerkin"
 #. module: gamification
 #: model_terms:gamification.karma.rank,description:gamification.rank_doctor
 msgid "You have reached the last rank. Congratulations!"
-msgstr "Olet saavuttanut viimeisen tason. Onnittelut!"
+msgstr "Olet saavuttanut lopullisen sijan. Onnittelut!"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description:gamification.rank_newbie
@@ -2988,7 +2993,7 @@ msgstr "Rakastat oppia asioita. Uteliaisuus on hyvä tapa edistyä."
 #. module: gamification
 #: model_terms:gamification.karma.rank,description:gamification.rank_student
 msgid "You're a young padawan now. May the force be with you!"
-msgstr ""
+msgstr "Olet nyt nuori padawan. Olkoon voima kanssasi!"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
@@ -3007,11 +3012,12 @@ msgid ""
 "e.g. A Master Chief knows quite everything on the forum! You cannot beat "
 "him!"
 msgstr ""
+"esim. Päällikkö tietää aivan kaiken foorumilla! Et voi päihittää häntä!"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_rank_view_form
 msgid "e.g. Master Chief"
-msgstr ""
+msgstr "esim. Päällikkö"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -3021,7 +3027,7 @@ msgstr "esim. kuukausittainen myytitavoite"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_rank_view_form
 msgid "e.g. Reach this rank to gain a free mug !"
-msgstr ""
+msgstr "esim. Saavuta tämä sija saadaksesi ilmaisen mukin!"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view

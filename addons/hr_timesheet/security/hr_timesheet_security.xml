@@ -63,5 +63,9 @@
             <field name="groups" eval="[(4, ref('group_timesheet_manager'))]"/>
         </record>
 
+        <record id="project.group_project_manager" model="res.groups">
+            <field name="implied_ids" eval="[(4, ref('hr_timesheet.group_hr_timesheet_approver'))]"/>
+        </record>
+
     </data>
 </odoo>
