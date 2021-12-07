@@ -49,11 +49,13 @@ class AccountEdiDocument(models.Model):
                 move = doc.move_id
                 config_errors = doc.edi_format_id._check_move_configuration(move)
                 if config_errors:
-                    res = base64.b64encode('\n'.join(config_errors).encode('UTF-8'))
+                    res = base64.b64encode('\n'.join(config_errors).encode())
                 elif move.is_invoice(include_receipts=True) and doc.edi_format_id._is_required_for_invoice(move):
-                    res = base64.b64encode(doc.edi_format_id._get_invoice_edi_content(doc.move_id))
+                    content = doc.edi_format_id._get_invoice_edi_content(doc.move_id) or b''
+                    res = base64.b64encode(content)
                 elif move.payment_id and doc.edi_format_id._is_required_for_payment(move):
-                    res = base64.b64encode(doc.edi_format_id._get_payment_edi_content(doc.move_id))
+                    content = doc.edi_format_id._get_payment_edi_content(doc.move_id) or b''
+                    res = base64.b64encode(content)
             doc.edi_content = res
 
     def action_export_xml(self):
