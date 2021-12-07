@@ -14,7 +14,7 @@ class SlideQuestion(models.Model):
     sequence = fields.Integer("Sequence")
     question = fields.Char("Question Name", required=True, translate=True)
     slide_id = fields.Many2one('slide.slide', string="Content", required=True)
-    answer_ids = fields.One2many('slide.answer', 'question_id', string="Answer")
+    answer_ids = fields.One2many('slide.answer', 'question_id', string="Answer", copy=True)
     # statistics
     attempts_count = fields.Integer(compute='_compute_statistics', groups='website_slides.group_website_slides_officer')
     attempts_avg = fields.Float(compute="_compute_statistics", digits=(6, 2), groups='website_slides.group_website_slides_officer')

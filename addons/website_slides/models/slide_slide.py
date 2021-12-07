@@ -133,7 +133,7 @@ class Slide(models.Model):
     user_vote = fields.Integer('User vote', compute='_compute_user_membership_id', compute_sudo=False)
     user_has_completed = fields.Boolean('Is Member', compute='_compute_user_membership_id', compute_sudo=False)
     # Quiz related fields
-    question_ids = fields.One2many("slide.question", "slide_id", string="Questions")
+    question_ids = fields.One2many("slide.question", "slide_id", string="Questions", copy=True)
     questions_count = fields.Integer(string="Numbers of Questions", compute='_compute_questions_count')
     quiz_first_attempt_reward = fields.Integer("Reward: first attempt", default=10)
     quiz_second_attempt_reward = fields.Integer("Reward: second attempt", default=7)
@@ -155,7 +155,7 @@ class Slide(models.Model):
     # generic
     url = fields.Char('External URL', help="URL of the Google Drive file or URL of the YouTube video")
     binary_content = fields.Binary('File', attachment=True)
-    slide_resource_ids = fields.One2many('slide.slide.resource', 'slide_id', string="Additional Resource for this slide")
+    slide_resource_ids = fields.One2many('slide.slide.resource', 'slide_id', string="Additional Resource for this slide", copy=True)
     slide_resource_downloadable = fields.Boolean('Allow Download', default=False, help="Allow the user to download the content of the slide.")
     # google
     google_drive_id = fields.Char('Google Drive ID of the external URL', compute='_compute_google_drive_id')
@@ -196,7 +196,7 @@ class Slide(models.Model):
     vimeo_id = fields.Char('Video Vimeo ID', compute='_compute_vimeo_id')
     # website
     website_id = fields.Many2one(related='channel_id.website_id', readonly=True)
-    date_published = fields.Datetime('Publish Date', readonly=True, tracking=False)
+    date_published = fields.Datetime('Publish Date', readonly=True, tracking=False, copy=False)
     likes = fields.Integer('Likes', compute='_compute_like_info', store=True, compute_sudo=False)
     dislikes = fields.Integer('Dislikes', compute='_compute_like_info', store=True, compute_sudo=False)
     embed_code = fields.Html('Embed Code', readonly=True, compute='_compute_embed_code', sanitize=False)

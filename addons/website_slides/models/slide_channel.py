@@ -194,7 +194,7 @@ class Channel(models.Model):
         'slide.channel.tag', 'slide_channel_tag_rel', 'channel_id', 'tag_id',
         string='Tags', help='Used to categorize and filter displayed channels/courses')
     # slides: promote, statistics
-    slide_ids = fields.One2many('slide.slide', 'channel_id', string="Slides and categories")
+    slide_ids = fields.One2many('slide.slide', 'channel_id', string="Slides and categories", copy=True)
     slide_content_ids = fields.One2many('slide.slide', string='Content', compute="_compute_category_and_slide_ids")
     slide_category_ids = fields.One2many('slide.slide', string='Categories', compute="_compute_category_and_slide_ids")
     slide_last_update = fields.Date('Last Update', compute='_compute_slide_last_update', store=True)
@@ -209,8 +209,9 @@ class Channel(models.Model):
         ('none', 'None')],
         string="Featured Content", default='latest', required=False,
         help='Defines the content that will be promoted on the course home page',
+        copy=False,
     )
-    promoted_slide_id = fields.Many2one('slide.slide', string='Promoted Slide')
+    promoted_slide_id = fields.Many2one('slide.slide', string='Promoted Slide', copy=False)
     access_token = fields.Char("Security Token", copy=False, default=_default_access_token)
     nbr_document = fields.Integer('Documents', compute='_compute_slides_statistics', store=True)
     nbr_video = fields.Integer('Videos', compute='_compute_slides_statistics', store=True)
@@ -242,7 +243,7 @@ class Channel(models.Model):
     enroll = fields.Selection([
         ('public', 'Public'), ('invite', 'On Invitation')],
         default='public', string='Enroll Policy', required=True,
-        help='Defines how people can enroll to your Course.')
+        help='Defines how people can enroll to your Course.', copy=False)
     enroll_msg = fields.Html(
         'Enroll Message', help="Message explaining the enroll process",
         default=_get_default_enroll_msg, translate=tools.html_translate, sanitize_attributes=False)
@@ -496,6 +497,14 @@ class Channel(models.Model):
                 channel._add_groups_members()
 
         return channels
+
+    def copy_data(self, default=None):
+        self.ensure_one()
+        default = default or {}
+        if 'name' not in default:
+            default['name'] = f"{self.name} ({_('copy')})"
+
+        return super().copy_data(default)
 
     def write(self, vals):
         # If description_short wasn't manually modified, there is an implicit link between this field and description.
