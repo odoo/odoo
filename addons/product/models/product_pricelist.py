@@ -88,34 +88,6 @@ class Pricelist(models.Model):
                 results[product_id][pricelist.id] = price
         return results
 
-    def _compute_price_rule_get_items(self, date, prod_tmpl_ids, prod_ids, categ_ids):
-        self.ensure_one()
-        # Load all rules
-        self.env['product.pricelist.item'].flush(['price', 'currency_id', 'company_id'])
-        self.env.cr.execute(
-            """
-            SELECT
-                item.id
-            FROM
-                product_pricelist_item AS item
-            LEFT JOIN product_category AS categ ON item.categ_id = categ.id
-            WHERE
-                (item.product_tmpl_id IS NULL OR item.product_tmpl_id = any(%s))
-                AND (item.product_id IS NULL OR item.product_id = any(%s))
-                AND (item.categ_id IS NULL OR item.categ_id = any(%s))
-                AND (item.pricelist_id = %s)
-                AND (item.date_start IS NULL OR item.date_start<=%s)
-                AND (item.date_end IS NULL OR item.date_end>=%s)
-            ORDER BY
-                item.applied_on, item.min_quantity desc, categ.complete_name desc, item.id desc
-            """,
-            (prod_tmpl_ids, prod_ids, categ_ids, self.id, date, date))
-        # NOTE: if you change `order by` on that query, make sure it matches
-        # _order from model to avoid inconstencies and undeterministic issues.
-
-        item_ids = [x[0] for x in self.env.cr.fetchall()]
-        return self.env['product.pricelist.item'].browse(item_ids)
-
     def _compute_price_rule(self, products, qty, uom=None, date=False):
         """ Low-level method - Mono pricelist, multi products
         Returns: dict{product_id: (price, suitable_rule) for the given pricelist}
@@ -145,19 +117,19 @@ class Pricelist(models.Model):
             while categ:
                 categ_ids[categ.id] = True
                 categ = categ.parent_id
-        categ_ids = list(categ_ids)
+        category_ids = list(categ_ids)
 
         is_product_template = products[0]._name == "product.template"
         if is_product_template:
-            prod_tmpl_ids = products.ids
+            product_tmpl_ids = products.ids
             # all variants of all products
-            prod_ids = products.product_variant_ids.ids
+            product_ids = products.product_variant_ids.ids
         else:
-            prod_ids = products.ids
-            prod_tmpl_ids = products.product_tmpl_id.ids
+            product_ids = products.ids
+            product_tmpl_ids = products.product_tmpl_id.ids
 
-        # Fetch all rules potentially matching specified products and date
-        rules = self._compute_price_rule_get_items(date, prod_tmpl_ids, prod_ids, categ_ids)
+        # Fetch all rules potentially matching specified products/templates/categories and date
+        rules = self._get_available_rules(date, product_tmpl_ids, product_ids, category_ids)
 
         if 'currency' in products.env.context:
             # Remove currency from product context to avoid any
@@ -217,6 +189,26 @@ class Pricelist(models.Model):
             results[product.id] = (price, suitable_rule.id)
 
         return results
+
+    # Split methods to ease (community) overrides
+    def _get_available_rules(self, *args, **kwargs):
+        self.ensure_one()
+        # Do not filter out archived pricelist items, since it means current pricelist is also archived
+        # We do not want the computation of prices for archived pricelist to always fallback on the Sales price
+        # because no rule was found (thanks to the automatic orm filtering on active field)
+        return self.env['product.pricelist.item'].with_context(active_test=False).search(
+            self._get_available_rules_domain(*args, **kwargs)
+        )
+
+    def _get_available_rules_domain(self, date, product_tmpl_ids, product_ids, category_ids):
+        return [
+            ('pricelist_id', '=', self.id),
+            '|', ('product_tmpl_id', '=', False), ('product_tmpl_id', 'in', product_tmpl_ids),
+            '|', ('product_id', '=', False), ('product_id', 'in', product_ids),
+            '|', ('categ_id', '=', False), ('categ_id', 'in', category_ids),
+            '|', ('date_start', '=', False), ('date_start', '<=', date),
+            '|', ('date_end', '=', False), ('date_end', '>=', date),
+        ]
 
     # New methods: product based
     def _get_products_price(self, products, quantity, uom=None, date=False):
