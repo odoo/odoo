@@ -6,34 +6,41 @@ import { useService } from "@web/core/utils/hooks";
 import { standardFieldProps } from "./standard_field_props";
 
 const { Component } = owl;
-const { onWillUnmount, useState } = owl.hooks;
+const { onWillUnmount, onWillUpdateProps, useState } = owl.hooks;
 
 export class ProgressBarField extends Component {
     setup() {
         this.eventTimeout = undefined;
         this.notifications = useService("notification");
         this.state = useState({
-            currentValue: this.currentValue,
-            maxValue: this.maxValue,
+            currentValue: this.getFieldValue("current_value"),
+            maxValue: this.getFieldValue("max_value"),
         });
         onWillUnmount(() => {
-            browser.clearTimeout(this.actionTimeoutId);
-            browser.clearTimeout(this.resetTimeoutId);
+            browser.clearTimeout(this.eventTimeout);
+        });
+        onWillUpdateProps((nextProps) => {
+            if (nextProps.readonly) {
+                Object.assign(this.state, {
+                    currentValue: this.getFieldValue("current_value"),
+                    maxValue: this.getFieldValue("max_value"),
+                });
+            }
         });
     }
-    get currentValue() {
-        let value = this.props.record.data[this.props.name] || 0;
-        if (this.props.options.current_value) {
-            value = this.props.record.data[this.props.options.current_value];
+    getFieldValue(val) {
+        if (this.props.options[val]) {
+            if (isNaN(this.props.options[val])) {
+                return (
+                    (this.props.record.data[this.props.options[val]] !== undefined &&
+                        this.props.record.data[this.props.options[val]]) ||
+                    0
+                );
+            } else {
+                return this.props.options[val];
+            }
         }
-        return value;
-    }
-    get maxValue() {
-        let value = 100;
-        if (this.props.options.max_value) {
-            value = this.props.record.data[this.props.options.max_value];
-        }
-        return value;
+        return val === "max_value" ? 100 : this.props.record.data[this.props.name] || 0;
     }
     checkFormat(val) {
         if (isNaN(val)) {
@@ -51,7 +58,12 @@ export class ProgressBarField extends Component {
         const value = ev.target.value;
         if (this.checkFormat(value)) {
             this.state.currentValue = value;
-            this.props.update(Number(value) || false, { name: this.props.options.current_value });
+            this.props.update(
+                Number(value) || false,
+                this.props.record.data[this.props.options.current_value] !== undefined
+                    ? { name: this.props.options.current_value }
+                    : false
+            );
         }
     }
     /**
@@ -61,7 +73,12 @@ export class ProgressBarField extends Component {
         const max_value = ev.target.value;
         if (this.checkFormat(max_value)) {
             this.state.maxValue = max_value;
-            this.props.update(Number(max_value) || false, { name: this.props.options.max_value });
+            this.props.update(
+                Number(max_value) || false,
+                this.props.record.data[this.props.options.max_value] !== undefined
+                    ? { name: this.props.options.max_value }
+                    : false
+            );
         }
     }
     /**
