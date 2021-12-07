@@ -3,7 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import float_is_zero, float_round
+from odoo.tools import float_is_zero, float_round, float_compare
 
 
 class ChangeProductionQty(models.TransientModel):
@@ -46,7 +46,7 @@ class ChangeProductionQty(models.TransientModel):
         for wizard in self:
             production = wizard.mo_id
             produced = sum(production.move_finished_ids.filtered(lambda m: m.product_id == production.product_id).mapped('quantity_done'))
-            if wizard.product_qty < produced:
+            if float_compare(wizard.product_qty, produced, precision_digits=precision) < 0:
                 format_qty = '%.{precision}f'.format(precision=precision)
                 raise UserError(_("You have already processed %s. Please input a quantity higher than %s ") % (format_qty % produced, format_qty % produced))
             old_production_qty = production.product_qty
@@ -98,14 +98,14 @@ class ChangeProductionQty(models.TransientModel):
                 if production.product_id.tracking == 'serial':
                     quantity = 1.0 if not float_is_zero(quantity, precision_digits=precision) else 0.0
                 else:
-                    quantity = quantity if (quantity > 0) else 0
+                    quantity = quantity if float_compare(quantity, 0, precision_digits=precision) > 0 else 0
                 if float_is_zero(quantity, precision_digits=precision):
                     wo.finished_lot_id = False
                     wo._workorder_line_ids().unlink()
                 wo.qty_producing = quantity
-                if wo.qty_produced < production_qty and wo.state == 'done':
+                if float_compare(wo.qty_produced, production_qty, precision_digits=precision) < 0 and wo.state == 'done':
                     wo.state = 'progress'
-                if wo.qty_produced == production_qty and wo.state == 'progress':
+                if float_compare(wo.qty_produced, production_qty, precision_digits=precision) == 0 and wo.state == 'progress':
                     wo.state = 'done'
                     if wo.next_work_order_id.state == 'pending':
                         wo.next_work_order_id.state = 'ready'
