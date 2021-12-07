@@ -155,7 +155,7 @@ export class ListArchParser extends XMLParser {
 
 // -----------------------------------------------------------------------------
 
-class ListView extends owl.Component {
+export class ListView extends owl.Component {
     setup() {
         this.actionService = useService("action");
         this.user = useService("user");

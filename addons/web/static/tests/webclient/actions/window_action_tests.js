@@ -6,7 +6,8 @@ import { editView } from "@web/views/debug_items";
 import { clearUncommittedChanges } from "@web/webclient/actions/action_service";
 import AbstractView from "web.AbstractView";
 import FormView from "web.FormView";
-import ListController from "web.ListController";
+import { ListView } from "@web/views/list/list_view";
+import { useSetupAction } from "@web/webclient/actions/action_hook";
 import testUtils from "web.test_utils";
 import legacyViewRegistry from "web.view_registry";
 import { session } from "@web/session";
@@ -1446,17 +1447,9 @@ QUnit.module("ActionManager", (hooks) => {
         ]);
     });
 
-    QUnit.skip("save current search", async function (assert) {
+    QUnit.test("save current search", async function (assert) {
         assert.expect(4);
-        testUtils.mock.patch(ListController, {
-            getOwnedQueryParams: function () {
-                return {
-                    context: {
-                        shouldBeInFilterContext: true,
-                    },
-                };
-            },
-        });
+
         serverData.actions[33] = {
             id: 33,
             context: {
@@ -1468,28 +1461,28 @@ QUnit.module("ActionManager", (hooks) => {
             type: "ir.actions.act_window",
             views: [[false, "list"]],
         };
-        const legacyParams = {
-            dataManager: {
-                create_filter: function (filter) {
-                    assert.strictEqual(
-                        filter.domain,
-                        `[("bar", "=", 1)]`,
-                        "should save the correct domain"
-                    );
-                    const expectedContext = {
-                        group_by: [],
-                        shouldBeInFilterContext: true,
-                    };
-                    assert.deepEqual(
-                        filter.context,
-                        expectedContext,
-                        "should save the correct context"
-                    );
-                },
-            },
-        };
         patchWithCleanup(browser, { setTimeout: (fn) => fn() });
-        const webClient = await createWebClient({ serverData, legacyParams });
+        patchWithCleanup(ListView.prototype, {
+            setup() {
+                this._super(...arguments);
+                useSetupAction({
+                    getContext: () => ({ shouldBeInFilterContext: true }),
+                });
+            },
+        });
+
+        const mockRPC = async (route, args) => {
+            if (args.method === "create_or_replace") {
+                assert.strictEqual(args.args[0].domain, `[("bar", "=", 1)]`);
+                assert.deepEqual(args.args[0].context, {
+                    group_by: [],
+                    shouldBeInFilterContext: true,
+                });
+                return 3; // fake filter id
+            }
+        };
+        const webClient = await createWebClient({ serverData, mockRPC });
+
         await doAction(webClient, 33);
         assert.containsN(target, ".o_data_row", 5, "should contain 5 records");
         // filter on bar
@@ -1501,8 +1494,6 @@ QUnit.module("ActionManager", (hooks) => {
         await cpHelpers.toggleSaveFavorite(target);
         await cpHelpers.editFavoriteName(target, "some name");
         await cpHelpers.saveFavorite(target);
-        await legacyExtraNextTick();
-        testUtils.mock.unpatch(ListController);
     });
 
     QUnit.skip(
