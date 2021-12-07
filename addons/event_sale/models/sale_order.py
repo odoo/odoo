@@ -175,7 +175,7 @@ class SaleOrderLine(models.Model):
         else:
             return super(SaleOrderLine, self).get_sale_order_line_multiline_description_sale(product)
 
-    def _get_display_price(self, product):
+    def _get_display_price(self):
         if self.event_ticket_id and self.event_id:
             # FIXME this is strange
             # price_reduce is the price after discount
@@ -185,4 +185,4 @@ class SaleOrderLine(models.Model):
                 pricelist=self.order_id.pricelist_id.id,
                 uom=self.product_uom.id).price_reduce
         else:
-            return super()._get_display_price(product)
+            return super()._get_display_price()

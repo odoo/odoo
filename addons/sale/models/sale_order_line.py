@@ -605,46 +605,6 @@ class SaleOrderLine(models.Model):
         """
         return {}
 
-    def _get_display_price(self, product):
-        # TODO: drop product param, enforce product=self.product_id for environment consistency (company, context, ...)
-        # TO DO: move me in master/saas-16 on sale.order
-        # awa: don't know if it's still the case since we need the "product_no_variant_attribute_value_ids" field now
-        # to be able to compute the full price
-        self.ensure_one()
-        product.ensure_one()
-
-        # it is possible that a no_variant attribute is still in a variant if
-        # the type of the attribute has been changed after creation.
-        no_variant_attributes_price_extra = [
-            ptav.price_extra for ptav in self.product_no_variant_attribute_value_ids.filtered(
-                lambda ptav:
-                    ptav.price_extra and
-                    ptav not in product.product_template_attribute_value_ids
-            )
-        ]
-        if no_variant_attributes_price_extra:
-            product = product.with_context(
-                no_variant_attributes_price_extra=tuple(no_variant_attributes_price_extra)
-            )
-
-        if self.order_id.pricelist_id.discount_policy == 'with_discount':
-            return self.order_id.pricelist_id._get_product_price(
-                product, self.product_uom_qty or 1.0, self.product_uom, self.order_id.date_order)
-
-        final_price, rule_id = self.order_id.pricelist_id._get_product_price_rule(
-            product, self.product_uom_qty or 1.0, self.product_uom, self.order_id.date_order)
-        base_price, currency = self._get_real_price_currency(
-            product, rule_id, self.product_uom_qty, self.product_uom, date=self.order_id.date_order)
-
-        if currency != self.order_id.pricelist_id.currency_id:
-            base_price = currency._convert(
-                base_price,
-                self.order_id.pricelist_id.currency_id,
-                self.order_id.company_id or self.env.company,
-                self.order_id.date_order or fields.Date.today())
-        # negative discounts (= surcharge) are included in the display price
-        return max(base_price, final_price)
-
     @api.depends('product_id')
     def _compute_name(self):
         for line in self:
@@ -700,11 +660,49 @@ class SaleOrderLine(models.Model):
                 line.price_unit = 0.0
                 continue
             if line.order_id.pricelist_id:
-                price = line._get_display_price(line.product_id)
+                price = line._get_display_price()
                 line.price_unit = self.env['account.tax']._fix_tax_included_price_company(
                     price, line.product_id.taxes_id, line.tax_id, line.company_id)
             else:
                 line.price_unit = 0.0
+
+    def _get_display_price(self):
+        self.ensure_one()
+        self.product_id.ensure_one()
+
+        product = self.product_id
+
+        # it is possible that a no_variant attribute is still in a variant if
+        # the type of the attribute has been changed after creation.
+        no_variant_attributes_price_extra = [
+            ptav.price_extra for ptav in self.product_no_variant_attribute_value_ids.filtered(
+                lambda ptav:
+                    ptav.price_extra and
+                    ptav not in product.product_template_attribute_value_ids
+            )
+        ]
+        if no_variant_attributes_price_extra:
+            product = product.with_context(
+                no_variant_attributes_price_extra=tuple(no_variant_attributes_price_extra)
+            )
+
+        if self.order_id.pricelist_id.discount_policy == 'with_discount':
+            return self.order_id.pricelist_id._get_product_price(
+                product, self.product_uom_qty or 1.0, self.product_uom, self.order_id.date_order)
+
+        final_price, rule_id = self.order_id.pricelist_id._get_product_price_rule(
+            product, self.product_uom_qty or 1.0, self.product_uom, self.order_id.date_order)
+        base_price, currency = self._get_real_price_currency(
+            product, rule_id, self.product_uom_qty, self.product_uom, date=self.order_id.date_order)
+
+        if currency != self.order_id.pricelist_id.currency_id:
+            base_price = currency._convert(
+                base_price,
+                self.order_id.pricelist_id.currency_id,
+                self.order_id.company_id or self.env.company,
+                self.order_id.date_order or fields.Date.today())
+        # negative discounts (= surcharge) are included in the display price
+        return max(base_price, final_price)
 
     def name_get(self):
         result = []

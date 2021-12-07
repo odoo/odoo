@@ -514,12 +514,12 @@ class SaleOrderLine(models.Model):
             taxes = line.tax_id.filtered(lambda r: not line.company_id or r.company_id == line.company_id)
             line.tax_id = fpos.map_tax(taxes)
 
-    def _get_display_price(self, product):
+    def _get_display_price(self):
         # A product created from a promotion does not have a list_price.
         # The price_unit of a reward order line is computed by the promotion, so it can be used directly
         if self.is_reward_line:
             return self.price_unit
-        return super()._get_display_price(product)
+        return super()._get_display_price()
 
     # Invalidation of `coupon.program.order_count`
     # `test_program_rules_validity_dates_and_uses`,
