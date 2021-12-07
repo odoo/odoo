@@ -407,7 +407,7 @@ export class SearchModel extends EventBus {
      */
     get context() {
         if (!this._context) {
-            this._context = this._getContext();
+            this._context = makeContext([this._getContext(), this.globalContext]);
         }
         return deepCopy(this._context);
     }
@@ -1325,7 +1325,7 @@ export class SearchModel extends EventBus {
      */
     _getContext() {
         const groups = this._getGroups();
-        const contexts = [this.userService.context, this.globalContext];
+        const contexts = [this.userService.context];
         for (const group of groups) {
             for (const activeItem of group.activeItems) {
                 const context = this._getSearchItemContext(activeItem);

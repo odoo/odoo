@@ -181,6 +181,7 @@ QUnit.module("Search", (hooks) => {
                 }
             },
             resModel: "foo",
+            context: { someOtherKey: "bar" }, // should not end up in filter's context
             Component: TestComponent,
             searchViewId: false,
         });
