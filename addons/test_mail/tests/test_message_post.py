@@ -503,6 +503,27 @@ class TestMessagePost(TestMailCommon, TestRecipients):
             body_content=test_record.name,
             attachments=[])
 
+    def test_post_notify_no_button(self):
+        pdata = self._generate_notify_recipients(self.partner_employee)
+        msg_vals = {
+            'body': 'Message body',
+            'model': False,
+            'res_id': False,
+            'subject': 'Message subject',
+        }
+        link_vals = {
+            'token': 'token_val',
+            'access_token': 'access_token_val',
+            'auth_signup_token': 'auth_signup_token_val',
+            'auth_login': 'auth_login_val',
+        }
+        notify_msg_vals = dict(msg_vals, **link_vals)
+        classify_res = self.env[self.test_record._name]._notify_classify_recipients(pdata, 'Test', msg_vals=notify_msg_vals)
+        # find back information for partner
+        partner_info = next(item for item in classify_res)
+        # check there is sno access button
+        self.assertFalse(partner_info['has_button_access'])
+
 
 @tagged('mail_post', 'post_install', '-at_install')
 class TestMessagePostGlobal(TestMailCommon, TestRecipients):
