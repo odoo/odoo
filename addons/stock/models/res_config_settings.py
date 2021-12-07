@@ -12,6 +12,8 @@ class ResConfigSettings(models.TransientModel):
         help="Track following dates on lots & serial numbers: best before, removal, end of life, alert. \n Such dates are set automatically at lot/serial number creation based on values set on the product (in days).")
     group_stock_production_lot = fields.Boolean("Lots & Serial Numbers",
         implied_group='stock.group_production_lot')
+    group_stock_lot_print_gs1 = fields.Boolean("Print GS1 Barcodes for Lots & Serial Numbers",
+        implied_group='stock.group_stock_lot_print_gs1')
     group_lot_on_delivery_slip = fields.Boolean("Display Lots & Serial Numbers on Delivery Slips",
         implied_group='stock.group_lot_on_delivery_slip', group="base.group_user,base.group_portal")
     group_stock_tracking_lot = fields.Boolean("Packages",
