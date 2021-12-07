@@ -1349,7 +1349,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.skip("honor group_by specified in actions context", async function (assert) {
+    QUnit.test("honor group_by specified in actions context", async function (assert) {
         assert.expect(5);
         serverData.actions[3].context = "{'group_by': 'bar'}";
         serverData.views["partner,false,search"] = `
@@ -1368,17 +1368,11 @@ QUnit.module("ActionManager", (hooks) => {
             "should be grouped by 'bar' (two groups) at first load"
         );
         // groupby 'bar' using the searchview
-        await testUtils.dom.click(
-            $(target).find(".o_control_panel .o_cp_bottom_right button:contains(Group By)")
-        );
-        await testUtils.dom.click(
-            $(target).find(".o_control_panel .o_group_by_menu .o_menu_item:first")
-        );
-        await legacyExtraNextTick();
+        await click(target.querySelectorAll(".o_control_panel .o_cp_bottom_right button")[1]);
+        await click(target.querySelector(".o_control_panel .o_group_by_menu .o_menu_item"));
         assert.containsN(target, ".o_group_header", 5, "should be grouped by 'foo' (five groups)");
         // remove the groupby in the searchview
-        await testUtils.dom.click($(target).find(".o_control_panel .o_searchview .o_facet_remove"));
-        await legacyExtraNextTick();
+        await click(target.querySelector(".o_control_panel .o_searchview .o_facet_remove"));
         assert.containsOnce(target, ".o_list_table_grouped", "should still be grouped");
         assert.containsN(
             target,
