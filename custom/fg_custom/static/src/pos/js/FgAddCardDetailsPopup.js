@@ -12,11 +12,13 @@ odoo.define('fg_custom.FgCardDetailsPopup', function (require) {
                 x_card_number: '',
                 x_card_name: '',
                 cardholder_name:'',
+                x_approval_no: '',
+                x_batch_num: '',
                 inputHasError: false,
             });
         }
         confirm() {
-            if (this.state.x_card_number == '' || this.state.x_card_name == '' || this.state.cardholder_name == '') {
+            if (this.state.x_card_number == '' || this.state.x_card_name == '' || this.state.cardholder_name == '' || this.state.x_approval_no == '' ||  this.state.x_batch_num == '') {
                 this.errorMessage = this.env._t('All fields are required.');
                 this.state.inputHasError = true;
                 return;
@@ -29,6 +31,8 @@ odoo.define('fg_custom.FgCardDetailsPopup', function (require) {
                 x_card_number: this.state.x_card_number,
                 x_card_name: this.state.x_card_name,
                 cardholder_name: this.state.cardholder_name,
+                x_approval_no: this.state.x_approval_no,
+                x_batch_num: this.state.x_batch_num,
                 inputHasError: this.state.inputHasError,
             };
         }

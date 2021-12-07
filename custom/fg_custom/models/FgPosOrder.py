@@ -17,7 +17,14 @@ class PosPaymentInherit(models.Model):
     x_check_date = fields.Date("Check Date")
     x_card_number = fields.Char("Card Number")
     x_card_name = fields.Char("Card Name")
+    x_approval_no = fields.Char("Approval No.")
+    x_batch_num = fields.Char("Batch Number")
     x_gift_card_number = fields.Char("Gift Card Number")
+    x_gcash_refnum =  fields.Char("GCash Reference Number")
+    x_gcash_customer =  fields.Char("GCash Customer")
+    x_gc_voucher_no = fields.Char("Gift Check Voucher No")
+    x_gc_voucher_name = fields.Char("Gift Check Voucher Name")
+    x_gc_voucher_cust = fields.Char("Gift Check Customer")
 
 
 
@@ -94,7 +101,14 @@ class PosOrder(models.Model):
             'x_check_date': ui_paymentline.get('x_check_date'),
             'x_card_number': ui_paymentline.get('x_card_number'),
             'x_card_name': ui_paymentline.get('x_card_name'),
+            'x_approval_no': ui_paymentline.get('x_approval_no'),
+            'x_batch_num': ui_paymentline.get('x_batch_num'),
             'x_gift_card_number': ui_paymentline.get('x_gift_card_number'),
+            'x_gcash_refnum': ui_paymentline.get('x_gcash_refnum'),
+            'x_gcash_customer': ui_paymentline.get('x_gcash_customer'),
+            'x_gc_voucher_no': ui_paymentline.get('x_gc_voucher_no'),
+            'x_gc_voucher_name': ui_paymentline.get('x_gc_voucher_name'),
+            'x_gc_voucher_cust': ui_paymentline.get('x_gc_voucher_cust')
         })
 
         return fields
@@ -104,6 +118,25 @@ class PosOrder(models.Model):
         fields = super(PosOrder, self)._export_for_ui(order)
         fields.update({
            'x_receipt_note': order.x_receipt_note
+        })
+
+    @api.model
+    def _export_for_ui(self, payment):
+        fields = super(PosPaymentInherit, self)._export_for_ui(payment)
+        fields.update({
+            'x_check_number': payment.x_check_number,
+            'x_issuing_bank': payment.x_issuing_bank,
+            'x_check_date': payment.x_check_date,
+            'x_card_number': payment.x_card_number,
+            'x_card_name': payment.x_card_name,
+            'x_approval_no': payment.x_approval_no,
+            'x_batch_num': payment.x_batch_num,
+            'x_gift_card_number': payment.x_gift_card_number,
+            'x_gcash_refnum': payment.x_gcash_refnum,
+            'x_gcash_customer': payment.x_gcash_customer,
+            'x_gc_voucher_no': payment.x_gc_voucher_no,
+            'x_gc_voucher_name': payment.x_gc_voucher_name,
+            'x_gc_voucher_cust': payment.x_gc_voucher_cust
         })
 
         return fields

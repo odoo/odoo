@@ -9,6 +9,18 @@
                        t-on-change="captureChange"
                        t-att-value="props.partner.x_type_of_business || ''" />
             </div>
+            <div class="client-detail">
+                <span class="label">PWD ID</span>
+                <input class="detail x_pwd_id" name="x_pwd_id"
+                       t-on-change="captureChange"
+                       t-att-value="props.partner.x_pwd_id || ''" />
+            </div>
+            <div class="client-detail">
+                <span class="label">Senior ID</span>
+                <input class="detail x_senior_id" name="x_senior_id"
+                       t-on-change="captureChange"
+                       t-att-value="props.partner.x_senior_id || ''" />
+            </div>
         </section>
     </t>
 </templates>

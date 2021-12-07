@@ -81,8 +81,62 @@
 
             <div>----------------------------------------------------</div>
     	</xpath>
-        <xpath expr="//div[hasclass('before-footer')]" position="inside">
-            <b>Notes:</b> <t t-esc='receipt.x_receipt_note'/>
+
+
+        <xpath expr="//div[@class='before-footer']" position="inside">
+            <t t-if="receipt.x_receipt_note">
+                <b>Notes:</b> <t t-esc='receipt.x_receipt_note'/>
+            </t>
+            <br/><br/>
+            <div>
+                <t t-if="receipt.client">
+                    <t t-if="receipt.client.x_pwd_id">
+                        <div style="font-size: 70%">PWD ID: <t t-esc='receipt.client.x_pwd_id'/></div>
+                    </t>
+                    <t t-elif="receipt.client.x_senior_id">
+                        <div style="font-size: 70%">Senior ID: <t t-esc='receipt.client.x_senior_id'/></div>
+                    </t>
+                </t>
+            </div>
         </xpath>
+
+       <!-- Payment Lines -->
+
+        <t t-foreach="receipt.paymentlines" t-as="line" t-key="line.cid">
+            <br/><br/>
+            <t t-if="line.name == 'Check' ">
+                <div style="font-size: 70%">Check No:    <t t-esc='line.x_check_number'/></div>
+                <div style="font-size: 70%">Issuing Bank:   <t t-esc='line.x_issuing_bank'/></div>
+                <div style="font-size: 70%">Check Date:     <t t-esc='line.x_check_date'/></div>
+                <br/>
+                <div style="font-size: 70%">Signature: __________________________</div>
+            </t>
+            <t t-elif="line.name == 'Debit Card' or line.name == 'Credit Card' " >
+                <div style="font-size: 70%">Card Name:  <t t-esc='line.x_card_name'/></div>
+                <div style="font-size: 70%">Card No:    <t t-esc='line.x_card_number'/></div>
+                <div style="font-size: 70%">Approval No:    <t t-esc='line.x_approval_no'/></div>
+                <div style="font-size: 70%">Batch Number:   <t t-esc='line.x_batch_num'/></div>
+                <br/>
+                <div style="font-size: 70%">Signature: __________________________</div>
+            </t>
+            <t t-elif="line.name == 'Gift Card' " >
+                <div style="font-size: 70%">Gift Card No:   <t t-esc='line.x_gift_card_number'/></div>
+                <div style="font-size: 70%">Signature: __________________________</div>
+            </t>
+            <t t-elif="line.name == 'GCash' " >
+                <div style="font-size: 70%">GCash Reference No:     <t t-esc='line.x_gcash_refnum'/></div>
+                <div style="font-size: 70%">GCash Customer:     <t t-esc='line.x_gcash_customer'/></div>
+                <br/>
+                <div style="font-size: 70%">Signature: __________________________</div>
+            </t>
+            <t t-if="line.name == 'Gift Check' ">
+                <div style="font-size: 70%">Gift Check Voucher No:    <t t-esc='line.x_gc_voucher_no'/></div>
+                <div style="font-size: 70%">Gift Check Voucher Name:   <t t-esc='line.x_gc_voucher_name'/></div>
+                <div style="font-size: 70%">Gift Check Customer:     <t t-esc='line.x_gc_voucher_cust'/></div>
+                <br/>
+                <div style="font-size: 70%">Signature: __________________________</div>
+            </t>
+        </t>
+
     </t>
 </templates>
