@@ -360,3 +360,28 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
             message_from='"test@unknown_domain.com" <notifications@test.com>',
             from_filter='test.com',
         )
+
+    @mute_logger('odoo.models.unlink')
+    @patch.dict('odoo.tools.config.options', {'from_filter': 'test.com'})
+    def test_mail_server_mail_default_from_filter(self):
+        """Test that the config parameter "mail.default.from_filter" overwrite the odoo-bin
+        argument "--from-filter"
+        """
+        self.env['ir.config_parameter'].sudo().set_param('mail.default.from_filter', 'example.com')
+
+        IrMailServer = self.env['ir.mail_server']
+
+        # Remove all mail server so we will use the odoo-bin arguments
+        IrMailServer.search([]).unlink()
+        self.assertFalse(IrMailServer.search([]))
+
+        # Use an email in the domain of the config parameter "mail.default.from_filter"
+        with self.mock_smtplib_connection():
+            message = self._build_email(mail_from='specific_user@example.com')
+            IrMailServer.send_email(message)
+
+        self.assert_email_sent_smtp(
+            smtp_from='specific_user@example.com',
+            message_from='specific_user@example.com',
+            from_filter='example.com',
+        )
