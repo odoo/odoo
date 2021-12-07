@@ -306,3 +306,64 @@ class TestTimesheet(TestCommonTimesheet):
         self.task1.write({'partner_id': partner2})
 
         self.assertEqual(timesheet_entry.partner_id, partner2, "The timesheet entry's partner should still be equal to the task's partner/customer, after the change")
+
+    def test_add_time_from_wizard(self):
+        config = self.env["res.config.settings"].create({
+                "timesheet_min_duration": 60,
+                "timesheet_rounding": 15,
+            })
+        config.execute()
+        wizard_min = self.env['project.task.create.timesheet'].create({
+                'time_spent': 0.7,
+                'task_id': self.task1.id,
+            })
+        wizard_round = self.env['project.task.create.timesheet'].create({
+                'time_spent': 1.15,
+                'task_id': self.task1.id,
+            })
+        self.assertEqual(wizard_min.save_timesheet().unit_amount, 1, "The timesheet's duration should be 1h (Minimum Duration = 60').")
+        self.assertEqual(wizard_round.save_timesheet().unit_amount, 1.25, "The timesheet's duration should be 1h15 (Rounding = 15').")
+
+    def test_task_with_timesheet_project_change(self):
+        '''This test checks that no error is raised when moving a task that contains timesheet to another project.
+           This move implying writing on the account.analytic.line.
+        '''
+
+        project_manager = self.env['res.users'].create({
+            'name': 'user_project_manager',
+            'login': 'user_project_manager',
+            'groups_id': [(6, 0, [self.ref('project.group_project_manager')])],
+        })
+
+        project = self.env['project.project'].create({
+            'name': 'Project With Timesheets',
+            'privacy_visibility': 'employees',
+            'allow_timesheets': True,
+            'user_id': project_manager.id,
+        })
+        second_project = self.env['project.project'].create({
+            'name': 'Project w/ timesheets',
+            'privacy_visibility': 'employees',
+            'allow_timesheets': True,
+            'user_id': project_manager.id,
+        })
+
+        task_1 = self.env['project.task'].create({
+            'name': 'First task',
+            'user_id': self.user_employee2.id,
+            'project_id': project.id
+        })
+
+        timesheet = self.env['account.analytic.line'].create({
+            'name': 'FirstTimeSheet',
+            'project_id': project.id,
+            'task_id': task_1.id,
+            'unit_amount': 2,
+            'employee_id': self.empl_employee2.id
+        })
+
+        task_1.with_user(project_manager).write({
+            'project_id': second_project.id
+        })
+
+        self.assertEqual(timesheet.project_id, second_project, 'The project_id of timesheet should be second_project')
