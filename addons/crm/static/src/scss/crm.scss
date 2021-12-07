@@ -1,3 +1,11 @@
+.o_lead_opportunity_form {
+    // Used to add spacing between fields when placed inline without having
+    // empty fields take extra space.
+    div.o_lead_opportunity_form_inline_fields > :not(.o_field_empty) {
+        margin-right: 1.5em;
+    }
+}
+
 .o_opportunity_kanban {
     .ribbon {
         &::before, &::after {
