@@ -10,6 +10,7 @@ import { useModel } from "@web/views/helpers/model";
 import { standardViewProps } from "@web/views/helpers/standard_view_props";
 import { useSetupView } from "@web/views/helpers/view_hook";
 import { Layout } from "@web/views/layout";
+import { ViewNotFoundError } from "@web/views/view";
 import { useViewButtons } from "@web/views/view_button/hook";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { getActiveActions, processButton } from "../helpers/view_utils";
@@ -199,13 +200,29 @@ class ListView extends owl.Component {
         });
     }
 
-    openRecord(record) {
+    async openRecord(record) {
         const resIds = this.model.root.records.map((datapoint) => datapoint.resId);
-        this.actionService.switchView("form", { resId: record.resId, resIds });
+        try {
+            await this.actionService.switchView("form", { resId: record.resId, resIds });
+        } catch (e) {
+            if (e instanceof ViewNotFoundError) {
+                // there's no form view in the current action
+                return;
+            }
+            throw e;
+        }
     }
 
-    onClickCreate() {
-        this.actionService.switchView("form", { resId: false });
+    async onClickCreate() {
+        try {
+            await this.actionService.switchView("form", { resId: false });
+        } catch (e) {
+            if (e instanceof ViewNotFoundError) {
+                // there's no form view in the current action
+                return;
+            }
+            throw e;
+        }
     }
 
     async getInfo() {

@@ -89,6 +89,8 @@ export function getDefaultConfig() {
  *  @property {Object} [globalState]
  */
 
+export class ViewNotFoundError extends Error {}
+
 const STANDARD_PROPS = [
     "resModel",
     "type",
