@@ -155,7 +155,7 @@ class Pricelist(models.Model):
             product_tmpl_ids = products.product_tmpl_id.ids
 
         # Fetch all rules potentially matching specified products/templates/categories and date
-        rules = self._get_available_rules(date, product_tmpl_ids, product_ids, category_ids)
+        rules = self._get_applicable_rules(date, product_tmpl_ids, product_ids, category_ids)
 
         if 'currency' in products.env.context:
             # Remove currency from product context to avoid any
@@ -167,41 +167,20 @@ class Pricelist(models.Model):
         for product in products:
             suitable_rule = self.env['product.pricelist.item']
 
-            # Compute quantity in product uom because pricelist rules are specified
-            # w.r.t product default UoM (min_quantity, price_surchage, ...)
             product_uom = product.uom_id
             target_uom = uom or product_uom  # If no uom is specified, fall back on the product uom
+
+            # Compute quantity in product uom because pricelist rules are specified
+            # w.r.t product default UoM (min_quantity, price_surchage, ...)
             if target_uom != product_uom:
                 qty_in_product_uom = target_uom._compute_quantity(qty, product_uom, raise_if_failure=False)
             else:
                 qty_in_product_uom = qty
 
             for rule in rules:
-                if rule.min_quantity and qty_in_product_uom < rule.min_quantity:
-                    continue
-                if is_product_template:
-                    if rule.product_tmpl_id and product.id != rule.product_tmpl_id.id:
-                        continue
-                    if rule.product_id and not (product.product_variant_count == 1 and product.product_variant_id.id == rule.product_id.id):
-                        # product rule acceptable on template if has only one variant
-                        continue
-                else:
-                    if rule.product_tmpl_id and product.product_tmpl_id.id != rule.product_tmpl_id.id:
-                        continue
-                    if rule.product_id and product.id != rule.product_id.id:
-                        continue
-
-                if rule.categ_id:
-                    cat = product.categ_id
-                    while cat:
-                        if cat.id == rule.categ_id.id:
-                            break
-                        cat = cat.parent_id
-                    if not cat:
-                        continue
-
-                suitable_rule = rule
-                break
+                if rule._is_applicable_for(product, qty_in_product_uom):
+                    suitable_rule = rule
+                    break
 
             if suitable_rule:
                 price = suitable_rule._compute_price(product, qty, target_uom, date)
@@ -217,16 +196,16 @@ class Pricelist(models.Model):
         return results
 
     # Split methods to ease (community) overrides
-    def _get_available_rules(self, *args, **kwargs):
+    def _get_applicable_rules(self, *args, **kwargs):
         self.ensure_one()
         # Do not filter out archived pricelist items, since it means current pricelist is also archived
         # We do not want the computation of prices for archived pricelist to always fallback on the Sales price
         # because no rule was found (thanks to the automatic orm filtering on active field)
         return self.env['product.pricelist.item'].with_context(active_test=False).search(
-            self._get_available_rules_domain(*args, **kwargs)
+            self._get_applicable_rules_domain(*args, **kwargs)
         )
 
-    def _get_available_rules_domain(self, date, product_tmpl_ids, product_ids, category_ids):
+    def _get_applicable_rules_domain(self, date, product_tmpl_ids, product_ids, category_ids):
         return [
             ('pricelist_id', '=', self.id),
             '|', ('product_tmpl_id', '=', False), ('product_tmpl_id', 'in', product_tmpl_ids),
@@ -591,6 +570,52 @@ class PricelistItem(models.Model):
         # to be invalided and recomputed.
         self.flush()
         self.invalidate_cache()
+        return res
+
+    def _is_applicable_for(self, product, qty_in_product_uom):
+        """Check whether the current rule is valid for the given product & qty.
+
+        Note: self.ensure_one()
+
+        :param product: product record (product.product/product.template)
+        :param float qty_in_product_uom: quantity, expressed in product UoM
+        :returns: Whether rules is valid or not
+        :rtype: bool
+        """
+        self.ensure_one()
+        product.ensure_one()
+        res = True
+
+        is_product_template = product._name == 'product.template'
+        if self.min_quantity and qty_in_product_uom < self.min_quantity:
+            res = False
+
+        elif self.categ_id:
+            # Applied on a specific category
+            cat = product.categ_id
+            while cat:
+                if cat.id == self.categ_id.id:
+                    break
+                cat = cat.parent_id
+            if not cat:
+                res = False
+        else:
+            # Applied on a specific product template/variant
+            if is_product_template:
+                if self.product_tmpl_id and product.id != self.product_tmpl_id.id:
+                    res = False
+                elif self.product_id and not (
+                    product.product_variant_count == 1
+                    and product.product_variant_id.id == self.product_id.id
+                ):
+                    # product self acceptable on template if has only one variant
+                    res = False
+            else:
+                if self.product_tmpl_id and product.product_tmpl_id.id != self.product_tmpl_id.id:
+                    res = False
+                elif self.product_id and product.id != self.product_id.id:
+                    res = False
+
         return res
 
     def _compute_price(self, product, quantity, uom, date):
