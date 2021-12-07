@@ -23,7 +23,6 @@ class TestImage(TransactionCase):
         self.base64_svg = base64.b64encode(b'<svg></svg>')
         self.svg = b'<svg></svg>'
         self.base64_1920x1080_jpeg = tools.image_to_base64(Image.new('RGB', (1920, 1080)), 'JPEG')
-        self.image_1920x1080_jpeg = Image.new('RGB', (1920, 1080))
         # The following image contains a tag `Lens Info` with a value of `3.99mm f/1.8`
         # This particular tag 0xa432 makes the `exif_transpose` method fail in 5.4.1 < Pillow < 7.2.0
         self.base64_exif_jpg = b"""/9j/4AAQSkZJRgABAQAAAQABAAD/4QDQRXhpZgAATU0AKgAAAAgABgESAAMAAAABAAYAAAEaAAUA
@@ -48,7 +47,6 @@ class TestImage(TransactionCase):
 
         # horizontal image (border is left/right)
         image = Image.new('RGB', (1920, 1080), color=self.bg_color)
-        self.image_1920_1080 = image
         offset = (image.size[0] - image.size[1]) / 2
         draw = ImageDraw.Draw(image)
         draw.rectangle(xy=[
@@ -161,18 +159,20 @@ class TestImage(TransactionCase):
 
         count = 0
         for test in tests:
-            image = tools.base64_to_image(tools.image_process(test[0], size=test[1]))
+            image = tools.image_process(base64.b64decode(test[0]), size=test[1])
+            image = Image.open(io.BytesIO(image))
             self.assertEqual(image.size, test[2], test[3])
             count = count + 1
         self.assertEqual(count, 10, "ensure the loop is ran")
 
     def test_12_image_process_verify_resolution(self):
         """Test the verify_resolution parameter of image_process."""
-        res = tools.image_process(self.base64_1920x1080_jpeg, verify_resolution=True)
+        res = tools.image_process(base64.b64decode(self.base64_1920x1080_jpeg), verify_resolution=True)
+        res = Image.open(io.BytesIO(res))
         self.assertNotEqual(res, False, "size ok")
-        base64_image_excessive = tools.image_to_base64(Image.new('RGB', (45001, 1000)), 'PNG')
+        image_excessive = Image.new('RGB', (45001, 1000))
         with self.assertRaises(ValueError, msg="size excessive"):
-            tools.image_process(base64_image_excessive, verify_resolution=True)
+            tools.image_process(tools.image_apply_opt(image_excessive, 'PNG'), verify_resolution=True)
 
     def test_13_image_process_quality(self):
         """Test the quality parameter of image_process."""
@@ -230,7 +230,8 @@ class TestImage(TransactionCase):
         for test in tests:
             count = count + 1
             # process the image, pass quality to make sure the result is palette
-            image = tools.base64_to_image(tools.image_process(test[0], size=test[1], crop=test[2], quality=95))
+            image = tools.image_process(base64.b64decode(test[0]), size=test[1], crop=test[2], quality=95)
+            image = Image.open(io.BytesIO(image))
             # verify size
             self.assertEqual(image.size, test[3], "%s - correct size" % test[5])
 
@@ -261,29 +262,35 @@ class TestImage(TransactionCase):
         base64_rgba = tools.image_to_base64(image_rgba, 'PNG')
 
         # CASE: color random, color has changed
-        image = tools.base64_to_image(tools.image_process(base64_rgba, colorize=True))
+        image = tools.image_process(base64.b64decode(base64_rgba), colorize=True)
+        image = Image.open(io.BytesIO(image))
         self.assertEqual(image.mode, 'RGB')
         self.assertNotEqual(image.getpixel((0, 0)), (0, 0, 0))
 
     def test_16_image_process_format(self):
         """Test the format parameter of image_process."""
 
-        image = tools.base64_to_image(tools.image_process(self.base64_1920x1080_jpeg, output_format='PNG'))
+        image = tools.image_process(base64.b64decode(self.base64_1920x1080_jpeg), output_format='PNG')
+        image = Image.open(io.BytesIO(image))
         self.assertEqual(image.format, 'PNG', "change format to PNG")
 
-        image = tools.base64_to_image(tools.image_process(self.base64_1x1_png, output_format='JpEg'))
+        image = tools.image_process(base64.b64decode(self.base64_1x1_png), output_format='JpEg')
+        image = Image.open(io.BytesIO(image))
         self.assertEqual(image.format, 'JPEG', "change format to JPEG (case insensitive)")
 
-        image = tools.base64_to_image(tools.image_process(self.base64_1920x1080_jpeg, output_format='BMP'))
+        image = tools.image_process(base64.b64decode(self.base64_1920x1080_jpeg), output_format='BMP')
+        image = Image.open(io.BytesIO(image))
         self.assertEqual(image.format, 'PNG', "change format to BMP converted to PNG")
 
         self.base64_image_1080_1920_rgba = tools.image_to_base64(Image.new('RGBA', (108, 192)), 'PNG')
-        image = tools.base64_to_image(tools.image_process(self.base64_image_1080_1920_rgba, output_format='jpeg'))
+        image = tools.image_process(base64.b64decode(self.base64_image_1080_1920_rgba), output_format='jpeg')
+        image = Image.open(io.BytesIO(image))
         self.assertEqual(image.format, 'JPEG', "change format PNG with RGBA to JPEG")
 
         # pass quality to force the image to be processed
         self.base64_image_1080_1920_tiff = tools.image_to_base64(Image.new('RGB', (108, 192)), 'TIFF')
-        image = tools.base64_to_image(tools.image_process(self.base64_image_1080_1920_tiff, quality=95))
+        image = tools.image_process(base64.b64decode(self.base64_image_1080_1920_tiff), quality=95)
+        image = Image.open(io.BytesIO(image))
         self.assertEqual(image.format, 'JPEG', "unsupported format to JPEG")
 
     def test_20_image_data_uri(self):
