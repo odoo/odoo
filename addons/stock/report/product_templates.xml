@@ -38,17 +38,29 @@
                 </t>
             </t>
         </template>
+
         <template id="label_lot_template_view">
             <t t-foreach="docs" t-as="lot">
                 <t t-translation="off">
 ^XA
 ^FO100,50
-^A0N,44,33^FD<t t-esc="lot.product_id.display_name"/>^FS
+^A0N,44,33^FD<t t-out="lot.product_id.display_name"/>^FS
 ^FO100,100
-^A0N,44,33^FDLN/SN: <t t-esc="lot.name"/>^FS
+^A0N,44,33^FDLN/SN: <t t-out="lot.name"/>^FS
+                    <t t-if="env.user.has_group('stock.group_stock_lot_print_gs1')">
+                        <t t-if="lot.product_id.valid_ean" t-set="final_barcode" t-value="'01' + '0' * (14 - len(lot.product_id.barcode)) + lot.product_id.barcode"/>
+                        <!-- TODO: must keep lot/sn as last value in barcode because we cannot pad '0's without changing lot/sn name until we can scan in FNC1. -->
+                        <t t-if="lot.product_id.tracking == 'lot'" name="datamatrix_lot" t-set="final_barcode" t-value="(final_barcode or '') + '10' + lot.name"/>
+                        <t t-elif="lot.product_id.tracking == 'serial'" t-set="final_barcode" t-value="(final_barcode or '') + '21' + lot.name"/>
+^FO425,150^BY3
+^BXN,8,200
+^FD<t t-out="final_barcode"/>^FS
+                    </t>
+                    <t t-else="" name="code128_barcode">
 ^FO100,150^BY3
 ^BCN,100,Y,N,N
-^FD<t t-esc="lot.name"/>^FS
+^FD<t t-out="lot.name"/>^FS
+                    </t>
 ^XZ
                 </t>
             </t>

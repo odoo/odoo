@@ -335,6 +335,13 @@
                                     <div class="text-muted">
                                         Get a full traceability from vendors to customers
                                     </div>
+                                    <div class="row mt-2" attrs="{'invisible': [('group_stock_production_lot','=',False)]}">
+                                        <field name="group_stock_lot_print_gs1" class="col-lg-1 ml16 mr0"/>
+                                        <div class="col pl-0">
+                                            <label for="group_stock_lot_print_gs1"/>
+                                            <div class="text-muted">Use GS1 nomenclature datamatrix whenever barcodes are printed for lots and serial numbers. Printing datamatrix requires extra software. If software can't be found then 1D barcodes will be printed.</div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-12 col-lg-6 o_setting_box"
