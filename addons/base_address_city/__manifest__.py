@@ -5,7 +5,6 @@
     'summary': 'Add a many2one field city on addresses',
     'sequence': '19',
     'category': 'Hidden/Tools',
-    'complexity': 'easy',
     'description': """
 City Management in Addresses
 ============================
