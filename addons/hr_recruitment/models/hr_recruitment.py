@@ -483,7 +483,7 @@ class Applicant(models.Model):
                     'default_name': applicant.partner_name or contact_name,
                     'default_job_id': applicant.job_id.id,
                     'default_job_title': applicant.job_id.name,
-                    'address_home_id': address_id,
+                    'default_address_home_id': address_id,
                     'default_department_id': applicant.department_id.id or False,
                     'default_address_id': applicant.company_id and applicant.company_id.partner_id
                             and applicant.company_id.partner_id.id or False,
