@@ -35,7 +35,7 @@ class SendSMS(models.TransientModel):
         ('numbers', 'Send to numbers'),
         ('comment', 'Post on a document'),
         ('mass', 'Send SMS in batch')], string='Composition Mode',
-        compute='_compute_composition_mode', readonly=False, required=True, store=True)
+        compute='_compute_composition_mode', precompute=True, readonly=False, required=True, store=True)
     res_model = fields.Char('Document Model Name')
     res_id = fields.Integer('Document ID')
     res_ids = fields.Char('Document IDs')
@@ -71,7 +71,7 @@ class SendSMS(models.TransientModel):
     template_id = fields.Many2one('sms.template', string='Use Template', domain="[('model', '=', res_model)]")
     body = fields.Text(
         'Message', compute='_compute_body',
-        readonly=False, store=True, required=True)
+        precompute=True, readonly=False, store=True, required=True)
 
     @api.depends('res_ids_count', 'active_domain_count')
     @api.depends_context('sms_composition_mode')
@@ -167,22 +167,6 @@ class SendSMS(models.TransientModel):
                 record.body = record.template_id._render_field('body', [record.res_id], compute_lang=True)[record.res_id]
             elif record.template_id:
                 record.body = record.template_id.body
-
-    # ------------------------------------------------------------
-    # CRUD
-    # ------------------------------------------------------------
-
-    @api.model
-    def create(self, values):
-        # TDE FIXME: currently have to compute manually to avoid required issue, waiting VFE branch
-        if not values.get('body') or not values.get('composition_mode'):
-            values_wdef = self._add_missing_default_values(values)
-            cache_composer = self.new(values_wdef)
-            cache_composer._compute_body()
-            cache_composer._compute_composition_mode()
-            values['body'] = values.get('body') or cache_composer.body
-            values['composition_mode'] = values.get('composition_mode') or cache_composer.composition_mode
-        return super(SendSMS, self).create(values)
 
     # ------------------------------------------------------------
     # Actions
