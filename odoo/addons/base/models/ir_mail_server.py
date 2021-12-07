@@ -264,7 +264,8 @@ class IrMailServer(models.Model):
             smtp_port = tools.config.get('smtp_port', 25) if port is None else port
             smtp_user = user or tools.config.get('smtp_user')
             smtp_password = password or tools.config.get('smtp_password')
-            from_filter = tools.config.get('from_filter')
+            from_filter = self.env['ir.config_parameter'].sudo().get_param(
+                'mail.default.from_filter', tools.config.get('from_filter'))
             smtp_encryption = encryption
             if smtp_encryption is None and tools.config.get('smtp_ssl'):
                 smtp_encryption = 'starttls' # smtp_ssl => STARTTLS as of v7
@@ -642,7 +643,8 @@ class IrMailServer(models.Model):
             return mail_servers[0], email_from
 
         # 5: SMTP config in odoo-bin arguments
-        from_filter = tools.config.get('from_filter')
+        from_filter = self.env['ir.config_parameter'].sudo().get_param(
+            'mail.default.from_filter', tools.config.get('from_filter'))
 
         if self._match_from_filter(email_from, from_filter):
             return None, email_from
