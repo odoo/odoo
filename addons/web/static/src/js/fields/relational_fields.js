@@ -2329,7 +2329,15 @@ var FieldMany2ManyTags = AbstractField.extend({
                 },
             });
         };
+        this.many2one._onNavigationMove = () => { };
         return this.many2one.appendTo(this.$el);
+    },
+    _onNavigationMove(ev) {
+        if (this.isSet()) {
+            return this._super(...arguments);
+        } else {
+            return basicFields.InputField.prototype._onNavigationMove.apply(this.many2one, arguments);
+        }
     },
     /**
      * @private

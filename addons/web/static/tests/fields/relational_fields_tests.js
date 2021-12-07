@@ -684,6 +684,50 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('navigation on required many2many_tags using TAB', async function (assert) {
+        assert.expect(3);
+
+        this.data.turtle.records[0].partner_ids = [2];
+
+        var form = await createView({
+            View: FormView,
+            model: 'turtle',
+            data: this.data,
+            arch: '<form string="Turtles">' +
+                    '<sheet>' +
+                        '<field name="partner_ids" required="1" widget="many2many_tags"/>' +
+                        '<field name="display_name"/>' +
+                    '</sheet>' +
+                '</form>',
+        });
+
+        assert.strictEqual(form.$('div[name="partner_ids"] .o_input')[0],
+            document.activeElement,
+            "focus should be on partner_ids");
+
+        // press TAB to go to next field
+        form.$('div[name="partner_ids"] .o_input').trigger($.Event('keydown', {
+            which: $.ui.keyCode.TAB,
+            keyCode: $.ui.keyCode.TAB,
+        }));
+        assert.strictEqual(form.$('div[name="partner_ids"] .o_input')[0],
+            document.activeElement,
+            "focus should still be on partner_ids");
+
+        await testUtils.fields.many2one.clickOpenDropdown('partner_ids');
+        await testUtils.fields.many2one.clickHighlightedItem('partner_ids');
+        // press TAB to go to next field
+        form.$('div[name="partner_ids"] .o_input').trigger($.Event('keydown', {
+            which: $.ui.keyCode.TAB,
+            keyCode: $.ui.keyCode.TAB,
+        }));
+        assert.strictEqual(form.$('input[name="display_name"]')[0],
+            document.activeElement,
+            "focus should be on partner_ids");
+
+        form.destroy();
+    });
+
     QUnit.test('many2many read, field context is properly sent', async function (assert) {
         assert.expect(4);
 
