@@ -39,8 +39,7 @@ export class Field extends Component {
 
         let value = this.props.record.data[this.props.name];
         if (value === undefined) {
-            // FIXME: this is certainly wrong, should we set the default in the datapoint?
-            value = field.default !== undefined ? field.default : null;
+            value = null;
         }
 
         if (activeField.decorations) {
