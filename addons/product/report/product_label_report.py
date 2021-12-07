@@ -18,10 +18,10 @@ def _prepare_data(env, data):
 
     total = 0
     quantity_by_product = defaultdict(list)
-    for p, q in data.get('quantity_by_product').items():
-        product = Product.browse(int(p))
-        quantity_by_product[product].append((product.barcode, q))
-        total += q
+    for p, q in data.get('quantity_by_product', {}).items():
+            product = Product.browse(int(p))
+            quantity_by_product[product].append((product.barcode, q))
+            total += q
     if data.get('custom_barcodes'):
         # we expect custom barcodes format as: {product: [(barcode, qty_of_barcode)]}
         for product, barcodes_qtys in data.get('custom_barcodes').items():
