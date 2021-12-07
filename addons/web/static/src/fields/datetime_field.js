@@ -12,6 +12,9 @@ export class DateTimeField extends Component {
     get formattedValue() {
         return this.props.value ? formatDateTime(this.props.value, { timezone: true }) : "";
     }
+    get datePickerOptions() {
+        return Object.assign({}, this.props.options.datepicker);
+    }
 
     /**
      * @param {CustomEvent} ev

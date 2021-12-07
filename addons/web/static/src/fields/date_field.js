@@ -15,12 +15,8 @@ export class DateField extends Component {
     get formattedValue() {
         return this.props.value ? formatDate(this.value) : "";
     }
-    get warnFuture() {
-        return !!(
-            this.props.options &&
-            this.props.options.datepicker &&
-            this.props.options.datepicker.warn_future
-        );
+    get datePickerOptions() {
+        return Object.assign({}, this.props.options.datepicker);
     }
 
     /**
