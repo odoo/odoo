@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.0\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:19+0000\n"
-"PO-Revision-Date: 2021-11-16 13:19+0000\n"
+"POT-Creation-Date: 2021-12-07 10:47+0000\n"
+"PO-Revision-Date: 2021-12-07 10:47+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -57,12 +57,6 @@ msgstr ""
 msgid ""
 "(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
 "'Order - %s' % (object.name)"
-msgstr ""
-
-#. module: sale
-#: model:product.product,description_sale:sale.product_product_4e
-#: model:product.product,description_sale:sale.product_product_4f
-msgid "160x80cm, with large legs."
 msgstr ""
 
 #. module: sale
@@ -834,7 +828,9 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__campaign_id
 #: model:ir.model.fields,field_description:sale.field_account_move__campaign_id
+#: model:ir.model.fields,field_description:sale.field_account_payment__campaign_id
 #: model:ir.model.fields,field_description:sale.field_sale_order__campaign_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__campaign_id
 msgid "Campaign"
@@ -1002,12 +998,6 @@ msgid "Contact"
 msgstr ""
 
 #. module: sale
-#: model_terms:product.product,website_description:sale.product_product_4e
-#: model_terms:product.product,website_description:sale.product_product_4f
-msgid "Contact Us"
-msgstr ""
-
-#. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__product_uom_category_id
 msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
@@ -1118,12 +1108,6 @@ msgid "Currency Rate"
 msgstr ""
 
 #. module: sale
-#: model:product.attribute.value,name:sale.product_attribute_value_7
-#: model:product.template.attribute.value,name:sale.product_4_attribute_1_value_3
-msgid "Custom"
-msgstr ""
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_custom_attribute_value_ids
 msgid "Custom Values"
 msgstr ""
@@ -1195,12 +1179,6 @@ msgid "Customers"
 msgstr ""
 
 #. module: sale
-#: model:product.product,name:sale.product_product_4e
-#: model:product.product,name:sale.product_product_4f
-msgid "Customizable Desk"
-msgstr ""
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
 msgid "Customize"
 msgstr ""
@@ -1219,7 +1197,7 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
-msgid "DHL USA Connector"
+msgid "DHL Express Connector"
 msgstr ""
 
 #. module: sale
@@ -1337,12 +1315,6 @@ msgid ""
 "lead time of the order lines in case of Service products. In case of "
 "shipping, the shipping policy of the order will be taken into account to "
 "either use the minimum or maximum lead time of the order lines."
-msgstr ""
-
-#. module: sale
-#: model:product.product,name:sale.advance_product_0
-#: model:product.template,name:sale.advance_product_0_product_template
-msgid "Deposit"
 msgstr ""
 
 #. module: sale
@@ -1514,12 +1486,6 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__confirmation_mail_template_id
 msgid "Email sent to the customer once the order is paid."
-msgstr ""
-
-#. module: sale
-#: model_terms:product.product,website_description:sale.product_product_4e
-#: model_terms:product.product,website_description:sale.product_product_4f
-msgid "Ergonomic"
 msgstr ""
 
 #. module: sale
@@ -2048,12 +2014,6 @@ msgid "Lets keep electronic signature for now."
 msgstr ""
 
 #. module: sale
-#: model_terms:product.product,website_description:sale.product_product_4e
-#: model_terms:product.product,website_description:sale.product_product_4f
-msgid "Locally handmade"
-msgstr ""
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_auto_done_setting
 msgid "Lock"
 msgstr ""
@@ -2067,14 +2027,6 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__state__done
 msgid "Locked"
-msgstr ""
-
-#. module: sale
-#: model_terms:product.product,website_description:sale.product_product_4e
-#: model_terms:product.product,website_description:sale.product_product_4f
-msgid ""
-"Looking for a custom bamboo stain to match existing furniture? Contact us "
-"for a quote."
 msgstr ""
 
 #. module: sale
@@ -2139,7 +2091,9 @@ msgid "Marketing"
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__medium_id
 #: model:ir.model.fields,field_description:sale.field_account_move__medium_id
+#: model:ir.model.fields,field_description:sale.field_account_payment__medium_id
 #: model:ir.model.fields,field_description:sale.field_sale_order__medium_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__medium_id
 msgid "Medium"
@@ -2646,14 +2600,6 @@ msgid "Portal Access URL"
 msgstr ""
 
 #. module: sale
-#: model_terms:product.product,website_description:sale.product_product_4e
-#: model_terms:product.product,website_description:sale.product_product_4f
-msgid ""
-"Press a button and watch your desk glide effortlessly from sitting to "
-"standing height in seconds."
-msgstr ""
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce
 msgid "Price Reduce"
 msgstr ""
@@ -3087,11 +3033,6 @@ msgid "Sale Payment acquire onboarding wizard"
 msgstr ""
 
 #. module: sale
-#: model:utm.source,name:sale.utm_source_sale_order_0
-msgid "Sale Promotion 1"
-msgstr ""
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sale Warnings"
 msgstr ""
@@ -3509,7 +3450,9 @@ msgid "Sold in the last 365 days"
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__source_id
 #: model:ir.model.fields,field_description:sale.field_account_move__source_id
+#: model:ir.model.fields,field_description:sale.field_account_payment__source_id
 #: model:ir.model.fields,field_description:sale.field_sale_order__source_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__source_id
 msgid "Source"
@@ -3768,14 +3711,6 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: model_terms:product.product,website_description:sale.product_product_4e
-#: model_terms:product.product,website_description:sale.product_product_4f
-msgid ""
-"The minimum height is 65 cm, and for standing work the maximum height "
-"position is 125 cm."
-msgstr ""
-
-#. module: sale
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "The order is not in a state requiring customer signature."
@@ -3871,7 +3806,9 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,help:sale.field_account_bank_statement_line__campaign_id
 #: model:ir.model.fields,help:sale.field_account_move__campaign_id
+#: model:ir.model.fields,help:sale.field_account_payment__campaign_id
 #: model:ir.model.fields,help:sale.field_sale_order__campaign_id
 msgid ""
 "This is a name that helps you keep track of your different campaign efforts,"
@@ -3886,13 +3823,17 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,help:sale.field_account_bank_statement_line__medium_id
 #: model:ir.model.fields,help:sale.field_account_move__medium_id
+#: model:ir.model.fields,help:sale.field_account_payment__medium_id
 #: model:ir.model.fields,help:sale.field_sale_order__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,help:sale.field_account_bank_statement_line__source_id
 #: model:ir.model.fields,help:sale.field_account_move__source_id
+#: model:ir.model.fields,help:sale.field_account_payment__source_id
 #: model:ir.model.fields,help:sale.field_sale_order__source_id
 msgid ""
 "This is the source of the link, e.g. Search Engine, another domain, or name "
@@ -4072,14 +4013,6 @@ msgid "Unit of Measure"
 msgstr ""
 
 #. module: sale
-#: model:product.product,uom_name:sale.advance_product_0
-#: model:product.product,uom_name:sale.product_product_4e
-#: model:product.product,uom_name:sale.product_product_4f
-#: model:product.template,uom_name:sale.advance_product_0_product_template
-msgid "Units"
-msgstr ""
-
-#. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_uom_form_action
 #: model:ir.ui.menu,name:sale.next_id_16
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4208,14 +4141,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
 msgid "Warning when Selling this Product"
-msgstr ""
-
-#. module: sale
-#: model_terms:product.product,website_description:sale.product_product_4e
-#: model_terms:product.product,website_description:sale.product_product_4f
-msgid ""
-"We pay special attention to detail, which is why our desks are of a superior"
-" quality."
 msgstr ""
 
 #. module: sale

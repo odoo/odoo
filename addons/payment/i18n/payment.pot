@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:29+0000\n"
-"PO-Revision-Date: 2021-09-14 10:29+0000\n"
+"POT-Creation-Date: 2021-12-07 10:47+0000\n"
+"PO-Revision-Date: 2021-12-07 10:47+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -264,6 +264,11 @@ msgstr ""
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_alipay
 msgid "Alipay"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__payment_acquirer_selection
+msgid "Allow Payment Acquirer"
 msgstr ""
 
 #. module: payment
@@ -772,18 +777,6 @@ msgid "Fixed international fees"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__acquirer_id
-msgid "Force Payment Acquirer"
-msgstr ""
-
-#. module: payment
-#: model:ir.model.fields,help:payment.field_payment_link_wizard__acquirer_id
-msgid ""
-"Force the customer to pay via the specified payment acquirer. Leave empty to"
-" allow the customer to choose among all acquirers."
-msgstr ""
-
-#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 msgid "From"
 msgstr ""
@@ -859,6 +852,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_token__id
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__id
 msgid "ID"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_link_wizard__payment_acquirer_selection
+msgid ""
+"If a specific payment acquirer is selected, customers will only be allowed "
+"to pay via this one. If 'All' is selected, customers can pay via any "
+"available payment acquirer."
 msgstr ""
 
 #. module: payment
@@ -1017,11 +1018,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_token__write_date
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__write_date
 msgid "Last Updated on"
-msgstr ""
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
-msgid "Leave empty to allow all acquirers"
 msgstr ""
 
 #. module: payment

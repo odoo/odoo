@@ -4,16 +4,23 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.5\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 10:29+0000\n"
-"PO-Revision-Date: 2021-09-14 10:29+0000\n"
+"POT-Creation-Date: 2021-12-07 10:47+0000\n"
+"PO-Revision-Date: 2021-12-07 10:47+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: website_event_booth
+#: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_registration_details
+msgid ""
+"<i class=\"fa fa-exclamation-triangle mr-2\" role=\"img\" aria-label=\"Error\" title=\"Error\"/>\n"
+"                    <span class=\"o_wbooth_registration_error_message\"/>"
+msgstr ""
 
 #. module: website_event_booth
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_registration
@@ -81,14 +88,17 @@ msgid "Booth Register"
 msgstr ""
 
 #. module: website_event_booth
-#: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_registration_complete
+#. openerp-web
+#: code:addons/website_event_booth/static/src/xml/event_booth_registration_templates.xml:0
+#, python-format
 msgid "Booth Registration completed!"
 msgstr ""
 
 #. module: website_event_booth
-#: code:addons/website_event_booth/controllers/event_booth.py:0
+#. openerp-web
+#: code:addons/website_event_booth/static/src/js/booth_register.js:0
 #, python-format
-msgid "Booth registration failed. Please try again."
+msgid "Booth registration failed."
 msgstr ""
 
 #. module: website_event_booth
@@ -99,12 +109,6 @@ msgstr ""
 #. module: website_event_booth
 #: model:ir.model.fields,field_description:website_event_booth.field_event_type__booth_menu
 msgid "Booths on Website"
-msgstr ""
-
-#. module: website_event_booth
-#: code:addons/website_event_booth/controllers/event_booth.py:0
-#, python-format
-msgid "Booths should belong to the same category."
 msgstr ""
 
 #. module: website_event_booth
@@ -160,8 +164,22 @@ msgid "Phone"
 msgstr ""
 
 #. module: website_event_booth
+#. openerp-web
+#: code:addons/website_event_booth/static/src/js/booth_register.js:0
+#, python-format
+msgid "Please fill out the form correctly."
+msgstr ""
+
+#. module: website_event_booth
 #: model_terms:ir.ui.view,arch_db:website_event_booth.event_booth_registration
 msgid "Sorry, all the booths are sold out."
+msgstr ""
+
+#. module: website_event_booth
+#. openerp-web
+#: code:addons/website_event_booth/static/src/js/booth_register.js:0
+#, python-format
+msgid "The booth category doesn't exist."
 msgstr ""
 
 #. module: website_event_booth
