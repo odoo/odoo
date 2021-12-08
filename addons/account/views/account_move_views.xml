@@ -654,13 +654,23 @@
                     </div>
                     <div groups="account.group_account_invoice,account.group_account_readonly"
                          class="alert alert-info mb-0" role="alert"
-                         attrs="{'invisible': ['|', '|', ('move_type', 'not in', ('out_invoice', 'out_refund')), ('invoice_has_outstanding', '=', False), ('payment_state', 'not in', ('not_paid', 'partial'))]}">
-                        You have <bold><a class="alert-link" href="#outstanding" role="button">outstanding payments</a></bold> for this customer. You can allocate them to mark this invoice as paid.
+                         attrs="{'invisible': ['|', '|', ('move_type', '!=', 'out_invoice'), ('invoice_has_outstanding', '=', False), ('payment_state', 'not in', ('not_paid', 'partial'))]}">
+                        You have <bold><a class="alert-link" href="#outstanding" role="button">outstanding credits</a></bold> for this customer. You can allocate them to mark this invoice as paid.
                     </div>
                     <div groups="account.group_account_invoice,account.group_account_readonly"
                          class="alert alert-info mb-0" role="alert"
-                         attrs="{'invisible': ['|', '|', ('move_type', 'not in', ('in_invoice', 'in_refund')), ('invoice_has_outstanding', '=', False), ('payment_state', 'not in', ('not_paid', 'partial'))]}">
+                         attrs="{'invisible': ['|', '|', ('move_type', '!=', 'in_invoice'), ('invoice_has_outstanding', '=', False), ('payment_state', 'not in', ('not_paid', 'partial'))]}">
                         You have <bold><a class="alert-link" href="#outstanding" role="button">outstanding debits</a></bold> for this vendor. You can allocate them to mark this bill as paid.
+                    </div>
+                    <div groups="account.group_account_invoice,account.group_account_readonly"
+                         class="alert alert-info mb-0" role="alert"
+                         attrs="{'invisible': ['|', '|', ('move_type', '!=', 'out_refund'), ('invoice_has_outstanding', '=', False), ('payment_state', 'not in', ('not_paid', 'partial'))]}">
+                        You have <bold><a class="alert-link" href="#outstanding" role="button">outstanding debits</a></bold> for this customer. You can allocate them to mark this credit note as paid.
+                    </div>
+                    <div groups="account.group_account_invoice,account.group_account_readonly"
+                         class="alert alert-info mb-0" role="alert"
+                         attrs="{'invisible': ['|', '|', ('move_type', '!=', 'in_refund'), ('invoice_has_outstanding', '=', False), ('payment_state', 'not in', ('not_paid', 'partial'))]}">
+                        You have <bold><a class="alert-link" href="#outstanding" role="button">outstanding credits</a></bold> for this vendor. You can allocate them to mark this credit note as paid.
                     </div>
                     <div class="alert alert-info mb-0" role="alert"
                          attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('auto_post', '=', False)]}">
@@ -1036,24 +1046,26 @@
                                         </sheet>
                                     </form>
                                 </field>
-                                <group col="4">
-                                    <group colspan="3">
+                                <group col="12" class="oe_invoice_lines_tab">
+                                    <group colspan="8">
                                         <field name="narration" placeholder="Terms and Conditions" class="oe_inline" nolabel="1"/>
                                     </group>
                                     <!-- Totals (only invoices / receipts) -->
-                                    <group class="oe_subtotal_footer oe_right"
-                                        attrs="{'invisible': ['|', ('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')),
-                                                                   ('payment_state' ,'=', 'invoicing_legacy')]}">
+                                    <group colspan="4">
+                                        <group class="oe_subtotal_footer oe_right"
+                                            attrs="{'invisible': ['|', ('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')),
+                                                                       ('payment_state' ,'=', 'invoicing_legacy')]}">
 
-                                        <field name="tax_totals_json" widget="account-tax-totals-field" nolabel="1" colspan="2"/>
+                                            <field name="tax_totals_json" widget="account-tax-totals-field" nolabel="1" colspan="2"/>
 
-                                        <field name="invoice_payments_widget" colspan="2" nolabel="1" widget="payment"/>
-                                        <field name="amount_residual" class="oe_subtotal_footer_separator" attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                                            <field name="invoice_payments_widget" colspan="2" nolabel="1" widget="payment"/>
+                                            <field name="amount_residual" class="oe_subtotal_footer_separator" attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                                        </group>
+                                        <field name="invoice_outstanding_credits_debits_widget"
+                                            class="oe_invoice_outstanding_credits_debits"
+                                            colspan="2" nolabel="1" widget="payment"
+                                            attrs="{'invisible': ['|', ('state', '!=', 'posted'), ('move_type', 'in', ('out_receipt', 'in_receipt'))]}"/>
                                     </group>
-                                    <field name="invoice_outstanding_credits_debits_widget"
-                                        class="oe_invoice_outstanding_credits_debits"
-                                        colspan="2" nolabel="1" widget="payment"
-                                        attrs="{'invisible': ['|', ('state', '!=', 'posted'), ('move_type', 'in', ('out_receipt', 'in_receipt'))]}"/>
                                 </group>
                             </page>
                             <page id="aml_tab" string="Journal Items" groups="account.group_account_readonly">
