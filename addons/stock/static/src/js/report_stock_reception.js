@@ -126,15 +126,17 @@ const ReceptionReport = clientAction.extend({
      */
      _onClickUnassign: function (ev) {
         const el = ev.currentTarget;
-        this._switchButton(el);
         const quantity = parseFloat(el.getAttribute('qty'));
         const modelId = parseInt(el.getAttribute('move-id'));
         const inIds = JSON.parse("[" + el.getAttribute('move-ins-ids') + "]");
-        el.closest('td').nextElementSibling.querySelectorAll('.o_print_label').forEach(button => button.setAttribute('disabled', true));
         return this._rpc({
             model: 'report.stock.report_reception',
             args: [false, modelId, quantity, inIds[0]],
             method: 'action_unassign'
+        }).then(() => {
+            // only switch buttons if successful
+            this._switchButton(el);
+            el.closest('td').nextElementSibling.querySelectorAll('.o_print_label').forEach(button => button.setAttribute('disabled', true));
         });
     },
 
