@@ -1918,7 +1918,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.skip("search view should keep focus during do_search", async function (assert) {
+    QUnit.test("search view should keep focus during do_search", async function (assert) {
         assert.expect(5);
         // One should be able to type something in the search view, press on enter to
         // make the facet and trigger the search, then do this process
@@ -1928,7 +1928,7 @@ QUnit.module("ActionManager", (hooks) => {
         const searchPromise = testUtils.makeTestPromise();
         const mockRPC = async (route, args) => {
             if (args.method === "web_search_read") {
-                assert.step("search_read " + args.domain);
+                assert.step("search_read " + args.kwargs.domain);
                 if (JSON.stringify(args.domain) === JSON.stringify([["foo", "ilike", "m"]])) {
                     await searchPromise;
                 }
@@ -1949,7 +1949,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps(["search_read |,foo,ilike,m,foo,ilike,o"]);
     });
 
-    QUnit.skip(
+    QUnit.test(
         "Call twice clearUncommittedChanges in a row does not save twice",
         async function (assert) {
             assert.expect(5);
@@ -1963,18 +1963,15 @@ QUnit.module("ActionManager", (hooks) => {
             // execute an action and edit existing record
             await doAction(webClient, 3);
             await click(webClient.el.querySelector(".o_list_view .o_data_row"));
-            await legacyExtraNextTick();
-            assert.containsOnce(webClient, ".o_form_view.o_form_readonly");
-            await testUtils.dom.click($(webClient.el).find(".o_control_panel .o_form_button_edit"));
-            assert.containsOnce(webClient, ".o_form_view.o_form_editable");
-            await testUtils.fields.editInput($(webClient.el).find("input[name=foo]"), "val");
+            assert.containsOnce(webClient, ".o_form_view .o_form_readonly");
+            await click(webClient.el.querySelector(".o_control_panel .o_form_button_edit"));
+            assert.containsOnce(webClient, ".o_form_view .o_form_editable");
+            await editInput(webClient.el, "input[name=foo]", "val");
             clearUncommittedChanges(webClient.env);
-            await testUtils.nextTick();
-            await legacyExtraNextTick();
+            await nextTick();
             assert.containsNone(document.body, ".modal");
             clearUncommittedChanges(webClient.env);
-            await testUtils.nextTick();
-            await legacyExtraNextTick();
+            await nextTick();
             assert.containsNone(document.body, ".modal");
             assert.strictEqual(writeCalls, 1);
         }
