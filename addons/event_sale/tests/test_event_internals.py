@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import date, datetime, timedelta
-from unittest.mock import patch
+from freezegun import freeze_time
 
 from odoo.addons.event_sale.tests.common import TestEventSaleCommon
 from odoo.fields import Datetime as FieldsDatetime, Date as FieldsDate
@@ -66,20 +66,7 @@ class TestEventData(TestEventSaleCommon):
 
 class TestEventTicketData(TestEventSaleCommon):
 
-    def setUp(self):
-        super(TestEventTicketData, self).setUp()
-        self.ticket_date_patcher = patch('odoo.addons.event.models.event_ticket.fields.Date', wraps=FieldsDate)
-        self.ticket_date_patcher_mock = self.ticket_date_patcher.start()
-        self.ticket_date_patcher_mock.context_today.return_value = date(2020, 1, 31)
-        self.ticket_datetime_patcher = patch('odoo.addons.event.models.event_event.fields.Datetime', wraps=FieldsDatetime)
-        self.mock_datetime = self.ticket_datetime_patcher.start()
-        self.mock_datetime.now.return_value = datetime(2020, 1, 31, 10, 0, 0)
-
-    def tearDown(self):
-        super(TestEventTicketData, self).tearDown()
-        self.ticket_date_patcher.stop()
-        self.ticket_datetime_patcher.stop()
-
+    @freeze_time('2020-01-31 10:00:00')
     @users('user_eventmanager')
     def test_event_ticket_fields(self):
         """ Test event ticket fields synchronization """
