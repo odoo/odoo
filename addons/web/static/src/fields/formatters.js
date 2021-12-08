@@ -367,6 +367,16 @@ export const formatSelection = (value, options = {}) => {
     return Object.fromEntries(options.field.selection)[value] || "";
 };
 
+/**
+ * Returns the value or an empty string if it's falsy.
+ *
+ * @param {string | false} value
+ * @returns {string}
+ */
+export const formatText = (value) => {
+    return value || "";
+};
+
 registry
     .category("formatters")
     .add("char", formatChar)
@@ -381,4 +391,5 @@ registry
     .add("many2many", formatX2many)
     .add("monetary", formatMonetary)
     .add("percentage", formatPercentage)
-    .add("selection", formatSelection);
+    .add("selection", formatSelection)
+    .add("text", formatText);
