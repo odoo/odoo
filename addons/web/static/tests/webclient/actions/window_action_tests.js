@@ -1926,52 +1926,6 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.skip(
-        "execute action without modal closes bootstrap tooltips anyway",
-        async function (assert) {
-            assert.expect(12);
-            Object.assign(serverData.views, {
-                "partner,666,form": `<form>
-            <header>
-              <button name="object" string="Call method" type="object" help="need somebody"/>
-            </header>
-            <field name="display_name"/>
-          </form>`,
-            });
-            const mockRPC = async (route, args) => {
-                assert.step(route);
-                if (route === "/web/dataset/call_button") {
-                    // Some business stuff server side, then return an implicit close action
-                    return Promise.resolve(false);
-                }
-            };
-            const webClient = await createWebClient({ serverData, mockRPC });
-            await doAction(webClient, 24);
-            assert.verifySteps([
-                "/web/webclient/load_menus",
-                "/web/action/load",
-                "/web/dataset/call_kw/partner/get_views",
-                "/web/dataset/call_kw/partner/read",
-            ]);
-            assert.containsN(target, ".o_form_buttons_view button:not([disabled])", 2);
-            const actionButton = target.querySelector("button[name=object]");
-            const tooltipProm = new Promise((resolve) => {
-                $(document.body).one("shown.bs.tooltip", () => {
-                    $(actionButton).mouseleave();
-                    resolve();
-                });
-            });
-            $(actionButton).mouseenter();
-            await tooltipProm;
-            assert.containsN(document.body, ".tooltip", 1);
-            await click(actionButton);
-            await legacyExtraNextTick();
-            assert.verifySteps(["/web/dataset/call_button", "/web/dataset/call_kw/partner/read"]);
-            assert.containsNone(document.body, ".tooltip"); // body different from webClient in tests !
-            assert.containsN(target, ".o_form_buttons_view button:not([disabled])", 2);
-        }
-    );
-
     QUnit.skip("search view should keep focus during do_search", async function (assert) {
         assert.expect(5);
         // One should be able to type something in the search view, press on enter to

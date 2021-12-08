@@ -652,4 +652,53 @@ QUnit.module("ActionManager", (hooks) => {
         delete legacyViewRegistry.map.test_view;
         delete legacyViewRegistry.map.test_jsClass;
     });
+
+    QUnit.test(
+        "execute action without modal closes bootstrap tooltips anyway",
+        async function (assert) {
+            assert.expect(12);
+            registry.category("views").remove("form"); // remove new form from registry
+            legacyViewRegistry.add("form", FormView); // add legacy form -> will be wrapped and added to new registry
+
+            Object.assign(serverData.views, {
+                "partner,666,form": `<form>
+            <header>
+              <button name="object" string="Call method" type="object" help="need somebody"/>
+            </header>
+            <field name="display_name"/>
+          </form>`,
+            });
+            const mockRPC = async (route) => {
+                assert.step(route);
+                if (route === "/web/dataset/call_button") {
+                    // Some business stuff server side, then return an implicit close action
+                    return Promise.resolve(false);
+                }
+            };
+            const webClient = await createWebClient({ serverData, mockRPC });
+            await doAction(webClient, 24);
+            assert.verifySteps([
+                "/web/webclient/load_menus",
+                "/web/action/load",
+                "/web/dataset/call_kw/partner/get_views",
+                "/web/dataset/call_kw/partner/read",
+            ]);
+            assert.containsN(target, ".o_form_buttons_view button:not([disabled])", 2);
+            const actionButton = target.querySelector("button[name=object]");
+            const tooltipProm = new Promise((resolve) => {
+                $(document.body).one("shown.bs.tooltip", () => {
+                    $(actionButton).mouseleave();
+                    resolve();
+                });
+            });
+            $(actionButton).mouseenter();
+            await tooltipProm;
+            assert.containsN(document.body, ".tooltip", 2);
+            await click(actionButton);
+            await legacyExtraNextTick();
+            assert.verifySteps(["/web/dataset/call_button", "/web/dataset/call_kw/partner/read"]);
+            assert.containsNone(document.body, ".tooltip"); // body different from webClient in tests !
+            assert.containsN(target, ".o_form_buttons_view button:not([disabled])", 2);
+        }
+    );
 });
