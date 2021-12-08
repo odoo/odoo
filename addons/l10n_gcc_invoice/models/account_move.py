@@ -7,7 +7,7 @@ from odoo import fields, models, api
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
-    narration = fields.Text(translate=True)
+    narration = fields.Html(translate=True)
 
     def _get_name_invoice_report(self):
         self.ensure_one()
