@@ -204,6 +204,7 @@ QUnit.module("Fields", (hooks) => {
         const form = await makeView({
             type: "form",
             resModel: "partner",
+            resId: 1,
             serverData,
             arch: `
                 <form>
@@ -211,6 +212,8 @@ QUnit.module("Fields", (hooks) => {
                 </form>
             `,
         });
+        // The view must be in edit mode
+        await click(form.el.querySelector(".o_form_button_edit"));
         assert.strictEqual(
             form.el.querySelector("input.o_input_file").getAttribute("accept"),
             ".png,.jpeg",
