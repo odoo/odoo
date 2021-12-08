@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_product_search" model="ir.ui.view">
+        <field name="model">sale.report</field>
+        <field name="inherit_id" ref="sale.view_order_product_search" />
+        <field name="arch" type="xml">
+            <field name="categ_id" position="after">
+                <field name="event_id" />
+                <field name="event_ticket_id" />
+            </field>
+            <filter name="Category" position="after">
+                <filter string="Event" name="event_id" context="{'group_by':'event_id'}"/>
+                <filter string="Event Ticket" name="event_ticket_id" context="{'group_by':'event_ticket_id'}"/>
+            </filter>
+        </field>
+    </record>
+</odoo>
