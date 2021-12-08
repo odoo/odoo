@@ -4,11 +4,11 @@
 from datetime import datetime, timedelta
 
 from odoo import fields
-from odoo.addons.website_event.tests.common import TestWebsiteEventCommon
+from odoo.addons.website_event.tests.common import OnlineEventCase
 from odoo.tests.common import users
 
 
-class TestEventWebsiteTrack(TestWebsiteEventCommon):
+class TestEventWebsiteTrack(OnlineEventCase):
 
     def _get_menus(self):
         return super(TestEventWebsiteTrack, self)._get_menus() | set(['Talks', 'Agenda', 'Talk Proposals'])

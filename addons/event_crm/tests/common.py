@@ -1,15 +1,18 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime, timedelta
+
+from odoo import fields
 from odoo.addons.crm.tests.common import TestCrmCommon
-from odoo.addons.event.tests.common import TestEventCommon
+from odoo.addons.event.tests.common import EventCase
 
 
-class TestEventCrmCommon(TestCrmCommon, TestEventCommon):
+class EventCrmCase(TestCrmCommon, EventCase):
 
     @classmethod
     def setUpClass(cls):
-        super(TestEventCrmCommon, cls).setUpClass()
+        super(EventCrmCase, cls).setUpClass()
 
         # avoid clash with existing rules
         cls.env['event.lead.rule'].search([]).write({'active': False})
@@ -20,7 +23,6 @@ class TestEventCrmCommon(TestCrmCommon, TestEventCommon):
             'name': 'Rule Attendee',
             'lead_creation_basis': 'attendee',
             'lead_creation_trigger': 'create',
-            'event_id': cls.event_0.id,
             'event_registration_filter': [['email', 'ilike', '@test.example.com']],
             'lead_type': 'lead',
             'lead_user_id': cls.user_sales_salesman.id,
@@ -31,7 +33,6 @@ class TestEventCrmCommon(TestCrmCommon, TestEventCommon):
             'name': 'Rule Order',
             'lead_creation_basis': 'order',
             'lead_creation_trigger': 'create',
-            'event_id': cls.event_0.id,
             'event_registration_filter': [['email', 'ilike', '@test.example.com']],
             'lead_type': 'opportunity',
             'lead_user_id': cls.user_sales_leads.id,
@@ -96,7 +97,6 @@ class TestEventCrmCommon(TestCrmCommon, TestEventCommon):
         self.assertEqual(lead.partner_id, partner)
         self.assertEqual(lead.name, '%s - %s' % (event.name, expected_reg_name))
         self.assertNotIn('False', lead.name)  # avoid a "Dear False" like construct ^^ (this assert is serious and intended)
-
         self.assertEqual(lead.contact_name, expected_contact_name)
         self.assertEqual(lead.partner_name, expected_partner_name)
         self.assertEqual(lead.email_from, partner.email if partner else registrations._find_first_notnull('email'))
@@ -120,3 +120,21 @@ class TestEventCrmCommon(TestCrmCommon, TestEventCommon):
         self.assertEqual(lead.user_id, rule.lead_user_id)
         self.assertEqual(lead.team_id, rule.lead_sales_team_id)
         self.assertEqual(lead.tag_ids, rule.lead_tag_ids)
+
+
+class TestEventCrmCommon(EventCrmCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestEventCrmCommon, cls).setUpClass()
+
+        cls.event_0 = cls.env['event.event'].create({
+            'name': 'TestEvent',
+            'auto_confirm': True,
+            'date_begin': fields.Datetime.to_string(datetime.today() + timedelta(days=1)),
+            'date_end': fields.Datetime.to_string(datetime.today() + timedelta(days=15)),
+            'date_tz': 'Europe/Brussels',
+        })
+
+        cls.test_rule_attendee.event_id = cls.event_0.id
+        cls.test_rule_order.event_id = cls.event_0.id
