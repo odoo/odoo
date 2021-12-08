@@ -266,9 +266,12 @@ class ReceptionReport(models.AbstractModel):
             amount_unassigned += min(qty, in_move.product_qty)
             if float_compare(qty, amount_unassigned, precision_rounding=out.product_id.uom_id.rounding) <= 0:
                 break
-        if out.move_orig_ids:
-            # annoying use case: batch reserved + individual picking unreserved, need to split the out move
-            new_move_vals = out._split(amount_unassigned)
+        if out.move_orig_ids and out.state != 'done':
+            # annoying use cases where we need to split the out move:
+            # 1. batch reserved + individual picking unreserved
+            # 2. moves linked from backorder generation
+            total_still_linked = sum(out.move_orig_ids.mapped('product_qty'))
+            new_move_vals = out._split(out.product_qty - total_still_linked)
             if new_move_vals:
                 new_move_vals[0]['procure_method'] = 'make_to_order'
                 new_out = self.env['stock.move'].create(new_move_vals)
@@ -296,3 +299,4 @@ class ReceptionReport(models.AbstractModel):
                 new_out._recompute_state()
         out.procure_method = 'make_to_stock'
         out._recompute_state()
+        return True
