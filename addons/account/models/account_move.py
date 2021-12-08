@@ -3304,28 +3304,6 @@ class AccountMove(models.Model):
         for move in self:
             move.has_reconciled_entries = len(move.line_ids._reconciled_lines()) > 1
 
-    def action_view_reverse_entry(self):
-        self.ensure_one()
-
-        # Create action.
-        action = {
-            'name': _('Reverse Moves'),
-            'type': 'ir.actions.act_window',
-            'res_model': 'account.move',
-        }
-        reverse_entries = self.env['account.move'].search([('reversed_entry_id', '=', self.id)])
-        if len(reverse_entries) == 1:
-            action.update({
-                'view_mode': 'form',
-                'res_id': reverse_entries.id,
-            })
-        else:
-            action.update({
-                'view_mode': 'tree',
-                'domain': [('id', 'in', reverse_entries.ids)],
-            })
-        return action
-
     @api.model
     def _autopost_draft_entries(self):
         ''' This method is called from a cron job.
