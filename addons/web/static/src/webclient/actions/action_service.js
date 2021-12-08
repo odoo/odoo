@@ -7,7 +7,7 @@ import { download } from "@web/core/network/download";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { KeepLast } from "@web/core/utils/concurrency";
-import { useBus } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { cleanDomFromBootstrap } from "@web/legacy/utils";
 import { View, ViewNotFoundError } from "@web/views/view";
@@ -541,6 +541,7 @@ function makeActionManager(env) {
             setup() {
                 this.Component = controller.Component;
                 this.componentRef = useRef("component");
+                this.titleService = useService("title");
                 useDebugCategory("action", { action });
                 useSubEnv({ config: controller.config });
                 if (action.target !== "new") {
@@ -557,6 +558,7 @@ function makeActionManager(env) {
                         __getLocalState__: this.__getLocalState__,
                     });
                 }
+                this.isMounted = false;
             }
             catchError(error) {
                 reject(error);
@@ -634,12 +636,15 @@ function makeActionManager(env) {
                     }
                     // END LEGACY CODE COMPATIBILITY
                     controllerStack = nextStack; // the controller is mounted, commit the new stack
-                    // wait Promise callbacks to be executed
                     pushState(controller);
+                    this.titleService.setParts({
+                        action: controller.title || this.env.config.displayName,
+                    });
                     browser.sessionStorage.setItem("current_action", action._originalAction);
                 }
                 resolve();
                 env.bus.trigger("ACTION_MANAGER:UI-UPDATED", _getActionMode(action));
+                this.isMounted = true;
             }
             willUnmount() {
                 if (action.target === "new" && dialogCloseResolve) {
@@ -656,6 +661,10 @@ function makeActionManager(env) {
             }
             onTitleUpdated(ev) {
                 controller.title = ev.detail;
+                if (this.isMounted) {
+                    // if not mounted yet, will be done in "mounted"
+                    this.titleService.setParts({ action: controller.title });
+                }
             }
         }
         ControllerComponent.template = ControllerComponentTemplate;

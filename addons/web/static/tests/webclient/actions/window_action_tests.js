@@ -2396,4 +2396,17 @@ QUnit.module("ActionManager", (hooks) => {
         await click(webClient.el.querySelector(".o_pager_next"));
         assert.strictEqual(titleService.current, '{"zopenerp":"Odoo","action":"Second record"}');
     });
+
+    QUnit.test("action part of title is updated when an action is mounted", async (assert) => {
+        // use a PivotView because we need a view converted to wowl
+        // those two lines can be removed once the list view is converted to wowl
+        serverData.actions[3].views.unshift([false, "pivot"]);
+        serverData.views["partner,false,pivot"] = "<pivot/>";
+        serviceRegistry.add("user", makeFakeUserService());
+
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, 3);
+        const titleService = webClient.env.services.title;
+        assert.strictEqual(titleService.current, '{"zopenerp":"Odoo","action":"Partners"}');
+    });
 });
