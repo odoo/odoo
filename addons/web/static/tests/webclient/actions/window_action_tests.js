@@ -547,7 +547,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(target, ".o_list_view", "should now display the list view");
         // open a record in form view
         def = testUtils.makeTestPromise();
-        await testUtils.dom.click($(target).find(".o_list_view .o_data_row:first"));
+        await click(target.querySelector(".o_list_view .o_data_row"));
         await legacyExtraNextTick();
         assert.containsOnce(target, ".o_list_view", "should still display the list view");
         assert.containsNone(target, ".o_form_view", "shouldn't display the form view yet");
@@ -631,7 +631,7 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
         // open a record in form view
-        await testUtils.dom.click($(target).find(".o_list_view .o_data_row:first"));
+        await click(target.querySelector(".o_list_view .o_data_row"));
         await legacyExtraNextTick();
         await testUtils.dom.click($(target).find(".o_form_view button:contains(Execute action)"));
         await legacyExtraNextTick();
@@ -715,7 +715,7 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 3);
         // open a record in form view
-        await testUtils.dom.click($(target).find(".o_list_view .o_data_row:first"));
+        await click(target.querySelector(".o_list_view .o_data_row"));
         await legacyExtraNextTick();
         assert.strictEqual(
             $(target).find(".o_field_widget[name=foo]").text(),
@@ -855,7 +855,7 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 3);
         // open a record in form view
-        await testUtils.dom.click($(target).find(".o_list_view .o_data_row:first"));
+        await click(target.querySelector(".o_list_view .o_data_row"));
         await legacyExtraNextTick();
         // click on 'Execute action' button (should execute an action)
         assert.containsN(
@@ -955,7 +955,7 @@ QUnit.module("ActionManager", (hooks) => {
             const webClient = await createWebClient({ serverData, mockRPC });
             await doAction(webClient, 3);
             // open a record in form view
-            await testUtils.dom.click($(target).find(".o_list_view .o_data_row:first"));
+            await click(target.querySelector(".o_list_view .o_data_row"));
             await legacyExtraNextTick();
             // click on 'Call method' button (should call an Object method)
             def = testUtils.makeTestPromise();
@@ -1016,7 +1016,7 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 3);
         // open the first record in form view
-        await testUtils.dom.click($(target).find(".o_list_view .o_data_row:first"));
+        await click(target.querySelector(".o_list_view .o_data_row"));
         await legacyExtraNextTick();
         assert.strictEqual(
             $(target).find(".o_control_panel .breadcrumb-item:last").text(),
@@ -1237,7 +1237,7 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
         // open a record in form view
-        await testUtils.dom.click($(target).find(".o_list_view .o_data_row:first"));
+        await click(target.querySelector(".o_list_view .o_data_row"));
         await legacyExtraNextTick();
         assert.containsN(
             target,
@@ -1542,7 +1542,7 @@ QUnit.module("ActionManager", (hooks) => {
                 "record should still be in descending order after default_order applied"
             );
             // go to formview and come back to listview
-            await testUtils.dom.click($(target).find(".o_list_view .o_data_row:first"));
+            await click(target.querySelector(".o_list_view .o_data_row"));
             await legacyExtraNextTick();
             await testUtils.dom.click($(target).find(".o_control_panel .breadcrumb a:eq(0)"));
             await legacyExtraNextTick();
@@ -1668,7 +1668,7 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData, mockRPC });
         // execute an action and create a new record
         await doAction(webClient, 3);
-        await testUtils.dom.click($(target).find(".o_list_button_add"));
+        await click(target.querySelector(".o_list_button_add"));
         await legacyExtraNextTick();
         assert.containsOnce(target, ".o_form_view.o_form_editable");
         assert.containsOnce(target, ".o_form_uri:contains(First record)");
@@ -1790,29 +1790,26 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.skip("open a record, come back, and create a new record", async function (assert) {
+    QUnit.test("open a record, come back, and create a new record", async function (assert) {
         assert.expect(7);
         const webClient = await createWebClient({ serverData });
         // execute an action and open a record
         await doAction(webClient, 3);
         assert.containsOnce(target, ".o_list_view");
         assert.containsN(target, ".o_list_view .o_data_row", 5);
-        await testUtils.dom.click($(target).find(".o_list_view .o_data_row:first"));
-        await legacyExtraNextTick();
+        await click(target.querySelector(".o_list_view .o_data_row"));
         assert.containsOnce(target, ".o_form_view");
-        assert.hasClass(target.querySelector(".o_form_view"), "o_form_readonly");
+        assert.containsOnce(target, ".o_form_view .o_form_readonly");
         // go back using the breadcrumbs
-        await testUtils.dom.click($(target).find(".o_control_panel .breadcrumb-item a"));
-        await legacyExtraNextTick();
+        await click(target.querySelector(".o_control_panel .breadcrumb-item a"));
         assert.containsOnce(target, ".o_list_view");
         // create a new record
-        await testUtils.dom.click($(target).find(".o_list_button_add"));
-        await legacyExtraNextTick();
+        await click(target.querySelector(".o_list_button_add"));
         assert.containsOnce(target, ".o_form_view");
-        assert.hasClass(target.querySelector(".o_form_view"), "o_form_editable");
+        assert.containsOnce(target, ".o_form_view .o_form_editable");
     });
 
-    QUnit.skip(
+    QUnit.test(
         "open form view, use the pager, execute action, and come back",
         async function (assert) {
             assert.expect(8);
@@ -1821,26 +1818,25 @@ QUnit.module("ActionManager", (hooks) => {
             await doAction(webClient, 3);
             assert.containsOnce(target, ".o_list_view");
             assert.containsN(target, ".o_list_view .o_data_row", 5);
-            await testUtils.dom.click($(target).find(".o_list_view .o_data_row:first"));
-            await legacyExtraNextTick();
+            await click(target.querySelector(".o_list_view .o_data_row"));
             assert.containsOnce(target, ".o_form_view");
             assert.strictEqual(
                 $(target).find(".o_field_widget[name=display_name]").text(),
                 "First record"
             );
             // switch to second record
-            await testUtils.dom.click($(target).find(".o_pager_next"));
+            await click(target.querySelector(".o_pager_next"));
             assert.strictEqual(
                 $(target).find(".o_field_widget[name=display_name]").text(),
                 "Second record"
             );
             // execute an action from the second record
             await testUtils.dom.click($(target).find(".o_statusbar_buttons button[name=4]"));
-            await legacyExtraNextTick();
             assert.containsOnce(target, ".o_kanban_view");
             // go back using the breadcrumbs
-            await testUtils.dom.click($(target).find(".o_control_panel .breadcrumb-item:nth(1) a"));
-            await legacyExtraNextTick();
+            await testUtils.dom.click(
+                $(target).find(".o_control_panel .breadcrumb-item:nth(1) a")
+            );
             assert.containsOnce(target, ".o_form_view");
             assert.strictEqual(
                 $(target).find(".o_field_widget[name=display_name]").text(),
@@ -1849,7 +1845,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.test(
         "create a new record in a form view, execute action, and come back",
         async function (assert) {
             assert.expect(8);
@@ -1857,25 +1853,21 @@ QUnit.module("ActionManager", (hooks) => {
             // execute an action and create a new record
             await doAction(webClient, 3);
             assert.containsOnce(target, ".o_list_view");
-            await testUtils.dom.click($(target).find(".o_list_button_add"));
-            await legacyExtraNextTick();
+            await click(target.querySelector(".o_list_button_add"));
             assert.containsOnce(target, ".o_form_view");
-            assert.hasClass($(target).find(".o_form_view")[0], "o_form_editable");
-            await testUtils.fields.editInput(
-                $(target).find(".o_field_widget[name=display_name]"),
-                "another record"
-            );
-            await testUtils.dom.click($(target).find(".o_form_button_save"));
-            assert.hasClass($(target).find(".o_form_view")[0], "o_form_readonly");
+            assert.containsOnce(webClient, ".o_form_view .o_form_editable");
+            await editInput(target, ".o_field_widget[name=display_name]", "another record");
+            await click(target.querySelector(".o_form_button_save"));
+            assert.containsOnce(target, ".o_form_view .o_form_readonly");
             // execute an action from the second record
             await testUtils.dom.click($(target).find(".o_statusbar_buttons button[name=4]"));
-            await legacyExtraNextTick();
             assert.containsOnce(target, ".o_kanban_view");
             // go back using the breadcrumbs
-            await testUtils.dom.click($(target).find(".o_control_panel .breadcrumb-item:nth(1) a"));
-            await legacyExtraNextTick();
+            await testUtils.dom.click(
+                $(target).find(".o_control_panel .breadcrumb-item:nth(1) a")
+            );
             assert.containsOnce(target, ".o_form_view");
-            assert.hasClass($(target).find(".o_form_view")[0], "o_form_readonly");
+            assert.containsOnce(target, ".o_form_view .o_form_readonly");
             assert.strictEqual(
                 $(target).find(".o_field_widget[name=display_name]").text(),
                 "another record"
@@ -2024,7 +2016,7 @@ QUnit.module("ActionManager", (hooks) => {
             const webClient = await createWebClient({ serverData, mockRPC });
             // execute an action and edit existing record
             await doAction(webClient, 3);
-            await testUtils.dom.click($(target).find(".o_list_view .o_data_row:first"));
+            await click(target.querySelector(".o_list_view .o_data_row"));
             await legacyExtraNextTick();
             assert.containsOnce(target, ".o_form_view.o_form_readonly");
             await testUtils.dom.click($(target).find(".o_control_panel .o_form_button_edit"));
