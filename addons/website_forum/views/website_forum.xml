@@ -19,10 +19,10 @@
     <form  t-attf-method="#{form_method or 'POST'}" t-att-action="url" t-attf-class="#{form_classes} #{not inDropdown and 'btn btn-sm border'}">
         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
         <div class="input-group">
-            <a t-attf-class="#{icon and not label and ('fa ' + icon)} #{inDropdown and 'dropdown-item pl-3' or 'btn btn-sm p-0'} #{classes} #{karma and 'karma_required text-muted'}" t-attf-data-karma="#{karma}" t-att-title="title">
+            <button t-attf-class="#{icon and not label and ('fa ' + icon)} #{inDropdown and 'dropdown-item pl-3' or 'btn btn-sm p-0'} #{classes} #{karma and 'karma_required text-muted'}" t-attf-data-karma="#{karma}" t-att-title="title">
                 <i t-if="icon and label" t-attf-class="fa fa-fw text-muted #{icon} #{inDropdown and 'mr-1'}"/>
                 <t t-esc="label"/>
-            </a>
+            </button>
             <t t-if="flag_validator" t-call="website_forum.show_flag_validator"/>
         </div>
     </form>
