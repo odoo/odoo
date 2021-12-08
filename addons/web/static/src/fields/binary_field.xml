@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.BinaryField" owl="1">
+        <div class="o_field_binary_file" aria-atomic="true">
+            <t t-if="props.readonly and state.file.data">
+                <FileDownloader file="state.file" onDownload="() => onFileDownload()"/>
+            </t>
+            <t t-elif="!props.readonly">
+                <FileUploader
+                    acceptedFileExtensions="props.options.accepted_file_extensions or '*'"
+                    file="state.file"
+                    onUploaded="(info) => onFileUploaded(info)"
+                    onRemove="() => onFileRemove()"
+                />
+            </t>
+            <t t-else="">
+                <span>-</span>
+            </t>
+        </div>
+    </t>
+
+</templates>

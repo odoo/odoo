@@ -1,6 +1,11 @@
 /** @odoo-module **/
 
-import { setupViewRegistries } from "../views/helpers";
+import { browser } from "@web/core/browser/browser";
+import { download } from "@web/core/network/download";
+import { makeMockXHR } from "../helpers/mock_services";
+import { click, makeDeferred, patchWithCleanup } from "../helpers/utils";
+import { makeView, setupViewRegistries } from "../views/helpers";
+import { registerCleanup } from "../helpers/cleanup";
 
 let serverData;
 
@@ -10,183 +15,18 @@ QUnit.module("Fields", (hooks) => {
             models: {
                 partner: {
                     fields: {
-                        date: { string: "A date", type: "date", searchable: true },
-                        datetime: { string: "A datetime", type: "datetime", searchable: true },
-                        display_name: { string: "Displayed name", type: "char", searchable: true },
                         foo: {
                             string: "Foo",
                             type: "char",
                             default: "My little Foo Value",
-                            searchable: true,
                             trim: true,
-                        },
-                        bar: { string: "Bar", type: "boolean", default: true, searchable: true },
-                        empty_string: {
-                            string: "Empty string",
-                            type: "char",
-                            default: false,
-                            searchable: true,
-                            trim: true,
-                        },
-                        txt: {
-                            string: "txt",
-                            type: "text",
-                            default: "My little txt Value\nHo-ho-hoooo Merry Christmas",
-                        },
-                        int_field: {
-                            string: "int_field",
-                            type: "integer",
-                            sortable: true,
-                            searchable: true,
-                        },
-                        qux: { string: "Qux", type: "float", digits: [16, 1], searchable: true },
-                        p: {
-                            string: "one2many field",
-                            type: "one2many",
-                            relation: "partner",
-                            searchable: true,
-                        },
-                        trululu: {
-                            string: "Trululu",
-                            type: "many2one",
-                            relation: "partner",
-                            searchable: true,
-                        },
-                        timmy: {
-                            string: "pokemon",
-                            type: "many2many",
-                            relation: "partner_type",
-                            searchable: true,
-                        },
-                        product_id: {
-                            string: "Product",
-                            type: "many2one",
-                            relation: "product",
-                            searchable: true,
-                        },
-                        sequence: { type: "integer", string: "Sequence", searchable: true },
-                        currency_id: {
-                            string: "Currency",
-                            type: "many2one",
-                            relation: "currency",
-                            searchable: true,
-                        },
-                        selection: {
-                            string: "Selection",
-                            type: "selection",
-                            searchable: true,
-                            selection: [
-                                ["normal", "Normal"],
-                                ["blocked", "Blocked"],
-                                ["done", "Done"],
-                            ],
                         },
                         document: { string: "Binary", type: "binary" },
-                        hex_color: { string: "hexadecimal color", type: "char" },
                     },
                     records: [
                         {
-                            id: 1,
-                            date: "2017-02-03",
-                            datetime: "2017-02-08 10:00:00",
-                            display_name: "first record",
-                            bar: true,
-                            foo: "yop",
-                            int_field: 10,
-                            qux: 0.44444,
-                            p: [],
-                            timmy: [],
-                            trululu: 4,
-                            selection: "blocked",
+                            foo: "coucou.txt",
                             document: "coucou==\n",
-                            hex_color: "#ff0000",
-                        },
-                        {
-                            id: 2,
-                            display_name: "second record",
-                            bar: true,
-                            foo: "blip",
-                            int_field: 0,
-                            qux: 0,
-                            p: [],
-                            timmy: [],
-                            trululu: 1,
-                            sequence: 4,
-                            currency_id: 2,
-                            selection: "normal",
-                        },
-                        {
-                            id: 4,
-                            display_name: "aaa",
-                            foo: "abc",
-                            sequence: 9,
-                            int_field: false,
-                            qux: false,
-                            selection: "done",
-                        },
-                        { id: 3, bar: true, foo: "gnap", int_field: 80, qux: -3.89859 },
-                        { id: 5, bar: false, foo: "blop", int_field: -4, qux: 9.1, currency_id: 1 },
-                    ],
-                    onchanges: {},
-                },
-                product: {
-                    fields: {
-                        name: { string: "Product Name", type: "char", searchable: true },
-                    },
-                    records: [
-                        {
-                            id: 37,
-                            display_name: "xphone",
-                        },
-                        {
-                            id: 41,
-                            display_name: "xpad",
-                        },
-                    ],
-                },
-                partner_type: {
-                    fields: {
-                        name: { string: "Partner Type", type: "char", searchable: true },
-                        color: { string: "Color index", type: "integer", searchable: true },
-                    },
-                    records: [
-                        { id: 12, display_name: "gold", color: 2 },
-                        { id: 14, display_name: "silver", color: 5 },
-                    ],
-                },
-                currency: {
-                    fields: {
-                        digits: { string: "Digits" },
-                        symbol: { string: "Currency Sumbol", type: "char", searchable: true },
-                        position: { string: "Currency Position", type: "char", searchable: true },
-                    },
-                    records: [
-                        {
-                            id: 1,
-                            display_name: "$",
-                            symbol: "$",
-                            position: "before",
-                        },
-                        {
-                            id: 2,
-                            display_name: "€",
-                            symbol: "€",
-                            position: "after",
-                        },
-                    ],
-                },
-                "ir.translation": {
-                    fields: {
-                        lang: { type: "char" },
-                        value: { type: "char" },
-                        res_id: { type: "integer" },
-                    },
-                    records: [
-                        {
-                            id: 99,
-                            res_id: 37,
-                            value: "",
-                            lang: "en_US",
                         },
                     ],
                 },
@@ -198,140 +38,152 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("BinaryField");
 
-    QUnit.skip("BinaryField is correctly rendered", async function (assert) {
+    QUnit.test("BinaryField is correctly rendered", async function (assert) {
         assert.expect(16);
 
-        // save the session function
-        var oldGetFile = session.get_file;
-        session.get_file = function (option) {
+        async function send(data) {
+            assert.ok(data instanceof FormData);
             assert.strictEqual(
-                option.data.field,
+                data.get("field"),
                 "document",
                 "we should download the field document"
             );
             assert.strictEqual(
-                option.data.data,
+                data.get("data"),
                 "coucou==\n",
                 "we should download the correct data"
             );
-            option.complete();
-            return Promise.resolve();
-        };
 
-        this.data.partner.records[0].foo = "coucou.txt";
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+            this.status = 200;
+            this.response = new Blob([data.get("data")], { type: "text/plain" });
+        }
+        let MockXHR = makeMockXHR("", send);
+
+        patchWithCleanup(
+            browser,
+            {
+                XMLHttpRequest: MockXHR,
+            },
+            { pure: true }
+        );
+
+        const form = await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
             arch:
                 '<form string="Partners">' +
                 '<field name="document" filename="foo"/>' +
                 '<field name="foo"/>' +
                 "</form>",
-            res_id: 1,
+            resId: 1,
         });
-
         assert.containsOnce(
             form,
-            'a.o_field_widget[name="document"] > .fa-download',
+            '.o_field_widget[name="document"] a > .fa-download',
             "the binary field should be rendered as a downloadable link in readonly"
         );
         assert.strictEqual(
-            form.$('a.o_field_widget[name="document"]').text().trim(),
+            form.el.querySelector('.o_field_widget[name="document"] span').innerText.trim(),
             "coucou.txt",
             "the binary field should display the name of the file in the link"
         );
         assert.strictEqual(
-            form.$(".o_field_char").text(),
+            form.el.querySelector(".o_field_char").innerText,
             "coucou.txt",
             "the filename field should have the file name as value"
         );
 
-        await testUtils.dom.click(form.$('a.o_field_widget[name="document"]'));
+        // Testing the download button in the field
+        // We must avoid the browser to download the file effectively
+        const prom = makeDeferred();
+        const downloadOnClick = (ev) => {
+            const target = ev.target;
+            if (target.tagName === "A" && "download" in target.attributes) {
+                ev.preventDefault();
+                document.removeEventListener("click", downloadOnClick);
+                prom.resolve();
+            }
+        };
+        document.addEventListener("click", downloadOnClick);
+        registerCleanup(() => document.removeEventListener("click", downloadOnClick));
+        await click(form.el.querySelector('.o_field_widget[name="document"] a'));
+        await prom;
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el, ".o_form_button_edit");
 
         assert.containsNone(
             form,
-            'a.o_field_widget[name="document"] > .fa-download',
+            '.o_field_widget[name="document"] a > .fa-download',
             "the binary field should not be rendered as a downloadable link in edit"
         );
         assert.strictEqual(
-            form.$('div.o_field_binary_file[name="document"] > input').val(),
+            form.el.querySelector('div.o_field_binary_file[name="document"] span').innerText,
             "coucou.txt",
             "the binary field should display the file name in the input edit mode"
         );
-        assert.hasAttrValue(
-            form.$(".o_field_binary_file > input"),
-            "readonly",
-            "readonly",
-            "the input should be readonly"
-        );
         assert.containsOnce(
             form,
-            ".o_field_binary_file > .o_clear_file_button",
+            ".o_field_binary_file .o_clear_file_button",
             "there shoud be a button to clear the file"
         );
         assert.strictEqual(
-            form.$("input.o_field_char").val(),
+            form.el.querySelector("input.o_field_char").value,
             "coucou.txt",
             "the filename field should have the file name as value"
         );
 
-        await testUtils.dom.click(form.$(".o_field_binary_file > .o_clear_file_button"));
+        await click(form.el.querySelector(".o_field_binary_file .o_clear_file_button"));
 
-        assert.isNotVisible(form.$(".o_field_binary_file > input"), "the input should be hidden");
-        assert.strictEqual(
-            form.$(".o_field_binary_file > .o_select_file_button:not(.o_hidden)").length,
-            1,
+        assert.isNotVisible(
+            form.el.querySelector(".o_field_binary_file > input"),
+            "the input should be hidden"
+        );
+        assert.containsOnce(
+            form,
+            ".o_field_binary_file .o_select_file_button",
             "there shoud be a button to upload the file"
         );
         assert.strictEqual(
-            form.$("input.o_field_char").val(),
+            form.el.querySelector("input.o_field_char").value,
             "",
             "the filename field should be empty since we removed the file"
         );
 
-        await testUtils.form.clickSave(form);
+        await click(form.el, ".o_form_button_save");
         assert.containsNone(
             form,
-            'a.o_field_widget[name="document"] > .fa-download',
+            '.o_field_widget[name="document"] a > .fa-download',
             "the binary field should not render as a downloadable link since we removed the file"
         );
         assert.strictEqual(
-            form.$('a.o_field_widget[name="document"]').text().trim(),
-            "",
+            form.el.querySelector('.o_field_widget[name="document"] span').innerText.trim(),
+            "-",
             "the binary field should not display a filename in the link since we removed the file"
         );
         assert.strictEqual(
-            form.$(".o_field_char").text().trim(),
+            form.el.querySelector(".o_field_char").innerText.trim(),
             "",
             "the filename field should be empty since we removed the file"
         );
-
-        form.destroy();
-
-        // restore the session function
-        session.get_file = oldGetFile;
     });
 
-    QUnit.skip("BinaryField: option accepted_file_extensions", async function (assert) {
+    QUnit.test("BinaryField: option accepted_file_extensions", async function (assert) {
         assert.expect(1);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        const form = await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
             arch: `<form string="Partners">
                       <field name="document" widget="binary" options="{'accepted_file_extensions': '.dat,.bin'}"/>
                    </form>`,
         });
         assert.strictEqual(
-            form.$("input.o_input_file").attr("accept"),
+            form.el.querySelector("input.o_input_file").getAttribute("accept"),
             ".dat,.bin",
             "the input should have the correct ``accept`` attribute"
         );
-        form.destroy();
     });
 
     QUnit.skip(
@@ -340,58 +192,53 @@ QUnit.module("Fields", (hooks) => {
             assert.expect(4);
 
             // save the session function
-            var oldGetFile = session.get_file;
-            session.get_file = function (option) {
+            var oldGetFile = download;
+            download = function (option) {
                 assert.step("We shouldn't be getting the file.");
-                return oldGetFile.bind(session)(option);
+                return oldGetFile.bind(download)(option);
             };
 
-            this.data.partner.onchanges = {
+            serverData.models.partner.onchanges = {
                 product_id: function (obj) {
                     obj.document = "onchange==\n";
                 },
             };
 
-            this.data.partner.fields.document.readonly = true;
+            serverData.models.partner.fields.document.readonly = true;
 
-            var form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
+            const form = await makeView({
+                serverData,
+                type: "form",
+                resModel: "partner",
                 arch:
                     '<form string="Partners">' +
                     '<field name="product_id"/>' +
                     '<field name="document" filename="\'yooo\'"/>' +
                     "</form>",
-                res_id: 1,
+                resId: 1,
             });
 
-            await testUtils.form.clickCreate(form);
+            await click(form.el, ".o_form_button_create");
             await testUtils.fields.many2one.clickOpenDropdown("product_id");
             await testUtils.fields.many2one.clickHighlightedItem("product_id");
 
             assert.containsOnce(
                 form,
-                'a.o_field_widget[name="document"]',
+                '.o_field_widget[name="document"] a',
                 "The link to download the binary should be present"
             );
             assert.containsNone(
                 form,
-                'a.o_field_widget[name="document"] > .fa-download',
+                '.o_field_widget[name="document"] a > .fa-download',
                 "The download icon should not be present"
             );
 
-            var link = form.$('a.o_field_widget[name="document"]');
+            var link = form.el.querySelector('.o_field_widget[name="document"] a');
             assert.ok(link.is(":hidden"), "the link element should not be visible");
-
-            // force visibility to test that the clicking has also been disabled
-            link.removeClass("o_hidden");
-            testUtils.dom.click(link);
 
             assert.verifySteps([]); // We shouldn't have passed through steps
 
-            form.destroy();
-            session.get_file = oldGetFile;
+            download = oldGetFile;
         }
     );
 });
