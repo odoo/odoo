@@ -1862,12 +1862,22 @@ class MrpProduction(models.Model):
             message += "\n".join(component.name for component in missing_components)
             raise UserError(message)
         next_serial = self.env['stock.lot']._get_next_serial(self.company_id, self.product_id)
+        lot_components = {}
+        for move in self.move_raw_ids:
+            if move.product_id.tracking != 'lot':
+                continue
+            lot_ids = move.move_line_ids.lot_id.ids
+            if not lot_ids:
+                continue
+            lot_components.setdefault(move.product_id, set()).update(lot_ids)
+        multiple_lot_components = set([p for p, l in lot_components.items() if len(l) != 1])
         action = self.env["ir.actions.actions"]._for_xml_id("mrp.act_assign_serial_numbers_production")
         action['context'] = {
             'default_production_id': self.id,
             'default_expected_qty': self.product_qty,
             'default_next_serial_number': next_serial,
             'default_next_serial_count': self.product_qty - self.qty_produced,
+            'default_multiple_lot_components_names': ",".join(c.display_name for c in multiple_lot_components) if multiple_lot_components else None,
         }
         return action
 
