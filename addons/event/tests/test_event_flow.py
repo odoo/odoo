@@ -5,12 +5,12 @@ import datetime
 
 from dateutil.relativedelta import relativedelta
 
-from odoo.addons.event.tests.common import TestEventCommon
+from odoo.addons.event.tests.common import EventCase
 from odoo.exceptions import ValidationError
 from odoo.tools import mute_logger
 
 
-class TestEventFlow(TestEventCommon):
+class TestEventFlow(EventCase):
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_event_auto_confirm(self):

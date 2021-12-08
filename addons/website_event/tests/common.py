@@ -4,7 +4,7 @@
 from datetime import datetime, timedelta, time
 from unittest.mock import patch
 
-from odoo.addons.event.tests.common import TestEventCommon
+from odoo.addons.event.tests.common import EventCase
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.fields import Datetime as FieldsDatetime, Date as FieldsDate
 from odoo.tests.common import TransactionCase
@@ -57,20 +57,29 @@ class EventDtPatcher(TransactionCase):
         cls.addClassCleanup(cls.wevent_main_date.stop)
 
 
-class TestWebsiteEventCommon(TestEventCommon):
+class OnlineEventCase(EventCase):
 
     @classmethod
     def setUpClass(cls):
-        super(TestWebsiteEventCommon, cls).setUpClass()
+        super(OnlineEventCase, cls).setUpClass()
 
         cls.company_main = cls.env.user.company_id
         cls.user_event_web_manager = mail_new_test_user(
-            cls.env, login='user_event_web_manager',
-            name='Martin Sales Manager', email='crm_manager@test.example.com',
-            company_id=cls.company_main.id,
-            notification_type='inbox',
+            cls.env,
+            company_id=cls.company_admin.id,
+            email='crm_manager@test.example.com',
             groups='event.group_event_manager,website.group_website_designer',
+            login='user_event_web_manager',
+            name='Martin Sales Manager',
+            notification_type='inbox',
         )
+
+        cls.event_customer.write({
+            'website_description': '<p>I am your best customer, %s</p>' % cls.event_customer.name,
+        })
+        cls.event_customer2.write({
+            'website_description': '<p>I am your best customer, %s</p>' % cls.event_customer2.name,
+        })
 
     def _get_menus(self):
         return set(['Introduction', 'Location', 'Register', 'Community'])
@@ -97,21 +106,17 @@ class TestWebsiteEventCommon(TestEventCommon):
                 self.assertFalse(bool(view))
 
 
-class TestEventOnlineCommon(TestEventCommon, EventDtPatcher):
+class TestEventOnlineCommon(OnlineEventCase, EventDtPatcher):
 
     @classmethod
     def setUpClass(cls):
         super(TestEventOnlineCommon, cls).setUpClass()
 
         # event if 8-18 in Europe/Brussels (DST) (first day: begins at 9, last day: ends at 15)
-        cls.event_0.write({
+        cls.event_0 = cls.env['event.event'].create({
+            'name': 'TestEvent',
+            'auto_confirm': True,
             'date_begin': datetime.combine(cls.reference_now, time(7, 0)) - timedelta(days=1),
             'date_end': datetime.combine(cls.reference_now, time(13, 0)) + timedelta(days=1),
-        })
-
-        cls.event_customer.write({
-            'website_description': '<p>I am your best customer, %s</p>' % cls.event_customer.name,
-        })
-        cls.event_customer2.write({
-            'website_description': '<p>I am your best customer, %s</p>' % cls.event_customer2.name,
+            'date_tz': 'Europe/Brussels',
         })

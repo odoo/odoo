@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.website.tests.test_base_url import TestUrlCommon
-from odoo.addons.website_event.tests.common import TestWebsiteEventCommon
+from odoo.addons.website_event.tests.common import OnlineEventCase
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
@@ -27,7 +27,7 @@ class TestURLs(TestUrlCommon):
 
 
 @tagged('post_install', '-at_install')
-class TestWebsiteAccess(HttpCaseWithUserDemo, TestWebsiteEventCommon):
+class TestWebsiteAccess(HttpCaseWithUserDemo, OnlineEventCase):
 
     def setUp(self):
         super(TestWebsiteAccess, self).setUp()
