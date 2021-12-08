@@ -33,6 +33,7 @@ var WysiwygDialog = Dialog.extend({
         }, this.options));
 
         this.destroyAction = 'cancel';
+        this.closeOnSave = true;
 
         var self = this;
         this.opened(function () {
@@ -42,7 +43,9 @@ var WysiwygDialog = Dialog.extend({
         });
         this.on('closed', this, function () {
             self._toggleFullScreen();
-            this.trigger(this.destroyAction, this.final_data || null);
+            if (this.destroyAction) {
+                this.trigger(this.destroyAction, this.final_data || null);
+            }
         });
     },
     /**
@@ -59,12 +62,17 @@ var WysiwygDialog = Dialog.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Called when the dialog is saved. Set the destroy action type to "save"
-     * and should set the final_data variable correctly before closing.
+     * Called when the dialog is saved.
+     * Optionally closes the dialog.
      */
     save: function () {
-        this.destroyAction = "save";
-        this.close();
+        if (this.closeOnSave) {
+            this.destroyAction = "save";
+            this.close();
+        } else {
+            this.destroyAction = null;
+            this.trigger('save', this.final_data || null);
+        }
     },
     /**
      * @override
