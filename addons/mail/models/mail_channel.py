@@ -73,7 +73,7 @@ class Channel(models.Model):
         groups='base.group_user')
     rtc_session_ids = fields.One2many('mail.channel.rtc.session', 'channel_id', groups="base.group_system")
     is_member = fields.Boolean('Is Member', compute='_compute_is_member', compute_sudo=True)
-    member_count = fields.Integer(string="Member Count", compute='_compute_member_count', help="Excluding guests from count.")
+    member_count = fields.Integer(string="Member Count", compute='_compute_member_count', compute_sudo=True, help="Excluding guests from count.")
     group_ids = fields.Many2many(
         'res.groups', string='Auto Subscription',
         help="Members of those groups will automatically added as followers. "
@@ -154,8 +154,10 @@ class Channel(models.Model):
 
     @api.depends('channel_partner_ids')
     def _compute_member_count(self):
+        read_group_res = self.env['mail.channel.partner'].read_group(domain=[('channel_id', 'in', self.ids)], fields=['channel_id'], groupby=['channel_id'])
+        member_count_by_channel_id = {item['channel_id'][0]: item['channel_id_count'] for item in read_group_res}
         for channel in self:
-            channel.member_count = len(channel.with_context(active_test=False).channel_partner_ids)
+            channel.member_count = member_count_by_channel_id.get(channel.id, 0)
 
     # ONCHANGE
 
