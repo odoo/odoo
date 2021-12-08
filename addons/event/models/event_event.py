@@ -135,7 +135,7 @@ class EventEvent(models.Model):
         compute='_compute_seats_max', readonly=False, store=True,
         help="For each event you can define a maximum registration of seats(number of attendees), above this numbers the registrations are not accepted.")
     seats_limited = fields.Boolean('Limit Attendees', required=True, compute='_compute_seats_limited',
-                                   readonly=False, store=True)
+                                   precompute=True, readonly=False, store=True)
     seats_reserved = fields.Integer(
         string='Number of Registrations',
         store=True, readonly=True, compute='_compute_seats')
@@ -179,7 +179,7 @@ class EventEvent(models.Model):
     # Date fields
     date_tz = fields.Selection(
         _tz_get, string='Timezone', required=True,
-        compute='_compute_date_tz', readonly=False, store=True)
+        compute='_compute_date_tz', precompute=True, readonly=False, store=True)
     date_begin = fields.Datetime(string='Start Date', required=True, tracking=True)
     date_end = fields.Datetime(string='End Date', required=True, tracking=True)
     date_begin_located = fields.Char(string='Start Date Located', compute='_compute_date_begin_tz')
@@ -511,10 +511,6 @@ class EventEvent(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        for vals in vals_list:
-            # Temporary fix for ``seats_limited`` and ``date_tz`` required fields
-            vals.update(self._sync_required_computed(vals))
-
         events = super(EventEvent, self).create(vals_list)
         for res in events:
             if res.organizer_id:
@@ -549,19 +545,6 @@ class EventEvent(models.Model):
             # able to post on published Event (see website_event)
             return 'read'
         return super(EventEvent, self)._get_mail_message_access(res_ids, operation, model_name)
-
-    def _sync_required_computed(self, values):
-        # TODO: See if the change to seats_limited affects this ?
-        """ Call compute fields in cache to find missing values for required fields
-        (seats_limited and date_tz) in case they are not given in values """
-        missing_fields = list(set(['seats_limited', 'date_tz']).difference(set(values.keys())))
-        if missing_fields and values:
-            cache_event = self.new(values)
-            cache_event._compute_seats_limited()
-            cache_event._compute_date_tz()
-            return dict((fname, cache_event[fname]) for fname in missing_fields)
-        else:
-            return {}
 
     def _set_tz_context(self):
         self.ensure_one()
