@@ -8,9 +8,10 @@ from odoo.addons.crm.models.crm_lead import PARTNER_FIELDS_TO_SYNC, PARTNER_ADDR
 from odoo.addons.crm.tests.common import TestCrmCommon, INCOMING_EMAIL
 from odoo.addons.phone_validation.tools.phone_validation import phone_format
 from odoo.exceptions import UserError
-from odoo.tests.common import Form, users
+from odoo.tests.common import Form, tagged, users
 
 
+@tagged('lead_internals')
 class TestCRMLead(TestCrmCommon):
 
     @classmethod
@@ -40,6 +41,7 @@ class TestCRMLead(TestCrmCommon):
             'country_id': self.country_ref.id,
             # other contact fields
             'function': 'Parmesan Rappeur',
+            'lang_id': self.lang_fr.id,
             # specific contact fields
             'email_from': self.test_email,
             'phone': self.test_phone,
@@ -50,9 +52,10 @@ class TestCRMLead(TestCrmCommon):
         # address
         self.assertLeadAddress(lead, False, False, False, False, self.env['res.country.state'], self.country_ref)
         # other contact fields
-        for fname in set(PARTNER_FIELDS_TO_SYNC) - set(['function']):
+        for fname in set(PARTNER_FIELDS_TO_SYNC) - set(['function', 'lang']):
             self.assertEqual(lead[fname], self.contact_1[fname], 'No user input -> take from contact for field %s' % fname)
         self.assertEqual(lead.function, 'Parmesan Rappeur', 'User input should take over partner value')
+        self.assertEqual(lead.lang_id, self.lang_fr)
         # specific contact fields
         self.assertEqual(lead.partner_name, self.contact_company_1.name)
         self.assertEqual(lead.contact_name, self.contact_1.name)
@@ -102,6 +105,7 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(lead.stage_id, self.stage_team1_1)
         self.assertEqual(lead.contact_name, 'Raoulette TestContact')
         self.assertEqual(lead.email_from, '"Raoulette TestContact" <raoulette@test.example.com>')
+        self.assertEqual(self.contact_1.lang, self.env.user.lang)
 
         # update to a partner, should udpate address
         lead.write({'partner_id': self.contact_1.id})
@@ -112,6 +116,7 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(lead.city, self.contact_1.city)
         self.assertEqual(lead.zip, self.contact_1.zip)
         self.assertEqual(lead.country_id, self.contact_1.country_id)
+        self.assertEqual(lead.lang_id.code, self.contact_1.lang)
 
     def test_crm_lead_creation_partner_address(self):
         """ Test that an address erases all lead address fields (avoid mixed addresses) """
@@ -170,6 +175,7 @@ class TestCRMLead(TestCrmCommon):
         empty_partner = self.env['res.partner'].create({
             'name': 'Empty partner',
             'is_company': True,
+            'lang': 'en_US',
             'mobile': '123456789',
             'title': self.env.ref('base.res_partner_title_mister').id,
             'function': 'My function',
@@ -198,6 +204,7 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(lead.zip, False, "Zip should remain since partner has no address field set")
         self.assertEqual(lead.state_id, self.env['res.country.state'], "State should remain since partner has no address field set")
         # PARTNER_FIELDS_TO_SYNC
+        self.assertEqual(lead.lang_id, self.lang_en)
         self.assertEqual(lead.phone, lead_data['phone'], "Phone should keep its initial value")
         self.assertEqual(lead.mobile, empty_partner.mobile, "Mobile from partner should be set on the lead")
         self.assertEqual(lead.title, empty_partner.title, "Title from partner should be set on the lead")
@@ -370,6 +377,7 @@ class TestCRMLead(TestCrmCommon):
         differences, wrong input, ...) """
         test_email = 'amy.wong@test.example.com'
         lead = self.lead_1.with_user(self.env.user)
+        lead.write({'phone': False})  # reset phone to start with all Falsy values
         contact = self.env['res.partner'].create({
             'name': 'NoContact Partner',
             'phone': '',

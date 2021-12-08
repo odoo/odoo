@@ -214,6 +214,7 @@ class EventRegistration(models.Model):
                 'contact_name': self._find_first_notnull('name'),
                 'email_from': self._find_first_notnull('email'),
                 'phone': self._find_first_notnull('phone'),
+                'lang_id': False,
             }
         contact_vals.update({
             'name': "%s - %s" % (self.event_id.name, valid_partner.name or self._find_first_notnull('name') or self._find_first_notnull('email')),
