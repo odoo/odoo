@@ -1600,7 +1600,8 @@ class AccountMove(models.Model):
                     'move_id': line.move_id.id,
                     'position': move.currency_id.position,
                     'digits': [69, move.currency_id.decimal_places],
-                    'payment_date': fields.Date.to_string(line.date),
+                    'date': fields.Date.to_string(line.date),
+                    'account_payment_id': line.payment_id.id,
                 })
 
             if not payments_widget_vals['content']:
@@ -3321,6 +3322,7 @@ class AccountMove(models.Model):
             move.has_reconciled_entries = len(move.line_ids._reconciled_lines()) > 1
 
     def action_view_reverse_entry(self):
+        # DEPRECATED: REMOVED IN MASTER
         self.ensure_one()
 
         # Create action.
