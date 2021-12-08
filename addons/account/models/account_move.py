@@ -1607,7 +1607,8 @@ class AccountMove(models.Model):
                     'move_id': line.move_id.id,
                     'position': move.currency_id.position,
                     'digits': [69, move.currency_id.decimal_places],
-                    'payment_date': fields.Date.to_string(line.date),
+                    'date': fields.Date.to_string(line.date),
+                    'account_payment_id': line.payment_id.id,
                 })
 
             if not payments_widget_vals['content']:
