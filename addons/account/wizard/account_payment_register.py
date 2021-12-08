@@ -411,7 +411,7 @@ class AccountPaymentRegister(models.TransientModel):
                         'name': 'available_partner_bank_ids',
                         'invisible': '1',
                     }))
-                    form_view.arch = etree.tostring(arch_tree, encoding='unicode')
+                    form_view.sudo().write({'arch': etree.tostring(arch_tree, encoding='unicode')})
                     return super().fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
 
         return res
