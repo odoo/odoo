@@ -198,6 +198,8 @@ class ProductTemplate(models.Model):
                 list_price = taxes.compute_all(combination_info['list_price'], pricelist.currency_id, quantity_1, product, partner)[tax_display]
             else:
                 list_price = price
+            combination_info['price_extra'] = self.env['account.tax']._fix_tax_included_price_company(combination_info['price_extra'], product_taxes, taxes, company_id)
+            price_extra = taxes.compute_all(combination_info['price_extra'], pricelist.currency_id, quantity_1, product, partner)[tax_display]
             has_discounted_price = pricelist.currency_id.compare_amounts(list_price, price) == 1
 
             combination_info.update(
@@ -205,6 +207,7 @@ class ProductTemplate(models.Model):
                 base_unit_price=product.base_unit_price,
                 price=price,
                 list_price=list_price,
+                price_extra=price_extra,
                 has_discounted_price=has_discounted_price,
             )
 
