@@ -2736,17 +2736,15 @@ QUnit.module("Views", (hooks) => {
     );
 
     QUnit.test("action name is displayed in breadcrumbs", async function (assert) {
-        assert.expect(1);
-        const graph = await makeView({
-            serverData,
-            type: "graph",
-            resModel: "foo",
-            config: {
-                displayName: "Glou glou",
-            },
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, {
+            name: "Glou glou",
+            res_model: "foo",
+            type: "ir.actions.act_window",
+            views: [[false, "graph"]],
         });
         assert.strictEqual(
-            graph.el.querySelector(".o_control_panel .breadcrumb-item.active").innerText,
+            webClient.el.querySelector(".o_control_panel .breadcrumb-item.active").innerText,
             "Glou glou"
         );
     });

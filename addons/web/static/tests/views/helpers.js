@@ -5,7 +5,7 @@ import { registry } from "@web/core/registry";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { getFixture } from "@web/../tests/helpers/utils";
 import { MainComponentsContainer } from "@web/core/main_components_container";
-import { View } from "@web/views/view";
+import { getDefaultConfig, View } from "@web/views/view";
 import { _fieldsViewGet } from "../helpers/mock_server";
 import {
     setupControlPanelFavoriteMenuRegistry,
@@ -36,7 +36,10 @@ export const makeView = async (params) => {
     const props = { ...params };
     const serverData = props.serverData;
     const mockRPC = props.mockRPC;
-    const config = props.config || {};
+    const config = {
+        ...getDefaultConfig(),
+        ...props.config,
+    };
     const legacyParams = props.legacyParams || {};
 
     delete props.serverData;
