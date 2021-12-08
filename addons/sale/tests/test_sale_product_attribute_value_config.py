@@ -208,6 +208,7 @@ class TestSaleProductAttributeValueConfig(TestSaleProductAttributeValueSetup):
         self.assertEqual(res['display_name'], "Super Computer (256 GB, 8 GB, 1 To)")
         self.assertEqual(res['price'], 2222)
         self.assertEqual(res['list_price'], 2222)
+        self.assertEqual(res['price_extra'], 222)
 
         # CASE: no combination, product given
         res = self.computer._get_combination_info(self.env['product.template.attribute.value'], computer_variant.id)
@@ -216,6 +217,7 @@ class TestSaleProductAttributeValueConfig(TestSaleProductAttributeValueSetup):
         self.assertEqual(res['display_name'], "Super Computer (256 GB, 8 GB, 1 To)")
         self.assertEqual(res['price'], 2222)
         self.assertEqual(res['list_price'], 2222)
+        self.assertEqual(res['price_extra'], 222)
 
         # CASE: using pricelist, quantity rule
         pricelist, pricelist_item, currency_ratio, discount_ratio = self._setup_pricelist()
@@ -226,6 +228,7 @@ class TestSaleProductAttributeValueConfig(TestSaleProductAttributeValueSetup):
         self.assertEqual(res['display_name'], "Super Computer (256 GB, 8 GB, 1 To)")
         self.assertEqual(res['price'], 2222 * currency_ratio * discount_ratio)
         self.assertEqual(res['list_price'], 2222 * currency_ratio)
+        self.assertEqual(res['price_extra'], 222 * currency_ratio)
 
         # CASE: no_variant combination, it's another variant now
 
@@ -246,6 +249,7 @@ class TestSaleProductAttributeValueConfig(TestSaleProductAttributeValueSetup):
         self.assertEqual(res['display_name'], "Super Computer (8 GB, 1 To)")
         self.assertEqual(res['price'], 2222 * currency_ratio * discount_ratio)
         self.assertEqual(res['list_price'], 2222 * currency_ratio)
+        self.assertEqual(res['price_extra'], 222 * currency_ratio)
 
         # CASE: dynamic combination, but the variant already exists
         self.computer_hdd_attribute_lines.unlink()
@@ -265,6 +269,7 @@ class TestSaleProductAttributeValueConfig(TestSaleProductAttributeValueSetup):
         self.assertEqual(res['display_name'], "Super Computer (8 GB, 1 To)")
         self.assertEqual(res['price'], 2222 * currency_ratio * discount_ratio)
         self.assertEqual(res['list_price'], 2222 * currency_ratio)
+        self.assertEqual(res['price_extra'], 222 * currency_ratio)
 
         # CASE: dynamic combination, no variant existing
         # Test invalidate_cache on product.template _create_variant_ids
@@ -276,6 +281,7 @@ class TestSaleProductAttributeValueConfig(TestSaleProductAttributeValueSetup):
         self.assertEqual(res['display_name'], "Super Computer (8 GB, 1 To, Excluded)")
         self.assertEqual(res['price'], (2222 - 5) * currency_ratio * discount_ratio)
         self.assertEqual(res['list_price'], (2222 - 5) * currency_ratio)
+        self.assertEqual(res['price_extra'], (222 - 5) * currency_ratio)
 
         # CASE: pricelist set value to 0, no variant
         # Test invalidate_cache on product.pricelist write
@@ -286,6 +292,7 @@ class TestSaleProductAttributeValueConfig(TestSaleProductAttributeValueSetup):
         self.assertEqual(res['display_name'], "Super Computer (8 GB, 1 To, Excluded)")
         self.assertEqual(res['price'], 0)
         self.assertEqual(res['list_price'], (2222 - 5) * currency_ratio)
+        self.assertEqual(res['price_extra'], (222 - 5) * currency_ratio)
 
     def test_03_get_combination_info_discount_policy(self):
         computer_ssd_256 = self._get_product_template_attribute_value(self.ssd_256)
@@ -301,12 +308,14 @@ class TestSaleProductAttributeValueConfig(TestSaleProductAttributeValueSetup):
         res = self.computer._get_combination_info(combination, add_qty=1, pricelist=pricelist)
         self.assertEqual(res['price'], 2222 * currency_ratio)
         self.assertEqual(res['list_price'], 2222 * currency_ratio)
+        self.assertEqual(res['price_extra'], 222 * currency_ratio)
         self.assertEqual(res['has_discounted_price'], False)
 
         # CASE: discount, setting with_discount
         res = self.computer._get_combination_info(combination, add_qty=2, pricelist=pricelist)
         self.assertEqual(res['price'], 2222 * currency_ratio * discount_ratio)
         self.assertEqual(res['list_price'], 2222 * currency_ratio)
+        self.assertEqual(res['price_extra'], 222 * currency_ratio)
         self.assertEqual(res['has_discounted_price'], False)
 
         # CASE: no discount, setting without_discount
@@ -314,12 +323,14 @@ class TestSaleProductAttributeValueConfig(TestSaleProductAttributeValueSetup):
         res = self.computer._get_combination_info(combination, add_qty=1, pricelist=pricelist)
         self.assertEqual(res['price'], 2222 * currency_ratio)
         self.assertEqual(res['list_price'], 2222 * currency_ratio)
+        self.assertEqual(res['price_extra'], 222 * currency_ratio)
         self.assertEqual(res['has_discounted_price'], False)
 
         # CASE: discount, setting without_discount
         res = self.computer._get_combination_info(combination, add_qty=2, pricelist=pricelist)
         self.assertEqual(res['price'], 2222 * currency_ratio * discount_ratio)
         self.assertEqual(res['list_price'], 2222 * currency_ratio)
+        self.assertEqual(res['price_extra'], 222 * currency_ratio)
         self.assertEqual(res['has_discounted_price'], True)
 
     def test_04_create_product_variant_non_dynamic(self):
