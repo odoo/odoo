@@ -123,8 +123,14 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             'is_won': True,
         })
 
+        # countries and langs
         base_us = cls.env.ref('base.us')
+        cls.env['res.lang']._activate_lang('fr_FR')
+        cls.env['res.lang']._activate_lang('en_US')
+        cls.lang_fr = cls.env['res.lang']._lang_get('fr_FR')
+        cls.lang_en = cls.env['res.lang']._lang_get('en_US')
 
+        # leads
         cls.lead_1 = cls.env['crm.lead'].create({
             'name': 'Nibbler Spacecraft Request',
             'type': 'lead',
@@ -133,6 +139,8 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             'partner_id': False,
             'contact_name': 'Amy Wong',
             'email_from': 'amy.wong@test.example.com',
+            'lang_id': cls.lang_fr.id,
+            'phone': '+1 202 555 9999',
             'country_id': cls.env.ref('base.us').id,
             'probability': 20,
         })
@@ -196,6 +204,7 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             'mobile': cls.test_phone_data[0],
             'title': cls.env.ref('base.res_partner_title_mister').id,
             'function': 'Delivery Boy',
+            'lang': cls.lang_en.code,
             'phone': False,
             'parent_id': cls.contact_company_1.id,
             'is_company': False,
@@ -207,6 +216,7 @@ class TestCrmCommon(TestSalesCommon, MailCase):
         cls.contact_2 = cls.env['res.partner'].create({
             'name': 'Turanga Leela',
             'email': cls.test_email_data[2],
+            'lang': cls.lang_en.code,
             'mobile': cls.test_phone_data[1],
             'phone': cls.test_phone_data[2],
             'parent_id': False,
@@ -223,6 +233,7 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             'street': 'Mom Friendly Robot Street',
             'city': 'New new York',
             'country_id': base_us.id,
+            'lang': cls.lang_en.code,
             'mobile': '+1 202 555 0888',
             'zip': '87654',
         })
