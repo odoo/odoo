@@ -6,11 +6,12 @@ import { ormService } from "@web/core/orm_service";
 import { registry } from "@web/core/registry";
 import { CustomFavoriteItem } from "@web/search/favorite_menu/custom_favorite_item";
 import { WithSearch } from "@web/search/with_search/with_search";
+import { getDefaultConfig } from "@web/views/view";
 import { viewService } from "@web/views/view_service";
 import { actionService } from "@web/webclient/actions/action_service";
 import { registerCleanup } from "../helpers/cleanup";
 import { makeTestEnv } from "../helpers/mock_env";
-import { click, getFixture, mouseEnter, triggerEvent, triggerEvents } from "../helpers/utils";
+import { click, getFixture, mouseEnter, triggerEvent } from "../helpers/utils";
 
 const serviceRegistry = registry.category("services");
 const favoriteMenuRegistry = registry.category("favoriteMenu");
@@ -38,7 +39,10 @@ export const makeWithSearch = async (params) => {
 
     const serverData = props.serverData || undefined;
     const mockRPC = props.mockRPC || undefined;
-    const config = props.config || {};
+    const config = {
+        ...getDefaultConfig(),
+        ...props.config,
+    };
 
     delete props.serverData;
     delete props.mockRPC;
