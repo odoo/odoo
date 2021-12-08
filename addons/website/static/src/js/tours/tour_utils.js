@@ -247,7 +247,6 @@ function clickOnExtraMenuItem(stepOptions) {
         content: "Click on the extra menu dropdown toggle if it is there",
         trigger: '#top_menu',
         run: function () {
-            console.log('click extra');
             const extraMenuButton = this.$anchor[0].querySelector('.o_extra_menu_items a.nav-link');
             if (extraMenuButton) {
                 extraMenuButton.click();
