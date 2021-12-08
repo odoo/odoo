@@ -86,6 +86,7 @@
                     <t t-snippet="mass_mailing.s_blockquote" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_blockquote.svg"/>
                     <t t-snippet="mass_mailing.s_hr" t-thumbnail="/web_editor/static/src/img/snippets_thumbs/s_hr.svg"/>
                     <t t-snippet="mass_mailing.s_text_highlight" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_text_highlight.svg"/>
+                    <t t-snippet="mass_mailing.s_mail_block_signature" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_signature.svg"/>
                 </div>
             </div>
             <div id="email_designer_default_footer" class="o_panel">
@@ -192,16 +193,23 @@
         <p>We want to take this opportunity to welcome you to our ever-growing community!<br/></p>
         <p>Your platform is ready for work. It will help you reduce the costs of digital signage, attract new customers and increase sales.</p>
         <p>Enjoy,</p>
-        <img src="/mass_mailing/static/src/img/theme_default/demo/signature.png" style="width:125px; margin-top:8px;margin-bottom:-25px;" alt="Demo Signature"/>
-        <p>
-            <small>
-                <strong>Michael Fletcher</strong><br/>
-                <small>Community Manager</small>
-            </small>
-        </p>
+        <t t-call="mass_mailing.s_mail_block_signature" />
+
         <div class="pt16 pb16 text-center">
             <a role="button" href="#" class="btn btn-primary">LOGIN</a>
         </div>
+    </div>
+</template>
+
+<template id="s_mail_block_signature" name="Signature">
+    <div class="s_mail_block_signature">
+        <img src="/mass_mailing/static/src/img/theme_default/demo/signature.png" style="width:125px; margin-top:8px;margin-bottom:-25px;" alt="Demo Signature"/>
+        <p>
+            <small>
+                <strong><t t-out="user_id.partner_id.name" /></strong><br/>
+                <small>Community Manager</small>
+            </small>
+        </p>
     </div>
 </template>
 
@@ -927,7 +935,7 @@
         t-att-data-selector="so_snippet_addition_selector"
         data-drop-in=":not(p).oe_structure:not(.oe_structure_solo), :not(.o_mega_menu):not(p)[data-oe-type=html], :not(p).oe_structure.oe_structure_solo:not(:has(> section, > div))"/>
 
-    <t t-set="so_content_addition_selector" t-translation="off">.s_mail_blockquote, .s_mail_alert, .s_rating, .s_hr, .s_mail_text_highlight</t>
+    <t t-set="so_content_addition_selector" t-translation="off">.s_mail_blockquote, .s_mail_alert, .s_rating, .s_hr, .s_mail_text_highlight, .s_mail_block_signature</t>
     <div id="so_content_addition"
         t-att-data-selector="so_content_addition_selector"
         t-attf-data-drop-near="p, h1, h2, h3, ul, ol, .row > div > img, #{so_content_addition_selector}"
