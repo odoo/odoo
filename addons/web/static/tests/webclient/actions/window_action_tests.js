@@ -4,7 +4,6 @@ import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { editView } from "@web/views/debug_items";
 import { clearUncommittedChanges } from "@web/webclient/actions/action_service";
-import AbstractView from "web.AbstractView";
 import FormView from "web.FormView";
 import { ListView } from "@web/views/list/list_view";
 import { useSetupAction } from "@web/webclient/actions/action_hook";
@@ -1883,36 +1882,6 @@ QUnit.module("ActionManager", (hooks) => {
             );
         }
     );
-
-    QUnit.test("view with js_class attribute (legacy)", async function (assert) {
-        assert.expect(2);
-        const TestView = AbstractView.extend({
-            viewType: "test_view",
-        });
-        const TestJsClassView = TestView.extend({
-            init() {
-                this._super.call(this, ...arguments);
-                assert.step("init js class");
-            },
-        });
-        serverData.views["partner,false,test_view"] = `
-      <div js_class="test_jsClass"></div>
-    `;
-        serverData.actions[9999] = {
-            id: 1,
-            name: "Partners Action 1",
-            res_model: "partner",
-            type: "ir.actions.act_window",
-            views: [[false, "test_view"]],
-        };
-        legacyViewRegistry.add("test_view", TestView);
-        legacyViewRegistry.add("test_jsClass", TestJsClassView);
-        const webClient = await createWebClient({ serverData });
-        await doAction(webClient, 9999);
-        assert.verifySteps(["init js class"]);
-        delete legacyViewRegistry.map.test_view;
-        delete legacyViewRegistry.map.test_jsClass;
-    });
 
     QUnit.skip(
         "on_close should be called only once with right parameters in js_class form view",

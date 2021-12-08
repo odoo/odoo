@@ -25,6 +25,7 @@ import { makeLegacyCrashManagerService } from "@web/legacy/utils";
 import { useDebugCategory } from "@web/core/debug/debug_context";
 import { ErrorDialog } from "@web/core/errors/error_dialogs";
 
+import AbstractView from "web.AbstractView";
 import ControlPanel from "web.ControlPanel";
 import core from "web.core";
 import AbstractAction from "web.AbstractAction";
@@ -620,5 +621,35 @@ QUnit.module("ActionManager", (hooks) => {
         });
         assert.containsOnce(webClient, ".client_action");
         assert.strictEqual($(webClient.el).find(".breadcrumb-item").text(), "PartnersBlabla");
+    });
+
+    QUnit.test("view with js_class attribute (legacy)", async function (assert) {
+        assert.expect(2);
+        const TestView = AbstractView.extend({
+            viewType: "test_view",
+        });
+        const TestJsClassView = TestView.extend({
+            init() {
+                this._super.call(this, ...arguments);
+                assert.step("init js class");
+            },
+        });
+        serverData.views["partner,false,test_view"] = `
+      <div js_class="test_jsClass"></div>
+    `;
+        serverData.actions[9999] = {
+            id: 1,
+            name: "Partners Action 1",
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            views: [[false, "test_view"]],
+        };
+        legacyViewRegistry.add("test_view", TestView);
+        legacyViewRegistry.add("test_jsClass", TestJsClassView);
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, 9999);
+        assert.verifySteps(["init js class"]);
+        delete legacyViewRegistry.map.test_view;
+        delete legacyViewRegistry.map.test_jsClass;
     });
 });
