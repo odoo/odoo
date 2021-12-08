@@ -395,6 +395,30 @@ class AccountPaymentRegister(models.TransientModel):
     # -------------------------------------------------------------------------
 
     @api.model
+<<<<<<< HEAD
+=======
+    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+        # OVERRIDE to add the 'available_partner_bank_ids' field dynamically inside the view.
+        # TO BE REMOVED IN MASTER
+        res = super().fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+        if view_type == 'form':
+            form_view = self.env.ref('account.view_account_payment_register_form')
+            tree = etree.fromstring(res['arch'])
+            if res.get('view_id') == form_view.id and len(tree.xpath("//field[@name='available_partner_bank_ids']")) == 0:
+                # Don't force people to update the account module.
+                arch_tree = etree.fromstring(form_view.arch)
+                if arch_tree.tag == 'form':
+                    arch_tree.insert(0, etree.Element('field', attrib={
+                        'name': 'available_partner_bank_ids',
+                        'invisible': '1',
+                    }))
+                    form_view.sudo().write({'arch': etree.tostring(arch_tree, encoding='unicode')})
+                    return super().fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
+
+        return res
+
+    @api.model
+>>>>>>> 67e1a463d93... temp
     def default_get(self, fields_list):
         # OVERRIDE
         res = super().default_get(fields_list)
