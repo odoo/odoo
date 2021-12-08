@@ -108,6 +108,11 @@ class FormView extends Component {
 
         useViewButtons(this.model);
         useSetupView({
+            beforeLeave: () => {
+                if (this.model.root.isDirty) {
+                    return this.model.root.save();
+                }
+            },
             getLocalState: () => {
                 // TODO: export the whole model?
                 return { resId: this.model.root.resId };
