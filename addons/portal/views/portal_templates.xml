@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="frontend_layout" name="Main Frontend Layout" inherit_id="web.frontend_layout">
+    <!-- <template id="frontend_layout" name="Main Frontend Layout" inherit_id="web.frontend_layout">
         <xpath expr="//div[@id='wrapwrap']" position="attributes">
             <attribute name="t-attf-class" add="#{request.env['res.lang']._lang_get(request.env.lang).direction == 'rtl' and 'o_rtl' or ''}" separator=" "/>
             <attribute name="t-attf-class" add="#{'o_portal' if is_portal else ''}" separator=" "/>
@@ -33,7 +33,7 @@
                 </div>
             </div>
         </xpath>
-    </template>
+    </template> -->
 
     <!-- Added by another template so that it can be disabled if needed -->
     <template id="footer_language_selector" inherit_id="portal.frontend_layout" name="Footer Language Selector">
