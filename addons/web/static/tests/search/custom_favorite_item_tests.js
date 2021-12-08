@@ -81,7 +81,7 @@ QUnit.module("Search", (hooks) => {
             searchMenuTypes: ["favorite"],
             searchViewId: false,
             config: {
-                displayName: "Action Name",
+                getDisplayName: () => "Action Name",
             },
         });
 
@@ -296,7 +296,7 @@ QUnit.module("Search", (hooks) => {
                     if (args.model === "ir.filters" && args.method === "create_or_replace") {
                         const irFilter = args.args[0];
                         assert.deepEqual(irFilter, {
-                            action_id: undefined,
+                            action_id: false,
                             context: { group_by: [] },
                             domain: "[]",
                             is_default: false,

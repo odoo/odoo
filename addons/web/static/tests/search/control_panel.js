@@ -45,21 +45,18 @@ QUnit.module("Search", (hooks) => {
         assert.containsNone(controlPanel, ".o_cp_switch_buttons");
 
         assert.containsOnce(controlPanel, ".breadcrumb");
-        assert.containsOnce(controlPanel, ".breadcrumb li.breadcrumb-item");
-        assert.strictEqual(
-            controlPanel.el.querySelector("li.breadcrumb-item").innerText,
-            "Unnamed"
-        );
     });
 
-    QUnit.test("breadcrumbs prop", async (assert) => {
+    QUnit.test("breadcrumbs", async (assert) => {
         const controlPanel = await makeWithSearch({
             serverData,
             resModel: "foo",
             Component: ControlPanel,
             config: {
-                breadcrumbs: [{ jsId: "controller_7", name: "Previous" }],
-                displayName: "Current",
+                breadcrumbs: [
+                    { jsId: "controller_7", name: "Previous" },
+                    { jsId: "controller_9", name: "Current" },
+                ],
             },
             searchMenuTypes: [],
         });
@@ -78,7 +75,7 @@ QUnit.module("Search", (hooks) => {
         assert.verifySteps(["controller_7"]);
     });
 
-    QUnit.test("viewSwitcherEntries prop", async (assert) => {
+    QUnit.test("view switcher", async (assert) => {
         const controlPanel = await makeWithSearch({
             serverData,
             resModel: "foo",

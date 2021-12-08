@@ -24,7 +24,7 @@ export class AddToBoard extends Component {
     setup() {
         this.notification = useService("notification");
         this.rpc = useService("rpc");
-        this.state = useState({ name: this.env.config.displayName });
+        this.state = useState({ name: this.env.config.getDisplayName() });
 
         useAutofocus();
     }
@@ -58,7 +58,7 @@ export class AddToBoard extends Component {
                     type: "warning",
                 }
             );
-            this.state.name = this.env.config.displayName;
+            this.state.name = this.env.config.getDisplayName();
         } else {
             this.notification.add(this.env._t("Could not add filter to dashboard"), {
                 type: "danger",

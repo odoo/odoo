@@ -264,7 +264,7 @@ export function breadcrumbsToLegacy(breadcrumbs) {
     if (!breadcrumbs) {
         return;
     }
-    return breadcrumbs.slice().map((bc) => {
+    return breadcrumbs.slice(0, -1).map((bc) => {
         return { title: bc.name, controllerID: bc.jsId };
     });
 }

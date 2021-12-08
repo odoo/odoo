@@ -5,6 +5,7 @@ import { makeWithSearch, setupControlPanelServiceRegistry } from "@web/../tests/
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { registry } from "@web/core/registry";
 import { Layout } from "@web/views/layout";
+import { getDefaultConfig } from "@web/views/view";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 
 const { Component, hooks, mount, tags } = owl;
@@ -126,7 +127,12 @@ QUnit.module("Views", (hooks) => {
 
         class ToyB extends Component {
             setup() {
-                useSubEnv({ config: { SearchPanel } });
+                useSubEnv({
+                    config: {
+                        ...getDefaultConfig(),
+                        SearchPanel,
+                    },
+                });
             }
         }
         ToyB.template = xml`

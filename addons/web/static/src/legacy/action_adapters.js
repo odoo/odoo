@@ -44,7 +44,7 @@ class ActionAdapter extends ComponentAdapter {
                 });
                 originalUpdateControlPanel = this.__widget.updateControlPanel.bind(this.__widget);
                 this.__widget.updateControlPanel = (newProps) => {
-                    this.trigger("controller-title-updated", this.__widget.getTitle());
+                    this.wowlEnv.config.setDisplayName(this.__widget.getTitle());
                     return originalUpdateControlPanel(newProps);
                 };
                 core.bus.trigger("DOM_updated");
@@ -77,7 +77,7 @@ class ActionAdapter extends ComponentAdapter {
         if (this.widget) {
             const actionTitle = this.widget.getTitle();
             if (actionTitle) {
-                this.trigger("controller-title-updated", actionTitle);
+                this.wowlEnv.config.setDisplayName(actionTitle);
             }
         }
         this.router.pushState(query);
