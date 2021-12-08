@@ -44,6 +44,7 @@ class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCo
         combination_info = self.computer._get_combination_info()
         self.assertEqual(combination_info['price'], 2222 * discount_rate * currency_ratio)
         self.assertEqual(combination_info['list_price'], 2222 * discount_rate * currency_ratio)
+        self.assertEqual(combination_info['price_extra'], 222 * currency_ratio)
         self.assertEqual(combination_info['has_discounted_price'], False)
 
         # CASE: B2C setting
@@ -53,6 +54,7 @@ class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCo
         combination_info = self.computer._get_combination_info()
         self.assertEqual(combination_info['price'], 2222 * discount_rate * currency_ratio * tax_ratio)
         self.assertEqual(combination_info['list_price'], 2222 * discount_rate * currency_ratio * tax_ratio)
+        self.assertEqual(combination_info['price_extra'], round(222 * currency_ratio * tax_ratio, 2))
         self.assertEqual(combination_info['has_discounted_price'], False)
 
         # CASE: pricelist 'without_discount'
@@ -63,6 +65,7 @@ class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCo
         combination_info = self.computer._get_combination_info()
         self.assertEqual(pricelist.currency_id.compare_amounts(combination_info['price'], 2222 * discount_rate * currency_ratio * tax_ratio), 0)
         self.assertEqual(pricelist.currency_id.compare_amounts(combination_info['list_price'], 2222 * currency_ratio * tax_ratio), 0)
+        self.assertEqual(pricelist.currency_id.compare_amounts(combination_info['price_extra'], 222 * currency_ratio * tax_ratio), 0)
         self.assertEqual(combination_info['has_discounted_price'], True)
 
     def test_get_combination_info_with_fpos(self):
@@ -75,6 +78,14 @@ class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCo
             'name': 'Test Product',
             'price': 2000,
         }).with_context(website_id=current_website.id)
+
+        computer_ssd_attribute_lines = self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': test_product.id,
+            'attribute_id': self.ssd_attribute.id,
+            'value_ids': [(6, 0, [self.ssd_256.id])],
+        })
+        computer_ssd_attribute_lines.product_template_value_ids[0].price_extra = 200
+        combination = computer_ssd_attribute_lines.product_template_value_ids[0]
 
         # Add fixed price for pricelist
         pricelist.item_ids = self.env['product.pricelist.item'].create({
@@ -107,30 +118,34 @@ class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCo
             'tax_dest_id': tax0.id,
         })
 
-        combination_info = test_product._get_combination_info()
+        combination_info = test_product._get_combination_info(combination)
         self.assertEqual(combination_info['price'], 575, "500$ + 15% tax")
         self.assertEqual(combination_info['list_price'], 575, "500$ + 15% tax (2)")
+        self.assertEqual(combination_info['price_extra'], 230, "200$ + 15% tax")
 
         # Now with fiscal position, taxes should be mapped
         self.env.user.partner_id.country_id = self.env.ref('base.be').id
-        combination_info = test_product._get_combination_info()
+        combination_info = test_product._get_combination_info(combination)
         self.assertEqual(combination_info['price'], 500, "500% + 0% tax (mapped from fp 15% -> 0% for BE)")
         self.assertEqual(combination_info['list_price'], 500, "500% + 0% tax (mapped from fp 15% -> 0% for BE) (2)")
+        self.assertEqual(combination_info['price_extra'], 200, "200% + 0% tax (mapped from fp 15% -> 0% for BE)")
 
         # Try same flow with tax included
         tax15.write({'price_include': True})
 
         # Reset / Safety check
         self.env.user.partner_id.country_id = None
-        combination_info = test_product._get_combination_info()
+        combination_info = test_product._get_combination_info(combination)
         self.assertEqual(combination_info['price'], 500, "434.78$ + 15% tax")
         self.assertEqual(combination_info['list_price'], 500, "434.78$ + 15% tax (2)")
+        self.assertEqual(combination_info['price_extra'], 200, "173.91$ + 15% tax")
 
         # Now with fiscal position, taxes should be mapped
         self.env.user.partner_id.country_id = self.env.ref('base.be').id
-        combination_info = test_product._get_combination_info()
+        combination_info = test_product._get_combination_info(combination)
         self.assertEqual(round(combination_info['price'], 2), 434.78, "434.78$ + 0% tax (mapped from fp 15% -> 0% for BE)")
         self.assertEqual(round(combination_info['list_price'], 2), 434.78, "434.78$ + 0% tax (mapped from fp 15% -> 0% for BE)")
+        self.assertEqual(combination_info['price_extra'], 173.91, "173.91$ + 0% tax (mapped from fp 15% -> 0% for BE)")
 
 @tagged('post_install', '-at_install')
 class TestWebsiteSaleProductPricelist(TestSaleProductAttributeValueCommon):
