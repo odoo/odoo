@@ -407,7 +407,7 @@ class View(models.Model):
                 return False
         return True
 
-    def _render(self, values=None, engine='ir.qweb', minimal_qcontext=False):
+    def _render(self, values=None, engine='ir.qweb', minimal_qcontext=False, options=None):
         """ Render the template. If website is enabled on request, then extend rendering context with website values. """
         self._handle_visibility(do_raise=True)
         new_context = dict(self._context)
@@ -430,7 +430,7 @@ class View(models.Model):
 
         if self._context != new_context:
             self = self.with_context(new_context)
-        return super(View, self)._render(values, engine=engine, minimal_qcontext=minimal_qcontext)
+        return super(View, self)._render(values, engine=engine, minimal_qcontext=minimal_qcontext, options=options)
 
     @api.model
     def _prepare_qcontext(self):
