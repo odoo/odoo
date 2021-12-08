@@ -1,30 +1,46 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
+from datetime import datetime, timedelta
 
-from odoo.addons.event.tests.common import TestEventCommon
+from odoo import fields
+from odoo.addons.event.tests.common import EventCase
 from odoo.exceptions import AccessError
 from odoo.tests.common import users
 from odoo.tools import mute_logger
 
 
-class TestEventSecurity(TestEventCommon):
+class TestEventSecurity(EventCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestEventSecurity, cls).setUpClass()
+
+        cls.test_event = cls.env['event.event'].create({
+            'auto_confirm': True,
+            'date_begin': fields.Datetime.to_string(datetime.today() + timedelta(days=1)),
+            'date_end': fields.Datetime.to_string(datetime.today() + timedelta(days=15)),
+            'date_tz': 'Europe/Brussels',
+            'name': 'TestEvent',
+        })
+        cls.test_event_type = cls.env['event.type'].create({
+            'auto_confirm': True,
+            'name': 'Update Type',
+        })
 
     @users('user_employee')
     @mute_logger('odoo.models.unlink', 'odoo.addons.base.models.ir_model')
     def test_event_access_employee(self):
         # Event: read ok
-        event = self.event_0.with_user(self.env.user)
+        event = self.test_event.with_user(self.env.user)
         event.read(['name'])
 
         # Event: read only
         with self.assertRaises(AccessError):
             self.env['event.event'].create({
                 'name': 'TestEvent',
-                'date_begin': datetime.now() + relativedelta(days=-1),
-                'date_end': datetime.now() + relativedelta(days=1),
+                'date_begin': datetime.now() + timedelta(days=-1),
+                'date_end': datetime.now() + timedelta(days=1),
                 'seats_limited': True,
                 'seats_max': 10,
             })
@@ -35,9 +51,9 @@ class TestEventSecurity(TestEventCommon):
 
         # Event Type
         with self.assertRaises(AccessError):
-            self.event_type_complex.with_user(self.env.user).read(['name'])
+            self.test_event_type.with_user(self.env.user).read(['name'])
         with self.assertRaises(AccessError):
-            self.event_type_complex.with_user(self.env.user).write({'name': 'Test Write'})
+            self.test_event_type.with_user(self.env.user).write({'name': 'Test Write'})
 
         # Event Stage
         with self.assertRaises(AccessError):
@@ -53,7 +69,7 @@ class TestEventSecurity(TestEventCommon):
     @mute_logger('odoo.models.unlink', 'odoo.addons.base.models.ir_model')
     def test_event_access_event_registration(self):
         # Event: read ok
-        event = self.event_0.with_user(self.env.user)
+        event = self.test_event.with_user(self.env.user)
         event.read(['name', 'user_id', 'kanban_state_label'])
 
         # Event: read only
@@ -64,9 +80,9 @@ class TestEventSecurity(TestEventCommon):
 
         # Event Registration
         registration = self.env['event.registration'].create({
-            'event_id': self.event_0.id,
+            'event_id': self.test_event.id,
         })
-        self.assertEqual(registration.event_id.name, self.event_0.name, 'Registration users should be able to read')
+        self.assertEqual(registration.event_id.name, self.test_event.name, 'Registration users should be able to read')
         registration.name = 'Test write'
         with self.assertRaises(AccessError):
             registration.unlink()
@@ -75,13 +91,13 @@ class TestEventSecurity(TestEventCommon):
     @mute_logger('odoo.models.unlink', 'odoo.addons.base.models.ir_model')
     def test_event_access_event_user(self):
         # Event
-        event = self.event_0.with_user(self.env.user)
+        event = self.test_event.with_user(self.env.user)
         event.read(['name', 'user_id', 'kanban_state_label'])
         event.write({'name': 'New name'})
         self.env['event.event'].create({
             'name': 'Event',
-            'date_begin': datetime.now() + relativedelta(days=-1),
-            'date_end': datetime.now() + relativedelta(days=1),
+            'date_begin': datetime.now() + timedelta(days=-1),
+            'date_end': datetime.now() + timedelta(days=1),
         })
 
         # Event: cannot unlink
@@ -112,8 +128,8 @@ class TestEventSecurity(TestEventCommon):
         # Event
         event = self.env['event.event'].create({
             'name': 'ManagerEvent',
-            'date_begin': datetime.now() + relativedelta(days=-1),
-            'date_end': datetime.now() + relativedelta(days=1),
+            'date_begin': datetime.now() + timedelta(days=-1),
+            'date_end': datetime.now() + timedelta(days=1),
         })
         event.write({'name': 'New Event Name'})
 
@@ -180,13 +196,13 @@ class TestEventSecurity(TestEventCommon):
         event_company_1, event_company_2 = self.env['event.event'].create([
             {
                 'name': 'Event Company 1',
-                'date_begin': datetime.now() + relativedelta(days=-1),
-                'date_end': datetime.now() + relativedelta(days=1),
+                'date_begin': datetime.now() + timedelta(days=-1),
+                'date_end': datetime.now() + timedelta(days=1),
                 'company_id': company_1.id,
             }, {
                 'name': 'Event Company 2',
-                'date_begin': datetime.now() + relativedelta(days=-1),
-                'date_end': datetime.now() + relativedelta(days=1),
+                'date_begin': datetime.now() + timedelta(days=-1),
+                'date_end': datetime.now() + timedelta(days=1),
                 'company_id': company_2.id,
             }
         ])

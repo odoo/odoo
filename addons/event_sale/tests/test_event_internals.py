@@ -15,7 +15,8 @@ class TestEventData(TestEventSaleCommon):
     def test_event_configuration_from_type(self):
         """ In addition to event test, also test tickets configuration coming
         from event_sale capabilities. """
-        event_type = self.event_type_complex.with_user(self.env.user)
+        event_type = self.event_type_tickets.with_user(self.env.user)
+        self.assertEqual(event_type.event_type_ticket_ids.description, self.event_product.description_sale)
 
         event = self.env['event.event'].create({
             'name': 'Event Update Type',
@@ -23,14 +24,6 @@ class TestEventData(TestEventSaleCommon):
             'date_begin': FieldsDatetime.to_string(datetime.today() + timedelta(days=1)),
             'date_end': FieldsDatetime.to_string(datetime.today() + timedelta(days=15)),
         })
-        event_type.write({
-            'event_type_ticket_ids': [(5, 0), (0, 0, {
-                'name': 'First Ticket',
-                'product_id': self.event_product.id,
-                'seats_max': 5,
-            })]
-        })
-        self.assertEqual(event_type.event_type_ticket_ids.description, self.event_product.description_sale)
 
         # synchronize event
         event.write({'event_type_id': event_type.id})

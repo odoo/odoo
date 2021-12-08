@@ -14,7 +14,7 @@ class TestEventData(TestEventQuestionCommon):
 
     @users('user_eventmanager')
     def test_event_type_configuration_from_type(self):
-        event_type = self.event_type_complex.with_user(self.env.user)
+        event_type = self.event_type_questions.with_user(self.env.user)
 
         event = self.env['event.event'].create({
             'name': 'Event Update Type',
@@ -40,7 +40,7 @@ class TestEventData(TestEventQuestionCommon):
     def test_process_attendees_form(self):
         event = self.env['event.event'].create({
             'name': 'Event Update Type',
-            'event_type_id': self.event_type_complex.with_user(self.env.user).id,
+            'event_type_id': self.event_type_questions.with_user(self.env.user).id,
             'date_begin': FieldsDatetime.to_string(datetime.today() + timedelta(days=1)),
             'date_end': FieldsDatetime.to_string(datetime.today() + timedelta(days=15)),
         })

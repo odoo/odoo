@@ -1,52 +1,79 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, timedelta
-
 from odoo import fields
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.tests import common
 
 
-class TestEventCommon(common.TransactionCase):
+class EventCase(common.TransactionCase):
 
     @classmethod
     def setUpClass(cls):
-        super(TestEventCommon, cls).setUpClass()
+        super(EventCase, cls).setUpClass()
+
+        cls.admin_user = cls.env.ref('base.user_admin')
+        cls.admin_user.write({
+            'country_id': cls.env.ref('base.be').id,
+            'login': 'admin',
+            'notification_type': 'inbox',
+        })
+        cls.company_admin = cls.admin_user.company_id
+        # set country in order to format Belgian numbers
+        cls.company_admin.write({
+            'country_id': cls.env.ref('base.be').id,
+        })
 
         # Test users to use through the various tests
         cls.user_portal = mail_new_test_user(
-            cls.env, login='portal_test',
-            name='Patrick Portal', email='patrick.portal@test.example.com',
-            notification_type='email', company_id=cls.env.ref("base.main_company").id,
-            groups='base.group_portal')
+            cls.env,
+            company_id=cls.company_admin.id,
+            email='patrick.portal@test.example.com',
+            groups='base.group_portal',
+            login='portal_test',
+            name='Patrick Portal',
+            notification_type='email',
+            tz='Europe/Brussels',
+        )
         cls.user_employee = mail_new_test_user(
-            cls.env, login='user_employee',
-            name='Eglantine Employee', email='eglantine.employee@test.example.com',
-            tz='Europe/Brussels', notification_type='inbox',
-            company_id=cls.env.ref("base.main_company").id,
+            cls.env,
+            company_id=cls.company_admin.id,
+            email='eglantine.employee@test.example.com',
             groups='base.group_user',
+            login='user_employee',
+            name='Eglantine Employee',
+            notification_type='inbox',
+            tz='Europe/Brussels',
         )
         cls.user_eventregistrationdesk = mail_new_test_user(
-            cls.env, login='user_eventregistrationdesk',
-            name='Ursule EventRegistration', email='ursule.eventregistration@test.example.com',
-            tz='Europe/Brussels', notification_type='inbox',
-            company_id=cls.env.ref("base.main_company").id,
+            cls.env,
+            company_id=cls.company_admin.id,
+            email='ursule.eventregistration@test.example.com',
+            login='user_eventregistrationdesk',
             groups='base.group_user,event.group_event_registration_desk',
+            name='Ursule EventRegistration',
+            notification_type='inbox',
+            tz='Europe/Brussels',
         )
         cls.user_eventuser = mail_new_test_user(
-            cls.env, login='user_eventuser',
-            name='Ursule EventUser', email='ursule.eventuser@test.example.com',
-            tz='Europe/Brussels', notification_type='inbox',
-            company_id=cls.env.ref("base.main_company").id,
+            cls.env,
+            company_id=cls.company_admin.id,
+            email='ursule.eventuser@test.example.com',
             groups='base.group_user,event.group_event_user',
+            login='user_eventuser',
+            name='Ursule EventUser',
+            notification_type='inbox',
+            tz='Europe/Brussels',
         )
         cls.user_eventmanager = mail_new_test_user(
-            cls.env, login='user_eventmanager',
-            name='Martine EventManager', email='martine.eventmanager@test.example.com',
-            tz='Europe/Brussels', notification_type='inbox',
-            company_id=cls.env.ref("base.main_company").id,
+            cls.env,
+            company_id=cls.company_admin.id,
+            email='martine.eventmanager@test.example.com',
             groups='base.group_user,event.group_event_manager',
+            login='user_eventmanager',
+            name='Martine EventManager',
+            notification_type='inbox',
+            tz='Europe/Brussels',
         )
 
         cls.event_customer = cls.env['res.partner'].create({
@@ -63,41 +90,6 @@ class TestEventCommon(common.TransactionCase):
             'phone': '0456987654',
             'mobile': '0456654321',
         })
-
-        cls.event_type_complex = cls.env['event.type'].create({
-            'name': 'Update Type',
-            'auto_confirm': True,
-            'has_seats_limitation': True,
-            'seats_max': 30,
-            'default_timezone': 'Europe/Paris',
-            'event_type_ticket_ids': [(0, 0, {
-                    'name': 'First Ticket',
-                }), (0, 0, {
-                    'name': 'Second Ticket',
-                })
-            ],
-            'event_type_mail_ids': [
-                (0, 0, {  # right at subscription
-                    'interval_unit': 'now',
-                    'interval_type': 'after_sub',
-                    'template_ref': 'mail.template,%i' % cls.env['ir.model.data']._xmlid_to_res_id('event.event_subscription')}),
-                (0, 0, {  # 1 days before event
-                    'interval_nbr': 1,
-                    'interval_unit': 'days',
-                    'interval_type': 'before_event',
-                    'template_ref': 'mail.template,%i' % cls.env['ir.model.data']._xmlid_to_res_id('event.event_reminder')}),
-            ],
-        })
-        cls.event_0 = cls.env['event.event'].create({
-            'name': 'TestEvent',
-            'auto_confirm': True,
-            'date_begin': fields.Datetime.to_string(datetime.today() + timedelta(days=1)),
-            'date_end': fields.Datetime.to_string(datetime.today() + timedelta(days=15)),
-            'date_tz': 'Europe/Brussels',
-        })
-
-        # set country in order to format Belgian numbers
-        cls.event_0.company_id.write({'country_id': cls.env.ref('base.be').id})
 
     @classmethod
     def _create_registrations(cls, event, reg_count):

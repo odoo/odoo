@@ -15,11 +15,6 @@ class TestSponsorData(TestEventExhibitorCommon):
     def setUpClass(cls):
         super(TestSponsorData, cls).setUpClass()
 
-        cls.sponsor_0.write({
-            'hour_from': 8.0,
-            'hour_to': 18.0,
-        })
-
         cls.wevent_exhib_dt = patch(
             'odoo.addons.website_event_exhibitor.models.event_sponsor.fields.Datetime',
             wraps=FieldsDatetime
