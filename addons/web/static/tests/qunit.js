@@ -352,10 +352,6 @@
         tooltip: "Stop the test suite immediately after the first failed test.",
     });
 
-    QUnit.testStart(() => {
-        console.log("*****", QUnit.config.current.testName);
-    });
-
     QUnit.begin(function () {
         if (odoo.__DEBUG__.services["@web/core/errors/error_utils"]) {
             const errorUtils = odoo.__DEBUG__.services["@web/core/errors/error_utils"];
