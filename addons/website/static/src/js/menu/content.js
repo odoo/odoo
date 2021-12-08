@@ -558,6 +558,9 @@ var EditMenuDialog = weWidgets.Dialog.extend({
             size: 'medium',
         }, options || {}));
         this.rootID = rootID;
+        // For the EditMenuDialog, saving the dialog should not close it,
+        // as a reload will be done to show the updated menus.
+        this.closeOnSave = false;
     },
     /**
      * @override
@@ -645,8 +648,8 @@ var EditMenuDialog = weWidgets.Dialog.extend({
                     'to_delete': this.toDelete,
                 }
             ],
-        }).then(function () {
-            return _super();
+        }).then(() => {
+            return _super(...arguments);
         });
     },
 

@@ -36,14 +36,6 @@ tour.register('edit_menus', {
     {
         content: "Click save and wait for the page to be reloaded",
         trigger: '.modal-dialog .btn-primary span:contains("Save")',
-        run: async function () {
-            await new Promise(resolve => {
-                window.onunload = () => {
-                    resolve();
-                };
-                this.$anchor.click();
-            });
-        },
     },
     wTourUtils.clickOnExtraMenuItem({extra_trigger: 'body:not(:has(.oe_menu_editor))'}),
     {
