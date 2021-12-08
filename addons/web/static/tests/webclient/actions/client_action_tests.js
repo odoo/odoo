@@ -333,15 +333,15 @@ QUnit.module("ActionManager", (hooks) => {
             setup() {
                 this.breadcrumbTitle = "myOwlAction";
                 const { breadcrumbs } = this.env.config;
-                assert.strictEqual(breadcrumbs.length, 1);
+                assert.strictEqual(breadcrumbs.length, 2);
                 assert.strictEqual(breadcrumbs[0].name, "Favorite Ponies");
             }
             mounted() {
-                this.trigger("controller-title-updated", this.breadcrumbTitle);
+                this.env.config.setDisplayName(this.breadcrumbTitle);
             }
             onClick() {
                 this.breadcrumbTitle = "newOwlTitle";
-                this.trigger("controller-title-updated", this.breadcrumbTitle);
+                this.env.config.setDisplayName(this.breadcrumbTitle);
             }
         }
         ClientAction.template = tags.xml`<div class="my_owl_action" t-on-click="onClick">owl client action</div>`;

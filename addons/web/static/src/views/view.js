@@ -14,6 +14,47 @@ const viewRegistry = registry.category("views");
 const { Component, hooks } = owl;
 const { useSubEnv } = hooks;
 
+/** @typedef {Object} Config
+ *  @property {integer|false} actionId
+ *  @property {string|false} actionType
+ *  @property {Object} actionFlags
+ *  @property {() => []} breadcrumbs
+ *  @property {() => string} getDisplayName
+ *  @property {(string) => void} setDisplayName
+ *  @property {() => Object} getPagerProps
+ *  @property {Object[]} viewSwitcherEntry
+ *  @property {Object[]} viewSwitcherEntry
+ */
+
+/**
+ * Returns the default config to use if no config, or an incomplete config has
+ * been provided in the env, which can happen with standalone views.
+ * @returns {Config}
+ */
+export function getDefaultConfig() {
+    let displayName;
+    const config = {
+        actionId: false,
+        actionType: false,
+        actionFlags: {},
+        breadcrumbs: [
+            {
+                get name() {
+                    return displayName;
+                },
+            },
+        ],
+        getDisplayName: () => displayName,
+        getPagerProps: () => {},
+        setDisplayName: (newDisplayName) => {
+            displayName = newDisplayName;
+        },
+        viewSwitcherEntries: [],
+        views: [],
+    };
+    return config;
+}
+
 /** @typedef {Object} ViewProps
  *  @property {string} resModel
  *  @property {string} type
@@ -106,7 +147,10 @@ export class View extends Component {
 
         useSubEnv({
             keepLast: new KeepLast(),
-            config: { ...(this.env.config || {}) },
+            config: {
+                ...getDefaultConfig(),
+                ...this.env.config,
+            },
         });
         useActionLinks({ resModel });
     }
@@ -119,7 +163,7 @@ export class View extends Component {
         // determine views for which descriptions should be obtained
         let { viewId, searchViewId } = this.props;
 
-        const views = deepCopy(this.env.config.views || []);
+        const views = deepCopy(this.env.config.views);
         const view = views.find((v) => v[1] === type) || [];
         if (view.length) {
             view[0] = viewId !== undefined ? viewId : view[0];

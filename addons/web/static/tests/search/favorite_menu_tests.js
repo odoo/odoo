@@ -68,7 +68,7 @@ QUnit.module("Search", (hooks) => {
                 searchMenuTypes: ["favorite"],
                 searchViewId: false,
                 config: {
-                    displayName: "Action Name",
+                    getDisplayName: () => "Action Name",
                 },
             });
 
@@ -101,7 +101,7 @@ QUnit.module("Search", (hooks) => {
             searchMenuTypes: ["favorite"],
             searchViewId: false,
             config: {
-                displayName: "Action Name",
+                getDisplayName: () => "Action Name",
             },
         });
 

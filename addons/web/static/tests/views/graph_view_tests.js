@@ -1320,8 +1320,18 @@ QUnit.module("Views", (hooks) => {
             label: "",
         });
         checkLegend(assert, graph, ["true / xphone", "false / xphone", "false / xpad"]);
-        checkTooltip(assert, graph, { lines: [{ label: "true / xphone", value: "3 (37.50%)" }] }, 0);
-        checkTooltip(assert, graph, { lines: [{ label: "false / xphone", value: "1 (12.50%)" }] }, 1);
+        checkTooltip(
+            assert,
+            graph,
+            { lines: [{ label: "true / xphone", value: "3 (37.50%)" }] },
+            0
+        );
+        checkTooltip(
+            assert,
+            graph,
+            { lines: [{ label: "false / xphone", value: "1 (12.50%)" }] },
+            1
+        );
         checkTooltip(assert, graph, { lines: [{ label: "false / xpad", value: "4 (50.00%)" }] }, 2);
     });
 
@@ -2732,17 +2742,15 @@ QUnit.module("Views", (hooks) => {
     );
 
     QUnit.test("action name is displayed in breadcrumbs", async function (assert) {
-        assert.expect(1);
-        const graph = await makeView({
-            serverData,
-            type: "graph",
-            resModel: "foo",
-            config: {
-                displayName: "Glou glou",
-            },
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, {
+            name: "Glou glou",
+            res_model: "foo",
+            type: "ir.actions.act_window",
+            views: [[false, "graph"]],
         });
         assert.strictEqual(
-            graph.el.querySelector(".o_control_panel .breadcrumb-item.active").innerText,
+            webClient.el.querySelector(".o_control_panel .breadcrumb-item.active").innerText,
             "Glou glou"
         );
     });
