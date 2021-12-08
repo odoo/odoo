@@ -381,6 +381,7 @@ class AccountMoveLine(models.Model):
 
                     tax_line.tax_line_id AS tax_id,
                     tax_line.group_tax_id,
+                    tax_line.tax_repartition_line_id,
 
                     tax_line.company_id,
                     comp_curr.id AS company_currency_id,
@@ -454,6 +455,7 @@ class AccountMoveLine(models.Model):
                 sub.group_tax_id,
                 sub.tax_exigible,
                 sub.base_account_id,
+                sub.tax_repartition_line_id,
 
                 sub.base_amount,
                 ROUND(
