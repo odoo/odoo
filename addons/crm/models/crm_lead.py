@@ -62,6 +62,7 @@ CRM_LEAD_FIELDS_TO_MERGE = [
 
 # Subset of partner fields: sync any of those
 PARTNER_FIELDS_TO_SYNC = [
+    'lang',
     'mobile',
     'title',
     'function',
@@ -193,7 +194,7 @@ class Lead(models.Model):
         ('correct', 'Correct'),
         ('incorrect', 'Incorrect')], string='Email Quality', compute="_compute_email_state", store=True)
     website = fields.Char('Website', index=True, help="Website of the contact", compute="_compute_website", readonly=False, store=True)
-    lang_id = fields.Many2one('res.lang', string='Language')
+    lang_id = fields.Many2one('res.lang', string='Language', compute='_compute_lang_id', readonly=False, store=True)
     lang_code = fields.Char(related='lang_id.code')
     # Address fields
     street = fields.Char('Street', compute='_compute_partner_address_values', readonly=False, store=True)
@@ -389,6 +390,19 @@ class Lead(models.Model):
         for lead in self:
             if not lead.website or lead.partner_id.website:
                 lead.website = lead.partner_id.website
+
+    @api.depends('partner_id')
+    def _compute_lang_id(self):
+        """ compute the lang based on partner, erase any value to force the partner
+        one if set. """
+        # prepare cache
+        lang_codes = [code for code in self.mapped('partner_id.lang') if code]
+        lang_id_by_code = dict(
+            (code, self.env['res.lang']._lang_get_id(code))
+            for code in lang_codes
+        )
+        for lead in self.filtered('partner_id'):
+            lead.lang_id = lang_id_by_code.get(lead.partner_id.lang, False)
 
     @api.depends('partner_id')
     def _compute_partner_address_values(self):
@@ -600,7 +614,9 @@ class Lead(models.Model):
         values = self._prepare_address_values_from_partner(partner)
 
         # For other fields, get the info from the partner, but only if set
-        values.update({f: partner[f] or self[f] for f in PARTNER_FIELDS_TO_SYNC})
+        values.update({f: partner[f] or self[f] for f in PARTNER_FIELDS_TO_SYNC if f != 'lang'})
+        if partner.lang:
+            values['lang_id'] = self.env['res.lang']._lang_get_id(partner.lang)
 
         # Fields with specific logic
         values.update(self._prepare_contact_name_from_partner(partner))
