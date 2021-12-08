@@ -879,6 +879,7 @@ var ContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         return new Promise(function (resolve) {
             var dialog = new EditMenuDialog(self, {}, rootID);
             dialog.on('save', self, function () {
+                window.document.body.classList.add('o_wait_reload');
                 // Before reloading the page after menu modification, does the
                 // given action to do.
                 if (beforeReloadCallback) {
