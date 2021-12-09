@@ -1259,7 +1259,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("'resModel' must be passed as prop", async function (assert) {
         assert.expect(2);
         try {
-            await makeView({ serverData }, { noFields: true });
+            await makeView({ serverData });
         } catch (error) {
             assert.step(error.message);
         }
@@ -1278,11 +1278,11 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("'arch' cannot be passed as prop alone", async function (assert) {
         assert.expect(2);
+        const env = await makeTestEnv({ serverData });
+        const target = getFixture();
+        const props = { resModel: "animal", type: "toy", arch: "<toy/>" };
         try {
-            await makeView(
-                { serverData, resModel: "animal", type: "toy", arch: "<toy/>" },
-                { noFields: true }
-            );
+            await mount(View, { env, props, target });
         } catch (error) {
             assert.step(error.message);
         }
