@@ -512,8 +512,9 @@ class AccountEdiFormat(models.Model):
 
             # Sometimes, the vat is specified with some whitespaces.
             normalized_vat = vat.replace(' ', '')
+            country_prefix = None
 
-            partner = self.env['res.partner'].search([('vat', '=', normalized_vat)], limit=1)
+            partner = self.env['res.partner'].search(extra_domain + [('vat', '=', normalized_vat)], limit=1)
 
             # Try to remove the country code prefix from the vat.
             if not partner and len(normalized_vat) > 2 and normalized_vat[:2].isalpha():
@@ -524,7 +525,7 @@ class AccountEdiFormat(models.Model):
                     ('country_id.code', '=', country_prefix.lower()),
                 ], limit=1)
 
-                # The country could be not specified.
+                # The country could be not specified on the partner.
                 if not partner:
                     partner = self.env['res.partner'].search(extra_domain + [
                         ('vat', '=', normalized_vat),
@@ -535,13 +536,18 @@ class AccountEdiFormat(models.Model):
             # beginning.
             if not partner:
                 try:
-                    vat_only_alphanumeric = str(int(normalized_vat))
+                    vat_only_numeric = str(int(normalized_vat))
                 except ValueError:
-                    vat_only_alphanumeric = None
+                    vat_only_numeric = None
 
-                if vat_only_alphanumeric:
-                    query = self.env['res.partner']._where_calc([('active', '=', True)], extra_domain)
+                if vat_only_numeric:
+                    query = self.env['res.partner']._where_calc(extra_domain + [('active', '=', True)])
                     tables, where_clause, where_params = query.get_sql()
+
+                    if country_prefix:
+                        vat_prefix_regex = f'({country_prefix})?'
+                    else:
+                        vat_prefix_regex = '([A-z]{2})?'
 
                     self._cr.execute(f'''
                         SELECT res_partner.id
@@ -549,7 +555,7 @@ class AccountEdiFormat(models.Model):
                         WHERE {where_clause}
                         AND res_partner.vat ~ %s
                         LIMIT 1
-                    ''', where_params + ['^0*%s$' % vat_only_alphanumeric])
+                    ''', where_params + ['^%s0*%s$' % (vat_prefix_regex, vat_only_numeric)])
                     partner_row = self._cr.fetchone()
                     if partner_row:
                         partner = self.env['res.partner'].browse(partner_row[0])
@@ -577,17 +583,11 @@ class AccountEdiFormat(models.Model):
                 return None
             return self.env['res.partner'].search([('name', 'ilike', name)] + extra_domain, limit=1)
 
-        for extra_domain, search_method in [
-            ([('company_id', '=', self.env.company.id)], search_with_vat),
-            ([('company_id', '=', False)], search_with_vat),
-            ([('company_id', '=', self.env.company.id)], search_with_phone_mail),
-            ([('company_id', '=', False)], search_with_phone_mail),
-            ([('company_id', '=', self.env.company.id)], search_with_name),
-            ([('company_id', '=', False)], search_with_name),
-        ]:
-            partner = search_method(extra_domain)
-            if partner:
-                return partner
+        for search_method in (search_with_vat, search_with_phone_mail, search_with_name):
+            for extra_domain in ([('company_id', '=', self.env.company.id)], []):
+                partner = search_method(extra_domain)
+                if partner:
+                    return partner
 
         return self.env['res.partner']
 
