@@ -69,7 +69,7 @@ var ActivityMenu = Widget.extend({
      * @returns {Array[]} output the list of views to display.
      */
     _getViewsList(model) {
-        return [[false, 'kanban'], [false, 'list'], [false, 'form']];
+        return [[false, 'kanban'], [false, 'list'], [false, 'form'], [false, 'activity']];
     },
     /**
      * Update(render) activity system tray view on activity updation.
