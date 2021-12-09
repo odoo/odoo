@@ -54,10 +54,10 @@ models.Order = models.Order.extend({
       result = Boolean(result || this.pos.is_french_country());
       return result;
     },
-    destroy: function(reason) {
+    destroy: function(option) {
         // SUGGESTION: It's probably more appropriate to apply this restriction
         // in the TicketScreen.
-        if (this.pos.is_french_country() && this.get_orderlines().length) {
+        if (option && option.reason == 'abandon' && this.pos.is_french_country() && this.get_orderlines().length) {
             Gui.showPopup("ErrorPopup", {
                 'title': _t("Fiscal Data Module error"),
                 'body':  _t("Deleting of orders is not allowed."),
