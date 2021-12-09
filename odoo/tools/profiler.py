@@ -335,7 +335,21 @@ class QwebTracker():
     def enter_directive(self, directive, attrib, xpath):
         execution_context = None
         if self.execution_context_enabled:
-            execution_context = tools.profiler.ExecutionContext(directive=directive, xpath=xpath)
+            directive_info = {}
+            if directive and ('t-' + directive) in attrib:
+                directive_info['t-' + directive] = repr(attrib['t-' + directive])
+            if directive == 'set':
+                if 't-value' in attrib:
+                    directive_info['t-value'] = repr(attrib['t-value'])
+                if 't-valuef' in attrib:
+                    directive_info['t-valuef'] = repr(attrib['t-valuef'])
+            elif directive == 'foreach':
+                directive_info['t-as'] = repr(attrib['t-as'])
+            elif directive == 'options':
+                for key in list(attrib):
+                    if key.startswith('t-options-'):
+                        directive_info[key] = repr(attrib[key])
+            execution_context = tools.profiler.ExecutionContext(**directive_info, xpath=xpath)
             execution_context.__enter__()
             self.context_stack.append(execution_context)
 
