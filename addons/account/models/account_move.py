@@ -1154,7 +1154,7 @@ class AccountMove(models.Model):
             elif (move.name and move.name != '/') or move.state != 'posted':
                 try:
                     if not move.posted_before:
-                        move._constrains_date_sequence()
+                        move.with_context(force_constraint_date=True)._constrains_date_sequence()
                     # Has already a name or is not posted, we don't add to a batch
                     continue
                 except ValidationError:

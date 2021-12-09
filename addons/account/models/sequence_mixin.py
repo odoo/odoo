@@ -56,10 +56,11 @@ class SequenceMixin(models.AbstractModel):
             'sequence.mixin.constraint_start_date',
             '1970-01-01'
         ))
+        force_constraint_date = self.env.context.get('force_constraint_date')
         for record in self:
             date = fields.Date.to_date(record[record._sequence_date_field])
             sequence = record[record._sequence_field]
-            if sequence and date and date > constraint_date:
+            if sequence and (force_constraint_date or (date and date > constraint_date)):
                 format_values = record._get_sequence_format_param(sequence)[1]
                 if (
                     format_values['year'] and format_values['year'] != date.year % 10**len(str(format_values['year']))
