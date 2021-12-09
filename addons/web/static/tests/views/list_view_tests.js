@@ -4333,6 +4333,7 @@ QUnit.module("Views", (hooks) => {
             add: () => {
                 throw new Error("should not display a notification");
             },
+            loadActionMenus: true,
         });
 
         assert.containsNone(list, "div.o_control_panel .o_cp_action_menus");

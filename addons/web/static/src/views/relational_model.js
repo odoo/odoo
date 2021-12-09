@@ -5,6 +5,7 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { Domain } from "@web/core/domain";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { ORM } from "@web/core/orm_service";
+import { evaluateExpr } from "@web/core/py_js/py";
 import { Deferred, KeepLast, Mutex } from "@web/core/utils/concurrency";
 import { session } from "@web/session";
 import { Model } from "@web/views/helpers/model";
