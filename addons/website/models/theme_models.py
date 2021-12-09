@@ -152,6 +152,33 @@ class Theme(models.AbstractModel):
     _description = 'Theme Utils'
     _auto = False
 
+    _header_templates = [
+        'website.template_header_hamburger',
+        'website.template_header_vertical',
+        'website.template_header_sidebar',
+        'website.template_header_slogan',
+        'website.template_header_contact',
+        'website.template_header_minimalist',
+        'website.template_header_boxed',
+        'website.template_header_centered_logo',
+        'website.template_header_image',
+        'website.template_header_hamburger_full',
+        'website.template_header_magazine',
+        # Default one, keep it last
+        'website.template_header_default',
+    ]
+    _footer_templates = [
+        'website.template_footer_descriptive',
+        'website.template_footer_centered',
+        'website.template_footer_links',
+        'website.template_footer_minimalist',
+        'website.template_footer_contact',
+        'website.template_footer_call_to_action',
+        'website.template_footer_headline',
+        # Default one, keep it last
+        'website.footer_custom',
+    ]
+
     def _post_copy(self, mod):
         # Call specific theme post copy
         theme_post_copy = '_%s_post_copy' % mod.name
@@ -183,28 +210,14 @@ class Theme(models.AbstractModel):
         self.disable_view('website.option_ripple_effect')
 
         # Reinitialize header templates
-        self.enable_view('website.template_header_default')
-        self.disable_view('website.template_header_hamburger')
-        self.disable_view('website.template_header_vertical')
-        self.disable_view('website.template_header_sidebar')
-        self.disable_view('website.template_header_slogan')
-        self.disable_view('website.template_header_contact')
-        self.disable_view('website.template_header_minimalist')
-        self.disable_view('website.template_header_boxed')
-        self.disable_view('website.template_header_centered_logo')
-        self.disable_view('website.template_header_image')
-        self.disable_view('website.template_header_hamburger_full')
-        self.disable_view('website.template_header_magazine')
+        for view in self._header_templates[:-1]:
+            self.disable_view(view)
+        self.enable_view(self._header_templates[-1])
 
         # Reinitialize footer templates
-        self.enable_view('website.footer_custom')
-        self.disable_view('website.template_footer_descriptive')
-        self.disable_view('website.template_footer_centered')
-        self.disable_view('website.template_footer_links')
-        self.disable_view('website.template_footer_minimalist')
-        self.disable_view('website.template_footer_contact')
-        self.disable_view('website.template_footer_call_to_action')
-        self.disable_view('website.template_footer_headline')
+        for view in self._footer_templates[:-1]:
+            self.disable_view(view)
+        self.enable_view(self._footer_templates[-1])
 
         # Reinitialize footer scrolltop template
         self.disable_view('website.option_footer_scrolltop')
@@ -233,6 +246,12 @@ class Theme(models.AbstractModel):
 
     @api.model
     def enable_view(self, xml_id):
+        if xml_id in self._header_templates:
+            for view in self._header_templates:
+                self.disable_view(view)
+        elif xml_id in self._footer_templates:
+            for view in self._footer_templates:
+                self.disable_view(view)
         self._toggle_view(xml_id, True)
 
     @api.model
