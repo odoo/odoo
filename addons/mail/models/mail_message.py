@@ -604,9 +604,9 @@ class Message(models.Model):
         messages = super(Message, self).create(values_list)
 
         check_attachment_access = []
-        if all(isinstance(command, int) or command[0] in (4, 6) for values in values_list for command in values.get('attachment_ids')):
+        if all(isinstance(command, int) or command[0] in (4, 6) for values in values_list for command in values.get('attachment_ids') or []):
             for values in values_list:
-                for command in values.get('attachment_ids'):
+                for command in values.get('attachment_ids') or []:
                     if isinstance(command, int):
                         check_attachment_access += [command]
                     elif command[0] == 6:

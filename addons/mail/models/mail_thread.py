@@ -1923,28 +1923,37 @@ class MailThread(models.AbstractModel):
         :return record: newly create mail.message
         """
         self.ensure_one()  # should always be posted on a record, use message_notify if no record
-        # split message additional values from notify additional values
-        msg_kwargs = dict((key, val) for key, val in kwargs.items() if key in self.env['mail.message']._fields)
-        notif_kwargs = dict((key, val) for key, val in kwargs.items() if key not in msg_kwargs)
 
         # preliminary value safety check
+        conflicting_field_names = set(('model', 'res_id')) & set(kwargs.keys())
+        if conflicting_field_names:
+            raise ValueError(_('Those values are not supported when posting on a document: %s',
+                               ', '.join(conflicting_field_names)
+                              ))
+        if self._name == 'mail.thread' or not self.id:
+            raise ValueError(_("Posting a message should be done on a business document. Use message_notify to send a notification to an user."))
+        if message_type == 'user_notification':
+            raise ValueError(_("Use message_notify to send a notification to an user."))
+        # values consistency check
         partner_ids = set(partner_ids or [])
-        if self._name == 'mail.thread' or not self.id or message_type == 'user_notification':
-            raise ValueError(_('Posting a message should be done on a business document. Use message_notify to send a notification to an user.'))
-        if 'channel_ids' in kwargs:
-            raise ValueError(_("Posting a message with channels as listeners is not supported since Odoo 14.3+. Please update code accordingly."))
-        if 'model' in msg_kwargs or 'res_id' in msg_kwargs:
-            raise ValueError(_("message_post does not support model and res_id parameters anymore. Please call message_post on record."))
-        if 'subtype' in kwargs:
-            raise ValueError(_("message_post does not support subtype parameter anymore. Please give a valid subtype_id or subtype_xmlid value instead."))
+        attachment_ids = set(attachment_ids or [])
         if any(not isinstance(pc_id, int) for pc_id in partner_ids):
             raise ValueError(_('message_post partner_ids and must be integer list, not commands.'))
+        if any(not isinstance(attach_id, int) for attach_id in attachment_ids):
+            raise ValueError(_('message_post attachment_ids and must be integer list, not commands.'))
 
-        self = self._fallback_lang() # add lang to context immediately since it will be useful in various flows latter.
+        # split message additional values from notify additional values
+        msg_kwargs = dict((key, val) for key, val in kwargs.items()
+                          if key in self.env['mail.message']._fields)
+        notif_kwargs = dict((key, val) for key, val in kwargs.items() if key not in msg_kwargs)
 
         # Explicit access rights check, because display_name is computed as sudo.
         self.check_access_rights('read')
         self.check_access_rule('read')
+
+        # Add lang to context immediately since it will be useful in various flows
+        # later
+        self = self._fallback_lang()
 
         # Find the message's author
         if self.env.user._is_public() and 'guest' in self.env.context:
@@ -1985,7 +1994,6 @@ class MailThread(models.AbstractModel):
         })
 
         attachments = attachments or []
-        attachment_ids = attachment_ids or []
         attachement_values = self._message_post_process_attachments(attachments, attachment_ids, msg_values)
         msg_values.update(attachement_values)  # attachement_ids, [body]
 
@@ -2086,6 +2094,20 @@ class MailThread(models.AbstractModel):
         on the user configuration, like other notifications. """
         if self:
             self.ensure_one()
+
+        # allow to link a notification to a document that does not inherit from
+        # MailThread by supporting model / res_id
+        if not (model and res_id):  # both value should be set or none should be set (record)
+            model = False
+            res_id = False
+
+        # preliminary value safety check
+        conflicting_field_names = set(('message_id', 'message_type')) & set(kwargs.keys())
+        if conflicting_field_names:
+            raise ValueError(_('Those values are not supported when notifying users: %s',
+                               ', '.join(conflicting_field_names)
+                              ))
+
         # split message additional values from notify additional values
         msg_kwargs = dict((key, val) for key, val in kwargs.items() if key in self.env['mail.message']._fields)
         notif_kwargs = dict((key, val) for key, val in kwargs.items() if key not in msg_kwargs)
@@ -2096,16 +2118,10 @@ class MailThread(models.AbstractModel):
             _logger.warning('Message notify called without recipient_ids, skipping')
             return self.env['mail.message']
 
-        # allow to link a notification to a document that does not inherit from
-        # MailThread by supporting model / res_id
-        if not (model and res_id):  # both value should be set or none should be set (record)
-            model = False
-            res_id = False
-
         msg_values = {
             'parent_id': parent_id,
-            'model': self._name if self else model,
-            'res_id': self.id if self else res_id,
+            'model': self._name if self else False,
+            'res_id': self.id if self else False,
             'message_type': 'user_notification',
             'subject': subject,
             'body': body,
@@ -2133,7 +2149,9 @@ class MailThread(models.AbstractModel):
         """ Helper method to log a note using a view_id without notifying followers. """
         return self._message_compose_with_view(views_or_xmlid, message_log=True, **kwargs)
 
-    def _message_log(self, *, body='', author_id=None, email_from=None, subject=False, message_type='notification', **kwargs):
+    def _message_log(self, *, body='', author_id=None, email_from=None, subject=False,
+                     message_type='notification',
+                     attachment_ids=False, tracking_value_ids=False):
         """ Shortcut allowing to post note on a document. It does not perform
         any notification and pre-computes some values to have a short code
         as optimized as possible. This method is private as it does not check
@@ -2144,25 +2162,27 @@ class MailThread(models.AbstractModel):
         author_id, email_from = self._message_compute_author(author_id, email_from, raise_on_email=False)
 
         msg_values = {
+            'attachment_ids': attachment_ids,
             'subject': subject,
             'body': body,
             'author_id': author_id,
             'email_from': email_from,
             'message_type': message_type,
-            'model': kwargs.get('model', self._name),
+            'model': self._name if self else False,
             'res_id': self.ids[0] if self.ids else False,
             'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
             'is_internal': True,
             'record_name': False,
             'reply_to': self.env['mail.thread']._notify_get_reply_to(default=email_from)[False],
             'message_id': tools.generate_tracking_message_id('message-notify'),  # why? this is all but a notify
+            'tracking_value_ids': tracking_value_ids,
             'email_add_signature': False,  # False as no notification -> no need to compute signature
         }
-        msg_values.update(kwargs)
 
         return self.sudo()._message_create(msg_values)
 
-    def _message_log_batch(self, bodies, author_id=None, email_from=None, subject=False, message_type='notification'):
+    def _message_log_batch(self, bodies, author_id=None, email_from=None, subject=False,
+                           message_type='notification'):
         """ Shortcut allowing to post notes on a batch of documents. It achieve the
         same purpose as _message_log, done in batch to speedup quick note log.
 
@@ -2253,6 +2273,16 @@ class MailThread(models.AbstractModel):
         if not isinstance(values_list, (list)):
             values_list = [values_list]
         create_values_list = []
+
+        # preliminary value safety check
+        invalid_field_names = self._message_get_filtered_fields()
+        for values in values_list:
+            conflicting_field_names = set(invalid_field_names) & set(values.keys())
+            if conflicting_field_names:
+                raise ValueError(_('Those values are not supported when posting or notifying: %s',
+                                   ', '.join(conflicting_field_names)
+                                  ))
+
         for values in values_list:
             create_values = dict(values)
             # Avoid warnings about non-existing fields
@@ -2264,6 +2294,18 @@ class MailThread(models.AbstractModel):
             ctx = {key: val for key, val in self._context.items() if key != 'default_child_ids'}
             self = self.with_context(ctx)
         return self.env['mail.message'].create(create_values_list)
+
+    def _message_get_filtered_fields(self):
+        return [
+            'author_avatar',
+            'canned_response_ids',
+            'child_ids',
+            'mail_ids',
+            'notification_ids',
+            'notified_partner_ids',
+            'reaction_ids',
+            'starred_partner_ids',
+        ]
 
     # ------------------------------------------------------
     # NOTIFICATION API
