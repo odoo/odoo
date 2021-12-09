@@ -41,6 +41,7 @@ registry
     .add('email', basic_fields.FieldEmail)
     .add('phone', basic_fields.FieldPhone)
     .add('url', basic_fields.UrlWidget)
+    .add('CopyClipboardButton', basic_fields.ButtonCopyClipboard)
     .add('CopyClipboardText', basic_fields.TextCopyClipboard)
     .add('CopyClipboardChar', basic_fields.CharCopyClipboard)
     .add('CopyClipboardURL', basic_fields.URLCopyClipboard)
