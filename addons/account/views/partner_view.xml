@@ -194,11 +194,18 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="groups_id" eval="[(5,)]"/>
             <field name="arch" type="xml">
+                <xpath expr="//sheet" position="before">
+                    <div groups="account.group_account_invoice,account.group_account_readonly" class="alert alert-warning" role="alert" style="margin-bottom:0px;"
+                         attrs="{'invisible': [('duplicated_bank_account_partners_count', '=', 0)]}">
+                        One or more Bank Accounts set on this partner are also used by other <bold><button class="alert-link" type="object" name="action_view_partner_with_same_bank" role="button" string="Partners" style="padding: 0;vertical-align: baseline;"/></bold>. Please make sure that this is a wanted behavior.
+                    </div>
+                </xpath>
                 <page name="sales_purchases" position="after">
                     <page string="Invoicing" name="accounting" attrs="{'invisible': [('is_company','=',False),('parent_id','!=',False)]}" groups="account.group_account_invoice,account.group_account_readonly">
+                        <field name="duplicated_bank_account_partners_count" invisible="1"/>
                         <group>
                             <group string="Bank Accounts" name="banks" groups="account.group_account_invoice,account.group_account_readonly">
-                                <field name="bank_ids" nolabel="1">
+                                <field name="bank_ids" nolabel="1" colspan="2">
                                     <tree editable="bottom">
                                         <field name="sequence" widget="handle"/>
                                         <field name="bank_id"/>

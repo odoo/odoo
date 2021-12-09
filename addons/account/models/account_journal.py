@@ -659,15 +659,16 @@ class AccountJournal(models.Model):
     def set_bank_account(self, acc_number, bank_id=None):
         """ Create a res.partner.bank (if not exists) and set it as value of the field bank_account_id """
         self.ensure_one()
-        res_partner_bank = self.env['res.partner.bank'].search([('sanitized_acc_number', '=', sanitize_account_number(acc_number)),
-                                                                ('company_id', '=', self.company_id.id)], limit=1)
+        res_partner_bank = self.env['res.partner.bank'].search([
+            ('sanitized_acc_number', '=', sanitize_account_number(acc_number)),
+            ('partner_id', '=', self.company_id.partner_id.id),
+        ], limit=1)
         if res_partner_bank:
             self.bank_account_id = res_partner_bank.id
         else:
             self.bank_account_id = self.env['res.partner.bank'].create({
                 'acc_number': acc_number,
                 'bank_id': bank_id,
-                'company_id': self.company_id.id,
                 'currency_id': self.currency_id.id,
                 'partner_id': self.company_id.partner_id.id,
             }).id

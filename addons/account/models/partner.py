@@ -7,6 +7,7 @@ import logging
 from psycopg2 import sql, DatabaseError
 
 from odoo import api, fields, models, _
+from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.exceptions import ValidationError
 from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
@@ -483,6 +484,11 @@ class ResPartner(models.Model):
     supplier_rank = fields.Integer(default=0)
     customer_rank = fields.Integer(default=0)
 
+    duplicated_bank_account_partners_count = fields.Integer(
+        compute='_compute_duplicated_bank_account_partners_count',
+        help='Technical field holding the amount partners that share the same account number as any set on this partner.',
+    )
+
     def _get_name_search_order_by_fields(self):
         res = super()._get_name_search_order_by_fields()
         partner_search_mode = self.env.context.get('res_partner_search_mode')
@@ -503,6 +509,24 @@ class ResPartner(models.Model):
         for partner in self:
             partner.bank_account_count = mapped_data.get(partner.id, 0)
 
+    def _get_duplicated_bank_accounts(self):
+        self.ensure_one()
+        if not self.bank_ids:
+            return self.env['res.partner.bank']
+        domains = []
+        for bank in self.bank_ids:
+            domains.append([('acc_number', '=', bank.acc_number), ('bank_id', '=', bank.bank_id.id)])
+        domain = expression.OR(domains)
+        if self.company_id:
+            domain = expression.AND([domain, [('company_id', 'in', (False, self.company_id.id))]])
+        domain = expression.AND([domain, [('partner_id', '!=', self._origin.id)]])
+        return self.env['res.partner.bank'].search(domain)
+
+    @api.depends('bank_ids')
+    def _compute_duplicated_bank_account_partners_count(self):
+        for partner in self:
+            partner.duplicated_bank_account_partners_count = len(partner._get_duplicated_bank_accounts())
+
     def _find_accounting_partner(self, partner):
         ''' Find the partner for which the accounting entries will be created '''
         return partner.commercial_partner_id
@@ -522,6 +546,30 @@ class ResPartner(models.Model):
         ]
         action['context'] = {'default_move_type':'out_invoice', 'move_type':'out_invoice', 'journal_type': 'sale', 'search_default_open': 1}
         return action
+
+    def action_view_partner_with_same_bank(self):
+        self.ensure_one()
+        partners = self._get_duplicated_bank_accounts()
+        # Open a list view or form view of the partner(s) with the same bank accounts
+        if self.duplicated_bank_account_partners_count == 1:
+            action_vals = {
+                'type': 'ir.actions.act_window',
+                'res_model': 'res.partner',
+                'view_mode': 'form',
+                'res_id': partners.id,
+                'views': [(False, 'form')],
+            }
+        else:
+            action_vals = {
+                'name': _("Partners"),
+                'type': 'ir.actions.act_window',
+                'res_model': 'res.partner',
+                'view_mode': 'tree,form',
+                'views': [(False, 'list'), (False, 'form')],
+                'domain': [('id', 'in', partners.ids)],
+            }
+
+        return action_vals
 
     def can_edit_vat(self):
         ''' Can't edit `vat` if there is (non draft) issued invoices. '''
