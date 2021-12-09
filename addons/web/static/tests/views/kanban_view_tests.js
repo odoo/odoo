@@ -1343,14 +1343,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skip("quick create record: validate with ENTER", async (assert) => {
-        // in this test, we accurately mock the behavior of the webclient by specifying a
-        // fieldDebounce > 0, meaning that the changes in an InputField aren't notified to the model
-        // on 'input' events, but they wait for the 'change' event (or a call to 'commitChanges',
-        // e.g. triggered by a navigation event)
-        // in this scenario, the call to 'commitChanges' actually does something (i.e. it notifies
-        // the new value of the char field), whereas it does nothing if the changes are notified
-        // directly
+    QUnit.test("quick create record: validate with ENTER", async (assert) => {
         assert.expect(3);
 
         serverData.views = {
@@ -1369,14 +1362,14 @@ QUnit.module("Views", (hooks) => {
                 '<div><field name="foo"/></div>' +
                 "</t></templates></kanban>",
             groupBy: ["bar"],
-            fieldDebounce: 5000,
         });
 
         assert.containsN(kanban, ".o_kanban_record", 4, "should have 4 records at the beginning");
 
         // add an element and confirm by pressing ENTER
         await quickCreateRecord(kanban);
-        await testUtils.kanban.quickCreate(kanban, "new partner", "foo");
+        await editQuickCreateInput(kanban, "foo", "new partner");
+        await validateRecord(kanban);
         // triggers a navigation event, leading to the 'commitChanges' and record creation
 
         assert.containsN(kanban, ".o_kanban_record", 5, "should have created a new record");
@@ -1387,7 +1380,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skip("quick create record: prevent multiple adds with ENTER", async (assert) => {
+    QUnit.test("quick create record: prevent multiple adds with ENTER", async (assert) => {
         assert.expect(9);
 
         serverData.views = {
@@ -1408,10 +1401,6 @@ QUnit.module("Views", (hooks) => {
                 '<div><field name="foo"/></div>' +
                 "</t></templates></kanban>",
             groupBy: ["bar"],
-            // add a fieldDebounce to accurately simulate what happens in the webclient: the field
-            // doesn't notify the BasicModel that it has changed directly, as it waits for the user
-            // to focusout or navigate (e.g. by pressing ENTER)
-            fieldDebounce: 5000,
             async mockRPC(route, args) {
                 if (args.method === "create") {
                     assert.step("create");
@@ -1459,7 +1448,7 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["create"]);
     });
 
-    QUnit.skip("quick create record: prevent multiple adds with Add clicked", async (assert) => {
+    QUnit.test("quick create record: prevent multiple adds with Add clicked", async (assert) => {
         assert.expect(9);
 
         serverData.views = {
@@ -1479,8 +1468,8 @@ QUnit.module("Views", (hooks) => {
                 '<div><field name="foo"/></div>' +
                 "</t></templates></kanban>",
             groupBy: ["bar"],
-            async mockRPC(route, args) {
-                if (args.method === "create") {
+            async mockRPC(route, { method }) {
+                if (method === "create") {
                     assert.step("create");
                     await prom;
                 }
@@ -1525,13 +1514,13 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["create"]);
     });
 
-    QUnit.skip(
+    QUnit.test(
         "quick create record: prevent multiple adds with ENTER, with onchange",
         async (assert) => {
-            assert.expect(13);
+            assert.expect(14);
 
             serverData.models.partner.onchanges = {
-                foo: function (obj) {
+                foo(obj) {
                     obj.int_field += obj.foo ? 3 : 0;
                 },
             };
@@ -1553,25 +1542,23 @@ QUnit.module("Views", (hooks) => {
                     '<div><field name="foo"/></div>' +
                     "</t></templates></kanban>",
                 groupBy: ["bar"],
-                async mockRPC(route, args) {
-                    if (args.method === "onchange") {
-                        assert.step("onchange");
-                        if (shouldDelayOnchange) {
-                            await prom;
+                async mockRPC(route, { method, args }) {
+                    switch (method) {
+                        case "onchange": {
+                            assert.step(method);
+                            if (shouldDelayOnchange) {
+                                await prom;
+                            }
+                            break;
+                        }
+                        case "create": {
+                            assert.step(method);
+                            assert.strictEqual(args[0].foo, "new partner");
+                            assert.strictEqual(args[0].int_field, 3);
+                            break;
                         }
                     }
-                    if (args.method === "create") {
-                        assert.step("create");
-                        assert.deepEqual(_.pick(args.args[0], "foo", "int_field"), {
-                            foo: "new partner",
-                            int_field: 3,
-                        });
-                    }
                 },
-                // add a fieldDebounce to accurately simulate what happens in the webclient: the field
-                // doesn't notify the BasicModel that it has changed directly, as it waits for the user
-                // to focusout or navigate (e.g. by pressing ENTER)
-                fieldDebounce: 5000,
             });
 
             assert.containsN(
@@ -1585,7 +1572,7 @@ QUnit.module("Views", (hooks) => {
             await quickCreateRecord(kanban);
             shouldDelayOnchange = true;
             await editQuickCreateInput(kanban, "foo", "new partner");
-            await triggerEvent(kanban.el, "o_kanban_quick_create input[name=foo]", "keydown", {
+            await triggerEvent(kanban.el, ".o_kanban_quick_create input[name=foo]", "keydown", {
                 key: "Enter",
             });
 

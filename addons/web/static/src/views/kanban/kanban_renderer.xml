@@ -97,7 +97,11 @@
                         </div>
                         <t t-if="!group.isFolded">
                             <t t-foreach="group.list.records" t-as="record" t-key="record.id">
-                                <div t-if="record.isQuickCreate and props.list.quickCreateInfo" class="o_kanban_quick_create" t-on-keydown="onQuickCreateKeydown(group)">
+                                <div t-if="record.isQuickCreate and props.list.quickCreateInfo"
+                                    class="o_kanban_quick_create"
+                                    t-att-class="{ o_disabled: state.quickCreateDisabled }"
+                                    t-on-keydown="onQuickCreateKeydown(group)"
+                                >
                                     <FormRenderer class="o_form_view o_xxs_form_view" record="record" fields="props.fields" info="props.list.quickCreateInfo" />
                                     <div class="d-flex">
                                         <button class="btn btn-primary o_kanban_add mr-1 text_truncate" t-on-click="validateQuickCreate(group, false)">
