@@ -1224,30 +1224,30 @@ export class ModelManager {
             for (const field of Model.__fieldList) {
                 Object.defineProperty(Model.prototype, field.fieldName, {
                     get: function getFieldValue() { // this is bound to record
-                        for (const listener of this.modelManager._listeners) {
-                            listener.lastObservedLocalIds.add(this.localId);
+                        if (this.modelManager._listeners.size) {
                             if (!this.modelManager._listenersObservingLocalId.has(this.localId)) {
                                 this.modelManager._listenersObservingLocalId.set(this.localId, new Map());
                             }
                             const entryLocalId = this.modelManager._listenersObservingLocalId.get(this.localId);
-                            const info = {
-                                listener,
-                                reason: `getField - ${field} of ${this}`,
-                            };
-                            if (entryLocalId.has(listener)) {
-                                entryLocalId.get(listener).push(info);
-                            } else {
-                                entryLocalId.set(listener, [info]);
-                            }
+                            const reason = `getField - ${field} of ${this}`;
                             const entryField = this.modelManager._listenersObservingFieldOfLocalId.get(this.localId).get(field);
-                            if (!listener.lastObservedFieldsByLocalId.has(this.localId)) {
-                                listener.lastObservedFieldsByLocalId.set(this.localId, new Set());
-                            }
-                            listener.lastObservedFieldsByLocalId.get(this.localId).add(field);
-                            if (entryField.has(listener)) {
-                                entryField.get(listener).push(info);
-                            } else {
-                                entryField.set(listener, [info]);
+                            for (const listener of this.modelManager._listeners) {
+                                listener.lastObservedLocalIds.add(this.localId);
+                                const info = { listener, reason };
+                                if (entryLocalId.has(listener)) {
+                                    entryLocalId.get(listener).push(info);
+                                } else {
+                                    entryLocalId.set(listener, [info]);
+                                }
+                                if (!listener.lastObservedFieldsByLocalId.has(this.localId)) {
+                                    listener.lastObservedFieldsByLocalId.set(this.localId, new Set());
+                                }
+                                listener.lastObservedFieldsByLocalId.get(this.localId).add(field);
+                                if (entryField.has(listener)) {
+                                    entryField.get(listener).push(info);
+                                } else {
+                                    entryField.set(listener, [info]);
+                                }
                             }
                         }
                         return field.get(this);
