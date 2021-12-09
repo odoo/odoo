@@ -30,11 +30,11 @@
                                     <td>Price excl. VAT:</td>
                                     <td><t t-esc="env.pos.format_currency(productInfo.all_prices.price_without_tax)"/></td>
                                 </tr>
-                                <tr>
+                                <tr t-if="_hasMarginsCostsAccessRights()">
                                     <td>Cost:</td>
                                     <td><t t-esc="costCurrency"/></td>
                                 </tr>
-                                <tr>
+                                <tr t-if="_hasMarginsCostsAccessRights()">
                                     <td>Margin:</td>
                                     <td><t t-esc="marginCurrency"/> (<t t-esc="marginPercent"/>%) </td>
                                 </tr>
@@ -78,7 +78,7 @@
                                         <td><span t-esc="supplier.name" class="table-name"/>:</td>
                                         <div class="mobile-line">
                                             <td><t t-esc="supplier.delay"/> Days</td>
-                                            <td><t t-esc="env.pos.format_currency(supplier.price)"/></td>
+                                            <td t-if="_hasMarginsCostsAccessRights()"><t t-esc="env.pos.format_currency(supplier.price)"/></td>
                                         </div>
                                     </tr>
                                 </t>
@@ -118,11 +118,11 @@
                                     <td>Total Price excl. VAT:</td>
                                     <td t-esc="orderPriceWithoutTaxCurrency" class="table-value"/>
                                 </tr>
-                                <tr>
+                                <tr t-if="_hasMarginsCostsAccessRights()">
                                     <td>Total Cost:</td>
                                     <td t-esc="orderCostCurrency" class="table-value"/>
                                 </tr>
-                                <tr>
+                                <tr t-if="_hasMarginsCostsAccessRights()">
                                     <td>Total Margin:</td>
                                     <td class="table-value"><t t-esc="orderMarginCurrency"/> (<t t-esc="orderMarginPercent"/>%)</td>
                                 </tr>
