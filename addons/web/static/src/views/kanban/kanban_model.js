@@ -255,7 +255,7 @@ class KanbanDynamicRecordList extends DynamicRecordList {
 
     async cancelQuickCreate() {
         const previousCount = this.records.length;
-        this.records = this.records.filter((r) => !r.isQuickCreate);
+        this.records = this.records.filter((r) => !r.isQuickCreate || r.isDirty);
         if (this.records.length !== previousCount) {
             this.model.notify();
         }

@@ -165,6 +165,10 @@ export class Record extends DataPoint {
         return evalContext;
     }
 
+    get isDirty() {
+        return Object.keys(this._changes).length > 0;
+    }
+
     async load() {
         if (!this.fieldNames.length) {
             return;
@@ -343,7 +347,7 @@ export class Record extends DataPoint {
     }
 
     _getChanges(allFields = false) {
-        const changes = Object.assign({}, allFields ? this.data : this._changes);
+        const changes = { ...(allFields ? this.data : this._changes) };
         for (const fieldName in changes) {
             const fieldType = this.fields[fieldName].type;
             if (fieldType === "one2many" || fieldType === "many2many") {
