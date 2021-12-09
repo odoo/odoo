@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.website.tools import MockRequest
-from odoo.exceptions import MissingError
 from odoo.tests import standalone
 
 
@@ -119,20 +118,21 @@ def test_02_copy_ids_views_unlink_on_module_update(env):
 
     website_1 = env['website'].browse(1)
     website_2 = env['website'].browse(2)
-    theme_common = env.ref('base.module_theme_common')
+    theme_default = env.ref('base.module_theme_default')
 
-    # Install theme_common on website 1 and website 2
-    (website_1 + website_2).theme_id = theme_common
+    # Install theme_default on website 1 and website 2
+    (website_1 + website_2).theme_id = theme_default
     env['ir.module.module'].with_context(load_all_views=True)._theme_load(website_1)
     env['ir.module.module'].with_context(load_all_views=True)._theme_load(website_2)
 
-    key = 'theme_common.theme_child_view'
+    key = 'theme_default.theme_child_view'
     domain = [
         ('type', '=', 'qweb'),
         ('key', '=', key),
     ]
+
     def _simulate_xml_view():
-        # Simulate a theme.ir.ui.view inside theme_common XML files
+        # Simulate a theme.ir.ui.view inside theme_default XML files
         base_view = env.ref('test_website.update_module_base_view')
         theme_child_view = ThemeView.create({
             'name': 'Theme Child View',
@@ -147,7 +147,7 @@ def test_02_copy_ids_views_unlink_on_module_update(env):
         })
         # Create IMD so when updating the module the views will be removed (not found in file)
         Imd.create({
-            'module': 'theme_common',
+            'module': 'theme_default',
             'name': 'theme_child_view',
             'model': 'theme.ir.ui.view',
             'res_id': theme_child_view.id,
@@ -172,20 +172,20 @@ def test_02_copy_ids_views_unlink_on_module_update(env):
 
         return view_website_1, view_website_2, theme_child_view
 
-    ############################################
-    ## CASE 1: generic update (-u, migration) ##
-    ############################################
+    ##########################################
+    # CASE 1: generic update (-u, migration) #
+    ##########################################
 
     view_website_1, view_website_2, theme_child_view = _simulate_xml_view()
 
     # Upgrade the module
-    theme_common.button_immediate_upgrade()
+    theme_default.button_immediate_upgrade()
     env.reset()  # clear the set of environments
     env = env()  # get an environment that refers to the new registry
 
     # Ensure the theme.ir.ui.view got removed (since there is an IMD but not
     # present in XML files)
-    view = env.ref('theme_common.theme_child_view', False)
+    view = env.ref('theme_default.theme_child_view', False)
     assert not view, "Theme view should have been removed during module update."
     assert not theme_child_view.exists(),\
         "Theme view should have been removed during module update. (2)"
@@ -195,21 +195,21 @@ def test_02_copy_ids_views_unlink_on_module_update(env):
     assert not (view_website_1.exists() or view_website_2.exists()),\
         "copy_ids views did not get removed! (2)"
 
-    #######################################################
-    ## CASE 2: specific update (website theme selection) ##
-    #######################################################
+    #####################################################
+    # CASE 2: specific update (website theme selection) #
+    #####################################################
 
     view_website_1, view_website_2, theme_child_view = _simulate_xml_view()
 
     # Upgrade the module
     with MockRequest(env, website=website_1):
-        theme_common.button_immediate_upgrade()
+        theme_default.button_immediate_upgrade()
     env.reset()  # clear the set of environments
     env = env()  # get an environment that refers to the new registry
 
     # Ensure the theme.ir.ui.view got removed (since there is an IMD but not
     # present in XML files)
-    view = env.ref('theme_common.theme_child_view', False)
+    view = env.ref('theme_default.theme_child_view', False)
     assert not view, "Theme view should have been removed during module update."
     assert not theme_child_view.exists(),\
         "Theme view should have been removed during module update. (2)"
