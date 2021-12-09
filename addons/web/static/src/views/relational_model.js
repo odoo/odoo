@@ -2,7 +2,7 @@
 
 import { Domain } from "@web/core/domain";
 import { ORM } from "@web/core/orm_service";
-import { Deferred, KeepLast } from "@web/core/utils/concurrency";
+import { Deferred, KeepLast, Mutex } from "@web/core/utils/concurrency";
 import { Model } from "@web/views/helpers/model";
 import { isX2Many } from "@web/views/helpers/view_utils";
 import { registry } from "../core/registry";
@@ -148,6 +148,8 @@ export class Record extends DataPoint {
         this.data = { ...this._values };
         this.preloadedData = {};
         this.selected = false;
+        this.mutex = new Mutex();
+        this._onChangePromise = Promise.resolve({});
     }
 
     get evalContext() {
@@ -266,40 +268,40 @@ export class Record extends DataPoint {
         this._changes[fieldName] = this.data[fieldName];
         const activeField = this.activeFields[fieldName];
         if (activeField && activeField.onChange) {
-            const onChangeValues = await this._performOnchange(fieldName);
-            Object.assign(this.data, onChangeValues);
-            Object.assign(this._changes, onChangeValues);
+            await this._performOnchange(fieldName);
         }
         this.model.notify();
     }
 
     async save() {
-        const changes = this._getChanges();
-        const keys = Object.keys(changes);
-        let reload = true;
-        if (this.resId) {
-            if (keys.length > 0) {
-                await this.model.orm.write(this.resModel, [this.resId], changes);
+        return this.mutex.exec(async () => {
+            const changes = this._getChanges();
+            const keys = Object.keys(changes);
+            let reload = true;
+            if (this.resId) {
+                if (keys.length > 0) {
+                    await this.model.orm.write(this.resModel, [this.resId], changes);
+                } else {
+                    reload = false;
+                }
             } else {
-                reload = false;
+                if (keys.length === 1 && keys[0] === "display_name") {
+                    const [resId] = await this.model.orm.call(
+                        this.resModel,
+                        "name_create",
+                        [changes.display_name],
+                        { context: this.context }
+                    );
+                    this.resId = resId;
+                } else {
+                    this.resId = await this.model.orm.create(this.resModel, changes, this.context);
+                }
             }
-        } else {
-            if (keys.length === 1 && keys[0] === "display_name") {
-                const [resId] = await this.model.orm.call(
-                    this.resModel,
-                    "name_create",
-                    [changes.display_name],
-                    { context: this.context }
-                );
-                this.resId = resId;
-            } else {
-                this.resId = await this.model.orm.create(this.resModel, changes, this.context);
+            if (reload) {
+                await this.load();
+                this.model.notify();
             }
-        }
-        if (reload) {
-            await this.load();
-            this.model.notify();
-        }
+        });
     }
 
     toggleSelection(selected) {
@@ -329,13 +331,18 @@ export class Record extends DataPoint {
     }
 
     async _performOnchange(fieldName) {
-        const result = await this.model.orm.call(this.resModel, "onchange", [
-            [],
-            this._getChanges(true),
-            fieldName ? [fieldName] : [],
-            this._getOnchangeSpec(),
-        ]);
-        return this._parseServerValues(result.value);
+        return this.mutex.exec(async () => {
+            const result = await this.model.orm.call(this.resModel, "onchange", [
+                [],
+                this._getChanges(true),
+                fieldName ? [fieldName] : [],
+                this._getOnchangeSpec(),
+            ]);
+            const onChangeValues = this._parseServerValues(result.value);
+            Object.assign(this.data, onChangeValues);
+            Object.assign(this._changes, onChangeValues);
+            return onChangeValues;
+        });
     }
 
     _getOnchangeSpec() {

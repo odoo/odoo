@@ -29,7 +29,10 @@ export class KanbanRenderer extends Component {
         this.cards = cards;
         this.className = className;
         this.cardTemplate = useViewCompiler(KanbanCompiler, arch, fields, xmlDoc);
-        this.state = useState({ newGroup: "" });
+        this.state = useState({
+            quickCreateDisabled: false,
+            newGroup: "",
+        });
         this.action = useService("action");
         this.dialog = useService("dialog");
         this.notification = useService("notification");
@@ -254,7 +257,12 @@ export class KanbanRenderer extends Component {
     }
 
     async validateQuickCreate(group, editAfterCreate) {
+        if (this.state.quickCreateDisabled) {
+            return;
+        }
+        this.state.quickCreateDisabled = true;
         const record = await group.list.validateQuickCreate();
+        this.state.quickCreateDisabled = false;
         if (editAfterCreate) {
             await this.props.openRecord(record);
         }
