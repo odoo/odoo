@@ -163,14 +163,18 @@
         <form action="/shop/cart/update" method="post" class="oe_product_cart h-100 d-flex"
             t-att-data-publish="product.website_published and 'on' or 'off'"
             itemscope="itemscope" itemtype="http://schema.org/Product">
-            <!-- <a class="o_product_link css_editable_mode_hidden" t-att-href="product_href"/> -->
-            <div class="oe_product_image position-relative h-100 flex-grow-0">
+            <div class="oe_product_image position-relative h-100 flex-grow-0 overflow-hidden">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                 <a t-att-href="product_href" class="oe_product_image_link d-block h-100 position-relative" itemprop="url" contenteditable="false">
                     <t t-set="image_holder" t-value="product._get_image_holder()"/>
                     <span t-field="image_holder.image_1920"
-                        t-options="{'widget': 'image', 'preview_image': 'image_1024', 'itemprop': 'image', 'class': 'h-100 w-100'}"
+                        t-options="{'widget': 'image', 'preview_image': 'image_1024', 'itemprop': 'image', 'class': 'h-100 w-100 position-absolute'}"
                         class="oe_product_image_img_wrapper d-flex h-100 justify-content-center align-items-center position-absolute"/>
+
+                    <t t-set="bg_color" t-value="td_product['ribbon']['bg_color'] or ''"/>
+                    <t t-set="text_color" t-value="td_product['ribbon']['text_color']"/>
+                    <t t-set="bg_class" t-value="td_product['ribbon']['html_class']"/>
+                    <span t-attf-class="o_ribbon #{bg_class}" t-attf-style="#{text_color and ('color: %s; ' % text_color)}#{bg_color and 'background-color:' + bg_color}" t-out="td_product['ribbon']['html'] or ''"/>
                 </a>
             </div>
             <div class="o_wsale_product_information position-relative d-flex flex-column flex-grow-1 flex-shrink-1">
@@ -192,10 +196,6 @@
                     </div>
                 </div>
             </div>
-            <t t-set="bg_color" t-value="td_product['ribbon']['bg_color'] or ''"/>
-            <t t-set="text_color" t-value="td_product['ribbon']['text_color']"/>
-            <t t-set="bg_class" t-value="td_product['ribbon']['html_class']"/>
-            <span t-attf-class="o_ribbon #{bg_class}" t-attf-style="#{text_color and ('color: %s; ' % text_color)}#{bg_color and 'background-color:' + bg_color}" t-out="td_product['ribbon']['html'] or ''"/>
         </form>
     </template>
 
