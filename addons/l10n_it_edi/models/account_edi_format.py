@@ -423,7 +423,12 @@ class AccountEdiFormat(models.Model):
                                 ('partner_id.id', '=', invoice_form.partner_id.commercial_partner_id.id)
                                 ])
                         else:
-                            bank = self.env['res.partner.bank'].search([('acc_number', '=', elements[0].text)])
+                            bank = self.env['res.partner.bank'].search([
+                                ('acc_number', '=', elements[0].text),
+                                ('company_id', '=', invoice_form.company_id.id),
+                            ])
+                            if len(bank) > 1:
+                                bank = None
                         if bank:
                             invoice_form.partner_bank_id = bank
                         else:

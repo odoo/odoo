@@ -521,7 +521,7 @@ class AccountMove(models.Model):
                 line.account_id = new_term_account
 
         self._compute_bank_partner_id()
-        bank_ids = self.bank_partner_id.bank_ids.filtered(lambda bank: bank.company_id is False or bank.company_id == self.company_id)
+        bank_ids = self.bank_partner_id.bank_ids.filtered(lambda bank: not bank.company_id or bank.company_id == self.company_id)
         self.partner_bank_id = bank_ids and bank_ids[0]
 
         # Find the new fiscal position.
