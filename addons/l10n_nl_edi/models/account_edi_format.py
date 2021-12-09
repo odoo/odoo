@@ -100,8 +100,6 @@ class AccountEdiFormat(models.Model):
             errors.append(_("Customer's address must include street, zip and city (%s).", customer.display_name))
         if customer.country_code == 'NL' and not customer.l10n_nl_kvk and not customer.l10n_nl_oin:
             errors.append(_("The customer %s must have a KvK-nummer or OIN.", customer.display_name))
-        if customer.country_code not in COUNTRY_EAS:
-            errors.append(_("Customer's country must belong to the EAS (Electronic Address Scheme) code list."))
 
         if not invoice.partner_bank_id:
             errors.append(_("The supplier %s must have a bank account.", supplier.display_name))
@@ -141,3 +139,10 @@ class AccountEdiFormat(models.Model):
         if self.code == 'nlcius_1' and self._is_nlcius(filename, tree):
             return self._decode_bis3(tree, invoice)
         return super()._update_invoice_from_xml_tree(filename, tree, invoice)
+
+    def _is_required_for_invoice(self, invoice):
+        self.ensure_one()
+        if self.code != 'nlcius_1':
+            return super()._is_required_for_invoice(invoice)
+
+        return invoice.commercial_partner_id.country_code in COUNTRY_EAS
