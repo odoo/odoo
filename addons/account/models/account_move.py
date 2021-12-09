@@ -490,8 +490,6 @@ class AccountMove(models.Model):
             if new_currency != self.currency_id:
                 self.currency_id = new_currency
                 self._onchange_currency()
-        if self.state == 'draft' and self._get_last_sequence() and self.name and self.name != '/':
-            self.name = '/'
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
@@ -4128,10 +4126,6 @@ class AccountMoveLine(models.Model):
 
         return self.move_id.move_type in ('in_refund', 'out_refund')
 
-    # -------------------------------------------------------------------------
-    # ONCHANGE METHODS
-    # -------------------------------------------------------------------------
-
     @api.onchange('amount_currency', 'currency_id', 'debit', 'credit', 'tax_ids', 'account_id', 'price_unit', 'quantity')
     def _onchange_mark_recompute_taxes(self):
         ''' Recompute the dynamic onchange based on taxes.
@@ -4150,12 +4144,15 @@ class AccountMoveLine(models.Model):
             if not line.tax_repartition_line_id and any(tax.analytic for tax in line.tax_ids):
                 line.recompute_tax_line = True
 
-    @api.depends('product_id')
+    @api.depends('product_id', 'journal_id')
     def _compute_name(self):
         for line in self:
             if not line.product_id or line.display_type in ('line_section', 'line_note'):
                 continue
-            line.name = line._get_computed_name()
+            if line.state == 'draft' and line._get_last_sequence() and line.name and line.name != '/':
+                line.name = '/'
+            else:
+                line.name = line._get_computed_name()
 
     @api.depends('product_id')
     def _compute_account_id(self):
