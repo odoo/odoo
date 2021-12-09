@@ -189,17 +189,6 @@ registerModel({
         },
         /**
          * @private
-         * @returns {mail.partner[]}
-         */
-        _computeRingingThreads() {
-            if (!this.messaging) {
-                return;
-            }
-            const threads = this.messaging.models['mail.thread'].all().filter(thread => !!thread.rtcInvitingSession);
-            return replace(threads);
-        },
-        /**
-         * @private
          */
         _handleGlobalWindowFocus() {
             this.update({ outOfFocusUnreadMessageCounter: 0 });
