@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="knowledge_article_view_form" model="ir.ui.view">
+        <field name="name">knowledge.article.view.form</field>
+        <field name="model">knowledge.article</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="parent_id" domain="[('id', '!=', id)]"/>
+                            <field name="child_ids" domain="[('id', 'not in', [id, parent_id])]" context="{'search_default_parent_id':False}" widget="many2many" force_save="1">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="author_ids" widget="many2many_avatar_user"/>
+                                </tree>
+                            </field>
+                            <field name="sequence"/>
+                        </group>
+                        <group>
+                            <field name="author_ids" widget="many2many_avatar_user"/>
+                            <field name="article_member_ids">
+                                    <tree>
+                                        <field name="partner_id"/>
+                                        <field name="permission"/>
+                                    </tree>
+                            </field>
+                            <field name="internal_permission"/>
+                        </group>
+                    </group>
+                    <label for="body"/>
+                    <field name="body" widget="html" no_label="1" class="col col-lg w-100"/>
+                 </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="knowledge_article_view_dashboard" model="ir.ui.view">
+        <field name="name">knowledge.article.view.form</field>
+        <field name="model">knowledge.article</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form class="h-100" js_class="knowledge_view_form">
+                <field name="is_locked" invisible="1" readonly="1"/>
+                <field name="user_can_write" invisible="1"/>
+                <div class="container-fluid h-100">
+                    <div class="row h-100">
+                        <div class="col-sm-3 p-0 border-right overflow-auto">
+                            <div class="o_knowledge_aside d-flex flex-column h-100">
+                                <!-- Search bar -->
+                                <div class="p-3">
+                                    <input type="text" class="form-control" placeholder="Search an Article..." disabled="True"/>
+                                </div>
+                                <!-- File explorer -->
+                                <div class="flex-grow-1 position-relative">
+                                    <div class="o_scroll_view px-3">
+                                        <aside class="o_sidebar">
+                                            <i class="fa fa-refresh fa-spin" title="loader"/>
+                                        </aside>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-9 p-0 overflow-auto">
+                            <div class="d-flex flex-column h-100">
+                                <!-- Article header -->
+                                <div class="o_knowledge_header d-sm-flex flex-row justify-content-between">
+                                    <div class="d-flex align-items-center">
+                                        <!-- Breadcrumbs -->
+                                        <ol class="breadcrumb p-3" role="navigation">
+                                            <li class="breadcrumb-item d-flex">
+                                                <field attrs="{'readonly': ['|', ('is_locked', '=', True), ('user_can_write', '=', False)]}" class="o_breadcrumb_article_name" name="name"/>
+                                            </li>
+                                        </ol>
+                                        <!--TODO DBE: Make the user_favourite widget a button for allow user that don't have write access to set article as favourite-->
+                                        <field name="is_user_favourite" class="m-0 pr-2" widget="boolean_favorite" nolabel="1" force_save="1"/>
+                                        <div class="pr-2" attrs="{'invisible': ['|', ('is_locked', '=', False), ('user_can_write', '=', False)]}">
+                                            <i class="fa fa-lock" title="locked"/>
+                                        </div>
+                                    </div>
+                                    <!-- Buttons -->
+                                    <div class="d-flex flex-shrink-0 align-items-start">
+                                        <a type="button" role="button" class="btn btn-secondary btn-create">
+                                            <i class="fa fa-plus-circle"/> Create
+                                        </a>
+                                        <a type="button" role="button" class="btn btn-secondary btn-share">
+                                            <i class="fa fa-share-alt"/> Share
+                                        </a>
+                                        <div class="btn-group" role="toolbar" aria-label="options">
+                                            <div class="o-dropdown dropdown o-dropdown--no-caret">
+                                                <a type="button" role="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="fa fa-ellipsis-v"/>
+                                                </a>
+                                                <div class="o_knowledge_more_options_panel dropdown-menu" role="menu">
+                                                    <a class="dropdown-item btn-move" href="#" role="button">
+                                                        <i class="fa fa-angle-double-right"/> Move To
+                                                    </a>
+                                                    <button class="dropdown-item btn-lock" href="#" type="object" name="action_set_lock"
+                                                        attrs="{'invisible': ['|', ('is_locked', '=', True), ('user_can_write', '=', False)]}">
+                                                        <i class="fa fa-lock"/> Lock
+                                                    </button>
+                                                    <button class="dropdown-item btn-lock" href="#" type="object" name="action_set_unlock"
+                                                        attrs="{'invisible': ['|', ('is_locked', '=', False), ('user_can_write', '=', False)]}">
+                                                        <i class="fa fa-unlock"/> Unlock
+                                                    </button>
+                                                    <a class="dropdown-item btn-duplicate" href="#" role="button">
+                                                        <i class="fa fa-copy"/> Duplicate
+                                                    </a>
+                                                    <a class="dropdown-item btn-delete" href="#" role="button">
+                                                        <i class="fa fa-trash"/> Delete
+                                                    </a>
+                                                    <div class="dropdown-divider"
+                                                        attrs="{'invisible': ['&amp;', ('last_edition_id', '=', False), ('last_edition_date', '=', False)]}"/>
+                                                    <div class="d-flex flex-column px-3"
+                                                        attrs="{'invisible': [('last_edition_id', '=', False)]}">
+                                                        <label for="last_edition_id" class="font-weight-bold my-0"/>
+                                                        <field name="last_edition_id" widget="many2one_avatar_user" readonly="1"/>
+                                                    </div>
+                                                    <div class="d-flex flex-column px-3"
+                                                        attrs="{'invisible': [('last_edition_date', '=', False)]}">
+                                                        <label for="last_edition_date" class="font-weight-bold my-0"/>
+                                                        <field name="last_edition_date" widget="date" readonly="1"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1 position-relative">
+                                    <div class="o_scroll_view">
+                                        <!-- Article body -->
+                                        <div class="o_knowledge_editor d-flex">
+                                            <field name="body" widget="html" no_label="1" attrs="{'readonly': ['|', ('is_locked', '=', True), ('user_can_write', '=', False)]}"/>
+                                        </div>
+                                        <!-- Chatter -->
+                                        <div class="o_knowledge_chatter_container">
+                                            <div class="oe_chatter">
+                                                <field name="message_follower_ids" groups="base.group_user"/>
+                                                <field name="message_ids"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="knowledge_article_view_tree" model="ir.ui.view">
+        <field name="name">knowledge.article.view.tree</field>
+        <field name="model">knowledge.article</field>
+        <field name="arch" type="xml">
+            <tree default_order="is_user_favourite desc, favourite_count desc">
+                <field name="sequence"/>
+                <field name="name"/>
+                <field name="is_user_favourite" widget="boolean_favorite" nolabel="1" force_save="1" options="{'allow_order': '1'}"/>
+                <field name="favourite_count" invisible="1"/>
+                <field name="parent_id"/>
+                <field name="author_ids" widget="many2many_avatar_user" options="{'no_open_chat':True}"/>
+                <field name="last_edition_id" widget="many2one_avatar_user"/>
+                <field name="last_edition_date"/>
+
+                <field name="owner_id" widget="many2one_avatar_user" groups="base.group_system"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="knowledge_article_view_search" model="ir.ui.view">
+        <field name="name">knowledge.article.view.search</field>
+        <field name="model">knowledge.article</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="parent_id"/>
+                <field name="author_ids"/>
+                <field name="last_edition_id"/>
+
+                <filter name="favourites" string="My Favourites" domain="[('is_user_favourite', '=', True)]"/>
+                <filter name="own_articles" string="My Articles" domain="[('owner_id', '=', uid)]"/>
+                <filter name="shared_articles" string="My Shared Articles" domain="[('category', '=', 'shared')]"/>
+                <!--TODO FABA: Apply record rules to avoid users that are not in partner_ids to access the records in category 'shared'.
+                        + all the other record rules of course :)
+                -->
+
+                <group expand="0" string="Group By">
+                  <filter string="Authors" name="author_ids" domain="[]" context="{'group_by':'author_ids'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="knowledge_article_action">
+        <field name="name">Articles</field>
+        <field name="res_model">knowledge.article</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create an article
+            </p><p>
+                Be the first one to unleash the power of Knowledge !
+            </p>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="knowledge_article_dashboard_action">
+        <field name="name">Articles</field>
+        <field name="res_model">knowledge.article</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="knowledge.knowledge_article_view_dashboard"/>
+    </record>
+
+    <record id="action_home_page" model="ir.actions.server">
+        <field name="name">Articles</field>
+        <field name="model_id" ref="model_knowledge_article"/>
+        <field name="state">code</field>
+        <field name="code">action = model.action_home_page()</field>
+    </record>
+
+    <menuitem
+        id="knowledge_menu_root"
+        name="Knowledge"
+        web_icon="knowledge,static/description/icon.png"
+        sequence="17"/>
+
+    <menuitem
+        id="knowledge_menu_home"
+        name="Home"
+        parent="knowledge_menu_root"
+        action="knowledge.action_home_page"
+        sequence="1"/>
+
+    <menuitem
+        id="knowledge_menu_article"
+        name="Search"
+        parent="knowledge_menu_root"
+        action="knowledge.knowledge_article_action"
+        sequence="2"/>
+</odoo>

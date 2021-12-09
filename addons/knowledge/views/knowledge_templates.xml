@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <!-- Article Tree layout -->
+    <template id="knowledge_article_tree_template" name="Article Tree">
+        <section>
+            <div class="h4 mb-0">Favourites</div>
+            <ul t-if="favourites" class="o_tree_favourite m-0 px-0 py-2">
+                <li t-if="favourite.user_has_access" t-foreach="favourites" t-as="favourite" t-att-data-article-id="favourite.id">
+                    <div class="d-flex">
+                        <button class="o_article_icon btn btn-link text-secondary p-0" type="button">
+                            <i t-attf-class="fa fa-fw #{favourite.icon}"/>
+                        </button>
+                        <div class="o_article_name flex-grow-1 text-truncate">
+                            <t t-out="favourite.name"/>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <div t-else="" class="px-0 py-2 font-italic">
+                No favourite yet
+            </div>
+        </section>
+
+        <section>
+            <div class="h4 mb-0">Workspace</div>
+            <ul class="o_tree o_tree_workspace m-0 px-0 py-2">
+                <t t-foreach="public_articles.sorted('sequence')" t-as="child">
+                    <t t-if="child.user_has_access" t-call="knowledge.article_template">
+                        <t t-set="article" t-value="child"/>
+                    </t>
+                </t>
+            </ul>
+        </section>
+
+        <section t-if="shared_articles">
+            <div class="h4 mb-0">Shared</div>
+            <ul class="o_tree o_tree_workspace m-0 px-0 py-2">
+                <t t-foreach="shared_articles.sorted('sequence')" t-as="child">
+                    <t t-if="child.user_has_access" t-call="knowledge.article_template">
+                        <t t-set="article" t-value="child"/>
+                    </t>
+                </t>
+            </ul>
+        </section>
+
+        <section>
+            <div class="h4 mb-0">Private</div>
+            <ul class="o_tree o_tree_private m-0 px-0 py-2">
+                <t t-foreach="private_articles.sorted('sequence')" t-as="child">
+                    <t t-if="child.user_has_access" t-call="knowledge.article_template">
+                        <t t-set="article" t-value="child"/>
+                    </t>
+                </t>
+            </ul>
+        </section>
+    </template>
+
+    <template id="article_template">
+        <li t-attf-id="article_#{article.id}" t-att-data-article-id="article.id">
+            <div class="o_article d-flex">
+                <button class="o_article_caret btn btn-link text-secondary p-0" type="button">
+                    <i class="fa fa-fw fa-caret-down align-self-center"/>
+                </button>
+                <div class="btn-group dropdown">
+                    <button class="o_article_icon btn btn-link text-secondary p-0" type="button" t-attf-id="o_article_dropdown_#{article.id}" data-toggle="dropdown" aria-expanded="true">
+                        <i t-attf-class="fa fa-fw #{article.icon}"/>
+                    </button>
+                    <div class="o_article_dropdown dropdown-menu p-0" role="menu" t-attf-aria-labelledby="o_article_dropdown_#{article.id}">
+                        <i class="fa fa-fw fa-file" data-icon-name="fa-file"/>
+                        <i class="fa fa-fw fa-book" data-icon-name="fa-book"/>
+                        <i class="fa fa-fw fa-user" data-icon-name="fa-user"/>
+                        <i class="fa fa-fw fa-address-book" data-icon-name="fa-address-book"/>
+                        <i class="fa fa-fw fa-calendar" data-icon-name="fa-calendar"/>
+                        <i class="fa fa-fw fa-code" data-icon-name="fa-code"/>
+                        <i class="fa fa-fw fa-car" data-icon-name="fa-car"/>
+                        <i class="fa fa-fw fa-comment" data-icon-name="fa-comment"/>
+                        <i class="fa fa-fw fa-bullhorn" data-icon-name="fa-bullhorn"/>
+                    </div>
+                </div>
+                <div class="o_article_name flex-grow-1 text-truncate">
+                    <t t-out="article.name"/>
+                </div>
+                <button class="o_article_create btn btn-link text-secondary p-0" type="button">
+                    <i class="fa fa-fw fa-plus"/>
+                </button>
+            </div>
+            <ul t-if="article.child_ids">
+                <t t-foreach="article.child_ids.sorted('sequence')" t-as="child">
+                    <t t-call="knowledge.article_template">
+                        <t t-set="article" t-value="child"/>
+                    </t>
+                </t>
+            </ul>
+        </li>
+    </template>
+</data>
+</odoo>

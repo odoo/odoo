@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="knowledge.knowledge_move_article_to_modal">
+        <form class="container">
+            <div class="form-group">
+                <input class="form-control" type="hidden" placeholder="Search an Article to use as Parent"/>
+            </div>
+        </form>
+    </t>
+    <t t-name="knowledge.knowledge_share_an_article_modal">
+        <form class="container">
+            <div class="form-group">
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" class="custom-control-input" id="published"/>
+                    <label class="custom-control-label" for="published">
+                        Published
+                    </label>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="link" class="col-sm-2 col-form-label">
+                    Link
+                </label>
+                <div class="col-sm-10">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="www.mycompany.odoo.com/share/f09b14"/>
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="button">
+                                <i class="fa fa-copy"/>Copy
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="link" class="col-sm-2 col-form-label">
+                    Recipients
+                </label>
+                <div class="col-sm-10">
+                    <!-- TODO -->
+                </div>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="notify"/>
+                <label class="form-check-label" for="notify">
+                    Notify Recipients
+                </label>
+            </div>
+            <div class="form-group">
+                <textarea class="form-control" placeholder="Write a Message..."/>
+            </div>
+        </form>
+    </t>
+    <t t-name="knowledge.knowledge_article_template">
+        <li t-attf-id="article_#{article.id}" t-att-data-article-id="article.id">
+            <div class="o_article d-flex">
+                <button class="o_article_caret btn btn-link text-secondary p-0" type="button">
+                    <i class="fa fa-fw fa-caret-down align-self-center"/>
+                </button>
+                <div class="btn-group dropdown">
+                    <button class="o_article_icon btn btn-link text-secondary p-0" type="button" t-attf-id="o_article_dropdown_#{article.id}" data-toggle="dropdown" aria-expanded="true">
+                        <i t-attf-class="fa fa-fw #{article.icon}"/>
+                    </button>
+                    <div class="o_article_dropdown dropdown-menu p-0" role="menu" t-attf-aria-labelledby="o_article_dropdown_#{article.id}">
+                        <i class="fa fa-fw fa-file" data-icon-name="fa-file"/>
+                        <i class="fa fa-fw fa-book" data-icon-name="fa-book"/>
+                        <i class="fa fa-fw fa-user" data-icon-name="fa-user"/>
+                        <i class="fa fa-fw fa-address-book" data-icon-name="fa-address-book"/>
+                        <i class="fa fa-fw fa-calendar" data-icon-name="fa-calendar"/>
+                        <i class="fa fa-fw fa-code" data-icon-name="fa-code"/>
+                        <i class="fa fa-fw fa-car" data-icon-name="fa-car"/>
+                        <i class="fa fa-fw fa-comment" data-icon-name="fa-comment"/>
+                        <i class="fa fa-fw fa-bullhorn" data-icon-name="fa-bullhorn"/>
+                    </div>
+                </div>
+                <div class="o_article_name flex-grow-1 text-truncate">
+                    <t t-out="article.name"/>
+                </div>
+                <button class="o_article_create btn btn-link text-secondary p-0" type="button">
+                    <i class="fa fa-fw fa-plus"/>
+                </button>
+            </div>
+        </li>
+    </t>
+</templates>

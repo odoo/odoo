@@ -1,0 +1,105 @@
+.o_knowledge_form_view {
+    .o_knowledge_header,
+    .o_knowledge_aside,
+    .o_knowledge_editor {
+        background: white;
+    }
+
+    .o_knowledge_editor {
+        min-height: 100%;
+        .o_readonly {
+            padding: 5px 10px;
+        }
+        .o_wysiwyg_wrapper {
+            margin: 0 !important;
+        }
+        .o_wysiwyg_resizer {
+            display: none;
+        }
+        .oe_form_field,
+        .odoo-editor {
+            display: flex;
+            flex-direction: column;
+        }
+        .oe_form_field,
+        .odoo-editor,
+        .note-editable {
+            flex-grow: 1;
+        }
+        .note-editable {
+            border: none;
+            height: auto !important;
+        }
+    }
+
+    aside {
+        ul {
+            padding-left: 15px; /* indentation space */
+        }
+        li {
+            list-style-type: none;
+            & > ul {
+                border-left: 2px solid #eee;
+            }
+        }
+        .o_article {
+            &:not(:hover) .o_article_create {
+                visibility: hidden;
+            }
+        }
+        .o_article_name,
+        .o_article_dropdown i {
+            cursor: pointer;
+        }
+        .o_placeholder {
+            background-color: #eee;
+        }
+    }
+
+    .o_knowledge_chatter_container {
+        border-top: 1px solid $o-gray-300;
+        li.nav-item {
+            display: none;
+        }
+        .o_FormRenderer_chatterContainer {
+            max-width: unset;
+            &.o-aside {
+                width: auto;
+                padding: 1rem;
+                border-left: 0px;
+            }
+        }
+    }
+
+    .dropdown-menu.o_knowledge_more_options_panel {
+        min-width: 225px;
+        width: 225px;
+        .o_m2o_avatar span {
+            overflow-wrap: break-word;
+        }
+    }
+}
+
+// Media queries:
+
+@include media-breakpoint-up(sm) {
+    .o_knowledge_form_view {
+        .o_scroll_view {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+    }
+}
+
+@media print {
+    .o_knowledge_header,
+    .o_knowledge_aside,
+    .o_knowledge_resizer {
+        display: none !important;
+    }
+}
