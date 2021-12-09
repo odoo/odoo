@@ -242,6 +242,8 @@ class ResPartnerBank(models.Model):
                 'quiet': 1,
                 'mask': 'ch_cross',
                 'value': '\n'.join(self._get_qr_vals(qr_method, amount, currency, debtor_partner, free_communication, structured_communication)),
+                # Swiss QR code requires Error Correction Level = 'M' by specification
+                'barLevel': 'M',
             }
         return super()._get_qr_code_generation_params(qr_method, amount, currency, debtor_partner, free_communication, structured_communication)
 
