@@ -1970,9 +1970,10 @@ class ReportController(http.Controller):
     # Misc. route utils
     #------------------------------------------------------
     @http.route(['/report/barcode', '/report/barcode/<type>/<path:value>'], type='http', auth="public")
-    def report_barcode(self, type, value, width=600, height=100, humanreadable=0, quiet=1, mask=None):
+    def report_barcode(self, type, value, **kwargs):
         """Contoller able to render barcode images thanks to reportlab.
-        Samples:
+        Samples::
+
             <img t-att-src="'/report/barcode/QR/%s' % o.name"/>
             <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' %
                 ('QR', o.name, 200, 200)"/>
@@ -1980,6 +1981,8 @@ class ReportController(http.Controller):
         :param type: Accepted types: 'Codabar', 'Code11', 'Code128', 'EAN13', 'EAN8', 'Extended39',
         'Extended93', 'FIM', 'I2of5', 'MSI', 'POSTNET', 'QR', 'Standard39', 'Standard93',
         'UPCA', 'USPS_4State'
+        :param width: Pixel width of the barcode
+        :param height: Pixel height of the barcode
         :param humanreadable: Accepted values: 0 (default) or 1. 1 will insert the readable value
         at the bottom of the output image
         :param quiet: Accepted values: 0 (default) or 1. 1 will display white
@@ -1987,10 +1990,11 @@ class ReportController(http.Controller):
         :param mask: The mask code to be used when rendering this QR-code.
                      Masks allow adding elements on top of the generated image,
                      such as the Swiss cross in the center of QR-bill codes.
+        :param barLevel: QR code Error Correction Levels. Default is 'L'.
+        ref: https://hg.reportlab.com/hg-public/reportlab/file/830157489e00/src/reportlab/graphics/barcode/qr.py#l101
         """
         try:
-            barcode = request.env['ir.actions.report'].barcode(type, value, width=width,
-                height=height, humanreadable=humanreadable, quiet=quiet, mask=mask)
+            barcode = request.env['ir.actions.report'].barcode(type, value, **kwargs)
         except (ValueError, AttributeError):
             raise werkzeug.exceptions.HTTPException(description='Cannot convert into barcode.')
 
