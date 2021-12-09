@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <!-- Article Tree layout -->
+    <template id="knowledge_article_tree_template" name="Article Tree">
+        <div>Favourites</div>
+        <ul t-if="favourites">
+            <li t-foreach="favourites" t-as="favourite">
+                <span t-out="favourite.name"/>
+            </li>
+        </ul>
+        <span t-else="">No favourite yet</span>
+
+        <div>Workspace</div>
+        <ul>
+            <t t-foreach="public_articles.sorted('sequence')" t-as="child">
+                <t t-call="knowledge.article_template">
+                    <t t-set="article" t-value="child"/>
+                </t>
+            </t>
+        </ul>
+
+        <div t-if="private_articles">Private</div>
+        <ul>
+            <t t-foreach="private_articles.sorted('sequence')" t-as="child">
+                <t t-call="knowledge.article_template">
+                    <t t-set="article" t-value="child"/>
+                </t>
+            </t>
+        </ul>
+    </template>
+
+    <template id="article_template">
+        <li t-if="article.child_ids">
+            <span t-out="article.name"/>
+            <ul>
+                <t t-foreach="article.child_ids.sorted('sequence')" t-as="child">
+                    <t t-call="knowledge.article_template">
+                        <t t-set="article" t-value="child"/>
+                    </t>
+                </t>
+            </ul>
+        </li>
+        <li t-else="" t-out="article.name"/>
+    </template>
+</data>
+</odoo>

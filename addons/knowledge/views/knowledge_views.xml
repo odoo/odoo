@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="knowledge_article_view_form" model="ir.ui.view">
+        <field name="name">knowledge.article.view.form</field>
+        <field name="model">knowledge.article</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="parent_id" domain="[('id', '!=', id)]"/>
+                            <field name="child_ids" domain="[('id', 'not in', [id, parent_id])]" context="{'search_default_parent_id':False}" widget="many2many" force_save="1">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="author_ids" widget="many2many_avatar_user"/>
+                                </tree>
+                            </field>
+                            <field name="sequence"/>
+                        </group>
+                        <group>
+                            <field name="author_ids" widget="many2many_avatar_user"/>
+                        </group>
+                    </group>
+                    <label for="body"/>
+                    <field name="body" widget="html" no_label="1" class="col col-lg w-100"/>
+                 </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="knowledge_article_view_tree" model="ir.ui.view">
+        <field name="name">knowledge.article.view.tree</field>
+        <field name="model">knowledge.article</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence"/>
+                <field name="name"/>
+                <field name="is_user_favourite" widget="boolean_favorite" nolabel="1" force_save="1"/>
+                <field name="parent_id"/>
+                <field name="level"/>
+                <field name="author_ids" widget="many2many_avatar_user" options="{'no_open_chat':True}"/>
+                <field name="last_edition_id" widget="many2one_avatar_user"/>
+                <field name="last_edition_date"/>
+
+                <field name="website_published" widget="boolean_toggle" attrs="{'invisible': [('parent_id', '!=', False)]}"/>
+                <field name="owner_id" widget="many2one_avatar_user" groups="base.group_system"/>
+                <field name="is_private" widget="boolean_toggle" attrs="{'invisible': [('parent_id', '!=', False)]}"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="knowledge_article_view_search" model="ir.ui.view">
+        <field name="name">knowledge.article.view.search</field>
+        <field name="model">knowledge.article</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="parent_id"/>
+                <field name="author_ids"/>
+                <field name="last_edition_id"/>
+                <field name="owner_id"/>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="knowledge_article_action">
+        <field name="name">Articles</field>
+        <field name="res_model">knowledge.article</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create an article
+            </p><p>
+                Be the first one to unleash the power of Knowledge !
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+        id="knowledge_menu_root"
+        name="Knowledge"
+        web_icon="knowledge,static/description/icon.png"
+        sequence="2"/>
+
+    <menuitem
+        id="knowledge_menu_article"
+        name="Articles"
+        parent="knowledge_menu_root"
+        action="knowledge.knowledge_article_action"
+        sequence="1"/>
+
+
+
+</odoo>
