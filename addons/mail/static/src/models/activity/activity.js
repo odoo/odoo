@@ -146,11 +146,18 @@ function factory(dependencies) {
         }
 
         async fetchAndUpdate() {
-            const [data] = await this.async(() => this.env.services.rpc({
+            const [data] = await this.env.services.rpc({
                 model: 'mail.activity',
                 method: 'activity_format',
                 args: [this.id],
-            }, { shadow: true }));
+            }, { shadow: true }).catch(e => {
+                const errorName = e.message && e.message.data && e.message.data.name;
+                if (errorName === 'odoo.exceptions.MissingError') {
+                    return [];
+                } else {
+                    throw e;
+                }
+            });
             let shouldDelete = false;
             if (data) {
                 this.update(this.constructor.convertData(data));
