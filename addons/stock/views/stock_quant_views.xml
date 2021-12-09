@@ -9,6 +9,7 @@
             <search string="Quants">
                 <field name="product_id"/>
                 <field name="location_id"/>
+                <field name="storage_category_id" groups="stock.group_stock_storage_categories" />
                 <field name="user_id"/>
                 <field name="inventory_date"/>
                 <field name="product_categ_id"/>
@@ -22,6 +23,7 @@
                     <filter name="on_hand" string="On Hand" domain="[('on_hand', '=', True)]"/>
                     <filter name="to_count" string="To Count" domain="[('inventory_date', '&lt;=', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter name="to_apply" string="To Apply" domain="[('inventory_quantity_set', '=', True)]"/>
+                    <filter name="priority_products" string="Starred Products" domain="[('priority', '=', 1)]"/>
                     <separator/>
                     <filter name="negative" string="Negative Stock" domain="[('quantity', '&lt;', 0.0)]"/>
                     <filter name="reserved" string="Reservations" domain="[('reserved_quantity', '&gt;', 0.0)]"/>
@@ -33,6 +35,7 @@
                 <group expand='0' string='Group by...'>
                     <filter string='Product' name="productgroup" context="{'group_by': 'product_id'}"/>
                     <filter string='Location' name="locationgroup" domain="[]" context="{'group_by': 'location_id'}"/>
+                    <filter string='Storage Category' name="storagecategorygroup" domain="[]" context="{'group_by': 'storage_category_id'}"/>
                     <filter string='Owner' name="owner" context="{'group_by': 'owner_id'}" groups="stock.group_tracking_owner"/>
                     <filter string='Lot/Serial Number' name="Lot_Serial_number" context="{'group_by': 'lot_id'}" groups="stock.group_production_lot"/>
                     <filter string='Package' name="package" domain="[]" context="{'group_by': 'package_id'}" groups="stock.group_tracking_lot"/>
@@ -298,6 +301,20 @@
         </field>
     </record>
 
+    <record id="duplicated_sn_warning" model="ir.ui.view">
+        <field name="name">stock.quant.duplicated.sn.warning</field>
+        <field name="priority">1000</field>
+        <field name="model">stock.quant</field>
+        <field name="arch" type="xml">
+            <form string="Duplicated SN Warning">
+                This SN is already in another location.
+                <footer>
+                    <button string="Close" class="btn btn-primary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
     <!-- Inventory Adjustments view -->
     <record model="ir.ui.view" id="view_stock_quant_tree_inventory_editable">
         <field name="name">stock.quant.inventory.tree.editable</field>
@@ -312,19 +329,27 @@
                 </header>
                 <field name="id" invisible="1"/>
                 <field name="is_outdated" invisible="1"/>
+                <field name="sn_duplicated" invisible="1"/>
                 <field name="tracking" invisible="1"/>
                 <field name="inventory_quantity_set" invisible="1"/>
                 <field name="location_id" domain="[('usage', 'in', ['internal', 'transit'])]" attrs="{'readonly': [('id', '!=', False)]}" invisible="context.get('hide_location', False)" options="{'no_create': True}"/>
+                <field name="storage_category_id" groups="stock.group_stock_storage_categories" invisible="context.get('hide_location', False)" options="{'no_create': True}" optional="hidden"/>
+                <field name="cyclic_inventory_frequency" invisible="context.get('hide_location', False)" options="{'no_create': True}" optional="hidden"/>
+                <field name="priority" widget="priority" nolabel="1" optional="hidden"/>
                 <field name="product_id" attrs="{'readonly': [('id', '!=', False)]}" readonly="context.get('single_product', False)" force_save="1" options="{'no_create': True}"/>
                 <field name="product_categ_id" optional="hide"/>
+                <button name="action_warning_duplicated_sn" type="object" attrs="{'invisible': [('sn_duplicated', '=', False)]}" title="This lot/serial number is already in another location" class="btn btn-secondary text-warning pull-right" icon="fa-warning"/>
                 <field name="lot_id" groups="stock.group_production_lot"
-                    attrs="{'readonly': ['|', ('id', '!=', False), ('tracking', 'not in', ['serial', 'lot'])]}"
+                    attrs="{'readonly': ['|', ('tracking', 'not in', ['serial', 'lot']), '&amp;', ('id', '!=', False), '|', ('lot_id', '!=', False), ('quantity', '!=', 0)]}"
                     invisible="context.get('hide_lot', False)"
-                    context="{'default_product_id': product_id, 'default_company_id': company_id}"/>
+                    context="{'default_product_id': product_id, 'default_company_id': company_id}"
+                    decoration-warning="sn_duplicated"
+                    force_save="1"/>
                 <field name="package_id" groups="stock.group_tracking_lot" attrs="{'readonly': [('id', '!=', False)]}"/>
                 <field name="owner_id" groups="stock.group_tracking_owner" attrs="{'readonly': [('id', '!=', False)]}" options="{'no_create': True}"/>
+                <field name="last_count_date" optional='hidden' readonly='1'/>
                 <field name="available_quantity" string="Available Quantity" decoration-danger="available_quantity &lt; 0" optional="hidden"/>
-                <field name="quantity" optional="show" string="On Hand Quantity"/>
+                <field name="quantity" optional="show" decoration-warning="quantity &lt; 0" string="On Hand Quantity"/>
                 <field name="product_uom_id" groups="uom.group_uom" string="UoM"/>
                 <field name="inventory_quantity" widget="counted_quantity_widget"/>
                 <field name="inventory_diff_quantity" string="Difference"  attrs="{'invisible': [('inventory_quantity_set', '=', False)]}" decoration-muted="inventory_diff_quantity == 0" decoration-danger="inventory_diff_quantity &lt; 0" decoration-success="inventory_diff_quantity &gt; 0" decoration-bf="inventory_diff_quantity != 0"/>
