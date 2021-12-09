@@ -135,6 +135,7 @@
         ],
         'web.assets_qweb': [
             'stock/static/src/xml/inventory_report.xml',
+            'stock/static/src/xml/inventory_adjustments.xml',
             'stock/static/src/xml/inventory_lines.xml',
             'stock/static/src/xml/popover_widget.xml',
             'stock/static/src/xml/forecast_widget.xml',

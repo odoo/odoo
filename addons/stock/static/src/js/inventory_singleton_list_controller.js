@@ -22,6 +22,30 @@ var _t = core._t;
 
 var SingletonListController = InventoryReportListController.extend({
 
+
+    init: function (parent, model, renderer, params) {
+        this.context = renderer.state.getContext();
+        return this._super(...arguments);
+    },
+
+    willStart() {
+        const sup = this._super(...arguments);
+        const acl = this.getSession().user_has_group('stock.group_stock_manager').then(hasGroup => {
+            if (hasGroup) {
+                this.buttons_template = 'StockInventoryAdjustments.Buttons';
+            }
+        });
+        return Promise.all([sup, acl]);
+    },
+
+    /**
+     * @override
+     */
+    renderButtons: function ($node) {
+        this._super(...arguments);
+        this.$buttons.on('click', '.o_button_apply_all', this._onApplyAll.bind(this));
+    },
+
     // -------------------------------------------------------------------------
     // Private
     // -------------------------------------------------------------------------
@@ -94,6 +118,16 @@ var SingletonListController = InventoryReportListController.extend({
         }).then(function () {
             self._enableButtons();
         }).guardedCatch(this._enableButtons.bind(this));
+    },
+
+    _onApplyAll: function () {
+        this.do_action('stock.action_stock_inventory_adjustement_name', {
+            additional_context: {
+                'active_model': 'ir.ui.view',
+                'active_ids': this.renderer.state.data.map(el => el['res_id']),
+            },
+            on_close: this.reload,
+        });
     },
 });
 
