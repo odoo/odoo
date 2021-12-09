@@ -885,9 +885,9 @@ $o-filter_colors: lighten(#000, 46.7%), #F06050, #F4A460, #F7CD1F, #6CC1ED, #814
             }
 
             &:not(.o_calendar_hatched):not(.o_calendar_striked){
-                background: $color;
+                background: scale-color($color, $lightness: 50%);
                 .fc-bg {
-                    background: mix($color, white);
+                    background: scale-color($color, $lightness: 50%);
                 }
             }
 
