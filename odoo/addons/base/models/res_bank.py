@@ -83,11 +83,13 @@ class ResPartnerBank(models.Model):
     bank_bic = fields.Char(related='bank_id.bic', readonly=False)
     sequence = fields.Integer(default=10)
     currency_id = fields.Many2one('res.currency', string='Currency')
-    company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company, ondelete='cascade', readonly=True)
+    company_id = fields.Many2one('res.company', 'Company', related='partner_id.company_id', store=True, readonly=True)
 
-    _sql_constraints = [
-        ('unique_number', 'unique(sanitized_acc_number, company_id)', 'Account Number must be unique'),
-    ]
+    _sql_constraints = [(
+        'unique_number',
+        'unique(sanitized_acc_number, partner_id)',
+        'The combination Account Number/Partner must be unique.'
+    )]
 
     @api.depends('acc_number')
     def _compute_sanitized_acc_number(self):
