@@ -1,7 +1,8 @@
 # coding: utf-8
-from odoo.tests import common
+from odoo.tests import common, tagged
 
 
+@tagged('-at_install', 'post_install')
 class TestTheme(common.TransactionCase):
 
     def test_theme_remove_working(self):
