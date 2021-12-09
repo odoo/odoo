@@ -2,8 +2,16 @@
 
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { registry } from "@web/core/registry";
+import { Many2OneField } from "@web/fields/many2one_field";
 import { makeFakeLocalizationService, makeFakeUserService } from "../helpers/mock_services";
-import { click, makeDeferred, nextTick, triggerEvent, triggerEvents } from "../helpers/utils";
+import {
+    click,
+    makeDeferred,
+    nextTick,
+    patchWithCleanup,
+    triggerEvent,
+    triggerEvents,
+} from "../helpers/utils";
 import {
     setupControlPanelFavoriteMenuRegistry,
     setupControlPanelServiceRegistry,
@@ -212,6 +220,10 @@ QUnit.module("Fields", (hooks) => {
         setupControlPanelServiceRegistry();
         serviceRegistry.add("dialog", dialogService);
         serviceRegistry.add("user", makeFakeUserService(hasGroup), { force: true });
+
+        patchWithCleanup(Many2OneField, {
+            AUTOCOMPLETE_DELAY: 0,
+        });
     });
 
     QUnit.module("Many2oneField");
@@ -880,135 +892,126 @@ QUnit.module("Fields", (hooks) => {
         list.destroy();
     });
 
-    QUnit.skip('many2one fields with option "no_open"', async function (assert) {
+    QUnit.test('many2one fields with option "no_open"', async function (assert) {
         assert.expect(3);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                "<group>" +
-                '<field name="trululu" options="{&quot;no_open&quot;: True}" />' +
-                "</group>" +
-                "</sheet>" +
-                "</form>",
-            res_id: 1,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="trululu" options="{'no_open': 1}" />
+                        </group>
+                    </sheet>
+                </form>
+            `,
         });
 
         assert.containsOnce(
             form,
-            "span.o_field_widget[name=trululu]",
+            "span.o_field_widget[name='trululu']",
             "should be displayed inside a span (sanity check)"
         );
         assert.containsNone(form, "span.o_form_uri", "should not have an anchor");
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el, ".o_form_button_edit");
         assert.containsNone(
             form,
-            ".o_field_widget[name=trululu] .o_external_button",
+            ".o_field_widget[name='trululu'] .o_external_button",
             "should not have the button to open the record"
         );
-
-        form.destroy();
     });
 
-    QUnit.skip("empty many2one field", async function (assert) {
+    QUnit.test("empty many2one field", async function (assert) {
         assert.expect(4);
 
-        const form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch: `<form string="Partners">
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form string="Partners">
                     <sheet>
                         <group>
-                            <field name="trululu"/>
+                            <field name="trululu" />
                         </group>
                     </sheet>
-                </form>`,
-            viewOptions: {
-                mode: "edit",
-            },
+                </form>
+            `,
         });
 
-        const $dropdown = form.$(".o_field_many2one input").autocomplete("widget");
-        await testUtils.fields.many2one.clickOpenDropdown("trululu");
+        await click(form.el, ".o_field_many2one input");
         assert.containsNone(
-            $dropdown,
-            "li.o_m2o_dropdown_option",
+            document.body,
+            ".dropdown-menu li.o_m2o_dropdown_option",
             "autocomplete should not contains dropdown options"
         );
         assert.containsOnce(
-            $dropdown,
-            "li.o_m2o_start_typing",
+            document.body,
+            ".dropdown-menu li.o_m2o_start_typing",
             "autocomplete should contains start typing option"
         );
 
-        await testUtils.fields.editAndTrigger(
-            form.$('.o_field_many2one[name="trululu"] input'),
-            "abc",
-            "keydown"
-        );
-        await testUtils.nextTick();
+        const input = form.el.querySelector(".o_field_many2one[name='trululu'] input");
+        input.value = "abc";
+        await triggerEvents(input, null, ["input", "change"]);
+
         assert.containsN(
-            $dropdown,
-            "li.o_m2o_dropdown_option",
+            document.body,
+            ".dropdown-menu li.o_m2o_dropdown_option",
             2,
             "autocomplete should contains 2 dropdown options"
         );
         assert.containsNone(
-            $dropdown,
-            "li.o_m2o_start_typing",
+            document.body,
+            ".dropdown-menu li.o_m2o_start_typing",
             "autocomplete should not contains start typing option"
         );
-
-        form.destroy();
     });
 
-    QUnit.skip("empty many2one field with node options", async function (assert) {
+    QUnit.test("empty many2one field with node options", async function (assert) {
         assert.expect(2);
 
-        const form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch: `<form string="Partners">
-                <sheet>
-                    <group>
-                        <field name="trululu" options="{'no_create_edit': 1}"/>
-                        <field name="product_id" options="{'no_create_edit': 1, 'no_quick_create': 1}"/>
-                    </group>
-                </sheet>
-            </form>`,
-            viewOptions: {
-                mode: "edit",
-            },
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form string="Partners">
+                    <sheet>
+                        <group>
+                            <field name="trululu" options="{'no_create_edit': 1}" />
+                            <field name="product_id" options="{'no_create_edit': 1, 'no_quick_create': 1}" />
+                        </group>
+                    </sheet>
+                </form>
+            `,
         });
 
-        const $dropdownTrululu = form
-            .$('.o_field_many2one[name="trululu"] input')
+        const $dropdownTrululu = $(form.el)
+            .find(".o_field_many2one[name='trululu'] input")
             .autocomplete("widget");
-        const $dropdownProduct = form
-            .$('.o_field_many2one[name="product_id"] input')
+        const $dropdownProduct = $(form.el)
+            .find(".o_field_many2one[name='product_id'] input")
             .autocomplete("widget");
-        await testUtils.fields.many2one.clickOpenDropdown("trululu");
+
+        await click(form.el, ".o_field_many2one[name='trululu'] input");
         assert.containsOnce(
             $dropdownTrululu,
             "li.o_m2o_start_typing",
             "autocomplete should contains start typing option"
         );
 
-        await testUtils.fields.many2one.clickOpenDropdown("product_id");
+        await click(form.el, ".o_field_many2one[name='product_id'] input");
         assert.containsNone(
             $dropdownProduct,
             "li.o_m2o_start_typing",
             "autocomplete should contains start typing option"
         );
-
-        form.destroy();
     });
 
     QUnit.skip("many2one in edit mode", async function (assert) {
@@ -1138,33 +1141,43 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("many2one in non edit mode", async function (assert) {
+    QUnit.test("many2one in non edit mode", async function (assert) {
         assert.expect(3);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch: '<form string="Partners">' + '<field name="trululu"/>' + "</form>",
-            res_id: 1,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="trululu" />
+                </form>
+            `,
         });
 
-        assert.containsOnce(form, "a.o_form_uri", "should display 1 m2o link in form");
+        assert.containsOnce(form.el, "a.o_form_uri", "should display 1 m2o link in form");
         assert.hasAttrValue(
-            form.$("a.o_form_uri"),
+            form.el.querySelector("a.o_form_uri"),
             "href",
             "#id=4&model=partner",
             "href should contain id and model"
         );
 
         // Remove value from many2one and then save, there should not have href with id and model on m2o anchor
-        await testUtils.form.clickEdit(form);
-        form.$(".o_field_many2one input").val("").trigger("keyup").trigger("focusout");
-        await testUtils.form.clickSave(form);
+        await click(form.el, ".o_form_button_edit");
 
-        assert.hasAttrValue(form.$("a.o_form_uri"), "href", "#", "href should have #");
+        const input = form.el.querySelector(".o_field_many2one input");
+        input.value = "";
+        await triggerEvent(input, null, "change");
 
-        form.destroy();
+        await click(form.el, ".o_form_button_save");
+        assert.hasAttrValue(
+            form.el.querySelector("a.o_form_uri"),
+            "href",
+            "#",
+            "href should have #"
+        );
     });
 
     QUnit.skip("many2one with co-model whose name field is a many2one", async function (assert) {
@@ -1200,55 +1213,50 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("many2one searches with correct value", async function (assert) {
+    QUnit.test("many2one searches with correct value", async function (assert) {
         assert.expect(6);
 
-        var M2O_DELAY = relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY;
-        relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = 0;
-
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                '<field name="trululu"/>' +
-                "</sheet>" +
-                "</form>",
-            res_id: 1,
-            mockRPC: function (route, args) {
-                if (args.method === "name_search") {
-                    assert.step("search: " + args.kwargs.name);
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <field name="trululu" />
+                    </sheet>
+                </form>
+            `,
+            mockRPC(route, { method, kwargs }) {
+                if (method === "name_search") {
+                    assert.step(`search: ${kwargs.name}`);
                 }
-                return this._super.apply(this, arguments);
-            },
-            viewOptions: {
-                mode: "edit",
             },
         });
+        await click(form.el, ".o_form_button_edit");
 
         assert.strictEqual(
-            form.$(".o_field_many2one input").val(),
+            form.el.querySelector(".o_field_many2one input").value,
             "aaa",
             "should be initially set to 'aaa'"
         );
 
-        await testUtils.dom.click(form.$(".o_field_many2one input"));
+        const input = form.el.querySelector(".o_field_many2one input");
+        await click(input);
+
         // unset the many2one -> should search again with ''
-        form.$(".o_field_many2one input").val("").trigger("keydown");
-        await testUtils.nextTick();
-        form.$(".o_field_many2one input").val("p").trigger("keydown").trigger("keyup");
-        await testUtils.nextTick();
+        input.value = "";
+        await triggerEvents(input, null, ["input", "change"]);
+
+        input.value = "p";
+        await triggerEvents(input, null, ["input", "change"]);
 
         // close and re-open the dropdown -> should search with 'p' again
-        await testUtils.dom.click(form.$(".o_field_many2one input"));
-        await testUtils.dom.click(form.$(".o_field_many2one input"));
+        await click(input);
+        await click(input);
 
         assert.verifySteps(["search: ", "search: ", "search: p", "search: p"]);
-
-        relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;
-        form.destroy();
     });
 
     QUnit.skip("many2one search with trailing and leading spaces", async function (assert) {

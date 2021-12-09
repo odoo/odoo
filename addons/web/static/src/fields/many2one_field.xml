@@ -3,22 +3,51 @@
 
     <t t-name="web.Many2OneField" owl="1">
         <t t-if="props.readonly">
-            <t t-if="props.options.no_open">
+            <t t-if="noOpen">
                 <span t-esc="displayName" />
             </t>
             <t t-else="">
                 <a
-                    href="#"
                     class="o_form_uri"
+                    t-att-href="props.value ? `#id=${props.value[0]}&amp;model=${relation}` : '#'"
                     t-esc="displayName"
                     t-on-click="onClick"
                 />
             </t>
         </t>
         <t t-else="">
-            <span class="o_field">
-                <t t-esc="displayName" />
-            </span>
+            <div
+                class="o_field_many2one"
+                aria-atomic="true"
+                t-att-class="{ 'o_with_button': hasExternalButton }"
+            >
+                <div class="o_field_many2one_selection">
+                    <div class="o_input_dropdown">
+                        <input
+                            type="text"
+                            class="o_input"
+                            t-att-placeholder="props.attrs.placeholder"
+                            t-att-value="displayName"
+                            t-on-click="onInputClick"
+                            t-on-change="onChange"
+                            t-ref="input"
+                        />
+                        <a role="button" class="o_dropdown_button" draggable="false" />
+                    </div>
+                    <t t-if="hasExternalButton">
+                        <button
+                            type="button"
+                            class="btn btn-secondary fa fa-external-link o_external_button"
+                            tabindex="-1"
+                            draggable="false"
+                            aria-label="External link"
+                            data-tooltip="External link"
+                            t-on-click="onExternalBtnClick"
+                        />
+                    </t>
+                </div>
+                <div class="o_field_many2one_extra" />
+            </div>
         </t>
     </t>
 
