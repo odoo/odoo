@@ -9,7 +9,7 @@ import {
     patchWithCleanup,
 } from "@web/../tests/helpers/utils";
 import { setupControlPanelServiceRegistry } from "@web/../tests/search/helpers";
-import { makeView } from "@web/../tests/views/helpers";
+import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { registry } from "@web/core/registry";
 import { OnboardingBanner } from "@web/views/onboarding_banner";
 import { View } from "@web/views/view";
@@ -92,8 +92,7 @@ QUnit.module("Views", (hooks) => {
         viewRegistry.add("toy", ToyView);
         viewRegistry.add("toy_imp", ToyViewImp);
 
-        setupControlPanelServiceRegistry();
-
+        setupViewRegistries();
         const fakeActionService = {
             name: "action",
             start() {
@@ -393,6 +392,7 @@ QUnit.module("Views", (hooks) => {
                 arch: `<toy>Specific arch content</toy>`,
                 fields: {},
                 loadActionMenus: true,
+                actionMenus: false,
             });
             assert.hasClass(view.el, "o_toy_view");
             assert.strictEqual(view.el.innerHTML, `<toy>Specific arch content</toy>`);
@@ -425,9 +425,6 @@ QUnit.module("Views", (hooks) => {
                 type: "toy",
                 arch: `<toy>Specific arch content</toy>`,
                 fields: {},
-                actionMenus: {
-                    /** ... */
-                },
                 loadActionMenus: true,
             });
             assert.hasClass(view.el, "o_toy_view");
@@ -600,6 +597,7 @@ QUnit.module("Views", (hooks) => {
                 searchViewArch: `<search/>`,
                 searchViewFields: {},
                 loadIrFilters: true,
+                irFilters: false,
             });
             assert.hasClass(view.el, "o_toy_view");
             assert.strictEqual(view.el.innerText, "Specific arch content");

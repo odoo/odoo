@@ -244,7 +244,6 @@ QUnit.test("dialog component crashes", async (assert) => {
     serviceRegistry.add("rpc", rpc);
     serviceRegistry.add("notification", notificationService);
     serviceRegistry.add("error", errorService);
-    serviceRegistry.add("localization", makeFakeLocalizationService());
 
     pseudoWebClient = await mount(PseudoWebClient, { env, target });
 

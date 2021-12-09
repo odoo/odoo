@@ -1,14 +1,15 @@
 /* @odoo-module */
 
+import { makeContext } from "@web/core/context";
 import { Domain } from "@web/core/domain";
+import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { ORM } from "@web/core/orm_service";
+import { evaluateExpr } from "@web/core/py_js/py";
 import { Deferred, KeepLast, Mutex } from "@web/core/utils/concurrency";
+import { session } from "@web/session";
 import { Model } from "@web/views/helpers/model";
 import { isX2Many } from "@web/views/helpers/view_utils";
 import { registry } from "../core/registry";
-import { evaluateExpr } from "@web/core/py_js/py";
-import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
-import { makeContext } from "@web/core/context";
 
 const preloadedDataRegistry = registry.category("preloadedData");
 
@@ -399,6 +400,48 @@ class DynamicList extends DataPoint {
         return this.records.filter((r) => r.selected);
     }
 
+    get isM2MGrouped() {
+        return this.groupBy.some((fieldName) => this.fields[fieldName].type === "many2many");
+    }
+
+    async getResIds(isSelected) {
+        let resIds;
+        if (isSelected) {
+            if (this.isDomainSelected) {
+                resIds = await this.model.orm.search(this.resModel, this.domain, {
+                    limit: session.active_ids_limit,
+                });
+            } else {
+                resIds = this.selection.map((r) => r.resId);
+            }
+        } else {
+            resIds = this.records.map((r) => r.resId);
+        }
+        return resIds;
+    }
+
+    async archive(isSelected) {
+        const resIds = await this.getResIds(isSelected);
+        const action = await this.model.orm.call(this.resModel, "action_archive", [resIds]);
+        if (action && Object.keys(action).length !== 0) {
+            this.model.action.doAction(action);
+        }
+        await this.model.load();
+        return resIds;
+        //todo fge _invalidateCache
+    }
+
+    async unarchive(isSelected) {
+        const resIds = await this.getResIds(isSelected);
+        const action = await this.model.orm.call(this.resModel, "action_unarchive", [resIds]);
+        if (action && Object.keys(action).length !== 0) {
+            this.model.action.doAction(action);
+        }
+        await this.model.load();
+        return resIds;
+        //todo fge _invalidateCache
+    }
+
     exportState() {
         return {
             limit: this.limit,
@@ -451,18 +494,6 @@ export class DynamicRecordList extends DynamicList {
 
     async load() {
         this.records = await this._loadRecords();
-    }
-
-    async archive() {
-        const resIds = this.records.map((r) => r.resId);
-        await this.model.orm.call(this.resModel, "action_archive", [resIds]);
-        await this.model.load();
-    }
-
-    async unarchive() {
-        const resIds = this.records.map((r) => r.resId);
-        await this.model.orm.call(this.resModel, "action_unarchive", [resIds]);
-        await this.model.load();
     }
 
     async resequence() {
@@ -857,7 +888,8 @@ export class StaticList extends DataPoint {
 StaticList.DEFAULT_LIMIT = 80;
 
 export class RelationalModel extends Model {
-    setup(params, { rpc, user }) {
+    setup(params, { action, rpc, user }) {
+        this.action = action;
         this.rpc = rpc;
         this.orm = new RequestBatcherORM(rpc, user);
         this.keepLast = new KeepLast();
@@ -963,7 +995,7 @@ export class RelationalModel extends Model {
     // }
 }
 
-RelationalModel.services = ["rpc", "user"];
+RelationalModel.services = ["action", "rpc", "user"];
 RelationalModel.Record = Record;
 RelationalModel.Group = Group;
 RelationalModel.DynamicRecordList = DynamicRecordList;

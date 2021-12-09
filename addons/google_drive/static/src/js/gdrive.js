@@ -3,6 +3,11 @@ odoo.define('google_drive.ActionMenus', function (require) {
 
     const ActionMenus = require('web.ActionMenus');
     const DropdownMenuItem = require('web.DropdownMenuItem');
+    const { registry } = require("@web/core/registry");
+
+    /**
+     * @typedef {import("@web/env").OdooEnv} OdooEnv
+     */
 
     /**
      * Fetches the google drive action menu item props. To do so this function
@@ -13,20 +18,17 @@ odoo.define('google_drive.ActionMenus', function (require) {
      * @param {Object} props
      * @param {number[]} props.activeIds
      * @param {Object} props.context
-     * @param {Object} env
-     * @param {Object} env.action The current action
-     * @param {Object} env.view The current view
-     * @param {Function} rpc Bound to the ActionMenus context
+     * @param {OdooEnv} env
      * @returns {Object | boolean} item props or false
      */
-    async function googleDrivePropsGetter(props, env, rpc) {
+    async function googleDrivePropsGetter(props, env) {
         const [activeId] = props.activeIds;
         const { context } = props;
         if (env.view.type !== "form" || !activeId) {
             return false;
         }
-        const items = await rpc({
-            args: [env.action.res_model, activeId],
+        const items = await env.services.rpc({
+            args: [props.resModel, activeId],
             context,
             method: 'get_google_drive_config',
             model: 'google.drive.config',
@@ -84,7 +86,7 @@ odoo.define('google_drive.ActionMenus', function (require) {
     };
     GoogleDriveMenu.template = 'GoogleDriveMenu';
 
-    ActionMenus.registry.add('google-drive-menu', {
+    registry.category("action_menus").add('google-drive-menu', {
         Component: GoogleDriveMenu,
         getProps: googleDrivePropsGetter,
     });

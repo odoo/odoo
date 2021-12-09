@@ -1,12 +1,9 @@
 /** @odoo-module **/
 
-import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
 import { click, makeDeferred, nextTick, triggerEvent } from "@web/../tests/helpers/utils";
 import {
     editFavoriteName,
     saveFavorite,
-    setupControlPanelFavoriteMenuRegistry,
-    setupControlPanelServiceRegistry,
     switchView,
     toggleFavoriteMenu,
     toggleFilterMenu,
@@ -16,13 +13,12 @@ import {
     toggleMenuItemOption,
     toggleSaveFavorite,
 } from "@web/../tests/search/helpers";
-import { makeView } from "@web/../tests/views/helpers";
+import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
-import { dialogService } from "@web/core/dialog/dialog_service";
+import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { BORDER_WHITE, DEFAULT_BG } from "@web/views/graph/colors";
 import { GraphArchParser } from "@web/views/graph/graph_arch_parser";
-import { browser } from "@web/core/browser/browser";
 import { patchWithCleanup } from "../helpers/utils";
 
 const serviceRegistry = registry.category("services");
@@ -276,9 +272,7 @@ QUnit.module("Views", (hooks) => {
                 `,
             },
         };
-        setupControlPanelServiceRegistry();
-        setupControlPanelFavoriteMenuRegistry();
-        serviceRegistry.add("dialog", dialogService);
+        setupViewRegistries();
         patchWithCleanup(browser, { setTimeout: (fn) => fn() });
     });
 
@@ -1320,8 +1314,18 @@ QUnit.module("Views", (hooks) => {
             label: "",
         });
         checkLegend(assert, graph, ["true / xphone", "false / xphone", "false / xpad"]);
-        checkTooltip(assert, graph, { lines: [{ label: "true / xphone", value: "3 (37.50%)" }] }, 0);
-        checkTooltip(assert, graph, { lines: [{ label: "false / xphone", value: "1 (12.50%)" }] }, 1);
+        checkTooltip(
+            assert,
+            graph,
+            { lines: [{ label: "true / xphone", value: "3 (37.50%)" }] },
+            0
+        );
+        checkTooltip(
+            assert,
+            graph,
+            { lines: [{ label: "false / xphone", value: "1 (12.50%)" }] },
+            1
+        );
         checkTooltip(assert, graph, { lines: [{ label: "false / xpad", value: "4 (50.00%)" }] }, 2);
     });
 
@@ -2860,7 +2864,6 @@ QUnit.module("Views", (hooks) => {
     QUnit.test('graph view with attribute disable_linking="1"', async function (assert) {
         assert.expect(4);
 
-        serviceRegistry.add("localization", makeFakeLocalizationService());
         serviceRegistry.add(
             "action",
             {

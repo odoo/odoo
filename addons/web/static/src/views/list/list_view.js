@@ -1,11 +1,14 @@
 /** @odoo-module */
 
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { isAttr, XMLParser } from "@web/core/utils/xml";
 import { Field } from "@web/fields/field";
+import { ActionMenus } from "@web/search/action_menus/action_menus";
 import { usePager } from "@web/search/pager_hook";
+import { session } from "@web/session";
 import { useModel } from "@web/views/helpers/model";
 import { standardViewProps } from "@web/views/helpers/standard_view_props";
 import { useSetupView } from "@web/views/helpers/view_hook";
@@ -22,11 +25,11 @@ const { onWillStart, useSubEnv } = owl.hooks;
 export class ListViewHeaderButton extends ViewButton {
     async onClick() {
         const clickParams = this.props.clickParams;
-        const { resModel, resIds } = await this.props.getInfo();
-
+        const resIds = await this.props.getSelectedResIds();
+        const resModel = this.props.resModel;
         clickParams.buttonContext = {
             active_domain: this.props.domain,
-            active_id: resIds[0],
+            // active_id: resIds[0], // FGE TODO
             active_ids: resIds,
             active_model: resModel,
         };
@@ -158,6 +161,8 @@ export class ListArchParser extends XMLParser {
 export class ListView extends owl.Component {
     setup() {
         this.actionService = useService("action");
+        this.dialogService = useService("dialog");
+        this.notificationService = useService("notification");
         this.user = useService("user");
 
         this.archInfo = new ListArchParser().parse(this.props.arch, this.props.fields);
@@ -176,8 +181,10 @@ export class ListView extends owl.Component {
             this.isExportEnable = await this.user.hasGroup("base.group_allow_export");
         });
 
+        this.archiveEnabled = "active" in this.props.fields || "x_active" in this.props.fields;
+
         this.openRecord = this.openRecord.bind(this);
-        this.getInfo = this.getInfo.bind(this);
+        this.getSelectedResIds = this.getSelectedResIds.bind(this);
 
         useSubEnv({ model: this.model }); // do this in useModel?
 
@@ -225,19 +232,47 @@ export class ListView extends owl.Component {
         }
     }
 
-    async getInfo() {
-        const root = this.model.root;
-        const resModel = root.resModel;
-        let resIds;
-        if (root.isDomainSelected) {
-            resIds = await this.model.orm.search(root.resModel, root.domain);
-        } else {
-            resIds = root.selection.map((r) => r.resId);
+    getSelectedResIds() {
+        return this.model.root.getResIds(true);
+    }
+
+    getActionMenuItems() {
+        const isM2MGrouped = this.model.root.isM2MGrouped;
+        const otherActionItems = [];
+        if (this.isExportEnable) {
+            otherActionItems.push({
+                description: this.env._t("Export"),
+                callback: () => this.onExportData(),
+            });
         }
-        return {
-            resIds,
-            resModel,
-        };
+        if (this.archiveEnabled && !isM2MGrouped) {
+            otherActionItems.push({
+                description: this.env._t("Archive"),
+                callback: () => {
+                    const dialogProps = {
+                        body: this.env._t(
+                            "Are you sure that you want to archive all the selected records?"
+                        ),
+                        confirm: () => {
+                            this.toggleArchiveState(true);
+                        },
+                        cancel: () => {},
+                    };
+                    this.dialogService.add(ConfirmationDialog, dialogProps);
+                },
+            });
+            otherActionItems.push({
+                description: this.env._t("Unarchive"),
+                callback: () => this.toggleArchiveState(false),
+            });
+        }
+        if (this.activeActions.delete && !isM2MGrouped) {
+            otherActionItems.push({
+                description: this.env._t("Delete"),
+                callback: () => this._onDeleteSelectedRecords(),
+            });
+        }
+        return Object.assign({}, this.props.info.actionMenus, { other: otherActionItems });
     }
 
     onSelectDomain() {
@@ -260,13 +295,60 @@ export class ListView extends owl.Component {
     get nbTotal() {
         return this.model.root.count;
     }
+
+    /**
+     * Opens the Export Dialog
+     *
+     * @private
+     */
+    onExportData() {
+        console.log("onExportData");
+        // this._getExportDialogWidget().open();
+    }
+    /**
+     * Export Records in a xls file
+     *
+     * @private
+     */
+    onDirectExportData() {
+        console.log("onDirectExportData");
+    }
+    /**
+     * Called when clicking on 'Archive' or 'Unarchive' in the sidebar.
+     *
+     * @private
+     * @param {boolean} archive
+     * @returns {Promise}
+     */
+    async toggleArchiveState(archive) {
+        let resIds;
+        const isDomainSelected = this.model.root.isDomainSelected;
+        if (archive) {
+            resIds = await this.model.root.archive(true);
+        } else {
+            resIds = await this.model.root.unarchive(true);
+        }
+        const total = this.model.root.count;
+        if (
+            isDomainSelected &&
+            resIds.length === session.active_ids_limit &&
+            resIds.length < total
+        ) {
+            this.notificationService.add(
+                this.env._t(
+                    `Of the ${total} records selected, only the first ${resIds.length} have been archived/unarchived.`
+                ),
+                { title: this.env._t("Warning") }
+            );
+        }
+    }
 }
 
 ListView.type = "list";
 ListView.display_name = "List";
 ListView.icon = "fa-list-ul";
 ListView.multiRecord = true;
-ListView.components = { ListViewHeaderButton, ListRenderer, Layout, ViewButton };
+ListView.components = { ActionMenus, ListViewHeaderButton, ListRenderer, Layout, ViewButton };
 ListView.props = {
     ...standardViewProps,
     hasSelectors: { type: Boolean, optional: 1 },

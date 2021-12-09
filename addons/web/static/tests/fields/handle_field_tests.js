@@ -47,7 +47,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("HandleField");
 
-    QUnit.test("HandleField in x2m", async function (assert) {
+    QUnit.skip("HandleField in x2m", async function (assert) {
         assert.expect(6);
 
         serverData.models.partner.records[0].p = [2, 4];
@@ -96,7 +96,7 @@ QUnit.module("Fields", (hooks) => {
             "handle should be visible in edit mode"
         );
 
-        click(form.el.querySelectorAll("td")[1]);
+        await click(form.el.querySelectorAll("td")[1]);
         assert.containsOnce(
             form.el.querySelector("td"),
             "span.o_row_handle",

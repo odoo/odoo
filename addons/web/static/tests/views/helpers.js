@@ -4,6 +4,7 @@ import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { registry } from "@web/core/registry";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { getFixture } from "@web/../tests/helpers/utils";
+import { MainComponentsContainer } from "@web/core/main_components_container";
 import { View } from "@web/views/view";
 import { _fieldsViewGet } from "../helpers/mock_server";
 import {
@@ -65,6 +66,12 @@ export const makeView = async (params) => {
         props.fields = Object.assign({}, props.fields, fvg.fields);
         props.searchViewArch = props.searchViewArch || "<search/>";
         props.searchViewFields = props.searchViewFields || Object.assign({}, props.fields);
+        if (props.loadActionMenus) {
+            props.actionMenus = props.actionMenus === undefined ? {} : props.actionMenus;
+        }
+        if (props.loadIrFilters) {
+            props.irFilters = props.irFilters === undefined ? [] : props.irFilters;
+        }
     }
 
     /** Legacy Environment, for compatibility sakes
@@ -86,8 +93,10 @@ export const makeView = async (params) => {
 
     const target = getFixture();
     const view = await mount(View, { env, props, target });
+    const mainComponentsContainer = await mount(MainComponentsContainer, { env, props, target });
 
     registerCleanup(() => view.destroy());
+    registerCleanup(() => mainComponentsContainer.destroy());
 
     const withSearch = Object.values(view.__owl__.children)[0];
     const concreteView = Object.values(withSearch.__owl__.children)[0];
