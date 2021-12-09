@@ -135,7 +135,7 @@ class ChannelUsersRelation(models.Model):
         record_email_values = dict()
         for template, records in template_to_records.items():
             record_email_values.update(
-                template.generate_email(
+                template._generate_template(
                     records.ids,
                     ['body_html',
                      'email_from',
@@ -148,6 +148,9 @@ class ChannelUsersRelation(models.Model):
         mail_mail_values = []
         for record in self:
             email_values = record_email_values.get(record.id)
+            # attachments specific not supported currently, only attachment_ids
+            email_values.pop('attachments', False)
+
             if not email_values or not email_values.get('partner_ids'):
                 continue
 
