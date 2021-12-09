@@ -4,6 +4,7 @@ odoo.define('website_livechat.legacy.website_livechat.livechat_request', functio
 var utils = require('web.utils');
 var session = require('web.session');
 var LivechatButton = require('im_livechat.legacy.im_livechat.im_livechat').LivechatButton;
+const config = require('web.config');
 
 
 LivechatButton.include({
@@ -32,7 +33,7 @@ LivechatButton.include({
         $(window).trigger('resize');
         await this._super(...arguments);
         this.el.innerHTML = "";
-        if (this.options.button_text) {
+        if (this.options.button_text && !config.device.touch) {
             this.el.dataset.content = this.options.button_text;
             this.el.dataset.toggle = "popover";
             this.el.dataset.trigger = "hover";
