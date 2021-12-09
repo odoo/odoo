@@ -285,12 +285,12 @@ export const editPager = async (el, value) => {
 /////////////////////////////////////
 // Action Menu
 /////////////////////////////////////
-// /**
-//  * @param {EventTarget} el
-//  * @param {string} [menuFinder="Action"]
-//  * @returns {Promise}
-//  */
-// export async function toggleActionMenu(el, menuFinder = "Action") {
-//     const dropdown = findItem(el, `.o_cp_action_menus button`, menuFinder);
-//     await click(dropdown);
-// }
+/**
+ * @param {EventTarget} el
+ * @param {string} [menuFinder="Action"]
+ * @returns {Promise}
+ */
+export async function toggleActionMenu(el, menuFinder = "Action") {
+    const dropdown = findItem(el, `.o_cp_action_menus button`, menuFinder);
+    await click(dropdown);
+}

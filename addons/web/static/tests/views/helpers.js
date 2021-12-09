@@ -4,6 +4,8 @@ import { registry } from "@web/core/registry";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { getFixture, mount } from "@web/../tests/helpers/utils";
 import { getDefaultConfig, View } from "@web/views/view";
+import { MainComponentsContainer } from "@web/core/main_components_container";
+import { _getView } from "../helpers/mock_server";
 import {
     setupControlPanelFavoriteMenuRegistry,
     setupControlPanelServiceRegistry,
@@ -52,6 +54,12 @@ export const makeView = async (params) => {
         const searchViewArch = props.searchViewArch || "<search/>";
         serverData.views[`${props.resModel},${props.searchViewId},search`] = searchViewArch;
         delete props.searchViewArch;
+        if (props.loadActionMenus) {
+            props.actionMenus = props.actionMenus === undefined ? {} : props.actionMenus;
+        }
+        if (props.loadIrFilters) {
+            props.irFilters = props.irFilters === undefined ? [] : props.irFilters;
+        }
     }
 
     const env = await makeTestEnv({ serverData, mockRPC, config });
@@ -72,7 +80,10 @@ export const makeView = async (params) => {
     }
     await addLegacyMockEnvironment(env, legacyParams);
 
-    const view = await mount(View, getFixture(), { env, props });
+    const target = getFixture();
+    const view = await mount(View, target, { env, props });
+    await mount(MainComponentsContainer, target, { env, props });
+
     const viewNode = view.__owl__;
     const withSearchNode = Object.values(viewNode.children)[0];
     const concreteViewNode = Object.values(withSearchNode.children)[0];

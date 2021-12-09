@@ -31,13 +31,14 @@ import {
     toggleGroupByMenu,
     toggleMenu,
     toggleMenuItem,
+    toggleActionMenu,
     toggleMenuItemOption,
     toggleSaveFavorite,
     groupByMenu,
     getButtons,
 } from "../search/helpers";
 import { createWebClient, doAction } from "../webclient/helpers";
-import { makeView } from "./helpers";
+import { makeView, setupViewRegistries } from "./helpers";
 import { browser } from "@web/core/browser/browser";
 import { Domain } from "@web/core/domain";
 import { localization } from "@web/core/l10n/localization";
@@ -195,12 +196,7 @@ QUnit.module("Views", (hooks) => {
                 },
             },
         };
-
-        setupControlPanelFavoriteMenuRegistry();
-        setupControlPanelServiceRegistry();
-        serviceRegistry.add("dialog", dialogService);
-        serviceRegistry.add("localization", makeFakeLocalizationService());
-        serviceRegistry.add("user", makeFakeUserService());
+        setupViewRegistries();
         patchWithCleanup(browser, {
             setTimeout: (fn) => fn(),
             clearTimeout: () => {},
@@ -255,14 +251,14 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(list, ".o_list_button_add", "should not have the 'Create' button");
     });
 
-    QUnit.skip('list with delete="0"', async function (assert) {
+    QUnit.test('list with delete="0"', async function (assert) {
         assert.expect(3);
 
         const list = await makeView({
             type: "list",
             resModel: "foo",
             serverData,
-            viewOptions: { hasActionMenus: true }, // FIXME need to handle this
+            loadActionMenus: true,
             arch: '<tree delete="0"><field name="foo"/></tree>',
         });
 
@@ -280,7 +276,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            viewOptions: { hasActionMenus: true },
+            loadActionMenus: true,
             arch: '<tree editable="top" edit="0"><field name="foo"/></tree>',
         });
 
@@ -302,7 +298,7 @@ QUnit.module("Views", (hooks) => {
                 type: "list",
                 resModel: "foo",
                 serverData,
-                viewOptions: { hasActionMenus: true },
+                loadActionMenus: true,
                 arch: '<tree><field name="foo"/></tree>',
                 session: {
                     async user_has_group(group) {
@@ -339,16 +335,17 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            viewOptions: { hasActionMenus: true },
+            loadActionMenus: true,
             arch: '<tree><field name="foo"/></tree>',
-            session: {
-                async user_has_group(group) {
-                    if (group === "base.group_allow_export") {
-                        return true;
-                    }
-                    return this._super(...arguments);
-                },
-            },
+
+            // session: {
+            //     async user_has_group(group) {
+            //         if (group === "base.group_allow_export") {
+            //             return true;
+            //         }
+            //         return this._super(...arguments);
+            //     },
+            // },
         });
 
         assert.containsNone(list.el, "div.o_control_panel .o_cp_action_menus");
@@ -731,7 +728,7 @@ QUnit.module("Views", (hooks) => {
                     // The action's execution context
                     assert.deepEqual(buttonContext, {
                         active_domain: [],
-                        active_id: 1,
+                        // active_id: 1, //FGE TODO
                         active_ids: [1],
                         active_model: "foo",
                         plouf: "plif",
@@ -785,7 +782,7 @@ QUnit.module("Views", (hooks) => {
                     // The action's execution context
                     assert.deepEqual(buttonContext, {
                         active_domain: [],
-                        active_id: 1,
+                        // active_id: 1, // FGE TODO
                         active_ids: [1, 2, 3, 4],
                         active_model: "foo",
                     });
@@ -1499,7 +1496,7 @@ QUnit.module("Views", (hooks) => {
                     <field name="foo"/>
                     <field name="m2m" widget="many2many_tags"/>
                 </tree>`,
-            viewOptions: { hasActionMenus: true },
+            loadActionMenus: true,
             groupBy: ["m2m"],
         });
 
@@ -1657,7 +1654,7 @@ QUnit.module("Views", (hooks) => {
             serverData,
             arch: "<tree>" + '<field name="foo"/>' + '<field name="date"/>' + "</tree>",
         });
-        debugger;
+
         // Descending order on Foo
         await click($(list.el).find('th.o_column_sortable:contains("Foo")')[0]);
         await click($(list.el).find('th.o_column_sortable:contains("Foo")')[0]);
@@ -1665,7 +1662,6 @@ QUnit.module("Views", (hooks) => {
         // Ascending order on Date
         await click($(list.el).find('th.o_column_sortable:contains("Date")')[0]);
 
-        debugger;
         var listContext = list.getOwnedQueryParams();
         assert.deepEqual(
             listContext,
@@ -2603,7 +2599,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             groupBy: ["foo"],
-            viewOptions: { hasActionMenus: true },
+            loadActionMenus: true,
             arch:
                 "<tree>" +
                 '<field name="foo"/>' +
@@ -4067,7 +4063,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            viewOptions: { hasActionMenus: true },
+            loadActionMenus: true,
             arch: '<tree><field name="foo"/></tree>',
         });
 
@@ -4096,7 +4092,7 @@ QUnit.module("Views", (hooks) => {
                 type: "list",
                 resModel: "foo",
                 serverData,
-                viewOptions: { hasActionMenus: true },
+                loadActionMenus: true,
                 arch: '<tree><field name="foo"/></tree>',
                 mockRPC: function (route, args) {
                     if (args.method === "unlink") {
@@ -4147,9 +4143,7 @@ QUnit.module("Views", (hooks) => {
                     },
                 },
             },
-            viewOptions: {
-                hasActionMenus: true,
-            },
+            loadActionMenus: true,
         });
 
         assert.containsNone(list, "div.o_control_panel .o_cp_action_menus");
@@ -4161,8 +4155,8 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(list, ".o_list_selection_box .o_list_select_domain");
 
         await click($(list.el).find(".o_list_selection_box .o_list_select_domain"));
-        await testUtils.controlPanel.toggleActionMenu(list);
-        await testUtils.controlPanel.toggleMenuItem(list, "Delete");
+        await toggleActionMenu(list.el);
+        await toggleMenuItem(list.el, "Delete");
 
         assert.strictEqual($(".modal").length, 1, "a confirm modal should be displayed");
         await click($(".modal-footer .btn-primary"));
@@ -4196,9 +4190,7 @@ QUnit.module("Views", (hooks) => {
             session: {
                 active_ids_limit: 4,
             },
-            viewOptions: {
-                hasActionMenus: true,
-            },
+            loadActionMenus: true,
         });
 
         assert.containsNone(list, "div.o_control_panel .o_cp_action_menus");
@@ -4219,7 +4211,7 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["notify"]);
     });
 
-    QUnit.skip("archiving one record", async function (assert) {
+    QUnit.test("archiving one record", async function (assert) {
         assert.expect(12);
 
         // add active field on foo model and make all records active
@@ -4229,43 +4221,59 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            viewOptions: { hasActionMenus: true },
+            loadActionMenus: true,
             arch: '<tree><field name="foo"/></tree>',
             mockRPC: function (route) {
                 assert.step(route);
                 if (route === "/web/dataset/call_kw/foo/action_archive") {
                     serverData.models.foo.records[0].active = false;
-                    return Promise.resolve();
+                    return true;
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
         assert.containsNone(list.el, "div.o_control_panel .o_cp_action_menus");
         assert.containsN(list, "tbody td.o_list_record_selector", 4, "should have 4 records");
 
-        await click($(list.el).find("tbody td.o_list_record_selector:first input"));
+        await click(list.el.querySelector("tbody td.o_list_record_selector:first-child input"));
 
         assert.containsOnce(list.el, "div.o_control_panel .o_cp_action_menus");
 
-        assert.verifySteps(["/web/dataset/search_read"]);
-        await testUtils.controlPanel.toggleActionMenu(list);
-        await testUtils.controlPanel.toggleMenuItem(list, "Archive");
-        assert.strictEqual($(".modal").length, 1, "a confirm modal should be displayed");
-        await click($(".modal-footer .btn-secondary"));
+        assert.verifySteps(["/web/dataset/call_kw/foo/web_search_read"]);
+        await toggleActionMenu(list.el);
+        await toggleMenuItem(list.el, "Archive");
+
+        assert.strictEqual(
+            document.querySelectorAll(".modal").length,
+            1,
+            "a confirm modal should be displayed"
+        );
+        await click(document, ".modal-footer .btn-secondary");
         assert.containsN(list, "tbody td.o_list_record_selector", 4, "still should have 4 records");
 
-        await testUtils.controlPanel.toggleActionMenu(list);
-        await testUtils.controlPanel.toggleMenuItem(list, "Archive");
-        assert.strictEqual($(".modal").length, 1, "a confirm modal should be displayed");
-        await click($(".modal-footer .btn-primary"));
+        await toggleActionMenu(list.el);
+        await toggleMenuItem(list.el, "Archive");
+        assert.strictEqual(
+            document.querySelectorAll(".modal").length,
+            1,
+            "a confirm modal should be displayed"
+        );
+        await click(document, ".modal-footer .btn-primary");
         assert.containsN(list, "tbody td.o_list_record_selector", 3, "should have 3 records");
-        assert.verifySteps(["/web/dataset/call_kw/foo/action_archive", "/web/dataset/search_read"]);
+        assert.verifySteps([
+            "/web/dataset/call_kw/foo/action_archive",
+            "/web/dataset/call_kw/foo/web_search_read",
+        ]);
     });
 
-    QUnit.skip("archive all records matching the domain", async function (assert) {
+    QUnit.test("archive all records matching the domain", async function (assert) {
         assert.expect(6);
-
+        const notificationService = serviceRegistry.get("notification");
+        patchWithCleanup(notificationService, {
+            add: () => {
+                throw new Error("should not display a notification");
+            },
+        });
         // add active field on foo model and make all records active
         serverData.models.foo.fields.active = { string: "Active", type: "boolean", default: true };
         serverData.models.foo.records.push({ id: 5, bar: true, foo: "xxx" });
@@ -4279,39 +4287,33 @@ QUnit.module("Views", (hooks) => {
             mockRPC: function (route, args) {
                 if (args.method === "action_archive") {
                     assert.deepEqual(args.args[0], [1, 2, 3, 5]);
-                    return Promise.resolve();
+                    return true;
                 }
-                return this._super.apply(this, arguments);
             },
-            services: {
-                notification: {
-                    notify: function () {
-                        throw new Error("should not display a notification");
-                    },
-                },
-            },
-            viewOptions: {
-                hasActionMenus: true,
-            },
+            loadActionMenus: true,
         });
 
         assert.containsNone(list, "div.o_control_panel .o_cp_action_menus");
         assert.containsN(list, "tbody td.o_list_record_selector", 2, "should have 2 records");
 
-        await click($(list.el).find("thead .o_list_record_selector input"));
+        await click(list.el, "thead .o_list_record_selector input");
 
         assert.containsOnce(list, "div.o_control_panel .o_cp_action_menus");
         assert.containsOnce(list, ".o_list_selection_box .o_list_select_domain");
 
-        await click($(list.el).find(".o_list_selection_box .o_list_select_domain"));
-        await testUtils.controlPanel.toggleActionMenu(list);
-        await testUtils.controlPanel.toggleMenuItem(list, "Archive");
+        await click(list.el, ".o_list_selection_box .o_list_select_domain");
+        await toggleActionMenu(list);
+        await toggleMenuItem(list, "Archive");
 
-        assert.strictEqual($(".modal").length, 1, "a confirm modal should be displayed");
-        await click($(".modal-footer .btn-primary"));
+        assert.strictEqual(
+            document.querySelectorAll(".modal").length,
+            1,
+            "a confirm modal should be displayed"
+        );
+        await click(document, ".modal-footer .btn-primary");
     });
 
-    QUnit.skip("archive all records matching the domain (limit reached)", async function (assert) {
+    QUnit.test("archive all records matching the domain (limit reached)", async function (assert) {
         assert.expect(8);
 
         // add active field on foo model and make all records active
@@ -4328,44 +4330,40 @@ QUnit.module("Views", (hooks) => {
             mockRPC: function (route, args) {
                 if (args.method === "action_archive") {
                     assert.deepEqual(args.args[0], [1, 2, 3, 5]);
-                    return Promise.resolve();
+                    return true;
                 }
-                return this._super.apply(this, arguments);
             },
-            services: {
-                notification: {
-                    notify: function () {
-                        assert.step("notify");
-                    },
-                },
-            },
-            session: {
-                active_ids_limit: 4,
-            },
-            viewOptions: {
-                hasActionMenus: true,
+            loadActionMenus: true,
+        });
+
+        patchWithCleanup(session, {
+            active_ids_limit: 4,
+        });
+        patchWithCleanup(list.env.services.notification, {
+            add: () => {
+                assert.step("notify");
             },
         });
 
         assert.containsNone(list, "div.o_control_panel .o_cp_action_menus");
         assert.containsN(list, "tbody td.o_list_record_selector", 2, "should have 2 records");
 
-        await click($(list.el).find("thead .o_list_record_selector input"));
+        await click(list.el, "thead .o_list_record_selector input");
 
         assert.containsOnce(list, "div.o_control_panel .o_cp_action_menus");
         assert.containsOnce(list, ".o_list_selection_box .o_list_select_domain");
 
-        await click($(list.el).find(".o_list_selection_box .o_list_select_domain"));
-        await testUtils.controlPanel.toggleActionMenu(list);
-        await testUtils.controlPanel.toggleMenuItem(list, "Archive");
+        await click(list.el, ".o_list_selection_box .o_list_select_domain");
+        await toggleActionMenu(list);
+        await toggleMenuItem(list, "Archive");
 
         assert.strictEqual($(".modal").length, 1, "a confirm modal should be displayed");
-        await click($(".modal-footer .btn-primary"));
+        await click(document.querySelector(".modal-footer .btn-primary"));
 
         assert.verifySteps(["notify"]);
     });
 
-    QUnit.skip("archive/unarchive handles returned action", async function (assert) {
+    QUnit.test("archive/unarchive handles returned action", async function (assert) {
         assert.expect(6);
 
         // add active field on foo model and make all records active
@@ -4392,14 +4390,14 @@ QUnit.module("Views", (hooks) => {
 
         const mockRPC = (route, args) => {
             if (route === "/web/dataset/call_kw/foo/action_archive") {
-                return Promise.resolve({
+                return {
                     type: "ir.actions.act_window",
                     name: "Archive Action",
                     res_model: "bar",
                     view_mode: "form",
                     target: "new",
                     views: [[false, "form"]],
-                });
+                };
             }
         };
 
@@ -4414,7 +4412,7 @@ QUnit.module("Views", (hooks) => {
 
         await click(webClient.el.querySelector(".o_cp_action_menus .dropdown-toggle"));
         const archiveItem = [
-            ...webClient.el.querySelectorAll(".o_cp_action_menus .dropdown-menu li > a"),
+            ...webClient.el.querySelectorAll(".o_cp_action_menus .dropdown-menu .o_menu_item"),
         ].filter((elem) => elem.textContent === "Archive");
         await click(archiveItem[0]);
         assert.strictEqual(
@@ -5323,8 +5321,8 @@ QUnit.module("Views", (hooks) => {
                     action: {
                         help: '<p class="hello">click to add a partner</p>',
                     },
-                    hasActionMenus: true,
                 },
+                loadActionMenus: true,
             });
 
             // Initial state: all records displayed
@@ -5412,8 +5410,8 @@ QUnit.module("Views", (hooks) => {
                     action: {
                         help: '<p class="hello">click to add a partner</p>',
                     },
-                    hasActionMenus: true,
                 },
+                loadActionMenus: true,
             });
 
             // Initial state: sample data and nocontent helper displayed
@@ -7180,9 +7178,7 @@ QUnit.module("Views", (hooks) => {
                 ],
                 print: [],
             },
-            viewOptions: {
-                hasActionMenus: true,
-            },
+            loadActionMenus: true,
         });
 
         assert.containsNone(list.el, "div.o_control_panel .o_cp_action_menus");
@@ -7220,9 +7216,7 @@ QUnit.module("Views", (hooks) => {
                     }
                     return this._super(...arguments);
                 },
-                viewOptions: {
-                    hasActionMenus: true,
-                },
+                loadActionMenus: true,
             });
 
             assert.containsNone(list.el, "div.o_control_panel .o_cp_action_menus");
@@ -7291,9 +7285,7 @@ QUnit.module("Views", (hooks) => {
                     }
                     return this._super(...arguments);
                 },
-                viewOptions: {
-                    hasActionMenus: true,
-                },
+                loadActionMenus: true,
             });
 
             assert.containsNone(list.el, "div.o_control_panel .o_cp_action_menus");
@@ -11049,9 +11041,7 @@ QUnit.module("Views", (hooks) => {
                 }
                 return this._super.apply(this, arguments);
             },
-            viewOptions: {
-                hasActionMenus: true,
-            },
+            loadActionMenus: true,
         });
         core.bus.on("clear_cache", list, assert.step.bind(assert, "clear_cache"));
 
@@ -11112,9 +11102,7 @@ QUnit.module("Views", (hooks) => {
                     }
                     return this._super.apply(this, arguments);
                 },
-                viewOptions: {
-                    hasActionMenus: true,
-                },
+                loadActionMenus: true,
             });
 
             assert.strictEqual(
@@ -11168,9 +11156,7 @@ QUnit.module("Views", (hooks) => {
                     }
                     return this._super.apply(this, arguments);
                 },
-                viewOptions: {
-                    hasActionMenus: true,
-                },
+                loadActionMenus: true,
                 groupBy: ["m2o"],
             });
 
@@ -11217,7 +11203,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.test(
         "list view move to previous page when all records from last page archive/unarchived",
         async function (assert) {
             assert.expect(9);
@@ -11234,61 +11220,63 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: '<tree limit="3"><field name="display_name"/></tree>',
-                viewOptions: {
-                    hasActionMenus: true,
-                },
+                loadActionMenus: true,
                 mockRPC: function (route) {
                     if (route === "/web/dataset/call_kw/foo/action_archive") {
                         serverData.models.foo.records[3].active = false;
-                        return Promise.resolve();
+                        return {};
                     }
-                    return this._super.apply(this, arguments);
                 },
             });
 
             assert.strictEqual(
-                $(list.el).find(".o_pager_counter").text().trim(),
+                list.el.querySelector(".o_pager_counter").textContent.trim(),
                 "1-3 / 4",
                 "should have 2 pages and current page should be first page"
             );
             assert.strictEqual(
-                $(list.el).find("tbody td.o_list_record_selector").length,
+                list.el.querySelectorAll("tbody td.o_list_record_selector").length,
                 3,
                 "should have 3 records"
             );
 
             // move to next page
-            await click($(list.el).find(".o_pager_next"));
+            await click(list.el, ".o_pager_next");
             assert.strictEqual(
-                $(list.el).find(".o_pager_counter").text().trim(),
+                list.el.querySelector(".o_pager_counter").textContent.trim(),
                 "4-4 / 4",
                 "should be on second page"
             );
             assert.strictEqual(
-                $(list.el).find("tbody td.o_list_record_selector").length,
+                list.el.querySelectorAll("tbody td.o_list_record_selector").length,
                 1,
                 "should have 1 records"
             );
             assert.containsNone(list, ".o_cp_action_menus", "sidebar should not be available");
 
             await click(
-                $(list.el).find("tbody .o_data_row:first td.o_list_record_selector:first input")
+                list.el,
+                "tbody .o_data_row:first-child td.o_list_record_selector:first-child input"
             );
             assert.containsOnce(list, ".o_cp_action_menus", "sidebar should be available");
 
             // archive all records of current page
-            await click($(list.el).find(".o_cp_action_menus .dropdown-toggle:contains(Action)"));
-            await click($(list.el).find("a:contains(Archive)"));
-            assert.strictEqual($(".modal").length, 1, "a confirm modal should be displayed");
-
-            await click($("body .modal button span:contains(Ok)"));
+            await toggleActionMenu(list);
+            await toggleMenuItem(list, "Archive");
             assert.strictEqual(
-                $(list.el).find("tbody td.o_list_record_selector").length,
+                document.querySelectorAll(".modal").length,
+                1,
+                "a confirm modal should be displayed"
+            );
+
+            await click(document, ".modal-footer .btn-primary");
+            assert.strictEqual(
+                list.el.querySelectorAll("tbody td.o_list_record_selector").length,
                 3,
                 "should have 3 records"
             );
             assert.strictEqual(
-                $(list.el).find(".o_pager_counter").text().trim(),
+                list.el.querySelector(".o_pager_counter").textContent.trim(),
                 "1-3 / 3",
                 "should have 1 page only"
             );

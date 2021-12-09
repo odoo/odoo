@@ -7,6 +7,14 @@
                 <div class="o_cp_buttons" role="toolbar" aria-label="Control panel buttons" t-ref="buttons">
                     <t t-call="{{ constructor.buttonTemplate }}"/>
                 </div>
+                <t t-if="props.info.actionMenus and model.root.selection.length">
+                    <ActionMenus 
+                        activeIds="model.root.selection.map((r) => r.resId)" 
+                        context="props.context" 
+                        items="getActionMenuItems()" 
+                        isDomainSelected="model.root.isDomainSelected" 
+                        resModel="model.root.resModel"/>
+                </t>
             </t>
             <ListRenderer list="model.root" fields="props.fields" info="archInfo" hasSelectors="props.hasSelectors" openRecord="openRecord" toggleSelection="toggleSelection" toggleRecordSelection="toggleRecordSelection"/>
         </Layout>
@@ -26,7 +34,7 @@
                 </button>
             </t>
             <t t-if="activeActions['exportXlsx'] and isExportEnable">
-                <button type="button" class="btn btn-secondary fa fa-download o_list_export_xlsx" data-tooltip="Export All" aria-label="Export All"/>
+                <button type="button" class="btn btn-secondary fa fa-download o_list_export_xlsx" data-tooltip="Export All" aria-label="Export All" t-on-click="onDirectExportData"/>
             </t>
             <t t-if="model.root.selection.length">
                 <t t-foreach="archInfo.headerButtons" t-as="button" t-key="button.id">
@@ -37,7 +45,8 @@
                         defaultRank="button.defaultRank"
                         domain="props.domain"
                         icon="button.icon"
-                        getInfo="getInfo"
+                        getSelectedResIds="getSelectedResIds"
+                        resModel="model.root.resModel"
                         string="button.string"
                         title="button.title"/>
                 </t>
