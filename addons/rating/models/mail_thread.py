@@ -30,13 +30,3 @@ class MailThread(models.AbstractModel):
             self.env['rating.rating'].browse(rating_id).write({'message_id': message.id})
 
         return message
-
-    def _message_create(self, values_list):
-        """ Force usage of rating-specific methods and API allowing to delegate
-        computation to records. Keep methods optimized and skip rating_ids
-        support to simplify MailThrad main API. """
-        if not isinstance(values_list, (list)):
-            values_list = [values_list]
-        if any(values.get('rating_ids') for values in values_list):
-            raise ValueError(_("Posting a rating should be done using message post API."))
-        return super()._message_create(values_list)

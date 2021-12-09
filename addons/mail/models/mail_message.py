@@ -571,7 +571,7 @@ class Message(models.Model):
             if 'record_name' not in values and 'default_record_name' not in self.env.context:
                 values['record_name'] = self._get_record_name(values)
 
-            if 'attachment_ids' not in values:
+            if not values.get('attachment_ids'):
                 values['attachment_ids'] = []
             # extract base64 images
             if 'body' in values:
@@ -604,9 +604,9 @@ class Message(models.Model):
         messages = super(Message, self).create(values_list)
 
         check_attachment_access = []
-        if all(isinstance(command, int) or command[0] in (4, 6) for values in values_list for command in values.get('attachment_ids')):
+        if all(isinstance(command, int) or command[0] in (4, 6) for values in values_list for command in values['attachment_ids']):
             for values in values_list:
-                for command in values.get('attachment_ids'):
+                for command in values['attachment_ids']:
                     if isinstance(command, int):
                         check_attachment_access += [command]
                     elif command[0] == 6:

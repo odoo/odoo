@@ -404,6 +404,40 @@ class TestMessageNotify(TestMessagePostCommon):
             )
 
     @users('employee')
+    def test_notify_parameters(self):
+        """ Test usage of parameters in notify, both for unwanted side effects
+        and magic parameters. """
+        test_record = self.test_record.with_env(self.env)
+
+        for parameters in [
+            {'message_type': 'comment'},
+            {'canned_response_ids': []},
+            {'child_ids': []},
+            {'mail_ids': []},
+            {'notification_ids': []},
+            {'notified_partner_ids': []},
+            {'reaction_ids': []},
+            {'starred_partner_ids': []},
+        ]:
+            with self.subTest(parameters=parameters), \
+                 self.mock_mail_gateway(), \
+                 self.assertRaises(ValueError):
+                _new_message = test_record.message_notify(
+                    body='<p>You will not receive a notification</p>',
+                    partner_ids=self.partner_1.ids,
+                    subject='This should not be accepted',
+                    **parameters
+                )
+
+        # support of subtype xml id
+        new_message = test_record.message_notify(
+            body='<p>You will not receive a notification</p>',
+            partner_ids=self.partner_1.ids,
+            subtype_xmlid='mail.mt_note',
+        )
+        self.assertEqual(new_message.subtype_id, self.env.ref('mail.mt_note'))
+
+    @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_notify_thread(self):
         """ Test notify on ``mail.thread`` model, which is pushing a message to
