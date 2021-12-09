@@ -184,7 +184,7 @@ const _DialogLinkWidget = Link.extend({
 const LinkDialog = Dialog.extend({
     init: function (parent, ...args) {
         this._super(...arguments);
-        this.linkWidget = new _DialogLinkWidget(this, ...args);
+        this.linkWidget = this.getLinkWidget(...args);
     },
     start: async function () {
         const res = await this._super(...arguments);
@@ -195,6 +195,16 @@ const LinkDialog = Dialog.extend({
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
+
+    /**
+     * Returns an instance of the widget that will be attached to the body of the
+     * link dialog. One may overwrite this function and return an instance of
+     * another widget to change the default logic.
+     * @param {...any} args
+     */
+    getLinkWidget: function (...args) {
+        return new _DialogLinkWidget(this, ...args);
+    },
 
     /**
      * @override
