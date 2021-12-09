@@ -428,7 +428,7 @@ class MailRenderMixin(models.AbstractModel):
 
     @api.model
     def _render_template(self, template_src, model, res_ids, engine='inline_template',
-                         add_context=None, options=None, post_process=False):
+                         add_context=None, options=None):
         """ Render the given string on records designed by model / res_ids using
         the given rendering engine. Possible engine are small_web, qweb, or
         qweb_view.
@@ -443,12 +443,15 @@ class MailRenderMixin(models.AbstractModel):
         :param dict add_context: additional context to give to renderer. It
           allows to add or update values to base rendering context generated
           by ``MailRenderMixin._render_<engine>_eval_context()``;
-        :param dict options: options for rendering;
-        :param boolean post_process: perform a post processing on rendered result
-          (notably html links management). See``_render_template_postprocess``;
+        :param dict options: options for rendering; may contain
+            boolean post_process: perform a post processing on rendered result
+            (notably html links management). See``_render_template_postprocess``);
 
         :return dict: {res_id: string of rendered template based on record}
         """
+        if options is None:
+            options = {}
+
         if not isinstance(res_ids, (list, tuple)):
             raise ValueError(_('Template rendering should be called only using on a list of IDs.'))
         if engine not in ('inline_template', 'qweb', 'qweb_view'):
@@ -463,7 +466,7 @@ class MailRenderMixin(models.AbstractModel):
         else:
             rendered = self._render_template_inline_template(template_src, model, res_ids,
                                                              add_context=add_context, options=options)
-        if post_process:
+        if options.get('post_process'):
             rendered = self._render_template_postprocess(rendered)
 
         return rendered
@@ -516,7 +519,7 @@ class MailRenderMixin(models.AbstractModel):
 
     def _render_field(self, field, res_ids, engine='inline_template',
                       compute_lang=False, set_lang=False,
-                      add_context=None, options=None, post_process=False):
+                      add_context=None, options=None):
         """ Given some record ids, render a template located on field on all
         records. ``field`` should be a field of self (i.e. ``body_html`` on
         ``mail.template``). res_ids are record IDs linked to ``model`` field
@@ -534,9 +537,9 @@ class MailRenderMixin(models.AbstractModel):
           valid lang code matching an activate res.lang. Checked only if
           ``compute_lang`` is False;
         :param dict add_context: additional context to give to renderer;
-        :param dict options: options for rendering;
-        :param boolean post_process: perform a post processing on rendered result
-          (notably html links management). See``_render_template_postprocess``);
+        :param dict options: options for rendering; may contain
+            boolean post_process: perform a post processing on rendered result
+            (notably html links management). See``_render_template_postprocess``);
 
         :return dict: {res_id: string of rendered template based on record}
         """
@@ -554,13 +557,12 @@ class MailRenderMixin(models.AbstractModel):
         # rendering options
         engine = getattr(self._fields[field], 'render_engine', engine)
         options.update(**getattr(self._fields[field], 'render_options', {}))
-        post_process = options.get('post_process') or post_process
 
         return dict(
             (res_id, rendered)
             for lang, (template, tpl_res_ids) in templates_res_ids.items()
             for res_id, rendered in template._render_template(
                 template[field], template.render_model, tpl_res_ids, engine=engine,
-                add_context=add_context, options=options, post_process=post_process
+                add_context=add_context, options=options
             ).items()
         )
