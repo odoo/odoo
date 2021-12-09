@@ -96,6 +96,7 @@ class MailGroupMessage(models.Model):
                     field: vals.pop(field)
                     for field in self.env['mail.message']._fields
                     if field in vals
+                    and field in self.env['mail.thread']._get_message_create_valid_field_names()
                 }).id
         return super(MailGroupMessage, self).create(values_list)
 
