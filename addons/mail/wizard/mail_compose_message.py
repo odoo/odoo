@@ -383,7 +383,7 @@ class MailComposer(models.TransientModel):
 
         # render all template-based value at once
         if mass_mail_mode and self.model:
-            rendered_values = self.render_message(res_ids)
+            rendered_values = self._render_message(res_ids)
         # compute alias-based reply-to in batch
         reply_to_value = dict.fromkeys(res_ids, None)
         if mass_mail_mode and not self.reply_to_force_new:
@@ -577,7 +577,7 @@ class MailComposer(models.TransientModel):
             if template.mail_server_id:
                 values['mail_server_id'] = template.mail_server_id.id
         elif template_id:
-            values = self.generate_email_for_composer(
+            values = self._generate_email_for_composer(
                 template_id, [res_id],
                 ('attachment_ids',
                  'body_html',
@@ -641,7 +641,7 @@ class MailComposer(models.TransientModel):
 
         return {'value': values}
 
-    def render_message(self, res_ids):
+    def _render_message(self, res_ids):
         """Generate template-based values of wizard, for the document records given
         by res_ids. This method is meant to be inherited by email_template that
         will produce a more complete dictionary, using qweb templates.
@@ -661,10 +661,6 @@ class MailComposer(models.TransientModel):
                               subject, body, email_from and reply_to
         """
         self.ensure_one()
-        multi_mode = True
-        if isinstance(res_ids, int):
-            multi_mode = False
-            res_ids = [res_ids]
 
         subjects = self._render_field('subject', res_ids)
         # We want to preserve comments in emails so as to keep mso conditionals
@@ -688,7 +684,7 @@ class MailComposer(models.TransientModel):
 
         # generate template-based values
         if self.template_id:
-            template_values = self.generate_email_for_composer(
+            template_values = self._generate_email_for_composer(
                 self.template_id.id, res_ids,
                 ('attachment_ids',
                  'email_to',
@@ -713,24 +709,19 @@ class MailComposer(models.TransientModel):
             # update template values by composer values
             template_values[res_id].update(results[res_id])
 
-        return multi_mode and template_values or template_values[res_ids[0]]
+        return template_values
 
     @api.model
-    def generate_email_for_composer(self, template_id, res_ids, fields):
-        """ Call email_template.generate_email(), get fields relevant for
+    def _generate_email_for_composer(self, template_id, res_ids, render_fields):
+        """ Call email_template._generate_template(), get fields relevant for
             mail.compose.message, transform email_cc and email_to into partner_ids """
-        multi_mode = True
-        if isinstance(res_ids, int):
-            multi_mode = False
-            res_ids = [res_ids]
-
-        returned_fields = list(fields) + ['partner_ids', 'attachments']
+        returned_fields = list(render_fields) + ['partner_ids', 'attachments']
         values = dict.fromkeys(res_ids, False)
 
-        template_values = self.env['mail.template'].with_context(tpl_partners_only=True).browse(template_id).generate_email(res_ids, fields)
+        template_values = self.env['mail.template'].with_context(tpl_partners_only=True).browse(template_id)._generate_template(res_ids, render_fields)
         for res_id in res_ids:
             res_id_values = dict((field, template_values[res_id][field]) for field in returned_fields if template_values[res_id].get(field))
             res_id_values['body'] = res_id_values.pop('body_html', '')
             values[res_id] = res_id_values
 
-        return multi_mode and values or values[res_ids[0]]
+        return values
