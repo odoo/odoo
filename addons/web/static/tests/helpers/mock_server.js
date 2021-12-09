@@ -484,6 +484,8 @@ export class MockServer {
                 return this.mockReadGroup(args.model, args.kwargs);
             case "web_read_group":
                 return this.mockWebReadGroup(args.model, args.kwargs);
+            case "read_progress_bar":
+                return this.mockReadProgressBar(args.model, args.kwargs);
             case "write":
                 return this.mockWrite(args.model, args.args);
             case "unlink":
@@ -1023,6 +1025,29 @@ export class MockServer {
             groups: groups,
             length: allGroups.length,
         };
+    }
+
+    mockReadProgressBar(modelName, kwargs) {
+        const { domain, group_by: groupBy, progress_bar: progressBar } = kwargs;
+        const records = this.getRecords(modelName, domain || []);
+
+        const data = {};
+        for (const record of records) {
+            const groupByValue = record[groupBy]; // always technical value here
+            if (!(groupByValue in data)) {
+                data[groupByValue] = {};
+                for (const key in progressBar.colors) {
+                    data[groupByValue][key] = 0;
+                }
+            }
+
+            const fieldValue = record[progressBar.field];
+            if (fieldValue in data[groupByValue]) {
+                data[groupByValue][fieldValue]++;
+            }
+        }
+
+        return data;
     }
 
     /**

@@ -6,6 +6,7 @@ import {
     editInput,
     makeDeferred,
     nextTick,
+    patchWithCleanup,
     triggerEvent,
 } from "@web/../tests/helpers/utils";
 import {
@@ -1227,10 +1228,11 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("window resize should not change quick create form size", async (assert) => {
         assert.expect(2);
 
-        testUtils.mock.patch(FormRenderer, {
+        patchWithCleanup(FormRenderer, {
             start: function () {
-                this._super.apply(this, arguments);
-                window.addEventListener("resize", this._applyFormSizeClass.bind(this));
+                this._super(...arguments);
+
+                window.addEventListener("resize", () => this._applyFormSizeClass());
             },
         });
         const kanban = await makeView({
@@ -1253,9 +1255,9 @@ QUnit.module("Views", (hooks) => {
         assert.hasClass(quickCreate.querySelector(".o_form_view"), "o_xxs_form_view");
 
         // trigger window resize explicitly to call _applyFormSizeClass
-        window.dispatchEvent(new Event("resize"));
+        await triggerEvent(window, "", "resize");
+
         assert.hasClass(quickCreate.querySelector(".o_form_view"), "o_xxs_form_view");
-        testUtils.mock.unpatch(FormRenderer);
     });
 
     QUnit.skip(
@@ -2695,7 +2697,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.test(
         "quick create record feature is properly enabled/disabled at reload",
         async (assert) => {
             assert.expect(3);
@@ -4256,7 +4258,7 @@ QUnit.module("Views", (hooks) => {
         KanbanView.prototype.searchMenuTypes = searchMenuTypesOriginal;
     });
 
-    QUnit.skip("kanban view with create=False", async (assert) => {
+    QUnit.test("kanban view with create=False", async (assert) => {
         assert.expect(1);
 
         const kanban = await makeView({
@@ -6509,7 +6511,7 @@ QUnit.module("Views", (hooks) => {
         assert.hasClass(kanban.el.querySelector(".o-kanban-button-new"), "o_catch_attention");
     });
 
-    QUnit.skip("buttons with modifiers", async (assert) => {
+    QUnit.test("buttons with modifiers", async (assert) => {
         assert.expect(2);
 
         serverData.models.partner.records[1].bar = false; // so that test is more complete
@@ -7396,7 +7398,7 @@ QUnit.module("Views", (hooks) => {
         delete fieldRegistry.map.test_widget;
     });
 
-    QUnit.skip("column progressbars properly work", async (assert) => {
+    QUnit.test("column progressbars properly work", async (assert) => {
         assert.expect(2);
 
         const kanban = await makeView({
@@ -7425,7 +7427,10 @@ QUnit.module("Views", (hooks) => {
         );
 
         assert.strictEqual(
-            Number(kanban.el.querySelector(".o_kanban_counter_side").last().innerText),
+            Number(
+                kanban.el.querySelector(".o_kanban_group:last-child .o_kanban_counter_side")
+                    .innerText
+            ),
             36,
             "counter should display the sum of int_field values"
         );
@@ -7870,7 +7875,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skip("RPCs when (re)loading kanban view progressbars", async (assert) => {
+    QUnit.test("RPCs when (re)loading kanban view progressbars", async (assert) => {
         assert.expect(9);
 
         const kanban = await makeView({
