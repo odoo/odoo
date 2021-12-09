@@ -40,7 +40,7 @@
                             <field name="scrap_location" attrs="{'invisible': [('usage', 'not in', ('inventory', 'internal'))]}"/>
                             <field name="return_location"/>
                         </group>
-                        <group string="Cyclic Inventory" attrs="{'invisible': ['|', ('usage', 'not in', ('internal', 'transit')), ('company_id', '=', False)]}">
+                        <group string="Cyclic Counting" attrs="{'invisible': ['|', ('usage', 'not in', ('internal', 'transit')), ('company_id', '=', False)]}">
                             <field name="cyclic_inventory_frequency"/>
                             <field name="last_inventory_date"/>
                             <field name="next_inventory_date" attrs="{'invisible': [('active', '=', False)]}"/>
