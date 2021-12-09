@@ -593,4 +593,32 @@ QUnit.module("ActionManager", (hooks) => {
         // check on the whole DOM
         assert.containsNone(document.body, ".tooltip");
     });
+
+    QUnit.test("breadcrumbs are correct in stacked legacy client actions", async function (assert) {
+        const ClientAction = AbstractAction.extend({
+            hasControlPanel: true,
+            async start() {
+                this.$el.addClass("client_action");
+                return this._super(...arguments);
+            },
+            getTitle() {
+                return "Blabla";
+            },
+        });
+        core.action_registry.add("clientAction", ClientAction);
+        registerCleanup(() => delete core.action_registry.map.clientAction);
+
+        const webClient = await createWebClient({ serverData });
+
+        await doAction(webClient, 3);
+        assert.containsOnce(webClient, ".o_list_view");
+        assert.strictEqual($(webClient.el).find(".breadcrumb-item").text(), "Partners");
+
+        await doAction(webClient, {
+            type: "ir.actions.client",
+            tag: "clientAction",
+        });
+        assert.containsOnce(webClient, ".client_action");
+        assert.strictEqual($(webClient.el).find(".breadcrumb-item").text(), "PartnersBlabla");
+    });
 });
