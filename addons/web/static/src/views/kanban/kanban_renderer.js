@@ -33,8 +33,10 @@ export class KanbanRenderer extends Component {
         this.action = useService("action");
         this.dialog = useService("dialog");
         this.notification = useService("notification");
+        this.mousedownTarget = null;
         this.colors = RECORD_COLORS;
         useAutofocus();
+        useExternalListener(window, "click", this.onWindowClick, true);
         useExternalListener(window, "keydown", this.onWindowKeydown);
         useExternalListener(window, "mousedown", this.onWindowMousedown);
         // Sortable
@@ -368,11 +370,31 @@ export class KanbanRenderer extends Component {
         }
     }
 
+    onQuickCreateKeydown(group, ev) {
+        if (ev.key === "Enter") {
+            this.validateQuickCreate(group, false);
+        }
+    }
+
     onRecordClick(record, ev) {
         if (ev.target.closest(GLOBAL_CLICK_CANCEL_SELECTORS.join(","))) {
             return;
         }
         this.props.openRecord(record);
+    }
+
+    onWindowClick(ev) {
+        if (!this.props.list.isGrouped) {
+            return;
+        }
+        const target = this.mousedownTarget || ev.target;
+        if (!target.closest(".o_kanban_quick_create")) {
+            this.cancelQuickCreate();
+        }
+        if (!target.closest(".o_column_quick_create")) {
+            this.state.quickCreateGroup = false;
+        }
+        this.mousedownTarget = null;
     }
 
     onWindowKeydown(ev) {
@@ -386,15 +408,7 @@ export class KanbanRenderer extends Component {
     }
 
     onWindowMousedown(ev) {
-        if (!this.props.list.isGrouped) {
-            return;
-        }
-        if (!ev.target.closest(".o_column_quick_create")) {
-            this.state.quickCreateGroup = false;
-        }
-        if (!ev.target.closest(".o_kanban_quick_create")) {
-            this.cancelQuickCreate();
-        }
+        this.mousedownTarget = ev.target;
     }
 
     //-------------------------------------------------------------------------

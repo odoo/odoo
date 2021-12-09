@@ -1260,17 +1260,21 @@ QUnit.module("Views", (hooks) => {
         assert.hasClass(quickCreate.querySelector(".o_form_view"), "o_xxs_form_view");
     });
 
-    QUnit.skip(
+    QUnit.test(
         "quick create record: cancel and validate without using the buttons",
         async (assert) => {
-            assert.expect(9);
+            assert.expect(8);
+
+            serverData.views = {
+                "partner,some_view_ref,form": `<form><field name="foo" /></form>`,
+            };
 
             const kanban = await makeView({
                 type: "kanban",
                 resModel: "partner",
                 serverData,
                 arch:
-                    '<kanban on_create="quick_create">' +
+                    '<kanban quick_create_view="some_view_ref" on_create="quick_create">' +
                     '<field name="bar"/>' +
                     '<templates><t t-name="kanban-box">' +
                     '<div><field name="foo"/></div>' +
@@ -1278,7 +1282,7 @@ QUnit.module("Views", (hooks) => {
                 groupBy: ["bar"],
             });
 
-            assert.strictEqual(kanban.exportState().resIds.length, 4);
+            assert.containsN(kanban, ".o_kanban_record:not(.o_kanban_ghost)", 4);
 
             // click to add an element and cancel the quick creation by pressing ESC
             await quickCreateRecord(kanban);
@@ -1297,7 +1301,7 @@ QUnit.module("Views", (hooks) => {
 
             // click to add and element and click outside, should cancel the quick creation
             await quickCreateRecord(kanban);
-            await click(kanban.el, ".o_kanban_group .o_kanban_record:first-child");
+            await click(kanban.el, ".o_kanban_group:first-child .o_kanban_record:last-child");
             assert.containsNone(
                 kanban,
                 ".o_kanban_quick_create",
@@ -1307,7 +1311,7 @@ QUnit.module("Views", (hooks) => {
             // click to input and drag the mouse outside, should not cancel the quick creation
             await quickCreateRecord(kanban);
             await triggerEvent(kanban.el, ".o_kanban_quick_create input", "mousedown");
-            await click(kanban.el, ".o_kanban_group .o_kanban_record:first-child");
+            await click(kanban.el, ".o_kanban_group:first-child .o_kanban_record:last-child");
             assert.containsOnce(
                 kanban,
                 ".o_kanban_quick_create",
@@ -1316,10 +1320,10 @@ QUnit.module("Views", (hooks) => {
 
             // click to really add an element
             await quickCreateRecord(kanban);
-            await editQuickCreateInput(kanban, "display_name", "new partner");
+            await editQuickCreateInput(kanban, "foo", "new partner");
 
             // clicking outside should no longer destroy the quick create as it is dirty
-            await click(kanban.el, ".o_kanban_group .o_kanban_record:first-child");
+            await click(kanban.el, ".o_kanban_group:first-child .o_kanban_record:last-child");
             assert.containsOnce(
                 kanban,
                 ".o_kanban_quick_create",
@@ -1331,17 +1335,11 @@ QUnit.module("Views", (hooks) => {
                 key: "Enter",
             });
 
+            assert.containsN(kanban, ".o_kanban_record:not(.o_kanban_ghost)", 5);
             assert.strictEqual(
-                serverData.models.partner.records.length,
-                5,
-                "should have created a partner"
+                kanban.el.querySelector(".o_kanban_group:first-child .o_kanban_record").innerText,
+                "new partner"
             );
-            assert.strictEqual(
-                serverData.models.partner.records.slice(-1)[0].name,
-                "new partner",
-                "should have correct name"
-            );
-            assert.strictEqual(kanban.exportState().resIds.length, 5);
         }
     );
 
