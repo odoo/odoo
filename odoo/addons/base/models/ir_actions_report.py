@@ -45,6 +45,12 @@ try:
 except Exception:
     pass
 
+datamatrix_available = True
+try:
+    from pylibdmtx import pylibdmtx
+except Exception:
+    _logger.info('A package may be missing to print Data Matrix barcodes: pylibdmtx or libdmtx.')
+    datamatrix_available = False
 
 def _get_wkhtmltopdf_bin():
     return find_in_path('wkhtmltopdf')
@@ -249,6 +255,16 @@ class IrActionsReport(models.Model):
         :return: wkhtmltopdf_state
         '''
         return wkhtmltopdf_state
+
+    @api.model
+    def datamatrix_available(self):
+        '''Returns whether or not datamatrix creation is possible.
+        * True: Reportlab seems to be able to create datamatrix without error.
+        * False: Reportlab cannot seem to create datamatrix, most likely due to missing package dependency
+
+        :return: Boolean
+        '''
+        return datamatrix_available
 
     def get_paperformat(self):
         return self.paperformat_id or self.env.company.paperformat_id
@@ -526,6 +542,9 @@ class IrActionsReport(models.Model):
         elif barcode_type == 'auto':
             symbology_guess = {8: 'EAN8', 13: 'EAN13'}
             barcode_type = symbology_guess.get(len(value), 'Code128')
+        elif barcode_type == 'DataMatrix' and not self.datamatrix_available():
+            # fallback to avoid stacktrack because reportlab won't recognize the type and error message isn't useful/will be blocking
+            barcode_type = 'Code128'
         try:
             width, height, humanreadable, quiet = int(width), int(height), bool(int(humanreadable)), bool(int(quiet))
             # for `QR` type, `quiet` is not supported. And is simply ignored.
