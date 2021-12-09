@@ -167,7 +167,13 @@ class MassMailController(http.Controller):
             if not self._valid_unsubscribe_token(mailing_id, res_id, email, str(token)) and not request.env.user.has_group('mass_mailing.group_mass_mailing_user'):
                 raise exceptions.AccessDenied()
 
-            html_markupsafe = mailing._render_field('body_html', [res_id])[res_id]
+            # do not force lang, will simply use user context
+            html_markupsafe = mailing._render_field(
+                'body_html',
+                [res_id],
+                compute_lang=False,
+                options={'post_process': False}
+            )[res_id]
             # Update generic URLs (without parameters) to final ones
             html_markupsafe = html_markupsafe.replace('/unsubscribe_from_list',
                                                       mailing._get_unsubscribe_url(email, res_id))

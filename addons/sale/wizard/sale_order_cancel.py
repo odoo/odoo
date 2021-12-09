@@ -66,7 +66,7 @@ class SaleOrderCancel(models.TransientModel):
                     wizard.template_id.subject,
                     'sale.order',
                     [wizard.order_id.id],
-                    post_process=True,
+                    options={'post_process': True},
                 )[wizard.order_id.id]
 
     @api.depends('order_id')
@@ -77,7 +77,7 @@ class SaleOrderCancel(models.TransientModel):
                     wizard.template_id.body_html,
                     'sale.order',
                     [wizard.order_id.id],
-                    post_process=True,
+                    options={'post_process': True},
                     engine='qweb',
                 )[wizard.order_id.id]
 
