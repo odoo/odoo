@@ -31,11 +31,12 @@ function registerClientAction(name, action) {
                 for (const key in this.props) {
                     if (key === "action" || key === "actionId") {
                         continue;
-                    } else if (key === "breadcrumbs") {
-                        options[key] = breadcrumbsToLegacy(this.props[key]);
                     } else {
                         options[key] = this.props[key];
                     }
+                }
+                if (this.env.config.breadcrumbs) {
+                    options.breadcrumbs = breadcrumbsToLegacy(this.env.config.breadcrumbs);
                 }
 
                 // always add user context to the action context
