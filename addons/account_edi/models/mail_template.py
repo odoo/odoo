@@ -27,24 +27,19 @@ class MailTemplate(models.Model):
             return {}
         return {'attachment_ids': [document.attachment_id.id]}
 
-    def generate_email(self, res_ids, fields):
-        res = super().generate_email(res_ids, fields)
-
-        multi_mode = True
-        if isinstance(res_ids, int):
-            res_ids = [res_ids]
-            multi_mode = False
+    def _generate_template(self, res_ids, render_fields):
+        res = super()._generate_template(res_ids, render_fields)
 
         if self.model not in ['account.move', 'account.payment']:
             return res
 
         records = self.env[self.model].browse(res_ids)
         for record in records:
-            record_data = (res[record.id] if multi_mode else res)
             for doc in record.edi_document_ids:
-                record_data.setdefault('attachments', [])
+                res[record.id].setdefault('attachment_ids', [])
+                res[record.id].setdefault('attachments', [])
                 attachments = self._get_edi_attachments(doc)
-                record_data['attachment_ids'] += attachments.get('attachment_ids', [])
-                record_data['attachments'] += attachments.get('attachments', [])
+                res[record.id]['attachment_ids'] += attachments.get('attachment_ids', [])
+                res[record.id]['attachments'] += attachments.get('attachments', [])
 
         return res
