@@ -70,6 +70,11 @@ odoo.define('point_of_sale.ProductInfoPopup', function(require) {
             posbus.trigger('search-product-from-info-popup', productName);
             this.cancel()
         }
+        _hasMarginsCostsAccessRights() {
+            const isAccessibleToEveryUser = this.env.pos.config.is_margins_costs_accessible_to_every_user;
+            const isCashierManager = this.env.pos.get_cashier().role === 'manager';
+            return isAccessibleToEveryUser || isCashierManager;
+        }
     }
 
     ProductInfoPopup.template = 'ProductInfoPopup';
