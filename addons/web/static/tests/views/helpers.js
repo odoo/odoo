@@ -21,11 +21,9 @@ const { mount } = owl;
 
 /**
  * @param {MakeViewParams} params
- * @param {Object} [options={}]
- * @param {boolean} [options.noFields] Do not add default fields
  * @returns {owl.Component}
  */
-export const makeView = async (params, options = {}) => {
+export const makeView = async (params) => {
     const props = { ...params };
     const serverData = props.serverData;
     const mockRPC = props.mockRPC;
@@ -39,7 +37,7 @@ export const makeView = async (params, options = {}) => {
 
     const env = await makeTestEnv({ serverData, mockRPC, config });
 
-    if (!options.noFields && props.arch) {
+    if (props.arch) {
         const defaultFields = serverData.models[props.resModel].fields;
         if (!props.fields) {
             props.fields = Object.assign({}, defaultFields);
