@@ -130,12 +130,10 @@ class HolidaysType(models.Model):
         FROM
             hr_leave_allocation alloc
         WHERE
-            alloc.id is not null or (
             alloc.employee_id = %s AND
             alloc.active = True AND alloc.state = 'validate' AND
-            alloc.date_to >= %s OR alloc.date_to IS NULL AND
+            (alloc.date_to >= %s OR alloc.date_to IS NULL) AND
             alloc.date_from <= %s 
-            )
         '''
 
         self._cr.execute(query, (employee_id or None, date_to, date_from))
@@ -399,7 +397,7 @@ class HolidaysType(models.Model):
         res = []
         for record in self:
             name = record.name
-            if record.requires_allocation == "yes":
+            if record.requires_allocation == "yes" and not self._context.get('from_manager_leave_form'):
                 name = "%(name)s (%(count)s)" % {
                     'name': name,
                     'count': _('%g remaining out of %g') % (
