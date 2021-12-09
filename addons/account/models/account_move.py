@@ -49,6 +49,45 @@ class AccountMove(models.Model):
     _check_company_auto = True
     _sequence_index = "journal_id"
 
+    def create_invoice(self):
+        ENTITIES = 100
+        account_type = self.env.ref('account.data_account_type_revenue')
+        template = self.env["account.account.template"].create({
+            'name': 'Account Template Perf',
+            'code': 'code',
+            'user_type_id': account_type.id,
+        })
+        partners = self.env['res.partner'].create([{
+            'name': 'Partner %s' % i,
+            'property_account_receivable_id': template.id
+        } for i in range(ENTITIES)])
+        salesmans = self.env.ref('base.user_admin') | self.env.ref('base.user_demo')
+        journal = self.env["account.journal"].create({
+            'name': 'Account Journal Test',
+            'type': 'sale',
+            'code': 'SALEPERF'
+        })
+        uom = self.env.ref('uom.product_uom_hour')
+        products = self.env['product.product'].create([{
+            'name': 'Product %s' % i,
+            'standard_price': 0.5 + 10 * i,
+            'list_price': 1 + 10 * i,
+            'type': 'service',
+            'uom_id': uom.id,
+            'uom_po_id': uom.id,
+        } for i in range(10)])
+        vals_list = [{
+            "partner_id": partners[i].id,
+            "invoice_user_id": salesmans[i % 2].id,
+            "journal_id": journal.id,
+            "invoice_line_ids": [
+                (0, 0, {"display_type": "line_note", "name": "NOTE"})
+            ] + [
+                (0, 0, {'product_id': product.id}) for product in products
+            ],
+        } for i in range(ENTITIES)]
+        self.env["account.move"].create(vals_list)
+
     @property
     def _sequence_monthly_regex(self):
         return self.journal_id.sequence_override_regex or super()._sequence_monthly_regex
@@ -121,12 +160,6 @@ class AccountMove(models.Model):
         return fields.Date.context_today(self) if self._context.get('default_move_type', 'entry') in self.get_purchase_types(include_receipts=True) else False
 
     @api.model
-    def _get_default_currency(self):
-        ''' Get the default currency from either the journal, either the default journal's company. '''
-        journal = self._get_default_journal()
-        return journal.currency_id or journal.company_id.currency_id
-
-    @api.model
     def _get_default_invoice_incoterm(self):
         ''' Get the default incoterm for invoice. '''
         return self.env.company.incoterm_id
@@ -178,10 +211,10 @@ class AccountMove(models.Model):
                                  compute='_compute_company_id')
     company_currency_id = fields.Many2one(string='Company Currency', readonly=True,
         related='company_id.currency_id')
-    currency_id = fields.Many2one('res.currency', store=True, readonly=True, tracking=True, required=True,
-        states={'draft': [('readonly', False)]},
-        string='Currency',
-        default=_get_default_currency)
+    currency_id = fields.Many2one(
+        'res.currency', string='Currency', tracking=True, required=True,
+        compute='_compute_currency_id', store=True, readonly=False, precompute=True,
+        states={'posted': [('readonly', True)], 'cancel': [('readonly', True)]})
     line_ids = fields.One2many('account.move.line', 'move_id', string='Journal Items', copy=True, readonly=True,
         states={'draft': [('readonly', False)]})
     partner_id = fields.Many2one('res.partner', readonly=True, tracking=True,
@@ -303,7 +336,8 @@ class AccountMove(models.Model):
         check_company=True,
         readonly=True, states={'draft': [('readonly', False)]})
     # /!\ invoice_line_ids is just a subset of line_ids.
-    invoice_line_ids = fields.One2many('account.move.line', 'move_id', string='Invoice lines',
+    invoice_line_ids = fields.One2many(
+        'account.move.line', 'move_id', string='Invoice lines',
         copy=False, readonly=True,
         domain=[('exclude_from_invoice_tab', '=', False)],
         states={'draft': [('readonly', False)]})
@@ -360,6 +394,10 @@ class AccountMove(models.Model):
     secure_sequence_number = fields.Integer(string="Inalteralbility No Gap Sequence #", readonly=True, copy=False)
     inalterable_hash = fields.Char(string="Inalterability Hash", readonly=True, copy=False)
     string_to_hash = fields.Char(compute='_compute_string_to_hash', readonly=True)
+
+    def _get_invoice_line_ids(self):
+        self.ensure_one()
+        return self.line_ids.filtered(lambda l: not l.exclude_from_invoice_tab)
 
     @api.model
     def _field_will_change(self, record, vals, field_name):
@@ -532,7 +570,7 @@ class AccountMove(models.Model):
     def _onchange_invoice_vendor_bill(self):
         if self.invoice_vendor_bill_id:
             # Copy invoice lines.
-            for line in self.invoice_vendor_bill_id.invoice_line_ids:
+            for line in self.invoice_vendor_bill_id._get_invoice_line_ids():
                 copied_vals = line.copy_data()[0]
                 copied_vals['move_id'] = self.id
                 new_line = self.env['account.move.line'].new(copied_vals)
@@ -550,14 +588,15 @@ class AccountMove(models.Model):
             self._recompute_dynamic_lines()
 
 
-    @api.onchange('invoice_line_ids')
-    def _onchange_invoice_line_ids(self):
-        current_invoice_lines = self.line_ids.filtered(lambda line: not line.exclude_from_invoice_tab)
-        others_lines = self.line_ids - current_invoice_lines
-        if others_lines and current_invoice_lines - self.invoice_line_ids:
-            others_lines[0].recompute_tax_line = True
-        self.line_ids = others_lines + self.invoice_line_ids
-        self._onchange_recompute_dynamic_lines()
+    # YTI Could be dropped normally
+    # @api.onchange('invoice_line_ids')
+    # def _onchange_invoice_line_ids(self):
+    #     current_invoice_lines = self.line_ids.filtered(lambda line: not line.exclude_from_invoice_tab)
+    #     others_lines = self.line_ids - current_invoice_lines
+    #     if others_lines and current_invoice_lines - self.invoice_line_ids:
+    #         others_lines[0].recompute_tax_line = True
+    #     self.line_ids = others_lines + self.invoice_line_ids
+    #     self._onchange_recompute_dynamic_lines()
 
     @api.onchange('line_ids', 'invoice_payment_term_id', 'invoice_date_due', 'invoice_cash_rounding_id', 'invoice_vendor_bill_id')
     def _onchange_recompute_dynamic_lines(self):
@@ -1116,6 +1155,11 @@ class AccountMove(models.Model):
     def _compute_company_id(self):
         for move in self:
             move.company_id = move.journal_id.company_id or move.company_id or self.env.company
+
+    @api.depends('journal_id')
+    def _compute_currency_id(self):
+        for move in self:
+            move.currency_id =  move.journal_id.currency_id or move.journal_id.company_id.currency_id
 
     def _get_lines_onchange_currency(self):
         # Override needed for COGS
@@ -2146,7 +2190,7 @@ class AccountMove(models.Model):
 
             is_invoice = vals.get('move_type') in self.get_invoice_types(include_receipts=True)
 
-            if 'line_ids' in vals:
+            if 'line_ids' in vals and vals['line_ids']:
                 vals.pop('invoice_line_ids', None)
                 new_vals_list.append(vals)
                 continue
@@ -2216,7 +2260,7 @@ class AccountMove(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        # OVERRIDE
+        print('create AM', vals_list)
         if any('state' in vals and vals.get('state') == 'posted' for vals in vals_list):
             raise UserError(_('You cannot create a move already in the posted state. Please create a draft move and post it after.'))
 
@@ -2224,6 +2268,7 @@ class AccountMove(models.Model):
         return super(AccountMove, self).create(vals_list)
 
     def write(self, vals):
+        print('Write AM', vals)
         for move in self:
             if (move.restrict_mode_hash_table and move.state == "posted" and set(vals).intersection(INTEGRITY_HASH_MOVE_FIELDS)):
                 raise UserError(_("You cannot edit the following fields due to restrict mode being activated on the journal: %s.") % ', '.join(INTEGRITY_HASH_MOVE_FIELDS))
@@ -3472,8 +3517,10 @@ class AccountMoveLine(models.Model):
     company_currency_id = fields.Many2one(related='company_id.currency_id', string='Company Currency',
         readonly=True, store=True,
         help='Utility field to express amount currency')
-    account_id = fields.Many2one('account.account', string='Account',
+    account_id = fields.Many2one(
+        'account.account', string='Account',
         index=True, ondelete="cascade",
+        compute='_compute_account_id', store=True, readonly=False, precompute=True,
         domain="[('deprecated', '=', False), ('company_id', '=', 'company_id'),('is_off_balance', '=', False)]",
         check_company=True,
         tracking=True)
@@ -3481,12 +3528,16 @@ class AccountMoveLine(models.Model):
     account_internal_group = fields.Selection(related='account_id.user_type_id.internal_group', string="Internal Group", readonly=True)
     account_root_id = fields.Many2one(related='account_id.root_id', string="Account Root", store=True, readonly=True)
     sequence = fields.Integer(default=10)
-    name = fields.Char(string='Label', tracking=True)
+    name = fields.Char(
+        string='Label', tracking=True,
+        compute='_compute_name', store=True, readonly=False, precompute=True)
     quantity = fields.Float(string='Quantity',
         default=1.0, digits='Product Unit of Measure',
         help="The optional quantity expressed by this line, eg: number of product sold. "
              "The quantity is not a legal requirement but is very useful for some reports.")
-    price_unit = fields.Float(string='Unit Price', digits='Product Price')
+    price_unit = fields.Float(
+        string='Unit Price', digits='Product Price',
+        compute='_compute_price_unit', store=True, readonly=False, precompute=True)
     discount = fields.Float(string='Discount (%)', digits='Discount', default=0.0)
     debit = fields.Monetary(string='Debit', default=0.0, currency_field='company_currency_id')
     credit = fields.Monetary(string='Credit', default=0.0, currency_field='company_currency_id')
@@ -3511,7 +3562,10 @@ class AccountMoveLine(models.Model):
         help="This field is used for payable and receivable journal entries. You can put the limit date for the payment of this line.")
     currency_id = fields.Many2one('res.currency', string='Currency', required=True)
     partner_id = fields.Many2one('res.partner', string='Partner', ondelete='restrict')
-    product_uom_id = fields.Many2one('uom.uom', string='Unit of Measure', domain="[('category_id', '=', product_uom_category_id)]", ondelete="restrict")
+    product_uom_id = fields.Many2one(
+        'uom.uom', string='Unit of Measure',
+        compute='_compute_product_uom_id', store=True, readonly=False, precompute=True,
+        domain="[('category_id', '=', product_uom_category_id)]", ondelete="restrict")
     product_id = fields.Many2one('product.product', string='Product', ondelete='restrict')
     product_uom_category_id = fields.Many2one('uom.category', related='product_id.uom_id.category_id')
 
@@ -3533,6 +3587,7 @@ class AccountMoveLine(models.Model):
         comodel_name='account.tax',
         string="Taxes",
         context={'active_test': False},
+        compute='_compute_tax_ids', store=True, readonly=False, precompute=True,
         check_company=True,
         help="Taxes that apply on the base amount")
     group_tax_id = fields.Many2one(
@@ -4095,45 +4150,45 @@ class AccountMoveLine(models.Model):
             if not line.tax_repartition_line_id and any(tax.analytic for tax in line.tax_ids):
                 line.recompute_tax_line = True
 
-    @api.onchange('product_id')
-    def _onchange_product_id(self):
+    @api.depends('product_id')
+    def _compute_name(self):
         for line in self:
             if not line.product_id or line.display_type in ('line_section', 'line_note'):
                 continue
-
             line.name = line._get_computed_name()
-            line.account_id = line._get_computed_account()
-            taxes = line._get_computed_taxes()
-            if taxes and line.move_id.fiscal_position_id:
-                taxes = line.move_id.fiscal_position_id.map_tax(taxes)
-            line.tax_ids = taxes
-            line.product_uom_id = line._get_computed_uom()
-            line.price_unit = line._get_computed_price_unit()
 
-    @api.onchange('product_uom_id')
-    def _onchange_uom_id(self):
-        ''' Recompute the 'price_unit' depending of the unit of measure. '''
-        if self.display_type in ('line_section', 'line_note'):
-            return
-        taxes = self._get_computed_taxes()
-        if taxes and self.move_id.fiscal_position_id:
-            taxes = self.move_id.fiscal_position_id.map_tax(taxes)
-        self.tax_ids = taxes
-        self.price_unit = self._get_computed_price_unit()
-
-    @api.onchange('account_id')
-    def _onchange_account_id(self):
-        ''' Recompute 'tax_ids' based on 'account_id'.
-        /!\ Don't remove existing taxes if there is no explicit taxes set on the account.
-        '''
+    @api.depends('product_id')
+    def _compute_account_id(self):
         for line in self:
-            if not line.display_type and (line.account_id.tax_ids or not line.tax_ids):
-                taxes = line._get_computed_taxes()
+            if not line.product_id or line.display_type in ('line_section', 'line_note'):
+                continue
+            line.account_id = line._get_computed_account()
 
+    @api.depends('product_id', 'product_uom_id')
+    def _compute_tax_ids(self):
+        for line in self:
+            if not line.product_id or line.display_type in ('line_section', 'line_note'):
+                continue
+            # /!\ Don't remove existing taxes if there is no explicit taxes set on the account.
+            if line.account_id.tax_ids or not line.tax_ids:
+                taxes = line._get_computed_taxes()
                 if taxes and line.move_id.fiscal_position_id:
                     taxes = line.move_id.fiscal_position_id.map_tax(taxes)
-
                 line.tax_ids = taxes
+
+    @api.depends('product_id')
+    def _compute_product_uom_id(self):
+        for line in self:
+            if not line.product_id or line.display_type in ('line_section', 'line_note'):
+                continue
+            line.product_uom_id = line._get_computed_uom()
+
+    @api.depends('product_id', 'product_uom_id')
+    def _compute_price_unit(self):
+        for line in self:
+            if not line.product_id or line.display_type in ('line_section', 'line_note'):
+                continue
+            line.price_unit = line._get_computed_price_unit()
 
     def _onchange_balance(self):
         for line in self:
@@ -4447,6 +4502,7 @@ class AccountMoveLine(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        print('create AML', vals_list)
         # OVERRIDE
         ACCOUNTING_FIELDS = ('debit', 'credit', 'amount_currency')
         BUSINESS_FIELDS = ('price_unit', 'quantity', 'discount', 'tax_ids')
@@ -4539,7 +4595,7 @@ class AccountMoveLine(models.Model):
         return lines
 
     def write(self, vals):
-        # OVERRIDE
+        print("write AML")
         ACCOUNTING_FIELDS = ('debit', 'credit', 'amount_currency')
         BUSINESS_FIELDS = ('price_unit', 'quantity', 'discount', 'tax_ids')
         PROTECTED_FIELDS_TAX_LOCK_DATE = ['debit', 'credit', 'tax_line_id', 'tax_ids', 'tax_tag_ids']
