@@ -117,7 +117,18 @@ class StockMove(models.Model):
         keys = super(StockMove, self)._key_assign_picking()
         return keys + (self.group_id.pos_order_id,)
 
-    def _add_mls_related_to_order(self, related_order_lines):
+    def _complete_done_qties(self):
+        self.ensure_one()
+        for move_line in self.move_line_ids:
+            move_line.qty_done = move_line.product_uom_qty
+        if float_compare(self.product_uom_qty, self.quantity_done, precision_rounding=self.product_uom.rounding) > 0:
+            remaining_qty = self.product_uom_qty - self.quantity_done
+            ml_vals = self._prepare_move_line_vals()
+            ml_vals.update({'qty_done': remaining_qty})
+            self.env['stock.move.line'].create(ml_vals)
+
+    def _add_mls_related_to_order(self, related_order_lines, are_qties_done=True):
+        qty_fname = 'qty_done' if are_qties_done else 'product_uom_qty'
         for move in self:
             if related_order_lines[0].product_id == move.product_id and related_order_lines[0].product_id.tracking != 'none':
                 if self.picking_type_id.use_existing_lots or self.picking_type_id.use_create_lots:
@@ -129,7 +140,6 @@ class StockMove(models.Model):
                             else:
                                 qty = abs(line.qty)
                             ml_vals = move._prepare_move_line_vals()
-                            ml_vals.update({'qty_done': qty})
                             if self.picking_type_id.use_existing_lots:
                                 existing_lot = self.env['stock.production.lot'].search([
                                     ('company_id', '=', self.company_id.id),
@@ -153,37 +163,26 @@ class StockMove(models.Model):
                                 ml_vals.update({
                                     'lot_name': lot.lot_name,
                                 })
-                            self.env['stock.move.line'].create(ml_vals)
+                            ml = self.env['stock.move.line'].create(ml_vals)
+                            ml.write({qty_fname: qty})
                             sum_of_lots += qty
                         if abs(line.qty) != sum_of_lots:
                             difference_qty = abs(line.qty) - sum_of_lots
                             ml_vals = self[0]._prepare_move_line_vals()
                             if line.product_id.tracking == 'serial':
-                                ml_vals.update({'qty_done': 1})
+                                mls = self.env['stock.move.line']
                                 for i in range(int(difference_qty)):
-                                    self.env['stock.move.line'].create(ml_vals)
+                                    mls |= self.env['stock.move.line'].create(ml_vals)
+                                mls.write({qty_fname: 1})
                             else:
-                                ml_vals.update({'qty_done': difference_qty})
-                                self.env['stock.move.line'].create(ml_vals)
+                                ml = self.env['stock.move.line'].create(ml_vals)
+                                ml.write({qty_fname: difference_qty})
                 else:
                     move._action_assign()
-                    for move_line in move.move_line_ids:
-                        move_line.qty_done = move_line.product_uom_qty
-                    if float_compare(move.product_uom_qty, move.quantity_done,
-                                     precision_rounding=move.product_uom.rounding) > 0:
-                        remaining_qty = move.product_uom_qty - move.quantity_done
-                        ml_vals = move._prepare_move_line_vals()
-                        ml_vals.update({'qty_done': remaining_qty})
-                        self.env['stock.move.line'].create(ml_vals)
-
+                    if are_qties_done:
+                        move._complete_done_qties()
             else:
                 move._action_assign()
-                for move_line in move.move_line_ids:
-                    move_line.qty_done = move_line.product_uom_qty
-                if float_compare(move.product_uom_qty, move.quantity_done,
-                                 precision_rounding=move.product_uom.rounding) > 0:
-                    remaining_qty = move.product_uom_qty - move.quantity_done
-                    ml_vals = move._prepare_move_line_vals()
-                    ml_vals.update({'qty_done': remaining_qty})
-                    self.env['stock.move.line'].create(ml_vals)
-                move.quantity_done = move.product_uom_qty
+                if are_qties_done:
+                    move._complete_done_qties()
+                    move.quantity_done = move.product_uom_qty
