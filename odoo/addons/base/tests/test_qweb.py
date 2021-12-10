@@ -1110,7 +1110,7 @@ class TestQWebBasic(TransactionCase):
         try:
             self.env['ir.qweb']._render(t.id)
         except QWebException as e:
-            self.assertIn('Can not compile expression', e.message)
+            self.assertIn('Cannot compile expression', e.message)
             self.assertIn('<div t-esc="abc + def + ("/>', e.message)
 
 from copy import deepcopy
