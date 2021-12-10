@@ -333,6 +333,7 @@ class AccountReconcileModel(models.Model):
             name = ' '.join([x for x in [base_line_dict.get('name', ''), tax_res['name']] if x])
             new_aml_dicts.append({
                 'account_id': tax_res['account_id'] or base_line_dict['account_id'],
+                'journal_id': base_line_dict.get('journal_id', False),
                 'name': name,
                 'partner_id': base_line_dict.get('partner_id'),
                 'balance': balance,
