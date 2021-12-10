@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from freezegun import freeze_time
+from unittest.mock import patch
 
 from odoo.tests import tagged
 from odoo.tools import mute_logger
@@ -223,7 +224,7 @@ class TestFlows(PaymentCommon, PaymentHttpCommon):
         response = self.portal_pay(**route_values)
         self.assertTrue(response.url.startswith(self._build_url('/web/login?redirect=')))
 
-        # Pay without a partner specified (but loggged) --> pay with the partner of current user.
+        # Pay without a partner specified (but logged) --> pay with the partner of current user.
         self.authenticate(self.portal_user.login, self.portal_user.login)
         tx_context = self.get_tx_checkout_context(**route_values)
         self.assertEqual(tx_context['partner_id'], self.portal_partner.id)
@@ -237,7 +238,7 @@ class TestFlows(PaymentCommon, PaymentHttpCommon):
         response = self.portal_pay(**route_values)
         self.assertTrue(response.url.startswith(self._build_url('/web/login?redirect=')))
 
-        # Pay without a partner specified (but loggged) --> pay with the partner of current user.
+        # Pay without a partner specified (but logged) --> pay with the partner of current user.
         self.authenticate(self.portal_user.login, self.portal_user.login)
         tx_context = self.get_tx_checkout_context(**route_values)
         self.assertEqual(tx_context['partner_id'], self.portal_partner.id)
@@ -265,34 +266,12 @@ class TestFlows(PaymentCommon, PaymentHttpCommon):
 
     def test_invoice_payment_flow(self):
         """Test the payment of an invoice through the payment/pay route"""
-        # Create a dummy invoice
-        account = self.env['account.account'].search([('company_id', '=', self.env.company.id)], limit=1)
-        invoice = self.env['account.move'].create({
-            'move_type': 'entry',
-            'date': '2019-01-01',
-            'line_ids': [
-                (0, 0, {
-                    'account_id': account.id,
-                    'currency_id': self.currency_euro.id,
-                    'debit': 100.0,
-                    'credit': 0.0,
-                    'amount_currency': 200.0,
-                }),
-                (0, 0, {
-                    'account_id': account.id,
-                    'currency_id': self.currency_euro.id,
-                    'debit': 0.0,
-                    'credit': 100.0,
-                    'amount_currency': -200.0,
-                }),
-            ],
-        })
 
         # Pay for this invoice (no impact even if amounts do not match)
         route_values = self._prepare_pay_values()
-        route_values['invoice_id'] = invoice.id
+        route_values['invoice_id'] = self.invoice.id
         tx_context = self.get_tx_checkout_context(**route_values)
-        self.assertEqual(tx_context['invoice_id'], invoice.id)
+        self.assertEqual(tx_context['invoice_id'], self.invoice.id)
 
         # payment/transaction
         route_values = {
@@ -318,8 +297,8 @@ class TestFlows(PaymentCommon, PaymentHttpCommon):
         # Note: strangely, the check
         # self.assertEqual(tx_sudo.invoice_ids, invoice)
         # doesn't work, and cache invalidation doesn't work either.
-        invoice.invalidate_cache(['transaction_ids'])
-        self.assertEqual(invoice.transaction_ids, tx_sudo)
+        self.invoice.invalidate_cache(['transaction_ids'])
+        self.assertEqual(self.invoice.transaction_ids, tx_sudo)
 
     def test_transaction_wrong_flow(self):
         transaction_values = self._prepare_pay_values()
@@ -380,3 +359,42 @@ class TestFlows(PaymentCommon, PaymentHttpCommon):
         self.assertEqual(manage_context['partner_id'], self.partner.id)
         self.assertEqual(manage_context['acquirer_ids'], [acquirer_b.id])
         self.assertEqual(manage_context['token_ids'], [])
+
+    def test_number_of_payment_request_from_portal(self):
+        self.authenticate(self.portal_user.login, self.portal_user.login)
+        self.partner = self.portal_partner
+        self.user = self.portal_user
+        self._test_number_of_payment_request_from_portal('direct', 0)
+        self._test_number_of_payment_request_from_portal('redirect', 0)
+        self._test_number_of_payment_request_from_portal('token', 1)
+
+    @mute_logger('odoo.addons.payment.models.payment_transaction')
+    def _test_number_of_payment_request_from_portal(self, flow, calls):
+        """ Test the number of payment requests made from the portal for a given online payment flow
+
+        :param str flow: The online payment flow to test ('direct', 'redirect', or 'token')
+        :param int calls: The expected number of call to `_send_payment_request`
+        """
+        payment_option_id = self.create_token().id if flow == 'token' else self.acquirer.id
+        data = {
+            'amount': self.amount,
+            'currency_id': self.currency.id,
+            'partner_id': self.partner.id,
+            'access_token': self._generate_test_access_token(
+                self.partner.id, self.amount, self.currency.id
+            ),
+            'payment_option_id': payment_option_id,
+            'reference_prefix': 'test',
+            'tokenization_requested': True,
+            'landing_route': 'Test',
+            'is_validation': False,
+            'invoice_id': self.invoice.id,
+            'flow': flow,
+        }
+
+        with patch(
+            'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
+            '._send_payment_request'
+        ) as patched:
+            self.get_processing_values(**data)
+            self.assertEqual(patched.call_count, calls)
