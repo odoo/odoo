@@ -156,7 +156,7 @@ class DigestDigest(models.Model):
                 digest.periodicity = digest._get_next_periodicity()[0]
             digest.next_run_date = digest._get_next_run_date()
 
-    def _action_send_to_user(self, user, tips_count=1, consume_tips=True):
+    def _action_send_to_user(self, user, tips_count=1, consume_tips=True, force_send=False):
         unsubscribe_token = self._get_unsubscribe_token(user.id)
 
         rendered_body = self.env['mail.render.mixin']._render_template(
@@ -219,8 +219,21 @@ class DigestDigest(models.Model):
             'state': 'outgoing',
             'subject': '%s: %s' % (user.company_id.name, self.name),
         }
-        self.env['mail.mail'].sudo().create(mail_values)
+        mail = self.env['mail.mail'].sudo().create(mail_values)
+        if force_send:
+            mail.send()
         return True
+
+    def action_launch_test_wizard(self):
+        self.ensure_one()
+        return {
+            'context': dict(self.env.context, default_digest_id=self.id),
+            'name': _('Test Digest'),
+            'res_model': 'digest.test',
+            'target': 'new',
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+        }
 
     @api.model
     def _cron_send_digest_email(self):
