@@ -1223,6 +1223,7 @@ class QWeb(object):
             options['_text_concat'].clear()
             code.append(self._indent("else:", indent))
             code.extend(self._compile_tag_open(el, options, indent + 1, not without_attributes))
+            code.extend(self._flushText(options, indent + 1))
             code.extend(default_body)
             options['_text_concat'].extend(_text_concat)
             code.extend(self._compile_tag_close(el, options))
