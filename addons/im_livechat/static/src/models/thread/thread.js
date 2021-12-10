@@ -99,4 +99,14 @@ patchRecordMethods('mail.thread', {
     _computeIsChatChannel() {
         return this.channel_type === 'livechat' || this._super();
     },
+    /**
+     * @override
+     */
+    _getDiscussSidebarCategory() {
+        switch (this.channel_type) {
+            case 'livechat':
+                return this.messaging.discuss.categoryLivechat;
+        }
+        return this._super();
+    }
 });

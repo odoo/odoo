@@ -1,9 +1,8 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many2one } from '@mail/model/model_field';
+import { attr, many2one, one2one } from '@mail/model/model_field';
 import { clear, link } from '@mail/model/model_field_command';
-import { isEventHandled } from '@mail/utils/utils';
 
 import Dialog from 'web.Dialog';
 
@@ -213,7 +212,7 @@ registerModel({
             compute: '_computeAvatarUrl',
         }),
         /**
-         * States the discuss sidebar category displaying this.
+         * Determines the discuss sidebar category displaying this item.
          */
         category: many2one('mail.discuss_sidebar_category', {
             inverse: 'categoryItems',
@@ -265,7 +264,7 @@ registerModel({
         /**
          * The related channel thread.
          */
-        channel: many2one('mail.thread', {
+        channel: one2one('mail.thread', {
             inverse: 'discussSidebarCategoryItem',
             readonly: true,
             required: true,

@@ -3,7 +3,9 @@
 import { registry } from '@mail/model/model_core';
 import { ModelField } from '@mail/model/model_field';
 import { FieldCommand, unlinkAll } from '@mail/model/model_field_command';
+import { RelationSet } from '@mail/model/model_field_relation_set';
 import { Listener } from '@mail/model/model_listener';
+import { followRelations } from '@mail/model/model_utils';
 import { makeDeferred } from '@mail/utils/deferred/deferred';
 
 /**
@@ -506,6 +508,7 @@ export class ModelManager {
                             'related',
                             'relationType',
                             'required',
+                            'sort',
                             'to',
                         ].includes(key)
                     );
@@ -520,6 +523,9 @@ export class ModelManager {
                     }
                     if (field.required && !(['one2one', 'many2one'].includes(field.relationType))) {
                         throw new Error(`Relational field(${fieldName}) on ${Model} has "required" true with a relation of type "${field.relationType}" but "required" is only supported for "one2one" and "many2one".`);
+                    }
+                    if (field.sort && !(['one2many', 'many2many'].includes(field.relationType))) {
+                        throw new Error(`Relational field "${Model}/${fieldName}" has "sort" with a relation of type "${field.relationType}" but "sort" is only supported for "one2many" and "many2many".`);
                     }
                 }
                 // 3. Computed field.
@@ -618,7 +624,7 @@ export class ModelManager {
                     throw new Error(`${field} on ${Model} defines its inverse as field(${field.inverse}) on ${RelatedModel}, but it does not exist.`);
                 }
                 if (inverseField.inverse !== fieldName) {
-                    throw new Error(`The name of ${field} on ${Model} does not match with the name defined in its inverse ${inverseField} on ${RelatedModel}.`)
+                    throw new Error(`The name of ${field} on ${Model} does not match with the name defined in its inverse ${inverseField} on ${RelatedModel}.`);
                 }
                 if (![Model.name, 'mail.model'].includes(inverseField.to)) {
                     throw new Error(`${field} on ${Model} has its inverse ${inverseField} on ${RelatedModel} referring to an invalid model (model(${inverseField.to})).`);
@@ -693,7 +699,7 @@ export class ModelManager {
             record.__values[field.fieldName] = undefined;
             if (field.fieldType === 'relation') {
                 if (['one2many', 'many2many'].includes(field.relationType)) {
-                    record.__values[field.fieldName] = new Set();
+                    record.__values[field.fieldName] = new RelationSet(record, field);
                 }
             }
         }
@@ -885,16 +891,7 @@ export class ModelManager {
                     onChange: (info) => {
                         this.startListening(listener);
                         for (const dependency of onChange.dependencies) {
-                            let target = record;
-                            for (const field of dependency.split('.')) {
-                                if (!target.constructor.__fieldMap[field]) {
-                                    throw Error(`onChange dependency "${field}" does not exist on ${record.constructor}.`);
-                                }
-                                target = target[field];
-                                if (!target) {
-                                    break;
-                                }
-                            }
+                            followRelations(record, dependency);
                         }
                         this.stopListening(listener);
                         record[onChange.methodName]();
@@ -1109,6 +1106,22 @@ export class ModelManager {
     }
 
     /**
+     * Marks the given field of the given record as changed.
+     *
+     * @param {mail.model} record
+     * @param {ModelField} field
+     */
+    _markRecordFieldAsChanged(record, field) {
+        for (const [listener, infoList] of this._listenersObservingFieldOfLocalId.get(record.localId).get(field)) {
+            this._markListenerToNotify(listener, {
+                listener,
+                reason: `_update: ${field} of ${record}`,
+                infoList,
+            });
+        }
+    }
+
+    /**
      * Notifies the listeners that have been flagged to be notified and for
      * which the `onChange` function was defined to be called after the update
      * cycle.
@@ -1304,13 +1317,7 @@ export class ModelManager {
                 throw new Error(`read-only ${field} on ${record} was updated`);
             }
             hasChanged = true;
-            for (const [listener, infoList] of this._listenersObservingFieldOfLocalId.get(record.localId).get(field)) {
-                this._markListenerToNotify(listener, {
-                    listener,
-                    reason: `_update: ${field} of ${record}`,
-                    infoList,
-                });
-            }
+            this._markRecordFieldAsChanged(record, field);
         }
         if (hasChanged) {
             this._updatedRecordsCheckRequired.add(record);

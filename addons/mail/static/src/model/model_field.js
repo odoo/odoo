@@ -24,6 +24,7 @@ export class ModelField {
         related,
         relationType,
         required = false,
+        sort,
         to,
     } = {}) {
         /**
@@ -97,6 +98,26 @@ export class ModelField {
          * null or empty string are NOT considered empty value, meaning these values meet the requirement.
         */
         this.required = required;
+        /**
+         * Determines the name of the function on record that returns the
+         * definition on how this field is sorted (only makes sense for
+         * relational x2many).
+         *
+         * It must contain a function returning the definition instead of the
+         * definition directly (to allow the definition to depend on the value
+         * of another field).
+         *
+         * The definition itself should be a list of operations, and each
+         * operation itself should be a list of 2 elements: the first is the
+         * name of a supported compare method, and the second is a dot separated
+         * relation path, starting from the current record.
+         *
+         * When determining the order of one record compared to another, each
+         * compare operation will be applied in the order provided, stopping at
+         * the first operation that is able to determine an order for the two
+         * records.
+         */
+        this.sort = sort;
         /**
          * This prop only makes sense in a relational field. Determine which
          * model name this relation refers to.
