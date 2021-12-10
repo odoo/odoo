@@ -10,6 +10,7 @@
         'fetchmail',
         'account_edi'
     ],
+    'auto_install': True,
     'author': 'Odoo',
     'description': """
 E-invoice implementation
