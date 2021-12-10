@@ -9,6 +9,7 @@ from collections import namedtuple, defaultdict
 
 from datetime import datetime, timedelta, time
 from pytz import timezone, UTC
+from odoo.tools import date_utils
 
 from odoo import api, Command, fields, models, tools, SUPERUSER_ID
 from odoo.addons.base.models.res_partner import _tz_get
@@ -1412,9 +1413,14 @@ class HolidaysRequest(models.Model):
         if not self.can_cancel:
             raise ValidationError(_('This time off cannot be canceled.'))
 
-        self.message_post(
-            body=_('The time off has been canceled: %s', reason)
-        )
+        self._force_cancel(reason, 'mail.mt_note')
+
+    def _force_cancel(self, reason, msg_subtype='mail.mt_comment'):
+        for leave in self:
+            leave.message_post(
+                body=_('The time off has been canceled: %s', reason),
+                subtype_xmlid=msg_subtype
+            )
 
         leave_sudo = self.sudo()
         leave_sudo.with_context(from_cancel_wizard=True).active = False
@@ -1430,7 +1436,6 @@ class HolidaysRequest(models.Model):
             'view_mode': 'kanban',
             'domain': domain
         }
-
 
     def _check_approval_update(self, state):
         """ Check if target state is achievable. """
@@ -1471,6 +1476,60 @@ class HolidaysRequest(models.Model):
 
                     if not is_officer and (state == 'validate' and val_type == 'hr') and holiday.holiday_type == 'employee':
                         raise UserError(_('You must either be a Time off Officer or Time off Manager to approve this leave'))
+
+    ###################################################
+    # Leave modification methods
+    ###################################################
+
+    def _split_leave_on_gto(self, gto): #gto = global time off
+        self.ensure_one()
+
+        leave_start = date_utils.start_of(self.date_from, 'day')
+        leave_end = date_utils.end_of(self.date_to - timedelta(seconds=1), 'day')
+        gto_start = date_utils.start_of(gto['date_from'], 'day')
+        gto_end = date_utils.end_of(gto['date_to'], 'day')
+        leave_tz = timezone(self.employee_id.resource_id.tz)
+
+        if gto_start <= leave_start\
+                and gto_end > leave_start\
+                and gto_end < leave_end:
+            self.write({
+                'date_from': leave_tz.localize(gto_end + timedelta(seconds=1))\
+                        .astimezone(UTC).replace(tzinfo=None)
+            })
+            return self.env['hr.leave']
+        if gto_start > leave_start\
+                and gto_end < leave_end:
+            copys = {
+                'date_from': self.date_from,
+                'date_to': leave_tz.localize(gto_start - timedelta(seconds=1))\
+                        .astimezone(UTC).replace(tzinfo=None)
+            }
+            self.write({
+                'date_from': leave_tz.localize(gto_end + timedelta(seconds=1))\
+                        .astimezone(UTC).replace(tzinfo=None)
+            })
+            return self.copy(copys)
+        if gto_start > leave_start\
+                and gto_start < leave_end\
+                and gto_end >= leave_end:
+            self.write({
+                'date_to': leave_tz.localize(gto_start - timedelta(seconds=1))\
+                        .astimezone(UTC).replace(tzinfo=None)
+            })
+            return self.env['hr.leave']
+
+    def split_leave(self, time_domain_dict):
+        self.ensure_one()
+
+        new_leaves = self.env['hr.leave']
+        for global_time_off in sorted(
+                filter(lambda r: r['date_to'] > self.date_from and r['date_from'] < self.date_to, time_domain_dict),
+                key=lambda r: r['date_from']):
+            new_leave = self._split_leave_on_gto(global_time_off)
+            if new_leave:
+                new_leaves |= new_leave
+        return new_leaves
 
     # ------------------------------------------------------------
     # Activity methods
@@ -1528,6 +1587,19 @@ class HolidaysRequest(models.Model):
     ####################################################
     # Messaging methods
     ####################################################
+
+    def _notify_change(self, message, subtype_xmlid='mail.mt_note'):
+        for leave in self:
+            leave.message_post(body=message, subtype_xmlid=subtype_xmlid)
+
+            recipient = None
+            if leave.user_id:
+                recipient = leave.user_id.partner_id.id
+            elif leave.employee_id:
+                recipient = leave.employee_id.address_home_id.id
+
+            if recipient:
+                self.env['mail.thread'].sudo().message_notify(body=message, partner_ids=[recipient])
 
     def _track_subtype(self, init_values):
         if 'state' in init_values and self.state == 'validate':
