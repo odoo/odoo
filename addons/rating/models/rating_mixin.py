@@ -5,7 +5,7 @@ from collections import defaultdict
 from datetime import timedelta
 
 from odoo import api, fields, models, tools
-from odoo.addons.rating.models.rating import RATING_LIMIT_SATISFIED, RATING_LIMIT_OK, RATING_LIMIT_MIN
+from odoo.addons.rating.models.rating import RATING_LIMIT_SATISFIED, RATING_LIMIT_OK, RATING_LIMIT_MIN, RATING_TEXT
 from odoo.osv import expression
 from odoo.tools.float_utils import float_compare
 
@@ -17,6 +17,9 @@ OPERATOR_MAPPING = {
     '>': operator.gt,
     '>=': operator.ge,
 }
+RATING_AVG_TOP = 3.66
+RATING_AVG_OK = 2.33
+RATING_AVG_MIN = RATING_LIMIT_MIN
 
 
 class RatingParentMixin(models.AbstractModel):
@@ -98,6 +101,8 @@ class RatingMixin(models.AbstractModel):
     rating_count = fields.Integer('Rating count', compute="_compute_rating_stats", compute_sudo=True)
     rating_avg = fields.Float("Average Rating", groups='base.group_user',
         compute='_compute_rating_stats', compute_sudo=True, search='_search_rating_avg')
+    rating_avg_text = fields.Selection(RATING_TEXT, groups='base.group_user',
+        compute='_compute_rating_avg_text', compute_sudo=True)
     rating_percentage_satisfaction = fields.Float("Rating Satisfaction", compute='_compute_rating_satisfaction', compute_sudo=True)
     rating_last_text = fields.Selection(string="Rating Text", groups='base.group_user', related="rating_ids.rating_text")
 
@@ -129,6 +134,18 @@ class RatingMixin(models.AbstractModel):
             if OPERATOR_MAPPING[operator](float_compare(res['rating_avg'], value, 2), 0)
         ]
         return [('id', 'in', res_ids)]
+
+    @api.depends('rating_avg')
+    def _compute_rating_avg_text(self):
+        for record in self:
+            if float_compare(record.rating_avg, RATING_AVG_TOP, 2) >= 0:
+                record.rating_avg_text = 'top'
+            elif float_compare(record.rating_avg, RATING_AVG_OK, 2) >= 0:
+                record.rating_avg_text = 'ok'
+            elif float_compare(record.rating_avg, RATING_AVG_MIN, 2) >= 0:
+                record.rating_avg_text = 'ko'
+            else:
+                record.rating_avg_text = 'none'
 
     @api.depends('rating_ids.res_id', 'rating_ids.rating')
     def _compute_rating_satisfaction(self):

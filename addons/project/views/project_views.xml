@@ -849,13 +849,14 @@
                         <span id="button_worksheet" invisible="1"/>
                         <!-- Dummy tag used to organize buttons, englobing the 3 buttons modifies the width of the button -->
                         <span id="start_rating_buttons" invisible="1"/>
+                        <field name="rating_avg" invisible="1"/>
                         <button name="action_open_ratings" type="object" attrs="{'invisible': [('rating_count', '=', 0)]}" class="oe_stat_button" groups="project.group_project_rating">
                             <i class="fa fa-fw o_button_icon fa-smile-o text-success" attrs="{'invisible': [('rating_avg', '&lt;', 3.66)]}" title="Satisfied"/>
                             <i class="fa fa-fw o_button_icon fa-meh-o text-warning" attrs="{'invisible': ['|', ('rating_avg', '&lt;', 2.33), ('rating_avg', '&gt;=', 3.66)]}" title="Okay"/>
                             <i class="fa fa-fw o_button_icon fa-frown-o text-danger" attrs="{'invisible': [('rating_avg', '&gt;=', 2.33)]}" title="Dissatisfied"/>
                             <div class="o_field_widget o_stat_info">
-                                <span class="o_stat_value"><field name="rating_avg" nolabel="1"/> / 5</span>
-                                <span class="o_stat_text">Ratings</span>
+                                <span class="o_stat_value"><field name="rating_avg_text" nolabel="1"/></span>
+                                <span class="o_stat_text">Rating</span>
                             </div>
                         </button>
                         <!-- Dummy tag used to organize buttons -->
