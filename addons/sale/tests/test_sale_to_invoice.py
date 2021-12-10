@@ -388,3 +388,84 @@ class TestSaleToInvoice(TestSaleCommon):
         qty_invoiced_field = sol_prod_deliver._fields.get('qty_invoiced')
         sol_prod_deliver.env.add_to_compute(qty_invoiced_field, sol_prod_deliver)
         self.assertEqual(sol_prod_deliver.qty_invoiced, expected_qty)
+
+    def test_cancel_invoice_with_downpayment_included(self):
+        """Check the unit_price of downpayment line when reset to draft an invoice"""
+        # Confirm the SO
+        order = self.sale_order
+        # Keep only one consummable product with delivery as invoice policy
+        order.order_line.filtered(lambda l: l.product_id.type != 'consu' or l.product_id.invoice_policy != 'delivery').unlink()
+        tax = self.tax_sale_a
+
+        order.action_confirm()
+        self._check_order_search(order, [('invoice_ids', '=', False)], order)
+
+        # Update delivered quantity of SO lines
+        self.sol_prod_deliver.write({'qty_delivered': 2.0})
+
+        # Let's do an invoice for a deposit of 100
+        downpayment = self.env['sale.advance.payment.inv'].with_context(self.context).create({
+                'advance_payment_method': 'fixed',
+                'fixed_amount': 100,
+                'deposit_account_id': self.company_data['default_account_revenue'].id,
+                'deposit_taxes_id': [(6, 0, tax.ids)]
+            })
+        downpayment.create_invoices()
+
+        self._check_order_search(self.sale_order, [('invoice_ids', '=', False)], self.env['sale.order'])
+        self.assertEqual(len(self.sale_order.invoice_ids), 1, 'Invoice should be created for the SO')
+
+        downpayment_line = self.sale_order.order_line.filtered(lambda l: l.is_downpayment)
+
+        self.assertEqual(len(downpayment_line), 1, 'SO line downpayment should be created on SO')
+        self.assertEqual(len(self.sale_order.invoice_ids), 1, 'Invoice should be created for the SO')
+
+        invoice_1 = max(order.invoice_ids)
+        invoice_lines = invoice_1.invoice_line_ids
+
+        self.assertEqual(len(invoice_lines), 1, 'Down Payment line should be invoiced')
+        self.assertEqual(invoice_1.amount_total, sum(downpayment_line.mapped('price_unit') + downpayment_line.mapped('tax_id.amount')), 'Downpayment should be applied')
+        self.assertEqual(downpayment_line.qty_invoiced, 1, "Downpayment should be invoiced")
+
+        invoice_1.action_post()
+
+        payment = self.env['sale.advance.payment.inv'].with_context(self.context).create({
+                'deposit_account_id': self.company_data['default_account_revenue'].id
+            })
+
+        payment.create_invoices()
+
+        self.assertEqual(len(order.invoice_ids), 2)
+
+        invoice_2 = max(order.invoice_ids)
+
+        self.assertEqual(invoice_2.amount_total, order.amount_total - sum(downpayment_line.mapped('price_unit') + downpayment_line.mapped('tax_id.amount')), 'Downpayment should be applied')
+        self.assertEqual(downpayment_line.qty_invoiced, 0, "Downpayment should not be invoiced anymore")
+        self.assertEqual(downpayment_line.price_unit, 100)
+
+        invoice_2.action_post()
+
+        self.assertEqual(downpayment_line.qty_invoiced, 0, "Downpayment should not be invoiced anymore")
+        self.assertEqual(downpayment_line.price_unit, 0)
+
+        invoice_2.button_draft()
+
+        self.assertEqual(downpayment_line.qty_invoiced, 0, "Downpayment should not be invoiced anymore")
+        self.assertEqual(downpayment_line.price_unit, 100)
+
+        invoice_2.button_cancel()
+
+        self.assertEqual(downpayment_line.qty_invoiced, 1, "Downpayment should be invoiced again")
+        self.assertEqual(downpayment_line.price_unit, 100)
+
+        payment_2 = self.env['sale.advance.payment.inv'].with_context(self.context).create({
+                'deposit_account_id': self.company_data['default_account_revenue'].id
+            })
+
+        payment_2.create_invoices()
+
+        self.assertEqual(len(order.invoice_ids), 3)
+
+        invoice_3 = max(order.invoice_ids)
+
+        self.assertEqual(invoice_3.amount_total, order.amount_total - sum(downpayment_line.mapped('price_unit') + downpayment_line.mapped('tax_id.amount')), 'Downpayment should be applied')

@@ -28,6 +28,19 @@ class AccountMove(models.Model):
                 pass
         return res
 
+    def button_draft(self):
+        #inherit of the function from account.move to reverse the computation made by action_post
+        super(AccountMove, self).button_draft()
+        line_ids = self.mapped('line_ids').filtered(lambda line: line.sale_line_ids.is_downpayment)
+        for line in line_ids:
+            try:
+                if not all(line.tax_ids.mapped('price_include')):
+                    line.sale_line_ids.price_unit = -line.sale_line_ids.untaxed_amount_to_invoice
+            except UserError:
+                # a UserError here means the SO was locked, which prevents changing the taxes
+                # just ignore the error - this is a nice to have feature and should not be blocking
+                pass
+
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
