@@ -14,4 +14,5 @@
         'views/view_move_form.xml',
         'views/report_invoice.xml',
     ],
+    'auto_install': True,
 }
