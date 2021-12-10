@@ -1261,6 +1261,23 @@ registerModel({
         },
         /**
          * @private
+         * @returns {FieldCommand}
+         */
+        _computeDiscussSidebarCategoryItem() {
+            if (this.model !== 'mail.channel') {
+                return clear();
+            }
+            if (!this.isPinned) {
+                return clear();
+            }
+            const discussSidebarCategory = this._getDiscussSidebarCategory();
+            if (!discussSidebarCategory) {
+                return clear();
+            }
+            return insertAndReplace({ category: replace(discussSidebarCategory) });
+        },
+        /**
+         * @private
          * @returns {string}
          */
         _computeDisplayName() {
@@ -1706,6 +1723,22 @@ registerModel({
             return this.rtcSessions.filter(session => session.videoStream).length;
         },
         /**
+         * Returns the discuss sidebar category that corresponds to this channel
+         * type.
+         *
+         * @private
+         * @returns {mail.discuss_sidebar_category}
+         */
+        _getDiscussSidebarCategory() {
+            switch (this.channel_type) {
+                case 'channel':
+                    return this.messaging.discuss.categoryChannel;
+                case 'chat':
+                case 'group':
+                    return this.messaging.discuss.categoryChat;
+            }
+        },
+        /**
          * @private
          * @param {Object} param0
          * @param {boolean} param0.isTyping
@@ -1941,9 +1974,15 @@ registerModel({
          * States the description of this thread. Only applies to channels.
          */
         description: attr(),
-        discussSidebarCategoryItem: one2many('mail.discuss_sidebar_category_item', {
+        /**
+         * Determines the discuss sidebar category item that displays this
+         * thread (if any). Only applies to channels.
+         */
+        discussSidebarCategoryItem: one2one('mail.discuss_sidebar_category_item', {
+            compute: '_computeDiscussSidebarCategoryItem',
             inverse: 'channel',
             isCausal: true,
+            readonly: true,
         }),
         displayName: attr({
             compute: '_computeDisplayName',
