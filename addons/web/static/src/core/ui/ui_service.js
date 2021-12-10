@@ -36,6 +36,7 @@ export function useActiveElement(refName = null) {
 }
 
 export const uiService = {
+    dependencies: ["localization"],
     start(env) {
         let ui = {};
 
