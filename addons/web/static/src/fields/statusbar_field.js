@@ -87,7 +87,7 @@ Object.assign(StatusBarField, {
 
 registry.category("fields").add("statusbar", StatusBarField);
 
-async function fetchStatusBarPreloadedData(datapoint, fieldName) {
+export async function preloadStatusBar(orm, datapoint, fieldName) {
     const field = datapoint.fields[fieldName];
     if (field.type !== "many2one") {
         return null;
@@ -99,7 +99,6 @@ async function fetchStatusBarPreloadedData(datapoint, fieldName) {
         fieldNames.push(foldField);
     }
 
-    const orm = datapoint.model.orm;
     const records = await orm.searchRead(field.relation, [], fieldNames);
     const foldMap = {};
     for (const record of records) {
@@ -116,4 +115,4 @@ async function fetchStatusBarPreloadedData(datapoint, fieldName) {
     }));
 }
 
-registry.category("preloadedData").add("statusbar", fetchStatusBarPreloadedData);
+registry.category("preloadedData").add("statusbar", preloadStatusBar);

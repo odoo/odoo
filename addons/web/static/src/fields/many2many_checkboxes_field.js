@@ -36,12 +36,10 @@ Object.assign(Many2ManyCheckboxesField, {
 
 registry.category("fields").add("many2many_checkboxes", Many2ManyCheckboxesField);
 
-function fetchMany2ManyCheckboxesPreloadedData(datapoint, fieldName) {
+export function preloadMany2ManyCheckboxes(orm, datapoint, fieldName) {
     const field = datapoint.fields[fieldName];
     const domain = [];
-    return datapoint.model.orm.call(field.relation, "name_search", ["", domain]);
+    return orm.call(field.relation, "name_search", ["", domain]);
 }
 
-registry
-    .category("preloadedData")
-    .add("many2many_checkboxes", fetchMany2ManyCheckboxesPreloadedData);
+registry.category("preloadedData").add("many2many_checkboxes", preloadMany2ManyCheckboxes);

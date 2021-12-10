@@ -218,7 +218,7 @@ export class Record extends DataPoint {
 
     loadPreloadedData() {
         const fetchPreloadedData = async (fetchFn, fieldName) => {
-            this.preloadedData[fieldName] = await fetchFn(this, fieldName);
+            this.preloadedData[fieldName] = await fetchFn(this.model.orm, this, fieldName);
         };
 
         const proms = [];
