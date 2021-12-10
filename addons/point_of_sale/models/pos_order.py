@@ -3,6 +3,7 @@
 import logging
 from datetime import timedelta
 from functools import partial
+from itertools import groupby
 
 import psycopg2
 import pytz
@@ -1084,6 +1085,15 @@ class PosOrderLine(models.Model):
             if pickings_to_confirm:
                 # Trigger the Scheduler for Pickings
                 pickings_to_confirm.action_confirm()
+                tracked_lines = order.lines.filtered(lambda l: l.product_id.tracking != 'none')
+                lines_by_tracked_product = groupby(sorted(tracked_lines, key=lambda l: l.product_id.id), key=lambda l: l.product_id.id)
+                mls_to_unlink = self.env['stock.move.line']
+                for product, lines in lines_by_tracked_product:
+                    lines = self.env['pos.order.line'].concat(*lines)
+                    moves = pickings_to_confirm.move_lines.filtered(lambda m: m.product_id in tracked_lines.product_id)
+                    mls_to_unlink |= moves.move_line_ids
+                    moves._add_mls_related_to_order(lines, are_qties_done=False)
+                mls_to_unlink.unlink()
         return True
 
     def _is_product_storable_fifo_avco(self):
