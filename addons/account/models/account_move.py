@@ -3540,12 +3540,8 @@ class AccountMoveLine(models.Model):
         string='Unit Price', digits='Product Price',
         compute='_compute_price_unit', store=True, readonly=False, precompute=True)
     discount = fields.Float(string='Discount (%)', digits='Discount', default=0.0)
-    debit = fields.Monetary(
-        string='Debit', currency_field='company_currency_id',
-        compute='_compute_debit', store=True, readonly=False, precompute=True)
-    credit = fields.Monetary(
-        string='Credit', currency_field='company_currency_id',
-        compute='_compute_credit', store=True, readonly=False, precompute=True)
+    debit = fields.Monetary(string='Debit', default=0.0, currency_field='company_currency_id')
+    credit = fields.Monetary(string='Credit', default=0.0, currency_field='company_currency_id')
     balance = fields.Monetary(string='Balance', store=True,
         currency_field='company_currency_id',
         compute='_compute_balance',
@@ -4133,7 +4129,7 @@ class AccountMoveLine(models.Model):
 
         return self.move_id.move_type in ('in_refund', 'out_refund')
 
-    @api.depends('amount_currency', 'currency_id', 'debit', 'credit', 'tax_ids', 'account_id', 'price_unit', 'quantity')
+    @api.onchange('amount_currency', 'currency_id', 'debit', 'credit', 'tax_ids', 'account_id', 'price_unit', 'quantity')
     def _onchange_mark_recompute_taxes(self):
         ''' Recompute the dynamic onchange based on taxes.
         If the edited line is a tax line, don't recompute anything as the user must be able to
@@ -4204,17 +4200,17 @@ class AccountMoveLine(models.Model):
                 continue
             line.update(line._get_fields_onchange_balance())
 
-    @api.depends('debit')
-    def _compute_credit(self):
-        lines_with_debit = self.filtered(lambda l: l.debit)
-        lines_with_debit.credit = 0.0
-        lines_with_debit._onchange_balance()
+    @api.onchange('debit')
+    def _onchange_debit(self):
+        if self.debit:
+            self.credit = 0.0
+        self._onchange_balance()
 
-    @api.depends('credit')
-    def _compute_debit(self):
-        lines_with_credit = self.filtered(lambda l: l.credit)
-        lines_with_credit.debit = 0.0
-        lines_with_credit._onchange_balance()
+    @api.onchange('credit')
+    def _onchange_credit(self):
+        if self.credit:
+            self.debit = 0.0
+        self._onchange_balance()
 
     @api.onchange('amount_currency')
     def _onchange_amount_currency(self):
