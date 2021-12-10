@@ -43,6 +43,15 @@ class AccountPayment(models.Model):
              "or if the current numbering is wrong, you can change it in the journal configuration page.",
     )
     payment_method_line_id = fields.Many2one(index=True)
+    show_check_number = fields.Boolean(compute='_compute_show_check_number')
+
+    @api.depends('payment_method_line_id.code', 'check_number')
+    def _compute_show_check_number(self):
+        for payment in self:
+            payment.show_check_number = (
+                payment.payment_method_line_id.code == 'check_printing'
+                and payment.check_number
+            )
 
     @api.constrains('check_number', 'journal_id')
     def _constrains_check_number(self):

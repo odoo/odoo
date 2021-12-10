@@ -1,0 +1,29 @@
+<odoo>
+
+    <record id="view_account_journal_tree" model="ir.ui.view">
+        <field name="name">account.journal.tree</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account_check_printing.view_account_journal_form_inherited"/>
+        <field name="arch" type="xml">
+            <div name="button_box" class="oe_button_box">
+                <button class="oe_stat_button" type="action" name="%(action_l10n_latam_checkbook)d" icon="fa-list" string="All Checkbooks" attrs="{'invisible': [('l10n_latam_use_checkbooks', '=', False)]}"/>
+            </div>
+            <xpath expr="//field[@name='check_sequence_id']/.." position="after">
+                <group string="Checks Management" name="check_management"
+                    attrs="{'invisible': ['|', '!', ('selected_payment_method_codes', 'ilike', ',check_printing,'), ('type', '!=', 'bank')]}">
+                    <field name="l10n_latam_use_checkbooks"/>
+                    <field name="l10n_latam_checkbook_ids" colspan="2" nolabel="1"
+                        attrs="{'invisible': [('l10n_latam_use_checkbooks', '=', False)]}">
+                        <tree string="Checkbooks" editable="bottom">
+                            <field name="type"/>
+                            <field name="next_number" attrs="{'invisible': [('type', '=', 'electronic')]}"/>
+                            <field name="range_to" attrs="{'invisible': [('type', '=', 'electronic')]}"/>
+                            <field name="active" invisible="1"/>
+                        </tree>
+                    </field>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
