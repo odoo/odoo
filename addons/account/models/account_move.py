@@ -3544,8 +3544,12 @@ class AccountMoveLine(models.Model):
         string='Unit Price', digits='Product Price',
         compute='_compute_price_unit', store=True, readonly=False, precompute=True)
     discount = fields.Float(string='Discount (%)', digits='Discount', default=0.0)
-    debit = fields.Monetary(string='Debit', default=0.0, currency_field='company_currency_id')
-    credit = fields.Monetary(string='Credit', default=0.0, currency_field='company_currency_id')
+    debit = fields.Monetary(
+        string='Debit', currency_field='company_currency_id',
+        compute='_compute_debit', store=True, readonly=False)
+    credit = fields.Monetary(
+        string='Credit', currency_field='company_currency_id',
+        compute='_compute_credit', store=True, readonly=False)
     balance = fields.Monetary(string='Balance', store=True,
         currency_field='company_currency_id',
         compute='_compute_balance',
@@ -4214,17 +4218,31 @@ class AccountMoveLine(models.Model):
                 continue
             line.update(line._get_fields_onchange_balance())
 
-    @api.onchange('debit')
-    def _onchange_debit(self):
-        if self.debit:
-            self.credit = 0.0
-        self._onchange_balance()
+    @api.depends('debit', 'amount_currency', 'currency_id')
+    def _compute_credit(self):
+        for line in self:
+            if line.debit and line.credit:
+                line.credit = 0.0
+                continue
+            if line.move_id.is_invoice(include_receipts=True):
+                continue
+            if not line.move_id.reversed_entry_id:
+                company = line.move_id.company_id
+                balance = line.currency_id._convert(line.amount_currency, company.currency_id, company, line.move_id.date or fields.Date.context_today(line))
+                line.credit = -balance if balance < 0.0 else 0.0
 
-    @api.onchange('credit')
-    def _onchange_credit(self):
-        if self.credit:
-            self.debit = 0.0
-        self._onchange_balance()
+    @api.depends('credit', 'amount_currency', 'currency_id')
+    def _compute_debit(self):
+        for line in self:
+            if line.debit and line.credit:
+                line.debit = 0.0
+                continue
+            if line.move_id.is_invoice(include_receipts=True):
+                continue
+            if not line.move_id.reversed_entry_id:
+                company = line.move_id.company_id
+                balance = line.currency_id._convert(line.amount_currency, company.currency_id, company, line.move_id.date or fields.Date.context_today(line))
+                line.debit = balance if balance > 0.0 else 0.0
 
     @api.depends('quantity', 'discount', 'price_unit', 'tax_ids', 'currency_id', 'amount_currency')
     def _compute_totals(self):
@@ -4232,26 +4250,6 @@ class AccountMoveLine(models.Model):
             if not line.move_id.is_invoice(include_receipts=True):
                 continue
             line.update(line._get_price_total_and_subtotal())
-
-    @api.onchange('amount_currency')
-    def _onchange_amount_currency(self):
-        for line in self:
-            company = line.move_id.company_id
-            balance = line.currency_id._convert(line.amount_currency, company.currency_id, company, line.move_id.date or fields.Date.context_today(line))
-            line.debit = balance if balance > 0.0 else 0.0
-            line.credit = -balance if balance < 0.0 else 0.0
-
-    @api.onchange('currency_id')
-    def _onchange_currency(self):
-        for line in self:
-            company = line.move_id.company_id
-
-            if line.move_id.is_invoice(include_receipts=True):
-                continue
-            elif not line.move_id.reversed_entry_id:
-                balance = line.currency_id._convert(line.amount_currency, company.currency_id, company, line.move_id.date or fields.Date.context_today(line))
-                line.debit = balance if balance > 0.0 else 0.0
-                line.credit = -balance if balance < 0.0 else 0.0
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
