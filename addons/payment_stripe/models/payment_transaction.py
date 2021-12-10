@@ -35,7 +35,7 @@ class PaymentTransaction(models.Model):
 
         checkout_session = self._stripe_create_checkout_session()
         return {
-            'publishable_key': self.acquirer_id.stripe_publishable_key,
+            'publishable_key': self.acquirer_id._get_stripe_publishable_key(),
             'session_id': checkout_session['id'],
         }
 
@@ -79,15 +79,7 @@ class PaymentTransaction(models.Model):
 
         # Create the session according to the operation and return it
         customer = self._stripe_create_customer()
-        common_session_values = {
-            **pmt_values,
-            'client_reference_id': self.reference,
-            # Assign a customer to the session so that Stripe automatically attaches the payment
-            # method to it in a validation flow. In checkout flow, a customer is automatically
-            # created if not provided but we still do it here to avoid requiring the customer to
-            # enter his email on the checkout page.
-            'customer': customer['id'],
-        }
+        common_session_values = self._get_common_stripe_session_values(pmt_values, customer)
         base_url = self.acquirer_id.get_base_url()
         if self.operation == 'online_redirect':
             return_url = f'{urls.url_join(base_url, StripeController._checkout_return_url)}' \
@@ -149,6 +141,26 @@ class PaymentTransaction(models.Model):
         )
         return customer
 
+    def _get_common_stripe_session_values(self, pmt_values, customer):
+        """ Return the Stripe Session values that are common to redirection and validation.
+
+        Note: This method is overridden by the internal module responsible for Stripe Connect.
+
+        :param dict pmt_values: The payment method types values
+        :param dict customer: The Stripe customer to assign to the session
+        :return: The common Stripe Session values
+        :rtype: dict
+        """
+        return {
+            **pmt_values,
+            'client_reference_id': self.reference,
+            # Assign a customer to the session so that Stripe automatically attaches the payment
+            # method to it in a validation flow. In checkout flow, a customer is automatically
+            # created if not provided but we still do it here to avoid requiring the customer to
+            # enter his email on the checkout page.
+            'customer': customer['id'],
+        }
+
     def _send_payment_request(self):
         """ Override of payment to send a payment request to Stripe with a confirmed PaymentIntent.
 
@@ -184,15 +196,7 @@ class PaymentTransaction(models.Model):
 
         response = self.acquirer_id._stripe_make_request(
             'payment_intents',
-            payload={
-                'amount': payment_utils.to_minor_currency_units(self.amount, self.currency_id),
-                'currency': self.currency_id.name.lower(),
-                'confirm': True,
-                'customer': self.token_id.acquirer_ref,
-                'off_session': True,
-                'payment_method': self.token_id.stripe_payment_method,
-                'description': self.reference,
-            },
+            payload=self._stripe_prepare_payment_intent_payload(),
             offline=self.operation == 'offline',
         )
         if 'error' not in response:
@@ -206,6 +210,25 @@ class PaymentTransaction(models.Model):
             payment_intent = response['error'].get('payment_intent')  # Get the PI from the error
 
         return payment_intent
+
+    def _stripe_prepare_payment_intent_payload(self):
+        """ Prepare the payload for the creation of a payment intent in Stripe format.
+
+        Note: This method is overridden by the internal module responsible for Stripe Connect.
+        Note: self.ensure_one()
+
+        :return: The Stripe-formatted payload for the payment intent request
+        :rtype: dict
+        """
+        return {
+            'amount': payment_utils.to_minor_currency_units(self.amount, self.currency_id),
+            'currency': self.currency_id.name.lower(),
+            'confirm': True,
+            'customer': self.token_id.acquirer_ref,
+            'off_session': True,
+            'payment_method': self.token_id.stripe_payment_method,
+            'description': self.reference,
+        }
 
     @api.model
     def _get_tx_from_feedback_data(self, provider, data):
