@@ -25,6 +25,7 @@ Send KPI Digests periodically
         'views/digest_views.xml',
         'views/digest_templates.xml',
         'views/res_config_settings_views.xml',
+        'wizard/digest_test_views.xml',
     ],
     'assets': {
         'web.assets_backend': [
