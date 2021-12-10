@@ -186,8 +186,8 @@ QUnit.module('fields', {}, function () {
 
             assert.ok(!form.$('.o_kanban_view .delete_icon').length,
                 'delete icon should not be visible in readonly');
-            assert.ok(!form.$('.o_field_many2many .o-kanban-button-new').length,
-                '"Add" button should not be visible in readonly');
+            assert.ok(form.$('.o_field_many2many .o-kanban-button-new').length,
+                '"Add" button should be visible in readonly');
 
             await testUtils.form.clickEdit(form);
 
@@ -335,8 +335,8 @@ QUnit.module('fields', {}, function () {
                 session: { user_context: {} },
             });
 
-            assert.ok(!form.$('.o-kanban-button-new').length,
-                '"Add" button should not be available in readonly');
+            assert.ok(form.$('.o-kanban-button-new').length,
+                '"Add" button should be available in readonly');
 
             await testUtils.form.clickEdit(form);
 

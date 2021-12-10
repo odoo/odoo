@@ -1154,7 +1154,7 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
                                             !!JSON.parse(arch.attrs.delete) :
                                             true;
             this.editable = arch.attrs.editable;
-            this._canQuickEdit = arch.tag === 'tree';
+            this._canQuickEdit = true;
         } else {
             this._canQuickEdit = false;
         }
@@ -1539,7 +1539,7 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
      * @private
      */
     _renderButtons: function () {
-        if (!this.isReadonly && this.view.arch.tag === 'kanban') {
+        if (this.view.arch.tag === 'kanban') {
             const renderingContext = this._getButtonsRenderingContext();
             this.$buttons = $(qweb.render('KanbanView.buttons', renderingContext));
             this.$buttons.on('click', 'button.o-kanban-button-new', this._onAddRecord.bind(this));
