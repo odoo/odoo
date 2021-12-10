@@ -19,7 +19,7 @@
             </xpath>
             <xpath expr="//group[@name='acquirer']" position="inside">
                 <group attrs="{'invisible': [('provider', '!=', 'stripe')]}" name="stripe_credentials">
-                    <field name="stripe_publishable_key" attrs="{'required':[('provider', '=', 'stripe'), ('state', '!=', 'disabled')]}" password="True"/>
+                    <field name="stripe_publishable_key" attrs="{'required':[('provider', '=', 'stripe'), ('state', '!=', 'disabled')]}"/>
                     <field name="stripe_secret_key" attrs="{'required':[('provider', '=', 'stripe'), ('state', '!=', 'disabled')]}" password="True"/>
                     <label for="stripe_webhook_secret"/>
                     <div class="o_row" col="2">
