@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { one2one } from '@mail/model/model_field';
+import { attr, one2one } from '@mail/model/model_field';
 import { replace } from '@mail/model/model_field_command';
 import { markEventHandled } from '@mail/utils/utils';
 
@@ -35,8 +35,36 @@ registerModel({
             }
             threadView.addComponentHint('highlight-reply', parentMessageView);
         },
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeHasAttachmentBackLink() {
+            const parentMessage = this.messageView.message.parentMessage;
+            return parentMessage.isBodyEmpty && parentMessage.hasAttachments;
+        },
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeHasBodyBackLink() {
+            return !this.messageView.message.parentMessage.isBodyEmpty;
+        },
     },
     fields: {
+        /**
+         * Determines if the reply has a back link to an attachment only
+         * message.
+         */
+        hasAttachmentBackLink: attr({
+            compute: '_computeHasAttachmentBackLink',
+        }),
+        /**
+         * Determines if the reply has a back link to a non-empty body.
+         */
+        hasBodyBackLink: attr({
+            compute: '_computeHasBodyBackLink',
+        }),
         messageView: one2one('MessageView', {
             inverse: 'messageInReplyToView',
             readonly: true,

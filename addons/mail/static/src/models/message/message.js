@@ -368,6 +368,13 @@ registerModel({
             return replace(this.notifications.filter(notifications => notifications.isFailure));
         },
         /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeHasAttachments() {
+            return this.attachments.length > 0;
+        },
+        /**
          * @returns {boolean}
          */
         _computeHasReactionIcon() {
@@ -386,6 +393,21 @@ registerModel({
                 this.guestAuthor &&
                 this.messaging.currentGuest &&
                 this.messaging.currentGuest === this.guestAuthor
+            );
+        },
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsBodyEmpty() {
+            return (
+                !this.body ||
+                [
+                    '',
+                    '<p></p>',
+                    '<p><br></p>',
+                    '<p><br/></p>',
+                ].includes(this.body.replace(/\s/g, ''))
             );
         },
         /**
@@ -417,18 +439,9 @@ registerModel({
          * @returns {boolean}
          */
         _computeIsEmpty() {
-            const isBodyEmpty = (
-                !this.body ||
-                [
-                    '',
-                    '<p></p>',
-                    '<p><br></p>',
-                    '<p><br/></p>',
-                ].includes(this.body.replace(/\s/g, ''))
-            );
             return (
-                isBodyEmpty &&
-                this.attachments.length === 0 &&
+                this.isBodyEmpty &&
+                !this.hasAttachments &&
                 this.tracking_value_ids.length === 0 &&
                 !this.subtype_description
             );
@@ -588,6 +601,12 @@ registerModel({
             inverse: 'authoredMessages',
         }),
         /**
+         * States whether the message has some attachments.
+         */
+        hasAttachments: attr({
+            compute: '_computeHasAttachments',
+        }),
+        /**
          * Determines whether the message has a reaction icon.
          */
         hasReactionIcon: attr({
@@ -600,6 +619,14 @@ registerModel({
         isCurrentUserOrGuestAuthor: attr({
             compute: '_computeIsCurrentUserOrGuestAuthor',
             default: false,
+        }),
+        /**
+         * States if the body field is empty, regardless of editor default
+         * html content. To determine if a message is fully empty, use
+         * `isEmpty`.
+         */
+        isBodyEmpty: attr({
+            compute: '_computeIsBodyEmpty',
         }),
         /**
          * States whether `body` and `subtype_description` contain similar
