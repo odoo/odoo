@@ -4033,7 +4033,7 @@ Fields:
 
         # classify fields for each record
         data_list = []
-        inversed_fields = set()
+        determine_inverses = defaultdict(set)       # {inverse: fields}
 
         for vals in vals_list:
             precomputed = vals.pop('__precomputed__', ())
@@ -4064,7 +4064,7 @@ Fields:
                     inherited[field.related_field.model_name][key] = val
                 elif field.inverse and field not in precomputed:
                     inversed[key] = val
-                    inversed_fields.add(field)
+                    determine_inverses[field.inverse].add(field)
                 # protect editable computed fields and precomputed fields
                 # against (re)computation
                 if field.compute and (not field.readonly or field.precompute):
@@ -4096,10 +4096,8 @@ Fields:
         # protect fields being written against recomputation
         protected = [(data['protected'], data['record']) for data in data_list]
         with self.env.protecting(protected):
-            # group fields by inverse method (to call it once), and order groups
-            # by dependence (in case they depend on each other)
-            field_groups = (fields for _inv, fields in groupby(inversed_fields, attrgetter('inverse')))
-            for fields in field_groups:
+            # call inverse method for each group of fields
+            for fields in determine_inverses.values():
                 # determine which records to inverse for those fields
                 inv_names = {field.name for field in fields}
                 rec_vals = [
@@ -4124,7 +4122,7 @@ Fields:
                     for record, vals in batch:
                         record._update_cache(vals)
                     batch_recs = self.concat(*(record for record, vals in batch))
-                    fields[0].determine_inverse(batch_recs)
+                    next(iter(fields)).determine_inverse(batch_recs)
 
         # check Python constraints for non-stored inversed fields
         for data in data_list:
