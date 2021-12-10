@@ -25,6 +25,11 @@ class Partner(models.Model):
             self.state_id = False
 
     @api.model
+    def _address_fields(self):
+        """Returns the list of address fields that are synced from the parent."""
+        return super(Partner, self)._address_fields() + ['city_id',]
+
+    @api.model
     def _fields_view_get_address(self, arch):
         arch = super(Partner, self)._fields_view_get_address(arch)
         # render the partner address accordingly to address_view_id
