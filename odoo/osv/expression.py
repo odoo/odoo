@@ -148,13 +148,16 @@ DOMAIN_OPERATORS = (NOT_OPERATOR, OR_OPERATOR, AND_OPERATOR)
 # operators are also used. In this case its right operand has the form (subselect, params).
 TERM_OPERATORS = ('=', '!=', '<=', '<', '>', '>=', '=?', '=like', '=ilike',
                   'like', 'not like', 'ilike', 'not ilike', 'in', 'not in',
+                  '~', '~*', '!~', '!~*',
                   'child_of', 'parent_of')
 
 # A subset of the above operators, with a 'negative' semantic. When the
 # expressions 'in NEGATIVE_TERM_OPERATORS' or 'not in NEGATIVE_TERM_OPERATORS' are used in the code
 # below, this doesn't necessarily mean that any of those NEGATIVE_TERM_OPERATORS is
 # legal in the processed term.
-NEGATIVE_TERM_OPERATORS = ('!=', 'not like', 'not ilike', 'not in')
+NEGATIVE_TERM_OPERATORS = ('!=', 'not like', 'not ilike', 'not in', '!~', '!~*')
+STRING_OPERATORS = ('=like', '=ilike', 'like', 'not like', 'ilike', 'not ilike',
+                    '~', '~*', '!~', '!~*')
 
 # Negation of domain expressions
 DOMAIN_OPERATORS_NEGATION = {
@@ -174,6 +177,10 @@ TERM_OPERATORS_NEGATION = {
     'not in': 'in',
     'not like': 'like',
     'not ilike': 'ilike',
+    '~': '!~',
+    '~*': '!~*',
+    '!~': '~',
+    '!~*': '~*',
 }
 
 TRUE_LEAF = (1, '=', 1)
@@ -1055,7 +1062,7 @@ class expression(object):
 
             need_wildcard = operator in ('like', 'ilike', 'not like', 'not ilike')
             sql_operator = {'=like': 'like', '=ilike': 'ilike'}.get(operator, operator)
-            cast = '::text' if sql_operator.endswith('like') else ''
+            cast = '::text' if sql_operator in STRING_OPERATORS else ''
 
             column_format = '%s' if need_wildcard else field.column_format
             unaccent = self._unaccent(field) if sql_operator.endswith('like') else lambda x: x
