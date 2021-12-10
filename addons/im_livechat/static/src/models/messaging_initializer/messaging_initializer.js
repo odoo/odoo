@@ -12,7 +12,6 @@ registerInstancePatchModel('mail.messaging_initializer', 'im_livechat/static/src
     _initResUsersSettings({ is_discuss_sidebar_category_livechat_open }) {
         this.messaging.discuss.update({
             categoryLivechat: insertAndReplace({
-                counterComputeMethod: 'unread',
                 isServerOpen: is_discuss_sidebar_category_livechat_open,
                 name: this.env._t("Livechat"),
                 serverStateKey: 'is_discuss_sidebar_category_livechat_open',

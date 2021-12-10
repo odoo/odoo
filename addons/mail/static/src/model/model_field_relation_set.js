@@ -1,5 +1,6 @@
 /** @odoo-module */
 
+import { decrement, increment } from '@mail/model/model_field_command';
 import { Listener } from '@mail/model/model_listener';
 import { followRelations } from '@mail/model/model_utils';
 
@@ -20,6 +21,14 @@ export class RelationSet {
         if (this.field.sort) {
             this.sortArray = new Array();
             this.sortListenerByValue = new Map();
+        }
+        if (this.field.sumContributions.length > 0) {
+            this.sumByValueByField = new Map();
+            this.sumListenerByValueByField = new Map();
+            for (const { to: sumFieldName } of this.field.sumContributions) {
+                this.sumByValueByField.set(sumFieldName, new Map());
+                this.sumListenerByValueByField.set(sumFieldName, new Map());
+            }
         }
     }
 
@@ -103,6 +112,34 @@ export class RelationSet {
             this.sortListenerByValue.set(value, listener);
             listener.onChange({ reason: 'initial call' });
         }
+        for (const { from: contributionFieldName, to: sumFieldName } of this.field.sumContributions) {
+            this.sumByValueByField.get(sumFieldName).set(value, 0);
+            const listener = new Listener({
+                isPartOfUpdateCycle: true,
+                name: `sum of field(${sumFieldName}) of ${this.record} from field(${contributionFieldName}) of ${value} through relation ${this.field}`,
+                onChange: info => {
+                    // listen to the contribution to mark it as dependency
+                    this.record.modelManager.startListening(listener);
+                    const contribution = value[contributionFieldName];
+                    this.record.modelManager.stopListening(listener);
+                    // retrieve the previous contribution and update it
+                    const previousContribution = this.sumByValueByField.get(sumFieldName).get(value);
+                    this.sumByValueByField.get(sumFieldName).set(value, contribution);
+                    this.record.modelManager._update(
+                        this.record,
+                        {
+                            [sumFieldName]: [
+                                decrement(previousContribution),
+                                increment(contribution),
+                            ],
+                        },
+                        { allowWriteReadonly: true },
+                    );
+                },
+            });
+            this.sumListenerByValueByField.get(sumFieldName).set(value, listener);
+            listener.onChange({ reason: 'initial call' });
+        }
     }
 
     /**
@@ -130,6 +167,16 @@ export class RelationSet {
             // remove listener on current value
             const listener = this.sortListenerByValue.get(value);
             this.sortListenerByValue.delete(listener);
+            this.record.modelManager.removeListener(listener);
+        }
+        for (const { to: sumFieldName } of this.field.sumContributions) {
+            // remove contribution of current value
+            const contribution = this.sumByValueByField.get(sumFieldName).get(value);
+            this.sumByValueByField.get(sumFieldName).delete(value);
+            this.record.modelManager._update(this.record, { [sumFieldName]: decrement(contribution) }, { allowWriteReadonly: true });
+            // remove listener on current value
+            const listener = this.sumListenerByValueByField.get(sumFieldName).get(value);
+            this.sumListenerByValueByField.get(sumFieldName).delete(value);
             this.record.modelManager.removeListener(listener);
         }
         return true;

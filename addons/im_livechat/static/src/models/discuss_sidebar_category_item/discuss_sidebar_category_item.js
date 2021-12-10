@@ -20,7 +20,16 @@ registerInstancePatchModel('mail.discuss_sidebar_category_item', 'im_livechat/st
         }
         return this._super();
     },
-
+    /**
+     * @override
+     */
+    _computeCategoryCounterContribution() {
+        switch (this.channel.channel_type) {
+            case 'livechat':
+                return this.channel.localMessageUnreadCounter > 0 ? 1 : 0;
+        }
+        return this._super();
+    },
     /**
      * @override
      */

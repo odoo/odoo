@@ -40,13 +40,16 @@ function factory(dependencies) {
 
         /**
          * @private
-         * @returns {mail.thread}
+         * @returns {integer}
          */
-        _computeChannel() {
-            return link(this.messaging.models['mail.thread'].findFromIdentifyingData({
-                id: this.channel.id,
-                model: 'mail.channel',
-            }));
+        _computeCategoryCounterContribution() {
+            switch (this.channel.channel_type) {
+                case 'channel':
+                    return this.channel.message_needaction_counter > 0 ? 1 : 0;
+                case 'chat':
+                case 'group':
+                    return this.channel.localMessageUnreadCounter > 0 ? 1 : 0;
+            }
         }
 
         /**
@@ -247,6 +250,14 @@ function factory(dependencies) {
             inverse: 'categoryItems',
             readonly: true,
             required: true,
+        }),
+        /**
+         * Determines the contribution of this discuss sidebar category item to
+         * the counter of this category.
+         */
+        categoryCounterContribution: attr({
+            compute: '_computeCategoryCounterContribution',
+            readonly: true,
         }),
         /**
          * Amount of unread/action-needed messages
