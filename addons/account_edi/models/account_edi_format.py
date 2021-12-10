@@ -11,6 +11,7 @@ import base64
 import io
 import logging
 import pathlib
+import re
 
 _logger = logging.getLogger(__name__)
 
@@ -513,23 +514,21 @@ class AccountEdiFormat(models.Model):
 
             # Sometimes, the vat is specified with some whitespaces.
             normalized_vat = vat.replace(' ', '')
-            country_prefix = None
+            country_prefix = re.match('^[A-Z]{2}|^', vat, re.I).group()
 
-            partner = self.env['res.partner'].search(extra_domain + [('vat', '=', normalized_vat)], limit=1)
+            partner = self.env['res.partner'].search(extra_domain + [('vat', 'in', (normalized_vat, vat))], limit=1)
 
             # Try to remove the country code prefix from the vat.
-            if not partner and len(normalized_vat) > 2 and normalized_vat[:2].isalpha():
-                country_prefix = normalized_vat[:2]
-                normalized_vat = normalized_vat[2:]
+            if not partner and country_prefix:
                 partner = self.env['res.partner'].search(extra_domain + [
-                    ('vat', '=', normalized_vat),
-                    ('country_id.code', '=', country_prefix.lower()),
+                    ('vat', 'in', (normalized_vat[2:], vat[2:])),
+                    ('country_id.code', '=', country_prefix.upper()),
                 ], limit=1)
 
                 # The country could be not specified on the partner.
                 if not partner:
                     partner = self.env['res.partner'].search(extra_domain + [
-                        ('vat', '=', normalized_vat),
+                        ('vat', 'in', (normalized_vat[2:], vat[2:])),
                         ('country_id', '=', False),
                     ], limit=1)
 
@@ -537,7 +536,7 @@ class AccountEdiFormat(models.Model):
             # beginning.
             if not partner:
                 try:
-                    vat_only_numeric = str(int(normalized_vat))
+                    vat_only_numeric = str(int(re.sub(r'^\D{2}', '', normalized_vat) or 0))
                 except ValueError:
                     vat_only_numeric = None
 
@@ -548,13 +547,13 @@ class AccountEdiFormat(models.Model):
                     if country_prefix:
                         vat_prefix_regex = f'({country_prefix})?'
                     else:
-                        vat_prefix_regex = '([A-z]{2})?'
+                        vat_prefix_regex = '([A-Z]{2})?'
 
                     self._cr.execute(f'''
                         SELECT res_partner.id
                         FROM {tables}
                         WHERE {where_clause}
-                        AND res_partner.vat ~ %s
+                        AND res_partner.vat ~* %s
                         LIMIT 1
                     ''', where_params + ['^%s0*%s$' % (vat_prefix_regex, vat_only_numeric)])
                     partner_row = self._cr.fetchone()
