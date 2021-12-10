@@ -119,6 +119,16 @@ export class ModelField {
          */
         this.sort = sort;
         /**
+         * Determines whether and how elements of this field should be summed
+         * into a counter field (only makes sense for relational x2many).
+         *
+         * It must contain an array of object with 2 keys: `from` giving the
+         * name of a field on the relation record that holds the contribution of
+         * that record to the sum, and `to` giving the name of a field on the
+         * current record which contains the sum.
+         */
+        this.sumContributions = [];
+        /**
          * This prop only makes sense in a relational field. Determine which
          * model name this relation refers to.
          */

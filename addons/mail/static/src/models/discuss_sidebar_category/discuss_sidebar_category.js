@@ -75,18 +75,6 @@ registerModel({
         },
         /**
          * @private
-         * @returns {integer}
-         */
-        _computeCounter() {
-            switch (this.counterComputeMethod) {
-                case 'needaction':
-                    return this.categoryItems.filter(categoryItem => categoryItem.channel.message_needaction_counter > 0).length;
-                case 'unread':
-                    return this.categoryItems.filter(categoryItem => categoryItem.channel.localMessageUnreadCounter > 0).length;
-            }
-        },
-        /**
-         * @private
          * @returns {FieldCommand}
          */
         _computeFilteredCategoryItems() {
@@ -237,17 +225,13 @@ registerModel({
             sort: '_sortDefinitionCategoryItems',
         }),
         /**
-         * The total amount unread/action-needed threads in the category.
+         * States the total amount of unread/action-needed threads in this
+         * category.
          */
         counter: attr({
-            compute: '_computeCounter',
-        }),
-        /**
-         * Determines how the counter of this category should be computed.
-         * Supported methods: 'needaction', 'unread'.
-         */
-        counterComputeMethod: attr({
-            required: true,
+            default: 0,
+            readonly: true,
+            sum: 'categoryItems.categoryCounterContribution',
         }),
         discussAsChannel: one2one('mail.discuss', {
             inverse: 'categoryChannel',
