@@ -2,9 +2,11 @@
 from __future__ import print_function
 from textwrap import dedent
 import copy
+import io
 import logging
 import re
 import markupsafe
+import tokenize
 from lxml import html, etree
 
 from odoo import api, models, tools
@@ -342,6 +344,14 @@ class IrQWeb(models.AbstractModel, QWeb):
 
         :param expr: string
         """
-        namespace_expr = super()._compile_expr(expr, raise_on_missing=raise_on_missing)
+        readable = io.BytesIO(expr.strip().encode('utf-8'))
+        try:
+            tokens = list(tokenize.tokenize(readable.readline))
+        except tokenize.TokenError:
+            raise ValueError(f"Cannot compile expression: {expr}")
+
+        namespace_expr = self._compile_expr_tokens(tokens, self._allowed_keyword + list(self._available_objects.keys()), raise_on_missing=raise_on_missing)
+        namespace_expr = f'({namespace_expr})'
+
         assert_valid_codeobj(_SAFE_QWEB_OPCODES, compile(namespace_expr, '<>', 'eval'), expr)
         return namespace_expr
