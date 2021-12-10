@@ -40,7 +40,7 @@ export const TimeOffCalendarRenderer = TimeOffPopoverRenderer.extend({
         return await this._rpc({
             model: 'hr.leave.type',
             method: 'get_days_all_request',
-            context: session.user_context,
+            context: this.state.context,
         });
     },
 
