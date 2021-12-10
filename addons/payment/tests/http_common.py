@@ -198,8 +198,7 @@ class PaymentHttpCommon(PaymentTestUtils, HttpCase):
     def portal_transaction(self, **route_kwargs):
         """/payment/transaction feedback
 
-        :returns: processing values for given route_kwargs
-        :rtype: dict
+        :return: The response to the json request
         """
         uri = '/payment/transaction'
         url = self._build_url(uri)
