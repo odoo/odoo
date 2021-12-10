@@ -577,7 +577,7 @@ class AccountMove(models.Model):
                 copied_vals = line.copy_data()[0]
                 copied_vals['move_id'] = self.id
                 new_line = self.env['account.move.line'].new(copied_vals)
-                new_line.recompute_tax_line = True            
+                new_line.recompute_tax_line = True
 
             # Copy currency.
             if self.currency_id != self.invoice_vendor_bill_id.currency_id:
@@ -2148,7 +2148,11 @@ class AccountMove(models.Model):
                 if field.compute and not field.readonly:
                     line[k] = v
 
-        self.line_ids._onchange_price_subtotal()
+        for line in self.line_ids:
+            if not line.move_id.is_invoice(include_receipts=True):
+                continue
+            line.update(line._get_price_total_and_subtotal())
+            line.update(line._get_fields_onchange_subtotal())
         self._recompute_dynamic_lines(recompute_all_taxes=True)
 
         values = self._convert_to_write(self._cache)
@@ -3552,9 +3556,13 @@ class AccountMoveLine(models.Model):
         help="Cumulated balance depending on the domain and the order chosen in the view.")
     amount_currency = fields.Monetary(string='Amount in Currency', store=True, copy=True,
         help="The amount expressed in an optional other currency if it is a multi-currency entry.")
-    price_subtotal = fields.Monetary(string='Subtotal', store=True, readonly=True,
+    price_subtotal = fields.Monetary(
+        string='Subtotal', readonly=True,
+        compute='_compute_totals', store=True, precompute=True,
         currency_field='currency_id')
-    price_total = fields.Monetary(string='Total', store=True, readonly=True,
+    price_total = fields.Monetary(
+        string='Total', readonly=True,
+        compute='_compute_totals', store=True, precompute=True,
         currency_field='currency_id')
     reconciled = fields.Boolean(compute='_compute_amount_residual', store=True)
     blocked = fields.Boolean(string='No Follow-up', default=False,
@@ -3639,7 +3647,8 @@ class AccountMoveLine(models.Model):
         compute="_compute_analytic_tag_ids", store=True, readonly=False, check_company=True, copy=True)
 
     # ==== Onchange / display purpose fields ====
-    recompute_tax_line = fields.Boolean(store=False, readonly=True,
+    recompute_tax_line = fields.Boolean(
+        store=False, readonly=True, compute='_compute_recompute_tax_line',
         help="Technical field used to know on which lines the taxes must be recomputed.")
     display_type = fields.Selection([
         ('line_section', 'Section'),
@@ -4129,23 +4138,28 @@ class AccountMoveLine(models.Model):
 
         return self.move_id.move_type in ('in_refund', 'out_refund')
 
-    @api.onchange('amount_currency', 'currency_id', 'debit', 'credit', 'tax_ids', 'account_id', 'price_unit', 'quantity')
-    def _onchange_mark_recompute_taxes(self):
+    @api.onchange(
+        'amount_currency', 'currency_id', 'debit', 'credit',
+        'tax_ids', 'account_id', 'price_unit', 'quantity',
+        'analytic_account_id', 'analytic_tag_ids')
+    def _compute_recompute_tax_line(self):
         ''' Recompute the dynamic onchange based on taxes.
         If the edited line is a tax line, don't recompute anything as the user must be able to
         set a custom value.
         '''
         for line in self:
-            if not line.tax_repartition_line_id:
+            if line.tax_repartition_line_id:
+                line.recompute_tax_line = False
+                continue
+            if not self._origin \
+                    or ((
+                            # Trigger tax recomputation only when some taxes with analytics
+                            self.analytic_account_id != self._origin.analytic_account_id or \
+                            self.analytic_tag_ids != self._origin.analytic_tag_ids \
+                        ) and any(tax.analytic for tax in line.tax_ids)):
                 line.recompute_tax_line = True
-
-    @api.onchange('analytic_account_id', 'analytic_tag_ids')
-    def _onchange_mark_recompute_taxes_analytic(self):
-        ''' Trigger tax recomputation only when some taxes with analytics
-        '''
-        for line in self:
-            if not line.tax_repartition_line_id and any(tax.analytic for tax in line.tax_ids):
-                line.recompute_tax_line = True
+            else:
+                line.recompute_tax_line = False
 
     @api.depends('product_id', 'journal_id')
     def _compute_name(self):
@@ -4212,6 +4226,13 @@ class AccountMoveLine(models.Model):
             self.debit = 0.0
         self._onchange_balance()
 
+    @api.depends('quantity', 'discount', 'price_unit', 'tax_ids', 'currency_id', 'amount_currency')
+    def _compute_totals(self):
+        for line in self:
+            if not line.move_id.is_invoice(include_receipts=True):
+                continue
+            line.update(line._get_price_total_and_subtotal())
+
     @api.onchange('amount_currency')
     def _onchange_amount_currency(self):
         for line in self:
@@ -4220,28 +4241,13 @@ class AccountMoveLine(models.Model):
             line.debit = balance if balance > 0.0 else 0.0
             line.credit = -balance if balance < 0.0 else 0.0
 
-            if not line.move_id.is_invoice(include_receipts=True):
-                continue
-
-            line.update(line._get_fields_onchange_balance())
-            line.update(line._get_price_total_and_subtotal())
-
-    @api.onchange('quantity', 'discount', 'price_unit', 'tax_ids')
-    def _onchange_price_subtotal(self):
-        for line in self:
-            if not line.move_id.is_invoice(include_receipts=True):
-                continue
-
-            line.update(line._get_price_total_and_subtotal())
-            line.update(line._get_fields_onchange_subtotal())
-
     @api.onchange('currency_id')
     def _onchange_currency(self):
         for line in self:
             company = line.move_id.company_id
 
             if line.move_id.is_invoice(include_receipts=True):
-                line._onchange_price_subtotal()
+                continue
             elif not line.move_id.reversed_entry_id:
                 balance = line.currency_id._convert(line.amount_currency, company.currency_id, company, line.move_id.date or fields.Date.context_today(line))
                 line.debit = balance if balance > 0.0 else 0.0
