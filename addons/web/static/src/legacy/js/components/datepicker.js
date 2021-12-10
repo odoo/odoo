@@ -48,11 +48,15 @@ odoo.define('web.DatePickerOwl', function (require) {
         }
 
         willUnmount() {
+            $(this.el).off('show.datetimepicker hide.datetimepicker error.datetimepicker');
             this._datetimepicker('destroy');
         }
 
         willUpdateProps(nextProps) {
             for (const prop in nextProps) {
+                if (prop == "onDateTimeChanged") {
+                    continue;
+                }
                 this._datetimepicker(prop, nextProps[prop]);
             }
             if (nextProps.date) {
@@ -122,7 +126,7 @@ odoo.define('web.DatePickerOwl', function (require) {
         _onDateTimePickerHide() {
             const date = this._parseInput(this.inputRef.el.value);
             this.state.warning = date.format('YYYY-MM-DD') > moment().format('YYYY-MM-DD');
-            this.trigger('datetime-changed', { date });
+            this.props.onDateTimeChanged(date);
         }
 
         /**
@@ -149,7 +153,7 @@ odoo.define('web.DatePickerOwl', function (require) {
             const date = this._parseInput(this.inputRef.el.value);
             if (date) {
                 this.state.warning = date.format('YYYY-MM-DD') > moment().format('YYYY-MM-DD');
-                this.trigger('datetime-changed', { date });
+                this.props.onDateTimeChanged(date);
             } else {
                 this.inputRef.el.value = this._formatDate(this.props.date);
             }
@@ -187,6 +191,8 @@ odoo.define('web.DatePickerOwl', function (require) {
     DatePicker.props = {
         // Actual date value
         date: moment,
+        // function to call when the date/time changed
+        onDateTimeChanged: Function,
         // Other props
         buttons: {
             type: Object,

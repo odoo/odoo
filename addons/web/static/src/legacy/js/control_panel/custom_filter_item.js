@@ -205,10 +205,10 @@ odoo.define('web.CustomFilterItem', function (require) {
          * @private
          * @param {Object} condition
          * @param {number} valueIndex
-         * @param {OwlEvent} ev
+         * @param {Date} date
          */
-        onDateChanged(condition, valueIndex, ev) {
-            condition.value[valueIndex] = ev.detail.date;
+        onDateTimeChanged(condition, valueIndex, date) {
+            condition.value[valueIndex] = date;
         }
 
         /**
