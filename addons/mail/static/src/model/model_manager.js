@@ -490,6 +490,7 @@ export class ModelManager {
                             'readonly',
                             'related',
                             'required',
+                            'sum',
                         ].includes(key)
                     );
                     if (invalidKeys.length > 0) {
@@ -1176,11 +1177,25 @@ export class ModelManager {
          * 1. Prepare fields.
          */
         for (const Model of Object.values(this.models)) {
+            const sumContributionsByFieldName = new Map();
             // Make fields aware of their field name.
             for (const [fieldName, fieldData] of registry.get(Model.name).get('fields')) {
                 Model.fields[fieldName] = new ModelField(Object.assign({}, fieldData, {
                     fieldName,
                 }));
+                if (fieldData.sum) {
+                    const [relationFieldName, contributionFieldName] = fieldData.sum.split('.');
+                    if (!sumContributionsByFieldName.has(relationFieldName)) {
+                        sumContributionsByFieldName.set(relationFieldName, []);
+                    }
+                    sumContributionsByFieldName.get(relationFieldName).push({
+                        from: contributionFieldName,
+                        to: fieldName,
+                    });
+                }
+            }
+            for (const [fieldName, sumContributions] of sumContributionsByFieldName) {
+                Model.fields[fieldName].sumContributions = sumContributions;
             }
         }
         /**
