@@ -7,13 +7,15 @@ import { sprintf } from "@web/core/utils/strings";
 import { standardFieldProps } from "./standard_field_props";
 
 const { Component } = owl;
-const { useRef, useState } = owl.hooks;
+const { onWillStart, onWillUpdateProps, useRef, useState } = owl.hooks;
 
 export class Many2OneField extends Component {
     setup() {
         this.orm = useService("orm");
         this.action = useService("action");
         this.inputRef = useRef("input");
+
+        this.extraLines = [];
 
         useEffect(() => {
             if (this.inputRef.el) {
@@ -24,6 +26,15 @@ export class Many2OneField extends Component {
                     this.autoComplete("destroy");
                 }
             };
+        });
+
+        onWillStart(async () => {
+            this.extraLines = await this.loadExtraLines(this.props.value);
+        });
+        onWillUpdateProps(async (nextProps) => {
+            if (this.props.value !== nextProps.value) {
+                this.extraLines = await this.loadExtraLines(nextProps.value);
+            }
         });
     }
 
@@ -93,6 +104,13 @@ export class Many2OneField extends Component {
         return $(this.inputRef.el).autocomplete(...args);
     }
 
+    async loadExtraLines(value) {
+        if (this.props.options.always_reload && value) {
+            const nameGet = await this.orm.call(this.relation, "name_get", [value[0]]);
+            return nameGet[0][1].split("\n").slice(1);
+        }
+        return [];
+    }
     async fetchAutoCompleteSources(term) {
         const trimmedTerm = term.trim();
         const results = await this.search(trimmedTerm);
@@ -243,3 +261,15 @@ Object.assign(Many2OneField, {
 });
 
 registry.category("fields").add("many2one", Many2OneField);
+
+export async function preloadMany2one(orm, record, fieldName) {
+    if (record.activeFields[fieldName].options.always_reload && record.data[fieldName]) {
+        const nameGet = await orm.call(record.fields[fieldName].relation, "name_get", [
+            record.data[fieldName][0],
+        ]);
+        return nameGet[0][1].split("\n").slice(1);
+    }
+    return [];
+}
+
+registry.category("preloadedData").add("many2one", preloadMany2one);
