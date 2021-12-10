@@ -99,6 +99,27 @@ class PaymentCommon(PaymentTestUtils):
         cls.currency = cls.currency_euro
         cls.partner = cls.default_partner
         cls.reference = "Test Transaction"
+        cls.account = cls.company.account_journal_payment_credit_account_id
+        cls.invoice = cls.env['account.move'].create({
+            'move_type': 'entry',
+            'date': '2019-01-01',
+            'line_ids': [
+                (0, 0, {
+                    'account_id': cls.account.id,
+                    'currency_id': cls.currency_euro.id,
+                    'debit': 100.0,
+                    'credit': 0.0,
+                    'amount_currency': 200.0,
+                }),
+                (0, 0, {
+                    'account_id': cls.account.id,
+                    'currency_id': cls.currency_euro.id,
+                    'debit': 0.0,
+                    'credit': 100.0,
+                    'amount_currency': -200.0,
+                }),
+            ],
+        })
 
     #=== Utils ===#
 
