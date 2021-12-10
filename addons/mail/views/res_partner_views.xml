@@ -60,17 +60,6 @@
             </field>
         </record>
 
-        <record id="res_partner_view_tree_inherit_mail" model="ir.ui.view">
-            <field name="name">res.partner.view.tree.inherit.mail</field>
-            <field name="model">res.partner</field>
-            <field name="inherit_id" ref="base.view_partner_tree"/>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='user_id']" position="after">
-                    <field name="activity_ids" optional="show" widget="list_activity"/>
-                </xpath>
-            </field>
-        </record>
-
         <record id="res_partner_view_activity" model="ir.ui.view">
             <field name="name">res.partner.activity</field>
             <field name="model">res.partner</field>
@@ -102,19 +91,34 @@
         </record>
 
         <!--  Replace the default mass-mailing wizard in base with the composition wizard -->
-        <record id="action_partner_mass_mail" model="ir.actions.act_window">
+        <record id="action_partner_mass_mail" model="ir.actions.server">
             <field name="name">Send email</field>
-            <field name="res_model">mail.compose.message</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-            <field name="context" eval="{
-                'default_composition_mode': 'mass_mail',
-                'default_partner_to': '{{ object.id or \'\' }}',
-                'default_use_template': False,
-                'default_reply_to_force_new': True,
-            }"/>
+            <field name="model_id" ref="base.model_res_partner"/>
             <field name="binding_model_id" ref="base.model_res_partner"/>
             <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                    action = records.action_send_mail_to_partner()
+            </field>
+        </record>
+
+        <!-- Moves the view below the action 'action_partner_mass_mail' as
+        action should be defined above the view -->
+        <record id="res_partner_view_tree_inherit_mail" model="ir.ui.view">
+            <field name="name">res.partner.view.tree.inherit.mail</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='user_id']" position="after">
+                    <field name="activity_ids" optional="show" widget="list_activity"/>
+                </xpath>
+                <xpath expr="//field[1]" position="before">
+                    <header>
+                        <button name="%(mail.action_partner_mass_mail)d" type="action" string="Email"/>
+                    </header>
+                </xpath>
+            </field>
         </record>
 
     </data>

@@ -51,6 +51,22 @@ class Partner(models.Model):
             WHERE R.res_partner_id = %s """, (self.id,))
         return self.env.cr.dictfetchall()[0].get('starred_count')
 
+    def action_send_mail_to_partner(self):
+        # Send emails from composer to selected partners
+        action = {
+            "type": "ir.actions.act_window",
+            "view_mode": "form",
+            "res_model": "mail.compose.message",
+            "target": "new",
+            "context": {
+                "default_composition_mode": 'mass_mail',
+                "default_partner_to": '{{ object.id or \'\' }}',
+                "default_use_template": False,
+                "default_reply_to_force_new": True,
+            }
+        }
+        return action
+
     # ------------------------------------------------------------
     # MESSAGING
     # ------------------------------------------------------------
