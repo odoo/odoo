@@ -20,6 +20,7 @@ import {
     patchWithCleanup,
     triggerHotkey,
 } from "../helpers/utils";
+import { makeParent } from "./tooltip/tooltip_hook_tests";
 
 const { App, Component, xml } = owl;
 const serviceRegistry = registry.category("services");
@@ -1006,5 +1007,20 @@ QUnit.module("Components", ({ beforeEach }) => {
         await click(parent.el, "button.dropdown-toggle");
         await click(parent.el, ".dropdown-item label");
         assert.verifySteps(["selected"]);
+    });
+
+    QUnit.test("Dropdown with a tooltip", async (assert) => {
+        assert.expect(2);
+
+        class MyComponent extends owl.Component {}
+        MyComponent.template = owl.tags.xml`
+            <Dropdown tooltip="'My tooltip'">
+                <DropdownItem/>
+            </Dropdown>`;
+
+        const parent = await makeParent(MyComponent);
+        await mouseEnter(parent.el, "button.dropdown-toggle");
+        assert.containsOnce(parent, ".o-tooltip");
+        assert.strictEqual(parent.el.querySelector(".o-tooltip").textContent, "My tooltip");
     });
 });

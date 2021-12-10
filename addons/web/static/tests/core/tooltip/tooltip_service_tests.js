@@ -8,6 +8,7 @@ import { registry } from "@web/core/registry";
 import { clearRegistryWithCleanup, makeTestEnv } from "../../helpers/mock_env";
 import { getFixture, nextTick, patchWithCleanup, triggerEvent } from "../../helpers/utils";
 import { registerCleanup } from "../../helpers/cleanup";
+import { makeFakeLocalizationService } from "../../helpers/mock_services";
 
 const { App, Component, useState, xml } = owl;
 
@@ -28,7 +29,7 @@ const mainComponents = registry.category("main_components");
  * @param {{[templateName:string]: string}} [options.templates] additional templates
  * @returns {Promise<Component>}
  */
-async function makeParent(Child, options = {}) {
+export async function makeParent(Child, options = {}) {
     const target = getFixture();
 
     // add the popover service to the registry -> will add the PopoverContainer
@@ -44,6 +45,7 @@ async function makeParent(Child, options = {}) {
 
     registry.category("services").add("popover", popoverService);
     registry.category("services").add("tooltip", tooltipService);
+    registry.category("services").add("localization", makeFakeLocalizationService());
     const env = await makeTestEnv();
 
     patchWithCleanup(env.services.popover, {

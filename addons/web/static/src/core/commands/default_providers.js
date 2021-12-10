@@ -71,7 +71,7 @@ commandProviderRegistry.add("data-hotkeys", {
             const category = closest ? closest.dataset.commandCategory : "default";
 
             const description =
-                el.title ||
+                el.title || //FGE: should be replaced by data-tooltip everywhere
                 el.dataset.originalTitle || // LEGACY: bootstrap moves title to data-original-title
                 el.dataset.tooltip ||
                 el.placeholder ||
