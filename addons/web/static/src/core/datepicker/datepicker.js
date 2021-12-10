@@ -171,15 +171,15 @@ export class DatePicker extends Component {
 
     /**
      * Called either when the input value has changed or when the boostrap
-     * datepicker is closed. The actual "datetime-changed" emitted by the
-     * component is only triggered if the date value has changed.
+     * datepicker is closed. The onDateTimeChanged prop is only called if the
+     * date value has changed.
      */
     onDateChange() {
         try {
             const date = this.parse(this.inputRef.el.value, this.options);
             if (!date.equals(this.props.date)) {
                 this.state.warning = date > DateTime.local();
-                this.trigger("datetime-changed", { date });
+                this.props.onDateTimeChanged(date);
             }
         } catch (err) {
             // Reset to default (= given) date.
@@ -217,6 +217,7 @@ DatePicker.defaultProps = {
 };
 DatePicker.props = {
     // Components props
+    onDateTimeChanged: Function,
     date: DateTime,
     warn_future: { type: Boolean, optional: true },
     // Bootstrap datepicker options

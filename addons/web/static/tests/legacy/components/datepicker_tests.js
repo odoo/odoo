@@ -15,7 +15,7 @@ odoo.define('web.datepicker_tests', function (require) {
             assert.expect(8);
 
             const picker = await createComponent(DatePicker, {
-                props: { date: moment('1997-01-09') },
+                props: { date: moment('1997-01-09'), onDateTimeChanged: () => {} },
             });
 
 
@@ -47,11 +47,11 @@ odoo.define('web.datepicker_tests', function (require) {
             assert.expect(5);
 
             const picker = await createComponent(DatePicker, {
-                props: { date: moment('1997-01-09') },
-                intercepts: {
-                    'datetime-changed': ev => {
+                props: {
+                    date: moment('1997-01-09'),
+                    onDateTimeChanged: date => {
                         assert.step('datetime-changed');
-                        assert.strictEqual(ev.detail.date.format('MM/DD/YYYY'), '02/08/1997',
+                        assert.strictEqual(date.format('MM/DD/YYYY'), '02/08/1997',
                             "Event should transmit the correct date");
                     },
                 }
@@ -88,11 +88,11 @@ odoo.define('web.datepicker_tests', function (require) {
                     date_format: "%d %b, %Y", // Those are important too
                     time_format: "%H:%M:%S",
                 },
-                props: { date: moment('09/01/1997', 'MM/DD/YYYY') },
-                intercepts: {
-                    'datetime-changed': ev => {
+                props: {
+                    date: moment('09/01/1997', 'MM/DD/YYYY'),
+                    onDateTimeChanged: date => {
                         assert.step('datetime-changed');
-                        assert.strictEqual(ev.detail.date.format('MM/DD/YYYY'), '09/02/1997',
+                        assert.strictEqual(date.format('MM/DD/YYYY'), '09/02/1997',
                             "Event should transmit the correct date");
                         hasChanged.resolve();
                     },
@@ -116,11 +116,11 @@ odoo.define('web.datepicker_tests', function (require) {
             assert.expect(5);
 
             const picker = await createComponent(DatePicker, {
-                props: { date: moment('1997-01-09') },
-                intercepts: {
-                    'datetime-changed': ev => {
+                props: {
+                    date: moment('1997-01-09'),
+                    onDateTimeChanged: date => {
                         assert.step('datetime-changed');
-                        assert.strictEqual(ev.detail.date.format('MM/DD/YYYY'), '02/08/1997',
+                        assert.strictEqual(date.format('MM/DD/YYYY'), '02/08/1997',
                             "Event should transmit the correct date");
                     },
                 }
@@ -149,7 +149,7 @@ odoo.define('web.datepicker_tests', function (require) {
 
             testUtils.mock.patch(time, { getLangDateFormat: () => "YYYY/MM/DD" });
             const picker = await createComponent(DatePicker, {
-                props: { date: moment('1997-01-09') },
+                props: { date: moment('1997-01-09'), onDateTimeChanged: () => {} },
             });
             const input = picker.el.querySelector('.o_datepicker_input');
 
@@ -170,7 +170,7 @@ odoo.define('web.datepicker_tests', function (require) {
             assert.expect(11);
 
             const picker = await createComponent(DateTimePicker, {
-                props: { date: moment('1997-01-09 12:30:01') },
+                props: { date: moment('1997-01-09 12:30:01'), onDateTimeChanged: () => {} },
             });
 
             assert.containsOnce(picker, 'input.o_input.o_datepicker_input');
@@ -205,11 +205,11 @@ odoo.define('web.datepicker_tests', function (require) {
             assert.expect(5);
 
             const picker = await createComponent(DateTimePicker, {
-                props: { date: moment('1997-01-09 12:30:01') },
-                intercepts: {
-                    'datetime-changed': ev => {
+                props: {
+                    date: moment('1997-01-09 12:30:01'),
+                    onDateTimeChanged: date => {
                         assert.step('datetime-changed');
-                        assert.strictEqual(ev.detail.date.format('MM/DD/YYYY HH:mm:ss'), '02/08/1997 15:45:05',
+                        assert.strictEqual(date.format('MM/DD/YYYY HH:mm:ss'), '02/08/1997 15:45:05',
                             "Event should transmit the correct date");
                     },
                 }
@@ -253,11 +253,11 @@ odoo.define('web.datepicker_tests', function (require) {
                     date_format: "%d %b, %Y", // Those are important too
                     time_format: "%H:%M:%S",
                 },
-                props: { date: moment('09/01/1997 12:30:01', 'MM/DD/YYYY HH:mm:ss') },
-                intercepts: {
-                    'datetime-changed': ev => {
+                props: {
+                    date: moment('09/01/1997 12:30:01', 'MM/DD/YYYY HH:mm:ss'),
+                    onDateTimeChanged: date => {
                         assert.step('datetime-changed');
-                        assert.strictEqual(ev.detail.date.format('MM/DD/YYYY HH:mm:ss'), '09/02/1997 15:45:05',
+                        assert.strictEqual(date.format('MM/DD/YYYY HH:mm:ss'), '09/02/1997 15:45:05',
                             "Event should transmit the correct date");
                         hasChanged.resolve();
                     },
@@ -293,11 +293,11 @@ odoo.define('web.datepicker_tests', function (require) {
             assert.expect(9);
 
             const picker = await createComponent(DateTimePicker, {
-                props: { date: moment('1997-01-09 12:30:01') },
-                intercepts: {
-                    'datetime-changed': ev => {
+                props: {
+                    date: moment('1997-01-09 12:30:01'),
+                    onDateTimeChanged: date => {
                         assert.step('datetime-changed');
-                        assert.strictEqual(ev.detail.date.format('MM/DD/YYYY HH:mm:ss'), '02/08/1997 15:45:05',
+                        assert.strictEqual(date.format('MM/DD/YYYY HH:mm:ss'), '02/08/1997 15:45:05',
                             "Event should transmit the correct date");
                     },
                 }
@@ -333,7 +333,7 @@ odoo.define('web.datepicker_tests', function (require) {
 
             testUtils.mock.patch(time, { getLangDatetimeFormat: () => "hh:mm:ss YYYY/MM/DD" });
             const picker = await createComponent(DateTimePicker, {
-                props: { date: moment('1997-01-09 12:30:01') },
+                props: { date: moment('1997-01-09 12:30:01'), onDateTimeChanged: () => {} },
             });
             const input = picker.el.querySelector('.o_datepicker_input');
 
