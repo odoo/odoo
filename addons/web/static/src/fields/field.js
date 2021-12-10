@@ -4,6 +4,7 @@ import { useEffect } from "@web/core/utils/hooks";
 import { snakeToCamel } from "@web/core/utils/strings";
 import { isAttr } from "@web/core/utils/xml";
 import { getX2MViewModes, X2M_TYPES } from "@web/views/helpers/view_utils";
+import { isBroadlyFalsy } from "../core/utils/misc";
 
 const { Component, tags } = owl;
 
@@ -70,6 +71,13 @@ export class Field extends Component {
         const record = this.props.record;
         const field = record.fields[this.props.name];
         const activeField = record.activeFields[this.props.name];
+
+        // GES
+        // Is this the right place ? Or should we delegate that to the fields anyway.
+        // The option exists at least on integer field. To see if it use at many places.
+        if ("format" in activeField.options && isBroadlyFalsy(activeField.options.format)) {
+            return value;
+        }
 
         const formatterRegistry = registry.category("formatters");
         if (formatterRegistry.contains(activeField.widget)) {

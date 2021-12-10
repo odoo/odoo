@@ -212,7 +212,7 @@ export const formatFloatTime = (value, options = {}) => {
  * Returns a string representing an integer.  If the value is false, then we
  * return an empty string.
  *
- * @param {number | false} value
+ * @param {number | false | null} value
  * @param {Object} [options]
  * @param {Object} [options.field] a description of the field
  * @param {boolean} [options.humanReadable] if true, large numbers are formatted
@@ -224,7 +224,7 @@ export const formatFloatTime = (value, options = {}) => {
  * @returns {string}
  */
 export const formatInteger = (value, options = {}) => {
-    if (value === false) {
+    if (value === false || value === null) {
         return "";
     }
     if (options.isPassword) {
