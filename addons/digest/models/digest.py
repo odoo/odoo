@@ -202,7 +202,7 @@ class DigestDigest(models.Model):
                 digest.periodicity = digest._get_next_periodicity()[0]
             digest.next_run_date = digest._get_next_run_date()
 
-    def _action_send_to_user(self, user, tips_count=1, consume_tips=True, values_by_kpi=None):
+    def _action_send_to_user(self, user, tips_count=1, consume_tips=True, values_by_kpi=None, force_send=False):
         self.ensure_one()
         digest_kpi_authorized = self.digest_kpi_ids.filtered(
             lambda dk: not dk.kpi_id.group_ids or user.all_group_ids & dk.kpi_id.group_ids)
@@ -276,7 +276,9 @@ class DigestDigest(models.Model):
             'state': 'outgoing',
             'subject': '%s: %s' % (user.company_id.name, self.name),
         }
-        self.env['mail.mail'].sudo().create(mail_values)
+        mail = self.env['mail.mail'].sudo().create(mail_values)
+        if force_send:
+            mail.send()
         return True
 
     def action_add_kpi(self):
@@ -300,6 +302,18 @@ class DigestDigest(models.Model):
             'res_model': 'digest.kpi',
             'view_mode': 'form',
             'target': 'new',
+        }
+
+    def action_launch_test_wizard(self):
+        self.ensure_one()
+        ctx = dict(self.env.context, default_digest_id=self.id)
+        return {
+            'name': _('Test Digest'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'digest.test',
+            'target': 'new',
+            'context': ctx,
         }
 
     @api.model
