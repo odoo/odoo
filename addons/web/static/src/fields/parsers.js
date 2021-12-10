@@ -2,6 +2,7 @@
 
 import { parseDate, parseDateTime } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
+import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { escapeRegExp } from "@web/core/utils/strings";
 import { session } from "@web/session";
@@ -9,6 +10,23 @@ import { session } from "@web/session";
 // -----------------------------------------------------------------------------
 // Helpers
 // -----------------------------------------------------------------------------
+
+function evaluateMathematicalExpression(expr, context = {}) {
+    // remove extra space
+    var val = expr.replace(new RegExp(/( )/g), "");
+    var safeEvalString = "";
+    for (let v of val.split(new RegExp(/([-+*/()^])/g))) {
+        if (!["+", "-", "*", "/", "(", ")", "^"].includes(v) && v.length) {
+            // check if this is a float and take into account user delimiter preference
+            v = parseFloat(v);
+        }
+        if (v === "^") {
+            v = "**";
+        }
+        safeEvalString += v;
+    }
+    return evaluateExpr(safeEvalString, context);
+}
 
 /**
  * Parses a string into a number.
@@ -24,6 +42,14 @@ function parseNumber(value, options = {}) {
     value = value.replaceAll(options.thousandsSep || ",", "");
     // a number only have one decimal separator
     value = value.replace(options.decimalPoint || ".", ".");
+
+    if (value.startsWith("=")) {
+        value = evaluateMathematicalExpression(value.substring(1));
+        if (options.truncate) {
+            value = Math.trunc(value);
+        }
+    }
+
     return Number(value);
 }
 
@@ -89,6 +115,7 @@ export function parseInteger(value) {
     const parsed = parseNumber(value, {
         thousandsSep: thousandsSepRegex,
         decimalPoint: decimalPointRegex,
+        truncate: true,
     });
     if (!Number.isInteger(parsed)) {
         throw new InvalidNumberError(`"${value}" is not a correct number`);
