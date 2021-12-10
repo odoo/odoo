@@ -26,7 +26,7 @@ export const TimeOffCalendarEmployeeController = TimeOffCalendarController.exten
 
     _getAllocationContext() {
         const context = this._super(...arguments);
-        context.default_employee_ids = this.context.employee_id;
+        context.default_employee_id = this.context.employee_id[0];
         return context;
     },
 
