@@ -1,16 +1,7 @@
 /** @odoo-module **/
 
-import { dialogService } from "@web/core/dialog/dialog_service";
-import { registry } from "@web/core/registry";
-import { makeFakeUserService } from "../helpers/mock_services";
-import {
-    setupControlPanelFavoriteMenuRegistry,
-    setupControlPanelServiceRegistry,
-} from "../search/helpers";
-import { makeView } from "../views/helpers";
 import { click } from "../helpers/utils";
-
-const serviceRegistry = registry.category("services");
+import { makeView, setupViewRegistries } from "../views/helpers";
 
 const MY_IMAGE =
     "iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==";
@@ -18,10 +9,6 @@ const PRODUCT_IMAGE =
     "R0lGODlhDAAMAKIFAF5LAP/zxAAAANyuAP/gaP///wAAAAAAACH5BAEAAAUALAAAAAAMAAwAAAMlWLPcGjDKFYi9lxKBOaGcF35DhWHamZUW0K4mAbiwWtuf0uxFAgA7";
 
 let serverData;
-
-function hasGroup(group) {
-    return group === "base.group_allow_export";
-}
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
@@ -69,10 +56,7 @@ QUnit.module("Fields", (hooks) => {
             },
         };
 
-        setupControlPanelFavoriteMenuRegistry();
-        setupControlPanelServiceRegistry();
-        serviceRegistry.add("dialog", dialogService);
-        serviceRegistry.add("user", makeFakeUserService(hasGroup), { force: true });
+        setupViewRegistries();
     });
 
     QUnit.module("ImageField");

@@ -1,8 +1,7 @@
 /** @odoo-module **/
 
 import { click, triggerEvent } from "../helpers/utils";
-import { setupControlPanelServiceRegistry } from "../search/helpers";
-import { makeView } from "../views/helpers";
+import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
 
@@ -41,7 +40,7 @@ QUnit.module("Fields", (hooks) => {
             },
         };
 
-        setupControlPanelServiceRegistry();
+        setupViewRegistries();
     });
 
     QUnit.module("EmailField");

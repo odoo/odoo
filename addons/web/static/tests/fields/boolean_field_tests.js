@@ -1,15 +1,7 @@
 /** @odoo-module **/
 
-import { dialogService } from "@web/core/dialog/dialog_service";
-import { registry } from "@web/core/registry";
 import { click, nextTick, triggerEvent, triggerEvents } from "../helpers/utils";
-import {
-    setupControlPanelFavoriteMenuRegistry,
-    setupControlPanelServiceRegistry,
-} from "../search/helpers";
-import { makeView } from "../views/helpers";
-
-const serviceRegistry = registry.category("services");
+import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
 
@@ -32,9 +24,7 @@ QUnit.module("Fields", (hooks) => {
             },
         };
 
-        setupControlPanelFavoriteMenuRegistry();
-        setupControlPanelServiceRegistry();
-        serviceRegistry.add("dialog", dialogService);
+        setupViewRegistries();
     });
 
     QUnit.module("BooleanField");

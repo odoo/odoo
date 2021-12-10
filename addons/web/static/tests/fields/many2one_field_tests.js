@@ -1,30 +1,10 @@
 /** @odoo-module **/
 
-import { dialogService } from "@web/core/dialog/dialog_service";
-import { registry } from "@web/core/registry";
 import { Many2OneField } from "@web/fields/many2one_field";
-import { makeFakeLocalizationService, makeFakeUserService } from "../helpers/mock_services";
-import {
-    click,
-    makeDeferred,
-    nextTick,
-    patchWithCleanup,
-    triggerEvent,
-    triggerEvents,
-} from "../helpers/utils";
-import {
-    setupControlPanelFavoriteMenuRegistry,
-    setupControlPanelServiceRegistry,
-} from "../search/helpers";
-import { makeView } from "../views/helpers";
-
-const serviceRegistry = registry.category("services");
+import { click, patchWithCleanup, triggerEvent, triggerEvents } from "../helpers/utils";
+import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
-
-function hasGroup(group) {
-    return group === "base.group_allow_export";
-}
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
@@ -216,10 +196,7 @@ QUnit.module("Fields", (hooks) => {
             },
         };
 
-        setupControlPanelFavoriteMenuRegistry();
-        setupControlPanelServiceRegistry();
-        serviceRegistry.add("dialog", dialogService);
-        serviceRegistry.add("user", makeFakeUserService(hasGroup), { force: true });
+        setupViewRegistries();
 
         patchWithCleanup(Many2OneField, {
             AUTOCOMPLETE_DELAY: 0,

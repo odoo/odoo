@@ -1,22 +1,9 @@
 /** @odoo-module **/
 
-import { dialogService } from "@web/core/dialog/dialog_service";
-import { registry } from "@web/core/registry";
 import { click, triggerEvent } from "../helpers/utils";
-import { makeFakeUserService } from "../helpers/mock_services";
+import { makeView, setupViewRegistries } from "../views/helpers";
 
-import {
-    setupControlPanelFavoriteMenuRegistry,
-    setupControlPanelServiceRegistry,
-} from "../search/helpers";
-import { makeView } from "../views/helpers";
-
-const serviceRegistry = registry.category("services");
 let serverData;
-
-function hasGroup(group) {
-    return group === "base.group_allow_export";
-}
 
 QUnit.module("Fields", (hooks) => {
     hooks.beforeEach(() => {
@@ -49,10 +36,7 @@ QUnit.module("Fields", (hooks) => {
             },
         };
 
-        setupControlPanelFavoriteMenuRegistry();
-        setupControlPanelServiceRegistry();
-        serviceRegistry.add("dialog", dialogService);
-        serviceRegistry.add("user", makeFakeUserService(hasGroup), { force: true });
+        setupViewRegistries();
     });
 
     QUnit.module("ColorPickerField");

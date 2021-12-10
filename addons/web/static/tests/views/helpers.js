@@ -1,9 +1,18 @@
 /** @odoo-module **/
 
+import { registry } from "@web/core/registry";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { getFixture, mount } from "@web/../tests/helpers/utils";
 import { getDefaultConfig, View } from "@web/views/view";
+import {
+    setupControlPanelFavoriteMenuRegistry,
+    setupControlPanelServiceRegistry,
+} from "../search/helpers";
 import { addLegacyMockEnvironment } from "../webclient/helpers";
+import { makeFakeLocalizationService, makeFakeUserService } from "../helpers/mock_services";
+import { dialogService } from "@web/core/dialog/dialog_service";
+
+const serviceRegistry = registry.category("services");
 
 /**
  * @typedef {{
@@ -71,3 +80,15 @@ export const makeView = async (params) => {
 
     return concreteView;
 };
+
+export function setupViewRegistries() {
+    setupControlPanelFavoriteMenuRegistry();
+    setupControlPanelServiceRegistry();
+    serviceRegistry.add(
+        "user",
+        makeFakeUserService((group) => group === "base.group_allow_export"),
+        { force: true }
+    );
+    serviceRegistry.add("localization", makeFakeLocalizationService()), { force: true };
+    serviceRegistry.add("dialog", dialogService), { force: true };
+}
