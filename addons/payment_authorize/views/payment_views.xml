@@ -13,7 +13,7 @@
                     <field name="authorize_signature_key" password="True" attrs="{'required':[ ('provider', '=', 'authorize'), ('state', '!=', 'disabled')]}"/>
                     <label for="authorize_client_key"/>
                     <div>
-                        <field name="authorize_client_key" password="True"/>
+                        <field name="authorize_client_key"/>
                         <button class="oe_link" icon="fa-refresh" type="object"
                                 name="action_update_merchant_details"
                                 string="Generate Client Key"/>

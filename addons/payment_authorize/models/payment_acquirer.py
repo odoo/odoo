@@ -30,7 +30,7 @@ class PaymentAcquirer(models.Model):
     # Authorize.Net supports only one currency: "One gateway account is required for each currency"
     # See https://community.developer.authorize.net/t5/The-Authorize-Net-Developer-Blog/Authorize-Net-UK-Europe-Update/ba-p/35957
     authorize_currency_id = fields.Many2one(
-        string="Authorize Currency", comodel_name='res.currency', groups='base.group_system')
+        string="Authorize Currency", comodel_name='res.currency')
     authorize_payment_method_type = fields.Selection(
         string="Allow Payments From",
         help="Determines with what payment method the customer can pay.",
