@@ -441,8 +441,8 @@ var DateTimePicker = function ($, moment) {
                 targetMoment.minutes(Math.round(targetMoment.minutes() / this._options.stepping) * this._options.stepping).seconds(0);
             }
 
+            this._dates[index] = targetMoment;
             if (this._isValid(targetMoment)) {
-                this._dates[index] = targetMoment;
                 this._datesFormatted[index] = targetMoment.format('YYYY-MM-DD');
                 this._viewDate = targetMoment.clone();
                 if (this._options.allowMultidate && this._dates.length > 1) {
