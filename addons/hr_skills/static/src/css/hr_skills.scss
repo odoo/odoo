@@ -16,9 +16,14 @@
             }
         }
 
-        // Use 'cursor:pointer' where is needed only
+        &.o_hr_skills_editable {
+            .o_data_row {
+                cursor: pointer;
+            }
+        }
+
         .o_data_row {
-            cursor: pointer;
+            cursor: default;
         }
 
         // Deny user interaction to headers but keep access to buttons
