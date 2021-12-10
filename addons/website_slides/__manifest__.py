@@ -23,10 +23,12 @@ Featuring
         'website',
         'website_mail',
         'website_profile',
+        'digest'
     ],
     'data': [
         'security/website_slides_security.xml',
         'security/ir.model.access.csv',
+        'views/digest_views.xml',
         'views/gamification_karma_tracking_views.xml',
         'views/mail_activity_views.xml',
         'views/res_config_settings_views.xml',
@@ -50,6 +52,7 @@ Featuring
         'views/website_pages_views.xml',
         'views/slide_channel_add.xml',
         'wizard/slide_channel_invite_views.xml',
+        'data/digest_data.xml',
         'data/gamification_data.xml',
         'data/mail_message_subtype_data.xml',
         'data/mail_template_data.xml',
