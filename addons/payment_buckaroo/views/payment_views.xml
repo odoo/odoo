@@ -9,7 +9,7 @@
             <xpath expr='//group[@name="acquirer"]' position='inside'>
                 <group attrs="{'invisible': [('provider', '!=', 'buckaroo')]}">
                     <field name="buckaroo_website_key" attrs="{'required':[ ('provider', '=', 'buckaroo'), ('state', '!=', 'disabled')]}"/>
-                    <field name="buckaroo_secret_key" string="Secret Key" attrs="{'required':[ ('provider', '=', 'buckaroo'), ('state', '!=', 'disabled')]}"/>
+                    <field name="buckaroo_secret_key" string="Secret Key" attrs="{'required':[ ('provider', '=', 'buckaroo'), ('state', '!=', 'disabled')]}" password="True"/>
                 </group>
             </xpath>
         </field>

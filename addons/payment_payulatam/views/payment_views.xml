@@ -13,7 +13,8 @@
                     <field name="payulatam_account_id"
                            attrs="{'required':[('provider', '=', 'payulatam'), ('state', '!=', 'disabled')]}"/>
                     <field name="payulatam_api_key"
-                           attrs="{'required':[('provider', '=', 'payulatam'), ('state', '!=', 'disabled')]}"/>
+                           attrs="{'required':[('provider', '=', 'payulatam'), ('state', '!=', 'disabled')]}"
+                           password="True"/>
                 </group>
             </xpath>
         </field>

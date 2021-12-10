@@ -9,7 +9,7 @@
             <xpath expr='//group[@name="acquirer"]' position='inside'>
                 <group attrs="{'invisible': [('provider', '!=', 'sips')]}">
                     <field name="sips_merchant_id" attrs="{'required':[ ('provider', '=', 'sips'), ('state', '!=', 'disabled')]}"/>
-                    <field name="sips_secret" string="Secret Key" attrs="{'required':[ ('provider', '=', 'sips'), ('state', '!=', 'disabled')]}"/>
+                    <field name="sips_secret" string="Secret Key" attrs="{'required':[ ('provider', '=', 'sips'), ('state', '!=', 'disabled')]}" password="True"/>
                     <field name="sips_key_version" attrs="{'required':[ ('provider', '=', 'sips'), ('state', '!=', 'disabled')]}" />
                     <field name="sips_test_url" attrs="{'required':[ ('provider', '=', 'sips'), ('state', '!=', 'disabled')]}" groups='base.group_no_one'/>
                     <field name="sips_prod_url" attrs="{'required':[ ('provider', '=', 'sips'), ('state', '!=', 'disabled')]}" groups='base.group_no_one'/>
