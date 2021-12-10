@@ -1258,7 +1258,30 @@ registerModel({
                 return link(this.members[0]);
             }
             return unlink();
+<<<<<<< HEAD
         },
+=======
+        }
+
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeDiscussSidebarCategoryItem() {
+            if (this.model !== 'mail.channel') {
+                return clear();
+            }
+            if (!this.isPinned) {
+                return clear();
+            }
+            const discussSidebarCategory = this._getDiscussSidebarCategory();
+            if (!discussSidebarCategory) {
+                return clear();
+            }
+            return insertAndReplace({ category: replace(discussSidebarCategory) });
+        }
+
+>>>>>>> a942dbf0753... temp
         /**
          * @private
          * @returns {string}
