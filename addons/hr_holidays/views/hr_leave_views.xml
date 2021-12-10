@@ -67,7 +67,7 @@
                 <filter name="archive" string="Archived Time Off"
                     domain="[('holiday_status_id.active', '=', False)]" help="Archived Time Off"/>
                 <separator/>
-                <filter name="archived_leaves" string="Deleted Time Off" domain="[('active', '=', False)]" />
+                <filter name="archived_leaves" string="Cancelled Time Off" domain="[('active', '=', False)]" />
                 <filter invisible="1" string="Late Activities" name="activities_overdue"
                     domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                     help="Show all records which has next action date is before today"/>
