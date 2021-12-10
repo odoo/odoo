@@ -149,7 +149,7 @@ class StripeController(http.Controller):
         :raise: :class:`werkzeug.exceptions.Forbidden` if the timestamp is too old or if the
                 signatures don't match
         """
-        webhook_secret = tx_sudo.acquirer_id.stripe_webhook_secret
+        webhook_secret = tx_sudo.acquirer_id._get_stripe_webhook_secret()
         if not webhook_secret:
             _logger.warning("ignored webhook event due to undefined webhook secret")
             return
