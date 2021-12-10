@@ -1,10 +1,9 @@
 /** @odoo-module **/
 
-import { registry } from "@web/core/registry";
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
+import { registry } from "@web/core/registry";
 import { click, triggerEvent } from "../helpers/utils";
-import { setupControlPanelServiceRegistry } from "../search/helpers";
-import { makeView } from "../views/helpers";
+import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
 
@@ -38,7 +37,7 @@ QUnit.module("Fields", (hooks) => {
             },
         };
 
-        setupControlPanelServiceRegistry();
+        setupViewRegistries();
     });
 
     QUnit.module("ProgressBarField");
