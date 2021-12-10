@@ -63,3 +63,7 @@ class AuthorizeController(http.Controller):
         request.env['payment.transaction'].sudo()._handle_feedback_data(
             'authorize', feedback_data
         )
+
+    @http.route('/payment/authorize/webhook', type='http', auth='public')
+    def authorize_notification(self):
+        return ''
