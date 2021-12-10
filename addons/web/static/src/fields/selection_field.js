@@ -73,15 +73,14 @@ Object.assign(SelectionField, {
 
 registry.category("fields").add("selection", SelectionField);
 
-export function fetchSelectionPreloadedData(datapoint, fieldName) {
+export function preloadSelection(orm, datapoint, fieldName) {
     const field = datapoint.fields[fieldName];
     if (field.type !== "many2one") {
         return null;
     }
 
-    const orm = datapoint.model.orm;
     const domain = [];
     return orm.call(field.relation, "name_search", ["", domain]);
 }
 
-registry.category("preloadedData").add("selection", fetchSelectionPreloadedData);
+registry.category("preloadedData").add("selection", preloadSelection);

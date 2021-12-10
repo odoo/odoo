@@ -67,15 +67,14 @@ Object.assign(RadioField, {
 
 registry.category("fields").add("radio", RadioField);
 
-export async function fetchRadioPreloadedData(datapoint, fieldName) {
+export async function preloadRadio(orm, datapoint, fieldName) {
     const field = datapoint.fields[fieldName];
     if (field.type !== "many2one") {
         return null;
     }
 
-    const orm = datapoint.model.orm;
     const records = await orm.searchRead(field.relation, [], ["id"]);
     return await orm.call(field.relation, "name_get", [records.map((record) => record.id)]);
 }
 
-registry.category("preloadedData").add("radio", fetchRadioPreloadedData);
+registry.category("preloadedData").add("radio", preloadRadio);
