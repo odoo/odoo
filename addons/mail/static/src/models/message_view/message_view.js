@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, one } from '@mail/model/model_field';
+import { attr, one, many } from '@mail/model/model_field';
 import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 import { markEventHandled } from '@mail/utils/utils';
 
@@ -128,6 +128,23 @@ registerModel({
          * @private
          * @returns {FieldCommand}
          */
+        _computeMessageReactionGroupViews() {
+            if (this.message.messageReactionGroups.length === 0) {
+                return clear();
+            }
+            const messageReactionGroupViewsData = [];
+            for (const reaction of this.message.messageReactionGroups) {
+                messageReactionGroupViewsData.push({
+                    messageReactionGroup: replace(reaction),
+                    messageView: replace(this),
+                });
+            }
+            return insertAndReplace(messageReactionGroupViewsData);
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
         _computeMessageInReplyToView() {
             return (
                 this.message &&
@@ -224,6 +241,11 @@ registerModel({
             inverse: 'messageView',
             isCausal: true,
             readonly: true,
+        }),
+        messageReactionGroupViews: many('MessageReactionGroupView', {
+            compute: '_computeMessageReactionGroupViews',
+            inverse: 'messageView',
+            isCausal: true,
         }),
         /**
          * States the thread view that is displaying this messages (if any).

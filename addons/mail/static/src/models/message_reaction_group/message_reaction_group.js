@@ -10,19 +10,6 @@ registerModel({
     identifyingFields: ['message', 'content'],
     recordMethods: {
         /**
-         * Handles click on the reaction group.
-         *
-         * @param {MouseEvent} ev
-         */
-        onClick(ev) {
-            markEventHandled(ev, 'MessageReactionGroup.Click');
-            if (this.hasUserReacted) {
-                this.message.removeReaction(this.content);
-            } else {
-                this.message.addReaction(this.content);
-            }
-        },
-        /**
          * @private
          * @returns {boolean}
          */
@@ -97,6 +84,14 @@ registerModel({
         messageId: attr({
             readonly: true,
             required: true,
+        }),
+        messageReactionGroupViews: many('MessageReactionGroupView', {
+            inverse: 'messageReactionGroup',
+            isCausal: true,
+        }),
+        messageReactionGroupSummaryViews: many('MessageReactionGroupSummaryView', {
+            inverse: 'messageReactionGroup',
+            isCausal: true,
         }),
         /**
          * States the partners that have used this reaction on this message.

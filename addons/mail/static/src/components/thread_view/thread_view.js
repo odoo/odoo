@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
-
+import { clear } from '@mail/model/model_field_command';
 const { Component } = owl;
 
 export class ThreadView extends Component {

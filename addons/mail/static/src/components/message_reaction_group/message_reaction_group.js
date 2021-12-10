@@ -6,8 +6,8 @@ const { Component } = owl;
 
 export class MessageReactionGroup extends Component {
 
-    get messageReactionGroup() {
-        return this.messaging.models['MessageReactionGroup'].get(this.props.localId);
+    get messageReactionGroupView() {
+        return this.messaging.models['MessageReactionGroupView'].get(this.props.localId);
     }
 
 }

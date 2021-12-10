@@ -12,14 +12,16 @@ registerModel({
     lifecycleHooks: {
         _created() {
             this._loaderTimeout = undefined;
+            document.addEventListener('click', this._onClickCaptureGlobal, true);
         },
         _willDelete() {
             this.messaging.browser.clearTimeout(this._loaderTimeout);
+            document.removeEventListener('click', this._onClickCaptureGlobal, true);
         },
     },
     recordMethods: {
         /**
-         * This function register a hint for the component related to this
+         * This function registers a hint for the component related to this
          * record. Hints are information on changes around this viewer that
          * make require adjustment on the component. For instance, if this
          * ThreadView initiated a thread cache load and it now has become
@@ -54,6 +56,19 @@ registerModel({
             this.messaging.messagingBus.trigger('o-thread-view-hint-processed', {
                 hint,
                 threadViewer: this.threadViewer,
+            });
+        },
+        /**
+         *
+         * @param {MessageReactionGroup} messageReactionGroup
+         */
+        openReactionsSummary(messageReactionGroup) {
+            this.update({
+                messageReactionsSummaryView: insertAndReplace({
+                    highlightedReaction: replace(messageReactionGroup),
+                    message: replace(messageReactionGroup.message),
+                    threadView: replace(this),
+                }),
             });
         },
         /**
@@ -204,6 +219,18 @@ registerModel({
          */
         _computeTopbar() {
             return this.hasTopbar ? insertAndReplace() : clear();
+        },
+        /**
+         * @private
+         * @param {MouseEvent} ev
+         */
+        _onClickCaptureGlobal(ev) {
+            if (this.messageReactionsSummaryView &&
+                this.messageReactionsSummaryView.component.root.el.contains(ev.target)
+            ) {
+                return;
+            }
+            this.update({ messageReactionsSummaryView: clear() });
         },
         /**
          * @private
@@ -421,6 +448,10 @@ registerModel({
         }),
         messages: many('Message', {
             related: 'threadCache.messages',
+        }),
+        messageReactionsSummaryView: one('MessageReactionsSummaryView', {
+            inverse: 'threadView',
+            isCausal: true,
         }),
         /**
          * States the message views used to display this messages.

@@ -735,6 +735,10 @@ registerModel({
             inverse: 'message',
             isCausal: true,
         }),
+        messageReactionsSummaryViews: many('MessageReactionsSummaryView', {
+            inverse: 'message',
+            isCausal: true,
+        }),
         message_type: attr(),
         /**
          * States the views that are displaying this message.
