@@ -8,6 +8,7 @@ import { registry } from "@web/core/registry";
 import { registerCleanup } from "../../helpers/cleanup";
 import { clearRegistryWithCleanup, makeTestEnv } from "../../helpers/mock_env";
 import { getFixture, nextTick, patchWithCleanup, triggerEvent } from "../../helpers/utils";
+import { makeFakeLocalizationService } from "../../helpers/mock_services";
 
 const { Component, mount, useState } = owl;
 const { xml } = owl.tags;
@@ -27,13 +28,14 @@ const mainComponents = registry.category("main_components");
  * @param {function} options.mockClearInterval the mocked clearInterval to use (by default, does nothing)
  * @returns {Promise<Component>}
  */
-async function makeParent(Child, options = {}) {
+export async function makeParent(Child, options = {}) {
     const fixture = getFixture();
 
     // add the popover service to the registry -> will add the PopoverContainer
     // to the mainComponentRegistry
     clearRegistryWithCleanup(mainComponents);
     registry.category("services").add("popover", popoverService);
+    registry.category("services").add("localization", makeFakeLocalizationService());
     const env = await makeTestEnv();
 
     class Parent extends Component {
