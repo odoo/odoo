@@ -1362,7 +1362,7 @@ function factory(dependencies) {
             }
             const discussSidebarCategory = this._getDiscussSidebarCategory();
             if (!discussSidebarCategory) {
-                throw new Error(`Channel ${this} could not find a matching discuss sidebar category for channel type "${this.channel_type}".`);
+                return clear();
             }
             return insertAndReplace({ category: replace(discussSidebarCategory) });
         }
