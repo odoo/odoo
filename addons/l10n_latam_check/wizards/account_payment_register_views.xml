@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_payment_register_form" model="ir.ui.view">
+        <field name="name">account.payment.register.form</field>
+        <field name="model">account.payment.register</field>
+        <field name="inherit_id" ref="account.view_account_payment_register_form"/>
+        <field name="arch" type="xml">
+            <field name="payment_method_line_id" position="after">
+                <field name="l10n_latam_use_checkbooks" invisible="1"/>
+                <field name="payment_method_code" invisible="1"/>
+                <field name="l10n_latam_checkbook_type" invisible="1"/>
+                <field name="l10n_latam_checkbook_id" options="{'no_create': True, 'no_open': True}" attrs="{'invisible': ['|', ('payment_method_code', '!=', 'check_printing'), ('l10n_latam_use_checkbooks', '=', False)], 'required': [('payment_method_code', '=', 'check_printing'), ('l10n_latam_use_checkbooks', '=', True)]}" domain="[('journal_id', '=', journal_id)]"/>
+                <field name="l10n_latam_check_number" attrs="{'invisible': ['|', ('payment_method_code', '!=', 'check_printing'), ('l10n_latam_check_number', '=', False), ('l10n_latam_checkbook_id', '=', False)], 'readonly': [('l10n_latam_checkbook_id', '=', False)], 'required': [('l10n_latam_checkbook_id', '!=', False)]}" force_save="1"/>
+                <field name="l10n_latam_check_payment_date" attrs="{'invisible': [('l10n_latam_checkbook_type', '!=', 'deferred')], 'required': [('l10n_latam_checkbook_type', '=', 'deferred')]}"/>
+
+                <div class="o_row" attrs="{'invisible': ['|', ('can_edit_wizard', '=', False), '&amp;', ('can_group_payments', '=', True), ('group_payment', '=', False)]}" colspan="2">
+                    <group>
+                        <field
+                            name="l10n_latam_check_id"
+                            attrs="{'invisible': [('payment_method_code', 'not in', ['in_third_checks', 'out_third_checks'])], 'required': [('payment_method_code', 'in', ['in_third_checks', 'out_third_checks'])]}"
+                            domain="[('payment_method_code', '=', 'new_third_checks'), ('l10n_latam_check_current_journal_id', '=', journal_id), ('state', '=', 'posted')] if payment_type == 'outbound' else [('payment_method_code', '=', 'new_third_checks'), ('l10n_latam_check_current_journal_id', '=', False), ('state', '=', 'posted')]"
+                            options="{'no_create': True}"
+                        />
+                        <field name="l10n_latam_check_number" readonly="0" attrs="{'invisible': [('payment_method_code', '!=', 'new_third_checks')], 'required': [('payment_method_code', '=', 'new_third_checks')]}"/>
+                        <field name="l10n_latam_check_payment_date" attrs="{'invisible': [('payment_method_code', '!=', 'new_third_checks')]}"/>
+                        <field name="l10n_latam_check_bank_id" string="Check Bank" attrs="{'invisible': [('payment_method_code', '!=', 'new_third_checks')]}"/>
+                        <field name="l10n_latam_check_issuer_vat" string="Check Issuer Vat" attrs="{'invisible': [('payment_method_code', '!=', 'new_third_checks')]}"/>
+                    </group>
+                </div>
+                <div colspan="2" class="o_row" attrs="{'invisible': ['|', ('payment_method_code', 'not in', ['new_third_checks', 'in_third_checks', 'out_third_checks']), '&amp;', ('can_edit_wizard', '=', True), '|', ('can_group_payments', '=', False), '&amp;', ('can_group_payments', '=', True), ('group_payment', '=', True)]}">
+                    <p class="alert alert-warning" role="alert">You can't use checks when paying invoices of different partners or same partner without grouping</p>
+                </div>
+            </field>
+            <xpath expr="//div[@name='amount_div']//field[@name='amount']" position="attributes">
+                <attribute name="attrs">{'readonly': [('payment_method_code', 'in', ['in_third_checks', 'out_third_checks'])]}</attribute>
+                <attribute name="force_save">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

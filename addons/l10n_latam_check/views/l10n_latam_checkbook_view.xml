@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_checkbook_tree" model="ir.ui.view">
+        <field name="name">l10n_latam.checkbook.tree</field>
+        <field name="model">l10n_latam.checkbook</field>
+        <field name="arch" type="xml">
+            <tree string="Checkbooks" decoration-muted="not active" editable="bottom">
+                <field name="type"/>
+                <field name="next_number" force_save="1" attrs="{'readonly': [('type', '==', 'electronic')]}"/>
+                <field name="range_to" force_save="1" attrs="{'readonly': [('type', '==', 'electronic')]}"/>
+                <field name="active" widget="boolean_toggle"/>
+            </tree>
+        </field>
+    </record>
+
+</odoo>
