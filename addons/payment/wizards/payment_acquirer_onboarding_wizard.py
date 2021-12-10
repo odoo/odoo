@@ -98,6 +98,9 @@ class PaymentWizard(models.TransientModel):
     def add_payment_methods(self):
         """ Install required payment acquiers, configure them and mark the
             onboarding step as done."""
+        if self.payment_method == 'stripe' and not self.stripe_publishable_key:
+            self.env.company.payment_onboarding_payment_method = self.payment_method
+            return self._start_stripe_onboarding()
 
         if self.payment_method == 'paypal':
             self._install_module('payment_paypal')
@@ -156,3 +159,8 @@ class PaymentWizard(models.TransientModel):
         self._set_payment_acquirer_onboarding_step_done()
         action = self.env["ir.actions.actions"]._for_xml_id("payment.action_payment_acquirer")
         return action
+
+    def _start_stripe_onboarding(self):
+        """ Start Stripe Connect onboarding. """
+        menu_id = self.env.ref('payment.payment_acquirer_menu').id
+        return self.env.company._run_payment_onboarding_step(menu_id)
