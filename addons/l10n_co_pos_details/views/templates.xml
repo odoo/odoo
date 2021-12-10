@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+        <template id="internal_layout" inherit_id="web.internal_layout" primary="True">
+            <xpath expr="//span[@t-esc='company.name']" position="after">
+                <t t-esc="company.vat"/>
+            </xpath>
+        </template>
+
         <template id="report_saledetails" inherit_id="point_of_sale.report_saledetails" primary="True">
+            <xpath expr="//t[@t-call='web.internal_layout']" position="attributes">
+                <attribute name="t-call">l10n_co_pos_details.internal_layout</attribute>
+            </xpath>
             <xpath expr="//div[hasclass('page')]/div/h2" position="before">
                 <h2 t-if="pos_config"><t t-esc="pos_config.name"/></h2>
             </xpath>

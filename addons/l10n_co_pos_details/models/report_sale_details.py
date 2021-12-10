@@ -3,14 +3,14 @@
 from odoo import api, models
 
 
-class PosOrder(models.AbstractModel):
+class L10nCoPosDetailsReport(models.AbstractModel):
     _name = 'report.l10n_co_pos_details.report_saledetails'
     _inherit = 'report.point_of_sale.report_saledetails'
     _description = 'Point of Sale Details'
 
     @api.model
     def _prepare_sale_details(self, orders, domain, date_start, date_stop, config_ids, session_ids):
-        result = super(PosOrder, self)._prepare_sale_details(orders, domain, date_start, date_stop, config_ids, session_ids)
+        result = super(L10nCoPosDetailsReport, self)._prepare_sale_details(orders, domain, date_start, date_stop, config_ids, session_ids)
         result.update({
             'pos_config': self.env['pos.config'].browse(config_ids),
             'first_ref': orders and orders[-1].name,
