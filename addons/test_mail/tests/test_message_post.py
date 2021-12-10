@@ -37,6 +37,31 @@ class TestMessagePost(TestMailCommon, TestRecipients):
         self.assertTrue(isinstance(messageId, int))
 
     @users('employee')
+    def test_notify_mail_add_signature(self):
+        self.test_track = self.env['mail.test.track'].with_context(self._test_context).with_user(self.user_employee).create({
+            'name': 'Test',
+            'email_from': 'ignasse@example.com'
+        })
+        self.test_track.user_id = self.env.user
+
+        signature = self.env.user.signature
+
+        template = self.env.ref('mail.mail_notification_paynow', raise_if_not_found=True).sudo()
+        self.assertIn("record.user_id.sudo().signature", template.arch)
+
+        with self.mock_mail_gateway():
+            self.test_track.message_post(body="Test body", mail_auto_delete=False, add_sign=True, partner_ids=[self.partner_1.id, self.partner_2.id], email_layout_xmlid="mail.mail_notification_paynow")
+        found_mail = self._new_mails
+        self.assertIn(signature, found_mail.body_html)
+        self.assertEqual(found_mail.body_html.count(signature), 1)
+
+        with self.mock_mail_gateway():
+            self.test_track.message_post(body="Test body", mail_auto_delete=False, add_sign=False, partner_ids=[self.partner_1.id, self.partner_2.id], email_layout_xmlid="mail.mail_notification_paynow")
+        found_mail = self._new_mails
+        self.assertNotIn(signature, found_mail.body_html)
+        self.assertEqual(found_mail.body_html.count(signature), 0)
+
+    @users('employee')
     def test_notify_prepare_template_context_company_value(self):
         """ Verify that the template context company value is right
         after switching the env company or if a company_id is set

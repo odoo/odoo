@@ -269,7 +269,7 @@
                     <t t-esc="access_name"/>
                 </a>
             </div>
-            <t t-if="record.user_id and not record.env.user._is_superuser()">
+            <t t-if="record.user_id and not record.env.user._is_superuser() and signature != ''">
                 <div style="margin: 0px; padding: 0px; font-size:13px;">
                     Best regards,
                 </div>
