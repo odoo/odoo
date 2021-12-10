@@ -165,7 +165,9 @@ class AccountMove(models.Model):
         return self.env.company.incoterm_id
 
     # ==== Business fields ====
-    name = fields.Char(string='Number', copy=False, compute='_compute_name', readonly=False, store=True, index=True, tracking=True)
+    name = fields.Char(
+        string='Number', copy=False, index=True, tracking=True,
+        compute='_compute_name', readonly=False, store=True)
     highest_name = fields.Char(compute='_compute_highest_name')
     show_name_warning = fields.Boolean(store=False)
     date = fields.Date(
@@ -332,9 +334,10 @@ class AccountMove(models.Model):
         states={'draft': [('readonly', False)]})
     invoice_origin = fields.Char(string='Origin', readonly=True, tracking=True,
         help="The document(s) that generated the invoice.")
-    invoice_payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms',
-        check_company=True,
-        readonly=True, states={'draft': [('readonly', False)]})
+    invoice_payment_term_id = fields.Many2one(
+        'account.payment.term', string='Payment Terms',
+        compute='_compute_invoice_payment_term_id', store=True, readonly=False, precompute=True, 
+        check_company=True, states={'posted': [('readonly', True)], 'cancel': [('readonly', True)]})
     # /!\ invoice_line_ids is just a subset of line_ids.
     invoice_line_ids = fields.One2many(
         'account.move.line', 'move_id', string='Invoice lines',
@@ -490,6 +493,8 @@ class AccountMove(models.Model):
             if new_currency != self.currency_id:
                 self.currency_id = new_currency
                 self._onchange_currency()
+        if self.state == 'draft' and self._get_last_sequence() and self.name and self.name != '/':
+            self.name = '/'
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
@@ -559,10 +564,10 @@ class AccountMove(models.Model):
 
         self._recompute_dynamic_lines(recompute_tax_base_amount=True)
 
-    @api.onchange('payment_reference')
-    def _onchange_payment_reference(self):
-        for line in self.line_ids.filtered(lambda line: line.account_id.user_type_id.type in ('receivable', 'payable')):
-            line.name = self.payment_reference or ''
+    @api.depends('invoice_vendor_bill_id')
+    def _compute_invoice_payment_term_id(self):
+        for move in self:
+            move.invoice_payment_term_id = move.invoice_vendor_bill_id.invoice_payment_term_id
 
     @api.onchange('invoice_vendor_bill_id')
     def _onchange_invoice_vendor_bill(self):
@@ -572,10 +577,7 @@ class AccountMove(models.Model):
                 copied_vals = line.copy_data()[0]
                 copied_vals['move_id'] = self.id
                 new_line = self.env['account.move.line'].new(copied_vals)
-                new_line.recompute_tax_line = True
-
-            # Copy payment terms.
-            self.invoice_payment_term_id = self.invoice_vendor_bill_id.invoice_payment_term_id
+                new_line.recompute_tax_line = True            
 
             # Copy currency.
             if self.currency_id != self.invoice_vendor_bill_id.currency_id:
@@ -586,7 +588,7 @@ class AccountMove(models.Model):
             self._recompute_dynamic_lines()
 
 
-    # YTI Could be dropped normally
+    # YTI Synchro left -> right Could be dropped normally
     # @api.onchange('invoice_line_ids')
     # def _onchange_invoice_line_ids(self):
     #     current_invoice_lines = self.line_ids.filtered(lambda line: not line.exclude_from_invoice_tab)
@@ -3510,7 +3512,8 @@ class AccountMoveLine(models.Model):
     date = fields.Date(related='move_id.date', store=True, readonly=True, index=True, copy=False, group_operator='min')
     ref = fields.Char(related='move_id.ref', store=True, copy=False, index=True, readonly=False)
     parent_state = fields.Selection(related='move_id.state', store=True, readonly=True)
-    journal_id = fields.Many2one(related='move_id.journal_id', store=True, index=True, copy=False)
+    journal_id = fields.Many2one(
+        related='move_id.journal_id', store=True, index=True, copy=False, precompute=True)
     company_id = fields.Many2one(related='move_id.company_id', store=True, readonly=True)
     company_currency_id = fields.Many2one(related='company_id.currency_id', string='Company Currency',
         readonly=True, store=True,
@@ -4153,10 +4156,10 @@ class AccountMoveLine(models.Model):
         for line in self:
             if not line.product_id or line.display_type in ('line_section', 'line_note'):
                 continue
-            if line.state == 'draft' and line._get_last_sequence() and line.name and line.name != '/':
-                line.name = '/'
-            else:
-                line.name = line._get_computed_name()
+            # YTI : Coming from conflicting onchange from account.move
+            # for line in self.filtered(lambda line: line.account_id.user_type_id.type in ('receivable', 'payable')):
+            #     line.name = self.payment_reference or ''
+            line.name = line._get_computed_name()
 
     @api.depends('product_id')
     def _compute_account_id(self):
