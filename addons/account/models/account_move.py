@@ -203,7 +203,8 @@ class AccountMove(models.Model):
     type_name = fields.Char('Type Name', compute='_compute_type_name')
     to_check = fields.Boolean(string='To Check', default=False, tracking=True,
         help='If this checkbox is ticked, it means that the user was not sure of all the related information at the time of the creation of the move and that the move needs to be checked again.')
-    journal_id = fields.Many2one('account.journal', string='Journal', required=True, readonly=True,
+    journal_id = fields.Many2one(
+        'account.journal', string='Journal', required=True, readonly=True,
         states={'draft': [('readonly', False)]},
         check_company=True, domain="[('id', 'in', suitable_journal_ids)]",
         default=_get_default_journal)
@@ -549,20 +550,6 @@ class AccountMove(models.Model):
         self._recompute_dynamic_lines()
         if warning:
             return {'warning': warning}
-
-    @api.onchange('date', 'currency_id')
-    def _onchange_currency(self):
-        currency = self.currency_id or self.company_id.currency_id
-
-        if self.is_invoice(include_receipts=True):
-            for line in self._get_lines_onchange_currency():
-                line.currency_id = currency
-                line._onchange_currency()
-        else:
-            for line in self.line_ids:
-                line._onchange_currency()
-
-        self._recompute_dynamic_lines(recompute_tax_base_amount=True)
 
     @api.depends('invoice_vendor_bill_id')
     def _compute_invoice_payment_term_id(self):
@@ -3573,7 +3560,9 @@ class AccountMoveLine(models.Model):
         help="You can check this box to mark this journal item as a litigation with the associated partner")
     date_maturity = fields.Date(string='Due Date', index=True, tracking=True,
         help="This field is used for payable and receivable journal entries. You can put the limit date for the payment of this line.")
-    currency_id = fields.Many2one('res.currency', string='Currency', required=True)
+    currency_id = fields.Many2one(
+        'res.currency', string='Currency', required=True,
+        compute='_compute_currency_id', store=True, readonly=False, precompute=True)
     partner_id = fields.Many2one('res.partner', string='Partner', ondelete='restrict')
     product_uom_id = fields.Many2one(
         'uom.uom', string='Unit of Measure',
@@ -3901,6 +3890,14 @@ class AccountMoveLine(models.Model):
             if 'price_unit' in business_vals:
                 self.price_unit = business_vals['price_unit']
 
+    @api.depends('move_id.date', 'move_id.currency_id')
+    def _compute_currency(self):
+        for line in self:
+            currency = line.move_id.currency_id or line.move_id.company_id.currency_id
+            if line.move_id.is_invoice(include_receipts=True):
+                if line in line.move_id._get_lines_onchange_currency():
+                    line.currency_id = currency
+
     @api.depends('product_id', 'account_id', 'partner_id', 'date')
     def _compute_analytic_account_id(self):
         for record in self:
@@ -4207,16 +4204,6 @@ class AccountMoveLine(models.Model):
             if not line.product_id or line.display_type in ('line_section', 'line_note'):
                 continue
             line.price_unit = line._get_computed_price_unit()
-
-    def _onchange_balance(self):
-        for line in self:
-            if line.currency_id == line.move_id.company_id.currency_id:
-                line.amount_currency = line.balance
-            else:
-                continue
-            if not line.move_id.is_invoice(include_receipts=True):
-                continue
-            line.update(line._get_fields_onchange_balance())
 
     @api.depends('debit', 'amount_currency', 'currency_id')
     def _compute_credit(self):
