@@ -73,25 +73,6 @@
                                         <br/>
                                         <button name="open_company" icon="fa-arrow-right" type="object" string="Update Info" class="btn-link"/>
                                     </div>
-                                    <br/>
-                                    <div class="o_setting_right_pane">
-                                        <span class="o_form_label">Document Layout</span>
-                                        <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
-                                        <div class="text-muted">
-                                            Choose the layout of your documents
-                                        </div>
-                                        <div class="content-group">
-                                            <div class="mt16" groups="base.group_no_one">
-                                                <label for="external_report_layout_id" string="Layout" class="col-3 col-lg-3 o_light_label"/>
-                                                <field name="external_report_layout_id" domain="[('type','=', 'qweb')]" class="oe_inline"/>
-                                            </div>
-                                            <div class="mt8">
-                                                <button name="%(web.action_base_document_layout_configurator)d" string="Configure Document Layout" type="action" class="oe_link" icon="fa-arrow-right"/>
-                                                <button name="edit_external_header" string="Edit Layout" type="object" class="oe_link" groups="base.group_no_one"/>
-                                                <button name="%(web.action_report_externalpreview)d" string="Preview Document" type="action" class="oe_link" groups="base.group_no_one"/>
-                                            </div>
-                                        </div>
-                                    </div> 
                                 </div>
                                 <div class="col-12 col-lg-6 o_setting_box" id="companies_setting">
                                     <div class="o_setting_right_pane">
@@ -124,6 +105,26 @@
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="col-12 col-lg-6 o_setting_box" id="companies_document_setting">
+                                    <div class="o_setting_right_pane">
+                                        <span class="o_form_label">Document Layout</span>
+                                        <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                        <div class="text-muted">
+                                            Choose the layout of your documents
+                                        </div>
+                                        <div class="content-group">
+                                            <div class="mt16" groups="base.group_no_one">
+                                                <label for="external_report_layout_id" string="Layout" class="col-3 col-lg-3 o_light_label"/>
+                                                <field name="external_report_layout_id" domain="[('type','=', 'qweb')]" class="oe_inline"/>
+                                            </div>
+                                            <div class="mt8">
+                                                <button name="%(web.action_base_document_layout_configurator)d" string="Configure Document Layout" type="action" class="oe_link" icon="fa-arrow-right"/>
+                                                <button name="edit_external_header" string="Edit Layout" type="object" class="oe_link" groups="base.group_no_one"/>
+                                                <button name="%(web.action_report_externalpreview)d" string="Preview Document" type="action" class="oe_link" groups="base.group_no_one"/>
+                                            </div>
+                                        </div>
+                                    </div> 
                                 </div>
                             </div>
                         </div>

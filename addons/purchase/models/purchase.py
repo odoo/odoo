@@ -396,9 +396,9 @@ class PurchaseOrder(models.Model):
         ir_model_data = self.env['ir.model.data']
         try:
             if self.env.context.get('send_rfq', False):
-                template_id = ir_model_data._xmlid_lookup('purchase.email_template_edi_purchase')[2]
+                template_id = int(self.env['ir.config_parameter'].sudo().get_param('purchase.default_rfq_template'))
             else:
-                template_id = ir_model_data._xmlid_lookup('purchase.email_template_edi_purchase_done')[2]
+                template_id = int(self.env['ir.config_parameter'].sudo().get_param('purchase.default_order_template'))
         except ValueError:
             template_id = False
         try:

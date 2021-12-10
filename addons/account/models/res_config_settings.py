@@ -159,6 +159,22 @@ class ResConfigSettings(models.TransientModel):
     # Allows for the use of a different delivery address
     group_sale_delivery_address = fields.Boolean("Customer Addresses", implied_group='account.group_delivery_invoice_address')
 
+    # Email templates
+    account_invoice_mail_template_id = fields.Many2one(
+        comodel_name='mail.template',
+        string='Invoice Template',
+        domain="[('model', '=', 'account.move')]",
+        config_parameter='account.default_invoice_template',
+        help="Template used when sending an invoice by email."
+    )
+    credit_note_mail_template_id = fields.Many2one(
+        comodel_name='mail.template',
+        string='Credit Note Template',
+        domain="[('model', '=', 'account.move')]",
+        config_parameter='account.default_credit_note_template',
+        help="Template used when sending a credit note by email."
+    )
+
     def set_values(self):
         super().set_values()
         # install a chart of accounts for the given company (if required)

@@ -131,5 +131,17 @@
             <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="auto_delete" eval="True"/>
         </record>
+
+        <!-- set default invoice template -->
+        <record id="default_invoice_template" model="ir.config_parameter">
+            <field name="key">account.default_invoice_template</field>
+            <field name="value" ref="account.email_template_edi_invoice"/>
+        </record>
+
+        <!-- set default credit note template -->
+        <record id="default_credit_note_template" model="ir.config_parameter">
+            <field name="key">account.default_credit_note_template</field>
+            <field name="value" ref="account.email_template_edi_credit_note"/>
+        </record>
     </data>
 </odoo>

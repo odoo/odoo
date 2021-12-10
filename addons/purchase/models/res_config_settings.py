@@ -33,6 +33,21 @@ class ResConfigSettings(models.TransientModel):
     group_send_reminder = fields.Boolean("Receipt Reminder", implied_group='purchase.group_send_reminder', default=True,
         help="Allow automatically send email to remind your vendor the receipt date")
 
+    rfq_mail_template_id = fields.Many2one(
+        comodel_name='mail.template',
+        string='RFQ Template',
+        domain="[('model', '=', 'purchase.order')]",
+        config_parameter='purchase.default_rfq_template',
+        help="Template used when sending a RFQ by email."
+    )
+    order_mail_template_id = fields.Many2one(
+        comodel_name='mail.template',
+        string='Order Template',
+        domain="[('model', '=', 'purchase.order')]",
+        config_parameter='purchase.default_order_template',
+        help="Template used when sending an order by email."
+    )
+
     @api.onchange('use_po_lead')
     def _onchange_use_po_lead(self):
         if not self.use_po_lead:

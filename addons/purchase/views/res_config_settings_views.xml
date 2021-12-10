@@ -14,6 +14,24 @@
                     <field name="po_lock" invisible="1"/>
                     <h2>Orders</h2>
                     <div class="row mt16 o_settings_container" name="purchase_setting_container">
+                        <div class="col-12 col-lg-6 o_setting_box" id="purchase_mail_template_setting">
+                            <div class="o_setting_left_pane">
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">Email Templates</span>
+                                <div class="text-muted">
+                                    Templates used when sending an order by email
+                                </div>
+                                <div class="mt16">
+                                    <div class="content-group" id="template_rfq_default">
+                                        <label for="rfq_mail_template_id" class="col-lg-4 o_light_label"/>
+                                        <field name="rfq_mail_template_id" class="oe_inline"/>
+                                        <label for="order_mail_template_id" class="col-lg-4 o_light_label"/>
+                                        <field name="order_mail_template_id" class="oe_inline"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-12 col-lg-6 o_setting_box" id="po_order_approval">
                             <div class="o_setting_left_pane">
                                 <field name="po_order_approval"/>
