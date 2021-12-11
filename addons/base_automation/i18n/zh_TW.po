@@ -73,12 +73,12 @@ msgstr "添加關注者"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__filter_domain
 msgid "Apply on"
-msgstr "應用於"
+msgstr "套用於"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_search
 msgid "Archived"
-msgstr "封存"
+msgstr "已歸檔 "
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation
@@ -117,7 +117,7 @@ msgstr "根據時間條件"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__filter_pre_domain
 msgid "Before Update Domain"
-msgstr "更新前域表達式"
+msgstr "更新domain前"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__binding_model_id
@@ -200,8 +200,8 @@ msgid ""
 "                important and/or required fields."
 msgstr ""
 "禁用此自動操作將使您能夠繼續您的工作流程\n"
-"                但在此之後創建的任何數據都可能被破壞，\n"
-"                因為您正在有效地禁用可能設置的自定義\n"
+"                但在此之後建立的任何資料都可能被破壞，\n"
+"                因為您正在有效地禁用可能設置的自訂\n"
 "                重要和/或必填字段。"
 
 #. module: base_automation
@@ -283,7 +283,7 @@ msgstr "最後修改於"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__last_run
 msgid "Last Run"
-msgstr "最後運行"
+msgstr "最後執行"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__write_uid
@@ -325,12 +325,12 @@ msgstr "模型名稱"
 msgid ""
 "Model for record creation / update. Set this field only to specify a "
 "different model than the base model."
-msgstr "記錄創建/更新的模型。設定這個字段僅指明模型與基本模型的不同。"
+msgstr "記錄建立/更新的模型。設定這個字段僅指明模型與基本模型的不同。"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__model_id
 msgid "Model on which the server action runs."
-msgstr "伺服器動作運行的模型."
+msgstr "伺服器動作執行的模型."
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__month
@@ -357,12 +357,12 @@ msgstr "變化字段的觸發器"
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create
 msgid "On Creation"
-msgstr "創建時"
+msgstr "建立時"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create_or_write
 msgid "On Creation & Update"
-msgstr "創建以及更新時"
+msgstr "建立以及更新時"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_unlink
@@ -386,7 +386,7 @@ msgstr "可選的幫助文本，目標視圖的說明，比如用途和目的。
 msgid ""
 "Provide the field used to link the newly created record on the record used "
 "by the server action."
-msgstr "提供用於鏈接服務器操作使用的記錄上新創建的記錄的字段。"
+msgstr "提供用於鏈接服務器操作使用的記錄上新建立的記錄的字段。"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__code
@@ -501,12 +501,12 @@ msgid ""
 msgstr ""
 "伺服器操作的類型。以下值可用：\n"
 "- \"執行 Python 代碼\"：將執行的 Python 代碼塊\n"
-"- \"創建\"：使用新值創建新記錄\n"
+"- \"建立\"：使用新值建立新記錄\n"
 "- \"更新記錄\"：更新記錄的值\n"
 "- \"執行多個操作\"：定義觸發其他幾個伺服器操作的操作\n"
 "- \"發送電子郵件\"：自動發送電子郵件（討論）\n"
 "- \"添加關注者\"：將關注者添加到記錄（討論）\n"
-"- \"創建下一個活動\"：創建活動（討論）"
+"- \"建立下一個活動\"：建立活動（討論）"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__usage
@@ -538,7 +538,7 @@ msgid ""
 "                trigger an automatic reminder email."
 msgstr ""
 "使用自動操作來自動觸發操作\n"
-"                不同的螢幕。例如：由特定使用者創建的線索可以\n"
+"                不同的螢幕。例如：由特定使用者建立的線索可以\n"
 "                被自動設定為一個特定的銷售團隊，或者\n"
 "                在14天之後仍處於等待狀態的機會可以\n"
 "                觸發一個自動提醒的信件。"
@@ -581,7 +581,7 @@ msgid ""
 "                                  If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
 "當條件被觸發。\n"
-"如果存在，將由調度器檢查。如果為空，將檢查創建並更新。"
+"如果存在，將由調度器檢查。如果為空，將檢查建立並更新。"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__active
@@ -616,4 +616,4 @@ msgstr "您可以禁用此自動操作或對其進行編輯以解決問題。"
 msgid ""
 "You cannot send an email, add followers or create an activity for a deleted "
 "record.  It simply does not work."
-msgstr "您無法為已刪除的記錄發送電子郵件、添加關注者或創建活動。它根本不起作用。"
+msgstr "您無法為已刪除的記錄發送電子郵件、添加關注者或建立活動。它根本不起作用。"

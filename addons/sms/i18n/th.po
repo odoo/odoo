@@ -309,7 +309,7 @@ msgstr "ผู้ติดตามเอกสาร"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_id
 msgid "Document ID"
-msgstr ""
+msgstr "ไอดีเอกสาร"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_ids
@@ -752,11 +752,14 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. {{ "
 "object.partner_id.lang }}."
 msgstr ""
+"ตัวเลือกภาษาการแปล (รหัส ISO) เพื่อเลือกเมื่อส่งอีเมล หากไม่ได้ตั้งค่าไว้ "
+"ระบบจะใช้เวอร์ชันภาษาอังกฤษ โดยปกติควรเป็นนิพจน์ตัวแทนที่ให้ภาษาที่เหมาะสม "
+"เช่น {{ object.partner_id.lang }}"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__null_value
 msgid "Optional value to use if the target field is empty"
-msgstr ""
+msgstr "ค่าทางเลือกที่จะใช้ถ้าช่องเป้าหมายว่างเปล่า"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_sms
@@ -889,7 +892,7 @@ msgstr "ลองใหม่"
 #: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
 #, python-format
 msgid "SMS"
-msgstr ""
+msgstr "SMS"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_api
@@ -1048,7 +1051,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__state__sms
 #, python-format
 msgid "Send SMS Text Message"
-msgstr ""
+msgstr "ส่งข้อความ SMS"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_composer
@@ -1100,7 +1103,7 @@ msgstr "Server Action"
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_server
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_server
 msgid "Server Error"
-msgstr ""
+msgstr "เซิร์ฟเวอร์ผิดพลาด"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form

@@ -31,7 +31,7 @@ msgstr "Crea fattura"
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_tracking
 #: model:ir.model.fields,field_description:sale_project.field_product_template__service_tracking
 msgid "Create on Order"
-msgstr ""
+msgstr "Crea un ordine"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__visible_project
@@ -60,6 +60,8 @@ msgid ""
 "Invoice as soon as this service is sold, and create a task in an existing "
 "project to track the time spent."
 msgstr ""
+"Fattura non appena questo servizio viene venduto, e crea un compito in un "
+"progetto esistente per tracciare il tempo speso."
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -69,6 +71,9 @@ msgid ""
 "project for the order with a task for each sales order line to track the "
 "time spent."
 msgstr ""
+"Fattura le quantità ordinate non appena questo servizio viene venduto, e "
+"crea un progetto per l'ordine con un compito per ogni linea di ordine di "
+"vendita per tracciare il tempo speso."
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -148,7 +153,7 @@ msgstr "Progetto"
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__task_in_project
 msgid "Project & Task"
-msgstr ""
+msgstr "Progetto & Compito"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__project_template_id
@@ -221,6 +226,8 @@ msgid ""
 "Sales Order Item to which the time spent on this task will be added, in "
 "order to be invoiced to your customer."
 msgstr ""
+"Voce dell'ordine di vendita a cui sarà aggiunto il tempo speso per questo "
+"compito, per essere fatturato al tuo cliente."
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_sale_order_line
@@ -264,13 +271,13 @@ msgstr "Ordine di vendita al quale è collegato il lavoro."
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Invoice"
-msgstr ""
+msgstr "Ricerca in fattura"
 
 #. module: sale_project
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order"
-msgstr ""
+msgstr "Ricerca in ordine di vendita"
 
 #. module: sale_project
 #: code:addons/sale_project/controllers/portal.py:0
@@ -419,9 +426,9 @@ msgstr ""
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.portal_tasks_list_inherit
 msgid "for sale order item:"
-msgstr ""
+msgstr "per articolo d'ordine di vendita:"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.portal_tasks_list_inherit
 msgid "for sale order:"
-msgstr ""
+msgstr "per ordine di vendita:"

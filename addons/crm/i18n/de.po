@@ -5,8 +5,8 @@
 # Translators:
 # Martin Trigaux, 2021
 # Ahmed Aly <ahmed.aly@datenpol.at>, 2021
-# Friederike Fasterling-Nesselbosch, 2021
 # Raymond Vetter, 2021
+# Friederike Fasterling-Nesselbosch, 2021
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: Raymond Vetter, 2021\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,7 +56,7 @@ msgstr "# Nicht zugewiesene Interessenten"
 #: code:addons/crm/models/crm_team.py:0
 #, python-format
 msgid "%(assigned)s leads allocated among %(team_count)s teams."
-msgstr ""
+msgstr " Aufteilung von %(assigned)s Leads auf %(team_count)s Teams."
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
@@ -74,7 +74,7 @@ msgstr "%(attach_name)s (von %(lead_name)s)"
 #: code:addons/crm/models/crm_team.py:0
 #, python-format
 msgid "%(duplicates)s duplicates leads have been merged."
-msgstr ""
+msgstr "%(duplicates)s doppelte Leads wurden zusammengeführt."
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
@@ -87,7 +87,7 @@ msgstr ""
 #: code:addons/crm/models/res_config_settings.py:0
 #, python-format
 msgid "%s and %s"
-msgstr ""
+msgstr "%s und %s"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
@@ -857,7 +857,7 @@ msgstr "Herzlichen Glückwunsch, viel Glück beim Fangen solch großer Fische :)
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_pls_update_view_form
 msgid "Consider leads created as of the:"
-msgstr ""
+msgstr "Für Leads mit einem Erstellungsdatum ab dem"
 
 #. module: crm
 #: model:ir.model,name:crm.model_res_partner
@@ -1061,7 +1061,7 @@ msgstr "Erzeugt am"
 #. module: crm
 #: model:ir.actions.server,name:crm.action_opportunity_forecast
 msgid "Crm: Forecast"
-msgstr ""
+msgstr "CRM: Prognose"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.action_your_pipeline
@@ -1252,6 +1252,8 @@ msgstr "Z.B. monatlich"
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_action_forecast
 msgid "Easily set expected closing dates and overview your revenue streams."
 msgstr ""
+"Legen Sie auf einfache Weise die voraussichtlichen Abschlusstermine fest und"
+" verschaffen Sie sich einen Überblick über Ihre Einnahmequellen."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -1943,7 +1945,7 @@ msgstr ""
 #: code:addons/crm/models/crm_team.py:0
 #, python-format
 msgid "Leads Assigned"
-msgstr ""
+msgstr "Zugewiesene Leads"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lost_reason__leads_count
@@ -1960,6 +1962,8 @@ msgstr "Leadgenerierung"
 msgid ""
 "Leads are the qualification step before the creation of an opportunity."
 msgstr ""
+"Leads sind der Qualifizierungsschritt vor der Schaffung einer "
+"Verkaufschance."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_activity
@@ -2257,6 +2261,7 @@ msgstr "Monatlich"
 #: model:ir.model.fields,help:crm.field_crm_team__assignment_max
 msgid "Monthly average leads capacity for all salesmen belonging to the team"
 msgstr ""
+"Monatliche durchschnittliche Lead-Kapazität für alle Verkäufer des Teams"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__is_membership_multi
@@ -2425,6 +2430,8 @@ msgstr ""
 msgid ""
 "No new lead allocated to the teams because no lead match their domains."
 msgstr ""
+"Den Teams werden keine neuen Leads zugewiesen, da keine Leads zu ihren "
+"Domains passen."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__kanban_state__grey
@@ -2830,7 +2837,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__duplicate_lead_ids
 msgid "Potential Duplicate Lead"
-msgstr ""
+msgstr "Potenzieller doppelter Lead"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__duplicate_lead_count
@@ -2884,7 +2891,7 @@ msgstr "Aufgeteilter Umsatz"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_tree_forecast
 msgid "Prorated Revenues"
-msgstr ""
+msgstr "Anteilige Einkünfte"
 
 #. module: crm
 #: model:crm.stage,name:crm.stage_lead2
@@ -2954,7 +2961,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__crm_auto_assignment_action__auto
 msgid "Repeatedly"
-msgstr ""
+msgstr "Mehrmals"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_menu_report
@@ -3063,6 +3070,8 @@ msgstr "Desinfiziert Nummer"
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_action_my_activities
 msgid "Schedule activities to keep track of everything you have to do."
 msgstr ""
+"Planen Sie Aktivitäten, um den Überblick über alles zu behalten, was Sie zu "
+"tun haben."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -3385,7 +3394,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action_lead
 msgid "This analysis shows you how many leads have been created per month."
-msgstr ""
+msgstr "Diese Analyse zeigt Ihnen, wie viele Leads pro Monat erzeugt wurden."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -3631,7 +3640,7 @@ msgstr "Wahrscheinlichkeiten aktualisieren"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_pls_update
 msgid "Update the probabilities"
-msgstr ""
+msgstr "Wahrscheinlichkeiten aktualisieren"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_utm_campaign__use_leads
@@ -3681,6 +3690,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
 msgid "Use the top left <i>Create</i> button, or send an email to"
 msgstr ""
+"Verwenden Sie die Schaltfläche <i>Erstellen</i> oben links, oder senden Sie "
+"eine E-Mail an"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
@@ -3698,6 +3709,8 @@ msgid ""
 "Use the top left Create button, or configure an email alias to test the "
 "email gateway."
 msgstr ""
+"Verwenden Sie die Schaltfläche Erstellen oben links, oder konfigurieren Sie "
+"einen E-Mail-Alias, um das E-Mail-Gateway zu testen."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action

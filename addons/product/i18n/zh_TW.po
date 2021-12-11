@@ -84,9 +84,9 @@ msgid ""
 "        - Never: Variants are never created for the attribute.\n"
 "        Note: the variants creation mode cannot be changed once the attribute is used on at least one product."
 msgstr ""
-"- 即刻：一旦屬性值添加到產品中，就會立即創建所有可能的變體。\n"
-"        - 動態：僅當將相應的屬性和值添加到銷售訂單時，才會創建每個變體。\n"
-"        - 不生成：不會為該屬性創建變體。\n"
+"- 即刻：一旦屬性值添加到產品中，就會立即建立所有可能的變體。\n"
+"        - 動態：僅當將相應的屬性和值添加到銷售訂單時，才會建立每個變體。\n"
+"        - 不生成：不會為該屬性建立變體。\n"
 "        注意：在至少一個產品上使用該屬性後，無法更改變體建立模式。"
 
 #. module: product
@@ -177,7 +177,7 @@ msgstr "<span>%</span>"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "<span>All general settings about this product are managed on</span>"
-msgstr "<span>有關此產品的所有常規設置均位於</span>"
+msgstr "<span>有關此產品的所有通用設置均位於</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
@@ -194,7 +194,7 @@ msgstr "<strong>銷售訂單明細數量（每單位價格）</strong>"
 msgid ""
 "<strong>Save</strong> this page and come back\n"
 "                                    here to set up the feature."
-msgstr "<strong>保存</strong>此頁面並返回此處設置該功能。"
+msgstr "<strong>儲存</strong>此頁面並返回此處設置該功能。"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
@@ -204,8 +204,8 @@ msgid ""
 "                        to the loss of their possible customizations."
 msgstr ""
 "<strong>警告</strong>：添加或刪除屬性將刪除\n"
-"並重新創建現有變體，\n"
-"並導致其可能的自定義的丟失。"
+"並重新建立現有變體，\n"
+"並導致其可能的自訂的損失。"
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_product_barcode_uniq
@@ -219,7 +219,7 @@ msgid ""
 "A description of the Product that you want to communicate to your customers."
 " This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Credit Note"
-msgstr "您想與客戶溝通的產品說明。 此說明將被複製到每個銷售訂單，交貨訂單和客戶憑單/信用單"
+msgstr "您想與客戶溝通的產品說明。 此說明將被複製到每個銷售訂單，交貨訂單和客戶憑單/折讓單"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -288,7 +288,7 @@ msgstr "活動狀態"
 #: model:ir.model.fields,field_description:product.field_product_product__activity_type_icon
 #: model:ir.model.fields,field_description:product.field_product_template__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "活動類型圖標"
+msgstr "活動類型圖示"
 
 #. module: product
 #. openerp-web
@@ -349,7 +349,7 @@ msgstr "應用於"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__applied_on
 msgid "Apply On"
-msgstr "應用於"
+msgstr "套用於"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
@@ -712,20 +712,20 @@ msgstr "國家群組"
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
 msgid "Create a new pricelist"
-msgstr "創建新價格表"
+msgstr "建立新價格表"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_template_action
 #: model_terms:ir.actions.act_window,help:product.product_template_action_all
 msgid "Create a new product"
-msgstr "創建新產品"
+msgstr "建立新產品"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action
 #: model_terms:ir.actions.act_window,help:product.product_normal_action_sell
 #: model_terms:ir.actions.act_window,help:product.product_variant_action
 msgid "Create a new product variant"
-msgstr "創建新產品變體"
+msgstr "建立新產品變體"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_uid
@@ -801,7 +801,7 @@ msgstr "客戶編碼"
 #: model:product.product,name:product.product_product_4d
 #: model:product.template,name:product.product_product_4_product_template
 msgid "Customizable Desk"
-msgstr "可定制的辦公桌"
+msgstr "可訂製的辦公桌"
 
 #. module: product
 #: model:product.product,uom_name:product.expense_hotel
@@ -1061,7 +1061,7 @@ msgstr "喜好的"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Favorites"
-msgstr "收藏"
+msgstr "最愛"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__fixed_price
@@ -1091,7 +1091,7 @@ msgstr "關注人（業務夥伴）"
 #: model:ir.model.fields,help:product.field_product_product__activity_type_icon
 #: model:ir.model.fields,help:product.field_product_template__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font awesome 圖標，例如，fa-task"
+msgstr "Font awesome 圖示，例如，fa-task"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__min_quantity
@@ -1169,7 +1169,7 @@ msgstr "google圖片"
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Group By"
-msgstr "分組按"
+msgstr "分組依據"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__html_color
@@ -1302,19 +1302,19 @@ msgstr "畫素 512"
 #: code:addons/product/models/product_pricelist.py:0
 #, python-format
 msgid "Import Template for Pricelists"
-msgstr "價格表的導入範本"
+msgstr "價格表的匯入範本"
 
 #. module: product
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "Import Template for Products"
-msgstr "導入模板-產品"
+msgstr "匯入模板-產品"
 
 #. module: product
 #: code:addons/product/models/product.py:0
 #, python-format
 msgid "Import Template for Vendor Pricelists"
-msgstr "為供應商價格表導入範本"
+msgstr "為供應商價格表匯入範本"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__standard_price
@@ -2594,12 +2594,12 @@ msgid ""
 "generate variants for each combination or generate them on demand from the "
 "sales order. To do so, open the form view of attributes and change the mode "
 "of *Create Variants*."
-msgstr "要生成的變體數過高。不應為每個組合生成變體，或按需從銷售訂單生成變體。為此，請打開屬性的表單檢視並更改 [創建變體] 的模式。"
+msgstr "要生成的變體數過高。不應為每個組合生成變體，或按需從銷售訂單生成變體。為此，請打開屬性的表單檢視並更改 [建立變體] 的模式。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__price
 msgid "The price to purchase a product"
-msgstr "該價格購買產品"
+msgstr "該價格採購產品"
 
 #. module: product
 #: code:addons/product/models/product_template.py:0
@@ -2613,7 +2613,7 @@ msgid ""
 "The quantity to purchase from this vendor to benefit from the price, "
 "expressed in the vendor Product Unit of Measure if not any, in the default "
 "unit of measure of the product otherwise."
-msgstr "從該供應商購買的數量，將影響適用的價格，依供應商產品度量單位（如果不是任何）設置，否則，以產品的預設度量單位表示。"
+msgstr "從該供應商採購的數量，將影響適用的價格，依供應商產品度量單位（如果不是任何）設置，否則，以產品的預設度量單位表示。"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price
@@ -3102,7 +3102,7 @@ msgstr "您可以通過設置負數折扣使用於加價。"
 msgid ""
 "You can assign pricelists to your customers or select one when creating a "
 "new sales quotation."
-msgstr "您可以為客戶分配價格表或在創建新的銷售報價單時選擇一個。"
+msgstr "您可以為客戶分配價格表或在建立新的銷售報價單時選擇一個。"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -3145,13 +3145,13 @@ msgstr "不能更改產品 %s 上設置的值 %s 的值。"
 #: code:addons/product/models/product.py:0
 #, python-format
 msgid "You cannot create recursive categories."
-msgstr "不能創建遞迴類別。"
+msgstr "不能建立遞迴類別。"
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_attribute_value_value_company_uniq
 msgid ""
 "You cannot create two values with the same name for the same attribute."
-msgstr "不能為同一屬性創建兩個同名值。"
+msgstr "不能為同一屬性建立兩個同名值。"
 
 #. module: product
 #: code:addons/product/models/decimal_precision.py:0
@@ -3225,7 +3225,7 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service."
 msgstr ""
-"您必須為您銷售或購買的所有產品定義產品，\n"
+"您必須為您銷售或採購的所有產品定義產品，\n"
 "                無論是可庫存產品、消耗品還是服務。"
 
 #. module: product
@@ -3236,7 +3236,7 @@ msgid ""
 "                The product form contains information to simplify the sale process:\n"
 "                price, notes in the quotation, accounting data, procurement methods, etc."
 msgstr ""
-"您必須為您銷售或購買的所有產品定義產品，\n"
+"您必須為您銷售或採購的所有產品定義產品，\n"
 "                無論是可庫存產品、消耗品還是服務。\n"
 "                產品主檔包含銷售流程的相關資訊：\n"
 "                價格、報價中的備註、會計資料、採購方法等。"

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:18+0000\n"
+"POT-Creation-Date: 2021-12-10 07:16+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
 "Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -39,6 +39,14 @@ msgstr "%(pos_name)s (未使用)"
 #, python-format
 msgid "%s POS payment of %s in %s"
 msgstr "%s  POS 付款 %s 中的 %s "
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
+#, python-format
+msgid ""
+"%s has a total amount of %s, are you sure you want to delete this order ?"
+msgstr ""
 
 #. module: point_of_sale
 #. openerp-web
@@ -390,7 +398,7 @@ msgstr "增加小費"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Add a custom message to header and footer"
-msgstr "向頁首和頁尾增加自定義訊息"
+msgstr "向頁首和頁尾增加自訂訊息"
 
 #. module: point_of_sale
 #. openerp-web
@@ -573,7 +581,7 @@ msgstr "已為此POS營業點打開其他銷售營業點。"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_search
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_search
 msgid "Archived"
-msgstr "封存"
+msgstr "已歸檔"
 
 #. module: point_of_sale
 #. openerp-web
@@ -763,7 +771,7 @@ msgid ""
 msgstr ""
 "預設情況下，加載 100 個合作夥伴。\n"
 "當營業點打開時，我們會繼續在背景加載所有剩餘的合作夥伴。\n"
-"同時，您可以使用“加載客戶”按鈕從數據庫加載合作夥伴。"
+"同時，您可以使用“加載客戶”按鈕從資料庫加載合作夥伴。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_print_via_proxy
@@ -1041,7 +1049,7 @@ msgstr "找零小費"
 msgid ""
 "Check if the product should be weighted using the hardware scale "
 "integration."
-msgstr "檢查產品是否應使用硬體規模集成進行加權。"
+msgstr "檢查產品是否應使用硬體規模整合進行加權。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_product__available_in_pos
@@ -1638,7 +1646,7 @@ msgstr "天數"
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
 #, python-format
 msgid "Debug Window"
-msgstr "調試窗口"
+msgstr "偵錯窗口"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement__account_id
@@ -2039,7 +2047,7 @@ msgid ""
 "Employees can scan their badge or enter a PIN to log in to a PoS session. "
 "These credentials are configurable in the *HR Settings* tab of the employee "
 "form."
-msgstr "員工可以掃瞄徽章或輸入PIN以登錄PoS營業點。 這些憑據可在員工表單的 *HR 設定* 選項中進行設定。"
+msgstr "員工可以掃瞄徽章或輸入PIN以登入PoS營業點。 這些憑證可在員工表單的 *HR 設定* 選項中進行設定。"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2058,7 +2066,7 @@ msgstr "使用遠端連接的條碼掃描器啟用條碼掃描，並使用 Vanti
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_electronic_scale
 msgid "Enables Electronic Scale integration."
-msgstr "啟用電子秤集成。"
+msgstr "啟用電子秤整合。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__module_account
@@ -2114,6 +2122,13 @@ msgstr "錯誤：沒有網路連結。"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
+#, python-format
+msgid "Existing orderlines"
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
 #: code:addons/point_of_sale/static/src/js/Popups/ErrorTracebackPopup.js:0
 #, python-format
 msgid "Exit Pos"
@@ -2132,14 +2147,14 @@ msgstr "預期"
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
 #, python-format
 msgid "Export Paid Orders"
-msgstr "導出已付款訂單"
+msgstr "匯出已付款訂單"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
 #, python-format
 msgid "Export Unpaid Orders"
-msgstr "導出未付款訂單"
+msgstr "匯出未付款訂單"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -2169,7 +2184,7 @@ msgstr "財務"
 #: code:addons/point_of_sale/static/src/xml/Popups/OrderImportPopup.xml:0
 #, python-format
 msgid "Finished Importing Orders"
-msgstr "完成導入訂單"
+msgstr "完成匯入訂單"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__fiscal_position_id
@@ -2313,7 +2328,7 @@ msgstr "大於允許量"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Group By"
-msgstr "分組按"
+msgstr "分組依據"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_uom_category__is_pos_groupable
@@ -2478,7 +2493,7 @@ msgstr "圖像"
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
 #, python-format
 msgid "Import Orders"
-msgstr "導入訂單"
+msgstr "匯入訂單"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2544,14 +2559,14 @@ msgid ""
 "                Invocing/Accounting app will create Bank and Cash payment\n"
 "                methods automatically."
 msgstr ""
-"從常規設定安裝會計科目表\n"
-"                開立發票/會計應用程序將建立銀行和現金支付\n"
+"從通用設定安裝會計科目表\n"
+"                開立發票/會計模組將建立銀行和現金支付\n"
 "                方法自動化。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_mercury
 msgid "Integrated Card Payments"
-msgstr "集成的卡支付"
+msgstr "整合的卡支付"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__receivable_account_id
@@ -2856,7 +2871,7 @@ msgid ""
 "Account used as outstanding account when creating accounting payment records for bank payments."
 msgstr ""
 "留空以使用公司設置中的預設帳戶。\n"
-"創建銀行付款的會計付款記錄時用作未結帳戶的帳戶。"
+"建立銀行付款的會計付款記錄時用作未結帳戶的帳戶。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__receivable_account_id
@@ -2969,7 +2984,7 @@ msgstr "本地客戶展示"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__login_number
 msgid "Login Sequence Number"
-msgstr "登錄序列號"
+msgstr "登入序號"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3192,7 +3207,7 @@ msgstr "網路錯誤"
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_order__state__draft
 #: model:ir.model.fields.selection,name:point_of_sale.selection__report_pos_order__state__draft
 msgid "New"
-msgstr "新的"
+msgstr "新增"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3200,7 +3215,7 @@ msgstr "新的"
 #: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/TicketScreen.xml:0
 #, python-format
 msgid "New Order"
-msgstr "新的訂單"
+msgstr "新增訂單"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -3483,7 +3498,7 @@ msgstr "僅限現金方式"
 msgid ""
 "Only users with Manager access rights for PoS app can modify the product "
 "prices on orders."
-msgstr "僅具有 PoS 應用的管理器訪問權限的使用者能夠修改訂單上的產品價格。"
+msgstr "僅具有 PoS 應用的管理器存取權限的使用者能夠修改訂單上的產品價格。"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5010,7 +5025,7 @@ msgstr "儲存"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Save this page and come back here to set up the feature."
-msgstr "保存這個頁面並返回來設定這個特性。"
+msgstr "儲存這個頁面並返回來設定這個特性。"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5363,7 +5378,7 @@ msgstr "向客戶顯示結帳"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__module_pos_hr
 msgid "Show employee login screen"
-msgstr "顯示員工登錄螢幕"
+msgstr "顯示員工登入介面"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -5552,7 +5567,7 @@ msgstr "不帶折扣的小計"
 #: code:addons/point_of_sale/static/src/xml/Popups/OrderImportPopup.xml:0
 #, python-format
 msgid "Successfully imported"
-msgstr "導入成功"
+msgstr "匯入成功"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5938,7 +5953,7 @@ msgstr "營業點開了很長一段時間。請考慮關閉。"
 msgid ""
 "The transactions are processed by Adyen. Set your Adyen credentials on the "
 "related payment method."
-msgstr "交易由 Adyen 處理。 在相關付款方式上設定您的 Adyen 憑據."
+msgstr "交易由 Adyen 處理。 在相關付款方式上設定您的 Adyen 憑證."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_six
@@ -5954,7 +5969,7 @@ msgstr "交易由Six處理. 在相關支付方式上設定終端的IP地址."
 msgid ""
 "The transactions are processed by Vantiv. Set your Vantiv credentials on the"
 " related payment method."
-msgstr "交易由 Vantiv 處理. 在相關付款方式上設定您的 Vantiv 憑據."
+msgstr "交易由 Vantiv 處理. 在相關付款方式上設定您的 Vantiv 憑證."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_end
@@ -6110,7 +6125,7 @@ msgid ""
 "This operation will destroy all unpaid orders in the browser. You will lose "
 "all the unsaved data and exit the point of sale. This operation cannot be "
 "undone."
-msgstr "此操作將銷毀瀏覽器中的所有未支付訂單。您將丟失所有未保存的資料，並退出POS。此操作無法撤消。"
+msgstr "此操作將銷毀瀏覽器中的所有未支付訂單。您將遺失所有未儲存的資料，並退出POS。此操作無法撤消。"
 
 #. module: point_of_sale
 #. openerp-web
@@ -6128,7 +6143,7 @@ msgstr "本操作將會損壞存儲在本地的所有營業點中的未付訂單
 msgid ""
 "This order already has refund lines for %s. We can't change the customer "
 "associated to it. Create a new order for the new customer."
-msgstr "此訂單已有 %s 的退款項目。我們無法更改與其關聯的客戶。為新客戶創建新訂單。"
+msgstr "此訂單已有 %s 的退款項目。我們無法更改與其關聯的客戶。為新客戶建立新訂單。"
 
 #. module: point_of_sale
 #. openerp-web
@@ -6148,7 +6163,7 @@ msgstr "本產品用作客戶收據之編碼。"
 msgid ""
 "This sequence is automatically created by Odoo but you can change it to "
 "customize the reference numbers of your orders lines."
-msgstr "此序列由 Odoo 自動建立，但您可以進行更改以自定義訂單明細的編碼。"
+msgstr "此序列由 Odoo 自動建立，但您可以進行更改以自訂訂單明細的編碼。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__sequence_id
@@ -6431,7 +6446,7 @@ msgstr "無法修改此 PoS 設定，因為您無法在營業點打開時修改 
 #: code:addons/point_of_sale/static/src/js/Screens/ClientListScreen/ClientListScreen.js:0
 #, python-format
 msgid "Unable to save changes."
-msgstr "無法保存更改."
+msgstr "無法儲存更改."
 
 #. module: point_of_sale
 #. openerp-web
@@ -6764,7 +6779,7 @@ msgstr "當營業點仍打開時，您不能在POS中刪除一個可銷售的產
 msgid ""
 "You cannot delete contacts while there are active PoS sessions. Close the "
 "session(s) %s first."
-msgstr "存在活動的 PoS營業點時，您無法刪除聯繫人. 首先關閉營業點 %s."
+msgstr "存在運行中的 PoS營業點時，您無法刪除聯繫人. 首先關閉營業點 %s."
 
 #. module: point_of_sale
 #. openerp-web
@@ -6990,7 +7005,7 @@ msgstr "未付訂單"
 #: code:addons/point_of_sale/static/src/xml/Popups/OrderImportPopup.xml:0
 #, python-format
 msgid "unpaid orders could not be imported"
-msgstr "未付訂單不能導入"
+msgstr "未付訂單不能匯入"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
@@ -7004,9 +7019,9 @@ msgid ""
 "When the session is open, we keep on loading all remaining products in the background.\n"
 "In the meantime, you can click on the 'database icon' in the searchbar to load products from database."
 msgstr ""
-"我們加載所有已加星標的產品（收藏夾）、所有服務、產品最近的庫存變動以及最近更新的產品。\n"
+"我們加載所有已加星標的產品（最愛）、所有服務、產品最近的庫存變動以及最近更新的產品。\n"
 "當營業點打開時，我們會繼續在後台加載所有剩餘的產品。\n"
-"同時，您可以單擊搜索欄中的“數據庫圖標”從數據庫中加載產品。"
+"同時，您可以單擊搜索欄中的“資料庫圖示”從資料庫中加載產品。"
 
 #. module: point_of_sale
 #. openerp-web

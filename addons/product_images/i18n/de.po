@@ -27,6 +27,8 @@ msgid ""
 "%(matching_images_count)s matching images have been found for "
 "%(product_count)s products."
 msgstr ""
+"%(matching_images_count)s passende Bilder wurden für "
+"%(product_count)sProdukte gefunden."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
@@ -87,17 +89,19 @@ msgid ""
 "Fetch product images from Google Images based on the product's barcode "
 "number."
 msgstr ""
+"Abruf von Produktbildern aus Google Images auf der Grundlage der Barcode-"
+"Nummer des Produkts."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
 msgid "Get Pictures"
-msgstr ""
+msgstr "Bilder erhalten"
 
 #. module: product_images
 #: model:ir.actions.act_window,name:product_images.product_product_action_get_pic_with_barcode
 #: model:ir.actions.act_window,name:product_images.product_template_action_get_pic_with_barcode
 msgid "Get Pictures from Google Images"
-msgstr ""
+msgstr "Bilder von Google Images erhalten"
 
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_res_config_settings__google_custom_search_key
@@ -163,7 +167,7 @@ msgstr "Produkt"
 #: model:ir.cron,cron_name:product_images.ir_cron_fetch_image
 #: model:ir.cron,name:product_images.ir_cron_fetch_image
 msgid "Product Images: Get product images from Google"
-msgstr ""
+msgstr "Produktbilder: Produktbilder von Google abrufen"
 
 #. module: product_images
 #: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
@@ -246,11 +250,13 @@ msgstr "Ausgelöste Aktionen"
 #: model:ir.model.fields,help:product_images.field_product_product__image_fetch_pending
 msgid "Whether an image must be fetched for this product. Handled by a cron."
 msgstr ""
+"Ob für dieses Produkt ein Bild abgerufen werden muss. Wird von einem Cron "
+"verwaltet."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
 msgid "You selected"
-msgstr ""
+msgstr "SIe haben ausgewählt"
 
 #. module: product_images
 #: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
@@ -261,7 +267,7 @@ msgstr "Ihr API-Schlüssel oder Ihre Suchmaschinen-ID ist falsch."
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
 msgid "of which will be processed."
-msgstr ""
+msgstr "derer verarbeitet werden."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
@@ -270,6 +276,9 @@ msgid ""
 "                            processed because they either already have an image or their barcode\n"
 "                            number is not set."
 msgstr ""
+"Produkte werden nicht\n"
+"verarbeitet, weil sie entweder bereits ein Bild haben oder ihre Barcode-\n"
+"Nummer nicht festgelegt ist."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form

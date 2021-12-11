@@ -6,7 +6,6 @@
 # Joan Ignasi Florit <jfloritmir@gmail.com>, 2021
 # Martin Trigaux, 2021
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2021
-# Carles Antoli <carlesantoli@hotmail.com>, 2021
 # Eric Antones <eantones@users.noreply.github.com>, 2021
 # RGB Consulting <odoo@rgbconsulting.com>, 2021
 # Quim - eccit <quim@eccit.com>, 2021
@@ -15,6 +14,7 @@
 # M Palau <mpalau@tda.ad>, 2021
 # Arnau Ros, 2021
 # José Cabrera Lozano <jose.cabrera@edukative.es>, 2021
+# Carles Antoli <carlesantoli@hotmail.com>, 2021
 # jabelchi, 2021
 # 
 msgid ""
@@ -1051,6 +1051,7 @@ msgid "Config Settings"
 msgstr "Ajustos de configuració"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.payment
 #: model_terms:ir.ui.view,arch_db:website_sale.wizard_checkout
 msgid "Confirm Order"
 msgstr "Confirmar comanda"
@@ -1164,7 +1165,7 @@ msgstr "Clients"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "DHL"
+msgid "DHL Express Connector"
 msgstr ""
 
 #. module: website_sale
@@ -1818,7 +1819,7 @@ msgstr "Nou Producte"
 #. module: website_sale
 #: model:product.ribbon,html:website_sale.new_ribbon
 msgid "New!"
-msgstr ""
+msgstr "Nou"
 
 #. module: website_sale
 #: model:ir.filters,name:website_sale.dynamic_snippet_newest_products_filter
@@ -2101,6 +2102,11 @@ msgstr "Ruta arrel"
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__parents_and_self
 msgid "Parents And Self"
 msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.payment
+msgid "Pay Now"
+msgstr "Pagar Ara"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
@@ -2508,7 +2514,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_latest_viewed_products_action
 msgid "Recently Viewed Products"
-msgstr ""
+msgstr "Productes vistos fa poc"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
@@ -2884,7 +2890,7 @@ msgstr "Venut"
 #. module: website_sale
 #: model:product.ribbon,html:website_sale.sold_out_ribbon
 msgid "Sold out"
-msgstr ""
+msgstr "Esgotat"
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:0

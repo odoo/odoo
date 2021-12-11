@@ -32,6 +32,9 @@ msgid ""
 " ASCII 29 char). The separator must not match the begin/end of any related "
 "rules pattern."
 msgstr ""
+"Delimitador automático regex para el FNC1 (si no está configurado, "
+"automáticamente es <GS> ASCII 29 char). El separador no debe tener el mismo "
+"inicio/fin de cualquier patrón de reglas relacionado."
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__associated_uom_id
@@ -81,7 +84,7 @@ msgstr "Fecha de vencimiento"
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_nomenclature__gs1_separator_fnc1
 msgid "FNC1 Separator"
-msgstr ""
+msgstr "Separador FNC1"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__gs1_content_type
@@ -165,7 +168,7 @@ msgstr "Cantidad"
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
 #, python-format
 msgid "The FNC1 Separator Alternative is not a valid Regex: "
-msgstr ""
+msgstr "La alternativa de separador FNC1 no es un regex válido:"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__gs1_content_type
@@ -176,6 +179,12 @@ msgid ""
 "UoM;        * Numeric Identifier: fixed length barcode following a specific "
 "encoding;        * Alpha-Numeric Name: variable length barcode."
 msgstr ""
+"El tipo de contenido GS1 define como qué tipo de reglas de datos se "
+"procesará el código de barras: * Fecha: El código de barras se convertirá en"
+" una fecha y hora de Odoo; * Medida: el valor del código de barras está "
+"relacionado a una UdM específica; * Identificador numérico: código de barras"
+" de un largo fijo que sigue una codificación específica; * Nombre "
+"alfanumérico: código de barras de tamaño variable."
 
 #. module: barcodes_gs1_nomenclature
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_rule.py:0

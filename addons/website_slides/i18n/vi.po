@@ -3,16 +3,15 @@
 # 	* website_slides
 # 
 # Translators:
-# Minh Nguyen <ndminh210994@gmail.com>, 2021
 # Dao Nguyen <trucdao.uel@gmail.com>, 2021
 # sao sang <saosangmo@yahoo.com>, 2021
+# fanha99 <fanha99@hotmail.com>, 2021
+# Duy BQ <duybq86@gmail.com>, 2021
 # Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2021
 # Dung Nguyen Thi <dungnt@trobz.com>, 2021
 # Martin Trigaux, 2021
-# fanha99 <fanha99@hotmail.com>, 2021
 # thanhnguyen.icsc <thanhnguyen.icsc@gmail.com>, 2021
 # Thang Duong Bao <nothingctrl@gmail.com>, 2021
-# Duy BQ <duybq86@gmail.com>, 2021
 # Vo Thanh Thuy, 2021
 # 
 msgid ""
@@ -32,7 +31,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__completed_slides_count
 msgid "# Completed Slides"
-msgstr "# lượng slide đã hoàn tất"
+msgstr "# slide đã hoàn thành"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed__count_views
@@ -42,17 +41,17 @@ msgstr "# Lượt xem"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__public_views
 msgid "# of Public Views"
-msgstr "Số lượt xem công khai"
+msgstr "# lượt xem công cộng"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_views
 msgid "# of Website Views"
-msgstr "# của lượt xem trang web"
+msgstr "# lượt xem website"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__completion
 msgid "% Completed Slides"
-msgstr "# lượng slide đã hoàn tất"
+msgstr "# slide đã hoàn thành "
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.mail_notification_channel_invite
@@ -207,6 +206,25 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        Xin chào<br/><br/>\n"
+"                        <t t-out=\"user.name or ''\">Mitchell Admin</t> đã chia sẻ <t t-out=\"object.slide_type or ''\">tài liệu</t> <strong t-out=\"object.name or ''\">Cây xanh</strong> với bạn!\n"
+"                        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a t-att-href=\"(object.website_url + '?fullscreen=1') if ctx.get('fullscreen') else object.website_url\">\n"
+"                                <img t-att-alt=\"object.name\" t-attf-src=\"{{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/image_1024\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a t-att-href=\"(object.website_url + '?fullscreen=1') if ctx.get('fullscreen') else object.website_url\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">Xem <strong t-out=\"object.name or ''\">Cây xanh</strong></a>\n"
+"                        </div>\n"
+"                        <t t-if=\"user.signature\">\n"
+"                            <br/>\n"
+"                            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"                        </t>\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_published
@@ -235,6 +253,29 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        Xin chào<br/><br/>\n"
+"                        Có thêm nội dung mới trong khóa <strong t-out=\"object.channel_id.name or ''\">Cây xanh, gỗ và vườn tược</strong> mà bạn đang theo dõi:<br/><br/>\n"
+"                        <center><strong t-out=\"object.name or ''\">Cây xanh</strong></center>\n"
+"                        <t t-if=\"object.image_1024\">\n"
+"                            <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                                <a t-att-href=\"object.website_url\">\n"
+"                                <img t-att-alt=\"object.name\" t-attf-src=\"{{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/image_1024\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        </t>\n"
+"                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a t-att-href=\"object.website_url\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">Xem nội dung</a>\n"
+"                        </div>\n"
+"                        Hi vọng bạn thích nội dung chọn lọc này!\n"
+"                        <t t-if=\"user.signature\">\n"
+"                            <br/>\n"
+"                            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"                        </t>\n"
+"                    </p>\n"
+"                </div>\n"
+"            "
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
@@ -272,7 +313,7 @@ msgstr "<i class=\"fa fa-circle-o-notch fa-spin mr-2\"/><b>Đang tải...</b>"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.rating_rating_view_kanban_slide_channel
 msgid "<i class=\"fa fa-clock-o mr-2\" aria-label=\"Create date\"/>"
-msgstr "<i class=\"fa fa-clock-o mr-2\" aria-label=\"Ngày tạo\"/>"
+msgstr "<i class=\"fa fa-clock-o mr-2\" aria-label=\"Create date\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
@@ -280,8 +321,8 @@ msgid ""
 "<i class=\"fa fa-clock-o mr-2\" aria-label=\"Duration\" role=\"img\" "
 "title=\"Duration\"/>"
 msgstr ""
-"<i class=\"fa fa-clock-o mr-2\" aria-label=\"Thời gian\" role=\"img\" "
-"title=\"Thời gian\"/>"
+"<i class=\"fa fa-clock-o mr-2\" aria-label=\"Duration\" role=\"img\" "
+"title=\"Thời lượng\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
@@ -348,7 +389,7 @@ msgid ""
 "title=\"Webpage\"/>"
 msgstr ""
 "<i class=\"fa fa-file-code-o mr-2\" aria-label=\"Webpage\" role=\"img\" "
-"title=\"Webpage\"/>"
+"title=\"Trang web\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
@@ -357,7 +398,7 @@ msgid ""
 " title=\"Infographic\"/>"
 msgstr ""
 "<i class=\"fa fa-file-image-o mr-2\" aria-label=\"Infographic\" role=\"img\""
-" title=\"Infographic\"/>"
+" title=\"Đồ họa thông tin\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
@@ -365,7 +406,7 @@ msgid ""
 "<i class=\"fa fa-file-pdf-o mr-2\" aria-label=\"Document\" role=\"img\" "
 "title=\"Document\"/>"
 msgstr ""
-"<i class=\"fa fa-file-pdf-o mr-2\" aria-label=\"Tài liệu\" role=\"img\" "
+"<i class=\"fa fa-file-pdf-o mr-2\" aria-label=\"Document\" role=\"img\" "
 "title=\"Tài liệu\"/>"
 
 #. module: website_slides
@@ -380,7 +421,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
 msgid "<i class=\"fa fa-flag mr-2\" aria-label=\"Quiz\" role=\"img\" title=\"Quiz\"/>"
-msgstr "<i class=\"fa fa-flag mr-2\" aria-label=\"Quiz\" role=\"img\" title=\"Quiz\"/>"
+msgstr "<i class=\"fa fa-flag mr-2\" aria-label=\"Quiz\" role=\"img\" title=\"Đố vui\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_training_category
@@ -395,7 +436,7 @@ msgstr "<i class=\"fa fa-flag-checkered text-warning mr-2\"/>Đố vui"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.rating_rating_view_kanban_slide_channel
 msgid "<i class=\"fa fa-folder mr-2\" aria-label=\"Open folder\"/>"
-msgstr "<i class=\"fa fa-folder mr-2\" aria-label=\"Mở thư mục\"/>"
+msgstr "<i class=\"fa fa-folder mr-2\" aria-label=\"Open folder\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
@@ -415,7 +456,7 @@ msgstr "<i class=\"fa fa-graduation-cap mr-1\"/>Tất cả khóa học"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "<i class=\"fa fa-home\"/> About"
-msgstr "<i class=\"fa fa-home\"/> Về"
+msgstr "<i class=\"fa fa-home\"/> Giới thiệu"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_main
@@ -438,7 +479,7 @@ msgid ""
 "                    The social sharing module will be unlocked when a moderator will allow your publication."
 msgstr ""
 "<i class=\"fa fa-info-circle\"/>\n"
-"                    Mô-đun chia sẻ xã hội sẽ được mở khóa khi người điều hành cho phép xuất bản của bạn."
+"                    Mô-đun chia sẻ xã hội sẽ được mở khóa khi người điều hành cho phép bài đăng của bạn."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
@@ -478,8 +519,8 @@ msgid ""
 "<i class=\"fa fa-question mr-2\" aria-label=\"Number of Questions\" "
 "role=\"img\" title=\"Number of Questions\"/>"
 msgstr ""
-"<i class=\"fa fa-question mr-2\" aria-label=\"Số câu hỏi\" role=\"img\" "
-"title=\"Số câu hỏi\"/>"
+"<i class=\"fa fa-question mr-2\" aria-label=\"Number of Questions\" "
+"role=\"img\" title=\"Số câu hỏi\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
@@ -518,17 +559,17 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.rating_rating_view_kanban_slide_channel
 msgid "<i class=\"fa fa-star text-black-25\" aria-label=\"A star\"/>"
-msgstr "<i class=\"fa fa-star text-black-25\" aria-label=\"Một sao\"/>"
+msgstr "<i class=\"fa fa-star text-black-25\" aria-label=\"A star\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.rating_rating_view_kanban_slide_channel
 msgid "<i class=\"fa fa-star\" aria-label=\"A star\" role=\"img\"/>"
-msgstr "<i class=\"fa fa-star\" aria-label=\"Một sao\" role=\"img\"/>"
+msgstr "<i class=\"fa fa-star\" aria-label=\"A star\" role=\"img\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.rating_rating_view_kanban_slide_channel
 msgid "<i class=\"fa fa-star-half-o\" aria-label=\"Half a star\" role=\"img\"/>"
-msgstr "<i class=\"fa fa-star-half-o\" aria-label=\"Nửa sao\" role=\"img\"/>"
+msgstr "<i class=\"fa fa-star-half-o\" aria-label=\"Half a star\" role=\"img\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
@@ -547,7 +588,7 @@ msgid ""
 "title=\"Dislikes\"/>"
 msgstr ""
 "<i class=\"fa fa-thumbs-down fa-1x\" role=\"img\" aria-label=\"Dislikes\" "
-"title=\"không thích\"/>"
+"title=\"Không thích\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_card
@@ -565,7 +606,7 @@ msgid ""
 "                            </small>"
 msgstr ""
 "<small class=\"text-success\">\n"
-"                                Yêu cầu đã sẵn sàng gửi đi\n"
+"                                Yêu cầu đã được gửi\n"
 "                            </small>"
 
 #. module: website_slides
@@ -614,16 +655,16 @@ msgid ""
 "class=\"fa fa-check\"/> Completed</span>"
 msgstr ""
 "<span class=\"badge badge-pill badge-success pull-right py-1 px-2\"><i "
-"class=\"fa fa-check\"/> Hoàn tất</span>"
+"class=\"fa fa-check\"/> Đã hoàn thành</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
 msgid ""
-"<span class=\"badge badge-pill badge-success py-1 px-2 mx-auto\" style"
-"=\"font-size: 1em\"><i class=\"fa fa-check\"/> Completed</span>"
+"<span class=\"badge badge-pill badge-success py-1 px-2 mx-auto\" "
+"style=\"font-size: 1em\"><i class=\"fa fa-check\"/> Completed</span>"
 msgstr ""
-"<span class=\"badge badge-pill badge-success py-1 px-2 mx-auto\" style"
-"=\"font-size: 1em\"><i class=\"fa fa-check\"/> Đã hoàn thành</span>"
+"<span class=\"badge badge-pill badge-success py-1 px-2 mx-auto\" "
+"style=\"font-size: 1em\"><i class=\"fa fa-check\"/> Đã hoàn thành</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
@@ -641,7 +682,7 @@ msgid ""
 "Completed</span>"
 msgstr ""
 "<span class=\"badge badge-pill badge-success\"><i class=\"fa fa-check\"/> Đã"
-" xong</span>"
+" hoàn thành</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
@@ -678,7 +719,7 @@ msgid ""
 "<span class=\"d-none d-sm-inline-block\">Next</span> <i class=\"fa fa-"
 "chevron-right ml-2\"/>"
 msgstr ""
-"<span class=\"d-none d-sm-inline-block\">Kế tiếp</span> <i class=\"fa fa-"
+"<span class=\"d-none d-sm-inline-block\">Tiếp</span> <i class=\"fa fa-"
 "chevron-right ml-2\"/>"
 
 #. module: website_slides
@@ -711,7 +752,7 @@ msgid ""
 "<span class=\"form-text text-muted d-block w-100\">Send presentation through"
 " email</span>"
 msgstr ""
-"<span class=\"form-text text-muted d-block w-100\">Gửi bài giới thiếu qua "
+"<span class=\"form-text text-muted d-block w-100\">Gửi bài thuyết trình qua "
 "email</span>"
 
 #. module: website_slides
@@ -720,8 +761,8 @@ msgid ""
 "<span class=\"o_form_label\">Slides</span>\n"
 "                        <span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
 msgstr ""
-"<span class=\"o_form_label\">Slides</span>\n"
-"                        <span class=\"fa fa-lg fa-globe\" title=\"Các giá trị được đặt ở đây là dành riêng cho trang web.\" groups=\"website.group_multi_website\"/>"
+"<span class=\"o_form_label\">Slide</span>\n"
+"                        <span class=\"fa fa-lg fa-globe\" title=\"Giá trị đặt ở đây áp dụng cho website cụ thể. \" groups=\"website.group_multi_website\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_partner_view_form
@@ -741,23 +782,23 @@ msgstr "<span class=\"p-2\">Nội dung khóa học</span>"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.user_quickkarma_card
 msgid "<span class=\"text-500 mx-2\">•</span>"
-msgstr ""
+msgstr "<span class=\"text-500 mx-2\">•</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "<span class=\"text-muted font-weight-bold mr-3\">Rating</span>"
-msgstr "<span class=\"text-muted font-weight-bold mr-3\">Xếp hạng</span>"
+msgstr "<span class=\"text-muted font-weight-bold mr-3\">Đánh giá</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
 msgid "<span class=\"text-muted\">Attendees</span>"
-msgstr "<span class=\"text-muted\">Tham dự</span>"
+msgstr "<span class=\"text-muted\">Người tham dự</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
 msgid "<span class=\"text-muted\">Common tasks for a computer scientist</span>"
 msgstr ""
-"<span class=\"text-muted\">Các nhiệm vụ chung cho một nhà khoa học máy "
+"<span class=\"text-muted\">Nhiệm vụ cơ bản của một nhà khoa học máy "
 "tính</span>"
 
 #. module: website_slides
@@ -778,6 +819,10 @@ msgid ""
 "                                        <span id=\"next\" class=\"mx-1 mx-sm-2\" title=\"Next slide\" aria-label=\"Next slide\" role=\"button\"><i class=\"fa fa-arrow-circle-right\"/></span>\n"
 "                                        <span id=\"last\" class=\"mx-1 mx-sm-2\" title=\"Last slide\" aria-label=\"Last slide\" role=\"button\"><i class=\"fa fa-step-forward\"/></span>"
 msgstr ""
+"<span id=\"first\" class=\"mr-1 mr-sm-2\" title=\"Slide đầu\" aria-label=\"First slide\" role=\"button\"><i class=\"fa fa-step-backward\"/></span>\n"
+"                                        <span id=\"previous\" class=\"mx-1 mx-sm-2\" title=\"Slide trước\" aria-label=\"Previous slide\" role=\"button\"><i class=\"fa fa-arrow-circle-left\"/></span>\n"
+"                                        <span id=\"next\" class=\"mx-1 mx-sm-2\" title=\"Slide tiếp\" aria-label=\"Next slide\" role=\"button\"><i class=\"fa fa-arrow-circle-right\"/></span>\n"
+"                                        <span id=\"last\" class=\"mx-1 mx-sm-2\" title=\"Slide cuối\" aria-label=\"Last slide\" role=\"button\"><i class=\"fa fa-step-forward\"/></span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
@@ -786,6 +831,9 @@ msgid ""
 "                                            <i class=\"fa fa-arrows-alt\"/>\n"
 "                                        </span>"
 msgstr ""
+"<span id=\"fullscreen\" class=\"ml-1 ml-sm-2\" title=\"Xem toàn màn hình\" aria-label=\"Fullscreen\" role=\"button\">\n"
+"                                            <i class=\"fa fa-arrows-alt\"/>\n"
+"                                        </span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
@@ -797,6 +845,12 @@ msgid ""
 "                                            <i class=\"fa fa-search-plus\"/>\n"
 "                                        </span>"
 msgstr ""
+"<span id=\"zoomout\" class=\"d-none d-sm-inline ml-2 mr-2\" title=\"Thu nhỏ\" aria-label=\"Zoom out\" role=\"button\">\n"
+"                                            <i class=\"fa fa-search-minus\"/>\n"
+"                                        </span>\n"
+"                                        <span id=\"zoomin\" class=\"d-none d-sm-inline\" title=\"Phóng to\" aria-label=\"Zoom in\" role=\"button\">\n"
+"                                            <i class=\"fa fa-search-plus\"/>\n"
+"                                        </span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
@@ -817,7 +871,7 @@ msgstr "<span> giờ</span>"
 #: model_terms:ir.ui.view,arch_db:website_slides.course_main
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
 msgid "<span>Add Tag</span>"
-msgstr "<span>Thêm từ khóa</span>"
+msgstr "<span>Thêm thẻ</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
@@ -827,7 +881,7 @@ msgstr "<span>Trả lời câu hỏi</span>"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
 msgid "<span>Asking Question</span>"
-msgstr "<span>Câu hỏi đang hỏi</span>"
+msgstr "<span>Đặt câu hỏi</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_sample
@@ -870,7 +924,7 @@ msgstr "<span>×</span>"
 #: code:addons/website_slides/static/src/js/slides_share.js:0
 #, python-format
 msgid "<strong>Thank you!</strong> Mail has been sent."
-msgstr "<strong>Cảm ơn bạn!</strong> Mail đã được gửi."
+msgstr "<strong>Cảm ơn bạn!</strong> Thư đã được gửi."
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_2_1
@@ -916,7 +970,8 @@ msgstr "Xẻng"
 msgid ""
 "A slide is either filled with a document url or HTML content. Not both."
 msgstr ""
-"A slide is either filled with a document url or HTML content. Not both."
+"Slide chỉ được chứa một trong hai loại: url tài liệu hoặc nội dung HTML. "
+"Không được chứa cả hai. "
 
 #. module: website_slides
 #: model:slide.answer,text_value:website_slides.slide_slide_demo_0_4_question_1_1
@@ -952,7 +1007,7 @@ msgstr "Một cái bàn"
 #. module: website_slides
 #: model:ir.model.constraint,message:website_slides.constraint_slide_tag_slide_tag_unique
 msgid "A tag must be unique!"
-msgstr "Từ khóa phải là duy nhất!"
+msgstr "Thẻ phải là duy nhất!"
 
 #. module: website_slides
 #: model:slide.answer,text_value:website_slides.slide_slide_demo_0_4_question_0_1
@@ -962,7 +1017,7 @@ msgstr "Một loại rau"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 msgid "API Key"
-msgstr "Mã khóa API"
+msgstr "Khóa API"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_channel.py:0
@@ -1000,18 +1055,18 @@ msgstr "Quyền truy cập"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_needaction
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_needaction
 msgid "Action Needed"
-msgstr "Hành động cần thiết"
+msgstr "Tác vụ cần thiết"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "Actions"
-msgstr "Tác vụ"
+msgstr "Hành động"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__active
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__active
 msgid "Active"
-msgstr "Có hiệu lực"
+msgstr "Hoạt động"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__activity_ids
@@ -1021,7 +1076,7 @@ msgstr "Các hoạt động"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Hành động ngoại lệ"
+msgstr "Thể hiện hoạt động ngoại lệ "
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__activity_state
@@ -1031,7 +1086,7 @@ msgstr "Trạng thái hoạt động"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Biểu tượng kiểu hoạt động"
+msgstr "Icon kiểu hoạt động"
 
 #. module: website_slides
 #. openerp-web
@@ -1117,7 +1172,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_resource_ids
 msgid "Additional Resource for this slide"
-msgstr "Tài nguyên bổ sung cho trang trình bày này"
+msgstr "Tài nguyên bổ sung cho slide này"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -1128,7 +1183,7 @@ msgstr "Nguồn bổ sung"
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_slide_resource
 msgid "Additional resource for a particular slide"
-msgstr "Tài nguyên bổ sung cho một trang trình bày cụ thể"
+msgstr "Tài nguyên bổ sung cho một slide cụ thể"
 
 #. module: website_slides
 #: model:slide.channel.tag,name:website_slides.slide_channel_tag_level_advanced
@@ -1190,12 +1245,12 @@ msgstr "Cho phép xếp hạng khóa học"
 #: code:addons/website_slides/static/src/xml/website_slides_channel.xml:0
 #, python-format
 msgid "Allow students to review your course"
-msgstr "Cho phép sinh viên đánh giá khóa học của bạn"
+msgstr "Cho phép sinh viên đánh giá khóa học "
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__slide_resource_downloadable
 msgid "Allow the user to download the content of the slide."
-msgstr "Cho phép người dùng tải xuống nội dung của trang trình bày."
+msgstr "Cho phép người dùng tải xuống nội dung của slide."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__channel_allow_comment
@@ -1213,7 +1268,7 @@ msgstr "Đã được yêu cầu"
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #, python-format
 msgid "Already installing \"%s\"."
-msgstr "Đã cài được \"%s\"."
+msgstr "Đã đang cài đặt \"%s\". "
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_channel.py:0
@@ -1226,12 +1281,12 @@ msgstr "Đã là thành viên"
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #, python-format
 msgid "Amazing!"
-msgstr "Thật kinh ngạc!"
+msgstr "Tuyệt vời!"
 
 #. module: website_slides
 #: model:slide.answer,text_value:website_slides.slide_slide_demo_2_0_question_1_2
 msgid "And also bananas"
-msgstr "Và cũng là chuối"
+msgstr "Và cả chuối nữa"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer__text_value
@@ -1266,7 +1321,7 @@ msgstr "Lưu trữ"
 #: code:addons/website_slides/static/src/js/slides_slide_archive.js:0
 #, python-format
 msgid "Archive Slide"
-msgstr "Lưu Slide"
+msgstr "Lưu trữ slide"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_search
@@ -1288,7 +1343,7 @@ msgstr "Bạn có chắc bạn muốn lưu trữ slide này?"
 #: code:addons/website_slides/static/src/xml/slide_management.xml:0
 #, python-format
 msgid "Are you sure you want to delete this category ?"
-msgstr ""
+msgstr "Bạn có chắc chắn muốn xóa danh mục này không? "
 
 #. module: website_slides
 #. openerp-web
@@ -1306,7 +1361,7 @@ msgstr "Đính kèm"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_attachment_count
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_attachment_count
 msgid "Attachment Count"
-msgstr "Số lượng tập tin đính kèm"
+msgstr "Số tệp đính kèm"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__attachment_ids
@@ -1316,12 +1371,12 @@ msgstr "Tệp đính kèm"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_question__attempts_avg
 msgid "Attempts Avg"
-msgstr "Số lượt trung bình"
+msgstr "Số lần thử TB"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_question__attempts_count
 msgid "Attempts Count"
-msgstr "Đếm số lượt"
+msgstr "Số lượt thử"
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.slide_channel_partner_action
@@ -1330,33 +1385,33 @@ msgstr "Đếm số lượt"
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_tree
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Attendees"
-msgstr "Người Tham dự"
+msgstr "Người tham dự"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__members_done_count
 msgid "Attendees Done Count"
-msgstr "Đếm số lượt hoàn thành"
+msgstr "Số người tham dự hoàn thành"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__members_count
 msgid "Attendees count"
-msgstr "Đếm số lượt"
+msgstr "Số người tham dự"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_channel.py:0
 #, python-format
 msgid "Attendees of %s"
-msgstr "Số lượt của %s"
+msgstr "Người tham dự của %s"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__enroll_group_ids
 msgid "Auto Enroll Groups"
-msgstr "Tự động tham gia nhóm"
+msgstr "Tự động ghi danh nhóm"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_home_user_achievements_small
 msgid "Badges"
-msgstr "Huy chương"
+msgstr "Huy hiệu"
 
 #. module: website_slides
 #: model:slide.channel.tag,name:website_slides.slide_channel_tag_level_basic
@@ -1388,7 +1443,7 @@ msgstr "Có thể bình luận"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__can_edit_body
 msgid "Can Edit Body"
-msgstr ""
+msgstr "Có thể sửa thân bài"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__can_publish
@@ -1400,7 +1455,7 @@ msgstr "Có thể đăng"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__can_review
 msgid "Can Review"
-msgstr "Cần duyệt"
+msgstr "Có thể đánh giá"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__can_upload
@@ -1462,7 +1517,7 @@ msgstr "Chứng nhận"
 #: model:gamification.challenge.line,name:website_slides.badge_data_certification_challenge_line_0
 #: model:gamification.goal.definition,name:website_slides.badge_data_certification_goal
 msgid "Certified Knowledge"
-msgstr "Chứng chỉ"
+msgstr "Chứng nhận kiến thức"
 
 #. module: website_slides
 #. openerp-web
@@ -1486,7 +1541,7 @@ msgstr "Kênh / Đối tác (Thành viên)"
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_channel_invite
 msgid "Channel Invitation Wizard"
-msgstr "Tính năng mời tham gia kênh"
+msgstr "Trợ lý mời tham gia kênh"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_search
@@ -1513,12 +1568,12 @@ msgstr "Nhóm Kênh/Khóa học"
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_channel_tag
 msgid "Channel/Course Tag"
-msgstr "Từ khóa Kênh/Khóa học"
+msgstr "Thẻ Kênh/Khóa học"
 
 #. module: website_slides
 #: model:mail.template,name:website_slides.mail_template_slide_channel_invite
 msgid "Channel: Invite by email"
-msgstr ""
+msgstr "Kênh: Mời qua email "
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag__channel_ids
@@ -1536,7 +1591,7 @@ msgstr "CheatSheet"
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #, python-format
 msgid "Check Profile"
-msgstr "Kiểm tra hồ sơ"
+msgstr "Xem hồ sơ"
 
 #. module: website_slides
 #. openerp-web
@@ -1680,7 +1735,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Communication"
-msgstr "Thông tin giao dịch"
+msgstr "Liên lạc"
 
 #. module: website_slides
 #: model:gamification.badge,name:website_slides.badge_data_karma
@@ -1693,7 +1748,7 @@ msgstr "Anh hùng cộng đồng"
 #: model:ir.model.fields,field_description:website_slides.field_res_partner__slide_channel_company_count
 #: model:ir.model.fields,field_description:website_slides.field_res_users__slide_channel_company_count
 msgid "Company Course Count"
-msgstr "Đếm khóa học của công ty"
+msgstr "Số khóa học công ty"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_3_0
@@ -1731,7 +1786,7 @@ msgstr "Khóa đã hoàn thành"
 #: model:ir.model.fields,field_description:website_slides.field_res_users__slide_channel_completed_ids
 #: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
 msgid "Completed Courses"
-msgstr "Các khóa học đã hoàn thành"
+msgstr "Khóa học đã hoàn thành"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__completion
@@ -1741,7 +1796,7 @@ msgstr "Hoàn thành"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__completed_template_id
 msgid "Completion Email"
-msgstr ""
+msgstr "Email hoàn thành"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
@@ -1765,8 +1820,8 @@ msgstr "Khoa học máy tính cho trẻ em"
 #: model:ir.model.fields,help:website_slides.field_slide_channel_partner__channel_enroll
 msgid "Condition to enroll: everyone, on invite, on payment (sale bridge)."
 msgstr ""
-"Điều kiện để ghi danh: tất cả mọi người, khi được mời, phải trả tiền (thông "
-"qua việc bán)."
+"Điều kiện để ghi danh: tất cả mọi người, khi được mời, khi thanh toán (thông"
+" qua bán hàng)."
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_res_config_settings
@@ -1839,7 +1894,7 @@ msgstr "Liên hệ"
 #: model_terms:slide.channel,enroll_msg:website_slides.slide_channel_demo_6_furn3
 #, python-format
 msgid "Contact Responsible"
-msgstr "Người phụ trách"
+msgstr "Liên hệ người phụ trách"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
@@ -1853,7 +1908,7 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #, python-format
 msgid "Contact the responsible to enroll."
-msgstr "Liên hệ với người chịu trách nhiệm để đăng ký."
+msgstr "Liên hệ với người phụ trách để ghi danh. "
 
 #. module: website_slides
 #: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_1_4
@@ -1883,7 +1938,7 @@ msgstr "Xem trước nội dung"
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_question
 msgid "Content Quiz Question"
-msgstr "Nội dung câu hỏi Quiz"
+msgstr "Câu đố về nội dung"
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.action_slide_tag
@@ -1919,7 +1974,7 @@ msgstr "Tiếp tục"
 #: code:addons/website_slides/static/src/xml/website_slides_share.xml:0
 #, python-format
 msgid "Copy Link"
-msgstr "Sao chép Link"
+msgstr "Sao chép link"
 
 #. module: website_slides
 #: model:slide.answer,comment:website_slides.slide_slide_demo_1_4_question_0_0
@@ -1936,13 +1991,12 @@ msgstr "Chính xác ! Xẻng là công cụ hoàn hảo để đào hố."
 #. module: website_slides
 #: model:slide.answer,comment:website_slides.slide_slide_demo_0_4_question_0_0
 msgid "Correct ! A strawberry is a fruit because it's the product of a tree."
-msgstr ""
-"Chính xác ! Dâu tây là một loại trái cây vì nó là sản phẩm của một cái cây."
+msgstr "Chính xác ! Dâu tây là một loại trái cây vì nó xuất phát từ cây. "
 
 #. module: website_slides
 #: model:slide.answer,comment:website_slides.slide_slide_demo_1_4_question_1_0
 msgid "Correct ! Congratulations you have time to loose"
-msgstr "Chính xác ! Xin chúc mừng, bạn có thời gian để thả lỏng"
+msgstr "Chính xác! Xin chúc mừng bạn đã trả lời xuất sắc"
 
 #. module: website_slides
 #: model:slide.answer,comment:website_slides.slide_slide_demo_5_3_question_0_0
@@ -1957,7 +2011,7 @@ msgid ""
 "%s"
 msgstr ""
 "Không thể tìm nạp dữ liệu từ url. Tài liệu hoặc quyền truy cập không khả dụng. \n"
-"Đây là phản hồi nhận được: %s"
+"%s"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_channel
@@ -1973,12 +2027,12 @@ msgstr "Khóa học"
 #: model:ir.model.fields,field_description:website_slides.field_res_partner__slide_channel_count
 #: model:ir.model.fields,field_description:website_slides.field_res_users__slide_channel_count
 msgid "Course Count"
-msgstr "Đếm khóa học"
+msgstr "Số khóa học"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_form
 msgid "Course Group Name"
-msgstr ""
+msgstr "Tên nhóm khóa học"
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.slide_channel_tag_group_action
@@ -1989,40 +2043,40 @@ msgstr "Nhóm khóa học"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_tree
 msgid "Course Name"
-msgstr ""
+msgstr "Tên khóa học"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_view_form
 msgid "Course Tag"
-msgstr "Từ khóa khóa học"
+msgstr "Thẻ khóa học"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_form
 msgid "Course Tag Group"
-msgstr "Nhóm từ khóa khóa học"
+msgstr "Nhóm thẻ khóa học"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_search
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_tree
 msgid "Course Tag Groups"
-msgstr "Nhóm từ khóa khóa học"
+msgstr "Nhóm thẻ khóa học"
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.slide_channel_tag_action
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_view_search
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_view_tree
 msgid "Course Tags"
-msgstr "Từ khóa khóa học"
+msgstr "Thẻ khóa học"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Course Title"
-msgstr "Tên khóa học"
+msgstr "Tiêu đề khóa học"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__karma_gen_channel_finish
 msgid "Course finished"
-msgstr "Khóa học đã xong"
+msgstr "Khóa học đã hoàn tất"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_channel.py:0
@@ -2045,7 +2099,7 @@ msgstr "Loại khóa học"
 #: code:addons/website_slides/models/slide_slide.py:0
 #, python-format
 msgid "Course: %s"
-msgstr ""
+msgstr "Khóa học: %s"
 
 #. module: website_slides
 #: code:addons/website_slides/models/website.py:0
@@ -2088,19 +2142,19 @@ msgstr "Tạo khóa học"
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #, python-format
 msgid "Create new %s '%s'"
-msgstr "Tạo mới %s '%s'"
+msgstr "Tạo %s '%s' mới"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/website_slides.editor.js:0
 #, python-format
 msgid "Create new Tag '%s'"
-msgstr "Tạo từ khóa mới '%s'"
+msgstr "Tạo thẻ '%s' mới"
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.slide_slide_action_report
 msgid "Create new content for your eLearning"
-msgstr "Tạo nội dung mới cho eLearning của bạn"
+msgstr "Tạo nội dung mới cho eLearning"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer__create_uid
@@ -2144,7 +2198,7 @@ msgstr "Ngày tạo"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__html_content
 msgid "Custom HTML content for slides of type 'Web Page'."
-msgstr "Nội dung HTML tùy chỉnh cho các trang loại 'Trang web'."
+msgstr "Nội dung HTML tùy chỉnh cho slide của loại 'Trang web'. "
 
 #. module: website_slides
 #: model:slide.channel,name:website_slides.slide_channel_demo_6_furn3
@@ -2185,7 +2239,7 @@ msgstr "Xoá"
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
 #, python-format
 msgid "Delete Category"
-msgstr ""
+msgstr "Xóa danh mục"
 
 #. module: website_slides
 #. openerp-web
@@ -2204,6 +2258,12 @@ msgid ""
 " * Specific : You choose the slide to appear.\n"
 " * None : No slides will be shown.\n"
 msgstr ""
+"Dựa theo chiến lược quảng bá, một slide sẽ xuất hiện ở trên đầu của trang khóa học: \n"
+" * Đăng gần nhất : slide được tạo gần nhất.\n"
+" * Được bình chọn nhiều nhất : slide được bình chọn nhiều nhất.\n"
+" * Được xem nhiều nhất : slide được xem nhiều nhất.\n"
+" * Cụ thể: Bạn có thể chọn slide hiển thị\n"
+" * Không: Không hiển thị slide.\n"
 
 #. module: website_slides
 #. openerp-web
@@ -2283,19 +2343,19 @@ msgstr "Trình tự hiển thị"
 #. module: website_slides
 #: model:slide.question,question:website_slides.slide_slide_demo_2_0_question_0
 msgid "Do you make beams out of lemon trees ?"
-msgstr "Bạn có làm dầm ra khỏi cây chanh?"
+msgstr "Bạn có làm dầm nhà từ cây chanh không? "
 
 #. module: website_slides
 #: model:slide.question,question:website_slides.slide_slide_demo_2_0_question_1
 msgid "Do you make lemons out of beams ?"
-msgstr "Bạn có làm chanh ra khỏi dầm không?"
+msgstr "Bạn có trồng chanh từ dầm nhà không? "
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_unsubscribe.xml:0
 #, python-format
 msgid "Do you really want to leave the course?"
-msgstr "Bạn có thực sự muốn bỏ khóa học?"
+msgstr "Bạn có thực sự muốn rời khỏi khóa học?"
 
 #. module: website_slides
 #: model:slide.question,question:website_slides.slide_slide_demo_1_4_question_0
@@ -2371,19 +2431,19 @@ msgstr "Chưa có tài khoản?"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__completed
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_home_user_achievements_small
 msgid "Done"
-msgstr "Hoàn thành"
+msgstr "Đã xong"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #, python-format
 msgid "Done !"
-msgstr "Hoàn thành !"
+msgstr "Đã xong !"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_question__done_count
 msgid "Done Count"
-msgstr "Đếm số hoàn thành"
+msgstr "Số đã xong"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
@@ -2398,17 +2458,17 @@ msgstr "Tải xuống nội dung"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_4_10
 msgid "Drawing 1"
-msgstr ""
+msgstr "Bản vẽ 1"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_4_11
 msgid "Drawing 2"
-msgstr ""
+msgstr "Bản vẽ 2"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
 msgid "Dropdown menu"
-msgstr "Trình đơn thả xuống"
+msgstr "Menu thả xuống"
 
 #. module: website_slides
 #. openerp-web
@@ -2419,7 +2479,7 @@ msgstr "Trình đơn thả xuống"
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 #, python-format
 msgid "Duration"
-msgstr "Thời gian"
+msgstr "Thời lượng"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
@@ -2440,12 +2500,12 @@ msgstr "Email"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__publish_template_id
 msgid "Email attendees once a new content is published"
-msgstr ""
+msgstr "Gửi email cho người tham dự khi nội dung mới đã được đăng"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__completed_template_id
 msgid "Email attendees once they've finished the course"
-msgstr ""
+msgstr "Gửi email cho người tham dự khi họ vừa hoàn thành khóa học"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__share_template_id
@@ -2455,22 +2515,22 @@ msgstr "Mẫu email được sử dụng khi chia sẻ một slide"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__embed_code
 msgid "Embed Code"
-msgstr "Mã nhúng"
+msgstr "Nhúng mã"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__embedcount_ids
 msgid "Embed Count"
-msgstr "Số lượng nhúng"
+msgstr "Nhúng số lượng"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_embed
 msgid "Embed in your website"
-msgstr "Đã nhúng trong trang web của bạn"
+msgstr "Nhúng trong website của bạn"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_embed
 msgid "Embedded Slides View Counter"
-msgstr "Đếm số lượt xem của Slide khi đã nhúng"
+msgstr "Bộ đếm số lượt xem slide được nhúng"
 
 #. module: website_slides
 #. openerp-web
@@ -2487,23 +2547,23 @@ msgstr "Sự thật về hiệu quả năng lượng"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.mail_notification_channel_invite
 msgid "Enjoy this exclusive content !"
-msgstr "Thưởng thức nội dung độc quyền này!"
+msgstr "Thưởng thức nội dung chọn lọc này!"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__enroll_msg
 msgid "Enroll Message"
-msgstr "Tin nhắn tham gia"
+msgstr "Thông báo ghi danh"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__enroll
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__channel_enroll
 msgid "Enroll Policy"
-msgstr "Chính sách tham gia"
+msgstr "Chính sách ghi danh"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_tree
 msgid "Enrolled On"
-msgstr ""
+msgstr "Ghi danh vào"
 
 #. module: website_slides
 #. openerp-web
@@ -2538,13 +2598,13 @@ msgstr "Nhập câu hỏi của bạn"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Estimated slide completion time"
-msgstr "Thời gian ước lượng hoàn thành các slide"
+msgstr "Thời gian ước lượng hoàn thành slide"
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:0
 #, python-format
 msgid "Evaluate and certify your students."
-msgstr "Đánh giá và chứng nhận học viên của bạn."
+msgstr "Đánh giá và trao chứng nhận cho học sinh. "
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
@@ -2564,12 +2624,12 @@ msgstr "Link ngoài"
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_slide_link
 msgid "External URL for a particular slide"
-msgstr "Link ngoài để vào slide"
+msgstr "URL ngoài cho một slide cụ thể"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__link_ids
 msgid "External URL for this slide"
-msgstr "URL bên ngoài cho slide này"
+msgstr "URL ngoài cho slide này"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -2582,7 +2642,7 @@ msgstr "Nguồn bên ngoài"
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #, python-format
 msgid "Failed to install \"%s\"."
-msgstr "Thất bại khi cài \"%s\"."
+msgstr "Thất bại khi cài đặt \"%s\"."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__model_object_field
@@ -2595,7 +2655,7 @@ msgstr "Trường"
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #, python-format
 msgid "File is too big. File size cannot exceed 25MB"
-msgstr "Tập tin quá lớn. Dung lượng tập tin không thể vượt 25Mb"
+msgstr "Tệp quá lớn. Dung lượng tệp không thể vượt 25Mb"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
@@ -2607,12 +2667,14 @@ msgstr "Lọc &amp; sắp xếp"
 msgid ""
 "Final placeholder expression, to be copy-pasted in the desired template "
 "field."
-msgstr "Biểu thức placeholder cuối cùng, để copy-pasted vào mẫu email."
+msgstr ""
+"Biểu thức trình giữ chỗ cuối cùng, để sao chép-dán vào trường mẫu mong muốn."
+" "
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Finish Course"
-msgstr "Khóa học hoàn tất"
+msgstr "Hoàn thành khóa"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
@@ -2675,12 +2737,12 @@ msgstr "Biểu tượng Font awesome v.d: fa-tasks"
 #: model:slide.slide,name:website_slides.slide_slide_demo_4_0
 #: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_4_0
 msgid "Foreword"
-msgstr ""
+msgstr "Lời nói đầu"
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_4_0
 msgid "Foreword for this documentation: how to use it, main attention points"
-msgstr ""
+msgstr "Lời nói đầu cho tài liệu: cách sử dụng, điểm chính cần lưu ý "
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_res_config_settings__module_website_slides_forum
@@ -2695,12 +2757,12 @@ msgstr "Thử lần 4 trở lên"
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_5_2
 msgid "From a piece of wood to a fully functional furniture, step by step."
-msgstr "Từ một mảnh gỗ đến một đồ nội thất đầy đủ chức năng, từng bước một."
+msgstr "Từ một khúc gỗ thành một đồ nội thất đầy đủ chức năng, từng bước một."
 
 #. module: website_slides
 #: model:slide.channel.tag,name:website_slides.slide_channel_tag_role_furniture
 msgid "Furniture Designer"
-msgstr "Thiết kế nội thất"
+msgstr "Nhà thiết kế nội thất"
 
 #. module: website_slides
 #: model:slide.channel,name:website_slides.slide_channel_demo_4_furn1
@@ -2710,12 +2772,12 @@ msgstr "Thông số kỹ thuật nội thất"
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_4_12
 msgid "GLork"
-msgstr ""
+msgstr "GLork"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_gamification_challenge
 msgid "Gamification Challenge"
-msgstr "Thử thách Gamification"
+msgstr "Thử thách game hóa"
 
 #. module: website_slides
 #: model:slide.channel.tag,name:website_slides.slide_channel_tag_role_gardener
@@ -2801,13 +2863,12 @@ msgstr "Tên nhóm"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__upload_group_ids
 msgid "Group of users allowed to publish contents on a documentation course."
-msgstr ""
-"Nhóm người dùng được phép xuất bản nội dung trên một khóa học tài liệu."
+msgstr "Nhóm người dùng được phép đăng nội dung lên tài liệu khóa học. "
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag__group_sequence
 msgid "Group sequence"
-msgstr "Thứ tự nhóm"
+msgstr "Trình tự nhóm"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__html_content
@@ -2822,7 +2883,7 @@ msgstr "HTTP Routing"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_category_demo_5_1
 msgid "Hand on !"
-msgstr "Bắt tay nào!"
+msgstr "Cùng làm nào!"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__has_message
@@ -2850,7 +2911,7 @@ msgstr "Làm vườn tại nhà"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_5_2
 msgid "How To Build a HIGH QUALITY Dining Table with LIMITED TOOLS"
-msgstr ""
+msgstr "Cách đóng bàn ăn CHẤT LƯỢNG CAO chỉ với CÔNG CỤ HẠN CHẾ"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_0_3
@@ -2886,14 +2947,15 @@ msgstr "Cách trồng cây trong chậu"
 #, python-format
 msgid "How to upload your PowerPoint Presentations or Word Documents?"
 msgstr ""
-"Làm cách nào để tải lên Bản trình bày PowerPoint hoặc Tài liệu Word của bạn?"
+"Làm cách nào để tải lên bản thuyết trình PowerPoint hoặc tài liệu Word của "
+"bạn?"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "How to upload your videos ?"
-msgstr "Làm thế nào để tải lên video của bạn?"
+msgstr "Làm thế nào để tải lên video? "
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_2_2
@@ -2903,7 +2965,7 @@ msgstr "Cách trang trí tường bằng cây trồng trong chai nhựa treo."
 #. module: website_slides
 #: model:slide.tag,name:website_slides.slide_tag_demo_howto
 msgid "HowTo"
-msgstr "HowTo"
+msgstr "Cách thức"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer__id
@@ -2950,7 +3012,7 @@ msgstr ""
 #: model:ir.model.fields,help:website_slides.field_slide_slide__message_needaction
 #: model:ir.model.fields,help:website_slides.field_slide_slide__message_unread
 msgid "If checked, new messages require your attention."
-msgstr "Nếu chọn, các tin nhắn mới yêu cầu sự có mặt của bạn."
+msgstr "Nếu chọn, các tin nhắn mới yêu cầu sự chú ý của bạn. "
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__message_has_error
@@ -2958,7 +3020,7 @@ msgstr "Nếu chọn, các tin nhắn mới yêu cầu sự có mặt của bạ
 #: model:ir.model.fields,help:website_slides.field_slide_slide__message_has_error
 #: model:ir.model.fields,help:website_slides.field_slide_slide__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Nếu đánh dấu thì một số thông điệp có lỗi."
+msgstr "Nếu đánh dấu, một số tin nhắn bị lỗi khi gửi. "
 
 #. module: website_slides
 #: model_terms:slide.channel,description:website_slides.slide_channel_demo_4_furn1
@@ -3029,12 +3091,12 @@ msgstr "Không đúng ! Bàn là một món đồ nội thất."
 #. module: website_slides
 #: model:slide.answer,comment:website_slides.slide_slide_demo_0_4_question_1_1
 msgid "Incorrect ! Good luck digging a hole with a spoon..."
-msgstr "Không đúng ! Chúc may mắn khi đào được một cái lỗ bằng thìa ..."
+msgstr "Không đúng! Đào hố bằng thìa thì thật là..."
 
 #. module: website_slides
 #: model:slide.answer,comment:website_slides.slide_slide_demo_1_4_question_1_2
 msgid "Incorrect ! Seriously ?"
-msgstr "Không đúng ! Nghiêm túc ?"
+msgstr "Không đúng! Bạn đang đùa à? "
 
 #. module: website_slides
 #: model:slide.answer,comment:website_slides.slide_slide_demo_5_3_question_0_1
@@ -3054,12 +3116,12 @@ msgstr "Không đúng ! dĩ nhiên là không ..."
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__infographic
 msgid "Infographic"
-msgstr "Infographic"
+msgstr "Đồ họa thông tin"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_infographic
 msgid "Infographics"
-msgstr "Infographics"
+msgstr "Đồ họa thông tin"
 
 #. module: website_slides
 #. openerp-web
@@ -3121,40 +3183,40 @@ msgstr "Mời"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__completed
 msgid "Is Completed"
-msgstr "Đã hoàn thành"
+msgstr "Là đã hoàn thành"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__is_mail_template_editor
 msgid "Is Editor"
-msgstr ""
+msgstr "Là biên tập"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_is_follower
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_is_follower
 msgid "Is Follower"
-msgstr "Trở thành người theo dõi"
+msgstr "Là người theo dõi"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__is_member
 msgid "Is Member"
-msgstr "Là một thành viên"
+msgstr "Là thành viên"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__is_new_slide
 msgid "Is New Slide"
-msgstr "Slide mới"
+msgstr "Là slide mới"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__is_published
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag_group__is_published
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__is_published
 msgid "Is Published"
-msgstr "Đã đăng"
+msgstr "Là đã đăng"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__is_category
 msgid "Is a category"
-msgstr "Là nhóm"
+msgstr "Là danh mục"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer__is_correct
@@ -3167,6 +3229,8 @@ msgid ""
 "Jim and Todd plant a potted tree for a customer of Knecht's Nurseries and "
 "Landscaping. Narrated by Leif Knecht, owner."
 msgstr ""
+"Jim và Todd trồng cây trong chậu cho khách hàng của Knecht's Nurseries and "
+"Landscaping. Kể lại bởi Leif Knecht, chủ sở hữu. "
 
 #. module: website_slides
 #. openerp-web
@@ -3203,17 +3267,17 @@ msgstr ""
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_1_2
 msgid "Just some basics Energy Efficiency Facts."
-msgstr "Chỉ một số điều cơ bản Thông tin về Hiệu quả Năng lượng."
+msgstr "Chỉ một số điều cơ bản về Hiệu quả năng lượng. "
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_1_1
 msgid "Just some basics Interesting Tree Facts."
-msgstr "Chỉ là một số điều cơ bản Những sự thật thú vị về cây cối."
+msgstr "Chỉ là một số điều thú vị về cây xanh. "
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_1_0
 msgid "Just some basics Tree Infographic."
-msgstr "Chỉ cần một số điều cơ bản cây Infographic."
+msgstr "Chỉ một số đồ thị thông tin cơ bản về cây xanh. "
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -3223,24 +3287,24 @@ msgstr "Karma"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__karma_slide_comment
 msgid "Karma needed to add a comment on a slide of this course"
-msgstr "Điểm cần để thêm bình luận vào slide trong khóa học này"
+msgstr "Cần có điểm karma để thêm bình luận cho một slide của khóa học này"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__karma_review
 msgid "Karma needed to add a review on the course"
-msgstr "Điểm cần để thêm nhận xét vào khóa học này"
+msgstr "Cần có điểm karma để thêm một đánh giá cho khóa học"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__karma_slide_vote
 msgid "Karma needed to like/dislike a slide of this course."
-msgstr "Điểm cần để đánh giá thích/không thích slide trong khóa học này."
+msgstr "Cần có điểm karma để thích/ không thích slide của khóa học này. "
 
 #. module: website_slides
 #: model:gamification.badge,name:website_slides.badge_data_profile
 #: model:gamification.challenge.line,name:website_slides.badge_data_profile_challenge_line_0
 #: model:gamification.goal.definition,name:website_slides.badge_data_profile_goal
 msgid "Know yourself"
-msgstr "Biết về bản thân"
+msgstr "Hiểu bản thân"
 
 #. module: website_slides
 #: model_terms:slide.channel,description:website_slides.slide_channel_demo_3_furn0
@@ -3249,6 +3313,8 @@ msgid ""
 "Knowing which kind of wood to use depending on your application is important. In this course you\n"
 "will learn the basics of wood characteristics."
 msgstr ""
+"Hiểu biết về loại gỗ nào cần dùng cho mỗi loại đồ nhất định là rất quan trọng. Trong khóa học này bạn\n"
+"sẽ tìm hiểu những đặc điểm cơ bản của gỗ."
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_2_3
@@ -3256,6 +3322,8 @@ msgid ""
 "Knowing wood characteristics is a requirement in order to know which kind of"
 " wood to use in a given situation."
 msgstr ""
+"Hiểu biết đặc điểm của gỗ là cần thiết để biết loại gỗ nào sẽ sử dụng trong "
+"một tình huống nhất định."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__lang
@@ -3265,7 +3333,7 @@ msgstr "Ngôn ngữ"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_tree
 msgid "Last Action On"
-msgstr ""
+msgstr "Tác vụ cuối vào"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer____last_update
@@ -3366,7 +3434,7 @@ msgstr "Học cách xác định gỗ tốt để đóng đồ nội thất ch�
 #: code:addons/website_slides/static/src/js/slides_course_unsubscribe.js:0
 #, python-format
 msgid "Leave the course"
-msgstr "Bỏ khóa học"
+msgstr "Rời khóa học"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
@@ -3376,7 +3444,7 @@ msgstr "Bài học"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "Lesson Nav"
-msgstr "Bài học"
+msgstr "Điều hướng bài học"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__karma_gen_slide_vote
@@ -3405,17 +3473,17 @@ msgstr "Thích"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_link__link
 msgid "Link"
-msgstr "Liên kết"
+msgstr "Link"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__template_id
 msgid "Mail Template"
-msgstr "Mẫu mail"
+msgstr "Mẫu thư"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_res_config_settings__module_mass_mailing_slides
 msgid "Mailing"
-msgstr "Mailing"
+msgstr "Gửi thư"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_main_attachment_id
@@ -3426,7 +3494,7 @@ msgstr "Tệp đính kèm chính"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_2_0
 msgid "Main Trees Categories"
-msgstr "Cây danh mục chính"
+msgstr "Danh mục cây chính"
 
 #. module: website_slides
 #: model:res.groups,name:website_slides.group_website_slides_manager
@@ -3471,19 +3539,19 @@ msgstr "Lượt xem của thành viên"
 msgid ""
 "Members of those groups are automatically added as members of the channel."
 msgstr ""
-"Thành viên của các nhóm này sẽ được tự động thêm làm thành viên của kênh."
+"Thành viên của các nhóm đó sẽ được tự động thêm làm thành viên của kênh."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_form
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_tree
 msgid "Menu Entry"
-msgstr ""
+msgstr "Mục nhập menu"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_has_error
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_has_error
 msgid "Message Delivery error"
-msgstr "Thông báo gửi đi gặp lỗi"
+msgstr "Gửi tin nhắn bị lỗi"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__enroll_msg
@@ -3504,7 +3572,7 @@ msgstr "Phương thức"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_0_2
 msgid "Mighty Carrots"
-msgstr "Cà-rốt"
+msgstr "Sức mạnh của cà-rốt"
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_2_1
@@ -3542,7 +3610,7 @@ msgstr "Điều hướng phụ"
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "More info"
-msgstr "Nhiều thông tin hơn"
+msgstr "Thêm thông tin"
 
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__promote_strategy__most_viewed
@@ -3555,7 +3623,7 @@ msgstr "Được xem nhiều nhất"
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__promote_strategy__most_voted
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
 msgid "Most Voted"
-msgstr "Được bình chọn nhiều nhất"
+msgstr "Được bầu chọn nhiều nhất"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
@@ -3617,7 +3685,7 @@ msgstr "Khóa học mới"
 #. module: website_slides
 #: model:mail.template,subject:website_slides.slide_template_published
 msgid "New {{ object.slide_type }} published on {{ object.channel_id.name }}"
-msgstr ""
+msgstr "{{ object.slide_type }} mới đã đăng trên {{ object.channel_id.name }}"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
@@ -3639,17 +3707,17 @@ msgstr "Tiếp"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr "Sự kiện lịch hoạt động tiếp theo"
+msgstr "Sự kiện lịch hoạt động kế tiếp"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Hạn chót cho hành động kế tiếp"
+msgstr "Hạn chót hoạt động kế tiếp"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__activity_summary
 msgid "Next Activity Summary"
-msgstr "Tóm tắt hoạt động tiếp theo"
+msgstr "Tóm tắt hoạt động kế tiếp"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__activity_type_id
@@ -3687,17 +3755,17 @@ msgstr "Chưa có khóa học hoàn thành nào!"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
 msgid "No content was found using your search"
-msgstr "Không có bài học nào như nội dung bạn tìm kiếm"
+msgstr "Không tìm thấy nội dung theo tìm kiếm của bạn"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 msgid "No course was found matching your search"
-msgstr "Không có khóa học nào như nội dung bạn tìm kiếm"
+msgstr "Không tìm thấy khóa học khớp với tìm kiếm của bạn"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 msgid "No course was found matching your search."
-msgstr "Không có khóa học nào như nội dung bạn tìm kiệm."
+msgstr "Không tìm thấy khóa học khớp với tìm kiếm của bạn. "
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.slide_slide_action_report
@@ -3712,7 +3780,7 @@ msgstr "Chưa có khóa học nào được theo dõi!"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.toggle_leaderboard
 msgid "No leaderboard currently :("
-msgstr "Hiện chưa có bảng xếp hạng :("
+msgstr "Hiện chưa có bảng thành tích :("
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_documentation
@@ -3727,7 +3795,7 @@ msgstr "Không có kết quả cho '"
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__promote_strategy__none
 msgid "None"
-msgstr "Không dùng"
+msgstr "Không "
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_slide.py:0
@@ -3739,7 +3807,7 @@ msgstr "Không đủ điểm karma để bình luận"
 #: code:addons/website_slides/models/slide_channel.py:0
 #, python-format
 msgid "Not enough karma to review"
-msgstr "Không đủ Điểm để xem trước"
+msgstr "Không đủ điểm karma để đánh giá"
 
 #. module: website_slides
 #. openerp-web
@@ -3762,18 +3830,18 @@ msgstr "Số lượng tài liệu"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__nbr_infographic
 msgid "Number of Infographics"
-msgstr "Số lượng Infographic"
+msgstr "Số lượng đồ họa thông tin"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__nbr_presentation
 msgid "Number of Presentations"
-msgstr "Số lượng bài đăng"
+msgstr "Số lượng bài thuyết trình"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_quiz
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__nbr_quiz
 msgid "Number of Quizs"
-msgstr "Số lượng Quizs"
+msgstr "Số lượng đố vui"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__nbr_video
@@ -3783,7 +3851,7 @@ msgstr "Số lượng video"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__nbr_webpage
 msgid "Number of Webpages"
-msgstr "Số lượng trang"
+msgstr "Số lượng trang web"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__comments_count
@@ -3806,7 +3874,7 @@ msgstr "Số thông báo cần xử lý"
 #: model:ir.model.fields,help:website_slides.field_slide_channel__message_has_error_counter
 #: model:ir.model.fields,help:website_slides.field_slide_slide__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Số lượng tin gửi đi bị lỗi"
+msgstr "Số tin nhắn gửi đi bị lỗi"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__message_unread_counter
@@ -3834,7 +3902,7 @@ msgstr "Odoo • Văn bản và hình ảnh"
 #. module: website_slides
 #: model:res.groups,name:website_slides.group_website_slides_officer
 msgid "Officer"
-msgstr "Cán bộ"
+msgstr "Nhân viên"
 
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__enroll__invite
@@ -3853,7 +3921,7 @@ msgstr "Sau khi bạn hoàn thành, đừng quên <b>Đăng</b> khóa học. "
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Only JPG, PNG, PDF, files types are supported"
-msgstr ""
+msgstr "Chỉ hỗ trợ dạng tệp JPG, PNG, PDF. "
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_invite__lang
@@ -3863,6 +3931,9 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. {{ "
 "object.partner_id.lang }}."
 msgstr ""
+"Tùy chọn ngôn ngữ dịch (mã ISO) khi gửi đi email. Nếu không đặt, phiên bản "
+"tiếng Anh sẽ được sử dụng. Đây thường là một biểu thức giữ chỗ cung cấp ngôn"
+" ngữ phù hợp, ví dụ: {{ object.partner_id.lang }}."
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_invite__null_value
@@ -3892,13 +3963,13 @@ msgid ""
 "People already took this quiz. To keep course progression it should not be "
 "deleted."
 msgstr ""
-"Mọi người đã làm bài kiểm tra này. Để duy trì tiến trình của khóa học, nó "
-"không nên bị xóa."
+"Mọi người đã trả lời đố vui này. Để giữ tiến trình khóa học, không nên xóa "
+"đố vui này. "
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__copyvalue
 msgid "Placeholder Expression"
-msgstr "Biểu thức Placeholder"
+msgstr "Biểu thức trình giữ chỗ"
 
 #. module: website_slides
 #. openerp-web
@@ -3925,8 +3996,8 @@ msgstr ""
 #, python-format
 msgid "Please <a href=\"/web/login?redirect=%s\">login</a> to vote this lesson"
 msgstr ""
-"Vui lòng <a href=\"/web/login?redirect=%s\">đăng nhập</a> để đánh giá bài "
-"này"
+"Vui lòng <a href=\"/web/login?redirect=%s\">đăng nhập</a> để bầu chọn bài "
+"học này"
 
 #. module: website_slides
 #. openerp-web
@@ -3947,7 +4018,7 @@ msgid ""
 "Please <a href=\"/web/signup?redirect=%s\">create an account</a> to vote "
 "this lesson"
 msgstr ""
-"Vui lòng <a href=\"/web/signup?redirect=%s\">tạo tài khoản</a> để đánh giá "
+"Vui lòng <a href=\"/web/signup?redirect=%s\">tạo tài khoản</a> để bầu chọn "
 "bài học này"
 
 #. module: website_slides
@@ -3955,45 +4026,45 @@ msgstr ""
 #: code:addons/website_slides/models/slide_slide.py:0
 #, python-format
 msgid "Please enter valid Youtube or Google Doc URL"
-msgstr "Vui lòng nhập đường dẫn URL Youtube hoặc Google Doc hợp lệ"
+msgstr "Vui lòng nhập URL Youtube hoặc Google Doc hợp lệ"
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:0
 #, python-format
 msgid "Please enter valid youtube or google doc url"
-msgstr "Vui lòng nhập đường dẫn URL Youtube hoặc Google Doc hợp lệ"
+msgstr "Vui lòng nhập url youtube hoặc google doc hợp lệ"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_course_quiz_question_form.js:0
 #, python-format
 msgid "Please fill in the question"
-msgstr "Vui lòng điền vào câu hỏi"
+msgstr "Vui lòng điền câu hỏi"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_channel.xml:0
 #, python-format
 msgid "Please fill in this field"
-msgstr "Vui lòng điền vào các thông tin này"
+msgstr "Vui lòng điền thông tin này"
 
 #. module: website_slides
 #: code:addons/website_slides/wizard/slide_channel_invite.py:0
 #, python-format
 msgid "Please select at least one recipient."
-msgstr ""
+msgstr "Vui lòng chọn ít nhất một người nhận."
 
 #. module: website_slides
 #: model:gamification.badge,name:website_slides.badge_data_course
 #: model:gamification.challenge.line,name:website_slides.badge_data_course_challenge_line_0
 #: model:gamification.goal.definition,name:website_slides.badge_data_course_goal
 msgid "Power User"
-msgstr "Người dùng quyền lực"
+msgstr "Người dùng siêu đẳng"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.mail_notification_channel_invite
 msgid "Powered by"
-msgstr "Được hỗ trợ bởi"
+msgstr "Cung cấp bởi"
 
 #. module: website_slides
 #. openerp-web
@@ -4003,18 +4074,18 @@ msgstr "Được hỗ trợ bởi"
 #: model:slide.slide,name:website_slides.slide_slide_demo_4_12
 #, python-format
 msgid "Presentation"
-msgstr "Bài đăng"
+msgstr "Bài thuyết trình"
 
 #. module: website_slides
 #: model:mail.message.subtype,description:website_slides.mt_channel_slide_published
 #: model:mail.message.subtype,name:website_slides.mt_channel_slide_published
 msgid "Presentation Published"
-msgstr "Bài đăng đã được công bố"
+msgstr "Bài thuyết trình đã được đăng"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_presentation
 msgid "Presentations"
-msgstr "Bài đăng"
+msgstr "Bài thuyết trình"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -4029,17 +4100,17 @@ msgstr "Khóa học riêng"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_tree
 msgid "Progress"
-msgstr "Xử lý"
+msgstr "Tiến trình"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__promote_strategy
 msgid "Promoted Content"
-msgstr "Nội dung được Quảng cáo"
+msgstr "Nội dung được quảng bá"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__promoted_slide_id
 msgid "Promoted Slide"
-msgstr "Trình bày được Quảng cáo"
+msgstr "Slide được quảng bá"
 
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__enroll__public
@@ -4051,7 +4122,7 @@ msgstr "Công cộng"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "Public Views"
-msgstr "Số lượt xem công khai"
+msgstr "Lượt xem công cộng"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_searchbar_input_snippet_options
@@ -4082,8 +4153,8 @@ msgid ""
 "Publishing is restricted to the responsible of training courses or members "
 "of the publisher group for documentation courses"
 msgstr ""
-"Việc đăng bị giới hạn bởi trách nhiệm của các khóa đào tạo hoặc các thành "
-"viên của nhóm đăng tải cho các tài liệu khóa học"
+"Đăng bài được giới hạn cho người phụ trách của khóa tập huấn hoặc thành viên"
+" của nhóm đăng bài của khóa tài liệu"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer__question_id
@@ -4106,7 +4177,7 @@ msgstr "Câu hỏi \"%s\" phải có 1 câu trả lời đúng và ít nhất 1 
 #: model:ir.model.fields,field_description:website_slides.field_slide_question__question
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_question_view_form
 msgid "Question Name"
-msgstr "Tên Câu hỏi"
+msgstr "Tên câu hỏi"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__question_ids
@@ -4130,12 +4201,12 @@ msgstr "Đố vui"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Quiz Demo Data"
-msgstr "Dữ liệu Demo Quiz"
+msgstr "Dữ liệu demo đố vui"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_partner__quiz_attempts_count
 msgid "Quiz attempts count"
-msgstr "Đếm số lượt làm Quiz"
+msgstr "Số lần thử trả lời đố vui"
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.slide_question_action_report
@@ -4144,7 +4215,7 @@ msgstr "Đếm số lượt làm Quiz"
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_question_view_tree
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_question_view_tree_report
 msgid "Quizzes"
-msgstr "Quizzes"
+msgstr "Đố vui"
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.rating_rating_action_slide_channel
@@ -4157,12 +4228,12 @@ msgstr "Đánh giá"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__rating_avg
 #: model_terms:ir.ui.view,arch_db:website_slides.rating_rating_view_graph_slide_channel
 msgid "Rating Average"
-msgstr "Điểm đánh giá trung bình"
+msgstr "Điểm đánh giá TB"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__rating_avg_stars
 msgid "Rating Average (Stars)"
-msgstr "Đánh giá trung bình (Sao)"
+msgstr "Điểm đánh giá TB (Sao)"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__rating_last_feedback
@@ -4172,7 +4243,7 @@ msgstr "Đánh giá phản hồi cuối cùng"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__rating_last_image
 msgid "Rating Last Image"
-msgstr "Ảnh đánh giá mới nhất"
+msgstr "Đánh giá ảnh cuối cùng"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__rating_last_value
@@ -4182,13 +4253,13 @@ msgstr "Đánh giá giá trị cuối cùng"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__rating_count
 msgid "Rating count"
-msgstr "Đánh giá"
+msgstr "Số đánh giá"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_channel.py:0
 #, python-format
 msgid "Rating of %s"
-msgstr "Xếp hạng của %s"
+msgstr "Đánh giá của %s"
 
 #. module: website_slides
 #: model:gamification.challenge,name:website_slides.badge_data_karma_challenge
@@ -4216,7 +4287,7 @@ msgstr "Người nhận"
 #: code:addons/website_slides/static/src/components/activity/activity.xml:0
 #, python-format
 msgid "Refuse Access"
-msgstr "Từ chối quyền truy cập"
+msgstr "Từ chối truy cập"
 
 #. module: website_slides
 #: model:gamification.challenge,name:website_slides.badge_data_register_challenge
@@ -4232,7 +4303,7 @@ msgstr "Liên quan"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_tree
 msgid "Remove"
-msgstr "Gỡ"
+msgstr "Xóa"
 
 #. module: website_slides
 #. openerp-web
@@ -4251,7 +4322,7 @@ msgstr "Xóa câu trả lời này"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__render_model
 msgid "Rendering Model"
-msgstr ""
+msgstr "Kết xuất mô hình"
 
 #. module: website_slides
 #: model:ir.ui.menu,name:website_slides.website_slides_menu_report
@@ -4282,7 +4353,7 @@ msgstr "Đặt lại"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_resource__data
 msgid "Resource"
-msgstr "Nguồn lực"
+msgstr "Tài nguyên"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
@@ -4299,21 +4370,21 @@ msgstr "Người phụ trách"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__activity_user_id
 msgid "Responsible User"
-msgstr "Người phụ trách"
+msgstr "Người dùng phụ trách"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #, python-format
 msgid "Responsible already contacted."
-msgstr "Có trách nhiệm đã được liên hệ."
+msgstr "Đã liên hệ người phụ trách. "
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__website_id
 #: model:ir.model.fields,help:website_slides.field_slide_channel_partner__channel_website_id
 #: model:ir.model.fields,help:website_slides.field_slide_slide__website_id
 msgid "Restrict publishing to this website."
-msgstr "Hạn chế đăng trên website này."
+msgstr "Hạn chế đăng trên website này. "
 
 #. module: website_slides
 #. openerp-web
@@ -4332,7 +4403,7 @@ msgstr "Trở về khóa học."
 #: code:addons/website_slides/static/src/xml/website_slides_channel.xml:0
 #, python-format
 msgid "Review"
-msgstr "Xem trước"
+msgstr "Đánh giá"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -4353,7 +4424,7 @@ msgstr "Đánh giá"
 #: code:addons/website_slides/static/src/js/portal_chatter.js:0
 #, python-format
 msgid "Reviews (%d)"
-msgstr ""
+msgstr "Đánh giá (%d)"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__quiz_fourth_attempt_reward
@@ -4363,17 +4434,17 @@ msgstr "Phần thưởng: mỗi lần thử sau lần thử thứ ba"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__quiz_first_attempt_reward
 msgid "Reward: first attempt"
-msgstr "Phần thưởng: nỗ lực lần đầu"
+msgstr "Phần thưởng: lần thử đầu tiên"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__quiz_second_attempt_reward
 msgid "Reward: second attempt"
-msgstr "Phần thưởng: nỗ lực lần hai"
+msgstr "Phần thưởng: lần thử thứ hai"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__quiz_third_attempt_reward
 msgid "Reward: third attempt"
-msgstr "Phần thưởng: nỗ lực lần ba"
+msgstr "Phần thưởng: lần thử thứ ba"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -4385,7 +4456,7 @@ msgstr "Phần thưởng"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__is_seo_optimized
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__is_seo_optimized
 msgid "SEO optimized"
-msgstr "Tối ưu SEO"
+msgstr "SEO đã tối ưu"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_has_sms_error
@@ -4416,7 +4487,7 @@ msgstr "Lưu & Đăng"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Save your presentations or documents as PDF files and upload them."
-msgstr ""
+msgstr "Lưu bài thuyết trình hoặc tài liệu ở dạng tệp PDF và tải lên. "
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
@@ -4452,14 +4523,14 @@ msgstr "Thử lần 2"
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__category_id
 #, python-format
 msgid "Section"
-msgstr "Mục"
+msgstr "Phần"
 
 #. module: website_slides
 #: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_1_4
 #: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_2_1
 #: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_4_0
 msgid "Section Subtitle"
-msgstr "Mục phụ đề"
+msgstr "Tiêu đề phần"
 
 #. module: website_slides
 #. openerp-web
@@ -4471,7 +4542,7 @@ msgstr "Tên phần"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__access_token
 msgid "Security Token"
-msgstr "Mã bảo mật"
+msgstr "Mã token bảo mật"
 
 #. module: website_slides
 #. openerp-web
@@ -4483,7 +4554,7 @@ msgstr "Chọn <b>Khóa học</b> để tạo và quản lý khóa. "
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_embed
 msgid "Select page to start with"
-msgstr "Chọn trang để bắt đầu với"
+msgstr "Chọn trang để bắt đầu "
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_invite__model_object_field
@@ -4491,8 +4562,8 @@ msgid ""
 "Select target field from the related document model.\n"
 "If it is a relationship field you will be able to select a target field at the destination of the relationship."
 msgstr ""
-"Select target field from the related document model.\n"
-"If it is a relationship field you will be able to select a target field at the destination of the relationship."
+"Lựa chọn trường mục tiêu từ mô hình tài liệu liên quan.\n"
+"Nếu đây là trường quan hệ, bạn sẽ có thể chọn trường mục tiêu ở đích đến của mối quan hệ. "
 
 #. module: website_slides
 #. openerp-web
@@ -4504,7 +4575,7 @@ msgstr "Chọn câu trả lời đúng dưới đây:"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_res_config_settings__module_website_sale_slides
 msgid "Sell on eCommerce"
-msgstr "Bán khóa học online"
+msgstr "Bán trên eCommerce"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_invite_view_form
@@ -4532,18 +4603,18 @@ msgstr "Tên Seo"
 #: model:ir.model.fields,field_description:website_slides.field_slide_question__sequence
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__sequence
 msgid "Sequence"
-msgstr "Quy tắc mã"
+msgstr "Trình tự"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "Set Done"
-msgstr "Để là hoàn thành"
+msgstr "Đặt là xong"
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.website_slides_action_settings
 #: model:ir.ui.menu,name:website_slides.website_slides_menu_config_settings
 msgid "Settings"
-msgstr "Thiết lập"
+msgstr "Cài đặt"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
@@ -4568,7 +4639,7 @@ msgstr "Chia sẻ liên kết"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__share_template_id
 msgid "Share Template"
-msgstr "Mẫu chia sẻ"
+msgstr "Chia sẻ mẫu"
 
 #. module: website_slides
 #. openerp-web
@@ -4585,7 +4656,7 @@ msgstr "Chia sẻ qua mail"
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_share_social
 #, python-format
 msgid "Share on Facebook"
-msgstr "Chia sẻ trên facebook"
+msgstr "Chia sẻ trên Facebook"
 
 #. module: website_slides
 #. openerp-web
@@ -4622,7 +4693,7 @@ msgstr "Mô tả ngắn"
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_0_4
 msgid "Show your newly mastered knowledge !"
-msgstr "Hiển thị kiến thức mới làm chủ của bạn!"
+msgstr "Thể hiện kiến thức bạn mới học được!"
 
 #. module: website_slides
 #. openerp-web
@@ -4656,48 +4727,50 @@ msgid ""
 "Skill up and have an impact! Your business career starts here.<br/>Time to "
 "start a course."
 msgstr ""
+"Nâng cao kỹ năng và tạo tầm ảnh hưởng! Sự nghiệp kinh doanh của bạn bắt đầu "
+"từ đây.<br/> Đã tới lúc bắt đầu một khóa học. "
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_link__slide_id
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_partner__slide_id
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_resource__slide_id
 msgid "Slide"
-msgstr "Bài viết"
+msgstr "Slide"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_slide_partner
 msgid "Slide / Partner decorated m2m"
-msgstr "Slide / Đối tác trang trí m2m"
+msgstr "Slide / Trường đối tác trang trí m2m"
 
 #. module: website_slides
 #: model:mail.template,name:website_slides.slide_template_published
 msgid "Slide Published"
-msgstr ""
+msgstr "Slide đã đăng"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_answer
 msgid "Slide Question's Answer"
-msgstr "Trang câu trả lời câu hỏi"
+msgstr "Trả lời câu hỏi slide"
 
 #. module: website_slides
 #: model:mail.template,name:website_slides.slide_template_shared
 msgid "Slide Shared"
-msgstr ""
+msgstr "Slide đã chia sẻ"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_tag
 msgid "Slide Tag"
-msgstr "Từ khóa bài viết"
+msgstr "Thẻ slide"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__slide_partner_ids
 msgid "Slide User Data"
-msgstr "Dữ lieu người dùng"
+msgstr "Dữ liệu người dùng slide"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__channel_id
 msgid "Slide channel"
-msgstr "Kênh Slide"
+msgstr "Kênh slide"
 
 #. module: website_slides
 #. openerp-web
@@ -4705,7 +4778,7 @@ msgstr "Kênh Slide"
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 #, python-format
 msgid "Slide image"
-msgstr "Hình ảnh bài viết"
+msgstr "Hình ảnh slide"
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:0
@@ -4722,7 +4795,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__slide_content_ids
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_ids
 msgid "Slides"
-msgstr "Bài viết"
+msgstr "Slide"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__slide_ids
@@ -4743,24 +4816,25 @@ msgstr "Xếp theo"
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__promote_strategy__specific
 msgid "Specific"
-msgstr "Đặc thù"
+msgstr "Cụ thể"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
 msgid "Start Course"
-msgstr "Khóa học bắt đầu"
+msgstr "Bắt đầu khóa học"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
 msgid "Start Course Channel"
-msgstr "Kênh khóa học bắt đầu"
+msgstr "Kênh bắt đầu khóa học "
 
 #. module: website_slides
 #: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_1_4
 #: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_2_1
 #: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_4_0
 msgid "Start with the customer – find out what they want and give it to them."
-msgstr "Bắt đầu với khách hàng-tìm hiểu những gì họ muốn và cho họ điều đó."
+msgstr ""
+"Bắt đầu từ khách hàng – tìm hiểu điều họ muốn và mang lại điều đó cho họ. "
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
@@ -4781,19 +4855,19 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "Trạng thái dựa trên hoạt động\n"
-"Quá hạn: Ngày đến hạn phải được chuyển\n"
-"Hôm nay: Hôm nay là ngày phải thực hiện\n"
+"Quá hạn: Đã quá hạn chót\n"
+"Hôm nay: Hôm nay là ngày hoạt động\n"
 "Kế hoạch: Các hoạt động trong tương lai."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__sub_model_object_field
 msgid "Sub-field"
-msgstr "Sub-field"
+msgstr "Trường phụ"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__sub_object
 msgid "Sub-model"
-msgstr "Sub-model"
+msgstr "Mô hình con"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__subject
@@ -4810,7 +4884,7 @@ msgstr "Chủ đề..."
 #: code:addons/website_slides/static/src/js/slides_course_unsubscribe.js:0
 #, python-format
 msgid "Subscribe"
-msgstr "Đăng ký nhận tin"
+msgstr "Đăng ký"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__user_membership_id
@@ -4820,7 +4894,7 @@ msgstr "Thông tin người đăng ký"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__user_membership_id
 msgid "Subscriber information for the current logged in user"
-msgstr "Thông tin người đăng ký hiện đã đăng nháp với vai trò người dùng"
+msgstr "Thông tin người đăng ký cho người dùng hiện đã đăng nhập"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__partner_ids
@@ -4842,7 +4916,7 @@ msgstr "Thông tin người đăng ký"
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #, python-format
 msgid "Succeed and gain karma"
-msgstr "Thành công và đạt được điểm"
+msgstr "Thành công và đạt được điểm karma"
 
 #. module: website_slides
 #. openerp-web
@@ -4851,7 +4925,7 @@ msgstr "Thành công và đạt được điểm"
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_tag_form
 #, python-format
 msgid "Tag"
-msgstr "Tag"
+msgstr "Thẻ"
 
 #. module: website_slides
 #. openerp-web
@@ -4870,7 +4944,7 @@ msgstr "Nhóm thẻ (bắt buộc đối với thẻ mới)"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_form
 msgid "Tag Name"
-msgstr "Tên Từ khóa"
+msgstr "Tên thẻ"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_tag__color
@@ -4879,6 +4953,9 @@ msgid ""
 "kanban or front-end, to distinguish internal tags from public categorization"
 " tags"
 msgstr ""
+"Màu thẻ được dùng trong cả backend và website. Không màu có nghĩa là không "
+"hiển thị ở kanban hay front-end, để phân biệt thẻ nội bộ với thẻ danh mục "
+"công cộng"
 
 #. module: website_slides
 #. openerp-web
@@ -4894,7 +4971,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_tag_tree
 #, python-format
 msgid "Tags"
-msgstr "Từ khóa"
+msgstr "Thẻ"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
@@ -4909,18 +4986,18 @@ msgstr "Chăm sóc cây"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_category_demo_4_1
 msgid "Technical Drawings"
-msgstr ""
+msgstr "Bản vẽ kỹ thuật"
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_4_10
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_4_11
 msgid "Technical drawing"
-msgstr ""
+msgstr "Bản vẽ kỹ thuật"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_category_demo_5_2
 msgid "Test Yourself"
-msgstr "Kiểm tra bản thân bạn"
+msgstr "Tự kiểm tra"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_0_4
@@ -4938,7 +5015,7 @@ msgstr "Kiểm tra kiến thức!"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Test your students with small Quizzes"
-msgstr "Kiểm tra học sinh của bạn bằng các câu đố nhỏ"
+msgstr "Kiểm tra học sinh bằng các câu đố nhỏ"
 
 #. module: website_slides
 #. openerp-web
@@ -4976,14 +5053,14 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__description_short
 msgid "The description that is displayed on the course card"
-msgstr ""
+msgstr "Mô tả được hiển thị trên thẻ khóa học"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__description
 msgid ""
 "The description that is displayed on top of the course page, just below the "
 "title"
-msgstr ""
+msgstr "Mô tả hiển thị trên đầu trang khóa học, ngay bên dưới tiêu đề"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__slide_type
@@ -4991,8 +5068,8 @@ msgid ""
 "The document type will be set automatically based on the document URL and "
 "properties (e.g. height and width for presentation and document)."
 msgstr ""
-"Loại tài liệu sẽ được đặt tự động dựa trên URL và thuộc tính củatài liệu (ví"
-" dụ: chiều cao và chiều rộng của bài đăng và tài liệu)."
+"Loại tài liệu sẽ được đặt tự động dựa trên URL và thuộc tính của tài liệu "
+"(ví dụ: chiều cao và chiều rộng của bài thuyết trình và tài liệu)."
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__completion_time
@@ -5014,7 +5091,7 @@ msgstr ""
 #: model:ir.model.fields,help:website_slides.field_slide_channel_tag_group__website_url
 #: model:ir.model.fields,help:website_slides.field_slide_slide__website_url
 msgid "The full URL to access the document through the website."
-msgstr "URL đầy đủ để truy cập tài liệu thông qua trang web."
+msgstr "URL đầy đủ để truy cập tài liệu thông qua website. "
 
 #. module: website_slides
 #: model:slide.tag,name:website_slides.slide_tag_demo_theory
@@ -5024,25 +5101,25 @@ msgstr "Lý thuyết"
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.slide_question_action_report
 msgid "There are no quizzes"
-msgstr "Không có quizzes"
+msgstr "Không có đố vui"
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.rating_rating_action_slide_channel
 #: model_terms:ir.actions.act_window,help:website_slides.rating_rating_action_slide_channel_report
 msgid "There are no ratings for these courses at the moment"
-msgstr "Hiện tại chưa có xếp hàng nào cho khóa học này"
+msgstr "Hiện tại không có đánh giá cho khóa học này"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_course_quiz.js:0
 #, python-format
 msgid "There was an error validating this quiz."
-msgstr "Có một lỗi khi xác nhận bài kiểm tra này."
+msgstr "Có lỗi khi xác nhận bài đố vui này. "
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed__url
 msgid "Third Party Website URL"
-msgstr "Đường dẫn URL website bên thứ ba"
+msgstr "URL website bên thứ ba"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
@@ -5052,14 +5129,14 @@ msgstr "Thử lần 3"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_answer__comment
 msgid "This comment will be displayed to the user if he selects this answer"
-msgstr ""
+msgstr "Bình luận này sẽ hiển thị cho người dùng nếu họ chọn câu trả lời này"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #, python-format
 msgid "This course is private."
-msgstr "Khóa học dành riêng."
+msgstr "Khóa học này ở chế độ riêng tư. "
 
 #. module: website_slides
 #. openerp-web
@@ -5080,7 +5157,7 @@ msgstr "Xin chúc mừng, đây là câu trả lời chính xác. "
 #: code:addons/website_slides/static/src/js/slides_course_quiz.js:0
 #, python-format
 msgid "This quiz is already done. Retaking it is not possible."
-msgstr "Quiz này đã được làm xong. Không được phép làm lại nữa."
+msgstr "Đố vui này đã được làm xong. Không được phép làm lại. "
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:0
@@ -5097,7 +5174,7 @@ msgstr "Video này đã tồn tại trong kênh này trên slide sau: %s"
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_link__name
 #, python-format
 msgid "Title"
-msgstr "Xưng hô"
+msgstr "Tiêu đề"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
@@ -5129,7 +5206,7 @@ msgstr "Tổng"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__total_slides
 msgid "Total Slides"
-msgstr "Tất cả Slides"
+msgstr "Tất cả slide"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -5146,12 +5223,12 @@ msgstr "Đào tạo"
 #: code:addons/website_slides/static/src/xml/website_slides_channel.xml:0
 #, python-format
 msgid "Training Layout"
-msgstr ""
+msgstr "Bố cục tập huấn"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_1_0
 msgid "Tree Infographic"
-msgstr "Infographic Cây"
+msgstr "Đồ họa thông tin về cây"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_2_2
@@ -5166,7 +5243,7 @@ msgstr "Cây"
 #. module: website_slides
 #: model:slide.channel,name:website_slides.slide_channel_demo_2_gard2
 msgid "Trees, Wood and Gardens"
-msgstr "Cây cối, gỗ và vườn"
+msgstr "Cây xanh, gỗ và vườn tược"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__slide_type
@@ -5184,7 +5261,7 @@ msgstr "Loại hoạt động ngoại lệ trên hồ sơ."
 #, python-format
 msgid "Unable to post message, please configure the sender's email address."
 msgstr ""
-"Không thể đăng tin, vui lòng cấu hình địa chỉ email của người gửi tin."
+"Không thể đăng tin nhắn, vui lòng cấu hình địa chỉ email của người gửi."
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_channel.py:0
@@ -5192,7 +5269,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
 #, python-format
 msgid "Uncategorized"
-msgstr "Chưa được phân loại"
+msgstr "Chưa phân loại"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_5_0
@@ -5211,20 +5288,20 @@ msgstr "Tài liệu không xác định"
 #: code:addons/website_slides/static/src/js/slides_slide_like.js:0
 #, python-format
 msgid "Unknown error"
-msgstr "Lỗi chưa xác định"
+msgstr "Lỗi không xác định"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_course_enroll_email.js:0
 #, python-format
 msgid "Unknown error, try again."
-msgstr ""
+msgstr "Lỗi không xác định, hãy thử lại. "
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_card
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
 msgid "Unpublished"
-msgstr "Chưa xuất bản"
+msgstr "Không đăng"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_unread
@@ -5248,13 +5325,13 @@ msgstr "Cập nhật"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__upload_group_ids
 msgid "Upload Groups"
-msgstr "Đang tải nhóm"
+msgstr "Tải lên nhóm"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
 msgid "Upload Presentation"
-msgstr "Đang tải bài đăng"
+msgstr "Tải lên bài thuyết trình"
 
 #. module: website_slides
 #. openerp-web
@@ -5262,7 +5339,7 @@ msgstr "Đang tải bài đăng"
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #, python-format
 msgid "Upload a document"
-msgstr "Tải lên 1 tài liệu"
+msgstr "Tải lên tài liệu"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__user_id
@@ -5274,22 +5351,22 @@ msgstr "Tải lên bởi"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Uploading document ..."
-msgstr "Đang tải tài liệu..."
+msgstr "Đang tải lên tài liệu..."
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__tag_ids
 msgid "Used to categorize and filter displayed channels/courses"
-msgstr "Được sử dụng để phân loại và lọc các kênh / khóa học được hiển thị"
+msgstr "Được sử dụng để phân loại và lọc các kênh/ khóa học được hiển thị"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__color
 msgid "Used to decorate kanban view"
-msgstr "Dùng để trang trí kanban view"
+msgstr "Dùng để trang trí dạng xem kanban "
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__user_vote
 msgid "User vote"
-msgstr "Người dùng bầu"
+msgstr "Người dùng bầu chọn"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_res_users
@@ -5344,7 +5421,7 @@ msgstr "Lượt xem •"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__visibility
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__channel_visibility
 msgid "Visibility"
-msgstr "Hiển thị"
+msgstr "Tính hiển thị"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_published
@@ -5357,7 +5434,7 @@ msgstr "Hiển thị ở website hiện tại"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__total_views
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Visits"
-msgstr "Khách ghé thăm"
+msgstr "Lượt truy cập"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__karma_slide_vote
@@ -5385,7 +5462,7 @@ msgstr "Đang chờ xác thực"
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_3_1
 msgid "Watching the master(s) at work"
-msgstr "Xem chủ (s) tại nơi làm việc"
+msgstr "Xem nghệ nhân làm việc"
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_1_4
@@ -5407,7 +5484,7 @@ msgstr "Trang web"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_webpage
 msgid "Webpages"
-msgstr "Webpages"
+msgstr "Trang web"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_website
@@ -5415,12 +5492,12 @@ msgstr "Webpages"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__channel_website_id
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_id
 msgid "Website"
-msgstr "Trang web"
+msgstr "Website"
 
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__gamification_challenge__challenge_category__slides
 msgid "Website / Slides"
-msgstr "Website / Slides"
+msgstr "Website / Slide"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_message_ids
@@ -5433,13 +5510,13 @@ msgstr "Thông báo Website"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag_group__website_url
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_url
 msgid "Website URL"
-msgstr "Địa chỉ website"
+msgstr "Website URL"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__website_message_ids
 #: model:ir.model.fields,help:website_slides.field_slide_slide__website_message_ids
 msgid "Website communication history"
-msgstr "Lịch sử thông tin liên lạc website"
+msgstr "Lịch sử liên lạc website"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_meta_description
@@ -5451,19 +5528,19 @@ msgstr "Mô tả meta website"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_meta_keywords
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_meta_keywords
 msgid "Website meta keywords"
-msgstr "Từ khóa website dữ liệu"
+msgstr "Từ khóa meta website"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_meta_title
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_meta_title
 msgid "Website meta title"
-msgstr "Tiêu đề website dữ liệu"
+msgstr "Tiêu đề meta website"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_meta_og_img
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_meta_og_img
 msgid "Website opengraph image"
-msgstr "Hình ảnh trang web"
+msgstr "Hình ảnh opengraph website"
 
 #. module: website_slides
 #. openerp-web
@@ -5481,7 +5558,7 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "What does"
-msgstr ""
+msgstr "Vậy"
 
 #. module: website_slides
 #: model:slide.question,question:website_slides.slide_slide_demo_0_4_question_0
@@ -5504,8 +5581,8 @@ msgid ""
 "When a relationship field is selected as first field, this field lets you "
 "select the target field within the destination document model (sub-model)."
 msgstr ""
-"When a relationship field is selected as first field, this field lets you "
-"select the target field within the destination document model (sub-model)."
+"Khi trường quan hệ được chọn làm trường đầu tiên, trường này sẽ cho bạn chọn"
+" trường mục tiêu trong mô hình tài liệu đích (mô hình con). "
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_invite__sub_object
@@ -5513,8 +5590,8 @@ msgid ""
 "When a relationship field is selected as first field, this field shows the "
 "document model the relationship goes to."
 msgstr ""
-"When a relationship field is selected as first field, this field shows the "
-"document model the relationship goes to."
+"Khi trường quan hệ được chọn làm trường đầu tiên, trường này sẽ hiển thị mô "
+"hình tài liệu mà mối quan hệ đi tới. "
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_4_1
@@ -5522,6 +5599,8 @@ msgid ""
 "Which wood type is best for my solid wood furniture? That's the question we "
 "help you answer in this video !"
 msgstr ""
+"Loại gỗ nào là tốt nhất để đóng đồ nội thất bằng gỗ nguyên khối? Trong video"
+" này, chúng tôi sẽ giúp bạn trả lời câu hỏi đó. "
 
 #. module: website_slides
 #. openerp-web
@@ -5531,6 +5610,8 @@ msgid ""
 "With Quizzes you can keep your students focused and motivated by answering "
 "some questions and gaining some karma points"
 msgstr ""
+"Với Đố vui, bạn có thể giúp học sinh tập trung và có động lực hơn bằng cách "
+"trả lời câu hỏi và giành thêm điểm karma "
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_category_demo_2_1
@@ -5540,7 +5621,7 @@ msgstr "Gỗ"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_3_1
 msgid "Wood Bending With Steam Box"
-msgstr "Gỗ uốn với hộp hơi"
+msgstr "Uốn gỗ bằng hộp hơi"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_2_3
@@ -5550,7 +5631,7 @@ msgstr "Đặc điểm gỗ"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_4_1
 msgid "Wood Types"
-msgstr ""
+msgstr "Loại gỗ"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_category_demo_3_0
@@ -5619,29 +5700,29 @@ msgstr ""
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #, python-format
 msgid "You can not upload password protected file."
-msgstr "Bạn không thể tải lên tập tin bảo mật mật khẩu."
+msgstr "Bạn không thể tải lên tệp có mật khẩu bảo mật. "
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:0
 #, python-format
 msgid "You cannot add tags to this course."
-msgstr ""
+msgstr "Bạn không thể thêm thẻ cho khóa học này. "
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_slide.py:0
 #, python-format
 msgid "You cannot mark a slide as completed if you are not among its members."
 msgstr ""
-"Bạn không thể đánh dấu một slide là hoàn thành nếu bạn không nằm trong số "
-"các thành viên của nó."
+"Bạn không thể đánh dấu một slide là hoàn thành nếu bạn không phải là thành "
+"viên."
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_slide.py:0
 #, python-format
 msgid "You cannot mark a slide as viewed if you are not among its members."
 msgstr ""
-"Bạn không thể đánh dấu một slide như đã xem nếu bạn không nằm trong số các "
-"thành viên của nó."
+"Bạn không thể đánh dấu một slide là đã xem nếu bạn không phải là thành viên."
+" "
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_slide.py:0
@@ -5649,8 +5730,8 @@ msgstr ""
 msgid ""
 "You cannot mark a slide quiz as completed if you are not among its members."
 msgstr ""
-"Bạn không thể đánh dấu một bài kiểm tra slide là hoàn thành nếu bạn không "
-"nằm trong số các thành viên của nó."
+"Bạn không thể đánh dấu một slide đố vui là hoàn thành nếu bạn không phải là "
+"thành viên. "
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:0
@@ -5670,14 +5751,14 @@ msgstr "Bạn không có quyền truy cập vào bài học này"
 #: code:addons/website_slides/static/src/js/slides_slide_like.js:0
 #, python-format
 msgid "You don't have enough karma to vote"
-msgstr "Bạn không có đủ điểm để bỏ phiếu"
+msgstr "Bạn không có đủ điểm karma để bầu chọn"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #, python-format
 msgid "You gained"
-msgstr "Bạn kiếm được"
+msgstr "Bạn đạt được"
 
 #. module: website_slides
 #. openerp-web
@@ -5691,7 +5772,7 @@ msgstr "Bạn đã tham gia kênh này"
 #: code:addons/website_slides/static/src/js/slides_slide_like.js:0
 #, python-format
 msgid "You have already voted for this lesson"
-msgstr "Bạn đã bình chọn cho bài học này"
+msgstr "Bạn đã bầu chọn cho bài học này"
 
 #. module: website_slides
 #: model:mail.template,subject:website_slides.mail_template_slide_channel_invite
@@ -5702,32 +5783,32 @@ msgstr "Bạn đã được mời tham gia {{ object.channel_id.name }}"
 #: code:addons/website_slides/models/slide_channel.py:0
 #, python-format
 msgid "You have to sign in before"
-msgstr ""
+msgstr "Bạn phải đăng nhập trước khi"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "You may now participate in our eLearning."
-msgstr ""
+msgstr "Bây giờ bạn có thể tham gia khóa eLearning. "
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_course_quiz.js:0
 #, python-format
 msgid "You must be logged to submit the quiz."
-msgstr "Bạn phải đăng nhập để gửi bài kiểm tra."
+msgstr "Bạn phải đăng nhập để nộp đố vui. "
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_slide_like.js:0
 #, python-format
 msgid "You must be member of this course to vote"
-msgstr "Bạn phải là thành viên của khóa học này để bỏ phiếu"
+msgstr "Bạn phải là thành viên của khóa học này để bầu chọn"
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_0_2
 msgid "You won't believe those facts about carrots."
-msgstr "Bạn sẽ không tin những sự thật về cà rốt."
+msgstr "Những sự thật khó tin về cà-rốt"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
@@ -5737,7 +5818,7 @@ msgstr "Bạn đã ghi danh"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.mail_notification_channel_invite
 msgid "Your"
-msgstr "Của bạn"
+msgstr "Hãy xem"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_slide.py:0
@@ -5746,6 +5827,8 @@ msgid ""
 "Your Google API key is invalid, please update it in your settings.\n"
 "Settings > Website > Features > API Key"
 msgstr ""
+"Khóa Google API của bạn không hợp lệ, vui lòng cập nhật trong cài đặt.\n"
+"Cài đặt > Website > Tính năng > Khóa API"
 
 #. module: website_slides
 #: model:slide.channel.tag.group,name:website_slides.slide_channel_tag_group_level
@@ -5775,29 +5858,29 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Youtube Link"
-msgstr "Đường dẫn Youtube"
+msgstr "Link Youtube"
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Youtube Video URL"
-msgstr "Đường dẫn URL video youtube"
+msgstr "URL video Youtube"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__document_id
 msgid "Youtube or Google Document ID"
-msgstr "ID youtube hoặc google"
+msgstr "ID Youtube hoặc Google Document"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__url
 msgid "Youtube or Google Document URL"
-msgstr "Đường dẫn URL youtube hoặc google"
+msgstr "URL Youtube hoặc Google Document"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.achievement_card
 msgid "achieved"
-msgstr "lưu trữ"
+msgstr "đã đạt được"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
@@ -5815,7 +5898,7 @@ msgstr "theo email."
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "e.g. Computer Science for kids"
-msgstr ""
+msgstr "ví dụ: Khoa học máy tính cho trẻ em"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
@@ -5837,12 +5920,12 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/slide_management.xml:0
 #, python-format
 msgid "e.g. Introduction"
-msgstr ""
+msgstr "ví dụ: Giới thiệu"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_form
 msgid "e.g. Your Level"
-msgstr ""
+msgstr "ví dụ: Cấp của bạn"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
@@ -5865,7 +5948,7 @@ msgstr "khóa học eLearning"
 #: model:ir.actions.act_window,name:website_slides.slide_channel_action_overview
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
 msgid "eLearning Overview"
-msgstr "eLearning Tổng quan"
+msgstr "Tổng quan eLearning"
 
 #. module: website_slides
 #. openerp-web
@@ -5884,13 +5967,16 @@ msgid ""
 " by the users with the link to it. Your video will never come up in the "
 "search results nor on your channel."
 msgstr ""
+"nghĩa là gì? \"không liệt kê\" trong Youtube nghĩa là video chỉ có thể xem "
+"bởi người dùng có đường link tới đó. Video của bạn sẽ không bao giờ hiện lên"
+" trong kết quả tìm kiếm hoặc trên kênh của bạn. "
 
 #. module: website_slides
 #. openerp-web
 #: code:addons/website_slides/static/src/js/slides_course_unsubscribe.js:0
 #, python-format
 msgid "or Leave the course"
-msgstr ""
+msgstr "hoặc Rời khóa học"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
@@ -5913,7 +5999,7 @@ msgstr "bước"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
 msgid "to contact responsible."
-msgstr ""
+msgstr "để liên hệ với người phụ trách. "
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.join_course_link
@@ -5925,7 +6011,7 @@ msgstr "để tải về tài nguyên"
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #, python-format
 msgid "to enroll."
-msgstr "để đăng ký."
+msgstr "để ghi danh. "
 
 #. module: website_slides
 #. openerp-web
@@ -5933,7 +6019,7 @@ msgstr "để đăng ký."
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 #, python-format
 msgid "to share this"
-msgstr "để chia sẻ nó"
+msgstr "để chia sẻ "
 
 #. module: website_slides
 #. openerp-web
@@ -5941,7 +6027,7 @@ msgstr "để chia sẻ nó"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "unlisted"
-msgstr ""
+msgstr "không liệt kê"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
@@ -5961,7 +6047,7 @@ msgstr "your-friend@domain.com"
 #. module: website_slides
 #: model:mail.template,subject:website_slides.slide_template_shared
 msgid "{{ user.name }} shared a {{ object.slide_type }} with you!"
-msgstr ""
+msgstr "{{ user.name }} đã chia sẻ {{ object.slide_type }} với bạn!"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav

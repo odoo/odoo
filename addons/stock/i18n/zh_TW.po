@@ -192,7 +192,7 @@ msgid ""
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
 msgstr ""
-"*新建：已經創建庫存移動，但尚未確認。\n"
+"*新建：已經建立庫存移動，但尚未確認。\n"
 "*等待另一個移動：當一個移動正在等待另一個移動時，例如在一個鏈式流程中，可以看到這個狀態。\n"
 "*等待可用性：當採購決議不是直接提交時會達到此狀態。它可能需要調度程序來運行，將要製造組件…\n"
 "*可用：當產品被保留時，它被設定為「可用」。\n"
@@ -210,7 +210,7 @@ msgid ""
 "* Transit Location: Counterpart location that should be used in inter-company or inter-warehouses operations"
 msgstr ""
 "• 供應商位置：虛擬位置，表示來自供應商的產品的源位置\n"
-"• 層級視圖：用於為倉庫創建分層結構的虛擬位置，聚合其子位置;不能直接包含產品\n"
+"• 層級視圖：用於為倉庫建構分層結構的虛擬位置，聚合其子位置;不能直接包含產品\n"
 "• 內部位置：您自己倉庫內的物理位置，\n"
 "• 客戶位置：虛擬位置，表示發送給客戶的產品的目標位置\n"
 "• 庫存調整：虛擬庫位作為用於校正庫存水準的庫存操作的對應位置（實物庫存）\n"
@@ -764,7 +764,7 @@ msgstr "活動狀態"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_type_icon
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "活動類型圖標"
+msgstr "活動類型圖示"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -803,7 +803,7 @@ msgid ""
 "Add and customize route operations to process product moves in your warehouse(s): e.g. unload > quality control > stock for incoming products, pick > pack > ship for outgoing products. \n"
 " You can also set putaway strategies on warehouse locations in order to send incoming products into specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
-"添加和自定義路線操作以處理您倉庫中的產品移動：例如：卸貨>品質控制>入庫產品庫存，揀貨>包裝>出貨產品。\n"
+"添加和自訂路線操作以處理您倉庫中的產品移動：例如：卸貨>品質控制>入庫產品庫存，揀貨>包裝>出貨產品。\n"
 "您也可以在倉庫位置設定入庫策略，以便立即將入庫產品發送到特定的小孩位置（例如：特定箱子、機架）。"
 
 #. module: stock
@@ -815,7 +815,7 @@ msgid ""
 "strategies on warehouse locations in order to send incoming products into "
 "specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
-"添加和自定義路線操作以處理您倉庫中的產品移動：例如：卸貨>品質控制>入庫產品庫存，揀貨>包裝>出貨產品。\n"
+"添加和自訂路線操作以處理您倉庫中的產品移動：例如：卸貨>品質控制>入庫產品庫存，揀貨>包裝>出貨產品。\n"
 "您也可以在倉庫位置設定入庫策略，以便立即將入庫產品發送到特定的小孩位置（例如：特定箱子、機架）。"
 
 #. module: stock
@@ -879,7 +879,7 @@ msgstr "一次性全部"
 msgid ""
 "All our contractual relations will be governed exclusively by United States "
 "law."
-msgstr "我們所有的合同關係都將僅受國家法律管轄。"
+msgstr "我們所有的合作關係都將受國家法律管轄。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__returned_move_ids
@@ -989,7 +989,7 @@ msgstr "四月"
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Archived"
-msgstr "封存"
+msgstr "已歸檔"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__direct
@@ -1137,7 +1137,7 @@ msgstr "延期交貨確認明細"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "Backorder creation"
-msgstr "欠單創建"
+msgstr "欠單建立"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_backorder
@@ -1214,7 +1214,7 @@ msgid ""
 "current stock) to gather products. If we want to chain moves and have this "
 "one to wait for the previous, this second option should be chosen."
 msgstr ""
-"預設情況下，系統從源位置的庫存中取貨，並被動等待產品可用。另外一個可能是允許您在源位置上直接創建一個採購單（從而忽略其目前庫存）來獲取產品。如果我們想把庫存移動連接起來，並讓庫存移動等待上一次移動，您應該選擇第二種方法。"
+"預設情況下，系統從源位置的庫存中取貨，並被動等待產品可用。另外一個可能是允許您在源位置上直接建立一個採購單（從而忽略其目前庫存）來獲取產品。如果我們想把庫存移動連接起來，並讓庫存移動等待上一次移動，您應該選擇第二種方法。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__active
@@ -1361,7 +1361,7 @@ msgstr "變更為更好名稱"
 msgid ""
 "Changing the company of this record is forbidden at this point, you should "
 "rather archive it and create a new one."
-msgstr "此時禁止更改此記錄的公司，您更應該將其存檔並創建一個新記錄。"
+msgstr "此時禁止更改此記錄的公司，您更應該將其存檔並建立一個新記錄。"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -1681,20 +1681,20 @@ msgstr "對方位置"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "Create Backorder"
-msgstr "創建欠單"
+msgstr "建立欠單"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Create Backorder?"
-msgstr "創建欠單？"
+msgstr "建立欠單？"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__picking_type_use_create_lots
 #: model:ir.model.fields,field_description:stock.field_stock_picking__use_create_lots
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__use_create_lots
 msgid "Create New Lots/Serial Numbers"
-msgstr "創建新批次/序號"
+msgstr "建立新批次/序號"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -1714,19 +1714,19 @@ msgstr "建立新作業類型"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_package_view
 msgid "Create a new package"
-msgstr "創建新包裹"
+msgstr "建立新包裹"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Create customizable worksheets for your quality checks"
-msgstr "為您的品檢作業創建可客製的工作表"
+msgstr "為您的品檢作業建立可客製的工作表"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_putaway_tree
 msgid ""
 "Create new putaway rules to dispatch automatically specific products to "
 "their appropriate destination location upon receptions."
-msgstr "創建新的上架規則，以便在接收時自動將特定產品發送到其適當的目的地位置。"
+msgstr "建立新的上架規則，以便在接收時自動將特定產品發送到其適當的目的地位置。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group__create_uid
@@ -1828,18 +1828,18 @@ msgstr "建立於"
 msgid ""
 "Creating a new warehouse will automatically activate the Storage Locations "
 "setting"
-msgstr "創建新倉庫將自動建立存儲位置設置"
+msgstr "建立新倉庫將自動建立存儲位置設置"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__date
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 msgid "Creation Date"
-msgstr "創建日期"
+msgstr "建立日期"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__date
 msgid "Creation Date, usually the time of the order"
-msgstr "創建日期，通常是訂單的時間"
+msgstr "建立日期，通常是訂單的時間"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -1908,8 +1908,8 @@ msgstr "循環盤點"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
-msgid "DHL USA Connector"
-msgstr "美國 DHL 連接器"
+msgid "DHL Express Connector"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__date
@@ -2067,7 +2067,7 @@ msgstr "通過此倉庫的預設路線"
 msgid ""
 "Define a minimum stock rule so that Odoo creates automatically requests for "
 "quotations or confirmed manufacturing orders to resupply your stock."
-msgstr "定義最低庫存規則，系統將自動創建報價請求或確認的製造訂單來重新供應您的庫存。"
+msgstr "定義最低庫存規則，系統將自動建立報價請求或確認的製造訂單來重新供應您的庫存。"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_warehouse_form
@@ -2098,7 +2098,7 @@ msgid ""
 "where to take the products from, which lot etc. for this location. This "
 "method can be enforced at the product category level, and a fallback is made"
 " on the parent locations if none is set here."
-msgstr "為此位置定義提取產品的確切位置(層)的預設方法。此方法可於產品類別上執行，如果上級位置沒有設定也可以延伸到其上級位置。"
+msgstr "為此位置定義擷取產品的確切位置(層)的預設方法。此方法可於產品類別上執行，如果上級位置沒有設定也可以延伸到其上級位置。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__delay_alert_date
@@ -2554,7 +2554,7 @@ msgid ""
 " checks, etc. Go to the \"Apps\" menu to activate the barcode interface."
 msgstr ""
 "使用 Odoo "
-"條碼應用程序享受快節奏的體驗。它速度極快，即使沒有穩定的互聯網連接也能工作。它支持所有流程：庫存調整、批次揀選、移動批次或託盤、低庫存檢查等。轉到“應用程序”菜單以激活條形碼界面。"
+"條碼模組享受快節奏的體驗。它速度極快，即使沒有穩定的互聯網連接也能工作。它支持所有流程：庫存調整、批次揀選、移動批次或託盤、低庫存檢查等。轉到“模組”選單以激活條形碼界面。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__tracking
@@ -2712,7 +2712,7 @@ msgstr "關注人（業務夥伴）"
 #: model:ir.model.fields,help:stock.field_stock_picking__activity_type_icon
 #: model:ir.model.fields,help:stock.field_stock_production_lot__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font awesome 圖標，例如，fa-task"
+msgstr "Font awesome 圖示，例如，fa-task"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category__removal_strategy_id
@@ -2943,7 +2943,7 @@ msgstr "顯示倉庫時給出此行的順序。"
 #: model_terms:ir.ui.view,arch_db:stock.view_putaway_search
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Group By"
-msgstr "分組按"
+msgstr "分組依據"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_package_search_view
@@ -3194,7 +3194,7 @@ msgstr "如果勾選此框，則揀貨線將表示詳細的庫存操作。否則
 msgid ""
 "If this is checked only, it will suppose you want to create new Lots/Serial "
 "Numbers, so you can provide them in a text field. "
-msgstr "如果僅選中此項，則會假設您要創建新的批次/序號，以便您可以在文本字段中提供它們"
+msgstr "如果僅選中此項，則會假設您要建立新的批次/序號，以便您可以在文本字段中提供它們"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__picking_type_use_existing_lots
@@ -3389,19 +3389,19 @@ msgstr "內部編碼，它不同於製造商的批次/序號"
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "Invalid domain left operand %s"
-msgstr "非法的域左操作符 %s"
+msgstr "不正確的domain左操作符 %s"
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "Invalid domain operator %s"
-msgstr "非法的域操作符 %s"
+msgstr "不正確的domain操作符 %s"
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "Invalid domain right operand %s"
-msgstr "非法的域右操作符 %s"
+msgstr "不正確的domain右操作符 %s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity_auto_apply
@@ -4317,7 +4317,7 @@ msgstr "移動明細數量"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__origin_returned_move_id
 msgid "Move that created the return move"
-msgstr "創建退回移動的移動"
+msgstr "建立退回移動的移動"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__product_return_moves
@@ -4332,7 +4332,7 @@ msgid ""
 "Moves created through this orderpoint will be put in this procurement group."
 " If none is given, the moves generated by stock rules will be grouped into "
 "one big picking."
-msgstr "通過此訂購點創建的移動將放在此補貨組中。如果沒有被提供，由補貨規則生成的移動將被組合到一個大揀貨。"
+msgstr "通過此訂購點建立的移動將放在此補貨組中。如果沒有被提供，由補貨規則生成的移動將被組合到一個大揀貨。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_adv_location
@@ -4517,7 +4517,7 @@ msgstr "此批號沒有作業."
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_get_picking_type_operations
 msgid "No operations found. Let's create a tranfer !"
-msgstr "未找到任何作業。讓我們創建一個調撥！"
+msgstr "未找到任何作業。讓我們建立一個調撥！"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
@@ -4798,7 +4798,7 @@ msgstr "可選的位置細節，僅供參考"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__returned_move_ids
 msgid "Optional: all returned moves created from this move"
-msgstr "可選: 所有從此移動創建的退貨移動"
+msgstr "可選: 所有從此移動建立的退貨移動"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__move_dest_ids
@@ -5099,8 +5099,8 @@ msgid ""
 "Packages are usually created via transfers (during pack operation) and can contain different products.\n"
 "                Once created, the whole package can be moved at once, or products can be unpacked and moved as single units again."
 msgstr ""
-"包裹通常是通過傳輸（在包裹操作期間）創建的，可以包含不同的產品。\n"
-"                創建後，可以立即移動整個包裝，或者可以將產品拆包並再次作為單個單元移動。"
+"包裹通常是通過傳輸（在包裹操作期間）建立的，可以包含不同的產品。\n"
+"                建立後，可以立即移動整個包裝，或者可以將產品拆包並再次作為單個單元移動。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_packaging_id
@@ -5250,7 +5250,7 @@ msgstr "計劃問題"
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Please add 'Done' quantities to the picking to create a new pack."
-msgstr "請將“完成”數量添加到批次調撥中以創建新包裝。"
+msgstr "請將“完成”數量添加到批次調撥中以建立新包裝。"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -5360,7 +5360,7 @@ msgstr "補貨組"
 #: model:ir.cron,cron_name:stock.ir_cron_scheduler_action
 #: model:ir.cron,name:stock.ir_cron_scheduler_action
 msgid "Procurement: run scheduler"
-msgstr "補貨: 運行調度器"
+msgstr "補貨: 執行調度器"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__produce_line_ids
@@ -5750,7 +5750,7 @@ msgstr "數量"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Quant's creation is restricted, you can't do this operation."
-msgstr "Quant 的創建受到限制，您無法進行此操作。"
+msgstr "Quant 的建立受到限制，您無法進行此操作。"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -5910,7 +5910,7 @@ msgstr "數量"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Quants cannot be created for consumables or services."
-msgstr "不能為消耗品或者服務創建份。"
+msgstr "不能為消耗品或者服務建立數量。"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__state__assigned
@@ -6333,8 +6333,8 @@ msgid ""
 "Reusable boxes are used for batch picking and emptied afterwards to be reused. In the barcode application, scanning a reusable box will add the products in this box.\n"
 "        Disposable boxes aren't reused, when scanning a disposable box in the barcode application, the contained products are added to the transfer."
 msgstr ""
-"可重複使用的包裝用於批量揀選，然後清空以重複使用。在條碼應用程序中，掃描可重複使用的包裝將添加此包裝中的產品。\n"
-"        一次性包裝不會重複使用，在條碼應用程序中掃描一次性包裝時，包含的產品會添加到調撥中。"
+"可重複使用的包裝用於批量揀選，然後清空以重複使用。在條碼模組中，掃描可重複使用的包裝將添加此包裝中的產品。\n"
+"        一次性包裝不會重複使用，在條碼模組中掃描一次性包裝時，包含的產品會添加到調撥中。"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_return_picking
@@ -6385,14 +6385,14 @@ msgstr "可於此商品選擇路線"
 msgid ""
 "Routes will be created automatically to resupply this warehouse from the "
 "warehouses ticked"
-msgstr "於此勾選設定，路線將自動創建, 以補給這個倉庫"
+msgstr "於此勾選設定，路線將自動建立, 以補給這個倉庫"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__resupply_route_ids
 msgid ""
 "Routes will be created for these resupply warehouses and you can select them"
 " on products and product categories"
-msgstr "將會為這些補充倉庫創建路線，而且您可以在產品和產品類別選擇它們"
+msgstr "將會為這些補充倉庫建立路線，而且您可以在產品和產品類別選擇它們"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
@@ -6429,17 +6429,17 @@ msgstr "使用的規則"
 #: model:ir.ui.menu,name:stock.menu_procurement_compute
 #: model_terms:ir.ui.view,arch_db:stock.view_procurement_compute_wizard
 msgid "Run Scheduler"
-msgstr "運行調度器"
+msgstr "執行調度器"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_scheduler_compute
 msgid "Run Scheduler Manually"
-msgstr "手動運行調度器"
+msgstr "手動執行調度器"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
 msgid "Run the scheduler"
-msgstr "運行調度器"
+msgstr "執行調度器"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_sms
@@ -6682,7 +6682,7 @@ msgid ""
 msgstr ""
 "序號 (%s) 不在 %s 中，但位於以下位置：%s。\n"
 "\n"
-"請更正此問題以防止數據不一致。"
+"請更正此問題以防止資料不一致。"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -7402,7 +7402,7 @@ msgid ""
 "The 'Manual Operation' value will create a stock move after the current one."
 " With 'Automatic No Step Added', the location is replaced in the original "
 "move."
-msgstr "「手動操作」的值會在目前操作之後創建庫存移動。當「自動無步驟添加」時，位置將在原來的移動中被替換。"
+msgstr "「手動操作」的值會在目前操作之後建立庫存移動。當「自動無步驟添加」時，位置將在原來的移動中被替換。"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -7414,7 +7414,7 @@ msgid ""
 msgstr ""
 "序號 (%s) 已在以下位置使用：%s。\n"
 "\n"
-"這是符合預期的嗎？例如，如果在運作相應的收貨操作之前運作交貨作業，則會發生這種情況。在這種情況下，一旦完成所有步驟，問題將自動解決。否則，應更正序號以防止數據不一致。"
+"這是符合預期的嗎？例如，如果在運作相應的收貨操作之前運作交貨作業，則會發生這種情況。在這種情況下，一旦完成所有步驟，問題將自動解決。否則，應更正序號以防止資料不一致。"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -7422,7 +7422,7 @@ msgstr ""
 msgid ""
 "The backorder <a href=# data-oe-model=stock.picking data-oe-id=%d>%s</a> has"
 " been created."
-msgstr "欠單<a href=# data-oe-model=stock.picking data-oe-id=%d>%s</a> 已創建。"
+msgstr "欠單<a href=# data-oe-model=stock.picking data-oe-id=%d>%s</a> 已建立。"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_location_barcode_company_uniq
@@ -7472,7 +7472,7 @@ msgstr ""
 msgid ""
 "The expected date of the created transfer will be computed based on this "
 "lead time."
-msgstr "將根據此提前期計算創建調撥的預期日期。"
+msgstr "將根據此提前期計算建立調撥的預期日期。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__sequence
@@ -7576,7 +7576,7 @@ msgstr "請求的作業無法處理，因為一個程序錯誤，設定`product_
 msgid ""
 "The selected Inventory Frequency (Days) creates a date too far into the "
 "future."
-msgstr "選定的庫存頻率（天）創建了一個離未來太遠的日期。"
+msgstr "選定的庫存頻率（天）建立了一個離未來太遠的日期。"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -7630,7 +7630,7 @@ msgid ""
 "The warehouse to propagate on the created move/procurement, which can be "
 "different of the warehouse this rule is for (e.g for resupplying rules from "
 "another warehouse)"
-msgstr "在已創建的移動/補貨傳播的倉庫，它可以與此規則所針對的倉庫不同 (例如：從另外倉庫補貨的規則)"
+msgstr "在已建立的移動/補貨傳播的倉庫，它可以與此規則所針對的倉庫不同 (例如：從另外倉庫補貨的規則)"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
@@ -7655,7 +7655,7 @@ msgid ""
 "with this operation type. It is possible however to change it or that the "
 "routes put another location. If it is empty, it will check for the customer "
 "location on the partner. "
-msgstr "這是使用此作業類型以手動創建揀配時的預設目的地位置。 但是可以改變它或者將路線放在另一位置。 如果它是空的，它將於合作夥伴上檢查客戶位置"
+msgstr "這是使用此作業類型以手動建立揀配時的預設目的地位置。 但是可以改變它或者將路線放在另一位置。 如果它是空的，它將於合作夥伴上檢查客戶位置"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__default_location_src_id
@@ -7664,7 +7664,7 @@ msgid ""
 "this operation type. It is possible however to change it or that the routes "
 "put another location. If it is empty, it will check for the supplier "
 "location on the partner. "
-msgstr "當您使用此操作類型手動創建揀配時的預設源位置。 但是有可能改變它或者將路線放置在另一位置。 如果它是空的，它將檢查合作夥伴上的供應商位置"
+msgstr "當您使用此操作類型手動建立揀配時的預設源位置。 但是有可能改變它或者將路線放置在另一位置。 如果它是空的，它將檢查合作夥伴上的供應商位置"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__owner_id
@@ -7751,7 +7751,7 @@ msgid ""
 " would create duplicated operations)"
 msgstr ""
 "這個揀貨顯示和另一個作業連結起來。稍後, 如果您正在接收退回的貨物，確保<b>逆轉</b>退回揀貨 ，以防止同樣的物流規則再次被應用 "
-"(這會創建重複操作)"
+"(這會建立重複操作)"
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -7761,7 +7761,7 @@ msgid ""
 "advised to change the Product Type since it can lead to inconsistencies. A "
 "better solution could be to archive the product and create a new one "
 "instead."
-msgstr "該產品已用於至少一次庫存移動。不建議更改產品類型，因為這會導致不一致。更好的解決方案可能是歸檔產品並創建一個新產品。"
+msgstr "該產品已用於至少一次庫存移動。不建議更改產品類型，因為這會導致不一致。更好的解決方案可能是歸檔產品並建立一個新產品。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -7810,7 +7810,7 @@ msgstr "該使用者將負責與該產品物流操作相關的下一個活動。
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.inventory_warning_reset_view
 msgid "This will discard all unapplied counts, do you want to proceed?"
-msgstr "這將丟失所有未應用的盤點，要繼續嗎？"
+msgstr "這將遺失所有未應用的盤點，要繼續嗎？"
 
 #. module: stock
 #: model:digest.tip,name:stock.digest_tip_stock_0
@@ -7912,7 +7912,7 @@ msgid ""
 " Such dates are set automatically at lot/serial number creation based on values set on the product (in days)."
 msgstr ""
 "追蹤以下日期的批次和序號：最佳日期、刪除、生命盡頭、警示。\n"
-"這些日期是根據產品上在批次/序號創建時自動設定的值（以天為單位）。"
+"這些日期是根據產品上在批次/序號建立時自動設定的值（以天為單位）。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -7920,7 +7920,7 @@ msgid ""
 "Track following dates on lots & serial numbers: best before, removal, end of"
 " life, alert. Such dates are set automatically at lot/serial number creation"
 " based on values set on the product (in days)."
-msgstr "追蹤以下日期的批次和序號：最佳日期、刪除、生命盡頭、警示。 這些日期是根據產品設定的值（以天為單位）在批次/序號創建時自動設定的。"
+msgstr "追蹤以下日期的批次和序號：最佳日期、刪除、生命盡頭、警示。 這些日期是根據產品設定的值（以天為單位）在批次/序號建立時自動設定的。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -7930,7 +7930,7 @@ msgstr "追蹤您倉庫內的產品位置"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
 msgid "Track your stock quantities by creating storable products."
-msgstr "通過創建庫存產品來跟踪您的庫存數量。"
+msgstr "通過建立庫存產品來跟踪您的庫存數量。"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -8409,7 +8409,7 @@ msgstr "倉庫配置"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route__warehouse_domain_ids
 msgid "Warehouse Domain"
-msgstr "倉庫域"
+msgstr "倉庫區域"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_warehouse_config
@@ -8568,7 +8568,7 @@ msgstr "產品到達時"
 msgid ""
 "When products are needed in <b>%s</b>, <br/> <b>%s</b> are created from "
 "<b>%s</b> to fulfill the need."
-msgstr "當 <b>%s</b>需要產品時, <br/> <b>%s</b> 將由 <b>%s</b>創建以用來滿足需求。"
+msgstr "當 <b>%s</b>需要產品時, <br/> <b>%s</b> 將由 <b>%s</b>建立以用來滿足需求。"
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:0
@@ -8576,7 +8576,7 @@ msgstr "當 <b>%s</b>需要產品時, <br/> <b>%s</b> 將由 <b>%s</b>創建以�
 msgid ""
 "When products arrive in <b>%s</b>, <br/> <b>%s</b> are created to send them "
 "in <b>%s</b>."
-msgstr "當產品到達 <b>%s </b> 時, 將創建 <br/> <b>%s </b> 以在 <b>%s </b> 中發送它們。"
+msgstr "當產品到達 <b>%s </b> 時, 將建立 <br/> <b>%s </b> 以在 <b>%s </b> 中發送它們。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__is_locked
@@ -8611,7 +8611,7 @@ msgstr "勾選後，運輸承運商將被傳播。"
 msgid ""
 "When ticked, if the move created by this rule is cancelled, the next move "
 "will be cancelled too."
-msgstr "勾選時，如果取消此規則創建的移動，則下一步移動也將被取消。"
+msgstr "勾選時，如果取消此規則建立的移動，則下一步移動也將被取消。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__owner_id
@@ -8664,7 +8664,7 @@ msgid ""
 "You are not allowed to change the product linked to a serial or lot number "
 "if some stock moves have already been created with that number. This would "
 "lead to inconsistencies in your stock."
-msgstr "如果已使用該數位創建了某些庫存移動, 則不允許更改連結到序號或批號的產品。這將導致您的股票不一致。"
+msgstr "如果已使用該數位建立了某些庫存移動, 則不允許更改連結到序號或批號的產品。這將導致您的股票不一致。"
 
 #. module: stock
 #: code:addons/stock/models/stock_production_lot.py:0
@@ -8673,7 +8673,7 @@ msgid ""
 "You are not allowed to create a lot or serial number with this operation "
 "type. To change this, go on the operation type and tick the box \"Create New"
 " Lots/Serial Numbers\"."
-msgstr "在此操作類型下不能創建批次或者序號。要更改此設定，請在相應的作業類型下勾選「創建新的批次 / 序號」 選項。"
+msgstr "在此操作類型下不能建立批次或者序號。要更改此設定，請在相應的作業類型下勾選「建立新的批次 / 序號」 選項。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
@@ -8768,7 +8768,7 @@ msgstr "您不能歸檔庫存位置 %s，因為倉庫 %s 目前正使用它"
 msgid ""
 "You cannot cancel a stock move that has been set to 'Done'. Create a return "
 "in order to reverse the moves which took place."
-msgstr "您無法取消已設置為“完成”的庫存移動。請透過創建一個退回單據來執行反向作業。"
+msgstr "您無法取消已設置為“完成”的庫存移動。請透過建立一個退回單據來執行反向作業。"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -8806,7 +8806,7 @@ msgid ""
 "You cannot change the unit of measure as there are already stock moves for "
 "this product. If you want to change the unit of measure, you should rather "
 "archive this product and create a new one."
-msgstr "您無法更改計量單位，因為此產品已有庫存變動。如果要更改計量單位，則應該歸檔此產品並創建新產品。"
+msgstr "您無法更改計量單位，因為此產品已有庫存變動。如果要更改計量單位，則應該歸檔此產品並建立新產品。"
 
 #. module: stock
 #: code:addons/stock/models/stock_scrap.py:0
@@ -8877,14 +8877,14 @@ msgstr "您不能使用兩次相同的序號。 請更正序號編碼。"
 msgid ""
 "You cannot validate a transfer if no quantities are reserved nor done. To "
 "force the transfer, switch in edit mode and encode the done quantities."
-msgstr "如果沒有保留或完成數量，則無法運行調撥過帳。要強制執行，請切換到編輯模式並對完成的數量進行輸入。"
+msgstr "如果沒有保留或完成數量，則無法執行調撥過帳。要強制執行，請切換到編輯模式並對完成的數量進行輸入。"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:0
 #, python-format
 msgid ""
 "You have manually created product lines, please delete them to proceed."
-msgstr "您已手動創建產品明細，需要刪除才能繼續。"
+msgstr "您已手動建立產品明細，需要刪除才能繼續。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_immediate_transfer
@@ -8928,7 +8928,7 @@ msgstr "您必須選擇與產品默認計量單位相同類別的產品計量單
 msgid ""
 "You have tried to create a record which already exists. The existing record "
 "has been modified instead."
-msgstr "您試圖創建一個已經存在的記錄。現有記錄已被修改。"
+msgstr "您試圖建立一個已經存在的記錄。現有記錄已被修改。"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:0
@@ -8981,7 +8981,7 @@ msgstr "您應該更新此文檔以反映您的 T&amp;C。"
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "You still have ongoing operations for picking types %s in warehouse %s"
-msgstr "您仍有倉庫 %s 中揀貨類型 %s 運行中的操作"
+msgstr "您仍有倉庫 %s 中揀貨類型 %s 執行中的操作"
 
 #. module: stock
 #: code:addons/stock/models/product.py:0

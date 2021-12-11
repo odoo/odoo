@@ -522,7 +522,7 @@ msgstr "<span>視圖</span>"
 msgid ""
 "<span>You cannot delete a project containing tasks. You can either archive "
 "it or first delete all of its tasks.</span>"
-msgstr "<span>您不能刪除包含任務的專案。 您可以封存此專案，也可以先刪除其所有任務，或刪除此專案內的所有任務，再刪除專案。</span>"
+msgstr "<span>您不能刪除包含任務的專案。 您可以歸檔此專案，也可以先刪除其所有任務，或刪除此專案內的所有任務，再刪除專案。</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -579,14 +579,14 @@ msgstr "=&gt;"
 msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
-msgstr "當創建別名的新記錄時，一個Python字典被提供作為預設值"
+msgstr "當建立別名的新記錄時，一個Python字典被提供作為預設值"
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_collaborator_unique_collaborator
 msgid ""
 "A collaborator cannot be selected more than once in the project sharing "
 "access. Please remove duplicate(s) and try again."
-msgstr "在專案共享訪問權限中不能多次選擇協作者。請刪除重複項並重試。"
+msgstr "在專案共享存取權限中不能多次選擇協作者。請刪除重複項並重試。"
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_user_rel_project_personal_stage_unique
@@ -653,7 +653,7 @@ msgstr "活動狀態"
 #: model:ir.model.fields,field_description:project.field_project_task__activity_type_icon
 #: model:ir.model.fields,field_description:project.field_project_update__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "活動類型圖標"
+msgstr "活動類型圖示"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.mail_activity_type_action_config_project_types
@@ -939,7 +939,7 @@ msgid ""
 "                                    You can customize here the labels for each state."
 msgstr ""
 "在每個階段，員工都可以阻止任務或將其標記為為下一步做好準備。\n"
-"                                    您可以在此處自定義每個階段的標記內容。"
+"                                    您可以在此處自訂每個階段的標記內容。"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_attachment_count
@@ -969,7 +969,7 @@ msgstr "作者"
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Auto-generate tasks for regular activities"
-msgstr "自動產生常規活動的任務"
+msgstr "自動產生常用活動的任務"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__auto_validation_kanban_state
@@ -1338,7 +1338,7 @@ msgstr "建立於"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Creation Date"
-msgstr "創建日期"
+msgstr "建立日期"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__currency_id
@@ -1443,7 +1443,7 @@ msgid ""
 "Customize how tasks are named according to the project and create tailor "
 "made status messages for each step of the workflow. It helps to document "
 "your workflow: what should be done at which step."
-msgstr "可根據專案自定義任務的命名方式，並為工作流的每個步驟建立量身定制的狀態消息。 它有助於記錄您的工作流程：在哪一步應該做什麼。"
+msgstr "可根據專案自訂任務的命名方式，並為工作流的每個步驟建立量身訂製的狀態消息。 它有助於記錄您的工作流程：在哪一步應該做什麼。"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__daily
@@ -1547,7 +1547,7 @@ msgid ""
 "                creation of the task, up to the closing of the task or issue.\n"
 "                You will use these stages in order to track the progress in\n"
 "                solving a task or an issue."
-msgstr "定義在專案裡的步驟從創建任務，更新已結束的任務或議題。您將使用這些階段來追蹤解決任務或議題。"
+msgstr "定義在專案裡的步驟從建立任務，更新已結束的任務或議題。您將使用這些階段來追蹤解決任務或議題。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
@@ -1704,7 +1704,7 @@ msgstr "顯示專案"
 #: code:addons/project/models/digest.py:0
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
-msgstr "無權訪問，跳過使用者摘要電子信件的此數據"
+msgstr "無權訪問，跳過使用者摘要電子信件的此筆資料"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1820,7 +1820,7 @@ msgstr "錯誤！專案開始日期必須早於專案結束日期。"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Error! You cannot create a recursive hierarchy of tasks."
-msgstr "錯誤！您不能創建任務的遞歸層次結構。"
+msgstr "錯誤！您不能建立任務的遞歸層次結構。"
 
 #. module: project
 #. openerp-web
@@ -1830,7 +1830,7 @@ msgid ""
 "Everyone can propose ideas, and the Editor marks the best ones as %s. Attach"
 " all documents or links to the task directly, to have all research "
 "information centralized. %s"
-msgstr "每個人都可以提出想法，編輯器將最好的標記為 %s。將所有文檔或鏈接直接附加到任務，以集中所有研究信息。 %s"
+msgstr "每個人都可以提出想法，編輯器將最好的標記為 %s。將所有文檔或鏈接直接附加到任務，以集中所有研究資料。 %s"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__date
@@ -2008,7 +2008,7 @@ msgstr "毛利"
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Group By"
-msgstr "分組按"
+msgstr "分組依據"
 
 #. module: project
 #. openerp-web
@@ -2101,7 +2101,7 @@ msgstr "ID"
 msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
-msgstr "上級記錄ID支援別名(例如:專案支援任務創建別名)"
+msgstr "上級記錄ID支援別名(例如:專案支援任務建立別名)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_exception_icon
@@ -2731,12 +2731,12 @@ msgstr "我的活動截止時間"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_extended
 msgid "My Favorite Projects"
-msgstr "我的收藏專案"
+msgstr "我的最愛專案"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "My Favorites"
-msgstr "我的收藏夾"
+msgstr "我的最愛"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -2810,7 +2810,7 @@ msgstr "平淡的表情"
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
 #, python-format
 msgid "New"
-msgstr "新的"
+msgstr "新增"
 
 #. module: project
 #. openerp-web
@@ -2912,7 +2912,7 @@ msgstr "還沒有客戶評級"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_project_task_user_tree
 msgid "No data yet!"
-msgstr "暫無數據！"
+msgstr "暫無資料！"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_milestone_all
@@ -2995,7 +2995,7 @@ msgstr "任務數"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__recurrence_left
 msgid "Number of Tasks Left to Create"
-msgstr "剩下要創建的任務數"
+msgstr "剩下要建立的任務數"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user__working_days_close
@@ -3093,7 +3093,7 @@ msgstr "擱置中"
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__on_track
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__on_track
 msgid "On Track"
-msgstr "正常運行"
+msgstr "正常執行"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__monthly
@@ -3124,7 +3124,7 @@ msgid ""
 "Optional ID of a thread (record) to which all incoming messages will be "
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
-msgstr "所有的進來的信件都將附上一條線索（記錄）選配的ID，即使它們不曾回覆過它。如果設定了，這個將完全阻止新記錄的創建。"
+msgstr "所有的進來的信件都將附上一條線索（記錄）選配的ID，即使它們不曾回覆過它。如果設定了，這個將完全阻止新記錄的建立。"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -3304,7 +3304,7 @@ msgid ""
 "colleagues that a task is ready for the next stage.%s Use the %s to indicate"
 " a problem or a need for discussion on a task.%s"
 msgstr ""
-"使用 %s 圖標確定任務的優先級。%s使用 %s 按鈕通知您的同事任務已準備好進入下一階段。%s使用 %s 指示問題或需要討論執行任務。%s"
+"使用 %s 圖示確定任務的優先級。%s使用 %s 按鈕通知您的同事任務已準備好進入下一階段。%s使用 %s 指示問題或需要討論執行任務。%s"
 
 #. module: project
 #. openerp-web
@@ -3315,7 +3315,7 @@ msgid ""
 "your colleagues that a task is ready for the next stage.%s Use the %s to "
 "signalize a problem or a need for discussion on a task.%s"
 msgstr ""
-"使用 %s 圖標確定任務的優先級。%s 使用 %s 按鈕向您的同事表示任務已準備好進入下一階段。%s 使用 %s 表示存在問題或需要關於任務的討論。%s"
+"使用 %s 圖示確定任務的優先級。%s 使用 %s 按鈕向您的同事表示任務已準備好進入下一階段。%s 使用 %s 表示存在問題或需要關於任務的討論。%s"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -4357,7 +4357,7 @@ msgstr "包含子任務的任務計數"
 #: model:mail.message.subtype,name:project.mt_project_task_new
 #: model:mail.message.subtype,name:project.mt_task_new
 msgid "Task Created"
-msgstr "已創建任務"
+msgstr "已建立任務"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__allow_task_dependencies
@@ -4569,7 +4569,7 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
-"相應於這個別名對應的模型(Odoo單據種類)。任何一封不屬於對某個已存在的記錄的到來信件，將導致此模組中新記錄的創建(例如，一個新的專案任務)。"
+"相應於這個別名對應的模型(Odoo單據種類)。任何一封不屬於對某個已存在的記錄的到來信件，將導致此模組中新記錄的建立(例如，一個新的專案任務)。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_name
@@ -4586,7 +4586,7 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
-"根據此別名接收到的信件，創建記錄的所有人。若此字段沒有設定，系統將試圖根據發送者(From)地址來查找正確的所有者，如果對於那個地址沒有系統使用者被發現，將使用系統管理員帳戶。"
+"根據此別名接收到的信件，建立記錄的所有人。若此字段沒有設定，系統將試圖根據發送者(From)地址來查找正確的所有者，如果對於那個地址沒有系統使用者被發現，將使用系統管理員帳戶。"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -4691,7 +4691,7 @@ msgstr "此任務"
 msgid ""
 "This will archive the stages and all the tasks they contain from the "
 "following projects:"
-msgstr "這將封存以下專案中的階段及其包含的所有任務："
+msgstr "此動作將會把以下專案中的階段及其包含的所有任務歸檔："
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__thu
@@ -4719,7 +4719,7 @@ msgstr "計劃完成此任務的時間（包括其子任務）。"
 #: model:digest.tip,name:project.digest_tip_project_0
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
 msgid "Tip: Customize tasks and stages according to the project"
-msgstr "提示：根據專案自定義任務和階段"
+msgstr "提示：根據專案自訂任務和階段"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -4805,12 +4805,12 @@ msgstr "追踪您的專案進度"
 #: model_terms:ir.actions.act_window,help:project.project_project_stage_configure
 msgid ""
 "Track the progress of your projects from their creation to their closing."
-msgstr "追踪專案從創建到結束的進度。"
+msgstr "追踪專案從建立到結束的進度。"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
 msgid "Track the progress of your tasks from their creation to their closing."
-msgstr "追踪您的任務從創建到結束的進度。"
+msgstr "追踪您的任務從建立到結束的進度。"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -5147,7 +5147,7 @@ msgstr "如果分析帳戶與專案相關，則您不能更改分析帳戶的公
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You cannot create cyclic dependency."
-msgstr "您不能創建循環依賴。"
+msgstr "您不能建立循環依賴。"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -5169,7 +5169,7 @@ msgstr "您不能刪除重複任務。請先禁用重複。"
 msgid ""
 "You cannot delete stages containing tasks. You can either archive them or "
 "first delete all of their tasks."
-msgstr "您不能刪除包含任務的階段。 您可以封存它們，也可以先刪除它們的所有任務。"
+msgstr "您不能刪除包含任務的階段。 您可以將它們歸檔，也可以先刪除它們的所有任務。"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
