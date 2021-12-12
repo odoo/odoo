@@ -1735,7 +1735,7 @@ msgstr "Kundenlagerorte"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
 msgid "DHL Express Connector"
-msgstr ""
+msgstr "DHL Express Konnektor"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__date
@@ -3353,19 +3353,24 @@ msgstr "Ist die erledigte Menge editierbar"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"It is not possible to reserve more products of %s than you have in stock."
+"It is not possible to unreserve more products of %s than you have in "
+"stock.The correction could unreserve some operations with problematics "
+"products."
 msgstr ""
-"Es ist nicht möglich, mehr Produkte von %s zu reservieren als im Lager "
-"vorhanden sind."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"It is not possible to unreserve more products of %s than you have in stock."
+"It is not possible to unreserve more products of %s than you have in stock. "
+"Contact an administrator."
 msgstr ""
-"Es ist nicht möglich, die Reservierung für mehr Produkte von %s aufzuheben "
-"als im Lager vorhanden sind."
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Try our automated action to fix it"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_type

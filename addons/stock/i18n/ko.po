@@ -3218,15 +3218,24 @@ msgstr "완료된 수량 편집 가능 여부"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"It is not possible to reserve more products of %s than you have in stock."
-msgstr "%s 품목을 재고보다 더 예약할 수 없습니다."
+"It is not possible to unreserve more products of %s than you have in "
+"stock.The correction could unreserve some operations with problematics "
+"products."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"It is not possible to unreserve more products of %s than you have in stock."
-msgstr "%s의 더 많은 품목을 재고보다 확보할 수 없습니다."
+"It is not possible to unreserve more products of %s than you have in stock. "
+"Contact an administrator."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Try our automated action to fix it"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_type
@@ -7665,8 +7674,8 @@ msgid ""
 "valuate your stock or change its rounding precision to a smaller value "
 "(example: 0.00001)."
 msgstr ""
-"품목 재고를 확보하기 위해 사용하는 것보다 작은 단위를 사용하고 있습니다. 이로 인해 예약 수량에 반올림 문제가 발생할 수 있습니다. "
-"재고를 평가하거나 반올림 정밀도를 더 작은 값으로 변경하려면 가능한 작은 측정 단위를 사용해야합니다 (예 : 0.00001)."
+"품목 재고를 확보하기 위해 사용하는 것보다 작은 단위를 사용하고 있습니다. 이로 인해 예약 수량에 반올림 문제가 발생할 수 "
+"있습니다. 재고를 평가하거나 반올림 정밀도를 더 작은 값으로 변경하려면 가능한 작은 측정 단위를 사용해야합니다 (예 : 0.00001)."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_routes_form
