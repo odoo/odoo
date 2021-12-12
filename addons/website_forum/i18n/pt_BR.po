@@ -19,20 +19,20 @@
 # Luiz Fernando <lfpsgs@outlook.com>, 2020
 # Fernando Colus <fcolus1@gmail.com>, 2020
 # André Carvalho <and2carvalho@gmail.com>, 2020
-# Martin Trigaux, 2020
 # Mateus Lopes <mateus1@gmail.com>, 2020
 # Peter Leaf <pablleaf@gmail.com>, 2020
 # grazziano <gra.negocia@gmail.com>, 2020
 # Diego Bittencourt <diegomb86@gmail.com>, 2020
 # Éder Brito <britoederr@gmail.com>, 2021
+# Martin Trigaux, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"POT-Creation-Date: 2021-12-07 10:46+0000\n"
 "PO-Revision-Date: 2016-08-05 13:12+0000\n"
-"Last-Translator: Éder Brito <britoederr@gmail.com>, 2021\n"
+"Last-Translator: Martin Trigaux, 2021\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,7 +41,23 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_forum.js:0
+#, python-format
+msgid " Flag"
+msgstr ""
+
+#. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_forum.js:0
+#: code:addons/website_forum/static/src/js/website_forum.js:0
+#, python-format
+msgid " Flagged"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__total_answers
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_list
 msgid "# Answers"
 msgstr "# Respostas"
 
@@ -57,18 +73,9 @@ msgstr "# Postagens"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__total_views
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_list
 msgid "# Views"
 msgstr "# Visualizações"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
-msgid "#{post.name}"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.new_question
-msgid "#{post_name}"
-msgstr ""
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:0
@@ -151,6 +158,8 @@ msgid "%d karma required to flag a post."
 msgstr "%d karma necessário para marcar uma postagem."
 
 #. module: website_forum
+#: code:addons/website_forum/controllers/main.py:0
+#: code:addons/website_forum/controllers/main.py:0
 #: code:addons/website_forum/models/forum.py:0
 #, python-format
 msgid "%d karma required to mark a post as offensive."
@@ -728,11 +737,6 @@ msgstr ""
 "                        </span>"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.close_post
-msgid "<span class=\"text-muted mx-3\">or</span>"
-msgstr "<span class=\"text-muted mx-3\">ou</span>"
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "<span>By </span>"
 msgstr "<span>Por </span>"
@@ -1213,15 +1217,6 @@ msgid "Click here to accept this answer."
 msgstr "Clique aqui para aceitar esta resposta."
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid ""
-"Click here to send a verification email allowing you to participate in the "
-"forum."
-msgstr ""
-"Clique aqui para enviar um e-mail de verificação permitindo que você "
-"participe do fórum."
-
-#. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 #, python-format
@@ -1272,7 +1267,7 @@ msgid "Close own posts"
 msgstr "Fechar próprias postagens"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.close_post
+#: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
 msgid "Close post"
 msgstr "Encerrar postagem"
 
@@ -1292,7 +1287,7 @@ msgid "Closed on"
 msgstr "Fechado às"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.close_post
+#: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
 msgid "Closing"
 msgstr "Encerrando"
 
@@ -1467,6 +1462,21 @@ msgid "Critic"
 msgstr "Crítico"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_searchbar_input_snippet_options
+msgid "Date"
+msgstr "Data"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_searchbar_input_snippet_options
+msgid "Date (high to low)"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_searchbar_input_snippet_options
+msgid "Date (low to high)"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__default_order
 msgid "Default"
 msgstr "Padrão"
@@ -1517,6 +1527,7 @@ msgstr "Própria postagem excluída com 3 ou mais votos positivos"
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__description
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_all_all_entries
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_searchbar_input_snippet_options
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid "Description"
 msgstr "Descrição"
@@ -1529,8 +1540,8 @@ msgstr "Descrição visível no site"
 #. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/js/website_forum.editor.js:0
-#: model_terms:ir.ui.view,arch_db:website_forum.close_post
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
+#: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answer
 #: model_terms:ir.ui.view,arch_db:website_forum.post_comment
@@ -1738,6 +1749,7 @@ msgstr "Marcar um post como ofensivo"
 #. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_post__state__flagged
 #: model_terms:ir.ui.view,arch_db:website_forum.header
+#: model_terms:ir.ui.view,arch_db:website_forum.question_dropdown
 msgid "Flagged"
 msgstr "Sinalizada"
 
@@ -1790,6 +1802,7 @@ msgstr ""
 
 #. module: website_forum
 #: code:addons/website_forum/models/website.py:0
+#: code:addons/website_forum/models/website.py:0
 #: model:ir.actions.act_url,name:website_forum.action_open_forum
 #: model:ir.model,name:website_forum.model_forum_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__forum_id
@@ -1840,6 +1853,7 @@ msgstr "Marcador do Fórum"
 #. module: website_forum
 #: model:ir.actions.act_window,name:website_forum.action_forum_forum
 #: model:ir.ui.menu,name:website_forum.menu_forum_global
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_searchbar_input_snippet_options
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_list
 msgid "Forums"
 msgstr "Fóruns"
@@ -2008,7 +2022,7 @@ msgid "If this approach is not for you, please respect the community."
 msgstr "Se essa abordagem não for para você, respeite a comunidade."
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.close_post
+#: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
 msgid ""
 "If you close this post, it will be hidden for most users. Only\n"
 "            users having a high karma can see closed posts to moderate\n"
@@ -2034,7 +2048,7 @@ msgstr ""
 "para mim”, então provavelmente você está bem."
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.close_post
+#: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
 msgid ""
 "If you mark this post as offensive, it will be hidden for most users. Only\n"
 "            users having a high karma can see offensive posts to moderate\n"
@@ -2229,7 +2243,12 @@ msgid "Mark as Best Answer"
 msgstr "Marcar como Melhor Resposta"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.close_post
+#: model_terms:ir.ui.view,arch_db:website_forum.show_flag_validator
+msgid "Mark as Offensive"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "Mark as offensive"
 msgstr "Marcar como ofensiva"
@@ -2520,15 +2539,18 @@ msgstr "Fora de Tópico ou irrelevante"
 #. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_post__state__offensive
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_post_reason__reason_type__offensive
-#: model_terms:ir.ui.view,arch_db:website_forum.close_post
 #: model_terms:ir.ui.view,arch_db:website_forum.header
+#: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Offensive"
 msgstr "Ofensivo"
 
 #. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_forum.js:0
 #: model_terms:ir.ui.view,arch_db:website_forum.header
+#, python-format
 msgid "Offensive Post"
 msgstr "Postagem Ofensiva"
 
@@ -2671,7 +2693,7 @@ msgid "Post Your Question"
 msgstr "Poste Sua Pergunta"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.close_post
+#: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
 msgid "Post:"
 msgstr "Postagem:"
 
@@ -2916,7 +2938,7 @@ msgid "Reason Type"
 msgstr "Tipo de Razão"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.close_post
+#: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
 msgid "Reason:"
 msgstr "Motivo:"
 
@@ -3109,6 +3131,11 @@ msgstr "Exibir"
 #: model_terms:ir.ui.view,arch_db:website_forum.tag
 msgid "Show Tags Starting By"
 msgstr "Exibir Marcadores Iniciando Por"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "Showing results for"
+msgstr ""
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -3474,11 +3501,12 @@ msgid "Total Answers"
 msgstr "Total de Respostas"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_list
-msgid "Total Favorites"
-msgstr "Total de Favoritos"
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_list
+msgid "Total Posts"
+msgstr ""
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_list
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_list
 msgid "Total Views"
 msgstr "Total de Visualizações"
@@ -3604,6 +3632,7 @@ msgstr "Postagens favoritas dos usuários"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 #: model_terms:ir.ui.view,arch_db:website_forum.question_dropdown
+#: model_terms:ir.ui.view,arch_db:website_forum.show_flag_validator
 msgid "Validate"
 msgstr "Validar"
 
@@ -3836,6 +3865,11 @@ msgstr "data da atividade"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
+msgid "and join this Forum"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "breadcrumb"
 msgstr "Detalhes"
 
@@ -3876,7 +3910,7 @@ msgstr ""
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_form
-msgid "e.g. Who to do this particular thing?"
+msgid "e.g. When should I plant my tomatoes?"
 msgstr ""
 
 #. module: website_forum
@@ -3977,19 +4011,17 @@ msgid "insert text link, upload files"
 msgstr "inserir link de texto, carregar arquivos"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "instead."
+msgstr ""
+
+#. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
 msgid "it is a rant disguised as a question: “______ sucks, am I right?”"
 msgstr ""
 "é um discurso retórico disfarçado em uma pergunta: “______ é uma merda, "
 "estou certo?”"
-
-#. module: website_forum
-#. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:0
-#, python-format
-msgid "karma is required to perform this action. "
-msgstr "karma é obrigatório para executar esta ação."
 
 #. module: website_forum
 #. openerp-web

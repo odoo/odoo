@@ -5,16 +5,16 @@
 # Translators:
 # Thomas Pot <thomas@open2bizz.nl>, 2019
 # Cas Vissers <casvissers@brahoo.nl>, 2019
-# Martin Trigaux, 2020
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # Cas Vissers <c.vissers@brahoo.nl>, 2020
+# Martin Trigaux, 2021
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2016-08-05 13:10+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -144,6 +144,11 @@ msgstr ""
 "producten om de kostprijs bij te werken."
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_move__analytic_account_line_id
+msgid "Analytic Account Line"
+msgstr "Kostenplaatsregel"
+
+#. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__real_time
 msgid "Automated"
 msgstr "Geautomatiseerd"
@@ -240,6 +245,11 @@ msgid ""
 msgstr ""
 "Tegenrekening boekingen voor alle inkomende voorraadbewegingen worden op deze rekening geboekt, tenzij er een specifieke waarderingsrekening is\n"
 "ingesteld op de bronlocatie. Dit is de standaardwaarde voor alle producten in deze categorie. Het kan ook direct op elk product worden ingesteld."
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_picking__country_code
+msgid "Country Code"
+msgstr "Landcode"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__create_uid
@@ -358,7 +368,7 @@ msgstr "Voorraad locaties"
 #: model:ir.model.fields,field_description:stock_account.field_product_template__valuation
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__property_valuation
 #: model:ir.ui.menu,name:stock_account.menu_valuation
-#: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
+#: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form_stock
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 #, python-format
 msgid "Inventory Valuation"
@@ -667,6 +677,15 @@ msgstr "Voorraadwaardelaag"
 msgid "Technical field used to retrieve the anglo-saxon lines."
 msgstr ""
 "Technisch veld dat wordt gebruikt om de anglo-Saksische regels op te halen."
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_picking__country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"De ISO-landcode in twee letters.\n"
+"Je kunt dit veld gebruiken voor snelzoeken."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0

@@ -18,9 +18,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"POT-Creation-Date: 2021-12-07 10:46+0000\n"
 "PO-Revision-Date: 2016-08-05 12:58+0000\n"
 "Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -64,15 +64,6 @@ msgstr "<b>恭喜你！</b>我可以協助您設置<a href=\"%s\">入職計畫�
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
 msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
-
-#. module: hr
-#: code:addons/hr/models/mail_alias.py:0
-#, python-format
-msgid ""
-"<p>Hi,<br/>\n"
-"Your document has not been created because your email address is not recognized.<br/>\n"
-"Please send emails with the email address recorded on your employee information, or contact your HR manager.</p>"
-msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
@@ -136,6 +127,21 @@ msgid "<span class=\"ml8 mr-2\">Minimum number of emails to sent </span>"
 msgstr "<span class=\"ml8 mr-2\">要發送的電子郵件數最少</span>"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
+msgid "<span class=\"o_form_label o_hr_form_label\">Close Activities</span>"
+msgstr "<span class=\"o_form_label o_hr_form_label\">關閉活動</span>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
+msgid "<span class=\"o_form_label o_hr_form_label\">Detailed Reason</span>"
+msgstr "<span class=\"o_form_label o_hr_form_label\">詳細原因</span>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
+msgid "<span class=\"o_form_label o_hr_form_label\">Personal Info</span>"
+msgstr "<span class=\"o_form_label o_hr_form_label\">個人資訊</span>"
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Presence Control</span>"
 msgstr "<span class=\"o_form_label\">出勤管理</span>"
@@ -166,6 +172,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 msgid "<span class=\"o_stat_text\">Connected Since</span>"
 msgstr "<span class=\"o_stat_text\">連結自</span>"
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.res_partner_view_form
+msgid "<span class=\"o_stat_text\">Employee(s)</span>"
+msgstr "<span class=\"o_stat_text\">員工）</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -205,11 +216,6 @@ msgid "Action Needed"
 msgstr "需要採取行動"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_form
-msgid "Activation Trigger"
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__active
 #: model:ir.model.fields,field_description:hr.field_hr_employee__active
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__active
@@ -231,11 +237,6 @@ msgstr "活動"
 #: model_terms:ir.ui.view,arch_db:hr.hr_plan_activity_type_view_form
 msgid "Activity"
 msgstr "活動"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__deadline_type
-msgid "Activity Deadline"
-msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_exception_decoration
@@ -281,8 +282,8 @@ msgstr "添加新計劃"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_plan_activity_type_action
-msgid "Add a new planning activity"
-msgstr "添加新的計劃活動"
+msgid "Add a new plan activity"
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_description
@@ -342,11 +343,24 @@ msgid "Allow employees to update their own data."
 msgstr "允許員工更新自己的資料。"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
+msgid "Apply"
+msgstr "套用"
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Approvers"
 msgstr "流程審批管理人"
+
+#. module: hr
+#. openerp-web
+#: code:addons/hr/static/src/js/hr_employee.js:0
+#: code:addons/hr/static/src/js/hr_employee.js:0
+#, python-format
+msgid "Archive"
+msgstr "歸檔"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__archive_private_address
@@ -364,16 +378,6 @@ msgstr "存檔私人地址"
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Archived"
 msgstr "歸檔"
-
-#. module: hr
-#: model:ir.model.fields.selection,name:hr.selection__hr_plan__trigger_offboarding__employee_archive
-msgid "Archived Employee"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields.selection,name:hr.selection__hr_plan_activity_type__deadline_type__plan_active
-msgid "At plan's activation"
-msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_attachment_count
@@ -578,6 +582,7 @@ msgstr "公司"
 #: model:ir.model.fields,field_description:hr.field_hr_job__company_id
 #: model:ir.model.fields,field_description:hr.field_hr_plan__company_id
 #: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__company_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__company_id
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__company_id
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
@@ -710,30 +715,10 @@ msgid "Date of Birth"
 msgstr "出生日期"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__deadline_days
-msgid "Days Deadline"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields.selection,name:hr.selection__hr_plan_activity_type__deadline_type__trigger_offset
-msgid "Days after activation trigger"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.constraint,message:hr.constraint_hr_plan_activity_type_check_deadline_days
-msgid "Days deadline must be positive."
-msgstr ""
-
-#. module: hr
 #: code:addons/hr/models/hr_departure_reason.py:0
 #, python-format
 msgid "Default departure reasons cannot be deleted."
 msgstr "預設離職原因無法刪除."
-
-#. module: hr
-#: model:ir.model.fields.selection,name:hr.selection__hr_plan_activity_type__deadline_type__default
-msgid "Default value"
-msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__resource_calendar_id
@@ -776,14 +761,8 @@ msgstr "離開"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__departure_date
 #: model:ir.model.fields,field_description:hr.field_hr_employee__departure_date
-#: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
 msgid "Departure Date"
 msgstr "離職日期"
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
-msgid "Departure Info"
-msgstr ""
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_departure_reason
@@ -821,6 +800,11 @@ msgid "Directory"
 msgstr "目錄"
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
+msgid "Discard"
+msgstr "放棄"
+
+#. module: hr
 #: model:ir.model,name:hr.model_mail_channel
 msgid "Discussion Channel"
 msgstr "討論群組"
@@ -849,6 +833,11 @@ msgstr "離異"
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__doctor
 msgid "Doctor"
 msgstr "博士"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__driving_license
+msgid "Driving License"
+msgstr "駕照"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -890,11 +879,11 @@ msgstr "緊急聯絡人電話"
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__employee_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__employee_id
 #: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__employee_id
+#: model:ir.model.fields,field_description:hr.field_resource_resource__employee_id
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__employee_type__employee
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__employee_type__employee
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__employee_type__employee
 #: model:ir.model.fields.selection,name:hr.selection__hr_plan_activity_type__responsible__employee
-#: model:ir.ui.menu,name:hr.menu_human_resources_configuration_employee
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -910,11 +899,6 @@ msgstr "員工類別"
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_count
 msgid "Employee Count"
 msgstr "員工計數"
-
-#. module: hr
-#: model:ir.model.fields.selection,name:hr.selection__hr_plan__trigger_onboarding__employee_creation
-msgid "Employee Creation"
-msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_employee_self_edit
@@ -943,6 +927,13 @@ msgstr "員工姓名"
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_category_form
 msgid "Employee Tags"
 msgstr "員工標籤"
+
+#. module: hr
+#. openerp-web
+#: code:addons/hr/static/src/js/hr_employee.js:0
+#, python-format
+msgid "Employee Termination"
+msgstr "員工終止日"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__employee_type
@@ -993,6 +984,7 @@ msgstr "員工"
 #: model:ir.actions.act_window,name:hr.open_view_employee_list_my
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__employee_ids
 #: model:ir.model.fields,field_description:hr.field_hr_job__employee_ids
+#: model:ir.model.fields,field_description:hr.field_res_partner__employee_ids
 #: model:ir.ui.menu,name:hr.menu_hr_employee_payroll
 #: model:ir.ui.menu,name:hr.menu_hr_employee_user
 #: model:ir.ui.menu,name:hr.menu_hr_root
@@ -1001,11 +993,19 @@ msgstr "員工"
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_tree
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_view_activity
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:hr.view_department_form
+#: model_terms:ir.ui.view,arch_db:hr.view_department_tree
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
 #: model_terms:ir.ui.view,arch_db:hr.view_partner_tree2
 msgid "Employees"
 msgstr "員工"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_partner__employees_count
+#: model:ir.model.fields,field_description:hr.field_res_users__employees_count
+msgid "Employees Count"
+msgstr "員工人數"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_employee_tree
@@ -1183,6 +1183,11 @@ msgid "ID"
 msgstr "ID"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__id_card
+msgid "ID Card Copy"
+msgstr "身份證複印件"
+
+#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__barcode
 #: model:ir.model.fields,help:hr.field_res_users__barcode
 msgid "ID used for employee identification."
@@ -1280,6 +1285,11 @@ msgstr "正在招聘"
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_is_follower
 msgid "Is Follower"
 msgstr "是訂閱者"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__is_system
+msgid "Is System"
+msgstr "使用者登錄入系統"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
@@ -1465,13 +1475,6 @@ msgid "Manager of employee %s is not set."
 msgstr "未設置員工 %s 的經理。"
 
 #. module: hr
-#: model:ir.model.fields.selection,name:hr.selection__hr_plan__trigger_offboarding__manual
-#: model:ir.model.fields.selection,name:hr.selection__hr_plan__trigger_onboarding__manual
-#: model:ir.model.fields.selection,name:hr.selection__hr_plan__trigger_other__manual
-msgid "Manual"
-msgstr "手動"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__marital
 #: model:ir.model.fields,field_description:hr.field_res_users__marital
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -1520,7 +1523,7 @@ msgstr "我的活動截止時間"
 
 #. module: hr
 #. openerp-web
-#: code:addons/hr/static/src/xml/hr_templates.xml:0
+#: code:addons/hr/static/src/js/user_menu.js:0
 #, python-format
 msgid "My Profile"
 msgstr "我的個人資料"
@@ -1666,29 +1669,13 @@ msgstr ""
 "                休假、招聘等"
 
 #. module: hr
-#: model:ir.model.fields.selection,name:hr.selection__hr_plan__plan_type__offboarding
-msgid "Offboarding"
-msgstr ""
-
-#. module: hr
 #: model:res.groups,name:hr.group_hr_user
 msgid "Officer"
 msgstr "主管"
 
 #. module: hr
-#: model:ir.model.fields.selection,name:hr.selection__hr_plan__plan_type__onboarding
-msgid "Onboarding"
-msgstr ""
-
-#. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
-msgid "Only Employee"
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__other
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__gender__other
-#: model:ir.model.fields.selection,name:hr.selection__hr_plan__plan_type__other
 #: model:ir.model.fields.selection,name:hr.selection__hr_plan_activity_type__responsible__other
 msgid "Other"
 msgstr "其他"
@@ -1754,9 +1741,9 @@ msgid "Plan"
 msgstr "計劃"
 
 #. module: hr
-#: code:addons/hr/models/hr_employee.py:0
-#, python-format
-msgid "Plan %s has been launched."
+#: model:ir.actions.act_window,name:hr.hr_plan_activity_type_action
+#: model:ir.ui.menu,name:hr.menu_config_plan_types
+msgid "Plan Activities"
 msgstr ""
 
 #. module: hr
@@ -1775,19 +1762,13 @@ msgid "Plan activity type"
 msgstr "計畫活動類型"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.hr_plan_action
 #: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_form
 #: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_tree
 msgid "Planning"
 msgstr "規劃"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.hr_plan_activity_type_action
-#: model:ir.ui.menu,name:hr.menu_config_plan_types
-msgid "Planning Types"
-msgstr "規劃類型"
-
-#. module: hr
+#: model:ir.actions.act_window,name:hr.hr_plan_action
 #: model:ir.ui.menu,name:hr.menu_config_plan_plan
 msgid "Plans"
 msgstr "計劃"
@@ -1930,6 +1911,12 @@ msgid "Register Departure"
 msgstr "註冊出發"
 
 #. module: hr
+#: code:addons/hr/models/res_partner.py:0
+#, python-format
+msgid "Related Employees"
+msgstr "相關員工"
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Related User"
 msgstr "相關使用者"
@@ -1938,6 +1925,11 @@ msgstr "相關使用者"
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_ids
 msgid "Related employee"
 msgstr "相關員工"
+
+#. module: hr
+#: model:ir.model.fields,help:hr.field_res_partner__employee_ids
+msgid "Related employees based on their private address"
+msgstr "基於私人地址的相關員工"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__user_id
@@ -2005,11 +1997,6 @@ msgid "SSN No"
 msgstr "社會保險號SSN"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
-msgid "Save"
-msgstr "儲存"
-
-#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Schedule"
@@ -2035,6 +2022,7 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__sequence
+#: model:ir.model.fields,field_description:hr.field_hr_job__sequence
 msgid "Sequence"
 msgstr "序列"
 
@@ -2208,6 +2196,11 @@ msgid ""
 msgstr "員工類型。儘管主要目的似乎是對員工進行分類，但該字段對合同歷史也有影響。只有 Employee 類型應該在合同中，並且會有合同歷史。"
 
 #. module: hr
+#: model:ir.model.constraint,message:hr.constraint_hr_job_no_of_recruitment_positive
+msgid "The expected number of new employees must be positive."
+msgstr "新員工的預期數量必須為正數。"
+
+#. module: hr
 #: code:addons/hr/models/hr_employee.py:0
 #, python-format
 msgid ""
@@ -2283,6 +2276,11 @@ msgid "Today Activities"
 msgstr "今天的活動"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department__total_employee
+msgid "Total Employee"
+msgstr "員工總數"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__expected_employees
 msgid "Total Forecasted Employees"
 msgstr "預計員工數合計"
@@ -2293,31 +2291,6 @@ msgstr "預計員工數合計"
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__employee_type__trainee
 msgid "Trainee"
 msgstr "見習"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_plan__trigger
-msgid "Trigger"
-msgstr "觸發器"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_plan__trigger_offboarding
-msgid "Trigger Offboarding"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_plan__trigger_onboarding
-msgid "Trigger Onboarding"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_plan__trigger_other
-msgid "Trigger Other"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_plan__plan_type
-msgid "Type"
-msgstr "類型"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__activity_exception_decoration
@@ -2413,14 +2386,6 @@ msgstr "簽證號"
 #, python-format
 msgid "Warning"
 msgstr "警告"
-
-#. module: hr
-#: code:addons/hr/models/hr_employee.py:0
-#, python-format
-msgid ""
-"Warning ! The step \"%(name)s: %(summary)s\" assigned to %(responsible)s "
-"could not be started because: \"%(error)s\""
-msgstr ""
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__widower
@@ -2572,6 +2537,12 @@ msgstr "您應該至少選擇一個 Advanced Presence Control 選項。"
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 msgid "ZIP"
 msgstr "郵遞區號"
+
+#. module: hr
+#: code:addons/hr/models/mail_alias.py:0
+#, python-format
+msgid "addresses linked to registered employees"
+msgstr "與註冊員工相關的地址"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_department_form

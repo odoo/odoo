@@ -7,21 +7,19 @@
 # Olivier Dony <odo@odoo.com>, 2019
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2019
 # Melanie Bernard <mbe@odoo.com>, 2019
-# Eloïse Stilmant <est@odoo.com>, 2019
 # Jonathan Quique <jqu@odoo.com>, 2020
 # Priscilla (prs) Odoo <prs@odoo.com>, 2020
 # Julien Goergen <jgo@odoo.com>, 2020
 # Cécile Collart <cco@odoo.com>, 2020
 # Martin Trigaux, 2020
-# guillaume bauer <guillaume.bauer@syentys.fr>, 2020
 # Alexandra Jubert <aju@odoo.com>, 2021
 # Vallen Delobel <edv@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-12-07 10:47+0000\n"
 "PO-Revision-Date: 2019-03-20 15:01+0000\n"
 "Last-Translator: Vallen Delobel <edv@odoo.com>, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
@@ -49,6 +47,11 @@ msgstr "<i class=\"fa fa-home\"/> Cours"
 #: model_terms:ir.ui.view,arch_db:website_slides_forum.website_slides_forum_index
 msgid "Check our Courses <i class=\"fa fa-chevron-right\"/>"
 msgstr "Consultez nos cours <i class=\"fa fa-chevron-right\"/>"
+
+#. module: website_slides_forum
+#: model_terms:ir.actions.act_window,help:website_slides_forum.forum_post_action_channel
+msgid "Come back later to monitor and moderate what is posted on your Forums."
+msgstr ""
 
 #. module: website_slides_forum
 #. openerp-web
@@ -81,14 +84,10 @@ msgstr "Cours de Discussions"
 #. module: website_slides_forum
 #. openerp-web
 #: code:addons/website_slides_forum/static/src/xml/website_slides_forum_channel.xml:0
+#: model_terms:ir.actions.act_window,help:website_slides_forum.forum_forum_action_channel
 #, python-format
 msgid "Create a Forum"
 msgstr "Créer un forum"
-
-#. module: website_slides_forum
-#: model_terms:ir.actions.act_window,help:website_slides_forum.forum_post_action_channel
-msgid "Create a new forum post"
-msgstr "Créez une nouvelle publication sur le forum"
 
 #. module: website_slides_forum
 #: model_terms:ir.ui.view,arch_db:website_slides_forum.website_slides_forum_index
@@ -103,7 +102,6 @@ msgstr ""
 #. module: website_slides_forum
 #: model:ir.model,name:website_slides_forum.model_forum_forum
 #: model:ir.ui.menu,name:website_slides_forum.website_slides_menu_forum
-#: model:ir.ui.menu,name:website_slides_forum.website_slides_menu_report_forum
 #: model_terms:ir.ui.view,arch_db:website_slides_forum.course_main
 #: model_terms:ir.ui.view,arch_db:website_slides_forum.website_slides_forum_channel_inherit_view_form
 #: model_terms:ir.ui.view,arch_db:website_slides_forum.website_slides_forum_header
@@ -111,6 +109,7 @@ msgid "Forum"
 msgstr "Forum"
 
 #. module: website_slides_forum
+#: model:ir.actions.act_window,name:website_slides_forum.forum_post_action_channel
 #: model_terms:ir.ui.view,arch_db:website_slides_forum.website_slides_forum_channel_inherit_view_form
 msgid "Forum Posts"
 msgstr "Messages du forum"
@@ -122,14 +121,25 @@ msgid ""
 msgstr ""
 
 #. module: website_slides_forum
+#: model:ir.actions.act_window,name:website_slides_forum.forum_forum_action_channel
 #: model:ir.ui.menu,name:website_slides_forum.website_slides_menu_forum_forum
 msgid "Forums"
 msgstr "Forums"
 
 #. module: website_slides_forum
-#: model_terms:ir.actions.act_window,help:website_slides_forum.forum_post_action_report
-msgid "No data yet!"
-msgstr "Pas de données"
+#: model_terms:ir.actions.act_window,help:website_slides_forum.forum_forum_action_channel
+msgid "Forums allow your attendees to ask questions to your community."
+msgstr ""
+
+#. module: website_slides_forum
+#: model_terms:ir.ui.view,arch_db:website_slides_forum.res_config_settings_view_form
+msgid "Manage Forums"
+msgstr ""
+
+#. module: website_slides_forum
+#: model_terms:ir.actions.act_window,help:website_slides_forum.forum_post_action_channel
+msgid "No Forum Post yet!"
+msgstr ""
 
 #. module: website_slides_forum
 #: model:ir.model.fields,field_description:website_slides_forum.field_slide_channel__forum_total_posts
@@ -167,13 +177,6 @@ msgid "eLearning"
 msgstr "eLearning"
 
 #. module: website_slides_forum
-#: model:ir.actions.act_window,name:website_slides_forum.forum_post_action_channel
-#: model:ir.actions.act_window,name:website_slides_forum.forum_post_action_report
 #: model_terms:ir.ui.view,arch_db:website_slides_forum.forum_post_view_graph_slides
 msgid "eLearning Forum Posts"
 msgstr "Postes du Forum eLearning"
-
-#. module: website_slides_forum
-#: model:ir.actions.act_window,name:website_slides_forum.forum_forum_action_channel
-msgid "eLearning Forums"
-msgstr "Forums eLearning"

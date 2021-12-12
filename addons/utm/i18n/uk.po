@@ -11,9 +11,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-12-07 10:47+0000\n"
 "PO-Revision-Date: 2016-08-05 13:11+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
@@ -27,11 +27,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:utm.field_utm_medium__active
 msgid "Active"
 msgstr "Активно"
-
-#. module: utm
-#: model_terms:ir.actions.act_window,help:utm.action_view_utm_tag
-msgid "Add a new tag"
-msgstr "Додати новий тег"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_campaign__is_auto_campaign
@@ -56,6 +51,11 @@ msgstr "Затверджено"
 #: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_search
 msgid "Archived"
 msgstr "Заархівовано"
+
+#. module: utm
+#: model_terms:ir.actions.act_window,help:utm.action_view_utm_tag
+msgid "Assign tags to your campaigns to organize, filter and track them."
+msgstr ""
 
 #. module: utm
 #. openerp-web
@@ -136,6 +136,16 @@ msgid "Craigslist"
 msgstr "Craigslist"
 
 #. module: utm
+#: model_terms:ir.actions.act_window,help:utm.utm_medium_action
+msgid "Create a Medium"
+msgstr ""
+
+#. module: utm
+#: model_terms:ir.actions.act_window,help:utm.action_view_utm_tag
+msgid "Create a Tag"
+msgstr ""
+
+#. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_campaign_action
 msgid "Create a campaign"
 msgstr "Створити кампанію"
@@ -169,16 +179,6 @@ msgstr "Створено на"
 #, python-format
 msgid "Creative Flow"
 msgstr "Процес створення"
-
-#. module: utm
-#: model_terms:ir.actions.act_window,help:utm.utm_medium_action
-msgid "Define a new UTM medium"
-msgstr "Визначіть нове середовище UTM"
-
-#. module: utm
-#: model_terms:ir.actions.act_window,help:utm.utm_source_action
-msgid "Define a new UTM source"
-msgstr "Визначіть нове джерело UTM"
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
@@ -398,6 +398,11 @@ msgid "Newsletter"
 msgstr "Інформаційний бюлетень"
 
 #. module: utm
+#: model_terms:ir.actions.act_window,help:utm.utm_source_action
+msgid "No Sources yet!"
+msgstr ""
+
+#. module: utm
 #. openerp-web
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
@@ -554,6 +559,14 @@ msgid "Tags"
 msgstr "Теги"
 
 #. module: utm
+#: code:addons/utm/models/utm.py:0
+#, python-format
+msgid ""
+"The UTM medium '%s' cannot be deleted as it is used in some main functional "
+"flows, such as the recruitment and the mass mailing."
+msgstr ""
+
+#. module: utm
 #. openerp-web
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
@@ -633,6 +646,13 @@ msgid "UTM Medium"
 msgstr "Носій UTM "
 
 #. module: utm
+#: model_terms:ir.actions.act_window,help:utm.utm_medium_action
+msgid ""
+"UTM Mediums track the mean that was used to attract traffic (e.g. "
+"\"Website\", \"Twitter\", ...)."
+msgstr ""
+
+#. module: utm
 #: model:ir.model,name:utm.model_utm_mixin
 msgid "UTM Mixin"
 msgstr "Мікс UTM "
@@ -641,6 +661,13 @@ msgstr "Мікс UTM "
 #: model:ir.model,name:utm.model_utm_source
 msgid "UTM Source"
 msgstr "Джерело UTM "
+
+#. module: utm
+#: model_terms:ir.actions.act_window,help:utm.utm_source_action
+msgid ""
+"UTM Sources track where traffic comes from  (e.g. \"May Newsletter\", \"\", "
+"...)."
+msgstr ""
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.action_view_utm_stage
@@ -663,11 +690,6 @@ msgstr "UTM"
 #, python-format
 msgid "Use This For My Campaigns"
 msgstr "Використовуйте це для Моєї кампанії"
-
-#. module: utm
-#: model_terms:ir.actions.act_window,help:utm.action_view_utm_tag
-msgid "Use tags to organize campaigns and easily filter them."
-msgstr "Використовуйте теги для організації кампаній та легко фільтруйте їх."
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form

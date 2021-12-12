@@ -15,9 +15,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"POT-Creation-Date: 2021-12-07 10:46+0000\n"
 "PO-Revision-Date: 2016-08-05 13:05+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -42,6 +42,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:lunch.view_lunch_cashmove_report_kanban
 msgid "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
 msgstr "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Datum\" title=\"Datum\"/>"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
+msgid ""
+"<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Send notification\" "
+"title=\"Send notification\"/>"
+msgstr ""
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.view_lunch_cashmove_kanban
@@ -80,6 +87,13 @@ msgstr ""
 "                                <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
+msgid ""
+"<span class=\"o_form_label\">Reception notification</span>\n"
+"                                <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
+msgstr ""
+
+#. module: lunch
 #: model:mail.template,body_html:lunch.lunch_order_mail_supplier
 msgid ""
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
@@ -92,7 +106,7 @@ msgid ""
 "                <tr><td valign=\"middle\">\n"
 "                    <span style=\"font-size: 10px;\">Lunch Order</span><br/>\n"
 "                </td><td valign=\"middle\" align=\"right\">\n"
-"                    <img src=\"/logo.png?company=${user.company_id.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"'%s' % company.name\"/>\n"
+"                    <img t-attf-src=\"/logo.png?company={{ user.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"user.company_id.name\"/>\n"
 "                </td></tr>\n"
 "                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
 "                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
@@ -107,15 +121,23 @@ msgid ""
 "                <tr>\n"
 "                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
 "    <div>\n"
-"        % set lines = ctx['lines']\n"
-"        % set order = ctx['order']\n"
-"        % set supplier = user.env['res.partner'].browse(order['supplier_id'])\n"
-"        % set currency = user.env['res.currency'].browse(order['currency_id'])\n"
+"        <t t-set=\"lines\" t-value=\"ctx.get('lines', [])\"/>\n"
+"        <t t-set=\"order\" t-value=\"ctx.get('order')\"/>\n"
+"        <t t-set=\"currency\" t-value=\"user.env['res.currency'].browse(order.get('currency_id'))\"/>\n"
 "        <p>\n"
-"        Dear ${order['supplier_name']},\n"
+"        Dear <t t-out=\"order.get('supplier_name', '')\">Laurie Poiret</t>,\n"
 "        </p><p>\n"
-"        Here is, today orders for ${order['company_name']}:\n"
+"        Here is, today orders for <t t-out=\"order.get('company_name', '')\">LunchCompany</t>:\n"
 "        </p>\n"
+"\n"
+"        <t t-if=\"sites\">\n"
+"            <br/>\n"
+"            <p>Location</p>\n"
+"            <t t-foreach=\"site\" t-as=\"site\">\n"
+"                <p><t t-out=\"site['name'] or ''\"/> : <t t-out=\"site['address'] or ''\"/></p>\n"
+"            </t>\n"
+"            <br/>\n"
+"        </t>\n"
 "\n"
 "        <table>\n"
 "            <thead>\n"
@@ -123,33 +145,34 @@ msgid ""
 "                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\"><strong>Product</strong></th>\n"
 "                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\"><strong>Comments</strong></th>\n"
 "                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\"><strong>Person</strong></th>\n"
+"                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\"><strong>Site</strong></th>\n"
 "                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\" align=\"center\"><strong>Qty</strong></th>\n"
 "                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\" align=\"center\"><strong>Price</strong></th>\n"
 "                </tr>\n"
 "            </thead>\n"
 "            <tbody>\n"
-"                % for line in lines\n"
-"                <tr>\n"
-"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\">${line['product']}</td>\n"
+"                <tr t-foreach=\"lines\" t-as=\"line\">\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" t-out=\"line['product'] or ''\">Sushi salmon</td>\n"
 "                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\">\n"
-"                    % if line['toppings']:\n"
-"                        ${line['toppings']}\n"
-"                    % endif\n"
-"                    % if line['note']:\n"
-"                        <div style=\"color: rgb(173,181,189);\">${line['note']}</div>\n"
-"                    % endif\n"
+"                    <t t-if=\"line['toppings']\">\n"
+"                        <t t-out=\"line['toppings'] or ''\">Soy sauce</t>\n"
+"                    </t>\n"
+"                    <t t-if=\"line['note']\">\n"
+"                        <div style=\"color: rgb(173,181,189);\" t-out=\"line['note'] or ''\">With wasabi.</div>\n"
+"                    </t>\n"
 "                    </td>\n"
-"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\">${line['username']}</td>\n"
-"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" align=\"right\">${line['quantity']}</td>\n"
-"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" align=\"right\">${format_amount(line['price'], currency)}</td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" t-out=\"line['username'] or ''\">lap</td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" t-out=\"line['site'] or ''\">Office 1</td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" align=\"right\" t-out=\"line['quantity'] or ''\">10</td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" align=\"right\" t-out=\"format_amount(line['price'], currency) or ''\">$ 1.00</td>\n"
 "                </tr>\n"
-"                % endfor\n"
 "                <tr>\n"
+"                    <td/>\n"
 "                    <td/>\n"
 "                    <td/>\n"
 "                    <td/>\n"
 "                    <td style=\"width: 100%; font-size: 13px; border-top: 1px solid black;\"><strong>Total</strong></td>\n"
-"                    <td style=\"width: 100%; font-size: 13px; border-top: 1px solid black;\" align=\"right\"><strong>${format_amount(order['amount_total'], currency)}</strong></td>\n"
+"                    <td style=\"width: 100%; font-size: 13px; border-top: 1px solid black;\" align=\"right\"><strong t-out=\"format_amount(order['amount_total'], currency) or ''\">$ 10.00</strong></td>\n"
 "                </tr>\n"
 "            </tbody>\n"
 "        </table>\n"
@@ -171,24 +194,18 @@ msgid ""
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\" align=\"left\">\n"
-"                    ${user.company_id.name}\n"
+"                    <t t-out=\"user.company_id.name or ''\">YourCompany</t>\n"
 "                </td></tr>\n"
 "                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
-"                    ${user.company_id.phone}\n"
-"                    % if user.company_id.phone and (user.company_id.email or user.company_id.website)\n"
-"                    |\n"
-"                    % endif\n"
-"                    % if user.company_id.email\n"
-"                    <a href=\"'mailto:%s' % ${user.company_id.email}\" style=\"text-decoration:none; color: #454748;\">${user.company_id.email}</a>\n"
-"                    % endif\n"
-"                    % if user.company_id.email and user.company_id.website\n"
-"                    |\n"
-"                    % endif\n"
-"                    % if user.company_id.website\n"
-"                    <a href=\"'%s' % ${user.company_id.website}\" style=\"text-decoration:none; color: #454748;\">\n"
-"                    ${user.company_id.website}\n"
-"                    </a>\n"
-"                    % endif\n"
+"                    <t t-out=\"user.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"                    <t t-if=\"user.company_id.phone and (user.company_id.email or user.company_id.website)\">|</t>\n"
+"                    <t t-if=\"user.company_id.email\">\n"
+"                        <a t-attf-href=\"'mailto:%s' % {{ user.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"user.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                    </t>\n"
+"                    <t t-if=\"user.company_id.email and user.company_id.website\">|</t>\n"
+"                    <t t-if=\"user.company_id.website\">\n"
+"                        <a t-attf-href=\"'%s' % {{ user.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"user.company_id.website or ''\">http://www.example.com</a>\n"
+"                    </t>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -215,9 +232,9 @@ msgstr ""
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\">\n"
-"                    <span style=\"font-size: 10px;\">Lunch order</span><br/>\n"
+"                    <span style=\"font-size: 10px;\">Lunchorder</span><br/>\n"
 "                </td><td valign=\"middle\" align=\"right\">\n"
-"                    <img src=\"/logo.png?company=${user.company_id.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"'%s' % company.name\"/>\n"
+"                    <img t-attf-src=\"/logo.png?company={{ user.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"user.company_id.name\"/>\n"
 "                </td></tr>\n"
 "                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
 "                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
@@ -232,54 +249,63 @@ msgstr ""
 "                <tr>\n"
 "                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
 "    <div>\n"
-"        % set lines = ctx['lines']\n"
-"        % set order = ctx['order']\n"
-"        % set supplier = user.env['res.partner'].browse(order['supplier_id'])\n"
-"        % set currency = user.env['res.currency'].browse(order['currency_id'])\n"
+"        <t t-set=\"lines\" t-value=\"ctx.get('lines', [])\"/>\n"
+"        <t t-set=\"order\" t-value=\"ctx.get('order')\"/>\n"
+"        <t t-set=\"currency\" t-value=\"user.env['res.currency'].browse(order.get('currency_id'))\"/>\n"
 "        <p>\n"
-"        Beste ${order['supplier_name']},\n"
+"        Beste <t t-out=\"order.get('supplier_name', '')\">Laurie Poiret</t>,\n"
 "        </p><p>\n"
-"        Hier is de bestelling van vandaag voor ${order['company_name']}:\n"
+"        Hier zijn de bestellingen voor vandaag voor <t t-out=\"order.get('company_name', '')\">LunchCompany</t>:\n"
 "        </p>\n"
+"\n"
+"        <t t-if=\"sites\">\n"
+"            <br/>\n"
+"            <p>Locatie</p>\n"
+"            <t t-foreach=\"site\" t-as=\"site\">\n"
+"                <p><t t-out=\"site['name'] or ''\"/> : <t t-out=\"site['address'] or ''\"/></p>\n"
+"            </t>\n"
+"            <br/>\n"
+"        </t>\n"
 "\n"
 "        <table>\n"
 "            <thead>\n"
 "                <tr style=\"background-color:rgb(233,232,233);\">\n"
 "                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\"><strong>Product</strong></th>\n"
-"                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\"><strong>Opmerkingen</strong></th>\n"
-"                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\"><strong>Personen</strong></th>\n"
+"                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\"><strong>Opmerking</strong></th>\n"
+"                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\"><strong>Persoon</strong></th>\n"
+"                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\"><strong>Met</strong></th>\n"
 "                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\" align=\"center\"><strong>Aantal</strong></th>\n"
 "                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\" align=\"center\"><strong>Prijs</strong></th>\n"
 "                </tr>\n"
 "            </thead>\n"
 "            <tbody>\n"
-"                % for line in lines\n"
-"                <tr>\n"
-"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\">${line['product']}</td>\n"
+"                <tr t-foreach=\"lines\" t-as=\"line\">\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" t-out=\"line['product'] or ''\">Sushi salmon</td>\n"
 "                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\">\n"
-"                    % if line['toppings']:\n"
-"                        ${line['toppings']}\n"
-"                    % endif\n"
-"                    % if line['note']:\n"
-"                        <div style=\"color: rgb(173,181,189);\">${line['note']}</div>\n"
-"                    % endif\n"
+"                    <t t-if=\"line['toppings']\">\n"
+"                        <t t-out=\"line['toppings'] or ''\">Soy sauce</t>\n"
+"                    </t>\n"
+"                    <t t-if=\"line['note']\">\n"
+"                        <div style=\"color: rgb(173,181,189);\" t-out=\"line['note'] or ''\">With wasabi.</div>\n"
+"                    </t>\n"
 "                    </td>\n"
-"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\">${line['username']}</td>\n"
-"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" align=\"right\">${line['quantity']}</td>\n"
-"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" align=\"right\">${format_amount(line['price'], currency)}</td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" t-out=\"line['username'] or ''\">lap</td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" t-out=\"line['site'] or ''\">Office 1</td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" align=\"right\" t-out=\"line['quantity'] or ''\">10</td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" align=\"right\" t-out=\"format_amount(line['price'], currency) or ''\">$ 1.00</td>\n"
 "                </tr>\n"
-"                % endfor\n"
 "                <tr>\n"
+"                    <td/>\n"
 "                    <td/>\n"
 "                    <td/>\n"
 "                    <td/>\n"
 "                    <td style=\"width: 100%; font-size: 13px; border-top: 1px solid black;\"><strong>Totaal</strong></td>\n"
-"                    <td style=\"width: 100%; font-size: 13px; border-top: 1px solid black;\" align=\"right\"><strong>${format_amount(order['amount_total'], currency)}</strong></td>\n"
+"                    <td style=\"width: 100%; font-size: 13px; border-top: 1px solid black;\" align=\"right\"><strong t-out=\"format_amount(order['amount_total'], currency) or ''\">$ 10.00</strong></td>\n"
 "                </tr>\n"
 "            </tbody>\n"
 "        </table>\n"
 "\n"
-"        <p>Aarzel niet om bij vragen contact met ons op te nemen.</p>\n"
+"        <p>Aarzel niet om contact met ons op te nemen als je vragen hebt.</p>\n"
 "    </div>\n"
 "                    </td>\n"
 "                </tr>\n"
@@ -296,24 +322,18 @@ msgstr ""
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\" align=\"left\">\n"
-"                    ${user.company_id.name}\n"
+"                    <t t-out=\"user.company_id.name or ''\">YourCompany</t>\n"
 "                </td></tr>\n"
 "                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
-"                    ${user.company_id.phone}\n"
-"                    % if user.company_id.phone and (user.company_id.email or user.company_id.website)\n"
-"                    |\n"
-"                    % endif\n"
-"                    % if user.company_id.email\n"
-"                    <a href=\"'mailto:%s' % ${user.company_id.email}\" style=\"text-decoration:none; color: #454748;\">${user.company_id.email}</a>\n"
-"                    % endif\n"
-"                    % if user.company_id.email and user.company_id.website\n"
-"                    |\n"
-"                    % endif\n"
-"                    % if user.company_id.website\n"
-"                    <a href=\"'%s' % ${user.company_id.website}\" style=\"text-decoration:none; color: #454748;\">\n"
-"                    ${user.company_id.website}\n"
-"                    </a>\n"
-"                    % endif\n"
+"                    <t t-out=\"user.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"                    <t t-if=\"user.company_id.phone and (user.company_id.email or user.company_id.website)\">|</t>\n"
+"                    <t t-if=\"user.company_id.email\">\n"
+"                        <a t-attf-href=\"'mailto:%s' % {{ user.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"user.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                    </t>\n"
+"                    <t t-if=\"user.company_id.email and user.company_id.website\">|</t>\n"
+"                    <t t-if=\"user.company_id.website\">\n"
+"                        <a t-attf-href=\"'%s' % {{ user.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"user.company_id.website or ''\">http://www.example.com</a>\n"
+"                    </t>\n"
 "                </td></tr>\n"
 "            </table>\n"
 "        </td>\n"
@@ -366,7 +386,6 @@ msgstr "Actie gevraagd"
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__active
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__active
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category__active
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_report__active
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__active
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_search
 msgid "Active"
@@ -391,13 +410,6 @@ msgstr "Activiteitsfase"
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_type_icon
 msgid "Activity Type Icon"
 msgstr "Activiteitensoort icoon"
-
-#. module: lunch
-#. openerp-web
-#: code:addons/lunch/static/src/xml/lunch.xml:0
-#, python-format
-msgid "Add"
-msgstr "Toevoegen"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
@@ -470,6 +482,11 @@ msgid "Availability"
 msgstr "Beschikbaarheid"
 
 #. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
+msgid "Available Today"
+msgstr "Vandaag beschikbaar"
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__available_toppings_1
 msgid "Available Toppings 1"
 msgstr "Beschikbare topping 1"
@@ -524,14 +541,11 @@ msgid "Cashmoves report"
 msgstr "Kasmutaties rapport"
 
 #. module: lunch
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_report_view_search
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Categories"
 msgstr "Categorieën"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_topping__category_id
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_report_view_search
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Category"
 msgstr "Categorie"
@@ -568,7 +582,6 @@ msgstr "Bedrijven"
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__company_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__company_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category__company_id
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_report__company_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__company_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__company_id
 msgid "Company"
@@ -671,7 +684,6 @@ msgstr "Cron"
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__currency_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__currency_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category__currency_id
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_report__currency_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__currency_id
 #: model:ir.model.fields,field_description:lunch.field_res_config_settings__currency_id
 msgid "Currency"
@@ -699,7 +711,6 @@ msgstr "Levering"
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_report__description
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__product_description
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__description
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_report__description
 msgid "Description"
 msgstr "Omschrijving"
 
@@ -721,18 +732,15 @@ msgstr "Tonen"
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__display_name
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__display_name
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category__display_name
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_report__display_name
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__display_name
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__display_name
 msgid "Display Name"
 msgstr "Schermnaam"
 
 #. module: lunch
-#. openerp-web
-#: code:addons/lunch/static/src/xml/lunch.xml:0
-#, python-format
-msgid "Don't forget the alerts displayed in the reddish area"
-msgstr "Vergeet niet de meldingen weergegeven in het rode veld"
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__display_reorder_button
+msgid "Display Reorder Button"
+msgstr "Knop voor opnieuw bestellen weergeven"
 
 #. module: lunch
 #: model:lunch.product.category,name:lunch.categ_drinks
@@ -767,37 +775,37 @@ msgstr "Iedereen"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_label_1
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_category__topping_label_1
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_label_1
 msgid "Extra 1 Label"
 msgstr "Extra 1 label"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_quantity_1
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_category__topping_quantity_1
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_quantity_1
 msgid "Extra 1 Quantity"
 msgstr "Extra 1 hoeveelheid"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_label_2
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_category__topping_label_2
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_label_2
 msgid "Extra 2 Label"
 msgstr "Extra 2 label"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_quantity_2
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_category__topping_quantity_2
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_quantity_2
 msgid "Extra 2 Quantity"
 msgstr "Extra 2 hoeveelheid"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_label_3
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_category__topping_label_3
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_label_3
 msgid "Extra 3 Label"
 msgstr "Extra 3 label"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_quantity_3
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_category__topping_quantity_3
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_quantity_3
 msgid "Extra 3 Quantity"
 msgstr "Extra 3 hoeveelheid"
 
@@ -820,11 +828,6 @@ msgstr "Extras 2"
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_ids_3
 msgid "Extras 3"
 msgstr "Extras 3"
-
-#. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_report__is_favorite
-msgid "Favorite"
-msgstr "Favoriet"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_res_users__favorite_lunch_product_ids
@@ -868,9 +871,13 @@ msgid "Fri"
 msgstr "Vrij"
 
 #. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
+msgid "Friday"
+msgstr "Vrijdag"
+
+#. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_search_2
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_report_view_search
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Group By"
 msgstr "Groepeer op"
@@ -916,7 +923,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__id
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__id
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category__id
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_report__id
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__id
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__id
 msgid "ID"
@@ -959,7 +965,6 @@ msgstr "Afbeelding 1024"
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__image_128
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__image_128
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category__image_128
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_report__image_128
 msgid "Image 128"
 msgstr "Afbeelding 128"
 
@@ -991,9 +996,19 @@ msgid "Is Displayed Today"
 msgstr "Wordt vandaag getoond"
 
 #. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__is_favorite
+msgid "Is Favorite"
+msgstr "Is favoriet"
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_is_follower
 msgid "Is Follower"
 msgstr "Is een volger"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__is_new
+msgid "Is New"
+msgstr "Is nieuw"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_res_users__last_lunch_location_id
@@ -1008,14 +1023,13 @@ msgstr "Laatste lunch locatie"
 #: model:ir.model.fields,field_description:lunch.field_lunch_order____last_update
 #: model:ir.model.fields,field_description:lunch.field_lunch_product____last_update
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category____last_update
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_report____last_update
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier____last_update
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping____last_update
 msgid "Last Modified on"
 msgstr "Laatst gewijzigd op"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_report__last_order_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__last_order_date
 msgid "Last Order Date"
 msgstr "Laatste order datum"
 
@@ -1104,6 +1118,11 @@ msgid "Lunch List"
 msgstr "Lunchlijst"
 
 #. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__lunch_location_id
+msgid "Lunch Location"
+msgstr "Lunchlocatie"
+
+#. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_location_action
 #: model:ir.model,name:lunch.model_lunch_location
 msgid "Lunch Locations"
@@ -1113,6 +1132,11 @@ msgstr "Lunch locatie"
 #: model:ir.model.fields,field_description:lunch.field_res_company__lunch_minimum_threshold
 msgid "Lunch Minimum Threshold"
 msgstr "Lunch minimale drempel"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_res_company__lunch_notify_message
+msgid "Lunch Notify Message"
+msgstr ""
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_order
@@ -1135,6 +1159,17 @@ msgid "Lunch Supplier"
 msgstr "Leverancier lunch"
 
 #. module: lunch
+#: code:addons/lunch/models/lunch_order.py:0
+#, python-format
+msgid "Lunch notification"
+msgstr ""
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_res_config_settings__company_lunch_notify_message
+msgid "Lunch notification message"
+msgstr ""
+
+#. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_order_action_cancel
 msgid "Lunch: Cancel meals"
 msgstr "Lunch: annuleer maaltijden"
@@ -1148,6 +1183,11 @@ msgstr "Lunch: ontvang maaltijden"
 #: model:mail.template,name:lunch.lunch_order_mail_supplier
 msgid "Lunch: Send by email"
 msgstr "Lunch: Verstuur per e-mail"
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_order_action_notify
+msgid "Lunch: Send notifications"
+msgstr ""
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_main_attachment_id
@@ -1201,6 +1241,11 @@ msgid "Mon"
 msgstr "Ma"
 
 #. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
+msgid "Monday"
+msgstr "Maandag"
+
+#. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_report_action_account
 msgid "My Account"
 msgstr "Mijn account"
@@ -1244,7 +1289,6 @@ msgid "Name"
 msgstr "Naam"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_report__is_new
 #: model_terms:ir.ui.view,arch_db:lunch.view_lunch_product_kanban_order
 msgid "New"
 msgstr "Nieuw"
@@ -1305,9 +1349,9 @@ msgid "None"
 msgstr "Geen"
 
 #. module: lunch
-#: model:ir.model.fields.selection,name:lunch.selection__lunch_product_category__topping_quantity_1__0_more
-#: model:ir.model.fields.selection,name:lunch.selection__lunch_product_category__topping_quantity_2__0_more
-#: model:ir.model.fields.selection,name:lunch.selection__lunch_product_category__topping_quantity_3__0_more
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__topping_quantity_1__0_more
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__topping_quantity_2__0_more
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__topping_quantity_3__0_more
 msgid "None or More"
 msgstr "Geen of Meer"
 
@@ -1349,6 +1393,11 @@ msgid "Notification time must be between 0 and 12"
 msgstr "Tijd van melding moet tussen 0 en 12 zijn"
 
 #. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__notified
+msgid "Notified"
+msgstr ""
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_needaction_counter
 msgid "Number of Actions"
 msgstr "Aantal acties"
@@ -1374,16 +1423,16 @@ msgid "Number of unread messages"
 msgstr "Aantal ongelezen berichten"
 
 #. module: lunch
-#: model:ir.model.fields.selection,name:lunch.selection__lunch_product_category__topping_quantity_1__1_more
-#: model:ir.model.fields.selection,name:lunch.selection__lunch_product_category__topping_quantity_2__1_more
-#: model:ir.model.fields.selection,name:lunch.selection__lunch_product_category__topping_quantity_3__1_more
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__topping_quantity_1__1_more
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__topping_quantity_2__1_more
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__topping_quantity_3__1_more
 msgid "One or More"
 msgstr "Een of Mee"
 
 #. module: lunch
-#: model:ir.model.fields.selection,name:lunch.selection__lunch_product_category__topping_quantity_1__1
-#: model:ir.model.fields.selection,name:lunch.selection__lunch_product_category__topping_quantity_2__1
-#: model:ir.model.fields.selection,name:lunch.selection__lunch_product_category__topping_quantity_3__1
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__topping_quantity_1__1
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__topping_quantity_2__1
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__topping_quantity_3__1
 msgid "Only One"
 msgstr "Slechts één"
 
@@ -1432,8 +1481,8 @@ msgstr "Orders"
 
 #. module: lunch
 #: model:mail.template,subject:lunch.lunch_order_mail_supplier
-msgid "Orders for ${ctx['order']['company_name']}"
-msgstr "Orders voor ${ctx['order']['company_name']}"
+msgid "Orders for {{ ctx['order']['company_name'] }}"
+msgstr "Orders voor {{ ctx['order']['company_name'] }}"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
@@ -1473,7 +1522,6 @@ msgstr "Pizza"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__price
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_report__price
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__price
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
 msgid "Price"
@@ -1481,15 +1529,13 @@ msgstr "Prijs"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__product_id
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_report__product_id
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_report_view_search
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Product"
 msgstr "Product"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_report__is_available_at
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__is_available_at
 msgid "Product Availability"
 msgstr "Product beschikbaarheid"
 
@@ -1508,7 +1554,6 @@ msgstr "Productcategorieën formulier"
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__category_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__category_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category__name
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_report__category_id
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_category_view_tree
 msgid "Product Category"
 msgstr "Productcategorie"
@@ -1519,14 +1564,17 @@ msgid "Product Count"
 msgstr "Aantal producten"
 
 #. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__product_image
+msgid "Product Image"
+msgstr "Productafbeelding"
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__name
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__name
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_report__name
 msgid "Product Name"
 msgstr "Productnaam"
 
 #. module: lunch
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_report_view_search
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Product Search"
 msgstr "Zoek product"
@@ -1536,11 +1584,6 @@ msgstr "Zoek product"
 #, python-format
 msgid "Product is no longer available."
 msgstr "Product is niet meer leverbaar."
-
-#. module: lunch
-#: model:ir.model,name:lunch.model_lunch_product_report
-msgid "Product report"
-msgstr "Product rapport"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_product_action
@@ -1572,6 +1615,11 @@ msgid "Quantity"
 msgstr "Hoeveelheid"
 
 #. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
+msgid "Re-order"
+msgstr "Opnieuw ordenen"
+
+#. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
 msgid "Receive"
@@ -1592,6 +1640,11 @@ msgstr "Ontvangers"
 #: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_action_payment
 msgid "Register a payment"
 msgstr "Registreer een betaling"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
+msgid "Reset"
+msgstr "Reset"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__responsible_id
@@ -1615,6 +1668,11 @@ msgid "Sat"
 msgstr "Zat"
 
 #. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
+msgid "Saturday"
+msgstr "Zaterdag"
+
+#. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
 msgid "Save"
 msgstr "Opslaan"
@@ -1626,17 +1684,20 @@ msgid "Search"
 msgstr "Zoek"
 
 #. module: lunch
-#. openerp-web
-#: code:addons/lunch/static/src/xml/lunch.xml:0
-#, python-format
-msgid "Select a product and put your order comments on the note."
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
+msgid "Send Notification"
 msgstr ""
-"Selecteer een product en plaats commentaar bij notitie van de bestelling."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__send_by
 msgid "Send Order By"
 msgstr "Verzend order via"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
+msgid "Send this message to your users when their order has been delivered."
+msgstr ""
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_config_settings_action
@@ -1706,29 +1767,39 @@ msgid "Sun"
 msgstr "Zon"
 
 #. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
+msgid "Sunday"
+msgstr "Zondag"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_topping__supplier_id
+msgid "Supplier"
+msgstr "Leverancier"
+
+#. module: lunch
+#: code:addons/lunch/models/lunch_product.py:0
+#, python-format
+msgid ""
+"The following product categories are archived. You should either unarchive the categories or change the category of the product.\n"
+"%s"
+msgstr ""
+"De volgende productcategorieën zijn gearchiveerd. Je moet de categorieën dearchiveren of de categorie van het product wijzigen.\n"
+"%s"
+
+#. module: lunch
+#: code:addons/lunch/models/lunch_product.py:0
+#, python-format
+msgid ""
+"The following suppliers are archived. You should either unarchive the suppliers or change the supplier of the product.\n"
+"%s"
+msgstr ""
+"De volgende leveranciers zijn gearchiveerd. Je moet de leveranciers dearchiveren of de leverancier van het product wijzigen.\n"
+"%s"
+
+#. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_product_category__product_count
 msgid "The number of products related to this category"
 msgstr "Het aantal producten gerelateerd aan deze categorie"
-
-#. module: lunch
-#: code:addons/lunch/models/lunch_product.py:0
-#, python-format
-msgid ""
-"The product category is archived. The user have to unarchive the category or"
-" change the category of the product."
-msgstr ""
-"De productcategorie wordt gearchiveerd. De gebruiker moet de categorie uit "
-"het archief halen of de categorie van het product wijzigen."
-
-#. module: lunch
-#: code:addons/lunch/models/lunch_product.py:0
-#, python-format
-msgid ""
-"The product supplier is archived. The user have to unarchive the supplier or"
-" change the supplier of the product."
-msgstr ""
-"De productleverancier is gearchiveerd. De gebruiker moet de leverancier de-"
-"archiveren of de leverancier van het product wijzigen."
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__responsible_id
@@ -1738,6 +1809,14 @@ msgid ""
 msgstr ""
 "De verantwoordelijke is de persoon die de lunch besteld voor iedereen. Het "
 "wordt gebruikt als de 'van' wanneer de automatische e-mail verzonden wordt."
+
+#. module: lunch
+#: code:addons/lunch/models/lunch_order.py:0
+#, python-format
+msgid "The vendor related to this order is not available today."
+msgstr ""
+"De leverancier met betrekking tot deze bestelling is vandaag niet "
+"beschikbaar."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_action
@@ -1769,17 +1848,15 @@ msgid "This is True when if the supplier is available today"
 msgstr "Dit is Waar indien de leverancier vandaag beschikbaar is"
 
 #. module: lunch
-#. openerp-web
-#: code:addons/lunch/static/src/xml/lunch.xml:0
-#, python-format
-msgid "This is the first time you order a meal"
-msgstr "Dit is de eerste keer dat u een maaltijd besteld"
-
-#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__thu
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__thu
 msgid "Thu"
 msgstr "Do"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
+msgid "Thursday"
+msgstr "Donderdag"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__tz
@@ -1835,17 +1912,17 @@ msgid "Topping Category"
 msgstr "Topping categorie"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_category__topping_ids_1
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_ids_1
 msgid "Topping Ids 1"
 msgstr "Topping ids 1"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_category__topping_ids_2
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_ids_2
 msgid "Topping Ids 2"
 msgstr "Topping ids 2"
 
 #. module: lunch
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_category__topping_ids_3
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_ids_3
 msgid "Topping Ids 3"
 msgstr "Topping ids 3"
 
@@ -1872,6 +1949,11 @@ msgid "Tue"
 msgstr "Di"
 
 #. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
+msgid "Tuesday"
+msgstr "Dinsdag"
+
+#. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__activity_exception_decoration
 msgid "Type of the exception activity on record."
 msgstr "Type van activiteit uitzondering op record."
@@ -1895,7 +1977,6 @@ msgstr "T/m"
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__user_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_report__user_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__user_id
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_report__user_id
 #: model:res.groups,name:lunch.group_lunch_user
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
 msgid "User"
@@ -1909,10 +1990,8 @@ msgstr "Gebruikers"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__supplier_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__supplier_id
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_report__supplier_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__partner_id
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_report_view_search
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
 msgid "Vendor"
@@ -1926,7 +2005,6 @@ msgstr "Leverancier orders op datum"
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_vendors_action
 #: model:ir.ui.menu,name:lunch.lunch_vendors_menu
-#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_report_view_search
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Vendors"
 msgstr "Leveranciers"
@@ -1936,6 +2014,11 @@ msgstr "Leveranciers"
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__wed
 msgid "Wed"
 msgstr "Wo"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
+msgid "Wednesday"
+msgstr "Woensdag"
 
 #. module: lunch
 #: code:addons/lunch/controllers/main.py:0
@@ -1976,13 +2059,6 @@ msgid ""
 msgstr ""
 "Uw winkelmandje\n"
 " ("
-
-#. module: lunch
-#. openerp-web
-#: code:addons/lunch/static/src/xml/lunch.xml:0
-#, python-format
-msgid "Your favorite meals will be created based on your last orders."
-msgstr "Uw favoriete maaltijden worden gebaseerd op je laatste bestellingen."
 
 #. module: lunch
 #. openerp-web

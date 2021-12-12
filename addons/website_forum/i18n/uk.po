@@ -7,17 +7,17 @@
 # Zoriana Zaiats, 2018
 # ТАрас <tratatuta@i.ua>, 2019
 # Oleg Pikarevskyi <o@btegri.co>, 2019
-# Martin Trigaux, 2020
 # Bohdan Lisnenko, 2020
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021
+# Martin Trigaux, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"POT-Creation-Date: 2021-12-07 10:46+0000\n"
 "PO-Revision-Date: 2016-08-05 13:12+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021\n"
+"Last-Translator: Martin Trigaux, 2021\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +26,23 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_forum.js:0
+#, python-format
+msgid " Flag"
+msgstr ""
+
+#. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_forum.js:0
+#: code:addons/website_forum/static/src/js/website_forum.js:0
+#, python-format
+msgid " Flagged"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__total_answers
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_list
 msgid "# Answers"
 msgstr "К-сть відповідей"
 
@@ -42,18 +58,9 @@ msgstr "К-сть публікацій"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__total_views
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_list
 msgid "# Views"
 msgstr "К-сть переглядів"
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.edit_post
-msgid "#{post.name}"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.new_question
-msgid "#{post_name}"
-msgstr ""
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:0
@@ -136,6 +143,8 @@ msgid "%d karma required to flag a post."
 msgstr "%d карма вимагає позначення публікації."
 
 #. module: website_forum
+#: code:addons/website_forum/controllers/main.py:0
+#: code:addons/website_forum/controllers/main.py:0
 #: code:addons/website_forum/models/forum.py:0
 #, python-format
 msgid "%d karma required to mark a post as offensive."
@@ -713,11 +722,6 @@ msgstr ""
 "                        </span>"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.close_post
-msgid "<span class=\"text-muted mx-3\">or</span>"
-msgstr "<span class=\"text-muted mx-3\">або</span>"
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "<span>By </span>"
 msgstr "<span>Зроблено </span>"
@@ -1196,15 +1200,6 @@ msgid "Click here to accept this answer."
 msgstr "Натисніть тут, щоби прийняти цю відповідь."
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.header
-msgid ""
-"Click here to send a verification email allowing you to participate in the "
-"forum."
-msgstr ""
-"Натисніть тут, щоб надіслати електронний лист із підтвердженням, що "
-"дозволить вам взяти участь у форумі."
-
-#. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/js/tours/website_forum.js:0
 #, python-format
@@ -1255,7 +1250,7 @@ msgid "Close own posts"
 msgstr "Закрити свої публікації"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.close_post
+#: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
 msgid "Close post"
 msgstr "Закрити публікацію "
 
@@ -1275,7 +1270,7 @@ msgid "Closed on"
 msgstr "Закрито на"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.close_post
+#: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
 msgid "Closing"
 msgstr "Закриття"
 
@@ -1450,6 +1445,21 @@ msgid "Critic"
 msgstr "Критик"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_searchbar_input_snippet_options
+msgid "Date"
+msgstr "Дата"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_searchbar_input_snippet_options
+msgid "Date (high to low)"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_searchbar_input_snippet_options
+msgid "Date (low to high)"
+msgstr ""
+
+#. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__default_order
 msgid "Default"
 msgstr "За замовчуванням"
@@ -1500,6 +1510,7 @@ msgstr "Видалені власні публікації з трьома аб�
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__description
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_all_all_entries
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_searchbar_input_snippet_options
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 msgid "Description"
 msgstr "Опис"
@@ -1512,8 +1523,8 @@ msgstr "Опис видимий на сайті"
 #. module: website_forum
 #. openerp-web
 #: code:addons/website_forum/static/src/js/website_forum.editor.js:0
-#: model_terms:ir.ui.view,arch_db:website_forum.close_post
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
+#: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
 #: model_terms:ir.ui.view,arch_db:website_forum.new_question
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answer
 #: model_terms:ir.ui.view,arch_db:website_forum.post_comment
@@ -1721,6 +1732,7 @@ msgstr "Позначити публікацію як неприйнятну"
 #. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_post__state__flagged
 #: model_terms:ir.ui.view,arch_db:website_forum.header
+#: model_terms:ir.ui.view,arch_db:website_forum.question_dropdown
 msgid "Flagged"
 msgstr "Позначений"
 
@@ -1774,6 +1786,7 @@ msgstr ""
 
 #. module: website_forum
 #: code:addons/website_forum/models/website.py:0
+#: code:addons/website_forum/models/website.py:0
 #: model:ir.actions.act_url,name:website_forum.action_open_forum
 #: model:ir.model,name:website_forum.model_forum_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__forum_id
@@ -1824,6 +1837,7 @@ msgstr "Тег форуму"
 #. module: website_forum
 #: model:ir.actions.act_window,name:website_forum.action_forum_forum
 #: model:ir.ui.menu,name:website_forum.menu_forum_global
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_searchbar_input_snippet_options
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_list
 msgid "Forums"
 msgstr "Форуми"
@@ -1990,7 +2004,7 @@ msgid "If this approach is not for you, please respect the community."
 msgstr "Якщо цей підхід не для вас, будь ласка, поважайте спільноту."
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.close_post
+#: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
 msgid ""
 "If you close this post, it will be hidden for most users. Only\n"
 "            users having a high karma can see closed posts to moderate\n"
@@ -2016,7 +2030,7 @@ msgstr ""
 "хотів, щоб інші пояснили ______ мені”, тоді все ОК."
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.close_post
+#: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
 msgid ""
 "If you mark this post as offensive, it will be hidden for most users. Only\n"
 "            users having a high karma can see offensive posts to moderate\n"
@@ -2212,7 +2226,12 @@ msgid "Mark as Best Answer"
 msgstr "Позначити, як найкраща відповідь"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.close_post
+#: model_terms:ir.ui.view,arch_db:website_forum.show_flag_validator
+msgid "Mark as Offensive"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "Mark as offensive"
 msgstr "Позначити як неприйнятний"
@@ -2504,15 +2523,18 @@ msgstr "Не по темі чи не актуально"
 #. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_post__state__offensive
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_post_reason__reason_type__offensive
-#: model_terms:ir.ui.view,arch_db:website_forum.close_post
 #: model_terms:ir.ui.view,arch_db:website_forum.header
+#: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "Offensive"
 msgstr "Неприйнятний "
 
 #. module: website_forum
+#. openerp-web
+#: code:addons/website_forum/static/src/js/website_forum.js:0
 #: model_terms:ir.ui.view,arch_db:website_forum.header
+#, python-format
 msgid "Offensive Post"
 msgstr "Образлива публікація "
 
@@ -2655,7 +2677,7 @@ msgid "Post Your Question"
 msgstr "Опублікуйте ваше запитання"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.close_post
+#: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
 msgid "Post:"
 msgstr "Публікація:"
 
@@ -2900,7 +2922,7 @@ msgid "Reason Type"
 msgstr "Тип причини"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.close_post
+#: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
 msgid "Reason:"
 msgstr "Причина:"
 
@@ -3092,6 +3114,11 @@ msgstr "Показати"
 #: model_terms:ir.ui.view,arch_db:website_forum.tag
 msgid "Show Tags Starting By"
 msgstr "Показати теги, які починаються за"
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "Showing results for"
+msgstr ""
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -3457,11 +3484,12 @@ msgid "Total Answers"
 msgstr "Усі відповіді"
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_list
-msgid "Total Favorites"
-msgstr "Усі закладки"
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_list
+msgid "Total Posts"
+msgstr ""
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_list
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_list
 msgid "Total Views"
 msgstr "Всього переглядів"
@@ -3587,6 +3615,7 @@ msgstr "Улюблені пости користувачів"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 #: model_terms:ir.ui.view,arch_db:website_forum.question_dropdown
+#: model_terms:ir.ui.view,arch_db:website_forum.show_flag_validator
 msgid "Validate"
 msgstr "Підтвердити"
 
@@ -3819,6 +3848,11 @@ msgstr "активна дата"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
+msgid "and join this Forum"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "breadcrumb"
 msgstr "хлібні крихти"
 
@@ -3859,7 +3893,7 @@ msgstr ""
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_form
-msgid "e.g. Who to do this particular thing?"
+msgid "e.g. When should I plant my tomatoes?"
 msgstr ""
 
 #. module: website_forum
@@ -3959,17 +3993,15 @@ msgid "insert text link, upload files"
 msgstr "вставити текстове посилання, завантажте файли"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_index
+msgid "instead."
+msgstr ""
+
+#. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
 msgid "it is a rant disguised as a question: “______ sucks, am I right?”"
 msgstr "це неприйнятне питання, таке як: “______ чортівня, чи я не правий?”"
-
-#. module: website_forum
-#. openerp-web
-#: code:addons/website_forum/static/src/js/website_forum.js:0
-#, python-format
-msgid "karma is required to perform this action. "
-msgstr "карма необхідна для виконання цієї дї. "
 
 #. module: website_forum
 #. openerp-web

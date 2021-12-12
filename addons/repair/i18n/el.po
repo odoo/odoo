@@ -3,34 +3,23 @@
 # 	* repair
 # 
 # Translators:
-# Martin Trigaux, 2020
-# Kostas Goutoudis <goutoudis@gmail.com>, 2021
 # George Tarasidis <george_tarasidis@yahoo.com>, 2021
+# Martin Trigaux, 2021
+# Kostas Goutoudis <goutoudis@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2018-03-22 16:02+0000\n"
-"Last-Translator: George Tarasidis <george_tarasidis@yahoo.com>, 2021\n"
+"Last-Translator: Kostas Goutoudis <goutoudis@gmail.com>, 2021\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: el\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: repair
-#: model:mail.template,report_name:repair.mail_template_repair_quotation
-msgid "${(object.name or '').replace('/','_')}"
-msgstr ""
-
-#. module: repair
-#: model:mail.template,subject:repair.mail_template_repair_quotation
-msgid "${object.partner_id.name} Repair Orders (Ref ${object.name or 'n/a' })"
-msgstr ""
-"${object.partner_id.name} Εντολές Επισκευής (Αναφ. ${object.name or 'μ/δ' })"
 
 #. module: repair
 #: model:ir.actions.report,print_report_name:repair.action_report_repair_order
@@ -73,23 +62,21 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px;font-size: 13px;\">\n"
-"        Hello ${object.partner_id.name},<br/>\n"
-"        Here is your repair order ${doc_name} <strong>${object.name}</strong>\n"
-"        % if object.origin:\n"
-"            (with reference: ${object.origin} )\n"
-"        % endif\n"
-"        % if object.invoice_method != 'none':\n"
-"            amounting in <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}.</strong><br/>\n"
-"        % else:\n"
+"        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br/>\n"
+"        Here is your repair order <strong t-out=\"object.name or ''\">RO/00004</strong>\n"
+"        <t t-if=\"object.invoice_method != 'none'\">\n"
+"            amounting in <strong><t t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 100.00</t>.</strong><br/>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
 "            .<br/>\n"
-"        % endif\n"
+"        </t>\n"
 "        You can reply to this email if you have any questions.\n"
 "        <br/><br/>\n"
 "        Thank you,\n"
-"        % if user.signature\n"
+"        <t t-if=\"user.signature\">\n"
 "            <br/>\n"
-"            ${user.signature | safe}\n"
-"        % endif\n"
+"            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        </t>\n"
 "    </p>\n"
 "</div>"
 msgstr ""
@@ -104,6 +91,11 @@ msgstr ""
 msgid ""
 "<span class=\"o_stat_text\">1</span>\n"
 "                                <span class=\"o_stat_text\">Invoices</span>"
+msgstr ""
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.stock_production_lot_view_form
+msgid "<span class=\"o_stat_text\">Repairs</span>"
 msgstr ""
 
 #. module: repair
@@ -497,6 +489,11 @@ msgid "If checked, some messages have a delivery error."
 msgstr ""
 
 #. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__priority
+msgid "Important repair order"
+msgstr ""
+
+#. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
 msgid ""
 "In a repair order, you can detail the components you remove,\n"
@@ -626,6 +623,7 @@ msgid "Location"
 msgstr "Τοποθεσία"
 
 #. module: repair
+#: model:ir.model,name:repair.model_stock_production_lot
 #: model:ir.model.fields,field_description:repair.field_repair_line__lot_id
 #: model:ir.model.fields,field_description:repair.field_repair_order__lot_id
 msgid "Lot/Serial"
@@ -716,6 +714,11 @@ msgid "No valid pricelist line found."
 msgstr ""
 
 #. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__priority__0
+msgid "Normal"
+msgstr "Κανονική"
+
+#. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_needaction_counter
 msgid "Number of Actions"
 msgstr "Πλήθος ενεργειών"
@@ -783,6 +786,11 @@ msgstr "Τιμοκατάλογος του επιλεγμένου συνεργά�
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Print Quotation"
 msgstr "Εκτύπωση Προσφοράς"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__priority
+msgid "Priority"
+msgstr "Προτεραιότητα"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__product_id
@@ -936,6 +944,8 @@ msgstr ""
 #. module: repair
 #: model:ir.actions.act_window,name:repair.action_repair_order_graph
 #: model:ir.actions.act_window,name:repair.action_repair_order_tree
+#: model:ir.model.fields,field_description:repair.field_stock_production_lot__repair_order_ids
+#: model_terms:ir.ui.view,arch_db:repair.stock_production_lot_view_form
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_graph
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_pivot
 msgid "Repair Orders"
@@ -959,6 +969,12 @@ msgstr ""
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__name
 msgid "Repair Reference"
+msgstr ""
+
+#. module: repair
+#: model:product.product,name:repair.product_service_order_repair
+#: model:product.template,name:repair.product_service_order_repair_product_template
+msgid "Repair Services"
 msgstr ""
 
 #. module: repair
@@ -989,6 +1005,17 @@ msgstr ""
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Repair must be under repair in order to end reparation."
+msgstr ""
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_stock_production_lot__repair_order_count
+msgid "Repair order count"
+msgstr ""
+
+#. module: repair
+#: code:addons/repair/models/stock_production_lot.py:0
+#, python-format
+msgid "Repair orders of %s"
 msgstr ""
 
 #. module: repair
@@ -1038,6 +1065,11 @@ msgstr "Παραγγελία"
 #: model:ir.model.fields,help:repair.field_repair_order__sale_order_id
 msgid "Sale Order from which the product to be repaired comes from."
 msgstr ""
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__schedule_date
+msgid "Scheduled Date"
+msgstr "Προγραμματισμένη Ημερομηνία"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
@@ -1183,6 +1215,8 @@ msgid "Today Activities"
 msgstr "Σημερινές Δραστηριότητες"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_fee__price_total
+#: model:ir.model.fields,field_description:repair.field_repair_line__price_total
 #: model:ir.model.fields,field_description:repair.field_repair_order__amount_total
 msgid "Total"
 msgstr "Σύνολο"
@@ -1227,6 +1261,12 @@ msgid "Unit of Measure"
 msgstr "Μονάδα Μέτρησης"
 
 #. module: repair
+#: model:product.product,uom_name:repair.product_service_order_repair
+#: model:product.template,uom_name:repair.product_service_order_repair_product_template
+msgid "Units"
+msgstr ""
+
+#. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_unread
 msgid "Unread Messages"
 msgstr "Μη αναγνωσμένα μηνύματα"
@@ -1250,6 +1290,11 @@ msgstr "Αφορολόγητο ποσό"
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "UoM"
 msgstr "ΜΜ"
+
+#. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__priority__1
+msgid "Urgent"
+msgstr "Επείγον"
 
 #. module: repair
 #: model:ir.model,name:repair.model_stock_warn_insufficient_qty_repair
@@ -1317,4 +1362,15 @@ msgstr ""
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_warn_insufficient_qty_repair_form_view
 msgid "from location"
+msgstr ""
+
+#. module: repair
+#: model:mail.template,report_name:repair.mail_template_repair_quotation
+msgid "{{ (object.name or '').replace('/','_') }}"
+msgstr ""
+
+#. module: repair
+#: model:mail.template,subject:repair.mail_template_repair_quotation
+msgid ""
+"{{ object.partner_id.name }} Repair Orders (Ref {{ object.name or 'n/a' }})"
 msgstr ""

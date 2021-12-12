@@ -12,16 +12,16 @@
 # inspur qiuguodong <qiuguodong@inspur.com>, 2019
 # John An <johnxan@163.com>, 2019
 # guohuadeng <guohuadeng@hotmail.com>, 2019
-# Martin Trigaux, 2020
 # as co02 <asco02@163.com>, 2020
+# Martin Trigaux, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-09-14 10:29+0000\n"
 "PO-Revision-Date: 2019-06-12 12:36+0000\n"
-"Last-Translator: as co02 <asco02@163.com>, 2020\n"
+"Last-Translator: Martin Trigaux, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -86,6 +86,11 @@ msgstr "回退"
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.sale_product_configurator_view_form
 msgid "Cancel"
 msgstr "取消"
+
+#. module: sale_product_configurator
+#: model:product.template,name:sale_product_configurator.product_product_1_product_template
+msgid "Chair floor protection"
+msgstr "椅子地板保护"
 
 #. module: sale_product_configurator
 #. openerp-web
@@ -157,6 +162,12 @@ msgid "Last Updated on"
 msgstr "更新时间"
 
 #. module: sale_product_configurator
+#: model:product.template,description_sale:sale_product_configurator.product_product_1_product_template
+msgid "Office chairs can harm your floor: protect it."
+msgstr "办公椅会伤害你的地板：保护它。"
+
+#. module: sale_product_configurator
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.optional_product_items
 msgid "Option not available"
 msgstr "选项无效"
@@ -174,11 +185,6 @@ msgid ""
 "Optional Products are suggested whenever the customer hits *Add to Cart* "
 "(cross-sell strategy, e.g. for computers: warranty, software, etc.)."
 msgstr "每当客户点击 * 加入购物车 *，就会出现建议的可选产品（交叉销售策略，例如，就电脑而言：保修、配套软件等）。"
-
-#. module: sale_product_configurator
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.product_template_view_form
-msgid "Options"
-msgstr "选项"
 
 #. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__pricelist_id
@@ -213,6 +219,11 @@ msgid "Quantity"
 msgstr "数量"
 
 #. module: sale_product_configurator
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.product_template_view_form
+msgid "Recommend when 'Adding to Cart' or quotation"
+msgstr ""
+
+#. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.product_quantity_config
 msgid "Remove one"
 msgstr "删除一行"
@@ -241,3 +252,8 @@ msgstr "此组合不存在。"
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure
 msgid "This product has no valid combination."
 msgstr "此产品没有有效的组合。"
+
+#. module: sale_product_configurator
+#: model:product.template,uom_name:sale_product_configurator.product_product_1_product_template
+msgid "Units"
+msgstr "单位"

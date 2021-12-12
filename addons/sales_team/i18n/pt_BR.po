@@ -13,22 +13,21 @@
 # Fernanda Marques <fem@odoo.com>, 2020
 # Luiz Fernando <lfpsgs@outlook.com>, 2020
 # Emanuel Martins <emanuel.breno@gmail.com>, 2020
-# Kevin Harrings <kha@odoo.com>, 2020
-# Martin Trigaux, 2021
 # Mateus Lopes <mateus1@gmail.com>, 2021
 # falexandresilva <falexandresilva@gmail.com>, 2021
 # grazziano <gra.negocia@gmail.com>, 2021
 # Fernando Colus <fcolus1@gmail.com>, 2021
 # Éder Brito <britoederr@gmail.com>, 2021
 # lluisgustavoreis <luis.gustavo@kmee.com.br>, 2021
+# Martin Trigaux, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-09-14 10:29+0000\n"
 "PO-Revision-Date: 2016-08-05 13:10+0000\n"
-"Last-Translator: lluisgustavoreis <luis.gustavo@kmee.com.br>, 2021\n"
+"Last-Translator: Martin Trigaux, 2021\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -179,9 +178,24 @@ msgid "Configuration"
 msgstr "Configuração"
 
 #. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor7
+msgid "Consulting"
+msgstr "Consultoria"
+
+#. module: sales_team
 #: model:ir.model,name:sales_team.model_res_partner
 msgid "Contact"
 msgstr "Contato"
+
+#. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
+msgid "Create CRM Tags"
+msgstr ""
+
+#. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_config
+msgid "Create a Sales Team"
+msgstr ""
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_member_action
@@ -189,18 +203,9 @@ msgid "Create a new salesman"
 msgstr "Criar um novo vendedor"
 
 #. module: sales_team
-#: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
-msgid "Create new tags for your opportunities"
-msgstr "Crie novos marcadores para suas oportunidades"
-
-#. module: sales_team
-#: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
-msgid ""
-"Create tags that fit your business (product structure, sales type, etc.) to "
-"better manage and track your opportunities."
+#: model_terms:ir.actions.act_window,help:sales_team.mail_activity_type_action_config_sales
+msgid "Create an Activity Type"
 msgstr ""
-"Crie marcadores que se ajustem ao seu negócio (estrutura do produto, tipo de"
-" vendas, etc.) para melhor gerenciar e aproveitar suas oportunidades."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__create_uid
@@ -232,11 +237,15 @@ msgid "Dashboard Graph Data"
 msgstr "Dados do Gráfico do Dashboard"
 
 #. module: sales_team
-#: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_config
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_pipeline
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_sales
 msgid "Define a new sales team"
 msgstr "Defina um novo time de vendas"
+
+#. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor5
+msgid "Design"
+msgstr "Design"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__display_name
@@ -355,6 +364,11 @@ msgstr "Imagem"
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__image_128
 msgid "Image (128)"
 msgstr ""
+
+#. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor4
+msgid "Information"
+msgstr "Informação"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_is_follower
@@ -482,6 +496,11 @@ msgid "Number of unread messages"
 msgstr "Quantidade de mensagens não lidas."
 
 #. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor8
+msgid "Other"
+msgstr "Outro"
+
+#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__phone
 msgid "Phone"
 msgstr "Telefone"
@@ -490,6 +509,16 @@ msgstr "Telefone"
 #: model:crm.team,name:sales_team.pos_sales_team
 msgid "Point of Sale"
 msgstr "Ponto de Venda"
+
+#. module: sales_team
+#: model:crm.team,name:sales_team.crm_team_1
+msgid "Pre-Sales"
+msgstr ""
+
+#. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor1
+msgid "Product"
+msgstr "Produto"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.team_sales_department
@@ -558,14 +587,30 @@ msgid "Salesteams Search"
 msgstr "Procurar Equipe de Vendas"
 
 #. module: sales_team
+#: code:addons/sales_team/models/crm_team.py:0
+#, python-format
+msgid "Sample data"
+msgstr "Dados de demonstração"
+
+#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__sequence
 msgid "Sequence"
 msgstr "Seqüência"
 
 #. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor3
+msgid "Services"
+msgstr "Serviços"
+
+#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__is_favorite
 msgid "Show on dashboard"
 msgstr "Mostrar no Painel"
+
+#. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor2
+msgid "Software"
+msgstr "Aplicativos"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__name
@@ -616,12 +661,24 @@ msgid "The default company for this user."
 msgstr "A empresa padrão para este usuário."
 
 #. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.mail_activity_type_action_config_sales
+msgid ""
+"Those represent the different categories of things you have to do (e.g. "
+"\"Call\" or \"Prepare meeting\")."
+msgstr ""
+
+#. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
 msgid ""
 "To add a Salesperson into multiple Teams, activate the Multi-Team option in "
 "settings."
 msgstr ""
+
+#. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor6
+msgid "Training"
+msgstr "Treinamento"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__user_in_teams_ids
@@ -656,6 +713,11 @@ msgstr "Contador de Mensagens Não Lidas"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_config
+msgid ""
+"Use Sales Teams to organize your sales departments and draw up reports."
+msgstr ""
+
+#. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_pipeline
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_sales
 msgid ""
@@ -664,6 +726,13 @@ msgid ""
 msgstr ""
 "Use equipes de vendas para organizar seus departamentos de vendas.\n"
 "                Cada time trabalhará com um pipeline separado."
+
+#. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
+msgid ""
+"Use Tags to manage and track your Opportunities (product structure, sales "
+"type, ...)"
+msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__user_company_ids

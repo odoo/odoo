@@ -8,18 +8,18 @@
 # Jean-Charles Drubay <jcdrubay@gmail.com>, 2020
 # Thang Duong Bao <nothingctrl@gmail.com>, 2020
 # Binh Lam <ltb0374@gmail.com>, 2020
-# Minh Nguyen <ndminh210994@gmail.com>, 2020
 # cef0acd66eac662fffb1f7344ac311b7_5e84ff2 <dc1db88e54aab416318660a1eb5bd2e5_695455>, 2020
 # fanha99 <fanha99@hotmail.com>, 2020
-# Martin Trigaux, 2020
 # Dung Nguyen Thi <dungnt@trobz.com>, 2020
-# Trần Hà <tranthuha13590@gmail.com>, 2021
+# Martin Trigaux, 2021
 # thanhnguyen.icsc <thanhnguyen.icsc@gmail.com>, 2021
 # Duy BQ <duybq86@gmail.com>, 2021
+# Minh Nguyen <ndminh210994@gmail.com>, 2021
 # Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2021
 # Dao Nguyen <trucdao.uel@gmail.com>, 2021
-# Mountain Tran <mountain.tran@viindoo.com>, 2021
+# Trần Hà <tranthuha13590@gmail.com>, 2021
 # Vo Thanh Thuy, 2021
+# Vũ Văn Phát <aloha050992@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -27,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 08:05+0000\n"
 "PO-Revision-Date: 2016-08-05 12:54+0000\n"
-"Last-Translator: Vo Thanh Thuy, 2021\n"
+"Last-Translator: Vũ Văn Phát <aloha050992@gmail.com>, 2021\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -8550,7 +8550,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"United Arab Emirates accounting chart and localization.\n"
+"Sơ đồ kế toán Các Tiểu vương quốc Ả Rập Thống nhất và bản địa hóa.\n"
 "=======================================================\n"
 "\n"
 "    "
@@ -9474,7 +9474,15 @@ msgid ""
 "                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'private')]}\">Private Address</b>\n"
 "                                <b attrs=\"{'invisible': ['&amp;', ('parent_id', '!=', False), ('type', '!=', False)]}\">Address</b>\n"
 "                            </span>"
-msgstr "1"
+msgstr ""
+"<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
+"<b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'contact')]}\">Địa chỉ công ty</b>\n"
+"<b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'invoice')]}\">Địa chỉ xuất hoá đơn</b>\n"
+"<b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'delivery')]}\">ĐỊa chỉ giao hàng</b>\n"
+"<b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'other')]}\">ĐỊa chỉ khác</b>\n"
+"<b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'private')]}\">Địa chỉ cá nhân</b>\n"
+"<b attrs=\"{'invisible': ['&amp;', ('parent_id', '!=', False), ('type', '!=', False)]}\">Địa chỉ</b>\n"
+"</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
@@ -12888,7 +12896,7 @@ msgstr "Đánh dấu nếu liên hệ này là một công ty, bỏ tích nếu 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_check_printing
 msgid "Check printing commons"
-msgstr "Check printing commons"
+msgstr "Kiểm tra in chung"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_accountant_check_printing
@@ -13094,7 +13102,7 @@ msgstr "Xem Cohort"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pad
 msgid "Collaborative Pads"
-msgstr "Collaborative Pads"
+msgstr "Bảng cộng tác"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_sepa_direct_debit
@@ -13878,7 +13886,7 @@ msgstr "Tạo công ty mới"
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_category_form
 msgid "Create a new contact tag"
-msgstr "Tạo từ khóa liên hệ"
+msgstr "Tạo thẻ liên hệ mới"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_customer_form
@@ -19081,7 +19089,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Invoice"
-msgstr "Công nợ"
+msgstr "Hoá đơn"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__type
@@ -20080,7 +20088,7 @@ msgstr "Đăng nhập"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Logo"
-msgstr "Biểu tượng"
+msgstr "Logo"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__logo_web
@@ -20455,8 +20463,8 @@ msgid ""
 "Manage contact tags to better classify them for tracking and analysis "
 "purposes."
 msgstr ""
-"Quản lý các từ khóa liên lạc để phân biệt tốt hơn các liên lạc cho mục đích "
-"theo dõi và phân tích."
+"Quản lý thẻ liên lạc để phân loại tốt hơn nhằm mục đích theo dõi và phân "
+"tích. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_disallowed_expenses
@@ -31057,7 +31065,7 @@ msgstr "Website Mail"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_mail_channel
 msgid "Website Mail Channels"
-msgstr "Website Mail Channels"
+msgstr "Kênh Mail trên Trang web"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_mail

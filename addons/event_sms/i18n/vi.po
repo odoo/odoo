@@ -3,16 +3,16 @@
 # 	* event_sms
 # 
 # Translators:
+# thanhnguyen.icsc <thanhnguyen.icsc@gmail.com>, 2020
 # Duy BQ <duybq86@gmail.com>, 2020
 # Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2020
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020
 # Trần Hà <tranthuha13590@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-10-05 10:54+0000\n"
 "PO-Revision-Date: 2019-12-16 11:02+0000\n"
 "Last-Translator: Trần Hà <tranthuha13590@gmail.com>, 2021\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
@@ -21,30 +21,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#. module: event_sms
-#: model:sms.template,body:event_sms.sms_template_data_event_reminder
-msgid ""
-"${object.event_id.organizer_id.name or object.event_id.company_id.name or "
-"user.env.company.name}: We are excited to remind you that the "
-"${object.event_id.name} event is starting ${object.get_date_range_str()}. We"
-" confirm your registration and hope to meet you there."
-msgstr ""
-"${object.event_id.organizer_id.name or object.event_id.company_id.name or "
-"user.env.company.name}: We are excited to remind you that the "
-"${object.event_id.name} event is starting ${object.get_date_range_str()}. We"
-" confirm your registration and hope to meet you there."
-
-#. module: event_sms
-#: model:sms.template,body:event_sms.sms_template_data_event_registration
-msgid ""
-"${object.event_id.organizer_id.name or object.event_id.company_id.name or "
-"user.env.company.name}: We are happy to confirm your registration for the "
-"${object.event_id.name} event."
-msgstr ""
-"${object.event_id.organizer_id.name or object.event_id.company_id.name or "
-"user.env.company.name}: We are happy to confirm your registration for the "
-"${object.event_id.name} event."
 
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_mail
@@ -83,10 +59,9 @@ msgid "SMS"
 msgstr "SMS"
 
 #. module: event_sms
-#: model:ir.model.fields,field_description:event_sms.field_event_mail__sms_template_id
-#: model:ir.model.fields,field_description:event_sms.field_event_type_mail__sms_template_id
-msgid "SMS Template"
-msgstr "Mẫu SMS"
+#: model:ir.model,name:event_sms.model_sms_template
+msgid "SMS Templates"
+msgstr "SMS Templates"
 
 #. module: event_sms
 #: model:ir.model.fields,field_description:event_sms.field_event_mail__notification_type
@@ -95,9 +70,18 @@ msgid "Send"
 msgstr "Gửi"
 
 #. module: event_sms
-#: model:ir.model.fields,help:event_sms.field_event_mail__sms_template_id
-#: model:ir.model.fields,help:event_sms.field_event_type_mail__sms_template_id
+#: model:sms.template,body:event_sms.sms_template_data_event_reminder
 msgid ""
-"This field contains the template of the SMS that will be automatically sent"
+"{{ object.event_id.organizer_id.name or object.event_id.company_id.name or "
+"user.env.company.name }}: We are excited to remind you that the {{ "
+"object.event_id.name }} event is starting {{ object.get_date_range_str() }}."
+" We confirm your registration and hope to meet you there."
 msgstr ""
-"This field contains the template of the SMS that will be automatically sent"
+
+#. module: event_sms
+#: model:sms.template,body:event_sms.sms_template_data_event_registration
+msgid ""
+"{{ object.event_id.organizer_id.name or object.event_id.company_id.name or "
+"user.env.company.name }}: We are happy to confirm your registration for the "
+"{{ object.event_id.name }} event."
+msgstr ""

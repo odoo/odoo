@@ -4,18 +4,18 @@
 # 
 # Translators:
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2019
-# Quim - eccit <quim@eccit.com>, 2019
 # Arnau Ros, 2019
 # RGB Consulting <odoo@rgbconsulting.com>, 2020
 # Martin Trigaux, 2020
-# Manel Fernandez Ramirez <manelfera@outlook.com>, 2020
+# Quim - eccit <quim@eccit.com>, 2021
+# Manel Fernandez Ramirez <manelfera@outlook.com>, 2021
 # jabelchi, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2019-12-16 11:04+0000\n"
 "Last-Translator: jabelchi, 2021\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
@@ -29,7 +29,7 @@ msgstr ""
 #: code:addons/hr_work_entry/models/hr_employee.py:0
 #, python-format
 msgid "%s work entries"
-msgstr ""
+msgstr "%s entrades de treball"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
@@ -64,6 +64,13 @@ msgstr ""
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__cancelled
 msgid "Cancelled"
 msgstr "Cancel·lat"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__code
+msgid ""
+"Carefull, the Code is used in many references, changing it could lead to "
+"unwanted changes."
+msgstr ""
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__code
@@ -152,6 +159,11 @@ msgid "Employee"
 msgstr "Empleat"
 
 #. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_tree
+msgid "End"
+msgstr "Fi"
+
+#. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__date_start
 msgid "From"
 msgstr "Des de"
@@ -215,7 +227,7 @@ msgstr "Nom"
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
 msgid "Note: Validated work entries cannot be modified."
-msgstr ""
+msgstr "Nota: Les ordres de treball validades no es poden modificar."
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__duration
@@ -271,6 +283,11 @@ msgid "The same code cannot be associated to multiple work entry types."
 msgstr ""
 
 #. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
+msgid "Time Off Options"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__date_stop
 msgid "To"
 msgstr "Fins"
@@ -279,6 +296,18 @@ msgstr "Fins"
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
 msgid "Type"
 msgstr "Tipus"
+
+#. module: hr_work_entry
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
+#, python-format
+msgid "Undefined"
+msgstr "Indefinit"
+
+#. module: hr_work_entry
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
+#, python-format
+msgid "Undefined Type"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__validated
@@ -298,7 +327,7 @@ msgstr "Detall del treball"
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_employee_view_form
 msgid "Work Entries"
-msgstr ""
+msgstr "Entrades de Treball"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_user_work_entry_employee
@@ -323,6 +352,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_attendance__work_entry_type_id
 #: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_leaves__work_entry_type_id
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.resource_calendar_leaves_view_search_inherit
 msgid "Work Entry Type"
 msgstr ""
 

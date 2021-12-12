@@ -5,28 +5,33 @@
 # Translators:
 # Shenglan Chen <dodolobox@gmail.com>, 2016
 # Eddie Lim <bhweelim@yahoo.com>, 2017
-# Martin Trigaux, 2017
 # e2f <projects@e2f.com>, 2018
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
 # Jeffery CHEN <jeffery9@gmail.com>, 2018
 # 老窦 北京 <2662059195@qq.com>, 2018
 # wopalm <wopalm@gmail.com>, 2020
 # liAnGjiA <liangjia@qq.com>, 2021
-# Benson White <Benson.Dr@Gmail.com>, 2021
+# Benson <Benson.Dr@Gmail.com>, 2021
+# Martin Trigaux, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-09-14 10:29+0000\n"
 "PO-Revision-Date: 2016-08-05 13:09+0000\n"
-"Last-Translator: Benson White <Benson.Dr@Gmail.com>, 2021\n"
+"Last-Translator: Martin Trigaux, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_count
+msgid "# Ratings"
+msgstr ""
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__access_token
@@ -141,6 +146,16 @@ msgid "Image"
 msgstr "图像"
 
 #. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+msgid "Last 30 days"
+msgstr "最近30天"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+msgid "Last 7 days"
+msgstr "最近7天"
+
+#. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating____last_update
 msgid "Last Modified on"
 msgstr "最后修改日"
@@ -170,6 +185,11 @@ msgstr "关注资源的模型"
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "My Ratings"
 msgstr "我的评级"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__rated_partner_name
+msgid "Name"
+msgstr "名称"
 
 #. module: rating
 #: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__none
@@ -239,16 +259,12 @@ msgstr "评分操作"
 #: model:ir.model,name:rating.model_rating_rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_ids
 #: model:ir.model.fields,field_description:rating.field_rating_rating__rating_text
-#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
-#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_tree
 msgid "Rating"
 msgstr "评级"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_avg
-#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_graph
-#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_pivot
 msgid "Rating Average"
 msgstr "平均评级"
 
@@ -290,6 +306,12 @@ msgid "Rating Value"
 msgstr "评级值"
 
 #. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_graph
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_pivot
+msgid "Rating Value (/5)"
+msgstr "评分值（/ 5）"
+
+#. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_count
 msgid "Rating count"
 msgstr "评级数"
@@ -309,7 +331,11 @@ msgstr "评分值: 0=不开心，5=开心"
 #: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_ids
 #: model:ir.ui.menu,name:rating.rating_rating_menu_technical
 #: model_terms:ir.ui.view,arch_db:rating.mail_message_view_form
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_graph
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_pivot
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_tree
 msgid "Ratings"
 msgstr "评级"
 
@@ -387,6 +413,11 @@ msgstr "被评估对象的名字"
 #: model_terms:ir.actions.act_window,help:rating.rating_rating_view
 msgid "There is no rating for this object at the moment."
 msgstr "这个对象目前没有评级"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
+msgid "Today"
+msgstr "今天"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__is_internal

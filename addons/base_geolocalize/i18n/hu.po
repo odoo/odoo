@@ -3,19 +3,18 @@
 # 	* base_geolocalize
 # 
 # Translators:
-# gezza <geza.nagy@oregional.hu>, 2016
-# krnkris, 2019
 # Ákos Nagy <akos.nagy@oregional.hu>, 2019
 # Tibor Kőnig <konig.tibor@evitalit.hu>, 2019
 # Tamás Németh <ntomasz81@gmail.com>, 2020
+# krnkris, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-12-07 10:47+0000\n"
 "PO-Revision-Date: 2016-08-05 12:56+0000\n"
-"Last-Translator: Tamás Németh <ntomasz81@gmail.com>, 2020\n"
+"Last-Translator: krnkris, 2021\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,22 +24,24 @@ msgstr ""
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
-msgid "<span class=\"oe_inline\"> ( On  </span>"
-msgstr "<span class=\"oe_inline\"> ( Ekkor </span>"
+msgid "(refresh)"
+msgstr ""
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
-msgid "<span> : Lat : </span>"
-msgstr "<span> : Szél. : </span>"
+msgid ""
+"<br/>\n"
+"                                    <span attrs=\"{'invisible': [('date_localization', '=', False)]}\">Updated on: </span>"
+msgstr ""
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
-msgid "<span> ;  Long:  </span>"
-msgstr "<span> ;  Hossz.:  </span>"
+msgid "<span>, Long: </span>"
+msgstr ""
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
-msgid "<span>) </span>"
+msgid "<span>Lat : </span>"
 msgstr ""
 
 #. module: base_geolocalize
@@ -101,14 +102,14 @@ msgid "Geo Coder"
 msgstr "Helymeghatározó"
 
 #. module: base_geolocalize
+#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
+msgid "Geo Location"
+msgstr ""
+
+#. module: base_geolocalize
 #: model:ir.model,name:base_geolocalize.model_base_geo_provider
 msgid "Geo Provider"
 msgstr "Földrajzi szolgáltató"
-
-#. module: base_geolocalize
-#: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
-msgid "Geolocate"
-msgstr "Geolokáció"
 
 #. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
@@ -157,6 +158,12 @@ msgid "Name"
 msgstr "Név"
 
 #. module: base_geolocalize
+#: code:addons/base_geolocalize/models/res_partner.py:0
+#, python-format
+msgid "No address found for %(partner_names)s."
+msgstr ""
+
+#. module: base_geolocalize
 #: model_terms:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Partner Assignment"
 msgstr ""
@@ -201,3 +208,9 @@ msgid ""
 msgstr ""
 "További információért látogasson el az alábbi oldalra: "
 "https://developers.google.com/maps/documentation/geocoding/get-api-key"
+
+#. module: base_geolocalize
+#: code:addons/base_geolocalize/models/res_partner.py:0
+#, python-format
+msgid "Warning"
+msgstr "Figyelmeztetés"

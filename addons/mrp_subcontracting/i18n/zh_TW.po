@@ -9,9 +9,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-11-16 13:19+0000\n"
 "PO-Revision-Date: 2019-06-12 12:35+0000\n"
 "Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -20,6 +20,11 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: mrp_subcontracting
+#: model:ir.model,name:mrp_subcontracting.model_report_mrp_report_bom_structure
+msgid "BOM Structure Report"
+msgstr "BOM結構報告"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_mrp_bom
@@ -78,10 +83,60 @@ msgid "Display Action Record Components"
 msgstr "顯示操作記錄元件"
 
 #. module: mrp_subcontracting
+#: model:ir.model.fields.selection,name:mrp_subcontracting.selection__stock_picking__display_action_record_components__facultative
+msgid "Facultative"
+msgstr "兼性"
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__subcontracting_has_been_recorded
+msgid "Has been recorded?"
+msgstr "有記錄嗎？"
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields.selection,name:mrp_subcontracting.selection__stock_picking__display_action_record_components__hide
+msgid "Hide"
+msgstr "隱藏"
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_quant__is_subcontract
+msgid "Is Subcontract"
+msgstr "外包服務"
+
+#. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #, python-format
 msgid "Make To Order"
 msgstr "接單生產"
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"Make sure you validate or adapt the related resupply picking to your "
+"subcontractor in order to avoid inconsistencies in your stock."
+msgstr ""
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields.selection,name:mrp_subcontracting.selection__stock_picking__display_action_record_components__mandatory
+msgid "Mandatory"
+msgstr "強制性"
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/stock_picking.py:0
+#, python-format
+msgid "Nothing to record"
+msgstr "沒什麼可記錄的"
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/stock_quant.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr "不支援該操作"
+
+#. module: mrp_subcontracting
+#: model:ir.model,name:mrp_subcontracting.model_product_product
+msgid "Product"
+msgstr "產品"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_move_line
@@ -92,6 +147,11 @@ msgstr "產品移動(移庫明細)"
 #: model:ir.model,name:mrp_subcontracting.model_mrp_production
 msgid "Production Order"
 msgstr "製造訂單"
+
+#. module: mrp_subcontracting
+#: model:ir.model,name:mrp_subcontracting.model_stock_quant
+msgid "Quants"
+msgstr "數量"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_move.py:0
@@ -121,6 +181,7 @@ msgstr "已保留"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
+#: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_route_id
 #, python-format
 msgid "Resupply Subcontractor"
@@ -147,6 +208,12 @@ msgstr "向外包商提供物料"
 #: model:ir.model,name:mrp_subcontracting.model_stock_return_picking
 msgid "Return Picking"
 msgstr "退貨作業"
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
+#, python-format
+msgid "Sequence Resupply Subcontractor"
+msgstr "序列補給外包商"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
@@ -200,6 +267,11 @@ msgid "Subcontracting Location"
 msgstr "外包位置"
 
 #. module: mrp_subcontracting
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.quant_subcontracting_search_view
+msgid "Subcontracting Locations"
+msgstr "外包地點"
+
+#. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_mto_pull_id
 msgid "Subcontracting MTO Rule"
 msgstr "外包MTO規則"
@@ -213,6 +285,22 @@ msgstr "外包MTS規則"
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_type_id
 msgid "Subcontracting Operation Type"
 msgstr "外包作業類型"
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__subcontracting_resupply_type_id
+msgid "Subcontracting Resupply Operation Type"
+msgstr "外包補給作業類型"
+
+#. module: mrp_subcontracting
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.report_mrp_bom_line_inherit_mrp_subcontracting
+msgid "Subcontracting:"
+msgstr "委外生產"
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/report/mrp_report_bom_structure.py:0
+#, python-format
+msgid "Subcontracting: "
+msgstr "委外生產"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__is_subcontractor
@@ -251,6 +339,12 @@ msgid ""
 msgstr "在外包過程中向此連絡人發送貨物時用作來源和目的地的庫存位置。"
 
 #. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/mrp_production.py:0
+#, python-format
+msgid "This MO isn't related to a subcontracted move"
+msgstr "此 MO 與外包庫存移動無關"
+
+#. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_move.py:0
 #, python-format
 msgid "To subcontract, use a planned transfer."
@@ -272,10 +366,19 @@ msgid "Warehouse"
 msgstr "倉庫"
 
 #. module: mrp_subcontracting
+#: model:ir.model,name:mrp_subcontracting.model_mrp_consumption_warning
+msgid ""
+"Wizard in case of consumption in warning/strict and more component has been "
+"used for a MO (related to the bom)"
+msgstr "在警告/嚴格消耗情況下的嚮導，並且更多組件已用於MO(與物料清單相關)"
+
+#. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/mrp_bom.py:0
 #, python-format
-msgid "You can not set a Bill of Material with operations as subcontracting."
-msgstr ""
+msgid ""
+"You can not set a Bill of Material with operations or by-product line as "
+"subcontracting."
+msgstr "您不能將帶有工序或副產品明細的物料清單設置為外包。"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/mrp_production.py:0

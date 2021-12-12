@@ -3,7 +3,6 @@
 # 	* website_event_exhibitor
 # 
 # Translators:
-# Martin Trigaux, 2020
 # Dariusz Żbikowski <darek@krokus.com.pl>, 2020
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2020
 # Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2020
@@ -22,14 +21,16 @@
 # Maksym <ms@myodoo.pl>, 2020
 # Natalia Gros <nag@odoo.com>, 2020
 # Piotr Strębski <strebski@gmail.com>, 2021
+# Martin Trigaux, 2021
+# Tomasz Leppich <t.leppich@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-12-07 10:47+0000\n"
 "PO-Revision-Date: 2020-12-11 11:05+0000\n"
-"Last-Translator: Piotr Strębski <strebski@gmail.com>, 2021\n"
+"Last-Translator: Tomasz Leppich <t.leppich@gmail.com>, 2021\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -78,6 +79,16 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
 "title=\"Arrow\"/>"
+
+#. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_aside
+msgid "<small class=\"badge badge-danger\">Unpublished</small>"
+msgstr ""
+
+#. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitors_search_tag
+msgid "<span class=\"btn border-0 py-1\">×</span>"
+msgstr ""
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_aside
@@ -225,6 +236,11 @@ msgid "Create a Sponsor / Exhibitor"
 msgstr "Utwórz Sponsora / Przedstawiciela "
 
 #. module: website_event_exhibitor
+#: model_terms:ir.actions.act_window,help:website_event_exhibitor.event_sponsor_type_action
+msgid "Create a Sponsor Level"
+msgstr ""
+
+#. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__create_uid
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor_type__create_uid
 msgid "Created by"
@@ -252,6 +268,11 @@ msgstr "Nazwa wyświetlana"
 #: model:ir.model.fields,help:website_event_exhibitor.field_event_type__exhibitor_menu
 msgid "Display exhibitors on website"
 msgstr "Wyświetl przedstawicieli na stronie"
+
+#. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
+msgid "Display in footer"
+msgstr ""
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__partner_email
@@ -315,6 +336,11 @@ msgstr "Przedstawiciel"
 #, python-format
 msgid "Exhibitors"
 msgstr "Przedstawiciele"
+
+#. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_type_view_form
+msgid "Exhibitors Menu Item"
+msgstr ""
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_event__exhibitor_menu_ids
@@ -624,6 +650,18 @@ msgid "Phone"
 msgstr "Telefon"
 
 #. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_search
+msgid "Published"
+msgstr "Opublikowano"
+
+#. module: website_event_exhibitor
+#: model_terms:ir.actions.act_window,help:website_event_exhibitor.event_sponsor_type_action
+msgid ""
+"Rank your sponsors based on your own grading system (e.g. \"Gold, Silver, "
+"Bronze\")."
+msgstr ""
+
+#. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_card
 msgid "Register"
 msgstr "Zarejestruj"
@@ -791,6 +829,11 @@ msgid "Type of the exception activity on record."
 msgstr "Wyjątkowa czynność w historii."
 
 #. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_thumb_details
+msgid "Unpublished"
+msgstr "Nieopublikowane"
+
+#. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__message_unread
 msgid "Unread Messages"
 msgstr "Nieprzeczytane wiadomości"
@@ -840,6 +883,11 @@ msgstr "Historia komunikacji"
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__is_in_opening_hours
 msgid "Within opening hours"
 msgstr "w czasie godzin otwarcia"
+
+#. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
+msgid "e.g. \"Openwood specializes in home decoration...\""
+msgstr ""
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form

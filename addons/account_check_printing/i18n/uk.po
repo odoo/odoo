@@ -11,9 +11,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2016-08-05 12:55+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
@@ -209,25 +209,21 @@ msgid "Last Updated on"
 msgstr "Останнє оновлення"
 
 #. module: account_check_printing
-#: model:ir.model.fields,help:account_check_printing.field_account_payment__payment_method_id
-msgid ""
-"Manual : Pay or Get paid by any method outside of Odoo.Payment Acquirers : "
-"Each payment acquirer has its own Payment Method. Request a transaction "
-"on/to a card thanks to a payment token saved by the partner when buying or "
-"subscribing online.Check: Pay bills by check and print it from Odoo.Batch "
-"Deposit: Collect several customer checks at once generating and submitting a"
-" batch deposit to your bank. Module account_batch_payment is necessary.SEPA "
-"Credit Transfer : Pay in the SEPA zone by submitting a SEPA Credit Transfer "
-"file to your bank. Module account_sepa is necessarySEPA Direct Debit : Get "
-"paid in the SEPA zone thanks to a mandate your partner will have granted to "
-"you. Module account_sepa is necessary"
-msgstr ""
-
-#. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_manual_sequencing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_manual_sequencing
 msgid "Manual Numbering"
 msgstr "Ручна нумерація"
+
+#. module: account_check_printing
+#: model:ir.model.fields,help:account_check_printing.field_account_payment__payment_method_line_id
+msgid ""
+"Manual: Pay or Get paid by any method outside of Odoo.\n"
+"Payment Acquirers: Each payment acquirer has its own Payment Method. Request a transaction on/to a card thanks to a payment token saved by the partner when buying or subscribing online.\n"
+"Check: Pay bills by check and print it from Odoo.\n"
+"Batch Deposit: Collect several customer checks at once generating and submitting a batch deposit to your bank. Module account_batch_payment is necessary.\n"
+"SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
+"SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
+msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -254,7 +250,7 @@ msgid "None"
 msgstr "Немає"
 
 #. module: account_check_printing
-#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__payment_method_id
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__payment_method_line_id
 #: model:ir.model.fields,field_description:account_check_printing.field_res_partner__property_payment_method_id
 #: model:ir.model.fields,field_description:account_check_printing.field_res_users__property_payment_method_id
 msgid "Payment Method"

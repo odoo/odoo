@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-09-14 10:29+0000\n"
 "PO-Revision-Date: 2017-12-13 14:57+0000\n"
 "Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -27,6 +27,7 @@ msgstr "分析行"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave__timesheet_ids
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_resource_calendar_leaves__timesheet_ids
 msgid "Analytic Lines"
 msgstr "分析行"
 
@@ -50,15 +51,24 @@ msgid "Config Settings"
 msgstr "設定"
 
 #. module: project_timesheet_holidays
-#: model:ir.model.fields,help:project_timesheet_holidays.field_res_company__leave_timesheet_project_id
-#: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__leave_timesheet_project_id
+#: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__internal_project_id
 msgid "Default project value for timesheet generated from time off type."
 msgstr "從休假類型生成的時程表的預設專案值。"
+
+#. module: project_timesheet_holidays
+#: model:ir.model,name:project_timesheet_holidays.model_hr_employee
+msgid "Employee"
+msgstr "員工"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave_type__timesheet_generate
 msgid "Generate Timesheet"
 msgstr "生成時間表"
+
+#. module: project_timesheet_holidays
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__global_leave_id
+msgid "Global Time Off"
+msgstr "公眾休假"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_hr_leave_type__timesheet_generate
@@ -75,8 +85,7 @@ msgid "Internal"
 msgstr "內部"
 
 #. module: project_timesheet_holidays
-#: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company__leave_timesheet_project_id
-#: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__leave_timesheet_project_id
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__internal_project_id
 msgid "Internal Project"
 msgstr "內部專案"
 
@@ -92,16 +101,15 @@ msgid "Project"
 msgstr "專案"
 
 #. module: project_timesheet_holidays
+#: model:ir.model,name:project_timesheet_holidays.model_resource_calendar_leaves
+msgid "Resource Time Off Detail"
+msgstr "資源關閉時間詳情"
+
+#. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave_type__timesheet_task_id
 #: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.res_config_settings_view_form
 msgid "Task"
 msgstr "任務"
-
-#. module: project_timesheet_holidays
-#: code:addons/project_timesheet_holidays/models/res_company.py:0
-#, python-format
-msgid "The Internal Project of a company should be in that company."
-msgstr "該公司的休假用內部專案應該在這家公司。"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_hr_leave_type__timesheet_project_id
@@ -117,6 +125,13 @@ msgstr "專案將包含驗證休假時生成的工時表。"
 #, python-format
 msgid "Time Off"
 msgstr "休假管理"
+
+#. module: project_timesheet_holidays
+#: code:addons/project_timesheet_holidays/models/hr_holidays.py:0
+#: code:addons/project_timesheet_holidays/models/resource_calendar_leaves.py:0
+#, python-format
+msgid "Time Off (%s/%s)"
+msgstr "休假 (%s/%s)"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company__leave_timesheet_task_id

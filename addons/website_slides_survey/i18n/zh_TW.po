@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-12-07 10:47+0000\n"
 "PO-Revision-Date: 2019-03-20 15:01+0000\n"
 "Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -21,15 +21,22 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_survey_view_kanban
+msgid ""
+"<br/>\n"
+"                        <span class=\"text-muted\">Courses</span>"
+msgstr ""
+
+#. module: website_slides_survey
 #: model:mail.template,body_html:website_slides_survey.mail_template_user_input_certification_failed
 msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear ${object.partner_id.name or 'participant'}<br/><br/>\n"
-"        Unfortunately, you have failed the certification and are no longer a member of the course: ${object.slide_partner_id.channel_id.name}.<br/><br/>\n"
+"        Dear <t t-out=\"object.partner_id.name or 'participant' or ''\">participant</t><br/><br/>\n"
+"        Unfortunately, you have failed the certification and are no longer a member of the course: <t t-out=\"object.slide_partner_id.channel_id.name or ''\">Basics of Gardening</t>.<br/><br/>\n"
 "        Don't hesitate to enroll again!\n"
 "        <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"            <a href=\"${(object.slide_partner_id.channel_id.website_url) | safe}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"            <a t-att-href=\"(object.slide_partner_id.channel_id.website_url)\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
 "                Enroll now\n"
 "            </a>\n"
 "        </div>\n"
@@ -38,20 +45,6 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        親愛的 ${object.partner_id.name or 'participant'}<br/><br/>\n"
-"        遺憾的是，您未通過認證，不再是該課程的成員：${object.slide_partner_id.channel_id.name}.<br/><br/>\n"
-"        請再次報名！\n"
-"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"            <a href=\"${(object.slide_partner_id.channel_id.website_url) | safe}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
-"                立即報名\n"
-"            </a>\n"
-"        </div>\n"
-"        感謝您的參與。.\n"
-"    </p>\n"
-"</div>\n"
-"            "
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
@@ -151,10 +144,25 @@ msgstr "添加證書"
 
 #. module: website_slides_survey
 #: model_terms:ir.actions.act_window,help:website_slides_survey.slide_slide_action_certification
-#: model_terms:ir.actions.act_window,help:website_slides_survey.survey_survey_action_slides
-#: model_terms:ir.actions.act_window,help:website_slides_survey.survey_survey_action_slides_report
 msgid "Add a new certification"
 msgstr "添加新認證"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__is_preview
+msgid "Allow Preview"
+msgstr "允許預覽"
+
+#. module: website_slides_survey
+#: model_terms:ir.actions.act_window,help:website_slides_survey.survey_survey_action_slides
+msgid ""
+"Assess the level of understanding of your attendees\n"
+"                <br>and send them a document if they pass the test."
+msgstr ""
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_survey_view_tree_slides
+msgid "Avg Score (%)"
+msgstr ""
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
@@ -167,11 +175,17 @@ msgid "Begin your <b>certification</b> today!"
 msgstr "今天開始 <b>認證</b>!"
 
 #. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__slide_category
+msgid "Category"
+msgstr "類別"
+
+#. module: website_slides_survey
 #. openerp-web
 #: code:addons/website_slides_survey/static/src/js/slides_upload.js:0
 #: code:addons/website_slides_survey/static/src/js/slides_upload.js:0
 #: code:addons/website_slides_survey/static/src/xml/website_slide_upload.xml:0
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__survey_id
+#: model:ir.model.fields.selection,name:website_slides_survey.selection__slide_slide__slide_category__certification
 #: model:ir.model.fields.selection,name:website_slides_survey.selection__slide_slide__slide_type__certification
 #, python-format
 msgid "Certification"
@@ -196,6 +210,11 @@ msgstr "認證幻燈片"
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide_partner__survey_scoring_success
 msgid "Certification Succeeded"
 msgstr "認證成功"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_survey_view_tree_slides
+msgid "Certification Title"
+msgstr ""
 
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide_partner__user_input_ids
@@ -228,9 +247,7 @@ msgstr "成功完成調查後，認證幻燈片就會完成。"
 #. module: website_slides_survey
 #: model:ir.actions.act_window,name:website_slides_survey.slide_slide_action_certification
 #: model:ir.actions.act_window,name:website_slides_survey.survey_survey_action_slides
-#: model:ir.actions.act_window,name:website_slides_survey.survey_survey_action_slides_report
 #: model:ir.ui.menu,name:website_slides_survey.website_slides_menu_courses_certification
-#: model:ir.ui.menu,name:website_slides_survey.website_slides_menu_report_certification
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.user_profile_content
 msgid "Certifications"
 msgstr "證照"
@@ -251,6 +268,11 @@ msgstr "課程"
 #: model:ir.model.fields,field_description:website_slides_survey.field_survey_survey__slide_channel_count
 msgid "Courses Count"
 msgstr "課程數"
+
+#. module: website_slides_survey
+#: model_terms:ir.actions.act_window,help:website_slides_survey.survey_survey_action_slides
+msgid "Create a Certification"
+msgstr ""
 
 #. module: website_slides_survey
 #. openerp-web
@@ -281,6 +303,11 @@ msgstr "回到課程"
 #, python-format
 msgid "How to upload a certification on your course?"
 msgstr "如何在您的課程中上傳證書？"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.res_config_settings_view_form
+msgid "Manage Certifications"
+msgstr ""
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
@@ -316,6 +343,11 @@ msgid "Slide / Partner decorated m2m"
 msgstr "幻燈片/合作夥伴裝飾m2m"
 
 #. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__slide_type
+msgid "Slide Type"
+msgstr ""
+
+#. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_survey_user_input__slide_partner_id
 msgid "Slide membership information for the logged in user"
 msgstr "為登錄使用者滑動成員資格信息"
@@ -329,6 +361,18 @@ msgstr "幻燈片"
 #: model:ir.model.fields,field_description:website_slides_survey.field_survey_user_input__slide_partner_id
 msgid "Subscriber information"
 msgstr "訂閱者信息"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,help:website_slides_survey.field_slide_slide__slide_type
+msgid ""
+"Subtype of the slide category, allows more precision on the actual file type"
+" / source type."
+msgstr ""
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_survey_view_tree_slides
+msgid "Success Ratio (%)"
+msgstr ""
 
 #. module: website_slides_survey
 #: model:ir.model,name:website_slides_survey.model_survey_survey
@@ -349,17 +393,25 @@ msgid "Test Certification"
 msgstr "測試認證"
 
 #. module: website_slides_survey
+#: code:addons/website_slides_survey/models/survey_survey.py:0
+#, python-format
+msgid ""
+"The Certification '%(certification_name)s' cannot be deleted because it is "
+"still being used by the Course(s) '%(courses_names)s'"
+msgstr ""
+
+#. module: website_slides_survey
+#: model:ir.model.fields,help:website_slides_survey.field_slide_slide__is_preview
+msgid ""
+"The course is accessible by anyone : the users don't need to join the "
+"channel to access the content of the course."
+msgstr "何人都可以訪問該課程：使用者無需加入頻道即可訪問課程內容。"
+
+#. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_survey_survey__slide_channel_ids
 msgid ""
 "The courses this survey is linked to through the e-learning application"
 msgstr "此試卷通過電子學習應用模組連結到的課程"
-
-#. module: website_slides_survey
-#: model:ir.model.fields,help:website_slides_survey.field_slide_slide__slide_type
-msgid ""
-"The document type will be set automatically based on the document URL and "
-"properties (e.g. height and width for presentation and document)."
-msgstr "文檔類型將根據文檔 URL 和屬性（例如，演示和文檔的高度和寬度）自動設定。"
 
 #. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_survey_user_input__slide_id
@@ -370,11 +422,6 @@ msgstr "沒有會員資料時，相關課程會滑動"
 #: model:ir.model.fields,help:website_slides_survey.field_survey_survey__slide_ids
 msgid "The slides this survey is linked to through the e-learning application"
 msgstr "此試卷通過電子學習應用模組連接到的幻燈片"
-
-#. module: website_slides_survey
-#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__slide_type
-msgid "Type"
-msgstr "類型"
 
 #. module: website_slides_survey
 #: code:addons/website_slides_survey/controllers/slides.py:0
@@ -406,7 +453,6 @@ msgstr "您可以通過認證獲得徽章。這是所有可用認證徽章的列
 
 #. module: website_slides_survey
 #: model:mail.template,subject:website_slides_survey.mail_template_user_input_certification_failed
-msgid "You have failed the course: ${object.slide_partner_id.channel_id.name}"
-msgstr ""
-"您沒有通過課程:\n"
-" ${object.slide_partner_id.channel_id.name}"
+msgid ""
+"You have failed the course: {{ object.slide_partner_id.channel_id.name }}"
+msgstr "您未通過課程：{{ object.slide_partner_id.channel_id.name }}"

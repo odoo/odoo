@@ -3,23 +3,23 @@
 # 	* website_crm
 # 
 # Translators:
-# Martin Trigaux, 2017
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
 # Umur Akın <umura@projetgrup.com>, 2018
 # Buket Şeker <buket_skr@hotmail.com>, 2019
+# Ediz Duman <neps1192@gmail.com>, 2019
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2019
+# Murat Kaplan <muratk@projetgrup.com>, 2019
 # Fırat Kaya <firat.kaya@mechsoft.com.tr>, 2019
-# Murat Kaplan <muratk@projetgrup.com>, 2020
 # Murat Durmuş <muratd@projetgrup.com>, 2020
-# Ediz Duman <neps1192@gmail.com>, 2021
+# Martin Trigaux, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-12-07 10:46+0000\n"
 "PO-Revision-Date: 2016-08-05 13:12+0000\n"
-"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2021\n"
+"Last-Translator: Martin Trigaux, 2021\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,50 +41,6 @@ msgstr "# Sayfa Görünümleri"
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Contact Form</span>"
 msgstr ""
-
-#. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-msgid ""
-"<span class=\"s_website_form_label_content\">Email</span>\n"
-"                                                <span class=\"s_website_form_mark\"> *</span>"
-msgstr ""
-
-#. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-msgid "<span class=\"s_website_form_label_content\">Phone Number</span>"
-msgstr "<span class=\"s_website_form_label_content\">Telefon Numarası</span>"
-
-#. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-msgid ""
-"<span class=\"s_website_form_label_content\">Subject</span>\n"
-"                                                <span class=\"s_website_form_mark\"> *</span>"
-msgstr ""
-"<span class=\"s_website_form_label_content\">Konu</span>\n"
-"                                                <span class=\"s_website_form_mark\"> *</span>"
-
-#. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-msgid "<span class=\"s_website_form_label_content\">Your Company</span>"
-msgstr "<span class=\"s_website_form_label_content\">Şirketiniz</span>"
-
-#. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-msgid ""
-"<span class=\"s_website_form_label_content\">Your Name</span>\n"
-"                                                <span class=\"s_website_form_mark\"> *</span>"
-msgstr ""
-"<span class=\"s_website_form_label_content\">Adınız</span>\n"
-"                                                <span class=\"s_website_form_mark\"> *</span>"
-
-#. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-msgid ""
-"<span class=\"s_website_form_label_content\">Your Question</span>\n"
-"                                                <span class=\"s_website_form_mark\"> *</span>"
-msgstr ""
-"<span class=\"s_website_form_label_content\">Sorunuz</span>\n"
-"                                                <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
@@ -158,7 +114,7 @@ msgid "Lead/Opportunity"
 msgstr "Aday/Fırsat"
 
 #. module: website_crm
-#: model:ir.actions.act_window,name:website_crm.website_visitor_crm_lead_action
+#: model:ir.actions.act_window,name:website_crm.crm_lead_action_from_visitor
 #: model:ir.model.fields,field_description:website_crm.field_website_visitor__lead_ids
 #: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_form
 #: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_search
@@ -167,8 +123,8 @@ msgstr "Adaylar"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_kanban
-msgid "Leads/Opportunities"
-msgstr "Adaylar/Fırsatlar"
+msgid "Leads / Opportunities"
+msgstr "Adaylar / Fırsatlar"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
@@ -178,7 +134,7 @@ msgstr ""
 " yönetilir."
 
 #. module: website_crm
-#: model_terms:ir.actions.act_window,help:website_crm.website_visitor_crm_lead_action
+#: model_terms:ir.actions.act_window,help:website_crm.crm_lead_action_from_visitor
 msgid "No lead linked for this visitor"
 msgstr "Bu ziyaretçi için olası satış yok"
 
@@ -213,14 +169,14 @@ msgid "Salesperson"
 msgstr "Satış Personeli"
 
 #. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-msgid "Submit"
-msgstr "Gönder"
-
-#. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_crm_lead__visitor_ids
 msgid "Web Visitors"
 msgstr "Web Ziyaretçileri"
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.crm_lead_merge_summary_inherit_website
+msgid "Web Visitors:"
+msgstr ""
 
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_website

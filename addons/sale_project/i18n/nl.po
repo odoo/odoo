@@ -3,20 +3,20 @@
 # 	* sale_project
 # 
 # Translators:
-# Martin Trigaux, 2020
 # Eric Geens <ericgeens@yahoo.com>, 2020
 # Cas Vissers <casvissers@brahoo.nl>, 2020
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2020
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
+# Martin Trigaux, 2021
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-12-07 10:47+0000\n"
 "PO-Revision-Date: 2020-02-13 10:47+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,29 +25,20 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_project
-#: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__project_only
-msgid "Create a new project but no task"
-msgstr "Maak een nieuw project maar geen taak"
+#: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
+msgid "Create Invoice"
+msgstr "Maak factuur"
 
 #. module: sale_project
-#: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__task_global_project
-msgid "Create a task in an existing project"
-msgstr "Maak een taak in een bestaand project"
-
-#. module: sale_project
-#: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__task_in_project
-msgid "Create a task in sales order's project"
-msgstr "Maak een taak in het project van de verkooporder"
+#: model:ir.model.fields,field_description:sale_project.field_product_product__service_tracking
+#: model:ir.model.fields,field_description:sale_project.field_product_template__service_tracking
+msgid "Create on Order"
+msgstr "Aanmaken bij order"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__visible_project
 msgid "Display project"
 msgstr "Toon project"
-
-#. module: sale_project
-#: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__no
-msgid "Don't create a task"
-msgstr ""
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__project_id
@@ -60,6 +51,54 @@ msgid "Generated Task"
 msgstr "Gegenereerde taak"
 
 #. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_project_project__has_any_so_to_invoice
+msgid "Has SO to Invoice"
+msgstr "Heeft SO te factureren"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_project_project__has_any_so_with_nothing_to_invoice
+msgid "Has a SO with an invoice status of No"
+msgstr ""
+
+#. module: sale_project
+#: code:addons/sale_project/models/product.py:0
+#, python-format
+msgid ""
+"Invoice as soon as this service is sold, and create a task in an existing "
+"project to track the time spent."
+msgstr ""
+"Factureer zodra deze dienst is verkocht, en maak een taak aan in een "
+"bestaand project om de bestede tijd bij te houden."
+
+#. module: sale_project
+#: code:addons/sale_project/models/product.py:0
+#, python-format
+msgid ""
+"Invoice ordered quantities as soon as this service is sold, and create a "
+"project for the order with a task for each sales order line to track the "
+"time spent."
+msgstr ""
+"Factureer bestelde hoeveelheden zodra deze dienst is verkocht, en maak een "
+"project voor de order met een taak voor elke verkooporderregel om de bestede"
+" tijd bij te houden."
+
+#. module: sale_project
+#: code:addons/sale_project/models/product.py:0
+#, python-format
+msgid ""
+"Invoice ordered quantities as soon as this service is sold, and create an "
+"empty project for the order to track the time spent."
+msgstr ""
+"Factureer bestelde hoeveelheden zodra deze dienst is verkocht, en maak een "
+"leeg project voor de order om de bestede tijd bij te houden."
+
+#. module: sale_project
+#: code:addons/sale_project/models/product.py:0
+#, python-format
+msgid "Invoice ordered quantities as soon as this service is sold."
+msgstr "Factuur bestelde hoeveelheden zodra deze dienst is verkocht."
+
+#. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__is_service
 msgid "Is a Service"
 msgstr "Is een dienst"
@@ -69,6 +108,21 @@ msgstr "Is een dienst"
 #, python-format
 msgid "New"
 msgstr "Nieuw"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.portal_tasks_list_inherit
+msgid "No Sales Order"
+msgstr "Geen verkooporder"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.portal_tasks_list_inherit
+msgid "No Sales Order Item"
+msgstr ""
+
+#. module: sale_project
+#: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__no
+msgid "Nothing"
+msgstr "Niets"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__project_count
@@ -105,13 +159,14 @@ msgstr "Productsjabloon"
 #: model:ir.model.fields,field_description:sale_project.field_product_product__project_id
 #: model:ir.model.fields,field_description:sale_project.field_product_template__project_id
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__project_id
+#: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__project_only
 msgid "Project"
 msgstr "Project"
 
 #. module: sale_project
-#: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
-msgid "Project Overview"
-msgstr "Project overzicht"
+#: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__task_in_project
+msgid "Project & Task"
+msgstr "Project & Taak"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__project_template_id
@@ -143,22 +198,42 @@ msgid "Projects used in this sales order."
 msgstr "Project gebruikt op deze verkooporder."
 
 #. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_search
 #: model_terms:ir.ui.view,arch_db:sale_project.project_task_view_search
 msgid "Sale Order"
 msgstr "Verkooporder"
 
 #. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_project_project__sale_order_count
+msgid "Sale Order Count"
+msgstr "Totaal verkooporders"
+
+#. module: sale_project
+#: code:addons/sale_project/controllers/portal.py:0
+#: code:addons/sale_project/models/project.py:0
 #: model:ir.model,name:sale_project.model_sale_order
 #: model:ir.model.fields,field_description:sale_project.field_project_project__sale_order_id
 #: model:ir.model.fields,field_description:sale_project.field_project_task__sale_order_id
+#: model:ir.model.fields,field_description:sale_project.field_report_project_task_user__sale_order_id
+#: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
+#, python-format
 msgid "Sales Order"
 msgstr "Verkooporder"
 
 #. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_search
+msgid "Sales Order Id"
+msgstr "Verkooporder-ID"
+
+#. module: sale_project
+#: code:addons/sale_project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:sale_project.field_project_project__sale_line_id
 #: model:ir.model.fields,field_description:sale_project.field_project_task__sale_line_id
+#: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_form
+#: model_terms:ir.ui.view,arch_db:sale_project.project_task_view_search
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
+#, python-format
 msgid "Sales Order Item"
 msgstr "Verkooporder item"
 
@@ -186,6 +261,11 @@ msgstr ""
 "afhankelijk van de productinstellingen."
 
 #. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
+msgid "Sales Orders"
+msgstr "Verkooporders"
+
+#. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_line_id
 msgid ""
 "Sales order item to which the project is linked. Link the timesheet entry to"
@@ -209,6 +289,24 @@ msgstr "Verkooporder waaraan het project is gerelateerd."
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_order_id
 msgid "Sales order to which the task is linked."
 msgstr "Verkooporder waaraan de taak is gerelateerd."
+
+#. module: sale_project
+#: code:addons/sale_project/controllers/portal.py:0
+#, python-format
+msgid "Search in Invoice"
+msgstr "Zoeken in factuur"
+
+#. module: sale_project
+#: code:addons/sale_project/controllers/portal.py:0
+#, python-format
+msgid "Search in Sales Order"
+msgstr "Zoeken in verkooporder"
+
+#. module: sale_project
+#: code:addons/sale_project/controllers/portal.py:0
+#, python-format
+msgid "Search in Sales Order Item"
+msgstr "Zoeken in verkooporderregel"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_product_product__project_id
@@ -239,19 +337,8 @@ msgstr ""
 "aangemaakt."
 
 #. module: sale_project
-#: model:ir.model.fields,field_description:sale_project.field_product_product__service_tracking
-#: model:ir.model.fields,field_description:sale_project.field_product_template__service_tracking
-msgid "Service Tracking"
-msgstr "Dienstopvolging"
-
-#. module: sale_project
-#: model:ir.model.fields,field_description:sale_project.field_project_project__project_overview
-#: model:ir.model.fields,field_description:sale_project.field_sale_order__project_overview
-msgid "Show Project Overview"
-msgstr ""
-
-#. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task
+#: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__task_global_project
 msgid "Task"
 msgstr "Taak"
 
@@ -279,6 +366,11 @@ msgstr "Taak gegenereerd door het verkooporder item"
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
 msgid "Tasks"
 msgstr "Taken"
+
+#. module: sale_project
+#: model:ir.model,name:sale_project.model_report_project_task_user
+msgid "Tasks Analysis"
+msgstr "Takenanalyse"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__tasks_ids
@@ -339,11 +431,3 @@ msgid ""
 msgstr ""
 "U kan het orderitem %(order_id)s - %(product_id)s niet linken aan deze taak "
 "omdat het een opnieuw te factureren declaratie is."
-
-#. module: sale_project
-#: code:addons/sale_project/models/project.py:0
-#, python-format
-msgid ""
-"You have to unlink the task from the sale order item in order to delete it."
-msgstr ""
-"U moet de taak ontkoppelen van het verkooporderitem om het te verwijderen."

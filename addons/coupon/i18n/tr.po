@@ -3,25 +3,25 @@
 # 	* coupon
 # 
 # Translators:
-# Martin Trigaux, 2020
-# Levent Karakaş <levent@mektup.at>, 2020
 # Murat Kaplan <muratk@projetgrup.com>, 2020
 # Saban Yildiz <sabany@projetgrup.com>, 2020
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2020
 # abc Def <hdogan1974@gmail.com>, 2020
-# Tugay Hatıl <tugayh@projetgrup.com>, 2020
 # Ediz Duman <neps1192@gmail.com>, 2020
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
 # Umur Akın <umura@projetgrup.com>, 2021
+# Martin Trigaux, 2021
+# Levent Karakaş <levent@mektup.at>, 2021
+# Tugay Hatıl <tugayh@projetgrup.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2020-08-21 13:31+0000\n"
-"Last-Translator: Umur Akın <umura@projetgrup.com>, 2021\n"
+"Last-Translator: Tugay Hatıl <tugayh@projetgrup.com>, 2021\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -69,6 +69,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "*Valid for following products:"
 msgstr "* Aşağıdaki ürünler için geçerlidir:"
+
+#. module: coupon
+#: model:coupon.program,name:coupon.10_percent_coupon
+msgid "10% Discount"
+msgstr "%10 İndirim"
+
+#. module: coupon
+#: model:product.product,name:coupon.product_product_10_percent_discount
+#: model:product.template,name:coupon.product_product_10_percent_discount_product_template
+msgid "10.0% discount on total amount"
+msgstr "toplam tutarda 10.0% indirim"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
@@ -237,8 +248,14 @@ msgstr ""
 "Bazı koşullar yerine getirilirse promosyon kodlarını paylaşabilir veya promosyonlara otomatik olarak izin verebilirsiniz."
 
 #. module: coupon
+#: model:coupon.program,name:coupon.3_cabinets_plus_1_free
+msgid "Buy 3 large cabinets, get one for free"
+msgstr "3 büyük dolap alana 1 tane ücretsiz."
+
+#. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_generate_view_form
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_view_form
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_view_tree
 msgid "Cancel"
 msgstr "İptal et"
 
@@ -251,6 +268,11 @@ msgstr "İptal Edildi"
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__code
 msgid "Code"
 msgstr "Kod"
+
+#. module: coupon
+#: model:coupon.program,name:coupon.10_percent_auto_applied
+msgid "Code for 10% on orders"
+msgstr "Siparişlerde %10 indirim için kod"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__company_id
@@ -507,6 +529,12 @@ msgstr "Ücretsiz Ürün"
 #, python-format
 msgid "Free Product - %s"
 msgstr "Ücretsiz Ürün - %s"
+
+#. module: coupon
+#: model:product.product,name:coupon.product_product_free_large_cabinet
+#: model:product.template,name:coupon.product_product_free_large_cabinet_product_template
+msgid "Free Product - Large Cabinet"
+msgstr "Ücretsiz Ürün - Büyük Dolap"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_generate_view_form
@@ -892,6 +920,11 @@ msgid "Select reward product"
 msgstr "Ödül ürünü seçin"
 
 #. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_view_tree
+msgid "Send"
+msgstr "Gönder"
+
+#. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__promo_applicability__on_next_order
 msgid "Send a Coupon"
 msgstr "Send a Coupon"
@@ -1020,6 +1053,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__reward_product_uom_id
 msgid "Unit of Measure"
 msgstr "Ölçü Birimi"
+
+#. module: coupon
+#: model:product.product,uom_name:coupon.product_product_10_percent_discount
+#: model:product.product,uom_name:coupon.product_product_free_large_cabinet
+#: model:product.template,uom_name:coupon.product_product_10_percent_discount_product_template
+#: model:product.template,uom_name:coupon.product_product_free_large_cabinet_product_template
+msgid "Units"
+msgstr "Birim"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__promo_code_usage__code_needed

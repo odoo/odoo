@@ -11,9 +11,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-11-16 13:19+0000\n"
 "PO-Revision-Date: 2016-08-05 12:57+0000\n"
 "Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -28,12 +28,6 @@ msgstr ""
 #, python-format
 msgid " (Estimated Cost: %s )"
 msgstr "（估計成本：%s）"
-
-#. module: delivery
-#: code:addons/delivery/models/sale_order.py:0
-#, python-format
-msgid "Free Shipping"
-msgstr "免費送貨"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_quant_package_weight_form
@@ -216,6 +210,7 @@ msgstr "取消"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__carrier_id
+#: model:ir.model.fields,field_description:delivery.field_stock_move_line__carrier_id
 #: model:ir.model.fields,field_description:delivery.field_stock_package_type__package_carrier_type
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_id
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -384,6 +379,7 @@ msgid "Destination Availability"
 msgstr "目的地有效性"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_stock_move_line__destination_country_code
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__destination_country_code
 msgid "Destination Country"
 msgstr "目的地國家"
@@ -465,6 +461,12 @@ msgstr "填寫此表格，您可以根據您的客戶送貨地址進行過濾。
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__delivery_type__fixed
 msgid "Fixed Price"
 msgstr "固定價格"
+
+#. module: delivery
+#: code:addons/delivery/models/sale_order.py:0
+#, python-format
+msgid "Free Shipping"
+msgstr "免費送貨"
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
@@ -613,6 +615,13 @@ msgstr "無承運商集成"
 #, python-format
 msgid "No price rule matching this order; delivery cost cannot be computed."
 msgstr "沒有與此訂單匹配的價格規則；無法計算運送費用。"
+
+#. module: delivery
+#: model:delivery.carrier,name:delivery.normal_delivery_carrier
+#: model:product.product,name:delivery.product_product_delivery_normal
+#: model:product.template,name:delivery.product_product_delivery_normal_product_template
+msgid "Normal Delivery Charges"
+msgstr "正常運輸成本"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
@@ -846,6 +855,7 @@ msgid "Stock package type"
 msgstr "庫存包裝類型"
 
 #. module: delivery
+#: model:ir.model.fields,help:delivery.field_stock_move_line__destination_country_code
 #: model:ir.model.fields,help:delivery.field_stock_picking__destination_country_code
 msgid ""
 "The ISO country code in two chars. \n"
@@ -853,6 +863,13 @@ msgid ""
 msgstr ""
 "ISO 國家代碼使用兩個字元。\n"
 " 您可以使用此字段進行快速搜尋。"
+
+#. module: delivery
+#: model:delivery.carrier,name:delivery.delivery_carrier
+#: model:product.product,name:delivery.product_product_delivery_poste
+#: model:product.template,name:delivery.product_product_delivery_poste_product_template
+msgid "The Poste"
+msgstr "郵政"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__get_return_label_from_portal
@@ -966,6 +983,10 @@ msgstr "調撥"
 
 #. module: delivery
 #: model:product.product,uom_name:delivery.product_product_delivery
+#: model:product.product,uom_name:delivery.product_product_delivery_normal
+#: model:product.product,uom_name:delivery.product_product_delivery_poste
+#: model:product.template,uom_name:delivery.product_product_delivery_normal_product_template
+#: model:product.template,uom_name:delivery.product_product_delivery_poste_product_template
 #: model:product.template,uom_name:delivery.product_product_delivery_product_template
 msgid "Units"
 msgstr "單位"

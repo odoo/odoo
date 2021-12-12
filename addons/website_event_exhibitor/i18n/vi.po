@@ -8,15 +8,15 @@
 # Thang Duong Bao <nothingctrl@gmail.com>, 2020
 # Duy BQ <duybq86@gmail.com>, 2020
 # Dao Nguyen <trucdao.uel@gmail.com>, 2020
-# thanhnguyen.icsc <thanhnguyen.icsc@gmail.com>, 2020
 # Trần Hà <tranthuha13590@gmail.com>, 2021
+# thanhnguyen.icsc <thanhnguyen.icsc@gmail.com>, 2021
 # Vo Thanh Thuy, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-12-07 10:47+0000\n"
 "PO-Revision-Date: 2020-12-11 11:05+0000\n"
 "Last-Translator: Vo Thanh Thuy, 2021\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
@@ -69,6 +69,16 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Hình mũi tên\" "
 "title=\"Mũi tên\"/>"
+
+#. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_aside
+msgid "<small class=\"badge badge-danger\">Unpublished</small>"
+msgstr "<small class=\"badge badge-danger\">Không đăng</small>"
+
+#. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitors_search_tag
+msgid "<span class=\"btn border-0 py-1\">×</span>"
+msgstr "<span class=\"btn border-0 py-1\">×</span>"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_aside
@@ -216,6 +226,11 @@ msgid "Create a Sponsor / Exhibitor"
 msgstr "Tạo một nhà tài trợ/ nhà triển lãm"
 
 #. module: website_event_exhibitor
+#: model_terms:ir.actions.act_window,help:website_event_exhibitor.event_sponsor_type_action
+msgid "Create a Sponsor Level"
+msgstr "Tạo cấp độ nhà tài trợ"
+
+#. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__create_uid
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor_type__create_uid
 msgid "Created by"
@@ -243,6 +258,11 @@ msgstr "Tên hiển thị"
 #: model:ir.model.fields,help:website_event_exhibitor.field_event_type__exhibitor_menu
 msgid "Display exhibitors on website"
 msgstr "Hiển thị nhà triển lãm trên website"
+
+#. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
+msgid "Display in footer"
+msgstr "Hiển thị ở chân trang"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__partner_email
@@ -306,6 +326,11 @@ msgstr "Nhà triển lãm"
 #, python-format
 msgid "Exhibitors"
 msgstr "Nhà triển lãm"
+
+#. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_type_view_form
+msgid "Exhibitors Menu Item"
+msgstr "Mục menu nhà triển lãm "
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_event__exhibitor_menu_ids
@@ -613,6 +638,20 @@ msgid "Phone"
 msgstr "Điện thoại"
 
 #. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_search
+msgid "Published"
+msgstr "Đã đăng"
+
+#. module: website_event_exhibitor
+#: model_terms:ir.actions.act_window,help:website_event_exhibitor.event_sponsor_type_action
+msgid ""
+"Rank your sponsors based on your own grading system (e.g. \"Gold, Silver, "
+"Bronze\")."
+msgstr ""
+"Xếp hạng nhà tài trợ dựa vào hệ thống xếp loại của bạn (vd. Vàng, Bạc, "
+"Đồng\"). "
+
+#. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_card
 msgid "Register"
 msgstr "Đăng ký"
@@ -784,6 +823,11 @@ msgid "Type of the exception activity on record."
 msgstr "Loại hoạt động ngoại lệ trên chứng từ."
 
 #. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_thumb_details
+msgid "Unpublished"
+msgstr "Không đăng"
+
+#. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__message_unread
 msgid "Unread Messages"
 msgstr "Tin chưa đọc"
@@ -833,6 +877,11 @@ msgstr "Lịch sử thông tin liên lạc website"
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__is_in_opening_hours
 msgid "Within opening hours"
 msgstr "Trong giờ mở cửa"
+
+#. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
+msgid "e.g. \"Openwood specializes in home decoration...\""
+msgstr ""
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form

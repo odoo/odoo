@@ -13,9 +13,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-05-11 12:35+0000\n"
 "Last-Translator: Istvan <leki69@gmail.com>, 2021\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
@@ -24,6 +24,13 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: mail_plugin
+#. openerp-web
+#: code:addons/mail_plugin/static/src/to_translate/translations_gmail.xml:0
+#, python-format
+msgid "%s employees"
+msgstr ""
 
 #. module: mail_plugin
 #. openerp-web
@@ -125,6 +132,7 @@ msgstr ""
 
 #. module: mail_plugin
 #. openerp-web
+#: code:addons/mail_plugin/static/src/to_translate/translations_gmail.xml:0
 #: code:addons/mail_plugin/static/src/to_translate/translations_outlook.xml:0
 #, python-format
 msgid "Company Insights"
@@ -143,6 +151,13 @@ msgstr "Vállalat típus"
 #: code:addons/mail_plugin/static/src/to_translate/translations_outlook.xml:0
 #, python-format
 msgid "Company created"
+msgstr ""
+
+#. module: mail_plugin
+#. openerp-web
+#: code:addons/mail_plugin/static/src/to_translate/translations_outlook.xml:0
+#, python-format
+msgid "Company updated"
 msgstr ""
 
 #. module: mail_plugin
@@ -197,6 +212,20 @@ msgstr ""
 #: code:addons/mail_plugin/static/src/to_translate/translations_gmail.xml:0
 #, python-format
 msgid "Could not connect to database. Try to log out and in."
+msgstr ""
+
+#. module: mail_plugin
+#. openerp-web
+#: code:addons/mail_plugin/static/src/to_translate/translations_outlook.xml:0
+#, python-format
+msgid "Could not connect to your database. Please try again."
+msgstr ""
+
+#. module: mail_plugin
+#. openerp-web
+#: code:addons/mail_plugin/static/src/to_translate/translations_outlook.xml:0
+#, python-format
+msgid "Could not display image %(attachmentName)s, size is over limit."
 msgstr ""
 
 #. module: mail_plugin
@@ -291,8 +320,30 @@ msgstr "Alkalmazottak"
 #. module: mail_plugin
 #. openerp-web
 #: code:addons/mail_plugin/static/src/to_translate/translations_gmail.xml:0
+#: code:addons/mail_plugin/static/src/to_translate/translations_outlook.xml:0
+#, python-format
+msgid "Enrich Company"
+msgstr ""
+
+#. module: mail_plugin
+#. openerp-web
+#: code:addons/mail_plugin/static/src/to_translate/translations_gmail.xml:0
+#, python-format
+msgid "Error during enrichment"
+msgstr ""
+
+#. module: mail_plugin
+#. openerp-web
+#: code:addons/mail_plugin/static/src/to_translate/translations_gmail.xml:0
 #, python-format
 msgid "Founded Year"
+msgstr ""
+
+#. module: mail_plugin
+#. openerp-web
+#: code:addons/mail_plugin/static/src/to_translate/translations_outlook.xml:0
+#, python-format
+msgid "From : %(email)s"
 msgstr ""
 
 #. module: mail_plugin
@@ -405,6 +456,7 @@ msgstr ""
 #. module: mail_plugin
 #. openerp-web
 #: code:addons/mail_plugin/static/src/to_translate/translations_gmail.xml:0
+#: code:addons/mail_plugin/static/src/to_translate/translations_outlook.xml:0
 #, python-format
 msgid "Logged from"
 msgstr ""
@@ -412,6 +464,7 @@ msgstr ""
 #. module: mail_plugin
 #. openerp-web
 #: code:addons/mail_plugin/static/src/to_translate/translations_gmail.xml:0
+#: code:addons/mail_plugin/static/src/to_translate/translations_outlook.xml:0
 #, python-format
 msgid "Login"
 msgstr "Bejelentkezés"
@@ -423,6 +476,13 @@ msgstr "Bejelentkezés"
 #, python-format
 msgid "Logout"
 msgstr "Kilépés"
+
+#. module: mail_plugin
+#. openerp-web
+#: code:addons/mail_plugin/static/src/to_translate/translations_outlook.xml:0
+#, python-format
+msgid "No additional insights were found for this company"
+msgstr ""
 
 #. module: mail_plugin
 #. openerp-web
@@ -461,10 +521,37 @@ msgstr ""
 
 #. module: mail_plugin
 #. openerp-web
-#: code:addons/mail_plugin/static/src/to_translate/translations_gmail.xml:0
 #: code:addons/mail_plugin/static/src/to_translate/translations_outlook.xml:0
 #, python-format
 msgid "No data found for this email address."
+msgstr ""
+
+#. module: mail_plugin
+#. openerp-web
+#: code:addons/mail_plugin/static/src/to_translate/translations_outlook.xml:0
+#, python-format
+msgid "No extra information found"
+msgstr ""
+
+#. module: mail_plugin
+#. openerp-web
+#: code:addons/mail_plugin/static/src/to_translate/translations_gmail.xml:0
+#, python-format
+msgid "No insights for this company."
+msgstr ""
+
+#. module: mail_plugin
+#. openerp-web
+#: code:addons/mail_plugin/static/src/to_translate/translations_gmail.xml:0
+#, python-format
+msgid "No insights found for this address."
+msgstr ""
+
+#. module: mail_plugin
+#. openerp-web
+#: code:addons/mail_plugin/static/src/to_translate/translations_gmail.xml:0
+#, python-format
+msgid "Not enough credits to enrich."
 msgstr ""
 
 #. module: mail_plugin
@@ -503,6 +590,13 @@ msgid "Our IAP server is down, please come back later."
 msgstr ""
 
 #. module: mail_plugin
+#. openerp-web
+#: code:addons/mail_plugin/static/src/to_translate/translations_outlook.xml:0
+#, python-format
+msgid "Outlook Inbox"
+msgstr ""
+
+#. module: mail_plugin
 #: model:ir.model.fields,field_description:mail_plugin.field_res_partner_iap__partner_id
 msgid "Partner"
 msgstr "Partner"
@@ -525,6 +619,13 @@ msgstr "Telefon"
 #, python-format
 msgid "Phones"
 msgstr "Telefonok"
+
+#. module: mail_plugin
+#. openerp-web
+#: code:addons/mail_plugin/static/src/to_translate/translations_gmail.xml:0
+#, python-format
+msgid "Read more"
+msgstr "Bővebben"
 
 #. module: mail_plugin
 #. openerp-web
@@ -614,7 +715,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/mail_plugin/static/src/to_translate/translations_outlook.xml:0
 #, python-format
-msgid "There was a problem contacting the service, please try again later."
+msgid "This company has no email address and could not be enriched."
 msgstr ""
 
 #. module: mail_plugin
@@ -628,7 +729,32 @@ msgstr ""
 #. openerp-web
 #: code:addons/mail_plugin/static/src/to_translate/translations_outlook.xml:0
 #, python-format
-msgid "This contact has no email address, no company could be enriched"
+msgid "This contact has no email address, no company could be enriched."
+msgstr ""
+
+#. module: mail_plugin
+#: code:addons/mail_plugin/controllers/mail_plugin.py:0
+#: code:addons/mail_plugin/controllers/mail_plugin.py:0
+#, python-format
+msgid "This partner does not exist"
+msgstr ""
+
+#. module: mail_plugin
+#. openerp-web
+#: code:addons/mail_plugin/static/src/to_translate/translations_outlook.xml:0
+#, python-format
+msgid ""
+"Warning: Attachments could not be logged in Odoo because their total size "
+"exceeded the allowed maximum."
+msgstr ""
+
+#. module: mail_plugin
+#. openerp-web
+#: code:addons/mail_plugin/static/src/to_translate/translations_outlook.xml:0
+#, python-format
+msgid ""
+"Warning: Could not fetch the attachments %(attachments)s as their sizes are "
+"bigger then the maximum size of %(size)sMB per each attachment."
 msgstr ""
 
 #. module: mail_plugin
@@ -648,7 +774,6 @@ msgstr ""
 
 #. module: mail_plugin
 #. openerp-web
-#: code:addons/mail_plugin/static/src/to_translate/translations_gmail.xml:0
 #: code:addons/mail_plugin/static/src/to_translate/translations_outlook.xml:0
 #, python-format
 msgid "You don't have enough credit to enrich."

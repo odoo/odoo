@@ -14,9 +14,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2016-08-05 12:57+0000\n"
 "Last-Translator: Cécile Collart <cco@odoo.com>, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
@@ -28,7 +28,14 @@ msgstr ""
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:0
+#: code:addons/board/static/src/add_to_board/add_to_board.js:0
+#, python-format
+msgid "\"%s\" added to dashboard"
+msgstr "\"%s\" ajouté au tableau de bord"
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/legacy/xml/board.xml:0
 #, python-format
 msgid ""
 "\"Add to\n"
@@ -39,50 +46,52 @@ msgstr ""
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:0
+#: code:addons/board/static/src/legacy/xml/board.xml:0
 #, python-format
 msgid "&nbsp;"
 msgstr "&nbsp;"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/add_to_board_menu.js:0
+#: code:addons/board/static/src/legacy/js/add_to_board_menu.js:0
 #, python-format
 msgid "'%s' added to dashboard"
 msgstr " %s  Ajouter à votre tableau de bord"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:0
-#: code:addons/board/static/src/xml/board.xml:0
+#: code:addons/board/static/src/add_to_board/add_to_board.xml:0
+#: code:addons/board/static/src/legacy/xml/board.xml:0
+#: code:addons/board/static/src/legacy/xml/board.xml:0
 #, python-format
 msgid "Add"
 msgstr "Ajouter"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:0
+#: code:addons/board/static/src/legacy/xml/board.xml:0
 #, python-format
 msgid "Add to my Dashboard"
 msgstr "Ajouter à mon tableau de bord"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:0
+#: code:addons/board/static/src/add_to_board/add_to_board.xml:0
+#: code:addons/board/static/src/legacy/xml/board.xml:0
 #, python-format
 msgid "Add to my dashboard"
 msgstr "Ajouter à mon tableau de bord"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/board_view.js:0
+#: code:addons/board/static/src/legacy/js/board_view.js:0
 #, python-format
 msgid "Are you sure you want to remove this item?"
 msgstr "Voulez-vous vraiment supprimer cet article ?"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/board_view.js:0
+#: code:addons/board/static/src/legacy/js/board_view.js:0
 #: model:ir.model,name:board.model_board_board
 #, python-format
 msgid "Board"
@@ -90,35 +99,36 @@ msgstr "Tableau"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:0
+#: code:addons/board/static/src/legacy/xml/board.xml:0
 #, python-format
 msgid "Change Layout"
 msgstr "Modifier l'agencement"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:0
+#: code:addons/board/static/src/legacy/xml/board.xml:0
 #, python-format
 msgid "Change Layout.."
 msgstr "Modifier l'agencement..."
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:0
+#: code:addons/board/static/src/legacy/xml/board.xml:0
 #, python-format
 msgid "Choose dashboard layout"
 msgstr "Choisissez l'agencement du tableau de bord"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/add_to_board_menu.js:0
+#: code:addons/board/static/src/add_to_board/add_to_board.js:0
+#: code:addons/board/static/src/legacy/js/add_to_board_menu.js:0
 #, python-format
 msgid "Could not add filter to dashboard"
 msgstr "Impossible d'ajouter le filtre au tableau de bord"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/board_view.js:0
+#: code:addons/board/static/src/legacy/js/board_view.js:0
 #, python-format
 msgid "Edit Layout"
 msgstr "Modifier l'agencement"
@@ -130,15 +140,15 @@ msgstr "ID"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:0
-#: code:addons/board/static/src/xml/board.xml:0
+#: code:addons/board/static/src/legacy/xml/board.xml:0
+#: code:addons/board/static/src/legacy/xml/board.xml:0
 #, python-format
 msgid "Layout"
 msgstr "Agencement"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/board_view.js:0
+#: code:addons/board/static/src/legacy/js/board_view.js:0
 #: model:ir.actions.act_window,name:board.open_board_my_dash_action
 #: model:ir.ui.menu,name:board.menu_board_my_dash
 #: model_terms:ir.ui.view,arch_db:board.board_my_dash_view
@@ -148,14 +158,15 @@ msgstr "Mon tableau de bord"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/js/add_to_board_menu.js:0
+#: code:addons/board/static/src/add_to_board/add_to_board.js:0
+#: code:addons/board/static/src/legacy/js/add_to_board_menu.js:0
 #, python-format
 msgid "Please refresh your browser for the changes to take effect."
 msgstr "Veuillez rafraichir votre navigateur pour appliquer les changements."
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:0
+#: code:addons/board/static/src/legacy/xml/board.xml:0
 #, python-format
 msgid ""
 "To add your first report into this dashboard, go to any\n"
@@ -166,7 +177,7 @@ msgstr ""
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:0
+#: code:addons/board/static/src/legacy/xml/board.xml:0
 #, python-format
 msgid ""
 "You can filter and group data before inserting into the\n"
@@ -177,14 +188,14 @@ msgstr ""
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:0
+#: code:addons/board/static/src/legacy/xml/board.xml:0
 #, python-format
 msgid "Your personal dashboard is empty"
 msgstr "Votre tableau de bord personnel est vide"
 
 #. module: board
 #. openerp-web
-#: code:addons/board/static/src/xml/board.xml:0
+#: code:addons/board/static/src/legacy/xml/board.xml:0
 #, python-format
 msgid "in the extended search options."
 msgstr "dans le menu \"Favoris\" des options de recherches."

@@ -4,17 +4,17 @@
 # 
 # Translators:
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
-# Martin Trigaux, 2021
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
+# Martin Trigaux, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-12-07 10:46+0000\n"
 "PO-Revision-Date: 2020-08-21 13:29+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
+"Last-Translator: Martin Trigaux, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -66,10 +66,10 @@ msgstr "Blokkeerniveau"
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__blocking_level
 msgid ""
-"Blocks the document current operation depending on the error severity :\n"
+"Blocks the current operation of the document depending on the error severity:\n"
 "  * Info: the document is not blocked and everything is working as it should.\n"
-"  * Warning : there is an error that doesn't prevent the current Electronic Invoicing operation to succeed.\n"
-"  * Error : there is an error that blocks the current Electronic Invoicing operation."
+"  * Warning: there is an error that doesn't prevent the current Electronic Invoicing operation to succeed.\n"
+"  * Error: there is an error that blocks the current Electronic Invoicing operation."
 msgstr ""
 "Blokkeert de huidige documentbewerking afhankelijk van de ernst van de fout:\n"
 "   * Info: het document is niet geblokkeerd en alles werkt zoals het hoort.\n"
@@ -126,6 +126,12 @@ msgid "Display Name"
 msgstr "Schermnaam"
 
 #. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+#: model_terms:ir.ui.view,arch_db:account_edi.view_payment_form_inherit
+msgid "Download"
+msgstr "Downloaden"
+
+#. module: account_edi
 #: model:ir.actions.server,name:account_edi.ir_cron_edi_network_ir_actions_server
 #: model:ir.cron,cron_name:account_edi.ir_cron_edi_network
 #: model:ir.cron,name:account_edi.ir_cron_edi_network
@@ -154,6 +160,11 @@ msgstr "EDI format that dat wordt ondersteund in dit dagboek"
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_blocking_level
 msgid "Edi Blocking Level"
 msgstr "Edi blokeerniveau"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_content
+msgid "Edi Content"
+msgstr ""
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_document_ids
@@ -221,6 +232,11 @@ msgstr "Elektronisch document voor een boeking"
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_state
 msgid "Electronic invoicing"
 msgstr "Elektronische facturatie"
+
+#. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_account_invoice_filter
+msgid "Electronic invoicing state"
+msgstr "Status elektronische facturering"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_mail_template
@@ -325,6 +341,12 @@ msgid "Payments"
 msgstr "Betalingen"
 
 #. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+#: model_terms:ir.ui.view,arch_db:account_edi.view_payment_form_inherit
+msgid "Process now"
+msgstr "Verwerk nu"
+
+#. module: account_edi
 #: model:ir.model,name:account_edi.model_ir_actions_report
 msgid "Report Action"
 msgstr "Rapport actie"
@@ -344,12 +366,6 @@ msgstr "Opnieuw proberen"
 #: model:ir.model.fields,help:account_edi.field_account_journal__edi_format_ids
 msgid "Send XML/EDI invoices"
 msgstr "Verstuur XML/EDI facturen"
-
-#. module: account_edi
-#: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
-#: model_terms:ir.ui.view,arch_db:account_edi.view_payment_form_inherit
-msgid "Send now"
-msgstr "Verzend nu"
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__sent
@@ -391,13 +407,19 @@ msgstr ""
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
-msgid "The invoice will be sent asynchronously to :"
-msgstr "De factuur wordt asynchroon verzonden naar:"
+msgid ""
+"The invoice will be processed asynchronously by the following E-invoicing "
+"service :"
+msgstr ""
+"De factuur wordt asynchroon verwerkt door de volgende E-facturatiedienst:"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_payment_form_inherit
-msgid "The payment will be sent asynchronously to :"
-msgstr "De betaling wordt asynchroon verzonden naar:"
+msgid ""
+"The payment will be processed asynchronously by the following E-invoicing "
+"service :"
+msgstr ""
+"De betaling wordt asynchroon verwerkt door de volgende e-factureringsdienst:"
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_edi_document__error

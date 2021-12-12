@@ -5,22 +5,19 @@
 # Translators:
 # Martin Trigaux, 2020
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2020
-# Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2020
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2020
 # Marcin Młynarczyk <mlynarczyk@gmail.com>, 2020
 # Karol Rybak <karolrybak85@gmail.com>, 2020
 # Andrzej Donczew <a.donczew@hadron.eu.com>, 2020
-# Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2020
 # Paweł Wodyński <pw@myodoo.pl>, 2020
-# Piotr Strębski <strebski@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"POT-Creation-Date: 2021-12-07 10:46+0000\n"
 "PO-Revision-Date: 2019-12-16 11:03+0000\n"
-"Last-Translator: Piotr Strębski <strebski@gmail.com>, 2021\n"
+"Last-Translator: Paweł Wodyński <pw@myodoo.pl>, 2020\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,19 +52,9 @@ msgid "<i class=\"fa fa-info-circle mr-1\" title=\"Hint\"/>"
 msgstr ""
 
 #. module: hr_work_entry_contract
-#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.create_company_global_time_off_view_form
-msgid "<span> to </span>"
-msgstr "<span> do </span>"
-
-#. module: hr_work_entry_contract
-#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.create_company_global_time_off_view_form
-msgid "Cancel"
-msgstr "Anuluj"
-
-#. module: hr_work_entry_contract
-#: model:ir.model.fields,field_description:hr_work_entry_contract.field_create_company_global_time_off__company_id
-msgid "Company"
-msgstr "Firma"
+#: model:ir.model.fields,help:hr_work_entry_contract.field_hr_work_entry_type__is_leave
+msgid "Allow the work entry type to be linked with time off types."
+msgstr ""
 
 #. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_compensatory
@@ -75,37 +62,21 @@ msgid "Compensatory Time Off"
 msgstr ""
 
 #. module: hr_work_entry_contract
-#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.create_company_global_time_off_view_form
-msgid "Confirm"
-msgstr "Potwierdź"
-
-#. module: hr_work_entry_contract
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry__contract_id
 msgid "Contract"
 msgstr "Umowa"
 
 #. module: hr_work_entry_contract
-#: model:ir.actions.act_window,name:hr_work_entry_contract.action_create_company_global_time_off
-#: model:ir.model,name:hr_work_entry_contract.model_create_company_global_time_off
-#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.create_company_global_time_off_view_form
-#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.resource_calendar_view_form
-msgid "Create Company Public Time Off"
-msgstr ""
-
-#. module: hr_work_entry_contract
-#: model:ir.model.fields,field_description:hr_work_entry_contract.field_create_company_global_time_off__create_uid
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__create_uid
 msgid "Created by"
 msgstr "Utworzona przez"
 
 #. module: hr_work_entry_contract
-#: model:ir.model.fields,field_description:hr_work_entry_contract.field_create_company_global_time_off__create_date
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__create_date
 msgid "Created on"
 msgstr "Data utworzenia"
 
 #. module: hr_work_entry_contract
-#: model:ir.model.fields,field_description:hr_work_entry_contract.field_create_company_global_time_off__display_name
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__display_name
 msgid "Display Name"
 msgstr "Nazwa wyświetlana"
@@ -133,11 +104,6 @@ msgid "Employee Contract"
 msgstr "Umowa pracownika"
 
 #. module: hr_work_entry_contract
-#: model:ir.model.fields,field_description:hr_work_entry_contract.field_create_company_global_time_off__date_to
-msgid "End Date"
-msgstr "Data końcowa"
-
-#. module: hr_work_entry_contract
 #. openerp-web
 #: code:addons/hr_work_entry_contract/static/src/js/work_entries_calendar.js:0
 #, python-format
@@ -148,6 +114,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__date_from
 msgid "From"
 msgstr "Od"
+
+#. module: hr_work_entry_contract
+#: model:ir.actions.server,name:hr_work_entry_contract.ir_cron_generate_missing_work_entries_ir_actions_server
+#: model:ir.cron,cron_name:hr_work_entry_contract.ir_cron_generate_missing_work_entries
+#: model:ir.cron,name:hr_work_entry_contract.ir_cron_generate_missing_work_entries
+msgid "Generate Missing Work Entries"
+msgstr ""
 
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_contract__date_generated_from
@@ -180,7 +153,6 @@ msgid "Home Working"
 msgstr ""
 
 #. module: hr_work_entry_contract
-#: model:ir.model.fields,field_description:hr_work_entry_contract.field_create_company_global_time_off__id
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__id
 msgid "ID"
 msgstr "ID"
@@ -196,19 +168,16 @@ msgid ""
 msgstr ""
 
 #. module: hr_work_entry_contract
-#: model:ir.model.fields,field_description:hr_work_entry_contract.field_create_company_global_time_off____last_update
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard____last_update
 msgid "Last Modified on"
 msgstr "Data ostatniej modyfikacji"
 
 #. module: hr_work_entry_contract
-#: model:ir.model.fields,field_description:hr_work_entry_contract.field_create_company_global_time_off__write_uid
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__write_uid
 msgid "Last Updated by"
 msgstr "Ostatnio aktualizowane przez"
 
 #. module: hr_work_entry_contract
-#: model:ir.model.fields,field_description:hr_work_entry_contract.field_create_company_global_time_off__write_date
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__write_date
 msgid "Last Updated on"
 msgstr "Data ostatniej aktualizacji"
@@ -227,16 +196,6 @@ msgstr ""
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_legal_leave
 msgid "Legal Leaves 2021"
 msgstr ""
-
-#. module: hr_work_entry_contract
-#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.create_company_global_time_off_view_form
-msgid "Period"
-msgstr "Okres"
-
-#. module: hr_work_entry_contract
-#: model:ir.model.fields,field_description:hr_work_entry_contract.field_create_company_global_time_off__name
-msgid "Reason"
-msgstr "Przyczyna"
 
 #. module: hr_work_entry_contract
 #: model:ir.model,name:hr_work_entry_contract.model_hr_work_entry_regeneration_wizard
@@ -261,11 +220,6 @@ msgstr ""
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_sick_leave
 msgid "Sick Time Off"
 msgstr ""
-
-#. module: hr_work_entry_contract
-#: model:ir.model.fields,field_description:hr_work_entry_contract.field_create_company_global_time_off__date_from
-msgid "Start Date"
-msgstr "Data początkowa"
 
 #. module: hr_work_entry_contract
 #: code:addons/hr_work_entry_contract/wizard/hr_work_entry_regeneration_wizard.py:0
@@ -314,9 +268,4 @@ msgstr ""
 #. module: hr_work_entry_contract
 #: model:ir.actions.act_window,name:hr_work_entry_contract.hr_work_entry_regeneration_wizard_action
 msgid "Work Entry Regeneration"
-msgstr ""
-
-#. module: hr_work_entry_contract
-#: model:ir.model.fields,field_description:hr_work_entry_contract.field_create_company_global_time_off__work_entry_type_id
-msgid "Work Entry Type"
 msgstr ""

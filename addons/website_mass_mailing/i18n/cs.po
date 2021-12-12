@@ -5,16 +5,16 @@
 # Translators:
 # Martin Trigaux, 2020
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2020
+# trendspotter <jirka.p@volny.cz>, 2020
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2021
-# trendspotter <jirka.p@volny.cz>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-09-14 10:29+0000\n"
 "PO-Revision-Date: 2016-08-05 13:13+0000\n"
-"Last-Translator: trendspotter <jirka.p@volny.cz>, 2021\n"
+"Last-Translator: karolína schusterová <karolina.schusterova@vdp.sk>, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,27 +28,7 @@ msgid ", .o_newsletter_popup"
 msgstr ", .o_newsletter_popup"
 
 #. module: website_mass_mailing
-#: code:addons/website_mass_mailing/models/mailing_list.py:0
-#, python-format
-msgid "<p>Thanks for subscribing!</p>"
-msgstr "<p>Děkujeme za přihlášení!</p>"
-
-#. module: website_mass_mailing
-#. openerp-web
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:0
-#, python-format
-msgid "Add a Newsletter Subscribe Button"
-msgstr "Tlačítko Přidat k odběru novinek"
-
-#. module: website_mass_mailing
-#. openerp-web
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:0
-#, python-format
-msgid "Add a Newsletter Subscribe Popup"
-msgstr "Přidat vyskakovací okno odebírání zpravodaje"
-
-#. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup_content
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
 msgid "Always <b>First</b>."
 msgstr "Vždy <b>První</b>."
 
@@ -63,20 +43,16 @@ msgid "Be the first to find out all the latest news, products, and trends."
 msgstr "Buďte první, kdo zjistí všechny nejnovější zprávy, produkty a trendy."
 
 #. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup_content
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
 msgid ""
 "Be the first to find out all the latest news,<br/> products, and trends."
 msgstr ""
 "Buďte první, kdo se dozví všechny nejnovější zprávy,<br/> produkty a trendy."
 
 #. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
-msgid "Change Newsletter"
-msgstr "Změnit Newsletter"
-
-#. module: website_mass_mailing
 #. openerp-web
 #: code:addons/website_mass_mailing/static/src/xml/website_mass_mailing.xml:0
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
 #, python-format
 msgid "Close"
 msgstr "Zavřít"
@@ -93,28 +69,6 @@ msgid "Contact"
 msgstr "Kontakt"
 
 #. module: website_mass_mailing
-#: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__create_uid
-msgid "Created by"
-msgstr "Vytvořeno od"
-
-#. module: website_mass_mailing
-#: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__create_date
-msgid "Created on"
-msgstr "Vytvořeno"
-
-#. module: website_mass_mailing
-#. openerp-web
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
-#, python-format
-msgid "DRAG BUILDING BLOCKS HERE"
-msgstr "SEM PŘESUNOUT STAVEBNÍ BLOKY"
-
-#. module: website_mass_mailing
-#: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__display_name
-msgid "Display Name"
-msgstr "Zobrazované jméno"
-
-#. module: website_mass_mailing
 #. openerp-web
 #: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
 #: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:0
@@ -123,42 +77,18 @@ msgid "Error"
 msgstr "Chyba"
 
 #. module: website_mass_mailing
-#: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__id
-msgid "ID"
-msgstr "ID"
-
-#. module: website_mass_mailing
-#: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup____last_update
-msgid "Last Modified on"
-msgstr "Naposled změněno"
-
-#. module: website_mass_mailing
-#: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__write_uid
-msgid "Last Updated by"
-msgstr "Naposledy upraveno od"
-
-#. module: website_mass_mailing
-#: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__write_date
-msgid "Last Updated on"
-msgstr "Naposled upraveno"
-
-#. module: website_mass_mailing
-#: model:ir.model,name:website_mass_mailing.model_mailing_list
-#: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__mailing_list_id
-msgid "Mailing List"
-msgstr "seznam adres"
-
-#. module: website_mass_mailing
-#: model:ir.model,name:website_mass_mailing.model_website_mass_mailing_popup
-msgid "Mailing list popup"
-msgstr "Vyskakovací okno seznamu adresátů"
+#: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
+msgid "Newsletter"
+msgstr "Newsletter"
 
 #. module: website_mass_mailing
 #. openerp-web
 #: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:0
 #, python-format
-msgid "Newsletter"
-msgstr "Newsletter"
+msgid ""
+"No mailing list found, do you want to create a new one? This will save all "
+"your changes, are you sure you want to proceed?"
+msgstr ""
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
@@ -189,30 +119,10 @@ msgid "Thanks"
 msgstr "Díky"
 
 #. module: website_mass_mailing
-#: model:ir.model.fields,field_description:website_mass_mailing.field_mailing_list__toast_content
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.mailing_list_view_form
-msgid "Toast Content"
-msgstr "Toastový obsah"
-
-#. module: website_mass_mailing
-#: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__website_id
-msgid "Website"
-msgstr "Webová strana"
-
-#. module: website_mass_mailing
-#: model:ir.model.fields,field_description:website_mass_mailing.field_website_mass_mailing_popup__popup_content
-msgid "Website Popup Content"
-msgstr "Obsah vyskakovacího okna"
-
-#. module: website_mass_mailing
-#: model:ir.model.fields,field_description:website_mass_mailing.field_mailing_list__website_popup_ids
-msgid "Website Popups"
-msgstr "Vyskakovací okna webových stránek"
-
-#. module: website_mass_mailing
-#: model_terms:ir.ui.view,arch_db:website_mass_mailing.mailing_list_view_form
-msgid "Website popups"
-msgstr "vyskakovací okna webové strany"
+#: code:addons/website_mass_mailing/controllers/main.py:0
+#, python-format
+msgid "Thanks for subscribing!"
+msgstr "Děkujeme za přihlášení!"
 
 #. module: website_mass_mailing
 #: model_terms:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form

@@ -9,9 +9,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-12-07 10:47+0000\n"
 "PO-Revision-Date: 2016-08-05 12:57+0000\n"
 "Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -65,6 +65,22 @@ msgid ""
 msgstr "如果勾選此復選框，則在歐洲 VIES 服務無法驗證合同的增值稅號碼時，您將無法保存合同。"
 
 #. module: base_vat
+#: model:ir.model.fields,help:base_vat.field_res_partner__vat
+#: model:ir.model.fields,help:base_vat.field_res_users__vat
+msgid ""
+"The Tax Identification Number. Complete it if the contact is subjected to "
+"government taxes. Used in some legal statements."
+msgstr "稅號。 如果聯繫人需繳納稅款，請填寫。 用於某些法律聲明。"
+
+#. module: base_vat
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid ""
+"The VAT number [%(wrong_vat)s] for %(record_label)s does not seem to be valid. \n"
+"Note: the expected format is %(expected_format)s"
+msgstr ""
+
+#. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid ""
@@ -74,16 +90,6 @@ msgid ""
 msgstr ""
 "%(record_label)s 的統一編號 [%(wrong_vat)s] 未通過 VIES 增值稅驗證檢查或不符合預期的格式 "
 "%(expected_format)s。"
-
-#. module: base_vat
-#: code:addons/base_vat/models/res_partner.py:0
-#, python-format
-msgid ""
-"The VAT number [%(wrong_vat)s] for record_label does not seem to be valid. \n"
-"Note: the expected format is %(expected_format)s"
-msgstr ""
-"record_label 的統一編號 [%(wrong_vat)s] 似乎無效。\n"
-"注意：預期格式為 %(expected_format)s"
 
 #. module: base_vat
 #: code:addons/base_vat/models/account_fiscal_position.py:0
@@ -98,6 +104,12 @@ msgstr "檢測到此外國統一編號的國家與此財務狀況中設置的國
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_form
 msgid "VAT"
 msgstr "增值稅"
+
+#. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_partner__vat
+#: model:ir.model.fields,field_description:base_vat.field_res_users__vat
+msgid "VAT/Tax ID"
+msgstr "統一編號"
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_company__vat_check_vies

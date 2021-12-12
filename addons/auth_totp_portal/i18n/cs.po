@@ -9,9 +9,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-19 09:44+0000\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2020-12-11 11:02+0000\n"
 "Last-Translator: trendspotter <jirka.p@volny.cz>, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
@@ -20,6 +20,13 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: cs\n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+
+#. module: auth_totp_portal
+#. openerp-web
+#: code:addons/auth_totp_portal/static/src/js/totp_frontend.js:0
+#, python-format
+msgid " Copy"
+msgstr ""
 
 #. module: auth_totp_portal
 #: model_terms:ir.ui.view,arch_db:auth_totp_portal.totp_portal_hook
@@ -59,6 +66,13 @@ msgid "<strong>Trusted Device</strong>"
 msgstr ""
 
 #. module: auth_totp_portal
+#. openerp-web
+#: code:addons/auth_totp_portal/static/src/js/totp_frontend.js:0
+#, python-format
+msgid "Copied !"
+msgstr "Zkopírováno !"
+
+#. module: auth_totp_portal
 #: model_terms:ir.ui.view,arch_db:auth_totp_portal.totp_portal_hook
 msgid "Enable two-factor authentication"
 msgstr "Povolit dvoufaktorové ověřování"
@@ -79,3 +93,8 @@ msgstr "Odvolat vše"
 #: model_terms:ir.ui.view,arch_db:auth_totp_portal.totp_portal_hook
 msgid "Two-factor authentication"
 msgstr "Dvoufaktorové ověřování"
+
+#. module: auth_totp_portal
+#: model:ir.model,name:auth_totp_portal.model_res_users
+msgid "Users"
+msgstr "Uživatelé"

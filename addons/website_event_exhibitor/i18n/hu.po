@@ -4,21 +4,21 @@
 # 
 # Translators:
 # Martin Trigaux, 2020
-# krnkris, 2020
-# gezza <geza.nagy@oregional.hu>, 2020
 # Kovács Tibor <kovika@gmail.com>, 2020
 # Ákos Nagy <akos.nagy@oregional.hu>, 2020
 # Tibor Kőnig <konig.tibor@evitalit.hu>, 2020
 # Zsolt Godó <zsolttokio@gmail.com>, 2020
 # Tamás Németh <ntomasz81@gmail.com>, 2021
+# krnkris, 2021
+# gezza <geza.nagy@oregional.hu>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-12-07 10:47+0000\n"
 "PO-Revision-Date: 2020-12-11 11:05+0000\n"
-"Last-Translator: Tamás Németh <ntomasz81@gmail.com>, 2021\n"
+"Last-Translator: gezza <geza.nagy@oregional.hu>, 2021\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -63,6 +63,16 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
 "title=\"Arrow\"/>"
+
+#. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_aside
+msgid "<small class=\"badge badge-danger\">Unpublished</small>"
+msgstr ""
+
+#. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitors_search_tag
+msgid "<span class=\"btn border-0 py-1\">×</span>"
+msgstr ""
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_aside
@@ -204,6 +214,11 @@ msgid "Create a Sponsor / Exhibitor"
 msgstr ""
 
 #. module: website_event_exhibitor
+#: model_terms:ir.actions.act_window,help:website_event_exhibitor.event_sponsor_type_action
+msgid "Create a Sponsor Level"
+msgstr ""
+
+#. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__create_uid
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor_type__create_uid
 msgid "Created by"
@@ -230,6 +245,11 @@ msgstr "Név megjelenítése"
 #. module: website_event_exhibitor
 #: model:ir.model.fields,help:website_event_exhibitor.field_event_type__exhibitor_menu
 msgid "Display exhibitors on website"
+msgstr ""
+
+#. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
+msgid "Display in footer"
 msgstr ""
 
 #. module: website_event_exhibitor
@@ -293,6 +313,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_search
 #, python-format
 msgid "Exhibitors"
+msgstr ""
+
+#. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_type_view_form
+msgid "Exhibitors Menu Item"
 msgstr ""
 
 #. module: website_event_exhibitor
@@ -602,6 +627,18 @@ msgid "Phone"
 msgstr "Telefon"
 
 #. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_search
+msgid "Published"
+msgstr "Közzétett"
+
+#. module: website_event_exhibitor
+#: model_terms:ir.actions.act_window,help:website_event_exhibitor.event_sponsor_type_action
+msgid ""
+"Rank your sponsors based on your own grading system (e.g. \"Gold, Silver, "
+"Bronze\")."
+msgstr ""
+
+#. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_card
 msgid "Register"
 msgstr "Regisztráció"
@@ -770,6 +807,11 @@ msgid "Type of the exception activity on record."
 msgstr ""
 
 #. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_thumb_details
+msgid "Unpublished"
+msgstr "Nem közzétett"
+
+#. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__message_unread
 msgid "Unread Messages"
 msgstr "Olvasatlan üzenetek"
@@ -818,6 +860,11 @@ msgstr "Weboldali kommunikációs előzmények"
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__is_in_opening_hours
 msgid "Within opening hours"
+msgstr ""
+
+#. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
+msgid "e.g. \"Openwood specializes in home decoration...\""
 msgstr ""
 
 #. module: website_event_exhibitor

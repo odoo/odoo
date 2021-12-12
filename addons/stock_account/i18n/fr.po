@@ -19,19 +19,19 @@
 # Olivier ANDRE <frsw194@gmail.com>, 2019
 # e2f <projects@e2f.com>, 2019
 # omaodoo <oma@odoo.com>, 2019
-# Martin Trigaux, 2020
 # Xavier Belmere <Info@cartmeleon.com>, 2020
 # guillaume bauer <guillaume.bauer@syentys.fr>, 2020
 # Eloïse Stilmant <est@odoo.com>, 2020
 # Cécile Collart <cco@odoo.com>, 2020
 # Christophe Ricevuto <cri@nalios.be>, 2021
+# Martin Trigaux, 2021
 # Thomas Deleval <thd@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2016-08-05 13:10+0000\n"
 "Last-Translator: Thomas Deleval <thd@odoo.com>, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
@@ -160,6 +160,11 @@ msgstr ""
 "répartit en fonction des produits pour mettre à jour leur prix coûtant."
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_move__analytic_account_line_id
+msgid "Analytic Account Line"
+msgstr "Ligne de Compte analytique"
+
+#. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__real_time
 msgid "Automated"
 msgstr "automatisé"
@@ -259,6 +264,11 @@ msgstr ""
 "spécifiquement précisé pour l'emplacement d'origine. C'est la valeur par "
 "défaut pour tous les articles de cette catégorie. Il est également possible "
 "de la préciser directement sur chaque article."
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_picking__country_code
+msgid "Country Code"
+msgstr "Code du pays"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__create_uid
@@ -380,7 +390,7 @@ msgstr "Emplacements de stock"
 #: model:ir.model.fields,field_description:stock_account.field_product_template__valuation
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__property_valuation
 #: model:ir.ui.menu,name:stock_account.menu_valuation
-#: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
+#: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form_stock
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 #, python-format
 msgid "Inventory Valuation"
@@ -687,6 +697,15 @@ msgstr "Couche de valorisation d'inventaire"
 #: model:ir.model.fields,help:stock_account.field_account_move_line__is_anglo_saxon_line
 msgid "Technical field used to retrieve the anglo-saxon lines."
 msgstr "Champ technique utilisé pour récupérer les lignes d'anglo-saxon."
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_picking__country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"Code de pays ISO en deux caractères. \n"
+"Vous pouvez utiliser ce champ pour une recherche rapide."
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0

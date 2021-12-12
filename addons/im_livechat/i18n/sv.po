@@ -16,9 +16,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2016-08-05 13:05+0000\n"
 "Last-Translator: Simon S, 2021\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
@@ -31,6 +31,11 @@ msgstr ""
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
 msgid "# Messages"
+msgstr ""
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__rating_count
+msgid "# Ratings"
 msgstr ""
 
 #. module: im_livechat
@@ -95,6 +100,13 @@ msgstr ""
 #: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
 #, python-format
 msgid "-------- Show older messages --------"
+msgstr ""
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
+msgid ""
+"<i class=\"fa fa-smile-o text-success\" title=\"Percentage of happy "
+"ratings\" role=\"img\" aria-label=\"Happy face\"/>"
 msgstr ""
 
 #. module: im_livechat
@@ -314,6 +326,13 @@ msgstr "Kanaler"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__input_placeholder
 msgid "Chat Input Placeholder"
 msgstr "Chattmeddelande Platshållare"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_mail_channel__channel_type
+msgid ""
+"Chat is private and unique between 2 persons. Group is private among invited"
+" persons. Channel can be freely joined (depending on its configuration)."
+msgstr ""
 
 #. module: im_livechat
 #. openerp-web
@@ -617,11 +636,6 @@ msgid "Group By..."
 msgstr "Gruppera efter"
 
 #. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
-msgid "Happy face"
-msgstr ""
-
-#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__header_background_color
 msgid "Header Background Color"
 msgstr ""
@@ -687,6 +701,11 @@ msgid "Invalid email address"
 msgstr ""
 
 #. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_res_users_settings__is_discuss_sidebar_category_livechat_open
+msgid "Is category livechat open"
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_mail_channel__livechat_active
 msgid "Is livechat ongoing?"
 msgstr ""
@@ -694,6 +713,17 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__is_anonymous
 msgid "Is visitor anonymous"
+msgstr ""
+
+#. module: im_livechat
+#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_3
+msgid "Joel Willis, Marc Demo"
+msgstr ""
+
+#. module: im_livechat
+#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_2
+#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_6
+msgid "Joel Willis, Mitchell Admin"
 msgstr ""
 
 #. module: im_livechat
@@ -777,8 +807,8 @@ msgstr ""
 #. module: im_livechat
 #. openerp-web
 #: code:addons/im_livechat/static/src/components/discuss/discuss.js:0
-#: code:addons/im_livechat/static/src/components/discuss_sidebar/discuss_sidebar.xml:0
 #: code:addons/im_livechat/static/src/components/thread_icon/thread_icon.xml:0
+#: code:addons/im_livechat/static/src/models/messaging_initializer/messaging_initializer.js:0
 #: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view
 #, python-format
 msgid "Livechat"
@@ -908,11 +938,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__name
 msgid "Name"
 msgstr "Namn"
-
-#. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
-msgid "Neutral face"
-msgstr ""
 
 #. module: im_livechat
 #. openerp-web
@@ -1173,21 +1198,6 @@ msgid "Rating: %s"
 msgstr ""
 
 #. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
-msgid "Rating: Bad"
-msgstr ""
-
-#. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
-msgid "Rating: Great"
-msgstr ""
-
-#. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
-msgid "Rating: Okay"
-msgstr ""
-
-#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__rating_ids
 msgid "Ratings"
 msgstr ""
@@ -1278,11 +1288,6 @@ msgid "Rules"
 msgstr "Regler"
 
 #. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
-msgid "Sad face"
-msgstr ""
-
-#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__rating_text
 msgid "Satisfaction Rate"
 msgstr ""
@@ -1316,7 +1321,8 @@ msgid "Search report"
 msgstr ""
 
 #. module: im_livechat
-#: code:addons/im_livechat/models/mail_channel.py:0
+#. openerp-web
+#: code:addons/im_livechat/static/src/models/messaging_initializer/messaging_initializer.js:0
 #, python-format
 msgid "See 15 last visited pages"
 msgstr ""
@@ -1602,6 +1608,11 @@ msgid "User"
 msgstr "Användare"
 
 #. module: im_livechat
+#: model:ir.model,name:im_livechat.model_res_users_settings
+msgid "User Settings"
+msgstr ""
+
+#. module: im_livechat
 #. openerp-web
 #: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
 #, python-format
@@ -1654,6 +1665,31 @@ msgid "Visitor"
 msgstr "Besökare"
 
 #. module: im_livechat
+#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_0
+msgid "Visitor #234, Mitchell Admin"
+msgstr ""
+
+#. module: im_livechat
+#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_1
+msgid "Visitor #323, Marc Demo"
+msgstr ""
+
+#. module: im_livechat
+#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_4
+msgid "Visitor #532, Mitchell Admin"
+msgstr ""
+
+#. module: im_livechat
+#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_5
+msgid "Visitor #649, Mitchell Admin"
+msgstr ""
+
+#. module: im_livechat
+#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_7
+msgid "Visitor #722, Marc Demo"
+msgstr ""
+
+#. module: im_livechat
 #: code:addons/im_livechat/models/mail_channel.py:0
 #, python-format
 msgid "Visitor has left the conversation."
@@ -1662,6 +1698,11 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__is_happy
 msgid "Visitor is Happy"
+msgstr ""
+
+#. module: im_livechat
+#: model:mail.channel,name:im_livechat.mail_channel_livechat_1
+msgid "Visitor, Mitchell Admin"
 msgstr ""
 
 #. module: im_livechat

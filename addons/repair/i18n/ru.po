@@ -18,38 +18,28 @@
 # sergeiruzkiicode <sergei.ruzki@icode.by>, 2018
 # Андрей Гусев <gaussgss@gmail.com>, 2019
 # Sergey Vilizhanin, 2019
-# Ivan Yelizariev // IEL <yelizariev@itpp.dev>, 2020
+# Ivan Yelizariev // IEL (ellui) <yelizariev@itpp.dev>, 2020
 # Ekaterina <nawsikaya@bk.ru>, 2020
 # Vasiliy Korobatov <korobatov@gmail.com>, 2020
-# Martin Trigaux, 2021
 # Константин Коровин <korovin74@gmail.com>, 2021
 # Сергей Шебанин <sergey@shebanin.ru>, 2021
 # ILMIR <karamov@it-projects.info>, 2021
+# Martin Trigaux, 2021
+# Irina Fedulova <istartlin@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2018-03-22 16:02+0000\n"
-"Last-Translator: ILMIR <karamov@it-projects.info>, 2021\n"
+"Last-Translator: Irina Fedulova <istartlin@gmail.com>, 2021\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
-
-#. module: repair
-#: model:mail.template,report_name:repair.mail_template_repair_quotation
-msgid "${(object.name or '').replace('/','_')}"
-msgstr "${(object.name or '').replace('/','_')}"
-
-#. module: repair
-#: model:mail.template,subject:repair.mail_template_repair_quotation
-msgid "${object.partner_id.name} Repair Orders (Ref ${object.name or 'n/a' })"
-msgstr ""
-"${Object.partner_id.name} Заказ на ремонт (Ref ${object.name or 'n / a'})"
 
 #. module: repair
 #: model:ir.actions.report,print_report_name:repair.action_report_repair_order
@@ -92,23 +82,21 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px;font-size: 13px;\">\n"
-"        Hello ${object.partner_id.name},<br/>\n"
-"        Here is your repair order ${doc_name} <strong>${object.name}</strong>\n"
-"        % if object.origin:\n"
-"            (with reference: ${object.origin} )\n"
-"        % endif\n"
-"        % if object.invoice_method != 'none':\n"
-"            amounting in <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}.</strong><br/>\n"
-"        % else:\n"
+"        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br/>\n"
+"        Here is your repair order <strong t-out=\"object.name or ''\">RO/00004</strong>\n"
+"        <t t-if=\"object.invoice_method != 'none'\">\n"
+"            amounting in <strong><t t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 100.00</t>.</strong><br/>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
 "            .<br/>\n"
-"        % endif\n"
+"        </t>\n"
 "        You can reply to this email if you have any questions.\n"
 "        <br/><br/>\n"
 "        Thank you,\n"
-"        % if user.signature\n"
+"        <t t-if=\"user.signature\">\n"
 "            <br/>\n"
-"            ${user.signature | safe}\n"
-"        % endif\n"
+"            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        </t>\n"
 "    </p>\n"
 "</div>"
 msgstr ""
@@ -123,6 +111,11 @@ msgstr "<i>(Добавить)</i>"
 msgid ""
 "<span class=\"o_stat_text\">1</span>\n"
 "                                <span class=\"o_stat_text\">Invoices</span>"
+msgstr ""
+
+#. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.stock_production_lot_view_form
+msgid "<span class=\"o_stat_text\">Repairs</span>"
 msgstr ""
 
 #. module: repair
@@ -523,6 +516,11 @@ msgstr ""
 "Если отмечено, то это означает, что некоторые сообщения не доставлены."
 
 #. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__priority
+msgid "Important repair order"
+msgstr ""
+
+#. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
 msgid ""
 "In a repair order, you can detail the components you remove,\n"
@@ -655,6 +653,7 @@ msgid "Location"
 msgstr "Место"
 
 #. module: repair
+#: model:ir.model,name:repair.model_stock_production_lot
 #: model:ir.model.fields,field_description:repair.field_repair_line__lot_id
 #: model:ir.model.fields,field_description:repair.field_repair_order__lot_id
 msgid "Lot/Serial"
@@ -745,6 +744,11 @@ msgid "No valid pricelist line found."
 msgstr "Не найдено ни одного строки прайс-листа."
 
 #. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__priority__0
+msgid "Normal"
+msgstr "Нормальный"
+
+#. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_needaction_counter
 msgid "Number of Actions"
 msgstr "Количество действий"
@@ -812,6 +816,11 @@ msgstr "Прайс-лист выбранного партнера."
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Print Quotation"
 msgstr "Печать коммерческого предложения"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__priority
+msgid "Priority"
+msgstr "Приоритет"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__product_id
@@ -965,6 +974,8 @@ msgstr "Ссылка заказа на ремонт"
 #. module: repair
 #: model:ir.actions.act_window,name:repair.action_repair_order_graph
 #: model:ir.actions.act_window,name:repair.action_repair_order_tree
+#: model:ir.model.fields,field_description:repair.field_stock_production_lot__repair_order_ids
+#: model_terms:ir.ui.view,arch_db:repair.stock_production_lot_view_form
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_graph
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_pivot
 msgid "Repair Orders"
@@ -989,6 +1000,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:repair.field_repair_order__name
 msgid "Repair Reference"
 msgstr "Ссылка ремонта"
+
+#. module: repair
+#: model:product.product,name:repair.product_service_order_repair
+#: model:product.template,name:repair.product_service_order_repair_product_template
+msgid "Repair Services"
+msgstr ""
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_tags
@@ -1019,6 +1036,17 @@ msgstr "Ремонт должен быть завершён перед пере�
 #, python-format
 msgid "Repair must be under repair in order to end reparation."
 msgstr "Для окончания ремонта он должен быть в процессе."
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_stock_production_lot__repair_order_count
+msgid "Repair order count"
+msgstr ""
+
+#. module: repair
+#: code:addons/repair/models/stock_production_lot.py:0
+#, python-format
+msgid "Repair orders of %s"
+msgstr ""
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__repaired
@@ -1067,6 +1095,11 @@ msgstr "Заказ на продажу"
 #: model:ir.model.fields,help:repair.field_repair_order__sale_order_id
 msgid "Sale Order from which the product to be repaired comes from."
 msgstr ""
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__schedule_date
+msgid "Scheduled Date"
+msgstr "Запланированная дата"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
@@ -1217,6 +1250,8 @@ msgid "Today Activities"
 msgstr "Действия на сегодня"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_fee__price_total
+#: model:ir.model.fields,field_description:repair.field_repair_line__price_total
 #: model:ir.model.fields,field_description:repair.field_repair_order__amount_total
 msgid "Total"
 msgstr "Всего"
@@ -1261,6 +1296,12 @@ msgid "Unit of Measure"
 msgstr "Единица измерения"
 
 #. module: repair
+#: model:product.product,uom_name:repair.product_service_order_repair
+#: model:product.template,uom_name:repair.product_service_order_repair_product_template
+msgid "Units"
+msgstr "Единицы"
+
+#. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_unread
 msgid "Unread Messages"
 msgstr "Непрочитанные Сообщения"
@@ -1284,6 +1325,11 @@ msgstr "Сумма без налога"
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "UoM"
 msgstr "UoM"
+
+#. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__priority__1
+msgid "Urgent"
+msgstr "Срочно"
 
 #. module: repair
 #: model:ir.model,name:repair.model_stock_warn_insufficient_qty_repair
@@ -1353,4 +1399,15 @@ msgstr "В форме ремонта нужно выбрать адрес сче
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_warn_insufficient_qty_repair_form_view
 msgid "from location"
+msgstr ""
+
+#. module: repair
+#: model:mail.template,report_name:repair.mail_template_repair_quotation
+msgid "{{ (object.name or '').replace('/','_') }}"
+msgstr ""
+
+#. module: repair
+#: model:mail.template,subject:repair.mail_template_repair_quotation
+msgid ""
+"{{ object.partner_id.name }} Repair Orders (Ref {{ object.name or 'n/a' }})"
 msgstr ""

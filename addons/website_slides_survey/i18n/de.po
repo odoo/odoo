@@ -3,20 +3,20 @@
 # 	* website_slides_survey
 # 
 # Translators:
-# Martin Trigaux, 2019
 # f91684c3ff9ec3e650d5c8461e534581_686eae3 <449b96d9f63071f94d89e129677b83de_366193>, 2019
 # Leon Grill <leg@odoo.com>, 2019
+# Ermin Trevisan <trevi@twanda.com>, 2019
 # Oliver Roch <oliver.roch@d9t.de>, 2020
 # Jérôme JEK <jek@odoo.com>, 2020
-# Ermin Trevisan <trevi@twanda.com>, 2020
 # Kevin Harrings <kha@odoo.com>, 2020
+# Martin Trigaux, 2021
 # Friederike Fasterling-Nesselbosch, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-12-07 10:47+0000\n"
 "PO-Revision-Date: 2019-03-20 15:01+0000\n"
 "Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
@@ -27,15 +27,22 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_survey_view_kanban
+msgid ""
+"<br/>\n"
+"                        <span class=\"text-muted\">Courses</span>"
+msgstr ""
+
+#. module: website_slides_survey
 #: model:mail.template,body_html:website_slides_survey.mail_template_user_input_certification_failed
 msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear ${object.partner_id.name or 'participant'}<br/><br/>\n"
-"        Unfortunately, you have failed the certification and are no longer a member of the course: ${object.slide_partner_id.channel_id.name}.<br/><br/>\n"
+"        Dear <t t-out=\"object.partner_id.name or 'participant' or ''\">participant</t><br/><br/>\n"
+"        Unfortunately, you have failed the certification and are no longer a member of the course: <t t-out=\"object.slide_partner_id.channel_id.name or ''\">Basics of Gardening</t>.<br/><br/>\n"
 "        Don't hesitate to enroll again!\n"
 "        <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"            <a href=\"${(object.slide_partner_id.channel_id.website_url) | safe}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"            <a t-att-href=\"(object.slide_partner_id.channel_id.website_url)\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
 "                Enroll now\n"
 "            </a>\n"
 "        </div>\n"
@@ -46,15 +53,15 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Guten Tag ${object.partner_id.name or ''}<br/><br/>\n"
-"        Leider haben Sie die Zertifizierung nicht bestanden und sind demnach kein Teilnehmer mehr des Kurses: ${object.slide_partner_id.channel_id.name}.<br/><br/>\n"
-"        Versuchen Sie es erneut!\n"
+"        Lieber <t t-out=\"object.partner_id.name or 'participant' or ''\">Teilnehmer</t><br/><br/>\n"
+"        Leider haben Sie die Zertifizierung nicht bestanden und sind nicht länger Teilnehmer dieses Kurses: <t t-out=\"object.slide_partner_id.channel_id.name or ''\">Grundlagen der Gärtnerei</t>.<br/><br/>\n"
+"        Schreiben Sie sich doch noch einmal ein!\n"
 "        <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"            <a href=\"${(object.slide_partner_id.channel_id.website_url) | safe}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"            <a t-att-href=\"(object.slide_partner_id.channel_id.website_url)\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
 "                Jetzt einschreiben\n"
 "            </a>\n"
 "        </div>\n"
-"        Danke für Ihre Teilnahme.\n"
+"       Vielen Dank für Ihre Teilnahme.\n"
 "    </p>\n"
 "</div>\n"
 "            "
@@ -161,10 +168,25 @@ msgstr "Eine Zertifizierung hinzufügen"
 
 #. module: website_slides_survey
 #: model_terms:ir.actions.act_window,help:website_slides_survey.slide_slide_action_certification
-#: model_terms:ir.actions.act_window,help:website_slides_survey.survey_survey_action_slides
-#: model_terms:ir.actions.act_window,help:website_slides_survey.survey_survey_action_slides_report
 msgid "Add a new certification"
 msgstr "Eine neue Zertifizierung hinzufügen"
+
+#. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__is_preview
+msgid "Allow Preview"
+msgstr "Vorschau erlauben"
+
+#. module: website_slides_survey
+#: model_terms:ir.actions.act_window,help:website_slides_survey.survey_survey_action_slides
+msgid ""
+"Assess the level of understanding of your attendees\n"
+"                <br>and send them a document if they pass the test."
+msgstr ""
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_survey_view_tree_slides
+msgid "Avg Score (%)"
+msgstr ""
 
 #. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.slide_content_detailed
@@ -177,11 +199,17 @@ msgid "Begin your <b>certification</b> today!"
 msgstr "Beginne deine <b>Zertifizierung</b> noch heute!"
 
 #. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__slide_category
+msgid "Category"
+msgstr "Kategorie"
+
+#. module: website_slides_survey
 #. openerp-web
 #: code:addons/website_slides_survey/static/src/js/slides_upload.js:0
 #: code:addons/website_slides_survey/static/src/js/slides_upload.js:0
 #: code:addons/website_slides_survey/static/src/xml/website_slide_upload.xml:0
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__survey_id
+#: model:ir.model.fields.selection,name:website_slides_survey.selection__slide_slide__slide_category__certification
 #: model:ir.model.fields.selection,name:website_slides_survey.selection__slide_slide__slide_type__certification
 #, python-format
 msgid "Certification"
@@ -206,6 +234,11 @@ msgstr "Zertifizierungsfolien"
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide_partner__survey_scoring_success
 msgid "Certification Succeeded"
 msgstr "Zertifizierung erfolgreich"
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_survey_view_tree_slides
+msgid "Certification Title"
+msgstr ""
 
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide_partner__user_input_ids
@@ -240,9 +273,7 @@ msgstr ""
 #. module: website_slides_survey
 #: model:ir.actions.act_window,name:website_slides_survey.slide_slide_action_certification
 #: model:ir.actions.act_window,name:website_slides_survey.survey_survey_action_slides
-#: model:ir.actions.act_window,name:website_slides_survey.survey_survey_action_slides_report
 #: model:ir.ui.menu,name:website_slides_survey.website_slides_menu_courses_certification
-#: model:ir.ui.menu,name:website_slides_survey.website_slides_menu_report_certification
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.user_profile_content
 msgid "Certifications"
 msgstr "Zertifizierungen"
@@ -262,6 +293,11 @@ msgstr "Kurse"
 #. module: website_slides_survey
 #: model:ir.model.fields,field_description:website_slides_survey.field_survey_survey__slide_channel_count
 msgid "Courses Count"
+msgstr ""
+
+#. module: website_slides_survey
+#: model_terms:ir.actions.act_window,help:website_slides_survey.survey_survey_action_slides
+msgid "Create a Certification"
 msgstr ""
 
 #. module: website_slides_survey
@@ -297,6 +333,11 @@ msgid "How to upload a certification on your course?"
 msgstr "Wie lade ich eine Zertifizierung zu meinem Kurs hoch?"
 
 #. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.res_config_settings_view_form
+msgid "Manage Certifications"
+msgstr ""
+
+#. module: website_slides_survey
 #: model_terms:ir.ui.view,arch_db:website_slides_survey.display_certificate
 msgid "No certifications yet!"
 msgstr "Noch keine Zertifizierung!"
@@ -330,6 +371,11 @@ msgid "Slide / Partner decorated m2m"
 msgstr "Folie / Partner dekoriert m2m"
 
 #. module: website_slides_survey
+#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__slide_type
+msgid "Slide Type"
+msgstr ""
+
+#. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_survey_user_input__slide_partner_id
 msgid "Slide membership information for the logged in user"
 msgstr "Informationen über die Mitgliedschaft des angemeldeten Benutzers"
@@ -343,6 +389,18 @@ msgstr "Folien"
 #: model:ir.model.fields,field_description:website_slides_survey.field_survey_user_input__slide_partner_id
 msgid "Subscriber information"
 msgstr "Abonnenten-Information "
+
+#. module: website_slides_survey
+#: model:ir.model.fields,help:website_slides_survey.field_slide_slide__slide_type
+msgid ""
+"Subtype of the slide category, allows more precision on the actual file type"
+" / source type."
+msgstr ""
+
+#. module: website_slides_survey
+#: model_terms:ir.ui.view,arch_db:website_slides_survey.survey_survey_view_tree_slides
+msgid "Success Ratio (%)"
+msgstr ""
 
 #. module: website_slides_survey
 #: model:ir.model,name:website_slides_survey.model_survey_survey
@@ -363,22 +421,29 @@ msgid "Test Certification"
 msgstr "Test Zertifizierung"
 
 #. module: website_slides_survey
+#: code:addons/website_slides_survey/models/survey_survey.py:0
+#, python-format
+msgid ""
+"The Certification '%(certification_name)s' cannot be deleted because it is "
+"still being used by the Course(s) '%(courses_names)s'"
+msgstr ""
+
+#. module: website_slides_survey
+#: model:ir.model.fields,help:website_slides_survey.field_slide_slide__is_preview
+msgid ""
+"The course is accessible by anyone : the users don't need to join the "
+"channel to access the content of the course."
+msgstr ""
+"Der Kurs ist für all zugänglich: Die Benutzer müssen nicht dem Kanal "
+"beitreten, um auf den Inhalt des Kurses zuzugreifen."
+
+#. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_survey_survey__slide_channel_ids
 msgid ""
 "The courses this survey is linked to through the e-learning application"
 msgstr ""
 "Die Kurse, mit denen diese Umfrage über die E-Learning-Anwendung verknüpft "
 "ist"
-
-#. module: website_slides_survey
-#: model:ir.model.fields,help:website_slides_survey.field_slide_slide__slide_type
-msgid ""
-"The document type will be set automatically based on the document URL and "
-"properties (e.g. height and width for presentation and document)."
-msgstr ""
-"Der Dokumenttyp wird automatisch basierend auf der Dokument-URL und den "
-"Eigenschaften (z. B. Höhe und Breite für Präsentation und Dokument) "
-"festgelegt."
 
 #. module: website_slides_survey
 #: model:ir.model.fields,help:website_slides_survey.field_survey_user_input__slide_id
@@ -393,11 +458,6 @@ msgid "The slides this survey is linked to through the e-learning application"
 msgstr ""
 "Die Folien mit denen diese Umfrage durch die E-Learning-Anwendung verbunden "
 "ist?"
-
-#. module: website_slides_survey
-#: model:ir.model.fields,field_description:website_slides_survey.field_slide_slide__slide_type
-msgid "Type"
-msgstr "Typ"
 
 #. module: website_slides_survey
 #: code:addons/website_slides_survey/controllers/slides.py:0
@@ -434,5 +494,8 @@ msgstr ""
 
 #. module: website_slides_survey
 #: model:mail.template,subject:website_slides_survey.mail_template_user_input_certification_failed
-msgid "You have failed the course: ${object.slide_partner_id.channel_id.name}"
+msgid ""
+"You have failed the course: {{ object.slide_partner_id.channel_id.name }}"
 msgstr ""
+"Sie haben diesen Kurs nicht bestanden: {{ "
+"object.slide_partner_id.channel_id.name }}"

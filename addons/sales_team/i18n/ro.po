@@ -4,19 +4,19 @@
 # 
 # Translators:
 # Iulian Cutui <iulian.cutui@gmail.com>, 2018
-# Cozmin Candea <office@terrabit.ro>, 2019
-# Dorin Hongu <dhongu@gmail.com>, 2020
-# Martin Trigaux, 2021
 # Hongu Cosmin <cosmin513@gmail.com>, 2021
 # Foldi Robert <foldirobert@nexterp.ro>, 2021
+# Martin Trigaux, 2021
+# Dorin Hongu <dhongu@gmail.com>, 2021
+# Cozmin Candea <office@terrabit.ro>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-09-14 10:29+0000\n"
 "PO-Revision-Date: 2016-08-05 13:10+0000\n"
-"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2021\n"
+"Last-Translator: Cozmin Candea <office@terrabit.ro>, 2021\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -169,9 +169,24 @@ msgid "Configuration"
 msgstr "Configurare"
 
 #. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor7
+msgid "Consulting"
+msgstr "Consultanta"
+
+#. module: sales_team
 #: model:ir.model,name:sales_team.model_res_partner
 msgid "Contact"
 msgstr "Contact"
+
+#. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
+msgid "Create CRM Tags"
+msgstr ""
+
+#. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_config
+msgid "Create a Sales Team"
+msgstr ""
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_member_action
@@ -179,19 +194,9 @@ msgid "Create a new salesman"
 msgstr "Creați un nou vânzător"
 
 #. module: sales_team
-#: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
-msgid "Create new tags for your opportunities"
-msgstr "Creați noi etichete pentru oportunitățile dumneavoastră."
-
-#. module: sales_team
-#: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
-msgid ""
-"Create tags that fit your business (product structure, sales type, etc.) to "
-"better manage and track your opportunities."
+#: model_terms:ir.actions.act_window,help:sales_team.mail_activity_type_action_config_sales
+msgid "Create an Activity Type"
 msgstr ""
-"Creați etichete care se potrivesc afacerii dumneavoastră (structura "
-"produsului, tipuri vânzări, etc.) pentru a gestiona și urmări mai bine "
-"oportunitățile."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__create_uid
@@ -223,11 +228,15 @@ msgid "Dashboard Graph Data"
 msgstr ""
 
 #. module: sales_team
-#: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_config
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_pipeline
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_sales
 msgid "Define a new sales team"
 msgstr "Definiți o nouă echipă de vânzări"
+
+#. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor5
+msgid "Design"
+msgstr "Proiectare"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__display_name
@@ -348,6 +357,11 @@ msgstr "Imagine"
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__image_128
 msgid "Image (128)"
 msgstr ""
+
+#. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor4
+msgid "Information"
+msgstr "Informații"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_is_follower
@@ -475,6 +489,11 @@ msgid "Number of unread messages"
 msgstr "Număr de mesaje necitite"
 
 #. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor8
+msgid "Other"
+msgstr "Altul"
+
+#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__phone
 msgid "Phone"
 msgstr "Telefon"
@@ -483,6 +502,16 @@ msgstr "Telefon"
 #: model:crm.team,name:sales_team.pos_sales_team
 msgid "Point of Sale"
 msgstr "Punct de vânzare"
+
+#. module: sales_team
+#: model:crm.team,name:sales_team.crm_team_1
+msgid "Pre-Sales"
+msgstr ""
+
+#. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor1
+msgid "Product"
+msgstr "Produs"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.team_sales_department
@@ -551,14 +580,30 @@ msgid "Salesteams Search"
 msgstr ""
 
 #. module: sales_team
+#: code:addons/sales_team/models/crm_team.py:0
+#, python-format
+msgid "Sample data"
+msgstr "Eșantion de date"
+
+#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__sequence
 msgid "Sequence"
 msgstr "Secvență"
 
 #. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor3
+msgid "Services"
+msgstr "Servicii"
+
+#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__is_favorite
 msgid "Show on dashboard"
 msgstr "Arată pe tabloul de bord"
+
+#. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor2
+msgid "Software"
+msgstr "Software"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__name
@@ -609,6 +654,13 @@ msgid "The default company for this user."
 msgstr "Compania implicită pentru acest utilizator."
 
 #. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.mail_activity_type_action_config_sales
+msgid ""
+"Those represent the different categories of things you have to do (e.g. "
+"\"Call\" or \"Prepare meeting\")."
+msgstr ""
+
+#. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
 msgid ""
@@ -617,6 +669,11 @@ msgid ""
 msgstr ""
 "Pentru a adăuga un agent de vânzări în mai multe echipe, activați opțiunea "
 "Multi-Team din setări."
+
+#. module: sales_team
+#: model:crm.tag,name:sales_team.categ_oppor6
+msgid "Training"
+msgstr "Instructaj"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__user_in_teams_ids
@@ -653,6 +710,11 @@ msgstr "Contor mesaje necitite"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_config
+msgid ""
+"Use Sales Teams to organize your sales departments and draw up reports."
+msgstr ""
+
+#. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_pipeline
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_sales
 msgid ""
@@ -661,6 +723,13 @@ msgid ""
 msgstr ""
 "Folosiți echipele de vânzări pentru a vă organiza departamentele de vânzări.\n"
 "                Fiecare echipă va lucra cu o conductă separată."
+
+#. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
+msgid ""
+"Use Tags to manage and track your Opportunities (product structure, sales "
+"type, ...)"
+msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__user_company_ids

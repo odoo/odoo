@@ -6,14 +6,11 @@
 # 6534c450c77b2549e41c52e2051f5839, 2018
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2019
 # Inès Gérardy <ige@odoo.com>, 2019
-# Richard Mathot <rim@odoo.com>, 2019
-# Xavier Belmere <Info@cartmeleon.com>, 2020
 # Frédéric LIETART <stuff@tifred.fr>, 2020
 # Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2020
 # Fred Gilson <fgi@odoo.com>, 2020
 # Gilles Mangin <gilles.mangin@phidias.fr>, 2020
 # Pauline Thiry <pth@odoo.com>, 2020
-# Martin Trigaux, 2020
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2020
 # Eloïse Stilmant <est@odoo.com>, 2020
 # gdp Odoo <gdp@odoo.com>, 2020
@@ -23,14 +20,18 @@
 # Clément Watthez <cwa@odoo.com>, 2021
 # Alexandra Jubert <aju@odoo.com>, 2021
 # Cécile Collart <cco@odoo.com>, 2021
+# sakodoo <sak@odoo.com>, 2021
+# Martin Trigaux, 2021
+# Xavier Belmere <Info@cartmeleon.com>, 2021
+# Grégory Schreiner, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"POT-Creation-Date: 2021-12-07 10:46+0000\n"
 "PO-Revision-Date: 2016-08-05 13:12+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2021\n"
+"Last-Translator: Grégory Schreiner, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,9 +45,9 @@ msgid "# Registrations"
 msgstr "# Inscriptions"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
-msgid "#{ticket['id']}"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_event.events_list
+msgid "'. Showing results for '"
+msgstr "'. Affichage des résultats pour '"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
@@ -60,8 +61,8 @@ msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
-msgid ", .oe_country_events, .s_speaker_bio"
-msgstr ", .oe_country_events, .s_speaker_bio"
+msgid ", .s_speaker_bio"
+msgstr ""
 
 #. module: website_event
 #. openerp-web
@@ -79,11 +80,6 @@ msgstr "<b>Fin</b>"
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "<b>Start</b>"
 msgstr "<b>Début</b>"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.country_events_list
-msgid "<b>View all</b>"
-msgstr "<b>Voir tout</b>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_quotes
@@ -129,11 +125,6 @@ msgstr ""
 "title=\"Facebook\"/>"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.country_events_list
-msgid "<i class=\"fa fa-flag mr-2\"/>Events:"
-msgstr "<i class=\"fa fa-flag mr-2\"/>Événements"
-
-#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "<i class=\"fa fa-fw fa-calendar\"/> Add to Google Calendar"
 msgstr "<i class=\"fa fa-fw fa-calendar\"/> Ajouter au Calendrier Google"
@@ -154,12 +145,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
 msgid "<i class=\"fa fa-github text-github\" aria-label=\"Github\" title=\"Github\"/>"
 msgstr "<i class=\"fa fa-github text-github\" aria-label=\"Github\" title=\"Github\"/>"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.country_events_list
-#: model_terms:ir.ui.view,arch_db:website_event.s_country_events
-msgid "<i class=\"fa fa-globe mr-2\"/>Upcoming Events"
-msgstr "<i class=\"fa fa-globe mr-2\"/>Événements à venir"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
@@ -185,6 +170,8 @@ msgid ""
 "<i class=\"fa fa-long-arrow-left text-primary mr-2\"/>\n"
 "                            <span>All Events</span>"
 msgstr ""
+"<i class=\"fa fa-long-arrow-left text-primary mr-2\"/>\n"
+"                            <span>Tous les événements</span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
@@ -251,12 +238,12 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "<span class=\"py-2 o_wevent_registration_title text-left\">Tickets</span>"
-msgstr ""
+msgstr "<span class=\"py-2 o_wevent_registration_title text-left\">Billets</span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "<span class=\"text-dark font-weight-bold align-middle px-2\">Qty</span>"
-msgstr ""
+msgstr "<span class=\"text-dark font-weight-bold align-middle px-2\">Qté</span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
@@ -280,6 +267,8 @@ msgid ""
 "<span>Tickets</span>\n"
 "                        <span class=\"btn p-0 close d-none\">×</span>"
 msgstr ""
+"<span>Billets</span>\n"
+"                        <span class=\"btn p-0 close d-none\">×</span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -304,12 +293,6 @@ msgid "About us"
 msgstr "À propos"
 
 #. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event__menu_register_cta
-#: model:ir.model.fields,field_description:website_event.field_event_type__menu_register_cta
-msgid "Add Register Button"
-msgstr "Ajouter un bouton d'enregistrement"
-
-#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Add to Calendar"
 msgstr "Ajouter au Calendrier"
@@ -321,9 +304,27 @@ msgid "All Countries"
 msgstr "Tous les pays"
 
 #. module: website_event
+#: code:addons/website_event/models/event_event.py:0
+#, python-format
+msgid "All Events"
+msgstr "Tous les événements"
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_location
 msgid "All countries"
 msgstr "Tous les pays"
+
+#. module: website_event
+#: model:ir.model.fields,help:website_event.field_event_event__website_menu
+msgid "Allows to display and manage event-specific menus on website."
+msgstr ""
+
+#. module: website_event
+#. openerp-web
+#: code:addons/website_event/static/src/js/website_event.editor.js:0
+#, python-format
+msgid "Apply"
+msgstr "Appliquer"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.res_config_settings_view_form
@@ -355,24 +356,24 @@ msgid "Author"
 msgstr "Auteur"
 
 #. module: website_event
+#: code:addons/website_event/models/website_snippet_filter.py:0
+#, python-format
+msgid "Business Workshops"
+msgstr ""
+
+#. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__can_publish
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__can_publish
 msgid "Can Publish"
 msgstr "Peut publier"
 
 #. module: website_event
+#. openerp-web
+#: code:addons/website_event/static/src/js/website_event.editor.js:0
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
+#, python-format
 msgid "Cancel"
 msgstr "Annuler"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_type_view_form
-msgid ""
-"Check this option to have menus for your event on the\n"
-"                                website: registrations, schedule, map, ..."
-msgstr ""
-"Activez cette option pour obtenir des menus pour votre événement sur le\n"
-"                                site Web : inscriptions, calendrier, carte, …"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.display_timer_alert_widget
@@ -383,6 +384,7 @@ msgstr "Fermer"
 #. module: website_event
 #: code:addons/website_event/models/event_event.py:0
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
+#: model_terms:ir.ui.view,arch_db:website_event.event_type_view_form
 #, python-format
 msgid "Community"
 msgstr ""
@@ -400,6 +402,12 @@ msgid "Company"
 msgstr "Société"
 
 #. module: website_event
+#: code:addons/website_event/models/website_snippet_filter.py:0
+#, python-format
+msgid "Conference For Architects"
+msgstr ""
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Continue"
 msgstr "Continuer"
@@ -408,6 +416,20 @@ msgstr "Continuer"
 #: model:ir.model.fields,field_description:website_event.field_event_event__cover_properties
 msgid "Cover Properties"
 msgstr "Propriétés de la couverture"
+
+#. module: website_event
+#. openerp-web
+#: code:addons/website_event/static/src/js/website_event.editor.js:0
+#, python-format
+msgid "Create"
+msgstr "Créer"
+
+#. module: website_event
+#. openerp-web
+#: code:addons/website_event/static/src/js/website_event.editor.js:0
+#, python-format
+msgid "Create \"%s\""
+msgstr ""
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu__create_uid
@@ -420,16 +442,38 @@ msgid "Created on"
 msgstr "Créé le"
 
 #. module: website_event
-#: model:ir.model.fields,help:website_event.field_event_event__website_menu
-msgid ""
-"Creates menus Introduction, Location and Register on the page of the event "
-"on the website."
+#. openerp-web
+#: code:addons/website_event/static/src/js/website_event.editor.js:0
+#, python-format
+msgid "Custom Range"
 msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Date &amp; Time"
 msgstr "Date et heure"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_searchbar_input_snippet_options
+msgid "Date (new to old)"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_searchbar_input_snippet_options
+msgid "Date (old to new)"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_searchbar_input_snippet_options
+msgid "Description"
+msgstr "Description"
+
+#. module: website_event
+#. openerp-web
+#: code:addons/website_event/static/src/js/website_event.editor.js:0
+#, python-format
+msgid "Discard"
+msgstr "Annuler"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu__display_name
@@ -476,6 +520,11 @@ msgid "Event Community Menus"
 msgstr ""
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_searchbar_input_snippet_options
+msgid "Event Date"
+msgstr "Date de l'événement"
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.template_location
 msgid "Event Location"
 msgstr "Emplacement de l'événement"
@@ -487,7 +536,7 @@ msgstr "Menu de l'événement"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/static/src/js/website_event.editor.js:0
+#: code:addons/website_event/static/src/xml/event_create.xml:0
 #, python-format
 msgid "Event Name"
 msgstr "Nom de l'événement"
@@ -528,6 +577,11 @@ msgid "Event Tag Category"
 msgstr "Catégorie d'Étiquette d'Événement"
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_options_template
+msgid "Event Tags"
+msgstr ""
+
+#. module: website_event
 #: model:ir.model,name:website_event.model_event_type
 msgid "Event Template"
 msgstr "Modèle d'événement"
@@ -557,6 +611,7 @@ msgstr "Événements non publiés"
 #. module: website_event
 #: code:addons/website_event/models/website.py:0
 #: model:website.menu,name:website_event.menu_events
+#: model_terms:ir.ui.view,arch_db:website_event.event_searchbar_input_snippet_options
 #, python-format
 msgid "Events"
 msgstr "Évènements"
@@ -565,6 +620,13 @@ msgstr "Évènements"
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "Expired"
 msgstr "Expiré"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__menu_register_cta
+#: model:ir.model.fields,field_description:website_event.field_event_type__menu_register_cta
+#: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
+msgid "Extra Register Button"
+msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
@@ -596,15 +658,38 @@ msgid "Google"
 msgstr "Google"
 
 #. module: website_event
+#: code:addons/website_event/models/website_snippet_filter.py:0
+#, python-format
+msgid "Great Reno Ballon Race"
+msgstr "La Great Reno Balloon Race"
+
+#. module: website_event
+#: code:addons/website_event/models/website_snippet_filter.py:0
+#, python-format
+msgid "Hockey Tournament"
+msgstr "Tournoi de hockey"
+
+#. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu__id
 msgid "ID"
 msgstr "ID"
 
 #. module: website_event
 #: code:addons/website_event/models/event_event.py:0
+#: model:ir.model.fields.selection,name:website_event.selection__website_event_menu__menu_type__introduction
 #, python-format
 msgid "Introduction"
 msgstr "Introduction"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__introduction_menu
+msgid "Introduction Menu"
+msgstr ""
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__introduction_menu_ids
+msgid "Introduction Menus"
+msgstr ""
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__is_done
@@ -628,6 +713,11 @@ msgid "Is Published"
 msgstr "Est publié"
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.s_events_options
+msgid "Items per row"
+msgstr "Eléments par ligne"
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_speaker_bio
 msgid "John DOE"
 msgstr "John DOE"
@@ -648,11 +738,30 @@ msgid "Last Updated on"
 msgstr "Dernière mise à jour le"
 
 #. module: website_event
+#: code:addons/website_event/models/website_snippet_filter.py:0
+#, python-format
+msgid "Live Music Festival"
+msgstr "Festival de musique live"
+
+#. module: website_event
+#. openerp-web
 #: code:addons/website_event/models/event_event.py:0
+#: code:addons/website_event/static/src/xml/event_create.xml:0
+#: model:ir.model.fields.selection,name:website_event.selection__website_event_menu__menu_type__location
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 #, python-format
 msgid "Location"
 msgstr "Lieu"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__location_menu
+msgid "Location Menu"
+msgstr ""
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__location_menu_ids
+msgid "Location Menus"
+msgstr ""
 
 #. module: website_event
 #. openerp-web
@@ -700,11 +809,21 @@ msgstr "Nom"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/controllers/main.py:0
 #: code:addons/website_event/static/src/js/website_event.editor.js:0
 #, python-format
 msgid "New Event"
 msgstr "Nouvel événement"
+
+#. module: website_event
+#: code:addons/website_event/models/website.py:0
+#, python-format
+msgid "Next Events"
+msgstr "Prochains événements"
+
+#. module: website_event
+#: model_terms:ir.actions.act_window,help:website_event.website_event_menu_action
+msgid "No Website Menu Items yet!"
+msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
@@ -714,6 +833,31 @@ msgstr "Aucun événement trouvé."
 #. module: website_event
 #: model_terms:ir.actions.act_window,help:website_event.event_registration_action_from_visitor
 msgid "No registration linked to this visitor"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.events_list
+msgid "No results found for '"
+msgstr "Aucun résultat trouvé pour '"
+
+#. module: website_event
+#. openerp-web
+#: code:addons/website_event/static/src/xml/event_create.xml:0
+#, python-format
+msgid "On Site"
+msgstr ""
+
+#. module: website_event
+#. openerp-web
+#: code:addons/website_event/static/src/xml/event_create.xml:0
+#, python-format
+msgid "Online"
+msgstr "En ligne"
+
+#. module: website_event
+#: code:addons/website_event/models/website_snippet_filter.py:0
+#, python-format
+msgid "OpenWood Collection Online Reveal"
 msgstr ""
 
 #. module: website_event
@@ -732,7 +876,7 @@ msgid "Parent"
 msgstr "Parent"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:0
+#: code:addons/website_event/models/event_event.py:0
 #, python-format
 msgid "Past Events"
 msgstr "Evènements passés"
@@ -749,15 +893,24 @@ msgstr "Photos"
 
 #. module: website_event
 #. openerp-web
+#: code:addons/website_event/static/src/xml/event_create.xml:0
+#: code:addons/website_event/static/src/xml/event_create.xml:0
+#: code:addons/website_event/static/src/xml/event_create.xml:0
+#, python-format
+msgid "Please fill in this field"
+msgstr "Veuillez remplir ce champ"
+
+#. module: website_event
+#. openerp-web
 #: code:addons/website_event/static/src/js/website_event.js:0
 #, python-format
 msgid "Please select at least one ticket."
 msgstr "Sélectionnez un moins un ticket."
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
-msgid "Preview Badges"
-msgstr "Prévisualiser les Badges"
+#: model_terms:ir.ui.view,arch_db:website_event.event_event_view_search
+msgid "Published"
+msgstr "Publié"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.res_config_settings_view_form
@@ -773,6 +926,7 @@ msgstr ""
 #. openerp-web
 #: code:addons/website_event/models/event_event.py:0
 #: code:addons/website_event/static/src/js/register_toaster_widget.js:0
+#: model:ir.model.fields.selection,name:website_event.selection__website_event_menu__menu_type__register
 #: model_terms:ir.ui.view,arch_db:website_event.layout
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 #, python-format
@@ -780,9 +934,19 @@ msgid "Register"
 msgstr "S'inscrire"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
+#: model_terms:ir.ui.view,arch_db:website_event.event_type_view_form
 msgid "Register Button"
 msgstr "Bouton d'inscription"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__register_menu
+msgid "Register Menu"
+msgstr ""
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__register_menu_ids
+msgid "Register Menus"
+msgstr ""
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_visitor__event_registered_ids
@@ -816,7 +980,7 @@ msgstr "Inscriptions terminées"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "Registrations are <b>closed</b>"
-msgstr ""
+msgstr "Les inscriptions sont <b>fermées</b>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
@@ -865,19 +1029,22 @@ msgid "Sales start on"
 msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.layout
-msgid "Search an event ..."
-msgstr "Rechercher un événement ..."
+#: model_terms:ir.ui.view,arch_db:website_event.dynamic_filter_template_event_event_card
+#: model_terms:ir.ui.view,arch_db:website_event.dynamic_filter_template_event_event_picture
+msgid "Sample"
+msgstr "Échantillon"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.index_topbar
+#: model_terms:ir.ui.view,arch_db:website_event.events_search_box_input
 msgid "Search an event..."
-msgstr ""
+msgstr "Rechercher..."
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.country_events_list
-msgid "See all events from"
-msgstr "Voir tous les événements de"
+#. openerp-web
+#: code:addons/website_event/static/src/xml/event_create.xml:0
+#, python-format
+msgid "Select Venue"
+msgstr ""
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__seo_name
@@ -909,6 +1076,13 @@ msgstr "Démarrer -"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__start_today
 msgid "Start Today"
+msgstr "Commence aujourd'hui"
+
+#. module: website_event
+#. openerp-web
+#: code:addons/website_event/static/src/xml/event_create.xml:0
+#, python-format
+msgid "Start → End"
 msgstr ""
 
 #. module: website_event
@@ -923,7 +1097,7 @@ msgid "The full URL to access the document through the website."
 msgstr "L'URL complète afin d'accéder au document à travers le site web."
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:0
+#: code:addons/website_event/models/event_event.py:0
 #, python-format
 msgid "This month"
 msgstr "Ce mois"
@@ -936,6 +1110,11 @@ msgid "This shortcut will bring you right back to the event form."
 msgstr ""
 
 #. module: website_event
+#: model_terms:ir.actions.act_window,help:website_event.website_event_menu_action
+msgid "This technical menu displays all event sub-menu items."
+msgstr ""
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Ticket #"
 msgstr "Ticket #"
@@ -943,15 +1122,15 @@ msgstr "Ticket #"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "Ticket Sales starting on"
-msgstr ""
+msgstr "Début de la vente de billet le"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "Tickets for this Event are <b>Sold Out</b>"
-msgstr ""
+msgstr "Les billets de cet événements sont <b>Épuisés</b>"
 
 #. module: website_event
-#: code:addons/website_event/controllers/main.py:0
+#: code:addons/website_event/models/event_event.py:0
 #, python-format
 msgid "Today"
 msgstr "Aujourd'hui"
@@ -962,12 +1141,8 @@ msgid "Toggle navigation"
 msgstr "Basculer la navigation"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.country_events_list
-msgid "Unpublished"
-msgstr "Non publié"
-
-#. module: website_event
-#: code:addons/website_event/controllers/main.py:0
+#: code:addons/website_event/models/event_event.py:0
+#: model:ir.filters,name:website_event.ir_filters_event_list_snippet
 #: model_terms:ir.ui.view,arch_db:website_event.event_time
 #, python-format
 msgid "Upcoming Events"
@@ -988,10 +1163,25 @@ msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_about_us
-msgid "Use this paragrah to write a short text about your events or company."
+msgid "Use this paragraph to write a short text about your events or company."
 msgstr ""
-"Utilisez ce paragraphe pour rédiger quelques lignes à propos de vos "
-"événements ou de votre entreprise."
+
+#. module: website_event
+#: model:ir.model.fields,help:website_event.field_website_event_menu__view_id
+msgid "Used when not being an url based menu"
+msgstr ""
+
+#. module: website_event
+#. openerp-web
+#: code:addons/website_event/static/src/xml/event_create.xml:0
+#, python-format
+msgid "Venue"
+msgstr "Lieu"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_website_event_menu__view_id
+msgid "View"
+msgstr "Vue"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__website_published
@@ -1047,7 +1237,13 @@ msgid "Website Menus"
 msgstr ""
 
 #. module: website_event
+#: model:ir.model,name:website_event.model_website_snippet_filter
+msgid "Website Snippet Filter"
+msgstr ""
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
+#: model_terms:ir.ui.view,arch_db:website_event.event_type_view_form
 msgid "Website Submenu"
 msgstr ""
 
@@ -1085,7 +1281,7 @@ msgstr "Image opengraph"
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event__is_ongoing
 msgid "Whether event has begun"
-msgstr ""
+msgstr "Si l'événement a commencé"
 
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event__is_done
@@ -1109,7 +1305,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "available)"
-msgstr ""
+msgstr "disponible)"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full

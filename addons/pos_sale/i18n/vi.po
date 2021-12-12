@@ -4,18 +4,20 @@
 # 
 # Translators:
 # fanha99 <fanha99@hotmail.com>, 2020
-# Duy BQ <duybq86@gmail.com>, 2020
-# Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2020
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020
+# Martin Trigaux, 2021
+# thanhnguyen.icsc <thanhnguyen.icsc@gmail.com>, 2021
+# Duy BQ <duybq86@gmail.com>, 2021
+# Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2021
 # Trần Hà <tranthuha13590@gmail.com>, 2021
+# Vo Thanh Thuy, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2017-02-15 10:52+0000\n"
-"Last-Translator: Trần Hà <tranthuha13590@gmail.com>, 2021\n"
+"Last-Translator: Vo Thanh Thuy, 2021\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,9 +26,54 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/xml/ProductScreen/Orderline.xml:0
+#, python-format
+msgid "(tax incl.)"
+msgstr ""
+
+#. module: pos_sale
+#: model_terms:ir.ui.view,arch_db:pos_sale.pos_config_view_form_pos_sale
+msgid "<span class=\"o_form_label\">Down Payment Product</span>"
+msgstr ""
+
+#. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.pos_config_view_form_pos_sale
 msgid "<span class=\"o_form_label\">Sales Team</span>"
 msgstr "<span class=\"o_form_label\">Sales Team</span>"
+
+#. module: pos_sale
+#: model_terms:ir.ui.view,arch_db:pos_sale.report_invoice_document
+msgid "<span style=\"margin: 0px 5px;\">:</span>"
+msgstr ""
+
+#. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderManagementControlPanel.xml:0
+#, python-format
+msgid "Back"
+msgstr "Quay lại"
+
+#. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/MobileSaleOrderManagementScreen.xml:0
+#, python-format
+msgid "Back to list"
+msgstr "Trở lại danh sách"
+
+#. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderRow.js:0
+#, python-format
+msgid "Cancelled"
+msgstr "Đã hủy"
+
+#. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/js/SetSaleOrderButton.js:0
+#, python-format
+msgid "Cannot access order management screen if offline."
+msgstr "Không thể truy cập màn hình quản lý đơn hàng nếu ngoại tuyến."
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order__currency_rate
@@ -34,14 +81,121 @@ msgid "Currency Rate"
 msgstr "Tỷ giá"
 
 #. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderList.xml:0
+#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderRow.xml:0
+#, python-format
+msgid "Customer"
+msgstr "Khách hàng"
+
+#. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderList.xml:0
+#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderRow.xml:0
+#, python-format
+msgid "Date"
+msgstr "Ngày"
+
+#. module: pos_sale
+#: model_terms:ir.ui.view,arch_db:pos_sale.message_body
+msgid "Delivered from"
+msgstr ""
+
+#. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#, python-format
+msgid "Do you want to load the SN/Lots linked to the Sales Order?"
+msgstr ""
+
+#. module: pos_sale
+#: model:product.product,name:pos_sale.default_downpayment_product
+#: model:product.template,name:pos_sale.default_downpayment_product_product_template
+msgid "Down Payment (POS)"
+msgstr ""
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__down_payment_details
+msgid "Down Payment Details"
+msgstr ""
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_pos_config__down_payment_product_id
+msgid "Down Payment Product"
+msgstr "Sản phẩm Tiền đặt cọc"
+
+#. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderManagementControlPanel.xml:0
+#, python-format
+msgid "E.g. customer: Steward, date: 2020-05-09"
+msgstr "Vd: khách hàng: Ngọc Anh, ngày: 2020-05-09"
+
+#. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/xml/ReceiptScreen/OrderReceipt.xml:0
+#: model_terms:ir.ui.view,arch_db:pos_sale.report_invoice_document
+#, python-format
+msgid "From"
+msgstr "Từ"
+
+#. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__invoiced
 msgid "Invoiced"
 msgstr "Đã xuất hóa đơn"
 
 #. module: pos_sale
+#: code:addons/pos_sale/models/sale_order.py:0
+#, python-format
+msgid "Linked POS Orders"
+msgstr ""
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__sale_order_origin_id
+msgid "Linked Sale Order"
+msgstr ""
+
+#. module: pos_sale
+#: code:addons/pos_sale/models/pos_order.py:0
+#, python-format
+msgid "Linked Sale Orders"
+msgstr ""
+
+#. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderRow.js:0
+#, python-format
+msgid "Locked"
+msgstr "Đã khoá"
+
+#. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderFetcher.js:0
+#: code:addons/pos_sale/static/src/js/SetSaleOrderButton.js:0
+#, python-format
+msgid "Network Error"
+msgstr "Lỗi mạng"
+
+#. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__pos_draft
 msgid "New"
 msgstr "Mới"
+
+#. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderManagementControlPanel.xml:0
+#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderManagementControlPanel.xml:0
+#, python-format
+msgid "Next Order List"
+msgstr "Danh sách đơn tiếp theo"
+
+#. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#, python-format
+msgid "No"
+msgstr "Không"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_sessions_open_count
@@ -54,14 +208,40 @@ msgid "Open Sessions"
 msgstr "Mở các Phiên"
 
 #. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderList.xml:0
+#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderRow.xml:0
+#, python-format
+msgid "Order"
+msgstr "Lệnh"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_sale_order__pos_order_line_ids
+#: model:ir.model.fields,field_description:pos_sale.field_sale_order_line__pos_order_line_ids
+msgid "Order lines Transfered to Point of Sale"
+msgstr ""
+
+#. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__paid
 msgid "Paid"
 msgstr "Đã thanh toán"
 
 #. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#, python-format
+msgid "Percentage of %s"
+msgstr ""
+
+#. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_config
 msgid "Point of Sale Configuration"
 msgstr "Cấu hình điểm bán lẻ"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_pos_order_line
+msgid "Point of Sale Order Lines"
+msgstr "Chi tiết đơn hàng bán lẻ"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_order
@@ -79,9 +259,75 @@ msgid "Point of Sales"
 msgstr "Điểm bán lẻ"
 
 #. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_sale_order__pos_order_count
+msgid "Pos Order Count"
+msgstr "Số đơn hàng POS"
+
+#. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__pos_done
 msgid "Posted"
 msgstr "Đã vào sổ"
+
+#. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderManagementControlPanel.xml:0
+#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderManagementControlPanel.xml:0
+#, python-format
+msgid "Previous Order List"
+msgstr "Danh sách đơn trước đây"
+
+#. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#, python-format
+msgid "Products not available in POS"
+msgstr ""
+
+#. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderRow.js:0
+#, python-format
+msgid "Quotation"
+msgstr "Báo giá"
+
+#. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderRow.js:0
+#, python-format
+msgid "Quotation Sent"
+msgstr "Báo giá đã Gửi"
+
+#. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/xml/SetSaleOrderButton.xml:0
+#, python-format
+msgid "Quotation/Order"
+msgstr ""
+
+#. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#, python-format
+msgid "SN/Lots Loading"
+msgstr ""
+
+#. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/xml/ProductScreen/Orderline.xml:0
+#: code:addons/pos_sale/static/src/xml/ProductScreen/Orderline.xml:0
+#, python-format
+msgid "SO"
+msgstr ""
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order__sale_order_count
+msgid "Sale Order Count"
+msgstr "Bộ đếm đơn hàng"
+
+#. module: pos_sale
+#: model_terms:ir.ui.view,arch_db:pos_sale.pos_config_view_form_pos_sale
+msgid "Sales"
+msgstr "Bán hàng"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_sale_report
@@ -89,9 +335,17 @@ msgid "Sales Analysis Report"
 msgstr "Báo cáo phân tích hoạt động kinh doanh"
 
 #. module: pos_sale
-#: model_terms:ir.ui.view,arch_db:pos_sale.pos_config_view_form_pos_sale
-msgid "Sales Reporting"
-msgstr "Sales Reporting"
+#. openerp-web
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderRow.js:0
+#: model:ir.model,name:pos_sale.model_sale_order
+#, python-format
+msgid "Sales Order"
+msgstr "Đơn bán hàng"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Dòng đơn bán hàng"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_crm_team
@@ -107,6 +361,20 @@ msgid "Sales are reported to the following sales team"
 msgstr "Sales are reported to the following sales team"
 
 #. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderRow.xml:0
+#, python-format
+msgid "Salesman"
+msgstr "Nhân viên bán hàng"
+
+#. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderList.xml:0
+#, python-format
+msgid "Salesperson"
+msgstr "Nhân viên kinh doanh"
+
+#. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.crm_team_view_kanban_dashboard
 msgid "Session Running"
 msgstr "Phiên đang chạy"
@@ -120,6 +388,36 @@ msgstr "Doanh số Phiên"
 #: model_terms:ir.ui.view,arch_db:pos_sale.crm_team_view_kanban_dashboard
 msgid "Sessions Running"
 msgstr "Phiên đang Hoạt động"
+
+#. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/xml/SetSaleOrderButton.xml:0
+#: code:addons/pos_sale/static/src/xml/SetSaleOrderButton.xml:0
+#, python-format
+msgid "Set Sale Order"
+msgstr ""
+
+#. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#, python-format
+msgid ""
+"Some of the products in your Sale Order are not available in POS, do you "
+"want to import them?"
+msgstr ""
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__sale_order_line_id
+msgid "Source Sale Order Line"
+msgstr ""
+
+#. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderList.xml:0
+#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderRow.xml:0
+#, python-format
+msgid "State"
+msgstr "Trạng thái"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_sale_report__state
@@ -138,3 +436,63 @@ msgstr "Tỷ giá tiền tệ của loại tiền tệ đang dùng tại ngày �
 #: model:ir.model.fields,help:pos_sale.field_pos_session__crm_team_id
 msgid "This Point of sale's sales will be related to this Sales Team."
 msgstr "This Point of sale's sales will be related to this Sales Team."
+
+#. module: pos_sale
+#: model_terms:ir.ui.view,arch_db:pos_sale.pos_config_view_form_pos_sale
+msgid "This product will be applied when down payment is made"
+msgstr ""
+
+#. module: pos_sale
+#: model:ir.model.fields,help:pos_sale.field_pos_config__down_payment_product_id
+msgid "This product will be used as down payment on a sale order."
+msgstr ""
+
+#. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderList.xml:0
+#: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderRow.xml:0
+#, python-format
+msgid "Total"
+msgstr "Tổng"
+
+#. module: pos_sale
+#: model_terms:ir.ui.view,arch_db:pos_sale.view_pos_order_form_inherit_pos_sale
+msgid ""
+"Transfered<br/>\n"
+"                                from Sale"
+msgstr ""
+
+#. module: pos_sale
+#: model_terms:ir.ui.view,arch_db:pos_sale.view_order_form_inherit_pos_sale
+msgid ""
+"Transfered<br/>\n"
+"                                to POS"
+msgstr ""
+
+#. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderFetcher.js:0
+#, python-format
+msgid "Unable to fetch orders if offline."
+msgstr "Unable to fetch orders if offline."
+
+#. module: pos_sale
+#: model:product.product,uom_name:pos_sale.default_downpayment_product
+#: model:product.template,uom_name:pos_sale.default_downpayment_product_product_template
+msgid "Units"
+msgstr "Đơn vị"
+
+#. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#, python-format
+msgid "What do you want to do?"
+msgstr "Bạn muốn làm gì?"
+
+#. module: pos_sale
+#. openerp-web
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#, python-format
+msgid "Yes"
+msgstr "Có"

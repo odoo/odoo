@@ -5,18 +5,18 @@
 # Translators:
 # krnkris, 2019
 # Kovács Tibor <kovika@gmail.com>, 2019
-# gezza <geza.nagy@oregional.hu>, 2019
 # Martin Trigaux, 2020
 # Tamás Németh <ntomasz81@gmail.com>, 2020
-# Ákos Nagy <akos.nagy@oregional.hu>, 2020
+# gezza <geza.nagy@oregional.hu>, 2021
+# Ákos Nagy <akos.nagy@oregional.hu>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-09-14 10:29+0000\n"
 "PO-Revision-Date: 2019-06-12 12:36+0000\n"
-"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2020\n"
+"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2021\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -81,6 +81,11 @@ msgstr "Vissza"
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.sale_product_configurator_view_form
 msgid "Cancel"
 msgstr "Mégse"
+
+#. module: sale_product_configurator
+#: model:product.template,name:sale_product_configurator.product_product_1_product_template
+msgid "Chair floor protection"
+msgstr "Padlóvédő szék alá"
 
 #. module: sale_product_configurator
 #. openerp-web
@@ -152,6 +157,12 @@ msgid "Last Updated on"
 msgstr "Frissítve "
 
 #. module: sale_product_configurator
+#: model:product.template,description_sale:sale_product_configurator.product_product_1_product_template
+msgid "Office chairs can harm your floor: protect it."
+msgstr "Az irodai székek árthatnak a padlónak: védje meg."
+
+#. module: sale_product_configurator
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.optional_product_items
 msgid "Option not available"
 msgstr "Opció nem elérhető"
@@ -172,11 +183,6 @@ msgstr ""
 "Választható termékek javasoltak mindig amikor a vásárló leüti a *Kosárhoz "
 "adás* (kereszt-értékesítés stratégia, pl. számítógépekhez: garancia, "
 "szoftver, stb.)."
-
-#. module: sale_product_configurator
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.product_template_view_form
-msgid "Options"
-msgstr "Opciók"
 
 #. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__pricelist_id
@@ -211,6 +217,11 @@ msgid "Quantity"
 msgstr "Mennyiség"
 
 #. module: sale_product_configurator
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.product_template_view_form
+msgid "Recommend when 'Adding to Cart' or quotation"
+msgstr ""
+
+#. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.product_quantity_config
 msgid "Remove one"
 msgstr "Eltávolítás"
@@ -239,3 +250,8 @@ msgstr "Ez a kombináció nem létezik."
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure
 msgid "This product has no valid combination."
 msgstr "Ezen terméknek nincs érvényes kombinációja."
+
+#. module: sale_product_configurator
+#: model:product.template,uom_name:sale_product_configurator.product_product_1_product_template
+msgid "Units"
+msgstr "egység"

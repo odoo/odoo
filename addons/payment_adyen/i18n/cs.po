@@ -4,14 +4,14 @@
 # 
 # Translators:
 # Michal Veselý <michal@veselyberanek.net>, 2020
-# trendspotter, 2021
+# trendspotter <jirka.p@volny.cz>, 2021
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2016-08-05 13:06+0000\n"
 "Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
@@ -35,7 +35,8 @@ msgstr "Adyen"
 #. module: payment_adyen
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 #, python-format
-msgid "An error occured during processing of your payment. Please try again."
+msgid ""
+"An error occurred during the processing of your payment. Please try again."
 msgstr ""
 
 #. module: payment_adyen
@@ -51,15 +52,15 @@ msgid "Checkout API URL"
 msgstr ""
 
 #. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_client_key
+msgid "Client Key"
+msgstr ""
+
+#. module: payment_adyen
 #: code:addons/payment_adyen/models/payment_acquirer.py:0
 #, python-format
 msgid "Could not establish the connection to the API."
 msgstr "Nepodařilo se navázat spojení s rozhraním API."
-
-#. module: payment_adyen
-#: model:ir.model.fields,help:payment_adyen.field_payment_transaction__adyen_payment_data
-msgid "Data that must be passed back to Adyen when returning from redirect"
-msgstr ""
 
 #. module: payment_adyen
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_hmac_key
@@ -135,6 +136,12 @@ msgid "Received data with missing payment state."
 msgstr ""
 
 #. module: payment_adyen
+#: code:addons/payment_adyen/models/payment_transaction.py:0
+#, python-format
+msgid "Received refund data with missing transaction values"
+msgstr ""
+
+#. module: payment_adyen
 #: code:addons/payment_adyen/controllers/main.py:0
 #, python-format
 msgid "Received tampered payment request data."
@@ -144,11 +151,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_recurring_api_url
 msgid "Recurring API URL"
 msgstr ""
-
-#. module: payment_adyen
-#: model:ir.model.fields,field_description:payment_adyen.field_payment_transaction__adyen_payment_data
-msgid "Saved Payment Data"
-msgstr "Uložená platební data"
 
 #. module: payment_adyen
 #: code:addons/payment_adyen/models/payment_token.py:0
@@ -173,7 +175,7 @@ msgstr ""
 
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_acquirer__adyen_api_key
-msgid "The API key of the user account"
+msgid "The API key of the webservice user"
 msgstr ""
 
 #. module: payment_adyen
@@ -195,6 +197,11 @@ msgstr ""
 #. module: payment_adyen
 #: model:ir.model.fields,help:payment_adyen.field_payment_acquirer__adyen_recurring_api_url
 msgid "The base URL for the Recurring API endpoints"
+msgstr ""
+
+#. module: payment_adyen
+#: model:ir.model.fields,help:payment_adyen.field_payment_acquirer__adyen_client_key
+msgid "The client key of the webservice user"
 msgstr ""
 
 #. module: payment_adyen

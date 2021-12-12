@@ -7,8 +7,6 @@
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
 # gezgin biri <gezginbiri@hotmail.com>, 2017
 # Gökay Kıvırcıoğlu <riza.gokay@gmail.com>, 2017
-# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2017
-# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2019
 # Murat Kaplan <muratk@projetgrup.com>, 2019
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2019
 # Levent Karakaş <levent@mektup.at>, 2019
@@ -20,14 +18,16 @@
 # Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2021
 # abc Def <hdogan1974@gmail.com>, 2021
 # Umur Akın <umura@projetgrup.com>, 2021
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2021
+# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-11-16 13:19+0000\n"
 "PO-Revision-Date: 2016-08-05 12:57+0000\n"
-"Last-Translator: Umur Akın <umura@projetgrup.com>, 2021\n"
+"Last-Translator: Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2021\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,12 +40,6 @@ msgstr ""
 #, python-format
 msgid " (Estimated Cost: %s )"
 msgstr " (Tahmini Maliyet: %s )"
-
-#. module: delivery
-#: code:addons/delivery/models/sale_order.py:0
-#, python-format
-msgid "Free Shipping"
-msgstr "Ücretsiz Sevkiyat"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_quant_package_weight_form
@@ -230,6 +224,7 @@ msgstr "İptal"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__carrier_id
+#: model:ir.model.fields,field_description:delivery.field_stock_move_line__carrier_id
 #: model:ir.model.fields,field_description:delivery.field_stock_package_type__package_carrier_type
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_id
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -398,6 +393,7 @@ msgid "Destination Availability"
 msgstr "Destinasyonlar"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_stock_move_line__destination_country_code
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__destination_country_code
 msgid "Destination Country"
 msgstr "Hedef Ülke"
@@ -483,6 +479,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__delivery_type__fixed
 msgid "Fixed Price"
 msgstr "Sabit Fiyat"
+
+#. module: delivery
+#: code:addons/delivery/models/sale_order.py:0
+#, python-format
+msgid "Free Shipping"
+msgstr "Ücretsiz Sevkiyat"
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
@@ -634,6 +636,13 @@ msgstr "Taşıyıcı entegrasyonu yok"
 msgid "No price rule matching this order; delivery cost cannot be computed."
 msgstr ""
 "Bu komutla eşleşen bir fiyat kuralı yok, teslimat bedeli hesaplanamaz."
+
+#. module: delivery
+#: model:delivery.carrier,name:delivery.normal_delivery_carrier
+#: model:product.product,name:delivery.product_product_delivery_normal
+#: model:product.template,name:delivery.product_product_delivery_normal_product_template
+msgid "Normal Delivery Charges"
+msgstr "Normal Teslimat Ücretleri"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
@@ -869,6 +878,7 @@ msgid "Stock package type"
 msgstr "Stok Paket Türü"
 
 #. module: delivery
+#: model:ir.model.fields,help:delivery.field_stock_move_line__destination_country_code
 #: model:ir.model.fields,help:delivery.field_stock_picking__destination_country_code
 msgid ""
 "The ISO country code in two chars. \n"
@@ -876,6 +886,13 @@ msgid ""
 msgstr ""
 "İki karakterde ISO ülke kodu.\n"
 "Hızlı arama için bu alanı kullanabilirsiniz."
+
+#. module: delivery
+#: model:delivery.carrier,name:delivery.delivery_carrier
+#: model:product.product,name:delivery.product_product_delivery_poste
+#: model:product.template,name:delivery.product_product_delivery_poste_product_template
+msgid "The Poste"
+msgstr "Post"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__get_return_label_from_portal
@@ -995,6 +1012,10 @@ msgstr "Transfer"
 
 #. module: delivery
 #: model:product.product,uom_name:delivery.product_product_delivery
+#: model:product.product,uom_name:delivery.product_product_delivery_normal
+#: model:product.product,uom_name:delivery.product_product_delivery_poste
+#: model:product.template,uom_name:delivery.product_product_delivery_normal_product_template
+#: model:product.template,uom_name:delivery.product_product_delivery_poste_product_template
 #: model:product.template,uom_name:delivery.product_product_delivery_product_template
 msgid "Units"
 msgstr "Adet"

@@ -17,20 +17,20 @@
 # Ekaterina <nawsikaya@bk.ru>, 2020
 # Gennady Marchenko <gennadym@gmail.com>, 2020
 # Irina Fedulova <istartlin@gmail.com>, 2020
-# Ivan Yelizariev // IEL <yelizariev@itpp.dev>, 2021
+# Ivan Yelizariev // IEL (ellui) <yelizariev@itpp.dev>, 2021
 # Sergey Vilizhanin, 2021
-# Сергей Шебанин <sergey@shebanin.ru>, 2021
-# Martin Trigaux, 2021
 # ILMIR <karamov@it-projects.info>, 2021
 # Диляра Дельтаева <dilya.kz93@gmail.com>, 2021
+# Martin Trigaux, 2021
+# Сергей Шебанин <sergey@shebanin.ru>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2016-08-05 12:58+0000\n"
-"Last-Translator: Диляра Дельтаева <dilya.kz93@gmail.com>, 2021\n"
+"Last-Translator: Сергей Шебанин <sergey@shebanin.ru>, 2021\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -165,6 +165,12 @@ msgstr "<strong>Итого</strong>"
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "<strong>Validated By:</strong>"
 msgstr "<strong>Утвержденные По:</strong>"
+
+#. module: hr_expense
+#: model:product.product,name:hr_expense.accomodation_expense_product
+#: model:product.template,name:hr_expense.accomodation_expense_product_product_template
+msgid "Accomodation"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__account_id
@@ -510,10 +516,22 @@ msgid "Currency"
 msgstr "Валюта"
 
 #. module: hr_expense
+#: model:product.product,name:hr_expense.allowance_expense_product
+#: model:product.template,name:hr_expense.allowance_expense_product_product_template
+msgid "Daily Allowance"
+msgstr ""
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Date"
 msgstr "Дата"
+
+#. module: hr_expense
+#: model:product.product,uom_name:hr_expense.allowance_expense_product
+#: model:product.template,uom_name:hr_expense.allowance_expense_product_product_template
+msgid "Days"
+msgstr "Дней"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -832,6 +850,12 @@ msgid "Explicitly Refused by manager or accountant"
 msgstr ""
 
 #. module: hr_expense
+#: model:product.product,name:hr_expense.trans_expense_product
+#: model:product.template,name:hr_expense.trans_expense_product_product_template
+msgid "Flights, train, bus, taxi, parking"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_follower_ids
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_follower_ids
 msgid "Followers"
@@ -848,6 +872,12 @@ msgstr "Подписчики (Партнеры)"
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
 msgstr "Иконка со шрифтом Font awesome, например. fa-tasks"
+
+#. module: hr_expense
+#: model:product.product,name:hr_expense.food_expense_product
+#: model:product.template,name:hr_expense.food_expense_product_product_template
+msgid "Food & beverages"
+msgstr ""
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -1000,6 +1030,7 @@ msgstr "Журнал"
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_move
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__account_move_id
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Journal Entry"
 msgstr "Запись журнала"
 
@@ -1082,6 +1113,12 @@ msgstr "Ошибка доставки сообщения"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_ids
 msgid "Messages"
 msgstr "Сообщения"
+
+#. module: hr_expense
+#: model:product.product,name:hr_expense.mileage_expense_product
+#: model:product.template,name:hr_expense.mileage_expense_product_product_template
+msgid "Mileage"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__my_activity_date_deadline
@@ -1295,6 +1332,12 @@ msgid "Other Info"
 msgstr "Прочая информация"
 
 #. module: hr_expense
+#: model:product.product,name:hr_expense.other_expense_product
+#: model:product.template,name:hr_expense.other_expense_product_product_template
+msgid "Other expenses"
+msgstr ""
+
+#. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__done
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__payment_state__paid
 #: model:mail.message.subtype,name:hr_expense.mt_expense_paid
@@ -1316,6 +1359,12 @@ msgstr "Частично"
 #. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__payment_state__partial
 msgid "Partially Paid"
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/account_move.py:0
+#, python-format
+msgid "Payment Cancelled"
 msgstr ""
 
 #. module: hr_expense
@@ -1832,8 +1881,16 @@ msgid "Unit of Measure"
 msgstr "Единица измерения"
 
 #. module: hr_expense
+#: model:product.product,uom_name:hr_expense.accomodation_expense_product
+#: model:product.product,uom_name:hr_expense.food_expense_product
+#: model:product.product,uom_name:hr_expense.other_expense_product
 #: model:product.product,uom_name:hr_expense.product_product_fixed_cost
+#: model:product.product,uom_name:hr_expense.trans_expense_product
+#: model:product.template,uom_name:hr_expense.accomodation_expense_product_product_template
+#: model:product.template,uom_name:hr_expense.food_expense_product_product_template
+#: model:product.template,uom_name:hr_expense.other_expense_product_product_template
 #: model:product.template,uom_name:hr_expense.product_product_fixed_cost_product_template
+#: model:product.template,uom_name:hr_expense.trans_expense_product_product_template
 msgid "Units"
 msgstr "Единицы"
 
@@ -2053,6 +2110,12 @@ msgid "has been refused"
 msgstr "было отклонено"
 
 #. module: hr_expense
+#: model:product.product,uom_name:hr_expense.mileage_expense_product
+#: model:product.template,uom_name:hr_expense.mileage_expense_product_product_template
+msgid "km"
+msgstr "км"
+
+#. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "to be reimbursed"
@@ -2073,10 +2136,4 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "use OCR to fill data from a picture of the bill"
-msgstr ""
-
-#. module: hr_expense
-#: code:addons/hr_expense/models/account_move.py:0
-#, python-format
-msgid "Payment Cancelled"
 msgstr ""

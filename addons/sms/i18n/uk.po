@@ -5,16 +5,16 @@
 # Translators:
 # Bohdan Lisnenko, 2018
 # ТАрас <tratatuta@i.ua>, 2018
-# Martin Trigaux, 2021
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021
+# Martin Trigaux, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-12-07 10:47+0000\n"
 "PO-Revision-Date: 2017-12-13 14:58+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021\n"
+"Last-Translator: Martin Trigaux, 2021\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,15 +58,6 @@ msgstr "%s недійсних одержувачів"
 msgid ""
 "%s out of the %s selected SMS Text Messages have successfully been resent."
 msgstr ""
-
-#. module: sms
-#: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
-msgid ""
-"<span class=\"fa fa-info-circle\"/> Caution: It won't be possible to send "
-"this SMS again to the recipients you did not select."
-msgstr ""
-"<span class=\"fa fa-info-circle\"/> Попередження: Не вдасться знову "
-"надіслати це SMS тим, кого ви не вибрали."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -155,7 +146,7 @@ msgid "Attachment Count"
 msgstr "Кількість прикріплень"
 
 #. module: sms
-#: model:ir.model.fields.selection,name:sms.selection__sms_sms__error_code__sms_blacklist
+#: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_blacklist
 msgid "Blacklisted"
 msgstr "У чорному списку"
 
@@ -188,7 +179,18 @@ msgid "Buy credits."
 msgstr ""
 
 #. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_resend__can_cancel
+msgid "Can Cancel"
+msgstr ""
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_resend__can_resend
+msgid "Can Resend"
+msgstr ""
+
+#. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_cancel
+#: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_tree
 #: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
 msgid "Cancel"
 msgstr "Скасувати"
@@ -219,6 +221,7 @@ msgid "Choose an example"
 msgstr "Оберіть приклад"
 
 #. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Close"
 msgstr "Закрити"
@@ -272,7 +275,6 @@ msgid "Default Value"
 msgstr "Типове значення"
 
 #. module: sms
-#: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "Discard"
 msgstr "Відмінити"
@@ -324,7 +326,7 @@ msgid "Document Model Name"
 msgstr "Назва моделі документа"
 
 #. module: sms
-#: model:ir.model.fields.selection,name:sms.selection__sms_sms__error_code__sms_duplicate
+#: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_duplicate
 msgid "Duplicate"
 msgstr "Дублювати"
 
@@ -349,13 +351,17 @@ msgid "Error"
 msgstr "Помилка"
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_sms__error_code
-msgid "Error Code"
-msgstr "Код помилки"
+#: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__failure_type
+msgid "Error Message"
+msgstr "Повідомлення про помилку"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_sms__failure_type
+msgid "Failure Type"
+msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__failure_type
-#: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__failure_type
 msgid "Failure type"
 msgstr "Тип невдачі"
 
@@ -397,11 +403,6 @@ msgstr "Підписники (Партнери)"
 #, python-format
 msgid "Following numbers are not correctly encoded: %s"
 msgstr "Наступні номери некоректно кодовані: %s"
-
-#. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_resend__has_cancel
-msgid "Has Cancel"
-msgstr "Має скасувати"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend__has_insufficient_credit
@@ -454,7 +455,6 @@ msgstr "Якщо позначено, то нові повідомлення бу
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_account_analytic_account__message_has_sms_error
-#: model:ir.model.fields,help:sms.field_adyen_account__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_calendar_event__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_crm_team__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_crm_team_member__message_has_sms_error
@@ -548,7 +548,7 @@ msgstr "Вказує, чи цілі SMS націлені на одного ко�
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_credit
-#: model:ir.model.fields.selection,name:sms.selection__sms_sms__error_code__sms_credit
+#: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_credit
 msgid "Insufficient Credit"
 msgstr "Недостатньо кредиту"
 
@@ -674,7 +674,7 @@ msgstr "Повідомлення"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_number_missing
-#: model:ir.model.fields.selection,name:sms.selection__sms_sms__error_code__sms_number_missing
+#: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_number_missing
 msgid "Missing Number"
 msgstr "Відсутній номер"
 
@@ -709,7 +709,6 @@ msgid "Notification Type"
 msgstr "Тип сповіщення"
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__sms_number
 #: model:ir.model.fields,field_description:sms.field_sms_sms__number
 msgid "Number"
 msgstr "Номер"
@@ -760,17 +759,18 @@ msgid "Number of unread messages"
 msgstr "Кількість непрочитаних повідомлень"
 
 #. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_optout
+msgid "Opted Out"
+msgstr ""
+
+#. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__lang
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language, e.g. "
-"${object.partner_id.lang}."
+"a placeholder expression that provides the appropriate language, e.g. {{ "
+"object.partner_id.lang }}."
 msgstr ""
-"Необов'язкова мова перекладу (ISO-код) для вибору при надсиланні "
-"електронного листа. Якщо не встановлено, буде використано англійську версію."
-" Це, як правило, має бути виразом заповнювача, який забезпечує відповідну "
-"мову, наприклад, ${object.partner_id.lang}."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__null_value
@@ -796,6 +796,11 @@ msgstr "Чорний список телефонів"
 #: model:ir.model.fields,field_description:sms.field_res_partner__phone_sanitized_blacklisted
 msgid "Phone Blacklisted"
 msgstr "Телефон у чорному списку"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__sms_number
+msgid "Phone Number"
+msgstr "Номер телефону"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__phone_mobile_search
@@ -833,11 +838,15 @@ msgid "Reason"
 msgstr "Причина"
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__partner_name
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Recipient"
 msgstr "Одержувач"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__partner_name
+msgid "Recipient Name"
+msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_number_itf
@@ -881,8 +890,6 @@ msgstr ""
 
 #. module: sms
 #: model:ir.actions.server,name:sms.ir_actions_server_sms_sms_resend
-#: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__resend
-#: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 msgid "Resend"
 msgstr "Переслати"
 
@@ -892,6 +899,7 @@ msgid "Resend Notification"
 msgstr "Повторно надіслати сповіщення"
 
 #. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_tree
 #: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
 msgid "Retry"
 msgstr "Повторіть"
@@ -917,7 +925,6 @@ msgstr "SMS API"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_account_analytic_account__message_has_sms_error
-#: model:ir.model.fields,field_description:sms.field_adyen_account__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_calendar_event__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_crm_team__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_crm_team_member__message_has_sms_error
@@ -1042,7 +1049,13 @@ msgstr ""
 "Якщо це пов'язане поле, ви зможете обрати цільове поле в призначенні відношення."
 
 #. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
+msgid "Send & Close"
+msgstr ""
+
+#. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
+#: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_tree
 #: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
 msgid "Send Now"
 msgstr "Надіслати зараз"
@@ -1118,7 +1131,7 @@ msgstr "Дія на сервері"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_server
-#: model:ir.model.fields.selection,name:sms.selection__sms_sms__error_code__sms_server
+#: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_server
 msgid "Server Error"
 msgstr "Помилка сервера"
 
@@ -1225,6 +1238,11 @@ msgstr ""
 " з чорного списку."
 
 #. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__resend
+msgid "Try Again"
+msgstr ""
+
+#. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_mail__message_type
 #: model:ir.model.fields,field_description:sms.field_mail_message__message_type
 msgid "Type"
@@ -1274,7 +1292,7 @@ msgstr "Кількість непрочитаних повідомлень"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_acc
-#: model:ir.model.fields.selection,name:sms.selection__sms_sms__error_code__sms_acc
+#: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_acc
 msgid "Unregistered Account"
 msgstr "Незареєстрований обліковий запис"
 
@@ -1339,7 +1357,7 @@ msgstr "Чи підтримує ця модель повідомлення та 
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_number_format
-#: model:ir.model.fields.selection,name:sms.selection__sms_sms__error_code__sms_number_format
+#: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_number_format
 msgid "Wrong Number Format"
 msgstr "Невірний формат номеру"
 
@@ -1392,8 +1410,8 @@ msgstr ""
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
-msgid "e.g. en_US or ${object.partner_id.lang}"
-msgstr "напр., en_US або ${object.partner_id.lang}"
+msgid "e.g. en_US or {{ object.partner_id.lang }}"
+msgstr ""
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form

@@ -4,15 +4,15 @@
 # 
 # Translators:
 # amos lin <seeing@edirect168.com>, 2019
-# Martin Trigaux, 2020
+# Martin Trigaux, 2019
 # Mandy Choy <mnc@odoo.com>, 2020
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-12-07 10:46+0000\n"
 "PO-Revision-Date: 2016-08-05 13:12+0000\n"
 "Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -36,52 +36,6 @@ msgstr "# 頁面查看"
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Contact Form</span>"
 msgstr "<span class=\"o_form_label\">聯絡表格</span>"
-
-#. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-msgid ""
-"<span class=\"s_website_form_label_content\">Email</span>\n"
-"                                                <span class=\"s_website_form_mark\"> *</span>"
-msgstr ""
-"<span class=\"s_website_form_label_content\">電子郵件</span>\n"
-"                                                <span class=\"s_website_form_mark\"> *</span>"
-
-#. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-msgid "<span class=\"s_website_form_label_content\">Phone Number</span>"
-msgstr "<span class=\"s_website_form_label_content\">電話號碼</span>"
-
-#. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-msgid ""
-"<span class=\"s_website_form_label_content\">Subject</span>\n"
-"                                                <span class=\"s_website_form_mark\"> *</span>"
-msgstr ""
-"<span class=\"s_website_form_label_content\">主題</span>\n"
-"                                                <span class=\"s_website_form_mark\"> *</span>"
-
-#. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-msgid "<span class=\"s_website_form_label_content\">Your Company</span>"
-msgstr "<span class=\"s_website_form_label_content\">你的公司名稱</span>"
-
-#. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-msgid ""
-"<span class=\"s_website_form_label_content\">Your Name</span>\n"
-"                                                <span class=\"s_website_form_mark\"> *</span>"
-msgstr ""
-"<span class=\"s_website_form_label_content\">你的名字</span>\n"
-"                                                <span class=\"s_website_form_mark\"> *</span>"
-
-#. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-msgid ""
-"<span class=\"s_website_form_label_content\">Your Question</span>\n"
-"                                                <span class=\"s_website_form_mark\"> *</span>"
-msgstr ""
-"<span class=\"s_website_form_label_content\">你的問題</span>\n"
-"                                                <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
@@ -151,7 +105,7 @@ msgid "Lead/Opportunity"
 msgstr "線索/商機"
 
 #. module: website_crm
-#: model:ir.actions.act_window,name:website_crm.website_visitor_crm_lead_action
+#: model:ir.actions.act_window,name:website_crm.crm_lead_action_from_visitor
 #: model:ir.model.fields,field_description:website_crm.field_website_visitor__lead_ids
 #: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_form
 #: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_search
@@ -160,8 +114,8 @@ msgstr "線索"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_kanban
-msgid "Leads/Opportunities"
-msgstr "線索/商機"
+msgid "Leads / Opportunities"
+msgstr ""
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
@@ -169,7 +123,7 @@ msgid "New messages are managed as leads or opportunities in your CRM app."
 msgstr "在您的客戶關係管理應用中，將新消息作為線索或機會進行管理。"
 
 #. module: website_crm
-#: model_terms:ir.actions.act_window,help:website_crm.website_visitor_crm_lead_action
+#: model_terms:ir.actions.act_window,help:website_crm.crm_lead_action_from_visitor
 msgid "No lead linked for this visitor"
 msgstr "沒有為此訪問者連結的線索"
 
@@ -202,14 +156,14 @@ msgid "Salesperson"
 msgstr "銷售員"
 
 #. module: website_crm
-#: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
-msgid "Submit"
-msgstr "提交"
-
-#. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_crm_lead__visitor_ids
 msgid "Web Visitors"
 msgstr "網站訪問者"
+
+#. module: website_crm
+#: model_terms:ir.ui.view,arch_db:website_crm.crm_lead_merge_summary_inherit_website
+msgid "Web Visitors:"
+msgstr ""
 
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_website

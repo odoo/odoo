@@ -4,14 +4,13 @@
 # 
 # Translators:
 # Martin Trigaux, 2019
-# JustinC <dev@dottdot.com>, 2021
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2019-12-16 11:03+0000\n"
 "Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -39,6 +38,13 @@ msgid "Employee Contract"
 msgstr "員工合同"
 
 #. module: hr_work_entry_holidays
+#: model:ir.model.fields,help:hr_work_entry_holidays.field_hr_work_entry_type__leave_type_ids
+msgid ""
+"Every new time off type in this list will be reported as select work entry "
+"in payslip."
+msgstr "此列表中的每個新休假類型都將報告為工資單中的選擇工時紀錄。"
+
+#. module: hr_work_entry_holidays
 #: model:ir.model,name:hr_work_entry_holidays.model_hr_work_entry
 msgid "HR Work Entry"
 msgstr "HR工時紀錄"
@@ -47,6 +53,11 @@ msgstr "HR工時紀錄"
 #: model:ir.model,name:hr_work_entry_holidays.model_hr_work_entry_type
 msgid "HR Work Entry Type"
 msgstr "HR工時紀錄類型"
+
+#. module: hr_work_entry_holidays
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_holidays.work_entry_type_leave_form_inherit
+msgid "Payroll"
+msgstr "薪資表"
 
 #. module: hr_work_entry_holidays
 #: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_work_entry__leave_state
@@ -85,11 +96,6 @@ msgstr "休假"
 #: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_work_entry_type__leave_type_ids
 msgid "Time Off Type"
 msgstr "休假類型"
-
-#. module: hr_work_entry_holidays
-#: model_terms:ir.ui.view,arch_db:hr_work_entry_holidays.work_entry_type_leave_form_inherit
-msgid "Work Entries"
-msgstr "工時記錄"
 
 #. module: hr_work_entry_holidays
 #: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_leave_type__work_entry_type_id

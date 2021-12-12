@@ -3,19 +3,21 @@
 # 	* auth_totp
 # 
 # Translators:
-# Levent Karakaş <levent@mektup.at>, 2020
-# Murat Kaplan <muratk@projetgrup.com>, 2020
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
-# Ediz Duman <neps1192@gmail.com>, 2021
 # Umur Akın <umura@projetgrup.com>, 2021
+# Ediz Duman <neps1192@gmail.com>, 2021
+# Martin Trigaux, 2021
+# Levent Karakaş <levent@mektup.at>, 2021
+# Murat Kaplan <muratk@projetgrup.com>, 2021
+# Doğan Altunbay <doganaltunbay@gmail.com>, 2021
 # abc Def <hdogan1974@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-19 09:43+0000\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2020-12-11 11:02+0000\n"
 "Last-Translator: abc Def <hdogan1974@gmail.com>, 2021\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
@@ -32,87 +34,62 @@ msgid "%(browser)s on %(platform)s"
 msgstr ""
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
-msgid "(Disable two-factor authentication)"
-msgstr "(İki faktörlü kimlik doğrulamayı devre dışı bırakın)"
+#: model:ir.model,name:auth_totp.model_auth_totp_wizard
+msgid "2-Factor Setup Wizard"
+msgstr ""
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
-msgid ""
-"<i class=\"fa fa-2x fa-mobile pull-left\"/>\n"
-"                        Open the two-factor authentication app on your\n"
-"                        device to obtain a code and verify your identity"
+#: code:addons/auth_totp/wizard/auth_totp_wizard.py:0
+#, python-format
+msgid "2-Factor authentication is now enabled."
 msgstr ""
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
-msgid ""
-"<i class=\"fa fa-check-circle\"/>\n"
-"                                Two-factor authentication enabled"
-msgstr ""
-"<i class=\"fa fa-check-circle\"/>\n"
-"                               İki faktörlü kimlik doğrulama etkin"
-
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
-msgid ""
-"<i class=\"fa fa-question-circle text-primary\" title=\"If checked, you "
-"won't be asked for two-factor authentication codes with this device.\"/>"
-msgstr ""
-
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
-msgid ""
-"<i class=\"fa fa-warning\"/>\n"
-"                                Two-factor authentication not enabled"
-msgstr ""
-"<i class=\"fa fa-warning\"/>\n"
-"                                İki faktörlü kimlik doğrulama etkin değil"
-
-#. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid ""
-"<span class=\"alert alert-info\" role=\"status\">\n"
-"                            <i class=\"fa fa-warning\"/>\n"
-"                            Two-factor authentication not enabled\n"
-"                        </span>"
+"<span attrs=\"{'invisible': [('totp_enabled', '=', False)]}\" class=\"text-"
+"muted\">Your account is protected!</span>"
 msgstr ""
-"<span class=\"alert alert-info\" role=\"status\">\n"
-"                            <i class=\"fa fa-warning\"/>\n"
-"                           İki faktörlü kimlik doğrulama etkin değil\n"
-"                        </span>"
-
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
-msgid ""
-"<span class=\"text-success\">\n"
-"                            <i class=\"fa fa-check-circle\"/>\n"
-"                            Two-factor authentication enabled\n"
-"                        </span>"
-msgstr ""
-"<span class=\"text-success\">\n"
-"                            <i class=\"fa fa-check-circle\"/>\n"
-"                           İki faktörlü kimlik doğrulama etkin\n"
-"                        </span>"
-
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
-msgid "Added On"
-msgstr "Eklendi"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid ""
-"After scanning the barcode, the app will display a 6-digit code that you\n"
-"                                should enter below. Don't worry if the code changes in the app,\n"
-"                                it stays valid a bit longer."
+"<span class=\"d-md-none d-block\">Or install an authenticator app</span>\n"
+"                                        <span class=\"d-none d-md-block\">Install an authenticator app on your mobile device</span>"
 msgstr ""
-"After scanning the barcode, the app will display a 6-digit code that you\n"
-"                                should enter below. Don't worry if the code changes in the app,\n"
-"                                it stays valid a bit longer."
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid ""
+"<span class=\"d-none d-md-block\">When requested to do so, scan the barcode below</span>\n"
+"                                    <span class=\"d-block d-md-none\">When requested to do so, copy the key below</span>"
+msgstr ""
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid ""
+"<span class=\"text-muted\">Popular ones include Authy, Google Authenticator "
+"or the Microsoft Authenticator.</span>"
+msgstr ""
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
+msgid "Account Security"
+msgstr "Hesap Güvenliği"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "Activate"
+msgstr "Etkinleştir"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
+msgid "Added On"
+msgstr "Eklendi"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid ""
 "Are you sure? Two-factor authentication will be required again on all your "
 "devices"
@@ -122,15 +99,35 @@ msgstr ""
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
-msgid "Authentication Code (6 digits)"
-msgstr "Kimlik Doğrulama Kodu (6 haneli)"
+msgid "Authentication Code"
+msgstr ""
+
+#. module: auth_totp
+#: model:ir.model,name:auth_totp.model_auth_totp_device
+msgid "Authentication Device"
+msgstr ""
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "Authenticator App Setup"
+msgstr ""
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Cancel"
 msgstr "İptal et"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "Cannot scan it?"
+msgstr ""
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "Click on this link to open your authenticator app"
+msgstr ""
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__create_uid
@@ -143,41 +140,52 @@ msgid "Created on"
 msgstr "Oluşturulma"
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__create_date
+msgid "Creation Date"
+msgstr "Oluşturulma Tarihi"
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__name
+msgid "Description"
+msgstr "Açıklama"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Device Name"
 msgstr "Araç Adı"
 
 #. module: auth_totp
-#: model:ir.actions.server,name:auth_totp.action_disable_totp
-msgid "Disable TOTP on users"
-msgstr "Disable TOTP on users"
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
+msgid "Disable 2FA"
+msgstr ""
 
 #. module: auth_totp
+#: model:ir.actions.server,name:auth_totp.action_disable_totp
+msgid "Disable two-factor authentication"
+msgstr ""
+
+#. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__display_name
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__display_name
 msgid "Display Name"
 msgstr "Görünüm Adı"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
-msgid "Don't ask again for this device"
-msgstr "Bu cihaz için bir daha sorma"
-
-#. module: auth_totp
-#: code:addons/auth_totp/models/res_users.py:0
-#, python-format
-msgid "Enable Two-Factor Authentication"
-msgstr "Enable Two-Factor Authentication"
+msgid "Don't ask again on this device"
+msgstr ""
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
-msgid "Enable two-factor authentication"
-msgstr "İki faktörlü kimlik doğrulamayı etkinleştirin"
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
+msgid "Enable 2FA"
+msgstr ""
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
-msgid "Enter the 6-digit code from your app"
-msgstr "Enter the 6-digit code from your app"
+msgid "Enter your six-digit code below"
+msgstr ""
 
 #. module: auth_totp
 #: model:ir.model,name:auth_totp.model_ir_http
@@ -185,6 +193,7 @@ msgid "HTTP Routing"
 msgstr "HTTP Yönlendirme"
 
 #. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__id
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__id
 msgid "ID"
 msgstr "ID"
@@ -196,6 +205,7 @@ msgid "Invalid authentication code format."
 msgstr "Invalid authentication code format."
 
 #. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device____last_update
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard____last_update
 msgid "Last Modified on"
 msgstr "Son Düzenleme"
@@ -211,9 +221,31 @@ msgid "Last Updated on"
 msgstr "Son Güncelleme"
 
 #. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
+msgid "Learn More"
+msgstr "Daha Fazla Bilgi"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+msgid "Login"
+msgstr "Oturum açma"
+
+#. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
-msgid "Or enter the secret code manually:"
-msgstr "Or enter the secret code manually:"
+msgid "Look for an \"Add an account\" button"
+msgstr ""
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "On Apple Store"
+msgstr "Apple Store'da"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
+msgid "On Google Play"
+msgstr "Google Play'de"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__qrcode
@@ -221,28 +253,19 @@ msgid "Qrcode"
 msgstr "Qrcode"
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Revoke"
 msgstr "Geriye al"
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Revoke All"
 msgstr "Hepsini Geriye Al"
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
-msgid ""
-"Scan the image below with the authenticator app on your phone.<br/>\n"
-"                                If you cannot scan the barcode, here are some alternative options:"
-msgstr ""
-"Scan the image below with the authenticator app on your phone.<br/>\n"
-"                                If you cannot scan the barcode, here are some alternative options:"
-
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
-msgid "Scan this barcode with your app"
-msgstr "Scan this barcode with your app"
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__scope
+msgid "Scope"
+msgstr "Kapsam"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__secret
@@ -250,10 +273,17 @@ msgid "Secret"
 msgstr "Gizli"
 
 #. module: auth_totp
-#: code:addons/auth_totp/models/res_users.py:0
+#: code:addons/auth_totp/wizard/auth_totp_wizard.py:0
 #, python-format
 msgid "The verification code should only contain numbers"
 msgstr "The verification code should only contain numbers"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+msgid ""
+"To login, enter below the six-digit authentication code provided by your Authenticator app.\n"
+"                        <br/>"
+msgstr ""
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_secret
@@ -261,30 +291,59 @@ msgid "Totp Secret"
 msgstr "Totp Secret"
 
 #. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Trusted Device"
 msgstr "Güvenilir Cihaz"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_trusted_device_ids
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Trusted Devices"
 msgstr "Güvenilir Cihazlar"
 
 #. module: auth_totp
-#: model:ir.model,name:auth_totp.model_auth_totp_wizard
-msgid "Two-Factor Setup Wizard"
-msgstr "Two-Factor Setup Wizard"
+#: code:addons/auth_totp/models/res_users.py:0
+#, python-format
+msgid "Two-Factor Authentication Activation"
+msgstr ""
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Two-factor Authentication"
 msgstr "Two-factor Authentication"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
+msgid ""
+"Two-factor Authentication (\"2FA\") is a system of double authentication.\n"
+"                                The first one is done with your password and the second one with a code you get from a dedicated mobile app.\n"
+"                                Popular ones include Authy, Google Authenticator or the Microsoft Authenticator."
+msgstr ""
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
+msgid ""
+"Two-factor Authentication (\"2FA\") is a system of double authentication.\n"
+"                            The first one is done with your password and the second one with a code you get from a dedicated mobile app.\n"
+"                            Popular ones include Authy, Google Authenticator or the Microsoft Authenticator."
+msgstr ""
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_enabled
 msgid "Two-factor authentication"
 msgstr "İki faktörlü kimlik doğrulama"
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.res_users_view_search
+msgid "Two-factor authentication Disabled"
+msgstr ""
+
+#. module: auth_totp
+#: model_terms:ir.ui.view,arch_db:auth_totp.res_users_view_search
+msgid "Two-factor authentication Enabled"
+msgstr ""
 
 #. module: auth_totp
 #: code:addons/auth_totp/models/res_users.py:0
@@ -301,15 +360,8 @@ msgstr "Two-factor authentication can only be enabled for yourself"
 #. module: auth_totp
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
-msgid "Two-factor authentication disabled for user(s) %s"
+msgid "Two-factor authentication disabled for the following user(s): %s"
 msgstr ""
-" Kullanıcı(lar) için iki faktörlü kimlik doğrulama devre dışı bırakıldı%s"
-
-#. module: auth_totp
-#: code:addons/auth_totp/models/res_users.py:0
-#, python-format
-msgid "Two-factor authentication is now enabled."
-msgstr "İki faktörlü kimlik doğrulama artık etkinleştirilmiştir."
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__url
@@ -317,6 +369,7 @@ msgid "Url"
 msgstr "Url"
 
 #. module: auth_totp
+#: model:ir.model.fields,field_description:auth_totp.field_auth_totp_device__user_id
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__user_id
 msgid "User"
 msgstr "Kullanıcı"
@@ -334,27 +387,13 @@ msgstr "Verification Code"
 
 #. module: auth_totp
 #: code:addons/auth_totp/controllers/home.py:0
-#: code:addons/auth_totp/models/res_users.py:0
+#: code:addons/auth_totp/wizard/auth_totp_wizard.py:0
 #, python-format
 msgid "Verification failed, please double-check the 6-digit code"
 msgstr "Verification failed, please double-check the 6-digit code"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
-msgid "Verify"
-msgstr "Doğrulayın"
-
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
-msgid "What is this?"
-msgstr "Bu nedir?"
-
-#. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
-msgid "Your two-factor secret:"
-msgstr "Your two-factor secret:"
-
-#. module: auth_totp
-#: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
-msgid "show the code"
-msgstr "show the code"
+msgid "e.g. 123456"
+msgstr ""

@@ -3,7 +3,6 @@
 # 	* sms
 # 
 # Translators:
-# fanha99 <fanha99@hotmail.com>, 2020
 # son dang <son.dang@doda100.com>, 2020
 # Minh Nguyen <ndminh210994@gmail.com>, 2020
 # Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2020
@@ -12,15 +11,16 @@
 # Phuc Tran Thanh <phuctran.odoo@gmail.com>, 2020
 # Martin Trigaux, 2021
 # thanhnguyen.icsc <thanhnguyen.icsc@gmail.com>, 2021
-# Duy BQ <duybq86@gmail.com>, 2021
 # Trần Hà <tranthuha13590@gmail.com>, 2021
+# fanha99 <fanha99@hotmail.com>, 2021
+# Duy BQ <duybq86@gmail.com>, 2021
 # Vo Thanh Thuy, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-12-07 10:47+0000\n"
 "PO-Revision-Date: 2017-12-13 14:58+0000\n"
 "Last-Translator: Vo Thanh Thuy, 2021\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
@@ -66,15 +66,6 @@ msgstr "%s invalid recipients"
 msgid ""
 "%s out of the %s selected SMS Text Messages have successfully been resent."
 msgstr ""
-
-#. module: sms
-#: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
-msgid ""
-"<span class=\"fa fa-info-circle\"/> Caution: It won't be possible to send "
-"this SMS again to the recipients you did not select."
-msgstr ""
-"<span class=\"fa fa-info-circle\"/> Caution: It won't be possible to send "
-"this SMS again to the recipients you did not select."
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -161,7 +152,7 @@ msgid "Attachment Count"
 msgstr "Số lượng tập tin đính kèm"
 
 #. module: sms
-#: model:ir.model.fields.selection,name:sms.selection__sms_sms__error_code__sms_blacklist
+#: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_blacklist
 msgid "Blacklisted"
 msgstr "Blacklisted"
 
@@ -191,10 +182,21 @@ msgstr "Buy credits"
 #: code:addons/sms/models/sms_api.py:0
 #, python-format
 msgid "Buy credits."
+msgstr "Mua tín dụng. "
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_resend__can_cancel
+msgid "Can Cancel"
+msgstr ""
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_resend__can_resend
+msgid "Can Resend"
 msgstr ""
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_cancel
+#: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_tree
 #: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
 msgid "Cancel"
 msgstr "Hủy"
@@ -225,6 +227,7 @@ msgid "Choose an example"
 msgstr "Chọn một ví dụ"
 
 #. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Close"
 msgstr "Đóng"
@@ -278,7 +281,6 @@ msgid "Default Value"
 msgstr "Giá trị mặc định"
 
 #. module: sms
-#: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "Discard"
 msgstr "Huỷ bỏ"
@@ -330,7 +332,7 @@ msgid "Document Model Name"
 msgstr "Tên Model tài liệu"
 
 #. module: sms
-#: model:ir.model.fields.selection,name:sms.selection__sms_sms__error_code__sms_duplicate
+#: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_duplicate
 msgid "Duplicate"
 msgstr "Nhân bản"
 
@@ -355,13 +357,17 @@ msgid "Error"
 msgstr "Lỗi"
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_sms__error_code
-msgid "Error Code"
-msgstr "Error Code"
+#: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__failure_type
+msgid "Error Message"
+msgstr "Thông điệp lỗi"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_sms__failure_type
+msgid "Failure Type"
+msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__failure_type
-#: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__failure_type
 msgid "Failure type"
 msgstr "Loại thất bại"
 
@@ -401,11 +407,6 @@ msgstr "Người theo dõi (Đối tác)"
 #, python-format
 msgid "Following numbers are not correctly encoded: %s"
 msgstr "Following numbers are not correctly encoded: %s"
-
-#. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_resend__has_cancel
-msgid "Has Cancel"
-msgstr "Hủy"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend__has_insufficient_credit
@@ -458,7 +459,6 @@ msgstr "Nếu chọn, các tin nhắn mới yêu cầu sự có mặt của bạ
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_account_analytic_account__message_has_sms_error
-#: model:ir.model.fields,help:sms.field_adyen_account__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_calendar_event__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_crm_team__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_crm_team_member__message_has_sms_error
@@ -552,7 +552,7 @@ msgstr ""
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_credit
-#: model:ir.model.fields.selection,name:sms.selection__sms_sms__error_code__sms_credit
+#: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_credit
 msgid "Insufficient Credit"
 msgstr "Insufficient Credit"
 
@@ -678,7 +678,7 @@ msgstr "Thông báo"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_number_missing
-#: model:ir.model.fields.selection,name:sms.selection__sms_sms__error_code__sms_number_missing
+#: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_number_missing
 msgid "Missing Number"
 msgstr "Missing Number"
 
@@ -713,7 +713,6 @@ msgid "Notification Type"
 msgstr "Loại thông báo"
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__sms_number
 #: model:ir.model.fields,field_description:sms.field_sms_sms__number
 msgid "Number"
 msgstr "Số"
@@ -761,16 +760,21 @@ msgid "Number of unread messages"
 msgstr "Số tin chưa đọc"
 
 #. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_optout
+msgid "Opted Out"
+msgstr ""
+
+#. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__lang
 msgid ""
 "Optional translation language (ISO code) to select when sending out an "
 "email. If not set, the english version will be used. This should usually be "
-"a placeholder expression that provides the appropriate language, e.g. "
-"${object.partner_id.lang}."
+"a placeholder expression that provides the appropriate language, e.g. {{ "
+"object.partner_id.lang }}."
 msgstr ""
-"Ngôn ngữ dịch tùy chọn (mã ISO) để chọn khi gửi email. Nếu không được đặt, "
-"phiên bản tiếng Anh sẽ được sử dụng. Điều này thường phải là biểu thức trình"
-" giữ chỗ cung cấp ngôn ngữ thích hợp, ví dụ: ${object.partner_id.lang}."
+"Tùy chọn ngôn ngữ dịch (mã ISO) khi gửi đi email. Nếu không đặt, phiên bản "
+"tiếng Anh sẽ được sử dụng. Đây thường là một biểu thức giữ chỗ cung cấp ngôn"
+" ngữ phù hợp, ví dụ: {{ object.partner_id.lang }}."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__null_value
@@ -796,6 +800,11 @@ msgstr "Phone Blacklist Mixin"
 #: model:ir.model.fields,field_description:sms.field_res_partner__phone_sanitized_blacklisted
 msgid "Phone Blacklisted"
 msgstr "Số điện thoại đã vào sổ đen"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__sms_number
+msgid "Phone Number"
+msgstr "Số Điện thoại"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__phone_mobile_search
@@ -833,11 +842,15 @@ msgid "Reason"
 msgstr "Lý do"
 
 #. module: sms
-#: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__partner_name
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Recipient"
 msgstr "Người nhận"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__partner_name
+msgid "Recipient Name"
+msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_number_itf
@@ -877,12 +890,10 @@ msgstr "Remove the contextual action of the related model"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__render_model
 msgid "Rendering Model"
-msgstr ""
+msgstr "Kết xuất mô hình"
 
 #. module: sms
 #: model:ir.actions.server,name:sms.ir_actions_server_sms_sms_resend
-#: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__resend
-#: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 msgid "Resend"
 msgstr "Resend"
 
@@ -892,6 +903,7 @@ msgid "Resend Notification"
 msgstr "Resend Notification"
 
 #. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_tree
 #: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
 msgid "Retry"
 msgstr "Thử lại"
@@ -917,7 +929,6 @@ msgstr "SMS API"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_account_analytic_account__message_has_sms_error
-#: model:ir.model.fields,field_description:sms.field_adyen_account__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_calendar_event__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_crm_team__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_crm_team_member__message_has_sms_error
@@ -1042,7 +1053,13 @@ msgstr ""
 "If it is a relationship field you will be able to select a target field at the destination of the relationship."
 
 #. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
+msgid "Send & Close"
+msgstr ""
+
+#. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
+#: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_tree
 #: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
 msgid "Send Now"
 msgstr "Gửi ngay"
@@ -1118,7 +1135,7 @@ msgstr "Hành động phía Máy chủ"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_server
-#: model:ir.model.fields.selection,name:sms.selection__sms_sms__error_code__sms_server
+#: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_server
 msgid "Server Error"
 msgstr "Lỗi máy chủ"
 
@@ -1225,6 +1242,11 @@ msgstr ""
 "danh sách đen."
 
 #. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__resend
+msgid "Try Again"
+msgstr ""
+
+#. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_mail__message_type
 #: model:ir.model.fields,field_description:sms.field_mail_message__message_type
 msgid "Type"
@@ -1274,7 +1296,7 @@ msgstr "Bộ đếm tin chưa đọc"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_acc
-#: model:ir.model.fields.selection,name:sms.selection__sms_sms__error_code__sms_acc
+#: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_acc
 msgid "Unregistered Account"
 msgstr "Unregistered Account"
 
@@ -1339,7 +1361,7 @@ msgstr "Whether this model supports messages and notifications through SMS"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_number_format
-#: model:ir.model.fields.selection,name:sms.selection__sms_sms__error_code__sms_number_format
+#: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_number_format
 msgid "Wrong Number Format"
 msgstr "Wrong Number Format"
 
@@ -1391,8 +1413,8 @@ msgstr ""
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
-msgid "e.g. en_US or ${object.partner_id.lang}"
-msgstr "e.g. en_US or ${object.partner_id.lang}"
+msgid "e.g. en_US or {{ object.partner_id.lang }}"
+msgstr ""
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form

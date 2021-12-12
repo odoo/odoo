@@ -19,9 +19,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-12-07 10:47+0000\n"
 "PO-Revision-Date: 2020-08-21 13:39+0000\n"
 "Last-Translator: Paweł Wodyński <pw@myodoo.pl>, 2021\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
@@ -178,6 +178,8 @@ msgid "Create"
 msgstr "Utwórz"
 
 #. module: website_event_meet
+#: model_terms:ir.actions.act_window,help:website_event_meet.action_meeting_room_from_event
+#: model_terms:ir.actions.act_window,help:website_event_meet.event_meeting_room_action
 #: model_terms:ir.ui.view,arch_db:website_event_meet.community_aside
 msgid "Create a Room"
 msgstr "Stwórz Pokój"
@@ -236,6 +238,11 @@ msgstr "Pokój Spotkania Wydarzenia "
 #: model:ir.model.fields.selection,name:website_event_meet.selection__website_event_menu__menu_type__meeting_room
 msgid "Event Meeting Room Menus"
 msgstr "Menu Pokoju Spotkań wydarzenia "
+
+#. module: website_event_meet
+#: model:ir.actions.act_window,name:website_event_meet.action_meeting_room_from_event
+msgid "Event Rooms"
+msgstr ""
 
 #. module: website_event_meet
 #: model:ir.model,name:website_event_meet.model_event_type
@@ -377,11 +384,6 @@ msgid "Room Is Full"
 msgstr "Pokój jest pełny"
 
 #. module: website_event_meet
-#: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_card
-msgid "Room Manager"
-msgstr "Kierownik Pokoju"
-
-#. module: website_event_meet
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__room_name
 msgid "Room Name"
 msgstr "Nazwa pokoju"
@@ -407,6 +409,13 @@ msgstr "Tworzenie pokoi będzie dostępne jak wydarzenie rozpocznie się o"
 #: model_terms:ir.ui.view,arch_db:website_event_meet.event_event_view_form
 msgid "Rooms"
 msgstr "Pokoje"
+
+#. module: website_event_meet
+#: model_terms:ir.actions.act_window,help:website_event_meet.action_meeting_room_from_event
+#: model_terms:ir.actions.act_window,help:website_event_meet.event_meeting_room_action
+msgid ""
+"Rooms allow your event attendees to meet up and chat on different topics."
+msgstr ""
 
 #. module: website_event_meet
 #. openerp-web
@@ -456,6 +465,11 @@ msgstr "Pełny adres URL dostępu do dokumentu przez stronę."
 #: model_terms:ir.ui.view,arch_db:website_event_meet.event_meeting_room_view_search
 msgid "Topic"
 msgstr "Temat"
+
+#. module: website_event_meet
+#: model_terms:ir.ui.view,arch_db:website_event_meet.event_meeting_room_view_tree
+msgid "Total Participant Count"
+msgstr ""
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.event_meeting_room_view_search

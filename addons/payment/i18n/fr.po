@@ -32,18 +32,18 @@
 # Laura Piraux <lap@odoo.com>, 2020
 # Priscilla (prs) Odoo <prs@odoo.com>, 2020
 # Fernanda Marques <fem@odoo.com>, 2021
-# Martin Trigaux, 2021
 # Cécile Collart <cco@odoo.com>, 2021
 # Rémi CAZENAVE, 2021
-# R HT, 2021
+# Martin Trigaux, 2021
+# RHTodoo, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-12-07 10:47+0000\n"
 "PO-Revision-Date: 2016-08-05 13:06+0000\n"
-"Last-Translator: R HT, 2021\n"
+"Last-Translator: RHTodoo, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -132,23 +132,23 @@ msgstr ""
 "o_enterprise_label\">Entreprise</span>"
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
+msgid "<span class=\"o_stat_text\">Saved Payment Methods</span>"
+msgstr "<span class=\"o_stat_text\">Méthodes de Paiement sauvées</span>"
+
+#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
-msgid "<span class=\"fa fa-arrow-right\"> Get my Stripe keys</span>"
-msgstr "<span class=\"fa fa-arrow-right\"> Obtenir mes clés Stripe</span>"
+msgid "<span><i class=\"fa fa-arrow-right\"/> Get my Stripe keys</span>"
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid ""
-"<span class=\"fa fa-arrow-right\"> How to configure your PayPal "
+"<span><i class=\"fa fa-arrow-right\"/> How to configure your PayPal "
 "account</span>"
 msgstr ""
-"<span class=\"fa fa-arrow-right\">Comment configurer votre compte "
+"<span><i class=\"fa fa-arrow-right\"/>Comment configurer votre compte "
 "PayPal</span>"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
-msgid "<span class=\"o_stat_text\">Saved Payment Methods</span>"
-msgstr "<span class=\"o_stat_text\">Méthodes de Paiement sauvées</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
@@ -169,6 +169,14 @@ msgstr ""
 msgid ""
 "<strong>No suitable payment option could be found.</strong><br/>\n"
 "                                If you believe that it is an error, please contact the website administrator."
+msgstr ""
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_refund_wizard_view_form
+msgid ""
+"<strong>Warning!</strong> There is a refund pending for this payment.\n"
+"                        Wait a moment for it to be processed. If the refund is still pending in a\n"
+"                        few minutes, please check your payment acquirer configuration."
 msgstr ""
 
 #. module: payment
@@ -200,6 +208,14 @@ msgstr "<strong>Avertissement</strong> Vous devez être connecté pour payer."
 #, python-format
 msgid "A payment transaction with reference %s already exists."
 msgstr "Une transaction financière avec la référence %s existe déjà."
+
+#. module: payment
+#: code:addons/payment/models/payment_transaction.py:0
+#, python-format
+msgid ""
+"A refund request of %(amount)s has been sent. The payment will be created "
+"soon. Refund transaction reference: %(ref)s (%(acq_name)s)."
+msgstr ""
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:0
@@ -239,11 +255,13 @@ msgid "Account Number"
 msgstr "Numéro de compte"
 
 #. module: payment
+#: code:addons/payment/models/account_payment_method.py:0
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__acquirer_id
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_kanban
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_search
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_search
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_search
+#, python-format
 msgid "Acquirer"
 msgstr "L'acquéreur"
 
@@ -300,6 +318,11 @@ msgid "Alipay"
 msgstr "Alipay"
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__payment_acquirer_selection
+msgid "Allow Payment Acquirer"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__allow_tokenization
 msgid "Allow Saving Payment Methods"
 msgstr ""
@@ -310,6 +333,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 msgid "Amount"
 msgstr "Montant"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_payment__amount_available_for_refund
+msgid "Amount Available For Refund"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__amount_max
@@ -505,6 +533,7 @@ msgstr "Cliquez ici pour être redirigé vers la page de confirmation."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:payment.payment_refund_wizard_view_form
 msgid "Close"
 msgstr "Fermer"
 
@@ -607,6 +636,7 @@ msgstr "Créez une icône de paiement"
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__create_uid
 #: model:ir.model.fields,field_description:payment.field_payment_icon__create_uid
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__create_uid
+#: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__create_uid
 #: model:ir.model.fields,field_description:payment.field_payment_token__create_uid
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__create_uid
 msgid "Created by"
@@ -617,6 +647,7 @@ msgstr "Créé par"
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__create_date
 #: model:ir.model.fields,field_description:payment.field_payment_icon__create_date
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__create_date
+#: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__create_date
 #: model:ir.model.fields,field_description:payment.field_payment_token__create_date
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__create_date
 msgid "Created on"
@@ -646,11 +677,6 @@ msgstr "Carte de crédit (fourni par Authorize)"
 #: model:payment.acquirer,display_as:payment.payment_acquirer_buckaroo
 msgid "Credit Card (powered by Buckaroo)"
 msgstr "Carte de crédit (fourni par Buckaroo)"
-
-#. module: payment
-#: model:payment.acquirer,display_as:payment.payment_acquirer_odoo
-msgid "Credit Card (powered by Odoo Payments)"
-msgstr ""
 
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_ogone
@@ -684,6 +710,7 @@ msgstr "Carte de crédit (via Stripe)"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__currency_id
+#: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__currency_id
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__currency_id
 msgid "Currency"
 msgstr "Devise"
@@ -729,6 +756,7 @@ msgstr "Annuler"
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__display_name
 #: model:ir.model.fields,field_description:payment.field_payment_icon__display_name
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__display_name
+#: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__display_name
 #: model:ir.model.fields,field_description:payment.field_payment_token__display_name
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__display_name
 msgid "Display Name"
@@ -802,21 +830,14 @@ msgid "Fixed international fees"
 msgstr "Frais fixes internationales "
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_link_wizard__acquirer_id
-msgid "Force Payment Acquirer"
-msgstr ""
-
-#. module: payment
-#: model:ir.model.fields,help:payment.field_payment_link_wizard__acquirer_id
-msgid ""
-"Force the customer to pay via the specified payment acquirer. Leave empty to"
-" allow the customer to choose among all acquirers."
-msgstr ""
-
-#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 msgid "From"
 msgstr "De"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__support_refund__full_only
+msgid "Full Only"
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
@@ -851,6 +872,11 @@ msgid "Has Multiple Acquirers"
 msgstr ""
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__has_pending_refund
+msgid "Has a pending refund"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__is_post_processed
 msgid "Has the payment been post-processed"
 msgstr ""
@@ -875,10 +901,19 @@ msgstr "J'ai un compte Paypal"
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__id
 #: model:ir.model.fields,field_description:payment.field_payment_icon__id
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__id
+#: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__id
 #: model:ir.model.fields,field_description:payment.field_payment_token__id
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__id
 msgid "ID"
 msgstr "ID"
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_link_wizard__payment_acquirer_selection
+msgid ""
+"If a specific payment acquirer is selected, customers will only be allowed "
+"to pay via this one. If 'All' is selected, customers can pay via any "
+"available payment acquirer."
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_form
@@ -911,6 +946,7 @@ msgid "Image displayed on the payment form"
 msgstr "Image affichée dans le formulaire de paiement"
 
 #. module: payment
+#: model:ir.model.fields,help:payment.field_account_payment_method_line__payment_acquirer_state
 #: model:ir.model.fields,help:payment.field_payment_acquirer__state
 msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
@@ -1004,6 +1040,7 @@ msgstr "Langue"
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard____last_update
 #: model:ir.model.fields,field_description:payment.field_payment_icon____last_update
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard____last_update
+#: model:ir.model.fields,field_description:payment.field_payment_refund_wizard____last_update
 #: model:ir.model.fields,field_description:payment.field_payment_token____last_update
 #: model:ir.model.fields,field_description:payment.field_payment_transaction____last_update
 msgid "Last Modified on"
@@ -1019,6 +1056,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__write_uid
 #: model:ir.model.fields,field_description:payment.field_payment_icon__write_uid
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__write_uid
+#: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__write_uid
 #: model:ir.model.fields,field_description:payment.field_payment_token__write_uid
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__write_uid
 msgid "Last Updated by"
@@ -1029,15 +1067,11 @@ msgstr "Dernière mise à jour par"
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__write_date
 #: model:ir.model.fields,field_description:payment.field_payment_icon__write_date
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__write_date
+#: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__write_date
 #: model:ir.model.fields,field_description:payment.field_payment_token__write_date
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__write_date
 msgid "Last Updated on"
 msgstr "Dernière mise à jour le"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
-msgid "Leave empty to allow all acquirers"
-msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay_meth_link
@@ -1048,6 +1082,11 @@ msgstr "Gérer les moyens de paiement"
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__manual
 msgid "Manual"
 msgstr "Manuel"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__amount_available_for_refund
+msgid "Maximum Refund Allowed"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__paypal_seller_account
@@ -1069,6 +1108,11 @@ msgstr "Messages"
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__manual_name
 msgid "Method"
 msgstr "Méthode"
+
+#. module: payment
+#: model:payment.acquirer,name:payment.payment_acquirer_mollie
+msgid "Mollie"
+msgstr ""
 
 #. module: payment
 #. openerp-web
@@ -1121,8 +1165,7 @@ msgid "Not done"
 msgstr "Pas fait"
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.checkout
-#: model_terms:ir.ui.view,arch_db:payment.manage
+#: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
 msgid "Not verified"
 msgstr ""
 
@@ -1148,11 +1191,6 @@ msgid "Odoo Enterprise Module"
 msgstr "Module Enterprise Odoo"
 
 #. module: payment
-#: model:payment.acquirer,name:payment.payment_acquirer_odoo
-msgid "Odoo Payments"
-msgstr ""
-
-#. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__offline
 msgid "Offline payment by token"
 msgstr ""
@@ -1165,8 +1203,7 @@ msgstr "Ogone"
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
-#: model_terms:ir.ui.view,arch_db:payment.checkout
-#: model_terms:ir.ui.view,arch_db:payment.manage
+#: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
 #, python-format
 msgid "Ok"
 msgstr "Ok"
@@ -1205,6 +1242,12 @@ msgid "Only authorized transactions can be voided."
 msgstr ""
 
 #. module: payment
+#: code:addons/payment/models/payment_transaction.py:0
+#, python-format
+msgid "Only confirmed transactions can be refunded."
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__operation
 msgid "Operation"
 msgstr "Opération"
@@ -1223,6 +1266,11 @@ msgstr "Autre intermédiaire de Paiement"
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__paypal_pdt_token
 msgid "PDT Identity Token"
 msgstr "Jeton d'Identité PDT"
+
+#. module: payment
+#: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__support_refund__partial
+msgid "Partial"
+msgstr "Partiel"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__partner_id
@@ -1260,12 +1308,14 @@ msgid "PayUmoney"
 msgstr "PayUmoney"
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__payment_id
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__payment_id
 msgid "Payment"
 msgstr "Paiement"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_acquirer
+#: model:ir.model.fields,field_description:payment.field_account_payment_method_line__payment_acquirer_id
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_form
 msgid "Payment Acquirer"
 msgstr "Intermédiaire de Paiement"
@@ -1281,6 +1331,11 @@ msgstr "Intermédiaires de paiement"
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__available_acquirer_ids
 msgid "Payment Acquirers Available"
 msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__payment_amount
+msgid "Payment Amount"
+msgstr "Montant du paiement"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_form
@@ -1326,9 +1381,19 @@ msgid "Payment Method"
 msgstr "Moyen de paiement"
 
 #. module: payment
+#: model:ir.model,name:payment.model_account_payment_method_line
+msgid "Payment Methods"
+msgstr "Méthodes de paiements"
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__description
 msgid "Payment Ref"
 msgstr "Réf. paiement"
+
+#. module: payment
+#: model:ir.model,name:payment.model_payment_refund_wizard
+msgid "Payment Refund Wizard"
+msgstr ""
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_token
@@ -1356,6 +1421,7 @@ msgstr "Tokens de Paiement"
 #. module: payment
 #: model:ir.model,name:payment.model_payment_transaction
 #: model:ir.model.fields,field_description:payment.field_account_payment__payment_transaction_id
+#: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__transaction_id
 #: model_terms:ir.ui.view,arch_db:payment.account_invoice_view_form_inherit_payment
 msgid "Payment Transaction"
 msgstr "Transaction"
@@ -1498,6 +1564,39 @@ msgid "Reference must be unique!"
 msgstr "La référence doit être unique!"
 
 #. module: payment
+#: code:addons/payment/models/account_payment.py:0
+#: code:addons/payment/models/account_payment.py:0
+#: code:addons/payment/models/payment_transaction.py:0
+#: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__refund
+#: model_terms:ir.ui.view,arch_db:payment.payment_refund_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:payment.view_account_payment_form_inherit_payment
+#, python-format
+msgid "Refund"
+msgstr "Avoir"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__amount_to_refund
+msgid "Refund Amount"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__refunded_amount
+msgid "Refunded Amount"
+msgstr ""
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
+#: model_terms:ir.ui.view,arch_db:payment.view_account_payment_form_inherit_payment
+msgid "Refunds"
+msgstr "Avoirs"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_payment__refunds_count
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__refunds_count
+msgid "Refunds Count"
+msgstr ""
+
+#. module: payment
 #: model:ir.model,name:payment.model_account_payment_register
 msgid "Register Payment"
 msgstr "Enregistrer un paiement"
@@ -1516,6 +1615,11 @@ msgstr "Modèle de document concerné"
 #: model:payment.acquirer,name:payment.payment_acquirer_sepa_direct_debit
 msgid "SEPA Direct Debit"
 msgstr "Prélèvement automatique SEPA"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.view_account_journal_form
+msgid "SETUP"
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.manage
@@ -1621,6 +1725,17 @@ msgid "Sips"
 msgstr "Sips"
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_payment__source_payment_id
+msgid "Source Payment"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_transaction__source_transaction_id
+msgid "Source Transaction"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_payment_method_line__payment_acquirer_state
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__state
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_state_id
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_search
@@ -1706,6 +1821,13 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__acquirer_reference
 msgid "The acquirer reference of the transaction"
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/wizards/payment_refund_wizard.py:0
+#, python-format
+msgid ""
+"The amount to be refunded must be positive and cannot be superior to %s."
 msgstr ""
 
 #. module: payment
@@ -1805,10 +1927,13 @@ msgid "The route the user is redirected to after the transaction"
 msgstr ""
 
 #. module: payment
-#: model:ir.model.fields,help:payment.field_payment_transaction__validation_route
-msgid ""
-"The route the user is redirected to in order to refund a validation "
-"transaction"
+#: model:ir.model.fields,help:payment.field_account_payment__source_payment_id
+msgid "The source payment of related refund payments"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_transaction__source_transaction_id
+msgid "The source transaction of related refund transactions"
 msgstr ""
 
 #. module: payment
@@ -1922,14 +2047,12 @@ msgid "This payment has not been processed yet."
 msgstr "Le paiement n'a pas encore été traité."
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.checkout
-#: model_terms:ir.ui.view,arch_db:payment.manage
+#: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
 msgid "This payment method has been verified by our system."
 msgstr "La méthode de paiement a été vérifiée par notre système."
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.checkout
-#: model_terms:ir.ui.view,arch_db:payment.manage
+#: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
 msgid "This payment method has not been verified by our system."
 msgstr "La méthode de paiement n'a pas été vérifiée par notre système."
 
@@ -1942,7 +2065,7 @@ msgstr "Cette transaction a été annulée."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__support_tokenization
-msgid "Tokenization supported"
+msgid "Tokenization Supported"
 msgstr ""
 
 #. module: payment
@@ -1961,6 +2084,12 @@ msgid "Transactions"
 msgstr "Transactions"
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_acquirer__support_refund
+#: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__support_refund
+msgid "Type of Refund Supported"
+msgstr ""
+
+#. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
@@ -1977,11 +2106,6 @@ msgstr "Mettre à jour"
 #: model:ir.model.fields,field_description:payment.field_account_payment__use_electronic_payment_method
 #: model:ir.model.fields,field_description:payment.field_account_payment_register__use_electronic_payment_method
 msgid "Use Electronic Payment Method"
-msgstr ""
-
-#. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_transaction__validation_route
-msgid "Validation Route"
 msgstr ""
 
 #. module: payment
@@ -2168,7 +2292,7 @@ msgstr "Votre commande est en cours de traitement, veuillez patienter."
 #: model_terms:payment.acquirer,auth_msg:payment.payment_acquirer_alipay
 #: model_terms:payment.acquirer,auth_msg:payment.payment_acquirer_authorize
 #: model_terms:payment.acquirer,auth_msg:payment.payment_acquirer_buckaroo
-#: model_terms:payment.acquirer,auth_msg:payment.payment_acquirer_odoo
+#: model_terms:payment.acquirer,auth_msg:payment.payment_acquirer_mollie
 #: model_terms:payment.acquirer,auth_msg:payment.payment_acquirer_ogone
 #: model_terms:payment.acquirer,auth_msg:payment.payment_acquirer_paypal
 #: model_terms:payment.acquirer,auth_msg:payment.payment_acquirer_payulatam
@@ -2188,7 +2312,7 @@ msgstr "Votre paiement a été autorisé."
 #: model_terms:payment.acquirer,cancel_msg:payment.payment_acquirer_alipay
 #: model_terms:payment.acquirer,cancel_msg:payment.payment_acquirer_authorize
 #: model_terms:payment.acquirer,cancel_msg:payment.payment_acquirer_buckaroo
-#: model_terms:payment.acquirer,cancel_msg:payment.payment_acquirer_odoo
+#: model_terms:payment.acquirer,cancel_msg:payment.payment_acquirer_mollie
 #: model_terms:payment.acquirer,cancel_msg:payment.payment_acquirer_ogone
 #: model_terms:payment.acquirer,cancel_msg:payment.payment_acquirer_paypal
 #: model_terms:payment.acquirer,cancel_msg:payment.payment_acquirer_payulatam
@@ -2216,7 +2340,7 @@ msgstr ""
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_alipay
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_authorize
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_buckaroo
-#: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_odoo
+#: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_mollie
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_ogone
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_paypal
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_payulatam
@@ -2237,7 +2361,7 @@ msgstr ""
 #: model_terms:payment.acquirer,done_msg:payment.payment_acquirer_alipay
 #: model_terms:payment.acquirer,done_msg:payment.payment_acquirer_authorize
 #: model_terms:payment.acquirer,done_msg:payment.payment_acquirer_buckaroo
-#: model_terms:payment.acquirer,done_msg:payment.payment_acquirer_odoo
+#: model_terms:payment.acquirer,done_msg:payment.payment_acquirer_mollie
 #: model_terms:payment.acquirer,done_msg:payment.payment_acquirer_ogone
 #: model_terms:payment.acquirer,done_msg:payment.payment_acquirer_paypal
 #: model_terms:payment.acquirer,done_msg:payment.payment_acquirer_payulatam

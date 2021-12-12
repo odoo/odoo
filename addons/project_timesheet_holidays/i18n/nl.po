@@ -11,9 +11,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-09-14 10:29+0000\n"
 "PO-Revision-Date: 2017-12-13 14:57+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -30,6 +30,7 @@ msgstr "Kostenplaatsregel"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave__timesheet_ids
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_resource_calendar_leaves__timesheet_ids
 msgid "Analytic Lines"
 msgstr "Kostenplaatsregels"
 
@@ -56,16 +57,25 @@ msgid "Config Settings"
 msgstr "Configuratie instellingen"
 
 #. module: project_timesheet_holidays
-#: model:ir.model.fields,help:project_timesheet_holidays.field_res_company__leave_timesheet_project_id
-#: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__leave_timesheet_project_id
+#: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__internal_project_id
 msgid "Default project value for timesheet generated from time off type."
 msgstr ""
 "Standaard projectwaarde voor urenstaten gegenereerd vanuit vakantie soort."
 
 #. module: project_timesheet_holidays
+#: model:ir.model,name:project_timesheet_holidays.model_hr_employee
+msgid "Employee"
+msgstr "Werknemer"
+
+#. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave_type__timesheet_generate
 msgid "Generate Timesheet"
 msgstr "Genereer urenstaat"
+
+#. module: project_timesheet_holidays
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_account_analytic_line__global_leave_id
+msgid "Global Time Off"
+msgstr "Algemene verlof"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_hr_leave_type__timesheet_generate
@@ -84,8 +94,7 @@ msgid "Internal"
 msgstr "Intern"
 
 #. module: project_timesheet_holidays
-#: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company__leave_timesheet_project_id
-#: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__leave_timesheet_project_id
+#: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__internal_project_id
 msgid "Internal Project"
 msgstr "Intern project"
 
@@ -101,16 +110,15 @@ msgid "Project"
 msgstr "Project"
 
 #. module: project_timesheet_holidays
+#: model:ir.model,name:project_timesheet_holidays.model_resource_calendar_leaves
+msgid "Resource Time Off Detail"
+msgstr "Resource verlof detail"
+
+#. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave_type__timesheet_task_id
 #: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.res_config_settings_view_form
 msgid "Task"
 msgstr "Taak"
-
-#. module: project_timesheet_holidays
-#: code:addons/project_timesheet_holidays/models/res_company.py:0
-#, python-format
-msgid "The Internal Project of a company should be in that company."
-msgstr "Het interne project van een bedrijf moet in dat bedrijf zijn."
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_hr_leave_type__timesheet_project_id
@@ -128,6 +136,13 @@ msgstr ""
 #, python-format
 msgid "Time Off"
 msgstr "Afwezigheid"
+
+#. module: project_timesheet_holidays
+#: code:addons/project_timesheet_holidays/models/hr_holidays.py:0
+#: code:addons/project_timesheet_holidays/models/resource_calendar_leaves.py:0
+#, python-format
+msgid "Time Off (%s/%s)"
+msgstr "Verlof (%s/%s)"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company__leave_timesheet_task_id

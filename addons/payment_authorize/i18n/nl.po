@@ -9,9 +9,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2016-08-05 13:06+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -20,6 +20,11 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "ABA Routing Number"
+msgstr "ABA-routeringsnummer"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_client_key
@@ -42,6 +47,16 @@ msgid "API Transaction Key"
 msgstr "API Transactiesleutel"
 
 #. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Account Number"
+msgstr "Rekeningnummer"
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_payment_method_type
+msgid "Allow Payments From"
+msgstr "Betalingen toestaan van"
+
+#. module: payment_authorize
 #. openerp-web
 #: code:addons/payment_authorize/static/src/js/payment_form.js:0
 #, python-format
@@ -61,9 +76,41 @@ msgid "Authorize.Net"
 msgstr "Authorize.Net"
 
 #. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__authorize_payment_method_type
+msgid "Authorize.Net Payment Type"
+msgstr "Authorize.Net betalingstype"
+
+#. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token__authorize_profile
 msgid "Authorize.Net Profile ID"
 msgstr "Authorize.Net profiel-ID"
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/payment_acquirer.py:0
+#, python-format
+msgid "Bank (powered by Authorize)"
+msgstr "Bank (powered by Authorize)"
+
+#. module: payment_authorize
+#: model:ir.model.fields.selection,name:payment_authorize.selection__payment_acquirer__authorize_payment_method_type__bank_account
+#: model:ir.model.fields.selection,name:payment_authorize.selection__payment_token__authorize_payment_method_type__bank_account
+msgid "Bank Account (USA Only)"
+msgstr "Bankrekening (alleen VS)"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Bank Account Type"
+msgstr "Type bankrekening"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Bank Name"
+msgstr "Naam bank"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Business Checking"
+msgstr "Zakelijke controle"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -86,9 +133,26 @@ msgstr ""
 "%s"
 
 #. module: payment_authorize
+#: model:ir.model.fields.selection,name:payment_authorize.selection__payment_acquirer__authorize_payment_method_type__credit_card
+#: model:ir.model.fields.selection,name:payment_authorize.selection__payment_token__authorize_payment_method_type__credit_card
+msgid "Credit Card"
+msgstr "Creditcard"
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/payment_acquirer.py:0
+#, python-format
+msgid "Credit Card (powered by Authorize)"
+msgstr "Credit Card (mogelijk gemaakt door Authorize)"
+
+#. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_acquirer_form
 msgid "Currency"
 msgstr "Valuta"
+
+#. module: payment_authorize
+#: model:ir.model.fields,help:payment_authorize.field_payment_acquirer__authorize_payment_method_type
+msgid "Determines with what payment method the customer can pay."
+msgstr "Bepaalt met welke betaalmethode de klant kan betalen."
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -121,6 +185,11 @@ msgid "MM"
 msgstr "MM"
 
 #. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Name On Account"
+msgstr "Naam op account"
+
+#. module: payment_authorize
 #: code:addons/payment_authorize/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
@@ -145,6 +214,16 @@ msgstr "Betalingstoken"
 #: model:ir.model,name:payment_authorize.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Betalingstransactie"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Personal Checking"
+msgstr "Persoonlijke controle"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Personal Savings"
+msgstr "Persoonlijke spaar"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__provider
@@ -214,6 +293,11 @@ msgid "The transaction is not linked to a token."
 msgstr "De transactie is niet gekoppeld aan een token."
 
 #. module: payment_authorize
+#: model:ir.model.fields,help:payment_authorize.field_payment_token__authorize_payment_method_type
+msgid "The type of payment method this token is linked to."
+msgstr "Het type betaalmethode waaraan deze token is gekoppeld."
+
+#. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token__authorize_profile
 msgid ""
 "The unique reference for the partner/token combination in the Authorize.net "
@@ -221,6 +305,19 @@ msgid ""
 msgstr ""
 "De unieke referentie voor de partner/token-combinatie in de Authorize.net-"
 "backend."
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/payment_acquirer.py:0
+#, python-format
+msgid ""
+"There are active tokens linked to this acquirer. To change the payment "
+"method type, please disable the acquirer and duplicate it. Then, change the "
+"payment method type on the duplicated acquirer."
+msgstr ""
+"Er zijn actieve tokens gekoppeld aan deze provider. Als je het type "
+"betaalmethode wilt wijzigen, schakel je de provider uit en dupliceer je "
+"deze. Wijzig vervolgens het type betalingsmethode op de gedupliceerde "
+"provider."
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment_acquirer.py:0

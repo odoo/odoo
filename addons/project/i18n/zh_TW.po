@@ -11,22 +11,29 @@
 # 李振維, 2021
 # Manga Tsang <mts@odoo.com>, 2021
 # Mandy Choy <mnc@odoo.com>, 2021
-# Benson White <Benson.Dr@Gmail.com>, 2021
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
+# Benson <Benson.Dr@Gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"POT-Creation-Date: 2021-12-07 10:46+0000\n"
 "PO-Revision-Date: 2016-08-05 13:08+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
+"Last-Translator: Benson <Benson.Dr@Gmail.com>, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/project_sharing/components/chatter.xml:0
+#, python-format
+msgid "!!widget.options.res_id && widget.get('messages') || []"
+msgstr ""
 
 #. module: project
 #. openerp-web
@@ -57,9 +64,14 @@ msgid "\"Today\""
 msgstr "「今天」"
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_report_project_task_user__delay_endings_days
-msgid "# Days to Deadline"
-msgstr "# 直至截止日期的天數"
+#: model:ir.model.fields,field_description:project.field_project_project__collaborator_count
+msgid "# Collaborators"
+msgstr "# 協作者"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__rating_count
+msgid "# Ratings"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner__task_count
@@ -68,25 +80,10 @@ msgid "# Tasks"
 msgstr "# 任務"
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_report_project_task_user__working_days_open
-msgid "# Working Days to Assign"
-msgstr "分配的工作日天數"
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_report_project_task_user__working_days_close
-msgid "# Working Days to Close"
-msgstr "完成任務所需的工作日"
-
-#. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__nb_tasks
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__nbr
 msgid "# of Tasks"
 msgstr "#  任務"
-
-#. module: project
-#: model:mail.template,subject:project.rating_project_request_email_template
-msgid "${object.project_id.company_id.name}: Satisfaction Survey"
-msgstr "${object.project_id.company_id.name}: 滿意度調查"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -116,23 +113,18 @@ msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.milestone_deadline
-msgid "(due on"
+msgid "(due"
 msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
-msgid ", out of"
-msgstr ""
+msgid "(last project update),"
+msgstr "（上次專案更新）"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.milestone_deadline
 msgid "- reached on"
 msgstr "- 達成日期"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_update_default_description
-msgid ". In the last 30 days,"
-msgstr ""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_day__10
@@ -284,25 +276,34 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+msgid ""
+"<br/>\n"
+"                                            <span class=\"font-italic text-muted\"><i class=\"fa fa-lock\"/> Private</span>"
+msgstr ""
+
+#. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
 msgid ""
 "<div>\n"
-"    % set access_token = object.rating_get_access_token()\n"
-"    % set partner = object.rating_get_partner_id()\n"
+"    <t t-set=\"access_token\" t-value=\"object.rating_get_access_token()\"/>\n"
+"    <t t-set=\"partner\" t-value=\"object.rating_get_partner_id()\"/>\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px auto;\">\n"
 "    <tbody>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"            % if partner.name:\n"
-"                Hello ${partner.name},<br/><br/>\n"
-"            % else:\n"
+"            <t t-if=\"partner.name\">\n"
+"                Hello <t t-out=\"partner.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
 "                Hello,<br/><br/>\n"
-"            % endif\n"
-"            Please take a moment to rate our services related to the task \"<strong>${object.name}</strong>\"\n"
-"            % if object.rating_get_rated_partner_id().name:\n"
-"                assigned to <strong>${object.rating_get_rated_partner_id().name}</strong>.<br/>\n"
-"            % else:\n"
+"            </t>\n"
+"            Please take a moment to rate our services related to the task \"<strong t-out=\"object.name or ''\">Planning and budget</strong>\"\n"
+"            <t t-if=\"object.rating_get_rated_partner_id().name\">\n"
+"                assigned to <strong t-out=\"object.rating_get_rated_partner_id().name or ''\">Mitchell Admin</strong>.<br/>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
 "                .<br/>\n"
-"            % endif\n"
+"            </t>\n"
 "        </td></tr>\n"
 "        <tr><td style=\"text-align: center;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" summary=\"o_mail_notification\" style=\"width:100%; margin: 32px 0px 32px 0px;\">\n"
@@ -311,20 +312,20 @@ msgid ""
 "                    <span style=\"text-color: #888888\">(click on one of these smileys)</span>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"font-size: 13px;\">\n"
-"                    <table style=\"width:100%;text-align:center;\">\n"
+"                    <table style=\"width:100%;text-align:center;margin-top:2rem;\">\n"
 "                        <tr>\n"
 "                            <td>\n"
-"                                <a href=\"/rate/${access_token}/5\">\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/5\">\n"
 "                                    <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Satisfied\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
-"                                <a href=\"/rate/${access_token}/3\">\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/3\">\n"
 "                                    <img alt=\"Okay\" src=\"/rating/static/src/img/rating_3.png\" title=\"Okay\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
-"                                <a href=\"/rate/${access_token}/1\">\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/1\">\n"
 "                                    <img alt=\"Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Dissatisfied\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
@@ -335,12 +336,12 @@ msgid ""
 "        </td></tr>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            We appreciate your feedback. It helps us to improve continuously.\n"
-"            % if object.project_id.rating_status == 'stage':\n"
-"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">This customer survey has been sent because your task has been moved to the stage <b>${object.stage_id.name}</b></span>\n"
-"            % endif\n"
-"            % if object.project_id.rating_status == 'periodic':\n"
-"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">This customer survey is sent <b>${object.project_id.rating_status_period}</b> as long as the task is in the <b>${object.stage_id.name}</b> stage.</span>\n"
-"            % endif\n"
+"            <t t-if=\"object.project_id.rating_status == 'stage'\">\n"
+"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">This customer survey has been sent because your task has been moved to the stage <b t-out=\"object.stage_id.name or ''\">In progress</b></span>\n"
+"            </t>\n"
+"            <t t-if=\"object.project_id.rating_status == 'periodic'\">\n"
+"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">This customer survey is sent <b t-out=\"object.project_id.rating_status_period or ''\">Weekly</b> as long as the task is in the <b t-out=\"object.stage_id.name or ''\">In progress</b> stage.</span>\n"
+"            </t>\n"
 "        </td></tr>\n"
 "    </tbody>\n"
 "    </table>\n"
@@ -352,15 +353,15 @@ msgstr ""
 #: model:mail.template,body_html:project.mail_template_data_project_task
 msgid ""
 "<div>\n"
-"    Dear ${object.partner_id.name or 'customer'},<br/>\n"
+"    Dear <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/>\n"
 "    Thank you for your enquiry.<br/>\n"
 "    If you have any questions, please let us know.\n"
 "    <br/><br/>\n"
 "    Thank you,\n"
-"    % if user.signature\n"
+"    <t t-if=\"user.signature\">\n"
 "        <br/>\n"
-"        ${user.signature | safe}\n"
-"    % endif\n"
+"        <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"    </t>\n"
 "</div>\n"
 "        "
 msgstr ""
@@ -371,22 +372,26 @@ msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"
 msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
-msgid ""
-"<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Domain Alias\" "
-"title=\"Domain Alias\"/>"
+#: model_terms:ir.ui.view,arch_db:project.project_task_view_activity
+msgid "<i class=\"fa fa-lock\"/> Private"
 msgstr ""
-"<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Domain Alias\" "
-"title=\"Domain Alias\"/>"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid ""
+"<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow icon\" title=\"Arrow\"/>\n"
+"                                <i class=\"fa fa-long-arrow-right mx-2 oe_read_only\" aria-label=\"Arrow icon\" title=\"Arrow\" attrs=\"{'invisible': [('date_start', '=', False), ('date', '=', False)]}\"/>"
+msgstr ""
+"<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow icon\" title=\"Arrow\"/>\n"
+"                                <i class=\"fa fa-long-arrow-right mx-2 oe_read_only\" aria-label=\"Arrow icon\" title=\"Arrow\" attrs=\"{'invisible': [('date_start', '=', False), ('date', '=', False)]}\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid ""
-"<i class=\"fa fa-smile-o\" role=\"img\" aria-label=\"Percentage of "
-"satisfaction\" title=\"Percentage of satisfaction\"/>"
+"<i class=\"fa fa-smile-o\" role=\"img\" aria-label=\"Average satisfaction "
+"rate for the last 30 days.\" title=\"Average satisfaction rate for the last "
+"30 days.\"/>"
 msgstr ""
-"<i class=\"fa fa-smile-o\" role=\"img\" aria-label=\"Percentage of "
-"satisfaction\" title=\"滿意度\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -396,6 +401,15 @@ msgid ""
 msgstr "<i class=\"fa fa-warning\" title=\"客戶對專案禁用\"/><b>客戶評級</b> 在以下專案上禁用: <br/>"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_form2
+msgid ""
+"<i class=\"o_project_task_project_field text-danger\" attrs=\"{'invisible': "
+"[('project_id', '!=', False)]}\">Private</i>"
+msgstr ""
+"<i class=\"o_project_task_project_field text-danger\" attrs=\"{'invisible': "
+"[('project_id', '!=', False)]}\">私人的</i>"
+
+#. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "<p><em>Number of tasks: %(tasks_count)s</em></p>"
@@ -403,8 +417,8 @@ msgstr "<p><em>任務數目： %(tasks_count)s</em></p>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
-msgid "<small class=\"text-right\">Status:</small>"
-msgstr "<small class=\"text-right\">狀態：</small>"
+msgid "<small class=\"text-right\">Stage:</small>"
+msgstr "<small class=\"text-right\">階段:</small>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -414,26 +428,40 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.portal_my_project
-msgid "<span class=\"fa fa-tasks\" role=\"img\" aria-label=\"Tasks\" title=\"Tasks\"/>"
-msgstr "<span class=\"fa fa-tasks\" role=\"img\" aria-label=\"Tasks\" title=\"任務\"/>"
+#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+msgid "<span class=\"fa fa-clock-o mr-2\" title=\"Dates\"/>"
+msgstr "<span class=\"fa fa-clock-o mr-2\" title=\"Dates\"/>"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+msgid ""
+"<span class=\"fa fa-envelope-o mr-2\" aria-label=\"Domain Alias\" "
+"title=\"Domain Alias\"/>"
+msgstr ""
+"<span class=\"fa fa-envelope-o mr-2\" aria-label=\"Domain Alias\" "
+"title=\"Domain Alias\"/>"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+msgid "<span class=\"fa fa-user mr-2\" aria-label=\"Partner\" title=\"Partner\"/>"
+msgstr "<span class=\"fa fa-user mr-2\" aria-label=\"Partner\" title=\"Partner\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid ""
-"<span class=\"font-weight-bold oe_read_only\" attrs=\"{'invisible':  [('alias_name', '=', False)]}\">to </span>\n"
-"                                            <span class=\"font-weight-bold oe_edit_only\">to </span>"
+"<span class=\"font-weight-bold oe_read_only\" attrs=\"{'invisible':  [('alias_name', '=', False)]}\">Create tasks by sending an email to </span>\n"
+"                                        <span class=\"font-weight-bold oe_edit_only\">Create tasks by sending an email to </span>"
 msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid ""
 "<span class=\"o_stat_text\">\n"
-"                                    Customer Satisfaction\n"
+"                                    Collaborators\n"
 "                                </span>"
 msgstr ""
 "<span class=\"o_stat_text\">\n"
-"                                    客戶滿意度\n"
+"                                    協作者\n"
 "                                </span>"
 
 #. module: project
@@ -451,6 +479,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid ""
 "<span class=\"o_stat_text\">\n"
+"                                    Satisfaction\n"
+"                                </span>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid ""
+"<span class=\"o_stat_text\">\n"
 "                                Burndown Chart\n"
 "                            </span>"
 msgstr ""
@@ -460,15 +496,28 @@ msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
-msgid "<span class=\"o_stat_text\">in Recurrence</span>"
-msgstr "<span class=\"o_stat_text\">再次建立</span>"
+msgid "<span class=\"o_stat_text\">Blocking</span>"
+msgstr "<span class=\"o_stat_text\">阻塞</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
-msgid ""
-"<span class=\"oe_read_only\" attrs=\"{'invisible':  [('alias_name', '=', False)]}\">@</span>\n"
-"                                            <span class=\"oe_edit_only\">@</span>"
+msgid "<span class=\"o_stat_text\">Gross Margin</span>"
+msgstr "<span class=\"o_stat_text\">毛利</span>"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_form2
+msgid "<span class=\"o_stat_text\">Satisfaction</span>"
 msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_form2
+msgid "<span class=\"o_stat_text\">Sub-tasks</span>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_form2
+msgid "<span class=\"o_stat_text\">in Recurrence</span>"
+msgstr "<span class=\"o_stat_text\">再次建立</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
@@ -499,13 +548,13 @@ msgstr "<strong class=\"d-block mb-2\">附件</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
-msgid "<strong>Assigned to</strong>"
-msgstr "<strong>分派給</strong>"
+msgid "<strong>Assignees</strong>"
+msgstr "<strong>執行者</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
-msgid "<strong>Date:</strong>"
-msgstr "<strong>日期:</strong>"
+msgid "<strong>Customer</strong>"
+msgstr "<strong>客戶</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -523,14 +572,19 @@ msgid "<strong>Message and communication history</strong>"
 msgstr "<strong>消息和溝通紀錄</strong>"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.portal_my_task_planned_hours_template
+msgid "<strong>Planned Hours:</strong>"
+msgstr "<strong>計畫時數:</strong>"
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Project:</strong>"
 msgstr "<strong>專案:</strong>"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.portal_my_task
-msgid "<strong>Reported by</strong>"
-msgstr "<strong>匯報人</strong>"
+#: model_terms:ir.ui.view,arch_db:project.project_update_default_description
+msgid "<u>Milestones</u>"
+msgstr "<u>里程碑</u>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -545,12 +599,16 @@ msgid ""
 msgstr "當建立別名的新記錄時，一個Python字典被提供作為預設值。"
 
 #. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
+#: model:ir.model.constraint,message:project.constraint_project_collaborator_unique_collaborator
 msgid ""
-"A sub-task cannot be a recurring task. Please consider making its parent "
-"task, a recurring task."
-msgstr ""
+"A collaborator cannot be selected more than once in the project sharing "
+"access. Please remove duplicate(s) and try again."
+msgstr "在專案共享訪問權限中不能多次選擇協作者。請刪除重複項並重試。"
+
+#. module: project
+#: model:ir.model.constraint,message:project.constraint_project_task_user_rel_project_personal_stage_unique
+msgid "A task can only have a single personal stage per user."
+msgstr "每個用戶的任務只能有一個個人階段。"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -558,7 +616,13 @@ msgid "Accept Emails From"
 msgstr "接收郵件來自"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_share_wizard__access_mode
+msgid "Access Mode"
+msgstr "訪問模式"
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_warning
+#: model:ir.model.fields,field_description:project.field_project_share_wizard__access_warning
 #: model:ir.model.fields,field_description:project.field_project_task__access_warning
 msgid "Access warning"
 msgstr "存取警告"
@@ -573,30 +637,36 @@ msgstr "需要採取行動"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__active
+#: model:ir.model.fields,field_description:project.field_project_project_stage__active
 #: model:ir.model.fields,field_description:project.field_project_task__active
 #: model:ir.model.fields,field_description:project.field_project_task_type__active
 msgid "Active"
 msgstr "有效"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__activity_ids
 #: model:ir.model.fields,field_description:project.field_project_task__activity_ids
 #: model:ir.model.fields,field_description:project.field_project_update__activity_ids
+#: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "Activities"
 msgstr "活動"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__activity_exception_decoration
 #: model:ir.model.fields,field_description:project.field_project_task__activity_exception_decoration
 #: model:ir.model.fields,field_description:project.field_project_update__activity_exception_decoration
 msgid "Activity Exception Decoration"
 msgstr "活動異常圖示"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__activity_state
 #: model:ir.model.fields,field_description:project.field_project_task__activity_state
 #: model:ir.model.fields,field_description:project.field_project_update__activity_state
 msgid "Activity State"
 msgstr "活動狀態"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__activity_type_icon
 #: model:ir.model.fields,field_description:project.field_project_task__activity_type_icon
 #: model:ir.model.fields,field_description:project.field_project_update__activity_type_icon
 msgid "Activity Type Icon"
@@ -621,6 +691,11 @@ msgid "Add a description..."
 msgstr "添加說明..."
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
+msgid "Add a note"
+msgstr "增加備註"
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tours/project.js:0
 #: code:addons/project/static/src/js/tours/project.js:0
@@ -629,6 +704,16 @@ msgid ""
 "Add columns to organize your tasks into <b>stages</b> <i>e.g. New - In "
 "Progress - Done</i>."
 msgstr "添加列以將您的任務組織成<b>階段，</b><i>例如 New-In Progress-Done</i> 。"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
+msgid "Add contacts to share the project..."
+msgstr "添加聯繫人以共享專案..."
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_share_wizard__note
+msgid "Add extra content to display in the email"
+msgstr "添加額外內容以顯示在電子郵件中"
 
 #. module: project
 #. openerp-web
@@ -670,6 +755,11 @@ msgid "Alias domain"
 msgstr "別名域名"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__alias_value
+msgid "Alias email"
+msgstr "別名電子郵件"
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_model_id
 msgid "Aliased Model"
 msgstr "別名模型"
@@ -698,20 +788,52 @@ msgstr "所有子任務"
 #. module: project
 #: model:ir.model,name:project.model_account_analytic_account
 #: model:ir.model.fields,field_description:project.field_project_project__analytic_account_id
+#: model:ir.model.fields,field_description:project.field_project_task__analytic_account_id
 msgid "Analytic Account"
 msgstr "分析帳戶"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__analytic_tag_ids
+msgid "Analytic Tag"
+msgstr "分析標籤"
+
+#. module: project
+#: model:ir.model,name:project.model_account_analytic_tag
+msgid "Analytic Tags"
+msgstr "分析標籤"
+
+#. module: project
 #: model:ir.model.fields,help:project.field_project_project__analytic_account_id
+#: model:ir.model.fields,help:project.field_project_task__project_analytic_account_id
 msgid ""
 "Analytic account to which this project is linked for financial management. "
 "Use an analytic account to record cost and revenue on your project."
 msgstr "此專案與財務管理相關聯的分析帳戶。流量分析客戶紀錄專案的成本和收入。"
 
 #. module: project
-#: model_terms:ir.actions.act_window,help:project.action_project_task_user_tree
-msgid "Analyze the performance of your projects and your employees."
+#: model:ir.model.fields,help:project.field_project_task__analytic_account_id
+msgid ""
+"Analytic account to which this task is linked for financial management. Use "
+"an analytic account to record cost and revenue on your task. If empty, the "
+"analytic account of the project will be used."
+msgstr "此任務與財務管理相關聯的分析帳戶。使用分析帳戶記錄任務的成本和收入。如果為空，將使用專案的分析帳戶。"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
+msgid "Analytics"
+msgstr "統計"
+
+#. module: project
+#: model_terms:ir.actions.act_window,help:project.action_project_task_burndown_chart_report
+msgid ""
+"Analyze how quickly your team is completing your project's tasks and check "
+"if everything is going according to plan."
 msgstr ""
+
+#. module: project
+#: model_terms:ir.actions.act_window,help:project.action_project_task_user_tree
+msgid "Analyze the performance of your tasks and your workers."
+msgstr "分析您的任務和員工的表現。"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__april
@@ -723,7 +845,6 @@ msgstr "四月"
 #. openerp-web
 #: code:addons/project/static/src/js/project_form.js:0
 #: code:addons/project/static/src/js/project_list.js:0
-#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 #, python-format
 msgid "Archive"
 msgstr "歸檔"
@@ -740,6 +861,9 @@ msgstr "封存專案"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
+#: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
+#: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_search
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -754,9 +878,26 @@ msgid "Are you sure you want to continue?"
 msgstr "確定要繼續？"
 
 #. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/subtasks_list_renderer.js:0
+#, python-format
+msgid "Are you sure you want to delete this record ?"
+msgstr "您確定要刪除此記錄嗎？"
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
 msgid "Are you sure you want to delete those stages ?"
 msgstr "確定要刪除這些階段？"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+msgid "Arrow"
+msgstr "箭頭"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+msgid "Arrow icon"
+msgstr "箭頭圖示"
 
 #. module: project
 #. openerp-web
@@ -766,6 +907,7 @@ msgid "Assembling"
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Assign to Me"
 msgstr "分配給我"
@@ -783,20 +925,26 @@ msgid "Assigned Tasks"
 msgstr "已分派任務"
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_report_project_task_user__user_id
-#: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
-msgid "Assigned To"
+#: model_terms:ir.ui.view,arch_db:project.rating_rating_view_form_project
+#: model_terms:ir.ui.view,arch_db:project.rating_rating_view_tree_project
+msgid "Assigned to"
 msgstr "分派給"
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_task__user_id
-#: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__user_id
-#: model_terms:ir.ui.view,arch_db:project.rating_rating_view_form_project
-#: model_terms:ir.ui.view,arch_db:project.rating_rating_view_tree_project
+#: code:addons/project/controllers/portal.py:0
+#: model:ir.model.fields,field_description:project.field_project_task__user_ids
+#: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__user_ids
+#: model:ir.model.fields,field_description:project.field_report_project_task_user__user_ids
+#: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_tree
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
-msgid "Assigned to"
-msgstr "分派給"
+#, python-format
+msgid "Assignees"
+msgstr "執行者"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__date_assign
@@ -879,6 +1027,16 @@ msgid "Backlog"
 msgstr "未完成的"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__analytic_account_balance
+msgid "Balance"
+msgstr "餘額"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__dependent_ids
+msgid "Block"
+msgstr "區塊"
+
+#. module: project
 #: code:addons/project/models/project.py:0
 #: model:ir.model.fields.selection,name:project.selection__project_task__kanban_state__blocked
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__blocked
@@ -900,19 +1058,31 @@ msgid "Brainstorm"
 msgstr "頭腦風暴"
 
 #. module: project
+#: code:addons/project/models/project.py:0
 #: model:ir.actions.act_window,name:project.action_project_task_burndown_chart_report
 #: model:ir.model,name:project.model_project_task_burndown_chart_report
+#: model:ir.model.fields.selection,name:project.selection__project_report_wizard__report_type__burndown
+#: model:ir.ui.menu,name:project.project_burndown_chart_report_menu_action
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_graph
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_pivot
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+#, python-format
 msgid "Burndown Chart"
 msgstr "燃盡圖"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
+#: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Cancel"
 msgstr "取消"
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#: model:project.project.stage,name:project.project_project_stage_3
+#, python-format
+msgid "Canceled"
+msgstr "已取消"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__partner_is_company
@@ -957,9 +1127,26 @@ msgstr "客戶評價"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__is_closed
-#: model:ir.model.fields,field_description:project.field_project_task_type__is_closed
 msgid "Closing Stage"
 msgstr "關閉階段"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_collaborator__partner_id
+#: model_terms:ir.ui.view,arch_db:project.project_collaborator_view_search
+msgid "Collaborator"
+msgstr "協作者"
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#: model:ir.model.fields,field_description:project.field_project_project__collaborator_ids
+#, python-format
+msgid "Collaborators"
+msgstr "協作者"
+
+#. module: project
+#: model:ir.model,name:project.model_project_collaborator
+msgid "Collaborators in project shared"
+msgstr "專案中的協作者共享"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_tags__color
@@ -985,9 +1172,9 @@ msgstr "商業實體"
 #, python-format
 msgid ""
 "Communicate with customers on the task using the email gateway. Attach logo "
-"designs to the task, so that information flow from designers to the workers "
-"who print the t-shirt. Organize priorities amongst orders %s using the icon."
-" %s"
+"designs to the task, so that information flows from designers to the workers"
+" who print the t-shirt. Organize priorities amongst orders using the %s "
+"icon. %s"
 msgstr ""
 
 #. module: project
@@ -1006,6 +1193,11 @@ msgstr "設定"
 #: model:ir.ui.menu,name:project.menu_project_config
 msgid "Configuration"
 msgstr "設定"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
+msgid "Configure Stages"
+msgstr "設定階段"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
@@ -1031,7 +1223,6 @@ msgstr "咨詢"
 
 #. module: project
 #: model:ir.model,name:project.model_res_partner
-#: model_terms:ir.ui.view,arch_db:project.portal_my_project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 #: model_terms:ir.ui.view,arch_db:project.project_view_kanban
 msgid "Contact"
@@ -1063,6 +1254,11 @@ msgid "Create"
 msgstr "建立"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_report_project_task_user__create_date
+msgid "Create Date"
+msgstr "創建日期"
+
+#. module: project
 #: model:ir.actions.act_window,name:project.open_create_project
 msgid "Create a Project"
 msgstr "建立專案"
@@ -1071,11 +1267,6 @@ msgstr "建立專案"
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form_domain
 msgid "Create a new stage in the task pipeline"
 msgstr "在任務管道建立一個新階段"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.edit_project
-msgid "Create tasks by sending an email"
-msgstr "通過發送電子郵件建立任務"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -1088,12 +1279,17 @@ msgid "Created On"
 msgstr "創建於"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_collaborator__create_uid
 #: model:ir.model.fields,field_description:project.field_project_delete_wizard__create_uid
 #: model:ir.model.fields,field_description:project.field_project_milestone__create_uid
 #: model:ir.model.fields,field_description:project.field_project_project__create_uid
+#: model:ir.model.fields,field_description:project.field_project_project_stage__create_uid
+#: model:ir.model.fields,field_description:project.field_project_report_wizard__create_uid
+#: model:ir.model.fields,field_description:project.field_project_share_wizard__create_uid
 #: model:ir.model.fields,field_description:project.field_project_tags__create_uid
 #: model:ir.model.fields,field_description:project.field_project_task__create_uid
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__create_uid
+#: model:ir.model.fields,field_description:project.field_project_task_stage_personal__create_uid
 #: model:ir.model.fields,field_description:project.field_project_task_type__create_uid
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__create_uid
 #: model:ir.model.fields,field_description:project.field_project_update__create_uid
@@ -1101,11 +1297,16 @@ msgid "Created by"
 msgstr "創建者"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_collaborator__create_date
 #: model:ir.model.fields,field_description:project.field_project_delete_wizard__create_date
 #: model:ir.model.fields,field_description:project.field_project_milestone__create_date
 #: model:ir.model.fields,field_description:project.field_project_project__create_date
+#: model:ir.model.fields,field_description:project.field_project_project_stage__create_date
+#: model:ir.model.fields,field_description:project.field_project_report_wizard__create_date
+#: model:ir.model.fields,field_description:project.field_project_share_wizard__create_date
 #: model:ir.model.fields,field_description:project.field_project_tags__create_date
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__create_date
+#: model:ir.model.fields,field_description:project.field_project_task_stage_personal__create_date
 #: model:ir.model.fields,field_description:project.field_project_task_type__create_date
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__create_date
 #: model:ir.model.fields,field_description:project.field_project_update__create_date
@@ -1113,6 +1314,7 @@ msgid "Created on"
 msgstr "建立時間"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Creation Date"
 msgstr "建立日期"
@@ -1123,12 +1325,12 @@ msgid "Currency"
 msgstr "貨幣"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
+#: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "Current project of the task"
 msgstr "任務的當前項目"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
+#: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "Current stage of the task"
 msgstr "任務的目前階段"
 
@@ -1143,14 +1345,17 @@ msgid "Custom Bounced Message"
 msgstr "自訂彈跳訊息"
 
 #. module: project
+#: code:addons/project/controllers/portal.py:0
 #: code:addons/project/models/project.py:0
 #: model:ir.model.fields,field_description:project.field_project_project__partner_id
 #: model:ir.model.fields,field_description:project.field_project_task__partner_id
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__partner_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__partner_id
-#: model_terms:ir.ui.view,arch_db:project.portal_my_project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
+#: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
+#: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #, python-format
 msgid "Customer"
 msgstr "客戶"
@@ -1189,9 +1394,10 @@ msgid "Customer Ratings Status"
 msgstr "客戶評級狀態"
 
 #. module: project
-#: model:ir.actions.act_window,name:project.rating_rating_action_task
-msgid "Customer Ratings on Task"
-msgstr "客戶對任務的評價"
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "Customer Satisfaction"
+msgstr "客戶滿意度"
 
 #. module: project
 #. openerp-web
@@ -1245,6 +1451,11 @@ msgid "Date of the Year"
 msgstr "年度日期"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid "Dates"
+msgstr "日期"
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_weekday
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__repeat_weekday
 msgid "Day Of The Week"
@@ -1270,14 +1481,27 @@ msgid "Days"
 msgstr "天"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_report_project_task_user__delay_endings_days
+msgid "Days to Deadline"
+msgstr "截止日期"
+
+#. module: project
+#: code:addons/project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:project.field_project_milestone__deadline
 #: model:ir.model.fields,field_description:project.field_project_task__date_deadline
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__date_deadline
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__date_deadline
-#: model_terms:ir.ui.view,arch_db:project.edit_project
-#: model_terms:ir.ui.view,arch_db:project.view_project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
+#: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
+#: model_terms:ir.ui.view,arch_db:project.view_task_search_form
+#, python-format
 msgid "Deadline"
 msgstr "截止日"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_message_user_assigned
+msgid "Dear"
+msgstr "親愛的"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__december
@@ -1309,20 +1533,19 @@ msgid ""
 "Defines the visibility of the tasks of the project:\n"
 "- Invited employees: employees may only see the followed project and tasks.\n"
 "- All employees: employees may see all project and tasks.\n"
-"- Portal users and all employees: employees may see everything.   Portal users may see project and tasks followed by.\n"
+"- Invited portal users and all employees: employees may see everything.   Invited portal users may see project and tasks followed by.\n"
 "   them or by someone of their company."
 msgstr ""
-"定義專案工作的可見度：\n"
-"- 受邀員工：員工只能看到隨後的專案和任務。\n"
-"- 所有員工：員工可以看到所有專案和任務。\n"
-"- 網站使用者和所有員工：員工可以看到一切。  網站使用者可能會看到專案和任務，然後。\n"
-"   他們或由他們的公司的人。"
+"定義專案任務的可見性：\n"
+"- 受邀員工：員工只能看到跟隨的專案和任務。\n"
+"- 所有員工：員工可以查看所有專案和任務。\n"
+"- 受邀網站登入會員和所有員工：員工可以看到一切。受邀網站登入會員可能會看到專案和任務緊隨其後。\n"
+"   他們或他們公司的某個人。"
 
 #. module: project
 #: model:ir.actions.server,name:project.unlink_project_action
 #: model:ir.actions.server,name:project.unlink_task_type_action
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
-#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Delete"
 msgstr "刪除"
 
@@ -1355,10 +1578,20 @@ msgid "Delivered"
 msgstr "已送貨"
 
 #. module: project
+#: code:addons/project/models/project.py:0
+#: model:ir.model.fields,field_description:project.field_project_task__dependent_tasks_count
+#, python-format
+msgid "Dependent Tasks"
+msgstr "相關任務"
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__description
 #: model:ir.model.fields,field_description:project.field_project_task__description
 #: model:ir.model.fields,field_description:project.field_project_task_type__description
 #: model:ir.model.fields,field_description:project.field_project_update__description
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
+#: model_terms:ir.ui.view,arch_db:project.project_update_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Description"
 msgstr "描述"
@@ -1408,6 +1641,7 @@ msgstr "禁用評分警告"
 #: code:addons/project/static/src/js/project_list.js:0
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified_footer
+#: model_terms:ir.ui.view,arch_db:project.project_report_wizard_form
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
 #, python-format
@@ -1415,13 +1649,23 @@ msgid "Discard"
 msgstr "取消"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_share_wizard__display_access_mode
+msgid "Display Access Mode"
+msgstr "顯示訪問模式"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_collaborator__display_name
 #: model:ir.model.fields,field_description:project.field_project_delete_wizard__display_name
 #: model:ir.model.fields,field_description:project.field_project_milestone__display_name
 #: model:ir.model.fields,field_description:project.field_project_project__display_name
+#: model:ir.model.fields,field_description:project.field_project_project_stage__display_name
+#: model:ir.model.fields,field_description:project.field_project_report_wizard__display_name
+#: model:ir.model.fields,field_description:project.field_project_share_wizard__display_name
 #: model:ir.model.fields,field_description:project.field_project_tags__display_name
 #: model:ir.model.fields,field_description:project.field_project_task__display_name
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__display_name
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__display_name
+#: model:ir.model.fields,field_description:project.field_project_task_stage_personal__display_name
 #: model:ir.model.fields,field_description:project.field_project_task_type__display_name
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__display_name
 #: model:ir.model.fields,field_description:project.field_project_update__display_name
@@ -1442,17 +1686,14 @@ msgid "Do not have access, skip this data for user's digest email"
 msgstr "無權存取，跳過使用者數據摘要的電子郵件"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
-msgid "Documents"
-msgstr "文件"
-
-#. module: project
 #. openerp-web
+#: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
+#: model:project.project.stage,name:project.project_project_stage_2
 #, python-format
 msgid "Done"
 msgstr "完成"
@@ -1465,11 +1706,19 @@ msgid "Draft"
 msgstr "草稿"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Dropdown menu"
 msgstr "下拉選單"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
+msgid "E.g: Product Launch"
+msgstr "例如：產品發布"
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_share_wizard__access_mode__edit
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Edit"
@@ -1479,13 +1728,6 @@ msgstr "編輯"
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Edit recurring task"
 msgstr "編輯定期任務"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
-msgid ""
-"Edit tasks' description collaboratively in real time. See each author's text"
-" in a distinct color."
-msgstr "實時協作編輯任務描述。 以不同的顏色顯示每個作者的文本。"
 
 #. module: project
 #. openerp-web
@@ -1507,6 +1749,7 @@ msgid "Email From"
 msgstr "信件來自"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_stage__mail_template_id
 #: model:ir.model.fields,field_description:project.field_project_task_type__mail_template_id
 msgid "Email Template"
 msgstr "電郵模板"
@@ -1522,6 +1765,8 @@ msgstr "抄件電郵"
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__repeat_until
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_type__until
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_type__until
+#: model_terms:ir.ui.view,arch_db:project.view_project
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "End Date"
 msgstr "結束日期"
 
@@ -1548,9 +1793,9 @@ msgstr "錯誤！ 您無法建立遞歸層次結構的任務。"
 #, python-format
 msgid ""
 "Everyone can propose ideas, and the Editor marks the best ones as %s. Attach"
-" all documents or links to the task directly, to have all information about "
-"a research centralized. %s"
-msgstr "每個人都可以提出想法，而編輯會將最好的想法標記為  %s。直接將所有文件或鏈接附加到任務，以集中研究的所有信息。%s"
+" all documents or links to the task directly, to have all research "
+"information centralized. %s"
+msgstr "每個人都可以提出想法，編輯器將最好的標記為 %s。將所有文檔或鏈接直接附加到任務，以集中所有研究信息。 %s"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__date
@@ -1579,12 +1824,12 @@ msgstr "二月"
 #, python-format
 msgid ""
 "Fill your Inbox easily with the email gateway. Periodically review your "
-"Inbox and schedule tasks by moving them to others columns. Every day, you "
+"Inbox and schedule tasks by moving them to other columns. Every day, you "
 "review the %s column to move important tasks %s. Every Monday, you review "
 "the %s column. %s"
 msgstr ""
-"使用電郵網關輕鬆填充您的收件箱。 定期查看您的收件箱並將任務移至其他列來安排任務。 每天，您都要查看 %s 列以移動重要任務  %s。 "
-"每個星期一，您都要查看 %s 列。 %s"
+"使用電子郵件網關輕鬆填寫您的收件箱。定期查看您的收件箱並通過將它們移動到其他列來安排任務。每天，您都會查看 %s 列以移動重要任務 "
+"%s。每個星期一，您都會查看 %s 列 %s"
 
 #. module: project
 #. openerp-web
@@ -1600,9 +1845,15 @@ msgid "First"
 msgstr "第一個"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project_stage__fold
 #: model:ir.model.fields,field_description:project.field_project_task_type__fold
 msgid "Folded in Kanban"
 msgstr "在看板中折疊"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_task__is_closed
+msgid "Folded in Kanban stages are closing stages."
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1617,9 +1868,9 @@ msgid "Followed"
 msgstr "關注"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_task_search_form
-msgid "Followed Tasks"
-msgstr "關注的任務"
+#: model_terms:ir.ui.view,arch_db:project.view_task_search_form_extended
+msgid "Followed Projects"
+msgstr "關注的專案"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_follower_ids
@@ -1638,6 +1889,7 @@ msgid "Followers (Partners)"
 msgstr "關注者(業務夥伴)"
 
 #. module: project
+#: model:ir.model.fields,help:project.field_project_project__activity_type_icon
 #: model:ir.model.fields,help:project.field_project_task__activity_type_icon
 #: model:ir.model.fields,help:project.field_project_update__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
@@ -1662,6 +1914,7 @@ msgid "Friday"
 msgstr "週五"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Future Activities"
 msgstr "未來的活動"
@@ -1701,6 +1954,16 @@ msgid "Gives the sequence order when displaying a list of tasks."
 msgstr "當顯示任務列表時，給出序列順序。"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_report_wizard_form
+msgid "Go to Burndown Chart"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_report_wizard_form
+msgid "Go to Project Updates"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__legend_done
 msgid "Green Kanban Label"
 msgstr "綠色看板標籤"
@@ -1711,6 +1974,15 @@ msgid "Grey Kanban Label"
 msgstr "灰色看板標籤"
 
 #. module: project
+#: code:addons/project/models/project.py:0
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "Gross Margin"
+msgstr "毛利"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_collaborator_view_search
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -1755,6 +2027,11 @@ msgid "High"
 msgstr "高"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.portal_my_task
+msgid "History"
+msgstr "歷史"
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Hours"
 msgstr "小時"
@@ -1775,19 +2052,29 @@ msgstr ""
 "不要忘記在要獲得客戶反饋的階段設置電子郵件模板。"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_update_default_description
+msgid "How’s this project going?"
+msgstr "這個專案進展如何？"
+
+#. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "I take it"
 msgstr "我來做"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_collaborator__id
 #: model:ir.model.fields,field_description:project.field_project_delete_wizard__id
 #: model:ir.model.fields,field_description:project.field_project_milestone__id
 #: model:ir.model.fields,field_description:project.field_project_project__id
+#: model:ir.model.fields,field_description:project.field_project_project_stage__id
+#: model:ir.model.fields,field_description:project.field_project_report_wizard__id
+#: model:ir.model.fields,field_description:project.field_project_share_wizard__id
 #: model:ir.model.fields,field_description:project.field_project_tags__id
 #: model:ir.model.fields,field_description:project.field_project_task__id
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__id
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__id
+#: model:ir.model.fields,field_description:project.field_project_task_stage_personal__id
 #: model:ir.model.fields,field_description:project.field_project_task_type__id
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__id
 #: model:ir.model.fields,field_description:project.field_project_update__id
@@ -1803,12 +2090,14 @@ msgid ""
 msgstr "上級記錄ID支援別名(例如:專案支援的任務創建別名)"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__activity_exception_icon
 #: model:ir.model.fields,field_description:project.field_project_task__activity_exception_icon
 #: model:ir.model.fields,field_description:project.field_project_update__activity_exception_icon
 msgid "Icon"
 msgstr "圖示"
 
 #. module: project
+#: model:ir.model.fields,help:project.field_project_project__activity_exception_icon
 #: model:ir.model.fields,help:project.field_project_task__activity_exception_icon
 #: model:ir.model.fields,help:project.field_project_update__activity_exception_icon
 msgid "Icon to indicate an exception activity."
@@ -1855,6 +2144,13 @@ msgid ""
 msgstr "如果設定，且專案評級設定為「改變階段時評級」，那麼當任務達到此步驟時，將會給客戶發送電子信件。"
 
 #. module: project
+#: model:ir.model.fields,help:project.field_project_project_stage__mail_template_id
+msgid ""
+"If set, an email will be sent to the customer when the project reaches this "
+"step."
+msgstr "如果設置，當專案到達此步驟時，將向客戶發送一封電子郵件。"
+
+#. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__mail_template_id
 msgid ""
 "If set, an email will be sent to the customer when the task or issue reaches"
@@ -1887,6 +2183,7 @@ msgstr "重要"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: model:ir.model.fields.selection,name:project.selection__project_task__kanban_state__normal
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__normal
+#: model:project.project.stage,name:project.project_project_stage_1
 #, python-format
 msgid "In Progress"
 msgstr "進行中"
@@ -1900,6 +2197,7 @@ msgstr "開發中"
 
 #. module: project
 #. openerp-web
+#: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Inbox"
@@ -1919,9 +2217,31 @@ msgid ""
 msgstr "與這個專案相關的內部信件。收件會自動的與任務同步（或者是可選的議題，如果議題追蹤模組已經安裝了）。"
 
 #. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "Invalid operator: %s"
+msgstr ""
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "Invalid value: %s"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
+msgid "Invite People"
+msgstr "邀請人"
+
+#. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
 msgid "Invited employees"
 msgstr "受邀員工"
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
+msgid "Invited portal users and all employees"
+msgstr "受邀網站登入會員和所有員工"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__is_deadline_exceeded
@@ -1940,6 +2260,16 @@ msgstr "截止日期未到"
 #: model:ir.model.fields,field_description:project.field_project_update__message_is_follower
 msgid "Is Follower"
 msgstr "是訂閱者"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__is_milestone_exceeded
+msgid "Is Milestone Exceeded"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__is_private
+msgid "Is Private"
+msgstr "是私人的"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__partner_is_company
@@ -1995,8 +2325,9 @@ msgid "Kanban Ongoing Explanation"
 msgstr "看板進展說明"
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_task__kanban_state
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__state
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
+#: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Kanban State"
 msgstr "看板狀態"
 
@@ -2027,18 +2358,18 @@ msgid "Last"
 msgstr "最後"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.rating_rating_view_search_project
-msgid "Last 30 Days"
-msgstr "過去30天"
-
-#. module: project
+#: model:ir.model.fields,field_description:project.field_project_collaborator____last_update
 #: model:ir.model.fields,field_description:project.field_project_delete_wizard____last_update
 #: model:ir.model.fields,field_description:project.field_project_milestone____last_update
 #: model:ir.model.fields,field_description:project.field_project_project____last_update
+#: model:ir.model.fields,field_description:project.field_project_project_stage____last_update
+#: model:ir.model.fields,field_description:project.field_project_report_wizard____last_update
+#: model:ir.model.fields,field_description:project.field_project_share_wizard____last_update
 #: model:ir.model.fields,field_description:project.field_project_tags____last_update
 #: model:ir.model.fields,field_description:project.field_project_task____last_update
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report____last_update
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence____last_update
+#: model:ir.model.fields,field_description:project.field_project_task_stage_personal____last_update
 #: model:ir.model.fields,field_description:project.field_project_task_type____last_update
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard____last_update
 #: model:ir.model.fields,field_description:project.field_project_update____last_update
@@ -2080,12 +2411,17 @@ msgid "Last Updated On"
 msgstr "最後更新時間"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_collaborator__write_uid
 #: model:ir.model.fields,field_description:project.field_project_delete_wizard__write_uid
 #: model:ir.model.fields,field_description:project.field_project_milestone__write_uid
 #: model:ir.model.fields,field_description:project.field_project_project__write_uid
+#: model:ir.model.fields,field_description:project.field_project_project_stage__write_uid
+#: model:ir.model.fields,field_description:project.field_project_report_wizard__write_uid
+#: model:ir.model.fields,field_description:project.field_project_share_wizard__write_uid
 #: model:ir.model.fields,field_description:project.field_project_tags__write_uid
 #: model:ir.model.fields,field_description:project.field_project_task__write_uid
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__write_uid
+#: model:ir.model.fields,field_description:project.field_project_task_stage_personal__write_uid
 #: model:ir.model.fields,field_description:project.field_project_task_type__write_uid
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__write_uid
 #: model:ir.model.fields,field_description:project.field_project_update__write_uid
@@ -2093,11 +2429,16 @@ msgid "Last Updated by"
 msgstr "最後更新者"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_collaborator__write_date
 #: model:ir.model.fields,field_description:project.field_project_delete_wizard__write_date
 #: model:ir.model.fields,field_description:project.field_project_milestone__write_date
 #: model:ir.model.fields,field_description:project.field_project_project__write_date
+#: model:ir.model.fields,field_description:project.field_project_project_stage__write_date
+#: model:ir.model.fields,field_description:project.field_project_report_wizard__write_date
+#: model:ir.model.fields,field_description:project.field_project_share_wizard__write_date
 #: model:ir.model.fields,field_description:project.field_project_tags__write_date
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__write_date
+#: model:ir.model.fields,field_description:project.field_project_task_stage_personal__write_date
 #: model:ir.model.fields,field_description:project.field_project_task_type__write_date
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__write_date
 #: model:ir.model.fields,field_description:project.field_project_update__write_date
@@ -2110,9 +2451,21 @@ msgid "Late Activities"
 msgstr "晚活動"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
+msgid "Late Milestones"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Late Tasks"
 msgstr "逾期任務"
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "Later"
+msgstr "稍後"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -2165,6 +2518,11 @@ msgstr "開始進行您的任務。"
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_task
 msgid "Let's wait for your customers to manifest themselves."
 msgstr "讓我們等待您的客戶表現出來。"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_share_wizard__share_link
+msgid "Link"
+msgstr "連結"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_cc
@@ -2254,6 +2612,11 @@ msgid "Members"
 msgstr "會員"
 
 #. module: project
+#: model:ir.model,name:project.model_ir_ui_menu
+msgid "Menu"
+msgstr "選單"
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_has_error
 #: model:ir.model.fields,field_description:project.field_project_project__message_has_error
 #: model:ir.model.fields,field_description:project.field_project_task__message_has_error
@@ -2286,7 +2649,6 @@ msgstr "里程碑數"
 #. openerp-web
 #: code:addons/project/static/src/xml/project_templates.xml:0
 #: model:ir.actions.act_window,name:project.project_milestone_all
-#: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 #, python-format
 msgid "Milestones"
 msgstr "里程碑"
@@ -2317,10 +2679,16 @@ msgid "Months"
 msgstr "月"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__my_activity_date_deadline
 #: model:ir.model.fields,field_description:project.field_project_task__my_activity_date_deadline
 #: model:ir.model.fields,field_description:project.field_project_update__my_activity_date_deadline
 msgid "My Activity Deadline"
 msgstr "我的活動截止時間"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_search_form_extended
+msgid "My Favorite Projects"
+msgstr "我的收藏專案"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -2329,10 +2697,15 @@ msgstr "我的收藏夾"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
+#: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
+#: model_terms:ir.ui.view,arch_db:project.view_task_search_form_extended
 msgid "My Projects"
 msgstr "我的專案"
 
 #. module: project
+#: model:ir.actions.act_window,name:project.action_view_all_task
+#: model:ir.ui.menu,name:project.menu_project_management
+#: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "My Tasks"
 msgstr "我的任務"
@@ -2341,9 +2714,10 @@ msgstr "我的任務"
 #: code:addons/project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:project.field_project_milestone__name
 #: model:ir.model.fields,field_description:project.field_project_project__name
+#: model:ir.model.fields,field_description:project.field_project_project_stage__name
 #: model:ir.model.fields,field_description:project.field_project_tags__name
 #: model:ir.model.fields,field_description:project.field_project_task_type__name
-#: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
+#: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 #: model_terms:ir.ui.view,arch_db:project.task_type_search
 #: model_terms:ir.ui.view,arch_db:project.view_project
 #, python-format
@@ -2367,8 +2741,10 @@ msgstr "平淡的表情"
 
 #. module: project
 #. openerp-web
+#: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
+#: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
 #, python-format
 msgid "New"
 msgstr "新建"
@@ -2415,24 +2791,28 @@ msgid "Next Activities"
 msgstr "下一步活動"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__activity_calendar_event_id
 #: model:ir.model.fields,field_description:project.field_project_task__activity_calendar_event_id
 #: model:ir.model.fields,field_description:project.field_project_update__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
 msgstr "下一個活動日曆事件"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__activity_date_deadline
 #: model:ir.model.fields,field_description:project.field_project_task__activity_date_deadline
 #: model:ir.model.fields,field_description:project.field_project_update__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "下一活動截止日期"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__activity_summary
 #: model:ir.model.fields,field_description:project.field_project_task__activity_summary
 #: model:ir.model.fields,field_description:project.field_project_update__activity_summary
 msgid "Next Activity Summary"
 msgstr "下一活動摘要"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__activity_type_id
 #: model:ir.model.fields,field_description:project.field_project_task__activity_type_id
 #: model:ir.model.fields,field_description:project.field_project_update__activity_type_id
 msgid "Next Activity Type"
@@ -2467,6 +2847,7 @@ msgid "No customer ratings yet"
 msgstr "還沒有客戶評級"
 
 #. module: project
+#: model_terms:ir.actions.act_window,help:project.action_project_task_burndown_chart_report
 #: model_terms:ir.actions.act_window,help:project.action_project_task_user_tree
 msgid "No data yet!"
 msgstr "暫無數據！"
@@ -2479,11 +2860,13 @@ msgstr "未找到里程碑。讓我們創造一個！"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all_config
+#: model_terms:ir.actions.act_window,help:project.open_view_project_all_group_stage
 msgid "No projects found. Let's create one!"
 msgstr "沒有找到任何項目。立即建立新項目！"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
+#: model_terms:ir.actions.act_window,help:project.project_project_stage_configure
 msgid "No stages found. Let's create one!"
 msgstr "沒有找到階段。讓我們創造一個！"
 
@@ -2496,6 +2879,8 @@ msgstr "找不到標籤。 立即建立一個！"
 #: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
 #: model_terms:ir.actions.act_window,help:project.action_view_all_task
 #: model_terms:ir.actions.act_window,help:project.action_view_task
+#: model_terms:ir.actions.act_window,help:project.project_sharing_project_task_action
+#: model_terms:ir.actions.act_window,help:project.project_task_action_sub_task
 msgid "No tasks found. Let's create one!"
 msgstr "找不到任務。立即建立一個！"
 
@@ -2515,6 +2900,11 @@ msgstr "無"
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__priority__1
 msgid "Normal"
 msgstr "正常"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_share_wizard__note
+msgid "Note"
+msgstr "備註"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__november
@@ -2555,6 +2945,16 @@ msgstr "結束任務的工作天數"
 #: model:ir.model.fields,help:project.field_report_project_task_user__working_days_open
 msgid "Number of Working Days to open the task"
 msgstr "打開任務的工作日數"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_report_project_task_user__working_hours_close
+msgid "Number of Working Hours to close the task"
+msgstr "關閉任務的工作小時數"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_report_project_task_user__working_hours_open
+msgid "Number of Working Hours to open the task"
+msgstr "打開任務的工時數"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__doc_count
@@ -2635,9 +3035,8 @@ msgid "Once a Month"
 msgstr "一個月一次"
 
 #. module: project
-#: code:addons/project/models/project.py:0
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened
-#, python-format
+#: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Open Tasks"
 msgstr "開放任務"
 
@@ -2660,20 +3059,6 @@ msgstr "所有收件都將附上一條線程（記錄）選配的ID，即使它�
 #, python-format
 msgid "Others"
 msgstr "其它"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_update_default_description
-msgid ""
-"Over the last 30 days, the deadline of the following milestone has been "
-"updated :"
-msgstr ""
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_update_default_description
-msgid ""
-"Over the last 30 days, the deadline of the following milestones has been "
-"updated :"
-msgstr ""
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
@@ -2729,6 +3114,7 @@ msgstr "上級記錄線程ID"
 #. module: project
 #: code:addons/project/models/project.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__parent_id
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 #, python-format
 msgid "Parent Task"
@@ -2750,14 +3136,30 @@ msgid "Percentage of happy ratings"
 msgstr "快樂百分比評分"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
-msgid "Percentage of happy ratings over the past 30 days."
-msgstr "過去30天的滿意評分百分比"
-
-#. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__periodic
 msgid "Periodic rating"
 msgstr "定期評級"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__personal_stage_type_ids
+#: model_terms:ir.ui.view,arch_db:project.view_task_search_form
+msgid "Personal Stage"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__personal_stage_id
+msgid "Personal Stage State"
+msgstr ""
+
+#. module: project
+#: model:ir.model,name:project.model_project_task_stage_personal
+msgid "Personal Task Stage"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__personal_stage_type_id
+msgid "Personal User Stage"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__partner_phone
@@ -2768,9 +3170,9 @@ msgstr "電話"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid ""
-"Plan resource allocation across projets and tasks, and estimate deadlines "
+"Plan resource allocation across projects and tasks, and estimate deadlines "
 "more accurately"
-msgstr "計劃跨項目和任務的資源分配，並更準確地估計截止日期"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_project_forecast
@@ -2812,9 +3214,9 @@ msgid "Portal Access URL"
 msgstr "外部訪問網址"
 
 #. module: project
-#: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
-msgid "Portal users and all employees"
-msgstr "網站使用者和所有員工"
+#: model:ir.model.fields,field_description:project.field_project_task__portal_user_names
+msgid "Portal User Names"
+msgstr ""
 
 #. module: project
 #. openerp-web
@@ -2839,9 +3241,26 @@ msgstr ""
 "使用 %s 圖標確定任務的優先級。%s 使用 %s 按鈕向您的同事表示任務已準備好進入下一階段。%s 使用 %s 表示存在問題或需要關於任務的討論。%s"
 
 #. module: project
+#: code:addons/project/controllers/portal.py:0
+#: code:addons/project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__priority
+#: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
+#, python-format
 msgid "Priority"
 msgstr "優先級"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/xml/project_templates.xml:0
+#: model_terms:ir.ui.view,arch_db:project.view_task_form2
+#, python-format
+msgid "Private"
+msgstr "私人"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
+msgid "Profitability"
+msgstr "盈利能力"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_update__progress
@@ -2859,10 +3278,11 @@ msgstr "進程百分比"
 #. openerp-web
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
-#: code:addons/project/static/src/js/project_rating_reporting.js:0
-#: code:addons/project/static/src/js/project_rating_reporting.js:0
+#: code:addons/project/static/src/js/project_rating_graph_view.js:0
+#: code:addons/project/static/src/js/project_rating_pivot_view.js:0
 #: model:ir.model,name:project.model_project_project
 #: model:ir.model.fields,field_description:project.field_project_milestone__project_id
+#: model:ir.model.fields,field_description:project.field_project_report_wizard__project_id
 #: model:ir.model.fields,field_description:project.field_project_task__project_id
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__project_id
 #: model:ir.model.fields,field_description:project.field_project_update__project_id
@@ -2870,8 +3290,12 @@ msgstr "進程百分比"
 #: model:ir.ui.menu,name:project.menu_main_pm
 #: model_terms:ir.ui.view,arch_db:project.digest_digest_view_form
 #: model_terms:ir.ui.view,arch_db:project.edit_project
-#: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
+#: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
+#: model_terms:ir.ui.view,arch_db:project.project_collaborator_view_search
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
+#: model_terms:ir.ui.view,arch_db:project.project_report_wizard_form
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_form_project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_search_project
@@ -2884,6 +3308,22 @@ msgstr "進程百分比"
 #, python-format
 msgid "Project"
 msgstr "專案"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__project_analytic_account_id
+msgid "Project Analytic Account"
+msgstr "專案分析帳戶"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_collaborator_view_form
+msgid "Project Collaborator"
+msgstr "專案協作者"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.project_collaborator_action
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_access_view_tree
+msgid "Project Collaborators"
+msgstr "專案協作者"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_account_analytic_account__project_count
@@ -2899,7 +3339,6 @@ msgstr "專案刪除精靈"
 #: model:ir.model.fields,field_description:project.field_project_project__user_id
 #: model:ir.model.fields,field_description:project.field_project_task__manager_id
 #: model_terms:ir.ui.view,arch_db:project.edit_project
-#: model_terms:ir.ui.view,arch_db:project.portal_my_project
 #: model_terms:ir.ui.view,arch_db:project.project_view_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -2919,9 +3358,47 @@ msgid "Project Name"
 msgstr "專案名稱"
 
 #. module: project
+#: model:ir.model,name:project.model_project_report_wizard
+msgid "Project Report Wizard"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_collaborator__project_id
+msgid "Project Shared"
+msgstr "已共享專案"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.project_sharing_project_task_action
+#: model:ir.model,name:project.model_project_share_wizard
+msgid "Project Sharing"
+msgstr "專案共享"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
+msgid "Project Sharing: Task"
+msgstr "專案共享：任務"
+
+#. module: project
+#: model:ir.model,name:project.model_project_project_stage
+msgid "Project Stage"
+msgstr "專案階段"
+
+#. module: project
+#: model:mail.message.subtype,name:project.mt_project_stage_change
+msgid "Project Stage Changed"
+msgstr "專案階段改變"
+
+#. module: project
 #: model:ir.model,name:project.model_project_task_type_delete_wizard
 msgid "Project Stage Delete Wizard"
 msgstr "專案階段刪除精靈"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.project_project_stage_configure
+#: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_stages
+#: model:ir.ui.menu,name:project.menu_project_config_project_stage
+msgid "Project Stages"
+msgstr "專案階段"
 
 #. module: project
 #: model:ir.model,name:project.model_project_tags
@@ -2930,19 +3407,19 @@ msgstr "專案標籤"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_activity
-#: model_terms:ir.ui.view,arch_db:project.view_project_task_graph
-#: model_terms:ir.ui.view,arch_db:project.view_project_task_pivot
 msgid "Project Tasks"
 msgstr "專案任務"
 
 #. module: project
 #: model:ir.model,name:project.model_project_update
+#: model:ir.model.fields.selection,name:project.selection__project_report_wizard__report_type__project_update
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_form
 msgid "Project Update"
 msgstr "專案更新"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_update_all_action
+#: model:ir.ui.menu,name:project.project_update_menu_action
 #: model_terms:ir.ui.view,arch_db:project.project_view_kanban_inherit_project
 msgid "Project Updates"
 msgstr "專案更新"
@@ -2974,12 +3451,14 @@ msgstr "專案：發送評級"
 #. module: project
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.actions.act_window,name:project.open_view_project_all_config
+#: model:ir.actions.act_window,name:project.open_view_project_all_group_stage
 #: model:ir.model.fields,field_description:project.field_account_analytic_account__project_ids
 #: model:ir.model.fields,field_description:project.field_project_delete_wizard__project_ids
 #: model:ir.model.fields,field_description:project.field_project_task_type__project_ids
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__project_ids
 #: model:ir.ui.menu,name:project.menu_projects
 #: model:ir.ui.menu,name:project.menu_projects_config
+#: model:ir.ui.menu,name:project.menu_projects_group_stage
 #: model_terms:ir.ui.view,arch_db:project.account_analytic_account_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:project.portal_layout
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
@@ -2996,12 +3475,13 @@ msgstr "已封存的專案"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all_config
-msgid ""
-"Projects regroup tasks on the same topic and each have their own dashboard."
-msgstr "項目將同一主題上的任務重新組合，並且每個任務都有自己的儀表板。"
+#: model_terms:ir.actions.act_window,help:project.open_view_project_all_group_stage
+msgid "Projects regroup tasks on the same topic, and each has its dashboard."
+msgstr "專案重新組合同一主題的任務，每個專案都有自己的儀表板。"
 
 #. module: project
 #. openerp-web
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Published"
@@ -3009,7 +3489,6 @@ msgstr "已公開"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Publishing"
@@ -3022,16 +3501,19 @@ msgstr "每季度"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
-msgid "Rated tasks"
-msgstr "評級任務"
+msgid "Rated Tasks"
+msgstr "已評分任務"
 
 #. module: project
-#: model:ir.actions.act_window,name:project.rating_rating_action_view_project_rating
 #: model:ir.model.fields,field_description:project.field_project_task__rating_ids
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_form_project
-#: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Rating"
 msgstr "評分"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_task_graph
+msgid "Rating (/5)"
+msgstr "評分 (/5)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_avg
@@ -3070,13 +3552,15 @@ msgstr "評級請求截止日期"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_percentage_satisfaction
+#: model:ir.model.fields,field_description:project.field_project_task__rating_percentage_satisfaction
 msgid "Rating Satisfaction"
 msgstr "評級滿意度"
 
 #. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_rating_reporting.js:0
-#: code:addons/project/static/src/js/project_rating_reporting.js:0
+#: code:addons/project/static/src/js/project_rating_graph_view.js:0
+#: code:addons/project/static/src/js/project_rating_pivot_view.js:0
+#: model:ir.model.fields,field_description:project.field_report_project_task_user__rating_last_value
 #, python-format
 msgid "Rating Value (/5)"
 msgstr "評等值 (/5)"
@@ -3092,15 +3576,13 @@ msgid "Rating when changing stage"
 msgstr "在變更階段時點評"
 
 #. module: project
+#: code:addons/project/models/project.py:0
+#: model:ir.actions.act_window,name:project.rating_rating_action_task
+#: model:ir.actions.act_window,name:project.rating_rating_action_view_project_rating
 #: model:ir.model.fields,field_description:project.field_project_project__rating_ids
+#, python-format
 msgid "Ratings"
 msgstr "點評"
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid "Ratings of %s"
-msgstr "%s 評級"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__is_reached
@@ -3111,6 +3593,11 @@ msgstr "達到"
 #: model:ir.model.fields,field_description:project.field_project_milestone__reached_date
 msgid "Reached Date"
 msgstr "達成日期"
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_share_wizard__access_mode__read
+msgid "Readonly"
+msgstr "唯讀"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -3131,8 +3618,13 @@ msgstr "點評的理由"
 
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_project_task
-msgid "Reception of ${object.name}"
-msgstr "接收 ${object.name}"
+msgid "Reception of {{ object.name }}"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_share_wizard__partner_ids
+msgid "Recipients"
+msgstr "收件人"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_force_thread_id
@@ -3175,7 +3667,7 @@ msgid "Red Kanban Label"
 msgstr "紅色看板標籤"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
+#: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "Ref"
 msgstr "參考編號"
 
@@ -3185,6 +3677,21 @@ msgstr "參考編號"
 #, python-format
 msgid "Refused"
 msgstr "已拒絕"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_share_wizard__resource_ref
+msgid "Related Document"
+msgstr "相關文件"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_share_wizard__res_id
+msgid "Related Document ID"
+msgstr "相關單據編號"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_share_wizard__res_model
+msgid "Related Document Model"
+msgstr "相關的單據模型"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_day
@@ -3260,6 +3767,11 @@ msgid "Repetitions"
 msgstr ""
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_report_wizard__report_type
+msgid "Report Type"
+msgstr "報告類型"
+
+#. module: project
 #: model:ir.ui.menu,name:project.menu_project_report
 msgid "Reporting"
 msgstr "報告"
@@ -3294,15 +3806,11 @@ msgid "Resources Allocation"
 msgstr "資源分配"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__activity_user_id
 #: model:ir.model.fields,field_description:project.field_project_task__activity_user_id
 #: model:ir.model.fields,field_description:project.field_project_update__activity_user_id
 msgid "Responsible User"
 msgstr "責任用戶"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
-msgid "Restore"
-msgstr "還原"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_has_sms_error
@@ -3361,8 +3869,8 @@ msgstr "在全部範圍內搜尋"
 #. module: project
 #: code:addons/project/controllers/portal.py:0
 #, python-format
-msgid "Search in Customer"
-msgstr "在客戶中搜尋"
+msgid "Search in Assignees"
+msgstr "在執行者中搜尋"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -3373,14 +3881,32 @@ msgstr "在消息中搜尋"
 #. module: project
 #: code:addons/project/controllers/portal.py:0
 #, python-format
+msgid "Search in Priority"
+msgstr ""
+
+#. module: project
+#: code:addons/project/controllers/portal.py:0
+#, python-format
 msgid "Search in Project"
 msgstr "在專案中搜尋"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
 #, python-format
+msgid "Search in Ref"
+msgstr "在參考資料中搜索"
+
+#. module: project
+#: code:addons/project/controllers/portal.py:0
+#, python-format
 msgid "Search in Stages"
 msgstr "在階段中搜尋"
+
+#. module: project
+#: code:addons/project/controllers/portal.py:0
+#, python-format
+msgid "Search in Status"
+msgstr "在狀態中搜索"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_week__second
@@ -3395,9 +3921,15 @@ msgid "Security Token"
 msgstr "安全指示物"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
-msgid "Send an email"
-msgstr "發送電子信件"
+#: model:ir.actions.act_window,name:project.project_burndown_chart_report_action
+#: model:ir.actions.act_window,name:project.project_update_all_report_action
+msgid "Select a Project"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
+msgid "Send"
+msgstr "發送"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__september
@@ -3407,15 +3939,24 @@ msgstr "九月"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__sequence
+#: model:ir.model.fields,field_description:project.field_project_project_stage__sequence
 #: model:ir.model.fields,field_description:project.field_project_task__sequence
 #: model:ir.model.fields,field_description:project.field_project_task_type__sequence
 msgid "Sequence"
 msgstr "序列"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Set Cover Image"
 msgstr "設定封面圖像"
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__to_define
+#, python-format
+msgid "Set Status"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -3432,11 +3973,26 @@ msgstr "設定"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.portal_share_action
-#: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Share"
 msgstr "分享"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid "Share Editable"
+msgstr "分享-可編輯"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.project_share_wizard_action
+#: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
+msgid "Share Project"
+msgstr "分享專案"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid "Share Readonly"
+msgstr "分享-唯讀"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_favorite
@@ -3447,6 +4003,11 @@ msgstr "在儀表板上顯示專案"
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Show all records which has next action date is before today"
 msgstr "顯示所有下一個活動日期在今天之前的記錄"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_update_default_description
+msgid "Since"
+msgstr "從"
 
 #. module: project
 #. openerp-web
@@ -3489,6 +4050,11 @@ msgid "Sprint Complete"
 msgstr "Sprint 完成"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_update_default_description
+msgid "Sprint Summary"
+msgstr "Sprint 總結"
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
@@ -3498,11 +4064,15 @@ msgstr "Sprint 執行中"
 #. module: project
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
+#: model:ir.model.fields,field_description:project.field_project_project__stage_id
 #: model:ir.model.fields,field_description:project.field_project_task__stage_id
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__stage_id
+#: model:ir.model.fields,field_description:project.field_project_task_stage_personal__stage_id
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__stage_id
-#: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
+#: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #, python-format
@@ -3520,16 +4090,14 @@ msgid "Stage Description and Tooltips"
 msgstr "階段描述和工具提示"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_type__user_id
+msgid "Stage Owner"
+msgstr "階段負責人"
+
+#. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
 msgid "Stage changed"
 msgstr "階段已改變"
-
-#. module: project
-#: model:ir.actions.act_window,name:project.open_task_type_form
-#: model:ir.actions.act_window,name:project.open_task_type_form_domain
-#: model:ir.ui.menu,name:project.menu_project_config_project
-msgid "Stages"
-msgstr "階段"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__stages_active
@@ -3543,23 +4111,39 @@ msgstr "刪除階段"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__priority
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
+#: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Starred"
 msgstr "以星號標示"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__date_start
+#: model_terms:ir.ui.view,arch_db:project.view_project
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Start Date"
 msgstr "開始日期"
 
 #. module: project
+#: code:addons/project/controllers/portal.py:0
+#: code:addons/project/controllers/portal.py:0
+#: model:ir.model.fields,field_description:project.field_project_task__kanban_state
 #: model:ir.model.fields,field_description:project.field_project_update__status
+#: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 #: model_terms:ir.ui.view,arch_db:project.view_project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
+#, python-format
 msgid "Status"
 msgstr "狀態"
 
 #. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "Status Update - "
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project__activity_state
 #: model:ir.model.fields,help:project.field_project_task__activity_state
 #: model:ir.model.fields,help:project.field_project_update__activity_state
 msgid ""
@@ -3587,9 +4171,11 @@ msgid "Sub-task Count"
 msgstr "子任務計數"
 
 #. module: project
+#: model:ir.actions.act_window,name:project.project_task_action_sub_task
 #: model:ir.model.fields,field_description:project.field_project_project__allow_subtasks
 #: model:ir.model.fields,field_description:project.field_project_task__child_ids
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_subtask_project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Sub-tasks"
 msgstr "子任務"
@@ -3632,25 +4218,28 @@ msgstr "標籤名稱已存在！"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_tags_action
+#: model:ir.model.fields,field_description:project.field_project_project__tag_ids
 #: model:ir.model.fields,field_description:project.field_project_task__tag_ids
 #: model:ir.ui.menu,name:project.menu_project_tags_act
 #: model_terms:ir.ui.view,arch_db:project.project_tags_form_view
 #: model_terms:ir.ui.view,arch_db:project.project_tags_tree_view
+#: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 msgid "Tags"
 msgstr "摘要"
 
 #. module: project
-#: model_terms:ir.actions.act_window,help:project.project_tags_action
-msgid "Tags are perfect for categorizing your tasks."
-msgstr ""
-
-#. module: project
 #. openerp-web
-#: code:addons/project/static/src/js/project_rating_reporting.js:0
-#: code:addons/project/static/src/js/project_rating_reporting.js:0
+#: code:addons/project/static/src/js/project_rating_graph_view.js:0
+#: code:addons/project/static/src/js/project_rating_pivot_view.js:0
 #: model:ir.model,name:project.model_project_task
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__task_ids
+#: model:ir.model.fields,field_description:project.field_project_task_stage_personal__task_id
+#: model:ir.model.fields,field_description:project.field_report_project_task_user__name
+#: model_terms:ir.ui.view,arch_db:project.portal_my_task
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_form_project
+#: model_terms:ir.ui.view,arch_db:project.rating_rating_view_search_project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_tree_project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
@@ -3695,6 +4284,12 @@ msgid "Task Dependencies"
 msgstr "任務依賴"
 
 #. module: project
+#: model:mail.message.subtype,name:project.mt_project_task_dependency_change
+#: model:mail.message.subtype,name:project.mt_task_dependency_change
+msgid "Task Dependency Changes"
+msgstr "任務依賴變化"
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_hr_timesheet
 msgid "Task Logs"
 msgstr "任務日誌"
@@ -3729,12 +4324,20 @@ msgid "Task Stage Changed"
 msgstr "任務階段已改變"
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_report_project_task_user__name
+#: model:ir.actions.act_window,name:project.open_task_type_form
+#: model:ir.actions.act_window,name:project.open_task_type_form_domain
+#: model:ir.ui.menu,name:project.menu_project_config_project
+msgid "Task Stages"
+msgstr "任務階段"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form
 #: model_terms:ir.ui.view,arch_db:project.quick_create_task_form
 msgid "Task Title"
 msgstr "任務標題"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Task Title..."
 msgstr "任務標題..."
@@ -3743,6 +4346,11 @@ msgstr "任務標題..."
 #: model:mail.message.subtype,description:project.mt_task_blocked
 msgid "Task blocked"
 msgstr "受阻的任務"
+
+#. module: project
+#: model:mail.message.subtype,name:project.mt_task_progress
+msgid "Task in Progress"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -3760,6 +4368,11 @@ msgid "Task ready for Next Stage"
 msgstr "任務可以到下一階段了"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.task_track_depending_tasks
+msgid "Task:"
+msgstr "任務："
+
+#. module: project
 #: model:mail.template,name:project.rating_project_request_email_template
 msgid "Task: Rating Request"
 msgstr "任務：評級請求"
@@ -3770,38 +4383,42 @@ msgid "Task: Reception Acknowledgment"
 msgstr "任務：接收確認"
 
 #. module: project
+#: code:addons/project/models/project.py:0
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
-#: model:ir.actions.act_window,name:project.action_view_all_task
 #: model:ir.actions.act_window,name:project.action_view_task
 #: model:ir.actions.act_window,name:project.project_task_action_from_partner
+#: model:ir.model.fields,field_description:project.field_account_analytic_tag__task_ids
 #: model:ir.model.fields,field_description:project.field_project_project__task_ids
+#: model:ir.model.fields,field_description:project.field_report_project_task_user__task_id
 #: model:ir.model.fields,field_description:project.field_res_partner__task_ids
 #: model:ir.model.fields,field_description:project.field_res_users__task_ids
-#: model:ir.ui.menu,name:project.menu_project_management
 #: model_terms:ir.ui.view,arch_db:project.portal_layout
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
+#: model_terms:ir.ui.view,arch_db:project.portal_my_project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
-#: model_terms:ir.ui.view,arch_db:project.project_update_default_description
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_tree
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_project_task_graph
+#: model_terms:ir.ui.view,arch_db:project.view_project_task_pivot
 #: model_terms:ir.ui.view,arch_db:project.view_task_calendar
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 #: model_terms:ir.ui.view,arch_db:project.view_task_partner_info_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_tree2
+#, python-format
 msgid "Tasks"
 msgstr "任務"
 
 #. module: project
-#. openerp-web
-#: code:addons/project/static/src/xml/project_templates.xml:0
 #: model:ir.actions.act_window,name:project.action_project_task_user_tree
 #: model:ir.model,name:project.model_report_project_task_user
 #: model:ir.ui.menu,name:project.menu_project_report_task_analysis
+#: model_terms:ir.ui.view,arch_db:project.report_project_task_user_view_tree
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_graph
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_pivot
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
-#, python-format
 msgid "Tasks Analysis"
 msgstr "任務分析"
 
@@ -3809,6 +4426,11 @@ msgstr "任務分析"
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Tasks In Progress"
 msgstr "任務進行中"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
+msgid "Tasks Late"
+msgstr "任務逾期"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -3827,12 +4449,6 @@ msgid "Tasks in Recurrence"
 msgstr "重複性任務"
 
 #. module: project
-#: model:ir.model.fields,help:project.field_project_task__is_closed
-#: model:ir.model.fields,help:project.field_project_task_type__is_closed
-msgid "Tasks in this stage are considered as closed."
-msgstr "此階段的任務被視為已關閉。"
-
-#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
@@ -3840,14 +4456,24 @@ msgid "Tests"
 msgstr "測試"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_update_default_description
-msgid "The following milestone has been added :"
-msgstr ""
+#: model:ir.model.fields,help:project.field_project_task__personal_stage_id
+msgid "The current user's personal stage."
+msgstr "當前用戶的個人階段。"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_task__personal_stage_type_id
+msgid "The current user's personal task stage."
+msgstr "當前用戶的個人任務階段。"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
-msgid "The following milestones have been added :"
-msgstr ""
+msgid "The following milestone has been added:"
+msgstr "添加了以下里程碑："
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_update_default_description
+msgid "The following milestones have been added:"
+msgstr "添加了以下里程碑："
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_model_id
@@ -3909,9 +4535,16 @@ msgid "There are no ratings for this project at the moment"
 msgstr "目前沒有此項目的評分"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.portal_my_project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "There are no tasks."
 msgstr "沒有任務。"
+
+#. module: project
+#: code:addons/project/controllers/portal.py:0
+#, python-format
+msgid "There is nothing to report."
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_from
@@ -3926,6 +4559,7 @@ msgstr "第三個"
 
 #. module: project
 #. openerp-web
+#: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "This Month"
@@ -3933,6 +4567,7 @@ msgstr "本月"
 
 #. module: project
 #. openerp-web
+#: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "This Week"
@@ -3949,6 +4584,11 @@ msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
 msgstr "當此階段沒有任何記錄要呈現的時候，此階段在看板視圖中被折疊起來。"
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project_stage__fold
+msgid "This stage is folded in the kanban view."
+msgstr "此階段在看板視圖中折疊。"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -4009,6 +4649,11 @@ msgid "Title of the Update"
 msgstr "更新標題"
 
 #. module: project
+#: model:project.project.stage,name:project.project_project_stage_0
+msgid "To Do"
+msgstr "待辦"
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
@@ -4016,9 +4661,7 @@ msgid "To Print"
 msgstr "列印"
 
 #. module: project
-#: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
-#: model_terms:ir.actions.act_window,help:project.action_view_all_task
-#: model_terms:ir.actions.act_window,help:project.action_view_task
+#: model_terms:ir.actions.act_window,help:project.project_task_action_sub_task
 msgid ""
 "To get things done, use activities and status on tasks.<br>\n"
 "                    Chat in real time or by email to collaborate efficiently."
@@ -4027,13 +4670,31 @@ msgstr ""
 " 及時聊天或通過電子信件進行有效協作。"
 
 #. module: project
+#: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
+#: model_terms:ir.actions.act_window,help:project.action_view_all_task
+#: model_terms:ir.actions.act_window,help:project.action_view_task
+msgid ""
+"To get things done, use activities and status on tasks.<br>\n"
+"                    Chat in real-time or by email to collaborate efficiently."
+msgstr ""
+
+#. module: project
+#: model_terms:ir.actions.act_window,help:project.project_sharing_project_task_action
+msgid ""
+"To get things done, use activities and status on tasks.<br>\n"
+"                Chat in real time or by email to collaborate efficiently."
+msgstr ""
+
+#. module: project
 #. openerp-web
+#: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Today"
 msgstr "今日"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Today Activities"
 msgstr "今天的活動"
@@ -4050,6 +4711,22 @@ msgstr "對任務進行客戶滿意度追蹤"
 #, python-format
 msgid "Track major progress points that must be reached to achieve success."
 msgstr "追踪專案成功必須達到的主要進展點。"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
+msgid "Track the costs and revenues linked to your projects"
+msgstr "追踪與您的專案相關的成本和收入"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
+msgid "Track the progress of your projects"
+msgstr "追踪您的專案進度"
+
+#. module: project
+#: model_terms:ir.actions.act_window,help:project.project_project_stage_configure
+msgid ""
+"Track the progress of your projects from their creation to their closing."
+msgstr "追踪專案從創建到結束的進度。"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
@@ -4079,6 +4756,7 @@ msgid "Twice a Month"
 msgstr "一個月二次"
 
 #. module: project
+#: model:ir.model.fields,help:project.field_project_project__activity_exception_decoration
 #: model:ir.model.fields,help:project.field_project_task__activity_exception_decoration
 #: model:ir.model.fields,help:project.field_project_update__activity_exception_decoration
 msgid "Type of the exception activity on record."
@@ -4093,11 +4771,21 @@ msgid "Unarchive"
 msgstr "取消歸檔"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
-#: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
+msgid "Unassign Me"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Unassigned"
 msgstr "未分配"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
+msgid "Unassigned Tasks"
+msgstr "未分配的任務"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -4134,10 +4822,18 @@ msgid "Update"
 msgstr "更新"
 
 #. module: project
-#: code:addons/project/models/project.py:0
+#: model:mail.message.subtype,description:project.mt_update_create
+#: model:mail.message.subtype,name:project.mt_project_update_create
+#: model:mail.message.subtype,name:project.mt_update_create
+msgid "Update Created"
+msgstr ""
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
-msgid "Updated (Last 30 Days)"
-msgstr "更新（過去 30 天）"
+msgid "Use %s and %s bullets to indicate the status of a task. %s"
+msgstr "使用 %s 和 %s 專案符號指示任務的狀態。 %s"
 
 #. module: project
 #. openerp-web
@@ -4162,6 +4858,11 @@ msgid "Use Recurring Tasks"
 msgstr "使用重複任務"
 
 #. module: project
+#: model:res.groups,name:project.group_project_stages
+msgid "Use Stages on Project"
+msgstr "在專案中使用階段"
+
+#. module: project
 #: model:res.groups,name:project.group_subtask_project
 msgid "Use Subtasks"
 msgstr "使用子任務"
@@ -4184,6 +4885,11 @@ msgid "Use This For My Project"
 msgstr "將此用於我的專案"
 
 #. module: project
+#: model_terms:ir.actions.act_window,help:project.project_tags_action
+msgid "Use tags to categorize your tasks."
+msgstr "使用標籤對您的任務進行分類。"
+
+#. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
@@ -4193,16 +4899,19 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_stage_personal__user_id
 #: model:res.groups,name:project.group_project_user
 msgid "User"
 msgstr "使用者"
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_task__user_email
-msgid "User Email"
-msgstr "使用者電郵"
+#: model_terms:ir.ui.view,arch_db:project.project_message_user_assigned
+#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+msgid "View"
+msgstr "檢視"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "View Task"
 msgstr "查看任務"
@@ -4211,13 +4920,6 @@ msgstr "查看任務"
 #: model:ir.model.fields,field_description:project.field_project_project__privacy_visibility
 msgid "Visibility"
 msgstr "可見性"
-
-#. module: project
-#. openerp-web
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
-#, python-format
-msgid "Waiting for the next stage: use %s and %s bullets. %s"
-msgstr "正在等待下個階段：用 %s 和%s 項目符號。 %s"
 
 #. module: project
 #. openerp-web
@@ -4281,21 +4983,25 @@ msgstr "此專案是否應顯示在儀表板上。"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_days_open
+#: model:ir.model.fields,field_description:project.field_report_project_task_user__working_days_open
 msgid "Working Days to Assign"
 msgstr "待分配的工作日"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_days_close
+#: model:ir.model.fields,field_description:project.field_report_project_task_user__working_days_close
 msgid "Working Days to Close"
 msgstr "待關閉的工作日"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_hours_open
+#: model:ir.model.fields,field_description:project.field_report_project_task_user__working_hours_open
 msgid "Working Hours to Assign"
 msgstr "待分配的工作時數"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_hours_close
+#: model:ir.model.fields,field_description:project.field_report_project_task_user__working_hours_close
 msgid "Working Hours to Close"
 msgstr "待關閉的工作時數"
 
@@ -4339,6 +5045,12 @@ msgid ""
 "You can also add a description to help your coworkers understand the meaning"
 " and purpose of the stage."
 msgstr "您還可以添加一個說明來讓您同事理解該階段的意思和目的。"
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "You cannot %s %s fields in task."
+msgstr "您不能在任務中 %s %s 欄位。"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -4391,6 +5103,24 @@ msgid ""
 msgstr "您不能刪除包含任務的階段。 您應該首先刪除其所有任務。"
 
 #. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "You have been assigned to %s"
+msgstr "您已被指派到 %s"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_message_user_assigned
+msgid "You have been assigned to the"
+msgstr "您被指派到"
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "You have not write access of %s field."
+msgstr "您沒有 %s 字段的寫入權限。"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form
 #: model_terms:ir.ui.view,arch_db:project.quick_create_task_form
 msgid "e.g. New Design"
 msgstr ""
@@ -4406,16 +5136,6 @@ msgid "e.g. office-party"
 msgstr "例如，辦公場所"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
-msgid "for project:"
-msgstr "於此專案："
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
-msgid "in stage:"
-msgstr "於此階段："
-
-#. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "task"
@@ -4423,25 +5143,22 @@ msgstr "任務"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
-msgid "tasks are open"
-msgstr ""
+msgid "the deadline of the following milestone has been updated:"
+msgstr "以下里程碑的截止日期已更新："
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
-msgid "was closed (folded stage)"
-msgstr ""
+msgid "the deadline of the following milestones has been updated:"
+msgstr "以下里程碑的截止日期已更新："
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_update_default_description
-msgid "was created"
-msgstr ""
+#. openerp-web
+#: code:addons/project/static/src/burndown_chart/burndown_chart_view.xml:0
+#, python-format
+msgid "true"
+msgstr "真"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_update_default_description
-msgid "were closed (folded stage)"
-msgstr ""
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_update_default_description
-msgid "were created"
-msgstr ""
+#: model:mail.template,subject:project.rating_project_request_email_template
+msgid "{{ object.project_id.company_id.name }}: Satisfaction Survey"
+msgstr "{{ object.project_id.company_id.name }}: 滿意度調查"

@@ -14,9 +14,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-12-07 10:47+0000\n"
 "PO-Revision-Date: 2020-08-21 13:39+0000\n"
 "Last-Translator: Vo Thanh Thuy, 2021\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
@@ -177,6 +177,8 @@ msgid "Create"
 msgstr "Tạo"
 
 #. module: website_event_meet
+#: model_terms:ir.actions.act_window,help:website_event_meet.action_meeting_room_from_event
+#: model_terms:ir.actions.act_window,help:website_event_meet.event_meeting_room_action
 #: model_terms:ir.ui.view,arch_db:website_event_meet.community_aside
 msgid "Create a Room"
 msgstr "Tạo một phòng"
@@ -235,6 +237,11 @@ msgstr "Phòng họp sự kiện"
 #: model:ir.model.fields.selection,name:website_event_meet.selection__website_event_menu__menu_type__meeting_room
 msgid "Event Meeting Room Menus"
 msgstr "Menu phòng họp sự kiện"
+
+#. module: website_event_meet
+#: model:ir.actions.act_window,name:website_event_meet.action_meeting_room_from_event
+msgid "Event Rooms"
+msgstr "Phòng sự kiện"
 
 #. module: website_event_meet
 #: model:ir.model,name:website_event_meet.model_event_type
@@ -376,11 +383,6 @@ msgid "Room Is Full"
 msgstr "Phòng đã đủ chỗ"
 
 #. module: website_event_meet
-#: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_card
-msgid "Room Manager"
-msgstr ""
-
-#. module: website_event_meet
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__room_name
 msgid "Room Name"
 msgstr "Tên phòng"
@@ -406,6 +408,15 @@ msgstr "Tính năng tạo phòng sẽ có khi sự kiện bắt đầu lúc"
 #: model_terms:ir.ui.view,arch_db:website_event_meet.event_event_view_form
 msgid "Rooms"
 msgstr "Phòng"
+
+#. module: website_event_meet
+#: model_terms:ir.actions.act_window,help:website_event_meet.action_meeting_room_from_event
+#: model_terms:ir.actions.act_window,help:website_event_meet.event_meeting_room_action
+msgid ""
+"Rooms allow your event attendees to meet up and chat on different topics."
+msgstr ""
+"Phòng cho phép người tham dự sự kiện gặp gỡ và trò chuyện về các chủ đề khác"
+" nhau. "
 
 #. module: website_event_meet
 #. openerp-web
@@ -457,6 +468,11 @@ msgstr "URL đầy đủ để truy cập tài liệu thông qua trang web."
 #: model_terms:ir.ui.view,arch_db:website_event_meet.event_meeting_room_view_search
 msgid "Topic"
 msgstr "Chủ đề"
+
+#. module: website_event_meet
+#: model_terms:ir.ui.view,arch_db:website_event_meet.event_meeting_room_view_tree
+msgid "Total Participant Count"
+msgstr ""
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.event_meeting_room_view_search

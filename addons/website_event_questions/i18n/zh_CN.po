@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Jeffery CHEN <jeffery9@gmail.com>, 2017
-# e2f <projects@e2f.com>, 2018
 # liAnGjiA <liangjia@qq.com>, 2018
 # keecome <7017511@qq.com>, 2019
 # Martin Trigaux, 2020
@@ -15,9 +14,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-12-07 10:47+0000\n"
 "PO-Revision-Date: 2016-08-05 13:12+0000\n"
 "Last-Translator: Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -187,18 +186,19 @@ msgstr "问题既不能属于事件范畴，也不能属于事件本身。"
 #: model:ir.model.fields,field_description:website_event_questions.field_event_type__question_ids
 #: model_terms:ir.ui.view,arch_db:website_event_questions.event_event_view_form
 #: model_terms:ir.ui.view,arch_db:website_event_questions.event_registration_view_form_inherit_question
+#: model_terms:ir.ui.view,arch_db:website_event_questions.event_type_view_form_inherit_question
 msgid "Questions"
 msgstr "问题"
-
-#. module: website_event_questions
-#: model:ir.model.fields,field_description:website_event_questions.field_event_type__use_questions
-msgid "Questions to Attendees"
-msgstr "针对参与者的问题"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__registration_id
 msgid "Registration"
 msgstr "登记记录"
+
+#. module: website_event_questions
+#: model_terms:ir.ui.view,arch_db:website_event_questions.event_registration_view_tree
+msgid "Selected Answers"
+msgstr ""
 
 #. module: website_event_questions
 #: model_terms:ir.ui.view,arch_db:website_event_questions.event_registration_answer_view_tree
@@ -257,4 +257,24 @@ msgstr "类型"
 #, python-format
 msgid ""
 "You cannot change the question type of a question that already has answers!"
+msgstr ""
+
+#. module: website_event_questions
+#: code:addons/website_event_questions/models/event_question.py:0
+#, python-format
+msgid ""
+"You cannot delete a question that has already been answered by attendees."
+msgstr ""
+
+#. module: website_event_questions
+#: code:addons/website_event_questions/models/event_question.py:0
+#, python-format
+msgid ""
+"You cannot delete an answer that has already been selected by attendees."
+msgstr ""
+
+#. module: website_event_questions
+#: model_terms:ir.ui.view,arch_db:website_event_questions.event_event_view_form
+#: model_terms:ir.ui.view,arch_db:website_event_questions.event_question_view_form
+msgid "e.g. \"Do you have any diet restrictions?\""
 msgstr ""

@@ -14,9 +14,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-11-16 13:19+0000\n"
 "PO-Revision-Date: 2016-08-05 12:57+0000\n"
 "Last-Translator: Martin Trigaux, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -31,12 +31,6 @@ msgstr ""
 #, python-format
 msgid " (Estimated Cost: %s )"
 msgstr "(Geschatte kost: %s)"
-
-#. module: delivery
-#: code:addons/delivery/models/sale_order.py:0
-#, python-format
-msgid "Free Shipping"
-msgstr "Gratis verzending"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_quant_package_weight_form
@@ -221,6 +215,7 @@ msgstr "Annuleer"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__carrier_id
+#: model:ir.model.fields,field_description:delivery.field_stock_move_line__carrier_id
 #: model:ir.model.fields,field_description:delivery.field_stock_package_type__package_carrier_type
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_id
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -389,6 +384,7 @@ msgid "Destination Availability"
 msgstr "Bestemming beschikbaarheid"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_stock_move_line__destination_country_code
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__destination_country_code
 msgid "Destination Country"
 msgstr "Land van bestemming"
@@ -475,6 +471,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__delivery_type__fixed
 msgid "Fixed Price"
 msgstr "Vaste prijs"
+
+#. module: delivery
+#: code:addons/delivery/models/sale_order.py:0
+#, python-format
+msgid "Free Shipping"
+msgstr "Gratis verzending"
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
@@ -627,6 +629,13 @@ msgid "No price rule matching this order; delivery cost cannot be computed."
 msgstr ""
 "Geen prijsregel gevonden voor deze order; leveringskosten kunnen niet "
 "berekend worden."
+
+#. module: delivery
+#: model:delivery.carrier,name:delivery.normal_delivery_carrier
+#: model:product.product,name:delivery.product_product_delivery_normal
+#: model:product.template,name:delivery.product_product_delivery_normal_product_template
+msgid "Normal Delivery Charges"
+msgstr "Standaard verzendkosten"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
@@ -863,6 +872,7 @@ msgid "Stock package type"
 msgstr "Type voorraadpakket:"
 
 #. module: delivery
+#: model:ir.model.fields,help:delivery.field_stock_move_line__destination_country_code
 #: model:ir.model.fields,help:delivery.field_stock_picking__destination_country_code
 msgid ""
 "The ISO country code in two chars. \n"
@@ -870,6 +880,13 @@ msgid ""
 msgstr ""
 "De ISO-landcode in twee letters.\n"
 "U kunt dit veld gebruiken voor snelzoeken."
+
+#. module: delivery
+#: model:delivery.carrier,name:delivery.delivery_carrier
+#: model:product.product,name:delivery.product_product_delivery_poste
+#: model:product.template,name:delivery.product_product_delivery_poste_product_template
+msgid "The Poste"
+msgstr "De post"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__get_return_label_from_portal
@@ -992,6 +1009,10 @@ msgstr "Overplaatsing"
 
 #. module: delivery
 #: model:product.product,uom_name:delivery.product_product_delivery
+#: model:product.product,uom_name:delivery.product_product_delivery_normal
+#: model:product.product,uom_name:delivery.product_product_delivery_poste
+#: model:product.template,uom_name:delivery.product_product_delivery_normal_product_template
+#: model:product.template,uom_name:delivery.product_product_delivery_poste_product_template
 #: model:product.template,uom_name:delivery.product_product_delivery_product_template
 msgid "Units"
 msgstr "Stuks"

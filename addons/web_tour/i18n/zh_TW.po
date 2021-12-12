@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-09-14 10:29+0000\n"
 "PO-Revision-Date: 2016-08-05 13:11+0000\n"
 "Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -42,7 +42,7 @@ msgstr "消費"
 
 #. module: web_tour
 #. openerp-web
-#: code:addons/web_tour/static/src/xml/debug_manager.xml:0
+#: code:addons/web_tour/static/src/debug/debug_manager.js:0
 #, python-format
 msgid "Disable Tours"
 msgstr "停用導覽"
@@ -74,10 +74,17 @@ msgstr "選單"
 
 #. module: web_tour
 #. openerp-web
-#: code:addons/web_tour/static/src/xml/debug_manager.xml:0
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
 #, python-format
 msgid "Name"
 msgstr "名稱"
+
+#. module: web_tour
+#. openerp-web
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#, python-format
+msgid "Onboarding tours"
+msgstr "入職導覽"
 
 #. module: web_tour
 #. openerp-web
@@ -88,7 +95,7 @@ msgstr "打開 bugger 選單"
 
 #. module: web_tour
 #. openerp-web
-#: code:addons/web_tour/static/src/xml/debug_manager.xml:0
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
 #, python-format
 msgid "Path"
 msgstr "路徑"
@@ -102,53 +109,53 @@ msgstr "滾動來進入下一步"
 
 #. module: web_tour
 #. openerp-web
-#: code:addons/web_tour/static/src/xml/debug_manager.xml:0
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
 #, python-format
 msgid "Sequence"
 msgstr "序號"
 
 #. module: web_tour
 #. openerp-web
-#: code:addons/web_tour/static/src/js/tour_manager.js:0
-#, python-format
-msgid "Skip tour"
-msgstr "跳過導覽"
-
-#. module: web_tour
-#. openerp-web
-#: code:addons/web_tour/static/src/xml/debug_manager.xml:0
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
 #, python-format
 msgid "Start"
 msgstr "開始"
 
 #. module: web_tour
 #. openerp-web
-#: code:addons/web_tour/static/src/xml/debug_manager.xml:0
+#: code:addons/web_tour/static/src/debug/debug_manager.js:0
 #, python-format
 msgid "Start Tour"
 msgstr "開始導覽"
 
 #. module: web_tour
 #. openerp-web
-#: code:addons/web_tour/static/src/xml/debug_manager.xml:0
-#: code:addons/web_tour/static/src/xml/debug_manager.xml:0
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
 #, python-format
 msgid "Start tour"
 msgstr "開始"
 
 #. module: web_tour
 #. openerp-web
-#: code:addons/web_tour/static/src/xml/debug_manager.xml:0
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
 #, python-format
 msgid "Test"
 msgstr "測試"
 
 #. module: web_tour
 #. openerp-web
-#: code:addons/web_tour/static/src/xml/debug_manager.xml:0
-#: code:addons/web_tour/static/src/xml/debug_manager.xml:0
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
 #, python-format
 msgid "Test tour"
+msgstr "測試導覽"
+
+#. module: web_tour
+#. openerp-web
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#, python-format
+msgid "Testing tours"
 msgstr "測試導覽"
 
 #. module: web_tour
@@ -162,8 +169,11 @@ msgid "Tour name"
 msgstr "遊覽名稱"
 
 #. module: web_tour
+#. openerp-web
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.js:0
 #: model:ir.actions.act_window,name:web_tour.edit_tour_action
 #: model:ir.model,name:web_tour.model_web_tour_tour
 #: model:ir.ui.menu,name:web_tour.menu_tour_action
+#, python-format
 msgid "Tours"
 msgstr "遊覽"

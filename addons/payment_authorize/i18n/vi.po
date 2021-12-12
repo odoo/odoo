@@ -8,13 +8,14 @@
 # Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2021
 # Manh Vu <vuducmanh96vp@gmail.com>, 2021
 # thanhnguyen.icsc <thanhnguyen.icsc@gmail.com>, 2021
+# Martin Trigaux, 2021
 # Trần Hà <tranthuha13590@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2016-08-05 13:06+0000\n"
 "Last-Translator: Trần Hà <tranthuha13590@gmail.com>, 2021\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
@@ -23,6 +24,11 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "ABA Routing Number"
+msgstr ""
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_client_key
@@ -45,6 +51,16 @@ msgid "API Transaction Key"
 msgstr "Khóa giao dịch API"
 
 #. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Account Number"
+msgstr "Số tài khoản"
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_payment_method_type
+msgid "Allow Payments From"
+msgstr ""
+
+#. module: payment_authorize
 #. openerp-web
 #: code:addons/payment_authorize/static/src/js/payment_form.js:0
 #, python-format
@@ -63,8 +79,40 @@ msgid "Authorize.Net"
 msgstr "Authorize.Net"
 
 #. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__authorize_payment_method_type
+msgid "Authorize.Net Payment Type"
+msgstr ""
+
+#. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token__authorize_profile
 msgid "Authorize.Net Profile ID"
+msgstr ""
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/payment_acquirer.py:0
+#, python-format
+msgid "Bank (powered by Authorize)"
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model.fields.selection,name:payment_authorize.selection__payment_acquirer__authorize_payment_method_type__bank_account
+#: model:ir.model.fields.selection,name:payment_authorize.selection__payment_token__authorize_payment_method_type__bank_account
+msgid "Bank Account (USA Only)"
+msgstr ""
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Bank Account Type"
+msgstr ""
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Bank Name"
+msgstr "Tên ngân hàng"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Business Checking"
 msgstr ""
 
 #. module: payment_authorize
@@ -86,9 +134,26 @@ msgid ""
 msgstr ""
 
 #. module: payment_authorize
+#: model:ir.model.fields.selection,name:payment_authorize.selection__payment_acquirer__authorize_payment_method_type__credit_card
+#: model:ir.model.fields.selection,name:payment_authorize.selection__payment_token__authorize_payment_method_type__credit_card
+msgid "Credit Card"
+msgstr "Thẻ tín dụng"
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/payment_acquirer.py:0
+#, python-format
+msgid "Credit Card (powered by Authorize)"
+msgstr "Credit Card (powered by Authorize)"
+
+#. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_acquirer_form
 msgid "Currency"
 msgstr "Tiền tệ"
+
+#. module: payment_authorize
+#: model:ir.model.fields,help:payment_authorize.field_payment_acquirer__authorize_payment_method_type
+msgid "Determines with what payment method the customer can pay."
+msgstr ""
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -119,6 +184,11 @@ msgid "MM"
 msgstr ""
 
 #. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Name On Account"
+msgstr ""
+
+#. module: payment_authorize
 #: code:addons/payment_authorize/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
@@ -143,6 +213,16 @@ msgstr "Mã thanh toán"
 #: model:ir.model,name:payment_authorize.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Giao dịch thanh toán"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Personal Checking"
+msgstr ""
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Personal Savings"
+msgstr ""
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__provider
@@ -205,10 +285,24 @@ msgid "The transaction is not linked to a token."
 msgstr ""
 
 #. module: payment_authorize
+#: model:ir.model.fields,help:payment_authorize.field_payment_token__authorize_payment_method_type
+msgid "The type of payment method this token is linked to."
+msgstr ""
+
+#. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token__authorize_profile
 msgid ""
 "The unique reference for the partner/token combination in the Authorize.net "
 "backend."
+msgstr ""
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/payment_acquirer.py:0
+#, python-format
+msgid ""
+"There are active tokens linked to this acquirer. To change the payment "
+"method type, please disable the acquirer and duplicate it. Then, change the "
+"payment method type on the duplicated acquirer."
 msgstr ""
 
 #. module: payment_authorize

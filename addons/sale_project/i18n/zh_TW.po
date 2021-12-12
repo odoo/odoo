@@ -9,9 +9,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-12-07 10:47+0000\n"
 "PO-Revision-Date: 2020-02-13 10:47+0000\n"
 "Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -22,29 +22,20 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sale_project
-#: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__project_only
-msgid "Create a new project but no task"
-msgstr "創建新專案，但沒有任務"
+#: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
+msgid "Create Invoice"
+msgstr "創建應收憑單"
 
 #. module: sale_project
-#: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__task_global_project
-msgid "Create a task in an existing project"
-msgstr "在現有專案中創建任務"
-
-#. module: sale_project
-#: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__task_in_project
-msgid "Create a task in sales order's project"
-msgstr "在銷售訂單項目中創建任務。"
+#: model:ir.model.fields,field_description:sale_project.field_product_product__service_tracking
+#: model:ir.model.fields,field_description:sale_project.field_product_template__service_tracking
+msgid "Create on Order"
+msgstr "由訂單建立"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__visible_project
 msgid "Display project"
 msgstr "顯示專案"
-
-#. module: sale_project
-#: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__no
-msgid "Don't create a task"
-msgstr ""
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__project_id
@@ -57,6 +48,47 @@ msgid "Generated Task"
 msgstr "生成任務"
 
 #. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_project_project__has_any_so_to_invoice
+msgid "Has SO to Invoice"
+msgstr "有待開立應收憑單之SO"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_project_project__has_any_so_with_nothing_to_invoice
+msgid "Has a SO with an invoice status of No"
+msgstr ""
+
+#. module: sale_project
+#: code:addons/sale_project/models/product.py:0
+#, python-format
+msgid ""
+"Invoice as soon as this service is sold, and create a task in an existing "
+"project to track the time spent."
+msgstr "此服務售出後立即開立應收憑單，並在現有專案中創建任務以追蹤花費的時間。"
+
+#. module: sale_project
+#: code:addons/sale_project/models/product.py:0
+#, python-format
+msgid ""
+"Invoice ordered quantities as soon as this service is sold, and create a "
+"project for the order with a task for each sales order line to track the "
+"time spent."
+msgstr "在此服務售出後立即為訂購數量開立應收憑單，並為訂單創建一個專案，並為每個銷售訂單明細創建一個任務以追蹤所花費的時間。"
+
+#. module: sale_project
+#: code:addons/sale_project/models/product.py:0
+#, python-format
+msgid ""
+"Invoice ordered quantities as soon as this service is sold, and create an "
+"empty project for the order to track the time spent."
+msgstr "在此服務售出後立即為訂購數量開立應收憑單，並為訂單創建一個新專案以追蹤花費的時間。"
+
+#. module: sale_project
+#: code:addons/sale_project/models/product.py:0
+#, python-format
+msgid "Invoice ordered quantities as soon as this service is sold."
+msgstr "此服務售出後，立即對訂購的數量開立應收憑單。"
+
+#. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__is_service
 msgid "Is a Service"
 msgstr "是服務"
@@ -66,6 +98,21 @@ msgstr "是服務"
 #, python-format
 msgid "New"
 msgstr "商機起始"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.portal_tasks_list_inherit
+msgid "No Sales Order"
+msgstr "沒有銷售訂單"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.portal_tasks_list_inherit
+msgid "No Sales Order Item"
+msgstr ""
+
+#. module: sale_project
+#: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__no
+msgid "Nothing"
+msgstr "無事項"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__project_count
@@ -102,13 +149,14 @@ msgstr "产品模板"
 #: model:ir.model.fields,field_description:sale_project.field_product_product__project_id
 #: model:ir.model.fields,field_description:sale_project.field_product_template__project_id
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__project_id
+#: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__project_only
 msgid "Project"
 msgstr "專案"
 
 #. module: sale_project
-#: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
-msgid "Project Overview"
-msgstr "計畫總覽"
+#: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__task_in_project
+msgid "Project & Task"
+msgstr "專案 & 任務"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__project_template_id
@@ -140,22 +188,42 @@ msgid "Projects used in this sales order."
 msgstr "在此銷售訂單中使用的專案。"
 
 #. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_search
 #: model_terms:ir.ui.view,arch_db:sale_project.project_task_view_search
 msgid "Sale Order"
 msgstr "銷售訂單"
 
 #. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_project_project__sale_order_count
+msgid "Sale Order Count"
+msgstr "銷售訂單個數"
+
+#. module: sale_project
+#: code:addons/sale_project/controllers/portal.py:0
+#: code:addons/sale_project/models/project.py:0
 #: model:ir.model,name:sale_project.model_sale_order
 #: model:ir.model.fields,field_description:sale_project.field_project_project__sale_order_id
 #: model:ir.model.fields,field_description:sale_project.field_project_task__sale_order_id
+#: model:ir.model.fields,field_description:sale_project.field_report_project_task_user__sale_order_id
+#: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
+#, python-format
 msgid "Sales Order"
 msgstr "銷售訂單"
 
 #. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_search
+msgid "Sales Order Id"
+msgstr "銷售訂單id"
+
+#. module: sale_project
+#: code:addons/sale_project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:sale_project.field_project_project__sale_line_id
 #: model:ir.model.fields,field_description:sale_project.field_project_task__sale_line_id
+#: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_form
+#: model_terms:ir.ui.view,arch_db:sale_project.project_task_view_search
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
+#, python-format
 msgid "Sales Order Item"
 msgstr "銷售訂單明細"
 
@@ -177,6 +245,11 @@ msgid ""
 "Sales Order item should generate a task and/or a project, depending on the "
 "product settings."
 msgstr "銷售訂單專案應根據產品設定生成任務和/或專案。"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
+msgid "Sales Orders"
+msgstr "銷售訂單"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_line_id
@@ -201,6 +274,24 @@ msgid "Sales order to which the task is linked."
 msgstr "任務連結到的銷售訂單。"
 
 #. module: sale_project
+#: code:addons/sale_project/controllers/portal.py:0
+#, python-format
+msgid "Search in Invoice"
+msgstr "於應收憑單中搜尋"
+
+#. module: sale_project
+#: code:addons/sale_project/controllers/portal.py:0
+#, python-format
+msgid "Search in Sales Order"
+msgstr "於銷售訂單中搜尋"
+
+#. module: sale_project
+#: code:addons/sale_project/controllers/portal.py:0
+#, python-format
+msgid "Search in Sales Order Item"
+msgstr "於銷售訂單明細中搜尋"
+
+#. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_product_product__project_id
 #: model:ir.model.fields,help:sale_project.field_product_template__project_id
 msgid ""
@@ -222,19 +313,8 @@ msgid "Select a non billable project on which tasks can be created."
 msgstr "選擇可以創建任務的不可計費專案。"
 
 #. module: sale_project
-#: model:ir.model.fields,field_description:sale_project.field_product_product__service_tracking
-#: model:ir.model.fields,field_description:sale_project.field_product_template__service_tracking
-msgid "Service Tracking"
-msgstr "服務追蹤"
-
-#. module: sale_project
-#: model:ir.model.fields,field_description:sale_project.field_project_project__project_overview
-#: model:ir.model.fields,field_description:sale_project.field_sale_order__project_overview
-msgid "Show Project Overview"
-msgstr ""
-
-#. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task
+#: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__task_global_project
 msgid "Task"
 msgstr "任務"
 
@@ -260,6 +340,11 @@ msgstr "銷售訂單專案生成的任務"
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
 msgid "Tasks"
 msgstr "任務"
+
+#. module: sale_project
+#: model:ir.model,name:sale_project.model_report_project_task_user
+msgid "Tasks Analysis"
+msgstr "任務分析"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__tasks_ids
@@ -310,10 +395,3 @@ msgid ""
 "You cannot link the order item %(order_id)s - %(product_id)s to this task "
 "because it is a re-invoiced expense."
 msgstr "您不能將訂單項目  %(order_id)s - %(product_id)s 連結到此任務，因為它是重新開立應收憑單的費用。"
-
-#. module: sale_project
-#: code:addons/sale_project/models/project.py:0
-#, python-format
-msgid ""
-"You have to unlink the task from the sale order item in order to delete it."
-msgstr "為了刪除銷售訂單項，您必須將任務從銷售訂單項中解除鏈接"

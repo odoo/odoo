@@ -5,20 +5,20 @@
 # Translators:
 # Martin Trigaux, 2020
 # Duy BQ <duybq86@gmail.com>, 2020
-# Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2020
 # Dung Nguyen Thi <dungnt@trobz.com>, 2020
 # Dao Nguyen <trucdao.uel@gmail.com>, 2020
 # Trần Hà <tranthuha13590@gmail.com>, 2021
 # fanha99 <fanha99@hotmail.com>, 2021
 # thanhnguyen.icsc <thanhnguyen.icsc@gmail.com>, 2021
+# Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-11-16 13:19+0000\n"
 "PO-Revision-Date: 2016-08-05 12:57+0000\n"
-"Last-Translator: thanhnguyen.icsc <thanhnguyen.icsc@gmail.com>, 2021\n"
+"Last-Translator: Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2021\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,12 +31,6 @@ msgstr ""
 #, python-format
 msgid " (Estimated Cost: %s )"
 msgstr " (Estimated Cost: %s )"
-
-#. module: delivery
-#: code:addons/delivery/models/sale_order.py:0
-#, python-format
-msgid "Free Shipping"
-msgstr "Miễn phí giao hàng"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_quant_package_weight_form
@@ -221,6 +215,7 @@ msgstr "Hủy"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__carrier_id
+#: model:ir.model.fields,field_description:delivery.field_stock_move_line__carrier_id
 #: model:ir.model.fields,field_description:delivery.field_stock_package_type__package_carrier_type
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_id
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -389,6 +384,7 @@ msgid "Destination Availability"
 msgstr "Đang có tại điểm đến"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_stock_move_line__destination_country_code
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__destination_country_code
 msgid "Destination Country"
 msgstr ""
@@ -474,6 +470,12 @@ msgstr ""
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__delivery_type__fixed
 msgid "Fixed Price"
 msgstr "Giá cố định"
+
+#. module: delivery
+#: code:addons/delivery/models/sale_order.py:0
+#, python-format
+msgid "Free Shipping"
+msgstr "Miễn phí giao hàng"
 
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
@@ -626,6 +628,13 @@ msgid "No price rule matching this order; delivery cost cannot be computed."
 msgstr ""
 "Không có quy tắc giá nào khớp với đơn đặt hàng này; không thể tính toán chi "
 "phí giao hàng."
+
+#. module: delivery
+#: model:delivery.carrier,name:delivery.normal_delivery_carrier
+#: model:product.product,name:delivery.product_product_delivery_normal
+#: model:product.template,name:delivery.product_product_delivery_normal_product_template
+msgid "Normal Delivery Charges"
+msgstr "Phí vận chuyển thông thường"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
@@ -862,6 +871,7 @@ msgid "Stock package type"
 msgstr ""
 
 #. module: delivery
+#: model:ir.model.fields,help:delivery.field_stock_move_line__destination_country_code
 #: model:ir.model.fields,help:delivery.field_stock_picking__destination_country_code
 msgid ""
 "The ISO country code in two chars. \n"
@@ -869,6 +879,13 @@ msgid ""
 msgstr ""
 "Mã ISO quốc gia có 2 ký tự. \n"
 "Bạn có thể dùng thông tin này để tìm kiếm nhanh."
+
+#. module: delivery
+#: model:delivery.carrier,name:delivery.delivery_carrier
+#: model:product.product,name:delivery.product_product_delivery_poste
+#: model:product.template,name:delivery.product_product_delivery_poste_product_template
+msgid "The Poste"
+msgstr "Poste"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__get_return_label_from_portal
@@ -989,6 +1006,10 @@ msgstr "Điều chuyển"
 
 #. module: delivery
 #: model:product.product,uom_name:delivery.product_product_delivery
+#: model:product.product,uom_name:delivery.product_product_delivery_normal
+#: model:product.product,uom_name:delivery.product_product_delivery_poste
+#: model:product.template,uom_name:delivery.product_product_delivery_normal_product_template
+#: model:product.template,uom_name:delivery.product_product_delivery_poste_product_template
 #: model:product.template,uom_name:delivery.product_product_delivery_product_template
 msgid "Units"
 msgstr "Đơn vị"

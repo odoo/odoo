@@ -3,18 +3,18 @@
 # 	* hr_fleet
 # 
 # Translators:
-# Ivan Yelizariev // IEL <yelizariev@itpp.dev>, 2020
-# Martin Trigaux, 2020
 # Ekaterina <nawsikaya@bk.ru>, 2020
 # Сергей Шебанин <sergey@shebanin.ru>, 2021
+# Martin Trigaux, 2021
+# Ivan Yelizariev // IEL (ellui) <yelizariev@itpp.dev>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2019-03-20 14:56+0000\n"
-"Last-Translator: Сергей Шебанин <sergey@shebanin.ru>, 2021\n"
+"Last-Translator: Ivan Yelizariev // IEL (ellui) <yelizariev@itpp.dev>, 2021\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,6 +29,11 @@ msgid "%(car_name)s (driven from: %(date_start)s to %(date_end)s)"
 msgstr ""
 
 #. module: hr_fleet
+#: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_view_form_inherit_hr
+msgid "<span class=\"o_stat_text\">Employee</span>"
+msgstr ""
+
+#. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.view_employee_form
 msgid "Application Settings"
 msgstr ""
@@ -37,6 +42,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_assignation_log_view_list
 msgid "Attachments"
 msgstr "Вложения"
+
+#. module: hr_fleet
+#: code:addons/hr_fleet/models/employee.py:0
+#, python-format
+msgid "Cannot remove address from employees with linked cars."
+msgstr ""
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__employee_cars_count
@@ -51,9 +62,34 @@ msgid "Claim Car Report"
 msgstr ""
 
 #. module: hr_fleet
+#: model_terms:ir.ui.view,arch_db:hr_fleet.hr_departure_wizard_view_form
+msgid "Company Car"
+msgstr "авто компании"
+
+#. module: hr_fleet
+#: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_view_search_inherit_hr
+msgid "Current Driver (Employee)"
+msgstr ""
+
+#. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_hr_departure_wizard
 msgid "Departure Wizard"
 msgstr "Мастер увольнения"
+
+#. module: hr_fleet
+#: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_log_contract_view_form_inherit_hr
+msgid "Driver"
+msgstr "Водитель"
+
+#. module: hr_fleet
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__driver_employee_id
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_assignation_log__driver_employee_id
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_log_contract__purchaser_employee_id
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_log_services__purchaser_employee_id
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_odometer__driver_employee_id
+#: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_log_services_view_form_inherit_hr
+msgid "Driver (Employee)"
+msgstr ""
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_fleet_vehicle_assignation_log
@@ -62,13 +98,30 @@ msgstr "История водителей транспортного средс�
 
 #. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_hr_employee
+#: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_log_contract_view_search_inherit_hr
 msgid "Employee"
 msgstr "Сотрудник"
+
+#. module: hr_fleet
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__driver_employee_name
+msgid "Employee Name"
+msgstr "Имя сотрудника"
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.view_employee_form
 msgid "Fleet Mobility Card"
 msgstr ""
+
+#. module: hr_fleet
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__future_driver_employee_id
+#: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_view_search_inherit_hr
+msgid "Future Driver (Employee)"
+msgstr ""
+
+#. module: hr_fleet
+#: model_terms:ir.ui.view,arch_db:hr_fleet.view_employee_filter
+msgid "License Plate"
+msgstr "Номерной знак"
 
 #. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__mobility_card
@@ -83,14 +136,35 @@ msgid "Number of Attachments"
 msgstr "Количество приложений"
 
 #. module: hr_fleet
+#: model:ir.model,name:hr_fleet.model_fleet_vehicle_odometer
+msgid "Odometer log for a vehicle"
+msgstr "Запись счетчика пробега для транспортного средства"
+
+#. module: hr_fleet
 #: model:ir.model,name:hr_fleet.model_hr_employee_public
 msgid "Public Employee"
 msgstr "Государственный служащий"
 
 #. module: hr_fleet
+#: code:addons/hr_fleet/models/fleet_vehicle.py:0
+#, python-format
+msgid "Related Employee"
+msgstr ""
+
+#. module: hr_fleet
 #: model:ir.model.fields,field_description:hr_fleet.field_hr_departure_wizard__release_campany_car
 msgid "Release Company Car"
 msgstr ""
+
+#. module: hr_fleet
+#: model:ir.model.fields,help:hr_fleet.field_hr_departure_wizard__release_campany_car
+msgid "Release the company car."
+msgstr ""
+
+#. module: hr_fleet
+#: model:ir.model,name:hr_fleet.model_fleet_vehicle_log_services
+msgid "Services for vehicles"
+msgstr "Услуги для транспортных средств"
 
 #. module: hr_fleet
 #: model_terms:ir.ui.view,arch_db:hr_fleet.res_users_view_form_preferences
@@ -109,3 +183,13 @@ msgstr "Пользователи"
 #: model:ir.model,name:hr_fleet.model_fleet_vehicle
 msgid "Vehicle"
 msgstr "Транспортное средство"
+
+#. module: hr_fleet
+#: model:ir.model,name:hr_fleet.model_fleet_vehicle_log_contract
+msgid "Vehicle Contract"
+msgstr ""
+
+#. module: hr_fleet
+#: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__car_ids
+msgid "Vehicles (private)"
+msgstr ""

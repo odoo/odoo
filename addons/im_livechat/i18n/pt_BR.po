@@ -9,10 +9,8 @@
 # Lauro de Lima <lauro@ciclix.com>, 2019
 # Ramiro Pereira de Magalhães <ramiro.p.magalhaes@gmail.com>, 2019
 # Fernanda Marques <fem@odoo.com>, 2020
-# Fernando Colus <fcolus1@gmail.com>, 2020
 # Luiz Fernando <lfpsgs@outlook.com>, 2020
 # Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatica@protonmail.com>, 2020
-# Martin Trigaux, 2020
 # Marcel Savegnago <marcel.savegnago@gmail.com>, 2020
 # Clemilton Clementino <clemylton@hotmail.com>, 2020
 # Mateus Lopes <mateus1@gmail.com>, 2020
@@ -22,14 +20,15 @@
 # Fernando Alencar <fernando@fernandoalencar.com.br>, 2020
 # Luiz Carareto Alonso <Luiz.cararetoalonso@gmail.com>, 2020
 # Éder Brito <britoederr@gmail.com>, 2021
+# Martin Trigaux, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2016-08-05 13:05+0000\n"
-"Last-Translator: Éder Brito <britoederr@gmail.com>, 2021\n"
+"Last-Translator: Martin Trigaux, 2021\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,6 +40,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
 msgid "# Messages"
 msgstr "# Mensagens"
+
+#. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__rating_count
+msgid "# Ratings"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__nbr_channel
@@ -105,6 +109,13 @@ msgstr ", no/na"
 #, python-format
 msgid "-------- Show older messages --------"
 msgstr "-------- Mostrar mensagens antigas --------"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
+msgid ""
+"<i class=\"fa fa-smile-o text-success\" title=\"Percentage of happy "
+"ratings\" role=\"img\" aria-label=\"Happy face\"/>"
+msgstr ""
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
@@ -330,6 +341,13 @@ msgstr "Canais"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__input_placeholder
 msgid "Chat Input Placeholder"
 msgstr "Espaço para Digitar no Chat"
+
+#. module: im_livechat
+#: model:ir.model.fields,help:im_livechat.field_mail_channel__channel_type
+msgid ""
+"Chat is private and unique between 2 persons. Group is private among invited"
+" persons. Channel can be freely joined (depending on its configuration)."
+msgstr ""
 
 #. module: im_livechat
 #. openerp-web
@@ -640,11 +658,6 @@ msgid "Group By..."
 msgstr "Agrupar por..."
 
 #. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
-msgid "Happy face"
-msgstr "Carinha Feliz"
-
-#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__header_background_color
 msgid "Header Background Color"
 msgstr "Cor de Fundo do Cabeçalho"
@@ -710,6 +723,11 @@ msgid "Invalid email address"
 msgstr "Endereço de e-mail inválido"
 
 #. module: im_livechat
+#: model:ir.model.fields,field_description:im_livechat.field_res_users_settings__is_discuss_sidebar_category_livechat_open
+msgid "Is category livechat open"
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_mail_channel__livechat_active
 msgid "Is livechat ongoing?"
 msgstr "O Chat está em andamento?"
@@ -718,6 +736,17 @@ msgstr "O Chat está em andamento?"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__is_anonymous
 msgid "Is visitor anonymous"
 msgstr "É um visitante anônimo"
+
+#. module: im_livechat
+#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_3
+msgid "Joel Willis, Marc Demo"
+msgstr "Joel Willis, Marc Demo"
+
+#. module: im_livechat
+#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_2
+#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_6
+msgid "Joel Willis, Mitchell Admin"
+msgstr "Joel Willis, Mitchell Admin"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
@@ -800,8 +829,8 @@ msgstr "Pesquisa de Canal de Chat"
 #. module: im_livechat
 #. openerp-web
 #: code:addons/im_livechat/static/src/components/discuss/discuss.js:0
-#: code:addons/im_livechat/static/src/components/discuss_sidebar/discuss_sidebar.xml:0
 #: code:addons/im_livechat/static/src/components/thread_icon/thread_icon.xml:0
+#: code:addons/im_livechat/static/src/models/messaging_initializer/messaging_initializer.js:0
 #: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view
 #, python-format
 msgid "Livechat"
@@ -936,11 +965,6 @@ msgstr "Sessões obsoletas"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__name
 msgid "Name"
 msgstr "Nome"
-
-#. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
-msgid "Neutral face"
-msgstr "Carinha Neutra"
 
 #. module: im_livechat
 #. openerp-web
@@ -1203,21 +1227,6 @@ msgid "Rating: %s"
 msgstr "Avaliação: %s"
 
 #. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
-msgid "Rating: Bad"
-msgstr "Avaliação: Ruim"
-
-#. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
-msgid "Rating: Great"
-msgstr "Avaliação: Ótimo"
-
-#. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
-msgid "Rating: Okay"
-msgstr "Avaliação: Ok"
-
-#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__rating_ids
 msgid "Ratings"
 msgstr "Avaliações"
@@ -1310,11 +1319,6 @@ msgid "Rules"
 msgstr "Regras"
 
 #. module: im_livechat
-#: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
-msgid "Sad face"
-msgstr "Carinha Triste"
-
-#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__rating_text
 msgid "Satisfaction Rate"
 msgstr "Taxa de Satisfação"
@@ -1348,7 +1352,8 @@ msgid "Search report"
 msgstr "Procurar no relatório"
 
 #. module: im_livechat
-#: code:addons/im_livechat/models/mail_channel.py:0
+#. openerp-web
+#: code:addons/im_livechat/static/src/models/messaging_initializer/messaging_initializer.js:0
 #, python-format
 msgid "See 15 last visited pages"
 msgstr "Ver as ultimas 15 páginas visitadas"
@@ -1640,6 +1645,11 @@ msgid "User"
 msgstr "Usuário"
 
 #. module: im_livechat
+#: model:ir.model,name:im_livechat.model_res_users_settings
+msgid "User Settings"
+msgstr ""
+
+#. module: im_livechat
 #. openerp-web
 #: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
 #, python-format
@@ -1692,6 +1702,31 @@ msgid "Visitor"
 msgstr "Visitante"
 
 #. module: im_livechat
+#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_0
+msgid "Visitor #234, Mitchell Admin"
+msgstr "Visitante #234, Mitchell Admin"
+
+#. module: im_livechat
+#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_1
+msgid "Visitor #323, Marc Demo"
+msgstr "Visitante #323, Marc Demo"
+
+#. module: im_livechat
+#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_4
+msgid "Visitor #532, Mitchell Admin"
+msgstr "Visitante #532, Mitchell Admin"
+
+#. module: im_livechat
+#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_5
+msgid "Visitor #649, Mitchell Admin"
+msgstr "Vosotamte #649, Mitchell Admin"
+
+#. module: im_livechat
+#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_7
+msgid "Visitor #722, Marc Demo"
+msgstr "Visitante #722, Marc Demo"
+
+#. module: im_livechat
 #: code:addons/im_livechat/models/mail_channel.py:0
 #, python-format
 msgid "Visitor has left the conversation."
@@ -1701,6 +1736,11 @@ msgstr "O visitante deixou a conversa."
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__is_happy
 msgid "Visitor is Happy"
 msgstr "O Visitante está Feliz"
+
+#. module: im_livechat
+#: model:mail.channel,name:im_livechat.mail_channel_livechat_1
+msgid "Visitor, Mitchell Admin"
+msgstr "Visitante, Mitchell Admin"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__web_page

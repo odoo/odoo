@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-19 09:44+0000\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2020-12-11 11:02+0000\n"
 "Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -18,6 +18,13 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: auth_totp_portal
+#. openerp-web
+#: code:addons/auth_totp_portal/static/src/js/totp_frontend.js:0
+#, python-format
+msgid " Copy"
+msgstr "複製"
 
 #. module: auth_totp_portal
 #: model_terms:ir.ui.view,arch_db:auth_totp_portal.totp_portal_hook
@@ -57,6 +64,13 @@ msgid "<strong>Trusted Device</strong>"
 msgstr "<strong>已驗證設備</strong>"
 
 #. module: auth_totp_portal
+#. openerp-web
+#: code:addons/auth_totp_portal/static/src/js/totp_frontend.js:0
+#, python-format
+msgid "Copied !"
+msgstr "已複製 !"
+
+#. module: auth_totp_portal
 #: model_terms:ir.ui.view,arch_db:auth_totp_portal.totp_portal_hook
 msgid "Enable two-factor authentication"
 msgstr "啟用兩步驟驗證"
@@ -77,3 +91,8 @@ msgstr "全部取消"
 #: model_terms:ir.ui.view,arch_db:auth_totp_portal.totp_portal_hook
 msgid "Two-factor authentication"
 msgstr "兩步驟驗證"
+
+#. module: auth_totp_portal
+#: model:ir.model,name:auth_totp_portal.model_res_users
+msgid "Users"
+msgstr "使用者"

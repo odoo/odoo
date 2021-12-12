@@ -3,15 +3,15 @@
 # 	* gift_card
 # 
 # Translators:
-# Martin Trigaux, 2021
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
+# Martin Trigaux, 2021
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-05-11 12:33+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -22,68 +22,16 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: gift_card
-#: model:mail.template,body_html:gift_card.mail_template_gift_card
+#: model:ir.model.fields,help:gift_card.field_product_product__detailed_type
+#: model:ir.model.fields,help:gift_card.field_product_template__detailed_type
 msgid ""
-"<div style=\"margin:0px; font-size:24px; font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:36px; color:#333333; text-align: center\">\n"
-"                Here is your gift card!\n"
-"            </div>\n"
-"            <div style=\"padding-top:20px; padding-bottom:20px\">\n"
-"                <img src=\"/gift_card/static/img/gift_card.png\" style=\"display:block; border:0; outline:none; text-decoration:none; margin:auto;\" width=\"300\"/>\n"
-"            </div>\n"
-"            <div style=\"padding:0; margin:0px; padding-top:35px; padding-bottom:35px; text-align:center;\">\n"
-"                <h3 style=\"margin:0px; line-height:48px; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:40px; font-style:normal; font-weight:normal; color:#333333; text-align:center\">\n"
-"                    <strong>${format_amount(object.initial_amount, object.currency_id)}</strong></h3>\n"
-"            </div>\n"
-"            <div style=\"padding:0; margin:0px; padding-top:35px; padding-bottom:35px; background-color:#efefef; text-align:center;\">\n"
-"                <p style=\"margin:0px; font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:21px; color:#333333\">\n"
-"                    <strong>Gift Card Code</strong>\n"
-"                </p>\n"
-"                <p style=\"margin:0px; font-size:25px;font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:38px; color:#A9A9A9\">\n"
-"                    ${object.code}\n"
-"                </p>\n"
-"            </div>\n"
-"            <div style=\"padding:0; margin:0px; padding-top:10px; padding-bottom:10px; text-align:center;\">\n"
-"                <h3 style=\"margin:0px; line-height:17px; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:14px; font-style:normal; font-weight:normal; color:#A9A9A9; text-align:center\">Card expires ${format_date(object.expired_date)}</h3>\n"
-"            </div>\n"
-"            <div style=\"padding:20px; margin:0px; text-align:center;\">\n"
-"                <span style=\"background-color:#999999; display:inline-block; width:auto; border-radius:5px;\">\n"
-"                    <a href=\"${object.buy_line_id.order_id.get_base_url()}/shop\" target=\"_blank\" style=\"text-decoration:none; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:22px; color:#FFFFFF; border-style:solid; border-color:#999999; border-width:20px 30px; display:inline-block; background-color:#999999; border-radius:5px; font-weight:bold; font-style:normal; line-height:26px; width:auto; text-align:center\">Use it right now!</a>\n"
-"                </span>\n"
-"            </div>\n"
-"        "
+"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
+"A consumable product is a product for which stock is not managed.\n"
+"A service is a non-material product you provide."
 msgstr ""
-"<div style=\"margin:0px; font-size:24px; font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:36px; color:#333333; text-align: center\">\n"
-"                Hier is je cadeaubon!\n"
-"            </div>\n"
-"            <div style=\"padding-top:20px; padding-bottom:20px\">\n"
-"                <img src=\"/gift_card/static/img/gift_card.png\" style=\"display:block; border:0; outline:none; text-decoration:none; margin:auto;\" breedte = \"300\"/>\n"
-"            </div>\n"
-"            <div style=\"padding:0; margin:0px; padding-top:35px; padding-bottom:35px; text-align:center;\">\n"
-"                <h3 style=\"margin:0px; line-height:48px; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:40px; font-style:normal; font-weight:normal; color:#333333; text-align:center\">\n"
-"                    <strong>${format_amount(object.initial_amount, object.currency_id)}</strong></h3>\n"
-"            </div>\n"
-"            <div style=\"padding:0; margin:0px; padding-top:35px; padding-bottom:35px; background-color:#efefef; text-align:center;\">\n"
-"                <p style=\"margin:0px; font-size:14px;font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:21px; color:#333333\">\n"
-"                    <strong>Cadeauboncode</strong>\n"
-"                </p>\n"
-"                <p style=\"margin:0px; font-size:25px;font-family:arial, 'helvetica neue', helvetica, sans-serif; line-height:38px; color:#A9A9A9\">\n"
-"                    ${object.code}\n"
-"                </p>\n"
-"            </div>\n"
-"            <div style=\"padding:0; margin:0px; padding-top:10px; padding-bottom:10px; text-align:center;\">\n"
-"                <h3 style=\"margin:0px; line-height:17px; font-family:arial, 'helvetica neue', helvetica, sans-serif; font-size:14px; font-style:normal; font-weight:normal; color:#A9A9A9; text-align:center\">Kaart verloopt ${format_date(object.expired_date)}</h3>\n"
-"            </div>\n"
-"            <div style=\"padding:20px; margin:0px; text-align:center;\">\n"
-"                <span style=\"background-color:#999999; display:inline-block; width:auto; border-radius:5px;\">\n"
-"                    <a href=\"${object.buy_line_id.order_id.get_base_url()}/shop\" target=\"_blank\" style=\"text-decoration:none; font-family:arial, 'helvetica neue', helvetica, schreefloos ; font-size:22px; color:#FFFFFF; border-style:solid; border-color:#999999; border-width:20px 30px; display:inline-block; background-color:#999999; border-radius:5px ; font-weight:bold; font-style:normal; line-height:26px; width:auto; text-align:center\">Gebruik het nu!</a>\n"
-"                </span>\n"
-"            </div>\n"
-"        "
-
-#. module: gift_card
-#: model_terms:ir.ui.view,arch_db:gift_card.sale_purchased_gift_card
-msgid "<span class=\"fa fa-clipboard\"/> Copy"
-msgstr "<span class=\"fa fa-clipboard\"/> Kopiëren"
+"Een voorraad product is een product waarvan je voorraad beheerd. De voorraad app moet geïnstalleerd worden.\n"
+"Een verbruiksproduct, is een product waarvoor geen voorraad wordt bijgehouden.\n"
+"Een dienst is een immateriëel product dat je verkoopt."
 
 #. module: gift_card
 #: model:ir.model.fields,field_description:gift_card.field_gift_card__balance
@@ -91,24 +39,9 @@ msgid "Balance"
 msgstr "Saldo"
 
 #. module: gift_card
-#: model:ir.model.fields,field_description:gift_card.field_sale_order_line__generated_gift_card_ids
-msgid "Bought Gift Card"
-msgstr "Cadeaukaart gekocht"
-
-#. module: gift_card
-#: model:ir.model.fields,field_description:gift_card.field_gift_card__buy_line_id
-msgid "Buy Line"
-msgstr "Koop lijn"
-
-#. module: gift_card
 #: model:ir.model.fields,field_description:gift_card.field_gift_card__code
 msgid "Code"
 msgstr "Code"
-
-#. module: gift_card
-#: model_terms:ir.ui.view,arch_db:gift_card.used_gift_card
-msgid "Code:"
-msgstr "Code:"
 
 #. module: gift_card
 #: model:ir.model.fields,field_description:gift_card.field_gift_card__company_id
@@ -129,11 +62,6 @@ msgstr "Aangemaakt op"
 #: model:ir.model.fields,field_description:gift_card.field_gift_card__currency_id
 msgid "Currency"
 msgstr "Valuta"
-
-#. module: gift_card
-#: model:ir.model.fields,help:gift_card.field_sale_order_line__gift_card_id
-msgid "Deducted from this Gift Card"
-msgstr "Afgehouden van deze cadeaukaart"
 
 #. module: gift_card
 #: code:addons/gift_card/models/product.py:0
@@ -157,16 +85,6 @@ msgid "Expired Date"
 msgstr "Vervaldatum"
 
 #. module: gift_card
-#: model_terms:ir.ui.view,arch_db:gift_card.used_gift_card
-msgid "Expired Date:"
-msgstr "Houdbaarheidsdatum:"
-
-#. module: gift_card
-#: model_terms:ir.ui.view,arch_db:gift_card.sale_purchased_gift_card
-msgid "Gift #"
-msgstr "Geschenk #"
-
-#. module: gift_card
 #: code:addons/gift_card/models/gift_card.py:0
 #, python-format
 msgid "Gift #%s"
@@ -174,7 +92,7 @@ msgstr "Cadeau #%s"
 
 #. module: gift_card
 #: model:ir.model,name:gift_card.model_gift_card
-#: model:ir.model.fields,field_description:gift_card.field_sale_order_line__gift_card_id
+#: model:ir.model.fields.selection,name:gift_card.selection__product_template__detailed_type__gift
 #: model:product.product,name:gift_card.gift_card_product_50
 #: model:product.product,name:gift_card.pay_with_gift_card_product
 #: model:product.template,name:gift_card.gift_card_product_50_product_template
@@ -185,36 +103,7 @@ msgid "Gift Card"
 msgstr "Cadeaukaart"
 
 #. module: gift_card
-#: model_terms:ir.ui.view,arch_db:gift_card.sale_purchased_gift_card
-msgid "Gift Card Code"
-msgstr "Cadeauboncode"
-
-#. module: gift_card
-#: model:ir.model.fields,field_description:gift_card.field_sale_order__gift_card_count
-msgid "Gift Card Count"
-msgstr "Aantal cadeaubonnen"
-
-#. module: gift_card
-#: code:addons/gift_card/models/sale_order.py:0
-#, python-format
-msgid "Gift Card already used."
-msgstr "Cadeaukaart al gebruikt."
-
-#. module: gift_card
-#: code:addons/gift_card/models/sale_order.py:0
-#, python-format
-msgid "Gift Card are restricted for another user."
-msgstr "Cadeaubonnen zijn beperkt voor een andere gebruiker."
-
-#. module: gift_card
-#: model:mail.template,name:gift_card.mail_template_gift_card
-msgid "Gift Card: Send by Email"
-msgstr "Cadeaubon: per e-mail verzenden"
-
-#. module: gift_card
 #: model:ir.actions.act_window,name:gift_card.gift_card_action
-#: model:ir.actions.act_window,name:gift_card.gift_card_sale_order_action
-#: model_terms:ir.ui.view,arch_db:gift_card.sale_order_view_extend_gift_card_form
 msgid "Gift Cards"
 msgstr "Cadeaukaarten"
 
@@ -232,18 +121,6 @@ msgstr "Indien leeg, kunnen alle gebruikers het gebruiken"
 #: model:ir.model.fields,field_description:gift_card.field_gift_card__initial_amount
 msgid "Initial Amount"
 msgstr "Startbedrag"
-
-#. module: gift_card
-#: code:addons/gift_card/models/sale_order.py:0
-#, python-format
-msgid "Invalid or Expired Gift Card."
-msgstr "Ongeldige of verlopen cadeaukaart."
-
-#. module: gift_card
-#: model:ir.model.fields,field_description:gift_card.field_product_product__is_gift_card
-#: model:ir.model.fields,field_description:gift_card.field_product_template__is_gift_card
-msgid "Is Gift Card"
-msgstr ""
 
 #. module: gift_card
 #: model:ir.model.fields,field_description:gift_card.field_gift_card____last_update
@@ -276,29 +153,10 @@ msgid "Product Template"
 msgstr "Productsjabloon"
 
 #. module: gift_card
-#: model:ir.model.fields,field_description:gift_card.field_gift_card__redeem_line_ids
-msgid "Redeems"
-msgstr "Inwisselen"
-
-#. module: gift_card
-#: model_terms:ir.ui.view,arch_db:gift_card.gift_card_view_form
-msgid "Sale Order"
-msgstr "Verkooporder"
-
-#. module: gift_card
-#: model:ir.model.fields,help:gift_card.field_gift_card__buy_line_id
-msgid "Sale Order line where this gift card has been bought."
-msgstr "Verkoop Orderregel waar deze cadeaukaart is gekocht."
-
-#. module: gift_card
-#: model:ir.model,name:gift_card.model_sale_order
-msgid "Sales Order"
-msgstr "Verkooporder"
-
-#. module: gift_card
-#: model:ir.model,name:gift_card.model_sale_order_line
-msgid "Sales Order Line"
-msgstr "Verkooporderregel"
+#: model:ir.model.fields,field_description:gift_card.field_product_product__detailed_type
+#: model:ir.model.fields,field_description:gift_card.field_product_template__detailed_type
+msgid "Product Type"
+msgstr "Productsoort"
 
 #. module: gift_card
 #: model:ir.model.fields,field_description:gift_card.field_gift_card__state
@@ -316,12 +174,6 @@ msgid "The initial amount must be positive."
 msgstr "Het startbedrag moet positief zijn."
 
 #. module: gift_card
-#: model:ir.model.fields,help:gift_card.field_product_product__is_gift_card
-#: model:ir.model.fields,help:gift_card.field_product_template__is_gift_card
-msgid "This product is converted into a gift card when purchased."
-msgstr ""
-
-#. module: gift_card
 #: model:product.product,uom_name:gift_card.gift_card_product_50
 #: model:product.product,uom_name:gift_card.pay_with_gift_card_product
 #: model:product.template,uom_name:gift_card.gift_card_product_50_product_template
@@ -334,17 +186,3 @@ msgstr "Stuks"
 #: model_terms:ir.ui.view,arch_db:gift_card.gift_card_view_search
 msgid "Valid"
 msgstr "Geldig"
-
-#. module: gift_card
-#: model_terms:ir.ui.view,arch_db:gift_card.sale_purchased_gift_card
-msgid ""
-"You will find below your gift cards code. An email has been sent with it. "
-"You can use it starting right now."
-msgstr ""
-"Hieronder vindt u de code van uw cadeaukaart. Er is een e-mail mee "
-"verzonden. Je kunt het vanaf nu gebruiken."
-
-#. module: gift_card
-#: model:mail.template,subject:gift_card.mail_template_gift_card
-msgid "Your Gift Card"
-msgstr "Uw cadeaukaart"

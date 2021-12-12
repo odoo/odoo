@@ -3,15 +3,16 @@
 # 	* mass_mailing_crm
 # 
 # Translators:
-# krnkris, 2019
 # Tamás Németh <ntomasz81@gmail.com>, 2020
+# krnkris, 2021
+# gezza <geza.nagy@oregional.hu>, 2021
 # Ákos Nagy <akos.nagy@oregional.hu>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-12-07 10:47+0000\n"
 "PO-Revision-Date: 2019-03-20 14:57+0000\n"
 "Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2021\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
@@ -42,6 +43,19 @@ msgid "Lead/Opportunity"
 msgstr "Érdeklődés/Lehetőség"
 
 #. module: mass_mailing_crm
+#: code:addons/mass_mailing_crm/models/mailing_mailing.py:0
+#: model:ir.model.fields.selection,name:mass_mailing_crm.selection__utm_campaign__ab_testing_winner_selection__crm_lead_count
+#, python-format
+msgid "Leads"
+msgstr "Érdeklődések"
+
+#. module: mass_mailing_crm
+#: code:addons/mass_mailing_crm/models/mailing_mailing.py:0
+#, python-format
+msgid "Leads Analysis"
+msgstr "Érdeklődések elemzése"
+
+#. module: mass_mailing_crm
 #: model:ir.model.fields,field_description:mass_mailing_crm.field_mailing_mailing__crm_lead_count
 msgid "Leads/Opportunities Count"
 msgstr ""
@@ -52,6 +66,41 @@ msgid "Mass Mailing"
 msgstr "Tömeges email küldés"
 
 #. module: mass_mailing_crm
+#: code:addons/mass_mailing_crm/models/mailing_mailing.py:0
+#, python-format
+msgid "No %s yet!"
+msgstr ""
+
+#. module: mass_mailing_crm
+#: code:addons/mass_mailing_crm/models/mailing_mailing.py:0
+#, python-format
+msgid ""
+"Note that Odoo cannot track replies if they are sent towards email addresses"
+" to this database."
+msgstr ""
+
+#. module: mass_mailing_crm
+#: code:addons/mass_mailing_crm/models/mailing_mailing.py:0
+#, python-format
+msgid "Opportunities"
+msgstr "Lehetőségek"
+
+#. module: mass_mailing_crm
+#: model:ir.model.fields,help:mass_mailing_crm.field_utm_campaign__ab_testing_winner_selection
+msgid "Selection to determine the winner mailing that will be sent."
+msgstr ""
+
+#. module: mass_mailing_crm
+#: model:ir.model,name:mass_mailing_crm.model_utm_campaign
+msgid "UTM Campaign"
+msgstr "UTM kampány"
+
+#. module: mass_mailing_crm
 #: model:ir.model.fields,field_description:mass_mailing_crm.field_mailing_mailing__use_leads
 msgid "Use Leads"
 msgstr "Érdekődések használata"
+
+#. module: mass_mailing_crm
+#: model:ir.model.fields,field_description:mass_mailing_crm.field_utm_campaign__ab_testing_winner_selection
+msgid "Winner Selection"
+msgstr ""

@@ -10,9 +10,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-12-07 10:47+0000\n"
 "PO-Revision-Date: 2020-12-11 11:05+0000\n"
 "Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -65,6 +65,16 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
 "title=\"Arrow\"/>"
+
+#. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_aside
+msgid "<small class=\"badge badge-danger\">Unpublished</small>"
+msgstr "<small class=\"badge badge-danger\">未發佈</small>"
+
+#. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitors_search_tag
+msgid "<span class=\"btn border-0 py-1\">×</span>"
+msgstr "<span class=\"btn border-0 py-1\">×</span>"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_aside
@@ -208,6 +218,11 @@ msgid "Create a Sponsor / Exhibitor"
 msgstr "創建贊助者/參展攤商"
 
 #. module: website_event_exhibitor
+#: model_terms:ir.actions.act_window,help:website_event_exhibitor.event_sponsor_type_action
+msgid "Create a Sponsor Level"
+msgstr "創建贊助者級別"
+
+#. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__create_uid
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor_type__create_uid
 msgid "Created by"
@@ -235,6 +250,11 @@ msgstr "顯示名稱"
 #: model:ir.model.fields,help:website_event_exhibitor.field_event_type__exhibitor_menu
 msgid "Display exhibitors on website"
 msgstr "在網站上展示參展攤商"
+
+#. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
+msgid "Display in footer"
+msgstr "在頁尾中顯示"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__partner_email
@@ -298,6 +318,11 @@ msgstr "參展攤商"
 #, python-format
 msgid "Exhibitors"
 msgstr "參展攤商"
+
+#. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_type_view_form
+msgid "Exhibitors Menu Item"
+msgstr "參展攤商清單項目"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_event__exhibitor_menu_ids
@@ -605,6 +630,18 @@ msgid "Phone"
 msgstr "電話"
 
 #. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_search
+msgid "Published"
+msgstr "已公開"
+
+#. module: website_event_exhibitor
+#: model_terms:ir.actions.act_window,help:website_event_exhibitor.event_sponsor_type_action
+msgid ""
+"Rank your sponsors based on your own grading system (e.g. \"Gold, Silver, "
+"Bronze\")."
+msgstr "根據您自己的分級架構（例如“金、銀、銅”）對您的贊助商進行排序。"
+
+#. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_card
 msgid "Register"
 msgstr "註冊"
@@ -774,6 +811,11 @@ msgid "Type of the exception activity on record."
 msgstr "記錄的異常活動的類型。"
 
 #. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_thumb_details
+msgid "Unpublished"
+msgstr "未公開"
+
+#. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__message_unread
 msgid "Unread Messages"
 msgstr "未讀訊息"
@@ -823,6 +865,11 @@ msgstr "網站溝通記錄"
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__is_in_opening_hours
 msgid "Within opening hours"
 msgstr "於開始時間"
+
+#. module: website_event_exhibitor
+#: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
+msgid "e.g. \"Openwood specializes in home decoration...\""
+msgstr ""
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form

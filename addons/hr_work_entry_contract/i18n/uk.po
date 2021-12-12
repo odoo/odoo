@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~15.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"POT-Creation-Date: 2021-12-07 10:46+0000\n"
 "PO-Revision-Date: 2019-12-16 11:03+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
@@ -51,19 +51,9 @@ msgid "<i class=\"fa fa-info-circle mr-1\" title=\"Hint\"/>"
 msgstr "<i class=\"fa fa-info-circle mr-1\" title=\"Hint\"/>"
 
 #. module: hr_work_entry_contract
-#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.create_company_global_time_off_view_form
-msgid "<span> to </span>"
-msgstr "<span> до </span>"
-
-#. module: hr_work_entry_contract
-#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.create_company_global_time_off_view_form
-msgid "Cancel"
-msgstr "Скасувати"
-
-#. module: hr_work_entry_contract
-#: model:ir.model.fields,field_description:hr_work_entry_contract.field_create_company_global_time_off__company_id
-msgid "Company"
-msgstr "Компанія"
+#: model:ir.model.fields,help:hr_work_entry_contract.field_hr_work_entry_type__is_leave
+msgid "Allow the work entry type to be linked with time off types."
+msgstr ""
 
 #. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_compensatory
@@ -71,37 +61,21 @@ msgid "Compensatory Time Off"
 msgstr ""
 
 #. module: hr_work_entry_contract
-#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.create_company_global_time_off_view_form
-msgid "Confirm"
-msgstr "Підтвердити"
-
-#. module: hr_work_entry_contract
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry__contract_id
 msgid "Contract"
 msgstr "Контракт"
 
 #. module: hr_work_entry_contract
-#: model:ir.actions.act_window,name:hr_work_entry_contract.action_create_company_global_time_off
-#: model:ir.model,name:hr_work_entry_contract.model_create_company_global_time_off
-#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.create_company_global_time_off_view_form
-#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.resource_calendar_view_form
-msgid "Create Company Public Time Off"
-msgstr ""
-
-#. module: hr_work_entry_contract
-#: model:ir.model.fields,field_description:hr_work_entry_contract.field_create_company_global_time_off__create_uid
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__create_uid
 msgid "Created by"
 msgstr "Створено"
 
 #. module: hr_work_entry_contract
-#: model:ir.model.fields,field_description:hr_work_entry_contract.field_create_company_global_time_off__create_date
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__create_date
 msgid "Created on"
 msgstr "Створено"
 
 #. module: hr_work_entry_contract
-#: model:ir.model.fields,field_description:hr_work_entry_contract.field_create_company_global_time_off__display_name
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__display_name
 msgid "Display Name"
 msgstr "Відобразити назву"
@@ -129,11 +103,6 @@ msgid "Employee Contract"
 msgstr "Трудовий контракт"
 
 #. module: hr_work_entry_contract
-#: model:ir.model.fields,field_description:hr_work_entry_contract.field_create_company_global_time_off__date_to
-msgid "End Date"
-msgstr "Кінцева дата"
-
-#. module: hr_work_entry_contract
 #. openerp-web
 #: code:addons/hr_work_entry_contract/static/src/js/work_entries_calendar.js:0
 #, python-format
@@ -144,6 +113,13 @@ msgstr "Робочі записи співробітників"
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__date_from
 msgid "From"
 msgstr "Від"
+
+#. module: hr_work_entry_contract
+#: model:ir.actions.server,name:hr_work_entry_contract.ir_cron_generate_missing_work_entries_ir_actions_server
+#: model:ir.cron,cron_name:hr_work_entry_contract.ir_cron_generate_missing_work_entries
+#: model:ir.cron,name:hr_work_entry_contract.ir_cron_generate_missing_work_entries
+msgid "Generate Missing Work Entries"
+msgstr ""
 
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_contract__date_generated_from
@@ -176,7 +152,6 @@ msgid "Home Working"
 msgstr "Робота з дому"
 
 #. module: hr_work_entry_contract
-#: model:ir.model.fields,field_description:hr_work_entry_contract.field_create_company_global_time_off__id
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__id
 msgid "ID"
 msgstr "ID"
@@ -196,19 +171,16 @@ msgstr ""
 "дійсного робочого запису."
 
 #. module: hr_work_entry_contract
-#: model:ir.model.fields,field_description:hr_work_entry_contract.field_create_company_global_time_off____last_update
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard____last_update
 msgid "Last Modified on"
 msgstr "Останні зміни на"
 
 #. module: hr_work_entry_contract
-#: model:ir.model.fields,field_description:hr_work_entry_contract.field_create_company_global_time_off__write_uid
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__write_uid
 msgid "Last Updated by"
 msgstr "Востаннє оновив"
 
 #. module: hr_work_entry_contract
-#: model:ir.model.fields,field_description:hr_work_entry_contract.field_create_company_global_time_off__write_date
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__write_date
 msgid "Last Updated on"
 msgstr "Останнє оновлення"
@@ -227,16 +199,6 @@ msgstr "Остання дата"
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_legal_leave
 msgid "Legal Leaves 2021"
 msgstr ""
-
-#. module: hr_work_entry_contract
-#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.create_company_global_time_off_view_form
-msgid "Period"
-msgstr "Період"
-
-#. module: hr_work_entry_contract
-#: model:ir.model.fields,field_description:hr_work_entry_contract.field_create_company_global_time_off__name
-msgid "Reason"
-msgstr "Причина"
 
 #. module: hr_work_entry_contract
 #: model:ir.model,name:hr_work_entry_contract.model_hr_work_entry_regeneration_wizard
@@ -261,11 +223,6 @@ msgstr "Пошук критерій завершено"
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_sick_leave
 msgid "Sick Time Off"
 msgstr "Лікарняний"
-
-#. module: hr_work_entry_contract
-#: model:ir.model.fields,field_description:hr_work_entry_contract.field_create_company_global_time_off__date_from
-msgid "Start Date"
-msgstr "Початкова дата"
 
 #. module: hr_work_entry_contract
 #: code:addons/hr_work_entry_contract/wizard/hr_work_entry_regeneration_wizard.py:0
@@ -319,8 +276,3 @@ msgstr "Робочі записи в інтервалі"
 #: model:ir.actions.act_window,name:hr_work_entry_contract.hr_work_entry_regeneration_wizard_action
 msgid "Work Entry Regeneration"
 msgstr "Оновлення робочих записів"
-
-#. module: hr_work_entry_contract
-#: model:ir.model.fields,field_description:hr_work_entry_contract.field_create_company_global_time_off__work_entry_type_id
-msgid "Work Entry Type"
-msgstr "Тип робочого запису"

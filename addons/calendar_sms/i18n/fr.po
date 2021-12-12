@@ -7,7 +7,6 @@
 # bb76cd9ac0cb7e20167a14728edb858b, 2018
 # Lucas Deliege <lud@odoo.com>, 2018
 # Christophe Metten <cme@odoo.com>, 2019
-# Eloïse Stilmant <est@odoo.com>, 2019
 # Nicolas Roussey <nro@odoo.com>, 2021
 # Alexandra Jubert <aju@odoo.com>, 2021
 # Celia Tydgat <cty@odoo.com>, 2021
@@ -15,9 +14,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2017-12-13 14:52+0000\n"
 "Last-Translator: Cécile Collart <cco@odoo.com>, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
@@ -48,15 +47,15 @@ msgid "Event Alarm Manager"
 msgstr "Gestionnaire de rappel d'évènements"
 
 #. module: calendar_sms
-#: model:sms.template,body:calendar_sms.sms_template_data_calendar_reminder
-msgid "Event reminder: ${object.name}, ${object.display_time}"
-msgstr "Rappel d'évènement: ${object.name}, ${object.display_time}"
-
-#. module: calendar_sms
 #: code:addons/calendar_sms/models/calendar_event.py:0
 #, python-format
 msgid "Event reminder: %(name)s, %(time)s."
 msgstr "Rappel d'événement: %(name)s, %(time)s."
+
+#. module: calendar_sms
+#: model:sms.template,body:calendar_sms.sms_template_data_calendar_reminder
+msgid "Event reminder: {{ object.name }}, {{ object.display_time }}"
+msgstr "Rappel d'événement : {{ object.name }}, {{ object.display_time }}"
 
 #. module: calendar_sms
 #: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_form_inherited

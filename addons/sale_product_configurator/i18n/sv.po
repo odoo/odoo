@@ -7,14 +7,14 @@
 # Haojun Zou <apollo_zhj@msn.com>, 2019
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2019
 # Martin Trigaux, 2020
-# Kim Asplund <kim.asplund@gmail.com>, 2020
+# Kim Asplund <kim.asplund@gmail.com>, 2021
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-09-14 10:29+0000\n"
 "PO-Revision-Date: 2019-06-12 12:36+0000\n"
 "Last-Translator: Chrille Hedberg <hedberg.chrille@gmail.com>, 2021\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
@@ -81,6 +81,11 @@ msgstr "Tillbaka"
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.sale_product_configurator_view_form
 msgid "Cancel"
 msgstr "Avbryt"
+
+#. module: sale_product_configurator
+#: model:product.template,name:sale_product_configurator.product_product_1_product_template
+msgid "Chair floor protection"
+msgstr "Golvskydd för stol"
 
 #. module: sale_product_configurator
 #. openerp-web
@@ -152,6 +157,12 @@ msgid "Last Updated on"
 msgstr "Senast uppdaterad"
 
 #. module: sale_product_configurator
+#: model:product.template,description_sale:sale_product_configurator.product_product_1_product_template
+msgid "Office chairs can harm your floor: protect it."
+msgstr "Kontorsstolar kan skada ditt golv. Se till att skydda det!"
+
+#. module: sale_product_configurator
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.optional_product_items
 msgid "Option not available"
 msgstr "Alternativ inte tillgängligt"
@@ -171,11 +182,6 @@ msgid ""
 msgstr ""
 "Alternativa produkter föreslås när kunden klickar *Lägg i varukorgen* "
 "(strategi för korsförsäljning, t.ex. garanti, mjukvara, etc)."
-
-#. module: sale_product_configurator
-#: model_terms:ir.ui.view,arch_db:sale_product_configurator.product_template_view_form
-msgid "Options"
-msgstr "Alternativ"
 
 #. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__pricelist_id
@@ -210,6 +216,11 @@ msgid "Quantity"
 msgstr "Antal"
 
 #. module: sale_product_configurator
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.product_template_view_form
+msgid "Recommend when 'Adding to Cart' or quotation"
+msgstr ""
+
+#. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.product_quantity_config
 msgid "Remove one"
 msgstr "Tabort en"
@@ -238,3 +249,8 @@ msgstr "Kombinationen existerar inte."
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure
 msgid "This product has no valid combination."
 msgstr "Denna produkt har ingen giltig kombination."
+
+#. module: sale_product_configurator
+#: model:product.template,uom_name:sale_product_configurator.product_product_1_product_template
+msgid "Units"
+msgstr "Enheter"

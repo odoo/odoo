@@ -7,15 +7,17 @@
 # Jakub Lohnisky <jakub@lepremier.cz>, 2020
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2020
 # Damian Brencic <brencicdamian12313@gmail.com>, 2021
-# trendspotter, 2021
+# Michal Veselý <michal@veselyberanek.net>, 2021
+# trendspotter <jirka.p@volny.cz>, 2021
+# karolína schusterová <karolina.schusterova@vdp.sk>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-09-14 10:29+0000\n"
 "PO-Revision-Date: 2020-08-21 13:39+0000\n"
-"Last-Translator: trendspotter, 2021\n"
+"Last-Translator: karolína schusterová <karolina.schusterova@vdp.sk>, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,11 +46,21 @@ msgid "<span class=\"text-muted\">Points</span>"
 msgstr "<span class=\"text-muted\">Body</span>"
 
 #. module: website_event_track_quiz
+#: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_track_view_form
+msgid "Add Quiz"
+msgstr ""
+
+#. module: website_event_track_quiz
 #. openerp-web
 #: code:addons/website_event_track_quiz/static/src/js/event_quiz.js:0
 #, python-format
 msgid "All questions must be answered !"
 msgstr "Všechny otázky musí být zodpovězeny!"
+
+#. module: website_event_track_quiz
+#: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_view_form
+msgid "Allow multiple tries"
+msgstr ""
 
 #. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_answer__text_value
@@ -72,14 +84,21 @@ msgid "Check your answers"
 msgstr "Zkontroluj si své odpovědi"
 
 #. module: website_event_track_quiz
-#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_answer__comment
-msgid "Comment"
-msgstr "Komentář"
-
-#. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_track_visitor__quiz_completed
 msgid "Completed"
 msgstr "Dokončeno"
+
+#. module: website_event_track_quiz
+#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_13_question_0_0
+msgid "Concrete Blocks Wall"
+msgstr ""
+
+#. module: website_event_track_quiz
+#. openerp-web
+#: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
+#, python-format
+msgid "Congratulations, you scored a total of"
+msgstr ""
 
 #. module: website_event_track_quiz
 #: model:ir.model,name:website_event_track_quiz.model_event_quiz_question
@@ -87,14 +106,21 @@ msgid "Content Quiz Question"
 msgstr "Obsah kvízové otázky"
 
 #. module: website_event_track_quiz
-#: model_terms:ir.actions.act_window,help:website_event_track_quiz.event_quiz_question_action
-msgid "Create a Question"
-msgstr "Vytvořit otázku"
+#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_answer__is_correct
+msgid "Correct"
+msgstr "Správný"
 
 #. module: website_event_track_quiz
-#: model_terms:ir.actions.act_window,help:website_event_track_quiz.event_quiz_action
-msgid "Create a Quiz"
-msgstr "Vytvořit kvíz"
+#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_question__correct_answer_id
+msgid "Correct Answer"
+msgstr "Správná odpověď"
+
+#. module: website_event_track_quiz
+#. openerp-web
+#: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
+#, python-format
+msgid "Correct."
+msgstr ""
 
 #. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz__create_uid
@@ -118,11 +144,14 @@ msgid "Display Name"
 msgstr "Zobrazované jméno"
 
 #. module: website_event_track_quiz
-#. openerp-web
-#: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
-#, python-format
-msgid "Done !"
-msgstr "Hotovo."
+#: model:event.quiz.answer,comment:website_event_track_quiz.event_7_track_1_question_0_1
+msgid "Even if there will be some."
+msgstr ""
+
+#. module: website_event_track_quiz
+#: model:event.quiz.answer,comment:website_event_track_quiz.event_7_track_5_question_0_1
+msgid "Even if you have a big trunk, some long products need to be secured."
+msgstr ""
 
 #. module: website_event_track_quiz
 #: model:ir.model,name:website_event_track_quiz.model_event_event
@@ -148,10 +177,44 @@ msgid "Event Track"
 msgstr ""
 
 #. module: website_event_track_quiz
+#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_answer__comment
+msgid "Extra Comment"
+msgstr ""
+
+#. module: website_event_track_quiz
+#: model_terms:ir.actions.act_window,help:website_event_track_quiz.event_quiz_question_action
+msgid ""
+"From here you will be able to examine all quiz questions you have linked to "
+"Tracks."
+msgstr ""
+
+#. module: website_event_track_quiz
+#: model_terms:ir.actions.act_window,help:website_event_track_quiz.event_quiz_action
+msgid ""
+"From here you will be able to overview all quizzes you have linked to "
+"Tracks."
+msgstr ""
+
+#. module: website_event_track_quiz
+#: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_track_view_form
+msgid "Go to Quiz"
+msgstr ""
+
+#. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_question_view_search
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_view_search
 msgid "Group By"
 msgstr "Seskupit podle"
+
+#. module: website_event_track_quiz
+#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_5_question_1_0
+msgid "Hammer"
+msgstr ""
+
+#. module: website_event_track_quiz
+#: model:event.quiz.answer,comment:website_event_track_quiz.event_7_track_5_question_1_0
+msgid "Hammer won't be of any help here!"
+msgstr ""
 
 #. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz__id
@@ -161,14 +224,23 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website_event_track_quiz
+#: model:event.quiz.answer,comment:website_event_track_quiz.event_7_track_5_question_0_0
+msgid ""
+"In order to avoid accident, you need to secure any product of this kind "
+"during transportation!"
+msgstr ""
+
+#. module: website_event_track_quiz
+#. openerp-web
+#: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
+#, python-format
+msgid "Incorrect."
+msgstr ""
+
+#. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_track__is_quiz_completed
 msgid "Is Quiz Done"
 msgstr "Je kvíz hotový"
-
-#. module: website_event_track_quiz
-#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_answer__is_correct
-msgid "Is correct answer"
-msgstr "Je správná odpověď"
 
 #. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz____last_update
@@ -192,9 +264,29 @@ msgid "Last Updated on"
 msgstr "Naposled upraveno"
 
 #. module: website_event_track_quiz
+#: model:ir.model.fields,help:website_event_track_quiz.field_event_quiz__repeatable
+msgid "Let attendees reset the quiz and try again."
+msgstr ""
+
+#. module: website_event_track_quiz
+#: model:event.quiz.answer,comment:website_event_track_quiz.event_7_track_1_question_1_1
+msgid "Lumbers need first to be cut from trees!"
+msgstr ""
+
+#. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.leaderboard_search_bar
 msgid "Mobile sub-nav"
 msgstr "Mobilní sub-navigace"
+
+#. module: website_event_track_quiz
+#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_13_question_0_2
+msgid "Mud Wall"
+msgstr ""
+
+#. module: website_event_track_quiz
+#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_1_question_0_1
+msgid "Music"
+msgstr "Hudba"
 
 #. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz__name
@@ -202,12 +294,26 @@ msgid "Name"
 msgstr "Název"
 
 #. module: website_event_track_quiz
+#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_5_question_0_1
+msgid "No"
+msgstr "Ne"
+
+#. module: website_event_track_quiz
+#: model_terms:ir.actions.act_window,help:website_event_track_quiz.event_quiz_question_action
+msgid "No Quiz Question yet!"
+msgstr ""
+
+#. module: website_event_track_quiz
+#: model_terms:ir.actions.act_window,help:website_event_track_quiz.event_quiz_action
+msgid "No Quiz added yet!"
+msgstr ""
+
+#. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_leaderboard
 msgid "No user found for"
 msgstr "Nenalezen žádný uživatel pro"
 
 #. module: website_event_track_quiz
-#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_answer__awarded_points
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_question__awarded_points
 msgid "Number of Points"
 msgstr "Počet bodů"
@@ -216,8 +322,38 @@ msgstr "Počet bodů"
 #. openerp-web
 #: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
 #, python-format
+msgid "Oopsie, you did not score any point on this quiz."
+msgstr ""
+
+#. module: website_event_track_quiz
+#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_1_question_0_2
+msgid "Open Source Apps"
+msgstr ""
+
+#. module: website_event_track_quiz
+#: model:event.quiz.answer,comment:website_event_track_quiz.event_7_track_1_question_0_2
+msgid "OpenWood is not an Open Source congres about Apps."
+msgstr ""
+
+#. module: website_event_track_quiz
+#. openerp-web
+#: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
+#, python-format
+msgid "Point"
+msgstr ""
+
+#. module: website_event_track_quiz
+#. openerp-web
+#: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
+#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_answer__awarded_points
+#, python-format
 msgid "Points"
 msgstr "Body"
+
+#. module: website_event_track_quiz
+#: model:event.quiz,name:website_event_track_quiz.event_7_track_13_quiz
+msgid "Pretty. Ugly. Lovely."
+msgstr ""
 
 #. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_answer__question_id
@@ -228,13 +364,15 @@ msgstr "Otázka"
 #. module: website_event_track_quiz
 #: code:addons/website_event_track_quiz/models/event_quiz.py:0
 #, python-format
-msgid "Question \"%s\" must have 1 correct answer"
+msgid ""
+"Question \"%s\" must have 1 correct answer and at least 1 incorrect answer "
+"to be valid."
 msgstr ""
 
 #. module: website_event_track_quiz
 #: code:addons/website_event_track_quiz/models/event_quiz.py:0
 #, python-format
-msgid "Question \"%s\" must have 1 correct answer and at least 1 incorrect answer"
+msgid "Question \"%s\" must have 1 correct answer to be valid."
 msgstr ""
 
 #. module: website_event_track_quiz
@@ -244,7 +382,6 @@ msgstr "Odpovědi na otázky"
 
 #. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz__question_ids
-#: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_view_form
 msgid "Questions"
 msgstr "Otázky"
 
@@ -284,6 +421,7 @@ msgid "Quiz validation error"
 msgstr "Chyba ověření kvízu"
 
 #. module: website_event_track_quiz
+#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_track__quiz_ids
 #: model:ir.ui.menu,name:website_event_track_quiz.event_quiz_menu
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_view_search
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_view_tree
@@ -296,6 +434,11 @@ msgstr "Kvízy"
 #, python-format
 msgid "Reset"
 msgstr "Resetovat"
+
+#. module: website_event_track_quiz
+#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_5_question_1_2
+msgid "Scotch tape"
+msgstr ""
 
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.leaderboard_search_bar
@@ -313,23 +456,37 @@ msgid "Search courses"
 msgstr "Hledat kurzy"
 
 #. module: website_event_track_quiz
+#: model:event.quiz,name:website_event_track_quiz.event_7_track_5_quiz
+msgid "Securing your Lumber during transport"
+msgstr ""
+
+#. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_answer__sequence
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_question__sequence
 msgid "Sequence"
 msgstr "Číselná řada"
 
 #. module: website_event_track_quiz
-#. openerp-web
-#: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
-#: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
-#, python-format
-msgid "Succeed and gain karma"
-msgstr "Uspěj a získej karmu"
+#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_13_question_0_1
+msgid "Steel Wall"
+msgstr ""
+
+#. module: website_event_track_quiz
+#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_1_question_1_1
+msgid "Stores !"
+msgstr ""
 
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_track_content
 msgid "Take the Quiz"
 msgstr "Zúčastněte se kvízu"
+
+#. module: website_event_track_quiz
+#. openerp-web
+#: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
+#, python-format
+msgid "The correct answer was:"
+msgstr ""
 
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_leaderboard
@@ -360,6 +517,11 @@ msgid "This quiz is already done. Retaking it is not possible."
 msgstr "Tento kvíz je již hotový. Opakování není možné."
 
 #. module: website_event_track_quiz
+#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_5_question_1_1
+msgid "Tie-down straps and other wooden blocks"
+msgstr ""
+
+#. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_view_search
 msgid "Track"
 msgstr "Track"
@@ -370,14 +532,64 @@ msgid "Track / Visitor Link"
 msgstr ""
 
 #. module: website_event_track_quiz
-#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz__event_track_ids
-msgid "Tracks"
-msgstr "Skladby"
+#: model:event.quiz.question,name:website_event_track_quiz.event_7_track_5_question_0
+msgid "Transporting lumber from stores to your house is safe."
+msgstr ""
+
+#. module: website_event_track_quiz
+#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_1_question_1_0
+msgid "Trees !"
+msgstr ""
+
+#. module: website_event_track_quiz
+#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz__repeatable
+msgid "Unlimited Tries"
+msgstr ""
 
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.top3_visitor_card
 msgid "User rank"
 msgstr "úroveň uživatele"
+
+#. module: website_event_track_quiz
+#: model:event.quiz.answer,comment:website_event_track_quiz.event_7_track_5_question_1_2
+msgid "Well, it could work but you will need a lot of tape!"
+msgstr ""
+
+#. module: website_event_track_quiz
+#: model:event.quiz,name:website_event_track_quiz.event_7_track_1_quiz
+msgid "What This Event Is All About"
+msgstr ""
+
+#. module: website_event_track_quiz
+#: model:event.quiz.question,name:website_event_track_quiz.event_7_track_5_question_1
+msgid "What kind of tool are needed to secure your lumber ?"
+msgstr ""
+
+#. module: website_event_track_quiz
+#: model:event.quiz.question,name:website_event_track_quiz.event_7_track_13_question_0
+msgid "What kind of wall is transformed here ?"
+msgstr ""
+
+#. module: website_event_track_quiz
+#: model:event.quiz.question,name:website_event_track_quiz.event_7_track_1_question_0
+msgid "What will we talk about during this event ?"
+msgstr ""
+
+#. module: website_event_track_quiz
+#: model:event.quiz.question,name:website_event_track_quiz.event_7_track_1_question_1
+msgid "Where does lumber comes from ?"
+msgstr ""
+
+#. module: website_event_track_quiz
+#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_1_question_0_0
+msgid "Wood"
+msgstr ""
+
+#. module: website_event_track_quiz
+#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_5_question_0_0
+msgid "Yes"
+msgstr "Ano"
 
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.all_visitor_card
@@ -386,11 +598,30 @@ msgid "You"
 msgstr "Vy"
 
 #. module: website_event_track_quiz
-#: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_question_view_form
-msgid "e.g. According to Douglas, what should you pay most attention to?"
-msgstr "např. Čemu byste měli podle Douglase věnovat největší pozornost?"
+#: model:event.quiz.answer,comment:website_event_track_quiz.event_7_track_1_question_0_0
+msgid "You're really smart !"
+msgstr ""
 
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_view_form
 msgid "e.g. Test your Knowledge"
 msgstr "např. Otestujte si své znalosti"
+
+#. module: website_event_track_quiz
+#: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_question_view_form
+msgid "e.g. What is Joe's favorite motto?"
+msgstr ""
+
+#. module: website_event_track_quiz
+#. openerp-web
+#: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
+#, python-format
+msgid "point!"
+msgstr ""
+
+#. module: website_event_track_quiz
+#. openerp-web
+#: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
+#, python-format
+msgid "points!"
+msgstr ""

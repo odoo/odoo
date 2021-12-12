@@ -3,14 +3,14 @@
 # 	* website_event_track_quiz
 # 
 # Translators:
-# Martin Trigaux, 2020
+# Martin Trigaux, 2021
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-09-14 10:29+0000\n"
 "PO-Revision-Date: 2020-08-21 13:39+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
@@ -41,11 +41,21 @@ msgid "<span class=\"text-muted\">Points</span>"
 msgstr "<span class=\"text-muted\">Бали</span>"
 
 #. module: website_event_track_quiz
+#: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_track_view_form
+msgid "Add Quiz"
+msgstr ""
+
+#. module: website_event_track_quiz
 #. openerp-web
 #: code:addons/website_event_track_quiz/static/src/js/event_quiz.js:0
 #, python-format
 msgid "All questions must be answered !"
 msgstr "Усі запитання повинні мати відповіді!"
+
+#. module: website_event_track_quiz
+#: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_view_form
+msgid "Allow multiple tries"
+msgstr ""
 
 #. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_answer__text_value
@@ -69,14 +79,21 @@ msgid "Check your answers"
 msgstr "Перевірте ваші відповіді"
 
 #. module: website_event_track_quiz
-#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_answer__comment
-msgid "Comment"
-msgstr "Коментар"
-
-#. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_track_visitor__quiz_completed
 msgid "Completed"
 msgstr "Завершено"
+
+#. module: website_event_track_quiz
+#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_13_question_0_0
+msgid "Concrete Blocks Wall"
+msgstr "Стіна з бетонних блоків"
+
+#. module: website_event_track_quiz
+#. openerp-web
+#: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
+#, python-format
+msgid "Congratulations, you scored a total of"
+msgstr ""
 
 #. module: website_event_track_quiz
 #: model:ir.model,name:website_event_track_quiz.model_event_quiz_question
@@ -84,14 +101,21 @@ msgid "Content Quiz Question"
 msgstr "Запитання вікторини"
 
 #. module: website_event_track_quiz
-#: model_terms:ir.actions.act_window,help:website_event_track_quiz.event_quiz_question_action
-msgid "Create a Question"
-msgstr "Створити запитання"
+#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_answer__is_correct
+msgid "Correct"
+msgstr "Правильно"
 
 #. module: website_event_track_quiz
-#: model_terms:ir.actions.act_window,help:website_event_track_quiz.event_quiz_action
-msgid "Create a Quiz"
-msgstr "Створити вікторину"
+#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_question__correct_answer_id
+msgid "Correct Answer"
+msgstr "Правильна відповідь"
+
+#. module: website_event_track_quiz
+#. openerp-web
+#: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
+#, python-format
+msgid "Correct."
+msgstr ""
 
 #. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz__create_uid
@@ -115,11 +139,14 @@ msgid "Display Name"
 msgstr "Відобразити назву"
 
 #. module: website_event_track_quiz
-#. openerp-web
-#: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
-#, python-format
-msgid "Done !"
-msgstr "Готово!"
+#: model:event.quiz.answer,comment:website_event_track_quiz.event_7_track_1_question_0_1
+msgid "Even if there will be some."
+msgstr ""
+
+#. module: website_event_track_quiz
+#: model:event.quiz.answer,comment:website_event_track_quiz.event_7_track_5_question_0_1
+msgid "Even if you have a big trunk, some long products need to be secured."
+msgstr ""
 
 #. module: website_event_track_quiz
 #: model:ir.model,name:website_event_track_quiz.model_event_event
@@ -145,10 +172,44 @@ msgid "Event Track"
 msgstr "Відстеження події"
 
 #. module: website_event_track_quiz
+#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_answer__comment
+msgid "Extra Comment"
+msgstr ""
+
+#. module: website_event_track_quiz
+#: model_terms:ir.actions.act_window,help:website_event_track_quiz.event_quiz_question_action
+msgid ""
+"From here you will be able to examine all quiz questions you have linked to "
+"Tracks."
+msgstr ""
+
+#. module: website_event_track_quiz
+#: model_terms:ir.actions.act_window,help:website_event_track_quiz.event_quiz_action
+msgid ""
+"From here you will be able to overview all quizzes you have linked to "
+"Tracks."
+msgstr ""
+
+#. module: website_event_track_quiz
+#: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_track_view_form
+msgid "Go to Quiz"
+msgstr ""
+
+#. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_question_view_search
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_view_search
 msgid "Group By"
 msgstr "Групувати за"
+
+#. module: website_event_track_quiz
+#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_5_question_1_0
+msgid "Hammer"
+msgstr "Молоток"
+
+#. module: website_event_track_quiz
+#: model:event.quiz.answer,comment:website_event_track_quiz.event_7_track_5_question_1_0
+msgid "Hammer won't be of any help here!"
+msgstr ""
 
 #. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz__id
@@ -158,14 +219,23 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website_event_track_quiz
+#: model:event.quiz.answer,comment:website_event_track_quiz.event_7_track_5_question_0_0
+msgid ""
+"In order to avoid accident, you need to secure any product of this kind "
+"during transportation!"
+msgstr ""
+
+#. module: website_event_track_quiz
+#. openerp-web
+#: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
+#, python-format
+msgid "Incorrect."
+msgstr ""
+
+#. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_track__is_quiz_completed
 msgid "Is Quiz Done"
 msgstr "Чи виконана вікторина"
-
-#. module: website_event_track_quiz
-#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_answer__is_correct
-msgid "Is correct answer"
-msgstr "Правильна відповідь"
 
 #. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz____last_update
@@ -189,9 +259,29 @@ msgid "Last Updated on"
 msgstr "Останнє оновлення"
 
 #. module: website_event_track_quiz
+#: model:ir.model.fields,help:website_event_track_quiz.field_event_quiz__repeatable
+msgid "Let attendees reset the quiz and try again."
+msgstr ""
+
+#. module: website_event_track_quiz
+#: model:event.quiz.answer,comment:website_event_track_quiz.event_7_track_1_question_1_1
+msgid "Lumbers need first to be cut from trees!"
+msgstr ""
+
+#. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.leaderboard_search_bar
 msgid "Mobile sub-nav"
 msgstr "Mobile sub-nav"
+
+#. module: website_event_track_quiz
+#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_13_question_0_2
+msgid "Mud Wall"
+msgstr "Грязьова стіна"
+
+#. module: website_event_track_quiz
+#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_1_question_0_1
+msgid "Music"
+msgstr "Музика"
 
 #. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz__name
@@ -199,12 +289,26 @@ msgid "Name"
 msgstr "Назва"
 
 #. module: website_event_track_quiz
+#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_5_question_0_1
+msgid "No"
+msgstr "Ні"
+
+#. module: website_event_track_quiz
+#: model_terms:ir.actions.act_window,help:website_event_track_quiz.event_quiz_question_action
+msgid "No Quiz Question yet!"
+msgstr ""
+
+#. module: website_event_track_quiz
+#: model_terms:ir.actions.act_window,help:website_event_track_quiz.event_quiz_action
+msgid "No Quiz added yet!"
+msgstr ""
+
+#. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_leaderboard
 msgid "No user found for"
 msgstr "Не знайдено користувачів"
 
 #. module: website_event_track_quiz
-#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_answer__awarded_points
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_question__awarded_points
 msgid "Number of Points"
 msgstr "Кількість балів"
@@ -213,8 +317,38 @@ msgstr "Кількість балів"
 #. openerp-web
 #: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
 #, python-format
+msgid "Oopsie, you did not score any point on this quiz."
+msgstr ""
+
+#. module: website_event_track_quiz
+#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_1_question_0_2
+msgid "Open Source Apps"
+msgstr "Додатки з відкритим кодом"
+
+#. module: website_event_track_quiz
+#: model:event.quiz.answer,comment:website_event_track_quiz.event_7_track_1_question_0_2
+msgid "OpenWood is not an Open Source congres about Apps."
+msgstr ""
+
+#. module: website_event_track_quiz
+#. openerp-web
+#: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
+#, python-format
+msgid "Point"
+msgstr ""
+
+#. module: website_event_track_quiz
+#. openerp-web
+#: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
+#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_answer__awarded_points
+#, python-format
 msgid "Points"
 msgstr "Бали"
+
+#. module: website_event_track_quiz
+#: model:event.quiz,name:website_event_track_quiz.event_7_track_13_quiz
+msgid "Pretty. Ugly. Lovely."
+msgstr "Гарненький. Потворний. Прекрасний."
 
 #. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_answer__question_id
@@ -225,16 +359,16 @@ msgstr "Запитання"
 #. module: website_event_track_quiz
 #: code:addons/website_event_track_quiz/models/event_quiz.py:0
 #, python-format
-msgid "Question \"%s\" must have 1 correct answer"
-msgstr "Запитання \"%s\" повинно містити 1 коректну відповідь"
+msgid ""
+"Question \"%s\" must have 1 correct answer and at least 1 incorrect answer "
+"to be valid."
+msgstr ""
 
 #. module: website_event_track_quiz
 #: code:addons/website_event_track_quiz/models/event_quiz.py:0
 #, python-format
-msgid "Question \"%s\" must have 1 correct answer and at least 1 incorrect answer"
+msgid "Question \"%s\" must have 1 correct answer to be valid."
 msgstr ""
-"Запитання \"%s\" повинно містити 1 правильну відповідь а принаймні 1 "
-"неправильну"
 
 #. module: website_event_track_quiz
 #: model:ir.model,name:website_event_track_quiz.model_event_quiz_answer
@@ -243,7 +377,6 @@ msgstr "Відповідь на запитання"
 
 #. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz__question_ids
-#: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_view_form
 msgid "Questions"
 msgstr "Запитання"
 
@@ -283,6 +416,7 @@ msgid "Quiz validation error"
 msgstr "Помилка підтвердження вікторини"
 
 #. module: website_event_track_quiz
+#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_track__quiz_ids
 #: model:ir.ui.menu,name:website_event_track_quiz.event_quiz_menu
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_view_search
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_view_tree
@@ -295,6 +429,11 @@ msgstr "Вікторини"
 #, python-format
 msgid "Reset"
 msgstr "Скинути"
+
+#. module: website_event_track_quiz
+#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_5_question_1_2
+msgid "Scotch tape"
+msgstr "Скотч"
 
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.leaderboard_search_bar
@@ -312,23 +451,37 @@ msgid "Search courses"
 msgstr "Пошук курсів"
 
 #. module: website_event_track_quiz
+#: model:event.quiz,name:website_event_track_quiz.event_7_track_5_quiz
+msgid "Securing your Lumber during transport"
+msgstr "Захист пиломатеріалів під час транспортування"
+
+#. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_answer__sequence
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_question__sequence
 msgid "Sequence"
 msgstr "Послідовність"
 
 #. module: website_event_track_quiz
-#. openerp-web
-#: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
-#: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
-#, python-format
-msgid "Succeed and gain karma"
-msgstr "Досягніть успіху та отримайте карму"
+#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_13_question_0_1
+msgid "Steel Wall"
+msgstr "Сталева стіна"
+
+#. module: website_event_track_quiz
+#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_1_question_1_1
+msgid "Stores !"
+msgstr "Магазини!"
 
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_track_content
 msgid "Take the Quiz"
 msgstr "Пройдіть вікторину"
+
+#. module: website_event_track_quiz
+#. openerp-web
+#: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
+#, python-format
+msgid "The correct answer was:"
+msgstr ""
 
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_leaderboard
@@ -359,6 +512,11 @@ msgid "This quiz is already done. Retaking it is not possible."
 msgstr "Цю вікторину пройдено. Повторити її неможливо."
 
 #. module: website_event_track_quiz
+#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_5_question_1_1
+msgid "Tie-down straps and other wooden blocks"
+msgstr "Стяжні ремені та інші дерев’яні блоки"
+
+#. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_view_search
 msgid "Track"
 msgstr "Відстеження"
@@ -369,14 +527,64 @@ msgid "Track / Visitor Link"
 msgstr "Посилання на відстеження/відвідувача"
 
 #. module: website_event_track_quiz
-#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz__event_track_ids
-msgid "Tracks"
-msgstr "Відстеження"
+#: model:event.quiz.question,name:website_event_track_quiz.event_7_track_5_question_0
+msgid "Transporting lumber from stores to your house is safe."
+msgstr "Перевезення пиломатеріалів з магазинів до дому безпечно."
+
+#. module: website_event_track_quiz
+#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_1_question_1_0
+msgid "Trees !"
+msgstr "Дерева!"
+
+#. module: website_event_track_quiz
+#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz__repeatable
+msgid "Unlimited Tries"
+msgstr ""
 
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.top3_visitor_card
 msgid "User rank"
 msgstr "Звання користувача"
+
+#. module: website_event_track_quiz
+#: model:event.quiz.answer,comment:website_event_track_quiz.event_7_track_5_question_1_2
+msgid "Well, it could work but you will need a lot of tape!"
+msgstr ""
+
+#. module: website_event_track_quiz
+#: model:event.quiz,name:website_event_track_quiz.event_7_track_1_quiz
+msgid "What This Event Is All About"
+msgstr "Про що ця подія"
+
+#. module: website_event_track_quiz
+#: model:event.quiz.question,name:website_event_track_quiz.event_7_track_5_question_1
+msgid "What kind of tool are needed to secure your lumber ?"
+msgstr "Який інструмент потрібен, щоб закріпити пиломатеріали?"
+
+#. module: website_event_track_quiz
+#: model:event.quiz.question,name:website_event_track_quiz.event_7_track_13_question_0
+msgid "What kind of wall is transformed here ?"
+msgstr "Яка стіна тут трансформується?"
+
+#. module: website_event_track_quiz
+#: model:event.quiz.question,name:website_event_track_quiz.event_7_track_1_question_0
+msgid "What will we talk about during this event ?"
+msgstr "Про що ми будемо говорити на цій події?"
+
+#. module: website_event_track_quiz
+#: model:event.quiz.question,name:website_event_track_quiz.event_7_track_1_question_1
+msgid "Where does lumber comes from ?"
+msgstr "Звідки беруться пиломатеріали?"
+
+#. module: website_event_track_quiz
+#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_1_question_0_0
+msgid "Wood"
+msgstr "Деревина"
+
+#. module: website_event_track_quiz
+#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_5_question_0_0
+msgid "Yes"
+msgstr "Так"
 
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.all_visitor_card
@@ -385,11 +593,30 @@ msgid "You"
 msgstr "Ви"
 
 #. module: website_event_track_quiz
-#: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_question_view_form
-msgid "e.g. According to Douglas, what should you pay most attention to?"
-msgstr "напр. На що, на думку Дугласа, слід звернути найбільшу увагу?"
+#: model:event.quiz.answer,comment:website_event_track_quiz.event_7_track_1_question_0_0
+msgid "You're really smart !"
+msgstr ""
 
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_view_form
 msgid "e.g. Test your Knowledge"
 msgstr "напр., Перевірте ваші знання"
+
+#. module: website_event_track_quiz
+#: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_question_view_form
+msgid "e.g. What is Joe's favorite motto?"
+msgstr ""
+
+#. module: website_event_track_quiz
+#. openerp-web
+#: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
+#, python-format
+msgid "point!"
+msgstr ""
+
+#. module: website_event_track_quiz
+#. openerp-web
+#: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
+#, python-format
+msgid "points!"
+msgstr ""

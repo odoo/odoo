@@ -3,27 +3,33 @@
 # 	* payment_authorize
 # 
 # Translators:
-# Martin Trigaux, 2017
 # Hüseyin Cem Aras <hcemaras@gmail.com>, 2018
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2019
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
 # Ediz Duman <neps1192@gmail.com>, 2021
 # 27cb721235bc771895826f594ae4f6eb_a256844 <219b303f361cd550c2362fb7cee8b2e6_513839>, 2021
+# Martin Trigaux, 2021
 # Murat Kaplan <muratk@projetgrup.com>, 2021
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2016-08-05 13:06+0000\n"
-"Last-Translator: Murat Kaplan <muratk@projetgrup.com>, 2021\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2021\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "ABA Routing Number"
+msgstr ""
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_client_key
@@ -46,6 +52,16 @@ msgid "API Transaction Key"
 msgstr "API İşlem Anahtarı"
 
 #. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Account Number"
+msgstr "Hesap Numarası"
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_payment_method_type
+msgid "Allow Payments From"
+msgstr ""
+
+#. module: payment_authorize
 #. openerp-web
 #: code:addons/payment_authorize/static/src/js/payment_form.js:0
 #, python-format
@@ -64,8 +80,40 @@ msgid "Authorize.Net"
 msgstr "Authorize.Net"
 
 #. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__authorize_payment_method_type
+msgid "Authorize.Net Payment Type"
+msgstr ""
+
+#. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token__authorize_profile
 msgid "Authorize.Net Profile ID"
+msgstr ""
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/payment_acquirer.py:0
+#, python-format
+msgid "Bank (powered by Authorize)"
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model.fields.selection,name:payment_authorize.selection__payment_acquirer__authorize_payment_method_type__bank_account
+#: model:ir.model.fields.selection,name:payment_authorize.selection__payment_token__authorize_payment_method_type__bank_account
+msgid "Bank Account (USA Only)"
+msgstr ""
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Bank Account Type"
+msgstr ""
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Bank Name"
+msgstr "Banka Adı"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Business Checking"
 msgstr ""
 
 #. module: payment_authorize
@@ -87,9 +135,26 @@ msgid ""
 msgstr ""
 
 #. module: payment_authorize
+#: model:ir.model.fields.selection,name:payment_authorize.selection__payment_acquirer__authorize_payment_method_type__credit_card
+#: model:ir.model.fields.selection,name:payment_authorize.selection__payment_token__authorize_payment_method_type__credit_card
+msgid "Credit Card"
+msgstr "Kredi Kartı"
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/payment_acquirer.py:0
+#, python-format
+msgid "Credit Card (powered by Authorize)"
+msgstr "Kredi Kartı (Authorize tarafından desteklenmektedir)"
+
+#. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_acquirer_form
 msgid "Currency"
 msgstr "Para Birimi"
+
+#. module: payment_authorize
+#: model:ir.model.fields,help:payment_authorize.field_payment_acquirer__authorize_payment_method_type
+msgid "Determines with what payment method the customer can pay."
+msgstr ""
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -120,6 +185,11 @@ msgid "MM"
 msgstr ""
 
 #. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Name On Account"
+msgstr ""
+
+#. module: payment_authorize
 #: code:addons/payment_authorize/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
@@ -144,6 +214,16 @@ msgstr "Ödeme Token'ı"
 #: model:ir.model,name:payment_authorize.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Ödeme İşlemi"
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Personal Checking"
+msgstr ""
+
+#. module: payment_authorize
+#: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
+msgid "Personal Savings"
+msgstr ""
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__provider
@@ -206,10 +286,24 @@ msgid "The transaction is not linked to a token."
 msgstr ""
 
 #. module: payment_authorize
+#: model:ir.model.fields,help:payment_authorize.field_payment_token__authorize_payment_method_type
+msgid "The type of payment method this token is linked to."
+msgstr ""
+
+#. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token__authorize_profile
 msgid ""
 "The unique reference for the partner/token combination in the Authorize.net "
 "backend."
+msgstr ""
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/payment_acquirer.py:0
+#, python-format
+msgid ""
+"There are active tokens linked to this acquirer. To change the payment "
+"method type, please disable the acquirer and duplicate it. Then, change the "
+"payment method type on the duplicated acquirer."
 msgstr ""
 
 #. module: payment_authorize

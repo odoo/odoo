@@ -11,15 +11,15 @@
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
 # dpms <pieter.van.de.wygaert@telenet.be>, 2021
-# Martin Trigaux, 2021
 # Bert Burggraaf, 2021
+# Martin Trigaux, 2021
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2016-08-05 12:58+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -160,6 +160,12 @@ msgstr "<strong>Totaal</strong>"
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "<strong>Validated By:</strong>"
 msgstr "<strong>Gevalideerd door:</strong>"
+
+#. module: hr_expense
+#: model:product.product,name:hr_expense.accomodation_expense_product
+#: model:product.template,name:hr_expense.accomodation_expense_product_product_template
+msgid "Accomodation"
+msgstr "Accommodatie"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__account_id
@@ -509,10 +515,22 @@ msgid "Currency"
 msgstr "Valuta"
 
 #. module: hr_expense
+#: model:product.product,name:hr_expense.allowance_expense_product
+#: model:product.template,name:hr_expense.allowance_expense_product_product_template
+msgid "Daily Allowance"
+msgstr "Dagvergoeding"
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Date"
 msgstr "Datum"
+
+#. module: hr_expense
+#: model:product.product,uom_name:hr_expense.allowance_expense_product
+#: model:product.template,uom_name:hr_expense.allowance_expense_product_product_template
+msgid "Days"
+msgstr "Dagen"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -837,6 +855,12 @@ msgid "Explicitly Refused by manager or accountant"
 msgstr "Expliciet geweigerd door manager of accountant."
 
 #. module: hr_expense
+#: model:product.product,name:hr_expense.trans_expense_product
+#: model:product.template,name:hr_expense.trans_expense_product_product_template
+msgid "Flights, train, bus, taxi, parking"
+msgstr "Vluchten, trein, bus, taxi, parkeren"
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_follower_ids
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_follower_ids
 msgid "Followers"
@@ -853,6 +877,12 @@ msgstr "Volgers (Relaties)"
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
 msgstr "Font awesome icoon b.v. fa-tasks"
+
+#. module: hr_expense
+#: model:product.product,name:hr_expense.food_expense_product
+#: model:product.template,name:hr_expense.food_expense_product_product_template
+msgid "Food & beverages"
+msgstr "Eten & drinken"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -1004,6 +1034,7 @@ msgstr "Dagboek"
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_move
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__account_move_id
+#: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 msgid "Journal Entry"
 msgstr "Boeking"
 
@@ -1086,6 +1117,12 @@ msgstr "Bericht aflever fout"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_ids
 msgid "Messages"
 msgstr "Berichten"
+
+#. module: hr_expense
+#: model:product.product,name:hr_expense.mileage_expense_product
+#: model:product.template,name:hr_expense.mileage_expense_product_product_template
+msgid "Mileage"
+msgstr "Kilometerstand"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__my_activity_date_deadline
@@ -1298,6 +1335,12 @@ msgid "Other Info"
 msgstr "Overige informatie"
 
 #. module: hr_expense
+#: model:product.product,name:hr_expense.other_expense_product
+#: model:product.template,name:hr_expense.other_expense_product_product_template
+msgid "Other expenses"
+msgstr "Andere declaraties"
+
+#. module: hr_expense
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense__state__done
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__payment_state__paid
 #: model:mail.message.subtype,name:hr_expense.mt_expense_paid
@@ -1320,6 +1363,12 @@ msgstr "Gedeeltelijk"
 #: model:ir.model.fields.selection,name:hr_expense.selection__hr_expense_sheet__payment_state__partial
 msgid "Partially Paid"
 msgstr "Gedeeltelijk betaald"
+
+#. module: hr_expense
+#: code:addons/hr_expense/models/account_move.py:0
+#, python-format
+msgid "Payment Cancelled"
+msgstr "Betaling geannuleerd"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__payment_state
@@ -1863,8 +1912,16 @@ msgid "Unit of Measure"
 msgstr "Maateenheid"
 
 #. module: hr_expense
+#: model:product.product,uom_name:hr_expense.accomodation_expense_product
+#: model:product.product,uom_name:hr_expense.food_expense_product
+#: model:product.product,uom_name:hr_expense.other_expense_product
 #: model:product.product,uom_name:hr_expense.product_product_fixed_cost
+#: model:product.product,uom_name:hr_expense.trans_expense_product
+#: model:product.template,uom_name:hr_expense.accomodation_expense_product_product_template
+#: model:product.template,uom_name:hr_expense.food_expense_product_product_template
+#: model:product.template,uom_name:hr_expense.other_expense_product_product_template
 #: model:product.template,uom_name:hr_expense.product_product_fixed_cost_product_template
+#: model:product.template,uom_name:hr_expense.trans_expense_product_product_template
 msgid "Units"
 msgstr "Stuks"
 
@@ -2094,6 +2151,12 @@ msgid "has been refused"
 msgstr "is geweigerd"
 
 #. module: hr_expense
+#: model:product.product,uom_name:hr_expense.mileage_expense_product
+#: model:product.template,uom_name:hr_expense.mileage_expense_product_product_template
+msgid "km"
+msgstr "km"
+
+#. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "to be reimbursed"
@@ -2115,9 +2178,3 @@ msgstr "onder validatie"
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "use OCR to fill data from a picture of the bill"
 msgstr "gebruik OCR om gegevens uit een foto van de rekening in te vullen."
-
-#. module: hr_expense
-#: code:addons/hr_expense/models/account_move.py:0
-#, python-format
-msgid "Payment Cancelled"
-msgstr "Betaling geannuleerd"

@@ -5,19 +5,19 @@
 # Translators:
 # Ermin Trevisan <trevi@twanda.com>, 2020
 # Leon Grill <leg@odoo.com>, 2020
-# Chris Egal <sodaswed@web.de>, 2020
 # Oliver Roch <oliver.roch@d9t.de>, 2020
 # Florian Pose <fp@igh.de>, 2020
 # Robert Förster <hello@suppliot.eu>, 2020
-# Martin Trigaux, 2021
 # Kevin Harrings <kha@odoo.com>, 2021
+# Martin Trigaux, 2021
+# Chris Egal <sodaswed@web.de>, 2021
 # Friederike Fasterling-Nesselbosch, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2020-08-21 13:31+0000\n"
 "Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
@@ -67,6 +67,17 @@ msgstr "%s, ein Gutschein wurde für Sie erstellt"
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "*Valid for following products:"
 msgstr "*Gültig für folgende Artikel:"
+
+#. module: coupon
+#: model:coupon.program,name:coupon.10_percent_coupon
+msgid "10% Discount"
+msgstr "10% Rabatt"
+
+#. module: coupon
+#: model:product.product,name:coupon.product_product_10_percent_discount
+#: model:product.template,name:coupon.product_product_10_percent_discount_product_template
+msgid "10.0% discount on total amount"
+msgstr "10,0% Rabatt auf den Gesamtbetrag"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
@@ -241,8 +252,14 @@ msgid ""
 msgstr ""
 
 #. module: coupon
+#: model:coupon.program,name:coupon.3_cabinets_plus_1_free
+msgid "Buy 3 large cabinets, get one for free"
+msgstr "Kaufen Sie 3 große Schränke, erhalten Sie einen gratis"
+
+#. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_generate_view_form
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_view_form
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_view_tree
 msgid "Cancel"
 msgstr "Stornieren"
 
@@ -255,6 +272,11 @@ msgstr "Storniert"
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__code
 msgid "Code"
 msgstr "Code"
+
+#. module: coupon
+#: model:coupon.program,name:coupon.10_percent_auto_applied
+msgid "Code for 10% on orders"
+msgstr "Code für 10% auf Bestellungen"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__company_id
@@ -509,6 +531,12 @@ msgstr "Gratisprodukt"
 #, python-format
 msgid "Free Product - %s"
 msgstr "Gratisprodukt – %s"
+
+#. module: coupon
+#: model:product.product,name:coupon.product_product_free_large_cabinet
+#: model:product.template,name:coupon.product_product_free_large_cabinet_product_template
+msgid "Free Product - Large Cabinet"
+msgstr ""
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_generate_view_form
@@ -893,6 +921,11 @@ msgid "Select reward product"
 msgstr "Prämienprodukt wählen"
 
 #. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_view_tree
+msgid "Send"
+msgstr "Senden"
+
+#. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__promo_applicability__on_next_order
 msgid "Send a Coupon"
 msgstr "Einen Kupon versenden"
@@ -1025,6 +1058,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__reward_product_uom_id
 msgid "Unit of Measure"
 msgstr "Mengeneinheit"
+
+#. module: coupon
+#: model:product.product,uom_name:coupon.product_product_10_percent_discount
+#: model:product.product,uom_name:coupon.product_product_free_large_cabinet
+#: model:product.template,uom_name:coupon.product_product_10_percent_discount_product_template
+#: model:product.template,uom_name:coupon.product_product_free_large_cabinet_product_template
+msgid "Units"
+msgstr "Einheiten"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__promo_code_usage__code_needed

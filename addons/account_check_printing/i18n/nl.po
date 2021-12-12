@@ -6,17 +6,17 @@
 # Eric Geens <ericgeens@yahoo.com>, 2018
 # Cas Vissers <casvissers@brahoo.nl>, 2018
 # Thomas Pot <thomas@open2bizz.nl>, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # Martin Trigaux, 2021
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2016-08-05 12:55+0000\n"
-"Last-Translator: Martin Trigaux, 2021\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -209,25 +209,27 @@ msgid "Last Updated on"
 msgstr "Laatst bijgewerkt op"
 
 #. module: account_check_printing
-#: model:ir.model.fields,help:account_check_printing.field_account_payment__payment_method_id
-msgid ""
-"Manual : Pay or Get paid by any method outside of Odoo.Payment Acquirers : "
-"Each payment acquirer has its own Payment Method. Request a transaction "
-"on/to a card thanks to a payment token saved by the partner when buying or "
-"subscribing online.Check: Pay bills by check and print it from Odoo.Batch "
-"Deposit: Collect several customer checks at once generating and submitting a"
-" batch deposit to your bank. Module account_batch_payment is necessary.SEPA "
-"Credit Transfer : Pay in the SEPA zone by submitting a SEPA Credit Transfer "
-"file to your bank. Module account_sepa is necessarySEPA Direct Debit : Get "
-"paid in the SEPA zone thanks to a mandate your partner will have granted to "
-"you. Module account_sepa is necessary"
-msgstr ""
-
-#. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_manual_sequencing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_manual_sequencing
 msgid "Manual Numbering"
 msgstr "Handmatige nummering"
+
+#. module: account_check_printing
+#: model:ir.model.fields,help:account_check_printing.field_account_payment__payment_method_line_id
+msgid ""
+"Manual: Pay or Get paid by any method outside of Odoo.\n"
+"Payment Acquirers: Each payment acquirer has its own Payment Method. Request a transaction on/to a card thanks to a payment token saved by the partner when buying or subscribing online.\n"
+"Check: Pay bills by check and print it from Odoo.\n"
+"Batch Deposit: Collect several customer checks at once generating and submitting a batch deposit to your bank. Module account_batch_payment is necessary.\n"
+"SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
+"SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
+msgstr ""
+"Handmatig: Betaal of word betaald met elke methode buiten Odoo.\n"
+"Betaalproviders: Elke betaalproviders heeft zijn eigen Betaalmethode. Vraag een transactie op/naar een kaart aan dankzij een betalingstoken dat door de klant is opgeslagen bij online aankopen of abonnementen.\n"
+"Cheque: Betaal rekeningen met een cheque en print deze vanuit Odoo.\n"
+"Batchstorting: Verzamel meerdere klantcheques tegelijk en genereer een batchstorting en dien deze in bij de bank. Module account_batch_payment is noodzakelijk.\n"
+"SEPA incasso: Betaal in de SEPA-zone door een SEPA Credit Transfer-bestand in te dienen bij je bank. Module account_sepa is noodzakelijk.\n"
+"SEPA betaling: Krijg betaald in de SEPA-zone dankzij een mandaat dat de klant je hebt gegeven. Module account_sepa is noodzakelijk.\n"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -254,7 +256,7 @@ msgid "None"
 msgstr "Geen"
 
 #. module: account_check_printing
-#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__payment_method_id
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__payment_method_line_id
 #: model:ir.model.fields,field_description:account_check_printing.field_res_partner__property_payment_method_id
 #: model:ir.model.fields,field_description:account_check_printing.field_res_users__property_payment_method_id
 msgid "Payment Method"

@@ -14,9 +14,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-11-16 14:47+0000\n"
 "PO-Revision-Date: 2021-05-11 12:32+0000\n"
 "Last-Translator: Thomas Deleval <thd@odoo.com>, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
@@ -35,12 +35,12 @@ msgstr "Nom alphanumérique"
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_nomenclature__gs1_separator_fnc1
 msgid ""
 "Alternative regex delimiter for the FNC1 (by default, if not set, it is <GS>"
-" ASCII 29 char). The seperator must not match the begin/end of any related "
+" ASCII 29 char). The separator must not match the begin/end of any related "
 "rules pattern."
 msgstr ""
-"Regex de délimiteur alternatif du FNC1 (par défaut c'est le caractère<GS> "
-"ASCII 29). Le séparateur ne doit pas matcher le debut/fin d'un patern de "
-"règle associé"
+"Délimiteur regex alternatif pour le FNC1 (par défaut il s'agit du charactère"
+" <GS>ASCII 29). Le délimiteur ne peut correspondre au début ou fin d'ue "
+"autre règle. "
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__associated_uom_id
@@ -89,7 +89,7 @@ msgstr "Date de fin de validité"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_nomenclature__gs1_separator_fnc1
-msgid "FNC1 Seperator"
+msgid "FNC1 Separator"
 msgstr "Séparateur FNC1"
 
 #. module: barcodes_gs1_nomenclature
@@ -161,29 +161,35 @@ msgid "Packaging Date"
 msgstr "Date de colisage"
 
 #. module: barcodes_gs1_nomenclature
-#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__qty_done
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__package_type
+msgid "Packaging Type"
+msgstr "Type de conditionnement"
+
+#. module: barcodes_gs1_nomenclature
+#: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__quantity
 msgid "Quantity"
 msgstr "Quantité"
 
 #. module: barcodes_gs1_nomenclature
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
 #, python-format
-msgid "The FNC1 Seperator Alternative is not a valid Regex: "
-msgstr "Le Séparateur FNC1 alternatif n'est pas un Regex valide"
+msgid "The FNC1 Separator Alternative is not a valid Regex: "
+msgstr "Le séparateur alternatif FNC1 n'est pas un regex valide:"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__gs1_content_type
 msgid ""
-"The GS1 content type defines to what this rule data will be handle:        *"
-" Date: the barcode will be converted into a Odoo datetime;        * Measure:"
-" the barcode's value is related to a specific UoM;        * Numeric "
-"Identifier: fixed length barcode following a specific encoding;        * "
-"Alpha-Numeric Name: variable length barcode."
+"The GS1 content type defines what kind of data the rule will process the "
+"barcode as:        * Date: the barcode will be converted into a Odoo "
+"datetime;        * Measure: the barcode's value is related to a specific "
+"UoM;        * Numeric Identifier: fixed length barcode following a specific "
+"encoding;        * Alpha-Numeric Name: variable length barcode."
 msgstr ""
 "Le type de contenu GS1 définit ce quelles données cette règle va gérer:   "
 "*Date: le code-barres sera converti en datetime Odoo;     *Mesure:  le code-"
 "barres est relatif à une unité de mesure spécifique;     *Numeric "
-"Identifier: code-barres de taille fixe suivi d'un encodage spécifique; "
+"Identifier: code-barres de taille fixe suivi d'un encodage spécifique;     "
+"*Nom Alpha-numérique: code-barres à taille variable"
 
 #. module: barcodes_gs1_nomenclature
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_rule.py:0

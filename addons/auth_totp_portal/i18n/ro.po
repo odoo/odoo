@@ -5,20 +5,28 @@
 # Translators:
 # Dorin Hongu <dhongu@gmail.com>, 2020
 # Foldi Robert <foldirobert@nexterp.ro>, 2020
+# Martin Trigaux, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-19 09:44+0000\n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2020-12-11 11:02+0000\n"
-"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2020\n"
+"Last-Translator: Martin Trigaux, 2021\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ro\n"
 "Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+
+#. module: auth_totp_portal
+#. openerp-web
+#: code:addons/auth_totp_portal/static/src/js/totp_frontend.js:0
+#, python-format
+msgid " Copy"
+msgstr ""
 
 #. module: auth_totp_portal
 #: model_terms:ir.ui.view,arch_db:auth_totp_portal.totp_portal_hook
@@ -58,6 +66,13 @@ msgid "<strong>Trusted Device</strong>"
 msgstr ""
 
 #. module: auth_totp_portal
+#. openerp-web
+#: code:addons/auth_totp_portal/static/src/js/totp_frontend.js:0
+#, python-format
+msgid "Copied !"
+msgstr "Copiat !"
+
+#. module: auth_totp_portal
 #: model_terms:ir.ui.view,arch_db:auth_totp_portal.totp_portal_hook
 msgid "Enable two-factor authentication"
 msgstr "Activați autentificarea cu doi factori"
@@ -78,3 +93,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:auth_totp_portal.totp_portal_hook
 msgid "Two-factor authentication"
 msgstr "Autentificare cu doi factori"
+
+#. module: auth_totp_portal
+#: model:ir.model,name:auth_totp_portal.model_res_users
+msgid "Users"
+msgstr "Utilizatori"

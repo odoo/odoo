@@ -4,17 +4,19 @@
 # 
 # Translators:
 # fanha99 <fanha99@hotmail.com>, 2020
-# Duy BQ <duybq86@gmail.com>, 2020
 # Dung Nguyen Thi <dungnt@trobz.com>, 2020
 # Dao Nguyen <trucdao.uel@gmail.com>, 2020
+# Martin Trigaux, 2021
 # thanhnguyen.icsc <thanhnguyen.icsc@gmail.com>, 2021
+# Duy BQ <duybq86@gmail.com>, 2021
+# Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2021
 # Vo Thanh Thuy, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2021-09-14 10:29+0000\n"
 "PO-Revision-Date: 2020-08-21 13:39+0000\n"
 "Last-Translator: Vo Thanh Thuy, 2021\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
@@ -45,11 +47,21 @@ msgid "<span class=\"text-muted\">Points</span>"
 msgstr "<span class=\"text-muted\">"
 
 #. module: website_event_track_quiz
+#: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_track_view_form
+msgid "Add Quiz"
+msgstr "Thêm đố vui"
+
+#. module: website_event_track_quiz
 #. openerp-web
 #: code:addons/website_event_track_quiz/static/src/js/event_quiz.js:0
 #, python-format
 msgid "All questions must be answered !"
 msgstr "Tất cả các câu hỏi phải được trả lời !"
+
+#. module: website_event_track_quiz
+#: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_view_form
+msgid "Allow multiple tries"
+msgstr "Cho phép thử nhiều lần"
 
 #. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_answer__text_value
@@ -73,14 +85,21 @@ msgid "Check your answers"
 msgstr "Kiểm tra câu trả lời của bạn"
 
 #. module: website_event_track_quiz
-#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_answer__comment
-msgid "Comment"
-msgstr "Bình luận"
-
-#. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_track_visitor__quiz_completed
 msgid "Completed"
 msgstr "Đã hoàn thành"
+
+#. module: website_event_track_quiz
+#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_13_question_0_0
+msgid "Concrete Blocks Wall"
+msgstr "Tường khối bê tông"
+
+#. module: website_event_track_quiz
+#. openerp-web
+#: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
+#, python-format
+msgid "Congratulations, you scored a total of"
+msgstr "Chúc mừng, bạn đã giành được tổng số"
 
 #. module: website_event_track_quiz
 #: model:ir.model,name:website_event_track_quiz.model_event_quiz_question
@@ -88,14 +107,21 @@ msgid "Content Quiz Question"
 msgstr "Nội dung câu hỏi Quiz"
 
 #. module: website_event_track_quiz
-#: model_terms:ir.actions.act_window,help:website_event_track_quiz.event_quiz_question_action
-msgid "Create a Question"
-msgstr ""
+#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_answer__is_correct
+msgid "Correct"
+msgstr "Chính xác"
 
 #. module: website_event_track_quiz
-#: model_terms:ir.actions.act_window,help:website_event_track_quiz.event_quiz_action
-msgid "Create a Quiz"
-msgstr ""
+#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_question__correct_answer_id
+msgid "Correct Answer"
+msgstr "Câu trả lời đúng"
+
+#. module: website_event_track_quiz
+#. openerp-web
+#: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
+#, python-format
+msgid "Correct."
+msgstr "Chính xác. "
 
 #. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz__create_uid
@@ -119,11 +145,16 @@ msgid "Display Name"
 msgstr "Tên hiển thị"
 
 #. module: website_event_track_quiz
-#. openerp-web
-#: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
-#, python-format
-msgid "Done !"
-msgstr "Hoàn thành !"
+#: model:event.quiz.answer,comment:website_event_track_quiz.event_7_track_1_question_0_1
+msgid "Even if there will be some."
+msgstr "Mặc dù có thảo luận một chút. "
+
+#. module: website_event_track_quiz
+#: model:event.quiz.answer,comment:website_event_track_quiz.event_7_track_5_question_0_1
+msgid "Even if you have a big trunk, some long products need to be secured."
+msgstr ""
+"Ngay cả khi bạn có thùng xe lớn, một số sản phẩm dài cần phải được buộc "
+"chặt. "
 
 #. module: website_event_track_quiz
 #: model:ir.model,name:website_event_track_quiz.model_event_event
@@ -149,10 +180,45 @@ msgid "Event Track"
 msgstr "Vết sự kiện"
 
 #. module: website_event_track_quiz
+#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_answer__comment
+msgid "Extra Comment"
+msgstr "Bình luận thêm"
+
+#. module: website_event_track_quiz
+#: model_terms:ir.actions.act_window,help:website_event_track_quiz.event_quiz_question_action
+msgid ""
+"From here you will be able to examine all quiz questions you have linked to "
+"Tracks."
+msgstr "Tại đây, bạn có thể xem xét toàn bộ câu đố bạn đã liên kết với bài. "
+
+#. module: website_event_track_quiz
+#: model_terms:ir.actions.act_window,help:website_event_track_quiz.event_quiz_action
+msgid ""
+"From here you will be able to overview all quizzes you have linked to "
+"Tracks."
+msgstr ""
+"Tại đây bạn có thể xem tổng quát tất cả đố vui bạn đã liên kết với bài. "
+
+#. module: website_event_track_quiz
+#: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_track_view_form
+msgid "Go to Quiz"
+msgstr "Đi tới đố vui"
+
+#. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_question_view_search
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_view_search
 msgid "Group By"
 msgstr "Nhóm theo"
+
+#. module: website_event_track_quiz
+#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_5_question_1_0
+msgid "Hammer"
+msgstr "Búa"
+
+#. module: website_event_track_quiz
+#: model:event.quiz.answer,comment:website_event_track_quiz.event_7_track_5_question_1_0
+msgid "Hammer won't be of any help here!"
+msgstr "Búa không hữu ích trong trường hợp này!"
 
 #. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz__id
@@ -162,14 +228,25 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website_event_track_quiz
+#: model:event.quiz.answer,comment:website_event_track_quiz.event_7_track_5_question_0_0
+msgid ""
+"In order to avoid accident, you need to secure any product of this kind "
+"during transportation!"
+msgstr ""
+"Để tránh tai nạn, bạn cần buộc chặt bất kỳ sản phẩm nào thuộc loại này khi "
+"vận chuyển!"
+
+#. module: website_event_track_quiz
+#. openerp-web
+#: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
+#, python-format
+msgid "Incorrect."
+msgstr "Không đúng. "
+
+#. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_track__is_quiz_completed
 msgid "Is Quiz Done"
 msgstr "Đố vui đã xong"
-
-#. module: website_event_track_quiz
-#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_answer__is_correct
-msgid "Is correct answer"
-msgstr "Là câu trả lời đúng"
 
 #. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz____last_update
@@ -193,9 +270,29 @@ msgid "Last Updated on"
 msgstr "Cập nhật lần cuối vào"
 
 #. module: website_event_track_quiz
+#: model:ir.model.fields,help:website_event_track_quiz.field_event_quiz__repeatable
+msgid "Let attendees reset the quiz and try again."
+msgstr "Cho người tham dự đặt lại đố vui và thử lại. "
+
+#. module: website_event_track_quiz
+#: model:event.quiz.answer,comment:website_event_track_quiz.event_7_track_1_question_1_1
+msgid "Lumbers need first to be cut from trees!"
+msgstr "Đầu tiên, phải cắt gỗ từ thân cây!"
+
+#. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.leaderboard_search_bar
 msgid "Mobile sub-nav"
 msgstr "Điều hướng phụ"
+
+#. module: website_event_track_quiz
+#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_13_question_0_2
+msgid "Mud Wall"
+msgstr "Tường bùn"
+
+#. module: website_event_track_quiz
+#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_1_question_0_1
+msgid "Music"
+msgstr "Âm nhạc"
 
 #. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz__name
@@ -203,12 +300,26 @@ msgid "Name"
 msgstr "Tên"
 
 #. module: website_event_track_quiz
+#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_5_question_0_1
+msgid "No"
+msgstr "Không"
+
+#. module: website_event_track_quiz
+#: model_terms:ir.actions.act_window,help:website_event_track_quiz.event_quiz_question_action
+msgid "No Quiz Question yet!"
+msgstr "Chưa có câu đố!"
+
+#. module: website_event_track_quiz
+#: model_terms:ir.actions.act_window,help:website_event_track_quiz.event_quiz_action
+msgid "No Quiz added yet!"
+msgstr "Chưa có đố vui!"
+
+#. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_leaderboard
 msgid "No user found for"
 msgstr "Không tìm thấy người dùng cho"
 
 #. module: website_event_track_quiz
-#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_answer__awarded_points
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_question__awarded_points
 msgid "Number of Points"
 msgstr "Số điểm"
@@ -217,8 +328,38 @@ msgstr "Số điểm"
 #. openerp-web
 #: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
 #, python-format
+msgid "Oopsie, you did not score any point on this quiz."
+msgstr "Rất tiếc, bạn không ghi được điểm cho mục đố vui này. "
+
+#. module: website_event_track_quiz
+#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_1_question_0_2
+msgid "Open Source Apps"
+msgstr "Ứng dụng nguồn mở"
+
+#. module: website_event_track_quiz
+#: model:event.quiz.answer,comment:website_event_track_quiz.event_7_track_1_question_0_2
+msgid "OpenWood is not an Open Source congres about Apps."
+msgstr "OpenWood không phải là công ty ứng dụng mã nguồn mở. "
+
+#. module: website_event_track_quiz
+#. openerp-web
+#: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
+#, python-format
+msgid "Point"
+msgstr "Điểm"
+
+#. module: website_event_track_quiz
+#. openerp-web
+#: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
+#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_answer__awarded_points
+#, python-format
 msgid "Points"
 msgstr "Điểm"
+
+#. module: website_event_track_quiz
+#: model:event.quiz,name:website_event_track_quiz.event_7_track_13_quiz
+msgid "Pretty. Ugly. Lovely."
+msgstr "Đẹp. Xấu. Đáng yêu. "
 
 #. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_answer__question_id
@@ -229,14 +370,18 @@ msgstr "Câu hỏi"
 #. module: website_event_track_quiz
 #: code:addons/website_event_track_quiz/models/event_quiz.py:0
 #, python-format
-msgid "Question \"%s\" must have 1 correct answer"
-msgstr "Câu hỏi \"%s\" phải có 1 câu trả lời đúng"
+msgid ""
+"Question \"%s\" must have 1 correct answer and at least 1 incorrect answer "
+"to be valid."
+msgstr ""
+"Câu hỏi \"%s\" phải có 1 câu trả lời đúng và ít nhất 1 câu trả lời sai để "
+"hợp lệ. "
 
 #. module: website_event_track_quiz
 #: code:addons/website_event_track_quiz/models/event_quiz.py:0
 #, python-format
-msgid "Question \"%s\" must have 1 correct answer and at least 1 incorrect answer"
-msgstr "Câu hỏi \"%s\" phải có 1 câu trả lời đúng và ít nhất 1 câu trả lời sai"
+msgid "Question \"%s\" must have 1 correct answer to be valid."
+msgstr "Câu hỏi \"%s\" phải có ít nhất 1 câu trả lời đúng để hợp lệ. "
 
 #. module: website_event_track_quiz
 #: model:ir.model,name:website_event_track_quiz.model_event_quiz_answer
@@ -245,7 +390,6 @@ msgstr "Câu trả lời"
 
 #. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz__question_ids
-#: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_view_form
 msgid "Questions"
 msgstr "Câu hỏi"
 
@@ -285,6 +429,7 @@ msgid "Quiz validation error"
 msgstr "Lỗi xác nhận đố vui"
 
 #. module: website_event_track_quiz
+#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_track__quiz_ids
 #: model:ir.ui.menu,name:website_event_track_quiz.event_quiz_menu
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_view_search
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_view_tree
@@ -297,6 +442,11 @@ msgstr "Quizzes"
 #, python-format
 msgid "Reset"
 msgstr "Đặt lại"
+
+#. module: website_event_track_quiz
+#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_5_question_1_2
+msgid "Scotch tape"
+msgstr "Băng dính trong"
 
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.leaderboard_search_bar
@@ -314,23 +464,37 @@ msgid "Search courses"
 msgstr "Tìm khóa học"
 
 #. module: website_event_track_quiz
+#: model:event.quiz,name:website_event_track_quiz.event_7_track_5_quiz
+msgid "Securing your Lumber during transport"
+msgstr "Buộc gỗ trong quá trình vận chuyển"
+
+#. module: website_event_track_quiz
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_answer__sequence
 #: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz_question__sequence
 msgid "Sequence"
 msgstr "Trình tự"
 
 #. module: website_event_track_quiz
-#. openerp-web
-#: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
-#: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
-#, python-format
-msgid "Succeed and gain karma"
-msgstr "Thành công và đạt được điểm"
+#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_13_question_0_1
+msgid "Steel Wall"
+msgstr "Tường thép"
+
+#. module: website_event_track_quiz
+#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_1_question_1_1
+msgid "Stores !"
+msgstr "Cửa hàng !"
 
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_track_content
 msgid "Take the Quiz"
 msgstr "Trả lời đố vui"
+
+#. module: website_event_track_quiz
+#. openerp-web
+#: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
+#, python-format
+msgid "The correct answer was:"
+msgstr "Câu trả lời đúng là: "
 
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_leaderboard
@@ -361,6 +525,11 @@ msgid "This quiz is already done. Retaking it is not possible."
 msgstr "Quiz này đã được làm xong. Không được phép làm lại nữa."
 
 #. module: website_event_track_quiz
+#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_5_question_1_1
+msgid "Tie-down straps and other wooden blocks"
+msgstr "Dây buộc và các khối gỗ khác"
+
+#. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_view_search
 msgid "Track"
 msgstr "Vết"
@@ -371,14 +540,64 @@ msgid "Track / Visitor Link"
 msgstr "Link bài / Khách"
 
 #. module: website_event_track_quiz
-#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz__event_track_ids
-msgid "Tracks"
-msgstr "Vết"
+#: model:event.quiz.question,name:website_event_track_quiz.event_7_track_5_question_0
+msgid "Transporting lumber from stores to your house is safe."
+msgstr "Vận chuyển gỗ từ cửa hàng về nhà là rất an toàn. "
+
+#. module: website_event_track_quiz
+#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_1_question_1_0
+msgid "Trees !"
+msgstr "Cây!"
+
+#. module: website_event_track_quiz
+#: model:ir.model.fields,field_description:website_event_track_quiz.field_event_quiz__repeatable
+msgid "Unlimited Tries"
+msgstr "Không giới hạn thử"
 
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.top3_visitor_card
 msgid "User rank"
 msgstr "Thứ hạng"
+
+#. module: website_event_track_quiz
+#: model:event.quiz.answer,comment:website_event_track_quiz.event_7_track_5_question_1_2
+msgid "Well, it could work but you will need a lot of tape!"
+msgstr "Nếu vậy bạn sẽ cần rất nhiều băng dính!"
+
+#. module: website_event_track_quiz
+#: model:event.quiz,name:website_event_track_quiz.event_7_track_1_quiz
+msgid "What This Event Is All About"
+msgstr "Nội dung của sự kiện"
+
+#. module: website_event_track_quiz
+#: model:event.quiz.question,name:website_event_track_quiz.event_7_track_5_question_1
+msgid "What kind of tool are needed to secure your lumber ?"
+msgstr "Dùng loại công cụ nào để buộc chặt gỗ?"
+
+#. module: website_event_track_quiz
+#: model:event.quiz.question,name:website_event_track_quiz.event_7_track_13_question_0
+msgid "What kind of wall is transformed here ?"
+msgstr "Loại tường nào được biến đổi? "
+
+#. module: website_event_track_quiz
+#: model:event.quiz.question,name:website_event_track_quiz.event_7_track_1_question_0
+msgid "What will we talk about during this event ?"
+msgstr "Chúng ta sẽ thảo luận những gì trong sự kiện này?"
+
+#. module: website_event_track_quiz
+#: model:event.quiz.question,name:website_event_track_quiz.event_7_track_1_question_1
+msgid "Where does lumber comes from ?"
+msgstr "Gỗ tới từ đâu?"
+
+#. module: website_event_track_quiz
+#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_1_question_0_0
+msgid "Wood"
+msgstr "Gỗ"
+
+#. module: website_event_track_quiz
+#: model:event.quiz.answer,text_value:website_event_track_quiz.event_7_track_5_question_0_0
+msgid "Yes"
+msgstr "Có"
 
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.all_visitor_card
@@ -387,11 +606,30 @@ msgid "You"
 msgstr "Bạn"
 
 #. module: website_event_track_quiz
-#: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_question_view_form
-msgid "e.g. According to Douglas, what should you pay most attention to?"
-msgstr ""
+#: model:event.quiz.answer,comment:website_event_track_quiz.event_7_track_1_question_0_0
+msgid "You're really smart !"
+msgstr "Bạn rất thông minh!"
 
 #. module: website_event_track_quiz
 #: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_view_form
 msgid "e.g. Test your Knowledge"
 msgstr "vd. Kiểm tra kiến thức"
+
+#. module: website_event_track_quiz
+#: model_terms:ir.ui.view,arch_db:website_event_track_quiz.event_quiz_question_view_form
+msgid "e.g. What is Joe's favorite motto?"
+msgstr "vd. Phương châm của Joe là gì?"
+
+#. module: website_event_track_quiz
+#. openerp-web
+#: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
+#, python-format
+msgid "point!"
+msgstr "điểm!"
+
+#. module: website_event_track_quiz
+#. openerp-web
+#: code:addons/website_event_track_quiz/static/src/xml/quiz_templates.xml:0
+#, python-format
+msgid "points!"
+msgstr "điểm!"
