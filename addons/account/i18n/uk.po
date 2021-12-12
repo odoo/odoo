@@ -449,12 +449,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
 msgid ""
 "<span class=\"badge badge-pill badge-info\"><i class=\"fa fa-fw fa-clock-o\""
-" aria-label=\"Opened\" title=\"Opened\" role=\"img\"/><span class=\"d-none d"
-"-md-inline\"> Waiting for Payment</span></span>"
+" aria-label=\"Opened\" title=\"Opened\" role=\"img\"/><span class=\"d-none "
+"d-md-inline\"> Waiting for Payment</span></span>"
 msgstr ""
 "<span class=\"badge badge-pill badge-info\"><i class=\"fa fa-fw fa-clock-o\""
-" aria-label=\"Opened\" title=\"Opened\" role=\"img\"/><span class=\"d-none d"
-"-md-inline\"> Очікування платежу</span></span>"
+" aria-label=\"Opened\" title=\"Opened\" role=\"img\"/><span class=\"d-none "
+"d-md-inline\"> Очікування платежу</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -13079,6 +13079,8 @@ msgstr ""
 #, python-format
 msgid "The tags linked to a tax report line should always match its tag name."
 msgstr ""
+"Теги, пов'язані з рядком податковго звіту, повинні завжди відповідати назві "
+"тегу."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__tax_report_line_ids
@@ -13092,6 +13094,8 @@ msgid ""
 "The tax set to apply this distribution on invoices. Mutually exclusive with "
 "refund_tax_id"
 msgstr ""
+"Податок, встановлений на продажу на рахунках. Взаємовиключення з "
+"refund_tax_id"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__refund_tax_id
@@ -13100,6 +13104,8 @@ msgid ""
 "The tax set to apply this distribution on refund invoices. Mutually "
 "exclusive with invoice_tax_id"
 msgstr ""
+"Цей податок буде застосовуватися до повернення рахунків-фактур. "
+"Взаємовиключення з invoice_tax_id"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding__rounding_method
@@ -13144,6 +13150,8 @@ msgid ""
 "There are still unreconciled bank statement lines in the period you want to "
 "lock.You should either reconcile or delete them."
 msgstr ""
+"У період, який потрібно заблокувати, все ще є неузгоджені рядки банківської "
+"виписки. Ви повинні або звірити їх, або видалити."
 
 #. module: account
 #: code:addons/account/models/account_partial_reconcile.py:0
@@ -13152,6 +13160,8 @@ msgid ""
 "There is no tax cash basis journal defined for the '%s' company.\n"
 "Configure it in Accounting/Configuration/Settings"
 msgstr ""
+"Журнал касового методу не визначено для компанії '%s'.\n"
+"Налаштуйте його в Бухобліку/Налаштуваннях/Налаштуваннях"
 
 #. module: account
 #: code:addons/account/models/company.py:0
@@ -13260,6 +13270,7 @@ msgid ""
 "This entry transfers the following amounts to "
 "<strong>%(destination)s</strong> <ul>"
 msgstr ""
+"Цей запис перераховує такі суми на <strong>%(destination)s</strong> <ul>"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model_line__journal_id
@@ -13313,6 +13324,8 @@ msgid ""
 "This matching rule is used when the user is not certain of all the "
 "information of the counterpart."
 msgstr ""
+"Це правило співставлення використовується, коли користувач не впевнений у "
+"всій інформації відповідника."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13324,13 +13337,13 @@ msgstr "Це переміщення налаштоване, щоби автом�
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
 "This move is configured to be posted automatically at the accounting date:"
-msgstr ""
+msgstr "Це переміщення налаштовано на автоматичну проводку на дату обліку:"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "This move will be posted at the accounting date: %(date)s"
-msgstr ""
+msgstr "Цю проводку буде опубліковано на дату бухобліку: %(date)s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__auto_delete
@@ -13392,7 +13405,7 @@ msgstr ""
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "This reconciliation model has created no entry so far"
-msgstr ""
+msgstr "Ця модель узгодження поки що не створила жодного запису"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_validate_account_move
@@ -13426,6 +13439,7 @@ msgstr ""
 #: model_terms:digest.tip,tip_description:account.digest_tip_account_0
 msgid "Tip: No need to print, put in an envelop and post your invoices"
 msgstr ""
+"Порада: Не потрібно друкувати, класти в конверт і публікувати ваші рахунки"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__destination_account_id
@@ -13525,7 +13539,7 @@ msgstr "Всього підписано"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__total_amount
 msgid "Total amount impacted by the automatic entry."
-msgstr ""
+msgstr "Загальна сума, на яку вплинув автоматичний запис."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__credit
@@ -13618,7 +13632,7 @@ msgstr "Переміщення"
 #: code:addons/account/wizard/account_tour_upload_bill.py:0
 #, python-format
 msgid "Try a sample vendor bill"
-msgstr ""
+msgstr "Спробуйте приклад рахунку постачальника"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__user_type_id
@@ -13655,6 +13669,9 @@ msgid ""
 "printing it. If left blank, the first available and usable method will be "
 "used."
 msgstr ""
+"Тип QR-коду, який буде згенеровано для оплати цього рахунка-фактури під час "
+"його друку. Якщо залишити порожнім, буде використано перший доступний метод,"
+" що використовується."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__activity_exception_decoration
@@ -13676,6 +13693,8 @@ msgid ""
 "Unable to create an open balance for a statement line because the receivable"
 " / payable accounts are missing on the partner."
 msgstr ""
+"Неможливо створити відкритий баланс для рядка виписки, оскільки рахунки "
+"дебіторської/кредиторської заборгованості відсутні на партнері."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -13683,6 +13702,8 @@ msgstr ""
 msgid ""
 "Unable to create an open balance for a statement line without a partner set."
 msgstr ""
+"Неможна створити відкритий баланс для рядка виписки без встановленого "
+"партнера."
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -13825,7 +13846,7 @@ msgstr "Завантажити"
 #: code:addons/account/wizard/account_tour_upload_bill.py:0
 #, python-format
 msgid "Upload your own bill"
-msgstr ""
+msgstr "Завантажте ваш рахунок постачальника"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__use_anglo_saxon
@@ -13921,7 +13942,7 @@ msgstr "Використовується для впорядкування жу�
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_method__sequence
 msgid "Used to order Methods in the form view"
-msgstr ""
+msgstr "Використовується для впорядкування Методів у перегляді форми."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__loss_account_id
@@ -14083,7 +14104,7 @@ msgstr "Платежі постачальника"
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Vendor Reimbursement"
-msgstr ""
+msgstr "Відшкодування постачальнику"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_product__supplier_taxes_id
@@ -14217,7 +14238,7 @@ msgstr "З валютою"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill
 msgid "With Odoo, you won't have to records bills manually"
-msgstr ""
+msgstr "З Odoo, вам не потрібно буде записувати рахунки постачальників вручну"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
@@ -14230,6 +14251,8 @@ msgstr "З податками"
 #, python-format
 msgid "Write a company name to <b>create one</b> or <b>see suggestions</b>."
 msgstr ""
+"Напишіть назву компанії, щоб <b>створити її</b> або <b>перегляньте "
+"запропоновані</b>."
 
 #. module: account
 #. openerp-web
@@ -14237,6 +14260,8 @@ msgstr ""
 #, python-format
 msgid "Write here <b>your own email address</b> to test the flow."
 msgstr ""
+"Напишіть тут <b>вашу власну адресу електронної пошти</b>, щоби протестити "
+"процес."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_credit_debit
@@ -14295,6 +14320,8 @@ msgstr ""
 msgid ""
 "You can not reorder sequence by date when the journal is locked with a hash."
 msgstr ""
+"Ви не можете змінити порядок послідовності за датою, якщо журнал заблоковано"
+" хешем."
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -14302,43 +14329,46 @@ msgstr ""
 msgid ""
 "You can only change the period/account for items that are not yet "
 "reconciled."
-msgstr ""
+msgstr "Змінити період/рахунок можна лише для позицій, які ще не узгоджені."
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "You can only change the period/account for posted journal items."
 msgstr ""
+"Ви можете змінити лише період/рахунок для опублікованих статей журналу."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "You can only create statement line in open bank statements."
 msgstr ""
+"Ви можете створити рядок виписки лише у відкритих банківських виписках."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You can only reconcile posted entries."
-msgstr ""
+msgstr "Ви можете узгодити лише опубліковані записи."
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid "You can only register payment for posted journal entries."
 msgstr ""
+"Ви можете зареєструвати платежі лише для опублікованих записів жураналу."
 
 #. module: account
 #: code:addons/account/wizard/account_resequence.py:0
 #, python-format
 msgid "You can only resequence items from the same journal"
-msgstr ""
+msgstr "Ви можете змінити послідовність лише елементів з того самого журналу"
 
 #. module: account
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
 msgid "You can only reverse posted moves."
-msgstr ""
+msgstr "Ви можете відмінити лише опубліковані проведення."
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_send.py:0
