@@ -6,12 +6,13 @@
 # SHIMIZU Taku <shimizu.taku@gmail.com>, 2018
 # Martin Trigaux, 2018
 # Manami Hashi <manami@roomsfor.hk>, 2018
-# NOKA Shigekazu <shigekazu.noka@gmail.com>, 2018
+# Shigekazu N. <shigekazu.noka@gmail.com>, 2018
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2018
 # kent_ocean <ke.tanabe@gmail.com>, 2018
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2018
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2019
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2019
 # Noma Yuki, 2020
+# Ryoko Tsuda <ryoko@quartile.co>, 2021
 # 
 msgid ""
 msgstr ""
@@ -19,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-03-29 10:09+0000\n"
 "PO-Revision-Date: 2018-08-24 09:15+0000\n"
-"Last-Translator: Noma Yuki, 2020\n"
+"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2021\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -69,7 +70,7 @@ msgstr "分析勘定"
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_distribution
 msgid "Analytic Account Distribution"
-msgstr ""
+msgstr "分析勘定の配賦"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_group_action
@@ -185,7 +186,7 @@ msgstr ""
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_group_action
 msgid "Click to add a new analytic account group."
-msgstr ""
+msgstr "新しい分析勘定グループを追加しましょう。"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__color
@@ -352,6 +353,8 @@ msgid ""
 "                analytic accounts. You can track costs and revenues to analyse\n"
 "                your margins easily."
 msgstr ""
+"Odooでは、販売オーダ、プロジェクトは分析勘定を使用します。\n"
+"                費用と収益を追跡して、簡単にマージンを分析することができます。"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_is_follower
@@ -487,6 +490,9 @@ msgid ""
 "                (fixed price invoices), on timesheets (based on the work done) or\n"
 "                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
+"収益は顧客請求書の作成時に自動的に作成されます。 \n"
+"顧客請求書は、販売オーダ（固定価格の請求書）や、タイムシート（実施された作業に基づく）、\n"
+"経費（例：顧客負担の旅費交通費の請求）に基づいて作成することができます。"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
@@ -512,7 +518,7 @@ msgstr ""
 #: sql_constraint:account.analytic.distribution:0
 msgid ""
 "The percentage of an analytic distribution should be between 0 and 100."
-msgstr ""
+msgstr "分析勘定の配賦の率は０から１００の間でなければなりません。"
 
 #. module: analytic
 #: code:addons/analytic/models/analytic_account.py:195
