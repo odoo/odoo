@@ -2580,6 +2580,8 @@ class AccountMove(models.Model):
             Nothing will be performed on those documents before the accounting date.
         :return Model<account.move>: the documents that have been posted
         """
+        if self.partner_bank_id and not self.partner_bank_id.active:
+            raise UserError(_("The recipient bank account link to this invoice is archived.\nSo you cannot confirm the invoice."))
         if soft:
             future_moves = self.filtered(lambda move: move.date > fields.Date.context_today(self))
             future_moves.auto_post = True
@@ -2697,7 +2699,9 @@ class AccountMove(models.Model):
 
         return action
 
-    def action_post(self):
+    def action_post(self):  # TODO Here or in the function _post?
+        if self.partner_bank_id and not self.partner_bank_id.active:
+            raise UserError(_("The recipient bank account link to this invoice is archived.\nSo you cannot confirm the invoice."))
         self._post(soft=False)
         return False
 
