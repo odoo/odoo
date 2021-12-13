@@ -248,7 +248,7 @@ registerModel({
             isCausal: true,
             readonly: true,
         }),
-        dialogManager: one2one('mail.dialog_manager', {
+        dialogManager: one2one('DialogManager', {
             default: insertAndReplace(),
             isCausal: true,
             readonly: true,

@@ -45,14 +45,14 @@ registerModel({
             inverse: 'dialog',
             readonly: true,
         }),
-        manager: many2one('mail.dialog_manager', {
+        manager: many2one('DialogManager', {
             inverse: 'dialogs',
             readonly: true,
         }),
         /**
          * Content of dialog that is directly linked to a record that models
          * a UI component, such as AttachmentViewer. These records must be
-         * created from @see `mail.dialog_manager:open()`.
+         * created from @see `DialogManager:open()`.
          */
         record: one2one('mail.model', {
             compute: '_computeRecord',
