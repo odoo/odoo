@@ -102,6 +102,9 @@ class HrExpenseSheetRegisterPaymentWizard(models.TransientModel):
             'communication': self.communication
         }
 
+    def _prepare_lines_to_reconcile(self, lines):
+        return lines.filtered(lambda l: l.account_id.internal_type == 'payable' and not l.reconciled)
+
     def expense_post_payment(self):
         self.ensure_one()
         company = self.company_id
@@ -119,10 +122,7 @@ class HrExpenseSheetRegisterPaymentWizard(models.TransientModel):
         expense_sheet.message_post(body=body)
 
         # Reconcile the payment and the expense, i.e. lookup on the payable account move lines
-        account_move_lines_to_reconcile = self.env['account.move.line']
-        for line in payment.move_line_ids + expense_sheet.account_move_id.line_ids:
-            if line.account_id.internal_type == 'payable' and not line.reconciled:
-                account_move_lines_to_reconcile |= line
+        account_move_lines_to_reconcile = self._prepare_lines_to_reconcile(payment.move_line_ids + expense_sheet.account_move_id.line_ids)
         account_move_lines_to_reconcile.reconcile()
 
         return {'type': 'ir.actions.act_window_close'}
