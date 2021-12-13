@@ -14,9 +14,9 @@ export class ChannelInvitationForm extends Component {
      */
     setup() {
         super.setup();
-        useComponentToModel({ fieldName: 'component', modelName: 'mail.channel_invitation_form', propNameAsRecordLocalId: 'localId' });
-        useRefToModel({ fieldName: 'searchInputRef', modelName: 'mail.channel_invitation_form', propNameAsRecordLocalId: 'localId', refName: 'searchInput' });
-        useUpdateToModel({ methodName: 'onComponentUpdate', modelName: 'mail.channel_invitation_form', propNameAsRecordLocalId: 'localId' });
+        useComponentToModel({ fieldName: 'component', modelName: 'ChannelInvitationForm', propNameAsRecordLocalId: 'localId' });
+        useRefToModel({ fieldName: 'searchInputRef', modelName: 'ChannelInvitationForm', propNameAsRecordLocalId: 'localId', refName: 'searchInput' });
+        useUpdateToModel({ methodName: 'onComponentUpdate', modelName: 'ChannelInvitationForm', propNameAsRecordLocalId: 'localId' });
     }
 
     //--------------------------------------------------------------------------
@@ -24,7 +24,7 @@ export class ChannelInvitationForm extends Component {
     //--------------------------------------------------------------------------
 
     get channelInvitationForm() {
-        return this.messaging && this.messaging.models['mail.channel_invitation_form'].get(this.props.localId);
+        return this.messaging && this.messaging.models['ChannelInvitationForm'].get(this.props.localId);
     }
 
 }

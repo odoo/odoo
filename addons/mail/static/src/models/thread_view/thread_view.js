@@ -290,7 +290,7 @@ registerModel({
          * States which channel invitation form is operating this thread view.
          * Only applies if this thread is a channel.
          */
-        channelInvitationForm: one2one('mail.channel_invitation_form', {
+        channelInvitationForm: one2one('ChannelInvitationForm', {
             inverse: 'threadView',
             isCausal: true,
         }),
