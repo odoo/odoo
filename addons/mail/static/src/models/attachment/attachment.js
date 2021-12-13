@@ -306,7 +306,7 @@ registerModel({
         /**
          * States on which composer this attachment is currently being created.
          */
-        composer: many2one('mail.composer', {
+        composer: many2one('Composer', {
             inverse: 'attachments',
         }),
         defaultSource: attr({

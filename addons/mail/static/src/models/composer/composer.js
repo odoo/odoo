@@ -5,7 +5,7 @@ import { attr, many2many, many2one, one2many, one2one } from '@mail/model/model_
 import { clear, replace, unlink } from '@mail/model/model_field_command';
 
 registerModel({
-    name: 'mail.composer',
+    name: 'Composer',
     identifyingFields: [['thread', 'messageViewInEditing']],
     recordMethods: {
         /**

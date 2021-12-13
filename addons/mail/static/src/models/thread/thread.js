@@ -1950,7 +1950,7 @@ registerModel({
         /**
          * Determines the composer state of this thread.
          */
-        composer: one2one('mail.composer', {
+        composer: one2one('Composer', {
             compute: '_computeComposer',
             inverse: 'thread',
             isCausal: true,

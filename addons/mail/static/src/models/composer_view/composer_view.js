@@ -869,7 +869,7 @@ registerModel({
         /**
          * States the composer state that is displayed by this composer view.
          */
-        composer: many2one('mail.composer', {
+        composer: many2one('Composer', {
             compute: '_computeComposer',
             inverse: 'composerViews',
             required: true,
