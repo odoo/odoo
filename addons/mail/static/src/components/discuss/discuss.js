@@ -72,7 +72,7 @@ export class Discuss extends Component {
     }
 
     /**
-     * @returns {mail.discuss}
+     * @returns {Discuss}
      */
     get discuss() {
         return this.messaging && this.messaging.discuss;
