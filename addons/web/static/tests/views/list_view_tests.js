@@ -4028,7 +4028,7 @@ QUnit.module("Views", (hooks) => {
         _t.database.multi_lang = multiLang;
     });
 
-    QUnit.skip("long words in text cells should break into smaller lines", async function (assert) {
+    QUnit.test("long words in text cells should break into smaller lines", async function (assert) {
         assert.expect(2);
 
         serverData.models.foo.records[0].text = "a";
@@ -4056,7 +4056,7 @@ QUnit.module("Views", (hooks) => {
         assert.ok(longText > emptyText, "Long word should change the height of the cell");
     });
 
-    QUnit.skip("deleting one record", async function (assert) {
+    QUnit.test("deleting one record", async function (assert) {
         assert.expect(5);
 
         const list = await makeView({
@@ -4070,20 +4070,24 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(list.el, "div.o_control_panel .o_cp_action_menus");
         assert.containsN(list, "tbody td.o_list_record_selector", 4, "should have 4 records");
 
-        await click($(list.el).find("tbody td.o_list_record_selector:first input"));
+        await click(list.el.querySelector("tbody td.o_list_record_selector:first-child input"));
 
         assert.containsOnce(list.el, "div.o_control_panel .o_cp_action_menus");
 
         await toggleActionMenu(list);
         await toggleMenuItem(list, "Delete");
-        assert.hasClass($("body"), "modal-open", "body should have modal-open clsss");
+        assert.hasClass(
+            document.querySelector("body"),
+            "modal-open",
+            "body should have modal-open clsss"
+        );
 
-        await click($("body .modal button span:contains(Ok)"));
+        await click(document, "body .modal footer button.btn-primary");
 
         assert.containsN(list, "tbody td.o_list_record_selector", 3, "should have 3 records");
     });
 
-    QUnit.skip(
+    QUnit.test(
         "deleting record which throws UserError should close confirmation dialog",
         async function (assert) {
             assert.expect(3);
@@ -4098,11 +4102,10 @@ QUnit.module("Views", (hooks) => {
                     if (args.method === "unlink") {
                         return Promise.reject({ message: "Odoo Server Error" });
                     }
-                    return this._super(...arguments);
                 },
             });
 
-            await click($(list.el).find("tbody td.o_list_record_selector:first input"));
+            await click(list.el.querySelector("tbody td.o_list_record_selector:first-child input"));
 
             assert.containsOnce(list.el, "div.o_control_panel .o_cp_action_menus");
 
@@ -4114,12 +4117,12 @@ QUnit.module("Views", (hooks) => {
                 "should have open the confirmation dialog"
             );
 
-            await click($("body .modal button span:contains(Ok)"));
+            await click(document, "body .modal footer button.btn-primary");
             assert.containsNone(document.body, ".modal", "confirmation dialog should be closed");
         }
     );
 
-    QUnit.skip("delete all records matching the domain", async function (assert) {
+    QUnit.test("delete all records matching the domain", async function (assert) {
         assert.expect(6);
 
         serverData.models.foo.records.push({ id: 5, bar: true, foo: "xxx" });
@@ -4134,35 +4137,36 @@ QUnit.module("Views", (hooks) => {
                 if (args.method === "unlink") {
                     assert.deepEqual(args.args[0], [1, 2, 3, 5]);
                 }
-                return this._super.apply(this, arguments);
-            },
-            services: {
-                notification: {
-                    notify: function () {
-                        throw new Error("should not display a notification");
-                    },
-                },
             },
             loadActionMenus: true,
+        });
+        patchWithCleanup(list.env.services.notification, {
+            add: () => {
+                throw new Error("should not display a notification");
+            },
         });
 
         assert.containsNone(list, "div.o_control_panel .o_cp_action_menus");
         assert.containsN(list, "tbody td.o_list_record_selector", 2, "should have 2 records");
 
-        await click($(list.el).find("thead .o_list_record_selector input"));
+        await click(list.el.querySelector("thead .o_list_record_selector input"));
 
         assert.containsOnce(list, "div.o_control_panel .o_cp_action_menus");
         assert.containsOnce(list, ".o_list_selection_box .o_list_select_domain");
 
-        await click($(list.el).find(".o_list_selection_box .o_list_select_domain"));
+        await click(list.el, ".o_list_selection_box .o_list_select_domain");
         await toggleActionMenu(list.el);
         await toggleMenuItem(list.el, "Delete");
 
-        assert.strictEqual($(".modal").length, 1, "a confirm modal should be displayed");
-        await click($(".modal-footer .btn-primary"));
+        assert.strictEqual(
+            document.querySelectorAll(".modal").length,
+            1,
+            "a confirm modal should be displayed"
+        );
+        await click(document, "body .modal footer button.btn-primary");
     });
 
-    QUnit.skip("delete all records matching the domain (limit reached)", async function (assert) {
+    QUnit.test("delete all records matching the domain (limit reached)", async function (assert) {
         assert.expect(8);
 
         serverData.models.foo.records.push({ id: 5, bar: true, foo: "xxx" });
@@ -4178,35 +4182,36 @@ QUnit.module("Views", (hooks) => {
                 if (args.method === "unlink") {
                     assert.deepEqual(args.args[0], [1, 2, 3, 5]);
                 }
-                return this._super.apply(this, arguments);
-            },
-            services: {
-                notification: {
-                    notify: function () {
-                        assert.step("notify");
-                    },
-                },
-            },
-            session: {
-                active_ids_limit: 4,
             },
             loadActionMenus: true,
+        });
+        patchWithCleanup(session, {
+            active_ids_limit: 4,
+        });
+        patchWithCleanup(list.env.services.notification, {
+            add: () => {
+                assert.step("notify");
+            },
         });
 
         assert.containsNone(list, "div.o_control_panel .o_cp_action_menus");
         assert.containsN(list, "tbody td.o_list_record_selector", 2, "should have 2 records");
 
-        await click($(list.el).find("thead .o_list_record_selector input"));
+        await click(list.el.querySelector("thead .o_list_record_selector input"));
 
         assert.containsOnce(list, "div.o_control_panel .o_cp_action_menus");
         assert.containsOnce(list, ".o_list_selection_box .o_list_select_domain");
 
-        await click($(list.el).find(".o_list_selection_box .o_list_select_domain"));
+        await click(list.el.querySelector(".o_list_selection_box .o_list_select_domain"));
         await toggleActionMenu(list);
         await toggleMenuItem(list, "Delete");
 
-        assert.strictEqual($(".modal").length, 1, "a confirm modal should be displayed");
-        await click($(".modal-footer .btn-primary"));
+        assert.strictEqual(
+            document.querySelectorAll(".modal").length,
+            1,
+            "a confirm modal should be displayed"
+        );
+        await click(document, "body .modal footer button.btn-primary");
 
         assert.verifySteps(["notify"]);
     });
@@ -4268,12 +4273,6 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("archive all records matching the domain", async function (assert) {
         assert.expect(6);
-        const notificationService = serviceRegistry.get("notification");
-        patchWithCleanup(notificationService, {
-            add: () => {
-                throw new Error("should not display a notification");
-            },
-        });
         // add active field on foo model and make all records active
         serverData.models.foo.fields.active = { string: "Active", type: "boolean", default: true };
         serverData.models.foo.records.push({ id: 5, bar: true, foo: "xxx" });
@@ -4291,6 +4290,11 @@ QUnit.module("Views", (hooks) => {
                 }
             },
             loadActionMenus: true,
+        });
+        patchWithCleanup(list.env.services.notification, {
+            add: () => {
+                throw new Error("should not display a notification");
+            },
         });
 
         assert.containsNone(list, "div.o_control_panel .o_cp_action_menus");

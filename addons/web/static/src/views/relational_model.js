@@ -462,6 +462,13 @@ class DynamicList extends DataPoint {
         //todo fge _invalidateCache
     }
 
+    async delete(isSelected) {
+        const resIds = await this.getResIds(isSelected);
+        await this.model.orm.unlink(this.resModel, resIds, this.context);
+        await this.model.load();
+        return resIds;
+    }
+
     exportState() {
         return {
             limit: this.limit,
