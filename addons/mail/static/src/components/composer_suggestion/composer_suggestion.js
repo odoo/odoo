@@ -36,7 +36,7 @@ export class ComposerSuggestion extends Component {
     }
 
     get isCommand() {
-        return this.props.modelName === "mail.channel_command";
+        return this.props.modelName === "ChannelCommand";
     }
 
     get isPartner() {
