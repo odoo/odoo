@@ -18,10 +18,10 @@ export class MailTemplate extends Component {
     }
 
     /**
-     * @returns {mail.mail_template}
+     * @returns {MailTemplate}
      */
     get mailTemplate() {
-        return this.messaging && this.messaging.models['mail.mail_template'].get(this.props.mailTemplateLocalId);
+        return this.messaging && this.messaging.models['MailTemplate'].get(this.props.mailTemplateLocalId);
     }
 
     //--------------------------------------------------------------------------
