@@ -135,7 +135,7 @@ registerModel({
             compute: '_computeCanPostMessage',
             default: false,
         }),
-        composerViews: one2many('mail.composer_view', {
+        composerViews: one2many('ComposerView', {
             inverse: 'composer',
             isCausal: true,
         }),
