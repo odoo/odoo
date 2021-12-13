@@ -13,6 +13,13 @@ options.registry.countdown = options.Class.extend({
     }),
 
     /**
+     * @override
+     */
+    async onBuilt() {
+        // To synchronize with the time displayed by the image previews
+        this.$target[0].dataset.endTime = Date.now() / 1000 + 232245;
+    },
+    /**
      * Remove any preview classes, if present.
      *
      * @override

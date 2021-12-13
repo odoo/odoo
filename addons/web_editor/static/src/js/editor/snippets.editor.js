@@ -1613,11 +1613,20 @@ var SnippetsMenu = Widget.extend({
      * @returns {Promise}
      */
     callPostSnippetDrop: async function ($target) {
+        // Ideally should be done at the very end to minimize the flicker
+        // transitioning from preview to actual content, here seems the best
+        // compromise as a generic solution (could be better if each snippet
+        // was in charge of removing their own preview elements?). In any case,
+        // it should be ensured that DOM is not added in the history.
+        $target.find('.s_preview').remove();
+        $target.find('.s_to_preview').removeClass('s_to_preview');
+
         // First call the onBuilt of all options of each item in the snippet
         // (and so build their editor instance first).
         await this._callForEachChildSnippet($target, function (editor, $snippet) {
             return editor.buildSnippet();
         });
+
         // The snippet is now fully built, notify the editor for changed
         // content.
         $target.trigger('content_changed');
@@ -2472,6 +2481,20 @@ var SnippetsMenu = Widget.extend({
                     }
 
                     $toInsert = $baseBody.clone();
+
+                    // Load preview content
+                    const previewItemsToLoad = [];
+                    for (const previewEl of $toInsert[0].querySelectorAll('.s_preview, .s_to_preview')) {
+                        if (previewEl.dataset.src) {
+                            previewItemsToLoad.push(previewEl);
+                        }
+                        previewItemsToLoad.push(...previewEl.querySelectorAll('[data-src]'));
+                    }
+                    for (const itemEl of previewItemsToLoad) {
+                        itemEl.src = itemEl.dataset.src;
+                        delete itemEl.dataset.src;
+                    }
+
                     // Color-customize dynamic SVGs in dropped snippets with current theme colors.
                     [...$toInsert.find('img[src^="/web_editor/shape/"]')].forEach(dynamicSvg => {
                         const colorCustomizedURL = new URL(dynamicSvg.getAttribute('src'), window.location.origin);
@@ -2566,6 +2589,11 @@ var SnippetsMenu = Widget.extend({
                         $toInsert.detach();
                     }
 
+                    // TODO the fact that we have to remove the added snippet to
+                    // then reenable the observe and then adding the snippet
+                    // back where it was... is the cause why some snippet
+                    // flicker on drop (like an iframe needing to be reloaded).
+                    // But how can this be solved?
                     self.options.wysiwyg.odooEditor.observerActive('dragAndDropCreateSnippet');
 
                     if (dropped) {

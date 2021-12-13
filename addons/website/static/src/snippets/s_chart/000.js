@@ -116,9 +116,13 @@ const ChartWidget = publicWidget.Widget.extend({
             };
         }
 
-        const canvas = this.el.querySelector('canvas');
+        let canvasEl = this.el.querySelector('canvas'); // Compatibility: the empty canvas was saved before
+        if (!canvasEl) {
+            canvasEl = document.createElement('canvas');
+            this.el.appendChild(canvasEl);
+        }
         window.Chart.Tooltip.positioners.custom = (elements, eventPosition) => eventPosition;
-        this.chart = new window.Chart(canvas, chartData);
+        this.chart = new window.Chart(canvasEl, chartData);
         return this._super.apply(this, arguments);
     },
     /**
