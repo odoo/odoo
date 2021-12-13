@@ -6,7 +6,7 @@ import { clear, insertAndReplace, link, unlink } from '@mail/model/model_field_c
 import { markEventHandled } from '@mail/utils/utils';
 
 registerModel({
-    name: 'mail.chat_window',
+    name: 'ChatWindow',
     identifyingFields: ['manager', ['thread', 'managerAsNewMessage']],
     lifecycleHooks: {
         _created() {
@@ -336,7 +336,7 @@ registerModel({
          * @private
          * @param {Object} [param0={}]
          * @param {boolean} [param0.reverse=false]
-         * @returns {mail.chat_window|undefined}
+         * @returns {ChatWindow|undefined}
          */
         _getNextVisibleUnfoldedChatWindow({ reverse = false } = {}) {
             const orderedVisible = this.manager.allOrderedVisible;

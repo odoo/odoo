@@ -1943,7 +1943,7 @@ registerModel({
         /**
          * States the chat window related to this thread (if any).
          */
-        chatWindow: one2one('mail.chat_window', {
+        chatWindow: one2one('ChatWindow', {
             inverse: 'thread',
             isCausal: true,
         }),
