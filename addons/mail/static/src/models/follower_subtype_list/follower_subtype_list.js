@@ -10,7 +10,7 @@ registerModel({
         /**
          * States the dialog displaying this follower subtype list.
          */
-        dialog: one2one('mail.dialog', {
+        dialog: one2one('Dialog', {
             inverse: 'followerSubtypeList',
             isCausal: true,
             readonly: true,
