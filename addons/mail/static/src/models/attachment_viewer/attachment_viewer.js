@@ -11,7 +11,7 @@ registerModel({
          * Close the attachment viewer by closing its linked dialog.
          */
         close() {
-            const dialog = this.messaging.models['mail.dialog'].find(dialog => dialog.record === this);
+            const dialog = this.messaging.models['Dialog'].find(dialog => dialog.record === this);
             if (dialog) {
                 dialog.delete();
             }
@@ -51,7 +51,7 @@ registerModel({
         /**
          * Determines the dialog displaying this attachment viewer.
          */
-        dialog: one2one('mail.dialog', {
+        dialog: one2one('Dialog', {
             inverse: 'attachmentViewer',
             isCausal: true,
             readonly: true,

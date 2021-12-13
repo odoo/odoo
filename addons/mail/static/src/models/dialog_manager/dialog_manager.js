@@ -8,7 +8,7 @@ registerModel({
     identifyingFields: ['messaging'],
     fields: {
         // FIXME: dependent on implementation that uses insert order in relations!!
-        dialogs: one2many('mail.dialog', {
+        dialogs: one2many('Dialog', {
             inverse: 'manager',
             isCausal: true,
         }),
