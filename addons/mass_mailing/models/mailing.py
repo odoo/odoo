@@ -623,6 +623,18 @@ class MassMailing(models.Model):
             ),
         return action
 
+    def action_view_mailing_contacts(self):
+        """Show the mailing contacts who are in a mailing list selected for this mailing."""
+        self.ensure_one()
+        action = self.env['ir.actions.actions']._for_xml_id('mass_mailing.action_view_mass_mailing_contacts')
+        if self.contact_list_ids:
+            action['context'] = {
+                'default_mailing_list_ids': self.contact_list_ids[0].ids,
+                'default_subscription_list_ids': [(0, 0, {'list_id': self.contact_list_ids[0].id})],
+            }
+        action['domain'] = [('list_ids', 'in', self.contact_list_ids.ids)]
+        return action
+
     def update_opt_out(self, email, list_ids, value):
         if len(list_ids) > 0:
             model = self.env['mailing.contact'].with_context(active_test=False)

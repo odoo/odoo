@@ -11,6 +11,7 @@ class MassMailingList(models.Model):
     _order = 'name'
     _description = 'Mailing List'
     _mailing_enabled = True
+    _order = 'create_date DESC'
     # As this model has his own data merge, avoid to enable the generic data_merge on that model.
     _disable_data_merge = True
 

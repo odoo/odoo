@@ -93,7 +93,7 @@
         <field name="model">mailing.contact</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
-            <tree string="Mailing List Contacts" sample="1">
+            <tree string="Mailing List Contacts" sample="1" js_class="mailing_contact_list">
                 <header>
                     <button name="action_add_to_mailing_list" string="Add to List" type="object"/>
                 </header>
@@ -104,6 +104,7 @@
                 <field name="is_blacklisted" string="Email Blacklisted"/>
                 <field name="message_bounce" sum="Total Bounces"/>
                 <field name="opt_out" invisible="'default_list_ids' not in context"/>
+                <field name="list_ids" widget="many2many_tags" optional="hide"/>
             </tree>
         </field>
     </record>
@@ -112,7 +113,7 @@
         <field name="name">mailing.contact.view.kanban</field>
         <field name="model">mailing.contact</field>
         <field name="arch" type="xml">
-            <kanban sample="1">
+            <kanban sample="1" js_class="mailing_contact_kanban">
                 <field name="name"/>
                 <field name="company_name"/>
                 <field name="email"/>
