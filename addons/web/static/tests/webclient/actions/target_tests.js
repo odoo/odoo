@@ -300,7 +300,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.skip('actions in target="new" do not update page title', async function (assert) {
+    QUnit.test('actions in target="new" do not update page title', async function (assert) {
         const mockedTitleService = {
             start() {
                 return {
@@ -508,44 +508,35 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.skip('fullscreen on action change: back to a "current" action', async function (assert) {
+    QUnit.test('fullscreen on action change: back to a "current" action', async function (assert) {
         serverData.actions[1].target = "fullscreen";
         serverData.views[
             "partner,false,form"
         ] = `<form><button name="1" type="action" class="oe_stat_button" /></form>`;
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 6);
-        await legacyExtraNextTick();
-        assert.containsOnce(target, ".o_main_navbar");
-        await testUtils.dom.click($(target).find("button[name=1]"));
-        await nextTick(); // wait for the webclient template to be re-rendered
-        await legacyExtraNextTick();
-        assert.containsNone(target, ".o_main_navbar");
-        await testUtils.dom.click(target.querySelector(".breadcrumb li a"));
-        await nextTick(); // wait for the webclient template to be re-rendered
-        await legacyExtraNextTick();
-        assert.containsOnce(target, ".o_main_navbar");
+        assert.isVisible(target.querySelector(".o_main_navbar"));
+        await click(target.querySelector("button[name='1']"));
+        assert.isNotVisible(target.querySelector(".o_main_navbar"));
+        await click(target.querySelector(".breadcrumb li a"));
+        assert.isVisible(target.querySelector(".o_main_navbar"));
     });
 
-    QUnit.skip('fullscreen on action change: all "fullscreen" actions', async function (assert) {
+    QUnit.test('fullscreen on action change: all "fullscreen" actions', async function (assert) {
         serverData.actions[6].target = "fullscreen";
         serverData.views[
             "partner,false,form"
         ] = `<form><button name="1" type="action" class="oe_stat_button" /></form>`;
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 6);
-        assert.containsNone(target, ".o_main_navbar");
-        await testUtils.dom.click($(target).find("button[name=1]"));
-        await nextTick(); // wait for the webclient template to be re-rendered
-        await legacyExtraNextTick();
-        assert.containsNone(target, ".o_main_navbar");
-        await testUtils.dom.click($(target).find(".breadcrumb li a:first"));
-        await nextTick(); // wait for the webclient template to be re-rendered
-        await legacyExtraNextTick();
-        assert.containsNone(target, ".o_main_navbar");
+        assert.isNotVisible(target.querySelector(".o_main_navbar"));
+        await click(target.querySelector("button[name='1']"));
+        assert.isNotVisible(target.querySelector(".o_main_navbar"));
+        await click(target.querySelector(".breadcrumb li a"));
+        assert.isNotVisible(target.querySelector(".o_main_navbar"));
     });
 
-    QUnit.skip(
+    QUnit.test(
         'fullscreen on action change: back to another "current" action',
         async function (assert) {
             serverData.menus = {
@@ -556,23 +547,18 @@ QUnit.module("ActionManager", (hooks) => {
             serverData.views["partner,false,form"] =
                 '<form><button name="24" type="action" class="oe_stat_button"/></form>';
             await createWebClient({ serverData });
-            await nextTick(); // wait for the load state (default app)
-            await legacyExtraNextTick();
+            await testUtils.nextTick(); // wait for the load state (default app)
             assert.containsOnce(target, "nav .o_menu_brand");
-            assert.strictEqual($(target).find("nav .o_menu_brand").text(), "MAIN APP");
-            await testUtils.dom.click($(target).find('button[name="24"]'));
-            await nextTick(); // wait for the webclient template to be re-rendered
-            await legacyExtraNextTick();
+            assert.strictEqual(target.querySelector("nav .o_menu_brand").innerText, "MAIN APP");
+            assert.doesNotHaveClass(target, "o_fullscreen");
+            await click(target.querySelector("button[name='24']"));
+            assert.doesNotHaveClass(target, "o_fullscreen");
+            await click(target.querySelector("button[name='1']"));
+            assert.hasClass(target, "o_fullscreen");
+            await click(target.querySelectorAll(".breadcrumb li a")[1]);
+            assert.doesNotHaveClass(target, "o_fullscreen");
             assert.containsOnce(target, "nav .o_menu_brand");
-            await testUtils.dom.click($(target).find('button[name="1"]'));
-            await nextTick(); // wait for the webclient template to be re-rendered
-            await legacyExtraNextTick();
-            assert.containsNone(target, "nav.o_main_navbar");
-            await testUtils.dom.click($(target).find(".breadcrumb li a")[1]);
-            await nextTick(); // wait for the webclient template to be re-rendered
-            await legacyExtraNextTick();
-            assert.containsOnce(target, "nav .o_menu_brand");
-            assert.strictEqual($(target).find("nav .o_menu_brand").text(), "MAIN APP");
+            assert.strictEqual(target.querySelector("nav .o_menu_brand").innerText, "MAIN APP");
         }
     );
 
