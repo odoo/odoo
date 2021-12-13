@@ -532,6 +532,13 @@ class AccountPaymentRegister(models.TransientModel):
             'destination_account_id': batch_result['lines'][0].account_id.id
         }
 
+    def _prepare_payment_and_lines_to_reconcile(self, payments, to_reconcile):
+        """
+        Hook method for inherit
+        Can customize payments and lines after register payment
+        """
+        return zip(payments, to_reconcile)
+
     def _create_payments(self):
         self.ensure_one()
         batches = self._get_batches()
@@ -601,7 +608,8 @@ class AccountPaymentRegister(models.TransientModel):
         payments.action_post()
 
         domain = [('account_internal_type', 'in', ('receivable', 'payable')), ('reconciled', '=', False)]
-        for payment, lines in zip(payments, to_reconcile):
+        reconcile_data = self._prepare_payment_and_lines_to_reconcile(payments, to_reconcile)
+        for payment, lines in reconcile_data:
 
             # When using the payment tokens, the payment could not be posted at this point (e.g. the transaction failed)
             # and then, we can't perform the reconciliation.
