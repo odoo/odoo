@@ -222,3 +222,16 @@ class TestMailChannelMembers(MailCommon):
             self.public_channel.with_user(self.user_portal).add_members(self.user_portal.partner_id.ids)
         with self.assertRaises(AccessError):
             self.public_channel.with_user(self.user_public).add_members(self.user_public.partner_id.ids)
+
+    def test_channel_partner_invite_with_guest(self):
+        guest = self.env['mail.guest'].create({'name': 'Guest'})
+        partner = self.env['res.partner'].create({
+            'name': 'ToInvite',
+            'active': True,
+            'type': 'contact',
+            'user_ids': self.user_1,
+        })
+        self.public_channel.add_members(guest_ids=[guest.id])
+        search = self.env['res.partner'].search_for_channel_invite(partner.name, channel_id=self.public_channel.id)
+        self.assertEqual(len(search['partners']), 1)
+        self.assertEqual(search['partners'][0]['id'], partner.id)

@@ -126,7 +126,7 @@ from datetime import date, datetime, time
 from psycopg2.sql import Composable, SQL
 
 import odoo.modules
-from odoo.osv.query import Query
+from odoo.osv.query import Query, _generate_table_alias
 from odoo.tools import pycompat
 from odoo.tools.misc import get_lang
 from ..models import MAGIC_COLUMNS, BaseModel
@@ -816,8 +816,14 @@ class expression(object):
                     if comodel == model:
                         push(('id', 'in', ids2), model, alias)
                     else:
-                        subquery = 'SELECT "%s" FROM "%s" WHERE "%s" IN %%s' % (rel_id1, rel_table, rel_id2)
-                        push(('id', 'inselect', (subquery, [tuple(ids2) or (None,)])), model, alias, internal=True)
+                        rel_alias = _generate_table_alias(alias, field.name)
+                        push_result(f"""
+                            EXISTS (
+                                SELECT 1 FROM "{rel_table}" AS "{rel_alias}"
+                                WHERE "{rel_alias}"."{rel_id1}" = "{alias}".id
+                                AND "{rel_alias}"."{rel_id2}" IN %s
+                            )
+                        """, [tuple(ids2) or (None,)])
 
                 elif right is not False:
                     # determine ids2 in comodel
@@ -833,22 +839,33 @@ class expression(object):
 
                     if isinstance(ids2, Query):
                         # rewrite condition in terms of ids2
-                        subop = 'not inselect' if operator in NEGATIVE_TERM_OPERATORS else 'inselect'
-                        subquery, subparams = ids2.subselect()
-                        query = 'SELECT "%s" FROM "%s" WHERE "%s" IN (%s)' % (rel_id1, rel_table, rel_id2, subquery)
-                        push(('id', subop, (query, subparams)), model, alias, internal=True)
+                        subquery, params = ids2.subselect()
+                        term_id2 = f"({subquery})"
                     else:
                         # rewrite condition in terms of ids2
-                        subop = 'not inselect' if operator in NEGATIVE_TERM_OPERATORS else 'inselect'
-                        subquery = 'SELECT "%s" FROM "%s" WHERE "%s" IN %%s' % (rel_id1, rel_table, rel_id2)
-                        ids2 = tuple(it for it in ids2 if it) or (None,)
-                        push(('id', subop, (subquery, [ids2])), model, alias, internal=True)
+                        term_id2 = "%s"
+                        params = [tuple(it for it in ids2 if it) or (None,)]
+
+                    exists = 'NOT EXISTS' if operator in NEGATIVE_TERM_OPERATORS else 'EXISTS'
+                    rel_alias = _generate_table_alias(alias, field.name)
+                    push_result(f"""
+                        {exists} (
+                            SELECT 1 FROM "{rel_table}" AS "{rel_alias}"
+                            WHERE "{rel_alias}"."{rel_id1}" = "{alias}".id
+                            AND "{rel_alias}"."{rel_id2}" IN {term_id2}
+                        )
+                    """, params)
 
                 else:
                     # rewrite condition to match records with/without relations
-                    op1 = 'inselect' if operator in NEGATIVE_TERM_OPERATORS else 'not inselect'
-                    subquery = 'SELECT "%s" FROM "%s" where "%s" is not null' % (rel_id1, rel_table, rel_id1)
-                    push(('id', op1, (subquery, [])), model, alias, internal=True)
+                    exists = 'EXISTS' if operator in NEGATIVE_TERM_OPERATORS else 'NOT EXISTS'
+                    rel_alias = _generate_table_alias(alias, field.name)
+                    push_result(f"""
+                        {exists} (
+                            SELECT 1 FROM "{rel_table}" AS "{rel_alias}"
+                            WHERE "{rel_alias}"."{rel_id1}" = "{alias}".id
+                        )
+                    """, [])
 
             elif field.type == 'many2one':
                 if operator in HIERARCHY_FUNCS:
