@@ -149,11 +149,11 @@ class SurveyQuestion(models.Model):
     triggering_question_id = fields.Many2one(
         'survey.question', string="Triggering Question", copy=False, compute="_compute_triggering_question_id",
         store=True, readonly=False, help="Question containing the triggering answer to display the current question.",
-        domain="""[('survey_id', '=', survey_id),
-                 '&', ('question_type', 'in', ['simple_choice', 'multiple_choice']),
-                 '|',
-                     ('sequence', '<', sequence),
-                     '&', ('sequence', '=', sequence), ('id', '<', id)]""")
+        domain="[('survey_id', '=', survey_id), \
+                 '&', ('question_type', 'in', ['simple_choice', 'multiple_choice']), \
+                 '|', \
+                     ('sequence', '<', sequence), \
+                     '&', ('sequence', '=', sequence), ('id', '<', id)]")
     triggering_answer_id = fields.Many2one(
         'survey.question.answer', string="Triggering Answer", copy=False, compute="_compute_triggering_answer_id",
         store=True, readonly=False, help="Answer that will trigger the display of the current question.",
