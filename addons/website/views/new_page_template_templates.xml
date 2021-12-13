@@ -1039,7 +1039,7 @@ overridden by modules), because:
 
 <!-- Previews for blocks that normally generate part of their content upon drop -->
 <!-- Defined in website so that every theme can benefit from it -->
-<!-- Form: define the default set of form fields -->
+<!-- Form: adapt style -->
 <template id="new_page_template_s_website_form" inherit_id="s_website_form" primary="True">
     <xpath expr="//section" position="attributes">
         <attribute name="class" add="o_colored_level" separator=" "/>
@@ -1052,95 +1052,12 @@ overridden by modules), because:
     <xpath expr="//div[hasclass('s_website_form_submit')]" position="attributes">
         <attribute name="class" add="text-end" separator=" "/>
     </xpath>
-    <xpath expr="//div[hasclass('s_website_form_submit')]" position="before">
-        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_dnone">
-            <div class="row s_col_no_resize s_col_no_bgcolor">
-                <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px">
-                    <span class="s_website_form_label_content"></span>
-                </label>
-                <div class="col-sm">
-                    <input type="hidden" class="form-control s_website_form_input" name="email_to" value="info@yourcompany.example.com"/>
-                </div>
-            </div>
-        </div>
-        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_required" data-type="char">
-            <div class="row s_col_no_resize s_col_no_bgcolor">
-                <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="obij2aulqyau">
-                    <span class="s_website_form_label_content">Your Name</span>
-                    <span class="s_website_form_mark"> *</span>
-                </label>
-                <div class="col-sm">
-                    <input class="form-control s_website_form_input" type="text" name="name" required="1" data-fill-with="name" id="obij2aulqyau"/>
-                </div>
-            </div>
-        </div>
-        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="tel">
-            <div class="row s_col_no_resize s_col_no_bgcolor">
-                <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="ozp7022vqhe">
-                    <span class="s_website_form_label_content">Phone Number</span>
-                </label>
-                <div class="col-sm">
-                    <input class="form-control s_website_form_input" type="tel" name="phone" data-fill-with="phone" id="ozp7022vqhe"/>
-                </div>
-            </div>
-        </div>
-        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_model_required" data-type="email">
-            <div class="row s_col_no_resize s_col_no_bgcolor">
-                <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="oub62hlfgjwf">
-                    <span class="s_website_form_label_content">Your Email</span>
-                    <span class="s_website_form_mark"> *</span>
-                </label>
-                <div class="col-sm">
-                    <input class="form-control s_website_form_input" type="email" name="email_from" required="" data-fill-with="email" id="oub62hlfgjwf"/>
-                </div>
-            </div>
-        </div>
-        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="char">
-            <div class="row s_col_no_resize s_col_no_bgcolor">
-                <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="o291di1too2s">
-                    <span class="s_website_form_label_content">Your Company</span>
-                </label>
-                <div class="col-sm">
-                    <input class="form-control s_website_form_input" type="text" name="company" data-fill-with="commercial_company_name" id="o291di1too2s"/>
-                </div>
-            </div>
-        </div>
-        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_model_required" data-type="char">
-            <div class="row s_col_no_resize s_col_no_bgcolor">
-                <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="oqsf4m51acj">
-                    <span class="s_website_form_label_content">Subject</span>
-                    <span class="s_website_form_mark"> *</span>
-                </label>
-                <div class="col-sm">
-                    <input class="form-control s_website_form_input" type="text" name="subject" required="" id="oqsf4m51acj"/>
-                </div>
-            </div>
-        </div>
-        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_required" data-type="text">
-            <div class="row s_col_no_resize s_col_no_bgcolor">
-                <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="oyeqnysxh10b">
-                    <span class="s_website_form_label_content">Your Question</span>
-                    <span class="s_website_form_mark"> *</span>
-                </label>
-                <div class="col-sm">
-                    <textarea class="form-control s_website_form_input" name="description" required="1" id="oyeqnysxh10b" rows="3">
-                    </textarea>
-                </div>
-            </div>
-        </div>
-    </xpath>
 </template>
 
-<!-- Map: define the embedded iframe -->
+<!-- Map: change height -->
 <template id="new_page_template_s_map" inherit_id="s_map" primary="True">
     <xpath expr="//section" position="attributes">
         <attribute name="class" add="o_half_screen_height" separator=" "/>
-    </xpath>
-    <xpath expr="//div[hasclass('s_map_color_filter')]" position="before">
-        <iframe class="s_map_embedded o_not_editable o_new_page_snippet_preview"
-            width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" 
-            src="https://maps.google.com/maps?q=250%20Executive%20Park%20Blvd%2C%20Suite%203400%20San%20Francisco%20California%20(US)%20United%20States&amp;t=m&amp;z=12&amp;ie=UTF8&amp;iwloc=&amp;output=embed">
-        </iframe>
     </xpath>
 </template>
 

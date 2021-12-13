@@ -14,6 +14,11 @@ const CountdownWidget = publicWidget.Widget.extend({
      * @override
      */
     start: function () {
+        // Remove SVG previews (used to simulated canvas)
+        this.$el[0].querySelectorAll('svg').forEach(el => {
+            el.parentNode.remove();
+        });
+
         this.$wrapper = this.$('.s_countdown_canvas_wrapper');
         this.$wrapper.addClass('d-flex justify-content-center');
         this.hereBeforeTimerEnds = false;
