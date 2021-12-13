@@ -90,7 +90,7 @@ registerModel({
         /**
          * Link with a chatter to handle attachments.
          */
-        chatter: one2one('mail.chatter', {
+        chatter: one2one('Chatter', {
             inverse: 'attachmentList',
             readonly: true,
         }),

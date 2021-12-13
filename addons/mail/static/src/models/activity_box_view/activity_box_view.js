@@ -21,7 +21,7 @@ registerModel({
         },
     },
     fields: {
-        chatter: one2one('mail.chatter', {
+        chatter: one2one('Chatter', {
             inverse: 'activityBoxView',
             readonly: true,
             required: true,

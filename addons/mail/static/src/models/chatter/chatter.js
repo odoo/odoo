@@ -22,7 +22,7 @@ const getMessageNextTemporaryId = (function () {
 })();
 
 registerModel({
-    name: 'mail.chatter',
+    name: 'Chatter',
     identifyingFields: ['id'],
     lifecycleHooks: {
         _created() {
