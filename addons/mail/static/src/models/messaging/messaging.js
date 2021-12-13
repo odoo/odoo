@@ -232,7 +232,7 @@ registerModel({
         autofetchPartnerImStatus: attr({
             default: true,
         }),
-        cannedResponses: one2many('mail.canned_response'),
+        cannedResponses: one2many('CannedResponse'),
         chatWindowManager: one2one('ChatWindowManager', {
             default: insertAndReplace(),
             isCausal: true,
