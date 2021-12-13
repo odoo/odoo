@@ -119,7 +119,7 @@ registerModel({
          * States the component displaying this message view (if any).
          */
         component: attr(),
-        composerForEditing: one2one('mail.composer', {
+        composerForEditing: one2one('Composer', {
             inverse: 'messageViewInEditing',
             isCausal: true,
         }),

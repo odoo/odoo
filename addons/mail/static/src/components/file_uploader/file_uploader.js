@@ -63,7 +63,7 @@ export class FileUploader extends Component {
     /**
      * @private
      * @param {Object} param0
-     * @param {mail.composer} param0.composer
+     * @param {Composer} param0.composer
      * @param {File} param0.file
      * @param {Thread} param0.thread
      * @returns {FormData}
@@ -81,7 +81,7 @@ export class FileUploader extends Component {
     /**
      * @private
      * @param {Object} param0
-     * @param {mail.composer} param0.composer
+     * @param {Composer} param0.composer
      * @param {FileList|Array} param0.files
      * @param {Thread} param0.thread
      * @returns {Promise}
@@ -138,7 +138,7 @@ export class FileUploader extends Component {
      * @private
      * @param {Object} param0
      * @param {Object} attachmentData
-     * @param {mail.composer} param0.composer
+     * @param {Composer} param0.composer
      * @param {Thread} param0.thread
      */
     _onAttachmentUploaded({ attachmentData, composer, thread }) {

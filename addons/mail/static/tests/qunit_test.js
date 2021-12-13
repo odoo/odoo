@@ -7,7 +7,7 @@ registerModel({
     name: 'mail.qunit_test',
     identifyingFields: [], // singleton acceptable (only one test at a time)
     fields: {
-        composer: one2one('mail.composer', {
+        composer: one2one('Composer', {
             isCausal: true,
         }),
         composerView: one2one('ComposerView', {
