@@ -430,7 +430,7 @@ def is_leaf(element, internal=False):
     """
     INTERNAL_OPS = TERM_OPERATORS + ('<>',)
     if internal:
-        INTERNAL_OPS += ('inselect', 'not inselect')
+        INTERNAL_OPS += ('inselect', 'not inselect', 'exists', 'not exists')
     return (isinstance(element, tuple) or isinstance(element, list)) \
         and len(element) == 3 \
         and element[1] in INTERNAL_OPS \
@@ -1039,8 +1039,10 @@ class expression(object):
 
                 else:
                     # rewrite condition to match records with/without relations
-                    op1 = 'inselect' if operator in NEGATIVE_TERM_OPERATORS else 'not inselect'
-                    subquery = 'SELECT "%s" FROM "%s" where "%s" is not null' % (rel_id1, rel_table, rel_id1)
+                    op1 = 'exists' if operator in NEGATIVE_TERM_OPERATORS else 'not exists'
+                    alias = leaf.generate_alias()
+                    assert rel_table != alias
+                    subquery = 'SELECT 1 FROM "%s" where "%s"."%s" = "%s".id' % (rel_table, rel_table, rel_id1, alias)
                     push(create_substitution_leaf(leaf, ('id', op1, (subquery, [])), internal=True))
 
             elif field.type == 'many2one':
@@ -1177,7 +1179,7 @@ class expression(object):
         left, operator, right = leaf
 
         # final sanity checks - should never fail
-        assert operator in (TERM_OPERATORS + ('inselect', 'not inselect')), \
+        assert operator in (TERM_OPERATORS + ('inselect', 'not inselect', 'exists', 'not exists')), \
             "Invalid operator %r in domain term %r" % (operator, leaf)
         assert leaf in (TRUE_LEAF, FALSE_LEAF) or left in model._fields, \
             "Invalid field %r in domain term %r" % (left, leaf)
@@ -1200,6 +1202,14 @@ class expression(object):
 
         elif operator == 'not inselect':
             query = '(%s."%s" not in (%s))' % (table_alias, left, right[0])
+            params = right[1]
+
+        elif operator == 'exists':
+            query = '(EXISTS (%s))' % right[0]
+            params = right[1]
+
+        elif operator == 'not exists':
+            query = '(NOT EXISTS (%s))' % right[0]
             params = right[1]
 
         elif operator in ['in', 'not in']:

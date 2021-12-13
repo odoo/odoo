@@ -440,8 +440,14 @@ class TestExpression(TransactionCase):
 
         # test many2many operator with False
         partners = self._search(Partner, [('category_id', '=', False)])
+        self.assertTrue(partners)
         for partner in partners:
             self.assertFalse(partner.category_id)
+
+        partners = self._search(Partner, [('category_id', '!=', False)])
+        self.assertTrue(partners)
+        for partner in partners:
+            self.assertTrue(partner.category_id)
 
         # filtering on nonexistent value across x2many should return nothing
         partners = self._search(Partner, [('child_ids.city', '=', 'foo')])
