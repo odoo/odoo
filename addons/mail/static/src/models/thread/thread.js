@@ -1978,7 +1978,7 @@ registerModel({
          * Determines the discuss sidebar category item that displays this
          * thread (if any). Only applies to channels.
          */
-        discussSidebarCategoryItem: one2one('mail.discuss_sidebar_category_item', {
+        discussSidebarCategoryItem: one2one('DiscussSidebarCategoryItem', {
             compute: '_computeDiscussSidebarCategoryItem',
             inverse: 'channel',
             isCausal: true,
