@@ -55,7 +55,7 @@ class MailActivity(models.Model):
     res_model = fields.Char(
         'Related Document Model',
         index=True, related='res_model_id.model', compute_sudo=True, store=True, readonly=True)
-    res_id = fields.Many2oneReference(string='Related Document ID', index=True, required=True, model_field='res_model')
+    res_id = fields.Many2oneReference(string='Related Document ID', index=True, model_field='res_model')
     res_name = fields.Char(
         'Document Name', compute='_compute_res_name', compute_sudo=True, store=True,
         help="Display name of the related document.", readonly=True)
@@ -94,6 +94,15 @@ class MailActivity(models.Model):
     chaining_type = fields.Selection(related='activity_type_id.chaining_type', readonly=True)
     # access
     can_write = fields.Boolean(compute='_compute_can_write', help='Technical field to hide buttons if the current user has no access.')
+
+    _sql_constraints = [
+        # Required on a Many2one reference field is not sufficient as actually
+        # writing 0 is considered as a valid value, because this is an integer field.
+        # We therefore need a specific constraint check.
+        ('check_res_id_is_set',
+         'CHECK(res_id IS NOT NULL AND res_id !=0 )',
+         'Activities have to be linked to records with a not null res_id.')
+    ]
 
     @api.onchange('previous_activity_type_id')
     def _compute_has_recommended_activities(self):
