@@ -3,6 +3,7 @@
 # OpenERP HTTP layer
 #----------------------------------------------------------
 import ast
+import cgi
 import collections
 import contextlib
 import copy
@@ -1403,6 +1404,7 @@ class Root(object):
             response = Response(result, mimetype='text/html')
         else:
             response = result
+            self.set_csp(response)
 
         save_session = (not request.endpoint) or request.endpoint.routing.get('save_session', True)
         if not save_session:
@@ -1427,6 +1429,23 @@ class Root(object):
                 'session_id', httprequest.session.sid, max_age=90 * 24 * 60 * 60, httponly=True)
 
         return response
+
+
+    def set_csp(self, response):
+        # ignore HTTP errors
+        if not isinstance(response, werkzeug.wrappers.BaseResponse):
+            return
+
+        headers = response.headers
+        if 'Content-Security-Policy' in headers:
+            return
+
+        mime, _params = cgi.parse_header(headers.get('Content-Type', ''))
+        if not mime.startswith('image/'):
+            return
+
+        headers['Content-Security-Policy'] = "default-src 'none'"
+
 
     def dispatch(self, environ, start_response):
         """
@@ -1685,35 +1704,16 @@ def set_safe_image_headers(headers, content):
     `Content-Type` set appropriately depending on the given `content` only if it
     is safe to do, as well as `X-Content-Type-Options: nosniff` so that if the
     file is of an unsafe type, it is not interpreted as that type if the
-    `Content-type` header was already set to a different mimetype"""
-    content_type = guess_mimetype(content)
-    safe_types = ['image/jpeg', 'image/png', 'image/gif', 'image/x-icon']
-    if content_type in safe_types:
-        headers = set_header_field(headers, 'Content-Type', content_type)
-    headers = set_header_field(headers, 'X-Content-Type-Options', 'nosniff')
-    set_header_field(headers, 'Content-Length', len(content))
-    return headers
-
-
-def set_header_field(headers, name, value):
-    """ Return new headers based on `headers` but with `value` set for the
-    header field `name`.
-
-    :param headers: the existing headers
-    :type headers: list of tuples (name, value)
-
-    :param name: the header field name
-    :type name: string
-
-    :param value: the value to set for the `name` header
-    :type value: string
-
-    :return: the updated headers
-    :rtype: list of tuples (name, value)
+    `Content-type` header was already set to a different mimetype
     """
-    dictheaders = dict(headers)
-    dictheaders[name] = value
-    return list(dictheaders.items())
+    headers = werkzeug.datastructures.Headers(headers)
+    safe_types = {'image/jpeg', 'image/png', 'image/gif', 'image/x-icon'}
+    content_type = guess_mimetype(content)
+    if content_type in safe_types:
+        headers['Content-Type'] = content_type
+    headers['X-Content-Type-Options'] = 'nosniff'
+    headers['Content-Length'] = len(content)
+    return list(headers)
 
 
 #  main wsgi handler
