@@ -7,8 +7,8 @@ registerModel({
     name: 'ThreadPartnerSeenInfo',
     identifyingFields: ['thread', 'partner'],
     fields: {
-        lastFetchedMessage: many2one('mail.message'),
-        lastSeenMessage: many2one('mail.message'),
+        lastFetchedMessage: many2one('Message'),
+        lastSeenMessage: many2one('Message'),
         /**
          * Partner that this seen info is related to.
          */

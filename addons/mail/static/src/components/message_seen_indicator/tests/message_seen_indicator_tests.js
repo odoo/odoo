@@ -59,7 +59,7 @@ QUnit.test('rendering when just one has received the message', async function (a
             message: insertAndReplace({ id: 100 }),
         }),
     });
-    const message = this.messaging.models['mail.message'].insert({
+    const message = this.messaging.models['Message'].insert({
         author: insert({ id: this.messaging.currentPartner.id, display_name: "Demo User" }),
         body: "<p>Test</p>",
         id: 100,
@@ -104,7 +104,7 @@ QUnit.test('rendering when everyone have received the message', async function (
             message: insertAndReplace({ id: 100 }),
         }),
     });
-    const message = this.messaging.models['mail.message'].insert({
+    const message = this.messaging.models['Message'].insert({
         author: insert({ id: this.messaging.currentPartner.id, display_name: "Demo User" }),
         body: "<p>Test</p>",
         id: 100,
@@ -150,7 +150,7 @@ QUnit.test('rendering when just one has seen the message', async function (asser
             message: insertAndReplace({ id: 100 }),
         }),
     });
-    const message = this.messaging.models['mail.message'].insert({
+    const message = this.messaging.models['Message'].insert({
         author: insert({ id: this.messaging.currentPartner.id, display_name: "Demo User" }),
         body: "<p>Test</p>",
         id: 100,
@@ -196,7 +196,7 @@ QUnit.test('rendering when just one has seen & received the message', async func
             message: insertAndReplace({ id: 100 }),
         }),
     });
-    const message = this.messaging.models['mail.message'].insert({
+    const message = this.messaging.models['Message'].insert({
         author: insert({ id: this.messaging.currentPartner.id, display_name: "Demo User" }),
         body: "<p>Test</p>",
         id: 100,
@@ -244,7 +244,7 @@ QUnit.test('rendering when just everyone has seen the message', async function (
             message: insertAndReplace({ id: 100 }),
         }),
     });
-    const message = this.messaging.models['mail.message'].insert({
+    const message = this.messaging.models['Message'].insert({
         author: insert({ id: this.messaging.currentPartner.id, display_name: "Demo User" }),
         body: "<p>Test</p>",
         id: 100,

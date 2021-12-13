@@ -166,7 +166,7 @@ registerModel({
         /**
          * Determines the message that is displayed by this message view.
          */
-        message: many2one('mail.message', {
+        message: many2one('Message', {
             inverse: 'messageViews',
             readonly: true,
             required: true,

@@ -176,7 +176,7 @@ registerModel({
         /**
          * States the message on which this action message list operates.
          */
-        message: many2one('mail.message', {
+        message: many2one('Message', {
             related: 'messageView.message',
         }),
         /**

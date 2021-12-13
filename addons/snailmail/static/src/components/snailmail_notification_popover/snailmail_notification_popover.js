@@ -39,10 +39,10 @@ class SnailmailNotificationPopover extends Component {
     }
 
     /**
-     * @returns {mail.message}
+     * @returns {Message}
      */
     get message() {
-        return this.messaging && this.messaging.models['mail.message'].get(this.props.messageLocalId);
+        return this.messaging && this.messaging.models['Message'].get(this.props.messageLocalId);
     }
 
     /**

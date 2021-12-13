@@ -4,7 +4,7 @@ import { addRecordMethods } from '@mail/model/model_core';
 // ensure that the model definition is loaded before the patch
 import '@mail/models/message/message';
 
-addRecordMethods('mail.message', {
+addRecordMethods('Message', {
     /**
      * Cancels the 'snailmail.letter' corresponding to this message.
      *
