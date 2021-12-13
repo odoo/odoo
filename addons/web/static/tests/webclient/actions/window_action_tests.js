@@ -1738,10 +1738,9 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(target, ".o_list_view");
     });
 
-    QUnit.skip(
+    QUnit.test(
         "go back to action with form view as main view, and res_id",
         async function (assert) {
-            assert.expect(7);
             serverData.actions[999] = {
                 id: 999,
                 name: "Partner",
@@ -1763,8 +1762,7 @@ QUnit.module("ActionManager", (hooks) => {
             };
             const webClient = await createWebClient({ serverData, mockRPC });
             await doAction(webClient, 999);
-            assert.containsOnce(target, ".o_form_view");
-            assert.hasClass(target.querySelector(".o_form_view"), "o_form_readonly");
+            assert.containsOnce(target, ".o_form_view .o_form_readonly");
             assert.strictEqual(
                 target.querySelector(".o_control_panel .breadcrumb").textContent,
                 "Second record"
@@ -1779,8 +1777,7 @@ QUnit.module("ActionManager", (hooks) => {
             // go back to the form view
             await testUtils.dom.click($(target).find(".o_control_panel .breadcrumb a:first"));
             await legacyExtraNextTick();
-            assert.containsOnce(target, ".o_form_view");
-            assert.hasClass(target.querySelector(".o_form_view"), "o_form_readonly");
+            assert.containsOnce(target, ".o_form_view .o_form_readonly");
             assert.strictEqual(
                 target.querySelector(".o_control_panel .breadcrumb-item").textContent,
                 "Second record"
