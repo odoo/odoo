@@ -398,7 +398,7 @@ async function createRootMessagingComponent(self, componentName, { props = {}, t
 
 function getCreateComposerComponent({ components, env, modelManager, widget }) {
     return async function createComposerComponent(composer, props) {
-        const composerView = modelManager.messaging.models['mail.composer_view'].create({
+        const composerView = modelManager.messaging.models['ComposerView'].create({
             qunitTest: insertAndReplace({
                 composer: replace(composer),
             }),
@@ -412,7 +412,7 @@ function getCreateComposerComponent({ components, env, modelManager, widget }) {
 
 function getCreateComposerSuggestionComponent({ components, env, modelManager, widget }) {
     return async function createComposerSuggestionComponent(composer, props) {
-        const composerView = modelManager.messaging.models['mail.composer_view'].create({
+        const composerView = modelManager.messaging.models['ComposerView'].create({
             qunitTest: insertAndReplace({
                 composer: replace(composer),
             }),

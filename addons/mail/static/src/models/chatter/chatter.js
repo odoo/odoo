@@ -302,7 +302,7 @@ registerModel({
         /**
          * Determines the composer view used to post in this chatter (if any).
          */
-        composerView: one2one('mail.composer_view', {
+        composerView: one2one('ComposerView', {
             inverse: 'chatter',
             isCausal: true,
         }),

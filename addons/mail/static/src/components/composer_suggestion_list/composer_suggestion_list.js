@@ -11,10 +11,10 @@ export class ComposerSuggestionList extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {mail.composer_view}
+     * @returns {ComposerView}
      */
     get composerView() {
-        return this.messaging && this.messaging.models['mail.composer_view'].get(this.props.composerViewLocalId);
+        return this.messaging && this.messaging.models['ComposerView'].get(this.props.composerViewLocalId);
     }
 
 }

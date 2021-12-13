@@ -32,7 +32,7 @@ export class FileUploader extends Component {
     //--------------------------------------------------------------------------
 
     get composerView() {
-        return this.messaging.models['mail.composer_view'].get(this.props.composerViewLocalId);
+        return this.messaging.models['ComposerView'].get(this.props.composerViewLocalId);
     }
 
     /**

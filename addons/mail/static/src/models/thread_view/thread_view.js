@@ -315,7 +315,7 @@ registerModel({
         componentHintList: attr({
             default: [],
         }),
-        composerView: one2one('mail.composer_view', {
+        composerView: one2one('ComposerView', {
             compute: '_computeComposerView',
             inverse: 'threadView',
             isCausal: true,
