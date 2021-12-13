@@ -141,6 +141,12 @@ class HolidaysAllocation(models.Model):
     nextcall = fields.Date("Date of the next accrual allocation", default=False, readonly=True)
     max_leaves = fields.Float(compute='_compute_leaves')
     leaves_taken = fields.Float(compute='_compute_leaves')
+    hours_per_day = fields.Float(
+        string="Hour per day",
+        compute="_compute_hours_per_day",
+        store=True,
+        help="Save hour per day at creation time in oder to avoid to recompute value in case calendar change afterwards"
+    )
 
     _sql_constraints = [
         ('type_value',
@@ -218,7 +224,7 @@ class HolidaysAllocation(models.Model):
                 # As we encode everything in days in the database we need to convert
                 # the number of hours into days for this we use the
                 # mean number of hours set on the employee's calendar
-                days_to_give = days_to_give / (employee.resource_calendar_id.hours_per_day or HOURS_PER_DAY)
+                days_to_give = days_to_give / holiday.hours_per_day
 
             values['number_of_days'] = holiday.number_of_days + days_to_give * prorata
             if holiday.accrual_limit > 0:
@@ -238,6 +244,17 @@ class HolidaysAllocation(models.Model):
                 allocation.name = allocation.sudo().private_name
             else:
                 allocation.name = '*****'
+
+    @api.depends("employee_id", "employee_id.resource_id.calendar_id")
+    def _compute_hours_per_day(self):
+        company_calendar = self.env.company.resource_calendar_id
+        for allocation in self:
+            if allocation.state in ("draft", "confirm") or not allocation.hours_per_day:
+                allocation.hours_per_day = (
+                    allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day
+                    or company_calendar.hours_per_day
+                    or HOURS_PER_DAY
+                )
 
     def _inverse_description(self):
         is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
@@ -273,7 +290,7 @@ class HolidaysAllocation(models.Model):
             if allocation.parent_id and allocation.parent_id.type_request_unit == "hour":
                 allocation.number_of_hours_display = allocation.number_of_days * HOURS_PER_DAY
             elif allocation.number_of_days:
-                allocation.number_of_hours_display = allocation.number_of_days * (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
+                allocation.number_of_hours_display = allocation.number_of_days * allocation.hours_per_day
             else:
                 allocation.number_of_hours_display = 0.0
 
@@ -358,7 +375,7 @@ class HolidaysAllocation(models.Model):
         for allocation in self:
             allocation.number_of_days = allocation.number_of_days_display
             if allocation.type_request_unit == 'hour':
-                allocation.number_of_days = allocation.number_of_hours_display / (allocation.employee_id.sudo().resource_calendar_id.hours_per_day or HOURS_PER_DAY)
+                allocation.number_of_days = allocation.number_of_hours_display / allocation.hours_per_day
 
             # set default values
             if not allocation.interval_number and not allocation._origin.interval_number:

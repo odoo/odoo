@@ -162,6 +162,7 @@ class HolidaysRequest(models.Model):
         help='Number of days of the time off request according to your working schedule. Used for interface.')
     number_of_hours_display = fields.Float(
         'Duration in hours', compute='_compute_number_of_hours_display', readonly=True,
+        store=True,
         help='Number of hours of the time off request according to your working schedule. Used for interface.')
     number_of_hours_text = fields.Char(compute='_compute_number_of_hours_text')
     duration_display = fields.Char('Requested (Days/Hours)', compute='_compute_duration_display', store=True,
@@ -192,6 +193,12 @@ class HolidaysRequest(models.Model):
         help='This area is automatically filled by the user who validate the time off with second level (If time off type need second validation)')
     can_reset = fields.Boolean('Can reset', compute='_compute_can_reset')
     can_approve = fields.Boolean('Can Approve', compute='_compute_can_approve')
+    hours_per_day = fields.Float(
+        string="Hour per day",
+        compute="_compute_hours_per_day",
+        store=True,
+        help="Save hour per day at creation time in oder to avoid to recompute value in case calendar change afterwards"
+    )
 
     # UX fields
     leave_type_request_unit = fields.Selection(related='holiday_status_id.request_unit', readonly=True)
@@ -274,6 +281,17 @@ class HolidaysRequest(models.Model):
         tools.create_index(self._cr, 'hr_leave_date_to_date_from_index',
                            self._table, ['date_to', 'date_from'])
         return res
+
+    @api.depends("employee_id", "employee_id.resource_id.calendar_id")
+    def _compute_hours_per_day(self):
+        company_calendar = self.env.company.resource_calendar_id
+        for allocation in self:
+            if allocation.state in ("draft", "confirm") or not allocation.hours_per_day:
+                allocation.hours_per_day = (
+                    allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day
+                    or company_calendar.hours_per_day
+                    or HOURS_PER_DAY
+                )
 
     @api.depends_context('uid')
     def _compute_description(self):
@@ -453,10 +471,11 @@ class HolidaysRequest(models.Model):
     @api.depends('date_from', 'date_to', 'employee_id')
     def _compute_number_of_days(self):
         for holiday in self:
-            if holiday.date_from and holiday.date_to:
-                holiday.number_of_days = holiday._get_number_of_days(holiday.date_from, holiday.date_to, holiday.employee_id.id)['days']
-            else:
-                holiday.number_of_days = 0
+            if holiday.state in ("draft", "confirm") or not holiday.number_of_days:
+                if holiday.date_from and holiday.date_to:
+                    holiday.number_of_days = holiday._get_number_of_days(holiday.date_from, holiday.date_to, holiday.employee_id.id)['days']
+                else:
+                    holiday.number_of_days = 0
 
     @api.depends('tz')
     @api.depends_context('uid')
@@ -490,29 +509,30 @@ class HolidaysRequest(models.Model):
     @api.depends('number_of_days')
     def _compute_number_of_hours_display(self):
         for holiday in self:
-            calendar = holiday._get_calendar()
-            if holiday.date_from and holiday.date_to:
-                # Take attendances into account, in case the leave validated
-                # Otherwise, this will result into number_of_hours = 0
-                # and number_of_hours_display = 0 or (#day * calendar.hours_per_day),
-                # which could be wrong if the employee doesn't work the same number
-                # hours each day
-                if holiday.state == 'validate':
-                    start_dt = holiday.date_from
-                    end_dt = holiday.date_to
-                    if not start_dt.tzinfo:
-                        start_dt = start_dt.replace(tzinfo=UTC)
-                    if not end_dt.tzinfo:
-                        end_dt = end_dt.replace(tzinfo=UTC)
-                    resource = holiday.employee_id.resource_id
-                    intervals = calendar._attendance_intervals_batch(start_dt, end_dt, resource)[resource.id] \
-                                - calendar._leave_intervals_batch(start_dt, end_dt, None)[False]  # Substract Global Leaves
-                    number_of_hours = sum((stop - start).total_seconds() / 3600 for start, stop, dummy in intervals)
+            if holiday.state in ("draft", "confirm") or not holiday.number_of_hours_display:
+                calendar = holiday._get_calendar()
+                if holiday.date_from and holiday.date_to:
+                    # Take attendances into account, in case the leave validated
+                    # Otherwise, this will result into number_of_hours = 0
+                    # and number_of_hours_display = 0 or (#day * calendar.hours_per_day),
+                    # which could be wrong if the employee doesn't work the same number
+                    # hours each day
+                    if holiday.state == 'validate':
+                        start_dt = holiday.date_from
+                        end_dt = holiday.date_to
+                        if not start_dt.tzinfo:
+                            start_dt = start_dt.replace(tzinfo=UTC)
+                        if not end_dt.tzinfo:
+                            end_dt = end_dt.replace(tzinfo=UTC)
+                        resource = holiday.employee_id.resource_id
+                        intervals = calendar._attendance_intervals_batch(start_dt, end_dt, resource)[resource.id] \
+                                    - calendar._leave_intervals_batch(start_dt, end_dt, None)[False]  # Substract Global Leaves
+                        number_of_hours = sum((stop - start).total_seconds() / 3600 for start, stop, dummy in intervals)
+                    else:
+                        number_of_hours = holiday._get_number_of_days(holiday.date_from, holiday.date_to, holiday.employee_id.id)['hours']
+                    holiday.number_of_hours_display = number_of_hours or (holiday.number_of_days * holiday.hours_per_day)
                 else:
-                    number_of_hours = holiday._get_number_of_days(holiday.date_from, holiday.date_to, holiday.employee_id.id)['hours']
-                holiday.number_of_hours_display = number_of_hours or (holiday.number_of_days * (calendar.hours_per_day or HOURS_PER_DAY))
-            else:
-                holiday.number_of_hours_display = 0
+                    holiday.number_of_hours_display = 0
 
     @api.depends('number_of_hours_display', 'number_of_days_display')
     def _compute_duration_display(self):
@@ -899,9 +919,7 @@ class HolidaysRequest(models.Model):
 
     def _prepare_holidays_meeting_values(self):
         result = defaultdict(list)
-        company_calendar = self.env.company.resource_calendar_id
         for holiday in self:
-            calendar = holiday.employee_id.resource_calendar_id or company_calendar
             user = holiday.user_id
             if holiday.leave_type_request_unit == 'hour':
                 meeting_name = _("%s on Time Off : %.2f hour(s)") % (holiday.employee_id.name or holiday.category_id.name, holiday.number_of_hours_display)
@@ -909,7 +927,7 @@ class HolidaysRequest(models.Model):
                 meeting_name = _("%s on Time Off : %.2f day(s)") % (holiday.employee_id.name or holiday.category_id.name, holiday.number_of_days)
             meeting_values = {
                 'name': meeting_name,
-                'duration': holiday.number_of_days * (calendar.hours_per_day or HOURS_PER_DAY),
+                'duration': holiday.number_of_days * holiday.hours_per_day,
                 'description': holiday.notes,
                 'user_id': user.id,
                 'start': holiday.date_from,
