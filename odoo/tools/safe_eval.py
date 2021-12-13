@@ -65,6 +65,7 @@ _CONST_OPCODES = set(to_opcodes([
     'BUILD_LIST', 'BUILD_MAP', 'BUILD_TUPLE', 'BUILD_SET',
     # 3.6: literal map with constant keys https://bugs.python.org/issue27140
     'BUILD_CONST_KEY_MAP',
+<<<<<<< HEAD
     'LIST_EXTEND', 'SET_UPDATE',
 ])) - _BLACKLIST
 
@@ -74,6 +75,15 @@ _operations = [
     'FLOOR_DIVIDE', 'TRUE_DIVIDE', 'MODULO', 'ADD',
     'SUBTRACT', 'LSHIFT', 'RSHIFT', 'AND', 'XOR', 'OR',
 ]
+=======
+    # until Python 3.5, literal maps are compiled to creating an empty map
+    # (pre-sized) then filling it key by key
+    'STORE_MAP',
+    # 3.9
+    'LIST_EXTEND', 'SET_UPDATE',
+] if x in opmap)
+
+>>>>>>> ea0d4b14e3e... temp
 # operations on literal values
 _EXPR_OPCODES = _CONST_OPCODES.union(to_opcodes([
     'UNARY_POSITIVE', 'UNARY_NEGATIVE', 'UNARY_NOT', 'UNARY_INVERT',
@@ -86,6 +96,7 @@ _EXPR_OPCODES = _CONST_OPCODES.union(to_opcodes([
     # specialised comparisons
     'IS_OP', 'CONTAINS_OP',
     'DICT_MERGE', 'DICT_UPDATE',
+<<<<<<< HEAD
 ])) - _BLACKLIST
 
 _SAFE_OPCODES = _EXPR_OPCODES.union(to_opcodes([
@@ -93,6 +104,9 @@ _SAFE_OPCODES = _EXPR_OPCODES.union(to_opcodes([
 
     # note: removed in 3.8
     'SETUP_LOOP', 'SETUP_EXCEPT', 'BREAK_LOOP', 'CONTINUE_LOOP',
+=======
+] if x in opmap))
+>>>>>>> ea0d4b14e3e... temp
 
     'EXTENDED_ARG',  # P3.6 for long jump offsets.
     'MAKE_FUNCTION', 'CALL_FUNCTION', 'CALL_FUNCTION_KW', 'CALL_FUNCTION_EX',
@@ -108,8 +122,14 @@ _SAFE_OPCODES = _EXPR_OPCODES.union(to_opcodes([
 
     'RAISE_VARARGS', 'LOAD_NAME', 'STORE_NAME', 'DELETE_NAME', 'LOAD_ATTR',
     'LOAD_FAST', 'STORE_FAST', 'DELETE_FAST', 'UNPACK_SEQUENCE',
+<<<<<<< HEAD
     'STORE_SUBSCR',
     'LOAD_GLOBAL',
+=======
+    'LOAD_GLOBAL', # Only allows access to restricted globals
+    'RERAISE', 'JUMP_IF_NOT_EXC_MATCH',
+] if x in opmap))
+>>>>>>> ea0d4b14e3e... temp
 
     'RERAISE', 'JUMP_IF_NOT_EXC_MATCH',
 ])) - _BLACKLIST

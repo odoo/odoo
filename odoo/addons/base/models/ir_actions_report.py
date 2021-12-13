@@ -222,7 +222,11 @@ class IrActionsReport(models.Model):
             return None
         attachment_vals = {
             'name': attachment_name,
+<<<<<<< HEAD
             'raw': buffer.getvalue(),
+=======
+            'datas': base64.encodebytes(buffer.getvalue()),
+>>>>>>> ea0d4b14e3e... temp
             'res_model': self.model,
             'res_id': record.id,
             'type': 'binary',

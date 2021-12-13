@@ -62,6 +62,7 @@ class AccountMove(models.Model):
             raise UserError(self.env['account.edi.format']._format_error_message(_("Invalid configuration:"), errors))
 
     def invoice_generate_xml(self):
+<<<<<<< HEAD
         self.ensure_one()
         report_name = self.env['account.edi.format']._l10n_it_edi_generate_electronic_invoice_filename(self)
 
@@ -80,6 +81,42 @@ class AccountMove(models.Model):
             body=(_("E-Invoice is generated on %s by %s") % (fields.Datetime.now(), self.env.user.display_name))
         )
         return {'attachment': attachment}
+=======
+        for invoice in self:
+            if invoice.l10n_it_einvoice_id and invoice.l10n_it_send_state not in ['invalid', 'to_send']:
+                raise UserError(_("You can't regenerate an E-Invoice when the first one is sent and there are no errors"))
+            if invoice.l10n_it_einvoice_id:
+                invoice.l10n_it_einvoice_id.unlink()
+
+            a = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            n = invoice.id
+            progressive_number = ""
+            while n:
+                (n,m) = divmod(n,len(a))
+                progressive_number = a[m] + progressive_number
+
+            report_name = '%(country_code)s%(codice)s_%(progressive_number)s.xml' % {
+                'country_code': invoice.company_id.country_id.code,
+                'codice': invoice.company_id.l10n_it_codice_fiscale,
+                'progressive_number': progressive_number.zfill(5),
+                }
+            invoice.l10n_it_einvoice_name = report_name
+
+            data = b"<?xml version='1.0' encoding='UTF-8'?>" + invoice._export_as_xml()
+            description = _('Italian invoice: %s') % invoice.type
+            invoice.l10n_it_einvoice_id = self.env['ir.attachment'].create({
+                'name': report_name,
+                'res_id': invoice.id,
+                'res_model': invoice._name,
+                'datas': base64.encodebytes(data),
+                'description': description,
+                'type': 'binary',
+                })
+
+            invoice.message_post(
+                body=(_("E-Invoice is generated on %s by %s") % (fields.Datetime.now(), self.env.user.display_name))
+            )
+>>>>>>> ea0d4b14e3e... temp
 
     def _prepare_fatturapa_export_values(self):
         self.ensure_one()

@@ -31,7 +31,11 @@ class pos_cache(models.Model):
                 display_default_code=False, lang=cache.compute_user_id.lang)
             res = prod_ctx.read(cache.get_product_fields())
             cache.write({
+<<<<<<< HEAD
                 'cache': base64.encodebytes(json.dumps(res, default=date_utils.json_default).encode('utf-8')),
+=======
+                'cache': base64.encodebytes(json.dumps(res).encode('utf-8')),
+>>>>>>> ea0d4b14e3e... temp
             })
 
     @api.model
@@ -42,7 +46,17 @@ class pos_cache(models.Model):
     def get_product_fields(self):
         return literal_eval(self.product_fields)
 
+<<<<<<< HEAD
     def cache2json(self):
+=======
+    @api.model
+    def get_cache(self, domain, fields):
+        if not self.cache or domain != self.get_product_domain() or fields != self.get_product_fields():
+            self.product_domain = str(domain)
+            self.product_fields = str(fields)
+            self.refresh_cache()
+
+>>>>>>> ea0d4b14e3e... temp
         return json.loads(base64.decodebytes(self.cache).decode('utf-8'))
 
 

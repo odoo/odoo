@@ -175,12 +175,20 @@ class FetchmailServer(models.Model):
             _logger.info('E-invoice already exist: %s', att_name)
             return invoices
 
+<<<<<<< HEAD
         # Create the new attachment for the file
         attachment = self.env['ir.attachment'].create({
             'name': att_name,
             'raw': att_content_data,
             'res_model': 'account.move',
             'type': 'binary'})
+=======
+        invoice_attachment = self.env['ir.attachment'].create({
+                'name': att_name,
+                'datas': base64.encodebytes(att_content),
+                'type': 'binary',
+                })
+>>>>>>> ea0d4b14e3e... temp
 
         # Decode the file.
         try:
