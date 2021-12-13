@@ -17,6 +17,26 @@ function orderByToString(orderBy) {
     return orderBy.map((o) => `${o.name} ${o.asc ? "ASC" : "DESC"}`).join(", ");
 }
 
+function stringToOrderBy(string) {
+    if (!string) {
+        return [];
+    }
+    return string.split(",").map((order) => {
+        const splitOrder = order.trim().split(" ");
+        if (splitOrder.length === 2) {
+            return {
+                name: splitOrder[0],
+                asc: splitOrder[1].toLowerCase() === "asc",
+            };
+        } else {
+            return {
+                name: splitOrder[0],
+                asc: true,
+            };
+        }
+    });
+}
+
 class RequestBatcherORM extends ORM {
     constructor() {
         super(...arguments);
@@ -901,6 +921,7 @@ export class RelationalModel extends Model {
             viewMode: params.viewMode || null,
             resModel: params.resModel,
             groupByInfo: params.groupByInfo,
+            defaultOrder: stringToOrderBy(params.defaultOrder),
         };
         if (this.rootType === "record") {
             this.rootParams.resId = params.resId;
@@ -926,12 +947,15 @@ export class RelationalModel extends Model {
      * @param {Context} [params.context]
      * @param {DomainListRepr} [params.domain]
      * @param {string[]} [params.groupBy]
-     * @param {string[]} [params.orderBy]
+     * @param {object[]} [params.orderBy]
      * @param {number} [params.resId] should not be there
      * @returns {Promise<void>}
      */
     async load(params) {
         const rootParams = Object.assign({}, this.rootParams, params);
+        if (params && params.orderBy && !params.orderBy.length) {
+            rootParams.orderBy = this.rootParams.defaultOrder;
+        }
         const state = this.root ? this.root.exportState() : {};
         this.root = this.createDataPoint(this.rootType, rootParams, state);
         await this.keepLast.add(this.root.load());

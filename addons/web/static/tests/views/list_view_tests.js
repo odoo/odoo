@@ -4545,7 +4545,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual($(list.el).find(".o_data_cell").text(), "blip-4blip9yop10gnap17");
     });
 
-    QUnit.skip("use default_order", async function (assert) {
+    QUnit.test("use default_order", async function (assert) {
         assert.expect(3);
 
         const list = await makeView({
@@ -4554,14 +4554,13 @@ QUnit.module("Views", (hooks) => {
             serverData,
             arch: '<tree default_order="foo"><field name="foo"/><field name="bar"/></tree>',
             mockRPC: function (route, args) {
-                if (route === "/web/dataset/search_read") {
+                if (route === "/web/dataset/call_kw/foo/web_search_read") {
                     assert.strictEqual(
-                        args.sort,
+                        args.kwargs.order,
                         "foo ASC",
                         "should correctly set the sort attribute"
                     );
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
@@ -4575,7 +4574,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skip("use more complex default_order", async function (assert) {
+    QUnit.test("use more complex default_order", async function (assert) {
         assert.expect(3);
 
         const list = await makeView({
@@ -4587,14 +4586,13 @@ QUnit.module("Views", (hooks) => {
                 '<field name="foo"/><field name="bar"/>' +
                 "</tree>",
             mockRPC: function (route, args) {
-                if (route === "/web/dataset/search_read") {
+                if (route === "/web/dataset/call_kw/foo/web_search_read") {
                     assert.strictEqual(
-                        args.sort,
+                        args.kwargs.order,
                         "foo ASC, bar DESC, int_field ASC",
                         "should correctly set the sort attribute"
                     );
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
