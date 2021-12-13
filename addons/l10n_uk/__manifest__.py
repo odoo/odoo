@@ -29,10 +29,9 @@ This is the latest UK Odoo localisation necessary to run Odoo accounting for UK 
         'data/account_tax_report_data.xml',
         'data/account_tax_data.xml',
         'data/account_fiscal_position_template_data.xml',
-        'data/account_chart_template_data.xml',
+        'data/account_chart_template_configure_data.xml',
     ],
     'demo': [
-        'demo/l10n_uk_demo.xml',
         'demo/demo_company.xml',
     ],
     'license': 'LGPL-3',

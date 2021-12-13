@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <!-- Northern Ireland requires its own CoA for the differing taxes and fiscal positions it has as a result of the Northern Ireland protocol -->
+        <record id="l10n_xi_chart_template" model="account.chart.template">
+            <field name="name">Northern Ireland Chart of Accounts and Taxes</field>
+            <field name="bank_account_code_prefix">1200</field>
+            <field name="cash_account_code_prefix">1210</field>
+            <field name="transfer_account_code_prefix">1220</field>
+            <field name="code_digits">6</field>
+            <field name="currency_id" ref="base.GBP"/>
+            <field name="parent_id" ref="l10n_uk.l10n_uk"/>
+            <field name="country_id" ref="base.uk"/>
+        </record>
+</odoo>
