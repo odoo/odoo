@@ -47,8 +47,8 @@ class Web_Editor(http.Controller):
         # Make sure we have at least size=1
         size = max(1, min(size, 512))
         # Initialize font
-        addons_path = http.addons_manifest['web']['addons_path']
-        font_obj = ImageFont.truetype(addons_path + font, size)
+        with tools.file_open(font.lstrip('/'), 'rb') as f:
+            font_obj = ImageFont.truetype(f, size)
 
         # if received character is not a number, keep old behaviour (icon is character)
         icon = chr(int(icon)) if icon.isdigit() else icon
