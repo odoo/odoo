@@ -61,7 +61,7 @@ registerModel({
         },
         /**
          * @private
-         * @returns {mail.discuss_sidebar_category_item | undefined}
+         * @returns {DiscussSidebarCategoryItem|undefined}
          */
         _computeActiveItem() {
             const thread = this.messaging.discuss.thread;
@@ -203,7 +203,7 @@ registerModel({
          * The category item which is active and belongs
          * to the category.
          */
-        activeItem: one2one('mail.discuss_sidebar_category_item', {
+        activeItem: one2one('DiscussSidebarCategoryItem', {
             compute: '_computeActiveItem',
         }),
         /**
@@ -219,7 +219,7 @@ registerModel({
          * Determines the discuss sidebar category items that are displayed by
          * this discuss sidebar category.
          */
-        categoryItems: one2many('mail.discuss_sidebar_category_item', {
+        categoryItems: one2many('DiscussSidebarCategoryItem', {
             inverse: 'category',
             isCausal: true,
             sort: '_sortDefinitionCategoryItems',
@@ -245,7 +245,7 @@ registerModel({
          * Determines the filtered and sorted discuss sidebar category items
          * that are displayed by this discuss sidebar category.
          */
-        filteredCategoryItems: one2many('mail.discuss_sidebar_category_item', {
+        filteredCategoryItems: one2many('DiscussSidebarCategoryItem', {
             compute: '_computeFilteredCategoryItems',
             readonly: true,
         }),
