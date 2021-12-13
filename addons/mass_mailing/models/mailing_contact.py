@@ -14,6 +14,7 @@ class MassMailingContactListRel(models.Model):
     _description = 'Mass Mailing Subscription Information'
     _table = 'mailing_contact_list_rel'
     _rec_name = 'contact_id'
+    _order = 'list_id DESC, contact_id DESC'
 
     contact_id = fields.Many2one('mailing.contact', string='Contact', ondelete='cascade', required=True)
     list_id = fields.Many2one('mailing.list', string='Mailing List', ondelete='cascade', required=True)
