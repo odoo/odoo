@@ -630,7 +630,7 @@ QUnit.module("ActionManager", (hooks) => {
         );
     });
 
-    QUnit.skip('reverse breadcrumb works on accesskey "b"', async function (assert) {
+    QUnit.test('reverse breadcrumb works on accesskey "b"', async function (assert) {
         assert.expect(4);
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
@@ -640,24 +640,22 @@ QUnit.module("ActionManager", (hooks) => {
         await testUtils.dom.click(
             $(webClient.el).find(".o_form_view button:contains(Execute action)")
         );
-        await legacyExtraNextTick();
         assert.containsN(webClient, ".o_control_panel .breadcrumb li", 3);
         var $previousBreadcrumb = $(webClient.el)
             .find(".o_control_panel .breadcrumb li.active")
             .prev();
         assert.strictEqual(
-            $previousBreadcrumb.attr("accesskey"),
+            $previousBreadcrumb.attr("data-hotkey"),
             "b",
             "previous breadcrumb should have accessKey 'b'"
         );
         await testUtils.dom.click($previousBreadcrumb);
-        await legacyExtraNextTick();
         assert.containsN(webClient, ".o_control_panel .breadcrumb li", 2);
         var $previousBreadcrumb = $(webClient.el)
             .find(".o_control_panel .breadcrumb li.active")
             .prev();
         assert.strictEqual(
-            $previousBreadcrumb.attr("accesskey"),
+            $previousBreadcrumb.attr("data-hotkey"),
             "b",
             "previous breadcrumb should have accessKey 'b'"
         );
@@ -1756,15 +1754,13 @@ QUnit.module("ActionManager", (hooks) => {
                 "Second record"
             );
             // push another action in the breadcrumb
-            await testUtils.dom.click($(webClient.el).find(".o_form_uri:contains(Third record)"));
-            await legacyExtraNextTick();
+            await click(webClient.el, ".o_field_many2one.o_form_uri");
             assert.strictEqual(
                 webClient.el.querySelector(".o_control_panel .breadcrumb").textContent,
                 "Second recordThird record"
             );
             // go back to the form view
-            await testUtils.dom.click($(webClient.el).find(".o_control_panel .breadcrumb a:first"));
-            await legacyExtraNextTick();
+            await click(webClient.el.querySelector(".o_control_panel .breadcrumb a"));
             assert.containsOnce(webClient.el, ".o_form_view .o_form_readonly");
             assert.strictEqual(
                 webClient.el.querySelector(".o_control_panel .breadcrumb-item").textContent,
