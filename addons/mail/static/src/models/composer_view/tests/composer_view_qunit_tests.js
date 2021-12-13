@@ -6,7 +6,7 @@ import { replace } from '@mail/model/model_field_command';
 // ensure that the model definition is loaded before the patch
 import '@mail/models/composer_view/composer_view';
 
-patchRecordMethods('mail.composer_view', {
+patchRecordMethods('ComposerView', {
     _computeComposer() {
         if (this.qunitTest && this.qunitTest.composer) {
             return replace(this.qunitTest.composer);
@@ -15,13 +15,13 @@ patchRecordMethods('mail.composer_view', {
     },
 });
 
-addFields('mail.composer_view', {
+addFields('ComposerView', {
     qunitTest: one2one('mail.qunit_test', {
         inverse: 'composerView',
         readonly: true,
     }),
 });
 
-patchIdentifyingFields('mail.composer_view', identifyingFields => {
+patchIdentifyingFields('ComposerView', identifyingFields => {
     identifyingFields[0].push('qunitTest');
 });

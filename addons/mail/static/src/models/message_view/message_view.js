@@ -126,7 +126,7 @@ registerModel({
         /**
         * Determines the composer that is used to edit this message (if any).
         */
-        composerViewInEditing: one2one('mail.composer_view', {
+        composerViewInEditing: one2one('ComposerView', {
             inverse: 'messageViewInEditing',
             isCausal: true,
         }),

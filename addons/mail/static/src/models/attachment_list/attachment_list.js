@@ -97,7 +97,7 @@ registerModel({
         /**
          * Link with a composer view to handle attachments.
          */
-        composerView: one2one('mail.composer_view', {
+        composerView: one2one('ComposerView', {
             inverse: 'attachmentList',
             readonly: true,
         }),

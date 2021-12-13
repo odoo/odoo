@@ -8,7 +8,7 @@ import { OnChange } from '@mail/model/model_onchange';
 import { addLink, escapeAndCompactTextContent, parseAndTransform } from '@mail/js/utils';
 
 registerModel({
-    name: 'mail.composer_view',
+    name: 'ComposerView',
     identifyingFields: [['threadView', 'messageViewInEditing', 'chatter']],
     lifecycleHooks: {
         _willCreate() {
