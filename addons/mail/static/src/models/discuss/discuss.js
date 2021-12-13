@@ -5,7 +5,7 @@ import { attr, many2one, one2one } from '@mail/model/model_field';
 import { clear, insertAndReplace, link, unlink } from '@mail/model/model_field_command';
 
 registerModel({
-    name: 'mail.discuss',
+    name: 'Discuss',
     identifyingFields: ['messaging'],
     lifecycleHooks: {
         _created() {

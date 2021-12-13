@@ -6,7 +6,7 @@ import { one2one } from '@mail/model/model_field';
 import '@mail/models/discuss_sidebar_category/discuss_sidebar_category';
 
 addFields('mail.discuss_sidebar_category', {
-    discussAsLivechat: one2one('mail.discuss', {
+    discussAsLivechat: one2one('Discuss', {
         inverse: 'categoryLivechat',
         readonly: true,
     }),
