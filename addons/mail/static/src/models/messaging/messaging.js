@@ -308,7 +308,7 @@ registerModel({
         isQUnitTest: attr({
             default: false,
         }),
-        locale: one2one('mail.locale', {
+        locale: one2one('Locale', {
             default: insertAndReplace(),
             isCausal: true,
             readonly: true,
