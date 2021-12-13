@@ -572,7 +572,7 @@ registerModel({
                 case '@':
                     return 'Partner';
                 case ':':
-                    return 'mail.canned_response';
+                    return 'CannedResponse';
                 case '/':
                     return 'ChannelCommand';
                 case '#':

@@ -5,7 +5,7 @@ import { attr } from '@mail/model/model_field';
 import { cleanSearchTerm } from '@mail/utils/utils';
 
 registerModel({
-    name: 'mail.canned_response',
+    name: 'CannedResponse',
     identifyingFields: ['id'],
     modelMethods: {
         /**
@@ -59,7 +59,7 @@ registerModel({
          * @param {Object} [options={}]
          * @param {Thread} [options.thread] prioritize and/or restrict
          *  result in the context of given thread
-         * @returns {[mail.canned_response[], mail.canned_response[]]}
+         * @returns {[CannedResponse[], CannedResponse[]]}
          */
         searchSuggestions(searchTerm, { thread } = {}) {
             const cleanedSearchTerm = cleanSearchTerm(searchTerm);
