@@ -32,12 +32,19 @@ Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır
         "data/account_chart_post_data.xml",
         "data/account_chart_template_try_loading.xml",
 
+        # Data
+        "data/l10n_tr.tax_office.csv",
+
         # Views
+        "views/tax_office_views.xml",
+        "views/res_partner_views.xml",
+        "views/ir_qweb_widget_templates.xml",
         'views/account_tax_views.xml',
         'views/account_move_line_views.xml',
 
         # Security
-        'security/ir.model.access.csv',
+        "security/ir.model.access.csv",
+
     ],
     'demo': [
         'demo/res_partner_demo.xml',
