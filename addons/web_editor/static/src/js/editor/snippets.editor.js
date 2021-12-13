@@ -2415,10 +2415,12 @@ var SnippetsMenu = Widget.extend({
      * @param {jQuery} $hook
      * @param {boolean} [vertical=false]
      * @param {Object} [style]
+     * @param {Array} [classes]
      */
-    _insertDropzone: function ($hook, vertical, style) {
+    _insertDropzone: function ($hook, vertical, style, classes = []) {
+        const extraClasses = classes.length ? ' ' + classes.join(' ') : '';
         var $dropzone = $('<div/>', {
-            'class': 'oe_drop_zone oe_insert' + (vertical ? ' oe_vertical' : ''),
+            'class': 'oe_drop_zone oe_insert' + (vertical ? ' oe_vertical' : '') + extraClasses,
         });
         if (style) {
             $dropzone.css(style);
@@ -2433,8 +2435,8 @@ var SnippetsMenu = Widget.extend({
      * @param {jQuery} $snippets
      */
     _makeSnippetDraggable: function ($snippets) {
-        var self = this;
-        var $toInsert, dropped, $snippet;
+        const self = this;
+        let $toInsert, dropped, $snippet;
 
         let dragAndDropResolve;
         let $scrollingElement = $().getScrollingElement(this.ownerDocument);
@@ -2456,6 +2458,8 @@ var SnippetsMenu = Widget.extend({
                 },
                 start: function () {
                     self._hideSnippetTooltips();
+
+                    let $modal = $();
 
                     const prom = new Promise(resolve => dragAndDropResolve = () => resolve());
                     self._mutex.exec(() => prom);
@@ -2515,22 +2519,37 @@ var SnippetsMenu = Widget.extend({
                         return;
                     }
 
-                    self._activateInsertionZones($selectorSiblings, $selectorChildren);
+                    if ($toInsert[0].dataset.combineDropZones) {
+                        $selectorChildren.each(function () {
+                            const combineDropZones = this.childElementCount > 0;
+                            const extraClasses = combineDropZones ? ['o_full_drop_zone'] : [];
+                            self._insertDropzone($('<we-hook/>').appendTo(this), false, {}, extraClasses);
+                        });
+                    } else {
+                        self._activateInsertionZones($selectorSiblings, $selectorChildren);
+                    }
+
+                    if ($toInsert[0].dataset.showModalOnPreview) {
+                        $modal = $toInsert.find('.modal');
+                    }
 
                     self.getEditableArea().find('.oe_drop_zone').droppable({
                         over: function () {
                             if (dropped) {
+                                $modal.modal('hide');
                                 $toInsert.detach();
                                 $toInsert.addClass('oe_snippet_body');
                                 $('.oe_drop_zone').removeClass('invisible');
                             }
                             dropped = true;
                             $(this).first().after($toInsert).addClass('invisible');
+                            $modal.modal('show');
                             $toInsert.removeClass('oe_snippet_body');
                         },
                         out: function () {
                             var prev = $toInsert.prev();
                             if (this === prev[0]) {
+                                $modal.modal('hide');
                                 dropped = false;
                                 $toInsert.detach();
                                 $(this).removeClass('invisible');
@@ -2872,11 +2891,11 @@ var SnippetsMenu = Widget.extend({
         this._activateSnippet(false);
     },
     /**
-    * Called when a snippet will move in the page.
-    *
-    * @private
-    */
-   _onSnippetDragAndDropStart: function () {
+     * Called when a snippet will move in the page.
+     *
+     * @private
+     */
+    _onSnippetDragAndDropStart: function () {
         this.snippetEditorDragging = true;
     },
     /**

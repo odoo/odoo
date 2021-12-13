@@ -1916,19 +1916,26 @@ body.editor_enable.editor_has_snippets {
     animation: dropZoneInsert 1s linear 0s infinite alternate;
 
     &.oe_insert {
-        position: relative;
         z-index: $o-we-overlay-zindex;
-        width: 100%;
-        min-width: $o-we-dropzone-size;
-        height: $o-we-dropzone-size;
-        min-height: $o-we-dropzone-size;
-        margin: (-$o-we-dropzone-size/2) 0;
         border: 2px dashed $o-we-border-color;
 
-        &.oe_vertical {
-            width: $o-we-dropzone-size;
-            float: left;
-            margin: 0 (-$o-we-dropzone-size/2);
+        &:not(.o_full_drop_zone) {
+            position: relative;
+            width: 100%;
+            min-width: $o-we-dropzone-size;
+            height: $o-we-dropzone-size;
+            min-height: $o-we-dropzone-size;
+            margin: (-$o-we-dropzone-size/2) 0;
+
+            &.oe_vertical {
+                width: $o-we-dropzone-size;
+                float: left;
+                margin: 0 (-$o-we-dropzone-size/2);
+            }
+        }
+
+        &.o_full_drop_zone {
+            @include o-position-absolute(0, 0, 0, 0);
         }
     }
 }
