@@ -31,14 +31,14 @@ QUnit.test('command suggestion displayed', async function (assert) {
         id: 20,
         model: 'mail.channel',
     });
-    const command = this.messaging.models['mail.channel_command'].create({
+    const command = this.messaging.models['ChannelCommand'].create({
         methodName: '',
         name: 'whois',
         help: "Displays who it is",
     });
     await createComposerSuggestionComponent(thread.composer, {
         isActive: true,
-        modelName: 'mail.channel_command',
+        modelName: 'ChannelCommand',
         recordLocalId: command.localId,
     });
 
@@ -58,14 +58,14 @@ QUnit.test('command suggestion correct data', async function (assert) {
         id: 20,
         model: 'mail.channel',
     });
-    const command = this.messaging.models['mail.channel_command'].create({
+    const command = this.messaging.models['ChannelCommand'].create({
         methodName: '',
         name: 'whois',
         help: "Displays who it is",
     });
     await createComposerSuggestionComponent(thread.composer, {
         isActive: true,
-        modelName: 'mail.channel_command',
+        modelName: 'ChannelCommand',
         recordLocalId: command.localId,
     });
 
@@ -105,14 +105,14 @@ QUnit.test('command suggestion active', async function (assert) {
         id: 20,
         model: 'mail.channel',
     });
-    const command = this.messaging.models['mail.channel_command'].create({
+    const command = this.messaging.models['ChannelCommand'].create({
         methodName: '',
         name: 'whois',
         help: "Displays who it is",
     });
     await createComposerSuggestionComponent(thread.composer, {
         isActive: true,
-        modelName: 'mail.channel_command',
+        modelName: 'ChannelCommand',
         recordLocalId: command.localId,
     });
 

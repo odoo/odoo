@@ -5,7 +5,7 @@ import { attr } from '@mail/model/model_field';
 import { cleanSearchTerm } from '@mail/utils/utils';
 
 registerModel({
-    name: 'mail.channel_command',
+    name: 'ChannelCommand',
     identifyingFields: ['name'],
     modelMethods: {
         /**
@@ -66,7 +66,7 @@ registerModel({
          * @param {Object} [options={}]
          * @param {mail.thread} [options.thread] prioritize and/or restrict
          *  result in the context of given thread
-         * @returns {[mail.channel_command[], mail.channel_command[]]}
+         * @returns {[ChannelCommand[], ChannelCommand[]]}
          */
         searchSuggestions(searchTerm, { thread } = {}) {
             if (thread.model !== 'mail.channel') {

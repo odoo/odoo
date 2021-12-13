@@ -238,7 +238,7 @@ registerModel({
             isCausal: true,
             readonly: true,
         }),
-        commands: one2many('mail.channel_command'),
+        commands: one2many('ChannelCommand'),
         companyName: attr(),
         currentGuest: one2one('Guest'),
         currentPartner: one2one('mail.partner'),
