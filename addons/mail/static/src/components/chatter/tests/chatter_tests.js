@@ -49,7 +49,7 @@ QUnit.test('base rendering when chatter has no attachment', async function (asse
         });
     }
     await this.start();
-    const chatter = this.messaging.models['mail.chatter'].create({
+    const chatter = this.messaging.models['Chatter'].create({
         id: 11,
         threadId: 100,
         threadModel: 'res.partner',
@@ -94,7 +94,7 @@ QUnit.test('base rendering when chatter has no record', async function (assert) 
     assert.expect(10);
 
     await this.start();
-    const chatter = this.messaging.models['mail.chatter'].create({
+    const chatter = this.messaging.models['Chatter'].create({
         id: 11,
         threadModel: 'res.partner',
     });
@@ -173,7 +173,7 @@ QUnit.test('base rendering when chatter has attachments', async function (assert
         }
     );
     await this.start();
-    const chatter = this.messaging.models['mail.chatter'].create({
+    const chatter = this.messaging.models['Chatter'].create({
         id: 11,
         threadId: 100,
         threadModel: 'res.partner',
@@ -215,7 +215,7 @@ QUnit.test('show attachment box', async function (assert) {
         }
     );
     await this.start();
-    const chatter = this.messaging.models['mail.chatter'].create({
+    const chatter = this.messaging.models['Chatter'].create({
         id: 11,
         threadId: 100,
         threadModel: 'res.partner',
@@ -262,7 +262,7 @@ QUnit.test('composer show/hide on log note/send message [REQUIRE FOCUS]', async 
 
     this.data['res.partner'].records.push({ id: 100 });
     await this.start();
-    const chatter = this.messaging.models['mail.chatter'].create({
+    const chatter = this.messaging.models['Chatter'].create({
         id: 11,
         threadId: 100,
         threadModel: 'res.partner',
@@ -356,7 +356,7 @@ QUnit.test('should display subject when subject is not the same as the thread na
         model: 'res.partner',
         name: "voyageur",
     });
-    const chatter = this.messaging.models['mail.chatter'].create({
+    const chatter = this.messaging.models['Chatter'].create({
         id: 11,
         threadId: 100,
         threadModel: 'res.partner',
@@ -391,7 +391,7 @@ QUnit.test('should not display subject when subject is the same as the thread na
         model: 'res.partner',
         name: "Salutations, voyageur",
     });
-    const chatter = this.messaging.models['mail.chatter'].create({
+    const chatter = this.messaging.models['Chatter'].create({
         id: 11,
         threadId: 100,
         threadModel: 'res.partner',
@@ -416,7 +416,7 @@ QUnit.test('should not display user notification messages in chatter', async fun
         res_id: 100,
     });
     await this.start();
-    const chatter = this.messaging.models['mail.chatter'].create({
+    const chatter = this.messaging.models['Chatter'].create({
         id: 11,
         threadId: 100,
         threadModel: 'res.partner',
@@ -435,7 +435,7 @@ QUnit.test('post message with "CTRL-Enter" keyboard shortcut', async function (a
 
     this.data['res.partner'].records.push({ id: 100 });
     await this.start();
-    const chatter = this.messaging.models['mail.chatter'].create({
+    const chatter = this.messaging.models['Chatter'].create({
         id: 11,
         threadId: 100,
         threadModel: 'res.partner',
@@ -470,7 +470,7 @@ QUnit.test('post message with "META-Enter" keyboard shortcut', async function (a
 
     this.data['res.partner'].records.push({ id: 100 });
     await this.start();
-    const chatter = this.messaging.models['mail.chatter'].create({
+    const chatter = this.messaging.models['Chatter'].create({
         id: 11,
         threadId: 100,
         threadModel: 'res.partner',
@@ -508,7 +508,7 @@ QUnit.test('do not post message with "Enter" keyboard shortcut', async function 
 
     this.data['res.partner'].records.push({ id: 100 });
     await this.start();
-    const chatter = this.messaging.models['mail.chatter'].create({
+    const chatter = this.messaging.models['Chatter'].create({
         id: 11,
         threadId: 100,
         threadModel: 'res.partner',
