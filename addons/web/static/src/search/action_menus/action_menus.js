@@ -5,7 +5,7 @@ import { session } from "@web/session";
 import { registry } from "@web/core/registry";
 
 const { Component } = owl;
-
+let registryActionId = 0;
 /**
  * Action menus (or Action/Print bar, previously called 'Sidebar')
  *

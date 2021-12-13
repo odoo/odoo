@@ -68,6 +68,7 @@ export class ListArchParser extends XMLParser {
             ...getActiveActions(xmlDoc),
             exportXlsx: isAttr(xmlDoc, "export_xlsx").truthy(true),
         };
+        const defaultOrder = xmlDoc.getAttribute("default_order");
         const activeFields = {};
         const columns = [];
         let buttonId = 0;
@@ -152,7 +153,15 @@ export class ListArchParser extends XMLParser {
             }
         });
 
-        return { activeActions, config, headerButtons, fields: activeFields, columns, groupBy };
+        return {
+            activeActions,
+            config,
+            headerButtons,
+            fields: activeFields,
+            columns,
+            groupBy,
+            defaultOrder,
+        };
     }
 }
 
@@ -174,6 +183,7 @@ export class ListView extends owl.Component {
             viewMode: "list",
             groupByInfo: this.archInfo.groupBy.fields,
             limit: this.archInfo.config.limit || this.props.limit,
+            defaultOrder: this.archInfo.defaultOrder,
         });
         useViewButtons(this.model);
 
