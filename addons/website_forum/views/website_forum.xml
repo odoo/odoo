@@ -38,95 +38,97 @@
 
 <!-- Page Index -->
 <template id="header" name="Forum Index">
-    <t t-if="forum and not forum.active" t-call="website_forum.layout">
-        <t t-set="head">
-            <meta name="robots" content="noindex, nofollow" />
+    <t t-call="website_forum.layout">
+        <t t-if="forum and not forum.active">
+            <t t-set="head">
+                <meta name="robots" content="noindex, nofollow" />
+            </t>
+            <div class="text-center text-muted">
+                <p class="css_editable_hidden"><h2>This forum has been archived.</h2></p>
+            </div>
         </t>
-        <div class="text-center text-muted">
-            <p class="css_editable_hidden"><h2>This forum has been archived.</h2></p>
-        </div>
-    </t>
-    <t t-else="" t-call="website_forum.layout">
-        <section t-if="forum" t-attf-class="s_cover parallax s_parallax_is_fixed py-3 #{'bg-black-50' if forum.image_1920 else 'o_wforum_forum_card_bg text-white'}" data-scroll-background-ratio="1" data-snippet="s_cover">
-            <span t-if="forum.image_1920" class="s_parallax_bg oe_img_bg" t-attf-style="background-image: url('#{website.image_url(forum, 'image_1920')}'); background-position: center;"/>
-            <div t-if="forum.image_1920" class="o_we_bg_filter bg-black-50"/>
-            <div class="container">
-                <div class="row s_nb_column_fixed">
-                    <div class="col-lg-12">
-                        <h1 class="o_default_snippet_text text-center"><t t-esc="forum.name"></t></h1>
-                    </div>
-                </div>
-                <div t-if="editable or (is_public_user and not forum_welcome_message)" t-att-class="'css_non_editable_mode_hidden' if editable else 'forum_intro'">
-                    <div t-field="forum.welcome_message"/>
-                </div>
-            </div>
-        </section>
-        <section t-else="" t-attf-class="s_cover parallax s_parallax_is_fixed py-3 o_wforum_forum_card_bg text-white" data-scroll-background-ratio="1" data-snippet="s_cover">
-            <div class="container">
-                <div class="row s_nb_column_fixed">
-                    <div class="col-lg-12">
-                        <h1 class="o_default_snippet_text text-center">All Forums</h1>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <div class="o_forum_nav_header_container mb-2 mb-md-4">
-            <t t-call="website_forum.forum_nav_header"></t>
-        </div>
-        <div id="wrap" t-attf-class="container #{website_forum_action}">
-            <div class="row">
-                <div class="col o_wprofile_email_validation_container mb16">
-                    <t t-call="website_profile.email_validation_banner">
-                        <t t-set="redirect_url" t-value="'/forum/%s' % slug(forum) if forum else '/forum/all/'"/>
-                        <t t-set="additional_validation_email_message"> and join this Forum</t>
-                        <t t-set="additional_validated_email_message"> You may now participate in our forums.</t>
-                    </t>
-                    <div class="row">
-                        <div class="col">
-                            <nav t-if="header.get('is_guidelines') or queue_type or new_question or is_edit or tags or reasons" aria-label="breadcrumb">
-                                <ol class="breadcrumb p-0 bg-white">
-                                    <li class="breadcrumb-item">
-                                        <a t-attf-href="/forum/#{ slug(forum) }" t-esc="forum.name"/>
-                                    </li>
-                                    <t t-if="header.get('is_guidelines')">
-                                        <li class="breadcrumb-item">
-                                            <a t-if="header.get('is_karma')" t-attf-href="/forum/#{ slug(forum) }/faq">Guidelines</a>
-                                            <t t-else="">
-                                                Guidelines
-                                            </t>
-                                        </li>
-                                        <li t-if="header.get('is_karma')" class="breadcrumb-item">Karma</li>
-                                    </t>
-                                    <li t-if="queue_type" class="breadcrumb-item">Moderation</li>
-                                    <li t-if="queue_type == 'validation'" class="breadcrumb-item">To Validate</li>
-                                    <li t-if="queue_type == 'flagged'" class="breadcrumb-item">Flagged</li>
-                                    <li t-if="queue_type == 'offensive'" class="breadcrumb-item">Offensive</li>
-                                    <li t-if="reasons and offensive" class="breadcrumb-item">Offensive Post</li>
-                                    <li t-if="reasons and not offensive" class="breadcrumb-item">Close Post</li>
-                                    <li t-if="new_question" class="breadcrumb-item">New Post</li>
-                                    <t t-if="is_edit">
-                                        <t t-set="target" t-value="post.parent_id if is_answer else post"/>
-                                        <li class="breadcrumb-item text-truncate" style="max-width:150px">
-                                            <a t-attf-href="/forum/#{ slug(forum) }/#{ slug(target)}" title="Back to Question">
-                                                <t t-esc="target.name"/>
-                                            </a>
-                                        </li>
-                                        <li t-if="not is_answer" class="breadcrumb-item">Edit Question</li>
-                                        <li t-if="is_answer" class="breadcrumb-item">Edit Answer</li>
-                                    </t>
-                                    <li t-elif="tags" class="breadcrumb-item">All Tags</li>
-                                </ol>
-                            </nav>
-                            <t t-out="0"/>
+        <t t-else="">
+            <section t-if="forum" t-attf-class="s_cover parallax s_parallax_is_fixed py-3 #{'bg-black-50' if forum.image_1920 else 'o_wforum_forum_card_bg text-white'}" data-scroll-background-ratio="1" data-snippet="s_cover">
+                <span t-if="forum.image_1920" class="s_parallax_bg oe_img_bg" t-attf-style="background-image: url('#{website.image_url(forum, 'image_1920')}'); background-position: center;"/>
+                <div t-if="forum.image_1920" class="o_we_bg_filter bg-black-50"/>
+                <div class="container">
+                    <div class="row s_nb_column_fixed">
+                        <div class="col-lg-12">
+                            <h1 class="o_default_snippet_text text-center"><t t-esc="forum.name"></t></h1>
                         </div>
-                        <aside t-if="uid" class="d-none d-lg-flex justify-content-end col-auto">
-                            <t t-call="website_forum.user_sidebar"/>
-                        </aside>
+                    </div>
+                    <div t-if="editable or (is_public_user and not forum_welcome_message)" t-att-class="'css_non_editable_mode_hidden' if editable else 'forum_intro'">
+                        <div t-field="forum.welcome_message"/>
+                    </div>
+                </div>
+            </section>
+            <section t-else="" t-attf-class="s_cover parallax s_parallax_is_fixed py-3 o_wforum_forum_card_bg text-white" data-scroll-background-ratio="1" data-snippet="s_cover">
+                <div class="container">
+                    <div class="row s_nb_column_fixed">
+                        <div class="col-lg-12">
+                            <h1 class="o_default_snippet_text text-center">All Forums</h1>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <div class="o_forum_nav_header_container mb-2 mb-md-4">
+                <t t-call="website_forum.forum_nav_header"></t>
+            </div>
+            <div id="wrap" t-attf-class="container #{website_forum_action}">
+                <div class="row">
+                    <div class="col o_wprofile_email_validation_container mb16">
+                        <t t-call="website_profile.email_validation_banner">
+                            <t t-set="redirect_url" t-value="'/forum/%s' % slug(forum) if forum else '/forum/all/'"/>
+                            <t t-set="additional_validation_email_message"> and join this Forum</t>
+                            <t t-set="additional_validated_email_message"> You may now participate in our forums.</t>
+                        </t>
+                        <div class="row">
+                            <div class="col">
+                                <nav t-if="header.get('is_guidelines') or queue_type or new_question or is_edit or tags or reasons" aria-label="breadcrumb">
+                                    <ol class="breadcrumb p-0 bg-white">
+                                        <li class="breadcrumb-item">
+                                            <a t-attf-href="/forum/#{ slug(forum) }" t-esc="forum.name"/>
+                                        </li>
+                                        <t t-if="header.get('is_guidelines')">
+                                            <li class="breadcrumb-item">
+                                                <a t-if="header.get('is_karma')" t-attf-href="/forum/#{ slug(forum) }/faq">Guidelines</a>
+                                                <t t-else="">
+                                                    Guidelines
+                                                </t>
+                                            </li>
+                                            <li t-if="header.get('is_karma')" class="breadcrumb-item">Karma</li>
+                                        </t>
+                                        <li t-if="queue_type" class="breadcrumb-item">Moderation</li>
+                                        <li t-if="queue_type == 'validation'" class="breadcrumb-item">To Validate</li>
+                                        <li t-if="queue_type == 'flagged'" class="breadcrumb-item">Flagged</li>
+                                        <li t-if="queue_type == 'offensive'" class="breadcrumb-item">Offensive</li>
+                                        <li t-if="reasons and offensive" class="breadcrumb-item">Offensive Post</li>
+                                        <li t-if="reasons and not offensive" class="breadcrumb-item">Close Post</li>
+                                        <li t-if="new_question" class="breadcrumb-item">New Post</li>
+                                        <t t-if="is_edit">
+                                            <t t-set="target" t-value="post.parent_id if is_answer else post"/>
+                                            <li class="breadcrumb-item text-truncate" style="max-width:150px">
+                                                <a t-attf-href="/forum/#{ slug(forum) }/#{ slug(target)}" title="Back to Question">
+                                                    <t t-esc="target.name"/>
+                                                </a>
+                                            </li>
+                                            <li t-if="not is_answer" class="breadcrumb-item">Edit Question</li>
+                                            <li t-if="is_answer" class="breadcrumb-item">Edit Answer</li>
+                                        </t>
+                                        <li t-elif="tags" class="breadcrumb-item">All Tags</li>
+                                    </ol>
+                                </nav>
+                                <t t-out="0"/>
+                            </div>
+                            <aside t-if="uid" class="d-none d-lg-flex justify-content-end col-auto">
+                                <t t-call="website_forum.user_sidebar"/>
+                            </aside>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="oe_structure" id="oe_structure_website_forum_header_1"/>
+            <div class="oe_structure" id="oe_structure_website_forum_header_1"/>
+        </t>
     </t>
 
 </template>

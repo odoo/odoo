@@ -134,6 +134,7 @@ class WebsiteForum(WebsiteProfile):
             'my': my,
             'author_id': author.id if author else False,
             'include_answers': include_answers,
+            'my_profile': request.env.user == author,
         }
         question_count, details, fuzzy_search_term = request.website._search_with_fuzzy("forum_posts_only", search,
             limit=page * self._post_per_page, order=sorting, options=options)
