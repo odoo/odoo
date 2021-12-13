@@ -77,7 +77,7 @@ registerModel({
             inverse: 'threadViewer',
             readonly: true,
         }),
-        discussPublicView: one2one('mail.discuss_public_view', {
+        discussPublicView: one2one('DiscussPublicView', {
             inverse: 'threadViewer',
             readonly: true,
         }),

@@ -143,7 +143,7 @@ registerModel({
         /**
          * States discuss public view on which this welcome view is displayed.
          */
-        discussPublicView: one2one('mail.discuss_public_view', {
+        discussPublicView: one2one('DiscussPublicView', {
             inverse: 'welcomeView',
             readonly: true,
             required: true,
