@@ -4,7 +4,7 @@ import { attr } from '@mail/model/model_field';
 import { registerModel } from '@mail/model/model_core';
 
 registerModel({
-    name: 'mail.media_preview',
+    name: 'MediaPreview',
     identifyingFields: ['messaging'],
     lifecycleHooks: {
         _created() {
@@ -37,7 +37,7 @@ registerModel({
             if (!this.audioStream) {
                 return;
             }
-            this.messaging.models['mail.media_preview'].stopTracksOnMediaStream(this.audioStream);
+            this.messaging.models['MediaPreview'].stopTracksOnMediaStream(this.audioStream);
             this.update({ audioStream: null });
         },
         /**
@@ -48,7 +48,7 @@ registerModel({
             if (!this.videoStream) {
                 return;
             }
-            this.messaging.models['mail.media_preview'].stopTracksOnMediaStream(this.videoStream);
+            this.messaging.models['MediaPreview'].stopTracksOnMediaStream(this.videoStream);
             this.update({ videoStream: null });
         },
         /**

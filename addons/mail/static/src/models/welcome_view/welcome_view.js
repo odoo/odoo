@@ -190,7 +190,7 @@ registerModel({
         /**
          * States the media preview embedded in this welcome view.
          */
-        mediaPreview: one2one('mail.media_preview', {
+        mediaPreview: one2one('MediaPreview', {
             compute: '_computeMediaPreview',
             isCausal: true,
             readonly: true,
