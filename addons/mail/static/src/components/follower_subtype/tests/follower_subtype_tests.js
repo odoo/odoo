@@ -49,7 +49,7 @@ QUnit.test('simplest layout of a followed subtype', async function (assert) {
         id: 100,
         model: 'res.partner',
     });
-    const follower = this.messaging.models['mail.follower'].create({
+    const follower = this.messaging.models['Follower'].create({
         partner: insert({
             id: 1,
             name: "François Perusse",
@@ -109,7 +109,7 @@ QUnit.test('simplest layout of a not followed subtype', async function (assert) 
         id: 100,
         model: 'res.partner',
     });
-    const follower = this.messaging.models['mail.follower'].create({
+    const follower = this.messaging.models['Follower'].create({
         partner: insert({
             id: 1,
             name: "François Perusse",
@@ -166,7 +166,7 @@ QUnit.test('toggle follower subtype checkbox', async function (assert) {
         id: 100,
         model: 'res.partner',
     });
-    const follower = this.messaging.models['mail.follower'].create({
+    const follower = this.messaging.models['Follower'].create({
         partner: insert({
             id: 1,
             name: "François Perusse",
