@@ -303,6 +303,10 @@ Dropdown.props = {
         type: String,
         optional: true,
     },
+    tooltip: {
+        type: String,
+        optional: true,
+    },
     title: {
         type: String,
         optional: true,

@@ -919,4 +919,18 @@ QUnit.module("Components", ({ beforeEach }) => {
         assert.containsNone(parent.el, ".dropdown-menu", "all menus are now closed");
         assert.strictEqual(hotkeyRegistrationsCount, 0, "no hotkey registration left");
     });
+
+    QUnit.test("Dropdown with a tooltip", async (assert) => {
+        assert.expect(1);
+
+        class Parent extends owl.Component {}
+        Parent.template = owl.tags.xml`<Dropdown tooltip="'My tooltip'"></Dropdown>`;
+
+        env = await makeTestEnv();
+        parent = await mount(Parent, { env, target });
+        assert.strictEqual(
+            parent.el.querySelector("button.dropdown-toggle").dataset.tooltip,
+            "My tooltip"
+        );
+    });
 });
