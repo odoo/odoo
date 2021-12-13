@@ -375,7 +375,7 @@ registerModel({
          * Determines the channel invitation form displayed by this chat window
          * (if any). Only makes sense if hasInviteFeature is true.
          */
-        channelInvitationForm: one2one('mail.channel_invitation_form', {
+        channelInvitationForm: one2one('ChannelInvitationForm', {
             inverse: 'chatWindow',
             isCausal: true,
         }),

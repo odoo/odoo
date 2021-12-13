@@ -6,7 +6,7 @@ import { clear, insertAndReplace, link, replace, unlink, unlinkAll } from '@mail
 import { cleanSearchTerm } from '@mail/utils/utils';
 
 registerModel({
-    name: 'mail.channel_invitation_form',
+    name: 'ChannelInvitationForm',
     identifyingFields: [['chatWindow', 'threadView']],
     lifecycleHooks: {
         _created() {
