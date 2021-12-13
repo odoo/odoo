@@ -47,7 +47,7 @@ const BASE_VISUAL = {
 };
 
 registerModel({
-    name: 'mail.chat_window_manager',
+    name: 'ChatWindowManager',
     identifyingFields: ['messaging'],
     recordMethods: {
         /**
