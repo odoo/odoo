@@ -109,7 +109,7 @@ registerModel({
          * Determines the attachment list displaying the attachments of this
          * message (if any).
          */
-        attachmentList: one2one('mail.attachment_list', {
+        attachmentList: one2one('AttachmentList', {
             compute: '_computeAttachmentList',
             inverse: 'messageView',
             isCausal: true,

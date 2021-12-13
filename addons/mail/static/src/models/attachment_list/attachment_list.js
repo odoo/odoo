@@ -5,7 +5,7 @@ import { many2many, many2one, one2many, one2one } from '@mail/model/model_field'
 import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 
 registerModel({
-    name: 'mail.attachment_list',
+    name: 'AttachmentList',
     identifyingFields: [['composerView', 'messageView', 'chatter']],
     recordMethods: {
         _computeAttachmentImages() {

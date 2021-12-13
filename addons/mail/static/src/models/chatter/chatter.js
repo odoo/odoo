@@ -289,7 +289,7 @@ registerModel({
         /**
          * Determines the attachment list that will be used to display the attachments.
          */
-        attachmentList: one2one('mail.attachment_list', {
+        attachmentList: one2one('AttachmentList', {
             compute: '_computeAttachmentList',
             inverse: 'chatter',
             isCausal: true,
