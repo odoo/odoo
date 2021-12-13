@@ -187,7 +187,7 @@ registerModel({
                 data2.lastInterestDateTime = str_to_datetime(data.last_interest_dt);
             }
             if ('last_message' in data && data.last_message) {
-                const messageData = this.messaging.models['mail.message'].convertData({
+                const messageData = this.messaging.models['Message'].convertData({
                     id: data.last_message.id,
                     model: data2.model,
                     res_id: data2.id,
@@ -195,7 +195,7 @@ registerModel({
                 data2.serverLastMessage = insert(messageData);
             }
             if ('last_message_id' in data && data.last_message_id) {
-                const messageData = this.messaging.models['mail.message'].convertData({
+                const messageData = this.messaging.models['Message'].convertData({
                     id: data.last_message_id,
                     model: data2.model,
                     res_id: data2.id,
@@ -393,8 +393,8 @@ registerModel({
                 method: 'channel_fetch_preview',
                 args: [channelIds],
             }, { shadow: true });
-            this.messaging.models['mail.message'].insert(channelPreviews.filter(p => p.last_message).map(
-                channelPreview => this.messaging.models['mail.message'].convertData(channelPreview.last_message)
+            this.messaging.models['Message'].insert(channelPreviews.filter(p => p.last_message).map(
+                channelPreview => this.messaging.models['Message'].convertData(channelPreview.last_message)
             ));
         },
         /**
@@ -840,7 +840,7 @@ registerModel({
         /**
          * Mark the specified conversation as read/seen.
          *
-         * @param {mail.message} message the message to be considered as last seen.
+         * @param {Message} message the message to be considered as last seen.
          */
         async markAsSeen(message) {
             if (this.messaging.currentGuest) {
@@ -869,7 +869,7 @@ registerModel({
          */
         async markNeedactionMessagesAsOriginThreadAsRead() {
             await this.async(() =>
-                this.messaging.models['mail.message'].markAsRead(this.needactionMessagesAsOriginThread)
+                this.messaging.models['Message'].markAsRead(this.needactionMessagesAsOriginThread)
             );
         },
         /**
@@ -1405,7 +1405,7 @@ registerModel({
         },
         /**
          * @private
-         * @returns {mail.message}
+         * @returns {Message}
          */
         _computeLastCurrentPartnerMessageSeenByEveryone() {
             const otherPartnerSeenInfos =
@@ -1440,7 +1440,7 @@ registerModel({
         },
         /**
          * @private
-         * @returns {mail.message|undefined}
+         * @returns {Message|undefined}
          */
         _computeLastMessage() {
             const {
@@ -1454,7 +1454,7 @@ registerModel({
         },
         /**
          * @private
-         * @returns {mail.message|undefined}
+         * @returns {Message|undefined}
          */
         _computeLastNonTransientMessage() {
             const {
@@ -1503,7 +1503,7 @@ registerModel({
         },
         /**
          * @private
-         * @returns {mail.message|undefined}
+         * @returns {Message|undefined}
          */
         _computeLastNeedactionMessageAsOriginThread() {
             const orderedNeedactionMessagesAsOriginThread = this.needactionMessagesAsOriginThread.sort(
@@ -1577,14 +1577,14 @@ registerModel({
         },
         /**
          * @private
-         * @returns {mail.message[]}
+         * @returns {Message[]}
          */
         _computeNeedactionMessagesAsOriginThread() {
             return replace(this.messagesAsOriginThread.filter(message => message.isNeedaction));
         },
         /**
          * @private
-         * @returns {mail.message|undefined}
+         * @returns {Message|undefined}
          */
         _computeMessageAfterNewMessageSeparator() {
             if (this.model !== 'mail.channel') {
@@ -1621,14 +1621,14 @@ registerModel({
         },
         /**
          * @private
-         * @returns {mail.message[]}
+         * @returns {Message[]}
          */
         _computeOrderedMessages() {
             return replace(this.messages.sort((m1, m2) => m1.id < m2.id ? -1 : 1));
         },
         /**
          * @private
-         * @returns {mail.message[]}
+         * @returns {Message[]}
          */
         _computeOrderedNonTransientMessages() {
             return replace(this.orderedMessages.filter(m => !m.isTransient));
@@ -2132,25 +2132,25 @@ registerModel({
          * pinning, and new message posted. It is contained as a Date object.
          */
         lastInterestDateTime: attr(),
-        lastCurrentPartnerMessageSeenByEveryone: many2one('mail.message', {
+        lastCurrentPartnerMessageSeenByEveryone: many2one('Message', {
             compute: '_computeLastCurrentPartnerMessageSeenByEveryone',
         }),
         /**
          * Last message of the thread, could be a transient one.
          */
-        lastMessage: many2one('mail.message', {
+        lastMessage: many2one('Message', {
             compute: '_computeLastMessage',
         }),
         /**
          * States the last known needaction message having this thread as origin.
          */
-        lastNeedactionMessageAsOriginThread: many2one('mail.message', {
+        lastNeedactionMessageAsOriginThread: many2one('Message', {
             compute: '_computeLastNeedactionMessageAsOriginThread',
         }),
         /**
          * Last non-transient message.
          */
-        lastNonTransientMessage: many2one('mail.message', {
+        lastNonTransientMessage: many2one('Message', {
             compute: '_computeLastNonTransientMessage',
         }),
         /**
@@ -2194,7 +2194,7 @@ registerModel({
          * Determines the message before which the "new message" separator must
          * be positioned, if any.
          */
-        messageAfterNewMessageSeparator: many2one('mail.message', {
+        messageAfterNewMessageSeparator: many2one('Message', {
             compute: '_computeMessageAfterNewMessageSeparator',
         }),
         message_needaction_counter: attr({
@@ -2205,14 +2205,14 @@ registerModel({
          * Note that this field is automatically computed by inverse
          * computed field.
          */
-        messages: many2many('mail.message', {
+        messages: many2many('Message', {
             inverse: 'threads',
             readonly: true,
         }),
         /**
          * All messages that have been originally posted in this thread.
          */
-        messagesAsOriginThread: one2many('mail.message', {
+        messagesAsOriginThread: one2many('Message', {
             inverse: 'originThread',
             isCausal: true,
         }),
@@ -2243,7 +2243,7 @@ registerModel({
         /**
          * States all known needaction messages having this thread as origin.
          */
-        needactionMessagesAsOriginThread: many2many('mail.message', {
+        needactionMessagesAsOriginThread: many2many('Message', {
             compute: '_computeNeedactionMessagesAsOriginThread',
         }),
         /**
@@ -2261,14 +2261,14 @@ registerModel({
         /**
          * All messages ordered like they are displayed.
          */
-        orderedMessages: many2many('mail.message', {
+        orderedMessages: many2many('Message', {
             compute: '_computeOrderedMessages',
         }),
         /**
          * All messages ordered like they are displayed. This field does not
          * contain transient messages which are not "real" records.
          */
-        orderedNonTransientMessages: many2many('mail.message', {
+        orderedNonTransientMessages: many2many('Message', {
             compute: '_computeOrderedNonTransientMessages',
         }),
         /**
@@ -2353,7 +2353,7 @@ registerModel({
          *
          * @see localMessageUnreadCounter
          */
-        serverLastMessage: many2one('mail.message'),
+        serverLastMessage: many2one('Message'),
         /**
          * Message unread counter coming from server.
          *

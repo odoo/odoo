@@ -201,8 +201,8 @@ registerModel({
          */
         async _initMailFailures(mailFailuresData) {
             await executeGracefully(mailFailuresData.map(messageData => () => {
-                const message = this.messaging.models['mail.message'].insert(
-                    this.messaging.models['mail.message'].convertData(messageData)
+                const message = this.messaging.models['Message'].insert(
+                    this.messaging.models['Message'].convertData(messageData)
                 );
                 // implicit: failures are sent by the server at initialization
                 // only if the current partner is author of the message

@@ -88,7 +88,7 @@ registerModel({
             compute: '_computeHasUserReacted',
             default: false,
         }),
-        message: many2one('mail.message', {
+        message: many2one('Message', {
             compute: '_computeMessage',
             inverse: 'messageReactionGroups',
             readonly: true,

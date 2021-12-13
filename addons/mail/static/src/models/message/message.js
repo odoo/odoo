@@ -11,7 +11,7 @@ import { session } from '@web/session';
 import { str_to_datetime } from 'web.time';
 
 registerModel({
-    name: 'mail.message',
+    name: 'Message',
     identifyingFields: ['id'],
     modelMethods: {
         /**
@@ -148,7 +148,7 @@ registerModel({
          *
          * @see MessagingNotificationHandler:_handleNotificationPartnerMarkAsRead()
          *
-         * @param {mail.message[]} messages
+         * @param {Message[]} messages
          */
         async markAsRead(messages) {
             await this.env.services.rpc({
@@ -162,15 +162,15 @@ registerModel({
          *
          * @param {string} route
          * @param {Object} params
-         * @returns {mail.message[]}
+         * @returns {Message[]}
          */
         async performRpcMessageFetch(route, params) {
             const messagesData = await this.env.services.rpc({ route, params }, { shadow: true });
             if (!this.messaging) {
                 return;
             }
-            const messages = this.messaging.models['mail.message'].insert(messagesData.map(
-                messageData => this.messaging.models['mail.message'].convertData(messageData)
+            const messages = this.messaging.models['Message'].insert(messagesData.map(
+                messageData => this.messaging.models['Message'].convertData(messageData)
             ));
             // compute seen indicators (if applicable)
             for (const message of messages) {
@@ -287,7 +287,7 @@ registerModel({
             if (!this.messaging) {
                 return;
             }
-            this.messaging.models['mail.message'].insert(messageData);
+            this.messaging.models['Message'].insert(messageData);
         },
         /**
          * @returns {string|FieldCommand}
@@ -725,7 +725,7 @@ registerModel({
          * (parent_id in python) that should be ignored for the purpose of this
          * feature.
          */
-        parentMessage: many2one('mail.message'),
+        parentMessage: many2one('Message'),
         /**
          * This value is meant to be based on field body which is
          * returned by the server (and has been sanitized before stored into db).

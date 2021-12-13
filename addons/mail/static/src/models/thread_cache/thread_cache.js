@@ -42,7 +42,7 @@ registerModel({
             this.update({ isLoadingMore: false });
         },
         /**
-         * @returns {mail.message[]|undefined}
+         * @returns {Message[]|undefined}
          */
         async loadNewMessages() {
             if (this.isLoading) {
@@ -64,7 +64,7 @@ registerModel({
         },
         /**
          * @private
-         * @returns {mail.message[]}
+         * @returns {Message[]}
          */
         _computeFetchedMessages() {
             if (!this.thread) {
@@ -80,7 +80,7 @@ registerModel({
         },
         /**
          * @private
-         * @returns {mail.message|undefined}
+         * @returns {Message|undefined}
          */
         _computeLastFetchedMessage() {
             const {
@@ -94,7 +94,7 @@ registerModel({
         },
         /**
          * @private
-         * @returns {mail.message|undefined}
+         * @returns {Message|undefined}
          */
         _computeLastMessage() {
             const {
@@ -108,7 +108,7 @@ registerModel({
         },
         /**
          * @private
-         * @returns {mail.message[]}
+         * @returns {Message[]}
          */
         _computeMessages() {
             if (!this.thread) {
@@ -126,14 +126,14 @@ registerModel({
         },
         /**
          * @private
-         * @returns {mail.message[]}
+         * @returns {Message[]}
          */
         _computeOrderedFetchedMessages() {
             return replace(this.fetchedMessages.sort((m1, m2) => m1.id < m2.id ? -1 : 1));
         },
         /**
          * @private
-         * @returns {mail.message[]}
+         * @returns {Message[]}
          */
         _computeOrderedMessages() {
             return replace(this.messages.sort((m1, m2) => m1.id < m2.id ? -1 : 1));
@@ -141,7 +141,7 @@ registerModel({
         /**
          *
          * @private
-         * @returns {mail.message[]}
+         * @returns {Message[]}
          */
         _computeOrderedNonEmptyMessages() {
             return replace(this.orderedMessages.filter(message => !message.isEmpty));
@@ -195,14 +195,14 @@ registerModel({
          * @param {integer} [param0.limit=30]
          * @param {integer} [param0.maxId]
          * @param {integer} [param0.minId]
-         * @returns {mail.message[]}
+         * @returns {Message[]}
          * @throws {Error} when failed to load messages
          */
         async _loadMessages({ limit = 30, maxId, minId } = {}) {
             this.update({ isLoading: true });
             let messages;
             try {
-                messages = await this.messaging.models['mail.message'].performRpcMessageFetch(this.thread.fetchMessagesUrl, {
+                messages = await this.messaging.models['Message'].performRpcMessageFetch(this.thread.fetchMessagesUrl, {
                     ...this.thread.fetchMessagesParams,
                     limit,
                     'max_id': maxId,
@@ -276,7 +276,7 @@ registerModel({
                 // ignore the request
                 return;
             }
-            this.messaging.models['mail.message'].markAllAsRead([
+            this.messaging.models['Message'].markAllAsRead([
                 ['model', '=', this.thread.model],
                 ['res_id', '=', this.thread.id],
             ]);
@@ -314,7 +314,7 @@ registerModel({
          * to manage "holes" in message list, while still allowing to display
          * new messages on main cache of thread in real-time.
          */
-        fetchedMessages: many2many('mail.message', {
+        fetchedMessages: many2many('Message', {
             compute: '_computeFetchedMessages',
         }),
         /**
@@ -367,16 +367,16 @@ registerModel({
          * cache (@see lastMessage field for that). @see fetchedMessages field
          * for a deeper explanation about "fetched" messages.
          */
-        lastFetchedMessage: many2one('mail.message', {
+        lastFetchedMessage: many2one('Message', {
             compute: '_computeLastFetchedMessage',
         }),
-        lastMessage: many2one('mail.message', {
+        lastMessage: many2one('Message', {
             compute: '_computeLastMessage',
         }),
         /**
          * List of messages linked to this cache.
          */
-        messages: many2many('mail.message', {
+        messages: many2many('Message', {
             compute: '_computeMessages',
         }),
         /**
@@ -386,19 +386,19 @@ registerModel({
          * cache (@see orderedMessages field for that). @see fetchedMessages
          * field for deeper explanation about "fetched" messages.
          */
-        orderedFetchedMessages: many2many('mail.message', {
+        orderedFetchedMessages: many2many('Message', {
             compute: '_computeOrderedFetchedMessages',
         }),
         /**
          * Ordered list of messages linked to this cache.
          */
-        orderedMessages: many2many('mail.message', {
+        orderedMessages: many2many('Message', {
             compute: '_computeOrderedMessages',
         }),
         /**
          * List of ordered non empty messages linked to this cache.
          */
-        orderedNonEmptyMessages: many2many('mail.message', {
+        orderedNonEmptyMessages: many2many('Message', {
             compute: '_computeOrderedNonEmptyMessages',
         }),
         thread: one2one('Thread', {

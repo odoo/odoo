@@ -224,7 +224,7 @@ registerModel({
                 }
             } else if (!this.thread || !this.thread.isTemporary) {
                 const currentPartner = this.messaging.currentPartner;
-                const message = this.messaging.models['mail.message'].create({
+                const message = this.messaging.models['Message'].create({
                     author: link(currentPartner),
                     body: this.env._t("Creating a new record..."),
                     id: getMessageNextTemporaryId(),

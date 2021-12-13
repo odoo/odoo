@@ -37,7 +37,7 @@ registerModel({
             });
         },
         /**
-         * @param {mail.message} message
+         * @param {Message} message
          */
         handleVisibleMessage(message) {
             if (!this.lastVisibleMessage || this.lastVisibleMessage.id < message.id) {
@@ -226,8 +226,8 @@ registerModel({
             this.update({ isLoading: false, isPreparingLoading: false });
         },
         /**
-         * @param {mail.message} prevMessage
-         * @param {mail.message} message
+         * @param {Message} prevMessage
+         * @param {Message} message
          * @returns {boolean}
          */
         _shouldMessageBeSquashed(prevMessage, message) {
@@ -393,15 +393,15 @@ registerModel({
         /**
          * Last message in the context of the currently displayed thread cache.
          */
-        lastMessage: many2one('mail.message', {
+        lastMessage: many2one('Message', {
             related: 'thread.lastMessage',
         }),
         /**
          * Most recent message in this ThreadView that has been shown to the
          * current partner in the currently displayed thread cache.
          */
-        lastVisibleMessage: many2one('mail.message'),
-        messages: many2many('mail.message', {
+        lastVisibleMessage: many2one('Message'),
+        messages: many2many('Message', {
             related: 'threadCache.messages',
         }),
         /**

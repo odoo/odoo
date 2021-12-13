@@ -41,7 +41,7 @@ QUnit.test('simplest layout', async function (assert) {
         mimetype: 'text/plain',
         name: "test.txt",
     });
-    const message = this.messaging.models['mail.message'].create({
+    const message = this.messaging.models['Message'].create({
         attachments: link(attachment),
         author: link(this.messaging.currentPartner),
         body: "<p>Test</p>",
@@ -113,7 +113,7 @@ QUnit.test('simplest layout + editable', async function (assert) {
         mimetype: 'text/plain',
         name: "test.txt",
     });
-    const message = this.messaging.models['mail.message'].create({
+    const message = this.messaging.models['Message'].create({
         attachments: link(attachment),
         author: link(this.messaging.currentPartner),
         body: "<p>Test</p>",
@@ -169,7 +169,7 @@ QUnit.test('layout with card details and filename and extension', async function
         mimetype: 'text/plain',
         name: "test.txt",
     });
-    const message = this.messaging.models['mail.message'].create({
+    const message = this.messaging.models['Message'].create({
         attachments: link(attachment),
         author: link(this.messaging.currentPartner),
         body: "<p>Test</p>",
@@ -201,7 +201,7 @@ QUnit.test('view attachment', async function (assert) {
         mimetype: 'image/png',
         name: "test.png",
     });
-    const message = this.messaging.models['mail.message'].create({
+    const message = this.messaging.models['Message'].create({
         attachments: link(attachment),
         author: link(this.messaging.currentPartner),
         body: "<p>Test</p>",
@@ -237,7 +237,7 @@ QUnit.test('close attachment viewer', async function (assert) {
         mimetype: 'image/png',
         name: "test.png",
     });
-    const message = this.messaging.models['mail.message'].create({
+    const message = this.messaging.models['Message'].create({
         attachments: link(attachment),
         author: link(this.messaging.currentPartner),
         body: "<p>Test</p>",
@@ -286,7 +286,7 @@ QUnit.test('clicking on the delete attachment button multiple times should do th
         mimetype: 'text/plain',
         name: "test.txt",
     });
-    const message = this.messaging.models['mail.message'].create({
+    const message = this.messaging.models['Message'].create({
         attachments: link(attachment),
         author: link(this.messaging.currentPartner),
         body: "<p>Test</p>",
@@ -328,7 +328,7 @@ QUnit.test('[technical] does not crash when the viewer is closed before image lo
         mimetype: 'image/png',
         name: "test.png",
     });
-    const message = this.messaging.models['mail.message'].create({
+    const message = this.messaging.models['Message'].create({
         attachments: link(attachment),
         author: link(this.messaging.currentPartner),
         body: "<p>Test</p>",
@@ -362,7 +362,7 @@ QUnit.test('plain text file is viewable', async function (assert) {
         mimetype: 'text/plain',
         name: "test.txt",
     });
-    const message = this.messaging.models['mail.message'].create({
+    const message = this.messaging.models['Message'].create({
         attachments: link(attachment),
         author: link(this.messaging.currentPartner),
         body: "<p>Test</p>",
@@ -387,7 +387,7 @@ QUnit.test('HTML file is viewable', async function (assert) {
         mimetype: 'text/html',
         name: "test.html",
     });
-    const message = this.messaging.models['mail.message'].create({
+    const message = this.messaging.models['Message'].create({
         attachments: link(attachment),
         author: link(this.messaging.currentPartner),
         body: "<p>Test</p>",
@@ -411,7 +411,7 @@ QUnit.test('ODT file is not viewable', async function (assert) {
         mimetype: 'application/vnd.oasis.opendocument.text',
         name: "test.odt",
     });
-    const message = this.messaging.models['mail.message'].create({
+    const message = this.messaging.models['Message'].create({
         attachments: link(attachment),
         author: link(this.messaging.currentPartner),
         body: "<p>Test</p>",
@@ -435,7 +435,7 @@ QUnit.test('DOCX file is not viewable', async function (assert) {
         mimetype: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
         name: "test.docx",
     });
-    const message = this.messaging.models['mail.message'].create({
+    const message = this.messaging.models['Message'].create({
         attachments: link(attachment),
         author: link(this.messaging.currentPartner),
         body: "<p>Test</p>",
