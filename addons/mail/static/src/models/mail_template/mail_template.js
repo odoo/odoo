@@ -4,7 +4,7 @@ import { registerModel } from '@mail/model/model_core';
 import { attr, many2many } from '@mail/model/model_field';
 
 registerModel({
-    name: 'mail.mail_template',
+    name: 'MailTemplate',
     identifyingFields: ['id'],
     recordMethods: {
         /**
