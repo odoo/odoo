@@ -448,11 +448,11 @@ registerModel({
         isVisible: attr({
             compute: '_computeIsVisible',
         }),
-        manager: many2one('mail.chat_window_manager', {
+        manager: many2one('ChatWindowManager', {
             inverse: 'chatWindows',
             readonly: true,
         }),
-        managerAsNewMessage: one2one('mail.chat_window_manager', {
+        managerAsNewMessage: one2one('ChatWindowManager', {
             inverse: 'newMessageChatWindow',
             readonly: true,
         }),

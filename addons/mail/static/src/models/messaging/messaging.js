@@ -230,7 +230,7 @@ registerModel({
             default: true,
         }),
         cannedResponses: one2many('mail.canned_response'),
-        chatWindowManager: one2one('mail.chat_window_manager', {
+        chatWindowManager: one2one('ChatWindowManager', {
             default: insertAndReplace(),
             isCausal: true,
             readonly: true,
