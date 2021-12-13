@@ -6,7 +6,7 @@ import { clear, insertAndReplace, replace } from '@mail/model/model_field_comman
 import { OnChange } from '@mail/model/model_onchange';
 
 registerModel({
-    name: 'mail.discuss_sidebar_category',
+    name: 'DiscussSidebarCategory',
     identifyingFields: [['discussAsChannel', 'discussAsChat']],
     lifecycleHooks: {
         _created() {
@@ -46,7 +46,7 @@ registerModel({
          */
         async close() {
             this.update({ isPendingOpen: false });
-            await this.messaging.models['mail.discuss_sidebar_category'].performRpcSetResUsersSettings({
+            await this.messaging.models['DiscussSidebarCategory'].performRpcSetResUsersSettings({
                 [this.serverStateKey]: false,
             });
         },
@@ -55,7 +55,7 @@ registerModel({
          */
         async open() {
             this.update({ isPendingOpen: true });
-            await this.messaging.models['mail.discuss_sidebar_category'].performRpcSetResUsersSettings({
+            await this.messaging.models['DiscussSidebarCategory'].performRpcSetResUsersSettings({
                 [this.serverStateKey]: true,
             });
         },

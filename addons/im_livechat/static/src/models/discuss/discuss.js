@@ -21,7 +21,7 @@ addFields('Discuss', {
     /**
      * Discuss sidebar category for `livechat` channel threads.
      */
-    categoryLivechat: one2one('mail.discuss_sidebar_category', {
+    categoryLivechat: one2one('DiscussSidebarCategory', {
         inverse: 'discussAsLivechat',
         isCausal: true,
     }),
