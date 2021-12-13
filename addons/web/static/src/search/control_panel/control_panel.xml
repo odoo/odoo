@@ -52,11 +52,7 @@
         <ol class="breadcrumb">
             <t t-foreach="env.config.breadcrumbs" t-as="breadcrumb" t-key="breadcrumb.jsId">
                 <t t-set="isPenultimate" t-value="breadcrumb_index === env.config.breadcrumbs.length - 2"/>
-                <li t-if="!breadcrumb_last"
-                    class="breadcrumb-item"
-                    t-att-class="{ o_back_button: isPenultimate}"
-                    t-on-click.prevent="() => this.onBreadcrumbClicked(breadcrumb.jsId)"
-                    >
+                <li t-if="!breadcrumb_last" class="breadcrumb-item" t-att-data-hotkey="isPenultimate and 'b'" t-att-class="{ o_back_button: isPenultimate}" t-on-click.prevent="() => this.onBreadcrumbClicked(breadcrumb.jsId)">
                     <a href="#">
                         <t t-if="breadcrumb.name" t-esc="breadcrumb.name"/>
                         <em t-else="" class="text-warning">Unnamed</em>
