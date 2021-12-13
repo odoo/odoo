@@ -105,6 +105,7 @@ var PrinterMixin = {
                     resolve(self.process_canvas(canvas));
                 },
                 letterRendering: self.htmlToImgLetterRendering,
+                width: 512
             })
         });
         return promise;
