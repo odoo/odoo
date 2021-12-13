@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { escape } from '@web/core/utils/strings';
 import emojis from '@mail/js/emojis';
 
 /**
@@ -49,24 +50,11 @@ export default {
      * @param {String} message a text message to format
      */
     _formatText: function (message) {
-        message = this._htmlEscape(message);
+        message = escape(message);
         message = this._wrapEmojis(message);
         message = message.replace(/(?:\r\n|\r|\n)/g, '<br>');
 
         return message;
-    },
-
-    /**
-     * Adapted from qweb2.js#html_escape to avoid formatting '&'
-     *
-     * @param {String} s
-     * @private
-     */
-    _htmlEscape: function (s) {
-        if (s == null) {
-            return '';
-        }
-        return String(s).replace(/</g, '&lt;').replace(/>/g, '&gt;');
     },
 
     /**
