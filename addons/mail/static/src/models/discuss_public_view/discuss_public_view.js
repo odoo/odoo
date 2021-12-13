@@ -5,7 +5,7 @@ import { registerModel } from '@mail/model/model_core';
 import { clear, insertAndReplace, link } from '@mail/model/model_field_command';
 
 registerModel({
-    name: 'mail.discuss_public_view',
+    name: 'DiscussPublicView',
     identifyingFields: ['messaging'],
     recordMethods: {
         /**
