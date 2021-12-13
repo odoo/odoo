@@ -28,7 +28,7 @@ export class ComposerSuggestion extends Component {
     }
 
     get isCannedResponse() {
-        return this.props.modelName === "mail.canned_response";
+        return this.props.modelName === "CannedResponse";
     }
 
     get isChannel() {
