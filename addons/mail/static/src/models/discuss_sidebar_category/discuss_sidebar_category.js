@@ -233,11 +233,11 @@ registerModel({
             readonly: true,
             sum: 'categoryItems.categoryCounterContribution',
         }),
-        discussAsChannel: one2one('mail.discuss', {
+        discussAsChannel: one2one('Discuss', {
             inverse: 'categoryChannel',
             readonly: true,
         }),
-        discussAsChat: one2one('mail.discuss', {
+        discussAsChat: one2one('Discuss', {
             inverse: 'categoryChat',
             readonly: true,
         }),

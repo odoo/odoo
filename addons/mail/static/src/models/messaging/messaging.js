@@ -259,7 +259,7 @@ registerModel({
         disableAnimation: attr({
             default: false,
         }),
-        discuss: one2one('mail.discuss', {
+        discuss: one2one('Discuss', {
             default: insertAndReplace(),
             isCausal: true,
             readonly: true,

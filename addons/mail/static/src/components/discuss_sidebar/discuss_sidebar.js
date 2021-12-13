@@ -15,7 +15,7 @@ export class DiscussSidebar extends Component {
     setup() {
         super.setup();
         useUpdate({ func: () => this._update() });
-        useRefToModel({ fieldName: 'startAMeetingButtonRef', modelName: 'mail.discuss', propNameAsRecordLocalId: 'localId', refName: 'startAMeetingButton' });
+        useRefToModel({ fieldName: 'startAMeetingButtonRef', modelName: 'Discuss', propNameAsRecordLocalId: 'localId', refName: 'startAMeetingButton' });
         /**
          * Reference of the quick search input. Useful to filter channels and
          * chats based on this input content.
@@ -28,10 +28,10 @@ export class DiscussSidebar extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {mail.discuss}
+     * @returns {Discuss}
      */
     get discuss() {
-        return this.messaging && this.messaging.models['mail.discuss'].get(this.props.localId);
+        return this.messaging && this.messaging.models['Discuss'].get(this.props.localId);
     }
 
     //--------------------------------------------------------------------------
