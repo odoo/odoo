@@ -4,6 +4,7 @@
 from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
+from psycopg2 import IntegrityError
 from unittest.mock import patch
 from unittest.mock import DEFAULT
 
@@ -201,7 +202,6 @@ class TestActivityFlow(TestActivityCommon):
             activity.with_user(self.user_admin).write({'user_id': self.user_employee.id})
         self.assertEqual(activity.user_id, self.user_employee)
 
-    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_summary_sync(self):
         """ Test summary from type is copied on activities if set (currently only in form-based onchange) """
         ActivityType = self.env['mail.activity.type']
@@ -210,8 +210,9 @@ class TestActivityFlow(TestActivityCommon):
             'summary': 'Email Summary',
         })
         call_activity_type = ActivityType.create({'name': 'call'})
-        with Form(self.env['mail.activity'].with_context(default_res_model_id=self.env.ref('base.model_res_partner'))) as ActivityForm:
-            ActivityForm.res_model_id = self.env.ref('base.model_res_partner')
+        with Form(self.env['mail.activity'].with_context(default_res_model_id=self.env['ir.model']._get_id('mail.test.activity'))) as ActivityForm:
+            ActivityForm.res_model_id = self.env['ir.model']._get('mail.test.activity')
+            ActivityForm.res_id = self.test_record.id
 
             ActivityForm.activity_type_id = call_activity_type
             # activity summary should be empty
@@ -224,6 +225,46 @@ class TestActivityFlow(TestActivityCommon):
             ActivityForm.activity_type_id = call_activity_type
             # activity summary remains unchanged from change of activity type as call activity doesn't have default summary
             self.assertEqual(ActivityForm.summary, email_activity_type.summary)
+
+    @mute_logger('odoo.sql_db')
+    def test_activity_values(self):
+        """ Test activities are created with right model / res_id values linking
+        to records without void values. 0 as res_id especially is not wanted. """
+        # creating activities on a temporary record generates activities with res_id
+        # being 0, which is annoying -> never create activities in transient mode
+        temp_record = self.env['mail.test.activity'].new({'name': 'Test'})
+        with self.assertRaises(IntegrityError):
+            activity = temp_record.activity_schedule('test_mail.mail_act_test_todo', user_id=self.user_employee.id)
+
+        test_record = self.env['mail.test.activity'].browse(self.test_record.ids)
+
+        with self.assertRaises(IntegrityError):
+            self.env['mail.activity'].create({
+                'res_model_id': self.env['ir.model']._get_id(test_record._name),
+            })
+        with self.assertRaises(IntegrityError):
+            self.env['mail.activity'].create({
+                'res_model_id': self.env['ir.model']._get_id(test_record._name),
+                'res_id': False,
+            })
+        with self.assertRaises(IntegrityError):
+            self.env['mail.activity'].create({
+                'res_id': test_record.id,
+            })
+
+        activity = self.env['mail.activity'].create({
+            'res_id': test_record.id,
+            'res_model_id': self.env['ir.model']._get_id(test_record._name),
+        })
+        with self.assertRaises(IntegrityError):
+            activity.write({'res_model_id': False})
+            activity.flush()
+        with self.assertRaises(IntegrityError):
+            activity.write({'res_id': False})
+            activity.flush()
+        with self.assertRaises(IntegrityError):
+            activity.write({'res_id': 0})
+            activity.flush()
 
 
 @tests.tagged('mail_activity')
