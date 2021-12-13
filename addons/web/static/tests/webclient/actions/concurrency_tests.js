@@ -549,9 +549,7 @@ QUnit.module("ActionManager", (hooks) => {
         ]);
     });
 
-    QUnit.skip("click multiple times to open a record", async function (assert) {
-        assert.expect(5);
-
+    QUnit.test("click multiple times to open a record", async function (assert) {
         const def = makeDeferred();
         const defs = [null, def];
         const mockRPC = async (route, args) => {
@@ -570,13 +568,21 @@ QUnit.module("ActionManager", (hooks) => {
         await click(webClient.el.querySelector(".o_back_button"));
         assert.containsOnce(webClient, ".o_list_view");
 
-        await click(webClient.el.querySelector(".o_list_view .o_data_row"));
-        await click(webClient.el.querySelector(".o_list_view .o_data_row"));
-        assert.containsOnce(webClient, ".o_list_view");
+        await click(webClient.el.querySelectorAll(".o_list_view .o_data_row")[0]);
+        await click(webClient.el.querySelectorAll(".o_list_view .o_data_row")[1]);
+        assert.containsOnce(webClient, ".o_form_view");
+        assert.strictEqual(
+            webClient.el.querySelector(".breadcrumb-item.active").innerText,
+            "Second record"
+        );
 
         def.resolve();
         await nextTick();
         assert.containsOnce(webClient, ".o_form_view");
+        assert.strictEqual(
+            webClient.el.querySelector(".breadcrumb-item.active").innerText,
+            "Second record"
+        );
     });
 
     QUnit.test("local state, global state, and race conditions", async function (assert) {
