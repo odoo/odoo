@@ -3232,7 +3232,7 @@ const SnippetOptionWidget = Widget.extend({
         hasUserValue = applyCSS.call(this, cssProps[0], values.join(' '), styles) || hasUserValue;
 
         function applyCSS(cssProp, cssValue, styles) {
-            if (!weUtils.areCssValuesEqual(styles[cssProp], cssValue)) {
+            if (!weUtils.areCssValuesEqual(styles[cssProp], cssValue, cssProp, this.$target[0])) {
                 this.$target[0].style.setProperty(cssProp, cssValue, 'important');
                 return true;
             }
@@ -4408,14 +4408,19 @@ registry.Box = SnippetOptionWidget.extend({
     /**
      * @see this.selectClass for parameters
      */
-    setShadow(previewMode, widgetValue, params) {
+    async setShadow(previewMode, widgetValue, params) {
+        // Add/remove the shadow class
         this.$target.toggleClass(params.shadowClass, !!widgetValue);
-        const defaultShadow = this._getDefaultShadow(widgetValue, params.shadowClass);
-        this.$target[0].style.setProperty('box-shadow', defaultShadow, 'important');
-        if (widgetValue === 'outset') {
-            // In this case, the shadowClass is enough
-            this.$target[0].style.setProperty('box-shadow', '');
-        }
+
+        // Get the shadow value that is supposed to be set according to the
+        // shadow mode. Try to apply it via the selectStyle method so that it is
+        // either ignored because the shadow class had its effect or forced (to
+        // the shadow value or none) if toggling the class is not enough (e.g.
+        // if the item has a default shadow coming from CSS rules, removing the
+        // shadow class won't be enough to remove the shadow but in most other
+        // cases it will).
+        const defaultShadow = this._getDefaultShadow(widgetValue, params.shadowClass) || 'none';
+        await this.selectStyle(previewMode, defaultShadow, Object.assign({cssProperty: 'box-shadow'}, params));
     },
 
     //--------------------------------------------------------------------------
@@ -4465,7 +4470,7 @@ registry.Box = SnippetOptionWidget.extend({
             }
         }
         el.remove();
-        return '';
+        return ''; // TODO in master this should be changed to 'none'
     }
 });
 
