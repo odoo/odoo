@@ -63,6 +63,8 @@ models.Order = models.Order.extend({
                 if (utils.float_is_zero(rounding_applied, this.pos.currency.decimals)){
                     // https://xkcd.com/217/
                     return 0;
+                } else if(this.get_total_with_tax() < this.pos.cash_rounding[0].rounding) {
+                    return 0;
                 } else if(this.pos.cash_rounding[0].rounding_method === "UP" && rounding_applied < 0 && remaining > 0) {
                     rounding_applied += this.pos.cash_rounding[0].rounding;
                 } else if(this.pos.cash_rounding[0].rounding_method === "UP" && rounding_applied > 0 && remaining < 0) {
@@ -86,6 +88,8 @@ models.Order = models.Order.extend({
             for(var id in this.get_paymentlines()) {
                 var line = this.get_paymentlines()[id];
                 var diff = round_pr(round_pr(line.amount, cash_rounding) - round_pr(line.amount, default_rounding), default_rounding);
+                if(this.get_total_with_tax() < this.pos.cash_rounding[0].rounding)
+                    return true;
                 if(diff && line.payment_method.is_cash_count) {
                     return false;
                 } else if(!this.pos.config.only_round_cash_method && diff) {
