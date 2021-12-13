@@ -319,7 +319,7 @@ QUnit.module("Views", (hooks) => {
 
             await click($(list.el).find("tbody td.o_list_record_selector:first input"));
             assert.containsOnce(list.el, "div.o_control_panel .o_cp_action_menus");
-            await testUtils.controlPanel.toggleActionMenu(list);
+            await toggleActionMenu(list);
             assert.deepEqual(
                 testUtils.controlPanel.getMenuItemTexts(list),
                 ["Delete"],
@@ -357,7 +357,7 @@ QUnit.module("Views", (hooks) => {
 
         await click($(list.el).find("tbody td.o_list_record_selector:first input"));
         assert.containsOnce(list.el, "div.o_control_panel .o_cp_action_menus");
-        await testUtils.controlPanel.toggleActionMenu(list);
+        await toggleActionMenu(list);
         assert.deepEqual(
             testUtils.controlPanel.getMenuItemTexts(list),
             ["Export", "Delete"],
@@ -4074,8 +4074,8 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsOnce(list.el, "div.o_control_panel .o_cp_action_menus");
 
-        await testUtils.controlPanel.toggleActionMenu(list);
-        await testUtils.controlPanel.toggleMenuItem(list, "Delete");
+        await toggleActionMenu(list);
+        await toggleMenuItem(list, "Delete");
         assert.hasClass($("body"), "modal-open", "body should have modal-open clsss");
 
         await click($("body .modal button span:contains(Ok)"));
@@ -4106,8 +4106,8 @@ QUnit.module("Views", (hooks) => {
 
             assert.containsOnce(list.el, "div.o_control_panel .o_cp_action_menus");
 
-            await testUtils.controlPanel.toggleActionMenu(list);
-            await testUtils.controlPanel.toggleMenuItem(list, "Delete");
+            await toggleActionMenu(list);
+            await toggleMenuItem(list, "Delete");
             assert.containsOnce(
                 document.body,
                 ".modal",
@@ -4202,8 +4202,8 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(list, ".o_list_selection_box .o_list_select_domain");
 
         await click($(list.el).find(".o_list_selection_box .o_list_select_domain"));
-        await testUtils.controlPanel.toggleActionMenu(list);
-        await testUtils.controlPanel.toggleMenuItem(list, "Delete");
+        await toggleActionMenu(list);
+        await toggleMenuItem(list, "Delete");
 
         assert.strictEqual($(".modal").length, 1, "a confirm modal should be displayed");
         await click($(".modal-footer .btn-primary"));
@@ -5331,8 +5331,8 @@ QUnit.module("Views", (hooks) => {
 
             // Delete all records
             await click(list.el.querySelector("thead .o_list_record_selector input"));
-            await testUtils.controlPanel.toggleActionMenu(list);
-            await testUtils.controlPanel.toggleMenuItem(list, "Delete");
+            await toggleActionMenu(list);
+            await toggleMenuItem(list, "Delete");
             await click($(".modal-footer .btn-primary"));
 
             // Final state: no more sample data, but nocontent helper displayed
@@ -5434,8 +5434,8 @@ QUnit.module("Views", (hooks) => {
 
             // Delete newly created record
             await click(list.el.querySelector(".o_data_row input"));
-            await testUtils.controlPanel.toggleActionMenu(list);
-            await testUtils.controlPanel.toggleMenuItem(list, "Delete");
+            await toggleActionMenu(list);
+            await toggleMenuItem(list, "Delete");
             await click($(".modal-footer .btn-primary"));
 
             // Final state: there should be no table, but the no content helper
@@ -7183,7 +7183,7 @@ QUnit.module("Views", (hooks) => {
 
         await click($(list.el).find(".o_list_record_selector:first input"));
 
-        await testUtils.controlPanel.toggleActionMenu(list);
+        await toggleActionMenu(list);
         assert.deepEqual(testUtils.controlPanel.getMenuItemTexts(list), ["Delete", "Action event"]);
     });
 
@@ -7227,14 +7227,14 @@ QUnit.module("Views", (hooks) => {
 
             assert.containsOnce(list.el, "div.o_control_panel .o_cp_action_menus");
 
-            await testUtils.controlPanel.toggleActionMenu(list);
-            await testUtils.controlPanel.toggleMenuItem(list, "Custom Action");
+            await toggleActionMenu(list);
+            await toggleMenuItem(list, "Custom Action");
 
             // unselect first record (will unselect the thead checkbox as well)
             await click($(list.el).find("tbody .o_list_record_selector:first input"));
             assert.containsN(list, ".o_list_record_selector input:checked", 3);
-            await testUtils.controlPanel.toggleActionMenu(list);
-            await testUtils.controlPanel.toggleMenuItem(list, "Custom Action");
+            await toggleActionMenu(list);
+            await toggleMenuItem(list, "Custom Action");
 
             // add a domain and select first two records
             await list.reload({ domain: [["bar", "=", true]] });
@@ -7245,8 +7245,8 @@ QUnit.module("Views", (hooks) => {
             await click($(list.el).find("tbody .o_list_record_selector:nth(1) input"));
             assert.containsN(list, ".o_list_record_selector input:checked", 2);
 
-            await testUtils.controlPanel.toggleActionMenu(list);
-            await testUtils.controlPanel.toggleMenuItem(list, "Custom Action");
+            await toggleActionMenu(list);
+            await toggleMenuItem(list, "Custom Action");
 
             assert.verifySteps([
                 '{"action_id":44,"context":{"active_id":1,"active_ids":[1,2,3,4],"active_model":"foo","active_domain":[]}}',
@@ -7295,15 +7295,15 @@ QUnit.module("Views", (hooks) => {
             assert.containsOnce(list, ".o_list_selection_box .o_list_select_domain");
             assert.containsOnce(list.el, "div.o_control_panel .o_cp_action_menus");
 
-            await testUtils.controlPanel.toggleActionMenu(list);
-            await testUtils.controlPanel.toggleMenuItem(list, "Custom Action");
+            await toggleActionMenu(list);
+            await toggleMenuItem(list, "Custom Action");
 
             // select all domain
             await click($(list.el).find(".o_list_selection_box .o_list_select_domain"));
             assert.containsN(list, ".o_list_record_selector input:checked", 3);
 
-            await testUtils.controlPanel.toggleActionMenu(list);
-            await testUtils.controlPanel.toggleMenuItem(list, "Custom Action");
+            await toggleActionMenu(list);
+            await toggleMenuItem(list, "Custom Action");
 
             // add a domain
             await list.reload({ domain: [["bar", "=", true]] });
@@ -7315,8 +7315,8 @@ QUnit.module("Views", (hooks) => {
             assert.containsN(list, ".o_list_record_selector input:checked", 3);
             assert.containsNone(list, ".o_list_selection_box .o_list_select_domain");
 
-            await testUtils.controlPanel.toggleActionMenu(list);
-            await testUtils.controlPanel.toggleMenuItem(list, "Custom Action");
+            await toggleActionMenu(list);
+            await toggleMenuItem(list, "Custom Action");
 
             assert.verifySteps([
                 '{"action_id":44,"context":{"active_id":1,"active_ids":[1,2],"active_model":"foo","active_domain":[]}}',
@@ -11061,8 +11061,8 @@ QUnit.module("Views", (hooks) => {
 
         // delete a record
         await click($(list.el).find(".o_data_row:first .o_list_record_selector input"));
-        await testUtils.controlPanel.toggleActionMenu(list);
-        await testUtils.controlPanel.toggleMenuItem(list, "Delete");
+        await toggleActionMenu(list);
+        await toggleMenuItem(list, "Delete");
         await click($(".modal-footer .btn-primary"));
 
         assert.verifySteps([
