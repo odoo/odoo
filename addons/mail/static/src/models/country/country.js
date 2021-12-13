@@ -5,7 +5,7 @@ import { attr } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
 
 registerModel({
-    name: 'mail.country',
+    name: 'Country',
     identifyingFields: ['id'],
     recordMethods: {
         /**
