@@ -1197,7 +1197,7 @@ QUnit.module("ActionManager", (hooks) => {
         ]);
     });
 
-    QUnit.skip('save when leaving a "dirty" view', async function (assert) {
+    QUnit.test('save when leaving a "dirty" view', async function (assert) {
         assert.expect(4);
         const mockRPC = async (route, { args, method, model }) => {
             if (model === "partner" && method === "write") {
@@ -1207,14 +1207,12 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 4);
         // open record in form view
-        await testUtils.dom.click($(target).find(".o_kanban_record:first")[0]);
-        await legacyExtraNextTick();
+        await click(target.querySelector(".o_kanban_record"));
         // edit record
-        await testUtils.dom.click($(target).find(".o_control_panel button.o_form_button_edit"));
-        await testUtils.fields.editInput($(target).find('input[name="foo"]'), "pinkypie");
+        await click(target.querySelector(".o_control_panel button.o_form_button_edit"));
+        await editInput(target, 'input[name="foo"]', "pinkypie");
         // go back to kanban view
-        await testUtils.dom.click($(target).find(".o_control_panel .breadcrumb-item:first a"));
-        await legacyExtraNextTick();
+        await click(target.querySelector(".o_control_panel .breadcrumb-item a"));
         assert.containsNone(document.body, ".modal", "should not display a modal dialog");
         assert.containsNone(target, ".o_form_view", "should no longer be in form view");
         assert.containsOnce(target, ".o_kanban_view", "should be in kanban view");
