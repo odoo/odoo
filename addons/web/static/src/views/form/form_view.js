@@ -129,7 +129,7 @@ class FormView extends Component {
      * FIXME: in owl2, will use hook "onRender"
      */
     __render() {
-        this.env.config.displayName = this.model.root.data.display_name || this.env._t("New");
+        this.env.config.setDisplayName(this.model.root.data.display_name || this.env._t("New"));
         return super.__render(...arguments);
     }
 

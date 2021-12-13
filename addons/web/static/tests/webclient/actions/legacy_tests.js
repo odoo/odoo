@@ -612,7 +612,7 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData });
 
         await doAction(webClient, 3);
-        assert.containsOnce(webClient, ".o_list_view");
+        assert.containsOnce(webClient, ".o_legacy_list_view");
         assert.strictEqual($(webClient.el).find(".breadcrumb-item").text(), "Partners");
 
         await doAction(webClient, {

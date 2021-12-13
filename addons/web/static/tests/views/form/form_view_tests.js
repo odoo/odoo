@@ -298,7 +298,6 @@ QUnit.module("Views", (hooks) => {
             form,
             "tbody td:not(.o_list_record_selector) .custom-checkbox input:checked"
         );
-        assert.containsOnce(form, ".o_control_panel .breadcrumb:contains(second record)");
         assert.containsNone(form, "label.o_form_label_empty:contains(timmy)");
     });
 
@@ -3188,22 +3187,32 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("form view properly change its title", async function (assert) {
-        const form = await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch: '<form><field name="foo"/></form>',
-            resId: 1,
-        });
+        serverData.views = {
+            "partner,false,form": '<form><field name="foo"/></form>',
+            "partner,false,search": "<search/>",
+        };
+        serverData.actions = {
+            1: {
+                id: 1,
+                name: "Partner",
+                res_model: "partner",
+                type: "ir.actions.act_window",
+                views: [[false, "form"]],
+                res_id: 1,
+            },
+        };
+
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, 1);
 
         assert.strictEqual(
-            form.el.querySelector(".o_control_panel .breadcrumb").innerText,
+            webClient.el.querySelector(".o_control_panel .breadcrumb").innerText,
             "first record",
             "should have the display name of the record as  title"
         );
-        await click(form.el.querySelector(".o_form_button_create"));
+        await click(webClient.el.querySelector(".o_form_button_create"));
         assert.strictEqual(
-            form.el.querySelector(".o_control_panel .breadcrumb").innerText,
+            webClient.el.querySelector(".o_control_panel .breadcrumb").innerText,
             "New",
             "should have the display name of the record as title"
         );
