@@ -4,7 +4,7 @@ import { registerModel } from '@mail/model/model_core';
 import { attr, many2many, many2one, one2one } from '@mail/model/model_field';
 
 registerModel({
-    name: 'mail.attachment_viewer',
+    name: 'AttachmentViewer',
     identifyingFields: ['attachmentList'],
     recordMethods: {
         /**

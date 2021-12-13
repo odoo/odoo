@@ -83,7 +83,7 @@ registerModel({
         /**
          * Determines the attachment viewers displaying this attachment list (if any).
          */
-        attachmentViewer: one2many('mail.attachment_viewer', {
+        attachmentViewer: one2many('AttachmentViewer', {
             inverse: 'attachmentList',
             isCausal: true,
         }),
