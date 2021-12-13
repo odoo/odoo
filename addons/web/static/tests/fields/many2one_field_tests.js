@@ -1221,25 +1221,31 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["search: ", "search: ", "search: p", "search: p"]);
     });
 
-    QUnit.skip("many2one search with trailing and leading spaces", async function (assert) {
+    QUnit.test("many2one search with trailing and leading spaces", async function (assert) {
         assert.expect(10);
 
-        const form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch: `<form><field name="trululu"/></form>`,
-            mockRPC: function (route, args) {
-                if (args.method === "name_search") {
-                    assert.step("search: " + args.kwargs.name);
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="trululu" />
+                </form>`,
+            mockRPC(route, { kwargs, method }) {
+                if (method === "name_search") {
+                    assert.step("search: " + kwargs.name);
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
-        const $dropdown = form.$(".o_field_many2one input").autocomplete("widget");
+        const $dropdown = $(form.el)
+            .find(".o_field_many2one[name='trululu'] input")
+            .autocomplete("widget");
 
-        await testUtils.fields.many2one.clickOpenDropdown("trululu");
+        const input = form.el.querySelector(".o_field_many2one[name='trululu'] input");
+        await click(input);
+
         assert.isVisible($dropdown);
         assert.containsN(
             $dropdown,
@@ -1249,8 +1255,8 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // search with leading spaces
-        form.$(".o_field_many2one input").val("   first").trigger("keydown").trigger("keyup");
-        await testUtils.nextTick();
+        input.value = "   first";
+        await triggerEvents(input, null, ["input", "change"]);
         assert.containsOnce(
             $dropdown,
             "li:not(.o_m2o_dropdown_option)",
@@ -1258,8 +1264,8 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // search with trailing spaces
-        form.$(".o_field_many2one input").val("first  ").trigger("keydown").trigger("keyup");
-        await testUtils.nextTick();
+        input.value = "first  ";
+        await triggerEvents(input, null, ["input", "change"]);
         assert.containsOnce(
             $dropdown,
             "li:not(.o_m2o_dropdown_option)",
@@ -1267,8 +1273,8 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // search with leading and trailing spaces
-        form.$(".o_field_many2one input").val("   first   ").trigger("keydown").trigger("keyup");
-        await testUtils.nextTick();
+        input.value = "   first   ";
+        await triggerEvents(input, null, ["input", "change"]);
         assert.containsOnce(
             $dropdown,
             "li:not(.o_m2o_dropdown_option)",
@@ -1276,52 +1282,48 @@ QUnit.module("Fields", (hooks) => {
         );
 
         assert.verifySteps(["search: ", "search: first", "search: first", "search: first"]);
-
-        form.destroy();
     });
 
-    QUnit.skip("many2one field with option always_reload", async function (assert) {
+    QUnit.test("many2one field with option always_reload", async function (assert) {
         assert.expect(4);
-        var count = 0;
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                "<form>" +
-                '<field name="trululu" options="{\'always_reload\': True}"/>' +
-                "</form>",
-            res_id: 2,
-            mockRPC: function (route, args) {
-                if (args.method === "name_get") {
+
+        let count = 0;
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 2,
+            serverData,
+            arch: `
+                <form>
+                    <field name="trululu" options="{'always_reload': 1}" />
+                </form>
+            `,
+            mockRPC(route, { method }) {
+                if (method === "name_get") {
                     count++;
                     return Promise.resolve([[1, "first record\nand some address"]]);
                 }
-                return this._super(route, args);
             },
         });
 
         assert.strictEqual(count, 1, "an extra name_get should have been done");
         assert.ok(
-            form.$("a:contains(and some address)").length,
+            form.el.querySelector("a").textContent.includes("and some address"),
             "should display additional result"
         );
 
-        await testUtils.form.clickEdit(form);
-
+        await click(form.el, ".o_form_button_edit");
         assert.strictEqual(
-            form.$(".o_field_widget[name=trululu] input").val(),
+            form.el.querySelector(".o_field_widget[name='trululu'] input").value,
             "first record",
             "actual field value should be displayed to be edited"
         );
 
-        await testUtils.form.clickSave(form);
-
+        await click(form.el, ".o_form_button_save");
         assert.ok(
-            form.$("a:contains(and some address)").length,
+            form.el.querySelector("a").textContent.includes("and some address"),
             "should still display additional result"
         );
-        form.destroy();
     });
 
     QUnit.skip("many2one field and list navigation", async function (assert) {
@@ -1361,9 +1363,6 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.skip("standalone many2one field", async function (assert) {
         assert.expect(4);
-
-        var M2O_DELAY = relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY;
-        relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = 0;
 
         var fixture = $("#qunit-fixture");
         var self = this;
@@ -1423,7 +1422,6 @@ QUnit.module("Fields", (hooks) => {
 
         parent.destroy();
         model.destroy();
-        relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;
     });
 
     // QUnit.skip('onchange on a many2one to a different model', async function (assert) {

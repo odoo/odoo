@@ -8,6 +8,7 @@ import { isX2Many } from "@web/views/helpers/view_utils";
 import { registry } from "../core/registry";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
+import { makeContext } from "@web/core/context";
 
 const preloadedDataRegistry = registry.category("preloadedData");
 
@@ -189,6 +190,13 @@ export class Record extends DataPoint {
         await this.loadRelationalData();
         this.evaluateActiveFields();
         await this.loadPreloadedData();
+    }
+
+    getFieldContext(fieldName) {
+        return makeContext(
+            [this.context, this.activeFields[fieldName].attrs.context],
+            this.evalContext
+        );
     }
 
     evaluateActiveFields() {

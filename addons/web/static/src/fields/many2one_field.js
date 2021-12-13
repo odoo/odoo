@@ -106,7 +106,9 @@ export class Many2OneField extends Component {
 
     async loadExtraLines(value) {
         if (this.props.options.always_reload && value) {
-            const nameGet = await this.orm.call(this.relation, "name_get", [value[0]]);
+            const nameGet = await this.orm.call(this.relation, "name_get", [value[0]], {
+                context: this.props.record.getFieldContext(this.props.name),
+            });
             return nameGet[0][1].split("\n").slice(1);
         }
         return [];
@@ -185,9 +187,7 @@ export class Many2OneField extends Component {
             this.props.record.fields[this.props.name].relation,
             "get_formview_action",
             [[this.props.value[0]]],
-            {
-                /* context: this.props.record.context */
-            }
+            { context: this.props.record.getFieldContext(this.props.name) }
         );
         await this.action.doAction(action);
     }
@@ -197,9 +197,7 @@ export class Many2OneField extends Component {
             this.props.record.fields[this.props.name].relation,
             "get_formview_action",
             [[this.props.value[0]]],
-            {
-                /* context: this.props.record.context */
-            }
+            { context: this.props.record.getFieldContext(this.props.name) }
         );
         await this.action.doAction(action);
     }
@@ -261,15 +259,3 @@ Object.assign(Many2OneField, {
 });
 
 registry.category("fields").add("many2one", Many2OneField);
-
-export async function preloadMany2one(orm, record, fieldName) {
-    if (record.activeFields[fieldName].options.always_reload && record.data[fieldName]) {
-        const nameGet = await orm.call(record.fields[fieldName].relation, "name_get", [
-            record.data[fieldName][0],
-        ]);
-        return nameGet[0][1].split("\n").slice(1);
-    }
-    return [];
-}
-
-registry.category("preloadedData").add("many2one", preloadMany2one);
