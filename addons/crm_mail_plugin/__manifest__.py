@@ -17,9 +17,6 @@
         'views/crm_mail_plugin_lead.xml',
         'views/crm_lead_views.xml'
     ],
-    'web.assets_backend': [
-        'crm_mail_plugin/static/src/to_translate/**/*',
-    ],
     'installable': True,
     'application': False,
     'auto_install': True,
