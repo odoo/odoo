@@ -422,7 +422,7 @@ class IrHttp(models.AbstractModel):
         return status, content, filename, mimetype, filehash
 
     def _binary_set_headers(self, status, content, filename, mimetype, unique, filehash=None, download=False):
-        headers = [('Content-Type', mimetype), ('X-Content-Type-Options', 'nosniff')]
+        headers = [('Content-Type', mimetype), ('X-Content-Type-Options', 'nosniff'), ('Content-Security-Policy', "default-src 'none'")]
         # cache
         etag = bool(request) and request.httprequest.headers.get('If-None-Match')
         status = status or 200
