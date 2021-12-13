@@ -71,7 +71,7 @@ registerModel({
                 return; // not supported for guests
             }
             if (
-                this.suggestionModelName === 'mail.channel_command' ||
+                this.suggestionModelName === 'ChannelCommand' ||
                 this._getCommandFromText(this.composer.textInputContent)
             ) {
                 return;
@@ -574,7 +574,7 @@ registerModel({
                 case ':':
                     return 'mail.canned_response';
                 case '/':
-                    return 'mail.channel_command';
+                    return 'ChannelCommand';
                 case '#':
                     return 'mail.thread';
                 default:
@@ -691,7 +691,7 @@ registerModel({
         /**
          * @private
          * @param {string} content html content
-         * @returns {mail.channel_command|undefined} command, if any in the content
+         * @returns {ChannelCommand|undefined} command, if any in the content
          */
         _getCommandFromText(content) {
             if (content.startsWith('/')) {
