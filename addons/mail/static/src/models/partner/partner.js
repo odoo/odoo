@@ -409,7 +409,7 @@ registerModel({
         avatarUrl: attr({
             compute: '_computeAvatarUrl',
         }),
-        country: many2one('mail.country'),
+        country: many2one('Country'),
         display_name: attr({
             compute: '_computeDisplayName',
             default: "",

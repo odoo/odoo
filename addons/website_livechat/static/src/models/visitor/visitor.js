@@ -61,7 +61,7 @@ registerModel({
         },
         /**
          * @private
-         * @returns {mail.country}
+         * @returns {Country}
          */
         _computeCountry() {
             if (this.partner && this.partner.country) {
@@ -93,7 +93,7 @@ registerModel({
         /**
          * Country of the visitor.
          */
-        country: many2one('mail.country', {
+        country: many2one('Country', {
             compute: '_computeCountry',
         }),
         /**
