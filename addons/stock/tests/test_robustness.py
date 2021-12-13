@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.tests.common import SavepointCase
 
 
@@ -221,3 +221,59 @@ class TestRobustness(SavepointCase):
                 'location_dest_id': move2.location_dest_id.id,
             })]})
 
+    def test_unreserve_error(self):
+        self.env['stock.quant']._update_available_quantity(
+            self.product1, self.stock_location, 5)
+
+        move = self.env['stock.move'].create({
+            'name': 'test_lot_id_product_id_mix_move_1',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 5.0,
+        })
+        move._action_confirm()
+        move._action_assign()
+        quant = self.env['stock.quant']._gather(
+            self.product1, self.stock_location, strict=True)
+        self.env.cr.execute("UPDATE stock_quant set reserved_quantity=0 WHERE id=%s", (quant.id,))
+        quant.invalidate_cache()
+        server_action = self.env.ref(
+            'stock.stock_quant_stock_move_line_desynchronization', raise_if_not_found=False)
+        if server_action:
+            with self.assertRaises(RedirectWarning):
+                move._do_unreserve()
+        else:
+            with self.assertRaises(UserError):
+                move._do_unreserve()
+
+    def test_unreserve_fix(self):
+        self.env['stock.quant']._update_available_quantity(
+            self.product1, self.stock_location, 5)
+
+        move = self.env['stock.move'].create({
+            'name': 'test_lot_id_product_id_mix_move_1',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 5.0,
+        })
+
+        move._action_confirm()
+        move._action_assign()
+
+        quant = self.env['stock.quant']._gather(
+            self.product1, self.stock_location, strict=True)
+        self.env.cr.execute(
+            "UPDATE stock_quant set reserved_quantity=0 WHERE id=%s", (quant.id,))
+        quant.invalidate_cache()
+        server_action = self.env.ref(
+            'stock.stock_quant_stock_move_line_desynchronization', raise_if_not_found=False)
+        if not server_action:
+            return
+        server_action.run()
+        self.assertEqual(move.reserved_availability, 0)
+        self.assertEqual(move.state, 'confirmed')
+        self.assertEqual(quant.reserved_quantity, 0)

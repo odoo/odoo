@@ -83,10 +83,11 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
             const screen = order.get_screen_data();
             if (['ProductScreen', 'PaymentScreen'].includes(screen.name) && order.get_orderlines().length > 0) {
                 const { confirmed } = await this.showPopup('ConfirmPopup', {
-                    title: 'Existing orderlines',
-                    body: `${order.name} has total amount of ${this.getTotal(
-                        order
-                    )}, are you sure you want delete this order?`,
+                    title: this.env._t('Existing orderlines'),
+                    body: _.str.sprintf(
+                      this.env._t('%s has a total amount of %s, are you sure you want to delete this order ?'),
+                      order.name, this.getTotal(order)
+                    ),
                 });
                 if (!confirmed) return;
             }

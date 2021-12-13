@@ -3618,6 +3618,14 @@ Fields:
             if fname == 'company_id' or (field.relational and field.check_company):
                 check_company = True
 
+        # force the computation of fields that are computed with some assigned
+        # fields, but are not assigned themselves
+        to_compute = [field.name
+                      for field in protected
+                      if field.compute and field.name not in vals]
+        if to_compute:
+            self.recompute(to_compute, self)
+
         # protect fields being written against recomputation
         with env.protecting(protected, self):
             # Determine records depending on values. When modifying a relational
