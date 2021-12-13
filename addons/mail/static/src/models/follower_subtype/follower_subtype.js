@@ -4,7 +4,7 @@ import { registerModel } from '@mail/model/model_core';
 import { attr } from '@mail/model/model_field';
 
 registerModel({
-    name: 'mail.follower_subtype',
+    name: 'FollowerSubtype',
     identifyingFields: ['id'],
     modelMethods: {
         /**

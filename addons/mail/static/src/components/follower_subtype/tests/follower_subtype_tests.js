@@ -59,7 +59,7 @@ QUnit.test('simplest layout of a followed subtype', async function (assert) {
         isActive: true,
         isEditable: true,
     });
-    const followerSubtype = this.messaging.models['mail.follower_subtype'].create({
+    const followerSubtype = this.messaging.models['FollowerSubtype'].create({
         id: 1,
         isDefault: true,
         isInternal: false,
@@ -119,7 +119,7 @@ QUnit.test('simplest layout of a not followed subtype', async function (assert) 
         isActive: true,
         isEditable: true,
     });
-    const followerSubtype = this.messaging.models['mail.follower_subtype'].create({
+    const followerSubtype = this.messaging.models['FollowerSubtype'].create({
         id: 1,
         isDefault: true,
         isInternal: false,
@@ -176,7 +176,7 @@ QUnit.test('toggle follower subtype checkbox', async function (assert) {
         isActive: true,
         isEditable: true,
     });
-    const followerSubtype = this.messaging.models['mail.follower_subtype'].create({
+    const followerSubtype = this.messaging.models['FollowerSubtype'].create({
         id: 1,
         isDefault: true,
         isInternal: false,

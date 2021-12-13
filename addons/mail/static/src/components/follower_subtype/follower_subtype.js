@@ -18,10 +18,10 @@ export class FollowerSubtype extends Component {
     }
 
     /**
-     * @returns {mail.follower_subtype}
+     * @returns {FollowerSubtype}
      */
     get followerSubtype() {
-        return this.messaging && this.messaging.models['mail.follower_subtype'].get(this.props.followerSubtypeLocalId);
+        return this.messaging && this.messaging.models['FollowerSubtype'].get(this.props.followerSubtypeLocalId);
     }
 
     //--------------------------------------------------------------------------
