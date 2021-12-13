@@ -71,7 +71,7 @@ registerModel({
             followedThread.fetchAndUpdateSuggestedRecipients();
         },
         /**
-         * @param {mail.follower_subtype} subtype
+         * @param {FollowerSubtype} subtype
          */
         selectSubtype(subtype) {
             if (!this.selectedSubtypes.includes(subtype)) {
@@ -88,8 +88,8 @@ registerModel({
             }));
             this.update({ subtypes: unlinkAll() });
             for (const data of subtypesData) {
-                const subtype = this.messaging.models['mail.follower_subtype'].insert(
-                    this.messaging.models['mail.follower_subtype'].convertData(data)
+                const subtype = this.messaging.models['FollowerSubtype'].insert(
+                    this.messaging.models['FollowerSubtype'].convertData(data)
                 );
                 this.update({ subtypes: link(subtype) });
                 if (data.followed) {
@@ -107,7 +107,7 @@ registerModel({
             });
         },
         /**
-         * @param {mail.follower_subtype} subtype
+         * @param {FollowerSubtype} subtype
          */
         unselectSubtype(subtype) {
             if (this.selectedSubtypes.includes(subtype)) {
@@ -158,11 +158,11 @@ registerModel({
         partner: many2one('mail.partner', {
             required: true,
         }),
-        selectedSubtypes: many2many('mail.follower_subtype'),
+        selectedSubtypes: many2many('FollowerSubtype'),
         subtypeList: one2many('mail.follower_subtype_list', {
             inverse: 'follower',
             isCausal: true,
         }),
-        subtypes: many2many('mail.follower_subtype'),
+        subtypes: many2many('FollowerSubtype'),
     },
 });
