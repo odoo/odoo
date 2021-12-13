@@ -36,7 +36,7 @@ registerModel({
         },
     },
     fields: {
-        chatter: one2one('mail.chatter', {
+        chatter: one2one('Chatter', {
             inverse: 'attachmentBoxView',
             readonly: true,
             required: true,

@@ -862,7 +862,7 @@ registerModel({
         /**
          * States the chatter which this composer allows editing (if any).
          */
-        chatter: one2one('mail.chatter', {
+        chatter: one2one('Chatter', {
             inverse: 'composerView',
             readonly: true,
         }),

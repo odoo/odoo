@@ -65,7 +65,7 @@ export class ChatterContainer extends Component {
         if (values.threadId === undefined) {
             values.threadId = clear();
         }
-        this.chatter = messaging.models['mail.chatter'].insert(values);
+        this.chatter = messaging.models['Chatter'].insert(values);
         this.chatter.refresh();
         this.render();
     }

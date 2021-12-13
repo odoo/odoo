@@ -12,7 +12,7 @@ export class ChatterTopbar extends Component {
      */
     setup() {
         super.setup();
-        useComponentToModel({ fieldName: 'componentChatterTopbar', modelName: 'mail.chatter', propNameAsRecordLocalId: 'chatterLocalId' });
+        useComponentToModel({ fieldName: 'componentChatterTopbar', modelName: 'Chatter', propNameAsRecordLocalId: 'chatterLocalId' });
     }
 
     //--------------------------------------------------------------------------
@@ -20,10 +20,10 @@ export class ChatterTopbar extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {mail.chatter}
+     * @returns {Chatter}
      */
     get chatter() {
-        return this.messaging && this.messaging.models['mail.chatter'].get(this.props.chatterLocalId);
+        return this.messaging && this.messaging.models['Chatter'].get(this.props.chatterLocalId);
     }
 
 }
