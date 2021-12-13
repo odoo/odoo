@@ -65,9 +65,14 @@ class Web_Editor(http.Controller):
         width = max(1, min(width, 512))
         height = max(1, min(height, 512))
         # Initialize font
+<<<<<<< HEAD
         if font.startswith('/'):
             font = font[1:]
         font_obj = ImageFont.truetype(file_open(font, 'rb'), height)
+=======
+        with tools.file_open(font.lstrip('/'), 'rb') as f:
+            font_obj = ImageFont.truetype(f, size)
+>>>>>>> 6bd1a73d7f8... temp
 
         # if received character is not a number, keep old behaviour (icon is character)
         icon = chr(int(icon)) if icon.isdigit() else icon
