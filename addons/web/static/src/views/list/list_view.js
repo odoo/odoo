@@ -279,7 +279,7 @@ export class ListView extends owl.Component {
         if (this.activeActions.delete && !isM2MGrouped) {
             otherActionItems.push({
                 description: this.env._t("Delete"),
-                callback: () => this._onDeleteSelectedRecords(),
+                callback: () => this.onDeleteSelectedRecords(),
             });
         }
         return Object.assign({}, this.props.info.actionMenus, { other: otherActionItems });
@@ -351,6 +351,35 @@ export class ListView extends owl.Component {
                 { title: this.env._t("Warning") }
             );
         }
+    }
+
+    async onDeleteSelectedRecords() {
+        const root = this.model.root;
+        const body =
+            root.isDomainSelected || root.selection.length > 1
+                ? this.env._t("Are you sure you want to delete these records?")
+                : this.env._t("Are you sure you want to delete this record?");
+        const dialogProps = {
+            body,
+            confirm: async () => {
+                const resIds = await this.model.root.delete(true);
+                const total = root.count;
+                if (
+                    root.isDomainSelected &&
+                    resIds.length === session.active_ids_limit &&
+                    resIds.length < total
+                ) {
+                    this.notificationService.add(
+                        this.env._t(
+                            `Only the first ${total} records have been deleted (out of ${resIds.length} selected)`
+                        ),
+                        { title: this.env._t("Warning") }
+                    );
+                }
+            },
+            cancel: () => {},
+        };
+        this.dialogService.add(ConfirmationDialog, dialogProps);
     }
 }
 
