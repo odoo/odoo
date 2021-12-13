@@ -329,14 +329,14 @@ registerModel({
         /**
          * Discuss sidebar category for `channel` type channel threads.
          */
-        categoryChannel: one2one('mail.discuss_sidebar_category', {
+        categoryChannel: one2one('DiscussSidebarCategory', {
             inverse: 'discussAsChannel',
             isCausal: true,
         }),
         /**
          * Discuss sidebar category for `chat` type channel threads.
          */
-        categoryChat: one2one('mail.discuss_sidebar_category', {
+        categoryChat: one2one('DiscussSidebarCategory', {
             inverse: 'discussAsChat',
             isCausal: true,
         }),

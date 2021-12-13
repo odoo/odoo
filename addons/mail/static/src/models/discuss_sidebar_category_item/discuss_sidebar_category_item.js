@@ -217,7 +217,7 @@ registerModel({
         /**
          * Determines the discuss sidebar category displaying this item.
          */
-        category: many2one('mail.discuss_sidebar_category', {
+        category: many2one('DiscussSidebarCategory', {
             inverse: 'categoryItems',
             readonly: true,
             required: true,

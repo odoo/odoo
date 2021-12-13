@@ -1727,7 +1727,7 @@ registerModel({
          * type.
          *
          * @private
-         * @returns {mail.discuss_sidebar_category}
+         * @returns {DiscussSidebarCategory}
          */
         _getDiscussSidebarCategory() {
             switch (this.channel_type) {
