@@ -3460,15 +3460,15 @@ var SnippetsMenu = Widget.extend({
 
                     var $target = $toInsert;
 
-                        if ($target[0].classList.contains("o_snippet_drop_in_only")) {
-                            // If it's a "drop in only" snippet, after dropping
-                            // it, we modify it so that it's no longer a
-                            // draggable snippet but rather simple HTML code, as
-                            // if the element had been created with the editor.
-                            $target[0].classList.remove("o_snippet_drop_in_only");
-                            delete $target[0].dataset.snippet;
-                            delete $target[0].dataset.name;
-                        }
+                    if ($target[0].classList.contains("o_snippet_drop_in_only")) {
+                        // If it's a "drop in only" snippet, after dropping
+                        // it, we modify it so that it's no longer a
+                        // draggable snippet but rather simple HTML code, as
+                        // if the element had been created with the editor.
+                        $target[0].classList.remove("o_snippet_drop_in_only");
+                        delete $target[0].dataset.snippet;
+                        delete $target[0].dataset.name;
+                    }
 
                     this.options.wysiwyg.odooEditor.observerUnactive('dragAndDropCreateSnippet');
                     await this._scrollToSnippet($target, this.$scrollable);

@@ -41,6 +41,12 @@ options.registry.facebookPage = options.Class.extend({
 
         return Promise.all(defs).then(() => this._markFbElement()).then(() => this._refreshPublicWidgets());
     },
+    /**
+     * @override
+     */
+    onBuilt() {
+        this.$target[0].querySelector('.o_facebook_page_preview')?.remove();
+    },
 
     //--------------------------------------------------------------------------
     // Options
