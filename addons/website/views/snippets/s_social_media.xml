@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_social_media" name="Social Media">
+    <div t-attf-class="s_share s_social_media text-left #{_classes}">
+        <h4 class="s_share_title d-none">Social Media</h4>
+        <a data-social-id="social_facebook" href="/website/social/facebook" t-attf-class="s_share_facebook #{_link_classes}" target="_blank">
+            <i t-attf-class="fa fa-facebook #{not _link_classes and 'rounded shadow-sm'}"/>
+        </a>
+        <a data-social-id="social_twitter" href="/website/social/twitter" t-attf-class="s_share_twitter #{_link_classes}" target="_blank">
+            <i t-attf-class="fa fa-twitter #{not _link_classes and 'rounded shadow-sm'}"/>
+        </a>
+        <a data-social-id="social_linkedin" href="/website/social/linkedin" t-attf-class="s_share_linkedin #{_link_classes}" target="_blank">
+            <i t-attf-class="fa fa-linkedin #{not _link_classes and 'rounded shadow-sm'}"/>
+        </a>
+        <a data-social-id="social_youtube" href="/website/social/youtube" t-attf-class="s_share_youtube #{_link_classes}" target="_blank">
+            <i t-attf-class="fa fa-youtube #{not _link_classes and 'rounded shadow-sm'}"/>
+        </a>
+        <a data-social-id="social_instagram" href="/website/social/instagram" t-attf-class="s_share_instagram #{_link_classes}" target="_blank">
+            <i t-attf-class="fa fa-instagram #{not _link_classes and 'rounded shadow-sm'}"/>
+        </a>
+        <a data-social-id="social_github" href="/website/social/github" class="s_share_github #{_link_classes}" target="_blank">
+            <i t-attf-class="fa fa-github #{not _link_classes and 'rounded shadow-sm'}"/>
+        </a>
+    </div>
+</template>
+
+<template id="s_social_media_options" inherit_id="website.snippet_options">
+    <xpath expr="." position="inside">
+        <div data-js="SocialMedia" data-selector=".s_social_media">
+            <we-list    string="Social Networks"
+                        data-add-item-title="Add New Social Network"
+                        data-render-list-items=""
+                        data-has-default="multiple"
+                        data-default-value="https://www.example.com"
+                        data-generate-id-for-new-items= "true"
+                        data-new-elements-toggled="true"
+                        data-id-mode="name"/>
+        </div>
+    </xpath>
+</template>
+
+</odoo>

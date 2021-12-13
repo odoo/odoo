@@ -1890,6 +1890,9 @@ const ListUserValueWidget = UserValueWidget.extend({
         } else {
             this.isCustom = !this.el.dataset.notEditable;
         }
+        if (this.el.dataset.idMode) {
+            this.idMode = this.el.dataset.idMode;
+        }
         if (this.el.dataset.defaults || this.el.dataset.hasDefault) {
             this.hasDefault = this.el.dataset.hasDefault || 'unique';
             this.selected = this.el.dataset.defaults ? JSON.parse(this.el.dataset.defaults) : [];
@@ -2045,9 +2048,25 @@ const ListUserValueWidget = UserValueWidget.extend({
             trEl.appendChild(checkboxTdEl);
         }
         const buttonTdEl = document.createElement('td');
-        buttonTdEl.appendChild(buttonEl);
+        if (!recordData || !recordData.undeletable) {
+            buttonTdEl.appendChild(buttonEl);
+        }
         trEl.appendChild(buttonTdEl);
         this.listTable.appendChild(trEl);
+    },
+    /**
+     * Generates a string ID.
+     * 
+     * @private
+     * @param  {Int} length the length of the generated ID.
+     */
+    _generateId(length) {
+        let result = '';
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+        for (let i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * characters.length));
+        }
+        return result;
     },
     /**
      * @private
@@ -2072,7 +2091,10 @@ const ListUserValueWidget = UserValueWidget.extend({
      */
     _notifyCurrentState() {
         const values = [...this.listTable.querySelectorAll('.o_we_list_record_name input')].map(el => {
-            const id = this.isCustom ? el.value : el.name;
+            let id = this.isCustom ? el.value : el.name;
+            if (this.idMode && this.idMode === "name") {
+                id = el.name;
+            }
             const idInt = parseInt(id);
             return Object.assign({
                 id: isNaN(idInt) ? id : idInt,
@@ -2131,7 +2153,14 @@ const ListUserValueWidget = UserValueWidget.extend({
      * @private
      */
     _onAddCustomItemClick() {
-        this._addItemToTable();
+        let id;
+        if (this.el.dataset.generateIdForNewItems) {
+            id = this._generateId(30);
+        }
+        if (this.el.dataset.newElementsToggled) {
+            this.selected.push(id);
+        }
+        this._addItemToTable(id, this.el.dataset.defaultValue);
         this._notifyCurrentState();
     },
     /**
