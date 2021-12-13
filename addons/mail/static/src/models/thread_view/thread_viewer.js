@@ -63,7 +63,7 @@ registerModel({
             inverse: 'threadViewer',
             readonly: true,
         }),
-        chatWindow: one2one('mail.chat_window', {
+        chatWindow: one2one('ChatWindow', {
             inverse: 'threadViewer',
             readonly: true,
         }),

@@ -178,7 +178,7 @@ registerModel({
         },
     },
     fields: {
-        chatWindow: one2one('mail.chat_window', {
+        chatWindow: one2one('ChatWindow', {
             inverse: 'channelInvitationForm',
             readonly: true,
         }),
