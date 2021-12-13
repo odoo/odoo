@@ -357,7 +357,7 @@ export class Record extends DataPoint {
     _getOnchangeSpec() {
         const specs = {};
         for (const fieldName of this.fieldNames) {
-            specs[fieldName] = "1";
+            specs[fieldName] = this.activeFields[fieldName].onChange ? "1" : "";
         }
         return specs;
     }
