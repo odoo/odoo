@@ -4,7 +4,7 @@ import { patchRecordMethods } from '@mail/model/model_core';
 // ensure that the model definition is loaded before the patch
 import '@mail/models/chat_window/chat_window';
 
-patchRecordMethods('mail.chat_window', {
+patchRecordMethods('ChatWindow', {
     /**
      * @override
      */

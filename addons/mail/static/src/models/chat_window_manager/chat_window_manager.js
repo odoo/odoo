@@ -109,7 +109,7 @@ registerModel({
                 chatWindow.thread === thread
             );
             if (!chatWindow) {
-                chatWindow = this.messaging.models['mail.chat_window'].create({
+                chatWindow = this.messaging.models['ChatWindow'].create({
                     isFolded,
                     manager: link(this),
                     thread: link(thread),
@@ -136,7 +136,7 @@ registerModel({
          * Shift provided chat window to previous visible index, which swap visible order of this
          * chat window and the preceding visible one
          *
-         * @param {mail.chat_window} chatWindow
+         * @param {ChatWindow} chatWindow
          */
         shiftPrev(chatWindow) {
             const chatWindows = this.allOrdered;
@@ -156,7 +156,7 @@ registerModel({
          * Shift provided chat window to next visible index, which swap visible order of this
          * chat window and the following visible one.
          *
-         * @param {mail.chat_window} chatWindow
+         * @param {ChatWindow} chatWindow
          */
         shiftNext(chatWindow) {
             const chatWindows = this.allOrdered;
@@ -173,8 +173,8 @@ registerModel({
             chatWindow.focus();
         },
         /**
-         * @param {mail.chat_window} chatWindow1
-         * @param {mail.chat_window} chatWindow2
+         * @param {ChatWindow} chatWindow1
+         * @param {ChatWindow} chatWindow2
          */
         swap(chatWindow1, chatWindow2) {
             const ordered = this.allOrdered;
@@ -190,27 +190,27 @@ registerModel({
         },
         /**
          * @private
-         * @returns {mail.chat_window[]}
+         * @returns {ChatWindow[]}
          */
         _computeAllOrdered() {
             return link(this.chatWindows);
         },
         /**
          * @private
-         * @returns {mail.chat_window[]}
+         * @returns {ChatWindow[]}
          */
         _computeAllOrderedHidden() {
             return replace(this.visual.hidden.chatWindowLocalIds.map(chatWindowLocalId =>
-                this.messaging.models['mail.chat_window'].get(chatWindowLocalId)
+                this.messaging.models['ChatWindow'].get(chatWindowLocalId)
             ));
         },
         /**
          * @private
-         * @returns {mail.chat_window[]}
+         * @returns {ChatWindow[]}
          */
         _computeAllOrderedVisible() {
             return replace(this.visual.visible.map(({ chatWindowLocalId }) =>
-                this.messaging.models['mail.chat_window'].get(chatWindowLocalId)
+                this.messaging.models['ChatWindow'].get(chatWindowLocalId)
             ));
         },
         /**
@@ -229,7 +229,7 @@ registerModel({
         },
         /**
          * @private
-         * @returns {mail.chat_window|undefined}
+         * @returns {ChatWindow|undefined}
          */
         _computeLastVisible() {
             const { length: l, [l - 1]: lastVisible } = this.allOrderedVisible;
@@ -327,16 +327,16 @@ registerModel({
         /**
          * List of ordered chat windows.
          */
-        allOrdered: one2many('mail.chat_window', {
+        allOrdered: one2many('ChatWindow', {
             compute: '_computeAllOrdered',
         }),
-        allOrderedHidden: one2many('mail.chat_window', {
+        allOrderedHidden: one2many('ChatWindow', {
             compute: '_computeAllOrderedHidden',
         }),
-        allOrderedVisible: one2many('mail.chat_window', {
+        allOrderedVisible: one2many('ChatWindow', {
             compute: '_computeAllOrderedVisible',
         }),
-        chatWindows: one2many('mail.chat_window', {
+        chatWindows: one2many('ChatWindow', {
             inverse: 'manager',
             isCausal: true,
         }),
@@ -349,10 +349,10 @@ registerModel({
         isHiddenMenuOpen: attr({
             default: false,
         }),
-        lastVisible: many2one('mail.chat_window', {
+        lastVisible: many2one('ChatWindow', {
             compute: '_computeLastVisible',
         }),
-        newMessageChatWindow: one2one('mail.chat_window', {
+        newMessageChatWindow: one2one('ChatWindow', {
             inverse: 'managerAsNewMessage',
             isCausal: true,
         }),
