@@ -267,18 +267,18 @@
                                 <field name="payment_method_line_id" required="1" options="{'no_create': True, 'no_open': True}"
                                        attrs="{'readonly': [('state', '!=', 'draft')]}"/>
 
-                                <field name="partner_bank_id" context="{'default_partner_id': partner_id}" string="Customer Bank Account"
+                                <field name="partner_bank_id" context="{'default_partner_id': partner_id}" string="Recipient Bank Account"
                                         attrs="{
                                             'invisible': ['|', '|', ('show_partner_bank_account', '=', False), ('partner_type','!=','customer'), ('is_internal_transfer', '=', True)],
                                             'required': [('require_partner_bank_account', '=', True), ('is_internal_transfer', '=', False)],
-                                            'readonly': [('state', '!=', 'draft')]
+                                            'readonly': ['|', ('state', '!=', 'draft'), ('payment_type', '=', 'inbound')],
                                         }"/>
 
-                                <field name="partner_bank_id" context="{'default_partner_id': partner_id}" string="Vendor Bank Account"
+                                <field name="partner_bank_id" context="{'default_partner_id': partner_id}" string="Recipient Bank Account"
                                         attrs="{
                                             'invisible': ['|', '|', ('show_partner_bank_account', '=', False), ('partner_type','!=','supplier'), ('is_internal_transfer', '=', True)],
                                             'required': [('require_partner_bank_account', '=', True), ('is_internal_transfer', '=', False)],
-                                            'readonly': [('state', '!=', 'draft')]
+                                            'readonly': ['|', ('state', '!=', 'draft'), ('payment_type', '=', 'inbound')],
                                         }"/>
                                 <field name="destination_journal_id" context="{'default_partner_id': partner_id}"
                                        attrs="{'invisible': [('is_internal_transfer', '=', False)],
