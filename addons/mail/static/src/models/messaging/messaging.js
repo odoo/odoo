@@ -240,7 +240,7 @@ registerModel({
         currentGuest: one2one('mail.guest'),
         currentPartner: one2one('mail.partner'),
         currentUser: one2one('mail.user'),
-        device: one2one('mail.device', {
+        device: one2one('Device', {
             default: insertAndReplace(),
             isCausal: true,
             readonly: true,
