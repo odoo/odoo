@@ -302,7 +302,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.skip('actions in target="new" do not update page title', async function (assert) {
+    QUnit.test('actions in target="new" do not update page title', async function (assert) {
         const mockedTitleService = {
             start() {
                 return {
@@ -449,6 +449,7 @@ QUnit.module("ActionManager", (hooks) => {
     });
 
     QUnit.module('Actions in target="fullscreen"');
+
     QUnit.test(
         'correctly execute act_window actions in target="fullscreen"',
         async function (assert) {
@@ -466,7 +467,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.skip('fullscreen on action change: back to a "current" action', async function (assert) {
+    QUnit.test('fullscreen on action change: back to a "current" action', async function (assert) {
         assert.expect(3);
         serverData.actions[1].target = "fullscreen";
         serverData.views[
@@ -475,15 +476,13 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 6);
         assert.isVisible(webClient.el.querySelector(".o_main_navbar"));
-        await testUtils.dom.click($(webClient.el).find("button[name=1]"));
-        await legacyExtraNextTick();
+        await click(webClient.el.querySelector("button[name='1']"));
         assert.isNotVisible(webClient.el.querySelector(".o_main_navbar"));
-        await testUtils.dom.click($(webClient.el).find(".breadcrumb li a:first"));
-        await legacyExtraNextTick();
+        await click(webClient.el.querySelector(".breadcrumb li a"));
         assert.isVisible(webClient.el.querySelector(".o_main_navbar"));
     });
 
-    QUnit.skip('fullscreen on action change: all "fullscreen" actions', async function (assert) {
+    QUnit.test('fullscreen on action change: all "fullscreen" actions', async function (assert) {
         assert.expect(3);
         serverData.actions[6].target = "fullscreen";
         serverData.views[
@@ -492,15 +491,13 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 6);
         assert.isNotVisible(webClient.el.querySelector(".o_main_navbar"));
-        await testUtils.dom.click($(webClient.el).find("button[name=1]"));
-        await legacyExtraNextTick();
+        await click(webClient.el.querySelector("button[name='1']"));
         assert.isNotVisible(webClient.el.querySelector(".o_main_navbar"));
-        await testUtils.dom.click($(webClient.el).find(".breadcrumb li a:first"));
-        await legacyExtraNextTick();
+        await click(webClient.el.querySelector(".breadcrumb li a"));
         assert.isNotVisible(webClient.el.querySelector(".o_main_navbar"));
     });
 
-    QUnit.skip(
+    QUnit.test(
         'fullscreen on action change: back to another "current" action',
         async function (assert) {
             assert.expect(8);
@@ -513,21 +510,23 @@ QUnit.module("ActionManager", (hooks) => {
                 '<form><button name="24" type="action" class="oe_stat_button"/></form>';
             const webClient = await createWebClient({ serverData });
             await testUtils.nextTick(); // wait for the load state (default app)
-            await legacyExtraNextTick();
             assert.containsOnce(webClient, "nav .o_menu_brand");
-            assert.strictEqual($(webClient.el).find("nav .o_menu_brand").text(), "MAIN APP");
+            assert.strictEqual(
+                webClient.el.querySelector("nav .o_menu_brand").innerText,
+                "MAIN APP"
+            );
             assert.doesNotHaveClass(webClient.el, "o_fullscreen");
-            await testUtils.dom.click($(webClient.el).find('button[name="24"]'));
-            await legacyExtraNextTick();
+            await click(webClient.el.querySelector("button[name='24']"));
             assert.doesNotHaveClass(webClient.el, "o_fullscreen");
-            await testUtils.dom.click($(webClient.el).find('button[name="1"]'));
-            await legacyExtraNextTick();
+            await click(webClient.el.querySelector("button[name='1']"));
             assert.hasClass(webClient.el, "o_fullscreen");
-            await testUtils.dom.click($(webClient.el).find(".breadcrumb li a")[1]);
-            await legacyExtraNextTick();
+            await click(webClient.el.querySelectorAll(".breadcrumb li a")[1]);
             assert.doesNotHaveClass(webClient.el, "o_fullscreen");
             assert.containsOnce(webClient, "nav .o_menu_brand");
-            assert.strictEqual($(webClient.el).find("nav .o_menu_brand").text(), "MAIN APP");
+            assert.strictEqual(
+                webClient.el.querySelector("nav .o_menu_brand").innerText,
+                "MAIN APP"
+            );
         }
     );
 });
