@@ -261,7 +261,7 @@ registerModel({
             compute: '_computeIsCurrentPartnerAssignee',
             default: false,
         }),
-        mailTemplates: many2many('mail.mail_template', {
+        mailTemplates: many2many('MailTemplate', {
             inverse: 'activities',
         }),
         /**
