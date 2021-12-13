@@ -156,6 +156,26 @@ function _areCssValuesEqual(value1, value2, cssProp, $target) {
         return true;
     }
 
+    // In case the values are meant as box-shadow, this is difficult to compare.
+    // In this case we use the kinda hacky and probably inneficient but probably
+    // easiest way: applying the value as box-shadow of two fakes elements and
+    // compare their computed value.
+    if (cssProp === 'box-shadow') {
+        const temp1El = document.createElement('div');
+        temp1El.style.boxShadow = value1;
+        document.body.appendChild(temp1El);
+        value1 = getComputedStyle(temp1El).boxShadow;
+        document.body.removeChild(temp1El);
+
+        const temp2El = document.createElement('div');
+        temp2El.style.boxShadow = value2;
+        document.body.appendChild(temp2El);
+        value2 = getComputedStyle(temp2El).boxShadow;
+        document.body.removeChild(temp2El);
+
+        return value1 === value2;
+    }
+
     // Convert the second value in the unit of the first one and compare
     // floating values
     const data = _getNumericAndUnit(value1);
