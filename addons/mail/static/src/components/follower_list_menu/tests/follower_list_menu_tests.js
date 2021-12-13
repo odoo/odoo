@@ -251,7 +251,7 @@ QUnit.test('click on remove follower', async function (assert) {
         id: 100,
         model: 'res.partner',
     });
-    await this.messaging.models['mail.follower'].create({
+    await this.messaging.models['Follower'].create({
         followedThread: link(thread),
         id: 2,
         isActive: true,

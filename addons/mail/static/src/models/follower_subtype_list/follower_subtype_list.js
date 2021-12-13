@@ -15,7 +15,7 @@ registerModel({
             isCausal: true,
             readonly: true,
         }),
-        follower: many2one('mail.follower', {
+        follower: many2one('Follower', {
             inverse: 'subtypeList',
             readonly: true,
             required: true,

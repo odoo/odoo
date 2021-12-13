@@ -5,7 +5,7 @@ import { attr, many2many, many2one, one2many } from '@mail/model/model_field';
 import { clear, insert, insertAndReplace, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
 
 registerModel({
-    name: 'mail.follower',
+    name: 'Follower',
     identifyingFields: ['id'],
     modelMethods: {
         /**

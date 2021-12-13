@@ -48,7 +48,7 @@ QUnit.test('base rendering not editable', async function (assert) {
         id: 100,
         model: 'res.partner',
     });
-    const follower = await this.messaging.models['mail.follower'].create({
+    const follower = await this.messaging.models['Follower'].create({
         partner: insert({
             id: 1,
             name: "François Perusse",
@@ -94,7 +94,7 @@ QUnit.test('base rendering editable', async function (assert) {
         id: 100,
         model: 'res.partner',
     });
-    const follower = await this.messaging.models['mail.follower'].create({
+    const follower = await this.messaging.models['Follower'].create({
         partner: insert({
             id: 1,
             name: "François Perusse",
@@ -169,7 +169,7 @@ QUnit.test('click on partner follower details', async function (assert) {
         id: 100,
         model: 'res.partner',
     });
-    const follower = await this.messaging.models['mail.follower'].create({
+    const follower = await this.messaging.models['Follower'].create({
         followedThread: link(thread),
         id: 2,
         isActive: true,
@@ -275,7 +275,7 @@ QUnit.test('edit follower and close subtype dialog', async function (assert) {
         id: 100,
         model: 'res.partner',
     });
-    const follower = await this.messaging.models['mail.follower'].create({
+    const follower = await this.messaging.models['Follower'].create({
         followedThread: link(thread),
         id: 2,
         isActive: true,
