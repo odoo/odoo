@@ -11,10 +11,10 @@ export class Follower extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {mail.follower}
+     * @returns {Follower}
      */
     get follower() {
-        return this.messaging && this.messaging.models['mail.follower'].get(this.props.followerLocalId);
+        return this.messaging && this.messaging.models['Follower'].get(this.props.followerLocalId);
     }
 
     //--------------------------------------------------------------------------

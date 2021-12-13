@@ -1038,7 +1038,7 @@ registerModel({
             if (followers.length > 0) {
                 this.update({
                     followers: insertAndReplace(followers.map(data =>
-                        this.messaging.models['mail.follower'].convertData(data))
+                        this.messaging.models['Follower'].convertData(data))
                     ),
                 });
             } else {
@@ -1996,7 +1996,7 @@ registerModel({
         followersPartner: many2many('mail.partner', {
             related: 'followers.partner',
         }),
-        followers: one2many('mail.follower', {
+        followers: one2many('Follower', {
             inverse: 'followedThread',
         }),
         /**
