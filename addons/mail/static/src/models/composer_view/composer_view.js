@@ -293,8 +293,8 @@ registerModel({
                 if (!this.messaging) {
                     return;
                 }
-                const message = this.messaging.models['mail.message'].insert(
-                    this.messaging.models['mail.message'].convertData(messageData)
+                const message = this.messaging.models['Message'].insert(
+                    this.messaging.models['Message'].convertData(messageData)
                 );
                 for (const threadView of message.originThread.threadViews) {
                     // Reset auto scroll to be able to see the newly posted message.

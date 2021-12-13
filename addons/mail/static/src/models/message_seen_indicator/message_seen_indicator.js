@@ -225,7 +225,7 @@ registerModel({
         /**
          * The message concerned by this seen indicator.
          */
-        message: many2one('mail.message', {
+        message: many2one('Message', {
             inverse: 'messageSeenIndicators',
             readonly: true,
             required: true,

@@ -140,7 +140,7 @@ registerModel({
         isFromCurrentUser: attr({
             compute: '_computeIsFromCurrentUser',
         }),
-        message: many2one('mail.message', {
+        message: many2one('Message', {
             inverse: 'notifications',
         }),
         notificationGroup: many2one('NotificationGroup', {

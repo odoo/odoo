@@ -32,7 +32,7 @@ registerModel({
         },
     },
     fields: {
-        authoredMessages: one2many('mail.message', {
+        authoredMessages: one2many('Message', {
             inverse: 'guestAuthor',
         }),
         avatarUrl: attr({

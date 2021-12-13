@@ -391,7 +391,7 @@ registerModel({
         mediaType: attr({
             compute: '_computeMediaType',
         }),
-        messages: many2many('mail.message', {
+        messages: many2many('Message', {
             inverse: 'attachments',
         }),
         mimetype: attr({

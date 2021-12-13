@@ -39,7 +39,7 @@ QUnit.test('auto layout with image', async function (assert) {
         mimetype: 'image/png',
         name: "test.png",
     });
-    const message = this.messaging.models['mail.message'].create({
+    const message = this.messaging.models['Message'].create({
         attachments: link(attachment),
         author: link(this.messaging.currentPartner),
         body: "<p>Test</p>",

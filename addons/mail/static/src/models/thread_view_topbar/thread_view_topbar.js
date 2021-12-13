@@ -53,7 +53,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickInboxMarkAllAsRead(ev) {
-            this.messaging.models['mail.message'].markAllAsRead();
+            this.messaging.models['Message'].markAllAsRead();
         },
         /**
          * Handles click on the "invite" button.
@@ -129,7 +129,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickUnstarAll(ev) {
-            this.messaging.models['mail.message'].unstarAll();
+            this.messaging.models['Message'].unstarAll();
         },
         /**
          * Handles click on the guest name.
