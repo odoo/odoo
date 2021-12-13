@@ -634,9 +634,7 @@ QUnit.module("ActionManager", (hooks) => {
                 assert.step("init js class");
             },
         });
-        serverData.views["partner,false,test_view"] = `
-      <div js_class="test_jsClass"></div>
-    `;
+        serverData.views["partner,false,test_view"] = `<div js_class="test_jsClass"></div>`;
         serverData.actions[9999] = {
             id: 1,
             name: "Partners Action 1",
@@ -701,4 +699,44 @@ QUnit.module("ActionManager", (hooks) => {
             assert.containsN(target, ".o_form_buttons_view button:not([disabled])", 2);
         }
     );
+
+    QUnit.test("click multiple times to open a record", async function (assert) {
+        assert.expect(5);
+
+        registry.category("views").remove("form"); // remove new form from registry
+        registry.category("views").remove("list"); // remove new list from registry
+        legacyViewRegistry.add("form", FormView); // add legacy form -> will be wrapped and added to new registry
+        legacyViewRegistry.add("list", ListView); // add legacy list -> will be wrapped and added to new registry
+
+        const def = testUtils.makeTestPromise();
+        const defs = [null, def];
+        const mockRPC = async (route, args) => {
+            if (args.method === "read") {
+                await Promise.resolve(defs.shift());
+            }
+        };
+
+        const webClient = await createWebClient({ serverData, mockRPC });
+        await doAction(webClient, 3);
+        assert.containsOnce(webClient, ".o_legacy_list_view");
+
+        await testUtils.dom.click(webClient.el.querySelector(".o_legacy_list_view .o_data_row"));
+        await legacyExtraNextTick();
+        assert.containsOnce(webClient, ".o_legacy_form_view");
+
+        await testUtils.dom.click(webClient.el.querySelector(".o_back_button"));
+        await legacyExtraNextTick();
+
+        assert.containsOnce(webClient, ".o_legacy_list_view");
+
+        await testUtils.dom.click(webClient.el.querySelector(".o_legacy_list_view .o_data_row"));
+        await testUtils.dom.click(webClient.el.querySelector(".o_legacy_list_view .o_data_row"));
+        await legacyExtraNextTick();
+        assert.containsOnce(webClient, ".o_legacy_list_view");
+
+        def.resolve();
+        await testUtils.nextTick();
+        await legacyExtraNextTick();
+        assert.containsOnce(webClient, ".o_legacy_form_view");
+    });
 });
