@@ -239,4 +239,4 @@ class AccountMoveLine(models.Model):
         self.ensure_one()
         if not self.product_id:
             return self.price_unit
-        return self.product_id._stock_account_get_anglo_saxon_price_unit(uom=self.product_uom_id)
+        return self.product_id.with_context(force_company=self.company_id.id)._stock_account_get_anglo_saxon_price_unit(uom=self.product_uom_id)

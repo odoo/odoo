@@ -117,9 +117,8 @@ class AccountMoveLine(models.Model):
         if so_line:
             qty_to_invoice = self.product_uom_id._compute_quantity(self.quantity, self.product_id.uom_id)
             qty_invoiced = sum([x.product_uom_id._compute_quantity(x.quantity, x.product_id.uom_id) for x in so_line.invoice_lines if x.move_id.state == 'posted'])
-            average_price_unit = self.product_id._compute_average_price(qty_invoiced, qty_to_invoice, so_line.move_ids)
+            average_price_unit = self.product_id.with_context(force_company=self.company_id.id)._compute_average_price(qty_invoiced, qty_to_invoice, so_line.move_ids)
 
             price_unit = average_price_unit or price_unit
-            price_unit = self.product_id.uom_id._compute_price(price_unit, self.product_uom_id)
+            price_unit = self.product_id.uom_id.with_context(force_company=self.company_id.id)._compute_price(price_unit, self.product_uom_id)
         return price_unit
-

@@ -3037,15 +3037,26 @@ msgstr "Чи є величина редагованою"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"It is not possible to reserve more products of %s than you have in stock."
-msgstr "Неможливо замовити більше товарів %s ніж у вас на складі."
+"It is not possible to unreserve more products of %s than you have in "
+"stock.The correction could unreserve some operations with problematics "
+"products."
+msgstr ""
+"Неможливо розрезервувати більше товарів %s ніж є на складі. Коригування може"
+" зняти резерв з деяких операцій з проблемними товарами."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"It is not possible to unreserve more products of %s than you have in stock."
-msgstr "Неможливо відновити більше товарів %s ніж у вас на складі."
+"It is not possible to unreserve more products of %s than you have in stock. "
+"Contact an administrator."
+msgstr "Неможливо зняти резерв з товарів більше %s ніж є на складі. Зв."
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Try our automated action to fix it"
+msgstr "Спробуйте нашу автоматичну дію, щоби виправити це"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_type

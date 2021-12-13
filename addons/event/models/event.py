@@ -436,7 +436,11 @@ class EventRegistration(models.Model):
 
     @api.model
     def check_access_rights(self, operation, raise_exception=True):
-        if not self.env.is_admin() and not self.user_has_groups('event.group_event_user'):
+        if operation == 'read' and not self.env.is_admin() and not self.user_has_groups('base.group_user'):
+            if raise_exception:
+                raise AccessError(_('Only internal users are allowed to read registrations.'))
+            return False
+        elif operation != 'read' and not self.env.is_admin() and not self.user_has_groups('event.group_event_user'):
             if raise_exception:
                 raise AccessError(_('Only event users or managers are allowed to create or update registrations.'))
             return False

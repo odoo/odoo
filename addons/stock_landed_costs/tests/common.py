@@ -28,7 +28,13 @@ class TestStockLandedCostsCommon(AccountingTestCase):
         self.supplier_location_id = self.ref('stock.stock_location_suppliers')
         self.stock_location_id = self.ref('stock.stock_location_stock')
         self.customer_location_id = self.ref('stock.stock_location_customers')
-        self.categ_all = self.env.ref('product.product_category_all')
+        self.categ_manual_periodic = self.env.ref('product.product_category_all').copy({
+            "property_valuation": "manual_periodic",
+            "property_cost_method": "fifo"
+        })
+        self.categ_real_time = self.env.ref('product.product_category_all').copy({
+            "property_valuation": "real_time"
+        })
         # Create account
         self.default_account = self.env['account.account'].create({
             'name': "Purchased Stocks",
@@ -51,7 +57,7 @@ class TestStockLandedCostsCommon(AccountingTestCase):
             'standard_price': 1.0,
             'weight': 10,
             'volume': 1,
-            'categ_id': self.categ_all.id})
+            'categ_id': self.categ_real_time.id})
         self.product_refrigerator.categ_id.property_cost_method = 'fifo'
         self.product_refrigerator.categ_id.property_valuation = 'real_time'
         self.product_oven = self.Product.create({
@@ -60,7 +66,7 @@ class TestStockLandedCostsCommon(AccountingTestCase):
             'standard_price': 1.0,
             'weight': 20,
             'volume': 1.5,
-            'categ_id': self.categ_all.id})
+            'categ_id': self.categ_real_time.id})
         self.product_oven.categ_id.property_cost_method = 'fifo'
         self.product_oven.categ_id.property_valuation = 'real_time'
         # Create service type product 1.Labour 2.Brokerage 3.Transportation 4.Packaging
