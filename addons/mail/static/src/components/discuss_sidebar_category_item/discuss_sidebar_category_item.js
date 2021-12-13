@@ -11,10 +11,10 @@ export class DiscussSidebarCategoryItem extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {mail.discuss_sidebar_category_item}
+     * @returns {DiscussSidebarCategoryItem}
      */
     get categoryItem() {
-        return this.messaging.models['mail.discuss_sidebar_category_item'].get(this.props.categoryItemLocalId);
+        return this.messaging.models['DiscussSidebarCategoryItem'].get(this.props.categoryItemLocalId);
     }
 }
 

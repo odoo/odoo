@@ -4,7 +4,7 @@ import { patchRecordMethods } from '@mail/model/model_core';
 // ensure that the model definition is loaded before the patch
 import '@mail/models/discuss_sidebar_category_item/discuss_sidebar_category_item';
 
-patchRecordMethods('mail.discuss_sidebar_category_item', {
+patchRecordMethods('DiscussSidebarCategoryItem', {
     /**
      * @override
      */

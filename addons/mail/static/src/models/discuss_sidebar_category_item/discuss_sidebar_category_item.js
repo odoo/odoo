@@ -7,7 +7,7 @@ import { clear, link } from '@mail/model/model_field_command';
 import Dialog from 'web.Dialog';
 
 registerModel({
-    name: 'mail.discuss_sidebar_category_item',
+    name: 'DiscussSidebarCategoryItem',
     identifyingFields: ['category', 'channel'],
     lifecycleHooks: {
         _created() {
