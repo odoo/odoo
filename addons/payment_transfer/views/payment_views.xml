@@ -11,7 +11,7 @@
             </field>
             <xpath expr="//group[@name='payment_followup']" position="attributes">
                 <attribute name="attrs">
-                    {'invisible': [('provider', '=', 'transfer')]}
+                    {'invisible': [('provider', 'not in', ['transfer', 'test'])]}
                 </attribute>
             </xpath>
         </field>

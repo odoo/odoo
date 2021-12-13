@@ -20,7 +20,7 @@ class AccountPaymentMethodLine(models.Model):
     @api.depends('payment_method_id')
     def _compute_payment_acquirer_id(self):
         acquirers = self.env['payment.acquirer'].sudo().search([
-            ('provider', 'in', self.mapped('code')),
+            ('provider', 'in', self.mapped(lambda pm: 'transfer' if pm.code == 'manual' else pm.code)),
             ('company_id', 'in', self.journal_id.company_id.ids),
         ])
 
@@ -34,7 +34,7 @@ class AccountPaymentMethodLine(models.Model):
             acquirers_map[(acquirer.provider, acquirer.company_id)] = acquirer
 
         for line in self:
-            code = line.payment_method_id.code
+            code = 'transfer' if line.payment_method_id.code == 'manual' else line.payment_method_id.code
             company = line.journal_id.company_id
             line.payment_acquirer_id = acquirers_map.get((code, company), False)
 

@@ -170,9 +170,10 @@ class PaymentAcquirer(models.Model):
 
     def _compute_journal_id(self):
         for acquirer in self:
+            prov = 'manual' if acquirer.provider == 'transfer' else acquirer.provider
             payment_method = self.env['account.payment.method.line'].search([
                 ('journal_id.company_id', '=', acquirer.company_id.id),
-                ('code', '=', acquirer.provider)
+                ('code', '=', prov)
             ], limit=1)
             if payment_method:
                 acquirer.journal_id = payment_method.journal_id
@@ -181,9 +182,10 @@ class PaymentAcquirer(models.Model):
 
     def _inverse_journal_id(self):
         for acquirer in self:
+            prov = 'manual' if acquirer.provider == 'transfer' else acquirer.provider
             payment_method_line = self.env['account.payment.method.line'].search([
                 ('journal_id.company_id', '=', acquirer.company_id.id),
-                ('code', '=', acquirer.provider)
+                ('code', '=', prov)
             ], limit=1)
             if acquirer.journal_id:
                 if not payment_method_line:
