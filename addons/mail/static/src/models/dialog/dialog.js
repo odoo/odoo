@@ -31,7 +31,7 @@ registerModel({
         },
     },
     fields: {
-        attachmentViewer: one2one('mail.attachment_viewer', {
+        attachmentViewer: one2one('AttachmentViewer', {
             isCausal: true,
             inverse: 'dialog',
             readonly: true,

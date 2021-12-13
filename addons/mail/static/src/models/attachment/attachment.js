@@ -299,7 +299,7 @@ registerModel({
         attachmentLists: many2many('mail.attachment_list', {
             inverse: 'attachments',
         }),
-        attachmentViewer: many2many('mail.attachment_viewer', {
+        attachmentViewer: many2many('AttachmentViewer', {
             inverse: 'attachments',
         }),
         checksum: attr(),
