@@ -9,6 +9,7 @@ class TestAngloSaxonAccounting(AccountTestInvoicingCommon):
     def setUpClass(cls):
         super().setUpClass()
         (cls.company_data['company'] + cls.company_data_2['company']).write({'anglo_saxon_accounting': True})
+        # fifo and real_time will be only set for company_A as product.category is company dependant
         product_category = cls.env['product.category'].create({
             'name': 'a random storable product category',
             'property_cost_method': 'fifo',
@@ -18,11 +19,6 @@ class TestAngloSaxonAccounting(AccountTestInvoicingCommon):
             'name': 'storable product a',
             'type': 'product',
             'categ_id': product_category.id,
-        })
-        # Those values are company dependent and need to be explicitly set for both companies
-        product_category.with_context(force_company=cls.company_data_2['company'].id).write({
-            'property_cost_method': 'fifo',
-            'property_valuation': 'real_time',
         })
 
     def test_cogs_should_use_price_from_the_right_company(self):
