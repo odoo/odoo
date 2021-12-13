@@ -296,7 +296,7 @@ registerModel({
         /**
          * States the attachment lists that are displaying this attachment.
          */
-        attachmentLists: many2many('mail.attachment_list', {
+        attachmentLists: many2many('AttachmentList', {
             inverse: 'attachments',
         }),
         attachmentViewer: many2many('mail.attachment_viewer', {

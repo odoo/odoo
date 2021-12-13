@@ -39,7 +39,7 @@ registerModel({
             default: 0,
         }),
         attachment: many2one('mail.attachment'),
-        attachmentList: many2one('mail.attachment_list', {
+        attachmentList: many2one('AttachmentList', {
             inverse: 'attachmentViewer',
             readonly: true,
             required: true,
