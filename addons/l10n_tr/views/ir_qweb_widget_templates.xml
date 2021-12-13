@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <template id="contact" inherit_id="base.contact">
+            <xpath expr="//span[@itemprop='vatID']" position="after">
+                <span t-if="object.l10n_tr_tax_office_id" t-field="object.l10n_tr_tax_office_id"/>
+            </xpath>
+        </template>
+    </data>
+</odoo>
