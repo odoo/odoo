@@ -123,8 +123,10 @@ class IrModule(models.Model):
                 })
 
         # Look for existing assets
-        existing_assets = IrAsset.search([('name', 'in', [vals['name'] for vals in assets_vals])])
-        existing_assets = existing_assets.mapped(lambda r: (r.name, r))
+        existing_assets = {
+            asset.name: asset
+            for asset in IrAsset.search([('name', 'in', [vals['name'] for vals in assets_vals])])
+        }
         assets_to_create = []
 
         # Update existing assets and generate the list of new assets values
