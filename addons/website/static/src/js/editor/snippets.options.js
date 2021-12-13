@@ -2361,7 +2361,7 @@ options.registry.HeaderBox = options.registry.Box.extend({
                 return;
             }
             const defaultShadow = this._getDefaultShadow(widgetValue, params.shadowClass);
-            return this.customizeWebsiteVariable(previewMode, defaultShadow || 'none', params);
+            return this.customizeWebsiteVariable(previewMode, defaultShadow, params);
         }
         return this._super(...arguments);
     },
