@@ -115,7 +115,7 @@ registerModel({
         /**
          * States the attachmentList displaying this attachment image.
          */
-        attachmentList: many2one('mail.attachment_list', {
+        attachmentList: many2one('AttachmentList', {
             inverse: 'attachmentImages',
             readonly: true,
             required: true,

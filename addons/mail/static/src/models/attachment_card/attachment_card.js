@@ -73,7 +73,7 @@ registerModel({
         /**
          * States the attachmentList displaying this card.
          */
-        attachmentList: many2one('mail.attachment_list', {
+        attachmentList: many2one('AttachmentList', {
             inverse: 'attachmentCards',
             readonly: true,
             required: true,
