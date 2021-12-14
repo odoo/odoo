@@ -166,7 +166,7 @@ registerModel({
                 // disabled on `channel` channels for performance reasons
                 return;
             }
-            this.messaging.models['mail.thread_partner_seen_info'].insert({
+            this.messaging.models['ThreadPartnerSeenInfo'].insert({
                 lastFetchedMessage: insert({ id: last_message_id }),
                 partner: insertAndReplace({ id: partner_id }),
                 thread: replace(channel),
@@ -307,7 +307,7 @@ registerModel({
             // for performance reasons
             const shouldComputeSeenIndicators = channel.channel_type !== 'channel';
             if (shouldComputeSeenIndicators) {
-                this.messaging.models['mail.thread_partner_seen_info'].insert({
+                this.messaging.models['ThreadPartnerSeenInfo'].insert({
                     lastSeenMessage: link(lastMessage),
                     partner: insertAndReplace({ id: partner_id }),
                     thread: replace(channel),

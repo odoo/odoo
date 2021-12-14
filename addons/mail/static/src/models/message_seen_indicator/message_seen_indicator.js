@@ -157,7 +157,7 @@ registerModel({
                 .filter(partnerSeenInfo =>
                     /**
                      * Relation may not be set yet immediately
-                     * @see mail.thread_partner_seen_info:partnerId field
+                     * @see ThreadPartnerSeenInfo:partnerId field
                      * FIXME task-2278551
                      */
                     partnerSeenInfo.partner &&
@@ -186,7 +186,7 @@ registerModel({
                 .filter(partnerSeenInfo =>
                     /**
                      * Relation may not be set yet immediately
-                     * @see mail.thread_partner_seen_info:partnerId field
+                     * @see ThreadPartnerSeenInfo:partnerId field
                      * FIXME task-2278551
                      */
                     partnerSeenInfo.partner &&
