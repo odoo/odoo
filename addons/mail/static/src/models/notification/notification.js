@@ -5,7 +5,7 @@ import { attr, many2one } from '@mail/model/model_field';
 import { clear, insert, insertAndReplace, unlinkAll } from '@mail/model/model_field_command';
 
 registerModel({
-    name: 'mail.notification',
+    name: 'Notification',
     identifyingFields: ['id'],
     modelMethods: {
         /**

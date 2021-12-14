@@ -96,7 +96,7 @@ registerModel({
             }
             if ('notifications' in data) {
                 data2.notifications = insert(data.notifications.map(notificationData =>
-                    this.messaging.models['mail.notification'].convertData(notificationData)
+                    this.messaging.models['Notification'].convertData(notificationData)
                 ));
             }
             if ('parentMessage' in data) {
@@ -578,7 +578,7 @@ registerModel({
             compute: '_computeDateFromNow',
         }),
         email_from: attr(),
-        failureNotifications: one2many('mail.notification', {
+        failureNotifications: one2many('Notification', {
             compute: '_computeFailureNotifications',
         }),
         guestAuthor: many2one('mail.guest', {
@@ -709,7 +709,7 @@ registerModel({
             inverse: 'message',
             isCausal: true,
         }),
-        notifications: one2many('mail.notification', {
+        notifications: one2many('Notification', {
             inverse: 'message',
             isCausal: true,
         }),
