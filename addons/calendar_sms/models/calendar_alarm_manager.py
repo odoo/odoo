@@ -12,13 +12,13 @@ class AlarmManager(models.AbstractModel):
         """ Cron method, overridden here to send SMS reminders as well
         """
         super()._send_reminder()
-        alarms_by_event = self._get_events_by_alarm_to_notify('sms')
-        if not alarms_by_event:
+        events_by_alarm = self._get_events_by_alarm_to_notify('sms')
+        if not events_by_alarm:
             return
 
-        events = self.env['calendar.event'].browse(list(alarms_by_event.keys()))
-        attendees = events.attendee_ids.filtered(lambda a: a.state != 'declined')
-        for event_id in alarms_by_event.keys():
-            event_alarms = attendees.event_id.alarm_ids.filtered(lambda alarm: alarm.id in alarms_by_event.get(event_id, []))
-            for alarm in event_alarms:
-                events.browse(event_id)._do_sms_reminder(alarm)
+        event_ids = list(set(event_id for event_ids in events_by_alarm.values() for event_id in event_ids))
+        events = self.env['calendar.event'].browse(event_ids)
+        alarms = self.env['calendar.alarm'].browse(events_by_alarm.keys())
+        for event in events:
+            alarm = event.alarm_ids.filtered(lambda alarm : alarm.id in alarms.ids)
+            event._do_sms_reminder(alarm)
