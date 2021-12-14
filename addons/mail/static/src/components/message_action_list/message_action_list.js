@@ -12,15 +12,15 @@ export class MessageActionList extends Component {
      */
     setup() {
         super.setup();
-        useRefToModel({ fieldName: 'reactionPopoverRef', modelName: 'mail.message_action_list', propNameAsRecordLocalId: 'messageActionListLocalId', refName: 'reactionPopover' });
+        useRefToModel({ fieldName: 'reactionPopoverRef', modelName: 'MessageActionList', propNameAsRecordLocalId: 'messageActionListLocalId', refName: 'reactionPopover' });
         this.ADD_A_REACTION = this.env._t("Add a Reaction");
     }
 
     /**
-     * @returns {mail.message}
+     * @returns {MessageActionList}
      */
     get messageActionList() {
-        return this.messaging && this.messaging.models['mail.message_action_list'].get(this.props.messageActionListLocalId);
+        return this.messaging && this.messaging.models['MessageActionList'].get(this.props.messageActionListLocalId);
     }
 
 }

@@ -148,7 +148,7 @@ registerModel({
         /**
          * Determines the message action list of this message view (if any).
          */
-        messageActionList: one2one('mail.message_action_list', {
+        messageActionList: one2one('MessageActionList', {
             compute: '_computeMessageActionList',
             inverse: 'messageView',
             isCausal: true,
@@ -158,7 +158,7 @@ registerModel({
          * States the message action list that is displaying this message view
          * in its delete confirmation view.
          */
-        messageActionListWithDelete: one2one('mail.message_action_list', {
+        messageActionListWithDelete: one2one('MessageActionList', {
             inverse: 'messageViewForDelete',
             isCausal: true,
             readonly: true,
