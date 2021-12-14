@@ -2103,7 +2103,10 @@ exports.Orderline = Backbone.Model.extend({
             if (tax_mappings && tax_mappings.length) {
                 _.each(tax_mappings, function(tm) {
                     if (tm.tax_dest_id) {
-                        taxes.push(self.pos.taxes_by_id[tm.tax_dest_id[0]]);
+                        var taxe = self.pos.taxes_by_id[tm.tax_dest_id[0]];
+                        if (taxe) {
+                            taxes.push(taxe);
+                        }
                     }
                 });
             } else{
@@ -3355,8 +3358,9 @@ exports.Order = Backbone.Model.extend({
                 if (utils.float_is_zero(rounding_applied, this.pos.currency.decimals)){
                     // https://xkcd.com/217/
                     return 0;
-                }
-                else if(this.pos.cash_rounding[0].rounding_method === "UP" && rounding_applied < 0 && remaining > 0) {
+                } else if(this.get_total_with_tax() < this.pos.cash_rounding[0].rounding) {
+                    return 0;
+                } else if(this.pos.cash_rounding[0].rounding_method === "UP" && rounding_applied < 0 && remaining > 0) {
                     rounding_applied += this.pos.cash_rounding[0].rounding;
                 }
                 else if(this.pos.cash_rounding[0].rounding_method === "UP" && rounding_applied > 0 && remaining < 0) {
@@ -3377,7 +3381,7 @@ exports.Order = Backbone.Model.extend({
         return 0;
     },
     has_not_valid_rounding: function() {
-        if(!this.pos.config.cash_rounding)
+        if(!this.pos.config.cash_rounding || this.get_total_with_tax() < this.pos.cash_rounding[0].rounding)
             return false;
 
         const only_cash = this.pos.config.only_round_cash_method;
@@ -3408,6 +3412,8 @@ exports.Order = Backbone.Model.extend({
             for(var id in this.get_paymentlines()) {
                 var line = this.get_paymentlines()[id];
                 var diff = round_pr(round_pr(line.amount, cash_rounding) - round_pr(line.amount, default_rounding), default_rounding);
+                if(this.get_total_with_tax() < this.pos.cash_rounding[0].rounding)
+                    return true;
                 if(diff && line.payment_method.is_cash_count) {
                     return false;
                 } else if(!this.pos.config.only_round_cash_method && diff) {
