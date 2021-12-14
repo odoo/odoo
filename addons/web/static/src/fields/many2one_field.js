@@ -1,32 +1,21 @@
 /** @odoo-module **/
 
+import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
-import { useEffect, useService } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { standardFieldProps } from "./standard_field_props";
 
 const { Component } = owl;
-const { onWillStart, onWillUpdateProps, useRef, useState } = owl.hooks;
+const { onWillStart, onWillUpdateProps } = owl.hooks;
 
 export class Many2OneField extends Component {
     setup() {
         this.orm = useService("orm");
         this.action = useService("action");
-        this.inputRef = useRef("input");
 
         this.extraLines = [];
-
-        useEffect(() => {
-            if (this.inputRef.el) {
-                this.autoComplete(this.autoCompleteOptions);
-            }
-            return () => {
-                if (this.inputRef.el) {
-                    this.autoComplete("destroy");
-                }
-            };
-        });
 
         onWillStart(async () => {
             this.extraLines = await this.loadExtraLines(this.props.value);
@@ -38,32 +27,9 @@ export class Many2OneField extends Component {
         });
     }
 
-    get autoCompleteOptions() {
-        return {
-            autoFocus: true,
-            html: true,
-            minLength: 0,
-            delay: this.constructor.AUTOCOMPLETE_DELAY,
-            classes: {
-                "ui-autocomplete": "dropdown-menu",
-            },
-            position: { my: "left top", at: "left bottom" },
-            create() {
-                $(this).data("ui-autocomplete")._renderMenu = function (ulWrapper, entries) {
-                    for (const entry of entries) {
-                        this._renderItemData(ulWrapper, entry);
-                    }
-                    ulWrapper.find("li > a").addClass("dropdown-item");
-                };
-            },
-            source: this.onAutoCompleteSource.bind(this),
-            select: this.onAutoCompleteSelect.bind(this),
-            focus: this.onAutoCompleteFocus.bind(this),
-            open: this.onAutoCompleteOpen.bind(this),
-            close: this.onAutoCompleteClose.bind(this),
-        };
+    get searchLimit() {
+        return this.constructor.searchLimit;
     }
-
     get relation() {
         return this.props.record.fields[this.props.name].relation;
     }
@@ -77,9 +43,9 @@ export class Many2OneField extends Component {
         return this.props.value ? this.getDisplayName(this.props.value[1]) : "";
     }
     get isFloating() {
-        return !!this.inputRef.el && this.displayName !== this.inputRef.el.value;
+        return false;
+        // return !!this.inputRef.el && this.displayName !== this.inputRef.el.value;
     }
-
     get canCreate() {
         const attr =
             "canCreate" in this.props.attrs ? JSON.parse(this.props.attrs.canCreate) : true;
@@ -100,10 +66,6 @@ export class Many2OneField extends Component {
         return value.split("\n")[0].trim();
     }
 
-    autoComplete(...args) {
-        return $(this.inputRef.el).autocomplete(...args);
-    }
-
     async loadExtraLines(value) {
         if (this.props.options.always_reload && value) {
             const nameGet = await this.orm.call(this.relation, "name_get", [value[0]], {
@@ -113,73 +75,14 @@ export class Many2OneField extends Component {
         }
         return [];
     }
-    async fetchAutoCompleteSources(term) {
-        const trimmedTerm = term.trim();
-        const results = await this.search(trimmedTerm);
-
-        if (trimmedTerm.length) {
-            // "Quick create" option
-            const nameExists = results.some((result) => result.value === trimmedTerm);
-            if (this.canQuickCreate && !nameExists) {
-                results.push({
-                    label: sprintf(
-                        this.env._t(`Create "<strong>%s</strong>"`),
-                        owl.utils.escape(trimmedTerm)
-                    ),
-                    classname: "o_m2o_dropdown_option",
-                });
-            }
-
-            // "Create and Edit" option
-            if (this.canCreateEdit) {
-                results.push({
-                    label: this.env._t("Create and Edit..."),
-                    classname: "o_m2o_dropdown_option",
-                });
-            }
-
-            // "No results" option
-            if (!results.length) {
-                results.push({
-                    label: this.env._t("No records"),
-                    classname: "o_m2o_no_result",
-                });
-            }
-        } else if (!this.props.value && (this.canQuickCreate || this.canCreateEdit)) {
-            // "Start typing" option
-            results.push({
-                label: this.env._t("Start typing..."),
-                classname: "o_m2o_start_typing",
-            });
+    async fetchAutoCompleteSources(request) {
+        const trimmedRequest = request.trim();
+        const suggestions = [];
+        const context = Object.create(this);
+        for (const source of registry.category("m2oAutoCompleteSources").getAll()) {
+            await source(trimmedRequest, suggestions, context);
         }
-
-        return results;
-    }
-
-    async search(term = "") {
-        const results = await this.orm.call(
-            this.props.record.fields[this.props.name].relation,
-            "name_search",
-            [],
-            {
-                name: term.trim(),
-                args: [],
-                operator: "ilike",
-                limit: 8,
-            }
-        );
-
-        return results.map(([id, fullName]) => {
-            const displayName = this.getDisplayName(fullName);
-            return {
-                label: owl.utils.escape(displayName),
-                value: displayName,
-                onSelected: () => {
-                    this.inputRef.el.value = displayName;
-                    this.props.update([id, fullName]);
-                },
-            };
-        });
+        return suggestions;
     }
 
     async openAction() {
@@ -202,45 +105,16 @@ export class Many2OneField extends Component {
         await this.action.doAction(action);
     }
 
-    onAutoCompleteFocus() {}
-    onAutoCompleteOpen() {}
-    onAutoCompleteClose() {}
-    onAutoCompleteSelect(e, { item }) {
-        if (e.key === "Enter") {
-            // on Enter we do not want any additional effect, such as
-            // navigating to another field
-            e.stopImmediatePropagation();
-            e.preventDefault();
-        }
-        if (item.onSelected) {
-            item.onSelected();
-        }
-        return false;
-    }
-    async onAutoCompleteSource(request, response) {
-        const term = request.term.trim();
-        const results = await this.fetchAutoCompleteSources(term);
-        response(results);
-    }
-
-    onChange(ev) {
-        if (!ev.target.value) {
-            this.props.update(false);
-        }
-    }
     onClick() {
         this.openAction();
     }
     onExternalBtnClick() {
         this.openDialog();
     }
-    onInputClick() {
-        if (this.autoComplete("widget").is(":visible")) {
-            this.autoComplete("close");
-        } else if (this.isFloating) {
-            this.autoComplete("search"); // search with the input's content
-        } else {
-            this.autoComplete("search", ""); // search with the empty string
+
+    onChange(value) {
+        if (!value) {
+            this.props.update(false);
         }
     }
 }
@@ -251,11 +125,85 @@ Object.assign(Many2OneField, {
         ...standardFieldProps,
         placeholder: { type: String, optional: true },
     },
+    components: {
+        AutoComplete,
+    },
 
     displayName: _lt("Many2one"),
     supportedTypes: ["many2one"],
 
-    AUTOCOMPLETE_DELAY: 200,
+    searchLimit: 7,
 });
 
 registry.category("fields").add("many2one", Many2OneField);
+
+async function searchRecords(request, suggestions, ctx) {
+    const results = await ctx.orm.call(ctx.relation, "name_search", [], {
+        name: request,
+        args: [],
+        operator: "ilike",
+        limit: ctx.searchLimit + 1,
+    });
+
+    suggestions.push(
+        ...results.map(([id, fullName]) => {
+            const displayName = ctx.getDisplayName(fullName);
+            return {
+                label: owl.utils.escape(displayName),
+                onSelected: ({ setValue }) => {
+                    setValue(displayName);
+                    ctx.props.update([id, fullName]);
+                },
+            };
+        })
+    );
+
+    // Add "Search more..." option if results count is higher than the limit
+    if (ctx.searchLimit < results.length) {
+        suggestions.push({
+            label: ctx.env._t("Search More..."),
+            classList: "o_m2o_dropdown_option",
+        });
+    }
+}
+
+registry.category("m2oAutoCompleteSources").add("searchRecords", searchRecords);
+
+function additionalOptions(request, suggestions, ctx) {
+    if (request.length) {
+        // "Quick create" option
+        if (
+            ctx.canQuickCreate &&
+            !suggestions.some((s) => s.classList !== "o_m2o_dropdown_option" && s.label === request)
+        ) {
+            suggestions.push({
+                label: sprintf(ctx.env._t(`Create "%s"`), owl.utils.escape(request)),
+                classList: "o_m2o_dropdown_option",
+            });
+        }
+
+        // "Create and Edit" option
+        if (ctx.canCreateEdit) {
+            suggestions.push({
+                label: ctx.env._t(`Create and Edit...`),
+                classList: "o_m2o_dropdown_option",
+            });
+        }
+
+        // "No results" option
+        if (!suggestions.length) {
+            suggestions.push({
+                label: ctx.env._t("No records"),
+                classList: "o_m2o_no_result",
+            });
+        }
+    } else if (!ctx.props.value && (ctx.canQuickCreate || ctx.canCreateEdit)) {
+        // "Start typing" option
+        suggestions.push({
+            label: ctx.env._t("Start typing..."),
+            classList: "o_m2o_start_typing",
+        });
+    }
+}
+
+registry.category("m2oAutoCompleteSources").add("additionalOptions", additionalOptions);

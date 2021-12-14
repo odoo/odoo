@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { Many2OneField } from "@web/fields/many2one_field";
 import { click, patchWithCleanup, triggerEvent, triggerEvents } from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
@@ -198,8 +199,11 @@ QUnit.module("Fields", (hooks) => {
 
         setupViewRegistries();
 
-        patchWithCleanup(Many2OneField, {
-            AUTOCOMPLETE_DELAY: 0,
+        patchWithCleanup(AutoComplete, {
+            delay: 0,
+        });
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => fn(),
         });
     });
 
@@ -954,23 +958,16 @@ QUnit.module("Fields", (hooks) => {
             `,
         });
 
-        const $dropdownTrululu = $(form.el)
-            .find(".o_field_many2one[name='trululu'] input")
-            .autocomplete("widget");
-        const $dropdownProduct = $(form.el)
-            .find(".o_field_many2one[name='product_id'] input")
-            .autocomplete("widget");
-
         await click(form.el, ".o_field_many2one[name='trululu'] input");
         assert.containsOnce(
-            $dropdownTrululu,
+            form.el.querySelector(".o_field_many2one[name='trululu'] .dropdown-menu"),
             "li.o_m2o_start_typing",
             "autocomplete should contains start typing option"
         );
 
         await click(form.el, ".o_field_many2one[name='product_id'] input");
         assert.containsNone(
-            $dropdownProduct,
+            form.el.querySelector(".o_field_many2one[name='product_id'] .dropdown-menu"),
             "li.o_m2o_start_typing",
             "autocomplete should contains start typing option"
         );
@@ -1239,16 +1236,14 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        const $dropdown = $(form.el)
-            .find(".o_field_many2one[name='trululu'] input")
-            .autocomplete("widget");
-
         const input = form.el.querySelector(".o_field_many2one[name='trululu'] input");
         await click(input);
 
-        assert.isVisible($dropdown);
+        const dropdown = form.el.querySelector(".o_field_many2one[name='trululu'] .dropdown-menu");
+
+        assert.isVisible(dropdown);
         assert.containsN(
-            $dropdown,
+            dropdown,
             "li:not(.o_m2o_dropdown_option)",
             4,
             "autocomplete should contains 4 suggestions"
@@ -1258,7 +1253,7 @@ QUnit.module("Fields", (hooks) => {
         input.value = "   first";
         await triggerEvents(input, null, ["input", "change"]);
         assert.containsOnce(
-            $dropdown,
+            dropdown,
             "li:not(.o_m2o_dropdown_option)",
             "autocomplete should contains 1 suggestion"
         );
@@ -1267,7 +1262,7 @@ QUnit.module("Fields", (hooks) => {
         input.value = "first  ";
         await triggerEvents(input, null, ["input", "change"]);
         assert.containsOnce(
-            $dropdown,
+            dropdown,
             "li:not(.o_m2o_dropdown_option)",
             "autocomplete should contains 1 suggestion"
         );
@@ -1276,7 +1271,7 @@ QUnit.module("Fields", (hooks) => {
         input.value = "   first   ";
         await triggerEvents(input, null, ["input", "change"]);
         assert.containsOnce(
-            $dropdown,
+            dropdown,
             "li:not(.o_m2o_dropdown_option)",
             "autocomplete should contains 1 suggestion"
         );
@@ -3916,33 +3911,36 @@ QUnit.module("Fields", (hooks) => {
         form.destroy();
     });
 
-    QUnit.skip("many2one dropdown disappears on scroll", async function (assert) {
+    QUnit.test("many2one dropdown disappears on scroll", async function (assert) {
         assert.expect(2);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                "<form>" +
-                '<div style="height: 2000px;">' +
-                '<field name="trululu"/>' +
-                "</div>" +
-                "</form>",
-            res_id: 1,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <div style="height: 2000px;">
+                        <field name="trululu" />
+                    </div>
+                </form>
+            `,
         });
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el, ".o_form_button_edit");
 
-        var $input = form.$(".o_field_many2one input");
+        await click(form.el, ".o_field_many2one input");
+        assert.isVisible(
+            form.el.querySelector(".o_field_many2one .dropdown-menu"),
+            "dropdown should be opened"
+        );
 
-        await testUtils.dom.click($input);
-        assert.isVisible($input.autocomplete("widget"), "dropdown should be opened");
-
-        form.el.dispatchEvent(new Event("scroll"));
-        assert.isNotVisible($input.autocomplete("widget"), "dropdown should be closed");
-
-        form.destroy();
+        await triggerEvent(form.el, null, "scroll");
+        assert.isNotVisible(
+            form.el.querySelector(".o_field_many2one .dropdown-menu"),
+            "dropdown should be closed"
+        );
     });
 
     QUnit.skip("x2many list sorted by many2one", async function (assert) {

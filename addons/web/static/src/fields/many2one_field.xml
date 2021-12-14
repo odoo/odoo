@@ -34,14 +34,11 @@
             >
                 <div class="o_field_many2one_selection">
                     <div class="o_input_dropdown">
-                        <input
-                            type="text"
-                            class="o_input"
-                            t-att-placeholder="props.attrs.placeholder"
-                            t-att-value="displayName"
-                            t-on-click="onInputClick"
-                            t-on-change="onChange"
-                            t-ref="input"
+                        <AutoComplete
+                            value="displayName"
+                            placeholder="props.attrs.placeholder"
+                            fetchSuggestions="(term) => this.fetchAutoCompleteSources(term)"
+                            onChange="(value) => this.onChange(value)"
                         />
                         <a role="button" class="o_dropdown_button" draggable="false" />
                     </div>
