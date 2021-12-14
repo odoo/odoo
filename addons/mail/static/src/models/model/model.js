@@ -145,7 +145,7 @@ registerModel({
         /**
          * Returns the messaging singleton.
          *
-         * @returns {mail.messaging}
+         * @returns {Messaging}
          */
         messaging() {
             return this.modelManager.messaging;
@@ -258,7 +258,7 @@ registerModel({
          * States the messaging singleton. Automatically assigned by the model
          * manager at creation.
          */
-        messaging: many2one('mail.messaging', {
+        messaging: many2one('Messaging', {
             default: insertAndReplace(),
             inverse: 'allRecords',
             readonly: true,

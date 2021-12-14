@@ -9,7 +9,7 @@ import { makeDeferred } from '@mail/utils/deferred/deferred';
 const { EventBus } = owl.core;
 
 registerModel({
-    name: 'mail.messaging',
+    name: 'Messaging',
     identifyingFields: [],
     lifecycleHooks: {
         _created() {

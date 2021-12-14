@@ -26,7 +26,7 @@ export const MessagingService = AbstractService.extend({
      * be considered the main entry point to the messaging system for outside
      * code.
      *
-     * @returns {mail.messaging}
+     * @returns {Messaging}
      **/
     async get() {
         return this.modelManager.getMessaging();

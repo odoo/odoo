@@ -5,7 +5,7 @@ import { attr } from '@mail/model/model_field';
 // ensure that the model definition is loaded before the patch
 import '@mail/models/messaging/messaging';
 
-addRecordMethods('mail.messaging', {
+addRecordMethods('Messaging', {
     async fetchSnailmailCreditsUrl() {
         const snailmail_credits_url = await this.async(() => this.env.services.rpc({
             model: 'iap.account',
@@ -28,7 +28,7 @@ addRecordMethods('mail.messaging', {
     },
 });
 
-addFields('mail.messaging', {
+addFields('Messaging', {
     snailmail_credits_url: attr(),
     snailmail_credits_url_trial: attr(),
 });
