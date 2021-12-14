@@ -328,7 +328,7 @@ registerModel({
             readonly: true,
             required: true,
         }),
-        messagingMenu: one2one('mail.messaging_menu', {
+        messagingMenu: one2one('MessagingMenu', {
             default: insertAndReplace(),
             isCausal: true,
             readonly: true,

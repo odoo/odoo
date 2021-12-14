@@ -4,7 +4,7 @@ import { registerModel } from '@mail/model/model_core';
 import { attr, one2many } from '@mail/model/model_field';
 
 registerModel({
-    name: 'mail.messaging_menu',
+    name: 'MessagingMenu',
     identifyingFields: ['messaging'],
     recordMethods: {
         /**
