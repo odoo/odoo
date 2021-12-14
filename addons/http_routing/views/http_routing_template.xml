@@ -38,9 +38,9 @@
                 </h4>
                 <div id="error_qweb" class="collapse show">
                     <div class="card-body">
-                        <p t-if="exception.message">
+                        <p>
                             <strong>Error message:</strong>
-                            <pre t-esc="exception.message"/>
+                            <pre t-esc="exception"/>
                         </p>
                         <p>
                             The error occurred while rendering the template <code t-esc="qweb_exception.name"/>

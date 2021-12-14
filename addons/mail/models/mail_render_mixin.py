@@ -10,7 +10,6 @@ from lxml import html
 from markupsafe import Markup
 from werkzeug import urls
 
-from .ir_qweb import QWebCodeFound
 from odoo import _, api, fields, models, tools
 from odoo.addons.base.models.ir_qweb import QWebException
 from odoo.exceptions import UserError, AccessError
@@ -286,11 +285,11 @@ class MailRenderMixin(models.AbstractModel):
                 # remove the rendered tag <div> that was added in order to wrap potentially multiples nodes into one.
                 render_result = render_result[5:-6]
             except Exception as e:
-                if isinstance(e, QWebException) and isinstance(e.error, QWebCodeFound):
+                if isinstance(e, QWebException) and isinstance(e.__cause__, PermissionError):
                     group = self.env.ref('mail.group_mail_template_editor')
-                    raise AccessError(_('Only users belonging to the "%s" group can modify dynamic templates.', group.name))
+                    raise AccessError(_('Only users belonging to the "%s" group can modify dynamic templates.', group.name)) from e
                 _logger.info("Failed to render template : %s", template_src, exc_info=True)
-                raise UserError(_("Failed to render QWeb template : %s)", e))
+                raise UserError(_("Failed to render QWeb template : %s)", e)) from e
             results[record.id] = render_result
 
         return results

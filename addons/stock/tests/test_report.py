@@ -54,7 +54,7 @@ class TestReports(TestReportsCommon):
             'company_id': self.env.company.id,
         })
         report = self.env.ref('stock.label_lot_template')
-        target = b'\n\n^XA\n^FO100,50\n^A0N,44,33^FD[C418]Mellohi^FS\n^FO100,100\n^A0N,44,33^FDLN/SN:Volume-Beta^FS\n^FO100,150^BY3\n^BCN,100,Y,N,N\n^FDVolume-Beta^FS\n^XZ\n\n'
+        target = b'\n\n^XA\n^FO100,50\n^A0N,44,33^FD[C418]Mellohi^FS\n^FO100,100\n^A0N,44,33^FDLN/SN:Volume-Beta^FS\n^FO100,150^BY3\n^BCN,100,Y,N,N\n^FDVolume-Beta^FS\n^XZ\n'
 
         rendering, qweb_type = report._render_qweb_text(lot1.id)
         self.assertEqual(target, rendering.replace(b' ', b''), 'The rendering is not good')
