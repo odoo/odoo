@@ -441,9 +441,9 @@ registerModel({
             related: 'threadViewer.thread',
         }),
         /**
-         * States the `mail.thread_cache` currently displayed by `this`.
+         * States the `ThreadCache` currently displayed by `this`.
          */
-        threadCache: many2one('mail.thread_cache', {
+        threadCache: many2one('ThreadCache', {
             inverse: 'threadViews',
             readonly: true,
             related: 'threadViewer.threadCache',

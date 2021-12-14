@@ -10,7 +10,7 @@ registerModel({
     recordMethods: {
         /**
          * @param {integer} scrollHeight
-         * @param {mail.thread_cache} threadCache
+         * @param {ThreadCache} threadCache
          */
         saveThreadCacheScrollHeightAsInitial(scrollHeight, threadCache) {
             threadCache = threadCache || this.threadCache;
@@ -31,7 +31,7 @@ registerModel({
         },
         /**
          * @param {integer} scrollTop
-         * @param {mail.thread_cache} threadCache
+         * @param {ThreadCache} threadCache
          */
         saveThreadCacheScrollPositionsAsInitial(scrollTop, threadCache) {
             threadCache = threadCache || this.threadCache;
@@ -117,9 +117,9 @@ registerModel({
          */
         thread: many2one('Thread'),
         /**
-         * States the `mail.thread_cache` that should be displayed by `this`.
+         * States the `ThreadCache` that should be displayed by `this`.
          */
-        threadCache: many2one('mail.thread_cache', {
+        threadCache: many2one('ThreadCache', {
             related: 'thread.cache',
         }),
         /**
