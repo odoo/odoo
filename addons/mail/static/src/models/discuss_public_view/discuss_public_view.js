@@ -86,7 +86,7 @@ registerModel({
         /**
          * States the welcome view linked to this discuss public view.
          */
-        welcomeView: one2one('mail.welcome_view', {
+        welcomeView: one2one('WelcomeView', {
             inverse: 'discussPublicView',
             isCausal: true,
         }),
