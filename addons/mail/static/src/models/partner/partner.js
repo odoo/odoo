@@ -446,7 +446,7 @@ registerModel({
         nameOrDisplayName: attr({
             compute: '_computeNameOrDisplayName',
         }),
-        partnerSeenInfos: one2many('mail.thread_partner_seen_info', {
+        partnerSeenInfos: one2many('ThreadPartnerSeenInfo', {
             inverse: 'partner',
             isCausal: true,
         }),

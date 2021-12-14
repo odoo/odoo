@@ -4,7 +4,7 @@ import { registerModel } from '@mail/model/model_core';
 import { many2one } from '@mail/model/model_field';
 
 registerModel({
-    name: 'mail.thread_partner_seen_info',
+    name: 'ThreadPartnerSeenInfo',
     identifyingFields: ['thread', 'partner'],
     fields: {
         lastFetchedMessage: many2one('mail.message'),
