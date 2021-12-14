@@ -38,7 +38,7 @@ class Project(models.Model):
     )
 
     timesheet_ids = fields.One2many('account.analytic.line', 'project_id', 'Associated Timesheets')
-    timesheet_count = fields.Boolean(compute="_compute_timesheet_count")
+    timesheet_count = fields.Integer(compute="_compute_timesheet_count")
     timesheet_encode_uom_id = fields.Many2one('uom.uom', related='company_id.timesheet_encode_uom_id')
     total_timesheet_time = fields.Integer(
         compute='_compute_total_timesheet_time',
