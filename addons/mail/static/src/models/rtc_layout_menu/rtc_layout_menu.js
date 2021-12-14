@@ -48,7 +48,7 @@ registerModel({
     },
     fields: {
         component: attr(),
-        callViewer: one2one('mail.rtc_call_viewer', {
+        callViewer: one2one('RtcCallViewer', {
             inverse: 'rtcLayoutMenu',
             readonly: true,
         }),

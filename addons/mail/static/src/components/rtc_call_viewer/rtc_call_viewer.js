@@ -35,10 +35,10 @@ export class RtcCallViewer extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {mail.rtc_call_viewer}
+     * @returns {RtcCallViewer}
      */
     get rtcCallViewer() {
-        return this.messaging.models['mail.rtc_call_viewer'].get(this.props.localId);
+        return this.messaging.models['RtcCallViewer'].get(this.props.localId);
     }
 
     //--------------------------------------------------------------------------
