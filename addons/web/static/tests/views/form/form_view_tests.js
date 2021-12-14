@@ -464,8 +464,6 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("decoration works on widgets", async function (assert) {
-        assert.expect(2);
-
         const form = await makeView({
             type: "form",
             resModel: "partner",
@@ -483,8 +481,6 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("decoration on widgets are reevaluated if necessary", async function (assert) {
-        assert.expect(2);
-
         const form = await makeView({
             type: "form",
             resModel: "partner",
@@ -503,8 +499,6 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("decoration on widgets works on same widget", async function (assert) {
-        assert.expect(2);
-
         const form = await makeView({
             type: "form",
             resModel: "partner",
@@ -669,27 +663,25 @@ QUnit.module("Views", (hooks) => {
         await testUtils.dom.click(webClient.el.querySelector('.o_field_widget[name="product_id"]'));
     });
 
-    QUnit.skip("invisible fields are properly hidden", async function (assert) {
-        assert.expect(4);
-
+    QUnit.test("invisible fields are properly hidden", async function (assert) {
         const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                "<group>" +
-                '<field name="foo" invisible="1"/>' +
-                '<field name="bar"/>' +
-                "</group>" +
-                '<field name="qux" invisible="1"/>' +
-                // x2many field without inline view: as it is always invisible, the view
-                // should not be fetched. we don't specify any view in this test, so if it
-                // ever tries to fetch it, it will crash, indicating that this is wrong.
-                '<field name="p" invisible="True"/>' +
-                "</sheet>" +
-                "</form>",
+            // the arch contains an x2many field without inline view: as it is always invisible,
+            // the view should not be fetched. we don't specify any view in this test, so if it
+            // ever tries to fetch it, it will crash, indicating that this is wrong.
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="foo" invisible="1"/>
+                            <field name="bar"/>
+                        </group>
+                        <field name="qux" invisible="1"/>
+                        <field name="p" invisible="True"/>
+                    </sheet>
+                </form>`,
             resId: 1,
         });
 
@@ -699,136 +691,106 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(form, ".o_field_widget[name=p]");
     });
 
-    QUnit.skip("invisible elements are properly hidden", async function (assert) {
-        assert.expect(3);
-
+    QUnit.test("invisible elements are properly hidden", async function (assert) {
         const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                '<form string="Partners">' +
-                '<header invisible="1">' +
-                '<button name="myaction" string="coucou"/>' +
-                "</header>" +
-                "<sheet>" +
-                "<group>" +
-                '<group string="invgroup" invisible="1">' +
-                '<field name="foo"/>' +
-                "</group>" +
-                "</group>" +
-                "<notebook>" +
-                '<page string="visible"/>' +
-                '<page string="invisible" invisible="1"/>' +
-                "</notebook>" +
-                "</sheet>" +
-                "</form>",
+            arch: `
+                <form>
+                    <header invisible="1">
+                        <button name="myaction" string="coucou"/>
+                    </header>
+                    <sheet>
+                    <group>
+                        <group string="invgroup" invisible="1">
+                            <field name="foo"/>
+                        </group>
+                        <group string="visgroup">
+                            <field name="bar"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="visible"/>
+                        <page string="invisible" invisible="1"/>
+                    </notebook>
+                    </sheet>
+                </form>`,
             resId: 1,
         });
-        assert.containsOnce(form, ".o_form_statusbar.o_invisible_modifier button:contains(coucou)");
-        assert.containsOnce(form, ".o_notebook li.o_invisible_modifier a:contains(invisible)");
-        assert.containsOnce(form, "table.o_inner_group.o_invisible_modifier td:contains(invgroup)");
+        assert.containsNone(form, ".o_form_statusbar button:contains(coucou)");
+        assert.containsOnce(form, ".o_notebook li a:contains(visible)");
+        assert.containsNone(form, ".o_notebook li a:contains(invisible)");
+        assert.containsOnce(form, "table.o_inner_group td:contains(visgroup)");
+        assert.containsNone(form, "table.o_inner_group td:contains(invgroup)");
     });
 
-    QUnit.skip(
+    QUnit.test(
         "invisible attrs on fields are re-evaluated on field change",
         async function (assert) {
-            assert.expect(3);
-
             // we set the value bar to simulate a falsy boolean value.
-            this.data.partner.records[0].bar = false;
+            serverData.models.partner.records[0].bar = false;
 
             const form = await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
-                arch:
-                    '<form string="Partners">' +
-                    "<sheet><group>" +
-                    '<field name="product_id"/>' +
-                    '<field name="timmy" invisible="1"/>' +
-                    '<field name="foo" class="foo_field" attrs=\'{"invisible": [["product_id", "=", false]]}\'/>' +
-                    '<field name="bar" class="bar_field" attrs=\'{"invisible":[("bar","=",False),("timmy","=",[])]}\'/>' +
-                    "</group></sheet>" +
-                    "</form>",
+                arch: `
+                    <form>
+                        <sheet>
+                            <group>
+                                <field name="int_field"/>
+                                <field name="timmy" invisible="1"/>
+                                <field name="foo" attrs='{"invisible": [("int_field", "=", 10)]}'/>
+                                <field name="bar" attrs='{"invisible": [("bar", "=", False), ("timmy", "=", [])]}'/>
+                            </group>
+                        </sheet>
+                    </form>`,
                 resId: 1,
-                viewOptions: {
-                    mode: "edit",
-                },
             });
+            await click(form.el.querySelector(".o_form_button_edit"));
 
-            assert.hasClass(form.$(".foo_field"), "o_invisible_modifier");
-            assert.hasClass(form.$(".bar_field"), "o_invisible_modifier");
+            assert.containsOnce(form, ".o_field_widget[name=int_field]");
+            assert.containsNone(form, ".o_field_widget[name=timmy]");
+            assert.containsNone(form, ".o_field_widget[name=foo]");
+            assert.containsNone(form, ".o_field_widget[name=bar]");
 
-            // set a value on the m2o
-            await testUtils.fields.many2one.searchAndClickItem("product_id");
-            assert.doesNotHaveClass(form.$(".foo_field"), "o_invisible_modifier");
+            await editInput(form.el, ".o_field_widget[name=int_field]", 44);
+            assert.containsOnce(form, ".o_field_widget[name=int_field]");
+            assert.containsNone(form, ".o_field_widget[name=timmy]");
+            assert.containsOnce(form, ".o_field_widget[name=foo]");
+            assert.containsNone(form, ".o_field_widget[name=bar]");
         }
     );
 
-    QUnit.skip("asynchronous fields can be set invisible", async function (assert) {
-        assert.expect(1);
-        var done = assert.async();
-
-        var def = testUtils.makeTestPromise();
-
-        // we choose this widget because it is a quite simple widget with a non
-        // empty qweb template
-        var PercentPieWidget = fieldRegistry.get("percentpie");
-        fieldRegistry.add(
-            "asyncwidget",
-            PercentPieWidget.extend({
-                willStart: function () {
-                    return def;
-                },
-            })
-        );
-
-        createView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch:
-                '<form string="Partners">' +
-                "<sheet><group>" +
-                '<field name="foo"/>' +
-                '<field name="int_field" invisible="1" widget="asyncwidget"/>' +
-                "</group></sheet>" +
-                "</form>",
-            resId: 1,
-        }).then(function (form) {
-            assert.containsNone(form, '.o_field_widget[name="int_field"]');
-            delete fieldRegistry.map.asyncwidget;
-            done();
-        });
-        def.resolve();
-    });
-
-    QUnit.skip(
+    QUnit.test(
         "properly handle modifiers and attributes on notebook tags",
         async function (assert) {
-            assert.expect(2);
-
             const form = await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
-                arch:
-                    '<form string="Partners">' +
-                    "<sheet>" +
-                    '<field name="product_id"/>' +
-                    '<notebook class="new_class" attrs=\'{"invisible": [["product_id", "=", false]]}\'>' +
-                    '<page string="Foo">' +
-                    '<field name="foo"/>' +
-                    "</page>" +
-                    "</notebook>" +
-                    "</sheet>" +
-                    "</form>",
+                arch: `
+                    <form>
+                        <sheet>
+                            <field name="int_field"/>
+                            <notebook class="new_class" attrs='{"invisible": [["int_field", "=", 10]]}'>
+                                <page string="Foo">
+                                    <field name="foo"/>
+                                </page>
+                            </notebook>
+                        </sheet>
+                    </form>`,
                 resId: 1,
             });
 
-            assert.hasClass(form.$(".o_notebook"), "o_invisible_modifier");
-            assert.hasClass(form.$(".o_notebook"), "new_class");
+            assert.containsNone(form, ".o_notebook");
+
+            await click(form.el.querySelector(".o_form_button_edit"));
+            await editInput(form.el, ".o_field_widget[name=int_field]", 44);
+
+            assert.containsOnce(form, ".o_notebook");
+            assert.hasClass(form.el.querySelector(".o_notebook"), "new_class");
         }
     );
 
@@ -857,12 +819,13 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(form, ":scope .o_notebook .nav");
     });
 
-    QUnit.skip("no visible page", async function (assert) {
-        assert.expect(4);
-
-        const form = await createView({
+    QUnit.test("no visible page", async function (assert) {
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
             arch: `
-                <form string="Partners">
+                <form>
                     <sheet>
                         <notebook>
                             <page string="Foo" invisible="1">
@@ -874,47 +837,42 @@ QUnit.module("Views", (hooks) => {
                         </notebook>
                     </sheet>
                 </form>`,
-            serverData,
-            resModel: "partner",
             resId: 1,
-            type: "form",
         });
 
-        // Does not change when switching state
-        await testUtils.form.clickEdit(form);
+        assert.containsNone(form, ".o_notebook_headers .nav-item");
+        assert.containsNone(form, ".tab-content .tab-pane");
 
-        for (const nav of form.el.querySelectorAll(":scope .o_notebook .nav")) {
-            assert.containsNone(nav, ".nav-link.active");
-            assert.containsN(nav, ".nav-item.o_invisible_modifier", 2);
-        }
+        // Does not change when switching state
+        await click(form.el.querySelector(".o_form_button_edit"));
+
+        assert.containsNone(form, ".o_notebook_headers .nav-item");
+        assert.containsNone(form, ".tab-content .tab-pane");
 
         // Does not change when coming back to initial state
-        await testUtils.form.clickSave(form);
+        await click(form.el.querySelector(".o_form_button_save"));
 
-        for (const nav of form.el.querySelectorAll(":scope .o_notebook .nav")) {
-            assert.containsNone(nav, ".nav-link.active");
-            assert.containsN(nav, ".nav-item.o_invisible_modifier", 2);
-        }
+        assert.containsNone(form, ".o_notebook_headers .nav-item");
+        assert.containsNone(form, ".tab-content .tab-pane");
     });
 
-    QUnit.skip("notebook: pages with invisible modifiers", async function (assert) {
-        assert.expect(10);
-
-        const form = await createView({
+    QUnit.test("notebook: pages with invisible modifiers", async function (assert) {
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch: `<form string="Partners">
+            arch: `
+                <form>
                     <sheet>
                         <field name="bar"/>
                         <notebook>
-                            <page string="First" attrs='{"invisible": [["bar", "=", false]]}'>
+                            <page string="A" attrs='{"invisible": [["bar", "=", false]]}'>
                                 <field name="foo"/>
                             </page>
-                            <page string="Second" attrs='{"invisible": [["bar", "=", true]]}'>
+                            <page string="B" attrs='{"invisible": [["bar", "=", true]]}'>
                                 <field name="int_field"/>
                             </page>
-                            <page string="Third">
+                            <page string="C">
                                 <field name="qux"/>
                             </page>
                         </notebook>
@@ -923,31 +881,19 @@ QUnit.module("Views", (hooks) => {
             resId: 1,
         });
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
 
-        assert.containsOnce(
-            form,
-            ".o_notebook .nav .nav-link.active",
-            "There should be only one active tab"
-        );
-        assert.isVisible(form.$(".o_notebook .nav .nav-item:first"));
-        assert.hasClass(form.$(".o_notebook .nav .nav-link:first"), "active");
+        assert.containsN(form, ".o_notebook .nav-link", 2);
+        assert.containsOnce(form, ".o_notebook .nav .nav-link.active");
+        assert.hasClass(form.el.querySelector(".o_notebook .nav .nav-link"), "active");
+        assert.strictEqual(form.el.querySelector(".o_notebook .nav-link.active").innerText, "A");
 
-        assert.isNotVisible(form.$(".o_notebook .nav .nav-item:eq(1)"));
-        assert.doesNotHaveClass(form.$(".o_notebook .nav .nav-link:eq(1)"), "active");
+        await click(form.el.querySelector(".o_field_widget[name=bar] input"));
 
-        await testUtils.dom.click(form.$(".o_field_widget[name=bar] input"));
-
-        assert.containsOnce(
-            form,
-            ".o_notebook .nav .nav-link.active",
-            "There should be only one active tab"
-        );
-        assert.isNotVisible(form.$(".o_notebook .nav .nav-item:first"));
-        assert.doesNotHaveClass(form.$(".o_notebook .nav .nav-link:first"), "active");
-
-        assert.isVisible(form.$(".o_notebook .nav .nav-item:eq(1)"));
-        assert.hasClass(form.$(".o_notebook .nav .nav-link:eq(1)"), "active");
+        assert.containsN(form, ".o_notebook .nav-link", 2);
+        assert.containsOnce(form, ".o_notebook .nav .nav-link.active");
+        assert.hasClass(form.el.querySelector(".o_notebook .nav .nav-link"), "active");
+        assert.strictEqual(form.el.querySelector(".o_notebook .nav-link.active").innerText, "B");
     });
 
     QUnit.skip("invisible attrs on first notebook page", async function (assert) {
