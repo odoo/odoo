@@ -171,15 +171,10 @@ class AccountMove(models.Model):
     highest_name = fields.Char(compute='_compute_highest_name')
     show_name_warning = fields.Boolean(store=False)
     date = fields.Date(
-        string='Date',
-        required=True,
-        index=True,
-        readonly=True,
-        states={'draft': [('readonly', False)]},
-        copy=False,
-        tracking=True,
-        default=fields.Date.context_today
-    )
+        string='Date', required=True, index=True, readonly=True,
+        compute='_compute_date', store=True,
+        states={'draft': [('readonly', False)]}, copy=False,
+        tracking=True, default=fields.Date.context_today)
     ref = fields.Char(string='Reference', copy=False, tracking=True)
     narration = fields.Html(string='Terms and Conditions', compute='_compute_narration', store=True, readonly=False)
 
@@ -331,7 +326,9 @@ class AccountMove(models.Model):
         default=lambda self: self.env.user)
     invoice_date = fields.Date(string='Invoice/Bill Date', readonly=True, index=True, copy=False,
         states={'draft': [('readonly', False)]})
-    invoice_date_due = fields.Date(string='Due Date', readonly=True, index=True, copy=False,
+    invoice_date_due = fields.Date(
+        string='Due Date', readonly=True, index=True, copy=False,
+        compute='_compute_invoice_date_due', store=True,
         states={'draft': [('readonly', False)]})
     invoice_origin = fields.Char(string='Origin', readonly=True, tracking=True,
         help="The document(s) that generated the invoice.")
@@ -473,29 +470,22 @@ class AccountMove(models.Model):
                     return max(invoice_date, today)
         return invoice_date
 
-    @api.onchange('invoice_date', 'highest_name', 'company_id')
-    def _onchange_invoice_date(self):
-        if self.invoice_date:
-            if not self.invoice_payment_term_id and (not self.invoice_date_due or self.invoice_date_due < self.invoice_date):
-                self.invoice_date_due = self.invoice_date
+    @api.depends('invoice_date', 'highest_name', 'company_id')
+    def _compute_invoice_date_due(self):
+        for move in self:
+            if move.invoice_date and not move.invoice_payment_term_id and \
+                    (not move.invoice_date_due or move.invoice_date_due < move.invoice_date):
+                move.invoice_date_due = move.invoice_date
 
-            has_tax = bool(self.line_ids.tax_ids or self.line_ids.tax_tag_ids)
-            accounting_date = self._get_accounting_date(self.invoice_date, has_tax)
-            if accounting_date != self.date:
-                self.date = accounting_date
-                self._onchange_currency()
-            else:
-                self._onchange_recompute_dynamic_lines()
-
-    @api.onchange('journal_id')
-    def _onchange_journal(self):
-        if self.journal_id and self.journal_id.currency_id:
-            new_currency = self.journal_id.currency_id
-            if new_currency != self.currency_id:
-                self.currency_id = new_currency
-                self._onchange_currency()
-        if self.state == 'draft' and self._get_last_sequence() and self.name and self.name != '/':
-            self.name = '/'
+    @api.depends('invoice_date', 'highest_name', 'company_id')
+    def _compute_date(self):
+        for move in self:
+            if not move.invoice_date:
+                continue
+            has_tax = bool(move.line_ids.tax_ids or move.line_ids.tax_tag_ids)
+            accounting_date = move._get_accounting_date(move.invoice_date, has_tax)
+            if accounting_date != move.date:
+                move.date = accounting_date
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
@@ -1146,7 +1136,7 @@ class AccountMove(models.Model):
     @api.depends('journal_id')
     def _compute_currency_id(self):
         for move in self:
-            move.currency_id =  move.journal_id.currency_id or move.journal_id.company_id.currency_id
+            move.currency_id = move.journal_id.currency_id or move.journal_id.company_id.currency_id
 
     def _get_lines_onchange_currency(self):
         # Override needed for COGS
@@ -3891,7 +3881,7 @@ class AccountMoveLine(models.Model):
                 self.price_unit = business_vals['price_unit']
 
     @api.depends('move_id.date', 'move_id.currency_id')
-    def _compute_currency(self):
+    def _compute_currency_id(self):
         for line in self:
             currency = line.move_id.currency_id or line.move_id.company_id.currency_id
             if line.move_id.is_invoice(include_receipts=True):
@@ -4139,7 +4129,7 @@ class AccountMoveLine(models.Model):
 
         return self.move_id.move_type in ('in_refund', 'out_refund')
 
-    @api.onchange(
+    @api.depends(
         'amount_currency', 'currency_id', 'debit', 'credit',
         'tax_ids', 'account_id', 'price_unit', 'quantity',
         'analytic_account_id', 'analytic_tag_ids')
