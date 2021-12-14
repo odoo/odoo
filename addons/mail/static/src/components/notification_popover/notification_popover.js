@@ -7,10 +7,10 @@ const { Component } = owl;
 export class NotificationPopover extends Component {
 
     /**
-     * @returns {mail.message_view}
+     * @returns {MessageView}
      */
     get messageView() {
-        return this.messaging && this.messaging.models['mail.message_view'].get(this.props.messageViewLocalId);
+        return this.messaging && this.messaging.models['MessageView'].get(this.props.messageViewLocalId);
     }
 
 }

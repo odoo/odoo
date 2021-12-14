@@ -264,7 +264,7 @@ export class MessageList extends Component {
      * Scrolls to a given message view and briefly highlights it.
      *
      * @private
-     * @param {mail.message_view} messageView
+     * @param {MessageView} messageView
      */
     _highlightMessageView(messageView) {
         if (messageView.exists() && messageView.component && messageView.component.el) {

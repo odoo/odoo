@@ -22,7 +22,7 @@ export class Message extends Component {
      */
     setup() {
         super.setup();
-        useComponentToModel({ fieldName: 'component', modelName: 'mail.message_view', propNameAsRecordLocalId: 'messageViewLocalId' });
+        useComponentToModel({ fieldName: 'component', modelName: 'MessageView', propNameAsRecordLocalId: 'messageViewLocalId' });
         this.state = useState({
             /**
              * Determine whether the message is hovered. When message is hovered
@@ -216,10 +216,10 @@ export class Message extends Component {
     }
 
     /**
-     * @returns {mail.message_view}
+     * @returns {MessageView}
      */
     get messageView() {
-        return this.messaging && this.messaging.models['mail.message_view'].get(this.props.messageViewLocalId);
+        return this.messaging && this.messaging.models['MessageView'].get(this.props.messageViewLocalId);
     }
     /**
      * @returns {string}

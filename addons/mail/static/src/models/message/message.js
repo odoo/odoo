@@ -705,7 +705,7 @@ registerModel({
         /**
          * States the views that are displaying this message.
          */
-        messageViews: one2many('mail.message_view', {
+        messageViews: one2many('MessageView', {
             inverse: 'message',
             isCausal: true,
         }),

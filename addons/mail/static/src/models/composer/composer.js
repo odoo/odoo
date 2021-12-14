@@ -172,7 +172,7 @@ registerModel({
         mentionedPartners: many2many('mail.partner', {
             compute: '_computeMentionedPartners',
         }),
-        messageViewInEditing: one2one('mail.message_view', {
+        messageViewInEditing: one2one('MessageView', {
             inverse: 'composerForEditing',
             readonly: true,
         }),

@@ -113,7 +113,7 @@ registerModel({
         /**
          * Link with a message view to handle attachments.
          */
-        messageView: one2one('mail.message_view', {
+        messageView: one2one('MessageView', {
             inverse: 'attachmentList',
             readonly: true,
         }),

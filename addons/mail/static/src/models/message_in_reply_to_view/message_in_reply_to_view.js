@@ -26,7 +26,7 @@ registerModel({
             if (!threadView || !parentMessage) {
                 return;
             }
-            const parentMessageView = this.messaging.models['mail.message_view'].findFromIdentifyingData({
+            const parentMessageView = this.messaging.models['MessageView'].findFromIdentifyingData({
                 message: replace(parentMessage),
                 threadView: replace(threadView),
             });
@@ -37,7 +37,7 @@ registerModel({
         },
     },
     fields: {
-        messageView: one2one('mail.message_view', {
+        messageView: one2one('MessageView', {
             inverse: 'messageInReplyToView',
             readonly: true,
             required: true,
