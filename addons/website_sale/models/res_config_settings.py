@@ -7,7 +7,7 @@ from odoo import api, models, fields
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    salesperson_id = fields.Many2one('res.users', related='website_id.salesperson_id', string='Salesperson', readonly=False)
+    salesperson_id = fields.Many2one('res.users', related='website_id.salesperson_id', string='Salesperson', readonly=False, domain="[('share', '=', False)]")
     salesteam_id = fields.Many2one('crm.team', related='website_id.salesteam_id', string='Sales Team', readonly=False)
     module_website_sale_delivery = fields.Boolean("eCommerce Shipping Costs")
     # field used to have a nice radio in form view, resuming the 2 fields above
