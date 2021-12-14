@@ -4,8 +4,6 @@ const { useState, onMounted, onWillUnmount } = owl.hooks;
 
 /**
  * This hook handle the visibility of the dropzone based on drag & drop events.
- * It needs a ref to a dropzone, so you need to specify a t-ref="dropzone" in
- * the template of your component.
  *
  * @returns {Object}
  */
