@@ -359,7 +359,7 @@ registerModel({
             isCausal: true,
             readonly: true,
         }),
-        soundEffects: one2one('mail.sound_effects', {
+        soundEffects: one2one('SoundEffects', {
             default: insertAndReplace(),
             isCausal: true,
             readonly: true,
