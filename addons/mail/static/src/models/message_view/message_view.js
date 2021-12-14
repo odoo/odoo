@@ -175,7 +175,7 @@ registerModel({
          * States the message in reply to view that displays the message of
          * which this message is a reply to (if any).
          */
-        messageInReplyToView: one2one('mail.message_in_reply_to_view', {
+        messageInReplyToView: one2one('MessageInReplyToView', {
             compute: '_computeMessageInReplyToView',
             inverse: 'messageView',
             isCausal: true,

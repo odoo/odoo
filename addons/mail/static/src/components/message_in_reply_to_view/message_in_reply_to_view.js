@@ -6,10 +6,10 @@ const { Component } = owl;
 
 export class MessageInReplyToView extends Component {
     /**
-     * @returns {mail.message_in_reply_to_view}
+     * @returns {MessageInReplyToView}
      */
     get messageInReplyToView() {
-        return this.messaging && this.messaging.models['mail.message_in_reply_to_view'].get(this.props.messageInReplyToViewLocalId);
+        return this.messaging && this.messaging.models['MessageInReplyToView'].get(this.props.messageInReplyToViewLocalId);
     }
 }
 
