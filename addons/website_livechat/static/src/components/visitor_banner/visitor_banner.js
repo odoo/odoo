@@ -11,10 +11,10 @@ class VisitorBanner extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {website_livechat.visitor}
+     * @returns {Visitor}
      */
     get visitor() {
-        return this.messaging && this.messaging.models['website_livechat.visitor'].get(this.props.visitorLocalId);
+        return this.messaging && this.messaging.models['Visitor'].get(this.props.visitorLocalId);
     }
 
 }

@@ -5,7 +5,7 @@ import { attr, many2one, one2many } from '@mail/model/model_field';
 import { insert, link, unlink } from '@mail/model/model_field_command';
 
 registerModel({
-    name: 'website_livechat.visitor',
+    name: 'Visitor',
     identifyingFields: ['id'],
     modelMethods: {
         convertData(data) {
