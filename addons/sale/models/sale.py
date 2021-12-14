@@ -477,6 +477,8 @@ class SaleOrder(models.Model):
             vals['partner_invoice_id'] = vals.setdefault('partner_invoice_id', addr['invoice'])
             vals['partner_shipping_id'] = vals.setdefault('partner_shipping_id', addr['delivery'])
             vals['pricelist_id'] = vals.setdefault('pricelist_id', partner.property_product_pricelist and partner.property_product_pricelist.id)
+            if self.env.context.get('import_file'):
+                vals['payment_term_id'] = vals.setdefault('payment_term_id', partner.property_payment_term_id.id)
         result = super(SaleOrder, self).create(vals)
         return result
 
