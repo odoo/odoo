@@ -4,7 +4,7 @@ import { addRecordMethods, patchRecordMethods } from '@mail/model/model_core';
 // ensure that the model definition is loaded before the patch
 import '@mail/models/messaging_initializer/messaging_initializer';
 
-addRecordMethods('mail.messaging_initializer', {
+addRecordMethods('MessagingInitializer', {
     /**
      * @private
      */
@@ -20,7 +20,7 @@ addRecordMethods('mail.messaging_initializer', {
     },
 });
 
-patchRecordMethods('mail.messaging_initializer', {
+patchRecordMethods('MessagingInitializer', {
     /**
      * @override
      */

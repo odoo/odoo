@@ -5,7 +5,7 @@ import { insert, insertAndReplace } from '@mail/model/model_field_command';
 // ensure that the model definition is loaded before the patch
 import '@mail/models/messaging_initializer/messaging_initializer';
 
-patchRecordMethods('mail.messaging_initializer', {
+patchRecordMethods('MessagingInitializer', {
     /**
      * @override
      * @param {Object} resUsersSettings

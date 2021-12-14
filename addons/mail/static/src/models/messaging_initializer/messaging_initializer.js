@@ -5,7 +5,7 @@ import { executeGracefully } from '@mail/utils/utils';
 import { link, insert, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
-    name: 'mail.messaging_initializer',
+    name: 'MessagingInitializer',
     identifyingFields: ['messaging'],
     recordMethods: {
         /**
