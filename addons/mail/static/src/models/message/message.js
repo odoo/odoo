@@ -693,7 +693,7 @@ registerModel({
          * Groups of reactions per content allowing to know the number of
          * reactions for each.
          */
-        messageReactionGroups: one2many('mail.message_reaction_group', {
+        messageReactionGroups: one2many('MessageReactionGroup', {
             inverse: 'message',
             isCausal: true,
         }),

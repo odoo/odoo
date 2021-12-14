@@ -6,7 +6,7 @@ import { registerMessagingComponent } from '@mail/utils/messaging_component';
 export class MessageReactionGroup extends Component {
 
     get messageReactionGroup() {
-        return this.messaging.models['mail.message_reaction_group'].get(this.props.messageReactionGroupLocalId);
+        return this.messaging.models['MessageReactionGroup'].get(this.props.messageReactionGroupLocalId);
     }
 
 }
