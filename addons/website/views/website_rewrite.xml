@@ -23,7 +23,7 @@
                             <group>
                                 <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
                                 <field name="active" widget="boolean_toggle"/>
-                                <field name="sequence" groups="base.group_no_one"/>
+                                <field name="sequence" features="debug"/>
                             </group>
                         </group>
                     </sheet>
@@ -60,7 +60,7 @@
             action="action_website_rewrite_list"
             parent="menu_website_global_configuration"
             sequence="30"
-            groups="base.group_no_one"/>
+            features="debug"/>
 
         <record id="view_rewrite_search" model="ir.ui.view">
             <field name="name">website.rewrite.search</field>

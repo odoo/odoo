@@ -16,12 +16,12 @@
                             <field name="active" invisible="1"/>
                             <field name="category"/>
                             <field name="default_user_id" options="{'no_create': True}" domain="[('share', '=', False)]"/>
-                            <field name="res_model" groups="base.group_no_one"/>
+                            <field name="res_model" features="debug"/>
                             <field name="res_model_change" invisible="1"/>
                             <field name="initial_res_model" invisible="1"/>
                             <field name="summary"/>
-                            <field name="icon" groups="base.group_no_one"/>
-                            <field name="decoration_type" groups="base.group_no_one"/>
+                            <field name="icon" features="debug"/>
+                            <field name="decoration_type" features="debug"/>
                         </group>
                         <group name="activity_planning" string="Next Activity">
                             <field name="chaining_type" attrs="{'invisible': [('category', '=', 'upload_file')]}"/>
@@ -73,8 +73,8 @@
                 <field name="summary"/>
                 <field name="delay_label" string="Planned in" class="text-right"/>
                 <field name="delay_from" string="Type"/>
-                <field name="res_model" groups="base.group_no_one"/>
-                <field name="icon" groups="base.group_no_one"/>
+                <field name="res_model" features="debug"/>
+                <field name="icon" features="debug"/>
             </tree>
         </field>
     </record>

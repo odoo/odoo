@@ -40,11 +40,11 @@
                         <div name="other">
                             <group name="other">
                                 <field name="company_id" options="{'no_open': True, 'no_create': True}" groups="base.group_multi_company"/>
-                                <field name="default_lang_id" options="{'no_open': True, 'no_create': True}" groups="base.group_no_one"/>
+                                <field name="default_lang_id" options="{'no_open': True, 'no_create': True}" features="debug"/>
                             </group>
                         </div>
                         <notebook>
-                            <page string="Custom Code" groups="base.group_no_one">
+                            <page string="Custom Code" features="debug">
                                 <label for="custom_code_head"/>
                                 <field name="custom_code_head" widget="ace" options="{'mode': 'xml'}"/>
 
@@ -85,7 +85,7 @@
                     <field name="country_group_ids" widget="many2many_tags"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="default_lang_id"/>
-                    <field name="theme_id" groups="base.group_no_one"/>
+                    <field name="theme_id" features="debug"/>
                 </tree>
             </field>
         </record>
@@ -119,8 +119,8 @@
                                 <field name="website_indexed"/>
                                 <field name="is_published"/>
                                 <field name="date_publish"/>
-                                <field name="cache_time" groups="base.group_no_one"/>
-                                <field name="cache_key_expr" groups="base.group_no_one"/>
+                                <field name="cache_time" features="debug"/>
+                                <field name="cache_key_expr" features="debug"/>
                             </group>
                         </group>
                         <label for="menu_ids" string="Related Menu Items"/>

@@ -7,7 +7,7 @@
             <field name="model">base.module.uninstall</field>
             <field name="arch" type="xml">
                 <form string="Uninstall module">
-                    <field name="module_id" groups="base.group_no_one"/>
+                    <field name="module_id" features="debug"/>
                     <h3>The following apps will be uninstalled</h3>
                     <field name="show_all"/> Show technical modules
                     <field name="module_ids" mode="kanban">
@@ -26,7 +26,7 @@
                                                 </h4>
                                                 <p class="oe_module_name">
                                                     <field groups="!base.group_no_one" name="summary" />
-                                                    <code groups="base.group_no_one">
+                                                    <code features="debug">
                                                         <field name="name" /></code>
                                                 </p>
                                             </div>

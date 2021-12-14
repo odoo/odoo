@@ -11,7 +11,7 @@ class ResPartnerBank(models.Model):
 
     aba_routing = fields.Char(
         string="ABA/Routing",
-        groups="base.group_country_US",
+        features="US",
         help="American Bankers Association Routing Number",
     )
 

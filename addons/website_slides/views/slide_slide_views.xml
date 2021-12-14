@@ -160,7 +160,7 @@
                                         </div>
                                         <field name="is_preview"/>
                                         <field name="slide_resource_downloadable" attrs="{'invisible': ['|', ('slide_category', '!=', 'document'), ('source_type', '!=', 'local_file')]}"/>
-                                        <field name="date_published" string="Published Date" attrs="{'invisible': [('date_published', '=', False)]}" groups="base.group_no_one"/>
+                                        <field name="date_published" string="Published Date" attrs="{'invisible': [('date_published', '=', False)]}" features="debug"/>
                                     </group>
                                 </group>
                             </page>

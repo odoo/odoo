@@ -18,7 +18,7 @@
                         <page string="General Information" name="general_info">
                             <group>
                                 <group>
-                                    <field name="partner_id" string="Contact" readonly="1" required="0" groups="base.group_no_one"/>
+                                    <field name="partner_id" string="Contact" readonly="1" required="0" features="debug"/>
                                     <label for="street" string="Address"/>
                                     <div class="o_address_format">
                                         <field name="street" placeholder="Street..." class="o_address_street"/>
@@ -39,7 +39,7 @@
                                     <field name="website" string="Website" widget="url" placeholder="e.g. https://www.odoo.com"/>
                                     <field name="parent_id"  groups="base.group_multi_company"/>
                                     <field name="sequence" invisible="1"/>
-                                    <field name="favicon" widget="image" class="float-left oe_avatar" groups="base.group_no_one"/>
+                                    <field name="favicon" widget="image" class="float-left oe_avatar" features="debug"/>
                                 </group>
                                 <group name="social_media"/>
                             </group>

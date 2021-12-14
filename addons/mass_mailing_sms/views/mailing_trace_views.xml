@@ -67,9 +67,9 @@
             <xpath expr="//field[@name='message_id']" position="after">
                 <field name="sms_sms_id_int" string="SMS ID"
                     attrs="{'invisible': [('trace_type', '!=', 'sms')]}"
-                    groups="base.group_no_one"/>
+                    features="debug"/>
                 <field name="sms_code" attrs="{'invisible': [('trace_type', '!=', 'sms')]}"
-                    groups="base.group_no_one"/>
+                    features="debug"/>
             </xpath>
         </field>
     </record>
@@ -106,14 +106,14 @@
                             <field name="trace_type" invisible="1"/>
                             <field name="sms_number"/>
                             <field name="mass_mailing_id"/>
-                            <field name="sms_sms_id_int" string="SMS ID" groups="base.group_no_one"/>
-                            <field name="sms_code" groups="base.group_no_one"/>
+                            <field name="sms_sms_id_int" string="SMS ID" features="debug"/>
+                            <field name="sms_code" features="debug"/>
                         </group>
                         <group string="Marketing">
                             <field name="campaign_id" groups="mass_mailing.group_mass_mailing_campaign"/>
                             <field name="medium_id"/>
                             <field name="source_id"/>
-                            <field name="sms_sms_id_int" groups="base.group_no_one"/>
+                            <field name="sms_sms_id_int" features="debug"/>
                         </group>
                     </group>
                 </sheet>

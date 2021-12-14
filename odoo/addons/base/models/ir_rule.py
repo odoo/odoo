@@ -229,7 +229,7 @@ class IrRule(models.Model):
         operation_error = msg_heads[operation]
         resolution_info = _("Contact your administrator to request access if necessary.")
 
-        if not self.env.user.has_group('base.group_no_one') or not self.env.user.has_group('base.group_user'):
+        if not self.user_has_features('debug') or not self.env.user.has_group('base.group_user'):
             msg = """{operation_error}
 
 {resolution_info}""".format(
@@ -239,7 +239,7 @@ class IrRule(models.Model):
 
         # This extended AccessError is only displayed in debug mode.
         # Note that by default, public and portal users do not have
-        # the group "base.group_no_one", even if debug mode is enabled,
+        # the feature "debug", even if debug mode is enabled,
         # so it is relatively safe here to include the list of rules and record names.
         rules = self._get_failing(records, mode=operation).sudo()
 

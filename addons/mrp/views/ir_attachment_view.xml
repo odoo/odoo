@@ -76,11 +76,11 @@
                             <field name="datas" filename="name" attrs="{'invisible':[('type','=','url')]}"/>
                             <field name="url" widget="url" attrs="{'invisible':[('type','=','binary')]}"/>
                         </group>
-                        <group string="Attached To" groups="base.group_no_one">
+                        <group string="Attached To" features="debug">
                             <field name="res_name"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                         </group>
-                        <group string="History" groups="base.group_no_one" attrs="{'invisible':[('create_date','=',False)]}">
+                        <group string="History" features="debug" attrs="{'invisible':[('create_date','=',False)]}">
                             <label for="create_uid" string="Creation"/>
                             <div name="creation_div">
                                 <field name="create_uid" readonly="1" class="oe_inline"/> on

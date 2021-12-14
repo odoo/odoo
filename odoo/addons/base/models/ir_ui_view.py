@@ -990,7 +990,7 @@ actual arch.
         be made invisible to people who are not members.
         """
         if node.get('groups'):
-            can_see = self.user_has_groups(groups=node.get('groups'))
+            can_see = self.user_has_groups(groups=node.get('groups')) and self.user_has_features(node.get('features'))
             if not can_see:
                 node.set('invisible', '1')
                 node_info['modifiers']['invisible'] = True
@@ -1151,6 +1151,10 @@ actual arch.
                     node.getparent().remove(node)
                     # no point processing view-level ``groups`` anymore, return
                     return
+                if not self.user_has_features(field.features):
+                    node.getparent().remove(node)
+                    # no point processing view-level ``groups`` anymore, return
+                    return
                 views = {}
                 for child in node:
                     if child.tag in ('form', 'tree', 'graph', 'kanban', 'calendar'):
@@ -1208,7 +1212,12 @@ actual arch.
     def _postprocess_tag_label(self, node, name_manager, node_info):
         if node.get('for'):
             field = name_manager.model._fields.get(node.get('for'))
-            if field and field.groups and not self.user_has_groups(groups=field.groups):
+            if (
+                field and (
+                    (field.groups and not self.user_has_groups(groups=field.groups))
+                    or not self.user_has_features(field.features)
+                )
+            ):
                 node.getparent().remove(node)
 
     def _postprocess_tag_search(self, node, name_manager, node_info):

@@ -27,7 +27,7 @@ class Http(models.AbstractModel):
 
     def webclient_rendering_context(self):
         return {
-            'menu_data': request.env['ir.ui.menu'].load_menus(request.session.debug),
+            'menu_data': request.env['ir.ui.menu'].load_menus(),
             'session_info': self.session_info(),
         }
 
@@ -79,7 +79,7 @@ class Http(models.AbstractModel):
             if request.db:
                 mods = list(request.registry._init_modules) + mods
             qweb_checksum = HomeStaticTemplateHelpers.get_qweb_templates_checksum(debug=request.session.debug, bundle="web.assets_qweb")
-            menus = request.env['ir.ui.menu'].load_menus(request.session.debug)
+            menus = request.env['ir.ui.menu'].load_menus()
             ordered_menus = {str(k): v for k, v in menus.items()}
             menu_json_utf8 = json.dumps(ordered_menus, default=ustr, sort_keys=True).encode()
             session_info['cache_hashes'].update({

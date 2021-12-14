@@ -7,9 +7,9 @@
         <field name="inherit_id" ref="purchase.purchase_order_form"/>
         <field name="arch" type="xml">
             <xpath expr="//header/button[@name='action_rfq_send']" position="after">
-                <button name="action_view_picking" 
-                    string="Receive Products" class="oe_highlight" type="object" 
-                    attrs="{'invisible': ['|', '|' , ('is_shipped', '=', True), ('state','not in', ('purchase','done')), ('incoming_picking_count', '=', 0)]}" 
+                <button name="action_view_picking"
+                    string="Receive Products" class="oe_highlight" type="object"
+                    attrs="{'invisible': ['|', '|' , ('is_shipped', '=', True), ('state','not in', ('purchase','done')), ('incoming_picking_count', '=', 0)]}"
                     data-hotkey="y" groups="stock.group_stock_user"/>
             </xpath>
             <xpath expr="//header/button[@name='confirm_reminder_mail']" position="attributes">
@@ -50,7 +50,7 @@
                 <field name="move_ids"/>
             </xpath>
             <xpath expr="//field[@name='order_line']/form//field[@name='account_analytic_id']" position="before">
-                <field name="propagate_cancel" groups="base.group_no_one"/>
+                <field name="propagate_cancel" features="debug"/>
             </xpath>
             <xpath expr="//field[@name='order_line']/tree//field[@name='qty_received']" position="attributes">
                 <attribute name="attrs">{'column_invisible': [('parent.state', 'not in', ('purchase', 'done'))], 'readonly': [('product_type', 'in', ('consu', 'product'))]}</attribute>

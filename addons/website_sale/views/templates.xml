@@ -2008,7 +2008,7 @@
         <field name="inherit_id" ref="website.view_website_form"/>
         <field name="arch" type="xml">
             <xpath expr="//notebook" position="inside">
-                <page string="Product Page Extra Fields" groups="base.group_no_one">
+                <page string="Product Page Extra Fields" features="debug">
                     <field name="shop_extra_field_ids" context="{'default_website_id': active_id}">
                         <tree editable="bottom">
                             <field name="sequence" widget="handle"/>

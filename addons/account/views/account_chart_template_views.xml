@@ -176,7 +176,7 @@
                                                attrs="{'invisible': ['|', ('amount_type','=', 'group'), ('price_include', '=', True)]}"/>
                                     </group>
                                     <group name="tax_configuration">
-                                        <field name="active" groups="base.group_no_one"/>
+                                        <field name="active" features="debug"/>
                                         <field name="tax_exigibility" widget="radio" attrs="{'invisible':[('amount_type','=', 'group')]}"/>
                                         <field name="cash_basis_transition_account_id" attrs="{'invisible': [('tax_exigibility', '=', 'on_invoice')], 'required': [('tax_exigibility', '=', 'on_payment')]}"/>
                                     </group>

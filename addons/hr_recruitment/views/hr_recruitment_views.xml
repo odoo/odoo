@@ -119,7 +119,7 @@
                         <field name="partner_id" invisible="1" />
                         <field name="refuse_reason_id" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="email_from" widget="email"/>
-                        <field name="email_cc" groups="base.group_no_one"/>
+                        <field name="email_cc" features="debug"/>
                         <field name="partner_phone" widget="phone"/>
                         <field name="partner_mobile" widget="phone"/>
                         <field name="type_id" placeholder="Degree"/>
@@ -129,7 +129,7 @@
                         <field name="user_id" domain="[('share', '=', False)]"/>
                         <field name="date_closed" attrs="{'invisible': [('date_closed', '=', False)]}" />
                         <field name="priority" widget="priority"/>
-                        <field name="medium_id" groups="base.group_no_one" />
+                        <field name="medium_id" features="debug" />
                         <field name="source_id"/>
                     </group>
                     <group string="Job">
@@ -748,7 +748,7 @@ action = act
                 <group name="stage_definition" string="Stage Definition">
                     <group>
                         <field name="name"/>
-                        <field name="sequence" groups="base.group_no_one"/>
+                        <field name="sequence" features="debug"/>
                         <field name="template_id" domain= "[('model_id.model', '=', 'hr.applicant')]"/>
                     </group>
                     <group name="stage_details">
@@ -806,7 +806,7 @@ action = act
         name="Stages"
         parent="menu_hr_recruitment_configuration"
         action="hr_recruitment_stage_act"
-        groups="base.group_no_one"
+        features="debug"
         sequence="1"/>
 
     <!-- Tag Form View -->
@@ -831,7 +831,7 @@ action = act
         <field name="arch" type="xml">
             <tree string="Tags" editable="bottom">
                 <field name="name"/>
-                <field name="color" groups="base.group_no_one"/>
+                <field name="color" features="debug"/>
             </tree>
         </field>
     </record>
@@ -851,7 +851,7 @@ action = act
         id="hr_applicant_category_menu"
         parent="menu_hr_recruitment_configuration"
         action="hr_applicant_category_action"
-        sequence="2" groups="base.group_no_one"/>
+        sequence="2" features="debug"/>
 
     <!-- Degree Tree View -->
     <record model="ir.ui.view" id="hr_recruitment_degree_tree">
@@ -874,7 +874,7 @@ action = act
             <sheet>
                 <group>
                     <field name="name"/>
-                    <field name="sequence" groups="base.group_no_one"/>
+                    <field name="sequence" features="debug"/>
                 </group>
             </sheet>
             </form>
@@ -893,7 +893,7 @@ action = act
             name="Degrees"
             parent="menu_hr_recruitment_configuration"
             action="hr_recruitment_degree_action"
-            sequence="5" groups="base.group_no_one"/>
+            sequence="5" features="debug"/>
 
     <!-- Source Kanban View -->
     <record id="hr_recruitment_source_kanban" model="ir.ui.view">
@@ -953,7 +953,7 @@ action = act
         id="menu_hr_recruitment_source"
         parent="menu_hr_recruitment_configuration"
         action="hr_recruitment_source_action"
-        groups="base.group_no_one"
+        features="debug"
         sequence="10"/>
 
     <record id="hr_applicant_action_from_department" model="ir.actions.act_window">

@@ -41,19 +41,19 @@
                             <field name="email" attrs="{'required': [('send_by', '=', 'mail')]}"/>
                             <field name="phone" class="o_force_ltr" attrs="{'required': [('send_by', '=', 'phone')]}"/>
                             <field name="company_id" groups="base.group_multi_company"/>
-                            <field name="responsible_id" attrs="{'required': [('send_by', '=', 'mail')]}" groups="base.group_no_one" domain="[('share', '=', False)]"/>
+                            <field name="responsible_id" attrs="{'required': [('send_by', '=', 'mail')]}" features="debug" domain="[('share', '=', False)]"/>
                         </group>
                     </group>
                     <group>
                         <group string="Availability">
-                            <label for="tz" groups="base.group_no_one"/>
+                            <label for="tz" features="debug"/>
                             <div class="o_col">
                                 <div class="o_row">
-                                    <field name="tz" groups="base.group_no_one"/>
+                                    <field name="tz" features="debug"/>
                                 </div>
                                 <widget name="week_days"/>
                             </div>
-                            <field name="recurrency_end_date" groups="base.group_no_one"/>
+                            <field name="recurrency_end_date" features="debug"/>
                         </group>
                         <group string="Orders">
                             <field name="delivery"/>

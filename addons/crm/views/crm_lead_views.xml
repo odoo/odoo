@@ -212,7 +212,7 @@
                                         title="By saving this change, the customer email will also be updated."
                                         attrs="{'invisible': [('partner_email_update', '=', False)]}"/>
                                 </div>
-                                <field name="email_cc" groups="base.group_no_one"/>
+                                <field name="email_cc" features="debug"/>
                                 <field name="function"/>
                                 <label for="phone_group_lead_info" class="oe_inline"/>
                                 <div class="o_row o_row_readonly">
@@ -262,7 +262,7 @@
                             </page>
                             <page name="extra" string="Extra Info" attrs="{'invisible': [('type', '=', 'opportunity')]}">
                                 <group>
-                                    <group string="Email" groups="base.group_no_one">
+                                    <group string="Email" features="debug">
                                         <field name="message_bounce" readonly="1"/>
                                     </group>
                                     <group string="Marketing" name="categorization">

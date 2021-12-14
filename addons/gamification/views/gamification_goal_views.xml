@@ -60,7 +60,7 @@
 
                     <button string="Goal Reached" type="object" name="action_reach" states="inprogress" />
                     <button string="Goal Failed" type="object" name="action_fail" states="inprogress"/>
-                    <button string="Reset Completion" type="object" name="action_cancel" states="failed,reached" groups="base.group_no_one" />
+                    <button string="Reset Completion" type="object" name="action_cancel" states="failed,reached" features="debug" />
                     <field name="state" widget="statusbar" statusbar_visible="draft,inprogress,reached" />
                 </header>
                 <sheet>
@@ -80,7 +80,7 @@
                                 <field name="remind_update_delay" class="oe_inline"/>
                                 days
                             </div>
-                            <field name="last_update" groups="base.group_no_one"/>
+                            <field name="last_update" features="debug"/>
                         </group>
                         <group string="Data" colspan="4">
                             <label for="target_goal" />

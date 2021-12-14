@@ -44,7 +44,7 @@
 
         <menuitem
               action="uom.product_uom_form_action" id="menu_purchase_uom_form_action"
-              parent="purchase.menu_unit_of_measure_in_config_purchase" sequence="5" groups="base.group_no_one"/>
+              parent="purchase.menu_unit_of_measure_in_config_purchase" sequence="5" features="debug"/>
 
         <menuitem
              action="uom.product_uom_categ_form_action" id="menu_purchase_uom_categ_form_action"
@@ -143,7 +143,7 @@
                     <button name="print_quotation" string="Print RFQ" type="object" states="sent" groups="base.group_user" data-hotkey="k"/>
                     <button name="button_confirm" type="object" states="draft" string="Confirm Order" id="draft_confirm"/>
                     <button name="action_rfq_send" states="purchase" string="Send PO by Email" type="object" context="{'send_rfq':False}" data-hotkey="g"/>
-                    <button name="confirm_reminder_mail" string="Confirm Receipt Date" type="object" attrs="{'invisible': ['|','|', ('state', 'not in', ('purchase', 'done')), ('mail_reminder_confirmed', '=', True), ('date_planned', '=', False)]}" groups="base.group_no_one" data-hotkey="o"/>
+                    <button name="confirm_reminder_mail" string="Confirm Receipt Date" type="object" attrs="{'invisible': ['|','|', ('state', 'not in', ('purchase', 'done')), ('mail_reminder_confirmed', '=', True), ('date_planned', '=', False)]}" features="debug" data-hotkey="o"/>
                     <button name="action_create_invoice" string="Create Bill" type="object" context="{'create_bill':True}" attrs="{'invisible': ['|', '|', ('state', 'not in', ('purchase', 'done')), ('invoice_status', 'not in', ('no', 'invoiced')), ('order_line', '=', [])]}" data-hotkey="w"/>
                     <button name="button_draft" states="cancel" string="Set to Draft" type="object" data-hotkey="o"/>
                     <button name="button_cancel" states="draft,to approve,sent,purchase" string="Cancel" type="object" data-hotkey="x" />

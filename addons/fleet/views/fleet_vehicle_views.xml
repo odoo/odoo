@@ -151,7 +151,7 @@
         <field name="name">fleet.vehicle.tree</field>
         <field name="model">fleet.vehicle</field>
         <field name="arch" type="xml">
-            <tree string="Vehicle" 
+            <tree string="Vehicle"
                 decoration-warning="contract_renewal_due_soon and not contract_renewal_overdue"
                 decoration-danger="contract_renewal_overdue"
                 multi_edit="1"
@@ -463,7 +463,7 @@
           </p>
         </field>
     </record>
-    <menuitem action="fleet_vehicle_service_types_action" parent="fleet_configuration" id="fleet_vehicle_service_types_menu" sequence="3" groups="base.group_no_one"/>
+    <menuitem action="fleet_vehicle_service_types_action" parent="fleet_configuration" id="fleet_vehicle_service_types_menu" sequence="3" features="debug"/>
 
     <record id='fleet_vehicle_state_view_tree' model='ir.ui.view'>
         <field name="name">fleet.vehicle.state.tree</field>
@@ -490,7 +490,7 @@
         </field>
     </record>
 
-    <menuitem action="fleet_vehicle_state_action" parent="fleet_configuration" id="fleet_vehicle_state_menu" groups="base.group_no_one"/>
+    <menuitem action="fleet_vehicle_state_action" parent="fleet_configuration" id="fleet_vehicle_state_menu" features="debug"/>
 
     <record id="fleet_vehicle_tag_view_view_form" model="ir.ui.view">
         <field name="name">fleet.vehicle.tag.form</field>
@@ -526,7 +526,7 @@
         </field>
     </record>
 
-    <menuitem id="fleet_vehicle_tag_menu" parent="fleet_configuration" action="fleet_vehicle_tag_action" sequence="89" groups="base.group_no_one"/>
+    <menuitem id="fleet_vehicle_tag_menu" parent="fleet_configuration" action="fleet_vehicle_tag_action" sequence="89" features="debug"/>
 
     <record id="fleet_vehicle_assignation_log_view_list" model="ir.ui.view">
         <field name="name">fleet.vehicle.assignation.log.view.tree</field>

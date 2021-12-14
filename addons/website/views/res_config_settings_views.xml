@@ -105,7 +105,7 @@
                                     <div class="mt8">
                                         <field name="website_domain" placeholder="https://www.odoo.com"/>
                                     </div>
-                                    <div groups="base.group_no_one">
+                                    <div features="debug">
                                         <div class="mt8 text-muted" title="You can have 2 websites with same domain AND a condition on country group to select wich website use.">
                                             Once the selection of available websites by domain is done, you can filter by country group.
                                         </div>
@@ -139,7 +139,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box" id="cdn_setting" title="A CDN helps you serve your website’s content with high availability and high performance to any visitor wherever they are located." groups="base.group_no_one">
+                            <div class="col-12 col-lg-6 o_setting_box" id="cdn_setting" title="A CDN helps you serve your website’s content with high availability and high performance to any visitor wherever they are located." features="debug">
                                 <div class="o_setting_left_pane">
                                     <field name="cdn_activated"/>
                                 </div>
@@ -408,7 +408,7 @@
             id="menu_website_websites_list"
             action="action_website_list"
             parent="menu_website_global_configuration"
-            groups="base.group_no_one"
+            features="debug"
             sequence="10"
             />
 
@@ -424,6 +424,6 @@
             action="action_website_menu"
             parent="menu_website_global_configuration"
             sequence="45"
-            groups="base.group_no_one"/>
+            features="debug"/>
 
 </odoo>

@@ -1043,7 +1043,7 @@ class TestTemplating(ViewCase):
             'name': "Base View",
             'type': 'qweb',
             'arch': """<root>
-                <item groups="base.group_no_one"/>
+                <item features="debug"/>
             </root>""",
         })
 

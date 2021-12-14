@@ -1275,9 +1275,9 @@ class GroupsView(models.Model):
                 xml2.append(E.group(*(xml_by_category[xml_cat]), col="2", string=master_category_name))
 
             xml = E.field(
-                E.group(*(xml1), col="2", groups="base.group_no_one"),
+                E.group(*(xml1), col="2", features="debug"),
                 E.group(*(xml2), col="2", attrs=str(user_type_attrs)),
-                E.group(*(xml3), col="4", attrs=str(user_type_attrs), groups="base.group_no_one"), name="groups_id", position="replace")
+                E.group(*(xml3), col="4", attrs=str(user_type_attrs), features="debug"), name="groups_id", position="replace")
             xml.addprevious(etree.Comment("GENERATED AUTOMATICALLY BY GROUPS"))
 
         # serialize and update the view

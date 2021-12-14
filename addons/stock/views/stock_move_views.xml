@@ -31,7 +31,7 @@
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
                 <tree string="Moves" create="0">
-                    <field name="date" groups="base.group_no_one" decoration-danger="(state not in ('cancel','done')) and date > current_date" />
+                    <field name="date" features="debug" decoration-danger="(state not in ('cancel','done')) and date > current_date" />
                     <field name="reference"/>
                     <field name="picking_type_id" invisible="1"/>
                     <field name="product_id"/>
@@ -312,12 +312,12 @@
                                 <field name="date_deadline" force_save="1"/>
                             </group>
                         </group>
-                        <group name="origin_grp" string="Origin" groups="base.group_no_one" >
+                        <group name="origin_grp" string="Origin" features="debug" >
                             <field name="origin"/>
                             <field name="group_id"/>
                             <field name="procure_method" attrs="{'readonly': [('state', '!=', 'draft')]}" groups="stock.group_adv_location"/>
                         </group>
-                        <group name="linked_group" string="Linked Moves" groups="base.group_no_one" colspan="2">
+                        <group name="linked_group" string="Linked Moves" features="debug" colspan="2">
                             <field name="move_orig_ids" string="Origin Moves" readonly="1">
                                 <tree>
                                     <field name="location_id"/>
@@ -368,7 +368,7 @@
                         <filter string="Source Location" name="groupby_location_id" domain="[]" context="{'group_by': 'location_id'}" groups="stock.group_stock_multi_locations"/>
                         <filter string="Destination Location" name="groupby_dest_location_id" domain="[]" context="{'group_by': 'location_dest_id'}" groups="stock.group_stock_multi_locations"/>
                         <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
-                        <filter string="Creation Date" name="groupby_create_date" domain="[]" context="{'group_by': 'create_date'}" groups="base.group_no_one"/>
+                        <filter string="Creation Date" name="groupby_create_date" domain="[]" context="{'group_by': 'create_date'}" features="debug"/>
                         <filter string="Scheduled Date" name="groupby_date" domain="[]" context="{'group_by': 'date'}"/>
                     </group>
                 </search>
@@ -455,6 +455,6 @@
             </field>
         </record>
 
-        <menuitem action="stock_move_action" id="stock_move_menu" parent="stock.menu_warehouse_report" sequence="140" groups="base.group_no_one"/>
+        <menuitem action="stock_move_action" id="stock_move_menu" parent="stock.menu_warehouse_report" sequence="140" features="debug"/>
 
 </odoo>
