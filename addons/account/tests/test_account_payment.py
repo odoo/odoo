@@ -852,3 +852,54 @@ class TestAccountPayment(AccountTestInvoicingCommon):
             'available_partner_bank_ids': self.comp_bank_account2.ids,
             'partner_bank_id': self.comp_bank_account2.id,
         }])
+
+    def test_internal_transfer_right_accounts(self):
+        """The purpose of this test is to check that the right accounts are computed when making an internal bank transfer"""
+
+        company = self.env.company
+        transfer_account = company.transfer_account_id
+        bank = self.bank_journal_1
+        bank_2 = self.bank_journal_2
+
+        payment = self.env['account.payment'].create({
+            'is_internal_transfer': True,
+            'payment_type': 'outbound',
+            'amount': 100.0,
+            'journal_id': bank.id,
+            'destination_journal_id': bank_2.id,
+        })
+        payment.action_post()
+
+        self.assertRecordValues(payment.line_ids, [
+            {'account_id': company.account_journal_payment_credit_account_id.id},
+            {'account_id': transfer_account.id},
+        ])
+        self.assertRecordValues(payment.paired_internal_transfer_payment_id.line_ids, [
+            {'account_id': company.account_journal_payment_debit_account_id.id},
+            {'account_id': transfer_account.id},
+        ])
+
+        # We check the behavior when setting specific receipts/payments account on bank journals
+        bank.inbound_payment_method_line_ids.payment_account_id = company.account_journal_payment_debit_account_id.copy({'code': 1001})
+        bank.outbound_payment_method_line_ids.payment_account_id = company.account_journal_payment_credit_account_id.copy({'code': 1002})
+
+        bank_2.inbound_payment_method_line_ids.payment_account_id = company.account_journal_payment_debit_account_id.copy({'code': 2001})
+        bank_2.outbound_payment_method_line_ids.payment_account_id = company.account_journal_payment_credit_account_id.copy({'code': 2002})
+
+        payment = self.env['account.payment'].create({
+            'is_internal_transfer': True,
+            'payment_type': 'outbound',
+            'amount': 100.0,
+            'journal_id': bank.id,
+            'destination_journal_id': bank_2.id,
+        })
+        payment.action_post()
+
+        self.assertRecordValues(payment.line_ids, [
+            {'account_id': bank.outbound_payment_method_line_ids.payment_account_id.id,},
+            {'account_id': transfer_account.id},
+        ])
+        self.assertRecordValues(payment.paired_internal_transfer_payment_id.line_ids, [
+            {'account_id': bank_2.inbound_payment_method_line_ids.payment_account_id.id},
+            {'account_id': transfer_account.id},
+        ])
