@@ -79,7 +79,7 @@ registerModel({
         /**
          * States the thread viewer linked to this discuss public view.
          */
-        threadViewer: one2one('mail.thread_viewer', {
+        threadViewer: one2one('ThreadViewer', {
             inverse: 'discussPublicView',
             isCausal: true,
         }),

@@ -5,7 +5,7 @@ import { attr, many2one, one2one } from '@mail/model/model_field';
 import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
-    name: 'mail.thread_viewer',
+    name: 'ThreadViewer',
     identifyingFields: [['chatter', 'chatWindow', 'discuss', 'discussPublicView']],
     recordMethods: {
         /**
@@ -52,7 +52,7 @@ registerModel({
         },
         /**
          * @private
-         * @returns {mail.thread_viewer|undefined}
+         * @returns {ThreadViewer|undefined}
          */
         _computeThreadView() {
             return this.hasThreadView ? insertAndReplace() : clear();

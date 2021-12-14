@@ -469,9 +469,9 @@ registerModel({
             related: 'threadViewer.threadCacheInitialScrollPositions',
         }),
         /**
-         * Determines the `mail.thread_viewer` currently managing `this`.
+         * Determines the `ThreadViewer` currently managing `this`.
          */
-        threadViewer: one2one('mail.thread_viewer', {
+        threadViewer: one2one('ThreadViewer', {
             inverse: 'threadView',
             readonly: true,
             required: true,
