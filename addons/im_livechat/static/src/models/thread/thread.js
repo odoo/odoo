@@ -34,16 +34,16 @@ patchModelMethods('Thread', {
                  * easier to handle one temporary partner per channel.
                  */
                 data2.members.push(unlink(this.messaging.publicPartners));
-                const partner = this.messaging.models['mail.partner'].create(
+                const partner = this.messaging.models['Partner'].create(
                     Object.assign(
-                        this.messaging.models['mail.partner'].convertData(data.livechat_visitor),
-                        { id: this.messaging.models['mail.partner'].getNextPublicId() }
+                        this.messaging.models['Partner'].convertData(data.livechat_visitor),
+                        { id: this.messaging.models['Partner'].getNextPublicId() }
                     )
                 );
                 data2.members.push(link(partner));
                 data2.correspondent = link(partner);
             } else {
-                const partnerData = this.messaging.models['mail.partner'].convertData(data.livechat_visitor);
+                const partnerData = this.messaging.models['Partner'].convertData(data.livechat_visitor);
                 data2.members.push(insert(partnerData));
                 data2.correspondent = insert(partnerData);
             }

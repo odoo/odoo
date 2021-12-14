@@ -44,7 +44,7 @@ registerModel({
                 discuss.openInitThread();
             }
             if (this.messaging.autofetchPartnerImStatus) {
-                this.messaging.models['mail.partner'].startLoopFetchImStatus();
+                this.messaging.models['Partner'].startLoopFetchImStatus();
             }
         },
         /**
@@ -285,7 +285,7 @@ registerModel({
                 this.messaging.update({ currentGuest: insert(currentGuest) });
             }
             if (current_partner) {
-                const partnerData = this.messaging.models['mail.partner'].convertData(current_partner);
+                const partnerData = this.messaging.models['Partner'].convertData(current_partner);
                 partnerData.user = insert({ id: currentUserId });
                 this.messaging.update({
                     currentPartner: insert(partnerData),
@@ -293,9 +293,9 @@ registerModel({
                 });
             }
             this.messaging.update({
-                partnerRoot: insert(this.messaging.models['mail.partner'].convertData(partner_root)),
+                partnerRoot: insert(this.messaging.models['Partner'].convertData(partner_root)),
                 publicPartners: insert(public_partners.map(
-                    publicPartner => this.messaging.models['mail.partner'].convertData(publicPartner)
+                    publicPartner => this.messaging.models['Partner'].convertData(publicPartner)
                 )),
             });
         },

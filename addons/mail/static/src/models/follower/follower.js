@@ -37,7 +37,7 @@ registerModel({
                 }
             }
             if (data.partner) {
-                data2.partner = insertAndReplace(this.models['mail.partner'].convertData(data.partner));
+                data2.partner = insertAndReplace(this.models['Partner'].convertData(data.partner));
             }
             return data2;
         },
@@ -155,7 +155,7 @@ registerModel({
         isEditable: attr({
             default: false,
         }),
-        partner: many2one('mail.partner', {
+        partner: many2one('Partner', {
             required: true,
         }),
         selectedSubtypes: many2many('FollowerSubtype'),

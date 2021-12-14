@@ -40,7 +40,7 @@ export class ComposerSuggestion extends Component {
     }
 
     get isPartner() {
-        return this.props.modelName === "mail.partner";
+        return this.props.modelName === "Partner";
     }
 
     get record() {

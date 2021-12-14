@@ -346,7 +346,7 @@ registerModel({
             if (!channel) {
                 return;
             }
-            const partner = this.messaging.models['mail.partner'].insert({
+            const partner = this.messaging.models['Partner'].insert({
                 id: partner_id,
                 name: partner_name,
             });

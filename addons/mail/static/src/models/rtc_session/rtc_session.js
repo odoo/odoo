@@ -389,7 +389,7 @@ registerModel({
          * has open sessions in multiple channels, but only one session per
          * channel is allowed.
          */
-        partner: many2one('mail.partner', {
+        partner: many2one('Partner', {
             inverse: 'rtcSessions',
         }),
         /**

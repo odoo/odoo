@@ -6,7 +6,7 @@ import { insert, link, unlinkAll } from '@mail/model/model_field_command';
 import { cleanSearchTerm } from '@mail/utils/utils';
 
 registerModel({
-    name: 'mail.partner',
+    name: 'Partner',
     identifyingFields: ['id'],
     modelMethods: {
         /**
@@ -93,8 +93,8 @@ registerModel({
                 },
                 { shadow: true },
             );
-            const partners = this.messaging.models['mail.partner'].insert(suggestedPartners.map(data =>
-                this.messaging.models['mail.partner'].convertData(data)
+            const partners = this.messaging.models['Partner'].insert(suggestedPartners.map(data =>
+                this.messaging.models['Partner'].convertData(data)
             ));
             if (isNonPublicChannel) {
                 thread.update({ members: link(partners) });
@@ -220,7 +220,7 @@ registerModel({
          * @param {Object} [options={}]
          * @param {Thread} [options.thread] prioritize and/or restrict
          *  result in the context of given thread
-         * @returns {[mail.partner[], mail.partner[]]}
+         * @returns {[Partner[], Partner[]]}
          */
         searchSuggestions(searchTerm, { thread } = {}) {
             let partners;
@@ -233,7 +233,7 @@ registerModel({
                 // mentioned partner.
                 partners = thread.members;
             } else {
-                partners = this.messaging.models['mail.partner'].all();
+                partners = this.messaging.models['Partner'].all();
             }
             const cleanedSearchTerm = cleanSearchTerm(searchTerm);
             const mainSuggestionList = [];

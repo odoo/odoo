@@ -31,14 +31,14 @@ QUnit.test('partner mention suggestion displayed', async function (assert) {
         id: 20,
         model: 'mail.channel',
     });
-    const partner = this.messaging.models['mail.partner'].create({
+    const partner = this.messaging.models['Partner'].create({
         id: 7,
         im_status: 'online',
         name: "Demo User",
     });
     await createComposerSuggestionComponent(thread.composer, {
         isActive: true,
-        modelName: 'mail.partner',
+        modelName: 'Partner',
         recordLocalId: partner.localId,
     });
 
@@ -58,7 +58,7 @@ QUnit.test('partner mention suggestion correct data', async function (assert) {
         id: 20,
         model: 'mail.channel',
     });
-    const partner = this.messaging.models['mail.partner'].create({
+    const partner = this.messaging.models['Partner'].create({
         email: "demo_user@odoo.com",
         id: 7,
         im_status: 'online',
@@ -66,7 +66,7 @@ QUnit.test('partner mention suggestion correct data', async function (assert) {
     });
     await createComposerSuggestionComponent(thread.composer, {
         isActive: true,
-        modelName: 'mail.partner',
+        modelName: 'Partner',
         recordLocalId: partner.localId,
     });
 
@@ -111,14 +111,14 @@ QUnit.test('partner mention suggestion active', async function (assert) {
         id: 20,
         model: 'mail.channel',
     });
-    const partner = this.messaging.models['mail.partner'].create({
+    const partner = this.messaging.models['Partner'].create({
         id: 7,
         im_status: 'online',
         name: "Demo User",
     });
     await createComposerSuggestionComponent(thread.composer, {
         isActive: true,
-        modelName: 'mail.partner',
+        modelName: 'Partner',
         recordLocalId: partner.localId,
     });
 

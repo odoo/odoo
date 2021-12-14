@@ -53,7 +53,7 @@ registerModel({
                 return user.getChat();
             }
             if (partnerId) {
-                const partner = this.messaging.models['mail.partner'].insert({ id: partnerId });
+                const partner = this.messaging.models['Partner'].insert({ id: partnerId });
                 return partner.getChat();
             }
         },
@@ -106,7 +106,7 @@ registerModel({
          */
         async openProfile({ id, model }) {
             if (model === 'res.partner') {
-                const partner = this.messaging.models['mail.partner'].insert({ id });
+                const partner = this.messaging.models['Partner'].insert({ id });
                 return partner.openProfile();
             }
             if (model === 'res.users') {
@@ -241,7 +241,7 @@ registerModel({
         commands: one2many('ChannelCommand'),
         companyName: attr(),
         currentGuest: one2one('Guest'),
-        currentPartner: one2one('mail.partner'),
+        currentPartner: one2one('Partner'),
         currentUser: one2one('mail.user'),
         device: one2one('Device', {
             default: insertAndReplace(),
@@ -341,12 +341,12 @@ registerModel({
         outOfFocusUnreadMessageCounter: attr({
             default: 0,
         }),
-        partnerRoot: many2one('mail.partner'),
+        partnerRoot: many2one('Partner'),
         /**
          * Determines which partners should be considered the public partners,
          * which are special partners notably used in livechat.
          */
-        publicPartners: many2many('mail.partner'),
+        publicPartners: many2many('Partner'),
         /**
          * Threads for which the current partner has a pending invitation.
          * It is computed from the inverse relation for performance reasons.

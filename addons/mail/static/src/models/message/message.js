@@ -538,7 +538,7 @@ registerModel({
         attachments: many2many('mail.attachment', {
             inverse: 'messages',
         }),
-        author: many2one('mail.partner'),
+        author: many2one('Partner'),
         /**
          * This value is meant to be returned by the server
          * (and has been sanitized before stored into db).
