@@ -14,7 +14,7 @@ patchModelMethods('mail.thread', {
         const data2 = this._super(data);
         if ('visitor' in data) {
             if (data.visitor) {
-                data2.visitor = insert(this.messaging.models['website_livechat.visitor'].convertData(data.visitor));
+                data2.visitor = insert(this.messaging.models['Visitor'].convertData(data.visitor));
             } else {
                 data2.visitor = unlink();
             }
@@ -27,7 +27,7 @@ addFields('mail.thread', {
     /**
      * Visitor connected to the livechat.
      */
-    visitor: many2one('website_livechat.visitor', {
+    visitor: many2one('Visitor', {
         inverse: 'threads',
     }),
 });
