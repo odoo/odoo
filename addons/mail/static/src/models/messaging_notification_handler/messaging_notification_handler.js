@@ -10,7 +10,7 @@ import { Markup } from 'web.utils';
 const PREVIEW_MSG_MAX_SIZE = 350; // optimal for native English speakers
 
 registerModel({
-    name: 'mail.messaging_notification_handler',
+    name: 'MessagingNotificationHandler',
     identifyingFields: ['messaging'],
     lifecycleHooks: {
         _willDelete() {

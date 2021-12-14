@@ -333,7 +333,7 @@ registerModel({
             isCausal: true,
             readonly: true,
         }),
-        notificationHandler: one2one('mail.messaging_notification_handler', {
+        notificationHandler: one2one('MessagingNotificationHandler', {
             default: insertAndReplace(),
             isCausal: true,
             readonly: true,

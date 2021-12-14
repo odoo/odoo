@@ -4,7 +4,7 @@ import { patchRecordMethods } from '@mail/model/model_core';
 // ensure that the model definition is loaded before the patch
 import '@mail/models/messaging_notification_handler/messaging_notification_handler';
 
-patchRecordMethods('mail.messaging_notification_handler', {
+patchRecordMethods('MessagingNotificationHandler', {
     /**
      * @override
      * @param {object} settings
