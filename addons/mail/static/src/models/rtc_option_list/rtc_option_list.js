@@ -4,7 +4,7 @@ import { registerModel } from '@mail/model/model_core';
 import { attr, one2one } from '@mail/model/model_field';
 
 registerModel({
-    name: 'mail.rtc_option_list',
+    name: 'RtcOptionList',
     identifyingFields: ['rtcController'],
     lifecycleHooks: {
         _created() {

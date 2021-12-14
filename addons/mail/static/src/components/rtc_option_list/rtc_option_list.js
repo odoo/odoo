@@ -12,7 +12,7 @@ export class RtcOptionList extends Component {
      */
     setup() {
         super.setup();
-        useComponentToModel({ fieldName: 'component', modelName: 'mail.rtc_option_list', propNameAsRecordLocalId: 'localId' });
+        useComponentToModel({ fieldName: 'component', modelName: 'RtcOptionList', propNameAsRecordLocalId: 'localId' });
     }
 
     //--------------------------------------------------------------------------
@@ -20,10 +20,10 @@ export class RtcOptionList extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {mail.rtc_option_list}
+     * @returns {RtcOptionList}
      */
     get rtcOptionList() {
-        return this.messaging && this.messaging.models['mail.rtc_option_list'].get(this.props.localId);
+        return this.messaging && this.messaging.models['RtcOptionList'].get(this.props.localId);
     }
 
 }
