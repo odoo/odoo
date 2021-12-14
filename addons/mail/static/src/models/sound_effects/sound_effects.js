@@ -5,7 +5,7 @@ import { one2one } from '@mail/model/model_field';
 import { insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
-    name: 'mail.sound_effects',
+    name: 'SoundEffects',
     identifyingFields: ['messaging'],
     fields: {
         channelJoin: one2one('SoundEffect', {
