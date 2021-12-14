@@ -21,10 +21,10 @@ export class RtcVideo extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {mail.thread|undefined}
+     * @returns {RtcSession|undefined}
      */
     get rtcSession() {
-        return this.messaging.models["mail.rtc_session"].get(
+        return this.messaging.models['RtcSession'].get(
             this.props.rtcSessionLocalId
         );
     }

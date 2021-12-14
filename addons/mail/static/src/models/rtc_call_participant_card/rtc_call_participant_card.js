@@ -183,6 +183,6 @@ registerModel({
         /**
          * If set, this card represents a rtcSession.
          */
-        rtcSession: many2one('mail.rtc_session'),
+        rtcSession: many2one('RtcSession'),
     },
 });

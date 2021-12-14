@@ -43,7 +43,7 @@ registerModel({
             readonly: true,
         }),
         name: attr(),
-        rtcSessions: one2many('mail.rtc_session', {
+        rtcSessions: one2many('RtcSession', {
             inverse: 'guest',
         }),
         volumeSetting: one2one('mail.volume_setting', {

@@ -101,7 +101,7 @@ registerModel({
         /**
          * Removes and disconnects all the peerConnections that are not current members of the call.
          *
-         * @param {mail.rtc_session[]} currentSessions list of sessions of this call.
+         * @param {RtcSession[]} currentSessions list of sessions of this call.
          */
         async filterCallees(currentSessions) {
             const currentSessionsTokens = new Set(currentSessions.map(session => session.peerToken));
@@ -143,7 +143,7 @@ registerModel({
          */
         async handleNotification(sender, content) {
             const { event, channelId, payload } = JSON.parse(content);
-            const rtcSession = this.messaging.models['mail.rtc_session'].findFromIdentifyingData({ id: sender });
+            const rtcSession = this.messaging.models['RtcSession'].findFromIdentifyingData({ id: sender });
             if (!rtcSession || rtcSession.channel !== this.channel) {
                 // does handle notifications targeting a different session
                 return;
@@ -177,7 +177,7 @@ registerModel({
         },
         /**
          * @param {Object} param0
-         * @param {string} param0.currentSessionId the Id of the 'mail.rtc_session'
+         * @param {string} param0.currentSessionId the Id of the 'RtcSession'
                   of the current partner for the current call
          * @param {Array<Object>} [param0.iceServers]
          * @param {boolean} [param0.startWithAudio]
@@ -598,7 +598,7 @@ registerModel({
         },
         /**
          * @private
-         * @param {mail.rtc_session} rtcSession
+         * @param {RtcSession} rtcSession
          * @param {Object} param1
          * @param {String} param1.type 'audio' or 'video'
          * @param {Object} param1.state
@@ -724,7 +724,7 @@ registerModel({
          * @param {String} token
          */
         _removePeer(token) {
-            const rtcSession = this.messaging.models['mail.rtc_session'].findFromIdentifyingData({ id: token });
+            const rtcSession = this.messaging.models['RtcSession'].findFromIdentifyingData({ id: token });
             if (rtcSession) {
                 rtcSession.reset();
             }
@@ -898,14 +898,14 @@ registerModel({
             }
         },
         /**
-         * Updates the mail.rtc_session associated to the token with a new track.
+         * Updates the RtcSession associated to the token with a new track.
          *
          * @private
          * @param {Track} [track]
          * @param {String} token the token of video
          */
         _updateExternalSessionTrack(track, token) {
-            const rtcSession = this.messaging.models['mail.rtc_session'].findFromIdentifyingData({ id: token });
+            const rtcSession = this.messaging.models['RtcSession'].findFromIdentifyingData({ id: token });
             if (!rtcSession) {
                 return;
             }
@@ -1092,7 +1092,7 @@ registerModel({
          */
         async _onICEConnectionStateChange(connectionState, token) {
             this._addLogEntry(token, `ICE connection state changed: ${connectionState}`, { state: connectionState });
-            const rtcSession = this.messaging.models['mail.rtc_session'].findFromIdentifyingData({ id: token });
+            const rtcSession = this.messaging.models['RtcSession'].findFromIdentifyingData({ id: token });
             if (!rtcSession) {
                 return;
             }
@@ -1170,7 +1170,7 @@ registerModel({
         /**
          * String, peerToken of the current session used to identify him during the peer-to-peer transactions.
          */
-        currentRtcSession: one2one('mail.rtc_session', {
+        currentRtcSession: one2one('RtcSession', {
             inverse: 'rtc',
         }),
         /**

@@ -7,7 +7,7 @@ import { attr, many2one, one2one, one2many } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
 
 registerModel({
-    name: 'mail.rtc_session',
+    name: 'RtcSession',
     identifyingFields: ['id'],
     lifecycleHooks: {
         _created() {
@@ -134,7 +134,7 @@ registerModel({
             this.updateAndBroadcast({
                 isDeaf: !this.isDeaf,
             });
-            for (const session of this.messaging.models['mail.rtc_session'].all()) {
+            for (const session of this.messaging.models['RtcSession'].all()) {
                 if (!session.audioElement) {
                     continue;
                 }

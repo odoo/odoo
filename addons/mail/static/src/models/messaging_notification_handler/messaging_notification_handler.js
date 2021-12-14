@@ -106,7 +106,7 @@ registerModel({
                         case 'mail.message/insert':
                             return this.messaging.models['mail.message'].insert(message.payload);
                         case 'mail.channel.rtc.session/insert':
-                            return this.messaging.models['mail.rtc_session'].insert(message.payload);
+                            return this.messaging.models['RtcSession'].insert(message.payload);
                         case 'res.users.settings/changed':
                             return this._handleNotificationResUsersSettings(message.payload);
                         case 'mail.channel.rtc.session/peer_notification':

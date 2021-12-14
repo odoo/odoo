@@ -2327,10 +2327,10 @@ registerModel({
          * The session that invited the current user, it is only set when the
          * invitation is still pending.
          */
-        rtcInvitingSession: many2one('mail.rtc_session', {
+        rtcInvitingSession: many2one('RtcSession', {
             inverse: 'calledChannels',
         }),
-        rtcSessions: one2many('mail.rtc_session', {
+        rtcSessions: one2many('RtcSession', {
             inverse: 'channel',
             isCausal: true,
         }),
