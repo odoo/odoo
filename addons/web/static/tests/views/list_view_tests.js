@@ -805,22 +805,19 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skip("column names (noLabel, label, string and default)", async function (assert) {
-        assert.expect(4);
+    QUnit.test("column names (noLabel, label, string and default)", async function (assert) {
+        assert.expect(1);
 
-        const FieldChar = fieldRegistry.get("char");
-        fieldRegistry.add(
-            "nolabel_char",
-            FieldChar.extend({
-                noLabel: true,
-            })
-        );
-        fieldRegistry.add(
-            "label_char",
-            FieldChar.extend({
-                label: "Some static label",
-            })
-        );
+        const fieldRegistry = registry.category("fields");
+        const CharField = fieldRegistry.get("char");
+
+        class NoLabelCharField extends CharField {}
+        NoLabelCharField.noLabel = true;
+        fieldRegistry.add("nolabel_char", NoLabelCharField);
+
+        class LabelCharField extends CharField {}
+        LabelCharField.displayName = "Some static label";
+        fieldRegistry.add("label_char", LabelCharField);
 
         const list = await makeView({
             type: "list",
@@ -835,13 +832,14 @@ QUnit.module("Views", (hooks) => {
                 </tree>`,
         });
 
-        assert.strictEqual($(list.el).find("thead th[data-name=display_name]").text(), "");
-        assert.strictEqual($(list.el).find("thead th[data-name=foo]").text(), "Some static label");
-        assert.strictEqual(
-            $(list.el).find("thead th[data-name=int_field]").text(),
-            "My custom label"
-        );
-        assert.strictEqual($(list.el).find("thead th[data-name=text]").text(), "text field");
+        const columnLabels = [...list.el.querySelectorAll("thead th")].map((th) => th.textContent);
+        assert.deepEqual(columnLabels, [
+            "",
+            "",
+            "Some static label",
+            "My custom label",
+            "text field",
+        ]);
     });
 
     QUnit.skip("simple editable rendering", async function (assert) {
@@ -1197,7 +1195,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(list, "th.o_group_name", 2, "should have 2 .o_group_name");
     });
 
-    QUnit.skip('basic grouped list rendering with widget="handle" col', async function (assert) {
+    QUnit.test('basic grouped list rendering with widget="handle" col', async function (assert) {
         assert.expect(5);
 
         const list = await makeView({
@@ -4464,7 +4462,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(list.el.querySelector(".o_pager_limit").innerText, "2");
     });
 
-    QUnit.skip("can sort records when clicking on header", async function (assert) {
+    QUnit.test("can sort records when clicking on header", async function (assert) {
         assert.expect(9);
 
         serverData.models.foo.fields.foo.sortable = true;
@@ -4476,10 +4474,9 @@ QUnit.module("Views", (hooks) => {
             serverData,
             arch: '<tree><field name="foo"/><field name="bar"/></tree>',
             mockRPC: function (route) {
-                if (route === "/web/dataset/search_read") {
+                if (route === "/web/dataset/call_kw/foo/web_search_read") {
                     nbSearchRead++;
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
@@ -4494,7 +4491,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         nbSearchRead = 0;
-        await click($(list.el).find("thead th:contains(Foo)"));
+        await click($(list.el).find("thead th:contains(Foo)")[0]);
         assert.strictEqual(nbSearchRead, 1, "should have done one search_read");
         assert.ok(
             $(list.el).find("tbody tr:first td:contains(blip)").length,
@@ -4506,7 +4503,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         nbSearchRead = 0;
-        await click($(list.el).find("thead th:contains(Foo)"));
+        await click($(list.el).find("thead th:contains(Foo)")[0]);
         assert.strictEqual(nbSearchRead, 1, "should have done one search_read");
         assert.ok(
             $(list.el).find("tbody tr:first td:contains(yop)").length,
@@ -4518,7 +4515,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skip("do not sort records when clicking on header with nolabel", async function (assert) {
+    QUnit.test("do not sort records when clicking on header with nolabel", async function (assert) {
         assert.expect(6);
 
         serverData.models.foo.fields.foo.sortable = true;
@@ -4530,21 +4527,20 @@ QUnit.module("Views", (hooks) => {
             serverData,
             arch: '<tree><field name="foo" nolabel="1"/><field name="int_field"/></tree>',
             mockRPC: function (route) {
-                if (route === "/web/dataset/search_read") {
+                if (route === "/web/dataset/call_kw/foo/web_search_read") {
                     nbSearchRead++;
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
         assert.strictEqual(nbSearchRead, 1, "should have done one search_read");
         assert.strictEqual($(list.el).find(".o_data_cell").text(), "yop10blip9gnap17blip-4");
 
-        await click($(list.el).find('thead th[data-name="int_field"]'));
+        await click(list.el.querySelectorAll("thead th")[2]);
         assert.strictEqual(nbSearchRead, 2, "should have done one other search_read");
         assert.strictEqual($(list.el).find(".o_data_cell").text(), "blip-4blip9yop10gnap17");
 
-        await click($(list.el).find('thead th[data-name="foo"]'));
+        await click(list.el.querySelectorAll("thead th")[1]);
         assert.strictEqual(nbSearchRead, 2, "shouldn't have done anymore search_read");
         assert.strictEqual($(list.el).find(".o_data_cell").text(), "blip-4blip9yop10gnap17");
     });

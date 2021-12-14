@@ -97,6 +97,7 @@ export class ListArchParser extends XMLParser {
                     buttonGroup = {
                         type: "button_group",
                         buttons: [button],
+                        hasLabel: false,
                     };
                     columns.push(buttonGroup);
                 }
@@ -104,10 +105,19 @@ export class ListArchParser extends XMLParser {
                 const fieldInfo = Field.parseFieldNode(node, fields, "list");
                 activeFields[fieldInfo.name] = fieldInfo;
                 if (isAttr(node, "invisible").falsy(true)) {
+                    const displayName =
+                        fieldInfo.widget &&
+                        registry.category("fields").get(fieldInfo.widget).displayName;
                     columns.push({
                         ...fieldInfo,
                         optional: node.getAttribute("optional") || false,
                         type: "field",
+                        hasLabel: !(
+                            fieldInfo.attrs.nolabel ||
+                            (fieldInfo.widget &&
+                                registry.category("fields").get(fieldInfo.widget).noLabel)
+                        ),
+                        label: (displayName && displayName.toString()) || fieldInfo.string,
                     });
                 }
             } else if (node.tagName === "groupby" && node.getAttribute("name")) {
