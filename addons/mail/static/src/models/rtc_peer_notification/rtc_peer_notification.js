@@ -4,7 +4,7 @@ import { registerModel } from '@mail/model/model_core';
 import { attr } from '@mail/model/model_field';
 
 registerModel({
-    name: 'mail.rtc_peer_notification',
+    name: 'RtcPeerNotification',
     identifyingFields: ['id'],
     fields: {
         channelId: attr({
