@@ -16,11 +16,6 @@ export class ChatWindow extends Component {
         super.setup();
         useUpdate({ func: () => this._update() });
         /**
-         * Reference of the header of the chat window.
-         * Useful to prevent click on header from wrongly focusing the window.
-         */
-        this._chatWindowHeaderRef = useRef('header');
-        /**
          * Reference of the autocomplete input (new_message chat window only).
          * Useful when focusing this chat window, which consists of focusing
          * this input.
