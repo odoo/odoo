@@ -210,7 +210,7 @@ registerModel({
         inviteButtonText: attr({
             compute: '_computeInviteButtonText',
         }),
-        popoverView: one2one('mail.popover_view', {
+        popoverView: one2one('PopoverView', {
             inverse: 'channelInvitationForm',
             isCausal: true,
         }),
