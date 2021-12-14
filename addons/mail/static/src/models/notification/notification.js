@@ -143,7 +143,7 @@ registerModel({
         message: many2one('mail.message', {
             inverse: 'notifications',
         }),
-        notificationGroup: many2one('mail.notification_group', {
+        notificationGroup: many2one('NotificationGroup', {
             compute: '_computeNotificationGroup',
             inverse: 'notifications',
         }),
