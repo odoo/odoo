@@ -1,10 +1,12 @@
 /** @odoo-module **/
+
+import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { useEffect } from "@web/core/utils/hooks";
+import { isBroadlyFalsy } from "@web/core/utils/misc";
 import { snakeToCamel } from "@web/core/utils/strings";
 import { isAttr } from "@web/core/utils/xml";
 import { getX2MViewModes, X2M_TYPES } from "@web/views/helpers/view_utils";
-import { isBroadlyFalsy } from "../core/utils/misc";
 
 const { Component, tags } = owl;
 
@@ -16,6 +18,7 @@ export class Field extends Component {
             this.el.classList.add("o_field_widget");
             this.el.classList.add(`o_field_${this.type}`);
             this.el.setAttribute("name", this.props.name);
+            this.applyDecorations();
         });
     }
 
@@ -41,10 +44,6 @@ export class Field extends Component {
         let value = this.props.record.data[this.props.name];
         if (value === undefined) {
             value = null;
-        }
-
-        if (activeField.decorations) {
-            this.props.decorations = activeField.decorations;
         }
 
         return {
@@ -105,6 +104,21 @@ export class Field extends Component {
             return value;
         }
     }
+
+    /**
+     * Apply field decorations (only if field-specific decorations have been
+     * defined in an attribute, e.g. decoration-danger="other_field = 5")
+     */
+    applyDecorations() {
+        const { decorationAttrs } = this.props.record.activeFields[this.props.name];
+        const getClassFromDecoration =
+            this.effectiveFieldComponent.getClassFromDecoration || ((d) => `text-${d}`);
+        const evalContext = this.props.record.evalContext;
+        for (const decoName in decorationAttrs) {
+            const value = evaluateExpr(decorationAttrs[decoName], evalContext);
+            this.el.classList.toggle(getClassFromDecoration(decoName), value);
+        }
+    }
 }
 Field.template = tags.xml/* xml */ `
     <t t-component="effectiveFieldComponent" t-props="effectiveFieldComponentProps" t-key="props.record.id"/>
@@ -151,6 +165,7 @@ Field.parseFieldNode = function (node, fields, viewType) {
         optionsAttribute: node.getAttribute("options") || "{}",
         modifiersAttribute: node.getAttribute("modifiers") || "{}",
         FieldComponent: Field.getEffectiveFieldComponent({ fields, viewType }, widget, name),
+        decorationAttrs: {}, // populated below
         attrs: {},
     };
     for (const attribute of node.attributes) {
@@ -161,8 +176,8 @@ Field.parseFieldNode = function (node, fields, viewType) {
         // prepare field decorations
         if (attribute.name.startsWith("decoration-")) {
             const decorationName = attribute.name.replace("decoration-", "");
-            fieldInfo.decorationAttributes = fieldInfo.decorationAttributes || {};
-            fieldInfo.decorationAttributes[decorationName] = attribute.value;
+            fieldInfo.decorationAttrs[decorationName] = attribute.value;
+            continue;
         }
 
         // FIXME: black list special attributes like on_change, name... ?

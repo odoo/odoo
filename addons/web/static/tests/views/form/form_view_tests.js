@@ -463,62 +463,59 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(form, 'input[placeholder="chimay"]');
     });
 
-    QUnit.skip("decoration works on widgets", async function (assert) {
+    QUnit.test("decoration works on widgets", async function (assert) {
         assert.expect(2);
 
         const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                '<form string="Partners">' +
-                '<field name="int_field"/>' +
-                '<field name="display_name" decoration-danger="int_field &lt; 5"/>' +
-                '<field name="foo" decoration-danger="int_field &gt; 5"/>' +
-                "</form>",
+            arch: `
+                <form>
+                    <field name="int_field"/>
+                    <field name="display_name" decoration-danger="int_field &lt; 5"/>
+                    <field name="foo" decoration-danger="int_field &gt; 5"/>
+                </form>`,
             resId: 2,
         });
-        assert.doesNotHaveClass(form.$('span[name="display_name"]'), "text-danger");
-        assert.hasClass(form.$('span[name="foo"]'), "text-danger");
+        assert.doesNotHaveClass(form.el.querySelector('span[name="display_name"]'), "text-danger");
+        assert.hasClass(form.el.querySelector('span[name="foo"]'), "text-danger");
     });
 
-    QUnit.skip("decoration on widgets are reevaluated if necessary", async function (assert) {
+    QUnit.test("decoration on widgets are reevaluated if necessary", async function (assert) {
         assert.expect(2);
 
         const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                '<form string="Partners">' +
-                '<field name="int_field"/>' +
-                '<field name="display_name" decoration-danger="int_field &lt; 5"/>' +
-                "</form>",
+            arch: `
+                <form>
+                    <field name="int_field"/>
+                    <field name="display_name" decoration-danger="int_field &lt; 5"/>
+                </form>`,
             resId: 2,
-            viewOptions: { mode: "edit" },
         });
-        assert.doesNotHaveClass(form.$('input[name="display_name"]'), "text-danger");
-        await testUtils.fields.editInput(form.$("input[name=int_field]"), 3);
-        assert.hasClass(form.$('input[name="display_name"]'), "text-danger");
+        await click(form.el.querySelector(".o_form_button_edit"));
+        assert.doesNotHaveClass(form.el.querySelector('input[name="display_name"]'), "text-danger");
+        await editInput(form.el, "input[name=int_field]", 3);
+        assert.hasClass(form.el.querySelector('input[name="display_name"]'), "text-danger");
     });
 
-    QUnit.skip("decoration on widgets works on same widget", async function (assert) {
+    QUnit.test("decoration on widgets works on same widget", async function (assert) {
         assert.expect(2);
 
         const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                '<form string="Partners">' +
-                '<field name="int_field" decoration-danger="int_field &lt; 5"/>' +
-                "</form>",
+            arch: `<form><field name="int_field" decoration-danger="int_field &lt; 5"/></form>`,
             resId: 2,
-            viewOptions: { mode: "edit" },
         });
-        assert.doesNotHaveClass(form.$('input[name="int_field"]'), "text-danger");
-        await testUtils.fields.editInput(form.$("input[name=int_field]"), 3);
-        assert.hasClass(form.$('input[name="int_field"]'), "text-danger");
+        await click(form.el.querySelector(".o_form_button_edit"));
+        assert.doesNotHaveClass(form.el.querySelector('input[name="int_field"]'), "text-danger");
+        await editInput(form.el, "input[name=int_field]", 3);
+        assert.hasClass(form.el.querySelector('input[name="int_field"]'), "text-danger");
     });
 
     QUnit.test("only necessary fields are fetched with correct context", async function (assert) {
