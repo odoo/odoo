@@ -18,10 +18,10 @@ export class DeleteMessageConfirmDialog extends Component {
     }
 
     /**
-     * @returns {mail.message_action_list}
+     * @returns {MessageActionList}
      */
     get messageActionList() {
-        return this.messaging && this.messaging.models['mail.message_action_list'].get(this.props.messageActionListLocalId);
+        return this.messaging && this.messaging.models['MessageActionList'].get(this.props.messageActionListLocalId);
     }
 }
 
