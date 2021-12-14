@@ -1932,7 +1932,7 @@ registerModel({
          * It only makes sense for channels.
          */
         avatarCacheKey: attr(),
-        cache: one2one('mail.thread_cache', {
+        cache: one2one('ThreadCache', {
             default: insertAndReplace(),
             inverse: 'thread',
             isCausal: true,

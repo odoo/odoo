@@ -6,7 +6,7 @@ import { link, replace, unlink, unlinkAll } from '@mail/model/model_field_comman
 import { OnChange } from '@mail/model/model_onchange';
 
 registerModel({
-    name: 'mail.thread_cache',
+    name: 'ThreadCache',
     identifyingFields: ['thread'],
     recordMethods: {
         async loadMoreMessages() {
