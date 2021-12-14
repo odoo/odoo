@@ -587,7 +587,7 @@ QUnit.test('filtered previews', async function (assert) {
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
-                this.messaging.models['mail.thread'].findFromIdentifyingData({
+                this.messaging.models['Thread'].findFromIdentifyingData({
                     id: 10,
                     model: 'mail.channel',
                 }).localId
@@ -600,7 +600,7 @@ QUnit.test('filtered previews', async function (assert) {
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
-                this.messaging.models['mail.thread'].findFromIdentifyingData({
+                this.messaging.models['Thread'].findFromIdentifyingData({
                     id: 20,
                     model: 'mail.channel',
                 }).localId
@@ -622,7 +622,7 @@ QUnit.test('filtered previews', async function (assert) {
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
-                this.messaging.models['mail.thread'].findFromIdentifyingData({
+                this.messaging.models['Thread'].findFromIdentifyingData({
                     id: 10,
                     model: 'mail.channel',
                 }).localId
@@ -635,7 +635,7 @@ QUnit.test('filtered previews', async function (assert) {
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
-                this.messaging.models['mail.thread'].findFromIdentifyingData({
+                this.messaging.models['Thread'].findFromIdentifyingData({
                     id: 20,
                     model: 'mail.channel',
                 }).localId
@@ -660,7 +660,7 @@ QUnit.test('filtered previews', async function (assert) {
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
-                this.messaging.models['mail.thread'].findFromIdentifyingData({
+                this.messaging.models['Thread'].findFromIdentifyingData({
                     id: 10,
                     model: 'mail.channel',
                 }).localId
@@ -673,7 +673,7 @@ QUnit.test('filtered previews', async function (assert) {
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
-                this.messaging.models['mail.thread'].findFromIdentifyingData({
+                this.messaging.models['Thread'].findFromIdentifyingData({
                     id: 20,
                     model: 'mail.channel',
                 }).localId
@@ -695,7 +695,7 @@ QUnit.test('filtered previews', async function (assert) {
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
-                this.messaging.models['mail.thread'].findFromIdentifyingData({
+                this.messaging.models['Thread'].findFromIdentifyingData({
                     id: 10,
                     model: 'mail.channel',
                 }).localId
@@ -708,7 +708,7 @@ QUnit.test('filtered previews', async function (assert) {
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
             .o_ThreadPreview[data-thread-local-id="${
-                this.messaging.models['mail.thread'].findFromIdentifyingData({
+                this.messaging.models['Thread'].findFromIdentifyingData({
                     id: 20,
                     model: 'mail.channel',
                 }).localId
@@ -1038,7 +1038,7 @@ QUnit.test('Group chat should be displayed inside the chat section of the messag
     assert.strictEqual(
         document.querySelectorAll(`
             .o_MessagingMenu_dropdownMenu
-            .o_ThreadPreview[data-thread-local-id="${this.messaging.models['mail.thread'].findFromIdentifyingData({
+            .o_ThreadPreview[data-thread-local-id="${this.messaging.models['Thread'].findFromIdentifyingData({
                 id: 11,
                 model: 'mail.channel',
              }).localId}"]`).length,

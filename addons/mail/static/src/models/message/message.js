@@ -512,7 +512,7 @@ registerModel({
         },
         /**
          * @private
-         * @returns {mail.thread[]}
+         * @returns {Thread[]}
          */
         _computeThreads() {
             const threads = [];
@@ -716,7 +716,7 @@ registerModel({
         /**
          * Origin thread of this message (if any).
          */
-        originThread: many2one('mail.thread', {
+        originThread: many2one('Thread', {
             inverse: 'messagesAsOriginThread',
         }),
         /**
@@ -742,7 +742,7 @@ registerModel({
         /**
          * All threads that this message is linked to. This field is read-only.
          */
-        threads: many2many('mail.thread', {
+        threads: many2many('Thread', {
             compute: '_computeThreads',
             inverse: 'messages',
         }),

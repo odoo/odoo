@@ -45,7 +45,7 @@ QUnit.test('simplest layout of a followed subtype', async function (assert) {
 
     await this.start();
 
-    const thread = this.messaging.models['mail.thread'].create({
+    const thread = this.messaging.models['Thread'].create({
         id: 100,
         model: 'res.partner',
     });
@@ -105,7 +105,7 @@ QUnit.test('simplest layout of a not followed subtype', async function (assert) 
 
     await this.start();
 
-    const thread = this.messaging.models['mail.thread'].create({
+    const thread = this.messaging.models['Thread'].create({
         id: 100,
         model: 'res.partner',
     });
@@ -162,7 +162,7 @@ QUnit.test('toggle follower subtype checkbox', async function (assert) {
 
     await this.start();
 
-    const thread = this.messaging.models['mail.thread'].create({
+    const thread = this.messaging.models['Thread'].create({
         id: 100,
         model: 'res.partner',
     });

@@ -206,7 +206,7 @@ QUnit.test('channel - states: close manually by clicking the title', async funct
     assert.containsNone(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['mail.thread'].findFromIdentifyingData({
+            this.messaging.models['Thread'].findFromIdentifyingData({
                 id: 20,
                 model: 'mail.channel',
             }).localId
@@ -231,7 +231,7 @@ QUnit.test('channel - states: open manually by clicking the title', async functi
     assert.containsOnce(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['mail.thread'].findFromIdentifyingData({
+            this.messaging.models['Thread'].findFromIdentifyingData({
                 id: 20,
                 model: 'mail.channel',
             }).localId
@@ -335,7 +335,7 @@ QUnit.test('channel - states: close from the bus', async function (assert) {
     assert.containsNone(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['mail.thread'].findFromIdentifyingData({
+            this.messaging.models['Thread'].findFromIdentifyingData({
                 id: 20,
                 model: 'mail.channel',
             }).localId
@@ -365,7 +365,7 @@ QUnit.test('channel - states: open from the bus', async function (assert) {
     assert.containsOnce(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['mail.thread'].findFromIdentifyingData({
+            this.messaging.models['Thread'].findFromIdentifyingData({
                 id: 20,
                 model: 'mail.channel',
             }).localId
@@ -383,7 +383,7 @@ QUnit.test('channel - states: the active category item should be visble even if 
     assert.containsOnce(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['mail.thread'].findFromIdentifyingData({
+            this.messaging.models['Thread'].findFromIdentifyingData({
                 id: 20,
                 model: 'mail.channel',
             }).localId
@@ -391,7 +391,7 @@ QUnit.test('channel - states: the active category item should be visble even if 
     );
 
     const channel = document.querySelector(`.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-        this.messaging.models['mail.thread'].findFromIdentifyingData({
+        this.messaging.models['Thread'].findFromIdentifyingData({
             id: 20,
             model: 'mail.channel',
         }).localId
@@ -408,7 +408,7 @@ QUnit.test('channel - states: the active category item should be visble even if 
     assert.containsOnce(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['mail.thread'].findFromIdentifyingData({
+            this.messaging.models['Thread'].findFromIdentifyingData({
                 id: 20,
                 model: 'mail.channel',
             }).localId
@@ -425,7 +425,7 @@ QUnit.test('channel - states: the active category item should be visble even if 
     assert.containsNone(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['mail.thread'].findFromIdentifyingData({
+            this.messaging.models['Thread'].findFromIdentifyingData({
                 id: 20,
                 model: 'mail.channel',
             }).localId
@@ -565,7 +565,7 @@ QUnit.test('chat - states: close manually by clicking the title', async function
     assert.containsNone(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['mail.thread'].findFromIdentifyingData({
+            this.messaging.models['Thread'].findFromIdentifyingData({
                 id: 10,
                 model: 'mail.channel',
             }).localId
@@ -595,7 +595,7 @@ QUnit.test('chat - states: open manually by clicking the title', async function 
     assert.containsOnce(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['mail.thread'].findFromIdentifyingData({
+            this.messaging.models['Thread'].findFromIdentifyingData({
                 id: 10,
                 model: 'mail.channel',
             }).localId
@@ -704,7 +704,7 @@ QUnit.test('chat - states: close from the bus', async function (assert) {
     assert.containsNone(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['mail.thread'].findFromIdentifyingData({
+            this.messaging.models['Thread'].findFromIdentifyingData({
                 id: 10,
                 model: 'mail.channel',
             }).localId
@@ -739,7 +739,7 @@ QUnit.test('chat - states: open from the bus', async function (assert) {
     assert.containsOnce(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['mail.thread'].findFromIdentifyingData({
+            this.messaging.models['Thread'].findFromIdentifyingData({
                 id: 10,
                 model: 'mail.channel',
             }).localId
@@ -762,7 +762,7 @@ QUnit.test('chat - states: the active category item should be visble even if the
     assert.containsOnce(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['mail.thread'].findFromIdentifyingData({
+            this.messaging.models['Thread'].findFromIdentifyingData({
                 id: 10,
                 model: 'mail.channel',
             }).localId
@@ -770,7 +770,7 @@ QUnit.test('chat - states: the active category item should be visble even if the
     );
 
     const chat = document.querySelector(`.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-        this.messaging.models['mail.thread'].findFromIdentifyingData({
+        this.messaging.models['Thread'].findFromIdentifyingData({
             id: 10,
             model: 'mail.channel',
         }).localId
@@ -787,7 +787,7 @@ QUnit.test('chat - states: the active category item should be visble even if the
     assert.containsOnce(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['mail.thread'].findFromIdentifyingData({
+            this.messaging.models['Thread'].findFromIdentifyingData({
                 id: 10,
                 model: 'mail.channel',
             }).localId
@@ -804,7 +804,7 @@ QUnit.test('chat - states: the active category item should be visble even if the
     assert.containsNone(
         document.body,
         `.o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['mail.thread'].findFromIdentifyingData({
+            this.messaging.models['Thread'].findFromIdentifyingData({
                 id: 10,
                 model: 'mail.channel',
             }).localId

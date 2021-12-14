@@ -142,7 +142,7 @@ registerModel({
         },
     },
     fields: {
-        followedThread: many2one('mail.thread', {
+        followedThread: many2one('Thread', {
             inverse: 'followers',
         }),
         id: attr({

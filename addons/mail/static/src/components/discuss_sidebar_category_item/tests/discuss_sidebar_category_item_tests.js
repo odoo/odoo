@@ -43,7 +43,7 @@ QUnit.test('channel - avatar: should have correct avatar', async function (asser
 
     const channelItem = document.querySelector(`
         .o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['mail.thread'].findFromIdentifyingData({
+            this.messaging.models['Thread'].findFromIdentifyingData({
                 id: 20,
                 model: 'mail.channel',
             }).localId
@@ -75,7 +75,7 @@ QUnit.test('channel - avatar: should update avatar url from bus', async function
 
     const channelItemAvatar = document.querySelector(`
         .o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['mail.thread'].findFromIdentifyingData({
+            this.messaging.models['Thread'].findFromIdentifyingData({
                 id: 20,
                 model: 'mail.channel',
             }).localId
@@ -122,7 +122,7 @@ QUnit.test('chat - avatar: should have correct avatar', async function (assert) 
 
     const chatItem = document.querySelector(`
         .o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['mail.thread'].findFromIdentifyingData({
+            this.messaging.models['Thread'].findFromIdentifyingData({
                 id: 10,
                 model: 'mail.channel',
             }).localId
@@ -157,11 +157,11 @@ QUnit.test('chat - sorting: should be sorted by last activity time', async funct
     });
     await this.start();
 
-    const chat10 = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const chat10 = this.messaging.models['Thread'].findFromIdentifyingData({
         id: 10,
         model: 'mail.channel',
     });
-    const chat20 = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const chat20 = this.messaging.models['Thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });

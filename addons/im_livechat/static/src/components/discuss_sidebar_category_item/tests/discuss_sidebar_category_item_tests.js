@@ -42,7 +42,7 @@ QUnit.test('livechat - avatar: should have a smiley face avatar for an anonymous
 
     const livechatItem = document.querySelector(`
         .o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['mail.thread'].findFromIdentifyingData({
+            this.messaging.models['Thread'].findFromIdentifyingData({
                 id: 11,
                 model: 'mail.channel',
             }).localId
@@ -77,7 +77,7 @@ QUnit.test('livechat - avatar: should have a partner profile picture for a livec
 
     const livechatItem = document.querySelector(`
         .o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['mail.thread'].findFromIdentifyingData({
+            this.messaging.models['Thread'].findFromIdentifyingData({
                 id: 11,
                 model: 'mail.channel',
             }).localId

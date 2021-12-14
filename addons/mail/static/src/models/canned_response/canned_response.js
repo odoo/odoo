@@ -17,7 +17,7 @@ registerModel({
          *
          * @param {string} searchTerm
          * @param {Object} [options={}]
-         * @param {mail.thread} [options.thread] prioritize and/or restrict
+         * @param {Thread} [options.thread] prioritize and/or restrict
          *  result in the context of given thread
          */
         fetchSuggestions(searchTerm, { thread } = {}) {},
@@ -27,7 +27,7 @@ registerModel({
          *
          * @param {string} searchTerm
          * @param {Object} [options={}]
-         * @param {mail.thread} [options.thread] prioritize result in the
+         * @param {Thread} [options.thread] prioritize result in the
          *  context of given thread
          * @returns {function}
          */
@@ -57,7 +57,7 @@ registerModel({
          * @static
          * @param {string} searchTerm
          * @param {Object} [options={}]
-         * @param {mail.thread} [options.thread] prioritize and/or restrict
+         * @param {Thread} [options.thread] prioritize and/or restrict
          *  result in the context of given thread
          * @returns {[mail.canned_response[], mail.canned_response[]]}
          */

@@ -100,7 +100,7 @@ registerModel({
          *
          * If a chat is not appropriate, a notification is displayed instead.
          *
-         * @returns {mail.thread|undefined}
+         * @returns {Thread|undefined}
          */
         async getChat() {
             if (!this.user && !this.hasCheckedUser) {
@@ -122,8 +122,8 @@ registerModel({
          *
          * If a chat is not appropriate, a notification is displayed instead.
          *
-         * @param {Object} [options] forwarded to @see `mail.thread:open()`
-         * @returns {mail.thread|undefined}
+         * @param {Object} [options] forwarded to @see `Thread:open()`
+         * @returns {Thread|undefined}
          */
         async openChat(options) {
             const chat = await this.async(() => this.getChat());

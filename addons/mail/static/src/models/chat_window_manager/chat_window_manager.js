@@ -66,7 +66,7 @@ registerModel({
         /**
          * Closes all chat windows related to the given thread.
          *
-         * @param {mail.thread} thread
+         * @param {Thread} thread
          * @param {Object} [options]
          */
         closeThread(thread, options) {
@@ -86,7 +86,7 @@ registerModel({
             this.newMessageChatWindow.makeActive();
         },
         /**
-         * @param {mail.thread} thread
+         * @param {Thread} thread
          * @param {Object} [param1={}]
          * @param {boolean} [param1.focus] if set, set focus the chat window
          *   to open.

@@ -479,7 +479,7 @@ QUnit.test('chat window: basic rendering', async function (assert) {
     const chatWindow = document.querySelector(`.o_ChatWindow`);
     assert.strictEqual(
         chatWindow.dataset.threadLocalId,
-        this.messaging.models['mail.thread'].findFromIdentifyingData({
+        this.messaging.models['Thread'].findFromIdentifyingData({
             id: 20,
             model: 'mail.channel',
         }).localId,
@@ -1094,7 +1094,7 @@ QUnit.test('open 2 different chat windows: enough screen width [REQUIRE FOCUS]',
         document.querySelector(`
             .o_MessagingMenu_dropdownMenu
             .o_NotificationList_preview[data-thread-local-id="${
-                this.messaging.models['mail.thread'].findFromIdentifyingData({
+                this.messaging.models['Thread'].findFromIdentifyingData({
                     id: 10,
                     model: 'mail.channel',
                 }).localId
@@ -1109,7 +1109,7 @@ QUnit.test('open 2 different chat windows: enough screen width [REQUIRE FOCUS]',
     assert.strictEqual(
         document.querySelectorAll(`
             .o_ChatWindow[data-thread-local-id="${
-                this.messaging.models['mail.thread'].findFromIdentifyingData({
+                this.messaging.models['Thread'].findFromIdentifyingData({
                     id: 10,
                     model: 'mail.channel',
                 }).localId
@@ -1121,7 +1121,7 @@ QUnit.test('open 2 different chat windows: enough screen width [REQUIRE FOCUS]',
     assert.ok(
         document.querySelector(`
             .o_ChatWindow[data-thread-local-id="${
-                this.messaging.models['mail.thread'].findFromIdentifyingData({
+                this.messaging.models['Thread'].findFromIdentifyingData({
                     id: 10,
                     model: 'mail.channel',
                 }).localId
@@ -1135,7 +1135,7 @@ QUnit.test('open 2 different chat windows: enough screen width [REQUIRE FOCUS]',
         document.querySelector(`
             .o_MessagingMenu_dropdownMenu
             .o_NotificationList_preview[data-thread-local-id="${
-                this.messaging.models['mail.thread'].findFromIdentifyingData({
+                this.messaging.models['Thread'].findFromIdentifyingData({
                     id: 20,
                     model: 'mail.channel',
                 }).localId
@@ -1150,7 +1150,7 @@ QUnit.test('open 2 different chat windows: enough screen width [REQUIRE FOCUS]',
     assert.strictEqual(
         document.querySelectorAll(`
             .o_ChatWindow[data-thread-local-id="${
-                this.messaging.models['mail.thread'].findFromIdentifyingData({
+                this.messaging.models['Thread'].findFromIdentifyingData({
                     id: 20,
                     model: 'mail.channel',
                 }).localId
@@ -1162,7 +1162,7 @@ QUnit.test('open 2 different chat windows: enough screen width [REQUIRE FOCUS]',
     assert.strictEqual(
         document.querySelectorAll(`
             .o_ChatWindow[data-thread-local-id="${
-                this.messaging.models['mail.thread'].findFromIdentifyingData({
+                this.messaging.models['Thread'].findFromIdentifyingData({
                     id: 10,
                     model: 'mail.channel',
                 }).localId
@@ -1174,7 +1174,7 @@ QUnit.test('open 2 different chat windows: enough screen width [REQUIRE FOCUS]',
     assert.ok(
         document.querySelector(`
             .o_ChatWindow[data-thread-local-id="${
-                this.messaging.models['mail.thread'].findFromIdentifyingData({
+                this.messaging.models['Thread'].findFromIdentifyingData({
                     id: 20,
                     model: 'mail.channel',
                 }).localId
@@ -1185,7 +1185,7 @@ QUnit.test('open 2 different chat windows: enough screen width [REQUIRE FOCUS]',
     assert.notOk(
         document.querySelector(`
             .o_ChatWindow[data-thread-local-id="${
-                this.messaging.models['mail.thread'].findFromIdentifyingData({
+                this.messaging.models['Thread'].findFromIdentifyingData({
                     id: 10,
                     model: 'mail.channel',
                 }).localId
@@ -1445,7 +1445,7 @@ QUnit.test('open 3 different chat windows: not enough screen width', async funct
         document.querySelector(`
             .o_MessagingMenu_dropdownMenu
             .o_NotificationList_preview[data-thread-local-id="${
-                this.messaging.models['mail.thread'].findFromIdentifyingData({
+                this.messaging.models['Thread'].findFromIdentifyingData({
                     id: 1,
                     model: 'mail.channel',
                 }).localId
@@ -1475,7 +1475,7 @@ QUnit.test('open 3 different chat windows: not enough screen width', async funct
         document.querySelector(`
             .o_MessagingMenu_dropdownMenu
             .o_NotificationList_preview[data-thread-local-id="${
-                this.messaging.models['mail.thread'].findFromIdentifyingData({
+                this.messaging.models['Thread'].findFromIdentifyingData({
                     id: 2,
                     model: 'mail.channel',
                 }).localId
@@ -1505,7 +1505,7 @@ QUnit.test('open 3 different chat windows: not enough screen width', async funct
         document.querySelector(`
             .o_MessagingMenu_dropdownMenu
             .o_NotificationList_preview[data-thread-local-id="${
-                this.messaging.models['mail.thread'].findFromIdentifyingData({
+                this.messaging.models['Thread'].findFromIdentifyingData({
                     id: 3,
                     model: 'mail.channel',
                 }).localId
@@ -1530,7 +1530,7 @@ QUnit.test('open 3 different chat windows: not enough screen width', async funct
     assert.strictEqual(
         document.querySelectorAll(`
             .o_ChatWindow[data-thread-local-id="${
-                this.messaging.models['mail.thread'].findFromIdentifyingData({
+                this.messaging.models['Thread'].findFromIdentifyingData({
                     id: 1,
                     model: 'mail.channel',
                 }).localId
@@ -1542,7 +1542,7 @@ QUnit.test('open 3 different chat windows: not enough screen width', async funct
     assert.strictEqual(
         document.querySelectorAll(`
             .o_ChatWindow[data-thread-local-id="${
-                this.messaging.models['mail.thread'].findFromIdentifyingData({
+                this.messaging.models['Thread'].findFromIdentifyingData({
                     id: 3,
                     model: 'mail.channel',
                 }).localId
@@ -1554,7 +1554,7 @@ QUnit.test('open 3 different chat windows: not enough screen width', async funct
     assert.ok(
         document.querySelector(`
             .o_ChatWindow[data-thread-local-id="${
-                this.messaging.models['mail.thread'].findFromIdentifyingData({
+                this.messaging.models['Thread'].findFromIdentifyingData({
                     id: 3,
                     model: 'mail.channel',
                 }).localId
@@ -1583,7 +1583,7 @@ QUnit.test('chat window: switch on TAB', async function (assert) {
         document.querySelector(`
             .o_MessagingMenu_dropdownMenu
             .o_NotificationList_preview[data-thread-local-id="${
-                this.messaging.models['mail.thread'].findFromIdentifyingData({
+                this.messaging.models['Thread'].findFromIdentifyingData({
                     id: 1,
                     model: 'mail.channel',
                 }).localId
@@ -1624,7 +1624,7 @@ QUnit.test('chat window: switch on TAB', async function (assert) {
         document.querySelector(`
             .o_MessagingMenu_dropdownMenu
             .o_NotificationList_preview[data-thread-local-id="${
-                this.messaging.models['mail.thread'].findFromIdentifyingData({
+                this.messaging.models['Thread'].findFromIdentifyingData({
                     id: 2,
                     model: 'mail.channel',
                 }).localId
@@ -2129,7 +2129,7 @@ QUnit.test('chat window does not fetch messages if hidden', async function (asse
     assert.containsNone(
         document.body,
         `.o_ChatWindow[data-thread-local-id="${
-            this.messaging.models['mail.thread'].findFromIdentifyingData({
+            this.messaging.models['Thread'].findFromIdentifyingData({
                 id: 12,
                 model: 'mail.channel',
             }).localId
@@ -2167,7 +2167,7 @@ QUnit.test('chat window does not fetch messages if hidden', async function (asse
     assert.containsOnce(
         document.body,
         `.o_ChatWindow[data-thread-local-id="${
-            this.messaging.models['mail.thread'].findFromIdentifyingData({
+            this.messaging.models['Thread'].findFromIdentifyingData({
                 id: 12,
                 model: 'mail.channel',
             }).localId

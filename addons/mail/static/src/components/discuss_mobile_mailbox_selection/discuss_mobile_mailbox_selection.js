@@ -11,13 +11,13 @@ export class DiscussMobileMailboxSelection extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {mail.thread[]}
+     * @returns {Thread[]}
      */
     get orderedMailboxes() {
         if (!this.messaging) {
             return [];
         }
-        return this.messaging.models['mail.thread']
+        return this.messaging.models['Thread']
             .all(thread => thread.isPinned && thread.model === 'mail.box')
             .sort((mailbox1, mailbox2) => {
                 if (mailbox1 === this.messaging.inbox) {
@@ -57,7 +57,7 @@ export class DiscussMobileMailboxSelection extends Component {
      */
     _onClick(ev) {
         const { mailboxLocalId } = ev.currentTarget.dataset;
-        const mailbox = this.messaging.models['mail.thread'].get(mailboxLocalId);
+        const mailbox = this.messaging.models['Thread'].get(mailboxLocalId);
         if (!mailbox) {
             return;
         }

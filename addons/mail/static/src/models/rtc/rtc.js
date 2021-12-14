@@ -1164,7 +1164,7 @@ registerModel({
         /**
          * The channel that is hosting the current RTC call.
          */
-        channel: one2one('mail.thread', {
+        channel: one2one('Thread', {
             inverse: 'rtc',
         }),
         /**

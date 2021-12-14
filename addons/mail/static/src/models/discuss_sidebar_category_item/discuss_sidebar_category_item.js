@@ -275,7 +275,7 @@ registerModel({
         /**
          * The related channel thread.
          */
-        channel: one2one('mail.thread', {
+        channel: one2one('Thread', {
             inverse: 'discussSidebarCategoryItem',
             readonly: true,
             required: true,

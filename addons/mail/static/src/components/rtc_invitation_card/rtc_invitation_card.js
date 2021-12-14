@@ -11,10 +11,10 @@ export class RtcInvitationCard extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {mail.thread}
+     * @returns {Thread}
      */
     get thread() {
-        return this.messaging.models['mail.thread'].get(this.props.threadLocalId);
+        return this.messaging.models['Thread'].get(this.props.threadLocalId);
     }
 
     //--------------------------------------------------------------------------

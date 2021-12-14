@@ -5,7 +5,7 @@ import { insert, link, unlink } from '@mail/model/model_field_command';
 // ensure that the model definition is loaded before the patch
 import '@mail/models/thread/thread';
 
-patchModelMethods('mail.thread', {
+patchModelMethods('Thread', {
     /**
      * @override
      */
@@ -52,7 +52,7 @@ patchModelMethods('mail.thread', {
     },
 });
 
-patchRecordMethods('mail.thread', {
+patchRecordMethods('Thread', {
     /**
      * @override
      */

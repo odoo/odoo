@@ -72,9 +72,9 @@ registerModel({
          */
         reason: attr(),
         /**
-         * Determines the `mail.thread` concerned by `this.`
+         * Determines the `Thread` concerned by `this.`
          */
-        thread: many2one('mail.thread', {
+        thread: many2one('Thread', {
             inverse: 'suggestedRecipientInfoList',
             required: true,
         }),
