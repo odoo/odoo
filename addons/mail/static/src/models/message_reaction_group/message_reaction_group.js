@@ -6,7 +6,7 @@ import { insertAndReplace } from '@mail/model/model_field_command';
 import { markEventHandled } from '@mail/utils/utils';
 
 registerModel({
-    name: 'mail.message_reaction_group',
+    name: 'MessageReactionGroup',
     identifyingFields: ['message', 'content'],
     lifecycleHooks: {
         _created() {
