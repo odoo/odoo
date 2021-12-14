@@ -2156,6 +2156,13 @@ var SnippetsMenu = Widget.extend({
             })
             .not('[data-module-id]');
 
+        // Enable the snippet tooltips
+        this.$snippets.tooltip({
+            trigger: 'manual',
+            placement: 'bottom',
+            title: _t("Drag and drop the building block."),
+        });
+
         // Hide scroll if no snippets defined
         if (!this.$snippets.length) {
             this.$el.detach();
@@ -2361,6 +2368,8 @@ var SnippetsMenu = Widget.extend({
                     return dragSnip;
                 },
                 start: function () {
+                    self._hideSnippetTooltips();
+
                     const prom = new Promise(resolve => dragAndDropResolve = () => resolve());
                     self._mutex.exec(() => prom);
 
@@ -2975,7 +2984,7 @@ var SnippetsMenu = Widget.extend({
      *
      * @private
      */
-    _onMouseDown: function () {
+    _onMouseDown: function (ev) {
         const $blockedArea = $('#wrapwrap'); // TODO should get that element another way
         this.options.wysiwyg.odooEditor.automaticStepSkipStack();
         $blockedArea.addClass('o_we_no_pointer_events');
@@ -2990,6 +2999,39 @@ var SnippetsMenu = Widget.extend({
             clearTimeout(enableTimeoutID);
             reenable();
         });
+
+        const snippetEl = ev.target.closest('.oe_snippet');
+        if (snippetEl && !snippetEl.querySelector('.o_we_already_dragging')) {
+            this._showSnippetTooltip($(snippetEl));
+        }
+    },
+    /**
+     * Displays an autofading tooltip over a snippet, after a delay.
+     * If in the meantime the user has started to drag the snippet, it won't be
+     * shown.
+     *
+     * @private
+     * @param {jQuery} $snippet
+     * @param {Number} [delay=1500]
+     */
+    _showSnippetTooltip($snippet, delay = 1500) {
+        this.__showSnippetTooltip = true;
+        setTimeout(() => {
+            if (this.__showSnippetTooltip) {
+                $snippet.tooltip('show');
+                this._hideSnippetTooltips(1500);
+            }
+        }, delay);
+    },
+    /**
+     * @private
+     * @param {Number} [delay=0]
+     */
+    _hideSnippetTooltips(delay = 0) {
+        this.__showSnippetTooltip = false;
+        setTimeout(() => {
+            this.$snippets.tooltip('hide');
+        }, delay);
     },
     /**
      * @private
