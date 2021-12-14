@@ -236,7 +236,7 @@ class Inventory(models.Model):
     def _get_inventory_lines_values(self):
         # TDE CLEANME: is sql really necessary ? I don't think so
         locations = self.env['stock.location'].search([('id', 'child_of', [self.location_id.id])])
-        domain = ' location_id in %s AND quantity != 0 AND active = TRUE'
+        domain = ' location_id in %s AND quantity != 0'
         args = (tuple(locations.ids),)
 
         vals = []
