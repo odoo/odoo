@@ -10,7 +10,7 @@ const getNextGuestNameInputId = (function () {
 })();
 
 registerModel({
-    name: 'mail.welcome_view',
+    name: 'WelcomeView',
     identifyingFields: ['messaging'],
     lifecycleHooks: {
         _created() {
