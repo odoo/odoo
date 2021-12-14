@@ -16,7 +16,7 @@ class DigestTip(models.Model):
     user_ids = fields.Many2many(
         'res.users', string='Recipients',
         help='Users having already received this tip')
-    tip_description = fields.Html('Tip description', translate=html_translate)
+    tip_description = fields.Html('Tip description', translate=html_translate, sanitize=False)
     group_id = fields.Many2one(
         'res.groups', string='Authorized Group',
         default=lambda self: self.env.ref('base.group_user'))
