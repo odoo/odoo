@@ -312,13 +312,12 @@ class QwebTracker():
     @classmethod
     def wrap_compile_directive(cls, method_compile_directive):
         @functools.wraps(method_compile_directive)
-        def _tracked_compile_directive(self, el, options, directive, indent):
-            if not options.get('profile') or directive in ('inner-content', 'tag'):
-                return method_compile_directive(self, el, options, directive, indent)
-
-            enter = self._indent(f"self.env.context['qweb_tracker'].enter_directive({directive!r}, {el.attrib!r}, {options['last_path_node']!r})", indent)
-            leave = self._indent("self.env.context['qweb_tracker'].leave_directive()", indent)
-            code_directive = method_compile_directive(self, el, options, directive, indent)
+        def _tracked_compile_directive(self, el, options, directive, level):
+            if not options.get('profile') or directive in ('inner-content', 'tag-open', 'tag-close'):
+                return method_compile_directive(self, el, options, directive, level)
+            enter = f"{' ' * 4 * level}self.env.context['qweb_tracker'].enter_directive({directive!r}, {el.attrib!r}, {options['last_path_node']!r})"
+            leave = f"{' ' * 4 * level}self.env.context['qweb_tracker'].leave_directive()"
+            code_directive = method_compile_directive(self, el, options, directive, level)
             return [enter, *code_directive, leave] if code_directive else []
         return _tracked_compile_directive
 
@@ -336,19 +335,30 @@ class QwebTracker():
         execution_context = None
         if self.execution_context_enabled:
             directive_info = {}
-            if directive and ('t-' + directive) in attrib:
+            if ('t-' + directive) in attrib:
                 directive_info['t-' + directive] = repr(attrib['t-' + directive])
             if directive == 'set':
                 if 't-value' in attrib:
                     directive_info['t-value'] = repr(attrib['t-value'])
                 if 't-valuef' in attrib:
                     directive_info['t-valuef'] = repr(attrib['t-valuef'])
+
+                for key in attrib:
+                    if key.startswith('t-set-') or key.startswith('t-setf-'):
+                        directive_info[key] = repr(attrib[key])
             elif directive == 'foreach':
                 directive_info['t-as'] = repr(attrib['t-as'])
+            elif directive == 'att':
+                for key in attrib:
+                    if key.startswith('t-att-') or key.startswith('t-attf-'):
+                        directive_info[key] = repr(attrib[key])
             elif directive == 'options':
-                for key in list(attrib):
+                for key in attrib:
                     if key.startswith('t-options-'):
                         directive_info[key] = repr(attrib[key])
+            elif ('t-' + directive) not in attrib:
+                directive_info['t-' + directive] = None
+
             execution_context = tools.profiler.ExecutionContext(**directive_info, xpath=xpath)
             execution_context.__enter__()
             self.context_stack.append(execution_context)
@@ -381,21 +391,36 @@ class QwebCollector(Collector):
     def _get_directive_profiling_name(self, directive, attrib):
         expr = ''
         if directive == 'set':
-            expr = f"t-set={repr(attrib['t-set'])}"
-            if 't-value' in attrib:
-                expr = f"{expr} t-value={repr(attrib['t-value'])}"
-            if 't-valuef' in attrib:
-                expr = f"{expr} t-valuef={repr(attrib['t-valuef'])}"
+            if 't-set' in attrib:
+                expr = f"t-set={repr(attrib['t-set'])}"
+                if 't-value' in attrib:
+                    expr += f" t-value={repr(attrib['t-value'])}"
+                if 't-valuef' in attrib:
+                    expr += f" t-valuef={repr(attrib['t-valuef'])}"
+            for key in attrib:
+                if key.startswith('t-set-') or key.startswith('t-setf-'):
+                    if expr:
+                        expr += ' '
+                    expr += f"{key}={repr(attrib[key])}"
         elif directive == 'foreach':
             expr = f"t-foreach={repr(attrib['t-foreach'])} t-as={repr(attrib['t-as'])}"
         elif directive == 'options':
             if attrib.get('t-options'):
                 expr = f"t-options={repr(attrib['t-options'])}"
-            for key in list(attrib):
+            for key in attrib:
                 if key.startswith('t-options-'):
                     expr = f"{expr}  {key}={repr(attrib[key])}"
-        elif directive and ('t-' + directive) in attrib:
+        elif directive == 'att':
+            for key in attrib:
+                if key == 't-att' or key.startswith('t-att-') or key.startswith('t-attf-'):
+                    if expr:
+                        expr += ' '
+                    expr += f"{key}={repr(attrib[key])}"
+        elif ('t-' + directive) in attrib:
             expr = f"t-{directive}={repr(attrib['t-' + directive])}"
+        else:
+            expr = f"t-{directive}"
+
         return expr
 
     def start(self):

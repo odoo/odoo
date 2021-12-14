@@ -24,7 +24,7 @@
 <h3 style="font-weight: bolder"><u>Milestones</u></h3>
 
 <ul class="o_checklist" t-if="milestones['list']">
-<t t-foreach="milestones['list']" t-as="milestone" t-key="milestone['id']">
+<t t-foreach="milestones['list']" t-as="milestone">
 <li t-attf-class="{{milestone['is_reached'] and 'o_checked' or ''}}">
 <t t-esc="milestone['name']"/>
 <span t-if="milestone['is_deadline_future'] and not milestone['is_reached']"><font style="color: rgb(190, 190, 190);"><t t-set="color_level" t-value="64"/><t t-call="project.milestone_deadline"/></font></span>
@@ -38,7 +38,7 @@
 <t t-if="len(milestones['updated']) > 1">the deadline of the following milestones has been updated:</t>
 <t t-else="">the deadline of the following milestone has been updated:</t>
 <ul>
-<t t-foreach="milestones['updated']" t-as="milestone" t-key="milestone['id']">
+<t t-foreach="milestones['updated']" t-as="milestone">
 <li>
 <t t-esc="milestone['name']"/> (<t t-esc="milestone['old_value']" t-options='{"widget": "date"}'/> =&gt; <t t-esc="milestone['new_value']"  t-options='{"widget": "date"}'/>)
 </li>
@@ -50,7 +50,7 @@
 <t t-if="len(milestones['created']) > 1">The following milestones have been added:</t>
 <t t-else="">The following milestone has been added:</t>
 <ul>
-<t t-foreach="milestones['created']" t-as="milestone" t-key="milestone['id']">
+<t t-foreach="milestones['created']" t-as="milestone">
 <li>
 <t t-esc="milestone['name']"/><span t-if="milestone['is_deadline_future'] and not milestone['is_reached']">
 <font style="color: rgb(190, 190, 190);">

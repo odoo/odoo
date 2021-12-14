@@ -44,8 +44,6 @@ class IrQWeb(models.AbstractModel):
     """
     _inherit = 'ir.qweb'
 
-    # compile directives
-
     def _compile_node(self, el, options, indent):
         snippet_key = options.get('snippet-key')
         if snippet_key == options['template'] \
@@ -71,10 +69,12 @@ class IrQWeb(models.AbstractModel):
 
         return super()._compile_node(el, options, indent)
 
+    # compile directives
+
     def _compile_directive_snippet(self, el, options, indent):
         key = el.attrib.pop('t-snippet')
         el.set('t-call', key)
-        el.set('t-options', "{'snippet-key': '" + key + "'}")
+        el.set('t-options', f"{{'snippet-key': {key!r}}}")
         View = self.env['ir.ui.view'].sudo()
         view_id = View.get_view_id(key)
         name = View.browse(view_id).name
@@ -85,41 +85,42 @@ class IrQWeb(models.AbstractModel):
             escape(pycompat.to_text(view_id)),
             escape(pycompat.to_text(el.findtext('keywords')))
         )
-        self._appendText(div, options)
+        self._append_text(div, options)
         code = self._compile_node(el, options, indent)
-        self._appendText('</div>', options)
+        self._append_text('</div>', options)
         return code
 
     def _compile_directive_snippet_call(self, el, options, indent):
         key = el.attrib.pop('t-snippet-call')
         el.set('t-call', key)
-        el.set('t-options', "{'snippet-key': '" + key + "'}")
+        el.set('t-options', f"{{'snippet-key': {key!r}}}")
         return self._compile_node(el, options, indent)
 
     def _compile_directive_install(self, el, options, indent):
+        key = el.attrib.pop('t-install')
+        thumbnail = el.attrib.pop('t-thumbnail', 'oe-thumbnail')
         if self.user_has_groups('base.group_system'):
-            module = self.env['ir.module.module'].search([('name', '=', el.attrib.get('t-install'))])
+            module = self.env['ir.module.module'].search([('name', '=', key)])
             if not module or module.state == 'installed':
                 return []
             name = el.attrib.get('string') or 'Snippet'
-            thumbnail = el.attrib.pop('t-thumbnail', 'oe-thumbnail')
             div = '<div name="%s" data-oe-type="snippet" data-module-id="%s" data-oe-thumbnail="%s"><section/></div>' % (
                 escape(pycompat.to_text(name)),
                 module.id,
                 escape(pycompat.to_text(thumbnail))
             )
-            self._appendText(div, options)
+            self._append_text(div, options)
         return []
 
-    def _compile_directive_tag(self, el, options, indent):
-        if el.get('t-placeholder'):
-            el.set('t-att-placeholder', el.attrib.pop('t-placeholder'))
-        return super(IrQWeb, self)._compile_directive_tag(el, options, indent)
+    def _compile_directive_placeholder(self, el, options, indent):
+        el.set('t-att-placeholder', el.attrib.pop('t-placeholder'))
+        return []
 
     # order and ignore
 
     def _directives_eval_order(self):
-        directives = super(IrQWeb, self)._directives_eval_order()
+        directives = super()._directives_eval_order()
+        directives.insert(directives.index('att'), 'placeholder')
         directives.insert(directives.index('call'), 'snippet')
         directives.insert(directives.index('call'), 'snippet-call')
         directives.insert(directives.index('call'), 'install')

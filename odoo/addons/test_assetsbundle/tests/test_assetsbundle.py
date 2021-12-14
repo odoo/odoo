@@ -1056,7 +1056,7 @@ class TestAssetsManifest(AddonManifestPatched):
         with self.assertRaises(Exception) as cm:
             view._render()
         self.assertTrue(
-            "['test_assetsbundle/static/src/js/test_doesntexist.js'] not found" in cm.exception.message
+            "['test_assetsbundle/static/src/js/test_doesntexist.js'] not found" in str(cm.exception)
         )
 
     def test_09_remove_wholeglob(self):
@@ -1143,10 +1143,11 @@ class TestAssetsManifest(AddonManifestPatched):
 
         with self.assertRaises(QWebException) as cm:
             view._render()
-        self.assertTrue(cm.exception.error)
-        self.assertFalse(isinstance(cm.exception.error, RecursionError))
+        error = str(cm.exception.__cause__)
+        self.assertTrue(error)
+        self.assertFalse(isinstance(error, RecursionError))
         self.assertTrue(
-            'Circular assets bundle declaration:' in cm.exception.message
+            'Circular assets bundle declaration:' in error
         )
 
     def test_13_2_include_recursive_sibling(self):
@@ -1681,7 +1682,7 @@ class TestAssetsManifest(AddonManifestPatched):
         with self.assertRaises(Exception) as cm:
             view._render()
         self.assertTrue(
-            "test_assetsbundle/static/src/js/doesnt_exist.js not found" in cm.exception.message
+            "test_assetsbundle/static/src/js/doesnt_exist.js not found" in str(cm.exception)
         )
 
     def test_29_js_after_js_in_irasset_glob(self):
@@ -1790,7 +1791,7 @@ class TestAssetsManifest(AddonManifestPatched):
         with self.assertRaises(QWebException) as cm:
             view._render()
 
-        self.assertTrue('Unallowed to fetch files from addon notinstalled_module' in cm.exception.message)
+        self.assertTrue('Unallowed to fetch files from addon notinstalled_module' in str(cm.exception))
 
     def test_33bis_notinstalled_not_in_manifests(self):
         self.env['ir.asset'].create({

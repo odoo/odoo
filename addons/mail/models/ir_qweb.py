@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
 from odoo import models
 
-class QWebCodeFound(Exception):
-    """
-    Exception raised when a qweb compilation encounter dynamic content if the
-    option `raise_on_code` is True.
-    """
-
 class IrQweb(models.AbstractModel):
+    """ Add ``raise_on_code`` option for qweb. When this option is activated
+    then all directives are prohibited.
+    """
     _inherit = 'ir.qweb'
 
     def _get_template_cache_keys(self):
@@ -15,5 +12,5 @@ class IrQweb(models.AbstractModel):
 
     def _compile_directives(self, el, options, indent):
         if options.get('raise_on_code'):
-            raise QWebCodeFound()
+            raise PermissionError("This rendering mode prohibits the use of directives.")
         return super()._compile_directives(el, options, indent)
