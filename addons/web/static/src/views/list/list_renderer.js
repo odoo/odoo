@@ -175,7 +175,7 @@ export class ListRenderer extends Component {
     getColumnClass(column) {
         const field = this.fields[column.name];
         const classNames = [];
-        if (field.sortable) {
+        if (field.sortable && column.hasLabel) {
             classNames.push("o_column_sortable");
         }
         const orderBy = this.props.list.orderBy;
@@ -310,17 +310,18 @@ export class ListRenderer extends Component {
         }
     }
 
-    onClickSortColumn(fieldName) {
-        if (this.fields[fieldName].sortable) {
-            if (this.props.list.isGrouped) {
+    onClickSortColumn(column) {
+        const fieldName = column.name;
+        const list = this.props.list;
+        if (this.fields[fieldName].sortable && column.hasLabel) {
+            if (list.isGrouped) {
                 const isSortable =
-                    this.props.list.groups[0].aggregates[fieldName] ||
-                    this.props.list.groupBy.includes(fieldName);
+                    list.groups[0].aggregates[fieldName] || list.groupBy.includes(fieldName);
                 if (isSortable) {
-                    this.props.list.sortBy(fieldName);
+                    list.sortBy(fieldName);
                 }
             } else {
-                this.props.list.sortBy(fieldName);
+                list.sortBy(fieldName);
             }
         }
     }
