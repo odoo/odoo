@@ -31,7 +31,7 @@ class SnailmailErrorDialog extends Component {
     }
 
     /**
-     * @returns {mail.notification}
+     * @returns {Notification}
      */
     get notification() {
         // Messages from snailmail are considered to have at most one notification.

@@ -124,7 +124,7 @@ registerModel({
         notification_type: attr({
             readonly: true,
         }),
-        notifications: one2many('mail.notification', {
+        notifications: one2many('Notification', {
             inverse: 'notificationGroup',
         }),
         res_id: attr({
