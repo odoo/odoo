@@ -127,6 +127,9 @@ export function makeMockFetch(mockRPC) {
         let params;
         if (route.includes("load_menus")) {
             const routeArray = route.split("/");
+            if (routeArray[routeArray.length - 1].includes('[')) {
+                routeArray.pop();
+            }
             params = {
                 hash: routeArray.pop(),
             };

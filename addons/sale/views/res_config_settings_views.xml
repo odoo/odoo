@@ -202,7 +202,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-6 o_setting_box" id="confirmation_email_setting" attrs="{'invisible': [('portal_confirmation_pay', '=', False) , ('portal_confirmation_sign', '=', False)]}" groups="base.group_no_one">
+                        <div class="col-12 col-lg-6 o_setting_box" id="confirmation_email_setting" attrs="{'invisible': [('portal_confirmation_pay', '=', False) , ('portal_confirmation_sign', '=', False)]}" features="debug">
                             <div class="o_setting_right_pane">
                                 <span class="o_form_label">Confirmation Email</span>
                                 <div class="text-muted">
@@ -392,7 +392,7 @@
                                 <div class="text-muted">
                                     Generate the invoice automatically when the online payment is confirmed
                                 </div>
-                                <div  attrs="{'invisible': [('automatic_invoice','=',False)]}" groups="base.group_no_one">
+                                <div  attrs="{'invisible': [('automatic_invoice','=',False)]}" features="debug">
                                     <label for="invoice_mail_template_id" class="o_light_label"/>
                                     <field name="invoice_mail_template_id" class="oe_inline" options="{'no_create': True}"/>
                                 </div>

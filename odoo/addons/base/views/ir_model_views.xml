@@ -39,11 +39,11 @@
                             <field name="name"/>
                             <field name="model" attrs="{'readonly': [('id', '!=', False)]}"/>
                             <field name="order"/>
-                            <field name="transient" attrs="{'readonly': [('id', '!=', False)]}" groups="base.group_no_one"/>
+                            <field name="transient" attrs="{'readonly': [('id', '!=', False)]}" features="debug"/>
                         </group>
                         <group>
-                            <field name="state" readonly="1" groups="base.group_no_one"/>
-                            <field name="modules" groups="base.group_no_one"/>
+                            <field name="state" readonly="1" features="debug"/>
+                            <field name="modules" features="debug"/>
                         </group>
                     </group>
                     <notebook>
@@ -55,8 +55,8 @@
                                     <field name="ttype"/>
                                     <field name="required"/>
                                     <field name="readonly"/>
-                                    <field name="index" groups="base.group_no_one"/>
-                                    <field name="state" groups="base.group_no_one"/>
+                                    <field name="index" features="debug"/>
+                                    <field name="state" features="debug"/>
                                 </tree>
                                 <form string="Fields Description">
                                     <group>
@@ -75,38 +75,38 @@
                                                 <group>
                                                     <field name="required"/>
                                                     <field name="readonly"/>
-                                                    <field name="store" groups="base.group_no_one"/>
-                                                    <field name="index" groups="base.group_no_one"/>
-                                                    <field name="copied" groups="base.group_no_one"/>
+                                                    <field name="store" features="debug"/>
+                                                    <field name="index" features="debug"/>
+                                                    <field name="copied" features="debug"/>
                                                 </group>
                                                 <group>
                                                     <field name="translate"
                                                         attrs="{'readonly': [('ttype','not in',['char','text','html'])],
                                                                 'invisible': [('ttype','not in',['char','text','html'])]}"/>
-                                                    <field name="size" groups="base.group_no_one"
+                                                    <field name="size" features="debug"
                                                         attrs="{'readonly': [('ttype','not in',['char','reference'])],
                                                                 'invisible': [('ttype','not in',['char','reference'])]}"/>
                                                     <field name="relation"
                                                         attrs="{'required': [('ttype','in',['many2one','one2many','many2many'])],
                                                                 'readonly': [('ttype','not in',['many2one','one2many','many2many'])],
                                                                 'invisible': [('ttype','not in',['many2one','one2many','many2many'])]}"/>
-                                                    <field name="on_delete" groups="base.group_no_one"
+                                                    <field name="on_delete" features="debug"
                                                         attrs="{'readonly': [('ttype','!=','many2one')],
                                                                 'invisible': [('ttype','!=','many2one')]}"/>
                                                     <field name="relation_field"
                                                         attrs="{'required': [('ttype','=','one2many')],
                                                                 'readonly': [('ttype','!=','one2many')],
                                                                 'invisible': [('ttype','!=','one2many')]}"/>
-                                                    <field name="relation_table" groups="base.group_no_one"
+                                                    <field name="relation_table" features="debug"
                                                         attrs="{'readonly': ['|', ('ttype','!=','many2many'), ('state','!=','manual')],
                                                                 'invisible': ['|', ('ttype','!=','many2many'), ('state','!=','manual')]}"/>
-                                                    <field name="column1" groups="base.group_no_one"
+                                                    <field name="column1" features="debug"
                                                         attrs="{'readonly': ['|', ('ttype','!=','many2many'), ('state','!=','manual')],
                                                                 'invisible': ['|', ('ttype','!=','many2many'), ('state','!=','manual')]}"/>
-                                                    <field name="column2" groups="base.group_no_one"
+                                                    <field name="column2" features="debug"
                                                         attrs="{'readonly': ['|', ('ttype','!=','many2many'), ('state','!=','manual')],
                                                                 'invisible': ['|', ('ttype','!=','many2many'), ('state','!=','manual')]}"/>
-                                                    <field name="domain" groups="base.group_no_one"
+                                                    <field name="domain" features="debug"
                                                         attrs="{'readonly': [('ttype','not in',['many2one','one2many','many2many'])],
                                                                 'invisible': [('ttype','not in',['many2one','one2many','many2many'])]}"/>
                                                 </group>
@@ -121,12 +121,12 @@
                                                     </tree>
                                                 </field>
                                             </group>
-                                            <group string="Advanced Properties" groups="base.group_no_one">
+                                            <group string="Advanced Properties" features="debug">
                                                 <field name="related"/>
                                                 <field name="depends" attrs="{'required': [('compute', 'not in', [False, ''])]}"/>
                                                 <field name="compute" widget="ace" options="{'mode': 'python'}"/>
                                             </group>
-                                            <div groups="base.group_no_one">
+                                            <div features="debug">
                                                 <h3>How to define a computed field</h3>
                                                 <p>Computed fields are defined with the fields
                                                 <strong>Dependencies</strong> and <strong>Compute</strong>.</p>
@@ -157,7 +157,7 @@
                                         <page name="groups" string="Access Rights">
                                             <field name="groups"/>
                                         </page>
-                                        <page name="misc" string="Miscellaneous" groups="base.group_no_one">
+                                        <page name="misc" string="Miscellaneous" features="debug">
                                             <group>
                                                 <field name="state"/>
                                                 <field name="modules"/>
@@ -166,7 +166,7 @@
                                     </notebook>
                                 </form>
                             </field>
-                            <button groups="base.group_no_one"
+                            <button features="debug"
                                 icon="fa-align-justify"
                                 name="%(act_menu_create)d"
                                 string="Create a Menu" type="action"
@@ -200,10 +200,10 @@
                                 </tree>
                             </field>
                         </page>
-                        <page string="Notes" name="notes" groups="base.group_no_one">
+                        <page string="Notes" name="notes" features="debug">
                             <field name="info"/>
                         </page>
-                        <page string="Views" name="views" groups="base.group_no_one">
+                        <page string="Views" name="views" features="debug">
                             <field name="view_ids"/>
                         </page>
                     </notebook>
@@ -266,41 +266,41 @@
                                     <group>
                                         <field name="required"/>
                                         <field name="readonly"/>
-                                        <field name="store" groups="base.group_no_one"/>
-                                        <field name="index" groups="base.group_no_one"/>
-                                        <field name="copied" groups="base.group_no_one"/>
+                                        <field name="store" features="debug"/>
+                                        <field name="index" features="debug"/>
+                                        <field name="copied" features="debug"/>
                                     </group>
                                     <group>
                                         <field name="translate"
                                             attrs="{'readonly': [('ttype','not in',['char','text','html'])],
                                                     'invisible': [('ttype','not in',['char','text','html'])]}"/>
-                                        <field name="size" groups="base.group_no_one"
+                                        <field name="size" features="debug"
                                             attrs="{'readonly': [('ttype','not in',['char','reference'])],
                                                     'invisible': [('ttype','not in',['char','reference'])]}"/>
                                         <field name="relation"
                                             attrs="{'required': [('ttype','in',['many2one','one2many','many2many'])],
                                                     'readonly': [('ttype','not in',['many2one','one2many','many2many'])],
                                                     'invisible': [('ttype','not in',['many2one','one2many','many2many'])]}"/>
-                                        <field name="group_expand" groups="base.group_no_one"
+                                        <field name="group_expand" features="debug"
                                             attrs="{'readonly': [('ttype','not in', ['many2one', 'selection'])],
                                                     'invisible': [('ttype','not in', ['many2one', 'selection'])]}"/>
-                                        <field name="on_delete" groups="base.group_no_one"
+                                        <field name="on_delete" features="debug"
                                             attrs="{'readonly': [('ttype','!=','many2one')],
                                                     'invisible': [('ttype','!=','many2one')]}"/>
                                         <field name="relation_field"
                                             attrs="{'required': [('ttype','=','one2many')],
                                                     'readonly': [('ttype','!=','one2many')],
                                                     'invisible': [('ttype','!=','one2many')]}"/>
-                                        <field name="relation_table" groups="base.group_no_one"
+                                        <field name="relation_table" features="debug"
                                             attrs="{'readonly': ['|', ('ttype','!=','many2many'), ('state','!=','manual')],
                                                     'invisible': ['|', ('ttype','!=','many2many'), ('state','!=','manual')]}"/>
-                                        <field name="column1" groups="base.group_no_one"
+                                        <field name="column1" features="debug"
                                             attrs="{'readonly': ['|', ('ttype','!=','many2many'), ('state','!=','manual')],
                                                     'invisible': ['|', ('ttype','!=','many2many'), ('state','!=','manual')]}"/>
-                                        <field name="column2" groups="base.group_no_one"
+                                        <field name="column2" features="debug"
                                             attrs="{'readonly': ['|', ('ttype','!=','many2many'), ('state','!=','manual')],
                                                     'invisible': ['|', ('ttype','!=','many2many'), ('state','!=','manual')]}"/>
-                                        <field name="domain" groups="base.group_no_one"
+                                        <field name="domain" features="debug"
                                             attrs="{'readonly': [('ttype','not in',['many2one','one2many','many2many'])],
                                                     'invisible': [('ttype','not in',['many2one','one2many','many2many'])]}"/>
                                     </group>
@@ -315,12 +315,12 @@
                                         </tree>
                                     </field>
                                 </group>
-                                <group string="Advanced Properties" groups="base.group_no_one">
+                                <group string="Advanced Properties" features="debug">
                                     <field name="related"/>
                                     <field name="depends" attrs="{'required': [('compute', 'not in', [False, ''])]}"/>
                                     <field name="compute" widget="ace" options="{'mode': 'python'}"/>
                                 </group>
-                                <div groups="base.group_no_one">
+                                <div features="debug">
                                     <h3>How to define a computed field</h3>
                                     <p>Computed fields are defined with the fields
                                     <strong>Dependencies</strong> and <strong>Compute</strong>.</p>
@@ -351,7 +351,7 @@
                             <page name="groups" string="Access Rights">
                                 <field name="groups"/>
                             </page>
-                            <page name="misc" string="Miscellaneous" groups="base.group_no_one">
+                            <page name="misc" string="Miscellaneous" features="debug">
                                 <group>
                                     <field name="state"/>
                                     <field name="modules"/>
@@ -419,9 +419,9 @@
                     <sheet>
                         <group>
                             <field name="field_id"/>
-                            <field name="value" groups="base.group_no_one"/>
+                            <field name="value" features="debug"/>
                             <field name="name"/>
-                            <field name="sequence" groups="base.group_no_one"/>
+                            <field name="sequence" features="debug"/>
                         </group>
                     </sheet>
                 </form>
@@ -493,7 +493,7 @@
                 <tree string="External Identifiers">
                     <field name="complete_name"/>
                     <field name="display_name"/>
-                    <field name="model" groups="base.group_no_one"/>
+                    <field name="model" features="debug"/>
                     <field name="module" invisible="1"/>
                     <field name="res_id"/>
                 </tree>
@@ -521,9 +521,9 @@
             <field name="res_model">ir.model.data</field>
             <field name="view_id" ref="view_model_data_list"/>
         </record>
-        <menuitem id="next_id_5" name="Sequences &amp; Identifiers" parent="base.menu_custom" sequence="21" groups="base.group_no_one"/>
+        <menuitem id="next_id_5" name="Sequences &amp; Identifiers" parent="base.menu_custom" sequence="21" features="debug"/>
         <menuitem action="action_model_data" id="ir_model_data_menu" parent="base.next_id_5"
-                  groups="base.group_no_one"/>
+                  features="debug"/>
 
         <!-- ir model contraints -->
         <record model="ir.ui.view" id="view_model_constraint_form">
@@ -579,7 +579,7 @@
             <field name="search_view_id" ref="view_model_constraint_search"/>
         </record>
         <menuitem action="action_model_constraint" id="ir_model_constraint_menu" parent="base.next_id_9"
-                  groups="base.group_no_one"/>
+                  features="debug"/>
 
         <!-- ir model relations -->
         <record model="ir.ui.view" id="view_model_relation_form">
@@ -612,7 +612,7 @@
             <field name="view_id" ref="view_model_relation_list"/>
         </record>
         <menuitem action="action_model_relation" id="ir_model_relation_menu" parent="base.next_id_9"
-                  groups="base.group_no_one"/>
+                  features="debug"/>
 
         <!-- ir.model.access -->
         <record id="ir_access_view_tree" model="ir.ui.view">
@@ -671,7 +671,7 @@
                         <field name="perm_create"/>
                         <field name="perm_unlink"/>
                     </group>
-                   </sheet> 
+                   </sheet>
                 </form>
             </field>
         </record>
@@ -689,7 +689,7 @@
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <field name="model_id"/>
                     <field name="group_id"/>
-                    <group expand="0" string="Group By" colspan="11" col="11" groups="base.group_no_one">
+                    <group expand="0" string="Group By" colspan="11" col="11" features="debug">
                         <filter string="Group" name="group" domain="[]" context="{'group_by': 'group_id'}"/>
                         <filter string="Model" name="group_by_object" domain="[]" context="{'group_by': 'model_id'}"/>
                     </group>

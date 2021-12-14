@@ -47,7 +47,7 @@
                 <widget name="web_ribbon" title="Paid" bg_color="bg-success" attrs="{'invisible': [('is_paid', '=', False)]}"/>
             </xpath>
             <group name="utm_link" position="before">
-                <group string="Transaction" groups="base.group_no_one">
+                <group string="Transaction" features="debug">
                     <field name="sale_order_id"/>
                     <field name="sale_order_line_id" readonly="1" attrs="{'invisible': [('sale_order_id', '=', False)]}"/>
                 </group>

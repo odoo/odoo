@@ -234,13 +234,13 @@
                             </page>
                             <page string="Dynamic Placeholder Generator"
                                 name="dynamic_placeholder_generator"
-                                groups="base.group_no_one">
+                                features="debug">
                                 <group>
                                     <field name="model_object_field" attrs="{'invisible': True}"/>
                                     <field name="model_object_field"
                                         domain="[('model_id','=',mailing_model_real),('ttype','!=','one2many'),('ttype','!=','many2many')]"/>
-                                    <field name="sub_object" readonly="1"/> 
-                                    <field name="sub_model_object_field" 
+                                    <field name="sub_object" readonly="1"/>
+                                    <field name="sub_model_object_field"
                                         domain="[('model_id','=',sub_object),('ttype','!=','one2many'),('ttype','!=','many2many')]"
                                         attrs="{'readonly':[('sub_object','=',False)],'required':[('sub_object','!=',False)]}"/>
                                     <field name="null_value"/>
@@ -333,19 +333,19 @@
                                         <field name="medium_id"
                                              string="Medium"
                                              required="True"
-                                             groups="base.group_no_one"
+                                             features="debug"
                                              attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                                         <field name="source_id"
                                             string="Source"
                                             readonly="1"
                                             required="False"
                                             class="o_text_overflow"
-                                            groups="base.group_no_one"
+                                            features="debug"
                                             attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                                         <field name="user_id" widget="many2one_avatar_user"
                                             domain="[('share', '=', False)]"/>
                                     </group>
-                                    <group string="Advanced" groups="base.group_no_one">
+                                    <group string="Advanced" features="debug">
                                         <field name="mail_server_available" invisible="1"/>
                                         <field name="name" required="False" string="Name" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                                         <field name="mail_server_id" attrs="{'readonly': [('state', 'in', ('sending', 'done'))],
@@ -430,7 +430,7 @@
                     <xpath expr="//div[hasclass('oe_chatter')]" position="move"/>
                 </xpath>
                 <xpath expr="//notebook/page[@name='mail_body']" position="after">
-                    <page string="Mail Debug" name="mail_debug" groups="base.group_no_one">
+                    <page string="Mail Debug" name="mail_debug" features="debug">
                         <div class="position-relative">
                             <div class="mt-n2">
                                 <field name="body_html" class="o_mail_body" widget="html"
@@ -504,7 +504,7 @@
                                                     <field name="subject"/>
                                                 </h3>
                                                 <div class="progress border col-3 px-0 mt-2" style="background-color: inherit; height:12px;">
-                                                    <div class="progress-bar" role="progressbar" 
+                                                    <div class="progress-bar" role="progressbar"
                                                         aria-valuemin="0"
                                                         t-att-aria-valuenow="record.delivered.raw_value"
                                                         t-att-aria-valuemax="record.expected.raw_value"
@@ -531,13 +531,13 @@
                                         </div>
                                         <div attrs="{'invisible': [('sent_date', '=', False)]}" class="d-flex justify-content-between">
                                             <div name="stat_opened">
-                                                <b><field name="opened_ratio" />%</b> Opened 
+                                                <b><field name="opened_ratio" />%</b> Opened
                                             </div>
                                             <div name="stat_replied">
-                                                <b><field name="replied_ratio" />%</b> Replied 
+                                                <b><field name="replied_ratio" />%</b> Replied
                                             </div>
                                             <div name="stat_clicks">
-                                                <b><field name="clicks_ratio" />%</b> Clicks 
+                                                <b><field name="clicks_ratio" />%</b> Clicks
                                             </div>
                                         </div>
                                     </div>

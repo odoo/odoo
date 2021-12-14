@@ -178,7 +178,7 @@
                                     Only load a limited number of customers at the opening of the PoS.
                                 </div>
                                 <div class="content-group mt16" attrs="{'invisible' : [('limited_partners_loading', '=', False)]}">
-                                    <div groups="base.group_no_one">
+                                    <div features="debug">
                                         <label for="limited_partners_amount" string="Number of Partners Loaded"/>
                                         <field name="limited_partners_amount" class="oe_inline"/>
                                     </div>
@@ -491,7 +491,7 @@
                     </div>
                     <h2>Bills &amp; Receipts</h2>
                     <div class="row mt16 o_settings_container" id="receipt">
-                        <div id="order_reference" class="col-12 col-lg-6 o_setting_box" groups="base.group_no_one">
+                        <div id="order_reference" class="col-12 col-lg-6 o_setting_box" features="debug">
                             <div class="o_setting_right_pane">
                                 <span class="o_form_label">Order Reference</span>
                                 <div class="text-muted">
@@ -609,7 +609,7 @@
                                     Only load most common products at the opening of the PoS.
                                 </div>
                                 <div class="content-group mt16" attrs="{'invisible' : [('limited_products_loading', '=', False)]}">
-                                    <div groups="base.group_no_one">
+                                    <div features="debug">
                                         <label for="limited_products_amount" string="Number of Products Loaded"/>
                                         <field name="limited_products_amount" class="oe_inline"/>
                                     </div>

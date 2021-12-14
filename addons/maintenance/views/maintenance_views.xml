@@ -95,7 +95,7 @@
                                        class="oe_inline"/> <span class="ml8">hours</span>
                             </div>
                             <field name="priority" widget="priority"/>
-                            <field name="email_cc" string="Email cc" groups="base.group_no_one"/>
+                            <field name="email_cc" string="Email cc" features="debug"/>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                         </group>
                     </group>
@@ -183,7 +183,7 @@
             <tree string="maintenance Request" multi_edit="1" sample="1">
                 <field name="message_needaction" invisible="1"/>
                 <field name="name"/>
-                <field name="request_date" groups="base.group_no_one"/>
+                <field name="request_date" features="debug"/>
                 <field name="owner_user_id"/>
                 <field name="user_id"/>
                 <field name="category_id" readonly="1" groups="maintenance.group_equipment_manager"/>
@@ -358,8 +358,8 @@
                         <group>
                             <field name="maintenance_team_id" attrs="{'required': [('period', '!=', 0)]}" context="{'default_company_id':company_id}"/>
                             <field name="technician_user_id" domain="[('share', '=', False)]"/>
-                            <field name="assign_date" groups="base.group_no_one"/>
-                            <field name="scrap_date" groups="base.group_no_one"/>
+                            <field name="assign_date" features="debug"/>
+                            <field name="scrap_date" features="debug"/>
                             <field name="location" string="Used in location"/>
                         </group>
                     </group>
@@ -488,7 +488,7 @@
                 <field name="name"/>
                 <!-- <field name="active" invisible="1"/> -->
                 <field name="owner_user_id" string="Owner"/>
-                <field name="assign_date" groups="base.group_no_one"/>
+                <field name="assign_date" features="debug"/>
                 <field name="serial_no"/>
                 <field name="technician_user_id"/>
                 <field name="category_id"/>
@@ -603,7 +603,7 @@
                     <field name="technician_user_id" class="oe_inline" domain="[('share', '=', False)]"/>
                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" class="oe_inline"/>
                 </group>
-                <group name="group_alias" attrs="{'invisible': [('alias_domain', '=', False)]}" groups="base.group_no_one">
+                <group name="group_alias" attrs="{'invisible': [('alias_domain', '=', False)]}" features="debug">
                     <label for="alias_name" string="Email Alias"/>
                     <div name="alias_def">
                         <field name="alias_id" class="oe_read_only oe_inline" string="Email Alias" required="0"/>
@@ -1063,6 +1063,6 @@
         name="Maintenance Stages"
         parent="menu_maintenance_configuration"
         action="hr_equipment_stage_action"
-        groups="base.group_no_one"
+        features="debug"
         sequence="3" />
 </odoo>

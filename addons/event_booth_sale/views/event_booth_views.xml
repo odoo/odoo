@@ -24,14 +24,14 @@
                        attrs="{'invisible': [('booth_category_id', '=', False)]}"/>
             </field>
             <group name="renter" position="after">
-                <group name="sales" groups="base.group_no_one"
+                <group name="sales" features="debug"
                        attrs="{'invisible': [('sale_order_line_id', '=', False)]}">
                     <field name="sale_order_id"/>
                     <field name="sale_order_line_id"/>
                 </group>
             </group>
             <xpath expr="//sheet" position="inside">
-                <notebook groups="base.group_no_one">
+                <notebook features="debug">
                     <page string="Registrations">
                         <field name="event_booth_registration_ids" readonly="1"/>
                     </page>

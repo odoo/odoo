@@ -212,7 +212,7 @@
                 <field name="hour_to" widget="float_time"/>
                 <field name="date_from" optional="hide"/>
                 <field name="date_to" optional="hide"/>
-                <field name="week_type" readonly="1" force_save="1" groups="base.group_no_one"/>
+                <field name="week_type" readonly="1" force_save="1" features="debug"/>
             </tree>
         </field>
     </record>
@@ -265,7 +265,7 @@
                         <button name="%(resource_calendar_leaves_action_from_calendar)d" type="action"
                                 string="Time Off" icon="fa-plane"
                                 class="oe_stat_button"
-                                groups="base.group_no_one"/>
+                                features="debug"/>
                         <button name="%(resource_resource_action_from_calendar)d" type="action"
                                 string="Work Resources" icon="fa-cogs"
                                 class="oe_stat_button"

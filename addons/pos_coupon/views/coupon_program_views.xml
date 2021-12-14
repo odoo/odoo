@@ -39,7 +39,7 @@
         <field name="inherit_id" ref="coupon.coupon_program_view_promo_program_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='promo_code']" position="after">
-                <field name="promo_barcode" attrs="{'invisible': [('promo_code_usage', '=', 'no_code_needed')]}" readonly="1" groups="base.group_no_one"/>
+                <field name="promo_barcode" attrs="{'invisible': [('promo_code_usage', '=', 'no_code_needed')]}" readonly="1" features="debug"/>
             </xpath>
             <xpath expr="//field[@name='coupon_count']/.." position="before">
                 <button class="oe_stat_button" type="object" icon="fa-usd" name="action_view_pos_orders">

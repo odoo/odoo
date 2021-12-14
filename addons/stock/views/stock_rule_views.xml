@@ -89,12 +89,12 @@
                         <group>
                             <group name="apply_on" string="Applicability">
                                 <field name="route_id"/>
-                                <field name="warehouse_id" attrs="{'invisible': [('action', '=', 'push')]}" groups="base.group_no_one"/>
+                                <field name="warehouse_id" attrs="{'invisible': [('action', '=', 'push')]}" features="debug"/>
                                 <field name="route_company_id" invisible="1"/>
                                 <field name="company_id" options="{'no_create': True}" attrs="{'required': [('action', '=', 'push')]}" groups="base.group_multi_company"/>
-                                <field name="sequence" string="Sequence" groups="base.group_no_one"/>
+                                <field name="sequence" string="Sequence" features="debug"/>
                             </group>
-                            <group name="propagation_group" string="Propagation" attrs="{'invisible': [('action', '=', 'push')]}" groups="base.group_no_one">
+                            <group name="propagation_group" string="Propagation" attrs="{'invisible': [('action', '=', 'push')]}" features="debug">
                                 <field name="group_propagation_option"/>
                                 <field name="group_id" attrs="{'invisible': [('group_propagation_option', '!=', 'fixed')], 'required': [('group_propagation_option', '=', 'fixed')]}"/>
                                 <field name="propagate_cancel"/>

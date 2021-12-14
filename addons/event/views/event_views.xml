@@ -66,11 +66,11 @@
                                <group>
                                     <label for="note" string="Note" />
                                     <br />
-                                    <field nolabel="1" colspan="2" name="note" 
+                                    <field nolabel="1" colspan="2" name="note"
                                         placeholder="Add some internal notes (to do lists, contact info, ...)" />
                                     <label for="ticket_instructions" string="Ticket Intructions" />
                                     <br />
-                                    <field nolabel="1" colspan="2" name="ticket_instructions" 
+                                    <field nolabel="1" colspan="2" name="ticket_instructions"
                                         placeholder="e.g. How to get to your event, door closing time, ..." />
                                 </group>
                            </page>
@@ -261,7 +261,7 @@
                                         <field name="interval_nbr" attrs="{'readonly':[('interval_unit','=','now')]}"/>
                                         <field name="interval_unit"/>
                                         <field name="interval_type"/>
-                                        <field name="scheduled_date" groups="base.group_no_one"/>
+                                        <field name="scheduled_date" features="debug"/>
                                         <field name="mail_count_done"/>
                                         <field name="mail_state" widget="icon_selection" string=" "
                                             options="{'sent': 'fa fa-check', 'scheduled': 'fa fa-hourglass-half', 'running': 'fa fa-cogs'}"/>
@@ -272,11 +272,11 @@
                                 <group>
                                     <label for="note" string="Note" />
                                     <br />
-                                    <field nolabel="1" colspan="2" name="note" 
+                                    <field nolabel="1" colspan="2" name="note"
                                         placeholder="Add some internal notes (to do lists, contact info, ...)" />
                                     <label for="ticket_instructions" string="Ticket Intructions" />
                                     <br />
-                                    <field nolabel="1" colspan="2" name="ticket_instructions" 
+                                    <field nolabel="1" colspan="2" name="ticket_instructions"
                                         placeholder="e.g. How to get to your event, door closing time, ..." />
                                 </group>
                             </page>
@@ -575,10 +575,10 @@
                                     attrs="{'invisible': [('event_id', '=', False)]}"
                                     options="{'no_open': True, 'no_create': True}"/>
                                 <field name="partner_id"/>
-                                <field name="create_date" string="Registration Date" groups="base.group_no_one"/>
-                                <field name="date_closed" groups="base.group_no_one"/>
+                                <field name="create_date" string="Registration Date" features="debug"/>
+                                <field name="date_closed" features="debug"/>
                             </group>
-                            <group string="Marketing" name="utm_link" groups="base.group_no_one">
+                            <group string="Marketing" name="utm_link" features="debug">
                                 <field name="utm_campaign_id"/>
                                 <field name="utm_medium_id"/>
                                 <field name="utm_source_id"/>
@@ -796,7 +796,7 @@
                                 <field name="scheduled_date"/>
                             </group>
                         </group>
-                        <notebook groups="base.group_no_one">
+                        <notebook features="debug">
                             <page string="Registration Mails" name="registration_mails">
                                 <field name="mail_registration_ids">
                                     <tree string="Registration mail" editable="bottom">

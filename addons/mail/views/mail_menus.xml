@@ -26,19 +26,19 @@
         parent="base.menu_email"
         action="action_view_mail_alias"
         sequence="11"
-        groups="base.group_no_one"/>
+        features="debug"/>
     <menuitem id="mail_channel_menu_settings"
         name="Channels"
         parent="base.menu_email"
         action="mail_channel_action_view"
         sequence="20"
-        groups="base.group_no_one"/>
+        features="debug"/>
     <menuitem name="Channels/Partner"
         id="mail_channel_partner_menu"
         parent="base.menu_email"
         action="mail_channel_partner_action"
         sequence="21"
-        groups="base.group_no_one"/>
+        features="debug"/>
 
     <!-- Under Technical/Discuss -->
     <menuitem name="Discuss"
@@ -80,13 +80,13 @@
         parent="mail.mail_menu_technical"
         action="mail_notification_action"
         sequence="20"
-        groups="base.group_no_one"/>
+        features="debug"/>
     <menuitem name="Followers"
         id="menu_email_followers"
         parent="mail.mail_menu_technical"
         action="action_view_followers"
         sequence="21"
-        groups="base.group_no_one"/>
+        features="debug"/>
     <menuitem id="mail_blacklist_menu"
         name="Email Blacklist"
         action="mail_blacklist_action"

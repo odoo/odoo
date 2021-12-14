@@ -10,6 +10,7 @@ from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.modules import get_module_resource
 from odoo.osv import expression
+from odoo.tools import frozendict
 
 MENU_ITEM_SEPARATOR = "/"
 NUMBER_PARENS = re.compile(r"\(([0-9]+)\)")
@@ -35,6 +36,7 @@ class IrUiMenu(models.Model):
                                  'menu_id', 'gid', string='Groups',
                                  help="If you have groups, the visibility of this menu will be based on these groups. "\
                                       "If this field is empty, Odoo will compute visibility based on the related object's read access.")
+    features = fields.Char()
     complete_name = fields.Char(string='Full Path', compute='_compute_complete_name', recursive=True)
     web_icon = fields.Char(string='Web Icon File')
     action = fields.Reference(selection=[('ir.actions.report', 'ir.actions.report'),
@@ -76,19 +78,19 @@ class IrUiMenu(models.Model):
             raise ValidationError(_('Error! You cannot create recursive menus.'))
 
     @api.model
-    @tools.ormcache('frozenset(self.env.user.groups_id.ids)', 'debug')
-    def _visible_menu_ids(self, debug=False):
+    @tools.ormcache('frozenset(self.env.user.groups_id.ids)', 'features')
+    def _visible_menu_ids(self, features=None):
         """ Return the ids of the menu items visible to the user. """
         # retrieve all menus, and determine which ones are visible
         context = {'ir.ui.menu.full_list': True}
         menus = self.with_context(context).search([]).sudo()
 
         groups = self.env.user.groups_id
-        if not debug:
-            groups = groups - self.env.ref('base.group_no_one')
         # first discard all menus with groups the user does not have
-        menus = menus.filtered(
-            lambda menu: not menu.groups_id or menu.groups_id & groups)
+        menus = menus.filtered(lambda menu:
+            (not menu.groups_id or menu.groups_id & groups)
+            and self.user_has_features(menu.features)
+        )
 
         # take apart menus that have an action
         action_menus = menus.filtered(lambda m: m.action and m.action.exists())
@@ -121,7 +123,7 @@ class IrUiMenu(models.Model):
             the menu hierarchy of the current user.
             Uses a cache for speeding up the computation.
         """
-        visible_ids = self._visible_menu_ids(request.session.debug if request else False)
+        visible_ids = self._visible_menu_ids(frozenset(self.evaluate_features()))
         return self.filtered(lambda menu: menu.id in visible_ids)
 
     @api.model
@@ -223,8 +225,11 @@ class IrUiMenu(models.Model):
         return menu_root
 
     @api.model
-    @tools.ormcache_context('self._uid', 'debug', keys=('lang',))
-    def load_menus(self, debug):
+    def load_menus(self):
+        return self._load_menus(frozenset(self.evaluate_features()))
+
+    @tools.ormcache_context('self._uid', 'frozenset(self.env.companies.ids)', 'features', keys=('lang',))
+    def _load_menus(self, features):
         """ Loads all menu items (all applications and their sub-menus).
 
         :return: the menu root

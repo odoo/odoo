@@ -103,7 +103,7 @@
         <field name="inherit_id" ref="uom.product_uom_categ_form_view"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="after">
-                <field name="is_pos_groupable" groups="base.group_no_one"/>
+                <field name="is_pos_groupable" features="debug"/>
             </xpath>
         </field>
     </record>
@@ -114,7 +114,7 @@
         <field name="inherit_id" ref="uom.product_uom_categ_tree_view"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="after">
-                <field name="is_pos_groupable" groups="base.group_no_one"/>
+                <field name="is_pos_groupable" features="debug"/>
             </xpath>
         </field>
     </record>

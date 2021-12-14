@@ -48,16 +48,16 @@
                             <label for="attempts_number" string="Attempt n°" attrs="{'invisible': ['|', ('is_attempts_limited', '=', False), '|', ('test_entry', '=', True), ('state', '!=', 'done')]}"/>
                             <div attrs="{'invisible': ['|', ('is_attempts_limited', '=', False), '|', ('test_entry', '=', True), ('state', '!=', 'done')]}">
                                 <field name="attempts_number" nolabel="1"/>
-                                 / 
+                                 /
                                 <field name="attempts_limit" nolabel="1" />
                             </div>
-                            <field name="access_token" groups="base.group_no_one"/>
+                            <field name="access_token" features="debug"/>
                         </group>
                         <group>
                             <field name="deadline"/>
                             <field name="partner_id"/>
                             <field name="email" widget="email"/>
-                            <field name="test_entry" groups="base.group_no_one"/>
+                            <field name="test_entry" features="debug"/>
                             <field name="scoring_type" invisible="1"/>
                             <field name="scoring_percentage" attrs="{'invisible': [('scoring_type', '=', 'no_scoring')]}"/>
                             <field name="scoring_success" attrs="{'invisible': [('scoring_type', '=', 'no_scoring')]}"/>
@@ -161,7 +161,7 @@
                         <field name="create_date"/>
                         <field name="answer_type"/>
                         <field name="skipped" />
-                        <field name="answer_score" groups="base.group_no_one"/>
+                        <field name="answer_score" features="debug"/>
                     </group>
                     <group>
                         <field name="value_char_box" colspan='2' attrs="{'invisible': [('answer_type','!=','char_box')]}"/>
@@ -187,7 +187,7 @@
                 <field name="create_date"/>
                 <field name="answer_type"/>
                 <field name="skipped"/>
-                <field name="answer_score" groups="base.group_no_one"/>
+                <field name="answer_score" features="debug"/>
             </tree>
         </field>
     </record>

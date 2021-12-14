@@ -277,6 +277,7 @@ class Field(MetaField('DummyField', (object,), {})):
     required = False                    # whether the field is required
     states = None                       # set readonly and required depending on state
     groups = None                       # csv list of group xml ids
+    features = None                     # feature formula
     change_default = False              # whether the field may trigger a "user-onchange"
     deprecated = None                   # whether the field is deprecated
 

@@ -137,7 +137,7 @@
                                 <field name="name"/>
                                 <field name="mail_template_id" context="{'default_model': 'project.task'}"/>
                                 <field name="rating_template_id" groups="project.group_project_rating" context="{'default_model': 'project.task'}"/>
-                                <field name="sequence" groups="base.group_no_one"/>
+                                <field name="sequence" features="debug"/>
                                 <div class="alert alert-warning" role="alert" colspan='2' attrs="{'invisible': ['|', ('rating_template_id','=', False), ('disabled_rating_warning', '=', False)]}">
                                     <i class="fa fa-warning" title="Customer disabled on projects"/><b> Customer Ratings</b> are disabled on the following project(s) : <br/>
                                     <field name="disabled_rating_warning" class="mb-0" />
@@ -146,7 +146,7 @@
                             </group>
                             <group>
                                 <field name="fold"/>
-                                <field name="project_ids" widget="many2many_tags" options="{'color_field': 'color'}" groups="base.group_no_one"/>
+                                <field name="project_ids" widget="many2many_tags" options="{'color_field': 'color'}" features="debug"/>
                             </group>
                         </group>
                         <group string="Stage Description and Tooltips">
@@ -1025,21 +1025,21 @@
                                 </div>
                             </group>
                         </page>
-                        <page name="extra_info" string="Extra Info" groups="base.group_no_one">
+                        <page name="extra_info" string="Extra Info" features="debug">
                             <group>
                                 <group>
                                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" context="{'default_partner_id': partner_id}"/>
-                                    <field name="parent_id" domain="[('parent_id', '=', False)]" attrs="{'invisible': [('allow_subtasks', '=', False)]}" groups="base.group_no_one"/>
+                                    <field name="parent_id" domain="[('parent_id', '=', False)]" attrs="{'invisible': [('allow_subtasks', '=', False)]}" features="debug"/>
                                     <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
-                                    <field name="sequence" groups="base.group_no_one"/>
+                                    <field name="sequence" features="debug"/>
                                     <field name="email_from" invisible="1"/>
-                                    <field name="email_cc" groups="base.group_no_one"/>
+                                    <field name="email_cc" features="debug"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                                    <field name="displayed_image_id" groups="base.group_no_one" options="{'no_create': True}"/>
+                                    <field name="displayed_image_id" features="debug" options="{'no_create': True}"/>
                                 </group>
                                 <group>
-                                    <field name="date_assign" groups="base.group_no_one"/>
-                                    <field name="date_last_stage_update" groups="base.group_no_one"/>
+                                    <field name="date_assign" features="debug"/>
+                                    <field name="date_last_stage_update" features="debug"/>
                                 </group>
                                 <group string="Working Time to Assign" attrs="{'invisible': [('working_hours_open', '=', 0.0)]}">
                                     <field name="working_hours_open" widget="float_time" string="Hours"/>
@@ -1091,7 +1091,7 @@
                         <field name="user_ids" options="{'no_open': True,'no_create': True}" domain="[('share', '=', False), ('active', '=', True)]"
                             widget="many2many_tags"/>
                         <field name="company_id" invisible="1"/>
-                        <field name="parent_id" invisible="1" groups="base.group_no_one"/>
+                        <field name="parent_id" invisible="1" features="debug"/>
                     </group>
                 </form>
             </field>
@@ -1217,7 +1217,7 @@
                     <field name="child_text" invisible="1"/>
                     <field name="project_id" widget="project_private_task" optional="show" readonly="1"/>
                     <field name="partner_id" optional="hide"/>
-                    <field name="parent_id" optional="hide" attrs="{'invisible': [('allow_subtasks', '=', False)]}" groups="base.group_no_one"/>
+                    <field name="parent_id" optional="hide" attrs="{'invisible': [('allow_subtasks', '=', False)]}" features="debug"/>
                     <field name="user_ids" optional="show" widget="many2many_avatar_user" domain="[('active', '=', True)]"/>
                     <field name="company_id" groups="base.group_multi_company" optional="show"/>
                     <field name="activity_ids" widget="list_activity" optional="show"/>
@@ -1251,8 +1251,8 @@
             <field name="model">project.task</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <calendar date_start="date_deadline" string="Tasks" mode="month" 
-                          color="user_ids" event_limit="5" hide_time="true" 
+                <calendar date_start="date_deadline" string="Tasks" mode="month"
+                          color="user_ids" event_limit="5" hide_time="true"
                           event_open_popup="true" quick_add="false" show_unusual_days="True"
                           js_class="project_calendar">
                     <field name="project_id" widget="project_private_task" filters="1"/>
@@ -1399,7 +1399,7 @@
 
         <menuitem action="project_project_stage_configure" id="menu_project_config_project_stage" name="Project Stages" parent="menu_project_config" sequence="9" groups="project.group_project_stages"/>
 
-        <menuitem action="open_task_type_form" id="menu_project_config_project" name="Task Stages" parent="menu_project_config" sequence="10" groups="base.group_no_one"/>
+        <menuitem action="open_task_type_form" id="menu_project_config_project" name="Task Stages" parent="menu_project_config" sequence="10" features="debug"/>
 
         <menuitem action="open_view_project_all" id="menu_projects" name="Projects" parent="menu_main_pm" sequence="1"/>
         <menuitem action="open_view_project_all_group_stage" id="menu_projects_group_stage" name="Projects" parent="menu_main_pm" sequence="1" groups="project.group_project_stages"/>

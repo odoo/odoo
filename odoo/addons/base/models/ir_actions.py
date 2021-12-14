@@ -84,10 +84,10 @@ class IrActions(models.Model):
 
     @api.model
     def get_bindings(self, model_name):
-        return self._get_bindings(model_name, bool(request) and request.session.debug)
+        return self._get_bindings(model_name, frozenset(self.evaluate_features()))
 
-    @tools.ormcache('frozenset(self.env.user.groups_id.ids)', 'model_name', 'debug')
-    def _get_bindings(self, model_name, debug=False):
+    @tools.ormcache('frozenset(self.env.user.groups_id.ids)', 'model_name', 'features')
+    def _get_bindings(self, model_name, features=None):
         """ Retrieve the list of actions bound to the given model.
 
            :return: a dict mapping binding types to a list of dict describing
@@ -100,8 +100,6 @@ class IrActions(models.Model):
         # discard unauthorized actions, and read action definitions
         result = defaultdict(list)
         user_groups = self.env.user.groups_id
-        if not debug:
-            user_groups -= self.env.ref('base.group_no_one')
 
         self.flush()
         cr.execute("""
@@ -116,6 +114,10 @@ class IrActions(models.Model):
                 action = self.env[action_model].sudo().browse(action_id)
                 action_groups = getattr(action, 'groups_id', ())
                 action_model = getattr(action, 'res_model', False)
+                action_features = getattr(action, 'features', None)
+                if not self.user_has_features(action_features):
+                    # the settings/context remove this action
+                    continue
                 if action_groups and not action_groups & user_groups:
                     # the user may not perform this action
                     continue

@@ -1456,6 +1456,18 @@ class BaseModel(metaclass=MetaModel):
     def view_header_get(self, view_id=None, view_type='form'):
         return False
 
+    def evaluate_features(self):
+        from odoo.http import request
+        features = set(c.code for c in self.env.company.country_id)
+        if request and request.session.debug:
+            features.add('debug')
+        return features
+
+    def user_has_features(self, features):
+        if not features:
+            return True
+        return features in self.evaluate_features()
+
     @api.model
     def user_has_groups(self, groups):
         """Return true if the user is member of at least one of the groups in

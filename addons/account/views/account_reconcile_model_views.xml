@@ -141,9 +141,9 @@
 
                                                 <field name="match_same_currency"
                                                        attrs="{'invisible': [('rule_type', '!=', 'invoice_matching')]}"/>
-                                                
+
                                             </group>
-                                            
+
                                         </group>
 
                                         <group id="right column" class="col">
@@ -224,7 +224,7 @@
                                             <field name="show_decimal_separator" invisible="1"/>
                                             <field name="decimal_separator"
                                                    attrs="{'invisible': [('show_decimal_separator', '=', False)]}"
-                                                   groups="base.group_no_one"/>
+                                                   features="debug"/>
                                         </group>
                                         <field name="line_ids"
                                                default="{'default_model_id': self, 'default_company_id': self.company_id}"

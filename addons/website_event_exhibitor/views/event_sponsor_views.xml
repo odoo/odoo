@@ -11,7 +11,7 @@
                     <group>
                         <field name="name"/>
                         <field name="display_ribbon_style"/>
-                        <field name="sequence" groups="base.group_no_one"/>
+                        <field name="sequence" features="debug"/>
                     </group>
                 </sheet>
             </form>
@@ -119,7 +119,7 @@
                     <notebook>
                         <page string="Description"
                             attrs="{'invisible': [('exhibitor_type', '=', 'sponsor')]}">
-                            <field name="website_description" nolabel="1" options="{'noVideos': False}" 
+                            <field name="website_description" nolabel="1" options="{'noVideos': False}"
                                 placeholder='e.g. "Openwood specializes in home decoration..."'/>
                         </page>
                         <page string="Online"
@@ -129,7 +129,7 @@
                                     <field name="room_name" attrs="{'required': [('exhibitor_type', '=', 'online')]}" string="Jitsi Name"/>
                                     <field name="room_lang_id"/>
                                     <field name="room_max_capacity" attrs="{'required': [('exhibitor_type', '=', 'online')]}"/>
-                                    <field name="chat_room_id" groups="base.group_no_one"/>
+                                    <field name="chat_room_id" features="debug"/>
                                 </group>
                             </group>
                         </page>

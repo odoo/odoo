@@ -91,12 +91,12 @@
         </record>
 
         <menuitem id="product_menu_catalog" name="Products" parent="sale_menu_root" sequence="4" groups="sales_team.group_sale_salesman"/>
-        <menuitem id="menu_product" name="Product Variants" parent="product_menu_catalog" sequence="2" groups="base.group_no_one" active="False"/>
+        <menuitem id="menu_product" name="Product Variants" parent="product_menu_catalog" sequence="2" features="debug" active="False"/>
         <menuitem action="product_template_action" id="menu_product_template_action" parent="product_menu_catalog" sequence="1" active="False"/>
         <menuitem id="prod_config_main" name="Products" parent="menu_sale_config" sequence="5"/>
         <menuitem id="menu_products" action="product.product_normal_action_sell" parent="product_menu_catalog" groups="product.group_product_variant" sequence="2" active="False"/>
         <menuitem id="next_id_16" name="Units of Measure" parent="menu_sale_config" sequence="6" groups="uom.group_uom" active="False"/>
-        <menuitem action="uom.product_uom_form_action" id="menu_product_uom_form_action" parent="next_id_16" sequence="7" groups="base.group_no_one" active="False"/>
+        <menuitem action="uom.product_uom_form_action" id="menu_product_uom_form_action" parent="next_id_16" sequence="7" features="debug" active="False"/>
         <menuitem action="uom.product_uom_categ_form_action" id="menu_product_uom_categ_form_action" parent="next_id_16" sequence="8" active="False"/>
         <menuitem id="menu_product_pricelist_main" name="Pricelists" parent="product_menu_catalog" action="product.product_pricelist_action2" groups="product.group_product_pricelist" sequence="3" active="False"/>
 
@@ -323,10 +323,10 @@
                         </group>
                         <group name="order_details">
                             <field name="validity_date" attrs="{'invisible': [('state', 'in', ['sale', 'done'])]}"/>
-                            <div class="o_td_label" groups="base.group_no_one" attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])]}">
+                            <div class="o_td_label" features="debug" attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])]}">
                                 <label for="date_order" string="Quotation Date"/>
                             </div>
-                            <field name="date_order" nolabel="1" groups="base.group_no_one" attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])]}"/>
+                            <field name="date_order" nolabel="1" features="debug" attrs="{'invisible': [('state', 'in', ['sale', 'done', 'cancel'])]}"/>
                             <div class="o_td_label" attrs="{'invisible': [('state', 'in', ['draft', 'sent'])]}">
                                 <label for="date_order" string="Order Date"/>
                             </div>
@@ -435,7 +435,7 @@
                                     <label for="name" string="Section Name (eg. Products, Services)" attrs="{'invisible': [('display_type', '!=', 'line_section')]}"/>
                                     <label for="name" string="Note" attrs="{'invisible': [('display_type', '!=', 'line_note')]}"/>
                                     <field name="name"/>
-                                    <div name="invoice_lines" groups="base.group_no_one" attrs="{'invisible': [('display_type', '!=', False)]}">
+                                    <div name="invoice_lines" features="debug" attrs="{'invisible': [('display_type', '!=', False)]}">
                                         <label for="invoice_lines"/>
                                         <field name="invoice_lines"/>
                                     </div>
@@ -661,7 +661,7 @@
                                 <group name="sale_info" string="Invoicing">
                                     <field name="fiscal_position_id" options="{'no_create': True}"/>
                                     <field name="analytic_account_id" context="{'default_partner_id':partner_invoice_id, 'default_name':name}" attrs="{'readonly': [('invoice_count','!=',0),('state','=','sale')]}" groups="analytic.group_analytic_accounting" force_save="1"/>
-                                    <field name="invoice_status" states="sale,done" groups="base.group_no_one"/>
+                                    <field name="invoice_status" states="sale,done" features="debug"/>
                                 </group>
                             </group>
                             <group>
@@ -684,7 +684,7 @@
                                 </group>
                             </group>
                         </page>
-                        <page groups="base.group_no_one" string="Customer Signature" name="customer_signature" attrs="{'invisible': [('require_signature', '=', False), ('signed_by', '=', False), ('signature', '=', False), ('signed_on', '=', False)]}">
+                        <page features="debug" string="Customer Signature" name="customer_signature" attrs="{'invisible': [('require_signature', '=', False), ('signed_by', '=', False), ('signature', '=', False), ('signed_on', '=', False)]}">
                             <group>
                                 <field name="signed_by"/>
                                 <field name="signed_on"/>
@@ -1232,7 +1232,7 @@
                     <xpath expr="//group[@id='other_tab_group']" position="inside">
                         <group string="Marketing"
                                name="utm_link"
-                               groups="base.group_no_one"
+                               features="debug"
                                attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund'))]}">
                             <field name="campaign_id"/>
                             <field name="medium_id"/>

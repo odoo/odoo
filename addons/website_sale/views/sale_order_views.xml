@@ -4,7 +4,7 @@
         <field name="name">sale.order.ecommerce.search.view</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_sales_order_filter"/>
-        <field name="mode">primary</field> 
+        <field name="mode">primary</field>
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='my_sale_orders_filter']" position="before">
                 <filter string="Confirmed" name="order_confirmed" domain="[('state', 'in', ('sale', 'done'))]"/>
@@ -27,7 +27,7 @@
         <field name="name">sale.order.ecommerce.search.unpaid.view</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_sales_order_filter"/>
-        <field name="mode">primary</field> 
+        <field name="mode">primary</field>
         <field name="priority">32</field>
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='my_sale_orders_filter']" position="attributes">
@@ -238,15 +238,15 @@
         parent="menu_ecommerce_settings" name="Payment Acquirers"/>
     <menuitem id="menu_ecommerce_payment_tokens"
         action="payment.action_payment_token"
-        groups="base.group_no_one"
+        features="debug"
         parent="menu_ecommerce_settings"/>
     <menuitem id="menu_ecommerce_payment_icons"
         action="payment.action_payment_icon"
-        groups="base.group_no_one"
+        features="debug"
         parent="menu_ecommerce_settings"/>
     <menuitem id="menu_ecommerce_payment_transactions"
         action="payment.action_payment_transaction"
-        groups="base.group_no_one"
+        features="debug"
         parent="menu_ecommerce_settings"/>
     <menuitem id="menu_catalog_categories"
         action="product_public_category_action"

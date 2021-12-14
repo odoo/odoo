@@ -42,7 +42,7 @@
                     </div>
                     <group>
                         <group name="payment_state">
-                            <field name="provider" groups="base.group_no_one" attrs="{'readonly': [('id', '!=', False)], 'invisible': [('module_id', '!=', False), ('module_state', '!=', 'installed')]}"/>
+                            <field name="provider" features="debug" attrs="{'readonly': [('id', '!=', False)], 'invisible': [('module_id', '!=', False), ('module_state', '!=', 'installed')]}"/>
                             <field name="state" widget="radio" attrs="{'invisible': [('module_state', '=', 'uninstalled')]}"/>
                             <field name="company_id" groups="base.group_multi_company" options='{"no_open":True}'/>
                         </group>

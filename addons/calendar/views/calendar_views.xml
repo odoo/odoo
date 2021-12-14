@@ -213,7 +213,7 @@
                             </group>
                         </page>
 
-                        <page name="page_invitations" string="Invitations" groups="base.group_no_one">
+                        <page name="page_invitations" string="Invitations" features="debug">
                             <button name="action_sendmail" type="object" string="Send Invitations" icon="fa-envelope" class="oe_link"/>
                             <field name="attendee_ids" widget="one2many" mode="tree,kanban">
                                 <tree string="Invitation details" editable="top" create="false" delete="false">
@@ -390,33 +390,33 @@
         name="Configuration"
         sequence="40"
         action="calendar.action_calendar_event"
-        groups="base.group_no_one"/>
+        features="debug"/>
 
     <menuitem
         id="calendar_submenu_reminders"
         parent="calendar_menu_config"
         name="Reminders"
         action="action_calendar_alarm"
-        groups="base.group_no_one"/>
+        features="debug"/>
 
     <menuitem
         id="menu_calendar_configuration"
         name="Calendar"
         parent="base.menu_custom"
         sequence="30"
-        groups="base.group_no_one"/>
+        features="debug"/>
 
     <menuitem
         id="menu_calendar_event_type"
         parent="menu_calendar_configuration"
         action="action_calendar_event_type"
-        groups="base.group_no_one"/>
+        features="debug"/>
 
     <menuitem
         id="menu_calendar_alarm"
         parent="menu_calendar_configuration"
         action="action_calendar_alarm"
-        groups="base.group_no_one"/>
+        features="debug"/>
 
     <!-- called in js from '/js/base_calendar.js' -->
     <record id="action_calendar_event_notify" model="ir.actions.act_window">

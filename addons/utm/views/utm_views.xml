@@ -4,13 +4,13 @@
         name="Link Tracker"
         sequence="270"
         web_icon="utm,static/description/icon.png"
-        groups="base.group_no_one"/>
+        features="debug"/>
 
     <menuitem id="marketing_utm"
         name="UTMs"
         parent="menu_link_tracker_root"
         sequence="99"
-        groups="base.group_no_one"/>
+        features="debug"/>
 
     <record id="utm_campaign_action" model="ir.actions.act_window">
         <field name="name">Campaigns</field>
@@ -30,7 +30,7 @@
         action="utm_campaign_action"
         parent="marketing_utm"
         sequence="1"
-        groups="base.group_no_one"/>
+        features="debug"/>
 
 	<!-- utm.medium -->
     <record id="utm_medium_view_tree" model="ir.ui.view">
@@ -70,7 +70,7 @@
             </search>
         </field>
     </record>
-    
+
     <record id="utm_medium_action" model="ir.actions.act_window">
         <field name="name">Mediums</field>
         <field name="res_model">utm.medium</field>
@@ -89,7 +89,7 @@
         action="utm_medium_action"
         parent="marketing_utm"
         sequence="5"
-        groups="base.group_no_one"/>
+        features="debug"/>
 
     <!-- utm.source -->
     <record id="utm_source_view_tree" model="ir.ui.view">
@@ -133,6 +133,6 @@
         action="utm_source_action"
         parent="marketing_utm"
         sequence="10"
-        groups="base.group_no_one"/>
+        features="debug"/>
 
 </odoo>

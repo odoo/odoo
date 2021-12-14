@@ -82,7 +82,7 @@
                         <h6 class="text-muted mt-2" attrs="{'invisible': [('has_iap', '=', False)]}">Contains In-App Purchases</h6>
                     </div>
                     <div class="oe_clear"/>
-                    <notebook groups="base.group_no_one">
+                    <notebook features="debug">
                         <page string="Information" name="information">
                             <group>
                                 <group>
@@ -148,7 +148,7 @@
                         <button name="button_immediate_install" type="object" string="Install"/>
                     </header>
                     <field name="shortdesc"/>
-                    <field name="name" groups="base.group_no_one"/>
+                    <field name="name" features="debug"/>
                     <field name="author"/>
                     <field name="website"/>
                     <field name="installed_version"/>
@@ -194,7 +194,7 @@
                           </h4>
                           <p class="oe_module_name">
                             <field groups="!base.group_no_one" name="summary"/>
-                            <code groups="base.group_no_one"><field name="name"/></code>
+                            <code features="debug"><field name="name"/></code>
                           </p>
                           <div class="oe_module_action">
                             <a t-att-href="record.website.raw_value" target="_blank" attrs="{'invisible':[('website', '=', '')]}" class="btn btn-sm btn-secondary float-right o-hidden-ios" role="button">Learn More</a>
@@ -254,14 +254,14 @@
             <field name="name">App Store</field>
             <field name="tag">apps</field>
         </record>
-        <menuitem id="module_mi" parent="base.menu_management" sequence="10" action="modules_act_cl" groups="base.group_no_one"/>
+        <menuitem id="module_mi" parent="base.menu_management" sequence="10" action="modules_act_cl" features="debug"/>
 
         <record model="ir.actions.client" id="modules_updates_act_cl">
             <field name="name">Updates</field>
             <field name="tag">apps.updates</field>
             <field name="params">{}</field>
         </record>
-        <menuitem id="menu_module_updates" parent="base.menu_management" sequence="20" action="modules_updates_act_cl" groups="base.group_no_one"/>
+        <menuitem id="menu_module_updates" parent="base.menu_management" sequence="20" action="modules_updates_act_cl" features="debug"/>
 
     </data>
 </odoo>

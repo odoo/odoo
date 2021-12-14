@@ -133,7 +133,7 @@
             <field name="context">{'search_default_no_share': 1}</field>
             <field name="help">A group is a set of functional areas that will be assigned to the user in order to give them access and rights to specific applications and tasks in the system. You can create custom groups or edit the ones existing by default in order to customize the view of the menu that users will be able to see. Whether they can have a read, write, create and delete access right can be managed from here.</field>
         </record>
-        <menuitem action="action_res_groups" id="menu_action_res_groups" parent="base.menu_users" groups="base.group_no_one" sequence="3"/>
+        <menuitem action="action_res_groups" id="menu_action_res_groups" parent="base.menu_users" features="debug" sequence="3"/>
 
         <!-- res.users -->
         <record id="view_users_simple_form" model="ir.ui.view">
@@ -163,8 +163,8 @@
                         </div>
                         <group name="phone_numbers">
                             <label for="groups_id" string="Access Rights"
-                                    attrs="{'invisible': [('id', '>', 0)]}" groups="base.group_no_one"/>
-                            <div attrs="{'invisible': [('id', '>', 0)]}" groups="base.group_no_one">
+                                    attrs="{'invisible': [('id', '>', 0)]}" features="debug"/>
+                            <div attrs="{'invisible': [('id', '>', 0)]}" features="debug">
                                 <field name="groups_id" readonly="1" widget="many2many_tags" options="{'color_field': 'color'}" style="display: inline;"/> You will be able to define additional access rights by editing the newly created user under the Settings / Users menu.
                             </div>
                             <field name="phone" widget="phone" options="{'enable_sms': false}"/>
@@ -184,13 +184,13 @@
                     <sheet>
                         <field name="id" invisible="1"/>
                         <div class="oe_button_box" name="button_box">
-                            <button name="action_show_groups" type="object" groups="base.group_no_one" class="oe_stat_button" icon="fa-users">
+                            <button name="action_show_groups" type="object" features="debug" class="oe_stat_button" icon="fa-users">
                                 <field string="Groups" name="groups_count" widget="statinfo"/>
                             </button>
-                            <button name="action_show_accesses" type="object" groups="base.group_no_one" class="oe_stat_button" icon="fa-list">
+                            <button name="action_show_accesses" type="object" features="debug" class="oe_stat_button" icon="fa-list">
                                 <field string="Access Rights" name="accesses_count" widget="statinfo"/>
                             </button>
-                            <button name="action_show_rules" type="object" groups="base.group_no_one" class="oe_stat_button" icon="fa-list-ul">
+                            <button name="action_show_rules" type="object" features="debug" class="oe_stat_button" icon="fa-list-ul">
                                 <field string="Record Rules" name="rules_count" widget="statinfo"/>
                             </button>
                         </div>
@@ -221,7 +221,7 @@
                             <label for="login" string="Email Address"/>
                             <h2><field name="login" placeholder="e.g. email@yourcompany.com"/></h2>
                             <group>
-                                <field name="partner_id" readonly="1" required="0" groups="base.group_no_one"
+                                <field name="partner_id" readonly="1" required="0" features="debug"
                                         attrs="{'invisible': [('id', '=', False)]}"/>
                                 <field name="share" invisible="1"/>
                             </group>
@@ -252,7 +252,7 @@
                                         <field name="tz" widget="timezone_mismatch" options="{'tz_offset_field': 'tz_offset'}" />
                                         <field name="tz_offset" invisible="1"/>
                                     </group>
-                                    <group string="Menus Customization" groups="base.group_no_one"
+                                    <group string="Menus Customization" features="debug"
                                         attrs="{'invisible': [('share', '=', True)]}">
                                         <field name="action_id"/>
                                     </group>
@@ -473,7 +473,7 @@
                                     <button name="preference_change_password" type="object" string="Change password" class="btn btn-secondary"/>
                                 </div>
                             </group>
-                            <group groups="base.group_no_one">
+                            <group features="debug">
                                 <div class="o_horizontal_separator">Developer API Keys
                                     <a href="https://www.odoo.com/documentation/15.0/developer/misc/api/odoo.html#api-keys" target="_blank">
                                         <i title="Documentation" class="fa fa-fw o_button_icon fa-info-circle"></i>

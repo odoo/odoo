@@ -92,8 +92,8 @@
                                         <field name="default_order" string="Default Sort"/>
                                         <field name="privacy" widget="radio" attrs="{'required': True}"/>
                                         <field name="authorized_group_id" options="{'no_create': True}" attrs="{'invisible': [('privacy', '!=', 'private')], 'required': [('privacy', '=', 'private')]}"/>
-                                        <label for="relevancy_post_vote" string="Relevance Computation" groups="base.group_no_one" attrs="{'invisible':[('default_order','!=','relevancy desc')]}"/>
-                                        <div groups="base.group_no_one" class="o_row" attrs="{'invisible':[('default_order','!=','relevancy desc')]}">
+                                        <label for="relevancy_post_vote" string="Relevance Computation" features="debug" attrs="{'invisible':[('default_order','!=','relevancy desc')]}"/>
+                                        <div features="debug" class="o_row" attrs="{'invisible':[('default_order','!=','relevancy desc')]}">
                                             (votes - 1) ** <field name="relevancy_post_vote"/> / (days + 2) ** <field name="relevancy_time_decay"/>
                                         </div>
                                     </group>
