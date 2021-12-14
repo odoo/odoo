@@ -591,7 +591,7 @@ registerModel({
          * If set, this is the record of invite button popover that is currently
          * open in the topbar.
          */
-        invitePopoverView: one2one('mail.popover_view', {
+        invitePopoverView: one2one('PopoverView', {
             isCausal: true,
             inverse: 'threadViewTopbarOwner',
         }),
