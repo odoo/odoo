@@ -5,7 +5,7 @@ import { attr, one2one } from '@mail/model/model_field';
 import { clear } from '@mail/model/model_field_command';
 
 registerModel({
-    name: 'mail.rtc_layout_menu',
+    name: 'RtcLayoutMenu',
     identifyingFields: ['callViewer'],
     lifecycleHooks: {
         _created() {
