@@ -16,7 +16,7 @@ patchRecordMethods('ComposerView', {
 });
 
 addFields('ComposerView', {
-    qunitTest: one2one('mail.qunit_test', {
+    qunitTest: one2one('QUnitTest', {
         inverse: 'composerView',
         readonly: true,
     }),

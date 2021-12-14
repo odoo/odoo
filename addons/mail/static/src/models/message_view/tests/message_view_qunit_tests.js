@@ -6,7 +6,7 @@ import { one2one } from '@mail/model/model_field';
 import '@mail/models/message_view/message_view';
 
 addFields('MessageView', {
-    qunitTest: one2one('mail.qunit_test', {
+    qunitTest: one2one('QUnitTest', {
         inverse: 'messageView',
         readonly: true,
     }),
