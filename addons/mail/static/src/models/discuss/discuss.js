@@ -395,11 +395,6 @@ registerModel({
             default: "",
         }),
         /**
-         * States the OWL ref of the start a meeting button in sidebar.
-         * Useful to provide anchor for the invite popover positioning.
-         */
-        startAMeetingButtonRef: attr(),
-        /**
          * Determines the `Thread` that should be displayed by `this`.
          */
         thread: many2one('Thread', {
