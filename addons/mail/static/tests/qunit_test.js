@@ -4,7 +4,7 @@ import { registerModel } from '@mail/model/model_core';
 import { one2one } from '@mail/model/model_field';
 
 registerModel({
-    name: 'mail.qunit_test',
+    name: 'QUnitTest',
     identifyingFields: [], // singleton acceptable (only one test at a time)
     fields: {
         composer: one2one('Composer', {
