@@ -12,7 +12,7 @@ export class RtcLayoutMenu extends Component {
      */
     setup() {
         super.setup();
-        useComponentToModel({ fieldName: 'component', modelName: 'mail.rtc_layout_menu', propNameAsRecordLocalId: 'localId' });
+        useComponentToModel({ fieldName: 'component', modelName: 'RtcLayoutMenu', propNameAsRecordLocalId: 'localId' });
     }
 
     //--------------------------------------------------------------------------
@@ -20,10 +20,10 @@ export class RtcLayoutMenu extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {mail.rtc_layout_menu}
+     * @returns {RtcLayoutMenu}
      */
     get layoutMenu() {
-        return this.messaging && this.messaging.models['mail.rtc_layout_menu'].get(this.props.localId);
+        return this.messaging && this.messaging.models['RtcLayoutMenu'].get(this.props.localId);
     }
 
 }
