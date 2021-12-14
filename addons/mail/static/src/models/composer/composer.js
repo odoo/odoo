@@ -10,7 +10,7 @@ registerModel({
     recordMethods: {
         /**
          * @private
-         * @returns {mail.thread}
+         * @returns {Thread}
          */
         _computeActiveThread() {
             if (this.messageViewInEditing && this.messageViewInEditing.message && this.messageViewInEditing.message.originThread) {
@@ -120,7 +120,7 @@ registerModel({
         },
     },
     fields: {
-        activeThread: many2one('mail.thread', {
+        activeThread: many2one('Thread', {
             compute: '_computeActiveThread',
             readonly: true,
             required: true,
@@ -166,7 +166,7 @@ registerModel({
          * Determines whether a post_message request is currently pending.
          */
         isPostingMessage: attr(),
-        mentionedChannels: many2many('mail.thread', {
+        mentionedChannels: many2many('Thread', {
             compute: '_computeMentionedChannels',
         }),
         mentionedPartners: many2many('mail.partner', {
@@ -199,7 +199,7 @@ registerModel({
         /**
          * States the thread which this composer represents the state (if any).
          */
-        thread: one2one('mail.thread', {
+        thread: one2one('Thread', {
             inverse: 'composer',
             readonly: true,
         }),

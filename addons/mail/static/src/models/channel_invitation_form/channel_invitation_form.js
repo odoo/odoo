@@ -28,7 +28,7 @@ registerModel({
                     ...this.thread.members.map(member => member.id),
                     ...this.selectedPartners.map(partner => partner.id),
                 ])];
-                const channel = await this.messaging.models['mail.thread'].createGroupChat({ partners_to });
+                const channel = await this.messaging.models['Thread'].createGroupChat({ partners_to });
                 if (this.thread.rtc) {
                     /**
                      * if we were in a RTC call on the current thread, we move to the new group chat.
@@ -243,7 +243,7 @@ registerModel({
         /**
          * States the thread on which this list operates (if any).
          */
-        thread: many2one('mail.thread', {
+        thread: many2one('Thread', {
             compute: '_computeThread',
             readonly: true,
             required: true,

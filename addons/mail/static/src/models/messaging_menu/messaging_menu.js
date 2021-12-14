@@ -80,7 +80,7 @@ registerModel({
         /**
          * States all the pinned channels that have unread messages.
          */
-         pinnedAndUnreadChannels: one2many('mail.thread', {
+         pinnedAndUnreadChannels: one2many('Thread', {
             inverse: 'messagingMenuAsPinnedAndUnreadChannel',
             readonly: true,
         }),

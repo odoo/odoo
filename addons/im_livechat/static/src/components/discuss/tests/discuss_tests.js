@@ -58,7 +58,7 @@ QUnit.test('livechat in the sidebar: basic rendering', async function (assert) {
     );
     const livechat = groupLivechat.querySelector(`
         .o_DiscussSidebarCategoryItem[data-thread-local-id="${
-            this.messaging.models['mail.thread'].findFromIdentifyingData({
+            this.messaging.models['Thread'].findFromIdentifyingData({
                 id: 11,
                 model: 'mail.channel',
             }).localId
@@ -278,11 +278,11 @@ QUnit.test('livechats are sorted by last activity time in the sidebar: most rece
         },
     );
     await this.start();
-    const livechat11 = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const livechat11 = this.messaging.models['Thread'].findFromIdentifyingData({
         id: 11,
         model: 'mail.channel',
     });
-    const livechat12 = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const livechat12 = this.messaging.models['Thread'].findFromIdentifyingData({
         id: 12,
         model: 'mail.channel',
     });

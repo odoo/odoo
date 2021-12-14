@@ -22,7 +22,7 @@ patchRecordMethods('MessagingNotificationHandler', {
      * @override
      */
     _handleNotificationChannelPartnerTypingStatus({ channel_id, is_typing, partner_id, partner_name }) {
-        const channel = this.messaging.models['mail.thread'].findFromIdentifyingData({
+        const channel = this.messaging.models['Thread'].findFromIdentifyingData({
             id: channel_id,
             model: 'mail.channel',
         });

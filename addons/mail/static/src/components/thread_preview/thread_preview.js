@@ -50,10 +50,10 @@ export class ThreadPreview extends Component {
     }
 
     /**
-     * @returns {mail.thread}
+     * @returns {Thread}
      */
     get thread() {
-        return this.messaging && this.messaging.models['mail.thread'].get(this.props.threadLocalId);
+        return this.messaging && this.messaging.models['Thread'].get(this.props.threadLocalId);
     }
 
     //--------------------------------------------------------------------------

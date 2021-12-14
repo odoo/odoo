@@ -43,7 +43,7 @@ QUnit.test('rendering when just one has received the message', async function (a
     assert.expect(3);
 
     await this.start();
-    const thread = this.messaging.models['mail.thread'].create({
+    const thread = this.messaging.models['Thread'].create({
         id: 1000,
         model: 'mail.channel',
         partnerSeenInfos: insertAndReplace([
@@ -87,7 +87,7 @@ QUnit.test('rendering when everyone have received the message', async function (
     assert.expect(3);
 
     await this.start();
-    const thread = this.messaging.models['mail.thread'].create({
+    const thread = this.messaging.models['Thread'].create({
         id: 1000,
         model: 'mail.channel',
         partnerSeenInfos: insertAndReplace([
@@ -132,7 +132,7 @@ QUnit.test('rendering when just one has seen the message', async function (asser
     assert.expect(3);
 
     await this.start();
-    const thread = this.messaging.models['mail.thread'].create({
+    const thread = this.messaging.models['Thread'].create({
         id: 1000,
         model: 'mail.channel',
         partnerSeenInfos: insertAndReplace([
@@ -179,7 +179,7 @@ QUnit.test('rendering when just one has seen & received the message', async func
     assert.expect(3);
 
     await this.start();
-    const thread = this.messaging.models['mail.thread'].create({
+    const thread = this.messaging.models['Thread'].create({
         id: 1000,
         model: 'mail.channel',
         partnerSeenInfos: insertAndReplace([
@@ -225,7 +225,7 @@ QUnit.test('rendering when just everyone has seen the message', async function (
     assert.expect(3);
 
     await this.start();
-    const thread = this.messaging.models['mail.thread'].create({
+    const thread = this.messaging.models['Thread'].create({
         id: 1000,
         model: 'mail.channel',
         partnerSeenInfos: insertAndReplace([

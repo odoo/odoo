@@ -142,7 +142,7 @@ registerModel({
             // the mention will appear in the target channel, or be notified to
             // the target partner.
             switch (this.activeSuggestedRecord.constructor.name) {
-                case 'mail.thread':
+                case 'Thread':
                     Object.assign(updateData, { mentionedChannels: link(this.activeSuggestedRecord) });
                     break;
                 case 'mail.partner':
@@ -576,7 +576,7 @@ registerModel({
                 case '/':
                     return 'ChannelCommand';
                 case '#':
-                    return 'mail.thread';
+                    return 'Thread';
                 default:
                     return clear();
             }

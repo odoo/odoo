@@ -46,7 +46,7 @@ QUnit.test('out of office message on direct chat with out of office partner', as
         members: [this.data.currentPartnerId, 11],
     }];
     const { createThreadViewComponent } = await this.start();
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel'
     });

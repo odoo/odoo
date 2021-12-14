@@ -460,10 +460,10 @@ registerModel({
             compute: '_computeName',
         }),
         /**
-         * Determines the `mail.thread` that should be displayed by `this`.
-         * If no `mail.thread` is linked, `this` is considered "new message".
+         * Determines the `Thread` that should be displayed by `this`.
+         * If no `Thread` is linked, `this` is considered "new message".
          */
-        thread: one2one('mail.thread', {
+        thread: one2one('Thread', {
             inverse: 'chatWindow',
             readonly: true,
         }),

@@ -129,7 +129,7 @@ registerModel({
         /**
          * Threads with this visitor as member
          */
-        threads: one2many('mail.thread', {
+        threads: one2many('Thread', {
             inverse: 'visitor',
         }),
         /**

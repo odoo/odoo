@@ -401,7 +401,7 @@ registerModel({
         orderedNonEmptyMessages: many2many('mail.message', {
             compute: '_computeOrderedNonEmptyMessages',
         }),
-        thread: one2one('mail.thread', {
+        thread: one2one('Thread', {
             inverse: 'cache',
             readonly: true,
             required: true,

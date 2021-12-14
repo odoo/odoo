@@ -45,7 +45,7 @@ registerModel({
          * @param {integer} [param0.partnerId]
          * @param {integer} [param0.userId]
          * @param {Object} [options]
-         * @returns {mail.thread|undefined}
+         * @returns {Thread|undefined}
          */
         async getChat({ partnerId, userId }) {
             if (userId) {
@@ -63,8 +63,8 @@ registerModel({
          * If a chat is not appropriate, a notification is displayed instead.
          *
          * @param {Object} person forwarded to @see `getChat()`
-         * @param {Object} [options] forwarded to @see `mail.thread:open()`
-         * @returns {mail.thread|undefined}
+         * @param {Object} [options] forwarded to @see `Thread:open()`
+         * @returns {Thread|undefined}
          */
         async openChat(person, options) {
             const chat = await this.async(() => this.getChat(person));
@@ -114,10 +114,10 @@ registerModel({
                 return user.openProfile();
             }
             if (model === 'mail.channel') {
-                let channel = this.messaging.models['mail.thread'].findFromIdentifyingData({ id, model: 'mail.channel' });
+                let channel = this.messaging.models['Thread'].findFromIdentifyingData({ id, model: 'mail.channel' });
                 if (!channel) {
                     channel = (await this.async(() =>
-                        this.messaging.models['mail.thread'].performRpcChannelInfo({ ids: [id] })
+                        this.messaging.models['Thread'].performRpcChannelInfo({ ids: [id] })
                     ))[0];
                 }
                 if (!channel) {
@@ -268,11 +268,11 @@ registerModel({
         /**
          * Mailbox History.
          */
-        history: one2one('mail.thread'),
+        history: one2one('Thread'),
         /**
          * Mailbox Inbox.
          */
-        inbox: one2one('mail.thread'),
+        inbox: one2one('Thread'),
         /**
          * Promise that will be resolved when messaging is initialized.
          */
@@ -351,7 +351,7 @@ registerModel({
          * Threads for which the current partner has a pending invitation.
          * It is computed from the inverse relation for performance reasons.
          */
-        ringingThreads: one2many('mail.thread', {
+        ringingThreads: one2many('Thread', {
             inverse: 'messagingAsRingingThread',
         }),
         rtc: one2one('Rtc', {
@@ -367,7 +367,7 @@ registerModel({
         /**
          * Mailbox Starred.
          */
-        starred: one2one('mail.thread'),
+        starred: one2one('Thread'),
         userSetting: one2one('mail.user_setting', {
             isCausal: true,
         }),

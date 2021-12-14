@@ -37,7 +37,7 @@ FormRenderer.include({
         this.off('o_attachments_changed', this);
         this.off('o_chatter_rendered', this);
         this.off('o_message_posted', this);
-        owl.Component.env.bus.off('mail.thread:promptAddFollower-closed', this);
+        owl.Component.env.bus.off('Thread:promptAddFollower-closed', this);
     },
 
     //--------------------------------------------------------------------------
@@ -76,7 +76,7 @@ FormRenderer.include({
             this.on('o_attachments_changed', this, ev => this.trigger_up('reload', { keepChanges: true }));
         }
         if (this.chatterFields.hasRecordReloadOnFollowersUpdate) {
-            owl.Component.env.bus.on('mail.thread:promptAddFollower-closed', this, ev => this.trigger_up('reload', { keepChanges: true }));
+            owl.Component.env.bus.on('Thread:promptAddFollower-closed', this, ev => this.trigger_up('reload', { keepChanges: true }));
         }
     },
     /**
@@ -177,7 +177,7 @@ FormRenderer.include({
      * @param {OdooEvent} ev
      * @param {Object} ev.data
      * @param {mail.attachment[]} ev.data.attachments
-     * @param {mail.thread} ev.data.thread
+     * @param {Thread} ev.data.thread
      */
     _onChatterRendered(ev) {},
 });

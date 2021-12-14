@@ -130,7 +130,7 @@ QUnit.test('Notification Sent', async function (assert) {
         res_partner_id: 12,
     });
     const { createThreadViewComponent } = await this.start();
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
         id: 11,
         model: 'mail.channel',
     });
@@ -229,7 +229,7 @@ QUnit.test('Notification Error', async function (assert) {
         res_partner_id: 12,
     });
     const { createThreadViewComponent } = await this.start({ env: { bus } });
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
         id: 11,
         model: 'mail.channel',
     });
@@ -285,7 +285,7 @@ QUnit.test("'channel_fetch' notification received is correctly handled", async f
         id: this.messaging.currentPartner.id,
         display_name: "Demo User",
     });
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
         id: 11,
         model: 'mail.channel',
     });
@@ -350,7 +350,7 @@ QUnit.test("'channel_seen' notification received is correctly handled", async fu
         id: this.messaging.currentPartner.id,
         display_name: "Demo User",
     });
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
         id: 11,
         model: 'mail.channel',
     });
@@ -414,7 +414,7 @@ QUnit.test("'channel_fetch' notification then 'channel_seen' received  are corre
         id: this.messaging.currentPartner.id,
         display_name: "Demo User",
     });
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
         id: 11,
         model: 'mail.channel',
     });
@@ -486,7 +486,7 @@ QUnit.test('do not show messaging seen indicator if not authored by me', async f
         id: 100,
         display_name: "Demo User"
     });
-    const thread = this.messaging.models['mail.thread'].create({
+    const thread = this.messaging.models['Thread'].create({
         channel_type: 'chat',
         id: 11,
         partnerSeenInfos: insertAndReplace([
@@ -534,7 +534,7 @@ QUnit.test('do not show messaging seen indicator if before last seen by all mess
         id: this.messaging.currentPartner.id,
         display_name: "Demo User",
     });
-    const thread = this.messaging.models['mail.thread'].create({
+    const thread = this.messaging.models['Thread'].create({
         channel_type: 'chat',
         id: 11,
         messageSeenIndicators: insertAndReplace({
@@ -601,7 +601,7 @@ QUnit.test('only show messaging seen indicator if authored by me, after last see
         id: this.messaging.currentPartner.id,
         display_name: "Demo User"
     });
-    const thread = this.messaging.models['mail.thread'].create({
+    const thread = this.messaging.models['Thread'].create({
         channel_type: 'chat',
         id: 11,
         partnerSeenInfos: insertAndReplace([

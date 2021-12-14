@@ -9,7 +9,7 @@ registerModel({
     identifyingFields: ['thread', 'message'],
     modelMethods: {
         /**
-         * @param {mail.thread} [channel] the concerned thread
+         * @param {Thread} [channel] the concerned thread
          */
         recomputeFetchedValues(channel = undefined) {
             const indicatorFindFunction = channel ? localIndicator => localIndicator.thread === channel : undefined;
@@ -23,7 +23,7 @@ registerModel({
             }
         },
         /**
-         * @param {mail.thread} [channel] the concerned thread
+         * @param {Thread} [channel] the concerned thread
          */
         recomputeSeenValues(channel = undefined) {
             const indicatorFindFunction = channel ? localIndicator => localIndicator.thread === channel : undefined;
@@ -239,7 +239,7 @@ registerModel({
         /**
          * The thread concerned by this seen indicator.
          */
-        thread: many2one('mail.thread', {
+        thread: many2one('Thread', {
             inverse: 'messageSeenIndicators',
             readonly: true,
             required: true,

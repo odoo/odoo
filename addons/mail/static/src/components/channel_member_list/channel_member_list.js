@@ -7,10 +7,10 @@ const { Component } = owl;
 export class ChannelMemberList extends Component {
 
     /**
-     * @returns {mail.thread}
+     * @returns {Thread}
      */
     get channel() {
-        return this.messaging.models['mail.thread'].get(this.props.channelLocalId);
+        return this.messaging.models['Thread'].get(this.props.channelLocalId);
     }
 
 }

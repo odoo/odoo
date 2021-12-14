@@ -76,7 +76,7 @@ registerModel({
          *
          * @param {string} searchTerm
          * @param {Object} [options={}]
-         * @param {mail.thread} [options.thread] prioritize and/or restrict
+         * @param {Thread} [options.thread] prioritize and/or restrict
          *  result in the context of given thread
          */
         async fetchSuggestions(searchTerm, { thread } = {}) {
@@ -106,7 +106,7 @@ registerModel({
          *
          * @param {string} searchTerm
          * @param {Object} [options={}]
-         * @param {mail.thread} [options.thread] prioritize result in the
+         * @param {Thread} [options.thread] prioritize result in the
          *  context of given thread
          * @returns {function}
          */
@@ -218,7 +218,7 @@ registerModel({
          *
          * @param {string} searchTerm
          * @param {Object} [options={}]
-         * @param {mail.thread} [options.thread] prioritize and/or restrict
+         * @param {Thread} [options.thread] prioritize and/or restrict
          *  result in the context of given thread
          * @returns {[mail.partner[], mail.partner[]]}
          */
@@ -320,7 +320,7 @@ registerModel({
          *
          * If a chat is not appropriate, a notification is displayed instead.
          *
-         * @returns {mail.thread|undefined}
+         * @returns {Thread|undefined}
          */
         async getChat() {
             if (!this.user && !this.hasCheckedUser) {
@@ -350,8 +350,8 @@ registerModel({
          *
          * If a chat is not appropriate, a notification is displayed instead.
          *
-         * @param {Object} [options] forwarded to @see `mail.thread:open()`
-         * @returns {mail.thread|undefined}
+         * @param {Object} [options] forwarded to @see `Thread:open()`
+         * @returns {Thread|undefined}
          */
         async openChat(options) {
             const chat = await this.async(() => this.getChat());
@@ -436,7 +436,7 @@ registerModel({
         isMuted: attr({
             default: false,
         }),
-        memberThreads: many2many('mail.thread', {
+        memberThreads: many2many('Thread', {
             inverse: 'members',
         }),
         model: attr({

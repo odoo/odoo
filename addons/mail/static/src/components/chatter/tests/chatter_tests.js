@@ -77,7 +77,7 @@ QUnit.test('base rendering when chatter has no attachment', async function (asse
     );
     assert.strictEqual(
         document.querySelector(`.o_Chatter_thread`).dataset.threadLocalId,
-        this.messaging.models['mail.thread'].findFromIdentifyingData({
+        this.messaging.models['Thread'].findFromIdentifyingData({
             id: 100,
             model: 'res.partner',
         }).localId,
@@ -351,7 +351,7 @@ QUnit.test('should display subject when subject is not the same as the thread na
         subject: "Salutations, voyageur",
     });
     await this.start();
-    this.messaging.models['mail.thread'].create({
+    this.messaging.models['Thread'].create({
         id: 100,
         model: 'res.partner',
         name: "voyageur",
@@ -386,7 +386,7 @@ QUnit.test('should not display subject when subject is the same as the thread na
         subject: "Salutations, voyageur",
     });
     await this.start();
-    this.messaging.models['mail.thread'].create({
+    this.messaging.models['Thread'].create({
         id: 100,
         model: 'res.partner',
         name: "Salutations, voyageur",
