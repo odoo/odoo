@@ -5,7 +5,7 @@ import { attr, many2one, one2one } from '@mail/model/model_field';
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
 registerModel({
-    name: 'mail.rtc_call_participant_card',
+    name: 'RtcCallParticipantCard',
     identifyingFields: ['relationalId'],
     lifecycleHooks: {
         _created() {
