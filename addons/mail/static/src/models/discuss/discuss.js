@@ -298,7 +298,7 @@ registerModel({
         },
         /**
          * @private
-         * @returns {mail.thread_viewer}
+         * @returns {ThreadViewer}
          */
         _computeThreadViewer() {
             return insertAndReplace({
@@ -412,9 +412,9 @@ registerModel({
             related: 'threadViewer.threadView',
         }),
         /**
-         * Determines the `mail.thread_viewer` managing the display of `this.thread`.
+         * Determines the `ThreadViewer` managing the display of `this.thread`.
          */
-        threadViewer: one2one('mail.thread_viewer', {
+        threadViewer: one2one('ThreadViewer', {
             compute: '_computeThreadViewer',
             inverse: 'discuss',
             isCausal: true,

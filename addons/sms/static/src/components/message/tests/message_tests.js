@@ -53,7 +53,7 @@ QUnit.test('Notification Sent', async function (assert) {
         res_partner_id: 12,
     });
     const { createThreadViewComponent } = await this.start();
-    const threadViewer = this.messaging.models['mail.thread_viewer'].create({
+    const threadViewer = this.messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: insert({
@@ -150,7 +150,7 @@ QUnit.test('Notification Error', async function (assert) {
         res_partner_id: 12,
     });
     const { createThreadViewComponent } = await this.start({ env: { bus } });
-    const threadViewer = this.messaging.models['mail.thread_viewer'].create({
+    const threadViewer = this.messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: insert({

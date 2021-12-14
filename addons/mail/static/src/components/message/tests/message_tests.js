@@ -134,7 +134,7 @@ QUnit.test('Notification Sent', async function (assert) {
         id: 11,
         model: 'mail.channel',
     });
-    const threadViewer = this.messaging.models['mail.thread_viewer'].create({
+    const threadViewer = this.messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: link(thread),
@@ -233,7 +233,7 @@ QUnit.test('Notification Error', async function (assert) {
         id: 11,
         model: 'mail.channel',
     });
-    const threadViewer = this.messaging.models['mail.thread_viewer'].create({
+    const threadViewer = this.messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: link(thread),
@@ -289,7 +289,7 @@ QUnit.test("'channel_fetch' notification received is correctly handled", async f
         id: 11,
         model: 'mail.channel',
     });
-    const threadViewer = this.messaging.models['mail.thread_viewer'].create({
+    const threadViewer = this.messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: link(thread),
@@ -354,7 +354,7 @@ QUnit.test("'channel_seen' notification received is correctly handled", async fu
         id: 11,
         model: 'mail.channel',
     });
-    const threadViewer = this.messaging.models['mail.thread_viewer'].create({
+    const threadViewer = this.messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: link(thread),
@@ -418,7 +418,7 @@ QUnit.test("'channel_fetch' notification then 'channel_seen' received  are corre
         id: 11,
         model: 'mail.channel',
     });
-    const threadViewer = this.messaging.models['mail.thread_viewer'].create({
+    const threadViewer = this.messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: link(thread),
@@ -501,7 +501,7 @@ QUnit.test('do not show messaging seen indicator if not authored by me', async f
         ]),
         model: 'mail.channel',
     });
-    const threadViewer = this.messaging.models['mail.thread_viewer'].create({
+    const threadViewer = this.messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: link(thread),
@@ -542,7 +542,7 @@ QUnit.test('do not show messaging seen indicator if before last seen by all mess
         }),
         model: 'mail.channel',
     });
-    const threadViewer = this.messaging.models['mail.thread_viewer'].create({
+    const threadViewer = this.messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: link(thread),
@@ -620,7 +620,7 @@ QUnit.test('only show messaging seen indicator if authored by me, after last see
         }),
         model: 'mail.channel',
     });
-    const threadViewer = this.messaging.models['mail.thread_viewer'].create({
+    const threadViewer = this.messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: link(thread),
@@ -921,7 +921,7 @@ QUnit.test('open chat with author on avatar click should be disabled when curren
     });
     const correspondent = this.messaging.models['mail.partner'].insert({ id: 10 });
     const thread = await correspondent.getChat();
-    const threadViewer = this.messaging.models['mail.thread_viewer'].create({
+    const threadViewer = this.messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: link(thread),
@@ -1564,7 +1564,7 @@ QUnit.test('message should not be considered as "clicked" after clicking on noti
         notification_type: 'email',
     });
     const { createThreadViewComponent } = await this.start();
-    const threadViewer = this.messaging.models['mail.thread_viewer'].create({
+    const threadViewer = this.messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: insert({
