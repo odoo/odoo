@@ -373,7 +373,7 @@ registerModel({
         /**
          * The model for the menu to control the layout of the viewer.
          */
-        rtcLayoutMenu: one2one('mail.rtc_layout_menu', {
+        rtcLayoutMenu: one2one('RtcLayoutMenu', {
             inverse: 'callViewer',
             isCausal: true,
         }),
