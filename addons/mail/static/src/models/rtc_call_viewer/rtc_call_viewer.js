@@ -363,7 +363,7 @@ registerModel({
         /**
          * The model for the controller (buttons).
          */
-        rtcController: one2one('mail.rtc_controller', {
+        rtcController: one2one('RtcController', {
             default: insertAndReplace(),
             readonly: true,
             required: true,

@@ -11,10 +11,10 @@ export class RtcController extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {mail.rtc_controller}
+     * @returns {RtcController}
      */
     get rtcController() {
-        return this.messaging && this.messaging.models['mail.rtc_controller'].get(this.props.localId);
+        return this.messaging && this.messaging.models['RtcController'].get(this.props.localId);
     }
 
 }
