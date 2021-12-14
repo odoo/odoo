@@ -23,7 +23,7 @@ const getRTCPeerNotificationNextTemporaryId = (function () {
 })();
 
 registerModel({
-    name: 'mail.rtc',
+    name: 'Rtc',
     identifyingFields: ['messaging'],
     lifecycleHooks: {
         _created() {

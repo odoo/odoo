@@ -354,7 +354,7 @@ registerModel({
         ringingThreads: one2many('mail.thread', {
             inverse: 'messagingAsRingingThread',
         }),
-        rtc: one2one('mail.rtc', {
+        rtc: one2one('Rtc', {
             default: insertAndReplace(),
             isCausal: true,
             readonly: true,
