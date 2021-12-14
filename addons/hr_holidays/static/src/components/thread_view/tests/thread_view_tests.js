@@ -50,7 +50,7 @@ QUnit.test('out of office message on direct chat with out of office partner', as
         id: 20,
         model: 'mail.channel'
     });
-    const threadViewer = this.messaging.models['mail.thread_viewer'].create({
+    const threadViewer = this.messaging.models['ThreadViewer'].create({
         hasThreadView: true,
         qunitTest: insertAndReplace(),
         thread: link(thread),
