@@ -2368,9 +2368,9 @@ registerModel({
             default: 0,
         }),
         /**
-         * Determines the `mail.suggested_recipient_info` concerning `this`.
+         * Determines the `SuggestedRecipientInfo` concerning `this`.
          */
-        suggestedRecipientInfoList: one2many('mail.suggested_recipient_info', {
+        suggestedRecipientInfoList: one2many('SuggestedRecipientInfo', {
             inverse: 'thread',
             isCausal: true,
         }),
