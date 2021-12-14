@@ -143,7 +143,7 @@ export class ModelManager {
         /**
          * Create the messaging singleton record.
          */
-        const messaging = this.models['mail.messaging'].insert(values);
+        const messaging = this.models['Messaging'].insert(values);
         Object.assign(odoo.__DEBUG__, { messaging });
         this.messagingCreatedPromise.resolve();
         await this.messaging.start();
@@ -302,7 +302,7 @@ export class ModelManager {
      * be considered the main entry point to the messaging system for outside
      * code.
      *
-     * @returns {mail.messaging}
+     * @returns {Messaging}
      **/
     async getMessaging() {
         await this.messagingCreatedPromise;
@@ -329,15 +329,15 @@ export class ModelManager {
     /**
      * Returns the messaging singleton associated to this model manager.
      *
-     * @returns {mail.messaging|undefined}
+     * @returns {Messaging|undefined}
      */
     get messaging() {
-        if (!this.models['mail.messaging']) {
+        if (!this.models['Messaging']) {
             return undefined;
         }
         // Use "findFromIdentifyingData" specifically to ensure the record still
         // exists and to ensure listeners are properly notified of this access.
-        return this.models['mail.messaging'].findFromIdentifyingData({});
+        return this.models['Messaging'].findFromIdentifyingData({});
     }
 
     /**
