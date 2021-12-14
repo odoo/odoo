@@ -78,10 +78,10 @@ export class ComposerSuggestedRecipient extends Component {
     }
 
     /**
-     * @returns {mail.suggested_recipient_info}
+     * @returns {SuggestedRecipientInfo}
      */
     get suggestedRecipientInfo() {
-        return this.messaging && this.messaging.models['mail.suggested_recipient_info'].get(this.props.suggestedRecipientInfoLocalId);
+        return this.messaging && this.messaging.models['SuggestedRecipientInfo'].get(this.props.suggestedRecipientInfoLocalId);
     }
 
     //--------------------------------------------------------------------------
