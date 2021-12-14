@@ -281,7 +281,7 @@ registerModel({
             required: true,
             readonly: true,
         }),
-        initializer: one2one('mail.messaging_initializer', {
+        initializer: one2one('MessagingInitializer', {
             default: insertAndReplace(),
             isCausal: true,
             readonly: true,
