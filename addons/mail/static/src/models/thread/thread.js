@@ -2306,7 +2306,7 @@ registerModel({
          * Contains the seen information for all members of the thread.
          * FIXME This field should be readonly once task-2336946 is done.
          */
-        partnerSeenInfos: one2many('mail.thread_partner_seen_info', {
+        partnerSeenInfos: one2many('ThreadPartnerSeenInfo', {
             inverse: 'thread',
             isCausal: true,
         }),

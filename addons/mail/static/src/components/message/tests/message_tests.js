@@ -559,7 +559,7 @@ QUnit.test('do not show messaging seen indicator if before last seen by all mess
         id: 99,
         originThread: link(thread),
     });
-    this.messaging.models['mail.thread_partner_seen_info'].insert([
+    this.messaging.models['ThreadPartnerSeenInfo'].insert([
         {
             lastSeenMessage: link(lastSeenMessage),
             partner: replace(this.messaging.currentPartner),
