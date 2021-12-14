@@ -4,7 +4,7 @@ import { registerModel } from '@mail/model/model_core';
 import { attr, many2one } from '@mail/model/model_field';
 
 registerModel({
-    name: 'mail.suggested_recipient_info',
+    name: 'SuggestedRecipientInfo',
     identifyingFields: ['id'],
     recordMethods: {
         /**
