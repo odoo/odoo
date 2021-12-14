@@ -4,7 +4,7 @@ import { patchRecordMethods } from '@mail/model/model_core';
 // ensure that the model definition is loaded before the patch
 import '@mail/models/messaging/messaging';
 
-patchRecordMethods('mail.messaging', {
+patchRecordMethods('Messaging', {
     /**
      * @override
      * @param {integer} [param0.employeeId]

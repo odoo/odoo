@@ -2223,7 +2223,7 @@ registerModel({
             inverse: 'thread',
             isCausal: true,
         }),
-        messagingAsRingingThread: many2one('mail.messaging', {
+        messagingAsRingingThread: many2one('Messaging', {
             compute: '_computeMessagingAsRingingThread',
             inverse: 'ringingThreads',
             readonly: true,
