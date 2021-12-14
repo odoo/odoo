@@ -420,7 +420,7 @@ registerModel({
          * the active current record is no longer part of the suggestions.
          *
          * @private
-         * @returns {mail.model}
+         * @returns {Model}
          */
         _computeActiveSuggestedRecord() {
             if (
@@ -476,7 +476,7 @@ registerModel({
          * main list, which is a requirement for the navigation process.
          *
          * @private
-         * @returns {mail.model[]}
+         * @returns {Model[]}
          */
         _computeExtraSuggestedRecords() {
             if (this.suggestionDelimiterPosition === undefined) {
@@ -495,7 +495,7 @@ registerModel({
          * Clears the main suggested record on closing mentions.
          *
          * @private
-         * @returns {mail.model[]}
+         * @returns {Model[]}
          */
         _computeMainSuggestedRecords() {
             if (this.suggestionDelimiterPosition === undefined) {
@@ -847,7 +847,7 @@ registerModel({
          * is highlighted in the UI and it will be the selected record if the
          * suggestion is confirmed by the user.
          */
-        activeSuggestedRecord: many2one('mail.model', {
+        activeSuggestedRecord: many2one('Model', {
             compute: '_computeActiveSuggestedRecord',
         }),
         /**
@@ -884,7 +884,7 @@ registerModel({
          * process. 2 arbitrary lists can be provided and the second is defined
          * as "extra".
          */
-        extraSuggestedRecords: many2many('mail.model', {
+        extraSuggestedRecords: many2many('Model', {
             compute: '_computeExtraSuggestedRecords',
         }),
         hasFocus: attr({
@@ -911,7 +911,7 @@ registerModel({
          * process. 2 arbitrary lists can be provided and the first is defined
          * as "main".
          */
-        mainSuggestedRecords: many2many('mail.model', {
+        mainSuggestedRecords: many2many('Model', {
             compute: '_computeMainSuggestedRecords',
         }),
         /**

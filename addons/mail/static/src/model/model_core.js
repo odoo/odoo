@@ -73,7 +73,7 @@ export function addLifecycleHooks(modelName, hooks) {
 /**
  * Adds the provided model getters to the model specified by the `modelName`.
  *
- * @deprecated Getters are only used in `mail.model` and are intended to
+ * @deprecated Getters are only used in `Model` and are intended to
  * provide fields such as `env` to all models by inheritance. The creation of
  * these fields will be directly in the model manager in the future.
  * Use fields instead.
@@ -150,7 +150,7 @@ export function addRecordMethods(modelName, recordMethods) {
 /**
  * Adds the provided record getters to the model specified by the `modelName`.
  *
- * @deprecated Getters are only used in `mail.model` and are intended to
+ * @deprecated Getters are only used in `Model` and are intended to
  * provide fields such as `env` to all records by inheritance. The creation of
  * these fields will be directly in the model manager in the future.
  * Use fields instead.

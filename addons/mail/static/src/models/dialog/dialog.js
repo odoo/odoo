@@ -54,7 +54,7 @@ registerModel({
          * a UI component, such as AttachmentViewer. These records must be
          * created from @see `mail.dialog_manager:open()`.
          */
-        record: one2one('mail.model', {
+        record: one2one('Model', {
             compute: '_computeRecord',
             isCausal: true,
             readonly: true,

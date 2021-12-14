@@ -196,7 +196,7 @@ export class ModelField {
      * default value. Relational fields are always unlinked before the default
      * is applied.
      *
-     * @param {mail.model} record
+     * @param {Model} record
      * @param {options} [options]
      * @returns {boolean} whether the value changed for the current field
      */
@@ -220,7 +220,7 @@ export class ModelField {
      * Compute method when this field is related.
      *
      * @private
-     * @param {mail.model} record
+     * @param {Model} record
      */
     computeRelated(record) {
         const [relationName, relatedFieldName] = this.related.split('.');
@@ -282,7 +282,7 @@ export class ModelField {
      * Decreases the field value by `amount`
      * for an attribute field holding number value,
      *
-     * @param {mail.model} record
+     * @param {Model} record
      * @param {number} amount
      */
     decrement(record, amount) {
@@ -294,7 +294,7 @@ export class ModelField {
      * Get the value associated to this field. Relations must convert record
      * local ids to records.
      *
-     * @param {mail.model} record
+     * @param {Model} record
      * @returns {any}
      */
     get(record) {
@@ -314,7 +314,7 @@ export class ModelField {
      * Increases the field value by `amount`
      * for an attribute field holding number value.
      *
-     * @param {mail.model} record
+     * @param {Model} record
      * @param {number} amount
      */
     increment(record, amount) {
@@ -325,7 +325,7 @@ export class ModelField {
     /**
      * Parses newVal for command(s) and executes them.
      *
-     * @param {mail.model} record
+     * @param {Model} record
      * @param {any} newVal
      * @param {Object} [options]
      * @param {boolean} [options.hasToUpdateInverse] whether updating the
@@ -419,7 +419,7 @@ export class ModelField {
      * Get the raw value associated to this field. For relations, this means
      * the local id or list of local ids of records in this relational field.
      *
-     * @param {mail.model} record
+     * @param {Model} record
      * @returns {any}
      */
     read(record) {
@@ -454,11 +454,11 @@ export class ModelField {
      * an iterable of records.
      *
      * @private
-     * @param {mail.model|mail.model[]} newValue
+     * @param {Model|Model[]} newValue
      * @param {Object} [param1={}]
      * @param {boolean} [param1.hasToVerify=true] whether the value has to be
      *  verified @see `_verifyRelationalValue`
-     * @returns {mail.model[]}
+     * @returns {Model[]}
      */
     _convertX2ManyValue(newValue, { hasToVerify = true } = {}) {
         if (typeof newValue[Symbol.iterator] === 'function') {
@@ -480,9 +480,9 @@ export class ModelField {
      * field based on the given data and the inverse relation value.
      *
      * @private
-     * @param {mail.model} record
+     * @param {Model} record
      * @param {Object|Object[]} data
-     * @returns {mail.model|mail.model[]}
+     * @returns {Model|Model[]}
      */
     _insertOtherRecord(record, data) {
         const OtherModel = record.models[this.to];
@@ -505,7 +505,7 @@ export class ModelField {
      *  Set a value for this attribute field
      *
      * @private
-     * @param {mail.model} record
+     * @param {Model} record
      * @param {any} newVal value to be written on the field value.
      * @returns {boolean} whether the value changed for the current field
      */
@@ -525,7 +525,7 @@ export class ModelField {
      * this field.
      *
      * @private
-     * @param {mail.model} record
+     * @param {Model} record
      * @param {Object|Object[]} data
      * @param {Object} [options]
      * @returns {boolean} whether the value changed for the current field
@@ -541,7 +541,7 @@ export class ModelField {
      * records, which themselves must replace value on this field.
      *
      * @private
-     * @param {mail.model} record
+     * @param {Model} record
      * @param {Object|Object[]} data
      * @param {Object} [options]
      * @returns {boolean} whether the value changed for the current field
@@ -557,7 +557,7 @@ export class ModelField {
      * records, which themselves must be unlinked from this field.
      *
      * @private
-     * @param {mail.model} record
+     * @param {Model} record
      * @param {Object|Object[]} data
      * @param {Object} [options]
      * @returns {boolean} whether the value changed for the current field
@@ -571,7 +571,7 @@ export class ModelField {
      * Set a 'link' operation on this relational field.
      *
      * @private
-     * @param {mail.model|mail.model[]} newValue
+     * @param {Model|Model[]} newValue
      * @param {Object} [options]
      * @returns {boolean} whether the value changed for the current field
      */
@@ -590,8 +590,8 @@ export class ModelField {
      * Handling of a `set` 'link' of a x2many relational field.
      *
      * @private
-     * @param {mail.model} record
-     * @param {mail.model|mail.model[]} newValue
+     * @param {Model} record
+     * @param {Model|Model[]} newValue
      * @param {Object} [param2={}]
      * @param {boolean} [param2.hasToUpdateInverse=true] whether updating the
      *  current field should also update its inverse field. Typically set to
@@ -629,8 +629,8 @@ export class ModelField {
      * Handling of a `set` 'link' of an x2one relational field.
      *
      * @private
-     * @param {mail.model} record
-     * @param {mail.model} recordToLink
+     * @param {Model} record
+     * @param {Model} recordToLink
      * @param {Object} [param2={}]
      * @param {boolean} [param2.hasToUpdateInverse=true] whether updating the
      *  current field should also update its inverse field. Typically set to
@@ -666,8 +666,8 @@ export class ModelField {
      * Set a 'replace' operation on this relational field.
      *
      * @private
-     * @param {mail.model} record
-     * @param {mail.model|mail.model[]} newValue
+     * @param {Model} record
+     * @param {Model|Model[]} newValue
      * @param {Object} [options]
      * @returns {boolean} whether the value changed for the current field
      */
@@ -731,8 +731,8 @@ export class ModelField {
      * Set an 'unlink' operation on this relational field.
      *
      * @private
-     * @param {mail.model} record
-     * @param {mail.model|mail.model[]} newValue
+     * @param {Model} record
+     * @param {Model|Model[]} newValue
      * @param {Object} [options]
      * @returns {boolean} whether the value changed for the current field
      */
@@ -751,8 +751,8 @@ export class ModelField {
      * Handling of a `set` 'unlink' of a x2many relational field.
      *
      * @private
-     * @param {mail.model} record
-     * @param {mail.model|mail.model[]} newValue
+     * @param {Model} record
+     * @param {Model|Model[]} newValue
      * @param {Object} [param2={}]
      * @param {boolean} [param2.hasToUpdateInverse=true] whether updating the
      *  current field should also update its inverse field. Typically set to
@@ -803,7 +803,7 @@ export class ModelField {
      * Handling of a `set` 'unlink' of a x2one relational field.
      *
      * @private
-     * @param {mail.model} record
+     * @param {Model} record
      * @param {Object} [param1={}]
      * @param {boolean} [param1.hasToUpdateInverse=true] whether updating the
      *  current field should also update its inverse field. Typically set to
@@ -848,7 +848,7 @@ export class ModelField {
      * and it must originates from relational `to` model (or its subclasses).
      *
      * @private
-     * @param {mail.model} record
+     * @param {Model} record
      * @throws {Error} if record does not satisfy related model
      */
     _verifyRelationalValue(record) {
