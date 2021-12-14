@@ -11,15 +11,15 @@ export class WelcomeView extends owl.Component {
      */
     setup() {
         super.setup();
-        useRefToModel({ fieldName: 'guestNameInputRef', modelName: 'mail.welcome_view', propNameAsRecordLocalId: 'localId', refName: 'guestNameInput' });
-        useUpdateToModel({ methodName: 'onComponentUpdate', modelName: 'mail.welcome_view', propNameAsRecordLocalId: 'localId' });
+        useRefToModel({ fieldName: 'guestNameInputRef', modelName: 'WelcomeView', propNameAsRecordLocalId: 'localId', refName: 'guestNameInput' });
+        useUpdateToModel({ methodName: 'onComponentUpdate', modelName: 'WelcomeView', propNameAsRecordLocalId: 'localId' });
     }
 
     /**
-     * @returns {mail.welcome_view}
+     * @returns {WelcomeView}
      */
     get welcomeView() {
-        return this.messaging && this.messaging.models['mail.welcome_view'].get(this.props.localId);
+        return this.messaging && this.messaging.models['WelcomeView'].get(this.props.localId);
     }
 
 }
