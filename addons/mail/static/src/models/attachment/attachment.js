@@ -398,11 +398,11 @@ registerModel({
             default: '',
         }),
         name: attr(),
-        originThread: many2one('mail.thread', {
+        originThread: many2one('Thread', {
             inverse: 'originThreadAttachments',
         }),
         size: attr(),
-        threads: many2many('mail.thread', {
+        threads: many2many('Thread', {
             inverse: 'attachments',
         }),
         type: attr(),

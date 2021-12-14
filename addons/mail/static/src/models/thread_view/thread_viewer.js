@@ -113,9 +113,9 @@ registerModel({
             default: 'asc',
         }),
         /**
-         * Determines the `mail.thread` that should be displayed by `this`.
+         * Determines the `Thread` that should be displayed by `this`.
          */
-        thread: many2one('mail.thread'),
+        thread: many2one('Thread'),
         /**
          * States the `mail.thread_cache` that should be displayed by `this`.
          */

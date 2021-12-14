@@ -40,7 +40,7 @@ QUnit.test('base rendering not editable', async function (assert) {
     assert.expect(3);
 
     await this.start();
-    const thread = this.messaging.models['mail.thread'].create({
+    const thread = this.messaging.models['Thread'].create({
         id: 100,
         model: 'res.partner',
     });
@@ -65,7 +65,7 @@ QUnit.test('base rendering editable', async function (assert) {
     assert.expect(3);
 
     await this.start();
-    const thread = this.messaging.models['mail.thread'].create({
+    const thread = this.messaging.models['Thread'].create({
         id: 100,
         model: 'res.partner',
     });
@@ -99,7 +99,7 @@ QUnit.test('hover following button', async function (assert) {
         res_model: 'res.partner',
     });
     await this.start();
-    const thread = this.messaging.models['mail.thread'].create({
+    const thread = this.messaging.models['Thread'].create({
         id: 100,
         model: 'res.partner',
     });
@@ -176,7 +176,7 @@ QUnit.test('click on "follow" button', async function (assert) {
             return this._super(...arguments);
         },
     });
-    const thread = this.messaging.models['mail.thread'].create({
+    const thread = this.messaging.models['Thread'].create({
         id: 100,
         model: 'res.partner',
     });
@@ -231,7 +231,7 @@ QUnit.test('click on "unfollow" button', async function (assert) {
             return this._super(...arguments);
         },
     });
-    const thread = this.messaging.models['mail.thread'].create({
+    const thread = this.messaging.models['Thread'].create({
         id: 100,
         model: 'res.partner',
     });

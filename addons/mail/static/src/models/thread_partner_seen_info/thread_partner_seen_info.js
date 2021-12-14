@@ -20,7 +20,7 @@ registerModel({
         /**
          * Thread (channel) that this seen info is related to.
          */
-        thread: many2one('mail.thread', {
+        thread: many2one('Thread', {
             inverse: 'partnerSeenInfos',
             readonly: true,
             required: true,

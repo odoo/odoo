@@ -46,7 +46,7 @@ QUnit.test('receive visitor typing status "is typing"', async function (assert) 
         members: [this.data.currentPartnerId, this.data.publicPartnerId],
     });
     await this.start();
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });

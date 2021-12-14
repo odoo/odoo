@@ -18,10 +18,10 @@ export class MessageAuthorPrefix extends Component {
     }
 
     /**
-     * @returns {mail.thread|undefined}
+     * @returns {Thread|undefined}
      */
     get thread() {
-        return this.messaging && this.messaging.models['mail.thread'].get(this.props.threadLocalId);
+        return this.messaging && this.messaging.models['Thread'].get(this.props.threadLocalId);
     }
 
 }

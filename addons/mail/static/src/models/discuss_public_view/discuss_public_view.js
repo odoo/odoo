@@ -54,7 +54,7 @@ registerModel({
         /**
          * States the channel linked to this discuss public view.
          */
-        channel: one2one('mail.thread', {
+        channel: one2one('Thread', {
             readonly: true,
             required: true,
         }),

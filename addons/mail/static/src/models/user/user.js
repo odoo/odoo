@@ -70,7 +70,7 @@ registerModel({
          *
          * If a chat is not appropriate, a notification is displayed instead.
          *
-         * @returns {mail.thread|undefined}
+         * @returns {Thread|undefined}
          */
         async getChat() {
             if (!this.partner) {
@@ -88,7 +88,7 @@ registerModel({
                 return;
             }
             // in other cases a chat would be valid, find it or try to create it
-            let chat = this.messaging.models['mail.thread'].find(thread =>
+            let chat = this.messaging.models['Thread'].find(thread =>
                 thread.channel_type === 'chat' &&
                 thread.correspondent === this.partner &&
                 thread.model === 'mail.channel' &&
@@ -98,7 +98,7 @@ registerModel({
                 // if chat is not pinned then it has to be pinned client-side
                 // and server-side, which is a side effect of following rpc
                 chat = await this.async(() =>
-                    this.messaging.models['mail.thread'].performRpcCreateChat({
+                    this.messaging.models['Thread'].performRpcCreateChat({
                         partnerIds: [this.partner.id],
                     })
                 );
@@ -117,8 +117,8 @@ registerModel({
          *
          * If a chat is not appropriate, a notification is displayed instead.
          *
-         * @param {Object} [options] forwarded to @see `mail.thread:open()`
-         * @returns {mail.thread|undefined}
+         * @param {Object} [options] forwarded to @see `Thread:open()`
+         * @returns {Thread|undefined}
          */
         async openChat(options) {
             const chat = await this.async(() => this.getChat());

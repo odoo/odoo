@@ -57,7 +57,7 @@ QUnit.test('base empty rendering', async function (assert) {
 
     this.data['res.partner'].records.push({ id: 100 });
     await this.start();
-    const thread = this.messaging.models['mail.thread'].create({
+    const thread = this.messaging.models['Thread'].create({
         id: 100,
         model: 'res.partner',
     });
@@ -110,7 +110,7 @@ QUnit.test('base non-empty rendering', async function (assert) {
             return this._super(...arguments);
         },
     });
-    const thread = this.messaging.models['mail.thread'].create({
+    const thread = this.messaging.models['Thread'].create({
         id: 100,
         model: 'res.partner',
     });
@@ -146,7 +146,7 @@ QUnit.test('attachment box: drop attachments', async function (assert) {
 
     this.data['res.partner'].records.push({ id: 100 });
     await this.start();
-    const thread = this.messaging.models['mail.thread'].create({
+    const thread = this.messaging.models['Thread'].create({
         id: 100,
         model: 'res.partner',
     });
@@ -224,7 +224,7 @@ QUnit.test('view attachments', async function (assert) {
     await this.start({
         hasDialog: true,
     });
-    const thread = this.messaging.models['mail.thread'].create({
+    const thread = this.messaging.models['Thread'].create({
         attachments: [
             insert({
                 id: 143,
@@ -299,7 +299,7 @@ QUnit.test('remove attachment should ask for confirmation', async function (asse
 
     this.data['res.partner'].records.push({ id: 100 });
     await this.start();
-    const thread = this.messaging.models['mail.thread'].create({
+    const thread = this.messaging.models['Thread'].create({
         attachments: insert({
             id: 143,
             mimetype: 'text/plain',

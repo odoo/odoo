@@ -53,7 +53,7 @@ export class FileUploader extends Component {
     }
 
     get thread() {
-        return this.messaging.models['mail.thread'].get(this.props.threadLocalId);
+        return this.messaging.models['Thread'].get(this.props.threadLocalId);
     }
 
     //--------------------------------------------------------------------------
@@ -65,7 +65,7 @@ export class FileUploader extends Component {
      * @param {Object} param0
      * @param {mail.composer} param0.composer
      * @param {File} param0.file
-     * @param {mail.thread} param0.thread
+     * @param {Thread} param0.thread
      * @returns {FormData}
      */
     _createFormData({ composer, file, thread }) {
@@ -83,7 +83,7 @@ export class FileUploader extends Component {
      * @param {Object} param0
      * @param {mail.composer} param0.composer
      * @param {FileList|Array} param0.files
-     * @param {mail.thread} param0.thread
+     * @param {Thread} param0.thread
      * @returns {Promise}
      */
     async _performUpload({ composer, files, thread }) {
@@ -139,7 +139,7 @@ export class FileUploader extends Component {
      * @param {Object} param0
      * @param {Object} attachmentData
      * @param {mail.composer} param0.composer
-     * @param {mail.thread} param0.thread
+     * @param {Thread} param0.thread
      */
     _onAttachmentUploaded({ attachmentData, composer, thread }) {
         if (attachmentData.error || !attachmentData.id) {

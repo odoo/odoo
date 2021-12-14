@@ -17,7 +17,7 @@ registerModel({
          *
          * @param {string} searchTerm
          * @param {Object} [options={}]
-         * @param {mail.thread} [options.thread] prioritize and/or restrict
+         * @param {Thread} [options.thread] prioritize and/or restrict
          *  result in the context of given thread
          */
         fetchSuggestions(searchTerm, { thread } = {}) {},
@@ -27,7 +27,7 @@ registerModel({
          *
          * @param {string} searchTerm
          * @param {Object} [options={}]
-         * @param {mail.thread} [options.thread] prioritize result in the
+         * @param {Thread} [options.thread] prioritize result in the
          *  context of given thread
          * @returns {function}
          */
@@ -64,7 +64,7 @@ registerModel({
          *
          * @param {string} searchTerm
          * @param {Object} [options={}]
-         * @param {mail.thread} [options.thread] prioritize and/or restrict
+         * @param {Thread} [options.thread] prioritize and/or restrict
          *  result in the context of given thread
          * @returns {[mail.channel_command[], mail.channel_command[]]}
          */
@@ -90,7 +90,7 @@ registerModel({
          * Executes this command on the given `mail.channel`.
          *
          * @param {Object} param0
-         * @param {mail.thread} param0.channel
+         * @param {Thread} param0.channel
          * @param {Object} [param0.body='']
          */
         async execute({ channel, body = '' }) {

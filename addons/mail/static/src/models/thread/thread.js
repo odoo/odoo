@@ -20,7 +20,7 @@ const getSuggestedRecipientInfoNextTemporaryId = (function () {
 })();
 
 registerModel({
-    name: 'mail.thread',
+    name: 'Thread',
     identifyingFields: ['model', 'id'],
     lifecycleHooks: {
         _willCreate() {
@@ -127,10 +127,10 @@ registerModel({
     },
     modelMethods: {
         /**
-         * @param {mail.thread} [thread] the concerned thread
+         * @param {Thread} [thread] the concerned thread
          */
         computeLastCurrentPartnerMessageSeenByEveryone(thread = undefined) {
-            const threads = thread ? [thread] : this.messaging.models['mail.thread'].all();
+            const threads = thread ? [thread] : this.messaging.models['Thread'].all();
             threads.map(localThread => {
                 localThread.update({
                     lastCurrentPartnerMessageSeenByEveryone: localThread._computeLastCurrentPartnerMessageSeenByEveryone(),
@@ -285,7 +285,7 @@ registerModel({
          * @param {number[]} param0.partners_to Ids of the partners to add as channel
          * members.
          * @param {boolean|string} param0.default_display_mode
-         * @returns {mail.thread} The newly created group chat.
+         * @returns {Thread} The newly created group chat.
          */
         async createGroupChat({ default_display_mode, partners_to }) {
             const channelData = await this.env.services.rpc({
@@ -296,8 +296,8 @@ registerModel({
                     partners_to,
                 },
             });
-            return this.messaging.models['mail.thread'].insert(
-                this.messaging.models['mail.thread'].convertData(channelData)
+            return this.messaging.models['Thread'].insert(
+                this.messaging.models['Thread'].convertData(channelData)
             );
         },
         /**
@@ -307,7 +307,7 @@ registerModel({
          *
          * @param {string} searchTerm
          * @param {Object} [options={}]
-         * @param {mail.thread} [options.thread] prioritize and/or restrict
+         * @param {Thread} [options.thread] prioritize and/or restrict
          *  result in the context of given thread
          */
         async fetchSuggestions(searchTerm, { thread } = {}) {
@@ -319,10 +319,10 @@ registerModel({
                 },
                 { shadow: true },
             );
-            this.messaging.models['mail.thread'].insert(channelsData.map(channelData =>
+            this.messaging.models['Thread'].insert(channelsData.map(channelData =>
                 Object.assign(
                     { model: 'mail.channel' },
-                    this.messaging.models['mail.thread'].convertData(channelData),
+                    this.messaging.models['Thread'].convertData(channelData),
                 )
             ));
         },
@@ -332,7 +332,7 @@ registerModel({
          *
          * @param {string} searchTerm
          * @param {Object} [options={}]
-         * @param {mail.thread} [options.thread] prioritize result in the
+         * @param {Thread} [options.thread] prioritize result in the
          *  context of given thread
          * @returns {function}
          */
@@ -376,7 +376,7 @@ registerModel({
          * Load the previews of the specified threads. Basically, it fetches the
          * last messages, since they are used to display inline content of them.
          *
-         * @param {mail.thread[]} threads
+         * @param {Thread[]} threads
          */
         async loadPreviews(threads) {
             const channelIds = threads.reduce((list, thread) => {
@@ -418,7 +418,7 @@ registerModel({
          *
          * @param {Object} param0
          * @param {integer[]} param0.ids list of id of channels
-         * @returns {mail.thread[]}
+         * @returns {Thread[]}
          */
         async performRpcChannelInfo({ ids }) {
             const channelInfos = await this.env.services.rpc({
@@ -426,8 +426,8 @@ registerModel({
                 method: 'channel_info',
                 args: [ids],
             }, { shadow: true });
-            const channels = this.messaging.models['mail.thread'].insert(
-                channelInfos.map(channelInfo => this.messaging.models['mail.thread'].convertData(channelInfo))
+            const channels = this.messaging.models['Thread'].insert(
+                channelInfos.map(channelInfo => this.messaging.models['Thread'].convertData(channelInfo))
             );
             return channels;
         },
@@ -470,7 +470,7 @@ registerModel({
          * @param {Object} param0
          * @param {string} param0.name
          * @param {string} [param0.privacy]
-         * @returns {mail.thread} the created channel
+         * @returns {Thread} the created channel
          */
         async performRpcCreateChannel({ name, privacy }) {
             const device = this.messaging.device;
@@ -486,8 +486,8 @@ registerModel({
                     }),
                 },
             });
-            return this.messaging.models['mail.thread'].insert(
-                this.messaging.models['mail.thread'].convertData(data)
+            return this.messaging.models['Thread'].insert(
+                this.messaging.models['Thread'].convertData(data)
             );
         },
         /**
@@ -499,7 +499,7 @@ registerModel({
          * @param {Object} param0
          * @param {integer[]} param0.partnerIds
          * @param {boolean} [param0.pinForCurrentPartner]
-         * @returns {mail.thread|undefined} the created or existing chat
+         * @returns {Thread|undefined} the created or existing chat
          */
         async performRpcCreateChat({ partnerIds, pinForCurrentPartner }) {
             const device = this.messaging.device;
@@ -520,8 +520,8 @@ registerModel({
             if (!data) {
                 return;
             }
-            return this.messaging.models['mail.thread'].insert(
-                this.messaging.models['mail.thread'].convertData(data)
+            return this.messaging.models['Thread'].insert(
+                this.messaging.models['Thread'].convertData(data)
             );
         },
         /**
@@ -593,7 +593,7 @@ registerModel({
          *
          * @param {string} searchTerm
          * @param {Object} [options={}]
-         * @param {mail.thread} [options.thread] prioritize and/or restrict
+         * @param {Thread} [options.thread] prioritize and/or restrict
          *  result in the context of given thread
          * @returns {[mail.threads[], mail.threads[]]}
          */
@@ -607,7 +607,7 @@ registerModel({
                 // channel.
                 threads = [thread];
             } else {
-                threads = this.messaging.models['mail.thread'].all();
+                threads = this.messaging.models['Thread'].all();
             }
             const cleanedSearchTerm = cleanSearchTerm(searchTerm);
             return [threads.filter(thread =>
@@ -655,7 +655,7 @@ registerModel({
             if (this.isTemporary) {
                 return;
             }
-            return this.messaging.models['mail.thread'].performRpcMailGetSuggestedRecipients({
+            return this.messaging.models['Thread'].performRpcMailGetSuggestedRecipients({
                 model: this.model,
                 res_ids: [this.id],
             });
@@ -859,7 +859,7 @@ registerModel({
                 return;
             }
             this.update({ pendingSeenMessageId: message.id });
-            return this.messaging.models['mail.thread'].performRpcChannelSeen({
+            return this.messaging.models['Thread'].performRpcChannelSeen({
                 id: this.id,
                 lastMessageId: message.id,
             });
@@ -886,7 +886,7 @@ registerModel({
             if (!this.uuid) {
                 return;
             }
-            return this.messaging.models['mail.thread'].performRpcChannelFold(this.uuid, state);
+            return this.messaging.models['Thread'].performRpcChannelFold(this.uuid, state);
         },
         /**
          * Notify server to leave the current channel. Useful for cross-tab
@@ -899,7 +899,7 @@ registerModel({
                 await this.leave();
                 return;
             }
-            await this.messaging.models['mail.thread'].performRpcChannelPin({
+            await this.messaging.models['Thread'].performRpcChannelPin({
                 pinned: this.isPendingPinned,
                 uuid: this.uuid,
             });
@@ -1829,7 +1829,7 @@ registerModel({
                 options: {
                     on_close: async () => {
                        await this.async(() => this.refreshFollowers());
-                       this.env.bus.trigger('mail.thread:promptAddFollower-closed');
+                       this.env.bus.trigger('Thread:promptAddFollower-closed');
                     },
                 },
             });
@@ -2184,7 +2184,7 @@ registerModel({
          * Determines the last mentioned channels of the last composer related
          * to this thread. Useful to sync the composer when re-creating it.
          */
-        mentionedChannelsBackup: many2many('mail.thread'),
+        mentionedChannelsBackup: many2many('Thread'),
         /**
          * Determines the last mentioned partners of the last composer related
          * to this thread. Useful to sync the composer when re-creating it.

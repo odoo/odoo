@@ -299,7 +299,7 @@ registerModel({
          * The mail.channel of the session, rtc sessions are part and managed by
          * mail.channel
          */
-        channel: many2one('mail.thread', {
+        channel: many2one('Thread', {
             inverse: 'rtcSessions',
         }),
         /**
@@ -324,7 +324,7 @@ registerModel({
          * this serves as an explicit inverse as it seems to confuse it with
          * other session-channel relations otherwise.
          */
-        calledChannels: one2many('mail.thread', {
+        calledChannels: one2many('Thread', {
             inverse: 'rtcInvitingSession',
         }),
         /**

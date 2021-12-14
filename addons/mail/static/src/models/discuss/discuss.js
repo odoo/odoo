@@ -43,14 +43,14 @@ registerModel({
             this.clearIsAddingItem();
             if (ui.item.special) {
                 const channel = await this.async(() =>
-                    this.messaging.models['mail.thread'].performRpcCreateChannel({
+                    this.messaging.models['Thread'].performRpcCreateChannel({
                         name,
                         privacy: ui.item.special,
                     })
                 );
                 channel.open();
             } else {
-                const channel = this.messaging.models['mail.thread'].insert({
+                const channel = this.messaging.models['Thread'].insert({
                     id: ui.item.id,
                     model: 'mail.channel',
                 });
@@ -68,7 +68,7 @@ registerModel({
          */
         async handleAddChannelAutocompleteSource(req, res) {
             this.update({ addingChannelValue: req.term });
-            const threads = await this.messaging.models['mail.thread'].searchChannelsToOpen({ limit: 10, searchTerm: req.term });
+            const threads = await this.messaging.models['Thread'].searchChannelsToOpen({ limit: 10, searchTerm: req.term });
             const items = threads.map((thread) => {
                 const escapedName = owl.utils.escape(thread.name);
                 return {
@@ -151,7 +151,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         async onClickStartAMeetingButton(ev) {
-            const meetingChannel = await this.messaging.models['mail.thread'].createGroupChat({
+            const meetingChannel = await this.messaging.models['Thread'].createGroupChat({
                 default_display_mode: 'video_full_screen',
                 partners_to: [this.messaging.currentPartner.id],
             });
@@ -171,7 +171,7 @@ registerModel({
             const [model, id] = typeof this.initActiveId === 'number'
                 ? ['mail.channel', this.initActiveId]
                 : this.initActiveId.split('_');
-            const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+            const thread = this.messaging.models['Thread'].findFromIdentifyingData({
                 id: model !== 'mail.box' ? Number(id) : id,
                 model,
             });
@@ -186,7 +186,7 @@ registerModel({
         /**
          * Opens the given thread in Discuss, and opens Discuss if necessary.
          *
-         * @param {mail.thread} thread
+         * @param {Thread} thread
          * @param {Object} [param1={}]
          * @param {Boolean} [param1.focus]
          */
@@ -209,7 +209,7 @@ registerModel({
             }
         },
         /**
-         * @param {mail.thread} thread
+         * @param {Thread} thread
          * @returns {string}
          */
         threadToActiveId(thread) {
@@ -289,7 +289,7 @@ registerModel({
          * Only pinned threads are allowed in discuss.
          *
          * @private
-         * @returns {mail.thread|undefined}
+         * @returns {Thread|undefined}
          */
         _computeThread() {
             if (!this.thread || !this.thread.isPinned) {
@@ -400,9 +400,9 @@ registerModel({
          */
         startAMeetingButtonRef: attr(),
         /**
-         * Determines the `mail.thread` that should be displayed by `this`.
+         * Determines the `Thread` that should be displayed by `this`.
          */
-        thread: many2one('mail.thread', {
+        thread: many2one('Thread', {
             compute: '_computeThread',
         }),
         /**

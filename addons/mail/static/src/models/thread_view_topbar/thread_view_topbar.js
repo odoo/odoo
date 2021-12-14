@@ -658,7 +658,7 @@ registerModel({
         /**
          * States the thread that is displayed by this top bar.
          */
-        thread: many2one('mail.thread', {
+        thread: many2one('Thread', {
             related: 'threadView.thread',
         }),
         /**

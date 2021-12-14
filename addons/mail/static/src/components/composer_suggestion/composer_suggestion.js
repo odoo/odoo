@@ -32,7 +32,7 @@ export class ComposerSuggestion extends Component {
     }
 
     get isChannel() {
-        return this.props.modelName === "mail.thread";
+        return this.props.modelName === "Thread";
     }
 
     get isCommand() {

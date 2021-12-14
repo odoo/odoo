@@ -54,7 +54,7 @@ QUnit.test('dragover files on thread with composer', async function (assert) {
         public: 'public',
     });
     const { createThreadViewComponent } = await this.start();
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
         id: 100,
         model: 'mail.channel',
     });
@@ -103,7 +103,7 @@ QUnit.test('message list desc order', async function (assert) {
         public: 'public',
     });
     const { createThreadViewComponent } = await this.start();
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
         id: 100,
         model: 'mail.channel',
     });
@@ -202,7 +202,7 @@ QUnit.test('message list asc order', async function (assert) {
         public: 'public',
     });
     const { createThreadViewComponent } = await this.start();
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
         id: 100,
         model: 'mail.channel',
     });
@@ -312,7 +312,7 @@ QUnit.test('mark channel as fetched when a new message is loaded and as seen whe
             return this._super(...arguments);
         }
     });
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
         id: 100,
         model: 'mail.channel',
     });
@@ -382,7 +382,7 @@ QUnit.test('mark channel as fetched and seen when a new message is loaded if com
             return this._super(...arguments);
         }
     });
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
         id: 100,
         model: 'mail.channel',
     });
@@ -436,7 +436,7 @@ QUnit.test('show message subject when subject is not the same as the thread name
         subject: "Salutations, voyageur",
     });
     const { createThreadViewComponent } = await this.start();
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
         id: 100,
         model: 'mail.channel',
     });
@@ -480,7 +480,7 @@ QUnit.test('do not show message subject when subject is the same as the thread n
         subject: "Salutations, voyageur",
     });
     const { createThreadViewComponent } = await this.start();
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
         id: 100,
         model: 'mail.channel',
     });
@@ -517,7 +517,7 @@ QUnit.test('[technical] new messages separator on posting message', async functi
         res_id: 20,
     });
     const { createThreadViewComponent } = await this.start();
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel'
     });
@@ -588,7 +588,7 @@ QUnit.test('new messages separator on receiving new message [REQUIRE FOCUS]', as
         res_id: 20,
     });
     const { createThreadViewComponent } = await this.start();
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel'
     });
@@ -682,7 +682,7 @@ QUnit.test('new messages separator on posting message', async function (assert) 
         name: "General",
     }];
     const { createThreadViewComponent } = await this.start();
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel'
     });
@@ -834,7 +834,7 @@ QUnit.test('should scroll to bottom on receiving new message if the list is init
         });
     }
     const { createThreadViewComponent } = await this.start();
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel'
     });
@@ -907,7 +907,7 @@ QUnit.test('should not scroll on receiving new message if the list is initially 
         });
     }
     const { createThreadViewComponent } = await this.start();
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel'
     });
@@ -1165,7 +1165,7 @@ QUnit.test('Post a message containing an email address followed by a mention on 
         name: "TestPartner",
     });
     const { createThreadViewComponent } = await this.start();
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
         id: 11,
         model: 'mail.channel',
     });
@@ -1209,7 +1209,7 @@ QUnit.test(`Mention a partner with special character (e.g. apostrophe ')`, async
         name: "Pynya's spokesman",
     });
     const { createThreadViewComponent } = await this.start();
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
         id: 11,
         model: 'mail.channel',
     });
@@ -1258,7 +1258,7 @@ QUnit.test('mention 2 different partners that have the same name', async functio
         },
     );
     const { createThreadViewComponent } = await this.start();
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
         id: 11,
         model: 'mail.channel',
     });
@@ -1311,7 +1311,7 @@ QUnit.test('mention a channel with space in the name', async function (assert) {
         name: "General good boy",
     });
     const { createThreadViewComponent } = await this.start();
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
         id: 7,
         model: 'mail.channel',
     });
@@ -1356,7 +1356,7 @@ QUnit.test('mention a channel with "&" in the name', async function (assert) {
         name: "General & good",
     });
     const { createThreadViewComponent } = await this.start();
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
         id: 7,
         model: 'mail.channel',
     });
@@ -1401,7 +1401,7 @@ QUnit.test('mention a channel on a second line when the first line contains #', 
         name: "General good",
     });
     const { createThreadViewComponent } = await this.start();
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
         id: 7,
         model: 'mail.channel',
     });
@@ -1446,7 +1446,7 @@ QUnit.test('mention a channel when replacing the space after the mention by anot
         name: "General good",
     });
     const { createThreadViewComponent } = await this.start();
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
         id: 7,
         model: 'mail.channel',
     });
@@ -1507,7 +1507,7 @@ QUnit.test('mention 2 different channels that have the same name', async functio
         },
     );
     const { createThreadViewComponent } = await this.start();
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
         id: 11,
         model: 'mail.channel',
     });
@@ -1771,7 +1771,7 @@ QUnit.test('first unseen message should be directly preceded by the new message 
         uuid: 'channel20uuid',
     }];
     const { createThreadViewComponent } = await this.start();
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel'
     });
@@ -1826,7 +1826,7 @@ QUnit.test('composer should be focused automatically after clicking on the send 
 
     this.data['mail.channel'].records.push({ id: 20 });
     const { createThreadViewComponent } = await this.start();
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel'
     });
@@ -1865,7 +1865,7 @@ QUnit.test('failure on loading messages should display error', async function (a
             return this._super(...arguments);
         },
     });
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel'
     });
@@ -1900,7 +1900,7 @@ QUnit.test('failure on loading messages should prompt retry button', async funct
             return this._super(...arguments);
         },
     });
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel'
     });
@@ -1949,7 +1949,7 @@ QUnit.test('failure on loading more messages should not alter message list displ
             return this._super(...arguments);
         },
     });
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel'
     });
@@ -2001,7 +2001,7 @@ QUnit.test('failure on loading more messages should display error and prompt ret
             return this._super(...arguments);
         },
     });
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel'
     });
@@ -2062,7 +2062,7 @@ QUnit.test('Retry loading more messages on failed load more messages should load
             return this._super(...arguments);
         },
     });
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel'
     });
@@ -2113,7 +2113,7 @@ QUnit.test("highlight the message mentioning the current user inside the channel
         res_id: 20,
     });
     const { createThreadViewComponent } = await this.start();
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel'
     });
@@ -2154,7 +2154,7 @@ QUnit.test("not highlighting the message if not mentioning the current user insi
         res_id: 20,
     });
     const { createThreadViewComponent } = await this.start();
-    const thread = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const thread = this.messaging.models['Thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel'
     });

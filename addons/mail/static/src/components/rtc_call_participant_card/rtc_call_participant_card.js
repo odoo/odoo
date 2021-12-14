@@ -20,7 +20,7 @@ export class RtcCallParticipantCard extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {mail.thread|undefined}
+     * @returns {Thread|undefined}
      */
     get callParticipantCard() {
         return this.messaging.models['mail.rtc_call_participant_card'].get(this.props.callParticipantCardLocalId);

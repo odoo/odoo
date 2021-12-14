@@ -38,10 +38,10 @@ export class FollowerListMenu extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @return {mail.thread}
+     * @return {Thread}
      */
     get thread() {
-        return this.messaging && this.messaging.models['mail.thread'].get(this.props.threadLocalId);
+        return this.messaging && this.messaging.models['Thread'].get(this.props.threadLocalId);
     }
 
     //--------------------------------------------------------------------------

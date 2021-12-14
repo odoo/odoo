@@ -39,7 +39,7 @@ registerModel({
         },
         /**
          * @private
-         * @returns {mail.thread|undefined}
+         * @returns {Thread|undefined}
          */
         _computeThread() {
             const notificationsThreadIds = this.notifications
@@ -144,7 +144,7 @@ registerModel({
         /**
          * Related thread when the notification group concerns a single thread.
          */
-        thread: many2one('mail.thread', {
+        thread: many2one('Thread', {
             compute: '_computeThread',
         }),
     },

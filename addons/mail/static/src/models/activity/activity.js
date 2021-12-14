@@ -287,7 +287,7 @@ registerModel({
          * Determines to which "thread" (using `mail.activity.mixin` on the
          * server) `this` belongs to.
          */
-        thread: many2one('mail.thread', {
+        thread: many2one('Thread', {
             inverse: 'activities',
         }),
         type: many2one('mail.activity_type', {

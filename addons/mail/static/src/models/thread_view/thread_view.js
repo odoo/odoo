@@ -433,9 +433,9 @@ registerModel({
             readonly: true,
         }),
         /**
-         * Determines the `mail.thread` currently displayed by `this`.
+         * Determines the `Thread` currently displayed by `this`.
          */
-        thread: many2one('mail.thread', {
+        thread: many2one('Thread', {
             inverse: 'threadViews',
             readonly: true,
             related: 'threadViewer.thread',

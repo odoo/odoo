@@ -20,7 +20,7 @@ patch(components.NotificationList.prototype, 'im_livechat/static/src/components/
      */
     _getThreads(props) {
         if (props.filter === 'livechat') {
-            return this.messaging.models['mail.thread'].all(thread =>
+            return this.messaging.models['Thread'].all(thread =>
                 thread.channel_type === 'livechat' &&
                 thread.isPinned &&
                 thread.model === 'mail.channel'

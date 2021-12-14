@@ -122,7 +122,7 @@ registerModel({
         /**
          * The channel of the call.
          */
-        channel: many2one('mail.thread', {
+        channel: many2one('Thread', {
             required: true,
         }),
         /**

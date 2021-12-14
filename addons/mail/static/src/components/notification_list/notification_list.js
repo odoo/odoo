@@ -34,7 +34,7 @@ export class NotificationList extends Component {
         let threadNeedactionNotifications = [];
         if (this.props.filter === 'all') {
             // threads with needactions
-            threadNeedactionNotifications = this.messaging.models['mail.thread']
+            threadNeedactionNotifications = this.messaging.models['Thread']
                 .all(t => t.model !== 'mail.box' && t.needactionMessagesAsOriginThread.length > 0)
                 .sort((t1, t2) => {
                     if (t1.needactionMessagesAsOriginThread.length > 0 && t2.needactionMessagesAsOriginThread.length === 0) {
@@ -124,18 +124,18 @@ export class NotificationList extends Component {
         const threads = this.notifications
             .filter(notification => notification.thread && notification.thread.exists())
             .map(notification => notification.thread);
-        this.messaging.models['mail.thread'].loadPreviews(threads);
+        this.messaging.models['Thread'].loadPreviews(threads);
     }
 
     /**
      * @private
      * @param {Object} props
      * @throws {Error} in case `props.filter` is not supported
-     * @returns {mail.thread[]}
+     * @returns {Thread[]}
      */
     _getThreads(props) {
         if (props.filter === 'mailbox') {
-            return this.messaging.models['mail.thread']
+            return this.messaging.models['Thread']
                 .all(thread => thread.isPinned && thread.model === 'mail.box')
                 .sort((mailbox1, mailbox2) => {
                     if (mailbox1 === this.messaging.inbox) {
@@ -155,7 +155,7 @@ export class NotificationList extends Component {
                     mailbox1Name < mailbox2Name ? -1 : 1;
                 });
         } else if (props.filter === 'channel') {
-            return this.messaging.models['mail.thread']
+            return this.messaging.models['Thread']
                 .all(thread =>
                     thread.channel_type === 'channel' &&
                     thread.isPinned &&
@@ -163,7 +163,7 @@ export class NotificationList extends Component {
                 )
                 .sort((c1, c2) => c1.displayName < c2.displayName ? -1 : 1);
         } else if (props.filter === 'chat') {
-            return this.messaging.models['mail.thread']
+            return this.messaging.models['Thread']
                 .all(thread =>
                     thread.isChatChannel &&
                     thread.isPinned &&
@@ -172,7 +172,7 @@ export class NotificationList extends Component {
                 .sort((c1, c2) => c1.displayName < c2.displayName ? -1 : 1);
         } else if (props.filter === 'all') {
             // "All" filter is for channels and chats
-            return this.messaging.models['mail.thread']
+            return this.messaging.models['Thread']
                 .all(thread => thread.isPinned && thread.model === 'mail.channel')
                 .sort((c1, c2) => c1.displayName < c2.displayName ? -1 : 1);
         } else {

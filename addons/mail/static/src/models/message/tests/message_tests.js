@@ -30,14 +30,14 @@ QUnit.test('create', async function (assert) {
 
     await this.start();
     assert.notOk(this.messaging.models['mail.partner'].findFromIdentifyingData({ id: 5 }));
-    assert.notOk(this.messaging.models['mail.thread'].findFromIdentifyingData({
+    assert.notOk(this.messaging.models['Thread'].findFromIdentifyingData({
         id: 100,
         model: 'mail.channel',
     }));
     assert.notOk(this.messaging.models['mail.attachment'].findFromIdentifyingData({ id: 750 }));
     assert.notOk(this.messaging.models['mail.message'].findFromIdentifyingData({ id: 4000 }));
 
-    const thread = this.messaging.models['mail.thread'].create({
+    const thread = this.messaging.models['Thread'].create({
         id: 100,
         model: 'mail.channel',
         name: "General",
@@ -59,7 +59,7 @@ QUnit.test('create', async function (assert) {
     });
 
     assert.ok(this.messaging.models['mail.partner'].findFromIdentifyingData({ id: 5 }));
-    assert.ok(this.messaging.models['mail.thread'].findFromIdentifyingData({
+    assert.ok(this.messaging.models['Thread'].findFromIdentifyingData({
         id: 100,
         model: 'mail.channel',
     }));
@@ -75,12 +75,12 @@ QUnit.test('create', async function (assert) {
         "2019-05-05 10:00:00"
     );
     assert.strictEqual(message.id, 4000);
-    assert.strictEqual(message.originThread, this.messaging.models['mail.thread'].findFromIdentifyingData({
+    assert.strictEqual(message.originThread, this.messaging.models['Thread'].findFromIdentifyingData({
         id: 100,
         model: 'mail.channel',
     }));
     assert.ok(
-        message.threads.includes(this.messaging.models['mail.thread'].findFromIdentifyingData({
+        message.threads.includes(this.messaging.models['Thread'].findFromIdentifyingData({
             id: 100,
             model: 'mail.channel',
         }))
@@ -96,7 +96,7 @@ QUnit.test('create', async function (assert) {
     assert.notOk(attachment.isUploading);
     assert.strictEqual(attachment.mimetype, 'text/plain');
     assert.strictEqual(attachment.name, "test.txt");
-    const channel = this.messaging.models['mail.thread'].findFromIdentifyingData({
+    const channel = this.messaging.models['Thread'].findFromIdentifyingData({
         id: 100,
         model: 'mail.channel',
     });

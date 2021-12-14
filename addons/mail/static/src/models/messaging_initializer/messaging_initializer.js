@@ -132,7 +132,7 @@ registerModel({
          */
         async _initChannels(channelsData) {
             return executeGracefully(channelsData.map(channelData => () => {
-                const convertedData = this.messaging.models['mail.thread'].convertData(channelData);
+                const convertedData = this.messaging.models['Thread'].convertData(channelData);
                 if (!convertedData.members) {
                     // channel_info does not return all members of channel for
                     // performance reasons, but code is expecting to know at
@@ -147,7 +147,7 @@ registerModel({
                         convertedData.guestMembers = link(this.messaging.currentGuest);
                     }
                 }
-                const channel = this.messaging.models['mail.thread'].insert(
+                const channel = this.messaging.models['Thread'].insert(
                     Object.assign({ model: 'mail.channel' }, convertedData)
                 );
                 // flux specific: channels received at init have to be
