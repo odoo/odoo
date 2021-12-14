@@ -88,7 +88,7 @@ registerModel({
         /**
          * If set, this popover view is owned by a thread view topbar record.
          */
-        threadViewTopbarOwner: one2one('mail.thread_view_topbar', {
+        threadViewTopbarOwner: one2one('ThreadViewTopbar', {
             inverse: 'invitePopoverView',
             readonly: true,
         }),

@@ -479,7 +479,7 @@ registerModel({
         /**
          * Determines the top bar of this thread view, if any.
          */
-        topbar: one2one('mail.thread_view_topbar', {
+        topbar: one2one('ThreadViewTopbar', {
             compute: '_computeTopbar',
             inverse: 'threadView',
             isCausal: true,
