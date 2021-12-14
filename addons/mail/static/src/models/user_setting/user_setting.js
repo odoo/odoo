@@ -251,7 +251,7 @@ registerModel({
         /**
          * Model for the component with the controls for RTC related settings.
          */
-        rtcConfigurationMenu: one2one('mail.rtc_configuration_menu', {
+        rtcConfigurationMenu: one2one('RtcConfigurationMenu', {
             default: insertAndReplace(),
             inverse: 'userSetting',
             isCausal: true,
