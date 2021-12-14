@@ -301,7 +301,8 @@ class PaymentPortal(payment_portal.PaymentPortal):
     # Payment overrides
 
     @http.route()
-    def payment_pay(self, *args, amount=None, sale_order_id=None, access_token=None, **kwargs):
+    def payment_pay(self, *args, amount=None, sale_order_id=None, confirm_order=False,
+                    access_token=None, **kwargs):
         """ Override of payment to replace the missing transaction values by that of the sale order.
 
         This is necessary for the reconciliation as all transaction values, excepted the amount,
@@ -309,6 +310,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
         :param str amount: The (possibly partial) amount to pay used to check the access token
         :param str sale_order_id: The sale order for which a payment id made, as a `sale.order` id
+        :param confirm_order: If the success of this transaction will confirm the order
         :param str access_token: The access token used to authenticate the partner
         :return: The result of the parent method
         :rtype: str
@@ -317,6 +319,8 @@ class PaymentPortal(payment_portal.PaymentPortal):
         # Cast numeric parameters as int or float and void them if their str value is malformed
         amount = self.cast_as_float(amount)
         sale_order_id = self.cast_as_int(sale_order_id)
+        new_access_token = None
+
         if sale_order_id:
             order_sudo = request.env['sale.order'].sudo().browse(sale_order_id).exists()
             if not order_sudo:
@@ -324,20 +328,33 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
             # Check the access token against the order values. Done after fetching the order as we
             # need the order fields to check the access token.
-            if not payment_utils.check_access_token(
-                access_token, order_sudo.partner_id.id, amount, order_sudo.currency_id.id
-            ):
+            token_verified = payment_utils.check_access_token(access_token,
+                                                              order_sudo.partner_id.id,
+                                                              amount,
+                                                              order_sudo.currency_id.id,
+                                                              confirm_order)
+
+            if not token_verified:
                 raise ValidationError(_("The provided parameters are invalid."))
+
+            # Generate a new access token for payment to verify without the confirm order.
+            new_access_token = payment_utils.generate_access_token(
+                order_sudo.partner_id.id, amount, order_sudo.currency_id.id,
+            )
 
             kwargs.update({
                 'currency_id': order_sudo.currency_id.id,
                 'partner_id': order_sudo.partner_id.id,
                 'company_id': order_sudo.company_id.id,
                 'sale_order_id': sale_order_id,
+                'confirm_order': confirm_order,
             })
-        return super().payment_pay(*args, amount=amount, access_token=access_token, **kwargs)
 
-    def _get_custom_rendering_context_values(self, sale_order_id=None, **kwargs):
+        return super().payment_pay(*args, amount=amount,
+                                   access_token=(new_access_token or access_token), **kwargs)
+
+    def _get_custom_rendering_context_values(self, sale_order_id=None, confirm_order=None,
+                                             **kwargs):
         """ Override of payment to add the sale order id in the custom rendering context values.
 
         :param int sale_order_id: The sale order for which a payment id made, as a `sale.order` id
@@ -347,6 +364,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
         rendering_context_values = super()._get_custom_rendering_context_values(**kwargs)
         if sale_order_id:
             rendering_context_values['sale_order_id'] = sale_order_id
+            rendering_context_values['confirm_order'] = confirm_order
         return rendering_context_values
 
     def _create_transaction(self, *args, sale_order_id=None, custom_create_values=None, **kwargs):
@@ -364,6 +382,16 @@ class PaymentPortal(payment_portal.PaymentPortal):
             # need not to override whatever value these modules could have already set
             if 'sale_order_ids' not in custom_create_values:  # We are in the payment module's flow
                 custom_create_values['sale_order_ids'] = [Command.set([int(sale_order_id)])]
+
+        # We also add the 'confirm_order' value of the payment link wizard to the transaction
+        # on the field of the same name.
+        if 'confirm_order' in kwargs:
+            if custom_create_values is None:
+                custom_create_values = {}
+
+            custom_create_values.update({
+                'confirm_order': kwargs.pop('confirm_order') == 'True'
+            })
 
         return super()._create_transaction(
             *args, sale_order_id=sale_order_id, custom_create_values=custom_create_values, **kwargs

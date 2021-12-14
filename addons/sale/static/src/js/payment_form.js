@@ -26,6 +26,8 @@ odoo.define('sale.payment_form', require => {
                 ...transactionRouteParams,
                 'sale_order_id': this.txContext.saleOrderId
                     ? parseInt(this.txContext.saleOrderId) : undefined,
+                'confirm_order': this.txContext.confirmOrder !== undefined
+                    ? this.txContext.confirmOrder : null,
             };
         },
 

@@ -275,6 +275,8 @@ class SaleOrder(models.Model):
     tax_totals_json = fields.Char(compute='_compute_tax_totals_json')
     terms_type = fields.Selection(related='company_id.terms_type')
     type_name = fields.Char(string="Type Name", compute='_compute_type_name')
+    amount_paid_msg = fields.Text(string="Shows the amount already paid by the customer on this SO",
+                                  compute="_compute_amount_paid_msg")
 
     #=== COMPUTE METHODS ===#
 
@@ -1164,7 +1166,11 @@ class SaleOrder(models.Model):
 
     def has_to_be_paid(self, include_draft=False):
         transaction = self.get_portal_last_transaction()
-        return (self.state == 'sent' or (self.state == 'draft' and include_draft)) and not self.is_expired and self.require_payment and transaction.state != 'done' and self.amount_total
+        return (
+                ((self.state == 'sent' or (self.state == 'draft' and include_draft)) and not self.is_expired and self.require_payment and transaction.state != 'done' and self.amount_total)
+                or
+                (self.state == "sale" and self.amount_paid() < self.amount_total and not self.is_expired and self.require_payment)
+        )
 
     def _get_portal_return_action(self):
         """ Return the action used to display orders when returning from customer portal. """
@@ -1296,3 +1302,32 @@ class SaleOrder(models.Model):
         # Override for correct taxcloud computation
         # when using coupon and delivery
         return True
+
+    #=== For the confirm in partial payment feature ===#
+
+    def amount_paid(self):
+        """
+        For SO that are paid in partial amounts returns the amount paid at the moment.
+        We consider that transactions in the states 'authorized', 'done' and 'paid' are
+        already paid as the bank side has already given approbation.
+
+        :return: the amount already paid of the SO
+        """
+        self.ensure_one()
+        return sum(
+            tx.amount for tx in self.transaction_ids if tx.state in ['authorized', 'done', 'paid']
+        )
+
+    def _compute_amount_paid_msg(self):
+        """
+        Compute the message to be displayed on the portal for potentially partially paid SOs.
+        """
+        for so in self:
+            if so.amount_total > so.amount_paid():
+                so.amount_paid_msg = (f"You have already paid "
+                                      f"{format_amount(so.env, so.amount_paid(), so.currency_id)} "
+                                      f"of a total of "
+                                      f"{format_amount(so.env, so.amount_total, so.currency_id)} "
+                                      f"on this Sale Order.")
+            else:
+                so.amount_paid_msg = _("You have paid the totality of this Sale Order")

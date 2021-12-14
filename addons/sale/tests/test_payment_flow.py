@@ -39,6 +39,40 @@ class TestSalePayment(PaymentCommon, PaymentHttpCommon):
             })],
         })
 
+    def _prepare_pay_values(self, amount=0.0, currency=None, reference='', partner=None,
+                            confirm_order=True):
+        """
+        Override to include the confirm_order parameter in the access token
+        Prepare basic payment/pay route values
+
+        :rtype: dict
+        """
+
+        pay_values = super()._prepare_pay_values(amount, currency, reference, partner)
+
+        new_access_token = self._generate_test_access_token(
+            pay_values["partner_id"],
+            pay_values["amount"],
+            pay_values["currency_id"],
+            confirm_order,
+        )
+
+        pay_values["confirm_order"] = confirm_order
+        pay_values["access_token"] = new_access_token
+
+        return pay_values
+
+    def _recompute_access_token_for_payment(self, amount=0.0, currency=None, partner=None):
+        """
+        For the confirm order parameter the flow is the following:
+        - compute the access token with confirm order in it and let sale verify it
+        - recompute the access token without the confirm order parameter and let payment take
+          the lead
+
+        the tests are unaware of it, thus I'm simulating the behaviour
+        """
+        return self._generate_test_access_token(partner, amount, currency)
+
     def test_11_so_payment_link(self):
         # test customized /payment/pay route with sale_order_id param
         self.amount = self.order.amount_total
@@ -62,6 +96,13 @@ class TestSalePayment(PaymentCommon, PaymentHttpCommon):
             'amount': tx_context['amount'],
             'currency_id': tx_context['currency_id'],
         })
+
+        access_token = self._recompute_access_token_for_payment(
+            route_values["amount"],
+            route_values["currency_id"],
+            route_values["partner_id"]
+        )
+        route_values["access_token"] = access_token
 
         with mute_logger('odoo.addons.payment.models.payment_transaction'):
             processing_values = self.get_processing_values(**route_values)
@@ -105,6 +146,14 @@ class TestSalePayment(PaymentCommon, PaymentHttpCommon):
             'reference_prefix': tx_context['reference_prefix'],
             'landing_route': tx_context['landing_route'],
         })
+
+        access_token = self._recompute_access_token_for_payment(
+            route_values["amount"],
+            route_values["currency_id"],
+            route_values["partner_id"]
+        )
+        route_values["access_token"] = access_token
+
         with mute_logger('odoo.addons.payment.models.payment_transaction'):
             processing_values = self.get_processing_values(**route_values)
         tx_sudo = self._get_tx(processing_values['reference'])
@@ -141,6 +190,14 @@ class TestSalePayment(PaymentCommon, PaymentHttpCommon):
             'reference_prefix': tx_context['reference_prefix'],
             'landing_route': tx_context['landing_route'],
         })
+
+        access_token = self._recompute_access_token_for_payment(
+            route_values["amount"],
+            route_values["currency_id"],
+            route_values["partner_id"]
+        )
+        route_values["access_token"] = access_token
+
         with mute_logger('odoo.addons.payment.models.payment_transaction'):
             processing_values = self.get_processing_values(**route_values)
         tx2_sudo = self._get_tx(processing_values['reference'])
@@ -180,6 +237,14 @@ class TestSalePayment(PaymentCommon, PaymentHttpCommon):
             'reference_prefix': tx_context['reference_prefix'],
             'landing_route': tx_context['landing_route'],
         })
+
+        access_token = self._recompute_access_token_for_payment(
+            route_values["amount"],
+            route_values["currency_id"],
+            route_values["partner_id"]
+        )
+        route_values["access_token"] = access_token
+
         with mute_logger('odoo.addons.payment.models.payment_transaction'):
             processing_values = self.get_processing_values(**route_values)
         tx_sudo = self._get_tx(processing_values['reference'])

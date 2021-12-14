@@ -20,6 +20,9 @@ class PaymentTransaction(models.Model):
                                       string='Sales Orders', copy=False, readonly=True)
     sale_order_ids_nbr = fields.Integer(compute='_compute_sale_order_ids_nbr', string='# of Sales Orders')
 
+    confirm_order = fields.Boolean(string="When this field is set to True confirms the Sale order"
+                                          "on a successful payment.")
+
     def _compute_sale_order_reference(self, order):
         self.ensure_one()
         if self.acquirer_id.so_reference_type == 'so_name':
@@ -51,7 +54,8 @@ class PaymentTransaction(models.Model):
     def _check_amount_and_confirm_order(self):
         self.ensure_one()
         for order in self.sale_order_ids.filtered(lambda so: so.state in ('draft', 'sent')):
-            if order.currency_id.compare_amounts(self.amount, order.amount_total) == 0:
+            if (order.currency_id.compare_amounts(self.amount, order.amount_total) == 0
+                    or self.confirm_order):
                 order.with_context(send_email=True).action_confirm()
             else:
                 _logger.warning(

@@ -5,6 +5,7 @@
     <template id="payment_checkout_inherit" inherit_id="payment.checkout">
         <xpath expr="//form[@name='o_payment_checkout']" position="attributes">
             <attribute name="t-att-data-sale-order-id">sale_order_id</attribute>
+            <attribute name="t-att-data-confirm-order">confirm_order</attribute>
         </xpath>
     </template>
 
@@ -14,5 +15,4 @@
             <attribute name="t-att-data-sale-order-id">sale_order_id</attribute>
         </xpath>
     </template>
-
 </odoo>

@@ -310,6 +310,12 @@
                         Your order is not in a state to be rejected.
                     </div>
 
+                    <t t-if="sale_order.state in ['draft', 'sent', 'sale'] and sale_order.amount_paid() > 0">
+                        <div class="alert alert-info alert-dismissible">
+                            <t t-out="sale_order.amount_paid_msg"/>
+                        </div>
+                    </t>
+
                     <t t-if="sale_order.transaction_ids">
                         <t t-call="payment.transaction_status">
                             <t t-set="tx" t-value="sale_order.get_portal_last_transaction()"/>

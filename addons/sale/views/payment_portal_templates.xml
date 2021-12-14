@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="payment_pay_inherit" inherit_id="payment.pay">
+        <xpath expr="//div[@t-if='partner_is_different']" position="after">
+            <t t-if="confirm_order and confirm_order == 'True'">
+                <div class="alert alert-info">
+                    <b>This payment will confirm the quotation.</b>
+                </div>
+            </t>
+        </xpath>
+    </template>
+</odoo>

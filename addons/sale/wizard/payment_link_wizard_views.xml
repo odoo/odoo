@@ -11,4 +11,27 @@
         <field name="binding_view_types">form</field>
     </record>
 
+    <record id="sale_link_wizard_view_form" model="ir.ui.view">
+        <field name="name">payment.link.wizard.form</field>
+        <field name="model">payment.link.wizard</field>
+        <field name="inherit_id" ref="payment.payment_link_wizard_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='amount']" position="after">
+                <field name="order_state" invisible="1"/>
+                <field name="override_confirm" invisible="1"/>
+                <field name="amount_paid" readonly="1"
+                       attrs="{
+                            'invisible': [
+                                '|', ('res_model', '!=', 'sale.order'),
+                                '!', ('amount_paid', '>', '0')]}"/>
+                <field name="confirm_order"
+                       attrs="{
+                           'invisible': [
+                               '|', ('res_model', '!=', 'sale.order'),
+                               '!', ('order_state', 'in', ['draft', 'sent'])
+                           ],
+                           'readonly': [('override_confirm', '=', 0)]}"/>
+            </xpath>
+        </field>
+    </record>
 </odoo>
