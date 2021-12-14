@@ -1212,7 +1212,7 @@ registerModel({
         logs: attr({
             default: {},
         }),
-        peerNotificationsToSend: one2many('mail.rtc_peer_notification', {
+        peerNotificationsToSend: one2many('RtcPeerNotification', {
             isCausal: true,
         }),
         /**
