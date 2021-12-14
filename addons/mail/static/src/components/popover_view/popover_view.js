@@ -14,7 +14,7 @@ export class PopoverView extends Component {
      */
     setup() {
         super.setup();
-        useComponentToModel({ fieldName: 'component', modelName: 'mail.popover_view', propNameAsRecordLocalId: 'popoverViewLocalId' });
+        useComponentToModel({ fieldName: 'component', modelName: 'PopoverView', propNameAsRecordLocalId: 'popoverViewLocalId' });
         usePosition(
             () => this.popoverView && this.popoverView.anchorRef && this.popoverView.anchorRef.el,
             {
@@ -29,10 +29,10 @@ export class PopoverView extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {mail.popover_view|undefined}
+     * @returns {PopoverView|undefined}
      */
     get popoverView() {
-        return this.messaging && this.messaging.models['mail.popover_view'].get(this.props.popoverViewLocalId);
+        return this.messaging && this.messaging.models['PopoverView'].get(this.props.popoverViewLocalId);
     }
 
 }
