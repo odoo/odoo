@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.tools import html2plaintext
 
 
 class SlideChannelPartner(models.Model):
@@ -19,7 +20,7 @@ class SlideChannelPartner(models.Model):
                 'name': channel.name,
                 'date_start': fields.Date.today(),
                 'date_end': fields.Date.today(),
-                'description': channel.description,
+                'description': html2plaintext(channel.description),
                 'line_type_id': line_type and line_type.id,
                 'display_type': 'course',
                 'channel_id': channel.id
