@@ -146,7 +146,7 @@ registerModel({
          *
          * [[dbname, 'res.partner', partnerId], { type: 'mark_as_read' }]
          *
-         * @see mail.messaging_notification_handler:_handleNotificationPartnerMarkAsRead()
+         * @see MessagingNotificationHandler:_handleNotificationPartnerMarkAsRead()
          *
          * @param {mail.message[]} messages
          */
