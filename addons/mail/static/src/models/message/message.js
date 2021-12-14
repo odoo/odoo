@@ -317,8 +317,11 @@ registerModel({
             if (this.tracking_value_ids.length > 0) {
                 return false;
             }
+            if (this.message_type !== 'comment') {
+                return false;
+            }
             if (this.originThread.model === 'mail.channel') {
-                return this.message_type === 'comment';
+                return true;
             }
             return this.is_note;
         },
