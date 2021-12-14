@@ -160,7 +160,7 @@ export class ChatWindow extends Component {
      * @param {function} res
      */
     _onAutocompleteSource(req, res) {
-        this.messaging.models['mail.partner'].imSearch({
+        this.messaging.models['Partner'].imSearch({
             callback: (partners) => {
                 const suggestions = partners.map(partner => {
                     return {

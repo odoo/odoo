@@ -24,7 +24,7 @@ commandProviderRegistry.add("partner", {
     async provide(newEnv, options) {
         const messaging = await Component.env.services.messaging.get();
         const suggestions = [];
-        await messaging.models['mail.partner'].imSearch({
+        await messaging.models['Partner'].imSearch({
             callback(partners) {
                 partners.forEach((partner) => {
                     suggestions.push({

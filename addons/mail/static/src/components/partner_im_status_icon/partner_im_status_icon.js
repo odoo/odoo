@@ -11,10 +11,10 @@ export class PartnerImStatusIcon extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {mail.partner}
+     * @returns {Partner}
      */
     get partner() {
-        return this.messaging && this.messaging.models['mail.partner'].get(this.props.partnerLocalId);
+        return this.messaging && this.messaging.models['Partner'].get(this.props.partnerLocalId);
     }
 
     //--------------------------------------------------------------------------

@@ -114,7 +114,7 @@ registerModel({
          */
         handleAddChatAutocompleteSource(req, res) {
             const value = owl.utils.escape(req.term);
-            this.messaging.models['mail.partner'].imSearch({
+            this.messaging.models['Partner'].imSearch({
                 callback: partners => {
                     const suggestions = partners.map(partner => {
                         return {

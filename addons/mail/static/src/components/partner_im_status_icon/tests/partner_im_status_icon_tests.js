@@ -39,7 +39,7 @@ QUnit.test('initially online', async function (assert) {
     assert.expect(3);
 
     await this.start();
-    const partner = this.messaging.models['mail.partner'].create({
+    const partner = this.messaging.models['Partner'].create({
         id: 7,
         name: "Demo User",
         im_status: 'online',
@@ -66,7 +66,7 @@ QUnit.test('initially offline', async function (assert) {
     assert.expect(1);
 
     await this.start();
-    const partner = this.messaging.models['mail.partner'].create({
+    const partner = this.messaging.models['Partner'].create({
         id: 7,
         name: "Demo User",
         im_status: 'offline',
@@ -83,7 +83,7 @@ QUnit.test('initially away', async function (assert) {
     assert.expect(1);
 
     await this.start();
-    const partner = this.messaging.models['mail.partner'].create({
+    const partner = this.messaging.models['Partner'].create({
         id: 7,
         name: "Demo User",
         im_status: 'away',
@@ -100,7 +100,7 @@ QUnit.test('change icon on change partner im_status', async function (assert) {
     assert.expect(4);
 
     await this.start();
-    const partner = this.messaging.models['mail.partner'].create({
+    const partner = this.messaging.models['Partner'].create({
         id: 7,
         name: "Demo User",
         im_status: 'online',

@@ -8,7 +8,7 @@ import '@mail/models/partner/partner';
 
 import { str_to_date } from 'web.time';
 
-patchModelMethods('mail.partner', {
+patchModelMethods('Partner', {
     /**
      * @override
      */
@@ -21,7 +21,7 @@ patchModelMethods('mail.partner', {
     },
 });
 
-addRecordMethods('mail.partner', {
+addRecordMethods('Partner', {
     /**
      * @private
      */
@@ -44,7 +44,7 @@ addRecordMethods('mail.partner', {
     },
 });
 
-patchRecordMethods('mail.partner', {
+patchRecordMethods('Partner', {
     /**
      * @override
      */
@@ -56,7 +56,7 @@ patchRecordMethods('mail.partner', {
     },
 });
 
-addFields('mail.partner', {
+addFields('Partner', {
     /**
      * Date of end of the out of office period of the partner as string.
      * String is expected to use Odoo's date string format

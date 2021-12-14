@@ -63,9 +63,9 @@ registerModel({
             compute: '_computeName',
         }),
         /**
-         * Determines the optional `mail.partner` associated to `this`.
+         * Determines the optional `Partner` associated to `this`.
          */
-        partner: many2one('mail.partner'),
+        partner: many2one('Partner'),
         /**
          * Determines why `this` is a suggestion for `this.thread`. It serves as
          * visual clue when displaying `this`.

@@ -145,7 +145,7 @@ registerModel({
          * Manually called as not always called when necessary
          *
          * @private
-         * @returns {mail.partner[]}
+         * @returns {Partner[]}
          * @see computeFetchedValues
          * @see computeSeenValues
          */
@@ -175,7 +175,7 @@ registerModel({
          * Manually called as not always called when necessary
          *
          * @private
-         * @returns {mail.partner[]}
+         * @returns {Partner[]}
          * @see computeSeenValues
          */
         _computePartnersThatHaveSeen() {
@@ -230,10 +230,10 @@ registerModel({
             readonly: true,
             required: true,
         }),
-        partnersThatHaveFetched: many2many('mail.partner', {
+        partnersThatHaveFetched: many2many('Partner', {
             compute: '_computePartnersThatHaveFetched',
         }),
-        partnersThatHaveSeen: many2many('mail.partner', {
+        partnersThatHaveSeen: many2many('Partner', {
             compute: '_computePartnersThatHaveSeen',
         }),
         /**

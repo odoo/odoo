@@ -59,7 +59,7 @@ registerModel({
             this.delete();
         },
         /**
-         * @param {mail.partner} partner
+         * @param {Partner} partner
          * @param {MouseEvent} ev
          */
         onClickSelectablePartner(partner, ev) {
@@ -70,7 +70,7 @@ registerModel({
             this.update({ selectedPartners: link(partner) });
         },
         /**
-         * @param {mail.partner} partner
+         * @param {Partner} partner
          * @param {MouseEvent} ev
          */
         onClickSelectedPartner(partner, ev) {
@@ -87,7 +87,7 @@ registerModel({
             }
         },
         /**
-         * @param {mail.partner} partner
+         * @param {Partner} partner
          * @param {InputEvent} ev
          */
         onInputPartnerCheckbox(partner, ev) {
@@ -136,7 +136,7 @@ registerModel({
                 }
                 this.update({
                     searchResultCount: count,
-                    selectablePartners: insertAndReplace(partnersData.map(partnerData => this.messaging.models['mail.partner'].convertData(partnerData))),
+                    selectablePartners: insertAndReplace(partnersData.map(partnerData => this.messaging.models['Partner'].convertData(partnerData))),
                 });
             } finally {
                 if (this.exists()) {
@@ -235,11 +235,11 @@ registerModel({
          * States all partners that are potential choices according to this
          * search term.
          */
-        selectablePartners: many2many('mail.partner'),
+        selectablePartners: many2many('Partner'),
         /**
          * Determines all partners that are currently selected.
          */
-        selectedPartners: many2many('mail.partner'),
+        selectedPartners: many2many('Partner'),
         /**
          * States the thread on which this list operates (if any).
          */

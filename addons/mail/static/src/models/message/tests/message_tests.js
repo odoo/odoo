@@ -29,7 +29,7 @@ QUnit.test('create', async function (assert) {
     assert.expect(31);
 
     await this.start();
-    assert.notOk(this.messaging.models['mail.partner'].findFromIdentifyingData({ id: 5 }));
+    assert.notOk(this.messaging.models['Partner'].findFromIdentifyingData({ id: 5 }));
     assert.notOk(this.messaging.models['Thread'].findFromIdentifyingData({
         id: 100,
         model: 'mail.channel',
@@ -58,7 +58,7 @@ QUnit.test('create', async function (assert) {
         originThread: link(thread),
     });
 
-    assert.ok(this.messaging.models['mail.partner'].findFromIdentifyingData({ id: 5 }));
+    assert.ok(this.messaging.models['Partner'].findFromIdentifyingData({ id: 5 }));
     assert.ok(this.messaging.models['Thread'].findFromIdentifyingData({
         id: 100,
         model: 'mail.channel',
@@ -104,7 +104,7 @@ QUnit.test('create', async function (assert) {
     assert.strictEqual(channel.model, 'mail.channel');
     assert.strictEqual(channel.id, 100);
     assert.strictEqual(channel.name, "General");
-    const partner = this.messaging.models['mail.partner'].findFromIdentifyingData({ id: 5 });
+    const partner = this.messaging.models['Partner'].findFromIdentifyingData({ id: 5 });
     assert.ok(partner);
     assert.strictEqual(partner.display_name, "Demo");
     assert.strictEqual(partner.id, 5);
