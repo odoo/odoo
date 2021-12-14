@@ -180,7 +180,7 @@ registerModel({
                         // on `channel` channels for performance reasons
                         continue;
                     }
-                    this.messaging.models['mail.message_seen_indicator'].insert({
+                    this.messaging.models['MessageSeenIndicator'].insert({
                         thread: replace(thread),
                         message: replace(message),
                     });
@@ -698,7 +698,7 @@ registerModel({
             isCausal: true,
         }),
         message_type: attr(),
-        messageSeenIndicators: one2many('mail.message_seen_indicator', {
+        messageSeenIndicators: one2many('MessageSeenIndicator', {
             inverse: 'message',
             isCausal: true,
         }),

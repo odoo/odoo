@@ -5,7 +5,7 @@ import { attr, many2many, many2one } from '@mail/model/model_field';
 import { replace, unlinkAll } from '@mail/model/model_field_command';
 
 registerModel({
-    name: 'mail.message_seen_indicator',
+    name: 'MessageSeenIndicator',
     identifyingFields: ['thread', 'message'],
     modelMethods: {
         /**
@@ -13,7 +13,7 @@ registerModel({
          */
         recomputeFetchedValues(channel = undefined) {
             const indicatorFindFunction = channel ? localIndicator => localIndicator.thread === channel : undefined;
-            const indicators = this.messaging.models['mail.message_seen_indicator'].all(indicatorFindFunction);
+            const indicators = this.messaging.models['MessageSeenIndicator'].all(indicatorFindFunction);
             for (const indicator of indicators) {
                 indicator.update({
                     hasEveryoneFetched: indicator._computeHasEveryoneFetched(),
@@ -27,7 +27,7 @@ registerModel({
          */
         recomputeSeenValues(channel = undefined) {
             const indicatorFindFunction = channel ? localIndicator => localIndicator.thread === channel : undefined;
-            const indicators = this.messaging.models['mail.message_seen_indicator'].all(indicatorFindFunction);
+            const indicators = this.messaging.models['MessageSeenIndicator'].all(indicatorFindFunction);
             for (const indicator of indicators) {
                 indicator.update({
                     hasEveryoneSeen: indicator._computeHasEveryoneSeen(),

@@ -2219,7 +2219,7 @@ registerModel({
         /**
          * Contains the message fetched/seen indicators for all messages of this thread.
          */
-        messageSeenIndicators: one2many('mail.message_seen_indicator', {
+        messageSeenIndicators: one2many('MessageSeenIndicator', {
             inverse: 'thread',
             isCausal: true,
         }),
