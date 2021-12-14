@@ -138,18 +138,21 @@ class MailController(http.Controller):
         for follower in follower_recs:
             if follower.partner_id == request.env.user.partner_id:
                 follower_id = follower.id
-            followers.append({
-                'id': follower.id,
-                'partner_id': follower.partner_id.id,
-                'channel_id': follower.channel_id.id,
-                'name': follower.name,
-                'display_name': follower.display_name,
-                'email': follower.email,
-                'is_active': follower.is_active,
-                # When editing the followers, the "pencil" icon that leads to the edition of subtypes
-                # should be always be displayed and not only when "debug" mode is activated.
-                'is_editable': True
-            })
+            try:
+                followers.append({
+                    'id': follower.id,
+                    'partner_id': follower.partner_id.id,
+                    'channel_id': follower.channel_id.id,
+                    'name': follower.name,
+                    'display_name': follower.display_name,
+                    'email': follower.email,
+                    'is_active': follower.is_active,
+                    # When editing the followers, the "pencil" icon that leads to the edition of subtypes
+                    # should be always be displayed and not only when "debug" mode is activated.
+                    'is_editable': True
+                })
+            except AccessError:
+                _logger.warning('follower with id %s cannot be displayed for security access restriction.', follower.id)
         return {
             'followers': followers,
             'subtypes': self.read_subscription_data(follower_id) if follower_id else None
