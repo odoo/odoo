@@ -80,7 +80,7 @@ registerModel({
         },
     },
     fields: {
-        callViewer: one2one('mail.rtc_call_viewer', {
+        callViewer: one2one('RtcCallViewer', {
             inverse: 'rtcController',
             readonly: true,
             required: true,

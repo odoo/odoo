@@ -426,7 +426,7 @@ registerModel({
         /**
          * Determines the Rtc call viewer of this thread.
          */
-        rtcCallViewer: one2one('mail.rtc_call_viewer', {
+        rtcCallViewer: one2one('RtcCallViewer', {
             compute: '_computeRtcCallViewer',
             inverse: 'threadView',
             isCausal: true,

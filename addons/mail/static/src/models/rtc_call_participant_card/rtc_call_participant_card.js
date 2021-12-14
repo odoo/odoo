@@ -171,13 +171,13 @@ registerModel({
         /**
          * The callViewer for which this card is the spotlight.
          */
-        rtcCallViewerOfMainCard: one2one('mail.rtc_call_viewer', {
+        rtcCallViewerOfMainCard: one2one('RtcCallViewer', {
             inverse: 'mainParticipantCard',
         }),
         /**
          * The callViewer for which this card is one of the tiles.
          */
-        rtcCallViewerOfTile: many2one('mail.rtc_call_viewer', {
+        rtcCallViewerOfTile: many2one('RtcCallViewer', {
             inverse: 'tileParticipantCards',
         }),
         /**

@@ -10,7 +10,7 @@ import { clear, insert, insertAndReplace, link, unlink } from '@mail/model/model
 import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
 registerModel({
-    name: 'mail.rtc_call_viewer',
+    name: 'RtcCallViewer',
     identifyingFields: ['threadView'],
     lifecycleHooks: {
         _created() {
