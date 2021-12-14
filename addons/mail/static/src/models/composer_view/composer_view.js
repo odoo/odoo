@@ -917,7 +917,7 @@ registerModel({
         /**
          * States the message view on which this composer allows editing (if any).
          */
-        messageViewInEditing: one2one('mail.message_view', {
+        messageViewInEditing: one2one('MessageView', {
             inverse: 'composerViewInEditing',
             readonly: true,
         }),

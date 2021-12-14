@@ -146,7 +146,7 @@ registerModel({
         },
         /**
          * @private
-         * @returns {mail.message_view}
+         * @returns {MessageView}
          */
         _computeMessageViewForDelete() {
             return this.message
@@ -182,7 +182,7 @@ registerModel({
         /**
          * States the message view that controls this message action list.
          */
-        messageView: one2one('mail.message_view', {
+        messageView: one2one('MessageView', {
             inverse: 'messageActionList',
             readonly: true,
             required: true,
@@ -191,7 +191,7 @@ registerModel({
          * Determines the message view that this message action list will use to
          * display this message in this delete confirmation dialog.
          */
-        messageViewForDelete: one2one('mail.message_view', {
+        messageViewForDelete: one2one('MessageView', {
             compute: '_computeMessageViewForDelete',
             inverse: 'messageActionListWithDelete',
             isCausal: true,
