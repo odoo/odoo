@@ -401,6 +401,7 @@ class Website(Home):
             t['rowPerSlide'] = attribs.get('data-row-per-slide')
             t['arrowPosition'] = attribs.get('data-arrow-position')
             t['extraClasses'] = attribs.get('data-extra-classes')
+            t['thumb'] = attribs.get('data-thumb')
         return templates
 
     @http.route('/website/get_current_currency', type='json', auth="public", website=True)

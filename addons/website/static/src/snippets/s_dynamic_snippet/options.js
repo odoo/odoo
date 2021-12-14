@@ -175,7 +175,11 @@ const dynamicSnippetOptions = options.Class.extend({
         for (let id in data) {
             const button = document.createElement('we-button');
             button.dataset.selectDataAttribute = id;
-            button.innerHTML = data[id].name;
+            if (data[id].thumb) {
+                button.dataset.img = data[id].thumb;
+            } else {
+                button.innerText = data[id].name;
+            }
             selectUserValueWidgetElement.appendChild(button);
         }
     },
