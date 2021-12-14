@@ -56,7 +56,7 @@ class AccountPayment(models.Model):
 
     # == Payment methods fields ==
     payment_method_line_id = fields.Many2one('account.payment.method.line', string='Payment Method',
-        readonly=False, store=True,
+        readonly=False, store=True, copy=False,
         compute='_compute_payment_method_line_id',
         domain="[('id', 'in', available_payment_method_line_ids)]",
         help="Manual: Pay or Get paid by any method outside of Odoo.\n"
