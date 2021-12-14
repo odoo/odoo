@@ -405,7 +405,7 @@ registerModel({
          * sessions from other channels with the same partner (sessions opened from different
          * tabs or devices).
          */
-        rtc: one2one('mail.rtc', {
+        rtc: one2one('Rtc', {
             inverse: 'currentRtcSession',
         }),
         /**
