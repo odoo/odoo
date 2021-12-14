@@ -171,12 +171,12 @@ registerModel({
                 partner: insertAndReplace({ id: partner_id }),
                 thread: replace(channel),
             });
-            this.messaging.models['mail.message_seen_indicator'].insert({
+            this.messaging.models['MessageSeenIndicator'].insert({
                 message: insertAndReplace({ id: last_message_id }),
                 thread: replace(channel),
             });
             // FIXME force the computing of message values (cf task-2261221)
-            this.messaging.models['mail.message_seen_indicator'].recomputeFetchedValues(channel);
+            this.messaging.models['MessageSeenIndicator'].recomputeFetchedValues(channel);
         },
         /**
          * @private
@@ -312,7 +312,7 @@ registerModel({
                     partner: insertAndReplace({ id: partner_id }),
                     thread: replace(channel),
                 });
-                this.messaging.models['mail.message_seen_indicator'].insert({
+                this.messaging.models['MessageSeenIndicator'].insert({
                     message: replace(lastMessage),
                     thread: replace(channel),
                 });
@@ -327,7 +327,7 @@ registerModel({
                 // FIXME force the computing of thread values (cf task-2261221)
                 this.messaging.models['mail.thread'].computeLastCurrentPartnerMessageSeenByEveryone(channel);
                 // FIXME force the computing of message values (cf task-2261221)
-                this.messaging.models['mail.message_seen_indicator'].recomputeSeenValues(channel);
+                this.messaging.models['MessageSeenIndicator'].recomputeSeenValues(channel);
             }
         },
         /**
