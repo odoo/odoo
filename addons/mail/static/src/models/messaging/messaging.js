@@ -221,7 +221,7 @@ registerModel({
          * Inverse of the messaging field present on all models. This field
          * therefore contains all existing records.
          */
-        allRecords: one2many('mail.model', {
+        allRecords: one2many('Model', {
             inverse: 'messaging',
             isCausal: true,
         }),

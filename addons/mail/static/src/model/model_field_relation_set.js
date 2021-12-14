@@ -11,7 +11,7 @@ import { followRelations } from '@mail/model/model_utils';
 export class RelationSet {
 
     /**
-     * @param {mail.model} record
+     * @param {Model} record
      * @param {ModelField} field
      */
     constructor(record, field) {
