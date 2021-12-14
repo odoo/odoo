@@ -13,11 +13,11 @@ export class ThreadViewTopbar extends Component {
      */
     setup() {
         super.setup();
-        useRefToModel({ fieldName: 'guestNameInputRef', modelName: 'mail.thread_view_topbar', propNameAsRecordLocalId: 'localId', refName: 'guestNameInput' });
-        useRefToModel({ fieldName: 'inviteButtonRef', modelName: 'mail.thread_view_topbar', propNameAsRecordLocalId: 'localId', refName: 'inviteButton' });
-        useRefToModel({ fieldName: 'threadNameInputRef', modelName: 'mail.thread_view_topbar', propNameAsRecordLocalId: 'localId', refName: 'threadNameInput' });
-        useRefToModel({ fieldName: 'threadDescriptionInputRef', modelName: 'mail.thread_view_topbar', propNameAsRecordLocalId: 'localId', refName: 'threadDescriptionInput' });
-        useUpdateToModel({ methodName: 'onComponentUpdate', modelName: 'mail.thread_view_topbar', propNameAsRecordLocalId: 'localId' });
+        useRefToModel({ fieldName: 'guestNameInputRef', modelName: 'ThreadViewTopbar', propNameAsRecordLocalId: 'localId', refName: 'guestNameInput' });
+        useRefToModel({ fieldName: 'inviteButtonRef', modelName: 'ThreadViewTopbar', propNameAsRecordLocalId: 'localId', refName: 'inviteButton' });
+        useRefToModel({ fieldName: 'threadNameInputRef', modelName: 'ThreadViewTopbar', propNameAsRecordLocalId: 'localId', refName: 'threadNameInput' });
+        useRefToModel({ fieldName: 'threadDescriptionInputRef', modelName: 'ThreadViewTopbar', propNameAsRecordLocalId: 'localId', refName: 'threadDescriptionInput' });
+        useUpdateToModel({ methodName: 'onComponentUpdate', modelName: 'ThreadViewTopbar', propNameAsRecordLocalId: 'localId' });
     }
 
     //--------------------------------------------------------------------------
@@ -25,10 +25,10 @@ export class ThreadViewTopbar extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * @returns {mail.thread_view_topbar}
+     * @returns {ThreadViewTopbar}
      */
     get threadViewTopbar() {
-        return this.messaging && this.messaging.models['mail.thread_view_topbar'].get(this.props.localId);
+        return this.messaging && this.messaging.models['ThreadViewTopbar'].get(this.props.localId);
     }
 
     //--------------------------------------------------------------------------

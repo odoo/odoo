@@ -5,7 +5,7 @@ import { attr, many2one, one2one } from '@mail/model/model_field';
 import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 
 registerModel({
-    name: 'mail.thread_view_topbar',
+    name: 'ThreadViewTopbar',
     identifyingFields: ['threadView'],
     lifecycleHooks: {
         _created() {
