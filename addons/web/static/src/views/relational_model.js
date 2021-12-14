@@ -233,15 +233,6 @@ export class Record extends DataPoint {
                     activeField.options
                 );
             }
-            if (activeField.decorationAttributes) {
-                activeField.decorations = {};
-                for (const decorationName in activeField.decorationAttributes) {
-                    activeField.decorations[decorationName] = evaluateExpr(
-                        activeField.decorationAttributes[decorationName],
-                        context
-                    );
-                }
-            }
         }
     }
 
