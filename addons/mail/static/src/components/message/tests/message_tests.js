@@ -281,7 +281,7 @@ QUnit.test("'channel_fetch' notification received is correctly handled", async f
         members: [this.data.currentPartnerId, 11],
     });
     const { createThreadViewComponent } = await this.start();
-    const currentPartner = this.messaging.models['mail.partner'].insert({
+    const currentPartner = this.messaging.models['Partner'].insert({
         id: this.messaging.currentPartner.id,
         display_name: "Demo User",
     });
@@ -346,7 +346,7 @@ QUnit.test("'channel_seen' notification received is correctly handled", async fu
         members: [this.data.currentPartnerId, 11],
     });
     const { createThreadViewComponent } = await this.start();
-    const currentPartner = this.messaging.models['mail.partner'].insert({
+    const currentPartner = this.messaging.models['Partner'].insert({
         id: this.messaging.currentPartner.id,
         display_name: "Demo User",
     });
@@ -410,7 +410,7 @@ QUnit.test("'channel_fetch' notification then 'channel_seen' received  are corre
         members: [this.data.currentPartnerId, 11],
     });
     const { createThreadViewComponent } = await this.start();
-    const currentPartner = this.messaging.models['mail.partner'].insert({
+    const currentPartner = this.messaging.models['Partner'].insert({
         id: this.messaging.currentPartner.id,
         display_name: "Demo User",
     });
@@ -482,7 +482,7 @@ QUnit.test('do not show messaging seen indicator if not authored by me', async f
     assert.expect(2);
 
     const { createThreadViewComponent } = await this.start();
-    const author = this.messaging.models['mail.partner'].create({
+    const author = this.messaging.models['Partner'].create({
         id: 100,
         display_name: "Demo User"
     });
@@ -530,7 +530,7 @@ QUnit.test('do not show messaging seen indicator if before last seen by all mess
     assert.expect(3);
 
     await this.start();
-    const currentPartner = this.messaging.models['mail.partner'].insert({
+    const currentPartner = this.messaging.models['Partner'].insert({
         id: this.messaging.currentPartner.id,
         display_name: "Demo User",
     });
@@ -597,7 +597,7 @@ QUnit.test('only show messaging seen indicator if authored by me, after last see
     assert.expect(3);
 
     const { createThreadViewComponent } = await this.start();
-    const currentPartner = this.messaging.models['mail.partner'].insert({
+    const currentPartner = this.messaging.models['Partner'].insert({
         id: this.messaging.currentPartner.id,
         display_name: "Demo User"
     });
@@ -919,7 +919,7 @@ QUnit.test('open chat with author on avatar click should be disabled when curren
     const { createThreadViewComponent } = await this.start({
         hasChatWindow: true,
     });
-    const correspondent = this.messaging.models['mail.partner'].insert({ id: 10 });
+    const correspondent = this.messaging.models['Partner'].insert({ id: 10 });
     const thread = await correspondent.getChat();
     const threadViewer = this.messaging.models['mail.thread_viewer'].create({
         hasThreadView: true,

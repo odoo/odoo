@@ -125,7 +125,7 @@ registerModel({
         /**
          * Partner linked to this visitor, if any.
          */
-        partner: many2one('mail.partner'),
+        partner: many2one('Partner'),
         /**
          * Threads with this visitor as member
          */

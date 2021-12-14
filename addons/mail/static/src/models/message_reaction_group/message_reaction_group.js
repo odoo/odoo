@@ -101,7 +101,7 @@ registerModel({
         /**
          * States the partners that have used this reaction on this message.
          */
-        partners: many2many('mail.partner'),
+        partners: many2many('Partner'),
         summary: attr({
             compute: '_computeSummary',
         }),

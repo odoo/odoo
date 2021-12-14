@@ -280,7 +280,7 @@ registerModel({
          * Also, be useful when the assigned user is different from the
          * "source" or "requesting" partner.
          */
-        requestingPartner: many2one('mail.partner'),
+        requestingPartner: many2one('Partner'),
         state: attr(),
         summary: attr(),
         /**

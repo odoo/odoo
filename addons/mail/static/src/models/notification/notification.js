@@ -149,6 +149,6 @@ registerModel({
         }),
         notification_status: attr(),
         notification_type: attr(),
-        partner: many2one('mail.partner'),
+        partner: many2one('Partner'),
     },
 });

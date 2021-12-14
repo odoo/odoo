@@ -132,7 +132,7 @@ registerModel({
         /**
          * If set, this card represents an invitation of this partner to this call.
          */
-        invitedPartner: many2one('mail.partner'),
+        invitedPartner: many2one('Partner'),
         /**
          * States whether this card is representing a person with a pending
          * invitation.

@@ -43,7 +43,7 @@ registerModel({
          * and removes them if not.
          *
          * @private
-         * @returns {mail.partner[]}
+         * @returns {Partner[]}
          */
         _computeMentionedPartners() {
             const unmentionedPartners = [];
@@ -68,7 +68,7 @@ registerModel({
          * and removes them if not.
          *
          * @private
-         * @returns {mail.partner[]}
+         * @returns {Partner[]}
          */
         _computeMentionedChannels() {
             const unmentionedChannels = [];
@@ -90,7 +90,7 @@ registerModel({
         },
         /**
          * @private
-         * @returns {mail.partner[]}
+         * @returns {Partner[]}
          */
         _computeRecipients() {
             const recipients = [...this.mentionedPartners];
@@ -169,7 +169,7 @@ registerModel({
         mentionedChannels: many2many('Thread', {
             compute: '_computeMentionedChannels',
         }),
-        mentionedPartners: many2many('mail.partner', {
+        mentionedPartners: many2many('Partner', {
             compute: '_computeMentionedPartners',
         }),
         messageViewInEditing: one2one('MessageView', {
@@ -177,11 +177,11 @@ registerModel({
             readonly: true,
         }),
         /**
-         * Determines the extra `mail.partner` (on top of existing followers)
+         * Determines the extra `Partner` (on top of existing followers)
          * that will receive the message being composed by `this`, and that will
          * also be added as follower of `this.activeThread`.
          */
-        recipients: many2many('mail.partner', {
+        recipients: many2many('Partner', {
             compute: '_computeRecipients',
         }),
         textInputContent: attr({

@@ -231,7 +231,7 @@ registerModel({
                     data2.members = [unlinkAll()];
                 } else {
                     data2.members = [insertAndReplace(data.members.map(memberData =>
-                        this.messaging.models['mail.partner'].convertData(memberData)
+                        this.messaging.models['Partner'].convertData(memberData)
                     ))];
                 }
             }
@@ -908,7 +908,7 @@ registerModel({
          * Handles click on the avatar of the given member in the member list of
          * this channel.
          *
-         * @param {mail.partner} member
+         * @param {Partner} member
          */
         onClickMemberAvatar(member) {
             member.openChat();
@@ -917,7 +917,7 @@ registerModel({
          * Handles click on the name of the given member in the member list of
          * this channel.
          *
-         * @param {mail.partner} member
+         * @param {Partner} member
          */
         onClickMemberName(member) {
             member.openProfile();
@@ -1057,7 +1057,7 @@ registerModel({
          * Called to refresh a registered other member partner that is typing
          * something.
          *
-         * @param {mail.partner} partner
+         * @param {Partner} partner
          */
         refreshOtherMemberTypingMember(partner) {
             this._otherMembersLongTypingTimers.get(partner).reset();
@@ -1087,7 +1087,7 @@ registerModel({
          * Called to register a new other member partner that is typing
          * something.
          *
-         * @param {mail.partner} partner
+         * @param {Partner} partner
          */
         registerOtherMemberTypingMember(partner) {
             const timer = new Timer(
@@ -1189,7 +1189,7 @@ registerModel({
          * Called to unregister an other member partner that is no longer typing
          * something.
          *
-         * @param {mail.partner} partner
+         * @param {Partner} partner
          */
         unregisterOtherMemberTypingMember(partner) {
             this._otherMembersLongTypingTimers.get(partner).clear();
@@ -1240,7 +1240,7 @@ registerModel({
         },
         /**
          * @private
-         * @returns {mail.partner}
+         * @returns {Partner}
          */
         _computeCorrespondent() {
             if (this.channel_type === 'channel') {
@@ -1607,14 +1607,14 @@ registerModel({
         },
         /**
          * @private
-         * @returns {mail.partner[]}
+         * @returns {Partner[]}
          */
         _computeOrderedOfflineMembers() {
             return replace(this._sortMembers(this.members.filter(member => !member.isOnline)));
         },
         /**
          * @private
-         * @returns {mail.partner[]}
+         * @returns {Partner[]}
          */
         _computeOrderedOnlineMembers() {
             return replace(this._sortMembers(this.members.filter(member => member.isOnline)));
@@ -1635,7 +1635,7 @@ registerModel({
         },
         /**
          * @private
-         * @returns {mail.partner[]}
+         * @returns {Partner[]}
          */
         _computeOrderedOtherTypingMembers() {
             return replace(this.orderedTypingMembers.filter(
@@ -1644,13 +1644,13 @@ registerModel({
         },
         /**
          * @private
-         * @returns {mail.partner[]}
+         * @returns {Partner[]}
          */
         _computeOrderedTypingMembers() {
             return [[
                 'replace',
                 this.orderedTypingMemberLocalIds
-                    .map(localId => this.messaging.models['mail.partner'].get(localId))
+                    .map(localId => this.messaging.models['Partner'].get(localId))
                     .filter(member => !!member),
             ]];
         },
@@ -1836,8 +1836,8 @@ registerModel({
         },
         /**
          * @private
-         * @param {mail.partner[]} members
-         * @returns {mail.partner[]}
+         * @param {Partner[]} members
+         * @returns {Partner[]}
          */
         _sortMembers(members) {
             return [...members].sort((a, b) => {
@@ -1893,7 +1893,7 @@ registerModel({
         },
         /**
          * @private
-         * @param {mail.partner} partner
+         * @param {Partner} partner
          */
         async _onOtherMemberLongTypingTimeout(partner) {
             if (!this.typingMembers.includes(partner)) {
@@ -1956,7 +1956,7 @@ registerModel({
             isCausal: true,
             readonly: true,
         }),
-        correspondent: many2one('mail.partner', {
+        correspondent: many2one('Partner', {
             compute: '_computeCorrespondent',
         }),
         counter: attr({
@@ -1993,7 +1993,7 @@ registerModel({
         fetchMessagesUrl: attr({
             compute: '_computeFetchMessagesUrl',
         }),
-        followersPartner: many2many('mail.partner', {
+        followersPartner: many2many('Partner', {
             related: 'followers.partner',
         }),
         followers: one2many('mail.follower', {
@@ -2060,7 +2060,7 @@ registerModel({
         /**
          * List of partners that have been invited to the RTC call of this channel.
          */
-        invitedPartners: many2many('mail.partner'),
+        invitedPartners: many2many('Partner'),
         /**
          * Determines whether this description can be changed.
          * Only makes sense for channels.
@@ -2177,7 +2177,7 @@ registerModel({
          * Only makes sense if this thread is a channel.
          */
         memberCount: attr(),
-        members: many2many('mail.partner', {
+        members: many2many('Partner', {
             inverse: 'memberThreads',
         }),
         /**
@@ -2189,7 +2189,7 @@ registerModel({
          * Determines the last mentioned partners of the last composer related
          * to this thread. Useful to sync the composer when re-creating it.
          */
-        mentionedPartnersBackup: many2many('mail.partner'),
+        mentionedPartnersBackup: many2many('Partner'),
         /**
          * Determines the message before which the "new message" separator must
          * be positioned, if any.
@@ -2249,13 +2249,13 @@ registerModel({
         /**
          * All offline members ordered like they are displayed.
          */
-        orderedOfflineMembers: many2many('mail.partner', {
+        orderedOfflineMembers: many2many('Partner', {
             compute: '_computeOrderedOfflineMembers',
         }),
         /**
          * All online members ordered like they are displayed.
          */
-        orderedOnlineMembers: many2many('mail.partner', {
+        orderedOnlineMembers: many2many('Partner', {
             compute: '_computeOrderedOnlineMembers',
         }),
         /**
@@ -2274,7 +2274,7 @@ registerModel({
         /**
          * Ordered typing members on this thread, excluding the current partner.
          */
-        orderedOtherTypingMembers: many2many('mail.partner', {
+        orderedOtherTypingMembers: many2many('Partner', {
             compute: '_computeOrderedOtherTypingMembers',
         }),
         /**
@@ -2282,7 +2282,7 @@ registerModel({
          * is currently typing for the longest time. This list includes current
          * partner as typer.
          */
-        orderedTypingMembers: many2many('mail.partner', {
+        orderedTypingMembers: many2many('Partner', {
             compute: '_computeOrderedTypingMembers',
         }),
         /**
@@ -2416,7 +2416,7 @@ registerModel({
          * Members that are currently typing something in the composer of this
          * thread, including current partner.
          */
-        typingMembers: many2many('mail.partner'),
+        typingMembers: many2many('Partner'),
         /**
          * Text that represents the status on this thread about typing members.
          */

@@ -145,7 +145,7 @@ registerModel({
                 case 'Thread':
                     Object.assign(updateData, { mentionedChannels: link(this.activeSuggestedRecord) });
                     break;
-                case 'mail.partner':
+                case 'Partner':
                     Object.assign(updateData, { mentionedPartners: link(this.activeSuggestedRecord) });
                     break;
             }
@@ -570,7 +570,7 @@ registerModel({
         _computeSuggestionModelName() {
             switch (this.suggestionDelimiter) {
                 case '@':
-                    return 'mail.partner';
+                    return 'Partner';
                 case ':':
                     return 'mail.canned_response';
                 case '/':

@@ -187,7 +187,7 @@ registerModel({
         nameOrDisplayName: attr({
             compute: '_computeNameOrDisplayName',
         }),
-        partner: one2one('mail.partner', {
+        partner: one2one('Partner', {
             inverse: 'user',
         }),
         /**

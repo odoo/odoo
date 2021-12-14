@@ -6,7 +6,7 @@ import '@mail/models/partner/partner';
 
 let nextPublicId = -1;
 
-addModelMethods('mail.partner', {
+addModelMethods('Partner', {
     getNextPublicId() {
         const id = nextPublicId;
         nextPublicId -= 1;
