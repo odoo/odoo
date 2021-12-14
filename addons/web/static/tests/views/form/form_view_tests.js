@@ -1,7 +1,9 @@
 /** @odoo-module **/
 
+import { browser } from "@web/core/browser/browser";
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { registry } from "@web/core/registry";
+import { CharField } from "@web/fields/char_field";
 import { session } from "@web/session";
 import {
     makeFakeLocalizationService,
@@ -37,11 +39,12 @@ import {
     toggleMenuItemOption,
     toggleSaveFavorite,
 } from "@web/../tests/search/helpers";
+import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { makeView } from "../helpers";
-import { browser } from "@web/core/browser/browser";
 
 const serviceRegistry = registry.category("services");
+const fieldRegistry = registry.category("fields");
 
 let serverData;
 QUnit.module("Views", (hooks) => {
@@ -452,45 +455,33 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skip("attributes are transferred on async widgets", async function (assert) {
+    QUnit.test("attributes are transferred on async widgets", async function (assert) {
         assert.expect(1);
-        var done = assert.async();
 
-        var def = testUtils.makeTestPromise();
+        const def = makeDeferred();
+        class AsyncField extends CharField {
+            willStart() {
+                return def;
+            }
+        }
+        fieldRegistry.add("asyncwidget", AsyncField);
 
-        var FieldChar = fieldRegistry.get("char");
-        fieldRegistry.add(
-            "asyncwidget",
-            FieldChar.extend({
-                willStart: function () {
-                    return def;
-                },
-            })
-        );
-
-        createView({
+        const viewProm = makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                '<form string="Partners">' +
-                "<group>" +
-                '<field name="foo" style="color: blue" widget="asyncwidget"/>' +
-                "</group>" +
-                "</form>",
+            arch: `<form><field name="foo" style="color: blue" widget="asyncwidget"/></form>`,
             resId: 2,
-        }).then(function (form) {
-            assert.hasAttrValue(
-                form.$(".o_field_widget[name=foo]"),
-                "style",
-                "color: blue",
-                "should apply style attribute on fields"
-            );
-            delete fieldRegistry.map.asyncwidget;
-            done();
         });
+        await nextTick();
         def.resolve();
-        await testUtils.nextTick();
+        const form = await viewProm;
+        assert.hasAttrValue(
+            form.el.querySelector(".o_field_widget[name=foo]"),
+            "style",
+            "color: blue;",
+            "should apply style attribute on fields"
+        );
     });
 
     QUnit.test("placeholder attribute on input", async function (assert) {
