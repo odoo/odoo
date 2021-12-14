@@ -6,7 +6,7 @@ import { one2one } from '@mail/model/model_field';
 import '@mail/models/thread_view/thread_viewer';
 
 addFields('ThreadViewer', {
-    qunitTest: one2one('mail.qunit_test', {
+    qunitTest: one2one('QUnitTest', {
         inverse: 'threadViewer',
         readonly: true,
     }),
