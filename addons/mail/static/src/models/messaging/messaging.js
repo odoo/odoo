@@ -144,7 +144,7 @@ registerModel({
          * @param {String} sessionId
          */
         toggleFocusedRtcSession(sessionId) {
-            const rtcSession = this.messaging.models['mail.rtc_session'].findFromIdentifyingData({
+            const rtcSession = this.messaging.models['RtcSession'].findFromIdentifyingData({
                 id: sessionId,
             });
             const focusedSessionId = this.focusedRtcSession && this.focusedRtcSession.id;
@@ -264,7 +264,7 @@ registerModel({
             isCausal: true,
             readonly: true,
         }),
-        focusedRtcSession: one2one('mail.rtc_session'),
+        focusedRtcSession: one2one('RtcSession'),
         /**
          * Mailbox History.
          */

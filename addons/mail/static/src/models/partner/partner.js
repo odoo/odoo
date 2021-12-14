@@ -450,7 +450,7 @@ registerModel({
             inverse: 'partner',
             isCausal: true,
         }),
-        rtcSessions: one2many('mail.rtc_session', {
+        rtcSessions: one2many('RtcSession', {
             inverse: 'partner',
         }),
         user: one2one('mail.user', {
