@@ -90,6 +90,7 @@ class Channel(models.Model):
         help='This group is visible by non members. Invisible groups can add members through the invite button.')
     group_public_id = fields.Many2one('res.groups', string='Authorized Group',
                                       default=lambda self: self.env.ref('base.group_user'))
+    is_user_admin = fields.Boolean('Is User Admin', compute='_compute_is_user_admin', compute_sudo=True)
 
     _sql_constraints = [
         ('uuid_unique', 'UNIQUE(uuid)', 'The channel UUID must be unique'),
@@ -152,6 +153,10 @@ class Channel(models.Model):
     def _compute_is_member(self):
         for channel in self:
             channel.is_member = self.env.user.partner_id in channel.channel_partner_ids
+
+    def _compute_is_user_admin(self):
+        for channel in self:
+            channel.is_user_admin = self.env.user._is_admin()
 
     @api.depends('channel_partner_ids')
     def _compute_member_count(self):

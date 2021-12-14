@@ -11,6 +11,7 @@ registerModel({
         _created() {
             // Bind necessary until OWL supports arrow function in handlers: https://github.com/odoo/owl/issues/876
             this.onClickStartAMeetingButton = this.onClickStartAMeetingButton.bind(this);
+            this.onClickSearchMore = this.onClickSearchMore.bind(this);
         },
     },
     recordMethods: {
@@ -41,6 +42,9 @@ registerModel({
         async handleAddChannelAutocompleteSelect(ev, ui) {
             const name = this.addingChannelValue;
             this.clearIsAddingItem();
+            if(ui.item.searchMore) {
+                return this.onClickSearchMore(ev);
+            }
             if (ui.item.special) {
                 const channel = await this.async(() =>
                     this.messaging.models['mail.thread'].performRpcCreateChannel({
@@ -81,6 +85,12 @@ registerModel({
             // XDU FIXME could use a component but be careful with owl's
             // renderToString https://github.com/odoo/owl/issues/708
             items.push({
+                label: _.str.sprintf(
+                    `<strong style="color:blue">${this.env._t('Search More...')}</strong>`,
+                ),
+                escapedValue,
+                searchMore: true,
+            },{
                 label: _.str.sprintf(
                     `<strong>${this.env._t('Create %s')}</strong>`,
                     `<em><span class="fa fa-hashtag"/>${escapedValue}</em>`,
@@ -144,6 +154,23 @@ registerModel({
          */
         onClickMobileNewChannelButton(ev) {
             this.update({ isAddingChannel: true });
+        },
+        /**
+         * Redirects to the public channels window when view command is clicked.
+         *
+         * @param {MouseEvent} ev
+         */
+        onClickSearchMore(ev) {
+            ev.stopPropagation();
+            return this.env.bus.trigger('do-action', {
+                action: {
+                    name: this.env._t("Public Channels"),
+                    type: 'ir.actions.act_window',
+                    res_model: 'mail.channel',
+                    views: [[false, 'kanban'], [false, 'form']],
+                    domain: [['public', '!=', 'private']],
+                },
+            });
         },
         /**
          * Handles click on the "Start a meeting" button.

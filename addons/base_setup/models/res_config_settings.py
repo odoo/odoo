@@ -50,6 +50,7 @@ class ResConfigSettings(models.TransientModel):
     company_informations = fields.Text(compute="_compute_company_informations")
     profiling_enabled_until = fields.Datetime("Profiling enabled until", config_parameter='base.profiling_enabled_until')
     module_product_images = fields.Boolean("Get product pictures using barcode")
+    public_channels_count = fields.Integer('Number of Public Channels', compute="_compute_public_channels_count")
 
     def open_company(self):
         return {
@@ -107,6 +108,12 @@ class ResConfigSettings(models.TransientModel):
         language_count = len(self.env['res.lang'].get_installed())
         for record in self:
             record.language_count = language_count
+
+    @api.depends('company_id')
+    def _compute_public_channels_count(self):
+        public_channels_count = self.env['mail.channel'].sudo().search_count([('public','!=','private')])
+        for record in self:
+            record.public_channels_count = public_channels_count
 
     @api.depends('company_id')
     def _compute_company_informations(self):

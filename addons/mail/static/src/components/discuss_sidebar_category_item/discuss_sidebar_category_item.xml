@@ -22,9 +22,6 @@
                 </span>
                 <div class="o-autogrow o_DiscussSidebarCategoryItem_item"/>
                 <div class="o_DiscussSidebarCategoryItem_item o_DiscussSidebarCategoryItem_commands">
-                    <t t-if="categoryItem.hasSettingsCommand">
-                        <div class="o_DiscussSidebarCategoryItem_command o_DiscussSidebarCategoryItem_commandSettings fa fa-cog" t-on-click="categoryItem.onClickCommandSettings" title="Channel settings" role="img"/>
-                    </t>
                     <t t-if="categoryItem.hasLeaveCommand">
                         <div class="o_DiscussSidebarCategoryItem_command o_DiscussSidebarCategoryItem_commandLeave fa fa-times" t-on-click="categoryItem.onClickCommandLeave" title="Leave this channel" role="img"/>
                     </t>

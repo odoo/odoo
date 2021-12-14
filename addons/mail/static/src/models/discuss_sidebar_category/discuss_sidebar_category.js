@@ -15,7 +15,6 @@ registerModel({
             this.onAddItemAutocompleteSelect = this.onAddItemAutocompleteSelect.bind(this);
             this.onAddItemAutocompleteSource = this.onAddItemAutocompleteSource.bind(this);
             this.onClickCommandAdd = this.onClickCommandAdd.bind(this);
-            this.onClickCommandView = this.onClickCommandView.bind(this);
         },
     },
     modelMethods: {
@@ -168,23 +167,6 @@ registerModel({
         onClickCommandAdd(ev) {
             ev.stopPropagation();
             this.update({ isAddingItem: true });
-        },
-        /**
-         * Redirects to the public channels window when view command is clicked.
-         *
-         * @param {MouseEvent} ev
-         */
-        onClickCommandView(ev) {
-            ev.stopPropagation();
-            return this.env.bus.trigger('do-action', {
-                action: {
-                    name: this.env._t("Public Channels"),
-                    type: 'ir.actions.act_window',
-                    res_model: 'mail.channel',
-                    views: [[false, 'kanban'], [false, 'form']],
-                    domain: [['public', '!=', 'private']],
-                },
-            });
         },
         /**
          * Handles change of open state coming from the server. Useful to

@@ -93,6 +93,19 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-12 col-lg-6 o_setting_box" id="active_user_setting">
+                            <div class="o_setting_right_pane">
+                                <field name='public_channels_count' class="w-auto pl-3 font-weight-bold"/>
+                                <span class='o_form_label' attrs="{'invisible':[('public_channels_count', '&gt;', '1')]}">
+                                    Public Channel
+                                </span>
+                                <span class='o_form_label' attrs="{'invisible':[('public_channels_count', '&lt;=', '1')]}">
+                                    Public Channels
+                                </span>
+                                <br/>
+                                <button type="action" name="%(mail.mail_channel_action_kanban_view)d" icon="fa-arrow-right" string="Manage Public Channels" class="btn-link o_web_settings_access_rights"/>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </field>
