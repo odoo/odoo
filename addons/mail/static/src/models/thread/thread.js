@@ -2228,7 +2228,7 @@ registerModel({
             inverse: 'ringingThreads',
             readonly: true,
         }),
-        messagingMenuAsPinnedAndUnreadChannel: many2one('mail.messaging_menu', {
+        messagingMenuAsPinnedAndUnreadChannel: many2one('MessagingMenu', {
             compute: '_computeMessagingMenuAsPinnedAndUnreadChannel',
             inverse: 'pinnedAndUnreadChannels',
             readonly: true,
