@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { registry } from "@web/core/registry";
 import { makeFakeDialogService } from "@web/../tests/helpers/mock_services";
 import {
     click,
@@ -13,12 +14,9 @@ import {
     getPagerLimit,
     getPagerValue,
     pagerNext,
-    setupControlPanelFavoriteMenuRegistry,
-    setupControlPanelServiceRegistry,
     validateSearch,
 } from "@web/../tests/search/helpers";
-import { makeView } from "@web/../tests/views/helpers";
-import { registry } from "@web/core/registry";
+import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 const serviceRegistry = registry.category("services");
 
@@ -238,14 +236,12 @@ QUnit.module("Views", (hooks) => {
             },
         };
 
-        setupControlPanelFavoriteMenuRegistry();
-        setupControlPanelServiceRegistry();
+        setupViewRegistries();
         serviceRegistry.add(
             "dialog",
-            makeFakeDialogService((...args) => addDialog(...args))
+            makeFakeDialogService((...args) => addDialog(...args)),
+            { force: true }
         );
-        // serviceRegistry.add("localization", makeFakeLocalizationService());
-        // serviceRegistry.add("user", makeFakeUserService());
     });
 
     QUnit.module("KanbanView");

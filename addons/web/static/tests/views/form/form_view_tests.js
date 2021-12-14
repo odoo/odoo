@@ -1,49 +1,20 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
-import { dialogService } from "@web/core/dialog/dialog_service";
 import { registry } from "@web/core/registry";
 import { CharField } from "@web/fields/char_field";
-import { session } from "@web/session";
-import {
-    makeFakeLocalizationService,
-    makeFakeUserService,
-} from "@web/../tests/helpers/mock_services";
+import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import {
     click,
+    editInput,
     legacyExtraNextTick,
     makeDeferred,
-    mockDownload,
     nextTick,
-    patchDate,
     patchWithCleanup,
-    triggerEvent,
-    triggerEvents,
-    mouseEnter,
 } from "@web/../tests/helpers/utils";
-import {
-    applyGroup,
-    editFavoriteName,
-    removeFacet,
-    saveFavorite,
-    selectGroup,
-    setupControlPanelFavoriteMenuRegistry,
-    setupControlPanelServiceRegistry,
-    toggleAddCustomGroup,
-    toggleComparisonMenu,
-    toggleFavoriteMenu,
-    toggleFilterMenu,
-    toggleGroupByMenu,
-    toggleMenu,
-    toggleMenuItem,
-    toggleMenuItemOption,
-    toggleSaveFavorite,
-} from "@web/../tests/search/helpers";
-import { registerCleanup } from "@web/../tests/helpers/cleanup";
+import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
-import { makeView } from "../helpers";
 
-const serviceRegistry = registry.category("services");
 const fieldRegistry = registry.category("fields");
 
 let serverData;
@@ -229,11 +200,7 @@ QUnit.module("Views", (hooks) => {
             },
         };
 
-        setupControlPanelFavoriteMenuRegistry();
-        setupControlPanelServiceRegistry();
-        serviceRegistry.add("dialog", dialogService);
-        // serviceRegistry.add("localization", makeFakeLocalizationService());
-        // serviceRegistry.add("user", makeFakeUserService());
+        setupViewRegistries();
     });
 
     QUnit.module("FormView");
