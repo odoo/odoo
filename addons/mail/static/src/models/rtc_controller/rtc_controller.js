@@ -88,7 +88,7 @@ registerModel({
         isSmall: attr({
             compute: '_computeIsSmall',
         }),
-        rtcOptionList: one2one('mail.rtc_option_list', {
+        rtcOptionList: one2one('RtcOptionList', {
             default: insertAndReplace(),
             inverse: 'rtcController',
             isCausal: true,
