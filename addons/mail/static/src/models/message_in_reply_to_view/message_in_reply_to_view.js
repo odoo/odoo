@@ -6,7 +6,7 @@ import { replace } from '@mail/model/model_field_command';
 import { markEventHandled } from '@mail/utils/utils';
 
 registerModel({
-    name: 'mail.message_in_reply_to_view',
+    name: 'MessageInReplyToView',
     identifyingFields: ['messageView'],
     lifecycleHooks: {
         _created() {
