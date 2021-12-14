@@ -4,7 +4,7 @@ import { patchRecordMethods } from '@mail/model/model_core';
 // ensure that the model definition is loaded before the patch
 import '@mail/models/notification_group/notification_group';
 
-patchRecordMethods('mail.notification_group', {
+patchRecordMethods('NotificationGroup', {
     /**
      * @override
      */

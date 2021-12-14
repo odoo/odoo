@@ -6,7 +6,7 @@ import { clear, insert, unlink } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 
 registerModel({
-    name: 'mail.notification_group',
+    name: 'NotificationGroup',
     identifyingFields: ['res_model', 'res_id', 'notification_type'],
     recordMethods: {
         /**

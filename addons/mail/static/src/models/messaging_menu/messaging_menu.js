@@ -41,7 +41,7 @@ registerModel({
             }
             const inboxCounter = this.messaging.inbox ? this.messaging.inbox.counter : 0;
             const unreadChannelsCounter = this.pinnedAndUnreadChannels.length;
-            const notificationGroupsCounter = this.messaging.models['mail.notification_group'].all().reduce(
+            const notificationGroupsCounter = this.messaging.models['NotificationGroup'].all().reduce(
                 (total, group) => total + group.notifications.length,
                 0
             );
