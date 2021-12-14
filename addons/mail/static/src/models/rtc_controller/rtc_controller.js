@@ -5,7 +5,7 @@ import { attr, one2one } from '@mail/model/model_field';
 import { insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
-    name: 'mail.rtc_controller',
+    name: 'RtcController',
     identifyingFields: ['callViewer'],
     lifecycleHooks: {
         _created() {
