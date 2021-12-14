@@ -114,7 +114,7 @@ function insertAndReplace(data = {}) {
  * - Or add the record(s) given by `newValue` which are not in the currecnt field value
  * to the field value for an x2many field.
  *
- * @param {mail.model|mail.model[]} newValue - record or records array to be linked.
+ * @param {Model|Model[]} newValue - record or records array to be linked.
  * @returns {FieldCommand}
  */
 function link(newValue) {
@@ -130,7 +130,7 @@ function link(newValue) {
  * link the missing values, and then sort field value by the order they are given in `newValue`
  * for a x2many field.
  *
- * @param {mail.model|mail.model[]} newValue - record or records array to be replaced.
+ * @param {Model|Model[]} newValue - record or records array to be replaced.
  * @returns {FieldCommand}
  */
 function replace(newValue) {
@@ -155,7 +155,7 @@ function set(newValue) {
  * - or remove the record(s) given by `data` which are in the current field value
  *  for a x2many field.
  *
- * @param {mail.model|mail.model[]} [data] - record or records array to be unlinked.
+ * @param {Model|Model[]} [data] - record or records array to be unlinked.
  * `data` will be ignored if the field is x2one type.
  * @returns {FieldCommand}
  */

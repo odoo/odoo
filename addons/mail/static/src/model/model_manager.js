@@ -157,9 +157,9 @@ export class ModelManager {
     /**
      * Returns all records of provided model that match provided criteria.
      *
-     * @param {mail.model} Model class
+     * @param {Model} Model class
      * @param {function} [filterFunc]
-     * @returns {mail.model[]} records matching criteria.
+     * @returns {Model[]} records matching criteria.
      */
     all(Model, filterFunc) {
         for (const listener of this._listeners) {
@@ -194,7 +194,7 @@ export class ModelManager {
      * existed. Note that relation are removed, which may delete more relations
      * if some of them are causal.
      *
-     * @param {mail.model} record
+     * @param {Model} record
      */
     delete(record) {
         this._delete(record);
@@ -204,8 +204,8 @@ export class ModelManager {
     /**
      * Returns whether the given record still exists.
      *
-     * @param {mail.model} Model class
-     * @param {mail.model} record
+     * @param {Model} Model class
+     * @param {Model} record
      * @returns {boolean}
      */
     exists(Model, record) {
@@ -217,9 +217,9 @@ export class ModelManager {
      * Get the record of provided model that has provided
      * criteria, if it exists.
      *
-     * @param {mail.model} Model class
+     * @param {Model} Model class
      * @param {function} findFunc
-     * @returns {mail.model|undefined} the record of model matching criteria, if
+     * @returns {Model|undefined} the record of model matching criteria, if
      *   exists.
      */
     find(Model, findFunc) {
@@ -230,9 +230,9 @@ export class ModelManager {
      * Gets the unique record of provided model that matches the given
      * identifying data, if it exists.
      *
-     * @param {mail.model} Model class
+     * @param {Model} Model class
      * @param {Object} data
-     * @returns {mail.model|undefined}
+     * @returns {Model|undefined}
      */
     findFromIdentifyingData(Model, data) {
         return this.get(Model, this._getRecordIndex(Model, data));
@@ -245,11 +245,11 @@ export class ModelManager {
      * id, if the resulting record is not an instance of this model, this getter
      * assumes the record does not exist.
      *
-     * @param {mail.model} Model class
+     * @param {Model} Model class
      * @param {string} localId
      * @param {Object} param2
      * @param {boolean} [param2.isCheckingInheritance=false]
-     * @returns {mail.model|undefined} record, if exists
+     * @returns {Model|undefined} record, if exists
      */
     get(Model, localId, { isCheckingInheritance = false } = {}) {
         if (!localId) {
@@ -284,7 +284,7 @@ export class ModelManager {
         if (!isCheckingInheritance) {
             return;
         }
-        // support for inherited models (eg. relation targeting `mail.model`)
+        // support for inherited models (eg. relation targeting `Model`)
         for (const SubModel of Object.values(this.models)) {
             if (!(SubModel.prototype instanceof Model)) {
                 continue;
@@ -315,10 +315,10 @@ export class ModelManager {
      * provided data. This method assumes that records are uniquely identifiable
      * per "unique find" criteria from data on Model.
      *
-     * @param {mail.model} Model class
+     * @param {Model} Model class
      * @param {Object|Object[]} data
      *  If data is an iterable, multiple records will be created/updated.
-     * @returns {mail.model|mail.model[]} created or updated record(s).
+     * @returns {Model|Model[]} created or updated record(s).
      */
     insert(Model, data) {
         const res = this._insert(Model, data);
@@ -393,7 +393,7 @@ export class ModelManager {
      * ones from `data`) and then indirect ones (i.e. compute/related fields
      * and "after updates").
      *
-     * @param {mail.model} record
+     * @param {Model} record
      * @param {Object} data
      * @returns {boolean} whether any value changed for the current record
      */
@@ -412,7 +412,7 @@ export class ModelManager {
      * given model.
      *
      * @private
-     * @param {mail.model} Model class
+     * @param {Model} Model class
      * @param {Object} [data={}]
      */
     _addDefaultData(Model, data = {}) {
@@ -433,7 +433,7 @@ export class ModelManager {
      * definition to the Model, then registers it in `this.models`.
      *
      * @private
-     * @param {mail.model} Model
+     * @param {Model} Model
      */
     _applyModelDefinition(Model) {
         const definition = registry.get(Model.name);
@@ -627,7 +627,7 @@ export class ModelManager {
                 if (inverseField.inverse !== fieldName) {
                     throw new Error(`The name of ${field} on ${Model} does not match with the name defined in its inverse ${inverseField} on ${RelatedModel}.`);
                 }
-                if (![Model.name, 'mail.model'].includes(inverseField.to)) {
+                if (![Model.name, 'Model'].includes(inverseField.to)) {
                     throw new Error(`${field} on ${Model} has its inverse ${inverseField} on ${RelatedModel} referring to an invalid model (model(${inverseField.to})).`);
                 }
                 if (
@@ -663,9 +663,9 @@ export class ModelManager {
 
     /**
      * @private
-     * @param {mail.model} Model class
+     * @param {Model} Model class
      * @param {string} localId
-     * @returns {mail.model}
+     * @returns {Model}
      */
     _create(Model, localId) {
         /**
@@ -747,7 +747,7 @@ export class ModelManager {
 
     /**
      * @private
-     * @param {mail.model} record
+     * @param {Model} record
      */
     _delete(record) {
         this._ensureNoLockingListener();
@@ -944,13 +944,13 @@ export class ModelManager {
     _generateModels() {
         // Create the model through a class to give it a meaningful name to be
         // displayed in stack traces and stuff.
-        const Model = { 'mail.model': class {} }['mail.model'];
+        const Model = { 'Model': class {} }['Model'];
         this._applyModelDefinition(Model);
-        // mail.model is generated separately and before the other models since
+        // Model is generated separately and before the other models since
         // it is the dependency of all of them.
-        const allModelNamesButMailModel = [...registry.keys()].filter(name => name !== 'mail.model');
+        const allModelNamesButMailModel = [...registry.keys()].filter(name => name !== 'Model');
         for (const modelName of allModelNamesButMailModel) {
-            const Model = { [modelName]: class extends this.models['mail.model'] {} }[modelName];
+            const Model = { [modelName]: class extends this.models['Model'] {} }[modelName];
             this._applyModelDefinition(Model);
         }
         /**
@@ -973,8 +973,8 @@ export class ModelManager {
     /**
      * Returns an index on the given model for the given data.
      *
-     * @param {mail.model} Model class
-     * @param {Object|mail.model} data insert data or record
+     * @param {Model} Model class
+     * @param {Object|Model} data insert data or record
      * @returns {string}
      */
     _getRecordIndex(Model, data) {
@@ -1026,9 +1026,9 @@ export class ModelManager {
 
     /**
      * @private
-     * @param {mail.model}
+     * @param {Model}
      * @param {Object|Object[]} [data={}]
-     * @returns {mail.model|mail.model[]}
+     * @returns {Model|Model[]}
      */
     _insert(Model, data = {}) {
         this._ensureNoLockingListener();
@@ -1051,7 +1051,7 @@ export class ModelManager {
 
     /**
      * @private
-     * @param {mail.model} Model class
+     * @param {Model} Model class
      * @param {ModelField} field
      * @returns {ModelField}
      */
@@ -1109,7 +1109,7 @@ export class ModelManager {
     /**
      * Marks the given field of the given record as changed.
      *
-     * @param {mail.model} record
+     * @param {Model} record
      * @param {ModelField} field
      */
     _markRecordFieldAsChanged(record, field) {
@@ -1288,7 +1288,7 @@ export class ModelManager {
 
     /**
      * @private
-     * @param {mail.model} record
+     * @param {Model} record
      * @param {Object} data
      * @param {Object} [options]
      * @param [options.allowWriteReadonly=false]
