@@ -4,11 +4,38 @@ from lxml.builder import E
 import copy
 import itertools
 import logging
+import re
 
 from odoo.tools.translate import _
 from odoo.tools import SKIPPED_ELEMENT_TYPES, html_escape
 
 _logger = logging.getLogger(__name__)
+RSTRIP_REGEXP = re.compile(r'\n[ \t]*$')
+
+def add_stripped_items_before(node, spec, extract):
+    text = spec.text or ''
+
+    before_text = ''
+    prev = node.getprevious()
+    if prev is None:
+        parent = node.getparent()
+        result = parent.text and RSTRIP_REGEXP.search(parent.text)
+        before_text = result.group(0) if result else ''
+        parent.text = (parent.text or '').rstrip() + text
+    else:
+        result = prev.tail and RSTRIP_REGEXP.search(prev.tail)
+        before_text = result.group(0) if result else ''
+        prev.tail = (prev.tail or '').rstrip() + text
+
+    if len(spec) > 0:
+        spec[-1].tail = (spec[-1].tail or "").rstrip() + before_text
+    else:
+        spec.text = (spec.text or "").rstrip() + before_text
+
+    for child in spec:
+        if child.get('position') == 'move':
+            child = extract(child)
+        node.addprevious(child)
 
 
 def add_text_before(node, text):
@@ -17,20 +44,10 @@ def add_text_before(node, text):
         return
     prev = node.getprevious()
     if prev is not None:
-        prev.tail = (prev.tail or "").rstrip() + text
+        prev.tail = (prev.tail or "") + text
     else:
         parent = node.getparent()
         parent.text = (parent.text or "").rstrip() + text
-
-
-def add_text_inside(node, text):
-    """ Add text inside ``node``. """
-    if text is None:
-        return
-    if len(node):
-        node[-1].tail = (node[-1].tail or "").rstrip() + text
-    else:
-        node.text = (node.text or "") + text
 
 
 def remove_element(node):
@@ -210,28 +227,22 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
                     elif attribute in node.attrib:
                         del node.attrib[attribute]
             elif pos == 'inside':
-                add_text_inside(node, spec.text)
-                for child in spec:
-                    if child.get('position') == 'move':
-                        child = extract(child)
-                    node.append(child)
+                # add a sentinel element at the end, insert content of spec
+                # before the sentinel, then remove the sentinel element
+                sentinel = E.sentinel()
+                node.append(sentinel)
+                add_stripped_items_before(sentinel, spec, extract)
+                remove_element(sentinel)
             elif pos == 'after':
                 # add a sentinel element right after node, insert content of
                 # spec before the sentinel, then remove the sentinel element
                 sentinel = E.sentinel()
                 node.addnext(sentinel)
-                add_text_before(sentinel, spec.text)
-                for child in spec:
-                    if child.get('position') == 'move':
-                        child = extract(child)
-                    sentinel.addprevious(child)
+                add_stripped_items_before(sentinel, spec, extract)
                 remove_element(sentinel)
             elif pos == 'before':
-                add_text_before(node, spec.text)
-                for child in spec:
-                    if child.get('position') == 'move':
-                        child = extract(child)
-                    node.addprevious(child)
+                add_stripped_items_before(node, spec, extract)
+
             else:
                 raise ValueError(
                     _("Invalid position attribute: '%s'") %
