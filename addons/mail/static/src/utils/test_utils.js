@@ -440,7 +440,7 @@ function getCreateComposerSuggestionComponent({ components, env, modelManager, w
 
 function getCreateMessageComponent({ components, env, modelManager, widget }) {
     return async function createMessageComponent(message) {
-        const messageView = modelManager.messaging.models['mail.message_view'].create({
+        const messageView = modelManager.messaging.models['MessageView'].create({
             message: replace(message),
             qunitTest: insertAndReplace(),
         });

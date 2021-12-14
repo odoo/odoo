@@ -14,7 +14,7 @@ registerModel({
             inverse: 'qunitTest',
             isCausal: true,
         }),
-        messageView: one2one('mail.message_view', {
+        messageView: one2one('MessageView', {
             inverse: 'qunitTest',
             isCausal: true,
         }),

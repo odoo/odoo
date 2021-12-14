@@ -97,7 +97,7 @@ registerModel({
         },
         /**
          * @private
-         * @returns {mail.message_view[]}
+         * @returns {MessageView[]}
          */
         _computeMessageViews() {
             if (!this.threadCache) {
@@ -407,7 +407,7 @@ registerModel({
         /**
          * States the message views used to display this messages.
          */
-        messageViews: one2many('mail.message_view', {
+        messageViews: one2many('MessageView', {
             compute: '_computeMessageViews',
             inverse: 'threadView',
             isCausal: true,
@@ -422,7 +422,7 @@ registerModel({
         /**
          * Determines the message that's currently being replied to.
          */
-        replyingToMessageView: many2one('mail.message_view'),
+        replyingToMessageView: many2one('MessageView'),
         /**
          * Determines the Rtc call viewer of this thread.
          */
