@@ -30,10 +30,10 @@ registerModel({
         address: one2one('TestAddress', {
             inverse: 'contact',
         }),
-        favorite: one2one('test.hobby', {
+        favorite: one2one('TestHobby', {
             default: insertAndReplace({ description: 'football' }),
         }),
-        hobbies: one2many('test.hobby', {
+        hobbies: one2many('TestHobby', {
             default: insertAndReplace([
                 { description: 'hiking' },
                 { description: 'fishing' },
@@ -46,7 +46,7 @@ registerModel({
 });
 
 registerModel({
-    name: 'test.hobby',
+    name: 'TestHobby',
     identifyingFields: ['description'],
     fields: {
         description: attr({
