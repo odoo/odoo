@@ -674,7 +674,7 @@ registerModel({
         /**
          * States the thread view managing this top bar.
          */
-        threadView: one2one('mail.thread_view', {
+        threadView: one2one('ThreadView', {
             inverse: 'topbar',
             readonly: true,
             required: true,

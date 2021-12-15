@@ -468,9 +468,9 @@ registerModel({
             readonly: true,
         }),
         /**
-         * States the `mail.thread_view` displaying `this.thread`.
+         * States the `ThreadView` displaying `this.thread`.
          */
-        threadView: one2one('mail.thread_view', {
+        threadView: one2one('ThreadView', {
             related: 'threadViewer.threadView',
         }),
         /**

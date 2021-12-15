@@ -159,10 +159,10 @@ export class MessageList extends Component {
     }
 
     /**
-     * @returns {mail.thread_view}
+     * @returns {ThreadView}
      */
     get threadView() {
-        return this.messaging && this.messaging.models['mail.thread_view'].get(this.props.threadViewLocalId);
+        return this.messaging && this.messaging.models['ThreadView'].get(this.props.threadViewLocalId);
     }
 
     //--------------------------------------------------------------------------

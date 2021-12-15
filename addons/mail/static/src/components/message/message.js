@@ -260,7 +260,7 @@ export class Message extends Component {
     }
 
     /**
-     * @returns {mail.thread_view}
+     * @returns {ThreadView}
      */
     get threadView() {
         return this.messageView && this.messageView.threadView;

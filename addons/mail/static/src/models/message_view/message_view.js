@@ -184,7 +184,7 @@ registerModel({
         /**
          * States the thread view that is displaying this messages (if any).
          */
-        threadView: many2one('mail.thread_view', {
+        threadView: many2one('ThreadView', {
             inverse: 'messageViews',
             readonly: true,
         }),

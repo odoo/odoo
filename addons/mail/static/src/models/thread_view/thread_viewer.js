@@ -142,9 +142,9 @@ registerModel({
             default: {},
         }),
         /**
-         * States the `mail.thread_view` currently displayed and managed by `this`.
+         * States the `ThreadView` currently displayed and managed by `this`.
          */
-        threadView: one2one('mail.thread_view', {
+        threadView: one2one('ThreadView', {
             compute: '_computeThreadView',
             inverse: 'threadViewer',
             isCausal: true,
