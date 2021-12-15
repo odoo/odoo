@@ -40,6 +40,17 @@ class WebsiteBackend(http.Controller):
                 )
         return dashboard_data
 
+    @http.route('/website/get_websites', type="json", auth='user')
+    def get_websites(self):
+        Website = request.env['website']
+
+        current_website = Website.get_current_website()
+        multi_website = request.env.user.has_group('website.group_multi_website')
+        websites = multi_website and request.env['website'].search([]) or current_website
+        results = websites.read(['id', 'name'])
+
+        return results
+
     @http.route('/website/dashboard/set_ga_data', type='json', auth='user')
     def website_set_ga_data(self, website_id, ga_client_id, ga_analytics_key):
         if not request.env.user.has_group('base.group_system'):

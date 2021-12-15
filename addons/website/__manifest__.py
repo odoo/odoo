@@ -171,6 +171,9 @@
             'website/static/src/js/widget_iframe.js',
             'website/static/src/js/theme_preview_kanban.js',
             'website/static/src/js/theme_preview_form.js',
+            'website/static/src/client_actions/*/*.js',
+            'website/static/src/client_actions/*/*.scss',
+            'website/static/src/services/website_service.js',
         ],
         'web.qunit_suite_tests': [
             'website/static/tests/dashboard_tests.js',
@@ -242,6 +245,7 @@
             'website/static/src/xml/website_widget.xml',
             'website/static/src/xml/theme_preview.xml',
             'website/static/src/components/configurator/configurator.xml',
+            'website/static/src/client_actions/*/*.xml',
         ],
         'website.test_bundle': [
             '/web/static/lib/qweb/qweb2.js',

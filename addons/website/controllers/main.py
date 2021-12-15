@@ -103,7 +103,7 @@ class Website(Home):
             # Website 1 : 127.0.0.1 (admin)
             # Website 2 : 127.0.0.2 (not logged in)
             # Click on "Website 2" from Website 1
-            return request.redirect(path)
+            return path
 
         website = request.env['website'].browse(website_id)
 
@@ -113,9 +113,9 @@ class Website(Home):
             if domain_from != domain_to:
                 # redirect to correct domain for a correct routing map
                 url_to = werkzeug.urls.url_join(website.domain, '/website/force/%s?isredir=1&path=%s' % (website.id, path))
-                return request.redirect(url_to)
+                return url_to
         website._force()
-        return request.redirect(path)
+        return path
 
     # ------------------------------------------------------
     # Login - overwrite of the web login so that regular users are redirected to the backend
