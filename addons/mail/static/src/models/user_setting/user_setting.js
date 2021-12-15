@@ -7,7 +7,7 @@ import { attr, one2one, one2many } from '@mail/model/model_field';
 import { insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
-    name: 'mail.user_setting',
+    name: 'UserSetting',
     identifyingFields: ['id'],
     lifecycleHooks: {
         _created() {

@@ -84,7 +84,7 @@ registerModel({
         isRegisteringKey: attr({
             default: false,
         }),
-        userSetting: one2one('mail.user_setting', {
+        userSetting: one2one('UserSetting', {
             inverse: 'rtcConfigurationMenu',
             readonly: true,
             required: true,
