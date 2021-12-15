@@ -4,17 +4,16 @@ import { useListener } from "web.custom_hooks";
 import { useService } from "@web/core/utils/hooks";
 import { evaluateExpr } from "@web/core/py_js/py";
 
-function toggleButtonsDisable(el, enable = true) {
+function disableButtons(el) {
     const btns = el.querySelectorAll("button");
-    let apply;
-    if (enable) {
-        apply = (btn) => btn.removeAttribute("disabled");
-    } else {
-        apply = (btn) => btn.setAttribute("disabled", "1");
-    }
+    const manuallyDisabledButtons = [];
     for (const btn of btns) {
-        apply(btn);
+        if (!btn.hasAttribute("disabled")) {
+            manuallyDisabledButtons.push(btn);
+            btn.setAttribute("disabled", "1");
+        }
     }
+    return manuallyDisabledButtons;
 }
 
 export function useViewButtons(model) {
@@ -22,7 +21,7 @@ export function useViewButtons(model) {
     const comp = owl.hooks.useComponent();
 
     async function handler(ev) {
-        toggleButtonsDisable(comp.el, false);
+        const manuallyDisabledButtons = disableButtons(comp.el);
         const { clickParams, record } = ev.detail;
 
         const resId = record.resId;
@@ -56,7 +55,9 @@ export function useViewButtons(model) {
             await action.doActionButton(doActionParams);
         } finally {
             if (comp.el) {
-                toggleButtonsDisable(comp.el, true);
+                for (const btn of manuallyDisabledButtons) {
+                    btn.removeAttribute("disabled");
+                }
             }
         }
     }

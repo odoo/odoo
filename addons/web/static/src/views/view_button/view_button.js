@@ -51,6 +51,7 @@ function iconFromString(iconString) {
 export class ViewButton extends owl.Component {
     setup() {
         const classes = transformButtonClasses(this.props.classes, this.props.defaultRank);
+        this.disabled = !this.props.clickParams.name && !this.props.clickParams.type;
         if (this.props.size) {
             classes.push(`btn-${this.props.size}`);
         }
@@ -69,3 +70,6 @@ export class ViewButton extends owl.Component {
     }
 }
 ViewButton.template = "views.ViewButton";
+ViewButton.defaultProps = {
+    clickParams: {},
+};

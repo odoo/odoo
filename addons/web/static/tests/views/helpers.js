@@ -12,7 +12,11 @@ import {
     setupControlPanelServiceRegistry,
 } from "../search/helpers";
 import { addLegacyMockEnvironment } from "../webclient/helpers";
-import { makeFakeLocalizationService, makeFakeUserService } from "../helpers/mock_services";
+import {
+    makeFakeLocalizationService,
+    makeFakeRouterService,
+    makeFakeUserService,
+} from "../helpers/mock_services";
 import { dialogService } from "@web/core/dialog/dialog_service";
 
 const { mount } = owl;
@@ -115,6 +119,7 @@ export function setupViewRegistries() {
         makeFakeUserService((group) => group === "base.group_allow_export"),
         { force: true }
     );
+    serviceRegistry.add("router", makeFakeRouterService(), { force: true });
     serviceRegistry.add("localization", makeFakeLocalizationService()), { force: true };
     serviceRegistry.add("dialog", dialogService), { force: true };
 }

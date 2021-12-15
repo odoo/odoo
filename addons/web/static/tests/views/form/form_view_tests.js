@@ -3,7 +3,6 @@
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { CharField } from "@web/fields/char_field";
-import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import {
     click,
     editInput,
@@ -16,6 +15,7 @@ import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 
 const fieldRegistry = registry.category("fields");
+const serviceRegistry = registry.category("services");
 
 let serverData;
 QUnit.module("Views", (hooks) => {
@@ -1059,9 +1059,9 @@ QUnit.module("Views", (hooks) => {
             const target = getFixture();
             target.append(scrollableParent);
 
-            var form = await createView({
-                View: FormView,
-                model: "partner",
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
                 data: {
                     partner: {
                         fields: {},
@@ -1158,7 +1158,6 @@ QUnit.module("Views", (hooks) => {
                 isVisible(scrollableParent.querySelector("#anchor1")),
                 "the first anchor is visible"
             );
-            form.destroy();
         }
     );
 
@@ -1216,11 +1215,10 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skip("reset local state when switching to another view", async function (assert) {
-        assert.expect(3);
-
+    QUnit.test("reset local state when switching to another view", async function (assert) {
         serverData.views = {
-            "partner,false,form": `<form>
+            "partner,false,form": `
+                <form>
                     <sheet>
                         <field name="product_id"/>
                         <notebook>
@@ -1241,7 +1239,7 @@ QUnit.module("Views", (hooks) => {
             1: {
                 id: 1,
                 name: "Partner",
-                resModel: "partner",
+                res_model: "partner",
                 type: "ir.actions.act_window",
                 views: [
                     [false, "list"],
@@ -1253,172 +1251,180 @@ QUnit.module("Views", (hooks) => {
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 1);
 
-        await testUtils.dom.click(webClient.el.querySelector(".o_list_button_add"));
-        await legacyExtraNextTick();
+        await click(webClient.el.querySelector(".o_list_button_add"));
         assert.containsOnce(webClient, ".o_form_view");
+        // sanity check: notebook active page is first page
+        assert.hasClass(webClient.el.querySelector(".o_notebook .nav-link"), "active");
 
         // click on second page tab
-        await testUtils.dom.click($(webClient.el).find(".o_notebook .nav-link:eq(1)"));
+        await click(webClient.el.querySelectorAll(".o_notebook .nav-link")[1]);
+        assert.hasClass(webClient.el.querySelectorAll(".o_notebook .nav-link")[1], "active");
 
-        await testUtils.dom.click(".o_control_panel .o_form_button_cancel");
-        await legacyExtraNextTick();
+        await click(webClient.el.querySelector(".o_control_panel .o_form_button_cancel"));
         assert.containsNone(webClient, ".o_form_view");
 
-        await testUtils.dom.click(webClient.el.querySelector(".o_list_button_add"));
-        await legacyExtraNextTick();
-        // check notebook active page is 0th page
-        assert.hasClass($(webClient.el).find(".o_notebook .nav-link:eq(0)"), "active");
+        await click(webClient.el.querySelector(".o_list_button_add"));
+        assert.containsOnce(webClient, ".o_form_view");
+        // check notebook active page is first page again
+        assert.hasClass(webClient.el.querySelector(".o_notebook .nav-link"), "active");
     });
 
-    QUnit.skip("rendering stat buttons with action", async function (assert) {
+    QUnit.test("rendering stat buttons with action", async function (assert) {
         assert.expect(3);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                '<div name="button_box" class="oe_button_box">' +
-                '<button class="oe_stat_button" >' +
-                '<field name="int_field"/>' +
-                "</button>" +
-                '<button class="oe_stat_button" name="some_action" type="action" attrs=\'{"invisible": [["bar", "=", true]]}\'>' +
-                '<field name="bar"/>' +
-                "</button>" +
-                "</div>" +
-                "<group>" +
-                '<field name="foo"/>' +
-                "</group>" +
-                "</sheet>" +
-                "</form>",
-            res_id: 2,
-        });
-
-        assert.containsN(form, "button.oe_stat_button", 2);
-        assert.containsOnce(form, "button.oe_stat_button.o_invisible_modifier");
-
-        var count = 0;
-        await testUtils.mock.intercept(form, "execute_action", function () {
-            count++;
-        });
-        await testUtils.dom.click(".oe_stat_button");
-        assert.strictEqual(count, 0, "should have triggered an execute_action");
-        form.destroy();
-    });
-
-    QUnit.skip("rendering stat buttons without action", async function (assert) {
-        assert.expect(4);
-
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                '<div name="button_box" class="oe_button_box">' +
-                '<button class="oe_stat_button">' +
-                '<field name="int_field"/>' +
-                "</button>" +
-                '<button class="oe_stat_button" attrs=\'{"invisible": [["bar", "=", true]]}\'>' +
-                '<field name="bar"/>' +
-                "</button>" +
-                "</div>" +
-                "<group>" +
-                '<field name="foo"/>' +
-                "</group>" +
-                "</sheet>" +
-                "</form>",
-            res_id: 2,
-        });
-
-        assert.containsN(form, "button.oe_stat_button", 2);
-        assert.containsOnce(form, "button.oe_stat_button.o_invisible_modifier");
-        assert.containsN(form, "button.oe_stat_button:disabled", 2);
-
-        var count = 0;
-        await testUtils.mock.intercept(form, "execute_action", function () {
-            count++;
-        });
-        await testUtils.dom.click(".oe_stat_button");
-        assert.strictEqual(count, 0, "should have not triggered an execute_action");
-        form.destroy();
-    });
-
-    QUnit.skip("readonly stat buttons stays disabled", async function (assert) {
-        assert.expect(4);
-
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                '<div name="button_box" class="oe_button_box">' +
-                '<button class="oe_stat_button">' +
-                '<field name="int_field"/>' +
-                "</button>" +
-                '<button class="oe_stat_button" type="action" name="some_action">' +
-                '<field name="bar"/>' +
-                "</button>" +
-                "</div>" +
-                "<group>" +
-                '<button type="action" name="action_to_perform">Run an action</button>' +
-                "</group>" +
-                "</sheet>" +
-                "</form>",
-            res_id: 2,
-        });
-
-        var count = 0;
-        await testUtils.mock.intercept(form, "execute_action", function (event) {
-            if (event.data.action_data.name == "action_to_perform") {
-                assert.containsN(
-                    form,
-                    "button.oe_stat_button[disabled]",
-                    2,
-                    "While performing the action, both buttons should be disabled."
-                );
-                event.data.on_success();
-            }
-        });
-
-        assert.containsN(form, "button.oe_stat_button", 2);
-        assert.containsN(form, "button.oe_stat_button[disabled]", 1);
-        await testUtils.dom.click("button[name=action_to_perform]");
-        assert.containsN(
-            form,
-            "button.oe_stat_button[disabled]",
-            1,
-            "After performing the action, only one button should be disabled."
-        );
-
-        form.destroy();
-    });
-
-    QUnit.skip("label uses the string attribute", async function (assert) {
-        assert.expect(1);
+        const fakeActionService = {
+            start() {
+                return {
+                    doActionButton(params) {
+                        assert.strictEqual(params.name, "someaction");
+                        assert.strictEqual(params.type, "action");
+                    },
+                };
+            },
+        };
+        serviceRegistry.add("action", fakeActionService, { force: true });
 
         const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                "<group>" +
-                '<label for="bar" string="customstring"/>' +
-                '<div><field name="bar"/></div>' +
-                "</group>" +
-                "</sheet>" +
-                "</form>",
+            arch: `
+                <form>
+                    <sheet>
+                        <div name="button_box" class="oe_button_box">
+                            <button class="oe_stat_button" type="action" name="someaction">
+                                <field name="int_field"/>
+                            </button>
+                            <button class="oe_stat_button" name="some_action" type="action" attrs='{"invisible": [["bar", "=", true]]}'>
+                                <field name="bar"/>
+                            </button>
+                        </div>
+                        <group>
+                            <field name="foo"/>
+                        </group>
+                    </sheet>
+                </form>`,
             resId: 2,
         });
 
-        assert.containsOnce(form, "label.o_form_label:contains(customstring)");
+        assert.containsOnce(form, "button.oe_stat_button");
+        await click(form.el.querySelector(".oe_stat_button")); // should not call doActionButton
+    });
+
+    QUnit.test("rendering stat buttons without action", async function (assert) {
+        const fakeActionService = {
+            start() {
+                return {
+                    doActionButton() {
+                        throw new Error("Should not call doActionButton");
+                    },
+                };
+            },
+        };
+        serviceRegistry.add("action", fakeActionService, { force: true });
+
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <div name="button_box" class="oe_button_box">
+                            <button class="oe_stat_button">
+                                <field name="int_field"/>
+                            </button>
+                            <button class="oe_stat_button" name="some_action" type="action" attrs='{"invisible": [["bar", "=", true]]}'>
+                                <field name="bar"/>
+                            </button>
+                        </div>
+                        <group>
+                            <field name="foo"/>
+                        </group>
+                    </sheet>
+                </form>`,
+            resId: 2,
+        });
+
+        assert.containsOnce(form, "button.oe_stat_button");
+        await click(form.el.querySelector(".oe_stat_button")); // should not call doActionButton
+    });
+
+    QUnit.test("readonly stat buttons stays disabled", async function (assert) {
+        assert.expect(4);
+
+        const fakeActionService = {
+            start() {
+                return {
+                    async doActionButton(params) {
+                        if (params.name == "action_to_perform") {
+                            assert.containsN(
+                                form,
+                                "button.oe_stat_button[disabled]",
+                                2,
+                                "While performing the action, both buttons should be disabled."
+                            );
+                        }
+                    },
+                };
+            },
+        };
+        serviceRegistry.add("action", fakeActionService, { force: true });
+
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <div name="button_box" class="oe_button_box">
+                            <button class="oe_stat_button">
+                                <field name="int_field"/>
+                            </button>
+                            <button class="oe_stat_button" type="action" name="some_action">
+                                <field name="bar"/>
+                            </button>
+                        </div>
+                        <group>
+                            <button type="action" name="action_to_perform">Run an action</button>
+                        </group>
+                    </sheet>
+                </form>`,
+            resId: 2,
+        });
+
+        assert.containsN(form, "button.oe_stat_button", 2);
+        assert.containsN(form, "button.oe_stat_button[disabled]", 1);
+        await click(form.el.querySelector("button[name=action_to_perform]"));
+        assert.containsOnce(
+            form,
+            "button.oe_stat_button[disabled]",
+            "After performing the action, only one button should be disabled."
+        );
+    });
+
+    QUnit.test("label uses the string attribute", async function (assert) {
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <label for="bar" string="customstring"/>
+                            <div>
+                                <field name="bar"/>
+                            </div>
+                        </group>
+                    </sheet>
+                </form>`,
+            resId: 2,
+        });
+
+        assert.containsOnce(form, "label.o_form_label");
+        assert.strictEqual(form.el.querySelector("label.o_form_label").innerText, "customstring");
     });
 
     QUnit.skip(
@@ -1729,10 +1735,10 @@ QUnit.module("Views", (hooks) => {
             // This one is necessary to have a valid, rendered widget
             this.data.product.fields.int_field = { type: "integer", string: "intField" };
 
-            var form = await createView({
-                View: FormView,
+            const form = await makeView({
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch: `
             <form>
                 <field name="trululu"/>
@@ -1767,8 +1773,6 @@ QUnit.module("Views", (hooks) => {
                     );
                 }
             }
-
-            form.destroy();
         }
     );
 
@@ -4872,9 +4876,9 @@ QUnit.module("Views", (hooks) => {
             // We just test that there is no crash in this situation
             this.data.partner.records[0].timmy = [12];
             const form = await createView({
-                View: FormView,
+                type: "form",
                 model: "partner",
-                data: this.data,
+                serverData,
                 arch: `<form string="Partners">
                     <group>
                         <field name="foo" widget="domain"/>
@@ -4898,8 +4902,6 @@ QUnit.module("Views", (hooks) => {
             // open a form view and save many2many record
             await testUtils.dom.click(form.$(".o_data_row .o_data_cell:first"));
             await testUtils.dom.click($(".modal-dialog footer button:first-child"));
-
-            form.destroy();
         }
     );
 
@@ -12761,9 +12763,9 @@ QUnit.module("Views", (hooks) => {
         assert.expect(5);
 
         const form = await createView({
-            View: FormView,
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch: `
                 <form>
                     <group>
@@ -12790,8 +12792,6 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(form, 'input[type="radio"]:eq(2):checked');
 
         assert.verifySteps([], "No write RPC done");
-
-        form.destroy();
     });
 
     QUnit.skip("Quick Edition: non-editable form", async function (assert) {
@@ -12897,9 +12897,9 @@ QUnit.module("Views", (hooks) => {
         });
 
         const form = await createView({
-            View: FormView,
+            type: "form",
             model: "partner",
-            data: this.data,
+            serverData,
             arch: `
                 <form>
                     <group>
@@ -12942,8 +12942,6 @@ QUnit.module("Views", (hooks) => {
         await testUtils.nextTick();
         await legacyExtraNextTick();
         assert.containsOnce(form, ".o_legacy_form_view.o_form_editable");
-
-        form.destroy();
     });
 
     QUnit.skip(
