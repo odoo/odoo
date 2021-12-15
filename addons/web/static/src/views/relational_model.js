@@ -8,7 +8,7 @@ import { evaluateExpr } from "@web/core/py_js/py";
 import { Deferred, KeepLast, Mutex } from "@web/core/utils/concurrency";
 import { session } from "@web/session";
 import { Model } from "@web/views/helpers/model";
-import { isX2Many } from "@web/views/helpers/view_utils";
+import { isNumeric, isX2Many } from "@web/views/helpers/view_utils";
 import { registry } from "../core/registry";
 
 const { DateTime } = luxon;
@@ -202,7 +202,11 @@ export class Record extends DataPoint {
             data = await this._read();
             this._changes = {};
         } else {
-            data = await this._performOnchange();
+            const onchangeValues = await this._performOnchange();
+            data = {
+                ...this._generateDefaultValues(),
+                ...onchangeValues,
+            };
         }
         this._values = data; // FIXME: don't update internal state directly
         this.data = { ...data };
@@ -401,6 +405,18 @@ export class Record extends DataPoint {
             }
         }
         return changes;
+    }
+
+    _generateDefaultValues() {
+        const defaultValues = {};
+        for (const fieldName of this.fieldNames) {
+            if (isNumeric(this.fields[fieldName])) {
+                defaultValues[fieldName] = 0;
+            } else {
+                defaultValues[fieldName] = null;
+            }
+        }
+        return defaultValues;
     }
 }
 
