@@ -955,7 +955,6 @@ export class RelationalModel extends Model {
      */
     async load(params) {
         const rootParams = Object.assign({}, this.rootParams, params);
-        debugger;
         if (params && params.orderBy && !params.orderBy.length) {
             rootParams.orderBy = this.rootParams.defaultOrder;
         }
