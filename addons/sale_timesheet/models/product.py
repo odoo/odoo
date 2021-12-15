@@ -6,16 +6,10 @@ import threading
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
-from odoo.addons.sale_project.models.product import SERVICE_POLICY, SERVICE_TO_GENERAL, GENERAL_TO_SERVICE
+from odoo.addons.sale_project.models.product import SERVICE_POLICY
 
 SERVICE_POLICY = [policy[:1] for policy in SERVICE_POLICY]
 SERVICE_POLICY.insert(1, ('delivered_timesheet', 'Based on Timesheets'))
-
-SERVICE_TO_GENERAL.update({
-    'ordered_timesheet': ('order', 'timesheet'),
-    'delivered_timesheet': ('delivery', 'timesheet'),
-})
-GENERAL_TO_SERVICE.update({value: key for key, value in SERVICE_TO_GENERAL.items()})
 
 
 class ProductTemplate(models.Model):
@@ -73,6 +67,13 @@ class ProductTemplate(models.Model):
                         "Invoice based on timesheets (delivered quantity), and create an empty "
                         "project for the order to track the time spent."
                     )
+
+    def _get_service_to_general_map(self):
+        return {
+            **super()._get_service_to_general_map(),
+            'delivered_timesheet': ('delivery', 'timesheet'),
+            'ordered_prepaid': ('order', 'timesheet'),
+        }
 
     @api.model
     def _get_onchange_service_policy_updates(self, service_tracking, service_policy, project_id, project_template_id):

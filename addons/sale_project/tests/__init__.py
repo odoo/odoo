@@ -3,3 +3,4 @@
 
 from . import test_child_tasks
 from . import test_sale_project
+from . import test_so_line_milestones
