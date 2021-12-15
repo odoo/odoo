@@ -53,7 +53,7 @@ $.extend($.expr[':'], {
             return false;
         }
         var $parent = $element.parent();
-        if (!$parent.length || $element.is('html')) {
+        if ($(element).css('visibility') === 'visible' || !$parent.length || $element.is('html')) {
             return true;
         }
         return $parent.is(':hasVisibility');
