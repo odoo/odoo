@@ -260,16 +260,20 @@ export class Record extends DataPoint {
                 continue;
             }
             const field = this.activeFields[fieldName];
-            const { invisible, relatedFields = {}, relation, views = {}, viewMode } = field;
+            const { invisible, relatedFields = {}, views = {}, viewMode, FieldComponent } = field;
 
             const fields = {
                 id: { name: "id", type: "integer", readonly: true },
                 ...relatedFields,
+                ...FieldComponent.fieldsToFetch,
             };
             const list = this.model.createDataPoint("list", {
-                resModel: relation,
+                resModel: this.fields[fieldName].relation,
                 fields,
-                activeFields: (views[viewMode] && views[viewMode].activeFields) || {},
+                activeFields:
+                    (views[viewMode] && views[viewMode].activeFields) ||
+                    FieldComponent.fieldsToFetch ||
+                    {},
                 resIds: this.data[fieldName] || [],
                 views,
                 viewMode,
@@ -951,6 +955,7 @@ export class RelationalModel extends Model {
      */
     async load(params) {
         const rootParams = Object.assign({}, this.rootParams, params);
+        debugger;
         if (params && params.orderBy && !params.orderBy.length) {
             rootParams.orderBy = this.rootParams.defaultOrder;
         }

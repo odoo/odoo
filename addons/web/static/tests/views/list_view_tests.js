@@ -1376,7 +1376,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skip("basic grouped list rendering with groupby m2m field", async function (assert) {
+    QUnit.test("basic grouped list rendering with groupby m2m field", async function (assert) {
         assert.expect(5);
 
         const list = await makeView({
@@ -1412,23 +1412,23 @@ QUnit.module("Views", (hooks) => {
             [...rows].map((el) => el.innerText.replace(/\s/g, "")),
             [
                 "Value1(3)",
-                "​yopValue1Value2",
-                "​blipValue1Value2Value3",
-                "​blipValue1",
+                "yopValue1Value2",
+                "blipValue1Value2Value3",
+                "blipValue1",
                 "Value2(2)",
-                "​yopValue1Value2",
-                "​blipValue1Value2Value3",
+                "yopValue1Value2",
+                "blipValue1Value2Value3",
                 "Value3(1)",
-                "​blipValue1Value2Value3",
+                "blipValue1Value2Value3",
                 "Undefined(1)",
-                "​gnap",
+                "gnap",
             ],
             "should have these row contents"
         );
     });
 
-    QUnit.skip("grouped list rendering with groupby m2o and m2m field", async function (assert) {
-        assert.expect(7);
+    QUnit.test("grouped list rendering with groupby m2o and m2m field", async function (assert) {
+        assert.expect(3);
 
         const list = await makeView({
             type: "list",
@@ -1442,49 +1442,52 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["m2o", "m2m"],
         });
 
-        assert.strictEqual(
-            $(list.el).find("th:contains(Value 1 (3))").length,
-            1,
-            "should contain 3 records in first group"
-        );
-        assert.strictEqual(
-            $(list.el).find("th:contains(Value 2 (1))").length,
-            1,
-            "should contain 1 record in second group"
+        let rows = list.el.querySelectorAll("tbody > tr");
+        assert.deepEqual(
+            [...rows].map((el) => el.innerText.replace(/\s/g, "")),
+
+            ["Value1(3)", "Value2(1)"],
+            "should have these row contents"
         );
 
-        await click($(list.el).find("th.o_group_name").first());
-        assert.strictEqual(
-            $(list.el).find("tbody:eq(1) th:contains(Value 1 (2))").length,
-            1,
-            "should contain 2 records in inner group"
-        );
-        assert.strictEqual(
-            $(list.el).find("tbody:eq(1) th:contains(Value 2 (1))").length,
-            1,
-            "should contain 1 records in inner group"
+        await click(list.el.querySelector("th.o_group_name"));
+
+        rows = list.el.querySelectorAll("tbody > tr");
+        assert.deepEqual(
+            [...rows].map((el) => el.innerText.replace(/\s/g, "")),
+            ["Value1(3)", "Value1(2)", "Value2(1)", "Undefined(1)", "Value2(1)"],
+            "should have these row contents"
         );
 
-        await click($(list.el).find("tbody:eq(2) th.o_group_name"));
-        assert.strictEqual(
-            $(list.el).find("tbody:eq(3) th:contains(Value 1 (1))").length,
-            1,
-            "should contain 1 record in inner group"
-        );
-        assert.strictEqual(
-            $(list.el).find("tbody:eq(3) th:contains(Value 2 (1))").length,
-            1,
-            "should contain 1 record in inner group"
-        );
-        assert.strictEqual(
-            $(list.el).find("tbody:eq(3) th:contains(Value 3 (1))").length,
-            1,
-            "should contain 1 record in inner group"
+        await click(list.el.querySelectorAll("tbody th.o_group_name")[4]);
+        rows = list.el.querySelectorAll("tbody > tr");
+
+        assert.deepEqual(
+            [...rows].map((el) => el.innerText.replace(/\s/g, "")),
+            [
+                "Value1(3)",
+                "Value1(2)",
+                "Value2(1)",
+                "Undefined(1)",
+                "Value2(1)",
+                "Value1(1)",
+                "Value2(1)",
+                "Value3(1)",
+            ],
+            "should have these row contents"
         );
     });
 
-    QUnit.skip("deletion of record is disabled when groupby m2m field", async function (assert) {
+    QUnit.test("deletion of record is disabled when groupby m2m field", async function (assert) {
         assert.expect(5);
+
+        serviceRegistry.add(
+            "user",
+            makeFakeUserService(() => false),
+            { force: true }
+        );
+
+        serverData.models.foo.fields.m2m.sortable = true;
 
         const list = await makeView({
             type: "list",
@@ -1495,11 +1498,11 @@ QUnit.module("Views", (hooks) => {
                     <field name="m2m" widget="many2many_tags"/>
                 </tree>`,
             loadActionMenus: true,
-            groupBy: ["m2m"],
         });
+        await groupByMenu(list, "m2m");
 
-        await click($(list.el).find(".o_group_header:first")); // open first group
-        await click($(list.el).find(".o_data_row:eq(0) .o_list_record_selector input"));
+        await click(list.el.querySelector(".o_group_header:first-child")); // open first group
+        await click(list.el.querySelector(".o_data_row .o_list_record_selector input"));
         assert.containsOnce(list.el, "div.o_control_panel .o_cp_action_menus");
         assert.containsNone(
             list.el,
@@ -1507,12 +1510,13 @@ QUnit.module("Views", (hooks) => {
             "should not have dropdown as delete item is not there"
         );
 
-        // reload withoud grouping by m2m
-        await list.reload({ groupBy: [] });
-        await click($(list.el).find(".o_data_row:eq(0) .o_list_record_selector input"));
+        // unselect group by m2m
+        await toggleGroupByMenu(list);
+        await toggleMenuItem(list, "M2M field");
+        await click(list.el.querySelector(".o_data_row .o_list_record_selector input"));
         assert.containsOnce(list.el, "div.o_control_panel .o_cp_action_menus");
         assert.containsOnce(list.el, "div.o_control_panel .o_cp_action_menus .dropdown");
-        await click($(list.el).find("div.o_control_panel .o_cp_action_menus .dropdown button"));
+        await click(list.el, "div.o_control_panel .o_cp_action_menus .dropdown button");
         assert.deepEqual(
             [...list.el.querySelectorAll(".o_cp_action_menus .o_menu_item")].map(
                 (el) => el.innerText
