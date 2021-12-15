@@ -41,6 +41,9 @@ options.registry.countdown = options.Class.extend({
             this.$target.toggleClass('hide-countdown', widgetValue === 'message_no_countdown');
         } else {
             const $message = this.$target.find('.s_countdown_end_message').detach();
+            if (this.showEndMessage) {
+                this._onToggleEndMessageClick();
+            }
             if ($message.length) {
                 this.endMessage = $message[0].outerHTML;
             }
