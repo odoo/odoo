@@ -400,6 +400,11 @@
             <field name="tag">backend_dashboard</field>
         </record>
 
+        <record id="website_preview" model="ir.actions.client">
+            <field name="name">Website Preview</field>
+            <field name="tag">website_preview</field>
+        </record>
+
         <record id="ir_actions_server_website_dashboard" model="ir.actions.server">
             <field name="name">Website: Dashboard</field>
             <field name="model_id" ref="website.model_website"/>
@@ -525,8 +530,8 @@
             groups="base.group_user"
             web_icon="website,static/description/icon.svg"/>
 
-        <menuitem id="menu_dashboard"
-            name="Dashboard"
+        <menuitem id="menu_site"
+            name="Site"
             sequence="1"
             parent="website.menu_website_configuration"/>
 
@@ -535,10 +540,11 @@
             sequence="99"
             parent="website.menu_website_configuration"/>
 
-        <!-- Force empty action, to ease upgrade -->
-        <record id="menu_dashboard" model="ir.ui.menu">
-            <field name="action" eval="False"/>
-        </record>
+        <menuitem id="menu_website_preview"
+            parent="menu_site"
+            sequence="10"
+            name="Go to Website"
+            action="website.website_preview"/>
 
         <menuitem id="menu_website_pages_list"
             parent="menu_site"

@@ -1,0 +1,11 @@
+.o_website_preview {
+    position: relative;
+    height: 100%;
+
+    > iframe {
+        @include o-position-absolute(0, 0, 0, 0);
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
+}
