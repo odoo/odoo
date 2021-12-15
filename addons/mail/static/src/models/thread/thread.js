@@ -2402,7 +2402,7 @@ registerModel({
         textInputSelectionDirectionBackup: attr({
             default: "none",
         }),
-        threadViews: one2many('mail.thread_view', {
+        threadViews: one2many('ThreadView', {
             inverse: 'thread',
         }),
         /**

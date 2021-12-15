@@ -251,7 +251,7 @@ registerModel({
         /**
          * States the thread view on which this list operates (if any).
          */
-        threadView: one2one('mail.thread_view', {
+        threadView: one2one('ThreadView', {
             inverse: 'channelInvitationForm',
             readonly: true,
         }),

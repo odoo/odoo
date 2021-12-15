@@ -7,7 +7,7 @@ import { clear, insertAndReplace, link, replace, unlink, update } from '@mail/mo
 import { OnChange } from '@mail/model/model_onchange';
 
 registerModel({
-    name: 'mail.thread_view',
+    name: 'ThreadView',
     identifyingFields: ['threadViewer'],
     lifecycleHooks: {
         _created() {

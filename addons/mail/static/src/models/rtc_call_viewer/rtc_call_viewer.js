@@ -392,7 +392,7 @@ registerModel({
         /**
          * ThreadView on which the call viewer is attached.
          */
-        threadView: one2one('mail.thread_view', {
+        threadView: one2one('ThreadView', {
             inverse: 'rtcCallViewer',
             readonly: true,
             required: true,
