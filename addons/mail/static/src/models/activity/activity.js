@@ -232,7 +232,7 @@ registerModel({
         },
     },
     fields: {
-        assignee: many2one('mail.user'),
+        assignee: many2one('User'),
         attachments: many2many('mail.attachment', {
             inverse: 'activities',
         }),
@@ -240,7 +240,7 @@ registerModel({
             default: false,
         }),
         category: attr(),
-        creator: many2one('mail.user'),
+        creator: many2one('User'),
         dateCreate: attr(),
         dateDeadline: attr(),
         /**

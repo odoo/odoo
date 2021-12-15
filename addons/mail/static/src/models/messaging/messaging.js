@@ -49,7 +49,7 @@ registerModel({
          */
         async getChat({ partnerId, userId }) {
             if (userId) {
-                const user = this.messaging.models['mail.user'].insert({ id: userId });
+                const user = this.messaging.models['User'].insert({ id: userId });
                 return user.getChat();
             }
             if (partnerId) {
@@ -110,7 +110,7 @@ registerModel({
                 return partner.openProfile();
             }
             if (model === 'res.users') {
-                const user = this.messaging.models['mail.user'].insert({ id });
+                const user = this.messaging.models['User'].insert({ id });
                 return user.openProfile();
             }
             if (model === 'mail.channel') {
@@ -242,7 +242,7 @@ registerModel({
         companyName: attr(),
         currentGuest: one2one('Guest'),
         currentPartner: one2one('Partner'),
-        currentUser: one2one('mail.user'),
+        currentUser: one2one('User'),
         device: one2one('Device', {
             default: insertAndReplace(),
             isCausal: true,

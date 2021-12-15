@@ -5,7 +5,7 @@ import { attr, one2one } from '@mail/model/model_field';
 import { insert, unlink } from '@mail/model/model_field_command';
 
 registerModel({
-    name: 'mail.user',
+    name: 'User',
     identifyingFields: ['id'],
     modelMethods: {
         /**
@@ -49,8 +49,8 @@ registerModel({
                     fields,
                 },
             }, { shadow: true });
-            return this.messaging.models['mail.user'].insert(usersData.map(userData =>
-                this.messaging.models['mail.user'].convertData(userData)
+            return this.messaging.models['User'].insert(usersData.map(userData =>
+                this.messaging.models['User'].convertData(userData)
             ));
         },
     },
@@ -59,7 +59,7 @@ registerModel({
          * Fetches the partner of this user.
          */
         async fetchPartner() {
-            return this.messaging.models['mail.user'].performRpcRead({
+            return this.messaging.models['User'].performRpcRead({
                 ids: [this.id],
                 fields: ['partner_id'],
                 context: { active_test: false },
