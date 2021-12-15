@@ -1962,7 +1962,7 @@ registerModel({
         counter: attr({
             default: 0,
         }),
-        creator: many2one('mail.user'),
+        creator: many2one('User'),
         custom_channel_name: attr(),
         /**
          * Determines the default display mode of this channel. Should contain

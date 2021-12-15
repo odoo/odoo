@@ -168,7 +168,7 @@ registerModel({
         /**
          * User related to this employee.
          */
-        user: one2one('mail.user', {
+        user: one2one('User', {
             inverse: 'employee',
         }),
     },
