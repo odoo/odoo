@@ -1162,62 +1162,57 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.test(
         "invisible attrs on group are re-evaluated on field change",
         async function (assert) {
-            assert.expect(2);
-
             const form = await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
-                arch:
-                    '<form string="Partners">' +
-                    "<sheet>" +
-                    '<field name="bar"/>' +
-                    '<group attrs=\'{"invisible": [["bar", "!=", true]]}\'>' +
-                    "<group>" +
-                    '<field name="foo"/>' +
-                    "</group>" +
-                    "</group>" +
-                    "</sheet>" +
-                    "</form>",
+                arch: `
+                    <form>
+                        <sheet>
+                            <field name="bar"/>
+                            <group attrs='{"invisible": [["bar", "!=", true]]}'>
+                                <group>
+                                    <field name="foo"/>
+                                </group>
+                            </group>
+                        </sheet>
+                    </form>`,
                 resId: 1,
-                viewOptions: {
-                    mode: "edit",
-                },
             });
 
-            assert.containsOnce(form, "div.o_group:visible");
-            await testUtils.dom.click(".o_field_boolean input", form);
-            assert.containsOnce(form, "div.o_group:hidden");
+            await click(form.el.querySelector(".o_form_button_edit"));
+
+            assert.containsOnce(form, "div.o_group");
+            await click(form.el.querySelector(".o_field_boolean input"));
+            assert.containsNone(form, "div.o_group");
         }
     );
 
-    QUnit.skip(
+    QUnit.test(
         "invisible attrs with zero value in domain and unset value in data",
         async function (assert) {
-            assert.expect(1);
-
-            this.data.partner.fields.int_field.type = "monetary";
+            serverData.models.partner.fields.int_field.type = "monetary";
 
             const form = await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
-                arch:
-                    '<form string="Partners">' +
-                    "<sheet>" +
-                    '<field name="foo"/>' +
-                    '<group attrs=\'{"invisible": [["int_field", "=", 0.0]]}\'>' +
-                    '<div class="hello">this should be invisible</div>' +
-                    '<field name="int_field"/>' +
-                    "</group>" +
-                    "</sheet>" +
-                    "</form>",
+                arch: `
+                    <form>
+                        <sheet>
+                            <field name="foo"/>
+                            <group attrs='{"invisible": [["int_field", "=", 0.0]]}'>
+                                <div class="hello">this should be invisible</div>
+                                <field name="int_field"/>
+                            </group>
+                        </sheet>
+                    </form>`,
             });
 
-            assert.isNotVisible(form.$("div.hello"));
+            assert.containsNone(form, "div.hello");
         }
     );
 
