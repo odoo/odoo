@@ -18,4 +18,4 @@ class ProjectCollaborator(models.Model):
         # ir.rule
         timesheet_portal_ir_rule = self.env.ref('hr_timesheet.timesheet_line_rule_portal_user').sudo()
         if timesheet_portal_ir_rule.active != active:
-            access_timesheet_portal.write({'active': active})
+            timesheet_portal_ir_rule.write({'active': active})
