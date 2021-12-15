@@ -360,6 +360,11 @@ class Channel(models.Model):
                     'id': channel_partner.guest_id.id,
                     'name': channel_partner.guest_id.name,
                 })
+                guest = channel_partner.guest_id
+                if guest:
+                    self.env['bus.bus']._sendone(guest, 'mail.channel/joined', {
+                        'channel': channel_partner.channel_id.sudo().channel_info()[0],
+                    })
             self.env['bus.bus']._sendone(channel, 'mail.channel/insert', {
                 'id': channel.id,
                 'guestMembers': [('insert', guest_members_data)],
