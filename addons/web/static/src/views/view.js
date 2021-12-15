@@ -351,6 +351,8 @@ export class View extends Component {
     }
 }
 
+View._download = async function () {};
+
 View.template = "web.View";
 View.components = { WithSearch };
 View.defaultProps = {

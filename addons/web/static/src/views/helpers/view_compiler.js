@@ -584,35 +584,15 @@ export class ViewCompiler {
     }
 
     compileNotebook(node, params) {
-        if (params.noteBookId) {
-            throw new Error("LPE FORBIDDEN");
-        }
         params = Object.create(params);
         const noteBookId = `notebook_${this.id++}`;
-
         params.noteBookId = noteBookId;
 
-        const notebook = this.document.createElement("div");
-        notebook.classList.add("o_notebook");
-
-        const activePage = this.document.createElement("t");
-        activePage.setAttribute("t-set", noteBookId);
-        notebook.appendChild(activePage);
-
-        const headers = this.document.createElement("div");
-        headers.classList.add("o_notebook_headers");
         const headersList = this.document.createElement("ul");
-        headersList.classList.add("nav", "nav-tabs");
-        headers.appendChild(headersList);
-
-        notebook.appendChild(headers);
-
         const contents = this.document.createElement("div");
-        contents.classList.add("tab-content");
-        notebook.appendChild(contents);
 
         const invisibleDomains = {};
-
+        let containsAlwaysVisiblePages = false;
         for (let child of node.childNodes) {
             if (!(child instanceof Element)) {
                 continue;
@@ -622,13 +602,38 @@ export class ViewCompiler {
                 continue;
             }
             invisibleDomains[page.pageId] = page.invisible;
+            containsAlwaysVisiblePages = containsAlwaysVisiblePages || !page.invisible;
             this.append(headersList, this.applyInvisible(page.invisible, page.header, params));
             this.append(contents, page.content);
         }
+        if (headersList.children.length === 0) {
+            return; // notebook has no visible page
+        }
+
+        let notebook = this.document.createElement("div");
+        if (!containsAlwaysVisiblePages) {
+            const notebookDomain = Domain.combine(Object.values(invisibleDomains), "AND");
+            notebook = this.applyInvisible(notebookDomain.toString(), notebook, params);
+        }
+        notebook.classList.add("o_notebook");
+
+        const activePage = this.document.createElement("t");
+        activePage.setAttribute("t-set", noteBookId);
         activePage.setAttribute(
             "t-value",
             `state.${noteBookId} or getActivePage(record, ${JSON.stringify(invisibleDomains)})`
         );
+        notebook.appendChild(activePage);
+
+        const headers = this.document.createElement("div");
+        headers.classList.add("o_notebook_headers");
+        headersList.classList.add("nav", "nav-tabs");
+        headers.appendChild(headersList);
+        notebook.appendChild(headers);
+
+        contents.classList.add("tab-content");
+        notebook.appendChild(contents);
+
         return notebook;
     }
 
