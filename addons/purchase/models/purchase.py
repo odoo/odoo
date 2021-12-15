@@ -599,6 +599,7 @@ class PurchaseOrder(models.Model):
             the purchase order views.
         """
         self.check_access_rights('read')
+        FormatFloat = self.env['ir.qweb.field.float']
 
         result = {
             'all_to_send': 0,
@@ -631,16 +632,16 @@ class PurchaseOrder(models.Model):
 
         self.env.cr.execute(query, (one_week_ago, self.env.company.id))
         res = self.env.cr.fetchone()
-        result['all_sent_rfqs'] = res[0] or 0
+        result['all_sent_rfqs'] = FormatFloat.value_to_html(res[0] or 0, {'precision': 0})
 
         # easy counts
         po = self.env['purchase.order']
-        result['all_to_send'] = po.search_count([('state', '=', 'draft')])
-        result['my_to_send'] = po.search_count([('state', '=', 'draft'), ('user_id', '=', self.env.uid)])
-        result['all_waiting'] = po.search_count([('state', '=', 'sent'), ('date_order', '>=', fields.Datetime.now())])
-        result['my_waiting'] = po.search_count([('state', '=', 'sent'), ('date_order', '>=', fields.Datetime.now()), ('user_id', '=', self.env.uid)])
-        result['all_late'] = po.search_count([('state', 'in', ['draft', 'sent', 'to approve']), ('date_order', '<', fields.Datetime.now())])
-        result['my_late'] = po.search_count([('state', 'in', ['draft', 'sent', 'to approve']), ('date_order', '<', fields.Datetime.now()), ('user_id', '=', self.env.uid)])
+        result['all_to_send'] = FormatFloat.value_to_html(po.search_count([('state', '=', 'draft')]), {'precision': 0})
+        result['my_to_send'] = FormatFloat.value_to_html(po.search_count([('state', '=', 'draft'), ('user_id', '=', self.env.uid)]), {'precision': 0})
+        result['all_waiting'] = FormatFloat.value_to_html(po.search_count([('state', '=', 'sent'), ('date_order', '>=', fields.Datetime.now())]), {'precision': 0})
+        result['my_waiting'] = FormatFloat.value_to_html(po.search_count([('state', '=', 'sent'), ('date_order', '>=', fields.Datetime.now()), ('user_id', '=', self.env.uid)]), {'precision': 0})
+        result['all_late'] = FormatFloat.value_to_html(po.search_count([('state', 'in', ['draft', 'sent', 'to approve']), ('date_order', '<', fields.Datetime.now())]), {'precision': 0})
+        result['my_late'] = FormatFloat.value_to_html(po.search_count([('state', 'in', ['draft', 'sent', 'to approve']), ('date_order', '<', fields.Datetime.now()), ('user_id', '=', self.env.uid)]), {'precision': 0})
 
         # Calculated values ('avg order value', 'avg days to purchase', and 'total last 7 days') note that 'avg order value' and
         # 'total last 7 days' takes into account exchange rate and current company's currency's precision. Min of currency precision
@@ -650,13 +651,12 @@ class PurchaseOrder(models.Model):
                           AVG(extract(epoch from age(po.date_approve,po.create_date)/(24*60*60)::decimal(16,2))),
                           SUM(CASE WHEN po.date_approve >= %s THEN COALESCE(po.amount_total / NULLIF(po.currency_rate, 0), po.amount_total) ELSE 0 END)
                    FROM purchase_order po
-                   JOIN res_company comp ON (po.company_id = comp.id)
                    WHERE po.state in ('purchase', 'done')
                      AND po.company_id = %s
                 """
         self._cr.execute(query, (one_week_ago, self.env.company.id))
         res = self.env.cr.fetchone()
-        result['all_avg_days_to_purchase'] = round(res[1] or 0, 2)
+        result['all_avg_days_to_purchase'] = FormatFloat.value_to_html(res[1] or 0, {'precision': 2})
         currency = self.env.company.currency_id
         result['all_avg_order_value'] = format_amount(self.env, res[0] or 0, currency)
         result['all_total_last_7_days'] = format_amount(self.env, res[2] or 0, currency)
