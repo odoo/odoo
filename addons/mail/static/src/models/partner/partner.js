@@ -456,7 +456,7 @@ registerModel({
         user: one2one('mail.user', {
             inverse: 'partner',
         }),
-        volumeSetting: one2one('mail.volume_setting', {
+        volumeSetting: one2one('VolumeSetting', {
             inverse: 'partner',
         }),
     },

@@ -5,7 +5,7 @@ import { attr, one2one, many2one } from '@mail/model/model_field';
 import { OnChange } from '@mail/model/model_onchange';
 
 registerModel({
-    name: 'mail.volume_setting',
+    name: 'VolumeSetting',
     identifyingFields: ['id'],
     recordMethods: {
         /**

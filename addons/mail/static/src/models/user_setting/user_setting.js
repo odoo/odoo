@@ -285,7 +285,7 @@ registerModel({
         /**
          * Models that represent the volume chosen by the user for each partner.
          */
-        volumeSettings: one2many('mail.volume_setting', {
+        volumeSettings: one2many('VolumeSetting', {
             inverse: 'userSetting',
             isCausal: true,
         }),

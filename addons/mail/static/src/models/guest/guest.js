@@ -46,7 +46,7 @@ registerModel({
         rtcSessions: one2many('RtcSession', {
             inverse: 'guest',
         }),
-        volumeSetting: one2one('mail.volume_setting', {
+        volumeSetting: one2one('VolumeSetting', {
             inverse: 'guest',
         }),
     },
