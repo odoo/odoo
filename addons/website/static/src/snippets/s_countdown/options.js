@@ -40,6 +40,9 @@ options.registry.countdown = options.Class.extend({
             }
         } else {
             const $message = this.$target.find('.s_countdown_end_message').detach();
+            if (this.showEndMessage) {
+                this._onToggleEndMessageClick();
+            }
             if ($message.length) {
                 this.endMessage = $message[0].outerHTML;
             }
