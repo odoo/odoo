@@ -126,9 +126,11 @@
 
                                 <group attrs="{'invisible': ['|', ('scoring_type', '=', 'no_scoring'), ('question_type', 'not in', ['numerical_box', 'date', 'datetime'])]}">
                                     <label for="is_scored_question"/>
-                                    <field name="is_scored_question"/>
-                                    <field name="answer_score" nolabel="1" class="oe_inline" attrs="{'invisible': [('is_scored_question', '=', False)]}"/>
-                                    <span class="oe_inline" attrs="{'invisible': [('is_scored_question', '=', False)]}">Points</span>
+                                    <div name="survey_scored_question">
+                                        <field name="is_scored_question" nolabel="1"/>
+                                        <field name="answer_score" class="w-50 mx-2" attrs="{'invisible': [('is_scored_question', '=', False)]}" nolabel="1"/>
+                                        <span attrs="{'invisible': [('is_scored_question', '!=', True)]}">Points</span>
+                                    </div>
                                 </group>
                             </group>
                             <group attrs="{'invisible': [('question_type', 'not in', ['simple_choice', 'multiple_choice', 'matrix'])]}">
