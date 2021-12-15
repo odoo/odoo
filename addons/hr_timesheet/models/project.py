@@ -60,7 +60,7 @@ class Project(models.Model):
     @api.depends('company_id')
     def _compute_is_internal_project(self):
         for project in self:
-            project.is_internal_project = bool(project.company_id.internal_project_id)
+            project.is_internal_project = project == project.company_id.internal_project_id
 
     @api.model
     def _search_is_internal_project(self, operator, value):
