@@ -159,7 +159,7 @@ registerModel({
             required: true,
         }),
         selectedSubtypes: many2many('FollowerSubtype'),
-        subtypeList: one2many('mail.follower_subtype_list', {
+        subtypeList: one2many('FollowerSubtypeList', {
             inverse: 'follower',
             isCausal: true,
         }),
