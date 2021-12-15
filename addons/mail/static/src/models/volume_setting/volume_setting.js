@@ -38,7 +38,7 @@ registerModel({
         partner: one2one('Partner', {
             inverse: 'volumeSetting',
         }),
-        userSetting: many2one('mail.user_setting', {
+        userSetting: many2one('UserSetting', {
             inverse: 'volumeSettings',
             required: true,
         }),

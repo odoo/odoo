@@ -368,7 +368,7 @@ registerModel({
          * Mailbox Starred.
          */
         starred: one2one('Thread'),
-        userSetting: one2one('mail.user_setting', {
+        userSetting: one2one('UserSetting', {
             isCausal: true,
         }),
     },
