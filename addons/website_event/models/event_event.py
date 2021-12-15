@@ -44,7 +44,7 @@ class Event(models.Model):
     website_published = fields.Boolean(tracking=True)
     website_menu = fields.Boolean(
         string='Website Menu',
-        compute='_compute_website_menu', readonly=False, store=True,
+        compute='_compute_website_menu', precompute=True, readonly=False, store=True,
         help="Allows to display and manage event-specific menus on website.")
     menu_id = fields.Many2one('website.menu', 'Event Menu', copy=False)
     menu_register_cta = fields.Boolean(
