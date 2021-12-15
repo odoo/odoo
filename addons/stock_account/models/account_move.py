@@ -106,6 +106,9 @@ class AccountMove(models.Model):
         '''
         lines_vals_list = []
         for move in self:
+            # Make the loop multi-company safe when accessing models like product.product
+            move = move.with_company(move.company_id)
+
             if not move.is_sale_document(include_receipts=True) or not move.company_id.anglo_saxon_accounting:
                 continue
 
@@ -116,11 +119,7 @@ class AccountMove(models.Model):
                     continue
 
                 # Retrieve accounts needed to generate the COGS.
-                accounts = (
-                    line.product_id.product_tmpl_id
-                    .with_company(line.company_id)
-                    .get_product_accounts(fiscal_pos=move.fiscal_position_id)
-                )
+                accounts = line.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=move.fiscal_position_id)
                 debit_interim_account = accounts['stock_output']
                 credit_expense_account = accounts['expense'] or self.journal_id.default_account_id
                 if not debit_interim_account or not credit_expense_account:
@@ -234,4 +233,4 @@ class AccountMoveLine(models.Model):
         self.ensure_one()
         if not self.product_id:
             return self.price_unit
-        return self.product_id._stock_account_get_anglo_saxon_price_unit(uom=self.product_uom_id)
+        return self.product_id.with_company(self.company_id)._stock_account_get_anglo_saxon_price_unit(uom=self.product_uom_id)
