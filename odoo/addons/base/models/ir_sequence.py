@@ -3,7 +3,7 @@
 from datetime import datetime, timedelta
 import logging
 import pytz
-from psycopg2 import sql, OperationalError, errorcodes
+from psycopg2 import sql
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
