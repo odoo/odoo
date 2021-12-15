@@ -273,6 +273,8 @@ function classToStyle($editable) {
         var $target = $(node);
         var css = getMatchedCSSRules(node);
         var style = $target.attr('style') || '';
+        // Outlook doesn't support inline !important
+        style = style.replace(/!important/g,'');
         _.each(css, function (v,k) {
             if (!(new RegExp('(^|;)\s*' + k).test(style))) {
                 style = k+':'+v+';'+style;
