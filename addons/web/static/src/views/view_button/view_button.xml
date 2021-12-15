@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
   <t t-name="views.ViewButton" owl="1">
-    <button class="btn" t-att-class="classes" t-att-name="props.clickParams and props.clickParams.name" t-att-title="props.title" t-att="attData" t-on-click.stop="onClick">
+    <button class="btn" t-att-class="classes" t-att-disabled="disabled" t-att-name="props.clickParams and props.clickParams.name" t-att-title="props.title" t-on-click.stop="onClick">
       <t t-if="icon" t-tag="icon.tag" t-att-class="icon.class" t-att-src="icon.src"/>
       <t t-slot="contents"><span t-esc="props.string" /></t>
     </button>

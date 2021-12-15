@@ -272,28 +272,27 @@ export class ViewCompiler {
 
     compileButtonBox(node, params) {
         params = Object.create(params);
-        params.enableInvisible = true;
+        // params.enableInvisible = true; // AAB: what do we do with this? Could be useful for studio, but...
         node.classList.remove("oe_button_box");
 
         const buttonBox = this.document.createElement("ButtonBox");
         // because dropdown is a ul; so we need to wrap every element in a li
-        const liWrappedSlot = this.document.createElement("t");
-        liWrappedSlot.setAttribute("t-set-slot", "liWrapped");
+        // const liWrappedSlot = this.document.createElement("t");
+        // liWrappedSlot.setAttribute("t-set-slot", "liWrapped");
 
-        if (node.children.length) {
-            this.append(buttonBox, liWrappedSlot);
-        }
+        // if (node.children.length) {
+        //     this.append(buttonBox, liWrappedSlot);
+        // }
 
         for (const child of node.children) {
-            const compiled = this.compileNode(child, params);
-            if (compiled) {
-                const li = this.document.createElement("li");
-                li.classList.add("o_dropdown_item");
-                this.append(li, compiled.cloneNode(true));
-                this.append(liWrappedSlot, li);
-            }
-
-            this.append(buttonBox, compiled);
+            this.append(buttonBox, this.compileNode(child, params));
+            // const compiled = this.compileNode(child, params);
+            // if (compiled) {
+            //     const li = this.document.createElement("li");
+            //     li.classList.add("o_dropdown_item");
+            //     this.append(li, compiled.cloneNode(true));
+            //     this.append(liWrappedSlot, li);
+            // }
         }
 
         return buttonBox;
