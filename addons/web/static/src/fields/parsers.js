@@ -79,6 +79,9 @@ export function parseFloat(value) {
         }
     } catch (e) {
         // It failed, let's try with an english localisation fallback
+        if (!localization.shouldParsersFallBackOnEnglishLocalization) {
+            throw e;
+        }
         parsed = parseNumber(value, {
             thousandsSep: ",",
             decimalPoint: ".",
@@ -136,9 +139,12 @@ export function parseInteger(value) {
         }
     } catch (e) {
         // It failed, let's try with an english localisation fallback
+        if (!localization.shouldParsersFallBackOnEnglishLocalization) {
+            throw e;
+        }
         parsed = parseNumber(value, {
-            thousandsSep: ".",
-            decimalPoint: ",",
+            thousandsSep: ",",
+            decimalPoint: ".",
             truncate: true,
         });
         if (!Number.isInteger(parsed)) {

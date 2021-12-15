@@ -4,6 +4,12 @@ import { registry } from "@web/core/registry";
 
 const { Component } = owl;
 export class BadgeField extends Component {
+    get formattedValue() {
+        return this.props.formatValue(this.props.value, {
+            selection: this.props.record.fields[this.props.name].selection,
+        });
+    }
+
     get classFromDecoration() {
         for (const decorationName in this.props.decorations) {
             console.log(decorationName);
