@@ -28,3 +28,6 @@ class TestSnippets(odoo.tests.HttpCase):
         ]
         snippets_names = ','.join([el.attrib['data-snippet'] for el in data_snippet_els if el.attrib['data-snippet'] not in blacklist])
         self.start_tour("/?enable_editor=1&snippets_names=%s" % snippets_names, "snippets_all_drag_and_drop", login='admin', timeout=300)
+
+    def test_04_countdown_preview(self):
+        self.start_tour("/?enable_editor=1", "snippet_countdown", login='admin')
