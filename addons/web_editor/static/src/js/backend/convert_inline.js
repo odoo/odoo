@@ -343,6 +343,8 @@ function classToStyle($editable, cssRules) {
 
         // Do not apply css that would override inline styles (which are prioritary).
         let style = node.getAttribute('style') || '';
+        // Outlook doesn't support inline !important
+        style = style.replace(/!important/g,'');
         for (const [key, value] of Object.entries(css)) {
             if (!(new RegExp(`(^|;)\\s*${key}`).test(style))) {
                 style = `${key}:${value};${style}`;
