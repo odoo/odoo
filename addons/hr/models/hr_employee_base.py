@@ -3,10 +3,11 @@
 
 from ast import literal_eval
 
-from odoo import api, fields, models
 from pytz import timezone, UTC, utc
 from datetime import timedelta
 
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 from odoo.tools import format_time
 
 
@@ -19,6 +20,8 @@ class HrEmployeeBase(models.AbstractModel):
     active = fields.Boolean("Active")
     color = fields.Integer('Color Index', default=0)
     department_id = fields.Many2one('hr.department', 'Department', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    member_of_department = fields.Boolean("Member of department", compute='_compute_part_of_department', search='_search_part_of_department',
+        help="Whether the employee is a member of the active user's department or one of it's child department.")
     job_id = fields.Many2one('hr.job', 'Job Position', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     job_title = fields.Char("Job Title", compute="_compute_job_title", store=True, readonly=False)
     company_id = fields.Many2one('res.company', 'Company')
@@ -62,6 +65,33 @@ class HrEmployeeBase(models.AbstractModel):
         ('freelance', 'Freelancer'),
         ], string='Employee Type', default='employee', required=True,
         help="The employee type. Although the primary purpose may seem to categorize employees, this field has also an impact in the Contract History. Only Employee type is supposed to be under contract and will have a Contract History.")
+
+    @api.depends_context('uid', 'company')
+    @api.depends('department_id')
+    def _compute_part_of_department(self):
+        active_department = self.env.user.employee_id.department_id
+        if not active_department:
+            self.member_of_department = False
+        else:
+            def get_all_children(department):
+                children = department.child_ids
+                if not children:
+                    return self.env['hr.department']
+                return children + get_all_children(children)
+
+            child_departments = active_department + get_all_children(active_department)
+            for employee in self:
+                employee.member_of_department = employee.department_id in child_departments
+
+    def _search_part_of_department(self, operator, value):
+        if operator not in ('=', '!=') or not isinstance(value, bool):
+            raise UserError(_('Operation not supported'))
+        # Double negation
+        if not value:
+            operator = '=' if operator == '!=' else '='
+        if not self.env.user.employee_id.department_id:
+            return [('id', operator, self.env.user.employee_id.id)]
+        return (['!'] if operator == '!=' else []) + [('department_id', 'child_of', self.env.user.employee_id.department_id.id)]
 
     @api.depends('user_id.im_status')
     def _compute_presence_state(self):
