@@ -663,6 +663,7 @@ var FieldDateRange = InputField.extend({
      */
     init: function () {
         this._super.apply(this, arguments);
+        this.formatType = this.nodeOptions.format_type || this.formatType;
         this.isDateField = this.formatType === 'date';
         this.dateRangePickerOptions = _.defaults(
             {},
