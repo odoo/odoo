@@ -47,7 +47,7 @@ class ormcache(object):
 
     Methods implementing this decorator should never return a Recordset,
     because the underlying cursor will eventually be closed and raise a
-    `psycopg2.OperationalError`.
+    `psycopg2.InterfaceError`.
     """
     def __init__(self, *args, **kwargs):
         self.args = args
