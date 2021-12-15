@@ -90,15 +90,24 @@ html .o_web_client > .o_action_manager > .o_action > .o_content > .o_controller_
             }
             .o_rightpanel_right_col {
                 float: right;
+                display: flex;
+                align-items: center;
+                .o_milestone_checkbox {
+                    display: flex;
+                    align-items: center;
+                }
             }
 
             .o_rightpanel_center_col {
                 flex-grow: 1;
                 text-align: center;
+                display: flex;
+                justify-content: center;
+                align-items: center;
             }
 
             .o_open_milestone {
-                margin-bottom: $o-rightpanel-p-tiny;
+                margin-bottom: $o-rightpanel-p-small;
                 display: flex;
                 &.o_milestone_danger {
                     color: $red;
@@ -112,6 +121,11 @@ html .o_web_client > .o_action_manager > .o_action > .o_content > .o_controller_
                     display: flex;
                     justify-content: space-between;
                     flex-grow: 1;
+                    .o_milestone_info {
+                        display: flex;
+                        flex-direction: column;
+                        flex: 30%;
+                    }
                 }
                 .o_delete_icon {
                     cursor: pointer;

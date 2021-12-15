@@ -264,7 +264,7 @@ class TestCommonSaleTimesheet(TestSaleCommon):
             'property_account_income_id': cls.account_sale.id,
         })
 
-        # -- milestones (delivered, manual)
+        # -- manual (delivered, manual)
         cls.product_delivery_manual1 = cls.env['product.product'].create({
             'name': "Service delivered, create no task",
             'standard_price': 11,

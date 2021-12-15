@@ -7,15 +7,10 @@ from odoo.exceptions import ValidationError
 
 SERVICE_POLICY = [
     # (service_policy, string)
-    ('ordered_timesheet', 'Prepaid/Fixed Price'),
+    ('ordered_prepaid', 'Prepaid/Fixed Price'),
+    ('delivered_milestones', 'Based on Milestones'),
     ('delivered_manual', 'Based on Delivered Quantity (Manual)'),
 ]
-SERVICE_TO_GENERAL = {
-    # service_policy: (invoice_policy, service_type)
-    'ordered_timesheet': ('order', 'manual'),
-    'delivered_manual': ('delivery', 'manual'),
-}
-GENERAL_TO_SERVICE = {value: key for key, value in SERVICE_TO_GENERAL.items()}
 
 
 class ProductTemplate(models.Model):
@@ -42,69 +37,104 @@ class ProductTemplate(models.Model):
         domain="[('company_id', '=', current_company_id)]",
         help='Select a billable project to be the skeleton of the new created project when selling the current product. Its stages and tasks will be duplicated.')
     service_policy = fields.Selection(SERVICE_POLICY, string="Service Invoicing Policy", compute='_compute_service_policy', inverse='_inverse_service_policy')
+    service_type = fields.Selection(selection_add=[
+        ('milestones', 'Project Milestones'),
+    ])
 
-    @api.depends('service_tracking', 'type')
+    @api.depends('invoice_policy', 'service_type', 'type')
+    def _compute_service_policy(self):
+        for product in self:
+            product.service_policy = self._get_general_to_service(product.invoice_policy, product.service_type)
+            if not product.service_policy and product.type == 'service':
+                product.service_policy = 'ordered_prepaid'
+
+    @api.depends('service_tracking', 'service_policy', 'type')
     def _compute_product_tooltip(self):
         super()._compute_product_tooltip()
         for record in self.filtered(lambda record: record.type == 'service'):
-            if record.service_policy == 'ordered_timesheet':
+            if record.service_policy == 'ordered_prepaid':
                 if record.service_tracking == 'no':
                     record.product_tooltip = _(
                         "Invoice ordered quantities as soon as this service is sold."
                     )
                 elif record.service_tracking == 'task_global_project':
                     record.product_tooltip = _(
-                        "Invoice as soon as this service is sold, and create a task in an existing "
-                        "project to track the time spent."
+                        "Invoice ordered quantities as soon as this service is sold. "
+                        "Create a task in an existing project to track the time spent."
                     )
                 elif record.service_tracking == 'task_in_project':
                     record.product_tooltip = _(
-                        "Invoice ordered quantities as soon as this service is sold, and create a "
-                        "project for the order with a task for each sales order line to track the time"
-                        " spent."
+                        "Invoice ordered quantities as soon as this service is sold. "
+                        "Create an empty project for the order to track the time spent."
                     )
                 elif record.service_tracking == 'project_only':
                     record.product_tooltip = _(
-                        "Invoice ordered quantities as soon as this service is sold, and create an "
-                        "empty project for the order to track the time spent."
+                        "Invoice ordered quantities as soon as this service is sold. "
+                        "Create a project for the order with a task for each sales order line "
+                        "to track the time spent."
+                    )
+            elif record.service_policy == 'delivered_milestones':
+                if record.service_tracking == 'no':
+                    record.product_tooltip = _(
+                        "Invoice your milestones when they are reached."
+                    )
+                elif record.service_tracking == 'task_global_project':
+                    record.product_tooltip = _(
+                        "Invoice your milestones when they are reached. "
+                        "Create a task in an existing project to track the time spent."
+                    )
+                elif record.service_tracking == 'task_in_project':
+                    record.product_tooltip = _(
+                        "Invoice your milestones when they are reached. "
+                        "Create an empty project for the order to track the time spent."
+                    )
+                elif record.service_tracking == 'project_only':
+                    record.product_tooltip = _(
+                        "Invoice your milestones when they are reached. "
+                        "Create a project for the order with a task for each sales order line "
+                        "to track the time spent."
                     )
             elif record.service_policy == 'delivered_manual':
                 if record.service_tracking == 'no':
                     record.product_tooltip = _(
-                        "Sales order lines define milestones of the project to invoice by setting "
-                        "the delivered quantity."
+                        "Invoice this service when it is delivered (set the quantity by hand on your sales order lines). "
                     )
                 elif record.service_tracking == 'task_global_project':
                     record.product_tooltip = _(
-                        "Sales order lines define milestones of the project to invoice by setting "
-                        "the delivered quantity. Create a task in an existing project to track the"
-                        " time spent."
+                        "Invoice this service when it is delivered (set the quantity by hand on your sales order lines). "
+                        "Create a task in an existing project to track the time spent."
                     )
                 elif record.service_tracking == 'task_in_project':
                     record.product_tooltip = _(
-                        "Sales order lines define milestones of the project to invoice by setting "
-                        "the delivered quantity. Create an empty project for the order to track "
-                        "the time spent."
+                        "Invoice this service when it is delivered (set the quantity by hand on your sales order lines). "
+                        "Create an empty project for the order to track the time spent."
                     )
                 elif record.service_tracking == 'project_only':
                     record.product_tooltip = _(
-                        "Sales order lines define milestones of the project to invoice by setting "
-                        "the delivered quantity. Create a project for the order with a task for "
-                        "each sales order line to track the time spent."
+                        "Invoice this service when it is delivered (set the quantity by hand on your sales order lines). "
+                        "Create a project for the order with a task for each sales order line to track the time spent."
                     )
 
-    @api.depends('invoice_policy', 'service_type', 'type')
-    def _compute_service_policy(self):
-        for product in self:
-            product.service_policy = GENERAL_TO_SERVICE.get((product.invoice_policy, product.service_type), False)
-            if not product.service_policy and product.type == 'service':
-                product.service_policy = 'ordered_timesheet'
+    def _get_service_to_general_map(self):
+        return {
+            # service_policy: (invoice_policy, service_type)
+            'ordered_prepaid': ('order', 'manual'),
+            'delivered_milestones': ('delivery', 'milestones'),
+            'delivered_manual': ('delivery', 'manual'),
+        }
+
+    def _get_service_to_general(self, service_policy):
+        return self._get_service_to_general_map().get(service_policy, (False, False))
+
+    def _get_general_to_service(self, invoice_policy, service_type):
+        general_to_service = {v: k for k, v in self._get_service_to_general_map().items()}
+        return general_to_service.get((invoice_policy, service_type), False)
 
     @api.onchange('service_policy')
     def _inverse_service_policy(self):
         for product in self:
             if product.service_policy:
-                product.invoice_policy, product.service_type = SERVICE_TO_GENERAL.get(product.service_policy, (False, False))
+                product.invoice_policy, product.service_type = self._get_service_to_general(product.service_policy)
 
     @api.constrains('project_id', 'project_template_id')
     def _check_project_and_template(self):

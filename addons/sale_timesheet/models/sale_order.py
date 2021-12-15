@@ -77,14 +77,14 @@ class SaleOrder(models.Model):
 
             These SOLs should contain a product which has:
                 - type="service",
-                - service_policy="ordered_timesheet",
+                - service_policy="ordered_prepaid",
         """
         self.ensure_one()
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         return self.order_line.filtered(lambda sol:
             sol.is_service
             and not sol.has_displayed_warning_upsell  # we don't want to display many times the warning each time we timesheet on the SOL
-            and sol.product_id.service_policy == 'ordered_timesheet'
+            and sol.product_id.service_policy == 'ordered_prepaid'
             and float_compare(
                 sol.qty_delivered,
                 sol.product_uom_qty * (sol.product_id.service_upsell_threshold or 1.0),
@@ -188,9 +188,9 @@ class SaleOrderLine(models.Model):
     def _compute_remaining_hours_available(self):
         uom_hour = self.env.ref('uom.product_uom_hour')
         for line in self:
-            is_ordered_timesheet = line.product_id.service_policy == 'ordered_timesheet'
+            is_ordered_prepaid = line.product_id.service_policy == 'ordered_prepaid'
             is_time_product = line.product_uom.category_id == uom_hour.category_id
-            line.remaining_hours_available = is_ordered_timesheet and is_time_product
+            line.remaining_hours_available = is_ordered_prepaid and is_time_product
 
     @api.depends('qty_delivered', 'product_uom_qty', 'analytic_line_ids')
     def _compute_remaining_hours(self):

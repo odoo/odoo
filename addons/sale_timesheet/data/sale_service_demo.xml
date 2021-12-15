@@ -71,7 +71,7 @@
             <field name="standard_price">190.00</field>
             <field name="uom_id" ref="uom.product_uom_hour"/>
             <field name="uom_po_id" ref="uom.product_uom_hour"/>
-            <field name="service_policy">ordered_timesheet</field>
+            <field name="service_policy">ordered_prepaid</field>
             <field name="service_tracking">task_global_project</field>
             <field name="project_id" ref="project_support"/>
             <field name="service_upsell_threshold">0.8</field>
@@ -103,11 +103,23 @@
             <field name="project_template_id" ref="so_template_project"/>
         </record>
 
-        <record id="product_service_deliver_manual" model="product.product">
+        <record id="product_service_deliver_milestones" model="product.product">
             <field name="name">Kitchen Assembly (Milestones)</field>
             <field name="categ_id" ref="product.product_category_3"/>
             <field name="list_price">500</field>
             <field name="standard_price">420.00</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+            <field name="service_policy">delivered_milestones</field>
+            <field name="service_tracking">no</field>
+        </record>
+
+        <record id="product_service_deliver_manual" model="product.product">
+            <field name="name">Furniture Delivery (Manual)</field>
+            <field name="categ_id" ref="product.product_category_3"/>
+            <field name="list_price">200</field>
+            <field name="standard_price">150.00</field>
             <field name="type">service</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
@@ -131,7 +143,7 @@
         <record id="sale_line_12" model="sale.order.line">
             <field name="order_id" ref="sale_order_1"/>
             <field name="sequence" eval="3"/>
-            <field name="product_id" ref="product_service_deliver_manual"/>
+            <field name="product_id" ref="product_service_deliver_milestones"/>
             <field name="product_uom_qty">4</field>
         </record>
         <record id="sale_line_13" model="sale.order.line">
@@ -168,6 +180,12 @@
             <field name="sequence" eval="2"/>
             <field name="price_unit">110</field>
             <field name="product_uom_qty">10</field>
+        </record>
+        <record id="sale_line_18" model="sale.order.line">
+            <field name="order_id" ref="sale_order_1"/>
+            <field name="sequence" eval="3"/>
+            <field name="product_id" ref="product_service_deliver_manual"/>
+            <field name="product_uom_qty">1</field>
         </record>
 
         <!-- Sale Order 'sale_order_2' (Delta PC) -->
@@ -237,6 +255,15 @@
         </record>
         <record id="sale_order_3" model="sale.order">
             <field name="date_order" eval="datetime.now() + relativedelta(weekday=0, weeks=-1)"/>
+        </record>
+
+        <!-- AGR Milestones -->
+        <record id="agr_milestone_1" model="project.milestone">
+            <field name="name">Cabinets</field>
+            <field name="project_id" search="[('sale_line_id', '=', ref('sale_line_13'))]"/>
+            <field name="is_reached">True</field>
+            <field name="sale_line_id" ref="sale_line_18"/>
+            <field name="quantity_percentage">0.25</field>
         </record>
 
         <!-- Make DPC project off-track -->

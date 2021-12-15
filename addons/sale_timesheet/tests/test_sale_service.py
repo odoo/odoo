@@ -556,7 +556,7 @@ class TestSaleService(TestCommonSaleTimesheet):
             5) Create without storing the timesheet to check if remaining hours in SOL does not change.
         """
         # 1) Check the remaining hours in the SOL containing a prepaid service product
-        prepaid_service_sol = self.so.order_line.filtered(lambda sol: sol.product_id.service_policy == 'ordered_timesheet')
+        prepaid_service_sol = self.so.order_line.filtered(lambda sol: sol.product_id.service_policy == 'ordered_prepaid')
         self.assertEqual(len(prepaid_service_sol), 1, "It should only have one SOL with prepaid service product in this SO.")
         self.assertEqual(prepaid_service_sol.remaining_hours, prepaid_service_sol.product_uom_qty - prepaid_service_sol.qty_delivered, "The remaining hours of this SOL should be equal to the ordered quantity minus the delivered quantity.")
 
