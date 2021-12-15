@@ -18,7 +18,7 @@ K.S.A. POS Localization
         ],
         'point_of_sale.assets': [
             'web/static/lib/zxing-library/zxing-library.js',
-            'l10n_sa_pos/static/src/js/OrderReceipt.js',
+            'l10n_sa_pos/static/src/js/models.js',
         ]
     },
     'auto_install': True,
