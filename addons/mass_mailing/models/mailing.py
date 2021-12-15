@@ -965,14 +965,15 @@ class MassMailing(models.Model):
                     'kpi_mail_required': not mass_mailing.sent_date,
                 })
 
-        mailings = self.env['mailing.mailing'].search([
-            ('kpi_mail_required', '=', True),
-            ('state', '=', 'done'),
-            ('sent_date', '<=', fields.Datetime.now() - relativedelta(days=1)),
-            ('sent_date', '>=', fields.Datetime.now() - relativedelta(days=5)),
-        ])
-        if mailings:
-            mailings._action_send_statistics()
+        if self.env['ir.config_parameter'].sudo().get_param('mass_mailing.mass_mailing_reports'):
+            mailings = self.env['mailing.mailing'].search([
+                ('kpi_mail_required', '=', True),
+                ('state', '=', 'done'),
+                ('sent_date', '<=', fields.Datetime.now() - relativedelta(days=1)),
+                ('sent_date', '>=', fields.Datetime.now() - relativedelta(days=5)),
+            ])
+            if mailings:
+                mailings._action_send_statistics()
 
     # ------------------------------------------------------
     # STATISTICS
@@ -1003,16 +1004,20 @@ class MassMailing(models.Model):
                     'mailing_type': mailing_type,
                 },
             )
+            rendering_data = {
+                'body': tools.html_sanitize(link_trackers_body),
+                'company': mail_company,
+                'user': mail_user,
+                'display_mobile_banner': True,
+                ** mailing._prepare_statistics_email_values(),
+            }
+            if mail_user.has_group('mass_mailing.group_mass_mailing_user'):
+                rendering_data['mailing_report_token'] = self._get_unsubscribe_token(mail_user.id)
+                rendering_data['user_id'] = mail_user.id
 
             rendered_body = self.env['ir.qweb']._render(
                 'digest.digest_mail_main',
-                {
-                    'body': tools.html_sanitize(link_trackers_body),
-                    'company': mail_company,
-                    'user': mail_user,
-                    'display_mobile_banner': True,
-                    ** mailing._prepare_statistics_email_values()
-                },
+                rendering_data
             )
 
             full_mail = self.env['mail.render.mixin']._render_encapsulate(
@@ -1107,6 +1112,11 @@ class MassMailing(models.Model):
     def _get_pretty_mailing_type(self):
         if self.mailing_type == 'mail':
             return _('Emails')
+
+    def _get_unsubscribe_token(self, user_id):
+        """Generate a secure hash for this user. It allows to opt out from
+        mailing reports while keeping some security in that process. """
+        return tools.hmac(self.env(su=True), 'mailing-report-deactivated', user_id)
 
     # ------------------------------------------------------
     # TOOLS
