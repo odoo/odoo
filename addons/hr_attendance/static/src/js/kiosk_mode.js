@@ -39,6 +39,12 @@ var KioskMode = AbstractAction.extend({
         return Promise.all([def, this._super.apply(this, arguments)]);
     },
 
+    on_attach_callback: function () {
+        // Stop polling to avoid notifications in kiosk mode
+        this.call('bus_service', 'stopPolling');
+        $('body').find('.o_ChatWindowHeader_commandClose').click();
+    },
+
     _onBarcodeScanned: function(barcode) {
         var self = this;
         core.bus.off('barcode_scanned', this, this._onBarcodeScanned);
@@ -69,6 +75,7 @@ var KioskMode = AbstractAction.extend({
         core.bus.off('barcode_scanned', this, this._onBarcodeScanned);
         clearInterval(this.clock_start);
         clearInterval(this._interval);
+        this.call('bus_service', 'startPolling');
         this._super.apply(this, arguments);
     },
 
