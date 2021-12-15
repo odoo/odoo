@@ -69,3 +69,53 @@ class TestHrEmployee(TestHrCommon):
 
     def test_employee_has_same_avatar_as_corresponding_user(self):
         self.assertEqual(self.employee_without_image.avatar_1920, self.user_without_image.avatar_1920)
+
+    def test_employee_member_of_department(self):
+        dept, dept_sub, dept_sub_sub, dept_other, dept_parent = self.env['hr.department'].create([
+            {
+                'name': 'main',
+            },
+            {
+                'name': 'sub',
+            },
+            {
+                'name': 'sub-sub',
+            },
+            {
+                'name': 'other',
+            },
+            {
+                'name': 'parent',
+            },
+        ])
+        dept_sub.parent_id = dept
+        dept_sub_sub.parent_id = dept_sub
+        dept.parent_id = dept_parent
+        emp, emp_sub, emp_sub_sub, emp_other, emp_parent = self.env['hr.employee'].with_user(self.res_users_hr_officer).create([
+            {
+                'name': 'employee',
+                'department_id': dept.id,
+            },
+            {
+                'name': 'employee sub',
+                'department_id': dept_sub.id,
+            },
+            {
+                'name': 'employee sub sub',
+                'department_id': dept_sub_sub.id,
+            },
+            {
+                'name': 'employee other',
+                'department_id': dept_other.id,
+            },
+            {
+                'name': 'employee parent',
+                'department_id': dept_parent.id,
+            },
+        ])
+        self.res_users_hr_officer.employee_id = emp
+        self.assertTrue(emp.member_of_department)
+        self.assertTrue(emp_sub.member_of_department)
+        self.assertTrue(emp_sub_sub.member_of_department)
+        self.assertFalse(emp_other.member_of_department)
+        self.assertFalse(emp_parent.member_of_department)
