@@ -3,7 +3,7 @@
 
 import logging
 
-from psycopg2 import Error, OperationalError
+from psycopg2 import Error
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
