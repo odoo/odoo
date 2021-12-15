@@ -22,4 +22,9 @@ This module allows to generate a project/task from sales orders.
     ],
     'auto_install': True,
     'license': 'LGPL-3',
+    'assets': {
+        'web.assets_qweb': [
+            'sale_project/static/src/xml/**/*',
+        ],
+    },
 }

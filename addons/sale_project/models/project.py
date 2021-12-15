@@ -19,7 +19,7 @@ class Project(models.Model):
         "Only applies on tasks without sale order item defined, and if the employee is not in the 'Employee/Sales Order Item Mapping' of the project.")
     sale_order_id = fields.Many2one(string='Sales Order', related='sale_line_id.order_id', help="Sales order to which the project is linked.")
     has_any_so_to_invoice = fields.Boolean('Has SO to Invoice', compute='_compute_has_any_so_to_invoice')
-    sale_order_count = fields.Integer(compute='_compute_sale_order_count')
+    sale_order_count = fields.Integer(compute='_compute_sale_order_count', groups='sales_team.group_sale_salesman')
     has_any_so_with_nothing_to_invoice = fields.Boolean('Has a SO with an invoice status of No', compute='_compute_has_any_so_with_nothing_to_invoice')
 
     @api.model
@@ -74,7 +74,7 @@ class Project(models.Model):
 
     def _get_all_sales_orders(self):
         self.ensure_one()
-        return self.sale_order_id | self.task_ids.sale_order_id
+        return self.sale_order_id | self.task_ids.sale_order_id | self.milestone_ids.sale_line_id.order_id
 
     @api.depends('sale_order_id', 'task_ids.sale_order_id')
     def _compute_sale_order_count(self):
