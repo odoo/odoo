@@ -13,6 +13,7 @@
         'views/employee_views.xml',
         'views/fleet_vehicle_views.xml',
         'views/fleet_vehicle_cost_views.xml',
+        'views/hr_work_location_views.xml',
         'wizard/hr_departure_wizard_views.xml',
     ],
     'demo': [

@@ -29,6 +29,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='driver_id']" position="after">
                 <field name="driver_employee_id" invisible="1"/>
+                <field name="work_location_id" invisible="1"/>
                 <field name="mobility_card" readonly="1"/>
             </xpath>
             <xpath expr="//field[@name='future_driver_id']" position="after">

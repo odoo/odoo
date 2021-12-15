@@ -21,6 +21,9 @@ class Job(models.Model):
         'res.partner', "Job Location", default=_default_address_id,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         help="Address where employees are working")
+    work_location_id = fields.Many2one('hr.work.location', "Work Location",
+        domain="[('address_id', '=', address_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        compute='_compute_work_location_id', store=True, readonly=False)
     application_ids = fields.One2many('hr.applicant', 'job_id', "Job Applications")
     application_count = fields.Integer(compute='_compute_application_count', string="Application Count")
     all_application_count = fields.Integer(compute='_compute_all_application_count', string="All Application Count")
@@ -88,6 +91,12 @@ class Job(models.Model):
         result = dict((data['job_id'][0], data['job_id_count']) for data in read_group_result)
         for job in self:
             job.application_count = result.get(job.id, 0)
+
+    @api.depends('address_id')
+    def _compute_work_location_id(self):
+        for job in self:
+            if job.address_id != job.work_location_id.address_id:
+                job.work_location_id = False
 
     def _get_first_stage(self):
         self.ensure_one()

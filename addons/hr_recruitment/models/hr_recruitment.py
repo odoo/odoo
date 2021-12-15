@@ -137,6 +137,7 @@ class Applicant(models.Model):
     date_last_stage_update = fields.Datetime("Last Stage Update", index=True, default=fields.Datetime.now)
     priority = fields.Selection(AVAILABLE_PRIORITIES, "Appreciation", default='0')
     job_id = fields.Many2one('hr.job', "Applied Job", domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", tracking=True)
+    work_location_id = fields.Many2one(related='job_id.work_location_id', store=True)
     salary_proposed_extra = fields.Char("Proposed Salary Extra", help="Salary Proposed by the Organisation, extra advantages", tracking=True)
     salary_expected_extra = fields.Char("Expected Salary Extra", help="Salary Expected by Applicant, extra advantages", tracking=True)
     salary_proposed = fields.Float("Proposed Salary", group_operator="avg", help="Salary Proposed by the Organisation", tracking=True)
@@ -572,8 +573,8 @@ class Applicant(models.Model):
                     'default_job_title': applicant.job_id.name,
                     'default_address_home_id': address_id,
                     'default_department_id': applicant.department_id.id or False,
-                    'default_address_id': applicant.company_id and applicant.company_id.partner_id
-                            and applicant.company_id.partner_id.id or False,
+                    'default_address_id': applicant.job_id.address_id.id or False,
+                    'default_work_location_id': applicant.job_id.work_location_id.id or False,
                     'default_work_email': applicant.department_id and applicant.department_id.company_id
                             and applicant.department_id.company_id.email or False,
                     'default_work_phone': applicant.department_id.company_id.phone,

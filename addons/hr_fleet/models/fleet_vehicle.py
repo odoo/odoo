@@ -21,6 +21,14 @@ class FleetVehicle(models.Model):
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         tracking=True,
     )
+    work_location_id = fields.Many2one(related='driver_employee_id.work_location_id')
+    manager_id = fields.Many2one(compute='_compute_manager_id', store=True, readonly=False)
+
+    @api.depends('driver_employee_id', 'work_location_id.fleet_manager_id')
+    def _compute_manager_id(self):
+        for vehicle in self:
+            if vehicle.driver_employee_id:
+                vehicle.manager_id = vehicle.work_location_id.fleet_manager_id
 
     @api.depends('driver_id')
     def _compute_driver_employee_id(self):
