@@ -182,11 +182,11 @@ registerModel({
          * @private
          * @param {Object} payload
          * @param {Thread} payload.channel
-         * @param {integer} payload.invited_by_user_id
+         * @param {integer} [payload.invited_by_user_id]
          */
         _handleNotificationChannelJoined({ channel: channelData, invited_by_user_id: invitedByUserId }) {
             const channel = this.messaging.models['Thread'].insert(this.messaging.models['Thread'].convertData(channelData));
-            if (invitedByUserId !== this.messaging.currentUser.id) {
+            if (this.messaging.currentUser && invitedByUserId !== this.messaging.currentUser.id) {
                 // Current user was invited by someone else.
                 this.env.services['notification'].notify({
                     message: _.str.sprintf(
