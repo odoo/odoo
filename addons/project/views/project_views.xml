@@ -551,7 +551,7 @@
                     <field name="sequence" optional="show" widget="handle"/>
                     <field name="message_needaction" invisible="1"/>
                     <field name="active" invisible="1"/>
-                    <field name="name" string="Name" class="font-weight-bold"/>
+                    <field name="display_name" string="Name" class="font-weight-bold"/>
                     <field name="partner_id" optional="show" string="Customer"/>
                     <field name="privacy_visibility" optional="hide"/>
                     <field name="company_id" optional="show"  groups="base.group_multi_company" options="{'no_create': True, 'no_create_edit': True}"/>
@@ -648,7 +648,7 @@
             <field name="model">project.project</field>
             <field name="arch" type="xml">
                 <kanban class="oe_background_grey o_kanban_dashboard o_project_kanban o_emphasize_colors" on_create="project.open_create_project" js_class="project_project_kanban" sample="1">
-                    <field name="name"/>
+                    <field name="display_name"/>
                     <field name="partner_id"/>
                     <field name="commercial_partner_id"/>
                     <field name="color"/>
@@ -677,7 +677,7 @@
                                     <div class="o_kanban_card_content mw-100">
                                         <div class="o_kanban_primary_left">
                                             <div class="o_primary">
-                                                <span class="o_text_overflow"><t t-esc="record.name.value"/></span>
+                                                <span class="o_text_overflow"><t t-esc="record.display_name.value"/></span>
                                                 <span class="o_text_overflow text-muted" t-if="record.partner_id.value">
                                                     <span class="fa fa-user mr-2" aria-label="Partner" title="Partner"></span><t t-esc="record.partner_id.value"/>
                                                 </span>

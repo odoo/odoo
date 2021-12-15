@@ -183,6 +183,16 @@ class Project(models.Model):
                     project._create_analytic_account()
         return super(Project, self).write(values)
 
+    def name_get(self):
+        res = super().name_get()
+        if len(self.env.context.get('allowed_company_ids', [])) <= 1:
+            return res
+        name_mapping = dict(res)
+        for project in self:
+            if project.is_internal_project:
+                name_mapping[project.id] = f'{name_mapping[project.id]} - {project.company_id.name}'
+        return list(name_mapping.items())
+
     @api.model
     def _init_data_analytic_account(self):
         self.search([('analytic_account_id', '=', False), ('allow_timesheets', '=', True)])._create_analytic_account()
