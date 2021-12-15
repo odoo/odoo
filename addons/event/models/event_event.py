@@ -30,21 +30,21 @@ class EventType(models.Model):
                   'interval_nbr': 0,
                   'interval_unit': 'now',
                   'interval_type': 'after_sub',
-                  'template_ref': 'mail.template, %i' % self.env.ref('event.event_subscription').id,
+                  'template_ref': 'mail.template, %i' % self.env['ir.model.data']._xmlid_to_res_id('event.event_subscription'),
                  }),
                 (0, 0,
                  {'notification_type': 'mail',
                   'interval_nbr': 1,
                   'interval_unit': 'hours',
                   'interval_type': 'before_event',
-                  'template_ref': 'mail.template, %i' % self.env.ref('event.event_reminder').id,
+                  'template_ref': 'mail.template, %i' % self.env['ir.model.data']._xmlid_to_res_id('event.event_reminder'),
                  }),
                 (0, 0,
                  {'notification_type': 'mail',
                   'interval_nbr': 3,
                   'interval_unit': 'days',
                   'interval_type': 'before_event',
-                  'template_ref': 'mail.template, %i' % self.env.ref('event.event_reminder').id,
+                  'template_ref': 'mail.template, %i' % self.env['ir.model.data']._xmlid_to_res_id('event.event_reminder'),
                  })]
 
     name = fields.Char('Event Template', required=True, translate=True)
@@ -421,21 +421,24 @@ class EventEvent(models.Model):
           * lines that are not sent and have no registrations linked are remove;
           * type lines are added;
         """
+        if any(not event.event_type_id and not event.event_mail_ids for event in self):
+            defaults = self._default_event_mail_ids()
+
         for event in self:
             if not event.event_type_id and not event.event_mail_ids:
-                event.event_mail_ids = self._default_event_mail_ids()
+                event.event_mail_ids = defaults
                 continue
 
             # lines to keep: those with already sent emails or registrations
             mails_to_remove = event.event_mail_ids.filtered(
                 lambda mail: not(mail._origin.mail_done) and not(mail._origin.mail_registration_ids)
             )
+            mails_to_remove = []
             command = [Command.unlink(mail.id) for mail in mails_to_remove]
             if event.event_type_id.event_type_mail_ids:
-                command += [
-                    Command.create(line._prepare_event_mail_values())
-                    for line in event.event_type_id.event_type_mail_ids
-                ]
+                event_mail_values_list = event.event_type_id.event_type_mail_ids._prepare_event_mail_values()
+                command += [Command.create(values) for values in event_mail_values_list]
+            # print('-> command', command)
             if command:
                 event.event_mail_ids = command
 

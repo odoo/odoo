@@ -15,9 +15,10 @@ class EventTypeMail(models.Model):
 
     @api.depends('notification_type')
     def _compute_template_model_id(self):
-        sms_model = self.env['ir.model']._get('sms.template')
         sms_mails = self.filtered(lambda mail: mail.notification_type == 'sms')
-        sms_mails.template_model_id = sms_model
+        if sms_mails:
+            sms_model = self.env['ir.model']._get('sms.template')  # cached
+            sms_mails.template_model_id = sms_model
         super(EventTypeMail, self - sms_mails)._compute_template_model_id()
 
 
@@ -32,9 +33,10 @@ class EventMailScheduler(models.Model):
 
     @api.depends('notification_type')
     def _compute_template_model_id(self):
-        sms_model = self.env['ir.model']._get('sms.template')
         sms_mails = self.filtered(lambda mail: mail.notification_type == 'sms')
-        sms_mails.template_model_id = sms_model
+        if sms_mails:
+            sms_model = self.env['ir.model']._get('sms.template')  # cached
+            sms_mails.template_model_id = sms_model
         super(EventMailScheduler, self - sms_mails)._compute_template_model_id()
 
     def execute(self):

@@ -58,14 +58,13 @@ class EventTypeMail(models.Model):
             mail.template_model_id = mail_model if mail.notification_type == 'mail' else False
 
     def _prepare_event_mail_values(self):
-        self.ensure_one()
-        return {
-            'notification_type': self.notification_type,
-            'interval_nbr': self.interval_nbr,
-            'interval_unit': self.interval_unit,
-            'interval_type': self.interval_type,
-            'template_ref': '%s,%i' % (self.template_ref._name, self.template_ref.id)
-        }
+        return [{
+            'notification_type': type_mail.notification_type,
+            'interval_nbr': type_mail.interval_nbr,
+            'interval_unit': type_mail.interval_unit,
+            'interval_type': type_mail.interval_type,
+            'template_ref': '%s,%i' % (type_mail.template_ref._name, type_mail.template_ref.id)
+        } for type_mail in self]
 
 
 class EventMailScheduler(models.Model):
