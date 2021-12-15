@@ -87,7 +87,7 @@ class TestPERF(common.TransactionCase):
     @users('admin')
     @warmup
     def test_light_sales_orders_batch_creation_perf(self):
-        with self.assertQueryCount(admin=67):
+        with self.assertQueryCount(admin=68):  # 67 locally, 68 in nightly runbot
             self.env['sale.order'].create([{
                 'partner_id': self.partners[0].id,
                 'user_id': self.salesmans[0].id,
@@ -111,8 +111,8 @@ class TestPERF(common.TransactionCase):
         """Cover the "complex" logic triggered inside the `_compute_discount`"""
         self.env['product.pricelist'].search([]).discount_policy = 'without_discount'
         self.env.user.groups_id += self.env.ref('product.group_discount_per_so_line')
-
-        self._test_complex_sales_orders_batch_creation_perf(2093)
+        # 2093 locally, 2094 in nightly runbot
+        self._test_complex_sales_orders_batch_creation_perf(2094)
 
     def _test_complex_sales_orders_batch_creation_perf(self, query_count):
         MSG = "Model %s, %i records, %s, time %.2f"
@@ -158,5 +158,6 @@ class TestPERF(common.TransactionCase):
             ],
         } for i in range(self.ENTITIES)]
 
-        with self.assertQueryCount(admin=2141):
+        # 2141 locally, 2142 in nightly runbot
+        with self.assertQueryCount(admin=2142):
             self.env["sale.order"].create(vals_list)
