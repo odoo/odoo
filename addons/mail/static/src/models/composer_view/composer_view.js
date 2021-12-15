@@ -969,7 +969,7 @@ registerModel({
         /**
          * States the thread view on which this composer allows editing (if any).
          */
-        threadView: one2one('mail.thread_view', {
+        threadView: one2one('ThreadView', {
             inverse: 'composerView',
             readonly: true,
         }),

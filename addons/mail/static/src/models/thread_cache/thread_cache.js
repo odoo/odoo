@@ -407,9 +407,9 @@ registerModel({
             required: true,
         }),
         /**
-         * States the 'mail.thread_view' that are currently displaying `this`.
+         * States the 'ThreadView' that are currently displaying `this`.
          */
-        threadViews: one2many('mail.thread_view', {
+        threadViews: one2many('ThreadView', {
             inverse: 'threadCache',
         }),
     },

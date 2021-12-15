@@ -72,7 +72,7 @@ registerModel({
         /**
          * States the thread view linked to this discuss public view.
          */
-        threadView: one2one('mail.thread_view', {
+        threadView: one2one('ThreadView', {
             readonly: true,
             related: 'threadViewer.threadView',
         }),
