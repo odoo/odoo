@@ -4,6 +4,7 @@ import { _lt } from "../l10n/translation";
 import { makeErrorFromResponse } from "@web/core/network/rpc_service";
 import { ConnectionLostError } from "@web/core/network/rpc_service";
 import { browser } from "@web/core/browser/browser";
+import { registry } from "@web/core/registry";
 
 // -----------------------------------------------------------------------------
 // Content Disposition Library
@@ -455,6 +456,8 @@ function _download(data, filename, mimetype) {
 export function download(options) {
     return download._download(options);
 }
+
+registry.category("download").add("download", download);
 
 download._download = (options) => {
     return new Promise((resolve, reject) => {

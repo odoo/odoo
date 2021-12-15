@@ -3,7 +3,6 @@
 import { browser } from "@web/core/browser/browser";
 import { makeContext } from "@web/core/context";
 import { useDebugCategory } from "@web/core/debug/debug_context";
-import { download } from "@web/core/network/download";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { KeepLast } from "@web/core/utils/concurrency";
@@ -956,6 +955,7 @@ function makeActionManager(env) {
         const url = _getReportUrl(action, type);
         env.services.ui.block();
         try {
+            const download = registry.category("download").get("download");
             await download({
                 url: "/report/download",
                 data: {
