@@ -4,7 +4,7 @@ import { registerModel } from '@mail/model/model_core';
 import { many2one, one2one } from '@mail/model/model_field';
 
 registerModel({
-    name: 'mail.follower_subtype_list',
+    name: 'FollowerSubtypeList',
     identifyingFields: ['follower'],
     fields: {
         /**

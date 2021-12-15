@@ -40,7 +40,7 @@ registerModel({
             compute: '_computeComponentName',
             required: true,
         }),
-        followerSubtypeList: one2one('mail.follower_subtype_list', {
+        followerSubtypeList: one2one('FollowerSubtypeList', {
             isCausal: true,
             inverse: 'dialog',
             readonly: true,
