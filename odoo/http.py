@@ -1320,8 +1320,7 @@ class Root(object):
                 manifest = get_manifest(module)
                 static_path = opj(addons_path, module, 'static')
                 if (manifest
-                        and manifest['installable']
-                        and manifest['assets']
+                        and (manifest['installable'] or manifest['assets'])
                         and os.path.isdir(static_path)):
                     statics[f'/{module}/static'] = static_path
 
