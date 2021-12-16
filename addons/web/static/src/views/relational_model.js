@@ -201,11 +201,11 @@ export class Record extends DataPoint {
         let data;
         if (this.resId) {
             data = await this._read();
+            this._changes = {};
         } else {
             data = await this._performOnchange();
         }
         this._values = data; // FIXME: don't update internal state directly
-        this._changes = {};
         this.data = { ...data };
 
         // Relational data
@@ -793,7 +793,7 @@ export class Group extends DataPoint {
                 return this.value || false;
             }
             case "selection": {
-                const descriptor = selection.find((opt) => opt[1] === this.value);
+                const descriptor = selection.find((opt) => opt[0] === this.value);
                 return descriptor && descriptor[0];
             }
             // for a date/datetime field, we take the last moment of the group as the group value
