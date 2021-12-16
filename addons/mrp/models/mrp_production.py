@@ -1459,6 +1459,7 @@ class MrpProduction(models.Model):
                         new_moves_vals.append(move_vals[0])
                 new_moves = self.env['stock.move'].create(new_moves_vals)
             backorders |= backorder_mo
+            first_wo = self.env['mrp.workorder']
             for old_wo, wo in zip(production.workorder_ids, backorder_mo.workorder_ids):
                 wo.qty_produced = max(old_wo.qty_produced - old_wo.qty_producing, 0)
                 if wo.product_tracking == 'serial':
@@ -1467,6 +1468,9 @@ class MrpProduction(models.Model):
                     wo.qty_producing = wo.qty_remaining
                 if wo.qty_producing == 0:
                     wo.action_cancel()
+                if not first_wo and wo.state != 'cancel':
+                    first_wo = wo
+            first_wo.state = 'ready'
 
             # We need to adapt `duration_expected` on both the original workorders and their
             # backordered workorders. To do that, we use the original `duration_expected` and the
