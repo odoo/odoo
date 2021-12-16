@@ -2,7 +2,7 @@
 
 import { makeContext } from "@web/core/context";
 import { Domain } from "@web/core/domain";
-import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
+import { formatDateTime, serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { ORM } from "@web/core/orm_service";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { Deferred, KeepLast, Mutex } from "@web/core/utils/concurrency";
@@ -11,6 +11,7 @@ import { Model } from "@web/views/helpers/model";
 import { isX2Many } from "@web/views/helpers/view_utils";
 import { registry } from "../core/registry";
 
+const { DateTime } = luxon;
 const preloadedDataRegistry = registry.category("preloadedData");
 
 function orderByToString(orderBy) {
@@ -356,12 +357,12 @@ export class Record extends DataPoint {
 
     async _performOnchange(fieldName) {
         return this.mutex.exec(async () => {
-            const result = await this.model.orm.call(this.resModel, "onchange", [
-                [],
-                this._getChanges(true),
-                fieldName ? [fieldName] : [],
-                this._getOnchangeSpec(),
-            ]);
+            const result = await this.model.orm.call(
+                this.resModel,
+                "onchange",
+                [[], this._getChanges(true), fieldName ? [fieldName] : [], this._getOnchangeSpec()],
+                { context: this.context }
+            );
             const onChangeValues = this._parseServerValues(result.value);
             Object.assign(this.data, onChangeValues);
             Object.assign(this._changes, onChangeValues);
@@ -677,64 +678,66 @@ export class DynamicGroupList extends DynamicList {
             orderBy: this.orderBy,
             groupByInfo: this.groupByInfo,
         };
-        return Promise.all(
-            groups.map(async (data) => {
-                const groupParams = {
-                    ...commonGroupParams,
-                    aggregates: {},
-                    isFolded: !this.openGroupsByDefault,
-                    groupByFieldName: this.groupByField.name,
-                };
-                for (const key in data) {
-                    const value = data[key];
-                    switch (key) {
-                        case this.groupByField.name: {
-                            // FIXME: not sure about this
-                            groupParams.value = Array.isArray(value) ? value[0] : value;
-                            groupParams.displayName = Array.isArray(value) ? value[1] : value;
-                            if (this.groupedBy("m2x")) {
-                                if (!groupParams.value) {
-                                    groupParams.displayName = this.model.env._t("Undefined");
-                                }
-                                if (this.groupByInfo[this.groupByField.name]) {
-                                    groupParams.recordParam = {
-                                        resModel: this.groupByField.relation,
-                                        resId: groupParams.value,
-                                        activeFields: this.groupByInfo[this.groupByField.name]
-                                            .activeFields,
-                                        fields: this.groupByInfo[this.groupByField.name].fields,
-                                    };
-                                }
+        return groups.map((data) => {
+            const groupParams = {
+                ...commonGroupParams,
+                aggregates: {},
+                isFolded: !this.openGroupsByDefault,
+                groupByField: this.groupByField,
+            };
+            for (const key in data) {
+                const value = data[key];
+                switch (key) {
+                    case this.groupByField.name: {
+                        // FIXME: not sure about this
+                        groupParams.value = Array.isArray(value) ? value[0] : value;
+                        groupParams.displayName = Array.isArray(value) ? value[1] : value;
+                        if (this.groupedBy("m2x")) {
+                            if (!groupParams.value) {
+                                groupParams.displayName = this.model.env._t("Undefined");
                             }
-                            break;
-                        }
-                        case `${this.groupByField.name}_count`: {
-                            groupParams.count = value;
-                            break;
-                        }
-                        case "__domain": {
-                            groupParams.groupDomain = value;
-                            break;
-                        }
-                        case "__fold": {
-                            // optional
-                            groupParams.isFolded = value;
-                            break;
-                        }
-                        default: {
-                            // other optional aggregated fields
-                            if (key in this.fields) {
-                                groupParams.aggregates[key] = value;
+                            if (this.groupByInfo[this.groupByField.name]) {
+                                groupParams.recordParam = {
+                                    resModel: this.groupByField.relation,
+                                    resId: groupParams.value,
+                                    activeFields: this.groupByInfo[this.groupByField.name]
+                                        .activeFields,
+                                    fields: this.groupByInfo[this.groupByField.name].fields,
+                                };
                             }
+                        }
+                        break;
+                    }
+                    case `${this.groupByField.name}_count`: {
+                        groupParams.count = value;
+                        break;
+                    }
+                    case "__domain": {
+                        groupParams.groupDomain = value;
+                        break;
+                    }
+                    case "__fold": {
+                        // optional
+                        groupParams.isFolded = value;
+                        break;
+                    }
+                    case "__range": {
+                        groupParams.range = value;
+                        break;
+                    }
+                    default: {
+                        // other optional aggregated fields
+                        if (key in this.fields) {
+                            groupParams.aggregates[key] = value;
                         }
                     }
                 }
+            }
 
-                const previousGroup = this.groups.find((g) => g.value === groupParams.value);
-                const state = previousGroup ? previousGroup.exportState() : {};
-                return this.model.createDataPoint("group", groupParams, state);
-            })
-        );
+            const previousGroup = this.groups.find((g) => g.value === groupParams.value);
+            const state = previousGroup ? previousGroup.exportState() : {};
+            return this.model.createDataPoint("group", groupParams, state);
+        });
     }
 }
 
@@ -748,8 +751,9 @@ export class Group extends DataPoint {
         this.displayName = params.displayName;
         this.aggregates = params.aggregates;
         this.groupDomain = params.groupDomain;
+        this.range = params.range;
         this.count = params.count;
-        this.groupByFieldName = params.groupByFieldName;
+        this.groupByField = params.groupByField;
         this.groupByInfo = params.groupByInfo;
         this.recordParam = params.recordParam;
         if ("isFolded" in state) {
@@ -780,8 +784,45 @@ export class Group extends DataPoint {
         };
     }
 
+    getServerValue() {
+        const { name, selection, type } = this.groupByField;
+        switch (type) {
+            case "many2one":
+            case "char":
+            case "boolean": {
+                return this.value || false;
+            }
+            case "selection": {
+                const descriptor = selection.find((opt) => opt[1] === this.value);
+                return descriptor && descriptor[0];
+            }
+            // for a date/datetime field, we take the last moment of the group as the group value
+            case "date":
+            case "datetime": {
+                const range = this.range[name];
+                if (!range) {
+                    return false;
+                }
+                if (type === "date") {
+                    return serializeDate(
+                        DateTime.fromFormat(range.to, "yyyy-MM-dd", { zone: "utc" }).minus({
+                            day: 1,
+                        })
+                    );
+                } else {
+                    return serializeDateTime(
+                        DateTime.fromFormat(range.to, "yyyy-MM-dd HH:mm:ss").minus({ second: 1 })
+                    );
+                }
+            }
+            default: {
+                return false; // other field types are not handled
+            }
+        }
+    }
+
     async load() {
-        if (!this.isFolded) {
+        if (!this.isFolded && this.count) {
             await this.list.load();
             if (this.recordParam) {
                 this.record = this.model.createDataPoint("record", this.recordParam);

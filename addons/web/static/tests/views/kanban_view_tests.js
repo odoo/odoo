@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { registry } from "@web/core/registry";
 import { makeFakeDialogService } from "@web/../tests/helpers/mock_services";
 import {
     click,
@@ -18,6 +17,7 @@ import {
     validateSearch,
 } from "@web/../tests/search/helpers";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import { registry } from "@web/core/registry";
 
 const serviceRegistry = registry.category("services");
 
@@ -71,6 +71,10 @@ const toggleColumnActions = async (kanban, columnIndex) => {
         const button = [...buttons].find((b) => re.test(b.innerText));
         return click(button);
     };
+};
+
+const makeFakeActionService = (actionService) => {
+    registry.category("services").add("action", { start: () => actionService }, { force: true });
 };
 
 // /!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\/!\
@@ -2004,8 +2008,15 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skip("quick create record and edit in grouped mode", async (assert) => {
+    QUnit.test("quick create record and edit in grouped mode", async (assert) => {
         assert.expect(6);
+
+        makeFakeActionService({
+            async switchView(viewType, props) {
+                assert.strictEqual(viewType, "form");
+                assert.strictEqual(props.resId, newRecordID);
+            },
+        });
 
         let newRecordID;
         const kanban = await makeView({
@@ -2018,30 +2029,12 @@ QUnit.module("Views", (hooks) => {
                 '<templates><t t-name="kanban-box">' +
                 '<div><field name="foo"/></div>' +
                 "</t></templates></kanban>",
-            async mockRPC(route, args) {
-                const def = this._super.apply(this, arguments);
-                if (args.method === "name_create") {
-                    def.then(function (result) {
-                        newRecordID = result[0];
-                    });
+            async mockRPC(route, { args, method }) {
+                if (method === "read") {
+                    newRecordID = args[0][0];
                 }
-                return def;
             },
             groupBy: ["bar"],
-            intercepts: {
-                switch_view: function (event) {
-                    assert.strictEqual(
-                        event.data.mode,
-                        "edit",
-                        "should trigger 'open_record' event in edit mode"
-                    );
-                    assert.strictEqual(
-                        event.data.res_id,
-                        newRecordID,
-                        "should open the correct record"
-                    );
-                },
-            },
         });
 
         assert.containsOnce(
@@ -2073,7 +2066,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skip("quick create several records in a row", async (assert) => {
+    QUnit.test("quick create several records in a row", async (assert) => {
         assert.expect(6);
 
         const kanban = await makeView({
@@ -2100,7 +2093,8 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsOnce(kanban, ".o_kanban_quick_create", "the quick create should be open");
 
-        await testUtils.kanban.quickCreate(kanban, "new partner 1");
+        await editQuickCreateInput(kanban, "display_name", "new partner 1");
+        await validateRecord(kanban);
 
         assert.containsN(
             kanban,
@@ -2115,7 +2109,9 @@ QUnit.module("Views", (hooks) => {
         );
 
         // create a second element in a row
-        await testUtils.kanban.quickCreate(kanban, "new partner 2");
+        await createRecord(kanban);
+        await editQuickCreateInput(kanban, "display_name", "new partner 2");
+        await validateRecord(kanban);
 
         assert.containsN(
             kanban,
@@ -2130,7 +2126,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skip("quick create is disabled until record is created and read", async (assert) => {
+    QUnit.test("quick create is disabled until record is created and read", async (assert) => {
         assert.expect(6);
 
         let prom = makeDeferred();
@@ -2145,12 +2141,10 @@ QUnit.module("Views", (hooks) => {
                 '<div><field name="foo"/></div>' +
                 "</t></templates></kanban>",
             groupBy: ["bar"],
-            async mockRPC(route, args) {
-                const result = this._super.apply(this, arguments);
-                if (args.method === "read") {
-                    return prom.then(_.constant(result));
+            async mockRPC(route, { method }) {
+                if (method === "read") {
+                    await prom;
                 }
-                return result;
             },
         });
 
@@ -2165,7 +2159,8 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsOnce(kanban, ".o_kanban_quick_create", "the quick create should be open");
 
-        await testUtils.kanban.quickCreate(kanban, "new partner 1");
+        await editQuickCreateInput(kanban, "display_name", "new partner 1");
+        await validateRecord(kanban);
 
         assert.containsOnce(
             kanban,
@@ -2179,17 +2174,17 @@ QUnit.module("Views", (hooks) => {
         );
 
         prom.resolve();
-
         await nextTick();
+
         assert.containsN(
             kanban,
             ".o_kanban_group:first-child .o_kanban_record",
             2,
             "first column should now contain two records"
         );
-        assert.strictEqual(
-            kanban.el.querySelector(".o_kanban_quick_create:not(.o_disabled)").length,
-            1,
+        assert.containsNone(
+            kanban,
+            ".o_kanban_quick_create.o_disabled",
             "quick create should be enabled"
         );
     });
@@ -2239,11 +2234,8 @@ QUnit.module("Views", (hooks) => {
         );
 
         await createRecord(kanban); // Click on 'Create'
-        assert.hasClass(
-            kanban.el.querySelector(".o_kanban_group:first-child > div:nth(1)"),
-            "o_kanban_quick_create",
-            "clicking on create should open the quick_create in the first column"
-        );
+
+        assert.containsOnce(kanban, ".o_kanban_group:first-child .o_kanban_quick_create");
 
         await editQuickCreateInput(kanban, "foo", "test");
         await validateRecord(kanban);
@@ -2323,9 +2315,10 @@ QUnit.module("Views", (hooks) => {
         });
 
         await createRecord(kanban);
+
         assert.containsOnce(kanban, ".o_kanban_quick_create", "should have a quick create widget");
 
-        await testUtils.kanban.quickCreate(kanban, "test");
+        await editQuickCreateInput(kanban, "display_name", "test");
 
         assert.strictEqual(
             $(".modal .o_form_view.o_form_editable").length,
@@ -2494,7 +2487,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skip("quick create record in empty grouped kanban", async (assert) => {
+    QUnit.test("quick create record in empty grouped kanban", async (assert) => {
         assert.expect(3);
 
         const kanban = await makeView({
@@ -2509,8 +2502,8 @@ QUnit.module("Views", (hooks) => {
                 "</t></templates>" +
                 "</kanban>",
             groupBy: ["product_id"],
-            async mockRPC(route, args) {
-                if (args.method === "web_read_group") {
+            async mockRPC(route, { method }) {
+                if (method === "web_read_group") {
                     // override read_group to return empty groups, as this is
                     // the case for several models (e.g. project.task grouped
                     // by stage_id)
@@ -2537,8 +2530,14 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skip("quick create record in grouped on date(time) field", async (assert) => {
+    QUnit.test("quick create record in grouped on date(time) field", async (assert) => {
         assert.expect(6);
+
+        makeFakeActionService({
+            async switchView(viewType, props) {
+                assert.deepEqual([props.resId, viewType], [false, "form"]);
+            },
+        });
 
         const kanban = await makeView({
             type: "kanban",
@@ -2551,18 +2550,6 @@ QUnit.module("Views", (hooks) => {
                 "</t></templates>" +
                 "</kanban>",
             groupBy: ["date"],
-            intercepts: {
-                switch_view: function (ev) {
-                    assert.deepEqual(
-                        _.pick(ev.data, "res_id", "view_type"),
-                        {
-                            res_id: undefined,
-                            view_type: "form",
-                        },
-                        "should trigger an event to open the form view (twice)"
-                    );
-                },
-            },
         });
 
         assert.containsNone(
@@ -2596,7 +2583,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skip(
+    QUnit.test(
         "quick create record if grouped on date(time) field with attribute allow_group_range_value: true",
         async (assert) => {
             assert.expect(6);
@@ -2644,7 +2631,7 @@ QUnit.module("Views", (hooks) => {
             );
             assert.strictEqual(
                 kanban.el.querySelector(
-                    ".o_kanban_group:first-child .o_kanban_quick_create .o_datepicker_input[name=date]"
+                    ".o_kanban_group:first-child .o_kanban_quick_create .o_datepicker[name=date] input"
                 ).value,
                 "01/31/2017"
             );
@@ -2659,6 +2646,7 @@ QUnit.module("Views", (hooks) => {
 
             // clicking on CREATE in control panel should open a quick create
             await createRecord(kanban);
+
             assert.containsOnce(
                 kanban,
                 ".o_kanban_group:first-child .o_kanban_quick_create",
@@ -2666,7 +2654,7 @@ QUnit.module("Views", (hooks) => {
             );
             assert.strictEqual(
                 kanban.el.querySelector(
-                    ".o_kanban_group:first-child .o_kanban_quick_create .o_datepicker_input[name=datetime]"
+                    ".o_kanban_group:first-child .o_kanban_quick_create .o_datepicker[name=datetime] input"
                 ).value,
                 "01/31/2017 23:59:59"
             );

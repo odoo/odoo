@@ -119,7 +119,7 @@ export class KanbanRenderer extends Component {
         const { list } = this.props;
         if (list.isGrouped) {
             return list.groups
-                .sort((a) => (a.value ? 0 : -1))
+                .sort((a, b) => (a.value && !b.value ? 1 : !a.value && b.value ? -1 : 0))
                 .map((group) => ({ group, key: group.value }));
         } else {
             return list.records.map((record) => ({ record, key: record.resId }));
