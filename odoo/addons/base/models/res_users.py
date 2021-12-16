@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
 import binascii
 import contextlib
 import datetime
@@ -17,16 +16,15 @@ from hashlib import sha256
 from itertools import chain, repeat
 
 import decorator
-import passlib.context
 import pytz
 from lxml import etree
 from lxml.builder import E
+from passlib.context import CryptContext
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _, Command
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
 from odoo.http import request
-from odoo.modules.module import get_module_resource
 from odoo.osv import expression
 from odoo.service.db import check_super
 from odoo.tools import partition, collections, frozendict, lazy_property, image_process
@@ -35,18 +33,7 @@ _logger = logging.getLogger(__name__)
 
 # Only users who can modify the user (incl. the user herself) see the real contents of these fields
 USER_PRIVATE_FIELDS = []
-
-DEFAULT_CRYPT_CONTEXT = passlib.context.CryptContext(
-    # kdf which can be verified by the context. The default encryption kdf is
-    # the first of the list
-    ['pbkdf2_sha512', 'plaintext'],
-    # deprecated algorithms are still verified as usual, but ``needs_update``
-    # will indicate that the stored hash should be replaced by a more recent
-    # algorithm. Passlib 1.6 supports an `auto` value which deprecates any
-    # algorithm but the default, but Ubuntu LTS only provides 1.5 so far.
-    deprecated=['plaintext'],
-)
-
+MIN_ROUNDS = 350000
 concat = chain.from_iterable
 
 #
@@ -353,9 +340,8 @@ class Users(models.Model):
 
     def _set_password(self):
         ctx = self._crypt_context()
-        hash_password = ctx.hash if hasattr(ctx, 'hash') else ctx.encrypt
         for user in self:
-            self._set_encrypted_password(user.id, hash_password(user.password))
+            self._set_encrypted_password(user.id, ctx.hash(user.password))
 
     def _set_encrypted_password(self, uid, pw):
         assert self._crypt_context().identify(pw) != 'plaintext'
@@ -919,15 +905,26 @@ class Users(models.Model):
     def get_company_currency_id(self):
         return self.env.company.currency_id.id
 
+    @tools.ormcache()
     def _crypt_context(self):
         """ Passlib CryptContext instance used to encrypt and verify
         passwords. Can be overridden if technical, legal or political matters
         require different kdfs than the provided default.
 
-        Requires a CryptContext as deprecation and upgrade notices are used
-        internally
+        The work factor of the default KDF can be configured using the
+        ``password.hashing.rounds`` ICP.
         """
-        return DEFAULT_CRYPT_CONTEXT
+        cfg = self.env['ir.config_parameter'].sudo()
+        return CryptContext(
+            # kdf which can be verified by the context. The default encryption
+            # kdf is the first of the list
+            ['pbkdf2_sha512', 'plaintext'],
+            # deprecated algorithms are still verified as usual, but
+            # ``needs_update`` will indicate that the stored hash should be
+            # replaced by a more recent algorithm.
+            deprecated=['auto'],
+            pbkdf2_sha512__rounds=max(MIN_ROUNDS, int(cfg.get_param('password.hashing.rounds', 0))),
+        )
 
     @contextlib.contextmanager
     def _assert_can_auth(self):
@@ -1614,13 +1611,12 @@ class ChangePasswordUser(models.TransientModel):
 # API keys support
 API_KEY_SIZE = 20 # in bytes
 INDEX_SIZE = 8 # in hex digits, so 4 bytes, or 20% of the key
-KEY_CRYPT_CONTEXT = passlib.context.CryptContext(
+KEY_CRYPT_CONTEXT = CryptContext(
     # default is 29000 rounds which is 25~50ms, which is probably unnecessary
     # given in this case all the keys are completely random data: dictionary
     # attacks on API keys isn't much of a concern
     ['pbkdf2_sha512'], pbkdf2_sha512__rounds=6000,
 )
-hash_api_key = getattr(KEY_CRYPT_CONTEXT, 'hash', None) or KEY_CRYPT_CONTEXT.encrypt
 class APIKeysUser(models.Model):
     _inherit = 'res.users'
 
@@ -1749,7 +1745,7 @@ class APIKeys(models.Model):
         VALUES (%s, %s, %s, %s, %s)
         RETURNING id
         """.format(table=self._table),
-        [name, self.env.user.id, scope, hash_api_key(k), k[:INDEX_SIZE]])
+        [name, self.env.user.id, scope, KEY_CRYPT_CONTEXT.hash(k), k[:INDEX_SIZE]])
 
         ip = request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
         _logger.info("%s generated: scope: <%s> for '%s' (#%s) from %s",
