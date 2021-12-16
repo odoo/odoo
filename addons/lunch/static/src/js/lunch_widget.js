@@ -43,7 +43,10 @@ var LunchWidget = Widget.extend({
         this.locations = params.locations || [];
         this.userLocation = params.user_location[1] || '';
 
-        this.lunchLocationField = this._createMany2One('locations', 'lunch.location', this.userLocation);
+        const company_ids = [false].concat(session.user_context.allowed_company_ids || []);
+        this.lunchLocationField = this._createMany2One('locations', 'lunch.location', this.userLocation, () => [
+            ['company_id', 'in', company_ids]
+        ]);
 
         this.wallet = params.wallet || 0;
         this.raw_state = params.raw_state || 'new';
@@ -72,7 +75,10 @@ var LunchWidget = Widget.extend({
         } else {
             this.$('.o_lunch_user_field').text(this.username);
         }
-        this.lunchLocationField.appendTo(this.$('.o_lunch_location_field'));
+
+        if (this.userLocation) {
+            this.lunchLocationField.appendTo(this.$('.o_lunch_location_field'));
+        }
     },
 
     //--------------------------------------------------------------------------
