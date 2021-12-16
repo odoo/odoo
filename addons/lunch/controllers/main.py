@@ -75,11 +75,12 @@ class LunchController(http.Controller):
         self._check_user_impersonification(user_id)
         user = request.env['res.users'].browse(user_id) if user_id else request.env.user
 
+        company_ids = request.env.context.get('allowed_company_ids', request.env.company.ids)
         user_location = user.last_lunch_location_id
-        has_multi_company_access = not user_location.company_id or user_location.company_id.id in request._context.get('allowed_company_ids', request.env.company.ids)
+        has_multi_company_access = not user_location.company_id or user_location.company_id.id in company_ids
 
         if not user_location or not has_multi_company_access:
-            return request.env['lunch.location'].search([], limit=1).id
+            return request.env['lunch.location'].search([('company_id', 'in', [False] + company_ids)], limit=1).id
         return user_location.id
 
     def _make_infos(self, user, **kwargs):
