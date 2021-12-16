@@ -242,9 +242,8 @@ export class KanbanRenderer extends Component {
     // ------------------------------------------------------------------------
 
     createGroup() {
-        const groupName = this.state.newGroup.trim();
-        if (groupName.length) {
-            this.props.list.createGroup(groupName);
+        if (this.state.newGroup.length) {
+            this.props.list.createGroup(this.state.newGroup);
         }
         this.state.newGroup = "";
         this.state.quickCreateGroup = false;
@@ -376,6 +375,10 @@ export class KanbanRenderer extends Component {
         if (!ev.target.closest(".dropdown") && group.isFolded) {
             group.toggle();
         }
+    }
+
+    onNewGroupChange(ev) {
+        this.state.newGroup = ev.target.value.trim();
     }
 
     onQuickCreateKeydown(group, ev) {

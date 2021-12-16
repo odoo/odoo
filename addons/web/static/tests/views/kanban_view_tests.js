@@ -2988,7 +2988,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skip("quick create record while adding a new column", async (assert) => {
+    QUnit.test("quick create record while adding a new column", async (assert) => {
         assert.expect(10);
 
         let prom = makeDeferred();
@@ -3003,12 +3003,10 @@ QUnit.module("Views", (hooks) => {
                 "</t></templates>" +
                 "</kanban>",
             groupBy: ["product_id"],
-            async mockRPC(route, args) {
-                const result = this._super.apply(this, arguments);
-                if (args.method === "name_create" && args.model === "product") {
-                    return prom.then(_.constant(result));
+            async mockRPC(route, { method, model }) {
+                if (method === "name_create" && model === "product") {
+                    await prom;
                 }
-                return result;
             },
         });
 
@@ -3049,7 +3047,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(kanban, ".o_kanban_group:first-child .o_kanban_record", 3);
     });
 
-    QUnit.skip("close a column while quick creating a record", async (assert) => {
+    QUnit.test("close a column while quick creating a record", async (assert) => {
         assert.expect(6);
 
         serverData.views = {
@@ -3068,12 +3066,10 @@ QUnit.module("Views", (hooks) => {
                     </t></templates>
                 </kanban>`,
             groupBy: ["product_id"],
-            async mockRPC(route, args) {
-                const result = this._super(...arguments);
-                if (args.method === "load_views") {
+            async mockRPC(route, { method }) {
+                if (method === "load_views") {
                     await prom;
                 }
-                return result;
             },
         });
 

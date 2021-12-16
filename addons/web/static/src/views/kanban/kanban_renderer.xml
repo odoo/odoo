@@ -141,7 +141,7 @@
                                     class="form-control o_input"
                                     placeholder="Column title"
                                     autofocus=""
-                                    t-model="state.newGroup"
+                                    t-on-change="onNewGroupChange"
                                     t-on-focus="() => state.quickCreateGroupInputFocus = true"
                                     t-on-blur="() => state.quickCreateGroupInputFocus = false"
                                     t-on-keydown="onAddGroupKeydown"
