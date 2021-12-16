@@ -110,6 +110,9 @@ Featuring
             'website_slides/static/lib/pdfslidesviewer/PDFSlidesViewer.js',
             'website_slides/static/src/js/slides_embed.js',
         ],
+        'web.tests_assets': [
+            'website_slides/static/src/tests/helpers/mock_models.js',
+        ],
         'web.qunit_suite_tests': [
             'website_slides/static/src/components/activity/activity_tests.js',
         ],

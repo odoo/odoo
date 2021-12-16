@@ -1,13 +1,6 @@
-odoo.define('website_slides/static/src/tests/activity_tests.js', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const { insert } = require('@mail/model/model_field_command');
-const {
-    afterEach,
-    beforeEach,
-    createRootMessagingComponent,
-    start,
-} = require('@mail/utils/test_utils');
+import { afterEach, beforeEach, start } from '@mail/utils/test_utils';
 
 QUnit.module('website_slides', {}, function () {
 QUnit.module('components', {}, function () {
@@ -15,20 +8,13 @@ QUnit.module('activity', {}, function () {
 QUnit.module('activity_tests.js', {
     beforeEach() {
         beforeEach(this);
-
-        this.createActivityComponent = async activity => {
-            await createRootMessagingComponent(this, "Activity", {
-                props: { activityLocalId: activity.localId },
-                target: this.widget.el,
-            });
-        };
-
         this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
+            const res = await start({ ...params, data: this.data });
+            const { components, env, widget } = res;
+            this.components = components;
             this.env = env;
             this.widget = widget;
+            return res;
         };
     },
     afterEach() {
@@ -39,7 +25,19 @@ QUnit.module('activity_tests.js', {
 QUnit.test('grant course access', async function (assert) {
     assert.expect(8);
 
-    await this.start({
+    this.data['res.partner'].records.push({ id: 5 });
+    this.data['slide.channel'].records.push({
+        activity_ids: [12],
+        id: 100,
+    });
+    this.data['mail.activity'].records.push({
+        can_write: true,
+        id: 12,
+        res_id: 100,
+        request_partner_id: 5,
+        res_model: 'slide.channel',
+    });
+    const { createChatterContainerComponent } = await this.start({
         async mockRPC(route, args) {
             if (args.method === 'action_grant_access') {
                 assert.strictEqual(args.args.length, 1);
@@ -51,23 +49,10 @@ QUnit.test('grant course access', async function (assert) {
             return this._super(...arguments);
         },
     });
-    const activity = this.messaging.models['Activity'].create({
-        id: 100,
-        canWrite: true,
-        thread: insert({
-            id: 100,
-            model: 'slide.channel',
-        }),
-        requestingPartner: insert({
-            id: 5,
-            displayName: "Pauvre pomme",
-        }),
-        type: insert({
-            id: 1,
-            displayName: "Access Request",
-        }),
+    await createChatterContainerComponent({
+        threadId: 100,
+        threadModel: 'slide.channel',
     });
-    await this.createActivityComponent(activity);
 
     assert.containsOnce(document.body, '.o_Activity', "should have activity component");
     assert.containsOnce(document.body, '.o_Activity_grantAccessButton', "should have grant access button");
@@ -79,7 +64,19 @@ QUnit.test('grant course access', async function (assert) {
 QUnit.test('refuse course access', async function (assert) {
     assert.expect(8);
 
-    await this.start({
+    this.data['res.partner'].records.push({ id: 5 });
+    this.data['slide.channel'].records.push({
+        activity_ids: [12],
+        id: 100,
+    });
+    this.data['mail.activity'].records.push({
+        can_write: true,
+        id: 12,
+        res_id: 100,
+        request_partner_id: 5,
+        res_model: 'slide.channel',
+    });
+    const { createChatterContainerComponent } = await this.start({
         async mockRPC(route, args) {
             if (args.method === 'action_refuse_access') {
                 assert.strictEqual(args.args.length, 1);
@@ -91,23 +88,10 @@ QUnit.test('refuse course access', async function (assert) {
             return this._super(...arguments);
         },
     });
-    const activity = this.messaging.models['Activity'].create({
-        id: 100,
-        canWrite: true,
-        thread: insert({
-            id: 100,
-            model: 'slide.channel',
-        }),
-        requestingPartner: insert({
-            id: 5,
-            displayName: "Pauvre pomme",
-        }),
-        type: insert({
-            id: 1,
-            displayName: "Access Request",
-        }),
+    await createChatterContainerComponent({
+        threadId: 100,
+        threadModel: 'slide.channel',
     });
-    await this.createActivityComponent(activity);
 
     assert.containsOnce(document.body, '.o_Activity', "should have activity component");
     assert.containsOnce(document.body, '.o_Activity_refuseAccessButton', "should have refuse access button");
@@ -118,6 +102,4 @@ QUnit.test('refuse course access', async function (assert) {
 
 });
 });
-});
-
 });

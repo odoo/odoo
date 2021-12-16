@@ -137,16 +137,8 @@ MockServer.include({
         }
         // mail.activity methods
         if (args.model === 'mail.activity' && args.method === 'activity_format') {
-            let res = this._mockRead(args.model, args.args, args.kwargs);
-            res = res.map(function (record) {
-                if (record.mail_template_ids) {
-                    record.mail_template_ids = record.mail_template_ids.map(function (template_id) {
-                        return { id: template_id, name: "template" + template_id };
-                    });
-                }
-                return record;
-            });
-            return res;
+
+            return this._mockMailActivityActivityFormat(args);
         }
         if (args.model === 'mail.activity' && args.method === 'get_activity_data') {
             const res_model = args.args[0] || args.kwargs.res_model;
@@ -306,6 +298,30 @@ MockServer.include({
     //--------------------------------------------------------------------------
     // Private Mocked Routes
     //--------------------------------------------------------------------------
+
+    /**
+     * Simulates `activity_format` on `mail.activity`.
+     *
+     * @private
+     * @param {Object} args
+     * @returns {Object[]}
+     */
+    _mockMailActivityActivityFormat(args) {
+        let res = this._mockRead(args.model, args.args, args.kwargs);
+        res = res.map(record => {
+            if (record.mail_template_ids) {
+                record.mail_template_ids = record.mail_template_ids.map(template_id => {
+                    const template = this._getRecords('mail.template', [['id', '=', template_id]])[0];
+                    return {
+                        id: template.id,
+                        name: template.name,
+                    };
+                });
+            }
+            return record;
+        });
+        return res;
+    },
 
     /**
      * Simulates the `/mail/attachment/delete` route.
@@ -569,13 +585,13 @@ MockServer.include({
         });
 
         return {
-            activity_types: activityTypes.map(function (type) {
+            activity_types: activityTypes.map((type) => {
                 let mailTemplates = [];
                 if (type.mail_template_ids) {
-                    mailTemplates = type.mail_template_ids.map(function (id) {
-                        const template = _.findWhere(self.data['mail.template'].records, { id: id });
+                    mailTemplates = type.mail_template_ids.map((template_id) => {
+                        const template = this._getRecords('mail.template', [['id', '=', template_id]])[0];
                         return {
-                            id: id,
+                            id: template.id,
                             name: template.name,
                         };
                     });
