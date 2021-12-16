@@ -985,7 +985,6 @@ actual arch.
         return arch
 
     def _apply_groups(self, node, name_manager, node_info):
-        #pylint: disable=unused-argument
         """ Apply group restrictions: elements with a 'groups' attribute should
         be made invisible to people who are not members.
         """
