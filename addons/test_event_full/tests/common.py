@@ -4,110 +4,287 @@
 from datetime import datetime, timedelta, time
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
-from odoo.addons.event_crm.tests.common import TestEventCrmCommon
+from odoo.addons.event_crm.tests.common import EventCrmCase
+from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.sales_team.tests.common import TestSalesCommon
 from odoo.addons.website.tests.test_website_visitor import MockVisitor
-from odoo.addons.website_event.tests.common import EventDtPatcher
 
 
-class TestEventFullCommon(TestEventCrmCommon, TestSalesCommon, EventDtPatcher, MockVisitor):
+class TestEventFullCommon(EventCrmCase, TestSalesCommon, MockVisitor):
 
     @classmethod
     def setUpClass(cls):
         super(TestEventFullCommon, cls).setUpClass()
+        cls._init_mail_gateway()
 
+        # Context data: dates
         # ------------------------------------------------------------
-        # TICKET INFORMATIONS
+
+        # Mock dates to have reproducible computed fields based on time
+        cls.reference_now = datetime(2021, 12, 1, 10, 0, 0)
+        cls.reference_today = datetime(2021, 12, 1)
+
+        # Users and contacts
         # ------------------------------------------------------------
 
-        cls.event_product = cls.env['product.product'].create({
-            'name': 'Test Registration Product',
-            'description_sale': 'Mighty Description',
-            'list_price': 10,
-            'standard_price': 30.0,
-            'detailed_type': 'event',
+        cls.admin_user = cls.env.ref('base.user_admin')
+        cls.admin_user.write({
+            'country_id': cls.env.ref('base.be').id,
+            'login': 'admin',
+            'notification_type': 'inbox',
         })
-
-        cls.website = cls.env['website'].search([
-            ('company_id', '=', cls.env.user.company_id.id)
-        ], limit=1)
-
-        cls.event_0.write({
-            # event if 8-18 in Europe/Brussels (DST) (first day: begins at 9, last day: ends at 15)
-            'date_begin': datetime.combine(cls.reference_now, time(7, 0)) - timedelta(days=1),
-            'date_end': datetime.combine(cls.reference_now, time(13, 0)) + timedelta(days=1),
-            # ticket informations
-            'event_ticket_ids': [
-                (5, 0),
-                (0, 0, {
-                    'name': 'First Ticket',
-                    'product_id': cls.event_product.id,
-                    'seats_max': 30,
-                }), (0, 0, {
-                    'name': 'Second Ticket',
-                    'product_id': cls.event_product.id,
-                })
-            ],
+        cls.company_admin = cls.admin_user.company_id
+        # set country in order to format Belgian numbers
+        cls.company_admin.write({
+            'country_id': cls.env.ref('base.be').id,
         })
+        cls.event_user = mail_new_test_user(
+            cls.env,
+            company_id=cls.company_admin.id,
+            company_ids=[(4, cls.company_admin.id)],
+            country_id=cls.env.ref('base.be').id,
+            groups='base.group_user,base.group_partner_manager,event.group_event_user',
+            email='e.e@example.com',
+            login='event_user',
+            name='Ernest Employee',
+            notification_type='inbox',
+            signature='--\nErnest',
+        )
 
+        cls.customer = cls.env['res.partner'].create({
+            'country_id': cls.env.ref('base.be').id,
+            'email': 'customer.test@example.com',
+            'name': 'Test Customer',
+            'mobile': '0456123456',
+            'phone': '0456123456',
+        })
         # make a SO for a customer, selling some tickets
         cls.customer_so = cls.env['sale.order'].with_user(cls.user_sales_salesman).create({
             'partner_id': cls.event_customer.id,
         })
 
-        # ------------------------------------------------------------
-        # QUESTIONS
+        # Side records for event main records
         # ------------------------------------------------------------
 
-        cls.event_question_1 = cls.env['event.question'].create({
-            'title': 'Question1',
-            'question_type': 'simple_choice',
-            'event_id': cls.event_0.id,
-            'once_per_order': False,
-            'answer_ids': [
-                (0, 0, {'name': 'Q1-Answer1'}),
-                (0, 0, {'name': 'Q1-Answer2'})
+        cls.ticket_product = cls.env['product.product'].create({
+            'description_sale': 'Ticket Product Description',
+            'detailed_type': 'event',
+            'list_price': 10,
+            'name': 'Test Registration Product',
+            'standard_price': 30.0,
+        })
+        cls.booth_product = cls.env['product.product'].create({
+            'description_sale': 'Booth Product Description',
+            'detailed_type': 'event_booth',
+            'list_price': 20,
+            'name': 'Test Booth Product',
+            'standard_price': 60.0,
+        })
+
+        cls.tag_categories = cls.env['event.tag.category'].create([
+            {'is_published': True, 'name': 'Published Category'},
+            {'is_published': False, 'name': 'Unpublished Category'},
+        ])
+        cls.tags = cls.env['event.tag'].create([
+            {'category_id': cls.tag_categories[0].id, 'name': 'PubTag1'},
+            {'category_id': cls.tag_categories[0].id, 'color': 0, 'name': 'PubTag2'},
+            {'category_id': cls.tag_categories[1].id, 'name': 'UnpubTag1'},
+        ])
+
+        cls.event_booth_categories = cls.env['event.booth.category'].create([
+            {'description': '<p>Standard</p>',
+             'name': 'Standard',
+             'product_id': cls.booth_product.id,
+            },
+            {'description': '<p>Premium</p>',
+             'name': 'Premium',
+             'product_id': cls.booth_product.id,
+             'price': 90,
+            }
+        ])
+
+        cls.sponsor_types = cls.env['event.sponsor.type'].create([
+            {'name': 'GigaTop',
+             'sequence': 1,
+            }
+        ])
+        cls.sponsor_partners = cls.env['res.partner'].create([
+            {'country_id': cls.env.ref('base.be').id,
+             'email': 'event.sponsor@example.com',
+             'name': 'EventSponsor',
+             'phone': '04856112233',
+            }
+        ])
+
+        # Event type
+        # ------------------------------------------------------------
+        test_registration_report = cls.env.ref('test_event_full.event_registration_report_test')
+        subscription_template = cls.env.ref('event.event_subscription')
+        subscription_template.write({'report_template': test_registration_report.id})
+        cls.test_event_type = cls.env['event.type'].create({
+            'auto_confirm': True,
+            'default_timezone': 'Europe/Paris',
+            'event_type_booth_ids': [
+                (0, 0, {'booth_category_id': cls.event_booth_categories[0].id,
+                        'name': 'Standard Booth',
+                       }
+                ),
+                (0, 0, {'booth_category_id': cls.event_booth_categories[0].id,
+                        'name': 'Standard Booth 2',
+                       }
+                ),
+                (0, 0, {'booth_category_id': cls.event_booth_categories[1].id,
+                        'name': 'Premium Booth',
+                       }
+                ),
+                (0, 0, {'booth_category_id': cls.event_booth_categories[1].id,
+                        'name': 'Premium Booth 2',
+                       }
+                ),
             ],
-        })
-        cls.event_question_2 = cls.env['event.question'].create({
-            'title': 'Question2',
-            'question_type': 'simple_choice',
-            'event_id': cls.event_0.id,
-            'once_per_order': True,
-            'answer_ids': [
-                (0, 0, {'name': 'Q2-Answer1'}),
-                (0, 0, {'name': 'Q2-Answer2'})
+            'event_type_mail_ids': [
+                (0, 0, {'interval_unit': 'now',  # right at subscription
+                        'interval_type': 'after_sub',
+                        'notification_type': 'mail',
+                        'template_ref': 'mail.template,%i' % subscription_template.id,
+                       }
+                ),
+                (0, 0, {'interval_nbr': 1,  # 1 days before event
+                        'interval_unit': 'days',
+                        'interval_type': 'before_event',
+                        'notification_type': 'mail',
+                        'template_ref': 'mail.template,%i' % cls.env['ir.model.data']._xmlid_to_res_id('event.event_reminder'),
+                       }
+                ),
+                (0, 0, {'interval_nbr': 1,  # 1 days after event
+                        'interval_unit': 'days',
+                        'interval_type': 'after_event',
+                        'notification_type': 'sms',
+                        'template_ref': 'sms.template,%i' % cls.env['ir.model.data']._xmlid_to_res_id('event_sms.sms_template_data_event_reminder'),
+                       }
+                ),
             ],
-        })
-        cls.event_question_3 = cls.env['event.question'].create({
-            'title': 'Question3',
-            'question_type': 'text_box',
-            'event_id': cls.event_0.id,
-            'once_per_order': True,
+            'event_type_ticket_ids': [
+                (0, 0, {'description': 'Ticket1 Description',
+                        'name': 'Ticket1',
+                        'product_id': cls.ticket_product.id,
+                        'seats_max': 10,
+                       }
+                ),
+                (0, 0, {'description': 'Ticket2 Description',
+                        'name': 'Ticket2',
+                        'product_id': cls.ticket_product.id,
+                        'price': 45,
+                       }
+                )
+            ],
+            'has_seats_limitation': True,
+            'name': 'Test Type',
+            'note': '<p>Template note</p>',
+            'question_ids': [
+                (0, 0, {'answer_ids':
+                        [(0, 0, {'name': 'Q1-Answer1'}),
+                         (0, 0, {'name': 'Q1-Answer2'}),
+                        ],
+                        'question_type': 'simple_choice',
+                        'once_per_order': False,
+                        'title': 'Question1',
+                       }
+                ),
+                (0, 0, {'answer_ids':
+                        [(0, 0, {'name': 'Q2-Answer1'}),
+                         (0, 0, {'name': 'Q2-Answer2'}),
+                        ],
+                        'question_type': 'simple_choice',
+                        'once_per_order': False,
+                        'title': 'Question2',
+                       }
+                ),
+                (0, 0, {'question_type': 'text_box',
+                        'once_per_order': True,
+                        'title': 'Question3',
+                       }
+                ),
+            ],
+            'seats_max': 30,
+            'tag_ids': [(4, tag.id) for tag in cls.tags],
+            'ticket_instructions': '<p>Ticket Instructions</p>',
+            'website_menu': True,
         })
 
-        # ------------------------------------------------------------
-        # DATA MARSHMALLING
+        # Stages
+        cls.stage_def = cls.env['event.stage'].create({
+            'name': 'First Stage',
+            'sequence': 0,
+        })
+
+        # Event data
         # ------------------------------------------------------------
 
-        cls.website_customer_data = [{
-            'name': 'My Customer %02d' % x,
-            'partner_id': cls.env.ref('base.public_partner').id,
-            'email': 'email.%02d@test.example.com' % x,
-            'phone': '04560000%02d' % x,
-            'registration_answer_ids': [
+        cls.event_base_vals = {
+            'name': 'Test Event',
+            'date_begin': cls.reference_now + timedelta(days=1),
+            'date_end': cls.reference_now + timedelta(days=5),
+            'is_published': True,
+        }
+
+        cls.test_event = cls.env['event.event'].create({
+            'name': 'Test Event',
+            'auto_confirm': True,
+            'date_begin': datetime.now() + timedelta(days=1),
+            'date_end': datetime.now() + timedelta(days=5),
+            'date_tz': 'Europe/Brussels',
+            'event_type_id': cls.test_event_type.id,
+            'is_published': True,
+        })
+        # update post-synchronize data
+        ticket_1 = cls.test_event.event_ticket_ids.filtered(lambda t: t.name == 'Ticket1')
+        ticket_2 = cls.test_event.event_ticket_ids.filtered(lambda t: t.name == 'Ticket2')
+        ticket_1.start_sale_datetime = cls.reference_now + timedelta(hours=1)
+        ticket_2.start_sale_datetime = cls.reference_now + timedelta(hours=2)
+
+        # Website data
+        # ------------------------------------------------------------
+
+        cls.website = cls.env['website'].search([
+            ('company_id', '=', cls.company_admin.id)
+        ], limit=1)
+
+        cls.customer_data = [
+            {'email': 'customer.email.%02d@test.example.com' % x,
+             'name': 'My Customer %02d' % x,
+             'mobile': '04569999%02d' % x,
+             'partner_id': False,
+             'phone': '04560000%02d' % x,
+            } for x in range(0, 10)
+        ]
+        cls.website_customer_data = [
+            {'email': 'website.email.%02d@test.example.com' % x,
+             'name': 'My Customer %02d' % x,
+             'mobile': '04569999%02d' % x,
+             'partner_id': cls.env.ref('base.public_partner').id,
+             'phone': '04560000%02d' % x,
+             'registration_answer_ids': [
                 (0, 0, {
-                    'question_id': cls.event_question_1.id,
-                    'value_answer_id': cls.event_question_1.answer_ids[(x % 2)].id,
+                    'question_id': cls.test_event.question_ids[0].id,
+                    'value_answer_id': cls.test_event.question_ids[0].answer_ids[(x % 2)].id,
                 }), (0, 0, {
-                    'question_id': cls.event_question_2.id,
-                    'value_answer_id': cls.event_question_2.answer_ids[(x % 2)].id,
+                    'question_id': cls.test_event.question_ids[1].id,
+                    'value_answer_id': cls.test_event.question_ids[1].answer_ids[(x % 2)].id,
                 }), (0, 0, {
-                    'question_id': cls.event_question_3.id,
+                    'question_id': cls.test_event.question_ids[2].id,
                     'value_text_box': 'CustomerAnswer%s' % x,
                 })
-            ],
-        }  for x in range(0, 4)]
+             ],
+            } for x in range(0, 10)
+        ]
+        cls.partners = cls.env['res.partner'].create([
+            {'email': 'partner.email.%02d@test.example.com' % x,
+             'name': 'PartnerCustomer',
+             'mobile': '04569999%02d' % x,
+             'phone': '04560000%02d' % x,
+            } for x in range(0, 10)
+        ])
 
     def assertLeadConvertion(self, rule, registrations, partner=None, **expected):
         super(TestEventFullCommon, self).assertLeadConvertion(rule, registrations, partner=partner, **expected)
@@ -127,10 +304,17 @@ class TestEventFullCommon(TestEventCrmCommon, TestSalesCommon, EventDtPatcher, M
                     self.assertIn(answer.value_text_box, lead.description)  # better: check multi line
 
 
-class TestWEventCommon(HttpCaseWithUserDemo, HttpCaseWithUserPortal, EventDtPatcher, MockVisitor):
+class TestWEventCommon(HttpCaseWithUserDemo, HttpCaseWithUserPortal, MockVisitor):
 
     def setUp(self):
         super(TestWEventCommon, self).setUp()
+
+        # Context data: dates
+        # ------------------------------------------------------------
+
+        # Mock dates to have reproducible computed fields based on time
+        self.reference_now = datetime(2021, 12, 1, 10, 0, 0)
+        self.reference_today = datetime(2021, 12, 1)
 
         self.event_product = self.env['product.product'].create({
             'name': 'Test Event Registration',

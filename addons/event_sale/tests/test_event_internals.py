@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import date, datetime, timedelta
-from unittest.mock import patch
+from freezegun import freeze_time
 
 from odoo.addons.event_sale.tests.common import TestEventSaleCommon
 from odoo.fields import Datetime as FieldsDatetime, Date as FieldsDate
@@ -15,7 +15,8 @@ class TestEventData(TestEventSaleCommon):
     def test_event_configuration_from_type(self):
         """ In addition to event test, also test tickets configuration coming
         from event_sale capabilities. """
-        event_type = self.event_type_complex.with_user(self.env.user)
+        event_type = self.event_type_tickets.with_user(self.env.user)
+        self.assertEqual(event_type.event_type_ticket_ids.description, self.event_product.description_sale)
 
         event = self.env['event.event'].create({
             'name': 'Event Update Type',
@@ -23,14 +24,6 @@ class TestEventData(TestEventSaleCommon):
             'date_begin': FieldsDatetime.to_string(datetime.today() + timedelta(days=1)),
             'date_end': FieldsDatetime.to_string(datetime.today() + timedelta(days=15)),
         })
-        event_type.write({
-            'event_type_ticket_ids': [(5, 0), (0, 0, {
-                'name': 'First Ticket',
-                'product_id': self.event_product.id,
-                'seats_max': 5,
-            })]
-        })
-        self.assertEqual(event_type.event_type_ticket_ids.description, self.event_product.description_sale)
 
         # synchronize event
         event.write({'event_type_id': event_type.id})
@@ -73,20 +66,7 @@ class TestEventData(TestEventSaleCommon):
 
 class TestEventTicketData(TestEventSaleCommon):
 
-    def setUp(self):
-        super(TestEventTicketData, self).setUp()
-        self.ticket_date_patcher = patch('odoo.addons.event.models.event_ticket.fields.Date', wraps=FieldsDate)
-        self.ticket_date_patcher_mock = self.ticket_date_patcher.start()
-        self.ticket_date_patcher_mock.context_today.return_value = date(2020, 1, 31)
-        self.ticket_datetime_patcher = patch('odoo.addons.event.models.event_event.fields.Datetime', wraps=FieldsDatetime)
-        self.mock_datetime = self.ticket_datetime_patcher.start()
-        self.mock_datetime.now.return_value = datetime(2020, 1, 31, 10, 0, 0)
-
-    def tearDown(self):
-        super(TestEventTicketData, self).tearDown()
-        self.ticket_date_patcher.stop()
-        self.ticket_datetime_patcher.stop()
-
+    @freeze_time('2020-01-31 10:00:00')
     @users('user_eventmanager')
     def test_event_ticket_fields(self):
         """ Test event ticket fields synchronization """

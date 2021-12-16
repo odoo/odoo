@@ -26,4 +26,6 @@ class TestEventExhibitorCommon(TestEventOnlineCommon):
             'partner_id': cls.sponsor_0_partner.id,
             'event_id': cls.event_0.id,
             'sponsor_type_id': cls.sponsor_type_0.id,
+            'hour_from': 8.0,
+            'hour_to': 18.0,
         })

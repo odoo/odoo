@@ -14,7 +14,10 @@ automatic lead generation, full Online support, ...
         'event',
         'event_booth',
         'event_crm',
+        'event_crm_sale',
         'event_sale',
+        'event_sms',
+        'payment_test',
         'website_event_booth_sale_exhibitor',
         'website_event_crm_questions',
         'website_event_exhibitor',
@@ -25,7 +28,11 @@ automatic lead generation, full Online support, ...
         'website_event_track_live',
         'website_event_track_quiz',
     ],
-    'installable': True,
+    'data': [
+        # 'data/event_type_data.xml',  # uncomment to reproduce test tour
+        'data/ir_actions_report_data.xml',
+        'views/event_registration_templates_reports.xml',
+    ],
     'assets': {
         'web.assets_tests': [
             'test_event_full/static/**/*',
