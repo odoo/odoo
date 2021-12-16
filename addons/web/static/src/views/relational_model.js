@@ -267,13 +267,19 @@ export class Record extends DataPoint {
                 ...relatedFields,
                 ...FieldComponent.fieldsToFetch,
             };
+            const activeFields =
+                (views[viewMode] && views[viewMode].activeFields) ||
+                FieldComponent.fieldsToFetch ||
+                {};
+            for (const fieldName in relatedFields) {
+                if (relatedFields[fieldName].active) {
+                    activeFields[fieldName] = relatedFields[fieldName];
+                }
+            }
             const list = this.model.createDataPoint("list", {
                 resModel: this.fields[fieldName].relation,
                 fields,
-                activeFields:
-                    (views[viewMode] && views[viewMode].activeFields) ||
-                    FieldComponent.fieldsToFetch ||
-                    {},
+                activeFields,
                 resIds: this.data[fieldName] || [],
                 views,
                 viewMode,

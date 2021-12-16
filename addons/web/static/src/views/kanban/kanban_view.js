@@ -111,9 +111,7 @@ export class KanbanArchParser extends XMLParser {
                 const name = fieldInfo.name;
                 activeFields[name] = fieldInfo;
                 Object.assign(tooltips, fieldInfo.options.group_by_tooltip);
-                if (fieldInfo.widget) {
-                    combineAttributes(node, "class", "oe_kanban_action");
-                } else {
+                if (!fieldInfo.widget) {
                     // Fields without a specified widget are rendered as simple
                     // spans in kanban records.
                     const tesc = document.createElement("span");

@@ -8,11 +8,14 @@ const { Component } = owl;
 
 export class Many2ManyTagsField extends Component {
     get tags() {
-        return this.props.value.records.map((record) => ({
-            id: record.data.id,
-            name: record.data.display_name,
-            color: record.data.color,
-        }));
+        const colorField = this.props.options.color_field;
+        return this.props.value.records
+            .filter((record) => !colorField || record.data[colorField])
+            .map((record, i) => ({
+                id: record.data.id,
+                name: record.data.display_name,
+                colorIndex: record.data[colorField] || i,
+            }));
     }
 }
 
