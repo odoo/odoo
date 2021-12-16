@@ -5,12 +5,12 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 
-from odoo.addons.event.tests.common import TestEventCommon
+from odoo.addons.event.tests.common import EventCase
 from odoo.addons.mail.tests.common import MockEmail
 from odoo.tools import formataddr, mute_logger
 
 
-class TestMailSchedule(TestEventCommon, MockEmail):
+class TestMailSchedule(EventCase, MockEmail):
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_event_mail_schedule(self):

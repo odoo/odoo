@@ -1,63 +1,95 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import date, datetime, timedelta
-from unittest.mock import patch
+from datetime import datetime, timedelta
+from freezegun import freeze_time
 
 from odoo import Command
-from odoo.addons.event.tests.common import TestEventCommon
+from odoo.addons.event.tests.common import EventCase
 from odoo import exceptions
-from odoo.fields import Datetime as FieldsDatetime, Date as FieldsDate
+from odoo.fields import Datetime as FieldsDatetime
 from odoo.tests.common import users, Form
 from odoo.tools import mute_logger
 
 
-class TestEventData(TestEventCommon):
+class TestEventInternalsCommon(EventCase):
 
     @classmethod
     def setUpClass(cls):
-        super(TestEventData, cls).setUpClass()
-        cls.patcher = patch('odoo.addons.event.models.event_event.fields.Datetime', wraps=FieldsDatetime)
-        cls.mock_datetime = cls.patcher.start()
-        cls.mock_datetime.now.return_value = datetime(2020, 1, 31, 10, 0, 0)
-        cls.addClassCleanup(cls.patcher.stop)
+        super(TestEventInternalsCommon, cls).setUpClass()
 
-        cls.event_0.write({
-            'date_begin': datetime(2020, 2, 1, 8, 30, 0),
-            'date_end': datetime(2020, 2, 4, 18, 45, 0),
+        cls.event_type_complex = cls.env['event.type'].create({
+            'name': 'Update Type',
+            'auto_confirm': True,
+            'has_seats_limitation': True,
+            'seats_max': 30,
+            'default_timezone': 'Europe/Paris',
+            'event_type_ticket_ids': [
+                (0, 0, {'name': 'First Ticket',}),
+                (0, 0, {'name': 'Second Ticket',}),
+            ],
+            'event_type_mail_ids': [
+                (0, 0, {  # right at subscription
+                    'interval_unit': 'now',
+                    'interval_type': 'after_sub',
+                    'template_ref': 'mail.template,%i' % cls.env['ir.model.data']._xmlid_to_res_id('event.event_subscription')}),
+                (0, 0, {  # 1 days before event
+                    'interval_nbr': 1,
+                    'interval_unit': 'days',
+                    'interval_type': 'before_event',
+                    'template_ref': 'mail.template,%i' % cls.env['ir.model.data']._xmlid_to_res_id('event.event_reminder')}),
+            ],
         })
+
+        # Mock dates to have reproducible computed fields based on time
+        cls.reference_now = datetime(2020, 1, 31, 10, 0, 0)
+        cls.reference_beg = datetime(2020, 2, 1, 8, 30, 0)
+        cls.reference_end = datetime(2020, 2, 4, 18, 45, 0)
+
+        cls.event_0 = cls.env['event.event'].create({
+            'auto_confirm': True,
+            'date_begin': cls.reference_beg,
+            'date_end': cls.reference_end,
+            'date_tz': 'Europe/Brussels',
+            'name': 'TestEvent',
+        })
+
+
+class TestEventData(TestEventInternalsCommon):
 
     @users('user_eventmanager')
     def test_event_date_computation(self):
         event = self.event_0.with_user(self.env.user)
-        event.write({
-            'registration_ids': [(0, 0, {'partner_id': self.event_customer.id, 'name': 'test_reg'})],
-            'date_begin': datetime(2020, 1, 31, 15, 0, 0),
-            'date_end': datetime(2020, 4, 5, 18, 0, 0),
-        })
-        registration = event.registration_ids[0]
-        self.assertEqual(registration.get_date_range_str(), u'today')
+        with freeze_time(self.reference_now):
+            event.write({
+                'registration_ids': [(0, 0, {'partner_id': self.event_customer.id, 'name': 'test_reg'})],
+                'date_begin': datetime(2020, 1, 31, 15, 0, 0),
+                'date_end': datetime(2020, 4, 5, 18, 0, 0),
+            })
+            registration = event.registration_ids[0]
+            self.assertEqual(registration.get_date_range_str(), u'today')
 
-        event.date_begin = datetime(2020, 2, 1, 15, 0, 0)
-        self.assertEqual(registration.get_date_range_str(), u'tomorrow')
+            event.date_begin = datetime(2020, 2, 1, 15, 0, 0)
+            self.assertEqual(registration.get_date_range_str(), u'tomorrow')
 
-        event.date_begin = datetime(2020, 2, 2, 6, 0, 0)
-        self.assertEqual(registration.get_date_range_str(), u'in 2 days')
+            event.date_begin = datetime(2020, 2, 2, 6, 0, 0)
+            self.assertEqual(registration.get_date_range_str(), u'in 2 days')
 
-        event.date_begin = datetime(2020, 2, 20, 17, 0, 0)
-        self.assertEqual(registration.get_date_range_str(), u'next month')
+            event.date_begin = datetime(2020, 2, 20, 17, 0, 0)
+            self.assertEqual(registration.get_date_range_str(), u'next month')
 
-        event.date_begin = datetime(2020, 3, 1, 10, 0, 0)
-        self.assertEqual(registration.get_date_range_str(), u'on Mar 1, 2020, 11:00:00 AM')
+            event.date_begin = datetime(2020, 3, 1, 10, 0, 0)
+            self.assertEqual(registration.get_date_range_str(), u'on Mar 1, 2020, 11:00:00 AM')
 
-        # Is actually 8:30 to 20:00 in Mexico
-        event.write({
-            'date_begin': datetime(2020, 1, 31, 14, 30, 0),
-            'date_end': datetime(2020, 2, 1, 2, 0, 0),
-            'date_tz': 'Mexico/General'
-        })
-        self.assertTrue(event.is_one_day)
+            # Is actually 8:30 to 20:00 in Mexico
+            event.write({
+                'date_begin': datetime(2020, 1, 31, 14, 30, 0),
+                'date_end': datetime(2020, 2, 1, 2, 0, 0),
+                'date_tz': 'Mexico/General'
+            })
+            self.assertTrue(event.is_one_day)
 
+    @freeze_time('2020-1-31 10:00:00')
     @users('user_eventmanager')
     def test_event_date_timezone(self):
         event = self.event_0.with_user(self.env.user)
@@ -349,6 +381,7 @@ class TestEventData(TestEventCommon):
         templates = self.env['mail.template'].with_context(filter_template_on_event=True).name_search('test template')
         self.assertEqual(len(templates), 1, 'Should return only mail templates related to the event registration model')
 
+    @freeze_time('2020-1-31 10:00:00')
     @users('user_eventmanager')
     def test_event_registrable(self):
         """Test if `_compute_event_registrations_open` works properly."""
@@ -401,6 +434,7 @@ class TestEventData(TestEventCommon):
         self.assertTrue(ticket.is_expired)
         self.assertFalse(event.event_registrations_open)
 
+    @freeze_time('2020-1-31 10:00:00')
     @users('user_eventmanager')
     def test_event_ongoing(self):
         event_1 = self.env['event.event'].create({
@@ -475,7 +509,7 @@ class TestEventData(TestEventCommon):
         self.assertEqual(event.seats_expected, 7)
 
 
-class TestEventRegistrationData(TestEventCommon):
+class TestEventRegistrationData(TestEventInternalsCommon):
 
     @users('user_eventmanager')
     def test_registration_partner_sync(self):
@@ -569,22 +603,9 @@ class TestEventRegistrationData(TestEventCommon):
         self.assertEqual(new_reg.phone, contact.phone)
 
 
-class TestEventTicketData(TestEventCommon):
+class TestEventTicketData(TestEventInternalsCommon):
 
-    def setUp(self):
-        super(TestEventTicketData, self).setUp()
-        self.ticket_date_patcher = patch('odoo.addons.event.models.event_ticket.fields.Date', wraps=FieldsDate)
-        self.ticket_date_patcher_mock = self.ticket_date_patcher.start()
-        self.ticket_date_patcher_mock.context_today.return_value = date(2020, 1, 31)
-        self.ticket_datetime_patcher = patch('odoo.addons.event.models.event_ticket.fields.Datetime', wraps=FieldsDatetime)
-        self.ticket_datetime_patcher_mock = self.ticket_datetime_patcher.start()
-        self.ticket_datetime_patcher_mock.now.return_value = datetime(2020, 1, 31, 10, 0, 0)
-
-    def tearDown(self):
-        super(TestEventTicketData, self).tearDown()
-        self.ticket_date_patcher.stop()
-        self.ticket_datetime_patcher.stop()
-
+    @freeze_time('2020-1-31 10:00:00')
     @users('user_eventmanager')
     def test_event_ticket_fields(self):
         """ Test event ticket fields synchronization """
@@ -657,7 +678,7 @@ class TestEventTicketData(TestEventCommon):
         self.assertTrue(second_ticket.is_expired)
 
 
-class TestEventTypeData(TestEventCommon):
+class TestEventTypeData(TestEventInternalsCommon):
 
     @users('user_eventmanager')
     def test_event_type_fields(self):
