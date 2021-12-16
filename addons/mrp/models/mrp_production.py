@@ -1799,6 +1799,7 @@ class MrpProduction(models.Model):
 
                 # Check presence of same sn in previous productions
                 duplicates = self.env['stock.move.line'].search_count(domain + [
+                    ('production_id', '!=', False),
                     ('location_id.usage', '=', 'production')
                 ])
                 if duplicates:
@@ -1841,6 +1842,7 @@ class MrpProduction(models.Model):
 
                 # Check presence of same sn in previous productions
                 duplicates = self.env['stock.move.line'].search_count(domain + [
+                    ('production_id', '!=', False),
                     ('location_dest_id.usage', '=', 'production')
                 ])
                 if duplicates:
