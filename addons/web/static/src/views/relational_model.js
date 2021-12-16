@@ -171,7 +171,6 @@ export class Record extends DataPoint {
         this.data = { ...this._values };
         this.preloadedData = {};
         this.selected = false;
-        this.mutex = new Mutex();
         this._onChangePromise = Promise.resolve({});
     }
 
@@ -299,7 +298,7 @@ export class Record extends DataPoint {
     }
 
     async save() {
-        return this.mutex.exec(async () => {
+        return this.model.mutex.exec(async () => {
             const changes = this._getChanges();
             const keys = Object.keys(changes);
             let reload = true;
@@ -356,7 +355,7 @@ export class Record extends DataPoint {
     }
 
     async _performOnchange(fieldName) {
-        return this.mutex.exec(async () => {
+        return this.model.mutex.exec(async () => {
             const result = await this.model.orm.call(
                 this.resModel,
                 "onchange",
@@ -833,7 +832,7 @@ export class Group extends DataPoint {
 
     async toggle() {
         this.isFolded = !this.isFolded;
-        await this.load({});
+        await this.model.keepLast.add(this.load());
         this.model.notify();
     }
 }
@@ -956,6 +955,7 @@ export class RelationalModel extends Model {
         this.rpc = rpc;
         this.orm = new RequestBatcherORM(rpc, user);
         this.keepLast = new KeepLast();
+        this.mutex = new Mutex();
 
         this.rootType = params.rootType || "list";
         this.rootParams = {

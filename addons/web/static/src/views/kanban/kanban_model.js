@@ -134,34 +134,36 @@ class KanbanDynamicGroupList extends DynamicGroupList {
     }
 
     async createGroup(value) {
-        const [id, displayName] = await this.model.orm.call(
-            this.groupByField.relation,
-            "name_create",
-            [value],
-            { context: this.context }
-        );
-        const group = this.model.createDataPoint("group", {
-            count: 0,
-            value: id,
-            displayName,
-            aggregates: {},
-            fields: this.fields,
-            activeFields: this.activeFields,
-            resModel: this.resModel,
-            domain: this.domain,
-            groupBy: this.groupBy.slice(1),
-            context: this.context,
-            orderedBy: this.orderBy,
+        return this.model.mutex.exec(async () => {
+            const [id, displayName] = await this.model.orm.call(
+                this.groupByField.relation,
+                "name_create",
+                [value],
+                { context: this.context }
+            );
+            const group = this.model.createDataPoint("group", {
+                count: 0,
+                value: id,
+                displayName,
+                aggregates: {},
+                fields: this.fields,
+                activeFields: this.activeFields,
+                resModel: this.resModel,
+                domain: this.domain,
+                groupBy: this.groupBy.slice(1),
+                context: this.context,
+                orderedBy: this.orderBy,
+            });
+            group.isFolded = false;
+            group.progressValues.push({
+                count: 0,
+                value: false,
+                string: this.model.env._t("Other"),
+                color: "muted",
+            });
+            this.groups.push(group);
+            this.model.notify();
         });
-        group.isFolded = false;
-        group.progressValues.push({
-            count: 0,
-            value: false,
-            string: this.model.env._t("Other"),
-            color: "muted",
-        });
-        this.groups.push(group);
-        this.model.notify();
     }
 
     async deleteGroup(group) {
@@ -241,11 +243,13 @@ class KanbanDynamicGroupList extends DynamicGroupList {
         const { ArchParser } = registry.category("views").get("form");
         let fieldsView = DEFAULT_QUICK_CREATE_VIEW;
         if (viewRef) {
-            fieldsView = await this.model.viewService.loadViews({
-                context: { ...this.context, form_view_ref: viewRef },
-                resModel: this.resModel,
-                views: [[false, "form"]],
-            });
+            fieldsView = await this.model.keepLast.add(
+                this.model.viewService.loadViews({
+                    context: { ...this.context, form_view_ref: viewRef },
+                    resModel: this.resModel,
+                    views: [[false, "form"]],
+                })
+            );
         }
         this.isLoadingQuickCreate = false;
         return new ArchParser().parse(fieldsView.form.arch, fieldsView.form.fields);
