@@ -167,7 +167,9 @@
                     </a>
                 </div>
                 <div id="o_wevent_tickets_collapse" class="collapse show">
-                    <div t-foreach="tickets" t-as="ticket" class="row px-3 py-3 mx-0 bg-light border-bottom">
+                    <div t-foreach="tickets" t-as="ticket"
+                         class="row px-3 py-3 mx-0 bg-light border-bottom o_wevent_ticket_selector"
+                         t-att-name="ticket.name">
                         <div class="col-md-8 col-xs-12 p-0" itemscope="itemscope" itemtype="http://schema.org/Offer">
                             <h5 itemprop="name" t-field="ticket.name" class="my-0"/>
                             <t t-if="ticket.description">
