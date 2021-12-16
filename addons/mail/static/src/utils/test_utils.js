@@ -410,6 +410,15 @@ async function createRootMessagingComponent(self, componentName, { props = {}, t
     await createRootComponent(self, getMessagingComponent(componentName), { props, target });
 }
 
+function getCreateChatterContainerComponent({ components, env, widget }) {
+    return async function createChatterContainerComponent(props) {
+        await createRootMessagingComponent({ components, env }, "ChatterContainer", {
+            props,
+            target: widget.el,
+        });
+    };
+}
+
 function getCreateComposerComponent({ components, env, modelManager, widget }) {
     return async function createComposerComponent(composer, props) {
         const composerView = modelManager.messaging.models['ComposerView'].create({
@@ -798,6 +807,7 @@ async function start(param0 = {}) {
     await waitUntilEventPromise;
     return {
         ...result,
+        createChatterContainerComponent: getCreateChatterContainerComponent({ components, env: testEnv, widget }),
         createComposerComponent: getCreateComposerComponent({ components, env: testEnv, modelManager, widget }),
         createComposerSuggestionComponent: getCreateComposerSuggestionComponent({ components, env: testEnv, modelManager, widget }),
         createMessageComponent: getCreateMessageComponent({ components, env: testEnv, modelManager, widget }),

@@ -330,10 +330,10 @@ QUnit.test('activity view: activity widget', async function (assert) {
     await testUtils.dom.click(today.find('.o_closest_deadline'));
     assert.hasClass(dropdown,'show', "dropdown should be displayed");
     assert.ok(dropdown.find('.o_activity_color_today:contains(Today)').length, "Title should be today");
-    assert.ok(dropdown.find('.o_activity_title_entry[data-activity-id="2"]:first div:contains(template8)').length,
-        "template8 should be available");
-    assert.ok(dropdown.find('.o_activity_title_entry[data-activity-id="2"]:eq(1) div:contains(template9)').length,
-        "template9 should be available");
+    assert.ok(dropdown.find('.o_activity_title_entry[data-activity-id="2"]:first div:contains(Template1)').length,
+        "Template1 should be available");
+    assert.ok(dropdown.find('.o_activity_title_entry[data-activity-id="2"]:eq(1) div:contains(Template2)').length,
+        "Template2 should be available");
 
     await testUtils.dom.click(dropdown.find('.o_activity_title_entry[data-activity-id="2"]:first .o_activity_template_preview'));
     await testUtils.dom.click(dropdown.find('.o_activity_title_entry[data-activity-id="2"]:first .o_activity_template_send'));
@@ -642,7 +642,7 @@ QUnit.test("Schedule activity dialog uses the same search view as activity view"
     function mockRPC(route, args) {
         if (args.method === "load_views") {
             assert.step(JSON.stringify(args.kwargs.views));
-        } 
+        }
     }
 
     const webClient = await createWebClient({ serverData, mockRPC, legacyParams: {withLegacyMockServer: true} });
