@@ -360,3 +360,92 @@ class TestBatchPicking(TransactionCase):
 
         # final package location should be correctly set based on wizard
         self.assertEqual(package.location_id.id, self.customer_location.id)
+
+    def test_auto_batch(self):
+        """ Test a simple auto-batch scenario with new picking type to avoid conflicts with existing picking types.
+        The pickings look like this:
+        Picking_out_1           Picking_out_2           Picking_out_3
+            Partner_1                Partner_2                Partner_1
+
+        So as the picking type is defined to batch automatically by partner, Picking 1&3 should be batched at their confirmation, while Picking2 isn't.
+        """
+        # Create picking type to avoid conflicts with existing pickings with auto-batch enabled grouping by partner.
+        warehouse = self.env['stock.warehouse'].search([], limit=1)
+        type_special_out = self.env['stock.picking.type'].create({
+            'name': 'Special Delivery',
+            'sequence_code': 'SPECOUT',
+            'code': 'outgoing',
+            'company_id': self.env.company.id,
+            'warehouse_id': warehouse.id,
+            'auto_batch': True,
+            'batch_group_by_partner': True,
+        })
+        partner_1 = self.env['res.partner'].create({
+            'name': 'Partner 1'
+        })
+        partner_2 = self.env['res.partner'].create({
+            'name': 'Partner 2'
+        })
+
+        # Create the pickings that will be confirmed and batched afterwards
+        picking_out_1 = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': type_special_out.id,
+            'company_id': self.env.company.id,
+            'partner_id': partner_1.id
+        })
+        self.env['stock.move'].create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 10,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking_out_1.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
+
+        picking_out_2 = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': type_special_out.id,
+            'company_id': self.env.company.id,
+            'partner_id': partner_2.id
+        })
+        self.env['stock.move'].create({
+            'name': self.productB.name,
+            'product_id': self.productB.id,
+            'product_uom_qty': 10,
+            'product_uom': self.productB.uom_id.id,
+            'picking_id': picking_out_2.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
+
+        picking_out_3 = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'picking_type_id': type_special_out.id,
+            'company_id': self.env.company.id,
+            'partner_id': partner_1.id
+        })
+        self.env['stock.move'].create({
+            'name': self.productB.name,
+            'product_id': self.productB.id,
+            'product_uom_qty': 10,
+            'product_uom': self.productB.uom_id.id,
+            'picking_id': picking_out_3.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
+
+        all_pickings = picking_out_1 | picking_out_2 | picking_out_3
+        # No pickings should have any batch before confirmation
+        self.assertFalse(all_pickings.batch_id)
+
+        all_pickings.action_confirm()
+        # Now Picking 1 and 3 should be batched together, while Picking 2 is still in no batch.
+        self.assertTrue(picking_out_1.batch_id)
+        self.assertTrue(picking_out_3.batch_id)
+        self.assertEqual(picking_out_1.batch_id.id, picking_out_3.batch_id.id)
+        self.assertFalse(picking_out_2.batch_id)

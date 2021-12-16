@@ -23,11 +23,13 @@ class TestBatchPicking(TransactionCase):
                 SN3 : 1 unit
                 SN4 : 1 unit
                 SN5 : 1 unit
+        The picking_internal is the same as Picking1 move-wise, only using a different picking_type so it doesn't get auto-batched with the other pickings.
         """
         super().setUpClass()
         cls.stock_location = cls.env.ref('stock.stock_location_stock')
         cls.customer_location = cls.env.ref('stock.stock_location_customers')
         cls.picking_type_out = cls.env['ir.model.data']._xmlid_to_res_id('stock.picking_type_out')
+        cls.picking_type_internal = cls.env['ir.model.data']._xmlid_to_res_id('stock.picking_type_internal')
         cls.user_demo = cls.env['res.users'].search([('login', '=', 'demo')])
 
         cls.productA = cls.env['product.product'].create({
@@ -119,8 +121,37 @@ class TestBatchPicking(TransactionCase):
             'location_id': cls.stock_location.id,
             'location_dest_id': cls.customer_location.id,
         })
+
+        cls.picking_internal = cls.env['stock.picking'].create({
+            'location_id': cls.stock_location.id,
+            'location_dest_id': cls.customer_location.id,
+            'picking_type_id': cls.picking_type_internal,
+            'company_id': cls.env.company.id,
+        })
+
+        cls.env['stock.move'].create({
+            'name': cls.productA.name,
+            'product_id': cls.productA.id,
+            'product_uom_qty': 15,
+            'product_uom': cls.productA.uom_id.id,
+            'picking_id': cls.picking_internal.id,
+            'location_id': cls.customer_location.id,
+            'location_dest_id': cls.stock_location.id,
+        })
+
+        cls.env['stock.move'].create({
+            'name': cls.productB.name,
+            'product_id': cls.productB.id,
+            'product_uom_qty': 5,
+            'product_uom': cls.productB.uom_id.id,
+            'picking_id': cls.picking_internal.id,
+            'location_id': cls.customer_location.id,
+            'location_dest_id': cls.stock_location.id,
+        })
+
         cls.all_pickings = cls.picking_client_1 | cls.picking_client_2 | cls.picking_client_3
         cls.all_pickings.action_confirm()
+        cls.picking_internal.action_confirm()
 
     def test_creation_from_lines(self):
         """ Select all the move_lines and create a wave from them """
@@ -225,7 +256,7 @@ class TestBatchPicking(TransactionCase):
         self.assertEqual(len(all_db_pickings) + 1, len(new_all_db_picking))
 
     def test_wave_split_move(self):
-        lines = self.picking_client_1.move_ids.filtered(lambda m: m.product_id == self.productB).move_line_ids[0:2]
+        lines = self.picking_internal.move_ids.filtered(lambda m: m.product_id == self.productB).move_line_ids[0:2]
         move = lines.move_id
         all_db_pickings = self.env['stock.picking'].search([])
         res_dict = lines.action_open_add_to_wave()
@@ -242,7 +273,7 @@ class TestBatchPicking(TransactionCase):
 
         # Original picking lost a stock move
         self.assertTrue(move.picking_id)
-        self.assertTrue(move.picking_id == self.picking_client_1)
+        self.assertTrue(move.picking_id == self.picking_internal)
         self.assertFalse(lines.move_id == move)
         self.assertFalse(move.picking_id.batch_id)
         new_move = lines.move_id
