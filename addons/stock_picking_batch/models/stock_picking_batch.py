@@ -49,10 +49,10 @@ class StockPickingBatch(models.Model):
         ('done', 'Done'),
         ('cancel', 'Cancelled')], default='draft',
         store=True, compute='_compute_state',
-        copy=False, tracking=True, required=True, readonly=True)
+        copy=False, tracking=True, required=True, readonly=True, index=True)
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type', check_company=True, copy=False,
-        readonly=True, states={'draft': [('readonly', False)]})
+        readonly=True, index=True, states={'draft': [('readonly', False)]})
     picking_type_code = fields.Selection(
         related='picking_type_id.code')
     scheduled_date = fields.Datetime(
@@ -323,3 +323,12 @@ class StockPickingBatch(models.Model):
             return self.env.ref('stock_picking_batch.mt_batch_state')
         return super()._track_subtype(init_values)
 
+    def _is_picking_auto_mergeable(self, picking):
+        """ Verifies if a picking can be safely inserted into the batch without violating auto_batch_constrains.
+        """
+        res = True
+        if self.picking_type_id.batch_max_lines:
+            res = res and (len(self.move_ids) + len(picking.move_ids) <= self.picking_type_id.batch_max_lines)
+        if self.picking_type_id.batch_max_pickings:
+            res = res and (len(self.picking_ids) + 1 <= self.picking_type_id.batch_max_pickings)
+        return res
