@@ -29,7 +29,7 @@ def initialize(cr):
         raise IOError(m)
 
     with odoo.tools.misc.file_open(f) as base_sql_file:
-        cr.execute(base_sql_file.read())
+        cr.execute(base_sql_file.read())  # pylint: disable=sql-injection
 
     for i in odoo.modules.get_modules():
         mod_path = odoo.modules.get_module_path(i)
