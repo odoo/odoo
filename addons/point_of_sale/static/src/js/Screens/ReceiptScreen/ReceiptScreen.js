@@ -27,7 +27,13 @@ odoo.define('point_of_sale.ReceiptScreen', function (require) {
                 // We are doing this because we want the receipt screen to be
                 // displayed regardless of what happen to the handleAutoPrint
                 // call.
-                setTimeout(async () => await this.handleAutoPrint(), 0);
+                setTimeout(async () => {
+                    let images = this.orderReceipt.el.getElementsByTagName('img');
+                    for(let image of images) {
+                        await image.decode();
+                    }
+                    await this.handleAutoPrint();
+                }, 0);
             }
             async onSendEmail() {
                 if (!is_email(this.orderUiState.inputEmail)) {
