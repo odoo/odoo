@@ -9,6 +9,7 @@ import {
     nextTick,
     patchWithCleanup,
     triggerEvent,
+    triggerEvents,
 } from "@web/../tests/helpers/utils";
 import {
     getPagerLimit,
@@ -45,6 +46,9 @@ const validateRecord = async (kanban) => {
 };
 const editRecord = async (kanban) => {
     await click(kanban.el, ".o_kanban_quick_create .o_kanban_edit");
+};
+const discardRecord = async (kanban) => {
+    await click(kanban.el, ".o_kanban_quick_create .o_kanban_cancel");
 };
 
 // Column
@@ -858,8 +862,8 @@ QUnit.module("Views", (hooks) => {
         ]);
     });
 
-    QUnit.skip("quick create record with quick_create_view", async (assert) => {
-        assert.expect(20);
+    QUnit.test("quick create record with quick_create_view", async (assert) => {
+        assert.expect(18);
 
         serverData.views = {
             "partner,some_view_ref,form":
@@ -931,11 +935,9 @@ QUnit.module("Views", (hooks) => {
             "web_search_read", // initial search_read (second column)
             "load_views", // form view in quick create
             "onchange", // quick create
-            "onchange", // first field onchange
-            "onchange", // second field onchange
-            "onchange", // third field onchange
             "create", // should perform a create to create the record
             "read", // read the created record
+            "onchange", // new quick create
         ]);
     });
 
@@ -996,7 +998,7 @@ QUnit.module("Views", (hooks) => {
         ]);
     });
 
-    QUnit.skip("quick create record in grouped on m2o (with quick_create_view)", async (assert) => {
+    QUnit.test("quick create record in grouped on m2o (with quick_create_view)", async (assert) => {
         assert.expect(14);
 
         serverData.views = {
@@ -1613,7 +1615,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.test(
         "quick create record: click Add to create, with delayed onchange",
         async (assert) => {
             assert.expect(13);
@@ -1712,7 +1714,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skip("quick create when first column is folded", async (assert) => {
+    QUnit.test("quick create when first column is folded", async (assert) => {
         assert.expect(6);
 
         const kanban = await makeView({
@@ -1752,12 +1754,9 @@ QUnit.module("Views", (hooks) => {
             "o_column_folded",
             "first column should no longer be folded"
         );
-        const quickCreate = kanban.el.querySelector(
-            ".o_kanban_group:first-child .o_kanban_quick_create"
-        );
-        assert.strictEqual(
-            quickCreate.length,
-            1,
+        assert.containsOnce(
+            kanban,
+            ".o_kanban_group:first-child .o_kanban_quick_create",
             "should have added a quick create element in first column"
         );
 
@@ -1777,7 +1776,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skip("quick create record: cancel when not dirty", async (assert) => {
+    QUnit.test("quick create record: cancel when not dirty", async (assert) => {
         assert.expect(11);
 
         const kanban = await makeView({
@@ -1816,7 +1815,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // click outside: should remove the quick create
-        await click(kanban.el, ".o_kanban_group .o_kanban_record:first-child");
+        await click(kanban.el, ".o_kanban_group:first-child .o_kanban_record:last-child");
         assert.containsNone(
             kanban,
             ".o_kanban_quick_create",
@@ -1832,12 +1831,8 @@ QUnit.module("Views", (hooks) => {
         );
 
         // press ESC: should remove the quick create
-        kanban.el.querySelector(".o_kanban_quick_create input").trigger(
-            $.Event("keydown", {
-                keyCode: $.ui.keyCode.ESCAPE,
-                which: $.ui.keyCode.ESCAPE,
-            })
-        );
+        await triggerEvent(kanban.el, ".o_kanban_quick_create input", "keydown", { key: "Escape" });
+
         assert.containsNone(
             kanban,
             ".o_kanban_quick_create",
@@ -1854,7 +1849,7 @@ QUnit.module("Views", (hooks) => {
 
         // click on 'Discard': should remove the quick create
         await quickCreateRecord(kanban);
-        await click(kanban.el, ".o_kanban_group .o_kanban_record:first-child");
+        await discardRecord(kanban);
         assert.containsNone(
             kanban,
             ".o_kanban_quick_create",
@@ -1912,12 +1907,8 @@ QUnit.module("Views", (hooks) => {
             "should have open the quick create widget"
         );
 
-        kanban.el
-            .querySelector(".o_kanban_quick_create input")
-            .val("test")
-            .trigger("keyup")
-            .trigger("focusout");
-        await nextTick();
+        await editInput(kanban.el, ".o_kanban_quick_create input", "test");
+        await triggerEvents(kanban.el, ".o_kanban_quick_create input", ["keyup", "blur"]);
 
         // When focusing out of the many2one, a modal to add a 'product' will appear.
         // The following assertions ensures that a click on the body element that has 'modal-open'
@@ -1935,7 +1926,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skip("quick create record: cancel when dirty", async (assert) => {
+    QUnit.test("quick create record: cancel when dirty", async (assert) => {
         assert.expect(7);
 
         const kanban = await makeView({
@@ -1959,6 +1950,7 @@ QUnit.module("Views", (hooks) => {
 
         // click to add an element and edit it
         await quickCreateRecord(kanban);
+
         assert.containsOnce(
             kanban,
             ".o_kanban_quick_create",
@@ -1968,7 +1960,8 @@ QUnit.module("Views", (hooks) => {
         await editQuickCreateInput(kanban, "display_name", "some value");
 
         // click outside: should not remove the quick create
-        await click(kanban.el, ".o_kanban_group .o_kanban_record:first-child");
+        await click(kanban.el, ".o_kanban_group:first-child .o_kanban_record");
+
         assert.containsOnce(
             kanban,
             ".o_kanban_quick_create",
@@ -1986,6 +1979,7 @@ QUnit.module("Views", (hooks) => {
 
         // click to reopen quick create and edit it
         await quickCreateRecord(kanban);
+
         assert.containsOnce(
             kanban,
             ".o_kanban_quick_create",
@@ -1995,7 +1989,8 @@ QUnit.module("Views", (hooks) => {
         await editQuickCreateInput(kanban, "display_name", "some value");
 
         // click on 'Discard': should remove the quick create
-        await click(kanban.el, ".o_kanban_quick_create .o_kanban_cancel");
+        await discardRecord(kanban);
+
         assert.containsNone(
             kanban,
             ".o_kanban_quick_create",
@@ -5311,7 +5306,7 @@ QUnit.module("Views", (hooks) => {
             );
 
             // cancel quick create
-            await click(kanban.el, "button.o_kanban_cancel");
+            await discardRecord(kanban);
             assert.containsNone(
                 kanban,
                 ".o_view_nocontent",

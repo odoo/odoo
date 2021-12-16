@@ -250,9 +250,9 @@ export class KanbanRenderer extends Component {
         this.state.quickCreateGroup = false;
     }
 
-    cancelQuickCreate() {
+    cancelQuickCreate(force = false) {
         for (const group of this.props.list.groups) {
-            group.list.cancelQuickCreate();
+            group.list.cancelQuickCreate(force);
         }
     }
 
@@ -411,7 +411,7 @@ export class KanbanRenderer extends Component {
         }
         if (ev.key === "Escape") {
             this.state.quickCreateGroup = false;
-            this.cancelQuickCreate();
+            this.cancelQuickCreate(true);
         }
     }
 
