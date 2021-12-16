@@ -62,7 +62,12 @@
                         <div class="o_Message_header">
                             <t t-if="message.author">
                                 <div class="o_Message_authorName o_Message_authorRedirect o_redirect" t-on-click="_onClickAuthorName" title="Open profile">
-                                    <t t-esc="message.author.nameOrDisplayName"/>
+                                    <t t-if="threadView and threadView.thread">
+                                        <t t-esc="threadView.thread.getMemberName(message.author)"/>
+                                    </t>
+                                    <t t-else="">
+                                        <t t-esc="message.author.nameOrDisplayName"/>
+                                    </t>
                                 </div>
                             </t>
                             <t t-elif="message.email_from">

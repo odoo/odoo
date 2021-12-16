@@ -741,6 +741,9 @@ class ModelManager {
             if (!generatable) {
                 throw new Error(`Cannot generate following Model: ${toGenerateNames.join(', ')}`);
             }
+            if (!generatable.factory) {
+                throw new Error(`Missing factory for the following Model: ${generatable.name} (maybe check for typo in name?)`);
+            }
             // Make environment accessible from Model.
             const Model = generatable.factory(Models);
             Model.env = this.env;

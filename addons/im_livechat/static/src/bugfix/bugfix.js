@@ -32,3 +32,35 @@ registerInstancePatchModel('mail.chat_window', 'im_livechat/static/src/models/ch
 });
 
 });
+
+
+odoo.define('im_livechat/static/src/models/message/message.js', function (require) {
+'use strict';
+
+const {
+    registerClassPatchModel,
+} = require('mail/static/src/model/model_core.js');
+
+registerClassPatchModel('mail.message', 'im_livechat/static/src/models/message/message.js', {
+    /**
+     * @override
+     */
+    convertData(data) {
+        const data2 = this._super(data);
+        if ('author_id' in data) {
+            if (data.author_id[2]) {
+                // flux specific for livechat, a 3rd param is livechat_username
+                // and means 2nd param (display_name) should be ignored
+                data2.author = [
+                    ['insert-and-replace', {
+                        id: data.author_id[0],
+                        livechat_username: data.author_id[2],
+                    }],
+                ];
+            }
+        }
+        return data2;
+    },
+});
+
+});
