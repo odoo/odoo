@@ -525,6 +525,7 @@ class SaleOrder(models.Model):
     def update_prices(self):
         self.ensure_one()
         lines_to_recompute = self.order_line.filtered(lambda line: not line.display_type)
+        lines_to_recompute.invalidate_cache(['pricelist_item_id'])
         lines_to_recompute._compute_price_unit()
         # Special case: we want to overwrite the existing discount on update_prices call
         # i.e. to make sure the discount is correctly reset
