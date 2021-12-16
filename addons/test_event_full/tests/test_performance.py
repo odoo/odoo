@@ -5,6 +5,7 @@ from datetime import timedelta
 from freezegun import freeze_time
 
 from odoo.addons.test_event_full.tests.common import TestEventFullCommon
+from odoo.addons.website.tests.test_performance import UtilPerf
 from odoo.tests.common import users, warmup, Form
 from odoo.tests import tagged
 
@@ -332,3 +333,90 @@ class TestRegistrationPerformance(EventPerformanceCase):
                 self.website_customer_data[0],
                 event_id=event.id)
             self.env['event.registration'].create([registration_values])
+
+
+@tagged('event_performance', 'event_online', 'post_install', '-at_install')
+class TestOnlineEventPerformance(EventPerformanceCase, UtilPerf):
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestOnlineEventPerformance, cls).setUpClass()
+        # if website_livechat is installed, disable it
+        if 'channel_id' in cls.env['website']:
+            cls.env['website'].search([]).channel_id = False
+
+        cash_journal = cls.env['account.journal'].create({
+            'name': 'Cash - Test',
+            'type': 'cash',
+            'code': 'CASH - Test'
+        })
+        cls.env['payment.acquirer'].search([('provider', '=', 'test')]).write({
+            'journal_id': cash_journal.id,
+            'state': 'test'
+        })
+
+        # clean even page to make it reproducible
+        cls.env['event.event'].search([('name', '!=', 'Test Event')]).write({'active': False})
+        # create noise for events
+        cls.noise_events = cls.env['event.event'].create([
+            {'name': 'Event %02d' % idx,
+             'date_begin': cls.reference_now + timedelta(days=(-2 + int(idx/10))),
+             'date_end': cls.reference_now + timedelta(days=5),
+             'is_published': True,
+            }
+            for idx in range(0, 50)
+        ])
+
+    def _test_url_open(self, url):
+        url += ('?' not in url and '?' or '') + '&nocache'
+        return self.url_open(url)
+
+    @warmup
+    def test_event_page_event_manager(self):
+        # website customer data
+        with freeze_time(self.reference_now):
+            self.authenticate('user_eventmanager', 'user_eventmanager')
+            with self.assertQueryCount(default=65):  # tef only: 64 (+1 ent)
+                self._test_url_open('/event/%i' % self.test_event.id)
+
+    @warmup
+    def test_event_page_public(self):
+        # website customer data
+        with freeze_time(self.reference_now):
+            self.authenticate(None, None)
+            with self.assertQueryCount(default=43):  # tef only: 43
+                self._test_url_open('/event/%i' % self.test_event.id)
+
+    @warmup
+    def test_events_browse_event_manager(self):
+        # website customer data
+        with freeze_time(self.reference_now):
+            self.authenticate('user_eventmanager', 'user_eventmanager')
+            with self.assertQueryCount(default=51):  # tef only: 50 (+1 ent)
+                self._test_url_open('/event')
+
+    @warmup
+    def test_events_browse_public(self):
+        # website customer data
+        with freeze_time(self.reference_now):
+            self.authenticate(None, None)
+            with self.assertQueryCount(default=32):  # tef only: 32
+                self._test_url_open('/event')
+
+    # @warmup
+    # def test_register_public(self):
+    #     with freeze_time(self.reference_now + timedelta(hours=3)):  # be sure sales has started
+    #         self.assertTrue(self.test_event.event_registrations_started)
+    #         self.authenticate(None, None)
+    #         with self.assertQueryCount(default=99999):  # tef only: 1110
+    #             self.browser_js(
+    #                 '/event/%i/register' % self.test_event.id,
+    #                 'odoo.__DEBUG__.services["web_tour.tour"].run("wevent_performance_register")',
+    #                 'odoo.__DEBUG__.services["web_tour.tour"].tours.wevent_performance_register.ready',
+    #                 login=None,
+    #                 timeout=200,
+    #             )
+
+    #     # minimal checkup, to be improved in future tests independently from performance
+    #     self.assertEqual(len(self.test_event.registration_ids), 3)
+    #     self.assertEqual(len(self.test_event.registration_ids.visitor_id), 1)
