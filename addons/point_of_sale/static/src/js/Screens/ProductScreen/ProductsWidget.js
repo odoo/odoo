@@ -16,7 +16,6 @@ odoo.define('point_of_sale.ProductsWidget', function(require) {
             super.setup();
             useListener('switch-category', this._switchCategory);
             useListener('update-search', this._updateSearch);
-            useListener('try-add-product', this._tryAddProduct);
             useListener('clear-search', this._clearSearch);
             useListener('update-product-list', this._updateProductList);
             this.state = useState({ searchWord: '' });
@@ -60,23 +59,14 @@ odoo.define('point_of_sale.ProductsWidget', function(require) {
         get hasNoCategories() {
             return this.env.pos.db.get_category_childs_ids(0).length === 0;
         }
+        get isEveryProductLoaded() {
+            return !this.env.pos.config.limited_products_loading || this.env.pos.config.product_load_background;
+        }
         _switchCategory(event) {
             this.env.pos.setSelectedCategoryId(event.detail);
         }
         _updateSearch(event) {
             this.state.searchWord = event.detail;
-        }
-        _tryAddProduct(event) {
-            const searchResults = this.productsToDisplay;
-            // If the search result contains one item, add the product and clear the search.
-            if (searchResults.length === 1) {
-                const { searchWordInput } = event.detail;
-                this.trigger('click-product', searchResults[0]);
-                // the value of the input element is not linked to the searchWord state,
-                // so we clear both the state and the element's value.
-                searchWordInput.el.value = '';
-                this._clearSearch();
-            }
         }
         _clearSearch() {
             this.state.searchWord = '';

@@ -15,7 +15,7 @@
                 <div class="pos-rightheader">
                     <CashMoveButton t-if="showCashMoveButton() and env.isMobile and !state.mobileSearchBarIsShown" />
                     <TicketButton isTicketScreenShown="isTicketScreenShown" t-if="env.isMobile and !state.mobileSearchBarIsShown" />
-                    <div class="search-bar-portal" />
+                    <div class="search-bar-portal search-bar-container sb-product" />
                     <div class="status-buttons" t-if="state.uiState === 'READY'" t-att-class="{ oe_hidden: state.mobileSearchBarIsShown }">
                         <CashierName />
                         <SaleDetailsButton t-if="env.proxy.printer" />

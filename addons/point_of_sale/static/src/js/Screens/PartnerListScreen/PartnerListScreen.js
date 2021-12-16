@@ -8,7 +8,7 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
     const { debounce } = require("@web/core/utils/timing");
     const { useListener } = require("@web/core/utils/hooks");
 
-    const { onWillUnmount } = owl;
+    const { onWillUnmount, useRef } = owl;
 
     /**
      * Render this screen using `showTempScreen` to select partner.
@@ -30,6 +30,7 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
             super.setup();
             useListener('click-save', () => this.env.bus.trigger('save-partner'));
             useListener('save-changes', this.saveChanges);
+            this.searchWordInputRef = useRef('search-word-input-partner');
 
             // We are not using useState here because the object
             // passed to useState converts the object and its contents
@@ -46,6 +47,7 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
             };
             this.updatePartnerList = debounce(this.updatePartnerList, 70);
             onWillUnmount(this.updatePartnerList.cancel);
+
         }
         // Lifecycle hooks
         back() {
@@ -91,7 +93,7 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
             }
             return res
         }
-        get isEveryPartnerLoadedAfterStartOfSession() {
+        get isEveryPartnerLoaded() {
             return !this.env.pos.config.limited_partners_loading || this.env.pos.config.partner_load_background;
         }
         get isBalanceDisplayed() {
@@ -103,18 +105,29 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
 
         // Methods
 
+        async _onPressEnterKey() {
+            if (!this.state.query) return;
+            if (!this.isEveryPartnerLoaded) {
+                const result = await this.searchPartner();
+                this.showNotification(
+                    _.str.sprintf(this.env._t('%s customer(s) found for "%s".'),
+                        result.length,
+                        this.state.query)
+                    , 3000);
+                if(!result.length) this._clearSearch();
+            }
+        }
+        _clearSearch() {
+            this.searchWordInputRef.el.value = '';
+            this.state.query = '';
+            this.render(true);
+        }
         // We declare this event handler as a debounce function in
         // order to lower its trigger rate.
         async updatePartnerList(event) {
             this.state.query = event.target.value;
             if (event.code === 'Enter') {
-                if (!this.isEveryPartnerLoadedAfterStartOfSession) {
-                    await this.searchPartner();
-                }
-                const partners = this.partners;
-                if (partners.length === 1) {
-                    this.clickPartner(partners[0]);
-                }
+                this._onPressEnterKey();
             } else {
                 this.render(true);
             }
@@ -163,13 +176,9 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
         async searchPartner() {
             let result = await this.getNewPartners();
             this.env.pos.db.add_partners(result);
-            if(!result.length) {
-                await this.showPopup('ErrorPopup', {
-                    title: '',
-                    body: this.env._t('No customer found'),
-                });
-            }
+            if (!this.env.pos.isEveryPartnerLoaded) await this.env.pos.updateIsEveryPartnerLoaded();
             this.render(true);
+            return result;
         }
         async getNewPartners() {
             let domain = [];
