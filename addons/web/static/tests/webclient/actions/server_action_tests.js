@@ -66,4 +66,25 @@ QUnit.module("ActionManager", (hooks) => {
             "close handler",
         ]);
     });
+
+    QUnit.test("send correct context when executing a server action", async function (assert) {
+        assert.expect(1);
+
+        serverData.actions[2].context = { someKey: 44 };
+        const mockRPC = async (route, args) => {
+            if (route === "/web/action/run") {
+                assert.deepEqual(args.context, {
+                    // user context
+                    lang: "en",
+                    tz: "taht",
+                    uid: 7,
+                    // action context
+                    someKey: 44,
+                });
+                return Promise.resolve(1); // execute action 1
+            }
+        };
+        const webClient = await createWebClient({ serverData, mockRPC });
+        await doAction(webClient, 2);
+    });
 });
