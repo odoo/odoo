@@ -944,9 +944,9 @@
 
     <div data-selector=".o_layout, .note-editable > div:not(.o_layout),
         .note-editable .oe_structure > div:not(:has(> .o_mail_snippet_general)),
-        .note-editable .oe_structure > div > .o_mail_snippet_general,
-        .note-editable .oe_structure > div > .o_mail_snippet_general .o_cc,
-        .note-editable .oe_structure > div > .o_mail_snippet_general .btn:not(.btn-link),
+        .note-editable .oe_structure > div.o_mail_snippet_general,
+        .note-editable .oe_structure > div.o_mail_snippet_general .o_cc,
+        .note-editable .oe_structure > div.o_mail_snippet_general .btn:not(.btn-link),
         td, td.o_mail_no_colorpicker div:first-child, th"
         data-exclude=".o_mail_no_colorpicker, .o_mail_no_options">
         <we-colorpicker string="Background Color"
