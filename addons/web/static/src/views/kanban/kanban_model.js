@@ -92,8 +92,11 @@ class KanbanDynamicGroupList extends DynamicGroupList {
         if (group.isFolded) {
             await group.toggle();
         }
-        const { list, groupByFieldName, value } = group;
-        await list.quickCreate(this.quickCreateInfo.fields, groupByFieldName, value);
+        await group.list.quickCreate(
+            this.quickCreateInfo.fields,
+            this.groupByField.name,
+            group.getServerValue()
+        );
     }
 
     async moveRecord(dataRecordId, dataGroupId, refId, newGroupId) {

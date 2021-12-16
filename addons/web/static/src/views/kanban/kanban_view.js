@@ -315,7 +315,7 @@ class KanbanView extends Component {
         const { root } = this.model;
         if (root.canQuickCreate()) {
             await root.quickCreate(group);
-        } else if (onCreate) {
+        } else if (onCreate && onCreate !== "quick_create") {
             await this.actionService.doAction(onCreate, { additionalContext: root.context });
         } else {
             try {
