@@ -6,8 +6,8 @@
             <table t-attf-class="o_list_table table table-sm table-hover table-striped {{props.list.isGrouped ? 'o_list_table_grouped' : 'o_list_table_ungrouped'}}">
                 <thead>
                     <tr>
-                        <th t-if="props.hasSelectors" class="o_list_record_selector">
-                            <CheckBox value="selectAll" t-on-change="toggleSelection"/>
+                        <th t-if="props.hasSelectors" class="o_list_record_selector" t-on-click.stop="toggleSelection">
+                            <CheckBox value="selectAll" t-on-change="toggleSelection"  t-on-click.stop=""/>
                         </th>
                         <t t-foreach="state.columns" t-as="column" t-key="column.name">
                             <th t-if="column.type === 'field'" t-att-class="getColumnClass(column)" t-on-click="onClickSortColumn(column)">
@@ -111,7 +111,7 @@
 
     <t t-name="web.ListRenderer.RecordRow" owl="1">
         <tr class="o_data_row" t-on-click="openRecord(record)">
-            <td t-if="props.hasSelectors" class="o_list_record_selector">
+            <td t-if="props.hasSelectors" class="o_list_record_selector" t-on-click.stop="toggleRecordSelection(record)">
                 <CheckBox value="record.selected" t-on-change="toggleRecordSelection(record)" t-on-click.stop=""/>
             </td>
             <t t-foreach="state.columns" t-as="column" t-key="column.name">

@@ -36,6 +36,7 @@ import {
     toggleSaveFavorite,
     groupByMenu,
     getButtons,
+    getFacetTexts,
 } from "../search/helpers";
 import { createWebClient, doAction } from "../webclient/helpers";
 import { makeView, setupViewRegistries } from "./helpers";
@@ -1643,7 +1644,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skip("ordered list, sort attribute in context", async function (assert) {
+    QUnit.test("ordered list, sort attribute in context", async function (assert) {
         assert.expect(1);
         // Equivalent to saving a custom filter
 
@@ -1664,22 +1665,19 @@ QUnit.module("Views", (hooks) => {
         // Ascending order on Date
         await click($(list.el).find('th.o_column_sortable:contains("Date")')[0]);
 
-        var listContext = list.getOwnedQueryParams();
         assert.deepEqual(
-            listContext,
-            {
-                orderedBy: [
-                    {
-                        name: "date",
-                        asc: true,
-                    },
-                    {
-                        name: "foo",
-                        asc: false,
-                    },
-                ],
-            },
-            "the list should have the right orderedBy in context"
+            list.model.root.orderBy,
+            [
+                {
+                    name: "date",
+                    asc: true,
+                },
+                {
+                    name: "foo",
+                    asc: false,
+                },
+            ],
+            "the list should have the right orderedBy"
         );
     });
 
@@ -2226,11 +2224,16 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skip("list view not groupable", async function (assert) {
+    QUnit.test("list view not groupable", async function (assert) {
         assert.expect(2);
 
-        const searchMenuTypesOriginal = ListView.prototype.searchMenuTypes;
-        ListView.prototype.searchMenuTypes = ["filter", "favorite"];
+        serverData.views = {
+            "foo,false,search": `
+                <search>
+                    <filter context="{'group_by': 'foo'}" name="foo"/>
+                </search>
+            `,
+        };
 
         const list = await makeView({
             type: "list",
@@ -2242,19 +2245,12 @@ QUnit.module("Views", (hooks) => {
                     <field name="foo"/>
                 </tree>
             `,
-            archs: {
-                "foo,false,search": `
-                    <search>
-                        <filter context="{'group_by': 'foo'}" name="foo"/>
-                    </search>
-                `,
-            },
             mockRPC: function (route, args) {
                 if (args.method === "read_group") {
                     throw new Error("Should not do a read_group RPC");
                 }
-                return this._super.apply(this, arguments);
             },
+            searchMenuTypes: ["filter", "favorite"],
             context: { search_default_foo: 1 },
         });
 
@@ -2263,13 +2259,11 @@ QUnit.module("Views", (hooks) => {
             ".o_control_panel div.o_search_options div.o_group_by_menu",
             "there should not be groupby menu"
         );
-        assert.deepEqual(cpHelpers.getFacetTexts(list.el), []);
-
-        ListView.prototype.searchMenuTypes = searchMenuTypesOriginal;
+        assert.deepEqual(getFacetTexts(list.el), []);
     });
 
-    QUnit.skip("selection changes are triggered correctly", async function (assert) {
-        assert.expect(8);
+    QUnit.test("selection changes are triggered correctly", async function (assert) {
+        assert.expect(11);
 
         const list = await makeView({
             type: "list",
@@ -2277,35 +2271,42 @@ QUnit.module("Views", (hooks) => {
             serverData,
             arch: '<tree><field name="foo"/><field name="bar"/></tree>',
         });
-        var $tbody_selector = $(list.el).find("tbody .o_list_record_selector input").first();
-        var $thead_selector = $(list.el).find("thead .o_list_record_selector input");
+        var tbody_selector = list.el.querySelector("tbody .o_list_record_selector input");
+        var thead_selector = list.el.querySelector("thead .o_list_record_selector input");
 
-        var n = 0;
-        testUtils.mock.intercept(list, "selection_changed", function () {
-            n += 1;
-        });
+        assert.strictEqual(list.model.root.selection.length, 0, "no record should be selected");
+        assert.notOk(tbody_selector.checked, "selection checkbox should be checked");
 
         // tbody checkbox click
-        click($tbody_selector);
-        assert.strictEqual(n, 1, "selection_changed should have been triggered");
-        assert.ok($tbody_selector.is(":checked"), "selection checkbox should be checked");
-        click($tbody_selector);
-        assert.strictEqual(n, 2, "selection_changed should have been triggered");
-        assert.ok(!$tbody_selector.is(":checked"), "selection checkbox shouldn't be checked");
+        await click(tbody_selector);
+        assert.strictEqual(list.model.root.selection.length, 1, "only 1 record should be selected");
+        assert.deepEqual(
+            list.model.root.selection[0].data,
+            {
+                bar: true,
+                foo: "yop",
+                id: 1,
+            },
+            "the correct record should be selected"
+        );
+        assert.ok(tbody_selector.checked, "selection checkbox should be checked");
+
+        await click(tbody_selector);
+        assert.strictEqual(list.model.root.selection.length, 0, "no record should be selected");
+        assert.notOk(tbody_selector.checked, "selection checkbox should be checked");
 
         // head checkbox click
-        click($thead_selector);
-        assert.strictEqual(n, 3, "selection_changed should have been triggered");
+        await click(thead_selector);
+        assert.strictEqual(list.model.root.selection.length, 4, "all records should be selected");
         assert.containsN(
             list,
             "tbody .o_list_record_selector input:checked",
-            $(list.el).find("tbody tr").length,
+            list.el.querySelectorAll("tbody tr").length,
             "all selection checkboxes should be checked"
         );
 
-        click($thead_selector);
-        assert.strictEqual(n, 4, "selection_changed should have been triggered");
-
+        await click(thead_selector);
+        assert.strictEqual(list.model.root.selection.length, 0, "no records should be selected");
         assert.containsNone(
             list,
             "tbody .o_list_record_selector input:checked",
@@ -2313,7 +2314,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skip(
+    QUnit.test(
         "Row selection checkbox can be toggled by clicking on the cell",
         async function (assert) {
             assert.expect(9);
@@ -2325,43 +2326,50 @@ QUnit.module("Views", (hooks) => {
                 arch: '<tree><field name="foo"/><field name="bar"/></tree>',
             });
 
-            testUtils.mock.intercept(list, "selection_changed", function (ev) {
-                assert.step(ev.data.selection.length.toString());
-            });
+            assert.strictEqual(list.model.root.selection.length, 0, "no record should be selected");
 
-            click($(list.el).find("tbody .o_list_record_selector:first"));
+            await click(list.el.querySelector("tbody .o_list_record_selector"));
             assert.containsOnce(list, "tbody .o_list_record_selector input:checked");
-            click($(list.el).find("tbody .o_list_record_selector:first"));
+            assert.strictEqual(
+                list.model.root.selection.length,
+                1,
+                "only 1 record should be selected"
+            );
+            await click(list.el.querySelector("tbody .o_list_record_selector"));
             assert.containsNone(list, ".o_list_record_selector input:checked");
+            assert.strictEqual(list.model.root.selection.length, 0, "no record should be selected");
 
-            click($(list.el).find("thead .o_list_record_selector"));
+            await click(list.el.querySelector("thead .o_list_record_selector"));
             assert.containsN(list, ".o_list_record_selector input:checked", 5);
-            click($(list.el).find("thead .o_list_record_selector"));
+            assert.strictEqual(
+                list.model.root.selection.length,
+                4,
+                "all records should be selected"
+            );
+            await click(list.el.querySelector("thead .o_list_record_selector"));
             assert.containsNone(list, ".o_list_record_selector input:checked");
-
-            assert.verifySteps(["1", "0", "4", "0"]);
+            assert.strictEqual(list.model.root.selection.length, 0, "no record should be selected");
         }
     );
 
-    QUnit.skip("head selector is toggled by the other selectors", async function (assert) {
+    QUnit.test("head selector is toggled by the other selectors", async function (assert) {
         assert.expect(6);
 
         const list = await makeView({
+            type: "list",
             arch: '<tree><field name="foo"/><field name="bar"/></tree>',
             serverData,
             groupBy: ["bar"],
             resModel: "foo",
-            serverData,
         });
 
-        assert.ok(
-            !$(list.el).find("thead .o_list_record_selector input")[0].checked,
+        assert.notOk(
+            list.el.querySelector("thead .o_list_record_selector input").checked,
             "Head selector should be unchecked"
         );
 
-        await click($(list.el).find(".o_group_header:first()"));
-        await click($(list.el).find("thead .o_list_record_selector input"));
-
+        await click(list.el.querySelector(".o_group_header"));
+        await click(list.el.querySelector("thead .o_list_record_selector input"));
         assert.containsN(
             list,
             "tbody .o_list_record_selector input:checked",
@@ -2369,36 +2377,34 @@ QUnit.module("Views", (hooks) => {
             "All visible checkboxes should be checked"
         );
 
-        await click($(list.el).find(".o_group_header:last()"));
-
-        assert.ok(
-            !$(list.el).find("thead .o_list_record_selector input")[0].checked,
+        await click([...list.el.querySelectorAll(".o_group_header")].pop());
+        assert.notOk(
+            list.el.querySelector("thead .o_list_record_selector input").checked,
             "Head selector should be unchecked"
         );
 
-        await click($(list.el).find("tbody .o_list_record_selector input:last()"));
-
+        await click([...list.el.querySelectorAll("tbody .o_list_record_selector input")].pop());
         assert.ok(
-            $(list.el).find("thead .o_list_record_selector input")[0].checked,
+            list.el.querySelector("thead .o_list_record_selector input").checked,
             "Head selector should be checked"
         );
 
-        await click($(list.el).find("tbody .o_list_record_selector:first() input"));
+        await click(list.el.querySelector("tbody .o_list_record_selector input"));
 
-        assert.ok(
-            !$(list.el).find("thead .o_list_record_selector input")[0].checked,
+        assert.notOk(
+            list.el.querySelector("thead .o_list_record_selector input").checked,
             "Head selector should be unchecked"
         );
 
-        await click($(list.el).find(".o_group_header:first()"));
+        await click(list.el.querySelector(".o_group_header"));
 
         assert.ok(
-            $(list.el).find("thead .o_list_record_selector input")[0].checked,
+            list.el.querySelector("thead .o_list_record_selector input").checked,
             "Head selector should be checked"
         );
     });
 
-    QUnit.skip("selection box is properly displayed (single page)", async function (assert) {
+    QUnit.test("selection box is properly displayed (single page)", async function (assert) {
         assert.expect(11);
 
         const list = await makeView({
@@ -2409,28 +2415,46 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsN(list, ".o_data_row", 4);
-        assert.containsNone($(list.el).find(".o_cp_buttons"), ".o_list_selection_box");
+        assert.containsNone(list.el.querySelector(".o_cp_buttons"), ".o_list_selection_box");
 
         // select a record
-        await click($(list.el).find(".o_data_row:first .o_list_record_selector input"));
-        assert.containsOnce($(list.el).find(".o_cp_buttons"), ".o_list_selection_box");
-        assert.containsNone($(list.el).find(".o_list_selection_box"), ".o_list_select_domain");
-        assert.strictEqual($(list.el).find(".o_list_selection_box").text().trim(), "1 selected");
+        await click(list.el.querySelector(".o_data_row .o_list_record_selector input"));
+        assert.containsOnce(list.el.querySelector(".o_cp_buttons"), ".o_list_selection_box");
+        assert.containsNone(
+            list.el.querySelector(".o_list_selection_box"),
+            ".o_list_select_domain"
+        );
+        assert.strictEqual(
+            list.el.querySelector(".o_list_selection_box").textContent.trim(),
+            "1 selected"
+        );
 
         // select all records of first page
-        await click($(list.el).find("thead .o_list_record_selector input"));
-        assert.containsOnce($(list.el).find(".o_cp_buttons"), ".o_list_selection_box");
-        assert.containsNone($(list.el).find(".o_list_selection_box"), ".o_list_select_domain");
-        assert.strictEqual($(list.el).find(".o_list_selection_box").text().trim(), "4 selected");
+        await click(list.el.querySelector("thead .o_list_record_selector input"));
+        assert.containsOnce(list.el.querySelector(".o_cp_buttons"), ".o_list_selection_box");
+        assert.containsNone(
+            list.el.querySelector(".o_list_selection_box"),
+            ".o_list_select_domain"
+        );
+        assert.strictEqual(
+            list.el.querySelector(".o_list_selection_box").textContent.trim(),
+            "4 selected"
+        );
 
         // unselect a record
-        await click($(list.el).find(".o_data_row:nth(1) .o_list_record_selector input"));
-        assert.containsOnce($(list.el).find(".o_cp_buttons"), ".o_list_selection_box");
-        assert.containsNone($(list.el).find(".o_list_selection_box"), ".o_list_select_domain");
-        assert.strictEqual($(list.el).find(".o_list_selection_box").text().trim(), "3 selected");
+        await click(list.el.querySelectorAll(".o_data_row .o_list_record_selector input")[1]);
+        assert.containsOnce(list.el.querySelector(".o_cp_buttons"), ".o_list_selection_box");
+        assert.containsNone(
+            list.el.querySelector(".o_list_selection_box"),
+            ".o_list_select_domain"
+        );
+        assert.strictEqual(
+            list.el.querySelector(".o_list_selection_box").textContent.trim(),
+            "3 selected"
+        );
     });
 
-    QUnit.skip("selection box is properly displayed (multi pages)", async function (assert) {
+    QUnit.test("selection box is properly displayed (multi pages)", async function (assert) {
         assert.expect(10);
 
         const list = await makeView({
@@ -2441,28 +2465,37 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsN(list, ".o_data_row", 3);
-        assert.containsNone($(list.el).find(".o_cp_buttons"), ".o_list_selection_box");
+        assert.containsNone(list.el.querySelector(".o_cp_buttons"), ".o_list_selection_box");
 
         // select a record
-        await click($(list.el).find(".o_data_row:first .o_list_record_selector input"));
-        assert.containsOnce($(list.el).find(".o_cp_buttons"), ".o_list_selection_box");
-        assert.containsNone($(list.el).find(".o_list_selection_box"), ".o_list_select_domain");
-        assert.strictEqual($(list.el).find(".o_list_selection_box").text().trim(), "1 selected");
+        await click(list.el.querySelector(".o_data_row .o_list_record_selector input"));
+        assert.containsOnce(list.el.querySelector(".o_cp_buttons"), ".o_list_selection_box");
+        assert.containsNone(
+            list.el.querySelector(".o_list_selection_box"),
+            ".o_list_select_domain"
+        );
+        assert.strictEqual(
+            list.el.querySelector(".o_list_selection_box").textContent.trim(),
+            "1 selected"
+        );
 
         // select all records of first page
-        await click($(list.el).find("thead .o_list_record_selector input"));
-        assert.containsOnce($(list.el).find(".o_cp_buttons"), ".o_list_selection_box");
-        assert.containsOnce($(list.el).find(".o_list_selection_box"), ".o_list_select_domain");
+        await click(list.el.querySelector("thead .o_list_record_selector input"));
+        assert.containsOnce(list.el.querySelector(".o_cp_buttons"), ".o_list_selection_box");
+        assert.containsOnce(
+            list.el.querySelector(".o_list_selection_box"),
+            ".o_list_select_domain"
+        );
         assert.strictEqual(
-            $(list.el).find(".o_list_selection_box").text().replace(/\s+/g, " ").trim(),
+            list.el.querySelector(".o_list_selection_box").textContent.replace(/\s+/g, " ").trim(),
             "3 selected Select all 4"
         );
 
         // select all domain
-        await click($(list.el).find(".o_list_selection_box .o_list_select_domain"));
-        assert.containsOnce($(list.el).find(".o_cp_buttons"), ".o_list_selection_box");
+        await click(list.el.querySelector(".o_list_selection_box .o_list_select_domain"));
+        assert.containsOnce(list.el.querySelector(".o_cp_buttons"), ".o_list_selection_box");
         assert.strictEqual(
-            $(list.el).find(".o_list_selection_box").text().trim(),
+            list.el.querySelector(".o_list_selection_box").textContent.trim(),
             "All 4 selected"
         );
     });
@@ -2549,7 +2582,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skip("selection is reset on reload", async function (assert) {
+    QUnit.test("selection is reset on reload", async function (assert) {
         assert.expect(8);
 
         const list = await makeView({
@@ -2563,7 +2596,7 @@ QUnit.module("Views", (hooks) => {
                 "</tree>",
         });
 
-        assert.containsNone($(list.el).find(".o_cp_buttons"), ".o_list_selection_box");
+        assert.containsNone(list.el.querySelector(".o_cp_buttons"), ".o_list_selection_box");
         assert.strictEqual(
             $(list.el).find("tfoot td:nth(2)").text(),
             "32",
@@ -2571,10 +2604,10 @@ QUnit.module("Views", (hooks) => {
         );
 
         // select first record
-        var $firstRowSelector = $(list.el).find("tbody .o_list_record_selector input").first();
-        click($firstRowSelector);
-        assert.ok($firstRowSelector.is(":checked"), "first row should be selected");
-        assert.containsOnce($(list.el).find(".o_cp_buttons"), ".o_list_selection_box");
+        var firstRowSelector = list.el.querySelector("tbody .o_list_record_selector input");
+        await click(firstRowSelector);
+        assert.ok(firstRowSelector.checked, "first row should be selected");
+        assert.containsOnce(list.el.querySelector(".o_cp_buttons"), ".o_list_selection_box");
         assert.strictEqual(
             $(list.el).find("tfoot td:nth(2)").text(),
             "10",
@@ -2582,10 +2615,11 @@ QUnit.module("Views", (hooks) => {
         );
 
         // reload
-        await list.reload();
-        $firstRowSelector = $(list.el).find("tbody .o_list_record_selector input").first();
-        assert.notOk($firstRowSelector.is(":checked"), "first row should no longer be selected");
-        assert.containsNone($(list.el).find(".o_cp_buttons"), ".o_list_selection_box");
+        await triggerEvent(list.el, "input.o_searchview_input", "keydown", { key: "Enter" });
+
+        firstRowSelector = list.el.querySelector("tbody .o_list_record_selector input");
+        assert.notOk(firstRowSelector.checked, "first row should no longer be selected");
+        assert.containsNone(list.el.querySelector(".o_cp_buttons"), ".o_list_selection_box");
         assert.strictEqual(
             $(list.el).find("tfoot td:nth(2)").text(),
             "32",
@@ -2593,7 +2627,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skip("selection is kept on render without reload", async function (assert) {
+    QUnit.test("selection is kept on render without reload", async function (assert) {
         assert.expect(10);
 
         const list = await makeView({
@@ -2610,34 +2644,34 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsNone(list.el, "div.o_control_panel .o_cp_action_menus");
-        assert.containsNone($(list.el).find(".o_cp_buttons"), ".o_list_selection_box");
+        assert.containsNone(list.el.querySelector(".o_cp_buttons"), ".o_list_selection_box");
 
         // open blip grouping and check all lines
-        await click($(list.el).find('.o_group_header:contains("blip (2)")'));
-        await click($(list.el).find(".o_data_row:first input"));
+        await click($(list.el).find('.o_group_header:contains("blip (2)")')[0]);
+        await click(list.el.querySelector(".o_data_row input"));
         assert.containsOnce(list.el, "div.o_control_panel .o_cp_action_menus");
-        assert.containsOnce($(list.el).find(".o_cp_buttons"), ".o_list_selection_box");
+        assert.containsOnce(list.el.querySelector(".o_cp_buttons"), ".o_list_selection_box");
 
         // open yop grouping and verify blip are still checked
-        await click($(list.el).find('.o_group_header:contains("yop (1)")'));
+        await click($(list.el).find('.o_group_header:contains("yop (1)")')[0]);
         assert.containsOnce(
             list,
             ".o_data_row input:checked",
             "opening a grouping does not uncheck others"
         );
         assert.containsOnce(list.el, "div.o_control_panel .o_cp_action_menus");
-        assert.containsOnce($(list.el).find(".o_cp_buttons"), ".o_list_selection_box");
+        assert.containsOnce(list.el.querySelector(".o_cp_buttons"), ".o_list_selection_box");
 
         // close and open blip grouping and verify blip are unchecked
-        await click($(list.el).find('.o_group_header:contains("blip (2)")'));
-        await click($(list.el).find('.o_group_header:contains("blip (2)")'));
+        await click($(list.el).find('.o_group_header:contains("blip (2)")')[0]);
+        await click($(list.el).find('.o_group_header:contains("blip (2)")')[0]);
         assert.containsNone(
             list,
             ".o_data_row input:checked",
             "opening and closing a grouping uncheck its elements"
         );
         assert.containsNone(list.el, "div.o_control_panel .o_cp_action_menus");
-        assert.containsNone($(list.el).find(".o_cp_buttons"), ".o_list_selection_box");
+        assert.containsNone(list.el.querySelector(".o_cp_buttons"), ".o_list_selection_box");
     });
 
     QUnit.test("aggregates are computed correctly", async function (assert) {
