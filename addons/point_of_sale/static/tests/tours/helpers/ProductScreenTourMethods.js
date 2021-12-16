@@ -136,7 +136,7 @@ odoo.define('point_of_sale.tour.ProductScreenTourMethods', function (require) {
             return [
                 {
                     content: 'product screen is shown',
-                    trigger: '.product-screen:not(:has(.oe_hidden))',
+                    trigger: '.product-screen',
                     run: () => {},
                 },
             ];

@@ -12,7 +12,7 @@ odoo.define('point_of_sale.ProductsWidgetControlPanel', function(require) {
     class ProductsWidgetControlPanel extends PosComponent {
         setup() {
             super.setup();
-            this.searchWordInput = useRef('search-word-input');
+            this.searchWordInput = useRef('search-word-input-product');
             this.updateSearch = debounce(this.updateSearch, 100);
 
             onMounted(() => {
@@ -23,7 +23,7 @@ odoo.define('point_of_sale.ProductsWidgetControlPanel', function(require) {
                 this.env.posbus.off('search-product-from-info-popup', this);
             });
         }
-        clearSearch() {
+        _clearSearch() {
             this.searchWordInput.el.value = '';
             this.trigger('clear-search');
         }
@@ -33,9 +33,19 @@ odoo.define('point_of_sale.ProductsWidgetControlPanel', function(require) {
         updateSearch(event) {
             this.trigger('update-search', event.target.value);
             if (event.key === 'Enter') {
-                // We are passing the searchWordInput ref so that when necessary,
-                // it can be modified by the parent.
-                this.trigger('try-add-product', { searchWordInput: this.searchWordInput });
+                this._onPressEnterKey()
+            }
+        }
+        async _onPressEnterKey() {
+            if (!this.searchWordInput.el.value) return;
+            if (!this.env.pos.isEveryProductLoaded) {
+                const result = await this.loadProductFromDB();
+                this.showNotification(
+                    _.str.sprintf(this.env._t('%s product(s) found for "%s".'),
+                        result.length,
+                        this.searchWordInput.el.value)
+                    , 3000);
+                if (!result.length) this._clearSearch();
             }
         }
         searchProductFromInfo(productName) {
@@ -57,15 +67,12 @@ odoo.define('point_of_sale.ProductsWidgetControlPanel', function(require) {
                     args: [['&', ['name', 'ilike', this.searchWordInput.el.value + "%"], ['available_in_pos', '=', true]]],
                     context: this.env.session.user_context,
                 });
-                if(!ProductIds.length) {
-                    this.showPopup('ErrorPopup', {
-                        title: '',
-                        body: this.env._t("No product found"),
-                    });
-                } else {
+                if(ProductIds.length) {
+                    if (!this.env.pos.isEveryProductLoaded) await this.env.pos.updateIsEveryProductLoaded();
                     await this.env.pos._addProducts(ProductIds, false);
                 }
                 this.trigger('update-product-list');
+                return ProductIds;
             } catch (error) {
                 const identifiedError = identifyError(error)
                 if (identifiedError instanceof ConnectionLostError || identifiedError instanceof ConnectionAbortedError) {

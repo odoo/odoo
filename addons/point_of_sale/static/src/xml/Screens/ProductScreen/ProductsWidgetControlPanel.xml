@@ -48,23 +48,21 @@
                     </div>
                 </t>
             </t>
-            <t t-portal="'.pos .search-bar-portal'">
-                <div class="search-box">
-                    <span t-if="env.isMobile" class="icon" t-on-click="_toggleMobileSearchbar">
-                        <i t-attf-class="fa {{props.mobileSearchBarIsShown ? 'fa-arrow-left' : 'fa-search'}}"/>
-                    </span>
-                    <span t-else="" class="icon">
-                        <i class="fa fa-search"/>
-                    </span>
-                    <t t-if="!env.isMobile || props.mobileSearchBarIsShown">
-                        <span t-on-click="clearSearch" class="clear-icon">
-                            <i class="fa fa-times" aria-hidden="true"/>
-                        </span>
-                        <span class="database-icon">
-                            <i class="fa fa-database" t-on-click="loadProductFromDB"/>
-                        </span>
-                        <input t-ref="search-word-input" autofocus="autofocus" type="text" placeholder="Search Products..." t-on-keyup="updateSearch" />
-                    </t>
+            <t t-portal="'.pos .pos-topheader .search-bar-container.sb-product'">
+                <span t-if="env.isMobile" class="oe_status oe_icon icon" t-on-click="_toggleMobileSearchbar">
+                    <i t-attf-class="fa {{props.mobileSearchBarIsShown ? 'fa-arrow-left' : 'fa-search'}}"/>
+                </span>
+                <t t-if="!env.isMobile || props.mobileSearchBarIsShown">
+                    <div class="pos-search-bar">
+                        <i class="fa fa-search" t-on-click="_onPressEnterKey"/>
+                        <input t-ref="search-word-input-product" placeholder="Search Products..." type="text" autofocus="autofocus" t-on-keyup="updateSearch" />
+                        <i class="fa fa-times search-clear-partner" t-on-click="_clearSearch"/>
+                    </div>
+                </t>
+            </t>
+            <t t-portal="'.pos .search-database-button'">
+                <div class="button highlight" t-on-click="_onPressEnterKey">
+                    <i class="fa fa-search"/> Search database
                 </div>
             </t>
         </div>
