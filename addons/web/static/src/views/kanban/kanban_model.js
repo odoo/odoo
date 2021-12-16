@@ -88,7 +88,11 @@ class KanbanDynamicGroupList extends DynamicGroupList {
         if (!this.quickCreateInfo) {
             this.quickCreateInfo = await this._loadQuickCreateView();
         }
-        const { list, groupByFieldName, value } = group || this.groups[0];
+        group = group || this.groups[0];
+        if (group.isFolded) {
+            await group.toggle();
+        }
+        const { list, groupByFieldName, value } = group;
         await list.quickCreate(this.quickCreateInfo.fields, groupByFieldName, value);
     }
 
@@ -253,9 +257,9 @@ class KanbanDynamicRecordList extends DynamicRecordList {
         this.model.notify();
     }
 
-    async cancelQuickCreate() {
+    async cancelQuickCreate(force = false) {
         const previousCount = this.records.length;
-        this.records = this.records.filter((r) => !r.isQuickCreate || r.isDirty);
+        this.records = this.records.filter((r) => !r.isQuickCreate || (!force && r.isDirty));
         if (this.records.length !== previousCount) {
             this.model.notify();
         }
