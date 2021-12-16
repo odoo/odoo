@@ -284,7 +284,7 @@ function classToStyle($editable, cssRules) {
         const $target = $(node);
         const css = _getMatchedCSSRules(node, cssRules);
         // Flexbox
-        for (const styleName in node.style) {
+        for (const styleName of node.style) {
             if (styleName.includes('flex') || `${node.style[styleName]}`.includes('flex')) {
                 node.style[styleName] = '';
             }
