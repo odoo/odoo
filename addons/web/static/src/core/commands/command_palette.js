@@ -9,7 +9,7 @@ import { debounce } from "@web/core/utils/timing";
 import { _lt } from "@web/core/l10n/translation";
 
 const { Component, hooks } = owl;
-const { useState } = hooks;
+const { onWillStart, useState } = hooks;
 
 const DEFAULT_PLACEHOLDER = _lt("Search...");
 const DEFAULT_EMPTY_MESSAGE = _lt("No results found");
@@ -94,7 +94,9 @@ export class CommandPalette extends Component {
             commands: [],
         });
 
-        this.setCommandPaletteConfig(this.props.config);
+        onWillStart(async () => {
+            await this.setCommandPaletteConfig(this.props.config);
+        });
     }
 
     get commandsByCategory() {
@@ -117,7 +119,7 @@ export class CommandPalette extends Component {
      * Apply the new config to the command pallet
      * @param {CommandPaletteConfig} config
      */
-    setCommandPaletteConfig(config) {
+    async setCommandPaletteConfig(config) {
         const result = { default: [] };
         for (const provider of config.providers) {
             const namespace = provider.namespace || "default";
@@ -136,7 +138,7 @@ export class CommandPalette extends Component {
         this.state.placeholder = config.placeholder || DEFAULT_PLACEHOLDER.toString();
 
         const namespace = config.namespace || "default";
-        this.setCommands(namespace, {
+        await this.setCommands(namespace, {
             activeElement: this.activeElement,
             searchValue: "",
         });
@@ -229,7 +231,7 @@ export class CommandPalette extends Component {
     async executeCommand(command) {
         const config = await command.action();
         if (config) {
-            this.setCommandPaletteConfig(config);
+            await this.setCommandPaletteConfig(config);
         } else {
             this.props.closeMe();
         }
