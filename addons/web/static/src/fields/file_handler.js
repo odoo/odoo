@@ -83,6 +83,7 @@ export class FileUploader extends Component {
                 size: file.size,
                 type: file.type,
                 data: data.split(",")[1],
+                objectUrl: file.type === "application/pdf" ? URL.createObjectURL(file) : null,
             });
             this.state.isUploading = false;
         }

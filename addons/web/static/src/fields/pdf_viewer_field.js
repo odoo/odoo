@@ -2,6 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { url } from "@web/core/utils/urls";
 import { download } from "@web/core/network/download";
 import { standardFieldProps } from "./standard_field_props";
 import { FileDownloader, FileUploader } from "./file_handler";
@@ -13,16 +14,18 @@ function isBinarySize(value) {
     return /^\d+(\.\d*)? [^0-9]+$/.test(value);
 }
 
-export class BinaryField extends Component {
+export class PdfViewerField extends Component {
     setup() {
         this.notification = useService("notification");
         this.state = useState({
             filename: "",
             isValid: true,
+            objectUrl: "",
         });
         onWillUpdateProps((nextProps) => {
             if (nextProps.readonly) {
                 this.state.filename = "";
+                this.state.objectUrl = "";
             }
         });
     }
@@ -33,48 +36,50 @@ export class BinaryField extends Component {
                 this.state.filename ||
                 this.props.record.data[this.props.attrs.filename] ||
                 this.props.attrs.filename ||
-                this.props.value,
+                null,
         };
     }
-    async onFileDownload() {
-        await download({
-            data: {
-                model: this.props.record.resModel,
-                id: this.props.record.resId,
-                field: this.props.name,
-                filename_field: this.file.name,
-                filename: this.file.name || "",
-                download: true,
-                data: isBinarySize(this.props.value) ? null : this.props.value,
-            },
-            url: "/web/content",
-        });
+    get url() {
+        if (this.state.isValid && this.props.value) {
+            return (
+                "/web/static/lib/pdfjs/web/viewer.html?file=" +
+                encodeURIComponent(
+                    this.state.objectUrl ||
+                        url("/web/content", {
+                            model: this.props.record.resModel,
+                            id: this.props.record.resId,
+                            field: this.props.options.preview_image || this.props.name,
+                        })
+                ) +
+                `#page=${this.props.record.data[this.props.name + "_page"] || 1}`
+            );
+        }
     }
     onFileRemove() {
         this.state.isValid = true;
         this.props.update(false);
-        this.props.update(false, { name: this.props.attrs.filename });
     }
     onFileUploaded(info) {
         this.state.filename = info.name;
         this.state.isValid = true;
         this.props.update(info.data);
+        this.state.objectUrl = info.objectUrl;
     }
     onLoadFailed() {
         this.state.isValid = false;
-        this.notification.add(this.env._t("Could not display the selected binary"), {
+        this.notification.add(this.env._t("Could not display the selected pdf"), {
             type: "danger",
         });
     }
 }
 
-BinaryField.components = {
+PdfViewerField.components = {
     FileDownloader,
     FileUploader,
 };
-BinaryField.props = {
+PdfViewerField.props = {
     ...standardFieldProps,
 };
-BinaryField.template = "web.BinaryField";
+PdfViewerField.template = "web.PdfViewerField";
 
-registry.category("fields").add("binary", BinaryField);
+registry.category("fields").add("pdf_viewer", PdfViewerField);

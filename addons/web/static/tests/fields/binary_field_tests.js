@@ -39,7 +39,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.module("BinaryField");
 
     QUnit.test("BinaryField is correctly rendered", async function (assert) {
-        assert.expect(16);
+        assert.expect(15);
 
         async function send(data) {
             assert.ok(data instanceof FormData);
@@ -157,15 +157,10 @@ QUnit.module("Fields", (hooks) => {
             '.o_field_widget[name="document"] a > .fa-download',
             "the binary field should not render as a downloadable link since we removed the file"
         );
-        assert.strictEqual(
-            form.el.querySelector('.o_field_widget[name="document"] span').innerText.trim(),
-            "-",
+        assert.containsNone(
+            form,
+            "o_field_widget span",
             "the binary field should not display a filename in the link since we removed the file"
-        );
-        assert.strictEqual(
-            form.el.querySelector(".o_field_char").innerText.trim(),
-            "",
-            "the filename field should be empty since we removed the file"
         );
     });
 

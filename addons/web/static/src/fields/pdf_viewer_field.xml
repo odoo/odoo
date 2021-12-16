@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.PdfViewerField" owl="1">
+        <div aria-atomic="true">
+            <t t-if="!props.readonly">
+                <FileUploader
+                    file="file"
+                    onUploaded="(info) => onFileUploaded(info)"
+                    onRemove="() => onFileRemove()"
+                    acceptedFileExtensions="'.pdf'"
+                />
+            </t>
+            <t t-if="file.data">
+                <iframe class="o_pdfview_iframe"
+                    alt="PDF file"
+                    t-att-src="url"
+                    t-att-name="props.name"
+                    t-on-error="onLoadFailed"
+                />
+            </t>
+        </div>
+    </t>
+
+</templates>
