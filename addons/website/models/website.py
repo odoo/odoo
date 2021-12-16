@@ -1410,9 +1410,12 @@ class Website(models.Model):
             snippet_occurences.append(match.group())
 
         # As well as every snippet dropped in html fields
-        snippet_regex = f'<([^>]*data-snippet="{snippet_id}"[^>]*)>'
-        snippet_dropped = 'UNION '.join(f'SELECT REGEXP_MATCHES({column}, \'{snippet_regex}\') FROM {table} ' for table, column in html_fields)
-        self.env.cr.execute(snippet_dropped)
+        self.env.cr.execute(sql.SQL(" UNION ").join(
+            sql.SQL('SELECT regexp_matches({}, %(snippet_regex)s) FROM {}').format(
+                sql.Identifier(column),
+                sql.Identifier(table)
+            ) for table, column in html_fields
+        ), {'snippet_regex': f'<([^>]*data-snippet="{snippet_id}"[^>]*)>'})
         results = self.env.cr.fetchall()
         for r in results:
             snippet_occurences.append(r[0][0])
