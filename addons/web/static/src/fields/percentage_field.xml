@@ -9,7 +9,8 @@
             <div class="d-flex">
                 <input
                     class="o-percentage-field o_input"
-                    type="number"
+                    type="text"
+                    inputmode="numeric"
                     t-att-value="percentageValue or ''"
                     t-att-required="props.required"
                     t-on-change="onChange"
