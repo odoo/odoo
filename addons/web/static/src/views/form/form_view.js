@@ -15,7 +15,6 @@ import { useViewButtons } from "@web/views/view_button/hook";
 import { Field } from "@web/fields/field";
 
 const { Component, useState } = owl;
-const viewRegistry = registry.category("views");
 
 // -----------------------------------------------------------------------------
 
@@ -27,39 +26,6 @@ export class FormArchParser extends XMLParser {
         this.visitXML(xmlDoc, (node) => {
             if (node.tagName === "field") {
                 const fieldInfo = Field.parseFieldNode(node, fields, "form");
-                const field = fields[fieldInfo.name];
-                if (field.views) {
-                    fieldInfo.views = {};
-                    for (let viewType in field.views) {
-                        const subView = field.views[viewType];
-                        viewType = viewType === "tree" ? "list" : viewType; // FIXME: get rid of this
-                        const { ArchParser } = viewRegistry.get(viewType);
-                        const archInfo = new ArchParser().parse(subView.arch, subView.fields);
-                        fieldInfo.views[viewType] = {
-                            ...archInfo,
-                            activeFields: archInfo.fields,
-                            fields: subView.fields,
-                        };
-                    }
-                }
-                if (!fieldInfo.invisible && ["one2many", "many2many"].includes(field.type)) {
-                    fieldInfo.relation = field.relation;
-                    const relatedFields = {};
-                    if (fieldInfo.FieldComponent.useSubView) {
-                        const firstView = fieldInfo.views && fieldInfo.views[fieldInfo.viewMode];
-                        if (firstView) {
-                            Object.assign(relatedFields, firstView.fields);
-                        }
-                    }
-                    // add fields required by specific FieldComponents
-                    Object.assign(relatedFields, fieldInfo.FieldComponent.fieldsToFetch);
-                    // special case for color field
-                    const colorField = fieldInfo.options.color_field;
-                    if (colorField) {
-                        relatedFields[colorField] = { name: colorField, type: "integer" };
-                    }
-                    fieldInfo.relatedFields = relatedFields;
-                }
                 activeFields[fieldInfo.name] = fieldInfo;
             }
         });
@@ -169,4 +135,4 @@ FormView.components = { Layout, FormRenderer };
 FormView.props = { ...standardViewProps };
 FormView.ArchParser = FormArchParser;
 
-viewRegistry.add("form", FormView);
+registry.category("views").add("form", FormView);

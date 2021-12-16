@@ -3094,7 +3094,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(kanban, ".o_column_folded");
     });
 
-    QUnit.skip(
+    QUnit.test(
         "quick create record: open on a column while another column has already one",
         async (assert) => {
             assert.expect(6);
@@ -3116,7 +3116,7 @@ QUnit.module("Views", (hooks) => {
             await quickCreateRecord(kanban);
             assert.containsOnce(kanban, ".o_kanban_quick_create");
             assert.containsOnce(
-                kanban.el.querySelector(".o_kanban_group:nth-child(2)"),
+                kanban.el.querySelector(".o_kanban_group:first-child"),
                 ".o_kanban_quick_create"
             );
 
@@ -3132,13 +3132,13 @@ QUnit.module("Views", (hooks) => {
             await quickCreateRecord(kanban);
             assert.containsOnce(kanban, ".o_kanban_quick_create");
             assert.containsOnce(
-                kanban.el.querySelector(".o_kanban_group:nth-child(2)"),
+                kanban.el.querySelector(".o_kanban_group:first-child"),
                 ".o_kanban_quick_create"
             );
         }
     );
 
-    QUnit.skip("many2many_tags in kanban views", async (assert) => {
+    QUnit.test("many2many_tags in kanban views", async (assert) => {
         assert.expect(12);
 
         serverData.models.partner.records[0].category_ids = [6, 7];
@@ -3147,6 +3147,16 @@ QUnit.module("Views", (hooks) => {
             id: 8,
             name: "hello",
             color: 0,
+        });
+
+        makeFakeActionService({
+            async switchView(viewType, props) {
+                assert.deepEqual(
+                    [props.resId, viewType],
+                    [1, "form"],
+                    "should trigger an event to open the clicked record in a form view"
+                );
+            },
         });
 
         const kanban = await makeView({
@@ -3166,20 +3176,6 @@ QUnit.module("Views", (hooks) => {
             async mockRPC(route) {
                 assert.step(route);
             },
-            intercepts: {
-                switch_view: function (event) {
-                    assert.deepEqual(
-                        _.pick(event.data, "mode", "model", "res_id", "view_type"),
-                        {
-                            mode: "readonly",
-                            resModel: "partner",
-                            res_id: 1,
-                            view_type: "form",
-                        },
-                        "should trigger an event to open the clicked record in a form view"
-                    );
-                },
-            },
         });
 
         const firstRecord = kanban.el.querySelector(".o_kanban_record");
@@ -3191,7 +3187,7 @@ QUnit.module("Views", (hooks) => {
         );
         assert.containsOnce(firstRecord, ".o_tag.o_tag_color_2", "first tag should have color 2");
         assert.verifySteps(
-            ["web_search_read", "/web/dataset/call_kw/category/read"],
+            ["/web/dataset/call_kw/partner/web_search_read", "/web/dataset/call_kw/category/read"],
             "two RPC should have been done (one search read and one read for the m2m)"
         );
 
@@ -3199,12 +3195,11 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(
             kanban.el,
             ".o_kanban_record:nth-child(2) .o_tag",
-            1,
             "there should be only one tag in second record"
         );
 
         // Write on the record using the priority widget to trigger a re-render in readonly
-        await click(kanban.el, ".o_field_widget.o_priority a.o_priority_star.fa-star-o");
+        await click(kanban.el, ".o_kanban_record:first-child .o_priority_star:first-child");
 
         assert.verifySteps(
             [
@@ -3222,7 +3217,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // click on a tag (should trigger switch_view)
-        await click(kanban.el, ".o_tag:contains(gold):first-child");
+        await click(kanban.el, ".o_kanban_record:first-child .o_tag:first-child");
     });
 
     QUnit.skip("Do not open record when clicking on `a` with `href`", async (assert) => {

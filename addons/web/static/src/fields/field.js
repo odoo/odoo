@@ -11,6 +11,7 @@ import { getX2MViewModes, X2M_TYPES } from "@web/views/helpers/view_utils";
 const { Component, tags } = owl;
 
 const fieldRegistry = registry.category("fields");
+const viewRegistry = registry.category("views");
 
 export class Field extends Component {
     setup() {
@@ -155,14 +156,15 @@ Field.parseFieldNode = function (node, fields, viewType) {
     const name = node.getAttribute("name");
     const widget = node.getAttribute("widget");
     const field = fields[name];
+    const optionsAttr = node.getAttribute("options") || "{}";
     const fieldInfo = {
         name,
         string: node.getAttribute("string") || field.string,
         widget,
-        options: {}, // can be already used to add options like 'group_by_tooltip'
+        options: evaluateExpr(optionsAttr), // can be already used to add options like 'group_by_tooltip'
         modifiers: {}, // a lot of code is easier if it always exists.
         onChange: isAttr(node, "on_change").truthy(),
-        optionsAttribute: node.getAttribute("options") || "{}",
+        optionsAttribute: optionsAttr,
         modifiersAttribute: node.getAttribute("modifiers") || "{}",
         FieldComponent: Field.getEffectiveFieldComponent({ fields, viewType }, widget, name),
         decorationAttrs: {}, // populated below
@@ -187,29 +189,40 @@ Field.parseFieldNode = function (node, fields, viewType) {
         fieldInfo.viewMode = getX2MViewModes(node.getAttribute("mode"))[0];
     }
 
-    // if (!fieldInfo.invisible && X2M_TYPES.includes(field.type)) {
-    //     fieldInfo.relation = field.relation;
-    //     const relatedFields = {
-    //         id: { name: "id", type: "integer", readonly: true },
-    //     };
-    //     if (FieldClass.useSubView) {
-    //         // FIXME: this part is incomplete, we have to parse the subview archs
-    //         // and extract the field info
-    //         // fieldInfo.views = field.views;
-    //         // const firstView = fieldInfo.views[fieldInfo.viewMode];
-    //         // if (firstView) {
-    //         //     Object.assign(relatedFields, firstView.fields);
-    //         // }
-    //     }
-    //     // add fields required by specific FieldComponents
-    //     Object.assign(relatedFields, FieldClass.fieldsToFetch);
-    //     // special case for color field
-    //     const colorField = fieldInfo.options.color_field;
-    //     if (colorField) {
-    //         relatedFields[colorField] = { name: colorField, type: "integer" };
-    //     }
-    //     fieldInfo.relatedFields = relatedFields;
-    // }
+    if (field.views) {
+        fieldInfo.views = {};
+        for (let viewType in field.views) {
+            const subView = field.views[viewType];
+            viewType = viewType === "tree" ? "list" : viewType; // FIXME: get rid of this
+            const { ArchParser } = viewRegistry.get(viewType);
+            const archInfo = new ArchParser().parse(subView.arch, subView.fields);
+            fieldInfo.views[viewType] = {
+                ...archInfo,
+                activeFields: archInfo.fields,
+                fields: subView.fields,
+            };
+        }
+    }
+
+    if (!fieldInfo.invisible && X2M_TYPES.includes(field.type)) {
+        fieldInfo.relation = field.relation;
+        const relatedFields = {};
+        if (fieldInfo.FieldComponent.useSubView) {
+            const firstView = fieldInfo.views && fieldInfo.views[fieldInfo.viewMode];
+            if (firstView) {
+                Object.assign(relatedFields, firstView.fields);
+            }
+        }
+        // add fields required by specific FieldComponents
+        Object.assign(relatedFields, fieldInfo.FieldComponent.fieldsToFetch);
+        // special case for color field
+        const colorField = fieldInfo.options.color_field;
+        if (colorField) {
+            relatedFields[colorField] = { name: colorField, type: "integer", active: true };
+        }
+        fieldInfo.relatedFields = relatedFields;
+    }
+
     return fieldInfo;
 };
 

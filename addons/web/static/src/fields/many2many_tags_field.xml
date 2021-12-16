@@ -4,7 +4,7 @@
     <t t-name="web.Many2ManyTagsField" owl="1">
         <div class="o_field_many2manytags">
             <t t-foreach="tags" t-as="tag" t-key="tag.id or tag_index">
-                <div class="o_tag badge" t-attf-class="o_tag_color_{{ tag.color or tag_index }}">
+                <div class="o_tag badge" t-attf-class="o_tag_color_{{ tag.colorIndex }}">
                     <span />
                     <t t-esc="tag.name or 'tag' + tag_index" />
                 </div>
