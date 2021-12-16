@@ -15,7 +15,7 @@ from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.tools.misc import formatLang, get_lang
+from odoo.tools.misc import formatLang, get_lang, format_amount
 
 
 class PurchaseOrder(models.Model):
@@ -679,19 +679,18 @@ class PurchaseOrder(models.Model):
         # This is done via SQL for scalability reasons
         query = """SELECT AVG(COALESCE(po.amount_total / NULLIF(po.currency_rate, 0), po.amount_total)),
                           AVG(extract(epoch from age(po.date_approve,po.create_date)/(24*60*60)::decimal(16,2))),
-                          SUM(CASE WHEN po.date_approve >= %s THEN COALESCE(po.amount_total / NULLIF(po.currency_rate, 0), po.amount_total) ELSE 0 END),
-                          MIN(curr.decimal_places)
+                          SUM(CASE WHEN po.date_approve >= %s THEN COALESCE(po.amount_total / NULLIF(po.currency_rate, 0), po.amount_total) ELSE 0 END)
                    FROM purchase_order po
                    JOIN res_company comp ON (po.company_id = comp.id)
-                   JOIN res_currency curr ON (comp.currency_id = curr.id)
                    WHERE po.state in ('purchase', 'done')
                      AND po.company_id = %s
                 """
         self._cr.execute(query, (one_week_ago, self.env.company.id))
         res = self.env.cr.fetchone()
-        result['all_avg_order_value'] = round(res[0] or 0, res[3])
         result['all_avg_days_to_purchase'] = round(res[1] or 0, 2)
-        result['all_total_last_7_days'] = round(res[2] or 0, res[3])
+        currency = self.env.company.currency_id
+        result['all_avg_order_value'] = format_amount(self.env, res[0] or 0, currency)
+        result['all_total_last_7_days'] = format_amount(self.env, res[2] or 0, currency)
 
         return result
 
