@@ -260,7 +260,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
                 class: 'container o_mail_wrapper o_mail_regular oe_unremovable',
             });
             $newWrapperContent = $('<div/>', {
-                class: 'col o_mail_no_options o_mail_wrapper_td oe_structure o_editable'
+                class: 'col o_mail_no_options o_mail_wrapper_td bg-white oe_structure o_editable'
             });
             $new_wrapper.append($('<div class="row"/>').append($newWrapperContent));
         }
