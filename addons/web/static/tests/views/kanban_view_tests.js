@@ -2705,7 +2705,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skip("quick create record in grouped by char field", async (assert) => {
+    QUnit.test("quick create record in grouped by char field", async (assert) => {
         assert.expect(4);
 
         const kanban = await makeView({
@@ -2719,13 +2719,9 @@ QUnit.module("Views", (hooks) => {
                 "</t></templates>" +
                 "</kanban>",
             groupBy: ["foo"],
-            async mockRPC(route, args) {
-                if (args.method === "name_create") {
-                    assert.deepEqual(
-                        args.kwargs.context,
-                        { default_foo: "yop" },
-                        "should send the correct default value for foo"
-                    );
+            async mockRPC(route, { method, kwargs }) {
+                if (method === "name_create") {
+                    assert.strictEqual(kwargs.context.default_foo, "yop");
                 }
             },
         });
@@ -2754,7 +2750,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skip("quick create record in grouped by boolean field", async (assert) => {
+    QUnit.test("quick create record in grouped by boolean field", async (assert) => {
         assert.expect(4);
 
         const kanban = await makeView({
@@ -2768,41 +2764,24 @@ QUnit.module("Views", (hooks) => {
                 "</t></templates>" +
                 "</kanban>",
             groupBy: ["bar"],
-            async mockRPC(route, args) {
-                if (args.method === "name_create") {
-                    assert.deepEqual(
-                        args.kwargs.context,
-                        { default_bar: true },
-                        "should send the correct default value for bar"
-                    );
+            async mockRPC(route, { method, kwargs }) {
+                if (method === "name_create") {
+                    assert.strictEqual(kwargs.context.default_bar, true);
                 }
             },
         });
 
-        assert.containsN(
-            kanban,
-            ".o_kanban_header .o_kanban_quick_add i",
-            2,
-            "quick create should be enabled when grouped on a boolean field"
-        );
-        assert.strictEqual(
-            kanban.el.querySelector(".o_kanban_group:nth(1) .o_kanban_record").length,
-            3,
-            "second column (true) should contain 3 records"
-        );
+        assert.containsN(kanban, ".o_kanban_header .o_kanban_quick_add i", 2);
+        assert.containsN(kanban, ".o_kanban_group:last-child .o_kanban_record", 3);
 
-        await quickCreateRecord(kanban);
+        await quickCreateRecord(kanban, 2);
         await editQuickCreateInput(kanban, "display_name", "new record");
         await validateRecord(kanban);
 
-        assert.strictEqual(
-            kanban.el.querySelector(".o_kanban_group:nth(1) .o_kanban_record").length,
-            4,
-            "second column (true) should now contain 4 records"
-        );
+        assert.containsN(kanban, ".o_kanban_group:last-child .o_kanban_record", 4);
     });
 
-    QUnit.skip("quick create record in grouped on selection field", async (assert) => {
+    QUnit.test("quick create record in grouped on selection field", async (assert) => {
         assert.expect(4);
 
         const kanban = await makeView({
@@ -2815,13 +2794,9 @@ QUnit.module("Views", (hooks) => {
                 '<div><field name="display_name"/></div>' +
                 "</t></templates>" +
                 "</kanban>",
-            async mockRPC(route, args) {
-                if (args.method === "name_create") {
-                    assert.deepEqual(
-                        args.kwargs.context,
-                        { default_state: "abc" },
-                        "should send the correct default value for bar"
-                    );
+            async mockRPC(route, { method, kwargs }) {
+                if (method === "name_create") {
+                    assert.strictEqual(kwargs.context.default_state, "abc");
                 }
             },
             groupBy: ["state"],
@@ -2851,7 +2826,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skip(
+    QUnit.test(
         "quick create record in grouped by char field (within quick_create_view)",
         async (assert) => {
             assert.expect(6);
@@ -2871,18 +2846,10 @@ QUnit.module("Views", (hooks) => {
                     "</t></templates>" +
                     "</kanban>",
                 groupBy: ["foo"],
-                async mockRPC(route, args) {
-                    if (args.method === "create") {
-                        assert.deepEqual(
-                            args.args[0],
-                            { foo: "yop" },
-                            "should write the correct value for foo"
-                        );
-                        assert.deepEqual(
-                            args.kwargs.context,
-                            { default_foo: "yop" },
-                            "should send the correct default value for foo"
-                        );
+                async mockRPC(route, { method, args, kwargs }) {
+                    if (method === "create") {
+                        assert.deepEqual(args[0], { foo: "yop" });
+                        assert.strictEqual(kwargs.context.default_foo, "yop");
                     }
                 },
             });
@@ -2916,7 +2883,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skip(
+    QUnit.test(
         "quick create record in grouped by boolean field (within quick_create_view)",
         async (assert) => {
             assert.expect(6);
@@ -2936,18 +2903,10 @@ QUnit.module("Views", (hooks) => {
                     "</t></templates>" +
                     "</kanban>",
                 groupBy: ["bar"],
-                async mockRPC(route, args) {
-                    if (args.method === "create") {
-                        assert.deepEqual(
-                            args.args[0],
-                            { bar: true },
-                            "should write the correct value for bar"
-                        );
-                        assert.deepEqual(
-                            args.kwargs.context,
-                            { default_bar: true },
-                            "should send the correct default value for bar"
-                        );
+                async mockRPC(route, { method, args, kwargs }) {
+                    if (method === "create") {
+                        assert.deepEqual(args[0], { bar: true });
+                        assert.strictEqual(kwargs.context.default_bar, true);
                     }
                 },
             });
@@ -2958,30 +2917,21 @@ QUnit.module("Views", (hooks) => {
                 2,
                 "quick create should be enabled when grouped on a boolean field"
             );
-            assert.strictEqual(
-                kanban.el.querySelector(".o_kanban_group:nth(1) .o_kanban_record").length,
-                3,
-                "second column (true) should contain 3 records"
+            assert.containsN(kanban, ".o_kanban_group:last-child .o_kanban_record", 3);
+
+            await quickCreateRecord(kanban, 2);
+
+            assert.ok(
+                kanban.el.querySelector(".o_kanban_quick_create .o_field_boolean input").checked
             );
 
-            await quickCreateRecord(kanban);
-            assert.ok(
-                kanban.el
-                    .querySelector(".o_kanban_quick_create .o_field_boolean input")
-                    .is(":checked"),
-                "should have set the correct bar value by default"
-            );
             await validateRecord(kanban);
 
-            assert.strictEqual(
-                kanban.el.querySelector(".o_kanban_group:nth(1) .o_kanban_record").length,
-                4,
-                "second column (true) should now contain 4 records"
-            );
+            assert.containsN(kanban, ".o_kanban_group:last-child .o_kanban_record", 4);
         }
     );
 
-    QUnit.skip(
+    QUnit.test(
         "quick create record in grouped by selection field (within quick_create_view)",
         async (assert) => {
             assert.expect(6);
@@ -3001,18 +2951,10 @@ QUnit.module("Views", (hooks) => {
                     "</t></templates>" +
                     "</kanban>",
                 groupBy: ["state"],
-                async mockRPC(route, args) {
-                    if (args.method === "create") {
-                        assert.deepEqual(
-                            args.args[0],
-                            { state: "abc" },
-                            "should write the correct value for state"
-                        );
-                        assert.deepEqual(
-                            args.kwargs.context,
-                            { default_state: "abc" },
-                            "should send the correct default value for state"
-                        );
+                async mockRPC(route, { method, args, kwargs }) {
+                    if (method === "create") {
+                        assert.deepEqual(args[0], { state: "abc" });
+                        assert.strictEqual(kwargs.context.default_state, "abc");
                     }
                 },
             });
