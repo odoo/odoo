@@ -516,7 +516,7 @@
         <div t-attf-class="article o_report_layout_standard o_company_#{company.id}_layout"
              t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id"
              t-att-data-oe-lang="o and o.env.context.get('lang')">
-            <div class="pt-5">
+            <div style="padding-top:80px">
                 <t t-set="address">
                     <address t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' class="mb-0"/>
                     <p t-if="o.partner_id.vat">
