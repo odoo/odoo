@@ -29,7 +29,6 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
         setup() {
             super.setup();
             useListener('click-save', () => this.env.bus.trigger('save-partner'));
-            useListener('click-edit', () => this.editPartner());
             useListener('save-changes', this.saveChanges);
 
             // We are not using useState here because the object
@@ -41,12 +40,8 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
                 query: null,
                 selectedPartner: this.props.partner,
                 detailIsShown: false,
-                // isEditMode: false,
                 editModeProps: {
-                    partner: {
-                        country_id: this.env.pos.company.country_id,
-                        state_id: this.env.pos.company.state_id,
-                    }
+                    partner: null,
                 },
             };
             this.updatePartnerList = debounce(this.updatePartnerList, 70);
@@ -66,6 +61,10 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
             this.props.resolve({ confirmed: true, payload: this.state.selectedPartner });
             this.trigger('close-temp-screen');
         }
+        activateEditMode() {
+            this.state.detailIsShown = true;
+            this.render(true);
+        }
         // Getters
 
         get currentOrder() {
@@ -79,23 +78,27 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
             } else {
                 res = this.env.pos.db.get_partners_sorted(1000);
             }
-            return res.sort(function (a, b) { return (a.name || '').localeCompare(b.name || '') });
-        }
-        get isNextButtonVisible() {
-            return this.state.selectedPartner ? true : false;
-        }
-        /**
-         * Returns the text and command of the next button.
-         * The command field is used by the clickNext call.
-         */
-        get nextButton() {
-            if (!this.props.partner) {
-                return { command: 'set', text: this.env._t('Set Customer') };
-            } else if (this.props.partner && this.props.partner === this.state.selectedPartner) {
-                return { command: 'deselect', text: this.env._t('Deselect Customer') };
-            } else {
-                return { command: 'set', text: this.env._t('Change Customer') };
+            res.sort(function (a, b) { return (a.name || '').localeCompare(b.name || '') });
+            // the selected partner (if any) is displayed at the top of the list
+            if (this.state.selectedPartner) {
+                let indexOfSelectedPartner = res.findIndex( partner => 
+                    partner.id === this.state.selectedPartner.id
+                );
+                if (indexOfSelectedPartner !== -1) {
+                    res.splice(indexOfSelectedPartner, 1);
+                    res.unshift(this.state.selectedPartner);
+                }
             }
+            return res
+        }
+        get isEveryPartnerLoadedAfterStartOfSession() {
+            return !this.env.pos.config.limited_partners_loading || this.env.pos.config.partner_load_background;
+        }
+        get isBalanceDisplayed() {
+            return this.env.pos.config.module_pos_loyalty;
+        }
+        get partnerLink() {
+            return `/web#model=res.partner&id=${this.state.editModeProps.partner.id}`;
         }
 
         // Methods
@@ -104,43 +107,37 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
         // order to lower its trigger rate.
         async updatePartnerList(event) {
             this.state.query = event.target.value;
-            const partners = this.partners;
-            if (event.code === 'Enter' && partners.length === 1) {
-                this.state.selectedPartner = partners[0];
-                this.clickNext();
+            if (event.code === 'Enter') {
+                if (!this.isEveryPartnerLoadedAfterStartOfSession) {
+                    await this.searchPartner();
+                }
+                const partners = this.partners;
+                if (partners.length === 1) {
+                    this.clickPartner(partners[0]);
+                }
             } else {
                 this.render(true);
             }
         }
         clickPartner(partner) {
-            if (this.state.selectedPartner === partner) {
+            if (this.state.selectedPartner && this.state.selectedPartner.id === partner.id) {
                 this.state.selectedPartner = null;
             } else {
                 this.state.selectedPartner = partner;
             }
-            this.render(true);
-        }
-        editPartner() {
-            this.state.editModeProps = {
-                partner: this.state.selectedPartner,
-            };
-            this.state.detailIsShown = true;
-            this.render(true);
-        }
-        clickNext() {
-            this.state.selectedPartner = this.nextButton.command === 'set' ? this.state.selectedPartner : null;
             this.confirm();
         }
-        activateEditMode(isNewPartner) {
-            // this.state.isEditMode = true;
-            this.state.detailIsShown = true;
-            this.state.isNewPartner = isNewPartner;
-            if (!isNewPartner) {
-                this.state.editModeProps = {
-                    partner: this.state.selectedPartner,
-                };
+        editPartner(partner) {
+            this.state.editModeProps.partner = partner;
+            this.activateEditMode();
+        }
+        createPartner() {
+            // initialize the edit screen with default details about country & state
+            this.state.editModeProps.partner = {
+                country_id: this.env.pos.company.country_id,
+                state_id: this.env.pos.company.state_id,
             }
-            this.render(true);
+            this.activateEditMode();
         }
         async saveChanges(event) {
             try {
@@ -151,8 +148,7 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
                 });
                 await this.env.pos.load_new_partners();
                 this.state.selectedPartner = this.env.pos.db.get_partner_by_id(partnerId);
-                this.state.detailIsShown = false;
-                this.render(true);
+                this.confirm();
             } catch (error) {
                 if (isConnectionError(error)) {
                     await this.showPopup('OfflineErrorPopup', {
@@ -178,7 +174,8 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
         async getNewPartners() {
             let domain = [];
             if(this.state.query) {
-                domain = [["name", "ilike", this.state.query + "%"]];
+                domain = ['|', ["name", "ilike", this.state.query + "%"],
+                               ["parent_name", "ilike", this.state.query + "%"]];
             }
             const result = await this.env.services.rpc(
                 {
