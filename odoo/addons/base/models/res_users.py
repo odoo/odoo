@@ -1017,7 +1017,7 @@ class GroupsImplied(models.Model):
     trans_implied_ids = fields.Many2many('res.groups', string='Transitively inherits',
         compute='_compute_trans_implied')
 
-    @api.depends('implied_ids.trans_implied_ids')
+    @api.depends('implied_ids')
     def _compute_trans_implied(self):
         # Compute the transitive closure recursively. Note that the performance
         # is good, because the record cache behaves as a memo (the field is
