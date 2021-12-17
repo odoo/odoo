@@ -1039,10 +1039,16 @@ class expression(object):
 
                 else:
                     # rewrite condition to match records with/without relations
-                    op1 = 'exists' if operator in NEGATIVE_TERM_OPERATORS else 'not exists'
-                    alias = leaf.generate_alias()
-                    assert rel_table != alias
-                    subquery = 'SELECT 1 FROM "%s" where "%s"."%s" = "%s".id' % (rel_table, rel_table, rel_id1, alias)
+                    if operator in NEGATIVE_TERM_OPERATORS:
+                        # table.id IN (SELECT id1 FROM rel_table WHERE id1 IS NOT NULL)
+                        op1 = 'inselect'
+                        subquery = 'SELECT "%s" FROM "%s" where "%s" is not null' % (rel_id1, rel_table, rel_id1)
+                    else:
+                        # NOT EXISTS (SELECT 1 FROM rel_table WHERE rel_table.id1 = table.id)
+                        op1 = 'not exists'
+                        alias = leaf.generate_alias()
+                        assert rel_table != alias
+                        subquery = 'SELECT 1 FROM "%s" where "%s"."%s" = "%s".id' % (rel_table, rel_table, rel_id1, alias)
                     push(create_substitution_leaf(leaf, ('id', op1, (subquery, [])), internal=True))
 
             elif field.type == 'many2one':
