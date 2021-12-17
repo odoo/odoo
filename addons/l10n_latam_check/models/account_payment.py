@@ -81,7 +81,7 @@ class AccountPayment(models.Model):
                 date = rec.date or fields.Datetime.now()
                 last_operation = rec.env['account.payment'].search([
                     ('state', '=', 'posted'), '|', ('l10n_latam_check_id', '=', rec.l10n_latam_check_id.id),
-                    ('id', '=', rec.l10n_latam_check_id.id)], order="date desc, id desc, name desc", limit=1)
+                    ('id', '=', rec.l10n_latam_check_id.id)], order="date desc, id desc", limit=1)
                 if last_operation and last_operation[0].date > date:
                     rec.l10n_latam_check_warning_msg = _(
                         "It seems you're trying to move a check with a date (%s) prior to last operation done with "
@@ -161,7 +161,7 @@ class AccountPayment(models.Model):
         new_checks = self.filtered(lambda x: x.payment_method_line_id.code == 'new_third_checks')
         for rec in new_checks:
             last_operation = rec.env['account.payment'].search(
-                [('l10n_latam_check_id', '=', rec.id), ('state', '=', 'posted')], order="date desc, id desc, name desc", limit=1)
+                [('l10n_latam_check_id', '=', rec.id), ('state', '=', 'posted')], order="date desc, id desc", limit=1)
             if not last_operation:
                 rec.l10n_latam_check_current_journal_id = rec.journal_id
                 continue
