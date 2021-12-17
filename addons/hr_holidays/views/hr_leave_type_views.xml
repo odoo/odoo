@@ -75,7 +75,7 @@
                         <h2>Allocation Requests</h2>
                             <field name="requires_allocation" widget="radio" options="{'horizontal':true}"/>
                             <field name="employee_requests" widget="radio" attrs="{'invisible': [('requires_allocation', '=', 'no')]}"/>
-                            <field name="allocation_validation_type" string="Approval" widget="radio" attrs="{'invisible': [('requires_allocation', '=', 'no')]}"/>
+                            <field name="allocation_validation_type" string="Approval" widget="radio" attrs="{'invisible': ['|', ('requires_allocation', '=', 'no'), ('employee_requests', '=', 'no')]}"/>
                         </group>
                     </group>
                     <group>
