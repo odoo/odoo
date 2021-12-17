@@ -518,7 +518,6 @@ class EventEvent(models.Model):
         for res in events:
             if res.organizer_id:
                 res.message_subscribe([res.organizer_id.id])
-        events.flush()
         return events
 
     def write(self, vals):

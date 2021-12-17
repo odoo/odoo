@@ -107,7 +107,7 @@ class TestEventPerformance(EventPerformanceCase):
         has_social = 'social_menu' in self.env['event.event']  # otherwise view may crash in enterprise
 
         # no type, no website
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=205):  # tef only: 186 - com runbot: 185
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=205):  # tef only: 187 - com runbot: 185
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             with Form(self.env['event.event']) as event_form:
                 event_form.name = 'Test Event'
@@ -125,7 +125,7 @@ class TestEventPerformance(EventPerformanceCase):
         has_social = 'social_menu' in self.env['event.event']  # otherwise view may crash in enterprise
 
         # no type, website
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=685):  # tef only: 632 - com runbot: 632
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=685):  # tef only: 631 - com runbot: 632
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             with Form(self.env['event.event']) as event_form:
                 event_form.name = 'Test Event'
@@ -144,7 +144,7 @@ class TestEventPerformance(EventPerformanceCase):
         has_social = 'social_menu' in self.env['event.event']  # otherwise view may crash in enterprise
 
         # type and website
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=733):  # tef only: 681 - com runbot: 683
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=733):  # tef only: 689 - com runbot: 683
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             with Form(self.env['event.event']) as event_form:
                 event_form.name = 'Test Event'
@@ -172,7 +172,7 @@ class TestEventPerformance(EventPerformanceCase):
     def test_event_create_single_notype_website(self):
         """ Test a single event creation """
         # simple without type involved + website
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=379):  # tef only: 353 (348) - com runbot: 352 - ent runbot 378
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=379):  # tef only: 352 (347) - com runbot: 352 - ent runbot 378
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             event_values = dict(
                 self.event_base_vals,
@@ -203,7 +203,7 @@ class TestEventPerformance(EventPerformanceCase):
         event_type = self.env['event.type'].browse(self.test_event_type.ids)
 
         # complex with type + website
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=426):  # tef only: 400 (395) - com runbot: 399 - ent runbot 425
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=426):  # tef only: 405 (400) - com runbot: 399 - ent runbot 425
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             event_values = dict(
                 self.event_base_vals,
