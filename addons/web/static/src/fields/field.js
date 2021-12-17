@@ -39,14 +39,6 @@ export class Field extends Component {
         const readonyFromModifiers = activeField.modifiers.readonly == true;
         const readonlyFromViewMode = this.props.readonly;
 
-        // currently unused
-        //const invisible = activeField.modifiers.invisible === true;
-
-        let value = this.props.record.data[this.props.name];
-        if (value === undefined) {
-            value = null;
-        }
-
         return {
             attrs: activeField.attrs || {},
             options: activeField.options || {},

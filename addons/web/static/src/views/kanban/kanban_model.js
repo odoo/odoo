@@ -285,8 +285,8 @@ class KanbanDynamicRecordList extends DynamicRecordList {
             context,
         });
         record.isQuickCreate = true;
-        this.records.unshift(record);
         await record.load();
+        this.records.unshift(record);
         this.model.notify();
     }
 
@@ -294,7 +294,7 @@ class KanbanDynamicRecordList extends DynamicRecordList {
         const record = this.records.find((r) => r.isQuickCreate);
         await record.save();
         record.isQuickCreate = false;
-        this.quickCreate(record.activeFields);
+        await this.quickCreate(record.activeFields);
         return record;
     }
 }
