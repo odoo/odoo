@@ -120,7 +120,7 @@
     <div t-if="toast_message" class="o_wevent_register_toaster d-none" t-att-data-message="toast_message"/>
     <div t-if="not event.event_registrations_open" class="bg-white mb-5">
         <div class="alert alert-info mb-0 d-flex justify-content-between align-items-center" role="status">
-            <t t-if="not event.event_registrations_started">
+            <t t-if="not event.event_registrations_started and not event.event_registrations_sold_out">
                 <div class="col-md-8 d-flex">
                     <em class="mr-2">Ticket Sales starting on
                         <span class="" t-out="event.start_sale_datetime"
@@ -204,7 +204,7 @@
                                     </t>
                                 </select>
                                 <div t-else="" class="text-danger">
-                                    <span t-if="not ticket.sale_available and not ticket.is_expired and ticket.is_launched()" >Sold Out</span>
+                                    <span t-if="not ticket.sale_available and not ticket.is_expired and ticket.is_launched" >Sold Out</span>
                                     <span t-if="ticket.is_expired">Expired</span>
                                 </div>
                             </div>
