@@ -66,14 +66,11 @@
                             <field name="mobile" class="o_force_ltr" widget="phone"/>
                         </group>
                         <group string="Event Information" name="event">
-                            <field class="o_text_overflow" name="event_id" attrs="{'readonly': [('state', '!=', 'draft')]}" options="{'no_create': True}"/>
-                            <field name="event_ticket_id"
-                                domain="[
-                                    ('event_id', '=', event_id),
-                                    '|', ('seats_limited', '=', False), ('seats_available', '>', 0)
-                                ]"
-                                attrs="{'invisible': [('event_id', '=', False)]}"
-                                options="{'no_open': True, 'no_create': True}"/>
+                            <field class="o_text_overflow" name="event_id" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                                   context="{'name_with_seats_availability': True}" options="{'no_create': True}"/>
+                            <field name="event_ticket_id" attrs="{'invisible': [('event_id', '=', False)]}"
+                                   context="{'name_with_seats_availability': True}" options="{'no_open': True, 'no_create': True}"
+                                   domain="[('event_id', '=', event_id)]"/>
                             <field name="partner_id"/>
                             <field name="create_date" string="Registration Date" groups="base.group_no_one"/>
                             <field name="date_closed" groups="base.group_no_one"/>
@@ -282,7 +279,7 @@
         <field name="name">Attendees</field>
         <field name="view_mode">tree,kanban,form,calendar,graph</field>
         <field name="domain">[('event_id', '=', active_id)]</field>
-        <field name="context">{'default_event_id': active_id}</field>
+        <field name="context">{'default_event_id': active_id, 'name_with_seats_availability': True}</field>
         <field name="search_view_id" ref="event_registration_view_search_event_specific"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">

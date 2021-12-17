@@ -95,19 +95,6 @@ class EventRegistration(models.Model):
                 else:
                     registration.date_closed = False
 
-    @api.constrains('event_id', 'state')
-    def _check_seats_limit(self):
-        for registration in self:
-            event_id = registration.event_id
-            if event_id.seats_limited and event_id.seats_max and event_id.seats_available < (1 if registration.state == 'draft' and event_id.auto_confirm else 0):
-                raise ValidationError(_('There are no more available seats for %s. Raise the limit or remove some other confirmed registrations first.', event_id.name))
-
-    @api.constrains('event_ticket_id', 'state')
-    def _check_ticket_seats_limit(self):
-        for record in self:
-            if record.event_ticket_id.seats_max and record.event_ticket_id.seats_available < 0:
-                raise ValidationError(_('No more available seats for this ticket'))
-
     @api.constrains('event_id', 'event_ticket_id')
     def _check_event_ticket(self):
         if any(registration.event_id != registration.event_ticket_id.event_id for registration in self if registration.event_ticket_id):
@@ -141,22 +128,26 @@ class EventRegistration(models.Model):
             # we currently avoid this by not running the scheduler, would be best to find the actual
             # reason for this issue and fix it so we can remove this check
             registrations._update_mail_schedulers()
-
         return registrations
 
     def write(self, vals):
-        pre_draft = self.env['event.registration']
-        if vals.get('state') == 'open':
-            pre_draft = self.filtered(lambda registration: registration.state == 'draft')
-
+        confirming = vals.get('state') in {'open', 'done'}
+        to_confirm = (self.filtered(lambda registration: registration.state in {'draft', 'cancel'})
+                      if confirming else None)
         ret = super(EventRegistration, self).write(vals)
+        # As these Event(Ticket) methods are model constraints, it is not necessary to call them
+        # explicitly when creating new registrations. However, it is necessary to trigger them here
+        # as changes in registration states cannot be used as constraints triggers.
+        if confirming:
+            to_confirm.event_id._check_seats_availability()
+            to_confirm.event_ticket_id._check_seats_availability()
 
-        if vals.get('state') == 'open' and not self.env.context.get('install_mode', False):
-            # running the scheduler for demo data can cause an issue where wkhtmltopdf runs during
-            # server start and hangs indefinitely, leading to serious crashes
-            # we currently avoid this by not running the scheduler, would be best to find the actual
-            # reason for this issue and fix it so we can remove this check
-            pre_draft._update_mail_schedulers()
+            if not self.env.context.get('install_mode', False):
+                # running the scheduler for demo data can cause an issue where wkhtmltopdf runs
+                # during server start and hangs indefinitely, leading to serious crashes we
+                # currently avoid this by not running the scheduler, would be best to find the
+                # actual reason for this issue and fix it so we can remove this check
+                to_confirm._update_mail_schedulers()
 
         return ret
 
@@ -181,11 +172,18 @@ class EventRegistration(models.Model):
             ret_list.append((registration.id, name))
         return ret_list
 
+    def toggle_active(self):
+        pre_inactive = self - self.filtered(self._active_name)
+        super().toggle_active()
+        # Necessary triggers as changing registration states cannot be used as triggers for the
+        # Event(Ticket) models constraints.
+        if pre_inactive:
+            pre_inactive.event_id._check_seats_availability()
+            pre_inactive.event_ticket_id._check_seats_availability()
+
     def _check_auto_confirmation(self):
-        if any(not registration.event_id.auto_confirm or
-               (not registration.event_id.seats_available and registration.event_id.seats_limited) for registration in self):
-            return False
-        return True
+        """ Checks that all registrations are for `auto-confirm` events. """
+        return all(event.auto_confirm for event in self.event_id)
 
     # ------------------------------------------------------------
     # ACTIONS / BUSINESS

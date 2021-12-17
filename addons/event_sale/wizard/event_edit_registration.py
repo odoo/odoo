@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
+from collections import Counter, defaultdict
+
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 
 
 class RegistrationEditor(models.TransientModel):
@@ -9,6 +12,37 @@ class RegistrationEditor(models.TransientModel):
 
     sale_order_id = fields.Many2one('sale.order', 'Sales Order', required=True, ondelete='cascade')
     event_registration_ids = fields.One2many('registration.editor.line', 'editor_id', string='Registrations to Edit')
+    seats_available_insufficient = fields.Boolean(
+        'Not enough seats for all registrations', compute='_compute_seats_available_insufficient', readonly=True)
+
+    @api.depends('event_registration_ids')
+    def _compute_seats_available_insufficient(self):
+        for editor in self:
+            editor.seats_available_insufficient = False
+
+            events_counts = Counter()
+            event_tickets_counts = defaultdict(Counter)
+
+            for registration in editor.event_registration_ids:
+                events_counts[registration.event_id] += 1
+                event_tickets_counts[registration.event_id][registration.event_ticket_id] += 1
+
+            for event, nb_seats_event in events_counts.items():
+                # Check nb of seats in each event for all registrations on sale order
+                try:
+                    event._check_seats_availability(nb_seats_event)
+                except ValidationError:
+                    editor.seats_available_insufficient = True
+                    break
+                # Check nb of seats for each ticket of the event for all registrations on sale order
+                for ticket, nb_seats_ticket in event_tickets_counts[event].items():
+                    try:
+                        ticket._check_seats_availability(nb_seats_ticket)
+                    except ValidationError:
+                        editor.seats_available_insufficient = True
+                        break
+                if editor.seats_available_insufficient:
+                    break
 
     @api.model
     def default_get(self, fields):
@@ -61,7 +95,8 @@ class RegistrationEditor(models.TransientModel):
                 registrations_to_create.append(values)
 
         self.env['event.registration'].create(registrations_to_create)
-        self.sale_order_id.order_line._update_registrations(confirm=self.sale_order_id.amount_total == 0)
+        self.sale_order_id.order_line._update_registrations(
+            confirm=self.sale_order_id.amount_total == 0 and not self.seats_available_insufficient)
 
         return {'type': 'ir.actions.act_window_close'}
 

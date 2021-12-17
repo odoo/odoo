@@ -36,7 +36,7 @@ class TestEventPerformance(EventPerformanceCase):
         batch_size = 20
 
         # simple without type involved
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=343):  # 337 (sometimes +6)
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=342):  # 336 (sometimes +6)
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             event_values = [
                 dict(self.event_base_vals,
@@ -107,7 +107,7 @@ class TestEventPerformance(EventPerformanceCase):
         has_social = 'social_menu' in self.env['event.event']  # otherwise view may crash in enterprise
 
         # no type, no website
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=234):  # tef only: 184 - com runbot: 184
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=229):  # tef only: 179? - com runbot: 179
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             with Form(self.env['event.event']) as event_form:
                 event_form.name = 'Test Event'
@@ -159,7 +159,7 @@ class TestEventPerformance(EventPerformanceCase):
     def test_event_create_single_notype(self):
         """ Test a single event creation """
         # simple without type involved
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=39):  # 33 (sometimes +6)
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=38):  # 32 (sometimes +6)
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             event_values = dict(
                 self.event_base_vals,
@@ -249,7 +249,7 @@ class TestRegistrationPerformance(EventPerformanceCase):
         """
         event = self.env['event.event'].browse(self.test_event.ids)
 
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=245):  # tef only: 201 - com runbot 240 - ent runbot 245
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=240):  # tef only: 197? - com runbot 236
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             registration_values = [
                 dict(reg_data,
@@ -321,7 +321,7 @@ class TestRegistrationPerformance(EventPerformanceCase):
         """ Test a single registration creation using Form """
         event = self.env['event.event'].browse(self.test_event.ids)
 
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=142):  # tef only: 124 - com runbot 126
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=138):  # tef only: 120? - com runbot 122
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             with Form(self.env['event.registration'].with_context(event_lead_rule_skip=True)) as reg_form:
                 reg_form.event_id = event

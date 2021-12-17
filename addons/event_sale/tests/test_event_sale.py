@@ -146,6 +146,8 @@ class TestEventSale(TestEventSaleCommon):
             'email': 'manual.email.2@test.example.com',
             'mobile': '+32456222222',
         })
+
+        self.assertFalse(editor.seats_available_insufficient)
         editor.action_make_registration()
 
         # check editor correctly created new registrations with information coming from it or SO as fallback
@@ -196,6 +198,135 @@ class TestEventSale(TestEventSaleCommon):
 
         self.assertEqual(editor_action['type'], 'ir.actions.act_window')
         self.assertEqual(editor_action['res_model'], 'registration.editor')
+
+    @users('user_sales_salesman')
+    def test_event_sale_free_confirm(self):
+        """Check that even with the event's `no_confirm`, free registrations are immediately
+        confirmed if the seats are available.
+        """
+        TICKET_COUNT = 3
+        customer_so = self.customer_so.with_user(self.env.user)
+        ticket = self.event_0.event_ticket_ids[0]
+
+        # Limiting seats
+        self.event_0.write({
+            "auto_confirm": False,
+            "seats_limited": True,
+            "seats_max": 5
+        })
+
+        customer_so.write({
+            'order_line': [
+                (0, 0, {
+                    'event_id': self.event_0.id,
+                    'event_ticket_id': ticket.id,
+                    'product_id': ticket.product_id.id,
+                    'product_uom_qty': TICKET_COUNT,
+                    'price_unit': 0,
+                })
+            ]
+        })
+
+        editor = self.env['registration.editor'].with_context({
+            'default_sale_order_id': customer_so.id
+        }).create({})
+
+        self.assertFalse(editor.seats_available_insufficient)
+
+        editor.action_make_registration()
+        self.assertEqual(len(self.event_0.registration_ids), TICKET_COUNT)
+        self.assertTrue(all(reg.state == "open" for reg in self.event_0.registration_ids))
+
+    @users('user_sales_salesman')
+    def test_event_sale_free_full_event_no_confirm(self):
+        """Check that even free registrations are not immediately confirmed if there are not
+        enough seats available for the event.
+        """
+        TICKET_COUNT = 3
+        customer_so = self.customer_so.with_user(self.env.user)
+        ticket = self.event_0.event_ticket_ids[0]
+
+        # Limiting event seats
+        self.event_0.write({
+            "auto_confirm": False,
+            "seats_limited": True,
+            "seats_max": 2
+        })
+
+        # adding too many tickets to SO in two different lines
+        customer_so.write({
+            'order_line': [
+                (0, 0, {
+                    'event_id': self.event_0.id,
+                    'event_ticket_id': ticket.id,
+                    'product_id': ticket.product_id.id,
+                    'product_uom_qty': TICKET_COUNT - 1,
+                    'price_unit': 0,
+                }),
+                (0, 0, {
+                    'event_id': self.event_0.id,
+                    'event_ticket_id': ticket.id,
+                    'product_id': ticket.product_id.id,
+                    'product_uom_qty': 1,
+                    'price_unit': 0,
+                })
+            ]
+        })
+
+        editor = self.env['registration.editor'].with_context({
+            'default_sale_order_id': customer_so.id
+        }).create({})
+
+        self.assertTrue(editor.seats_available_insufficient)
+
+        editor.action_make_registration()
+        self.assertEqual(len(self.event_0.registration_ids), TICKET_COUNT)
+        self.assertTrue(all(reg.state == "draft" for reg in self.event_0.registration_ids))
+
+    @users('user_sales_salesman')
+    def test_event_sale_free_full_ticket_no_confirm(self):
+        """Check that even free registrations are not immediately confirmed if there are not enough
+        seats available for the requested tickets.
+        """
+        TICKET_COUNT = 3
+        customer_so = self.customer_so.with_user(self.env.user)
+        ticket = self.event_0.event_ticket_ids[0]
+
+        self.event_0.write({"auto_confirm": False})
+        # Limiting ticket seats
+        ticket.write({
+            "seats_limited": True,
+            "seats_max": 2,
+        })
+        # adding too many tickets to SO in two different lines
+        customer_so.write({
+            'order_line': [
+                (0, 0, {
+                    'event_id': self.event_0.id,
+                    'event_ticket_id': ticket.id,
+                    'product_id': ticket.product_id.id,
+                    'product_uom_qty': TICKET_COUNT - 1,
+                    'price_unit': 0,
+                }),
+                (0, 0, {
+                    'event_id': self.event_0.id,
+                    'event_ticket_id': ticket.id,
+                    'product_id': ticket.product_id.id,
+                    'product_uom_qty': 1,
+                    'price_unit': 0,
+                })
+            ]
+        })
+
+        editor = self.env['registration.editor'].with_context({
+            'default_sale_order_id': customer_so.id
+        }).create({})
+
+        self.assertTrue(editor.seats_available_insufficient)
+
+        editor.action_make_registration()
+        self.assertEqual(len(self.event_0.registration_ids), TICKET_COUNT)
+        self.assertTrue(all(reg.state == "draft" for reg in self.event_0.registration_ids))
 
     def test_ticket_price_with_pricelist_and_tax(self):
         self.env.user.partner_id.country_id = False

@@ -25,9 +25,8 @@
                 <field
                     name="event_ticket_id"
                     domain="[
-                        ('event_id', '=', event_id),
-                        ('product_id','=',product_id),
-                        '|', ('seats_limited', '=', False), ('seats_available', '>', 0), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)
+                        ('event_id', '=', event_id), ('product_id','=',product_id),
+                         '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)
                     ]"
                     attrs="{
                         'invisible': ['|', ('event_ok', '=', False), ('event_id', '=', False)],
