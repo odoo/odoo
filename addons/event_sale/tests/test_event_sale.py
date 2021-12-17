@@ -269,5 +269,5 @@ class TestEventSale(TestEventSaleCommon):
         event = self.env['event.event'].browse(self.event_0.ids)
         self.register_person.action_make_registration()
         self.assertEqual(event.seats_expected, 1)
-        self.sale_order.action_cancel()
+        self.sale_order._action_cancel()
         self.assertEqual(event.seats_expected, 0)

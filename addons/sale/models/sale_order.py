@@ -806,18 +806,41 @@ class SaleOrder(models.Model):
         self.write({'state': 'sale'})
 
     def action_cancel(self):
+        """ Cancel SO after showing the cancel wizard when needed. (cfr `_show_cancel_wizard`)
+
+        For post-cancel operations, please only override `_action_cancel`.
+
+        note: self.ensure_one() if the wizard is shown.
+        """
         cancel_warning = self._show_cancel_wizard()
         if cancel_warning:
+            self.ensure_one()
+            template_id = self.env['ir.model.data']._xmlid_to_res_id(
+                'sale.mail_template_sale_cancellation', raise_if_not_found=False
+            )
+            lang = self.env.context.get('lang')
+            template = self.env['mail.template'].browse(template_id)
+            if template.lang:
+                lang = template._render_lang(self.ids)[self.id]
+            ctx = {
+                'default_use_template': bool(template_id),
+                'default_template_id': template_id,
+                'default_order_id': self.id,
+                'mark_so_as_canceled': True,
+                'default_email_layout_xmlid': "mail.mail_notification_paynow",
+                'model_description': self.with_context(lang=lang).type_name,
+            }
             return {
-                'name': _('Cancel Sales Order'),
+                'name': _('Cancel %s', self.type_name),
                 'view_mode': 'form',
                 'res_model': 'sale.order.cancel',
                 'view_id': self.env.ref('sale.sale_order_cancel_view_form').id,
                 'type': 'ir.actions.act_window',
-                'context': {'default_order_id': self.id},
+                'context': ctx,
                 'target': 'new'
             }
-        return self._action_cancel()
+        else:
+            return self._action_cancel()
 
     def _action_cancel(self):
         inv = self.invoice_ids.filtered(lambda inv: inv.state == 'draft')
@@ -825,10 +848,9 @@ class SaleOrder(models.Model):
         return self.write({'state': 'cancel'})
 
     def _show_cancel_wizard(self):
-        for order in self:
-            if order.invoice_ids.filtered(lambda inv: inv.state == 'draft') and not order._context.get('disable_cancel_warning'):
-                return True
-        return False
+        if self.env.context.get('disable_cancel_warning'):
+            return False
+        return any(so.state != 'draft' for so in self)
 
     def update_prices(self):
         self.ensure_one()
