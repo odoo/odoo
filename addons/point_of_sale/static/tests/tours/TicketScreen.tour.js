@@ -18,14 +18,12 @@ odoo.define('point_of_sale.tour.TicketScreen', function (require) {
     ProductScreen.exec.addOrderline('Desk Pad', '1', '2');
     ProductScreen.do.clickPartnerButton();
     ProductScreen.do.clickCustomer('Nicole Ford');
-    ProductScreen.do.clickSetCustomer();
     Chrome.do.clickTicketButton();
     TicketScreen.check.nthRowContains(2, 'Nicole Ford');
     TicketScreen.do.clickNewTicket();
     ProductScreen.exec.addOrderline('Desk Pad', '1', '3');
     ProductScreen.do.clickPartnerButton();
     ProductScreen.do.clickCustomer('Brandon Freeman');
-    ProductScreen.do.clickSetCustomer();
     ProductScreen.do.clickPayButton();
     PaymentScreen.check.isShown();
     Chrome.do.clickTicketButton();
@@ -79,7 +77,7 @@ odoo.define('point_of_sale.tour.TicketScreen', function (require) {
     TicketScreen.do.clickControlButton('Invoice');
     Chrome.do.confirmPopup();
     PartnerListScreen.check.isShown();
-    PartnerListScreen.exec.setPartner('Colleen Diaz');
+    PartnerListScreen.do.clickPartner('Colleen Diaz');
     TicketScreen.check.partnerIs('Colleen Diaz');
     // Reprint receipt
     TicketScreen.do.clickControlButton('Print Receipt');

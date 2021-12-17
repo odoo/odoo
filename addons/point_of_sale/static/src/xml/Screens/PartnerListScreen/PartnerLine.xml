@@ -5,24 +5,35 @@
         <tr t-attf-class="partner-line {{highlight}}" t-att-data-id="props.partner.id"
             t-on-click="() => this.props.onClickPartner(props.partner)">
             <td>
-                <t t-esc="props.partner.name or ''" />
-                <span t-if="highlight">
-                    <br/><button class="edit-partner-button" t-on-click.stop="() => this.trigger('click-edit')">EDIT</button>
-                </span>
+                <div>
+                    <t t-esc="props.partner.name or ''" />
+                </div>
+                <div class="company-field">
+                    <t t-esc="props.partner.parent_name or ''" />
+                </div>
+                <div t-if="_isPartnerSelected" class="unselect-tag">
+                    <i class="fa fa-times"></i>
+                    <span> unselect </span>
+                </div>
             </td>
             <td t-if="!env.isMobile">
-                <t t-esc="props.partner.address" />
+                <t t-esc="shortAddress" />
             </td>
-            <td t-if="!env.isMobile" style="width: 130px;">
-                <t t-esc="props.partner.phone || ''" />
+            <td class="partner-line-email" t-if="!env.isMobile">
+                <div t-if="props.partner.phone">
+                    <i class="fa fa-phone"/><t t-esc="props.partner.phone"/>
+                </div>
+                <div t-if="props.partner.email" class="email-field">
+                    <i class="fa fa-paper-plane-o"/><t t-esc="props.partner.email" />
+                </div>
             </td>
             <td t-if="env.isMobile">
                 <t t-esc="props.partner.zip or ''" />
                 <span t-if="highlight"><br/></span>
             </td>
-            <td class="partner-line-email">
-                <t t-esc="props.partner.email or ''" />
-                <span t-if="highlight"><br/></span>
+            <td class="partner-line-balance" t-if="props.isBalanceDisplayed"></td>
+            <td>
+                <button class="edit-partner-button" t-on-click.stop="() => props.onClickEdit(props.partner)">DETAILS</button>
             </td>
             <td class="partner-line-last-column-placeholder oe_invisible"></td>
         </tr>
