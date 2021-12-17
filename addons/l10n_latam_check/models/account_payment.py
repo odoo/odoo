@@ -88,6 +88,12 @@ class AccountPayment(models.Model):
                         "the check (%s). This may be wrong, please double check it. If continue, last operation on "
                         "the check will remain being %s") % (
                             format_date(self.env, date), last_operation.display_name, last_operation.display_name)
+                elif not rec.is_internal_transfer and rec.partner_type != last_operation.partner_type:
+                    rec.l10n_latam_check_warning_msg = _(
+                        "It seems you're receiving back a check from '%s' with a different payment type than "
+                        "when sending it. It is advisable to use the same payment type (customer payment / supplier "
+                        "payment) so that the same receivable / payable account is used") % (rec.partner_id.name)
+
             elif rec.check_number and rec.payment_method_line_id.code == 'new_third_checks' and \
                     rec.l10n_latam_check_bank_id and rec.l10n_latam_check_issuer_vat:
                 same_checks = self.search([
