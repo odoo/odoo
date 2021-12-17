@@ -36,6 +36,13 @@ class AccountPaymentMassTransfer(models.TransientModel):
         payments = self.env['account.payment'].browse(self._context.get('active_ids', []))
         checks = payments.filtered(lambda x: x.payment_method_line_id.code == 'new_third_checks')
         payment_vals_list = []
+
+        pay_method_line = checks[0].journal_id._get_available_payment_method_lines('outbound').filtered(
+            lambda x: x.code == 'out_third_checks')
+        if not pay_method_line:
+            raise UserError(_("There is no 'out_third_checks' payment method configured on journal %s") % (
+                self.journal_id.name))
+
         for check in checks:
             payment_vals_list.append({
                 'date': self.payment_date,
@@ -46,7 +53,7 @@ class AccountPaymentMassTransfer(models.TransientModel):
                 'journal_id': self.journal_id.id,
                 'currency_id': check.currency_id.id,
                 'is_internal_transfer': True,
-                'payment_method_line_id': self.env.ref('l10n_latam_check.account_payment_method_out_third_checks').id,
+                'payment_method_line_id': pay_method_line.id,
                 'destination_journal_id': self.destination_journal_id.id,
             })
         payments = self.env['account.payment'].create(payment_vals_list)
