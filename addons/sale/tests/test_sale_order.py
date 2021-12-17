@@ -245,7 +245,7 @@ class TestSaleOrder(TestSaleCommon):
         so_copy = self.sale_order.copy()
         so_copy.action_confirm()
         self.assertTrue(so_copy.state == 'sale', 'Sale: SO should be in state "sale"')
-        so_copy.action_cancel()
+        so_copy._action_cancel()
         self.assertTrue(so_copy.state == 'cancel', 'Sale: SO should be in state "cancel"')
         with self.assertRaises(AccessError):
             so_copy.with_user(self.company_data['default_user_employee']).unlink()

@@ -37,7 +37,7 @@ class TestSalePurchaseStockFlow(TransactionCase):
 
         po = self.env['purchase.order'].search([('partner_id', '=', vendor.id)])
 
-        so.action_cancel()
+        so._action_cancel()
 
         self.assertTrue(po.activity_ids)
         self.assertIn(so.name, po.activity_ids.note)
