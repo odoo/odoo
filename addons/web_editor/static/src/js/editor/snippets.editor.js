@@ -460,9 +460,14 @@ var SnippetEditor = Widget.extend({
         // first, destroying the related editors and not calling onBlur... to
         // check if this has always been like this or not and this should be
         // unit tested.
-        const parent = this.$target[0].parentElement;
+        let parent = this.$target[0].parentElement;
         const nextSibling = this.$target[0].nextElementSibling;
         const previousSibling = this.$target[0].previousElementSibling;
+        if ($(parent).is('.o_editable:not(body)')) {
+            // If we target the editable, we want to reset the selection to the
+            // body. If the editable has options, we do not want to show them.
+            parent = $(parent).closest('body');
+        }
         this.trigger_up('activate_snippet', {
             $snippet: $(previousSibling || nextSibling || parent)
         });
@@ -1293,7 +1298,7 @@ var SnippetsMenu = Widget.extend({
             if (!$target.closest('we-button, we-toggler, we-select, .o_we_color_preview').length) {
                 this._closeWidgets();
             }
-            if (!$target.closest('body > *').length) {
+            if (!$target.closest('body > *').length || $target.is('#iframe_target')) {
                 return;
             }
             if ($target.closest(this._notActivableElementsSelector).length) {
