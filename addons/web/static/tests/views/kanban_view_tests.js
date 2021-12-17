@@ -3220,10 +3220,18 @@ QUnit.module("Views", (hooks) => {
         await click(kanban.el, ".o_kanban_record:first-child .o_tag:first-child");
     });
 
-    QUnit.skip("Do not open record when clicking on `a` with `href`", async (assert) => {
+    QUnit.test("Do not open record when clicking on `a` with `href`", async (assert) => {
         assert.expect(5);
 
         serverData.models.partner.records = [{ id: 1, foo: "yop" }];
+
+        makeFakeActionService({
+            async switchView() {
+                // when clicking on a record in kanban view,
+                // it switches to form view.
+                throw new Error("should not switch view");
+            },
+        });
 
         const kanban = await makeView({
             type: "kanban",
@@ -3242,14 +3250,6 @@ QUnit.module("Views", (hooks) => {
                 "</t>" +
                 "</templates>" +
                 "</kanban>",
-            intercepts: {
-                // when clicking on a record in kanban view,
-                // it switches to form view.
-                switch_view: function () {
-                    throw new Error("should not switch view");
-                },
-            },
-            doNotDisableAHref: true,
         });
 
         assert.containsOnce(kanban.el, ".o_kanban_record:not(.o_kanban_ghost)");
@@ -3280,7 +3280,7 @@ QUnit.module("Views", (hooks) => {
         await click(testLink);
     });
 
-    QUnit.skip("o2m loaded in only one batch", async (assert) => {
+    QUnit.test("o2m loaded in only one batch", async (assert) => {
         assert.expect(9);
 
         serverData.models.subtask = {
@@ -3332,7 +3332,7 @@ QUnit.module("Views", (hooks) => {
         ]);
     });
 
-    QUnit.skip("m2m loaded in only one batch", async (assert) => {
+    QUnit.test("m2m loaded in only one batch", async (assert) => {
         assert.expect(9);
 
         const kanban = await makeView({
@@ -3409,11 +3409,10 @@ QUnit.module("Views", (hooks) => {
         ]);
     });
 
-    QUnit.skip("wait x2manys batch fetches to re-render", async (assert) => {
-        assert.expect(7);
-        const done = assert.async();
+    QUnit.test("wait x2manys batch fetches to re-render", async (assert) => {
+        assert.expect(8);
 
-        let prom;
+        let prom = Promise.resolve();
         const kanban = await makeView({
             type: "kanban",
             resModel: "partner",
@@ -3428,37 +3427,39 @@ QUnit.module("Views", (hooks) => {
                 "</t></templates>" +
                 "</kanban>",
             groupBy: ["product_id"],
-            async mockRPC(route, args) {
-                if (args.method === "read") {
+            async mockRPC(route, { method }) {
+                if (method === "read") {
                     await prom;
                 }
             },
         });
 
-        prom = makeDeferred();
         assert.containsN(kanban, ".o_tag", 2);
         assert.containsN(kanban, ".o_kanban_group", 2);
-        kanban.update({ groupBy: ["state"] });
-        prom.then(async () => {
-            assert.containsN(kanban, ".o_kanban_group", 2);
-            await nextTick();
-            assert.containsN(kanban, ".o_kanban_group", 3);
 
-            assert.containsN(kanban, ".o_tag", 2, "Should display 2 tags after update");
-            assert.strictEqual(
-                kanban.el.querySelector(".o_kanban_group:nth-child(2) .o_tag").innerText,
-                "gold",
-                "First category should be 'gold'"
-            );
-            assert.strictEqual(
-                kanban.el.querySelector(".o_kanban_group:nth-child(2) .o_tag").innerText,
-                "silver",
-                "Second category should be 'silver'"
-            );
-            done();
-        });
+        prom = makeDeferred();
+        reload(kanban, { groupBy: ["state"] });
+
         await nextTick();
+
+        assert.containsN(kanban, ".o_tag", 2);
+        assert.containsN(kanban, ".o_kanban_group", 2);
+
         prom.resolve();
+        await nextTick();
+
+        assert.containsN(kanban, ".o_kanban_group", 3);
+        assert.containsN(kanban, ".o_tag", 2, "Should display 2 tags after update");
+        assert.strictEqual(
+            kanban.el.querySelector(".o_kanban_group:nth-child(2) .o_tag").innerText,
+            "gold",
+            "First category should be 'gold'"
+        );
+        assert.strictEqual(
+            kanban.el.querySelector(".o_kanban_group:nth-child(3) .o_tag").innerText,
+            "silver",
+            "Second category should be 'silver'"
+        );
     });
 
     QUnit.skip("can drag and drop a record from one column to the next", async (assert) => {
@@ -3583,7 +3584,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
         // simulate an update coming from the searchview, with another groupby given
-        await kanban.update({ groupBy: ["state"] });
+        await reload(kanban, { groupBy: ["state"] });
         assert.containsOnce(kanban, ".o_kanban_group:nth-child(2) .o_kanban_record");
         assert.containsOnce(kanban, ".o_kanban_group:nth-child(2) .o_kanban_record");
 
@@ -3599,7 +3600,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(kanban, ".o_kanban_group:nth-child(2) .o_kanban_record");
 
         // simulate an update coming from the searchview, with another groupby given
-        await kanban.update({ groupBy: ["foo"] });
+        await reload(kanban, { groupBy: ["foo"] });
         assert.containsOnce(kanban, ".o_kanban_group:nth-child(2) .o_kanban_record");
         assert.containsN(kanban, ".o_kanban_group:nth-child(2) .o_kanban_record", 2);
 
@@ -4105,11 +4106,11 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(kanban, ".o_kanban_group", 2, "should have " + 2 + " columns");
 
         // simulate an update coming from the searchview, with another groupby given
-        await kanban.update({ groupBy: ["product_id"] });
+        await reload(kanban, { groupBy: ["product_id"] });
         assert.containsN(kanban, ".o_kanban_group", 2, "should now have " + 3 + " columns");
 
         // simulate an update coming from the searchview, removing the previously set groupby
-        await kanban.update({ groupBy: [] });
+        await reload(kanban, { groupBy: [] });
         assert.containsN(kanban, ".o_kanban_group", 2, "should have " + 2 + " columns again");
     });
 
@@ -5255,9 +5256,9 @@ QUnit.module("Views", (hooks) => {
             });
 
             assert.doesNotHaveClass(kanban.el.querySelector(".o_kanban_view"), "o_kanban_grouped");
-            await kanban.update({ groupBy: ["product_id"] });
+            await reload(kanban, { groupBy: ["product_id"] });
             assert.hasClass(kanban.el.querySelector(".o_kanban_view"), "o_kanban_grouped");
-            await kanban.update({ groupBy: [] });
+            await reload(kanban, { groupBy: [] });
             assert.doesNotHaveClass(kanban.el.querySelector(".o_kanban_view"), "o_kanban_grouped");
         }
     );
@@ -6672,7 +6673,7 @@ QUnit.module("Views", (hooks) => {
         envIDs = [2, 4, 1, 3]; // the columns will be inverted
         kanban._onResequenceColumn({ data: { ids: [5, 3] } });
         await nextTick(); // wait for resequencing before re-rendering
-        await kanban.update({}, { reload: false }); // re-render without reloading
+        await reload(kanban, {}, { reload: false }); // re-render without reloading
 
         assert.strictEqual(
             kanban.el.querySelector(".o_kanban_group:first-child").data("id"),
@@ -6965,7 +6966,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(kanban, ".o_kanban_group", 2, "should have " + 2 + " columns");
 
         // simulate an update coming from the searchview, with another groupby given
-        await kanban.update({ groupBy: ["product_id"] });
+        await reload(kanban, { groupBy: ["product_id"] });
         assert.containsN(kanban, ".o_kanban_group", 3, "should have " + 3 + " columns");
         assert.strictEqual(
             kanban.el.querySelector(".o_kanban_group:nth-child(2) .o_kanban_record").length,
@@ -8510,8 +8511,8 @@ QUnit.module("Views", (hooks) => {
                 "the kanban view should not be ungrouped"
             );
 
-            kanban.update({ domain: [] }); // 1st update on kanban view
-            kanban.update({ groupBy: [] }); // 2n update on kanban view
+            reload(kanban, { domain: [] }); // 1st update on kanban view
+            reload(kanban, { groupBy: [] }); // 2n update on kanban view
             prom.resolve(); // simulate slow 1st update of kanban view
 
             await nextTick();
@@ -9016,7 +9017,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsNone(kanban, ".o_kanban_record:not(.o_kanban_ghost)");
 
-        kanban.update({ domain: [] }); // this rendering will be async
+        reload(kanban, { domain: [] }); // this rendering will be async
 
         assert.containsNone(kanban, ".o_kanban_record:not(.o_kanban_ghost)");
 
@@ -9448,7 +9449,7 @@ QUnit.module("Views", (hooks) => {
             );
 
             // Add searchdomain to something restricting progressbars' values (records still in filtered group)
-            await kanban.update({ domain: [["foo", "=", "yop"]] });
+            await reload(kanban, { domain: [["foo", "=", "yop"]] });
 
             // Check that we have now 1 column only and check its progressbar's state
             assert.containsOnce(kanban.el, ".o_kanban_group");
@@ -9464,7 +9465,7 @@ QUnit.module("Views", (hooks) => {
             );
 
             // Undo searchdomain
-            await kanban.update({ domain: [] });
+            await reload(kanban, { domain: [] });
 
             // Check that we have 2 columns back and check their progressbar's state
             assert.containsN(kanban.el, ".o_kanban_group", 2);
@@ -9584,7 +9585,7 @@ QUnit.module("Views", (hooks) => {
             );
 
             // Add searchdomain to something restricting progressbars' values + emptying the filtered group
-            await kanban.update({ domain: [["foo", "=", "blip"]] });
+            await reload(kanban, { domain: [["foo", "=", "blip"]] });
 
             // Check that we still have 2 columns, check their progressbar's state and check records
             assert.containsN(kanban.el, ".o_kanban_group", 2);
@@ -9623,7 +9624,7 @@ QUnit.module("Views", (hooks) => {
             );
 
             // Undo searchdomain
-            await kanban.update({ domain: [] });
+            await reload(kanban, { domain: [] });
 
             // Check that we still have 2 columns and check their progressbar's state
             assert.containsN(kanban.el, ".o_kanban_group", 2);

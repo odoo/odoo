@@ -20,7 +20,7 @@ const { Component, hooks } = owl;
 const { useExternalListener, useState } = hooks;
 const { RECORD_COLORS } = ColorPickerField;
 
-const GLOBAL_CLICK_CANCEL_SELECTORS = [".dropdown", ".oe_kanban_action"];
+const GLOBAL_CLICK_CANCEL_SELECTORS = ["a", ".dropdown", ".oe_kanban_action"];
 const isBinSize = (value) => /^\d+(\.\d*)? [^0-9]+$/.test(value);
 
 export class KanbanRenderer extends Component {
