@@ -146,13 +146,16 @@ export class ListArchParser extends XMLParser {
                 groupBy.fields[fieldName] = { activeFields, fields: parsedFields };
                 return false;
             } else if (node.tagName === "header") {
+                // AAB: not sure we need to handle invisible="1" button as the usecase seems way
+                // less relevant than for fields (so for buttons, relying on the modifiers logic
+                // that applies later on could be enough, even if the value is always true)
                 headerButtons = [...node.children]
                     .map((node) => ({
                         ...processButton(node),
                         type: "button",
                         id: buttonId++,
                     }))
-                    .filter((button) => !evaluateExpr(button.modifiersAttribute).invisible);
+                    .filter((button) => button.modifiers.invisible !== true);
                 return false;
             } else if (node.tagName === "tree") {
                 config.limit = parseInt(node.getAttribute("limit"));

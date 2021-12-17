@@ -14,9 +14,10 @@ const DATE_TYPES = ["date", "datetime"];
 const QUICK_CREATE_FIELD_TYPES = ["char", "boolean", "many2one", "selection"];
 const DEFAULT_QUICK_CREATE_VIEW = {
     form: {
+        // note: the required modifier is written in the format returned by the server
         arch: /* xml */ `
             <form>
-                <field name="display_name" placeholder="Title" required="1" />
+                <field name="display_name" placeholder="Title" modifiers='{"required": true}'/>
             </form>`,
         fields: {
             display_name: { string: "Display name", type: "char" },

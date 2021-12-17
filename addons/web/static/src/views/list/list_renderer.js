@@ -236,13 +236,8 @@ export class ListRenderer extends Component {
         return formatter(record.data[fieldName], formatOptions);
     }
 
-    getButtonClass(button, record) {
-        const classes = [...button.classes];
-        const modifiers = evaluateExpr(button.modifiersAttribute, record.data);
-        if (modifiers.invisible && new Domain(modifiers.invisible).contains(record.data)) {
-            classes.push("o_invisible_modifier");
-        }
-        return classes;
+    evalModifier(modifier, record) {
+        return !!(modifier && new Domain(modifier).contains(record.data));
     }
 
     get getEmptyRowIds() {

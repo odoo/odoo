@@ -548,11 +548,11 @@ QUnit.module("Views", (hooks) => {
             3,
             "adjacent buttons in the arch must be grouped in a single column"
         );
-        assert.containsOnce($(list.el).find(".o_data_row:first"), "td.o_list_button");
+        assert.containsOnce(list.el.querySelector(".o_data_row"), "td.o_list_button");
         assert.strictEqual($(list.el).find(".o_field_cell").text(), "yopblipgnapblip");
-        assert.containsN(list, "td button i.fa-star:visible", 2);
-        assert.containsN(list, "td button i.fa-refresh:visible", 3);
-        assert.containsN(list, "td button i.fa-exclamation:visible", 3);
+        assert.containsN(list, "td button i.fa-star", 2);
+        assert.containsN(list, "td button i.fa-refresh", 3);
+        assert.containsN(list, "td button i.fa-exclamation", 3);
     });
 
     QUnit.test("list view with icon buttons", async function (assert) {
