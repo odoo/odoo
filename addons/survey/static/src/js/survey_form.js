@@ -88,8 +88,13 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
      * @param {Event} event
      */
     _onKeyDown: function (event) {
-        // If user is answering a text input, do not handle keydown (can be forced by pressing CTRL)
-        if ((this.$("textarea").is(":focus") || this.$('input').is(':focus')) && !event.ctrlKey) {
+        var self = this;
+        var keyCode = event.keyCode;
+
+        // If user is answering a text input, do not handle keydown
+        // CTRL+enter will force submission
+        if ((this.$("textarea").is(":focus") || this.$('input').is(':focus')) &&
+            (!event.ctrlKey || keyCode !== 13)) {
             return;
         }
         // If in session mode and question already answered, do not handle keydown
@@ -97,8 +102,6 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
             return;
         }
 
-        var self = this;
-        var keyCode = event.keyCode;
         var letter = String.fromCharCode(keyCode).toUpperCase();
 
         // Handle Start / Next / Submit
