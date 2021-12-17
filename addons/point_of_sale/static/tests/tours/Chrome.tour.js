@@ -94,7 +94,6 @@ odoo.define('point_of_sale.tour.Chrome', function (require) {
     ProductScreen.exec.addOrderline('Whiteboard Pen', '5', '6');
     ProductScreen.do.clickPartnerButton();
     ProductScreen.do.clickCustomer('Nicole Ford');
-    ProductScreen.do.clickSetCustomer();
     ProductScreen.do.clickPayButton();
     PaymentScreen.do.clickPaymentMethod('Bank');
     PaymentScreen.do.clickInvoiceButton();

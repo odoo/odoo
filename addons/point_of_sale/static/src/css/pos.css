@@ -898,6 +898,10 @@ td {
     flex-wrap: wrap;
     gap: 2px;
 }
+.pos .product-list-container .product-list-empty p {
+    margin: 10px;
+    text-align: center;
+}
 @media screen and (max-width: 768px) {
     .pos .product-list {
         padding: 0px;
@@ -1798,10 +1802,44 @@ td {
 }
 
 
-/* e) The Client List Screen */
+/* e) The Partner List Screen */
 
 .pos .partnerlist-screen .full-content{
     overflow: auto;
+}
+
+.pos .no-results-message {
+    text-align: center;
+}
+
+.pos .no-results-message {
+    margin-top: 45px;
+    padding: 0 10%;
+}
+
+.pos .no-results-message .button {
+    margin: auto;
+    width: 180px;
+    border-radius: 25px;
+    padding: 10px 0;
+    cursor: pointer;
+    font-size: large;
+    box-shadow: 0px -2px 5px -3px rgb(82,82,82) inset;
+    transition: all linear 75ms;
+}
+
+.pos .no-results-message .button:hover {
+    opacity: 0.8;
+}
+
+.pos .no-results-message .button:active {
+    opacity: 0.5;
+}
+
+.pos .partnerlist-screen .top-content div.top-right-buttons {
+    display: flex;
+    justify-content: flex-end;
+    flex: 1;
 }
 
 .pos .partnerlist-screen .partner-list{
@@ -1813,6 +1851,30 @@ td {
     padding: 12px 8px;
 }
 
+.pos .partnerlist-screen .fa.fa-phone,
+.pos .partnerlist-screen .fa.fa-paper-plane-o {
+    margin-right: 4px;
+}
+
+.pos .partnerlist-screen .e-mail-field {
+    white-space: nowrap;
+}
+
+.pos .partnerlist-screen tr div.company-field {
+    color: #888c8f;
+}
+
+.pos .partnerlist-screen tr.highlight div.company-field {
+    color: white;
+}
+
+.pos .partnerlist-screen tr.highlight div.unselect-tag {
+    font-size: large;
+    color:#555555;
+    font-weight: bold;
+    padding-top: 5px;
+}
+
 .pos .partnerlist-screen .partner-list th.partner-line-last-column-placeholder,
 .pos .partnerlist-screen .partner-list td.partner-line-last-column-placeholder {
     padding: 0;
@@ -1822,22 +1884,31 @@ td {
     transition: all 150ms linear;
     background: rgb(230,230,230);
 }
+.pos .partnerlist-screen tr.partner-line:hover {
+    cursor: pointer;
+}
 .pos .partnerlist-screen .partner-list thead > tr,
 .pos .partnerlist-screen .partner-list tr:nth-child(even) {
-    background: rgb(247,247,247);
+    background: rgb(247,247,247,0.1);
 }
 .pos .partnerlist-screen .partner-list tr.highlight{
-    transition: all 150ms linear;
-    background: rgb(110,200,155) !important;
+    background: rgb(110,200,155);
     color: white;
 }
-.pos .partnerlist-screen .partner-list tr.lowlight{
-    transition: all 150ms linear;
-    background: rgb(216, 238, 227);
+.pos .partnerlist-screen .partner-list tr.highlight:active {
+    background-color: black;
+    color: white;
 }
-.pos .partnerlist-screen .partner-list tr.lowlight:nth-child(even){
-    transition: all 150ms linear;
-    background: rgb(227, 246, 237);
+.pos .partnerlist-screen tr.partner-line:hover {
+    cursor: pointer;
+    background: rgb(207, 238, 222);
+}
+.pos .partnerlist-screen tr.partner-line:active {
+    background-color: black;
+    color: white;
+}
+.pos .edit-partner-button:hover {
+    background: #c7c7c7;
 }
 .pos .partner-line {
     vertical-align: text-top;
@@ -1845,6 +1916,10 @@ td {
 .pos .edit-partner-button {
     margin-top: 6px;
     color: black;
+}
+.pos .partner-list tr.partner-line.highlight{
+    background: rgb(110,200,155);
+    color: white;
 }
 .pos .partnerlist-screen .partner-details{
     padding: 16px;

@@ -11,18 +11,12 @@
                     </t>
                 </div>
                 <div t-else="" class="product-list-empty">
-                    <div class="product-list-empty">
-                        <t t-if="searchWord !== ''">
-                            <p>
-                                No results found for "
-                                <b t-esc="searchWord"></b>
-                                ".
-                            </p>
-                        </t>
-                        <t t-else="">
-                            <p>There are no products in this category.</p>
-                        </t>
-                    </div>
+                    <p t-if="searchWord !== ''">
+                        No results found for "<b t-esc="searchWord"></b>". Press "Enter" to search the database.
+                    </p>
+                    <p t-else="">
+                        There are no products in this category.
+                    </p>
                 </div>
             </div>
         </div>

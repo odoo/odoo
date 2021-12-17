@@ -101,9 +101,6 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
         content: "select Deco Addict",
         trigger: ".partner-line:contains('Deco Addict')",
     }, {
-        content: "confirm selection",
-        trigger: ".partnerlist-screen .next",
-    }, {
         content: "click pricelist button",
         trigger: ".control-button.o_pricelist_button",
     }, {
@@ -120,9 +117,6 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
         content: "select Lumber Inc",
         trigger: ".partner-line:contains('Lumber Inc')",
     },  {
-        content: "confirm selection",
-        trigger: ".partnerlist-screen .next",
-    }, {
         content: "click pricelist button",
         trigger: ".control-button.o_pricelist_button",
     }, {

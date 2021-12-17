@@ -108,20 +108,6 @@ odoo.define('point_of_sale.tour.ProductScreenTourMethods', function (require) {
                     content: `select customer '${name}'`,
                     trigger: `.partnerlist-screen .partner-line td:contains("${name}")`,
                 },
-                {
-                    content: `partner line '${name}' is highlighted`,
-                    trigger: `.partnerlist-screen .partner-line.highlight td:contains("${name}")`,
-                    run: () => {},
-                },
-            ];
-        }
-
-        clickSetCustomer() {
-            return [
-                {
-                    content: 'click set customer',
-                    trigger: '.partnerlist-screen .button.next.highlight',
-                },
             ];
         }
 
