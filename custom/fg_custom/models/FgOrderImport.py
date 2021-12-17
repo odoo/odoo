@@ -103,6 +103,8 @@ class FgImportOrders(models.TransientModel):
         notNotFound = ''
         notNotFoundInPOS = ''
 
+        duplicateSKUS = ''
+
         duplicateRef = '' #duplicate orders
 
         orderReferencesSesion = ''  # hold order ref for session not found
@@ -146,7 +148,7 @@ class FgImportOrders(models.TransientModel):
                     orderSource = orderLine[3]
                     sku = orderLine[10]
                     cust = orderLine[4]
-                    print(orderSource+orderRef)
+                    #print(orderSource+orderRef)
                     if sku != 'Payment':
                         price = float(orderLine[12])
                         quantity = float(orderLine[13])
@@ -193,22 +195,30 @@ class FgImportOrders(models.TransientModel):
                             paymentList.append(payment)
                     else:
                         # check items if exist
-
+                        product_template = None
                         product_template = self.env['product.template'].search([('default_code', '=', sku)])
-                        if not product_template:
+                        if len(product_template) > 1:
                             hasErrors = True
-                            if notNotFound == '':
-                                notNotFound = sku
+                            if duplicateSKUS == '':
+                                duplicateSKUS = sku
                             else:
-                                if sku not in notNotFound:
-                                    notNotFound += ", " + sku
-                        elif not product_template.available_in_pos:
-                            hasErrors = True
-                            if notNotFoundInPOS == '':
-                                notNotFoundInPOS = sku
-                            else:
-                                if sku not in notNotFoundInPOS:
-                                    notNotFoundInPOS += ", " + sku
+                                if sku not in duplicateSKUS:
+                                    duplicateSKUS += ", " + sku
+                        else:
+                            if not product_template:
+                                hasErrors = True
+                                if notNotFound == '':
+                                    notNotFound = sku
+                                else:
+                                    if sku not in notNotFound:
+                                        notNotFound += ", " + sku
+                            elif not product_template.available_in_pos:
+                                hasErrors = True
+                                if notNotFoundInPOS == '':
+                                    notNotFoundInPOS = sku
+                                else:
+                                    if sku not in notNotFoundInPOS:
+                                        notNotFoundInPOS += ", " + sku
 
                         # check duplicate orders
                         orderexist = None
@@ -267,7 +277,8 @@ class FgImportOrders(models.TransientModel):
                         customer = self.env['res.partner'].search([('name', '=', cust)])
                         if cust not in customerNames:
                             if not customer:
-                                customer = self.env['res.partner'].search([('email', '=', custEmail)])
+                                if custEmail!=False and custEmail != '':
+                                    customer = self.env['res.partner'].search([('email', '=', custEmail)])
                                 if not customer:
                                     #create customer
                                     customer = {"name": cust,
@@ -333,6 +344,9 @@ class FgImportOrders(models.TransientModel):
 
         if notNotFoundInPOS != '':
             errorMsg = "\n\nItems found but not available in POS: " + notNotFoundInPOS
+
+        if duplicateSKUS != '':
+            errorMsg += "\n\nDuplicate SKU setup: " + duplicateSKUS
 
         if duplicateRef != '':
             errorMsg += "\n\nDuplicate orders: " + duplicateRef
