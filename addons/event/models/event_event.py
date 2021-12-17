@@ -518,9 +518,11 @@ class EventEvent(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         events = super(EventEvent, self).create(vals_list)
-        for res in events:
-            if res.organizer_id:
-                res.message_subscribe([res.organizer_id.id])
+        subscriber_to_events = dict
+        for event in self.filtered('organizer_id'):
+            subscriber_to_events.setdefault(event.organizer_id, list).append(event)
+        for subscriber, event in subscriber_to_events:
+            event.message_subscribe(subscriber.ids)
         return events
 
     def write(self, vals):
