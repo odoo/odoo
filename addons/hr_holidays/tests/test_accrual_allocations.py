@@ -497,28 +497,29 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
     def test_unused_accrual_lost(self):
         #1 accrual with 2 levels and level transition immediately
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
-            'name': 'Accrual Plan For Test',
-            'level_ids': [(0, 0, {
-                'start_count': 1,
-                'start_type': 'day',
-                'added_value': 1,
-                'added_value_type': 'days',
-                'frequency': 'daily',
-                'maximum_leave': 1,
-                'action_with_unused_accruals': 'lost',
-            })],
-        })
-        allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
-            'name': 'Accrual allocation for employee',
-            'accrual_plan_id': accrual_plan.id,
-            'employee_id': self.employee_emp.id,
-            'holiday_status_id': self.leave_type.id,
-            'number_of_days': 10,
-            'allocation_type': 'accrual',
-        })
-        allocation.action_confirm()
-        allocation.action_validate()
+        with freeze_time('2021-09-01'):
+            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+                'name': 'Accrual Plan For Test',
+                'level_ids': [(0, 0, {
+                    'start_count': 1,
+                    'start_type': 'day',
+                    'added_value': 1,
+                    'added_value_type': 'days',
+                    'frequency': 'daily',
+                    'maximum_leave': 1,
+                    'action_with_unused_accruals': 'lost',
+                })],
+            })
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+                'name': 'Accrual allocation for employee',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'number_of_days': 10,
+                'allocation_type': 'accrual',
+            })
+            allocation.action_confirm()
+            allocation.action_validate()
 
         with freeze_time('2022-01-01'):
             allocation._update_accrual()
@@ -527,28 +528,29 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_unused_accrual_postponed(self):
         # 1 accrual with 2 levels and level transition after
         # This also tests retroactivity
-        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
-            'name': 'Accrual Plan For Test',
-            'level_ids': [(0, 0, {
-                'start_count': 1,
-                'start_type': 'day',
-                'added_value': 1,
-                'added_value_type': 'days',
-                'frequency': 'daily',
-                'maximum_leave': 25,
-                'action_with_unused_accruals': 'postponed',
-            })],
-        })
-        allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
-            'name': 'Accrual allocation for employee',
-            'accrual_plan_id': accrual_plan.id,
-            'employee_id': self.employee_emp.id,
-            'holiday_status_id': self.leave_type.id,
-            'number_of_days': 10,
-            'allocation_type': 'accrual',
-        })
-        allocation.action_confirm()
-        allocation.action_validate()
+        with freeze_time('2021-09-01'):
+            accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+                'name': 'Accrual Plan For Test',
+                'level_ids': [(0, 0, {
+                    'start_count': 1,
+                    'start_type': 'day',
+                    'added_value': 1,
+                    'added_value_type': 'days',
+                    'frequency': 'daily',
+                    'maximum_leave': 25,
+                    'action_with_unused_accruals': 'postponed',
+                })],
+            })
+            allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+                'name': 'Accrual allocation for employee',
+                'accrual_plan_id': accrual_plan.id,
+                'employee_id': self.employee_emp.id,
+                'holiday_status_id': self.leave_type.id,
+                'number_of_days': 10,
+                'allocation_type': 'accrual',
+            })
+            allocation.action_confirm()
+            allocation.action_validate()
 
         with freeze_time('2022-01-01'):
             allocation._update_accrual()
