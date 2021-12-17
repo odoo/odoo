@@ -795,6 +795,35 @@ class TestExpression(TransactionCase):
         countries = countries.browse(reversed(countries._ids))
         self.assertEqual(countries.filtered_domain(domain)._ids, countries._ids)
 
+    def test_filter_domain_with_archived_records(self):
+        """ Test that filtering a domain on archived records works as expected """
+        model = self.env["res.partner"]
+        partner = model.create({"name": "Foo"})
+        children = model.create([
+            {'name': 'Bar', 'parent_id': partner.id, 'active': True},
+            {'name': 'Baz', 'parent_id': partner.id, 'active': False},
+        ])
+        records = partner + children
+
+        domain = [("parent_id", "child_of", partner.id)]
+        self.assertIn(partner, records.filtered_domain(domain))
+        filtered_partner = records.with_context(active_test=False).filtered_domain(domain)
+        self.assertIn(partner, filtered_partner)
+
+        partner.write({'active': False})
+        self.assertNotEqual(children.ids, records.filtered_domain(domain).ids)
+        filtered_partner = records.with_context(active_test=False).filtered_domain(domain)
+        self.assertEqual(records.ids, filtered_partner.ids)
+
+        domain = [("child_ids.name", "=", "Baz")]
+        self.assertFalse(partner.filtered_domain(domain))
+        filtered_partner = partner.with_context(active_test=False).filtered_domain(domain)
+        self.assertFalse(filtered_partner)
+
+        domain = [("child_ids.name", "like", "Ba")]
+        filtered_partner = partner.filtered_domain(domain)
+        self.assertEqual(partner.ids, filtered_partner.ids)
+
 
 class TestAutoJoin(TransactionCase):
 

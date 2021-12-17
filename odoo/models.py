@@ -3352,7 +3352,7 @@ Fields:
 
     def _filter_access_rules_python(self, operation):
         dom = self.env['ir.rule']._compute_domain(self._name, operation)
-        return self.sudo().filtered_domain(dom or [])
+        return self.sudo().with_context(active_test=False).filtered_domain(dom or [])
 
     def unlink(self):
         """ unlink()
