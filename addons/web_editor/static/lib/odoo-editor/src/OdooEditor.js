@@ -46,6 +46,7 @@ import {
     YOUTUBE_URL_GET_VIDEO_ID,
     unwrapContents,
     peek,
+    rightPos,
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -2138,7 +2139,21 @@ export class OdooEditor extends EventTarget {
                 this.historyRollback();
                 ev.preventDefault();
                 if (this._applyCommand('oEnter') === UNBREAKABLE_ROLLBACK_CODE) {
-                    this._applyCommand('oShiftEnter');
+                    const brs = this._applyCommand('oShiftEnter');
+                    const anchor = brs[0].parentElement;
+                    if (anchor.nodeName === 'A') {
+                        if (brs.includes(anchor.firstChild)) {
+                            brs.forEach(br => anchor.before(br));
+                            setSelection(...rightPos(brs[brs.length - 1]));
+                            this.sanitize();
+                            this.historyStep();
+                        } else if (brs.includes(anchor.lastChild)) {
+                            brs.forEach(br => anchor.after(br));
+                            setSelection(...rightPos(brs[0]));
+                            this.sanitize();
+                            this.historyStep();
+                        }
+                    }
                 }
             } else if (['insertText', 'insertCompositionText'].includes(ev.inputType)) {
                 // insertCompositionText, courtesy of Samsung keyboard.

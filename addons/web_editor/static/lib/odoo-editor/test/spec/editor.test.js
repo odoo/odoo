@@ -2248,6 +2248,31 @@ X[]
                         contentAfter: '<p><b>abc</b></p><p>[]<br></p>',
                     });
                 });
+                it.only('should insert line breaks outside the edges of an anchor', async () => {
+                    const pressEnter = editor => {
+                        editor.document.execCommand('insertParagraph');
+                    }
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<div>ab<a>[]cd</a></div>',
+                        stepFunction: pressEnter,
+                        contentAfter: '<div>ab<br><a>[]cd</a></div>',
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<div><a>a[]b</a></div>',
+                        stepFunction: pressEnter,
+                        contentAfter: '<div><a>a<br>[]b</a></div>',
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<div><a>ab[]</a></div>',
+                        stepFunction: pressEnter,
+                        contentAfter: '<div><a>ab</a><br>[]<br></div>',
+                    });
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<div><a>ab[]</a>cd</div>',
+                        stepFunction: pressEnter,
+                        contentAfter: '<div><a>ab</a><br>[]cd</div>',
+                    });
+                });
             });
             describe('With attributes', () => {
                 it('should insert an empty paragraph before a paragraph with a span with a class', async () => {
