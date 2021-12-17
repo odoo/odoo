@@ -237,7 +237,8 @@ class TestRegistrationPerformance(EventPerformanceCase):
                  'partner_id': partner.id,
                 } for partner in self.partners
             ]
-            self.env['event.registration'].create(registration_values)
+            _registrations = self.env['event.registration'].create(registration_values)
+        print(_registrations.lead_ids)
 
     @users('event_user')
     @warmup
@@ -260,7 +261,8 @@ class TestRegistrationPerformance(EventPerformanceCase):
                  'registration_answer_ids': self.website_customer_data[0]['registration_answer_ids'],
                 } for partner in self.partners
             ]
-            self.env['event.registration'].create(registration_values)
+            _registrations = self.env['event.registration'].create(registration_values)
+        print(_registrations.lead_ids)
 
     @users('event_user')
     @warmup
@@ -277,6 +279,7 @@ class TestRegistrationPerformance(EventPerformanceCase):
                 reg_form.name = 'My Customer'
                 reg_form.phone = '0456000000'
             _registration = reg_form.save()
+        print(_registration.lead_ids)
 
     @users('event_user')
     @warmup
@@ -290,6 +293,7 @@ class TestRegistrationPerformance(EventPerformanceCase):
                 reg_form.event_id = event
                 reg_form.partner_id = self.partners[0]
             _registration = reg_form.save()
+        print(_registration.lead_ids)
 
     @users('event_user')
     @warmup
@@ -303,7 +307,8 @@ class TestRegistrationPerformance(EventPerformanceCase):
             registration_values = dict(
                 self.customer_data[0],
                 event_id=event.id)
-            self.env['event.registration'].create([registration_values])
+            _registration = self.env['event.registration'].create([registration_values])
+        print(_registration.lead_ids)
 
     @users('event_user')
     @warmup
@@ -318,7 +323,8 @@ class TestRegistrationPerformance(EventPerformanceCase):
                 'event_id': event.id,
                 'partner_id': self.partners[0].id,
             }
-            self.env['event.registration'].create([registration_values])
+            _registration = self.env['event.registration'].create([registration_values])
+        print(_registration.lead_ids)
 
     @users('event_user')
     @warmup
@@ -332,7 +338,8 @@ class TestRegistrationPerformance(EventPerformanceCase):
             registration_values = dict(
                 self.website_customer_data[0],
                 event_id=event.id)
-            self.env['event.registration'].create([registration_values])
+            _registration = self.env['event.registration'].create([registration_values])
+        print(_registration.lead_ids)
 
 
 @tagged('event_performance', 'event_online', 'post_install', '-at_install')
