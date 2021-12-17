@@ -536,6 +536,8 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
 
     def test_unused_accrual_lost(self):
         #1 accrual with 2 levels and level transition immediately
+        freezer = freeze_time('2021-09-01')
+        freezer.start()
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
             'name': 'Accrual Plan For Test',
             'level_ids': [(0, 0, {
@@ -558,6 +560,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         })
         allocation.action_confirm()
         allocation.action_validate()
+        freezer.stop()
 
         freezer = freeze_time('2022-01-01')
         freezer.start()
@@ -568,6 +571,8 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_unused_accrual_postponed(self):
         # 1 accrual with 2 levels and level transition after
         # This also tests retroactivity
+        freezer = freeze_time('2021-09-01')
+        freezer.start()
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
             'name': 'Accrual Plan For Test',
             'level_ids': [(0, 0, {
@@ -590,6 +595,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         })
         allocation.action_confirm()
         allocation.action_validate()
+        freezer.stop()
 
         freezer = freeze_time('2022-01-01')
         freezer.start()
