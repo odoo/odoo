@@ -142,8 +142,6 @@ class PaymentWizard(models.TransientModel):
                 if journal:
                     journal.name = self.journal_name
                     journal.bank_acc_number = self.acc_number
-                else:
-                    raise UserError(_("You have to set a journal for your payment acquirer %s.", self.manual_name))
 
             # delete wizard data immediately to get rid of residual credentials
             self.sudo().unlink()
