@@ -85,14 +85,22 @@ class HolidaysType(models.Model):
         ('both', "By Employee's Approver and Time Off Officer")], default='hr', string='Leave Validation')
     requires_allocation = fields.Selection([
         ('yes', 'Yes'),
-        ('no', 'No Limit')], default="yes", required=True, string='Requires allocation')
+        ('no', 'No Limit')], default="yes", required=True, string='Requires allocation',
+        help="""Yes: Time off requests need to have a valid allocation.\n
+              No Limit: Time Off requests can be taken without any prior allocation.""")
     employee_requests = fields.Selection([
         ('yes', 'Extra Days Requests Allowed'),
-        ('no', 'Not Allowed')], default="no", required=True, string="Employee Requests")
+        ('no', 'Not Allowed')], default="no", required=True, string="Employee Requests",
+        help="""Extra Days Requests Allowed: User can request an allocation for himself.\n
+        Not Allowed: User cannot request an allocation.""")
     allocation_validation_type = fields.Selection([
-        ('no', 'No validation needed'),
         ('officer', 'Approved by Time Off Officer'),
-        ('set', "Set by Time Off Officer")], default='officer', string='Approval')
+        ('no', 'No validation needed')], default='officer', string='Approval',
+        compute='_compute_allocation_validation_type', store=True, readonly=False,
+        help="""Approved by Time Off Officer: The requested allocation must be validated by the time off approver set on the
+        employee's profile or by a member of the time off officer security group.\n
+        No validation needed: The requested allocation is automatically approved.
+        """)
     has_valid_allocation = fields.Boolean(compute='_compute_valid', search='_search_valid', help='This indicates if it is still possible to use this type of leave')
     time_type = fields.Selection([('leave', 'Time Off'), ('other', 'Other')], default='leave', string="Kind of Leave",
                                  help="Whether this should be computed as a holiday or as work time (eg: formation)")
@@ -386,6 +394,11 @@ class HolidaysType(models.Model):
         mapped_data = dict((data['time_off_type_id'][0], data['time_off_type_id_count']) for data in accrual_allocations)
         for leave_type in self:
             leave_type.accrual_count = mapped_data.get(leave_type.id, 0)
+
+    @api.depends('employee_requests')
+    def _compute_allocation_validation_type(self):
+        for leave_type in self:
+            leave_type.allocation_validation_type = 'no' if leave_type.employee_requests == 'no' else 'officer'
 
     def requested_name_get(self):
         return self._context.get('holiday_status_name_get', True) and self._context.get('employee_id')

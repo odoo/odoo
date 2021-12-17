@@ -696,10 +696,7 @@ class HolidaysAllocation(models.Model):
         self.ensure_one()
         responsible = self.env.user
 
-        if self.validation_type == 'manager' or (self.validation_type == 'both' and self.state == 'confirm'):
-            if self.employee_id.leave_manager_id:
-                responsible = self.employee_id.leave_manager_id
-        elif self.validation_type == 'hr' or (self.validation_type == 'both' and self.state == 'validate1'):
+        if self.validation_type == 'officer':
             if self.holiday_status_id.responsible_id:
                 responsible = self.holiday_status_id.responsible_id
 
@@ -708,29 +705,30 @@ class HolidaysAllocation(models.Model):
     def activity_update(self):
         to_clean, to_do = self.env['hr.leave.allocation'], self.env['hr.leave.allocation']
         for allocation in self:
-            note = _(
-                'New Allocation Request created by %(user)s: %(count)s Days of %(allocation_type)s',
-                user=allocation.create_uid.name,
-                count=allocation.number_of_days,
-                allocation_type=allocation.holiday_status_id.name
-            )
-            if allocation.state == 'draft':
-                to_clean |= allocation
-            elif allocation.state == 'confirm':
-                allocation.activity_schedule(
-                    'hr_holidays.mail_act_leave_allocation_approval',
-                    note=note,
-                    user_id=allocation.sudo()._get_responsible_for_approval().id or self.env.user.id)
-            elif allocation.state == 'validate1':
-                allocation.activity_feedback(['hr_holidays.mail_act_leave_allocation_approval'])
-                allocation.activity_schedule(
-                    'hr_holidays.mail_act_leave_allocation_second_approval',
-                    note=note,
-                    user_id=allocation.sudo()._get_responsible_for_approval().id or self.env.user.id)
-            elif allocation.state == 'validate':
-                to_do |= allocation
-            elif allocation.state == 'refuse':
-                to_clean |= allocation
+            if allocation.validation_type != 'no':
+                note = _(
+                    'New Allocation Request created by %(user)s: %(count)s Days of %(allocation_type)s',
+                    user=allocation.create_uid.name,
+                    count=allocation.number_of_days,
+                    allocation_type=allocation.holiday_status_id.name
+                )
+                if allocation.state == 'draft':
+                    to_clean |= allocation
+                elif allocation.state == 'confirm':
+                    allocation.activity_schedule(
+                        'hr_holidays.mail_act_leave_allocation_approval',
+                        note=note,
+                        user_id=allocation.sudo()._get_responsible_for_approval().id or self.env.user.id)
+                elif allocation.state == 'validate1':
+                    allocation.activity_feedback(['hr_holidays.mail_act_leave_allocation_approval'])
+                    allocation.activity_schedule(
+                        'hr_holidays.mail_act_leave_allocation_second_approval',
+                        note=note,
+                        user_id=allocation.sudo()._get_responsible_for_approval().id or self.env.user.id)
+                elif allocation.state == 'validate':
+                    to_do |= allocation
+                elif allocation.state == 'refuse':
+                    to_clean |= allocation
         if to_clean:
             to_clean.activity_unlink(['hr_holidays.mail_act_leave_allocation_approval', 'hr_holidays.mail_act_leave_allocation_second_approval'])
         if to_do:

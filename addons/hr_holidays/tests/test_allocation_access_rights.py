@@ -32,13 +32,6 @@ class TestAllocationRights(TestHrHolidaysCommon):
             'employee_requests': 'yes',
         })
 
-        cls.lt_allocation_manager = cls.env['hr.leave.type'].create({
-            'name': 'Validation = manager',
-            'allocation_validation_type': 'set',
-            'requires_allocation': 'yes',
-            'employee_requests': 'no',
-        })
-
         cls.lt_allocation_no_validation = cls.env['hr.leave.type'].create({
             'name': 'Validation = user',
             'allocation_validation_type': 'no',
@@ -67,15 +60,6 @@ class TestAccessRightsSimpleUser(TestAllocationRights):
         allocation = self.request_allocation(self.user_employee.id, values)
         with self.assertRaises(UserError):
             allocation.action_validate()
-
-    def test_simple_user_request_fixed_allocation(self):
-        """ A simple user cannot request an allocation if employee requests is not enabled """
-        values = {
-            'employee_id': self.employee_emp.id,
-            'holiday_status_id': self.lt_allocation_manager.id,
-        }
-        with self.assertRaises(AccessError):
-            self.request_allocation(self.user_employee.id, values)
 
     def test_simple_user_request_allocation_no_validation(self):
         """ A simple user can request and automatically validate an allocation with no validation """
@@ -177,17 +161,6 @@ class TestAccessRightsHolidayUser(TestAllocationRights):
         values = {
             'employee_id': self.employee_emp.id,
             'holiday_status_id': self.lt_validation_manager.id,
-        }
-        allocation = self.request_allocation(self.user_hruser.id, values)
-        allocation.action_confirm()
-        allocation.action_validate()
-        self.assertEqual(allocation.state, 'validate', "It should have been validated")
-
-    def test_holiday_user_request_fixed_allocation(self):
-        """ A holiday user can request and approve an allocation if set by HR """
-        values = {
-            'employee_id': self.employee_emp.id,
-            'holiday_status_id': self.lt_allocation_manager.id,
         }
         allocation = self.request_allocation(self.user_hruser.id, values)
         allocation.action_confirm()

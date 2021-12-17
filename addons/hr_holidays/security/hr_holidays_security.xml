@@ -169,7 +169,7 @@
                     ('employee_id.user_id', '=', user.id),
                     ('state', '!=', 'validate'),
                 '&amp;',
-                    ('validation_type', 'in', ['officer', 'set']),
+                    ('validation_type', '=', 'officer'),
                     ('employee_id.leave_manager_id', '=', user.id),
         ]</field>
         <field name="perm_read" eval="False"/>

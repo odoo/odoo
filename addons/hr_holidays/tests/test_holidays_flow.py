@@ -88,7 +88,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
                 'name': 'Paid Time Off',
                 'requires_allocation': 'yes',
                 'employee_requests': 'no',
-                'allocation_validation_type': 'set',
+                'allocation_validation_type': 'officer',
                 'leave_validation_type': 'both',
                 'responsible_id': self.env.ref('base.user_admin').id,
             })
@@ -132,7 +132,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
                 'name': 'Limited',
                 'requires_allocation': 'yes',
                 'employee_requests': 'no',
-                'allocation_validation_type': 'set',
+                'allocation_validation_type': 'officer',
                 'leave_validation_type': 'both',
             })
             HolidaysEmployeeGroup = Requests.with_user(self.user_employee_id)
@@ -242,7 +242,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             'name': 'Paid Time Off',
             'requires_allocation': 'yes',
             'employee_requests': 'no',
-            'allocation_validation_type': 'set',
+            'allocation_validation_type': 'officer',
             'leave_validation_type': 'both',
             'responsible_id': self.env.ref('base.user_admin').id,
         })

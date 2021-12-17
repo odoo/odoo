@@ -47,14 +47,6 @@ class TestHolidaysOvertime(TransactionCase):
             'employee_requests': 'yes',
             'overtime_deductible': True,
         })
-        cls.leave_type_manager_alloc = cls.env['hr.leave.type'].create({
-            'name': 'Overtime Compensation Manager Allocation',
-            'company_id': cls.company.id,
-            'requires_allocation': 'yes',
-            'employee_requests': 'no',
-            'allocation_validation_type': 'set',
-            'overtime_deductible': True,
-        })
 
     def new_attendance(self, check_in, check_out=False):
         return self.env['hr.attendance'].create({
