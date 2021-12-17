@@ -1738,6 +1738,8 @@ class HttpCase(TransactionCase):
         self.xmlrpc_object = xmlrpclib.ServerProxy(self.xmlrpc_url + 'object', transport=Transport(self.cr))
         # setup an url opener helper
         self.opener = Opener(self.cr)
+        if hasattr(self, 'test_module'):
+            type(self)._logger = logging.getLogger('%s.%s' % (self.test_module, type(self).__name__))
 
     def url_open(self, url, data=None, files=None, timeout=12, headers=None, allow_redirects=True, head=False):
         if url.startswith('/'):

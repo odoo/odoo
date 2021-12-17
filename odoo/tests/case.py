@@ -277,3 +277,10 @@ class _SubTest(TestCase):
 
     def __str__(self):
         return "{} {}".format(self.test_case, self._subDescription())
+
+
+def cross_module(method):
+    def module_method(self):
+        return method(self, self.test_module)
+    module_method.cross_module = True
+    return module_method
