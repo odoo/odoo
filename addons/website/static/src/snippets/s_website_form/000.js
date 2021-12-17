@@ -8,6 +8,7 @@ odoo.define('website.s_website_form', function (require) {
     var ajax = require('web.ajax');
     var publicWidget = require('web.public.widget');
     const dom = require('web.dom');
+    const concurrency = require('web.concurrency');
 
     var _t = core._t;
     var qweb = core.qweb;
@@ -269,7 +270,7 @@ odoo.define('website.s_website_form', function (require) {
 
             // Post form and handle result
             ajax.post(this.$target.attr('action') + (this.$target.data('force_action') || this.$target.data('model_name')), form_values)
-            .then(function (result_data) {
+            .then(async function (result_data) {
                 // Restore send button behavior
                 self.$target.find('.s_website_form_send, .o_website_form_send')
                     .removeAttr('disabled')
@@ -291,28 +292,41 @@ odoo.define('website.s_website_form', function (require) {
                         successMode = successPage ? 'redirect' : 'nothing';
                     }
                     switch (successMode) {
-                        case 'redirect':
+                        case 'redirect': {
                             successPage = successPage.startsWith("/#") ? successPage.slice(1) : successPage;
                             if (successPage.charAt(0) === "#") {
-                                dom.scrollTo($(successPage)[0], {
+                                await dom.scrollTo($(successPage)[0], {
                                     duration: 500,
                                     extraOffset: 0,
                                 });
-                            } else {
-                                $(window.location).attr('href', successPage);
+                                break;
                             }
-                            break;
-                        case 'message':
+                            $(window.location).attr('href', successPage);
+                            return;
+                        }
+                        case 'message': {
+                            // Prevent double-clicking on the send button and
+                            // add a upload loading effect (delay before success
+                            // message)
+                            await concurrency.delay(dom.DEBOUNCE);
+
                             self.$target[0].classList.add('d-none');
                             self.$target[0].parentElement.querySelector('.s_website_form_end_message').classList.remove('d-none');
-                            break;
-                        default:
+                            return;
+                        }
+                        default: {
+                            // Prevent double-clicking on the send button and
+                            // add a upload loading effect (delay before success
+                            // message)
+                            await concurrency.delay(dom.DEBOUNCE);
+
                             self.update_status('success');
                             break;
+                        }
                     }
 
-                    // Reset the form
                     self.$target[0].reset();
+                    self.restoreBtnLoading();
                 }
             })
             .guardedCatch(error => {
