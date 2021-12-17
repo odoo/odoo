@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { Domain } from "@web/core/domain";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { useEffect } from "@web/core/utils/hooks";
@@ -19,8 +20,21 @@ export class Field extends Component {
             this.el.classList.add("o_field_widget");
             this.el.classList.add(`o_field_${this.type}`);
             this.el.setAttribute("name", this.props.name);
+            this.el.classList.toggle("o_required_modifier", this.evalModifier("required"));
+            this.el.classList.toggle("o_readonly_modifier", this.evalModifier("readonly"));
             this.applyDecorations();
         });
+    }
+
+    // AAB: no need to pre-optimize anything, but as it stands, this method is called
+    // twice at each patch for "required" and twice for "readonly"
+    evalModifier(modifier) {
+        const activeField = this.props.record.activeFields[this.props.name];
+        let modifierValue = activeField.modifiers[modifier];
+        if (Array.isArray(modifierValue)) {
+            modifierValue = new Domain(modifierValue).contains(this.props.record.evalContext);
+        }
+        return !!modifierValue;
     }
 
     get effectiveFieldComponent() {
@@ -36,26 +50,26 @@ export class Field extends Component {
         const field = record.fields[this.props.name];
         const activeField = record.activeFields[this.props.name];
 
-        const readonyFromModifiers = activeField.modifiers.readonly == true;
+        const readonlyFromModifiers = this.evalModifier("readonly");
         const readonlyFromViewMode = this.props.readonly;
 
         return {
             attrs: activeField.attrs || {},
             options: activeField.options || {},
-            required: this.props.required || field.required || false,
+            required: this.evalModifier("required"), // AAB: does the field really need this?
             update: async (value, options = { name: null }) => {
                 await record.update(options.name || this.props.name, value);
                 // We save only if we're on view mode readonly and no readonly field modifier
-                if (readonlyFromViewMode && !readonyFromModifiers) {
+                if (readonlyFromViewMode && !readonlyFromModifiers) {
                     return record.save();
                 }
             },
-            value,
+            value: this.props.record.data[this.props.name],
             formatValue: this.formatValue.bind(this),
             parseValue: this.parseValue.bind(this),
             ...this.props,
             type: field.type,
-            readonly: readonlyFromViewMode || readonyFromModifiers || false,
+            readonly: readonlyFromViewMode || readonlyFromModifiers || false,
         };
     }
 
@@ -103,12 +117,12 @@ export class Field extends Component {
      * defined in an attribute, e.g. decoration-danger="other_field = 5")
      */
     applyDecorations() {
-        const { decorationAttrs } = this.props.record.activeFields[this.props.name];
+        const { decorations } = this.props.record.activeFields[this.props.name];
         const getClassFromDecoration =
             this.effectiveFieldComponent.getClassFromDecoration || ((d) => `text-${d}`);
         const evalContext = this.props.record.evalContext;
-        for (const decoName in decorationAttrs) {
-            const value = evaluateExpr(decorationAttrs[decoName], evalContext);
+        for (const decoName in decorations) {
+            const value = evaluateExpr(decorations[decoName], evalContext);
             this.el.classList.toggle(getClassFromDecoration(decoName), value);
         }
     }
@@ -148,18 +162,15 @@ Field.parseFieldNode = function (node, fields, viewType) {
     const name = node.getAttribute("name");
     const widget = node.getAttribute("widget");
     const field = fields[name];
-    const optionsAttr = node.getAttribute("options") || "{}";
     const fieldInfo = {
         name,
         string: node.getAttribute("string") || field.string,
         widget,
-        options: evaluateExpr(optionsAttr), // can be already used to add options like 'group_by_tooltip'
-        modifiers: {}, // a lot of code is easier if it always exists.
+        options: evaluateExpr(node.getAttribute("options") || "{}"),
+        modifiers: JSON.parse(node.getAttribute("modifiers") || "{}"),
         onChange: isAttr(node, "on_change").truthy(),
-        optionsAttribute: optionsAttr,
-        modifiersAttribute: node.getAttribute("modifiers") || "{}",
         FieldComponent: Field.getEffectiveFieldComponent({ fields, viewType }, widget, name),
-        decorationAttrs: {}, // populated below
+        decorations: {}, // populated below
         attrs: {},
     };
     for (const attribute of node.attributes) {
@@ -170,7 +181,7 @@ Field.parseFieldNode = function (node, fields, viewType) {
         // prepare field decorations
         if (attribute.name.startsWith("decoration-")) {
             const decorationName = attribute.name.replace("decoration-", "");
-            fieldInfo.decorationAttrs[decorationName] = attribute.value;
+            fieldInfo.decorations[decorationName] = attribute.value;
             continue;
         }
 

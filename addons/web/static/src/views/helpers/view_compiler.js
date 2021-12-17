@@ -101,16 +101,18 @@ export class ViewCompiler {
     }
 
     getModifier(node, modifierName) {
-        let mod = node.getAttribute(modifierName);
-        if (mod === null) {
-            const modifiers = this.getAllModifiers(node);
-            mod = modifiers && modifierName in modifiers ? modifiers[modifierName] : null;
-        }
-
-        if (!Array.isArray(mod) && !(typeof mod === "boolean")) {
-            mod = !!evalIrUiViewModifier(mod);
-        }
-        return mod;
+        // AAB: I think we don't need to check attributes "invisible", "required" and "readonly"
+        // directly, as the info is always put inside attribute "attrs" anyway
+        // let mod = node.getAttribute(modifierName);
+        // if (mod === null) {
+        const modifiers = JSON.parse(node.getAttribute("modifiers") || "{}");
+        let mod = modifierName in modifiers ? modifiers[modifierName] : false;
+        // }
+        // AAB: is this necessary for modifiers?
+        // if (!Array.isArray(mod) && !(typeof mod === "boolean")) {
+        //     mod = !!evalIrUiViewModifier(mod);
+        // }
+        return Array.isArray(mod) ? mod : !!mod; // convert 1/0 to true/false
     }
 
     getLabels(fieldName) {
@@ -126,11 +128,6 @@ export class ViewCompiler {
 
     isAlwaysInvisible(invisibleModifer, params) {
         return !params.enableInvisible && typeof invisibleModifer === "boolean" && invisibleModifer;
-    }
-
-    getInvisible(node) {
-        const invisible = this.getModifier(node, "invisible");
-        return invisible || false;
     }
 
     applyInvisible(invisible, compiled, params) {
@@ -175,7 +172,7 @@ export class ViewCompiler {
         } else if (isTextNode(node)) {
             return;
         }
-        const invisible = this.getInvisible(node);
+        const invisible = this.getModifier(node, "invisible");
         if (this.isAlwaysInvisible(invisible, params)) {
             return;
         }
@@ -393,7 +390,7 @@ export class ViewCompiler {
 
                 let tds = [];
                 if (child.tagName === "field") {
-                    if (this.isAlwaysInvisible(this.getInvisible(child), params)) {
+                    if (this.isAlwaysInvisible(this.getModifier(child, "invisible"), params)) {
                         continue;
                     }
 
@@ -452,40 +449,37 @@ export class ViewCompiler {
         return titleDiv;
     }
 
-    handleReadonly(node, compiled) {
-        const readonly = this.getModifier(node, "readonly");
-        if (readonly !== null) {
-            const roClass = "o_readonly_modifier";
-            let readonlyExpr;
-            if (!Array.isArray(readonly)) {
-                readonlyExpr = readonly;
-            } else {
-                readonlyExpr = `evalDomain(record,${JSON.stringify(readonly)})`;
-            }
-            const tAttClass = `${roClass}: ${readonlyExpr}`;
-            appendAttr(compiled, "class", tAttClass);
-        }
-        compiled.setAttribute("readonly", "props.readonly"); // handled by form renderer
-    }
+    // handleReadonly(node, compiled) {
+    //     const readonly = this.getModifier(node, "readonly");
+    //     if (readonly) {
+    //         const roClass = "o_readonly_modifier";
+    //         let readonlyExpr;
+    //         if (!Array.isArray(readonly)) {
+    //             readonlyExpr = readonly;
+    //         } else {
+    //             readonlyExpr = `evalDomain(record,${JSON.stringify(readonly)})`;
+    //         }
+    //         const tAttClass = `${roClass}: ${readonlyExpr}`;
+    //         appendAttr(compiled, "class", tAttClass);
+    //     }
+    // }
 
-    handleRequired(node, compiled) {
-        const required = this.getModifier(node, "required");
-        if (required !== null) {
-            const reqClass = "o_required_modifier";
-            let reqExpr;
-            if (!Array.isArray(required)) {
-                reqExpr = required;
-            } else {
-                reqExpr = `evalDomain(record,${JSON.stringify(required)})`;
-            }
-            const tAttClass = `${reqClass}: ${reqExpr}`;
-            appendAttr(compiled, "class", tAttClass);
+    // handleRequired(node, compiled) {
+    //     const required = this.getModifier(node, "required");
+    //     if (required) {
+    //         const reqClass = "o_required_modifier";
+    //         let reqExpr;
+    //         if (!Array.isArray(required)) {
+    //             reqExpr = required;
+    //         } else {
+    //             reqExpr = `evalDomain(record,${JSON.stringify(required)})`;
+    //         }
+    //         const tAttClass = `${reqClass}: ${reqExpr}`;
+    //         appendAttr(compiled, "class", tAttClass);
 
-            if (compiled.nodeName === "Field") {
-                compiled.setAttribute("required", reqExpr);
-            }
-        }
-    }
+    //         compiled.setAttribute("required", reqExpr);
+    //     }
+    // }
 
     handleEmpty(compiled, params) {
         // handle Empty field
@@ -514,7 +508,7 @@ export class ViewCompiler {
         const fieldName = node.getAttribute("name");
         label.classList.add("o_form_label");
 
-        label = this.applyInvisible(this.getInvisible(node), label, params);
+        label = this.applyInvisible(this.getModifier(node, "invisible"), label, params);
         this.pushLabel(fieldName, label);
         return label;
     }
@@ -561,8 +555,9 @@ export class ViewCompiler {
             field.setAttribute("type", `"${widgetName}"`);
         }
 
-        this.handleReadonly(node, field);
-        this.handleRequired(node, field);
+        // this.handleReadonly(node, field); // AAB: done by the Field itself (s.t. it works in all views)
+        field.setAttribute("readonly", "props.readonly"); // handled by form renderer
+        // this.handleRequired(node, field); // AAB: done by the Field itself (s.t. it works in all views)
         this.handleEmpty(field, { fieldName, widgetName });
 
         const labels = this.getLabels(fieldName);
@@ -575,8 +570,8 @@ export class ViewCompiler {
                     label.setAttribute("t-esc", `record.fields.${fieldName}.string`);
                 }
             }
-            this.handleReadonly(node, label);
-            this.handleRequired(node, label);
+            // this.handleReadonly(node, label); // AAB: seems unnecessary on labels
+            // this.handleRequired(node, label); // AAB: seems unnecessary on labels
             this.handleEmpty(label, { fieldName, widgetName });
         }
         return field;
@@ -637,7 +632,7 @@ export class ViewCompiler {
     }
 
     compilePage(node, params) {
-        const invisible = this.getInvisible(node);
+        const invisible = this.getModifier(node, "invisible");
         if (typeof invisible === "boolean" && invisible) {
             return;
         }

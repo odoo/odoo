@@ -123,8 +123,8 @@
                 <t t-if="column.type === 'button_group'">
                     <td class="o_data_cell" t-att-class="getCellClass(column, record)">
                         <t t-foreach="column.buttons" t-as="button" t-key="button.id">
-                            <ViewButton
-                                classes="getButtonClass(button, record)"
+                            <ViewButton t-if="!evalModifier(button.modifiers.invisible, record)"
+                                classes="button.classes"
                                 clickParams="button.clickParams"
                                 defaultRank="button.defaultRank"
                                 icon="button.icon"

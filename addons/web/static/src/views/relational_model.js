@@ -213,7 +213,6 @@ export class Record extends DataPoint {
 
         // Relational data
         await this.loadRelationalData();
-        this.evaluateActiveFields();
         await this.loadPreloadedData();
     }
 
@@ -222,22 +221,6 @@ export class Record extends DataPoint {
             [this.context, this.activeFields[fieldName].attrs.context],
             this.evalContext
         );
-    }
-
-    evaluateActiveFields() {
-        const context = this.data;
-        for (const fieldName of this.fieldNames) {
-            const activeField = this.activeFields[fieldName];
-            if (activeField.modifiersAttribute) {
-                activeField.modifiers = evaluateExpr(activeField.modifiersAttribute, context);
-            }
-            if (activeField.optionsAttribute) {
-                activeField.options = Object.assign(
-                    evaluateExpr(activeField.optionsAttribute, context),
-                    activeField.options
-                );
-            }
-        }
     }
 
     loadPreloadedData() {
@@ -584,7 +567,6 @@ export class DynamicRecordList extends DynamicList {
                     activeFields: this.activeFields,
                 });
                 await record.loadRelationalData();
-                record.evaluateActiveFields();
                 await record.loadPreloadedData();
                 return record;
             })

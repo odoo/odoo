@@ -62,8 +62,8 @@ export function processButton(node) {
         icon: node.getAttribute("icon") || false,
         title: node.getAttribute("title") || undefined,
         string: node.getAttribute("string") || undefined,
-        optionsAttribute: node.getAttribute("options") || "{}",
-        modifiersAttribute: node.getAttribute("modifiers") || "{}",
+        options: JSON.parse(node.getAttribute("options") || "{}"),
+        modifiers: JSON.parse(node.getAttribute("modifiers") || "{}"),
         clickParams: {
             context: node.getAttribute("context") || "{}",
             name: node.getAttribute("name"),

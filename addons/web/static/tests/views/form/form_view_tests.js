@@ -1663,46 +1663,44 @@ QUnit.module("Views", (hooks) => {
         odoo.debug = initialDebugMode;
     });
 
-    QUnit.skip(
+    QUnit.test(
         "readonly attrs on fields are re-evaluated on field change",
         async function (assert) {
-            assert.expect(4);
-
             const form = await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
-                arch:
-                    '<form string="Partners">' +
-                    "<sheet>" +
-                    "<group>" +
-                    "<field name=\"foo\" attrs=\"{'readonly': [['bar', '=', True]]}\"/>" +
-                    '<field name="bar"/>' +
-                    "</group>" +
-                    "</sheet>" +
-                    "</form>",
+                arch: `
+                    <form>
+                        <sheet>
+                            <group>
+                                <field name="foo" attrs="{'readonly': [['bar', '=', True]]}"/>
+                                <field name="bar"/>
+                            </group>
+                        </sheet>
+                    </form>`,
                 resId: 1,
             });
-            await testUtils.form.clickEdit(form);
+            await click(form.el.querySelector(".o_form_button_edit"));
 
             assert.containsOnce(
                 form,
                 'span[name="foo"]',
                 "the foo field widget should be readonly"
             );
-            await testUtils.dom.click(form.$(".o_field_boolean input"));
+            await click(form.el.querySelector(".o_field_boolean input"));
             assert.containsOnce(
                 form,
                 'input[name="foo"]',
                 "the foo field widget should have been rerendered to now be editable"
             );
-            await testUtils.dom.click(form.$(".o_field_boolean input"));
+            await click(form.el.querySelector(".o_field_boolean input"));
             assert.containsOnce(
                 form,
                 'span[name="foo"]',
                 "the foo field widget should have been rerendered to now be readonly again"
             );
-            await testUtils.dom.click(form.$(".o_field_boolean input"));
+            await click(form.el.querySelector(".o_field_boolean input"));
             assert.containsOnce(
                 form,
                 'input[name="foo"]',
@@ -1864,21 +1862,21 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(6);
 
-            this.data.partner.fields.foo.default = false; // no default value for this test
-            this.data.partner.records[1].foo = false; // 1 is record with id=2
-            this.data.partner.records[1].display_name = false; // 1 is record with id=2
+            serverData.models.partner.fields.foo.default = false; // no default value for this test
+            serverData.models.partner.records[1].foo = false; // 1 is record with id=2
+            serverData.models.partner.records[1].display_name = false; // 1 is record with id=2
 
             const form = await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
-                arch:
-                    "<form>" +
-                    "<group>" +
-                    '<field name="foo"/>' +
-                    "<field name=\"display_name\" attrs=\"{'readonly': [['foo', '=', 'readonly']]}\"/>" +
-                    "</group>" +
-                    "</form>",
+                arch: `
+                    <form>
+                        <group>
+                            <field name="foo"/>
+                            <field name="display_name" attrs="{'readonly': [['foo', '=', 'readonly']]}"/>
+                        </group>
+                    </form>`,
                 resId: 2,
             });
 
@@ -1890,7 +1888,7 @@ QUnit.module("Views", (hooks) => {
                 "should have 1 muted label (for the empty fied) in readonly"
             );
 
-            await testUtils.form.clickEdit(form);
+            await click(form.el.querySelector(".o_form_button_edit"));
 
             assert.containsNone(
                 form,
@@ -1903,10 +1901,10 @@ QUnit.module("Views", (hooks) => {
                 "in edit mode, only labels associated to empty readonly fields should have the o_form_label_empty class"
             );
 
-            await testUtils.fields.editInput(form.$("input[name=foo]"), "readonly");
-            await testUtils.fields.editInput(form.$("input[name=foo]"), "edit");
-            await testUtils.fields.editInput(form.$("input[name=display_name]"), "some name");
-            await testUtils.fields.editInput(form.$("input[name=foo]"), "readonly");
+            await editInput(form.el, "input[name=foo]", "readonly");
+            await editInput(form.el, "input[name=foo]", "edit");
+            await editInput(form.el, "input[name=display_name]", "some name");
+            await editInput(form.el, "input[name=foo]", "readonly");
 
             assert.containsNone(
                 form,
@@ -1926,21 +1924,21 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(2);
 
-            this.data.partner.fields.product_id.readonly = true;
+            serverData.models.partner.fields.product_id.readonly = true;
             const form = await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
-                arch:
-                    '<form string="Partners">' +
-                    "<sheet>" +
-                    "<group>" +
-                    "<group>" +
-                    '<field name="product_id"/>' +
-                    "</group>" +
-                    "</group>" +
-                    "</sheet>" +
-                    "</form>",
+                arch: `
+                    <form>
+                        <sheet>
+                            <group>
+                                <group>
+                                    <field name="product_id"/>
+                                </group>
+                            </group>
+                        </sheet>
+                    </form>`,
             });
             assert.containsNone(form, ".o_form_label_empty", "no empty class on label");
             assert.containsNone(form, ".o_field_empty", "no empty class on field");
@@ -2054,40 +2052,38 @@ QUnit.module("Views", (hooks) => {
         assert.isVisible(form.el.querySelector(".o_form_buttons_edit"));
     });
 
-    QUnit.skip(
+    QUnit.test(
         "required attrs on fields are re-evaluated on field change",
         async function (assert) {
-            assert.expect(3);
-
             const form = await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
-                arch:
-                    '<form string="Partners">' +
-                    "<sheet>" +
-                    "<group>" +
-                    "<field name=\"foo\" attrs=\"{'required': [['bar', '=', True]]}\"/>" +
-                    '<field name="bar"/>' +
-                    "</group>" +
-                    "</sheet>" +
-                    "</form>",
+                arch: `
+                    <form>
+                        <sheet>
+                            <group>
+                                <field name="foo" attrs="{'required': [['bar', '=', True]]}"/>
+                                <field name="bar"/>
+                            </group>
+                        </sheet>
+                    </form>`,
                 resId: 1,
             });
-            await testUtils.form.clickEdit(form);
+            await click(form.el.querySelector(".o_form_button_edit"));
 
             assert.containsOnce(
                 form,
                 'input[name="foo"].o_required_modifier',
                 "the foo field widget should be required"
             );
-            await testUtils.dom.click(".o_field_boolean input");
+            await click(form.el.querySelector(".o_field_boolean input"));
             assert.containsOnce(
                 form,
                 'input[name="foo"]:not(.o_required_modifier)',
                 "the foo field widget should now have been marked as non-required"
             );
-            await testUtils.dom.click(".o_field_boolean input");
+            await click(form.el.querySelector(".o_field_boolean input"));
             assert.containsOnce(
                 form,
                 'input[name="foo"].o_required_modifier',
