@@ -6,23 +6,31 @@
             <field name="model">registration.editor</field>
             <field name="arch" type="xml">
                 <form string="Registration">
-                    <p>Before confirming <field name="sale_order_id" readonly="1" class="oe_inline"/>
-                    please give details about the registrations</p>
-                    <field name="event_registration_ids">
-                        <tree string="Registration" editable="top" create="false" delete="false">
-                            <field name="event_id" readonly='1' force_save="1"/>
-                            <field name="registration_id" readonly='1' force_save="1"/>
-                            <field name="event_ticket_id" domain="[('event_id', '=', event_id)]" readonly='1' force_save="1"/>
-                            <field name="name"/>
-                            <field name="email"/>
-                            <field name="mobile" class="o_force_ltr"/>
-                            <field name="phone" class="o_force_ltr"/>
-                            <field name="sale_order_line_id" invisible="1"/>
-                        </tree>
-                    </field>
+                    <field name="seats_available_insufficient" invisible="1"/>
+                    <div class="alert alert-warning m-0" role="alert" attrs="{'invisible': [('seats_available_insufficient', '=', False)]}">
+                        <p class="my-0">
+                            <span>Not enough seats available. All registrations were created as "Unconfirmed" and can be updated later on.</span>
+                        </p>
+                    </div>
+                    <sheet>
+                        <p>Before updating the linked registrations of <field name="sale_order_id" readonly="1" class="oe_inline"/>
+                        please give attendee details.</p>
+                        <field name="event_registration_ids">
+                            <tree string="Registration" editable="top" create="false" delete="false">
+                                <field name="event_id" readonly='1' force_save="1"/>
+                                <field name="registration_id" readonly='1' force_save="1"/>
+                                <field name="event_ticket_id" domain="[('event_id', '=', event_id)]" readonly='1' force_save="1"/>
+                                <field name="name"/>
+                                <field name="email"/>
+                                <field name="mobile" class="o_force_ltr"/>
+                                <field name="phone" class="o_force_ltr"/>
+                                <field name="sale_order_line_id" invisible="1"/>
+                            </tree>
+                        </field>
+                    </sheet>
                     <footer>
-                        <button string="Confirm" name="action_make_registration" type="object" class="btn-primary" data-hotkey="q"/>
-                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                        <button string="Create/Update registrations" name="action_make_registration" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Skip" class="btn-secondary" special="cancel" data-hotkey="z"/>
                     </footer>
                 </form>
             </field>

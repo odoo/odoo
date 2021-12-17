@@ -285,41 +285,7 @@
         </field>
     </record>
 
-    <record id="event_event_view_pivot" model="ir.ui.view" >
-        <field name="name">event.event.view.pivot</field>
-        <field name="model">event.event</field>
-        <field name="arch" type="xml">
-            <pivot string="Event" sample="1">
-                <field name="name" type="row"/>
-                <field name="seats_reserved" type="measure"/>
-            </pivot>
-        </field>
-    </record>
-
-    <record id="event_event_view_graph" model="ir.ui.view" >
-        <field name="name">event.event.view.graph</field>
-        <field name="model">event.event</field>
-        <field name="arch" type="xml">
-            <graph string="Events" sample="1">
-                <field name="name"/>
-                <field name="seats_available" type="measure"/>
-            </graph>
-        </field>
-    </record>
-
     <!-- EVENT.EVENT VIEWS -->
-    <record id="event_event_action_pivot" model="ir.actions.act_window" >
-        <field name="name">Events Analysis</field>
-        <field name="res_model">event.event</field>
-        <field name="view_mode">pivot,graph</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                No Event data yet!
-            </p><p>
-                Use this report to compare or aggregate event performances.
-            </p>
-        </field>
-    </record>
 
     <record model="ir.actions.act_window" id="action_event_view">
        <field name="name">Events</field>
@@ -340,10 +306,4 @@
         <field name="action" ref="event.action_event_view"/>
     </record>
 
-    <menuitem name="Events"
-        id="event_event_menu_pivot_report"
-        action="event_event_action_pivot"
-        sequence="3"
-        parent="event.menu_reporting_events"
-        groups="event.group_event_user"/>
 </data></odoo>
