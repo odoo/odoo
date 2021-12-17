@@ -225,7 +225,7 @@ class TestRegistrationPerformance(EventPerformanceCase):
         """
         event = self.env['event.event'].browse(self.test_event.ids)
 
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=873):  # tef only: 828 - com runbot 871
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=874):  # tef only: 828 - com runbot 871 - ent runbot 873
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             registration_values = [
                 dict(reg_data,
