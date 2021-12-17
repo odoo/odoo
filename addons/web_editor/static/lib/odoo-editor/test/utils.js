@@ -296,9 +296,10 @@ export async function testEditor(Editor = OdooEditor, spec) {
     const selection = parseTextualSelection(testNode);
 
     const editor = new Editor(testNode, { toSanitize: false });
-    editor.keyboardType = 'PHYSICAL_KEYBOARD';
+    editor.keyboardType = 'PHYSICAL';
     if (selection) {
         setTestSelection(selection);
+        editor._recordHistorySelection();
     } else {
         document.getSelection().removeAllRanges();
     }

@@ -139,7 +139,7 @@ const testMultiEditor = spec => {
                 clientInfo.editor.onExternalHistorySteps(missingSteps.concat([step]));
             },
         });
-        clientInfo.editor.keyboardType = 'PHYSICAL_KEYBOARD';
+        clientInfo.editor.keyboardType = 'PHYSICAL';
         const selection = selections[clientInfo.clientId];
         if (selection) {
             setTestSelection(selection, iframeDocument);
