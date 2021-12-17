@@ -74,5 +74,5 @@ class EventBoothRegistration(models.Model):
                 body=body,
                 partner_ids=order.user_id.partner_id.ids,
             )
-            order.sudo().action_cancel()
+            order.sudo()._action_cancel()
         other_registrations.unlink()

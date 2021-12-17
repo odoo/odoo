@@ -94,7 +94,7 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
         self._apply_promo_code(sale_order_a, coupon.code)
         self.assertEqual(len(sale_order_a.order_line.ids), 2)
 
-        sale_order_a.action_cancel()
+        sale_order_a._action_cancel()
 
         sale_order_b.write({'order_line': [
             (0, False, {

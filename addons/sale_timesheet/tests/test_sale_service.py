@@ -230,7 +230,7 @@ class TestSaleService(TestCommonSaleTimesheet):
         self.assertEqual(so_line1.product_uom_qty, so_line1.task_id.planned_hours, "The planned hours should have changed when updating the ordered quantity of the native SO line")
 
         # cancel SO
-        self.sale_order.action_cancel()
+        self.sale_order._action_cancel()
 
         self.assertTrue(so_line1.task_id, "SO cancellation should keep the task")
         self.assertTrue(so_line1.project_id, "SO cancellation should create a project")
@@ -509,7 +509,7 @@ class TestSaleService(TestCommonSaleTimesheet):
         sale_order_line.write({'product_uom_qty': 20})
         self.assertEqual(sale_order_line.product_uom_qty, sale_order_line.task_id.planned_hours, "The planned hours should have changed when updating the ordered quantity of the native SO line")
 
-        self.sale_order.action_cancel()
+        self.sale_order._action_cancel()
         sale_order_line.write({'product_uom_qty': 30})
         self.assertEqual(sale_order_line.product_uom_qty, sale_order_line.task_id.planned_hours, "The planned hours should have changed when updating the ordered quantity, even after SO cancellation")
 

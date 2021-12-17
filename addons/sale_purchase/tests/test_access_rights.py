@@ -47,7 +47,7 @@ class TestAccessRights(TestCommonSalePurchaseNoChart):
 
         # confirming SO will create the PO even if you don't have the rights
         sale_order.action_confirm()
-        sale_order.action_cancel()
+        sale_order._action_cancel()
 
         self.assertTrue(sale_order.name, "Saleperson can read its own SO")
 

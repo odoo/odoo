@@ -422,7 +422,7 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         so1.action_confirm()
         self.assertEqual(len(so1.picking_ids), 1)
         self.assertEqual(so1.picking_ids.partner_id.id, partner1)
-        so1.action_cancel()
+        so1._action_cancel()
         so1.action_draft()
         so1.partner_id = partner2
         so1.partner_shipping_id = partner2  # set by an onchange
@@ -991,7 +991,7 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         self.assertEqual(inv_2.state, 'draft', 'invoice should be in draft state')
 
         # check the status of invoices after cancelling the order
-        so.action_cancel()
+        so._action_cancel()
         wizard = self.env['sale.order.cancel'].with_context({'order_id': so.id}).create({'order_id': so.id})
         wizard.action_cancel()
         self.assertEqual(inv_1.state, 'posted', 'A posted invoice state should remain posted')
