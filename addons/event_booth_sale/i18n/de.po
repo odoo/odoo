@@ -36,17 +36,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__event_booth_ids
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__event_booth_id
 msgid "Booth"
-msgstr ""
+msgstr "Stand"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__event_booth_category_id
 msgid "Booth Category"
-msgstr ""
+msgstr "Standkategorie"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,help:event_booth_sale.field_event_booth_configurator__event_booth_category_available_ids
 msgid "Booth Category for which booths are still available. Used in frontend"
 msgstr ""
+"Standkategorie, für die noch Stände verfügbar sind. Verwendet im Frontend"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_sale_order__event_booth_count
@@ -56,13 +57,13 @@ msgstr ""
 #. module: event_booth_sale
 #: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_category_view_form
 msgid "Booth Details"
-msgstr ""
+msgstr "Stand Details"
 
 #. module: event_booth_sale
 #: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_registration_view_form
 #: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_registration_view_tree
 msgid "Booth Registration"
-msgstr ""
+msgstr "Stand Registrierung"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_sale_order__event_booth_ids
@@ -73,7 +74,7 @@ msgstr "Stände"
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_sale_order_line__event_booth_category_id
 msgid "Booths Category"
-msgstr ""
+msgstr "Standkategorie"
 
 #. module: event_booth_sale
 #: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_configurator_view_form
@@ -82,17 +83,17 @@ msgstr "Abbrechen"
 
 #. module: event_booth_sale
 msgid "Configure an event booth"
-msgstr ""
+msgstr "Einen Veranstaltungsstand konfigurieren"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_sale_order_line__event_booth_ids
 msgid "Confirmed Booths"
-msgstr ""
+msgstr "Bestätigte Stände"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_sale_order_line__event_booth_registration_ids
 msgid "Confirmed Registration"
-msgstr ""
+msgstr "Bestätigte Registrierung"
 
 #. module: event_booth_sale
 #: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_registration_view_form
@@ -107,7 +108,7 @@ msgstr "Kontakt-E-Mail"
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__contact_mobile
 msgid "Contact Mobile"
-msgstr ""
+msgstr "Kontakt Mobil"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__contact_name
@@ -169,28 +170,28 @@ msgstr "Event-Stand"
 #. module: event_booth_sale
 #: model:ir.model,name:event_booth_sale.model_event_booth_category
 msgid "Event Booth Category"
-msgstr ""
+msgstr "Veranstaltungsstand Kategorie"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__event_booth_category_available_ids
 msgid "Event Booth Category Available"
-msgstr ""
+msgstr "Veranstaltungsstand Kategorie Verfügbar"
 
 #. module: event_booth_sale
 #: model:ir.model,name:event_booth_sale.model_event_booth_configurator
 msgid "Event Booth Configurator"
-msgstr ""
+msgstr "Veranstaltungsstand Konfigurator"
 
 #. module: event_booth_sale
 #: model:ir.model,name:event_booth_sale.model_event_booth_registration
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth__event_booth_registration_ids
 msgid "Event Booth Registration"
-msgstr ""
+msgstr "Anmeldung Veranstaltungsstand"
 
 #. module: event_booth_sale
 #: model:ir.model,name:event_booth_sale.model_event_type_booth
 msgid "Event Booth Template"
-msgstr ""
+msgstr "Veranstaltungsstand Vorlage"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth__sale_order_line_id
@@ -211,7 +212,7 @@ msgstr "Bild"
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_sale_order_line__is_event_booth
 msgid "Is Event Booth"
-msgstr ""
+msgstr "Ist Veranstaltungsstand"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth__is_paid
@@ -259,7 +260,7 @@ msgstr "Bezahlt"
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_sale_order_line__event_booth_pending_ids
 msgid "Pending Booths"
-msgstr ""
+msgstr "Ausstehende Stände"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth__price
@@ -303,11 +304,13 @@ msgstr "Anmeldungen"
 #, python-format
 msgid "Registrations from the same Order Line must belong to a single event."
 msgstr ""
+"Anmeldungen aus einer Bestellzeile müssen zu derselben Veranstaltung "
+"gehören."
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth__sale_order_line_registration_ids
 msgid "SO Lines with reservations"
-msgstr ""
+msgstr "Kundenauftragszeilen mit Reservierungen"
 
 #. module: event_booth_sale
 #: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_view_form_from_event
@@ -348,7 +351,7 @@ msgstr ""
 #. module: event_booth_sale
 #: model:ir.model.constraint,message:event_booth_sale.constraint_event_booth_registration_unique_registration
 msgid "There can be only one registration for a booth by sale order line"
-msgstr ""
+msgstr "Es kann nur eine Anmeldung für einen Stand pro Bestellzeile erfolgen."
 
 #. module: event_booth_sale
 #: model:product.product,uom_name:event_booth_sale.product_product_event_booth
@@ -359,6 +362,8 @@ msgstr "Einheiten"
 #: model:ir.model.fields,help:event_booth_sale.field_sale_order_line__event_booth_pending_ids
 msgid "Used to create registration when providing the desired event booth."
 msgstr ""
+"Wird verwendet, um die Registrierung zu erstellen, wenn der gewünschte "
+"Veranstaltungsstand bereitgestellt wird."
 
 #. module: event_booth_sale
 #: code:addons/event_booth_sale/models/event_booth.py:0
@@ -367,12 +372,14 @@ msgid ""
 "You can't delete the following booths as they are linked to sales orders: "
 "%(booths)s"
 msgstr ""
+"Die folgenden Stände können nicht gelöscht werden, da sie mit "
+"Kundenaufträgen verbunden sind:%(booths)s"
 
 #. module: event_booth_sale
 #: code:addons/event_booth_sale/wizard/event_booth_configurator.py:0
 #, python-format
 msgid "You have to select at least one booth."
-msgstr ""
+msgstr "Sie müssen mindestens einen Stand auswählen."
 
 #. module: event_booth_sale
 #: code:addons/event_booth_sale/models/event_booth_registration.py:0
@@ -381,3 +388,4 @@ msgid ""
 "Your order has been cancelled because the following booths have been "
 "reserved"
 msgstr ""
+"Ihre Bestellung wurde storniert, da die folgenden Stände reserviert wurden"

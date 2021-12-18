@@ -131,6 +131,12 @@ msgid ""
 "contribute, there is a free ticket, therefore, catering and access to "
 "evening events aren't included."
 msgstr ""
+"<b>Die gesamte Veranstaltung ist für die Öffentlichkeit zugänglich!</b> "
+"<br>Wir bitten um eine Teilnahmegebühr von 49,50€ für die Kosten der 3 Tage "
+"(Kaffeepausen, Verpflegung, Getränke und ein Überraschungskonzert und "
+"Bierparty). <br>Für diejenigen, die keinen Beitrag leisten wollen, gibt es "
+"ein kostenloses Ticket, bei dem die Verpflegung und der Zugang zu den "
+"Abendveranstaltungen nicht inbegriffen sind."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -150,6 +156,8 @@ msgid ""
 "<br/>\n"
 "                                            <span class=\"text-muted\">Share a quiz to your attendees once a track is over</span>"
 msgstr ""
+"<br/>\n"
+"                                            <span class=\"text-muted\">Stellen Sie Ihren Teilnehmern ein Quiz zur Verfügung, sobald ein Track vorbei ist</span>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_registration_mail_template_badge
@@ -290,12 +298,14 @@ msgid ""
 "<span class=\"text-muted\" states=\"done\">Attended</span>\n"
 "                                    <span class=\"text-muted\" states=\"cancel\">Canceled</span>"
 msgstr ""
+"<span class=\"text-muted\" states=\"erledigt\">Teilgenommen</span>\n"
+"                                    <span class=\"text-muted\" states=\"stornieren\">Storniert</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
 msgid "<span>John Doe</span>"
-msgstr ""
+msgstr "<span>John Doe</span>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_reminder
@@ -1196,7 +1206,7 @@ msgstr "Erstellen Sie eine Event-Tag-Kategorie"
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_type
 msgid "Create an Event Template"
-msgstr ""
+msgstr "Erstellen Sie eine Event-Vorlage"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__create_uid
@@ -1466,6 +1476,18 @@ msgid ""
 "  - or the responsible of the event,\n"
 "  - or the last writer of the template.\n"
 msgstr ""
+"Veranstaltung geplant für:\n"
+"  - Veranstaltung: %(event_name)s (%(event_id)s)\n"
+"  - Zeit: %(date)s\n"
+"  - Vorlage: %(template_name)s (%(template_id)s)\n"
+"\n"
+"Fehlgeschlagen:\n"
+"  - %(error)s\n"
+"\n"
+"Sie erhalten diese E-Mail aufgrund Ihrer Rolle als:\n"
+"  - Organisator dieses Events,\n"
+"  - Verantwortlicher dieses Events,\n"
+"  - Letzter Bearbeiter der Vorlage.\n"
 
 #. module: event
 #: model:ir.model,name:event.model_event_stage
@@ -1548,7 +1570,7 @@ msgstr "Veranstaltungskarte"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
 msgid "Event Ticket For"
-msgstr ""
+msgstr "Veranstaltungsticket für"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_mail__event_type_id
@@ -1566,6 +1588,8 @@ msgid ""
 "Event stages are used to track the progress of an Event from its origin "
 "until its conclusion."
 msgstr ""
+"Ereignisphasen werden verwendet, um den Verlauf eines Ereignisses von seinem"
+" Ursprung bis zu seinem Ende zu verfolgen."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_form_view
@@ -2938,7 +2962,7 @@ msgstr "Stufenbezeichnung"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__description
 msgid "Stage description"
-msgstr ""
+msgstr "Beschreibung der Phase"
 
 #. module: event
 #: model:event.event.ticket,name:event.event_0_ticket_1
@@ -3077,6 +3101,9 @@ msgid ""
 "The event is sold out if no more seats are available on event. If ticketing "
 "is used and all tickets are sold out, the event will be sold out."
 msgstr ""
+"Die Veranstaltung ist ausverkauft, wenn keine Plätze mehr verfügbar sind. "
+"Wenn das Ticketing genutzt wird und alle Tickets ausverkauft sind, ist die "
+"Veranstaltung ausverkauft."
 
 #. module: event
 #: model_terms:event.event,description:event.event_7
@@ -3084,6 +3111,8 @@ msgid ""
 "The finest OpenWood furnitures are coming to your house in a brand new "
 "collection"
 msgstr ""
+"Die schönsten OpenWood-Möbel kommen in einer brandneuen Kollektion zu Ihnen "
+"nach Hause"
 
 #. module: event
 #: code:addons/event/models/event_ticket.py:0
@@ -3135,7 +3164,7 @@ msgstr ""
 #: model:ir.model.fields,help:event.field_event_event__ticket_instructions
 #: model:ir.model.fields,help:event.field_event_type__ticket_instructions
 msgid "This information will be printed on your tickets."
-msgstr ""
+msgstr "Diese Informationen werden auf Ihre Tickets gedruckt."
 
 #. module: event
 #. openerp-web
@@ -3213,6 +3242,8 @@ msgid ""
 "Ticket types allow you to distinguish your attendees. Let's <b>create</b> a "
 "new one."
 msgstr ""
+"Ticketarten ermöglichen es Ihnen, Ihre Teilnehmer zu unterscheiden. Lassen "
+"Sie uns einen <b>neuen Typ erstellen</b>."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__event_type_ticket_ids
@@ -3519,7 +3550,7 @@ msgstr "z.B. Konferenz für Architekten"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "e.g. Online Conferences"
-msgstr ""
+msgstr "z.B. Online-Konferenz"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_form_view
@@ -3566,7 +3597,7 @@ msgstr "nächste Woche "
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "on %(date)s"
-msgstr ""
+msgstr "am %(date)s"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__event_registrations_started

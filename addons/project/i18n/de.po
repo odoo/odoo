@@ -30,7 +30,7 @@ msgstr ""
 #: code:addons/project/static/src/project_sharing/components/chatter.xml:0
 #, python-format
 msgid "!!widget.options.res_id && widget.get('messages') || []"
-msgstr ""
+msgstr "!!widget.options.res_id && widget.get('messages') || []"
 
 #. module: project
 #. openerp-web
@@ -260,7 +260,7 @@ msgstr "31"
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "<b>Drag &amp; drop</b> the card to change your task from stage."
-msgstr ""
+msgstr "Verschieben Sie die Karte per Drag & Drop in eine andere Phase."
 
 #. module: project
 #. openerp-web
@@ -555,6 +555,9 @@ msgid ""
 "                                    Milestones\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                    Milestones\n"
+"                                </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -748,7 +751,7 @@ msgstr "Aktivitätstypen"
 #: code:addons/project/static/src/xml/project_templates.xml:0
 #, python-format
 msgid "Add Milestone"
-msgstr ""
+msgstr "Milestone hinzufügen"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -1072,6 +1075,9 @@ msgid ""
 " * Good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
 " * Neutral or bad feedback will set the kanban state to 'blocked' (red bullet).\n"
 msgstr ""
+"Ändern Sie den Kanban-Status automatisch, wenn der Kunde auf die Rückmeldung für diese Stufe antwortet.\n"
+"* Positive Rückmeldungen des Kunden aktualisieren den Kanban-Status auf \"bereit für die neue Stufe\" (grüner Punkt).\n"
+"* Neutrales oder negatives Feedback setzt den Kanban-Status auf \"blockiert\" (roter Punkt).\n"
 
 #. module: project
 #. openerp-web
@@ -1222,6 +1228,8 @@ msgstr ""
 msgid ""
 "Choose a task <b>name</b> <i>(e.g. Website Design, Purchase Goods...)</i>"
 msgstr ""
+"Wählen Sie einen <b>Aufgabennamen</b><i> (z. B. Website-Design, "
+"Wareneinkauf...)</i>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__partner_city
@@ -1345,7 +1353,7 @@ msgstr "Kontakt"
 #: code:addons/project/static/src/js/project_list.js:0
 #, python-format
 msgid "Continue Recurrence"
-msgstr ""
+msgstr "Wiederholung fortsetzen"
 
 #. module: project
 #. openerp-web
@@ -1533,6 +1541,10 @@ msgid ""
 "made status messages for each step of the workflow. It helps to document "
 "your workflow: what should be done at which step."
 msgstr ""
+"Passen Sie die Benennung der Aufgaben an das Projekt an und erstellen Sie "
+"maßgeschneiderte Statusmeldungen für jeden Schritt des Workflows. Es hilft "
+"Ihnen, Ihren Arbeitsablauf zu dokumentieren: was sollte in welchem Schritt "
+"getan werden."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__daily
@@ -1664,7 +1676,7 @@ msgstr "Löschen"
 #: code:addons/project/static/src/xml/project_templates.xml:0
 #, python-format
 msgid "Delete Milestone"
-msgstr ""
+msgstr "Milestone löschen"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
@@ -1912,7 +1924,7 @@ msgstr "Fehler! Projektanfang muss vor Projektende liegen."
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Error! You cannot create a recursive hierarchy of tasks."
-msgstr ""
+msgstr "Fehler! Sie können keine rekursive Hierarchie von Aufgaben erstellen."
 
 #. module: project
 #. openerp-web
@@ -1923,6 +1935,9 @@ msgid ""
 " all documents or links to the task directly, to have all research "
 "information centralized. %s"
 msgstr ""
+"Jeder kann Ideen vorschlagen, und der Editor markiert die besten Ideen als "
+"%s. Hängen Sie alle Dokumente oder Links direkt an die Aufgabe an, um alle "
+"relevanten Informationen an zentraler Stelle zu haben. %s"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__date
@@ -1955,6 +1970,11 @@ msgid ""
 "review the %s column to move important tasks %s. Every Monday, you review "
 "the %s column. %s"
 msgstr ""
+"Füllen Sie Ihren Posteingang ganz einfach mit dem E-Mail-Gateway. Überprüfen"
+" Sie regelmäßig Ihren Posteingang und planen Sie Aufgaben, indem Sie sie in "
+"andere Spalten verschieben. Überprüfen Sie jeden Tag die %s Spalte, um "
+"wichtige Aufgaben %s zu verschieben. Überprüfen Sie jeden Montag die %s "
+"Spalte. %s"
 
 #. module: project
 #. openerp-web
@@ -2114,6 +2134,9 @@ msgid ""
 " in the chatter of the tasks. Use the %s and %s to signalize what is the "
 "current status of your Idea. %s"
 msgstr ""
+"Führen Sie Ihre Ideensammlung innerhalb der Aufgaben Ihres neuen Projekts "
+"durch und diskutieren Sie sie im Chatter der Aufgaben. Verwenden Sie %s und "
+"%s, um den aktuellen Status Ihrer Idee anzuzeigen. %s"
 
 #. module: project
 #. openerp-web
@@ -2406,7 +2429,7 @@ msgstr "Eingeladene Portalnutzer und alle Mitarbeiter"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__is_deadline_exceeded
 msgid "Is Deadline Exceeded"
-msgstr ""
+msgstr "Wenn Deadline überschritten"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__is_deadline_future
@@ -2441,7 +2464,7 @@ msgstr "Version"
 #: code:addons/project/static/src/js/project_list.js:0
 #, python-format
 msgid "It seems that some tasks are part of a recurrence."
-msgstr ""
+msgstr "Es scheint, dass einige Aufgaben Teil einer Wiederholung sind."
 
 #. module: project
 #. openerp-web
@@ -2794,12 +2817,12 @@ msgstr "Nachrichten"
 #: model:ir.model.fields,field_description:project.field_project_project__milestone_ids
 #, python-format
 msgid "Milestone"
-msgstr ""
+msgstr "Milestone"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__milestone_count
 msgid "Milestone Count"
-msgstr ""
+msgstr "Anzahl Milestones"
 
 #. module: project
 #. openerp-web
@@ -3030,7 +3053,7 @@ msgstr "Noch keine Daten vorhanden!"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_milestone_all
 msgid "No milestones found. Let's create one!"
-msgstr ""
+msgstr "Keine Milestones gefunden. Legen Sie einen an!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
@@ -3123,7 +3146,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user__working_hours_close
 msgid "Number of Working Hours to close the task"
-msgstr ""
+msgstr "Anzahl der Arbeitsstunden bis zum Abschluss der Aufgabe"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user__working_hours_open
@@ -3543,7 +3566,7 @@ msgstr "Projektmanager"
 #. module: project
 #: model:ir.model,name:project.model_project_milestone
 msgid "Project Milestone"
-msgstr ""
+msgstr "Projekt Milestone"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -3610,7 +3633,7 @@ msgstr "Projekt-Update"
 #: model:ir.actions.act_window,name:project.project_update_all_action
 #: model_terms:ir.ui.view,arch_db:project.project_view_kanban_inherit_project
 msgid "Project Updates"
-msgstr ""
+msgstr "Projekt-Updates"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__project_privacy_visibility
@@ -3955,7 +3978,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_on_year
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__repeat_on_year
 msgid "Repeat On Year"
-msgstr ""
+msgstr "Jährlich wiederholen"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_show_day
@@ -4237,6 +4260,8 @@ msgstr "Software-Entwicklung"
 #, python-format
 msgid "Sorry. You can't set a task as its parent task."
 msgstr ""
+"Entschuldigung. Sie können eine Aufgabe nicht als ihre übergeordnete Aufgabe"
+" festlegen."
 
 #. module: project
 #. openerp-web
@@ -4864,6 +4889,8 @@ msgstr "Zeitmanagement"
 #: model:ir.model.fields,help:project.field_project_task__planned_hours
 msgid "Time planned to achieve this task (including its sub-tasks)."
 msgstr ""
+"Geplante Zeit für die Durchführung dieser Aufgabe (einschließlich ihrer "
+"Teilaufgaben)."
 
 #. module: project
 #: model:digest.tip,name:project.digest_tip_project_0
@@ -4904,6 +4931,8 @@ msgid ""
 "To get things done, use activities and status on tasks.<br>\n"
 "                    Chat in real-time or by email to collaborate efficiently."
 msgstr ""
+"Um Dinge zu erledigen, verwenden Sie Aktivitäten und den Status von Aufgaben.<br>\n"
+"Chatten Sie in Echtzeit oder per E-Mail, um effizient zusammenzuarbeiten."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_sharing_project_task_action
@@ -4952,7 +4981,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track the progress of your projects"
-msgstr ""
+msgstr "Verfolgen Sie den Fortschritt Ihrer Projekte"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_project_stage_configure
@@ -5132,6 +5161,8 @@ msgid ""
 "Use the chatter to <b>send emails</b> and communicate efficiently with your customers. \n"
 "    Add new people to the followers' list to make them aware of the main changes about this task."
 msgstr ""
+"Nutzen Sie den Chatter zum <b>Versenden von E-Mails</b> und kommunizieren Sie effizient mit Ihren Kunden. \n"
+"Fügen Sie neue Personen zur Follower-Liste hinzu, um sie auf die wichtigsten Änderungen in dieser Aufgabe aufmerksam zu machen."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_stage_personal__user_id
@@ -5221,7 +5252,7 @@ msgstr "Ob dieses Projekt auf Ihrem Dashboard angezeigt werden soll"
 #: model:ir.model.fields,field_description:project.field_project_task__working_days_open
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__working_days_open
 msgid "Working Days to Assign"
-msgstr ""
+msgstr "Zuzuweisende Arbeitstage"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_days_close
@@ -5306,12 +5337,14 @@ msgid ""
 "You cannot change the company of an analytic account if it is related to a "
 "project."
 msgstr ""
+"Sie können das Unternehmen eines analytischen Kontos nicht ändern, wenn es "
+"mit einem Projekt verbunden ist."
 
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You cannot create cyclic dependency."
-msgstr ""
+msgstr "Sie können keine zyklischen Abhängigkeiten schaffen."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -5386,7 +5419,7 @@ msgstr "z.B. Büro-Party"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "for customer:"
-msgstr ""
+msgstr "für Kunden:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list

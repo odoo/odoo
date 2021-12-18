@@ -10,6 +10,7 @@
 # Talal Albahra <talal.albahra@outlook.com>, 2021
 # Nisrine Tagri <nta@odoo.com>, 2021
 # Tariq Almutairi <tareq.s.m.79@gmail.com>, 2021
+# Malaz Abuidris <msea@odoo.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Tariq Almutairi <tareq.s.m.79@gmail.com>, 2021\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2021\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,11 +42,11 @@ msgid ""
 msgstr ""
 "\n"
 "    -  مجموعة الضرائب: الضريبة هي مجموعة من الضرائب الفرعية.\n"
-"    - ثابتة: مبلغ الضريبة يبقى ثابت مهما كان السعر.\n"
-"    - نسبة مئوية على السعر: مبلغ الضريبة هو نسبة مئوية من السعر:\n"
+"    - ثابتة: يبقى مبلغ الضريبة ثابتاً مهما كان السعر.\n"
+"    - نسبة من السعر: مبلغ الضريبة هو نسبة مئوية من السعر:\n"
 "        مثلاً 100 × (1 + 10%) = 110 (لا يشمل السعر)\n"
 "        مثلاً 110 ÷ (1 + 10%) = 100 (السعر مشمول)\n"
-"    - نسبة مئوية من السعر الشامل للضريبة: مبلغ الضريبة هو تقسيم للسعر\n"
+"    - نسبة من السعر شامل الضريبة: مبلغ الضريبة هو جزء من السعر\n"
 "         على سبيل المثال ، 180 ÷ (1 - 10%) = 200 (لا يشمل السعر)\n"
 "         على سبيل المثال ، 200 × (1 - 10%) = 180 (السعر مشمول)\n"
 "        "
@@ -53,17 +54,17 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
 msgid "# Reconciled Bills"
-msgstr "فواتير مشتريات تمت تسويتها"
+msgstr "عدد فواتير المشتريات التي تمت تسويتها "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoices_count
 msgid "# Reconciled Invoices"
-msgstr "فواتير مبيعات تمت تسويتها"
+msgstr "عدد فواتير المبيعات التي تمت تسويتها "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statements_count
 msgid "# Reconciled Statements"
-msgstr "كشوفات تمت مطابقتها"
+msgstr "عدد الكشوفات التي تمت تسويتها "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
@@ -73,7 +74,7 @@ msgstr "عدد خانات الأرقام"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cashbox_line__number
 msgid "#Coins/Bills"
-msgstr "#العملات / فواتير"
+msgstr "عدد العملات / الأوراق النقدية "
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -123,25 +124,25 @@ msgstr "%s  (تقريب)"
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "%s - %s; %s Billed, %s Received at %s each"
-msgstr "%s - %s; %s مفوتر, %s مستلم في %s كل"
+msgstr "%s - %s؛ %s مفوتر،%s تم تسليمه في %s كل "
 
 #. module: account
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "%s - %s; %s Invoiced, %s Delivered at %s each"
-msgstr ""
+msgstr "%s - %s؛ %s مفوتر، %s تم تسليمه في %s كل "
 
 #. module: account
 #: code:addons/account/models/product.py:0
 #, python-format
 msgid "%s Excl. Taxes"
-msgstr "%s ضرائب مستنثاة"
+msgstr "%s الضرائب المستنثاة "
 
 #. module: account
 #: code:addons/account/models/product.py:0
 #, python-format
 msgid "%s Incl. Taxes"
-msgstr "%s ضرائب متضمنة"
+msgstr "%s الضرائب المشمولة "
 
 #. module: account
 #: code:addons/account/models/sequence_mixin.py:0
@@ -165,12 +166,12 @@ msgstr "-> عرض القيود المسواة جزئيًا"
 msgid ""
 ". The journal entries need to be computed by Odoo before being posted in "
 "your company's currency."
-msgstr "يجب أن يحسب أودو قيد اليومية قبل أن يتم ترحيله بعملة شركتك."
+msgstr ". يجب أن تُحسب قيود اليومية من قِبَل أودو قبل وضعها في عُملة شركتك. "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ". You might want to put a higher number here."
-msgstr "ربما يجب أن تدخل رقماً أكبر هنا."
+msgstr ". من الأفضل أن تدخل رقماً أكبر هنا. "
 
 #. module: account
 #: code:addons/account/wizard/account_resequence.py:0
@@ -186,7 +187,7 @@ msgstr "دفعة واحدة"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "1 Statement"
-msgstr "كشف واحد"
+msgstr "كشف واحد "
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
@@ -196,7 +197,7 @@ msgstr "15 يوماً"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_2months
 msgid "2 Months"
-msgstr "شهران"
+msgstr "شهرين "
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_21days
@@ -258,6 +259,37 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        عزيزي\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">براندن فريمان، </t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">براندن فريمان</t>،\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        إليك \n"
+"        <t t-if=\"object.name\">\n"
+"            الإشعارات الدائنة <strong t-out=\"object.name or ''\">RINV/2021/05/0001</strong>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            الإشعارات الدائنة\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (مع المرجع: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"        </t>\n"
+"        والتي تقدر قيمتها بـ <strong t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</strong>\n"
+"        من <t t-out=\"object.company_id.name or ''\">شركتك</t>.\n"
+"        <br/><br/>\n"
+"        لا تتردد في التواصل معنا إذا كانت لديك أي أسئلة أو استفسارات.\n"
+"        <t t-if=\"object.invoice_user_id.signature\">\n"
+"            <br/>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -304,6 +336,47 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        عزيزي\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">براندن فريمان،</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">براندن فريمان</t>،\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        إليك\n"
+"        <t t-if=\"object.name\">\n"
+"            الفاتورة <strong t-out=\"object.name or ''\">INV/2021/05/0005</strong>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            الفاتورة\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (مع المرجع: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"        </t>\n"
+"        والتي تقدر قيمتها بـ <strong t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</strong>\n"
+"        من <t t-out=\"object.company_id.name or ''\">شركتك</t>.\n"
+"        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
+"            تم تسديد هذه الفاتورة بالفعل.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            الرجاء تحويل المدفوعات في أقرب وقت ممكن. \n"
+"            <t t-if=\"object.payment_reference\">\n"
+"                <br/><br/>\n"
+"                الرجاء استخدام المرجع التالي لإكمال عملية الدفع: <strong t-out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>.\n"
+"            </t>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"         لا تتردد في التواصل معنا إذا كانت لديك أي أسئلة أو استفسارات.\n"
+"        <t t-if=\"object.invoice_user_id.signature\">\n"
+"            <br/>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_payment_receipt
@@ -325,11 +398,27 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        أعزاءنا <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br/><br/>\n"
+"        شكراً لإتمامك عملية الدفع\n"
+"        إليك إيصال الدفع الخاص بك <strong t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</strong> والذي يقدر بـ\n"
+"         <strong t-out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</strong> من <t t-out=\"object.company_id.name or ''\">شركتك</t>.\n"
+"        <br/><br/>\n"
+"         لا تتردد في التواصل معنا إذا كانت لديك أي أسئلة أو استفسارات.\n"
+"        <br/><br/>\n"
+"        مع أطيب التحيات،\n"
+"        <t t-if=\"user.signature\">\n"
+"            <br/>\n"
+"            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
 msgid "<em>Draft Invoice</em>"
-msgstr "<em>مسودة فاتورة مبيعات</em>"
+msgstr "<em>مسودة فاتورة</em>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
@@ -364,7 +453,7 @@ msgstr "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Date\" title=\"Date
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "<i class=\"fa fa-download\"/> Download"
-msgstr "تنزيل"
+msgstr "<i class=\"fa fa-download\"/> تنزيل "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -385,8 +474,8 @@ msgstr "<i class=\"fa fa-fw fa-comments\"/><b>إرسال رسالة</b>"
 msgid ""
 "<i class=\"fa fa-fw o_button_icon fa-arrow-right\"/> Configure Email Servers"
 msgstr ""
-"<i class=\"fa fa-fw o_button_icon fa-arrow-right\"/> ضبط سيرفرات البريد "
-"الإلكتروني"
+"<i class=\"fa fa-fw o_button_icon fa-arrow-right\"/> ضبط خوادم البريد "
+"الإلكتروني "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -401,7 +490,7 @@ msgid ""
 "<strong>{account_target_name}</strong> by {link}</li>"
 msgstr ""
 "<li>{amount} ({debit_credit}) من <strong>%s</strong> والتي تم نقلها الى "
-"<strong>{account_target_name}</strong> حسب {link}</li>"
+"<strong>{account_target_name}</strong> عن طريق {link}</li>"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -421,6 +510,10 @@ msgid ""
 "                                <span attrs=\"{'invisible': ['|',('reconciled_invoices_type','=','invoice'),('reconciled_invoices_count','&gt;', 1)]}\">Credit Note</span>\n"
 "                                <span attrs=\"{'invisible': ['|',('reconciled_invoices_type','=','invoice'),('reconciled_invoices_count','&lt;=', 1)]}\">Credit Notes</span>"
 msgstr ""
+"<span attrs=\"{'invisible': ['|',('reconciled_invoices_type','!=','invoice'),('reconciled_invoices_count','&gt;', 1)]}\">فاتورة</span>\n"
+"                                <span attrs=\"{'invisible': ['|',('reconciled_invoices_type','!=','invoice'),('reconciled_invoices_count','&lt;=', 1)]}\">فواتير</span>\n"
+"                                <span attrs=\"{'invisible': ['|',('reconciled_invoices_type','=','invoice'),('reconciled_invoices_count','&gt;', 1)]}\">إشعار دائن</span>\n"
+"                                <span attrs=\"{'invisible': ['|',('reconciled_invoices_type','=','invoice'),('reconciled_invoices_count','&lt;=', 1)]}\">إشعارات دائنة</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
@@ -432,10 +525,10 @@ msgid ""
 "                                    <span>Followers of the document and</span>"
 msgstr ""
 "<span attrs=\"{'invisible': [('composition_mode', '!=', 'mass_mail')]}\">\n"
-"                                        <strong>إرسال مراسلات جماعية</strong> إلى\n"
+"                                        <strong>إرسال الرسائل الجماعية</strong> إلى\n"
 "                                        <span>السجلات المحددة</span>\n"
 "                                    </span>\n"
-"                                    <span>متابعو المستند و</span>"
+"                                    <span>متابعي المستند و</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -443,8 +536,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('reconciled_bills_count','&gt;', 1)]}\">Bill</span>\n"
 "                                <span attrs=\"{'invisible': [('reconciled_bills_count','&lt;=', 1)]}\">Bills</span>"
 msgstr ""
-"<span attrs=\"{'invisible': [('reconciled_bills_count','&gt;', 1)]}\">فاتورة مشتريات</span>\n"
-"                                <span attrs=\"{'invisible': [('reconciled_bills_count','&lt;=', 1)]}\">فواتير مشتريات</span>"
+"<span attrs=\"{'invisible': [('reconciled_bills_count','&gt;', 1)]}\">فاتورة</span>\n"
+"                                <span attrs=\"{'invisible': [('reconciled_bills_count','&lt;=', 1)]}\">فواتير</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -497,7 +590,7 @@ msgid ""
 msgstr ""
 "<span class=\"badge badge-pill badge-warning\"><i class=\"fa fa-fw fa-"
 "remove\" aria-label=\"Cancelled\" title=\"Cancelled\" role=\"img\"/><span "
-"class=\"d-none d-md-inline\"> ملغاة</span></span>"
+"class=\"d-none d-md-inline\"> ملغي</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -516,8 +609,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\"/>"
 msgstr ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
-"specific.\"/>"
+"<span class=\"fa fa-lg fa-building-o\" title=\"القيم المحددة هنا هي قيم خاصة"
+" بالشركة. \"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -536,6 +629,8 @@ msgid ""
 "<span class=\"o_form_label oe_inline\" "
 "attrs=\"{'invisible':[('amount_type','!=','percentage')]}\">%</span>"
 msgstr ""
+"<span class=\"o_form_label oe_inline\" "
+"attrs=\"{'invisible':[('amount_type','!=','percentage')]}\">%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_form
@@ -544,6 +639,8 @@ msgid ""
 "<span class=\"o_form_label oe_inline\" "
 "attrs=\"{'invisible':[('amount_type','=','fixed')]}\">%</span>"
 msgstr ""
+"<span class=\"o_form_label oe_inline\" "
+"attrs=\"{'invisible':[('amount_type','=','fixed')]}\">%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_line_form
@@ -551,6 +648,8 @@ msgid ""
 "<span class=\"o_form_label oe_inline\" "
 "attrs=\"{'invisible':[('value','!=','percent')]}\">%</span>"
 msgstr ""
+"<span class=\"o_form_label oe_inline\" "
+"attrs=\"{'invisible':[('value','!=','percent')]}\">%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -567,8 +666,8 @@ msgid ""
 "<span class=\"o_form_label\">All selected journal entries will be validated "
 "and posted. You won't be able to modify them afterwards.</span>"
 msgstr ""
-"<span class=\"o_form_label\">سيتم اعتماد وترحيل كل قيود اليومية المحددة. لن "
-"تستطيع تعديلهم بعد ذلك.</span>"
+"<span class=\"o_form_label\">سوف يتم تصديق وترحيل كافة قيود اليومية المحددة."
+" لن يكون بمقدورك إجراء تعديلات عليها بعد ذلك.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -660,7 +759,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
 msgid "<span class=\"o_stat_text\">Invoiced</span>"
-msgstr "<span class=\"o_stat_text\">صدرت فاتورته</span>"
+msgstr "<span class=\"o_stat_text\">مفوتر</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -687,7 +786,7 @@ msgid ""
 " account, or select a journal to link it with the bank account.</span>"
 msgstr ""
 "<span class=\"text-muted\">دعه فارغاً ليتم إنشاء يومية جديدة خاصة بهذا "
-"الحساب المصرفي، أو اختر يومية ليتم ربطها مع هذا الحساب المصرفي</span>"
+"الحساب المصرفي، أو اختر يومية ليتم ربطها مع الحساب المصرفي</span> "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -695,6 +794,8 @@ msgid ""
 "<span class=\"text-nowrap\">$ <span "
 "class=\"oe_currency_value\">11,750.00</span></span>"
 msgstr ""
+"<span class=\"text-nowrap\">$ <span "
+"class=\"oe_currency_value\">11,750.00</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -702,6 +803,8 @@ msgid ""
 "<span class=\"text-nowrap\">$ <span "
 "class=\"oe_currency_value\">19,250.00</span></span>"
 msgstr ""
+"<span class=\"text-nowrap\">$ <span "
+"class=\"oe_currency_value\">19,250.00</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -709,16 +812,18 @@ msgid ""
 "<span class=\"text-nowrap\">$ <span "
 "class=\"oe_currency_value\">7,500.00</span></span>"
 msgstr ""
+"<span class=\"text-nowrap\">$ <span "
+"class=\"oe_currency_value\">7,500.00</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid "<span class=\"text-nowrap\">1,500.00</span>"
-msgstr ""
+msgstr "<span class=\"text-nowrap\">1,500.00</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid "<span class=\"text-nowrap\">2,350.00</span>"
-msgstr ""
+msgstr "<span class=\"text-nowrap\">2,350.00</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -732,7 +837,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span name=\"button_import_placeholder\"/> Statements"
-msgstr "<span name=\"button_import_placeholder\"/>الكشوفات البنكية"
+msgstr "<span name=\"button_import_placeholder\"/>كشوفات الحساب البنكية "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -752,12 +857,14 @@ msgstr "<span role=\"separator\">عرض</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Balance in General Ledger\">Balance in GL</span>"
-msgstr "<span title=\"Balance in General Ledger\">رصيد دفتر الاستاذ العام</span>"
+msgstr ""
+"<span title=\"الرصيد المتوفر في دفتر الأستاذ العام \">الرصيد المتوفر في دفتر"
+" الأستاذ العام</span> "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Latest Statement\">Latest Statement</span>"
-msgstr "<span title=\"آخر الكشوفات\">آخر كشف حساب</span>"
+msgstr "<span title=\"آخر كشف حساب\">آخر كشف حساب</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -765,7 +872,7 @@ msgid ""
 "<span title=\"Outstanding Payments/Receipts\">Outstanding "
 "Payments/Receipts</span>"
 msgstr ""
-"<span title=\"Outstanding Payments/Receipts\">مدفوعات/مقبوضات معلقة</span>"
+"<span title=\"Outstanding Payments/Receipts\">مدفوعات/إيصالات مستحقة</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
@@ -790,18 +897,18 @@ msgstr "<span> إلى </span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
-msgstr ""
+msgstr "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid "<span>5.00</span>"
-msgstr ""
+msgstr "<span>5.00</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Amount</span>"
-msgstr "<span>القيمة</span>"
+msgstr "<span>المبلغ</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -864,7 +971,7 @@ msgstr "<span>مرجع</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Reporting</span>"
-msgstr "<span>التقارير</span>"
+msgstr "<span>إعداد التقارير</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -900,12 +1007,12 @@ msgstr "<span>سعر الوحدة</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Upload Invoices</span>"
-msgstr "<span>تحميل الفواتير</span>"
+msgstr "<span>رفع الفواتير</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Upload</span>"
-msgstr "<span>ارفع</span>"
+msgstr "<span>رفع</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -923,7 +1030,7 @@ msgid ""
 "<strong class=\"text-center\">Scan me with your banking "
 "app.</strong><br/><br/>"
 msgstr ""
-"<strong class=\"text-center\">امسحني ضوئياً عبر تطبيقك "
+"<strong class=\"text-center\">قم بإجراء المسح الضوئي عن طريق تطبيقك "
 "البنكي.</strong><br/><br/>"
 
 #. module: account
@@ -934,7 +1041,7 @@ msgstr "<strong>المبلغ المستحق</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "<strong>Company:</strong>"
-msgstr "<strong>المؤسسة:</strong>"
+msgstr "<strong>الشركة:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -960,12 +1067,12 @@ msgstr "<strong>الرصيد النهائي</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "<strong>Entries Sorted By:</strong>"
-msgstr "<strong>ترتيب القيود حسب:</strong>"
+msgstr "<strong>تم فرز القيود حسب:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Incoterm: </strong>"
-msgstr "<strong>Incoterm: </strong>"
+msgstr "<strong>شروط التجارة الدولية: </strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -986,7 +1093,7 @@ msgstr "<strong>المنتج</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Reference:</strong>"
-msgstr "<strong>رقم الإشارة:</strong>"
+msgstr "<strong>الرقم المرجعي:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -996,7 +1103,7 @@ msgstr "<strong>المصدر:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "<strong>Starting Balance</strong>"
-msgstr "<strong>الرصيد المبدأي</strong>"
+msgstr "<strong>الرصيد المبدئي</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1014,8 +1121,8 @@ msgid ""
 "<strong>This currency has already been used to generate accounting entries.</strong> <br/>\n"
 "                        Changing its rounding factor now will not change the rounding made on previous entries; possibly causing an inconsistency with the new ones."
 msgstr ""
-"<strong>لقد تم استخدام هذه العملة في إنشاء قيود محاسبية.</strong> <br/>\n"
-"                        تغيير مُعامِل التقريب الخاص بها الآن لن يغير التقريب في القيود السابقة؛ ما قد يؤدي إلى عدم اتساق مع القيود الجديدة."
+"<strong>لقد تم استخدام هذه العملة بالفعل في إنشاء قيود محاسبية.</strong> <br/>\n"
+"                        تغيير مُعامِل التقريب الخاص بها الآن لن يغير التقريب في القيود السابقة؛ مما قد يؤدي إلى التفاوت مع القيود الجديدة. "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1044,10 +1151,10 @@ msgid ""
 "                your cash box, and then post entries when money comes in or\n"
 "                goes out of the cash box."
 msgstr ""
-"يسمح لك سجل النقدية بإدارة قيود النقدية في في دفاتر يومية الخزينة.\n"
+"تتيح لك آلة تسجيل النقد إدارة قيود النقد في في دفاتر يومية الخزينة.\n"
 "                تقدم هذه الخاصية طريقة سهلة لمتابعة الدفعات النقدية\n"
 "                وجردها يومياً. يمكنك إدخال فئات العملات الموجودة في صندوق\n"
-"                النقدية, وترحيل القيود بعد ذلك عندما إضافة أو سحب نقدية من الصندوق."
+"                النقد، وترحيل القيود بعد ذلك عند إضافة أو سحب النقد من الصندوق. "
 
 #. module: account
 #: code:addons/account/models/account_payment_term.py:0
@@ -1068,8 +1175,8 @@ msgid ""
 "                occurring over a given period of time on a bank account. You\n"
 "                should receive this periodicaly from your bank."
 msgstr ""
-"كشف الحساب البنكي هو موجز لكل المعاملات المالية\n"
-"                التي تحدث على الحساب البنكي خلال فترة زمنية معينة. ينبغي أن\n"
+"كشف الحساب البنكي هو موجز لكافة المعاملات المالية\n"
+"                التي تحدث في الحساب البنكي خلال فترة زمنية معينة. ينبغي أن\n"
 "                تحصل على كشف الحساب بشكل دوري من بنكك."
 
 #. module: account
@@ -1081,7 +1188,7 @@ msgstr "بند كشف الحساب هو معاملة مالية في حساب ب
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid "A fiscal position with a foreign VAT already exists in this region."
-msgstr ""
+msgstr "يوجد وضع مالي مع ضريبة أجنبية بالفعل في هذا الإقليم. "
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -1089,8 +1196,8 @@ msgid ""
 "A journal entry consists of several journal items, each of\n"
 "                which is either a debit or a credit transaction."
 msgstr ""
-"يتكون قيد اليومية من عدة عناصر يومية؛ كل\n"
-"                واحد منها إما أن يكون معاملة دائنة أو مدينة."
+"يتكون قيد اليومية من عدة عناصر لليومية؛ كل واحد\n"
+"                منها إما أن يكون معاملة دائنة أو مدينة."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_form
@@ -1098,14 +1205,14 @@ msgid ""
 "A journal is used to record transactions of all accounting data\n"
 "                related to the day-to-day business."
 msgstr ""
-"يُستخدم دفتر اليومية لتسجيل كافة المعاملات المحاسبية\n"
-"                المتعلقة بالأعمال اليومية."
+"يُستخدم دفتر اليومية لتسجيل المعاملات لكافة البيانات المحاسبية\n"
+"                المتعلقة بالأعمال اليومية. "
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "A payment must always belongs to a bank or cash journal."
-msgstr "يجب دوماً ربط المدفوعات بيومية بنك أو صندوق."
+msgstr "يجب ربط المدفوعات دوماً بالبنك أو دفتر يومية الصندوق. "
 
 #. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
@@ -1113,14 +1220,14 @@ msgstr "يجب دوماً ربط المدفوعات بيومية بنك أو ص�
 msgid ""
 "A payment tolerance defined as a percentage should always be between 0 and "
 "100"
-msgstr "يجب أن تكون النسبة المئوية للسماح في الدفعات بين 0 و 100"
+msgstr "يجب أن تكون النسبة المئوية للسماح في الدفعات دائماً بين 0 و 100 "
 
 #. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid ""
 "A payment tolerance defined as an amount should always be higher than 0"
-msgstr "يجب أن تكون قيمة السماح في الدفعات أكبر من 0 دائماً"
+msgstr "يجب أن يكون مبلغ السماح في الدفعات دائماً أكبر من 0 "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1145,12 +1252,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid ""
 "A second payment will be created automatically in the destination journal."
-msgstr "دفعة ثانية سيتم إنشاؤها تلقائياً في اليومية المستهدفة"
+msgstr "سوف يتم إنشاء دفعة ثانية تلقائياً في اليومية المستهدفة. "
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_tax_tax_src_dest_uniq
 msgid "A tax fiscal position could be defined only one time on same taxes."
-msgstr "لا يمكن ضبط الموقف الضريبي لنفس الضريبة أكثر من مرة."
+msgstr "لا يمكن تحديد الوضع المالي الضريبي لنفس الضريبة سوى مرة واحدة "
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -1159,8 +1266,8 @@ msgid ""
 "A tax should only use tags from its country. You should use another tax and "
 "a fiscal position if you wish to uses the tags from foreign tax reports."
 msgstr ""
-"يجب أن تستخدم الضريبة علامات من بلدها فقط. يجب عليك استخدام ضريبة أخرى ووضع "
-"مالي إذا كنت ترغب في استخدام العلامات من تقارير الضرائب الأجنبية."
+"يجب أن تستخدم الضريبة علامات من بلدها فقط. سيتوجب عليك استخدام ضريبة ووضع "
+"مالي آخرين إذا كنت ترغب في استخدام العلامات من تقارير الضرائب الأجنبية. "
 
 #. module: account
 #: code:addons/account/models/res_users.py:0
@@ -1171,15 +1278,15 @@ msgid ""
 "either in 'Tax-Included' or in 'Tax-Excluded' mode\n"
 "(or switch twice the mode if you are already in the desired one)."
 msgstr ""
-"لا يمكن للمستخدم أن يمتلك ضرائب الشركات للشركات B2B وضرائب الشركات للأفراد B2C في نفس الوقت.\n"
-"يتوجب عليك أن الذهاب إلى الإعدادات العامة، وأن تختار وضع عرض أسعار المنتج\n"
-"إما أن تكون 'الضريبة مشمولة' أو وضع 'الضريبة غير مشمولة'\n"
-"(أو قم بتبديل الوضع مرتين إذا كنت بالفعل في الوضع المطلوب)."
+"لا يمكن أن يكون للمستخدم ضريبة الشركات للشركات B2B وضريبة الشركات للأفراد B2C في نفس الوقت.\n"
+"عليك الذهاب إلى الإعدادات العامة واختيار أن تقوم بعرض أسعار المنتج\n"
+"إما في وضع 'شامل الضريبة' أو وضع 'غير شامل الضريبة'\n"
+"(أو قم بتبديل الوضع مرتين إذا كنت بالفعل في الوضع المطلوب). "
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account
 msgid "A warning can be set on a partner (Account)"
-msgstr "يمكن ضبط تحذير خاص بشريك (الحساب)"
+msgstr "يمكن وضع تحذير خاص بالشريك (الحساب) "
 
 #. module: account
 #: model:ir.model,name:account.model_res_groups
@@ -1219,17 +1326,18 @@ msgid ""
 "Account %s does not allow reconciliation. First change the configuration of "
 "this account to allow it."
 msgstr ""
-"الحساب %s لا يقبل التخصيص. يجب أولاً أن تغير إعدادات الحساب ليتم قبولها."
+"الحساب %s لا يقبل التسوية. عليك أن تقوم بتغيير إعدادات تهيئة هذا الحساب "
+"أولاً ليتم قبولها. "
 
 #. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
 msgid "Account Cash Rounding"
-msgstr "تقريب القيم المالية"
+msgstr "تقريب القيم المالية في الحساب "
 
 #. module: account
 #: model:ir.model,name:account.model_account_chart_template
 msgid "Account Chart Template"
-msgstr "قالب مخطط الحساب"
+msgstr "نموذج مخطط الحساب "
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_report
@@ -1292,7 +1400,7 @@ msgstr "دفتر يومية الحساب"
 #. module: account
 #: model:ir.model,name:account.model_account_journal_group
 msgid "Account Journal Group"
-msgstr "حساب مجموع الدفاتر اليومية"
+msgstr "مجموعة حساب دفتر اليومية "
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_journal
@@ -1304,12 +1412,12 @@ msgstr "تقرير اليومية المحاسبية"
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template__account_ids
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Account Mapping"
-msgstr "ربط الحسابات"
+msgstr "تخطيط الحسابات "
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_reversal
 msgid "Account Move Reversal"
-msgstr "الحركة العكسية"
+msgstr "عكس حركة الحساب "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__name
@@ -1328,7 +1436,7 @@ msgstr "رقم الحساب"
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_payable_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_account_payable_id
 msgid "Account Payable"
-msgstr "حساب الدائنون"
+msgstr "حساب الدائن "
 
 #. module: account
 #: model:ir.model,name:account.model_account_print_journal
@@ -1344,7 +1452,7 @@ msgstr "خصائص الحساب"
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_receivable_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_account_receivable_id
 msgid "Account Receivable"
-msgstr "حساب المدينون"
+msgstr "حساب مدين "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_root_id
@@ -1366,13 +1474,13 @@ msgstr "إحصائيات الحساب"
 #. module: account
 #: model:ir.model,name:account.model_account_account_tag
 msgid "Account Tag"
-msgstr "وسم الحساب"
+msgstr "علامة تصنيف الحساب"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_product__account_tag_ids
 #: model:ir.model.fields,field_description:account.field_product_template__account_tag_ids
 msgid "Account Tags"
-msgstr "وسوم الحساب"
+msgstr "علامات تصنيف الحساب "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tax_view_tree
@@ -1394,13 +1502,13 @@ msgstr "حساب تقرير الضرائب"
 #. module: account
 #: model:ir.model,name:account.model_account_tax_report_line
 msgid "Account Tax Report Line"
-msgstr "سطر حساب التقرير الضريبي"
+msgstr "بند حساب التقرير الضريبي "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_tree
 msgid "Account Tax Template"
-msgstr "القالب الضريبي"
+msgstr "نموذج ضريبة الحساب "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_taxcloud
@@ -1413,7 +1521,7 @@ msgstr "حساب TaxCloud"
 #: model_terms:ir.ui.view,arch_db:account.view_account_template_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_template_tree
 msgid "Account Template"
-msgstr "قالب الحساب"
+msgstr "نموذج الحساب "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_stock_valuation_account_id
@@ -1440,9 +1548,9 @@ msgid ""
 "legal reports, and set the rules to close a fiscal year and generate opening"
 " entries."
 msgstr ""
-"يستخدم نوع الحساب في استخراج التقارير وفقاً للتقارير القانونية المطلوبة في "
-"كل دولة، وتضع القواعد اللازمة في إقفال سنة مالية وإنشاء القيد الافتتاحي "
-"للسنة المالية اللاحقة."
+"يُستخدم نوع الحساب في إنشاء التقارير  القانونية المخصصة لكل دولة، وتضع "
+"القواعد اللازمة لإقفال السنة المالية وإنشاء القيود الافتتاحية للسنة المالية "
+"اللاحقة. "
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_type_form
@@ -1500,12 +1608,12 @@ msgstr "تقرير محاسبي مع بنود السداد"
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_invoice
 msgid "Account report without payment lines"
-msgstr "تقرير الحساب بدون مواد الدفع"
+msgstr "تقرير محاسبي دون بنود السداد "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template__tag_ids
 msgid "Account tag"
-msgstr "وسم الحساب"
+msgstr "علامة تصنيف الحساب "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template__property_cash_basis_base_account_id
@@ -1515,7 +1623,7 @@ msgid ""
 "Account that will be set on lines created in cash basis journal entry and "
 "used to keep track of the tax base amount."
 msgstr ""
-"الحساب الذي سيُضبط حسب البنود المذكورة في قيد يومية حركة النقدية ويُستخدم "
+"الحساب الذي سيُضبط حسب البنود المذكورة في قيد يومية حركة النقد ويُستخدم "
 "لتتبع الضريبة المفروضة على المبلغ الأساسي."
 
 #. module: account
@@ -1726,7 +1834,7 @@ msgstr "فعّلها لإنشاء إيصال مشتريات"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Activate to create sale receipt"
-msgstr ""
+msgstr "التفعيل لإنشاء إيصال بيع "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__active
@@ -3941,7 +4049,7 @@ msgstr "اتصل"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_bank_account_step
 msgid "Connect your financial accounts in seconds."
-msgstr ""
+msgstr "اربط حساباتك المالية في ثوان. "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__reply_to_force_new
@@ -4017,6 +4125,7 @@ msgid ""
 "Could not compute any code for the copy automatically. Please create it "
 "manually."
 msgstr ""
+"لم تتم عملية إنشاء كود تلقائياً من أجل النسخة بنجاح. الرجاء إنشاؤه يدوياً. "
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -4029,7 +4138,7 @@ msgstr "لم نستطع تثبيت دليل محاسبي جديد بسبب وج�
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Counterpart Entries"
-msgstr ""
+msgstr "قيود مقابلة "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__country_id
@@ -4100,7 +4209,7 @@ msgstr "إنشئ قيوداً تلقائية لسطور اليوميات الم�
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
 msgid "Create Entry"
-msgstr ""
+msgstr "إنشاء قيد "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_create_invoice_step
@@ -4120,7 +4229,7 @@ msgstr "Create Journal Entries"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Create Manually"
-msgstr ""
+msgstr "الإنشاء يدوياً "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -4201,7 +4310,7 @@ msgstr "إنشاء ضريبة جديدة"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_tax_group
 msgid "Create a new tax group"
-msgstr ""
+msgstr "إنشاء مجموعة ضريبة جديدة "
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_invoice_type
@@ -4441,7 +4550,7 @@ msgstr "Credit Note Created"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_out_credit_note_tree
 msgid "Credit Note Currency"
-msgstr ""
+msgstr "عملة الإشعارات الدائنة "
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_move_out_refund_type
@@ -4464,7 +4573,7 @@ msgstr "عناصر اليومية الدائنة المتطابقة مع عنص�
 #. module: account
 #: model:mail.template,name:account.email_template_edi_credit_note
 msgid "Credit note: Send by email"
-msgstr ""
+msgstr "إشعار دائن: الإرسال عن طريق البريد الإلكتروني "
 
 #. module: account
 #: model:mail.template,report_name:account.email_template_edi_credit_note
@@ -4472,6 +4581,8 @@ msgid ""
 "Credit_note_{{ (object.name or '').replace('/','_') }}{{ object.state == "
 "'draft' and '_draft' or '' }}"
 msgstr ""
+"Credit_note_{{ (object.name or '').replace('/','_') }}{{ object.state == "
+"'draft' and '_draft' or '' }}"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__cumulated_balance
@@ -4941,7 +5052,7 @@ msgstr "الشروط والأحكام الافتراضية"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__invoice_terms_html
 msgid "Default Terms and Conditions as a Web page"
-msgstr ""
+msgstr "الشروط والأحكام الافتراضية كصفحة ويب "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__null_value
@@ -5021,7 +5132,7 @@ msgid ""
 " be forced to the total of this report line: a report line with a balance of"
 " 10 with an existing carryover of 50 will create a new carryover line of "
 "-40, so that the total carryover becomes 10."
-msgstr ""
+msgstr "يحدد كيفية قيام بند التقرير هذا بإنشاء بنود ترحيل عند إغلاق الضريبة. "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_cash_rounding_id

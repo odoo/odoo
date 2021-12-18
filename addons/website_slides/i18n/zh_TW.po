@@ -78,7 +78,7 @@ msgstr "3 主要方法"
 #: code:addons/website_slides/models/slide_channel.py:0
 #, python-format
 msgid "<b>%s</b> is requesting access to this course."
-msgstr "<b>%s</b>正在請求訪問此課程。"
+msgstr "<b>%s</b>正在請求存取此課程。"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
@@ -945,13 +945,13 @@ msgstr "授予存取權限"
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_res_groups
 msgid "Access Groups"
-msgstr "訪問組"
+msgstr "存取組"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_channel.py:0
 #, python-format
 msgid "Access Refused"
-msgstr "拒絕訪問"
+msgstr "拒絕存取"
 
 #. module: website_slides
 #: model:mail.activity.type,name:website_slides.mail_activity_data_access_request
@@ -961,7 +961,7 @@ msgstr "存取請求"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__has_requested_access
 msgid "Access Requested"
-msgstr "請求訪問"
+msgstr "請求存取"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -1777,7 +1777,7 @@ msgstr "恭喜，您的課程已建立，但還沒有任何內容。首先，讓
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_res_partner
 msgid "Contact"
-msgstr "聯繫人"
+msgstr "聯絡人"
 
 #. module: website_slides
 #: code:addons/website_slides/models/slide_channel.py:0
@@ -2273,7 +2273,7 @@ msgstr "你想正確回覆嗎？"
 #: code:addons/website_slides/static/src/xml/slide_course_join.xml:0
 #, python-format
 msgid "Do you want to request access to this course ?"
-msgstr "您想申請訪問本課程嗎？"
+msgstr "您想申請存取本課程嗎？"
 
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__document
@@ -2404,7 +2404,7 @@ msgstr "當完成課程後向參加者發送電子郵件"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__share_template_id
 msgid "Email template used when sharing a slide"
-msgstr "分享投影片時使用的信件模板"
+msgstr "分享投影片時使用的信件範本"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__embed_code
@@ -2518,12 +2518,12 @@ msgstr "外部鏈結"
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_slide_link
 msgid "External URL for a particular slide"
-msgstr "外部鏈接對特定投影片"
+msgstr "外部連結對特定投影片"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__link_ids
 msgid "External URL for this slide"
-msgstr "此投影片的外部鏈接"
+msgstr "此投影片的外部連結"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -2541,7 +2541,7 @@ msgstr "無法安裝 \"%s\"."
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__model_object_field
 msgid "Field"
-msgstr "字段"
+msgstr "欄位"
 
 #. module: website_slides
 #. openerp-web
@@ -2561,7 +2561,7 @@ msgstr "Filter &amp; order"
 msgid ""
 "Final placeholder expression, to be copy-pasted in the desired template "
 "field."
-msgstr "最終的佔位符表達式，可以複製粘貼到目標模板字段。"
+msgstr "最終的佔位符表達式，可以複製粘貼到目標模板欄位。"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -3355,7 +3355,7 @@ msgstr "連結"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__template_id
 msgid "Mail Template"
-msgstr "信件模板"
+msgstr "信件範本"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_res_config_settings__module_mass_mailing_slides
@@ -3811,7 +3811,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_invite__null_value
 msgid "Optional value to use if the target field is empty"
-msgstr "如果目標字段為空則使用此可選值"
+msgstr "如果目標欄位為空則使用此可選值"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -4148,7 +4148,7 @@ msgstr "收件人"
 #: code:addons/website_slides/static/src/components/activity/activity.xml:0
 #, python-format
 msgid "Refuse Access"
-msgstr "拒絕訪問"
+msgstr "拒絕存取"
 
 #. module: website_slides
 #: model:gamification.challenge,name:website_slides.badge_data_register_challenge
@@ -4403,7 +4403,7 @@ msgstr "章節名稱"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__access_token
 msgid "Security Token"
-msgstr "安全指示物"
+msgstr "安全代碼(token)"
 
 #. module: website_slides
 #. openerp-web
@@ -4423,8 +4423,8 @@ msgid ""
 "Select target field from the related document model.\n"
 "If it is a relationship field you will be able to select a target field at the destination of the relationship."
 msgstr ""
-"從相關單據模型中選擇目標字段。\n"
-"如果這是個關係型字段，您將可以在關係字段目的地選擇目標字段。"
+"從相關單據模型中選擇目標欄位。\n"
+"如果這是個關係型欄位，您將可以在關係欄位目的地選擇目標欄位。"
 
 #. module: website_slides
 #. openerp-web
@@ -4495,7 +4495,7 @@ msgstr "分享頻道"
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_share_link
 #, python-format
 msgid "Share Link"
-msgstr "分享鏈接"
+msgstr "分享連結"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__share_template_id
@@ -4718,7 +4718,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__sub_model_object_field
 msgid "Sub-field"
-msgstr "子字段"
+msgstr "子欄位"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__sub_object
@@ -4895,7 +4895,7 @@ msgstr "<b>您的課程標題</b>是自動完成的，但您可以根據需要�
 msgid ""
 "The course is accessible by anyone : the users don't need to join the "
 "channel to access the content of the course."
-msgstr "何人都可以訪問該課程：使用者無需加入頻道即可訪問課程內容。"
+msgstr "何人都可以存取該課程：使用者無需加入頻道即可存取課程內容。"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__description_short
@@ -5006,7 +5006,7 @@ msgstr "這個測驗已經做完了, 重新開始是不可能的。"
 #: code:addons/website_slides/controllers/main.py:0
 #, python-format
 msgid "This video already exists in this channel on the following slide: %s"
-msgstr "此視頻已存在於以下投影片中的此頻道中： %s"
+msgstr "此影片已存在於以下投影片中的此頻道中： %s"
 
 #. module: website_slides
 #. openerp-web
@@ -5418,21 +5418,21 @@ msgstr "有什麼問題？"
 msgid ""
 "When a relationship field is selected as first field, this field lets you "
 "select the target field within the destination document model (sub-model)."
-msgstr "如果首先選擇了一個關係型字段，這個字段允許您選擇目的地單據模型（子模型）內的目標字段。"
+msgstr "如果首先選擇了一個關係型欄位，這個欄位允許您選擇目的地單據模型（子模型）內的目標欄位。"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_invite__sub_object
 msgid ""
 "When a relationship field is selected as first field, this field shows the "
 "document model the relationship goes to."
-msgstr "如果關係型字段被選為第一個字段，這個字段顯示這個關係指向的單據模型。"
+msgstr "如果關係型欄位被選為第一個欄位，這個欄位顯示這個關係指向的單據模型。"
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_4_1
 msgid ""
 "Which wood type is best for my solid wood furniture? That's the question we "
 "help you answer in this video !"
-msgstr "哪種木材類型最適合我的實木家具？這就是我們在本視頻中幫助您回答的問題！"
+msgstr "哪種木材類型最適合我的實木家具？這就是我們在本影片中幫助您回答的問題！"
 
 #. module: website_slides
 #. openerp-web
@@ -5562,7 +5562,7 @@ msgstr "您無法在此頻道上傳。"
 #: code:addons/website_slides/static/src/js/slides_slide_like.js:0
 #, python-format
 msgid "You don't have access to this lesson"
-msgstr "您無權訪問本課程"
+msgstr "您無權存取本課程"
 
 #. module: website_slides
 #. openerp-web
@@ -5725,7 +5725,7 @@ msgstr "例如: 如何通過Odoo拓展業務？"
 msgid ""
 "e.g. In this video, we'll give you the keys on how Odoo can help you to grow"
 " your business. At the end, we'll propose you a quiz to test your knowledge."
-msgstr "例如: 在本視頻中，我們將向您介紹Odoo如何幫助您拓展業務。 最後，我們將為測試您的知識。"
+msgstr "例如: 在本影片中，我們將向您介紹Odoo如何幫助您拓展業務。 最後，我們將為測試您的知識。"
 
 #. module: website_slides
 #. openerp-web
@@ -5778,7 +5778,7 @@ msgid ""
 "means? The YouTube \"unlisted\" means it is a video which can be viewed only"
 " by the users with the link to it. Your video will never come up in the "
 "search results nor on your channel."
-msgstr "方法？ YouTube“不公開”意味著它是一個只能由擁有連結的用戶觀看的視頻。您的視頻永遠不會出現在搜索結果或您的頻道中。"
+msgstr "方法？ YouTube“不公開”意味著它是一個只能由擁有連結的用戶觀看的影片。您的影片永遠不會出現在搜索結果或您的頻道中。"
 
 #. module: website_slides
 #. openerp-web

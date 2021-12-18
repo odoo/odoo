@@ -514,8 +514,8 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"Một thư viện Python mà sẽ được biểu thị/đánh giá để cung cấp các giá trị mặc"
-" định khi tạo mới các bản ghi cho bí danh này."
+"Một từ điển Python sẽ được đánh giá để cung cấp giá trị mặc định khi tạo hồ "
+"sơ mới cho bí danh này. "
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_bus_presence_partner_or_guest_exists
@@ -595,7 +595,7 @@ msgstr "Thực hiện"
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_needaction
 #: model:ir.model.fields,field_description:mail.field_res_users__message_needaction
 msgid "Action Needed"
-msgstr "Hành động cần thiết"
+msgstr "Cần tác vụ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__state
@@ -629,7 +629,7 @@ msgstr "Được kích hoạt mặc định khi đăng ký (subscribing)."
 #: model:ir.model.fields,field_description:mail.field_mail_channel__active
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_search
 msgid "Active"
-msgstr "Có hiệu lực"
+msgstr "Đang hoạt động"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__active_domain
@@ -871,7 +871,7 @@ msgstr "Bí danh"
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_contact
 #: model:ir.model.fields,field_description:mail.field_mail_channel__alias_contact
 msgid "Alias Contact Security"
-msgstr "An ninh về bí danh liên hệ"
+msgstr "Bảo mật bí danh liên hệ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__alias_domain
@@ -882,13 +882,13 @@ msgstr "Tên miền bí danh"
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_name
 #: model:ir.model.fields,field_description:mail.field_mail_channel__alias_name
 msgid "Alias Name"
-msgstr "Tên Alias"
+msgstr "Tên bí danh"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_domain
 #: model:ir.model.fields,field_description:mail.field_mail_channel__alias_domain
 msgid "Alias domain"
-msgstr "Tên miền Alias"
+msgstr "Tên miền bí danh"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_model_id
@@ -1051,7 +1051,7 @@ msgstr "Đính kèm"
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_attachment_count
 #: model:ir.model.fields,field_description:mail.field_res_users__message_attachment_count
 msgid "Attachment Count"
-msgstr "Số lượng tập tin đính kèm"
+msgstr "Số tệp đính kèm"
 
 #. module: mail
 #. openerp-web
@@ -1115,7 +1115,7 @@ msgstr "Avatar của tác giả"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__group_public_id
 msgid "Authorized Group"
-msgstr "Nhóm có thẩm quyền"
+msgstr "Nhóm được cấp quyền"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__auto_delete
@@ -1131,7 +1131,7 @@ msgstr "Nhóm nhận tin tự động"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__group_ids
 msgid "Auto Subscription"
-msgstr "Tự động đăng ký nhận tin"
+msgstr "Tự động đăng ký"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_message_subtype_form
@@ -1494,7 +1494,7 @@ msgstr "Kênh/Đối tác"
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel__channel_type__chat
 #, python-format
 msgid "Chat"
-msgstr "Nhắn tin"
+msgstr "Chat"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_shortcode_action
@@ -3186,8 +3186,7 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
 msgstr ""
-"ID của bản ghi cha mà chứa bí danh (ví dụ: dự án chứa bí danh để tạo nhiệm "
-"vụ)"
+"ID của hồ sơ gốc chứa bí danh (ví dụ: dự án chứa bí danh để tạo nhiệm vụ)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__icon
@@ -3240,7 +3239,7 @@ msgstr "Rảnh rỗi"
 #: model:ir.model.fields,help:mail.field_res_users__message_needaction
 #: model:ir.model.fields,help:mail.field_res_users__message_unread
 msgid "If checked, new messages require your attention."
-msgstr "Nếu chọn, các tin nhắn mới yêu cầu sự có mặt của bạn."
+msgstr "Nếu chọn, các tin nhắn mới yêu cầu sự chú ý của bạn. "
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__message_has_error
@@ -3251,7 +3250,7 @@ msgstr "Nếu chọn, các tin nhắn mới yêu cầu sự có mặt của bạ
 #: model:ir.model.fields,help:mail.field_res_partner__message_has_error
 #: model:ir.model.fields,help:mail.field_res_users__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Nếu đánh dấu thì một số thông điệp có lỗi."
+msgstr "Nếu đánh dấu, một số tin nhắn bị lỗi khi gửi. "
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_wizard_invite__send_mail
@@ -3295,8 +3294,8 @@ msgid ""
 "If set, this content will automatically be sent out to unauthorized users "
 "instead of the default message."
 msgstr ""
-"Nếu được cài, nội dung này sẽ tự động được gửi đến người dùng chưa xác thực "
-"thay vì thông báo mặc định."
+"Nếu được cài, nội dung này sẽ tự động được gửi đến người dùng chưa được cấp "
+"quyền thay vì thông báo mặc định."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_thread_blacklist__is_blacklisted
@@ -3572,12 +3571,12 @@ msgstr "Là biên tập"
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_is_follower
 #: model:ir.model.fields,field_description:mail.field_res_users__message_is_follower
 msgid "Is Follower"
-msgstr "Trở thành người theo dõi"
+msgstr "Là người theo dõi"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__is_member
 msgid "Is Member"
-msgstr "Là một thành viên"
+msgstr "Là thành viên"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_notification__is_read
@@ -3587,7 +3586,7 @@ msgstr "Đã được đọc"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__is_chat
 msgid "Is a chat"
-msgstr "Nhắn tin"
+msgstr "Là đoạn chat"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__is_discuss_sidebar_category_channel_open
@@ -4136,9 +4135,8 @@ msgid ""
 "Members of those groups will automatically added as followers. Note that "
 "they will be able to manage their subscription manually if necessary."
 msgstr ""
-"Thành viên của nhóm sẽ được tự động thêm vào danh sách người theo dõi. Lưu ý"
-" rằng họ có thể tự thay đổi việc theo dõi này một cách thủ công, khi cần "
-"thiết."
+"Thành viên của nhóm sẽ được tự động thêm là người theo dõi. Lưu ý là họ sẽ "
+"có thể quản lý đăng ký một cách thủ công nếu cần thiết. "
 
 #. module: mail
 #: model:ir.model,name:mail.model_base_partner_merge_automatic_wizard
@@ -4185,7 +4183,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_has_error
 #: model:ir.model.fields,field_description:mail.field_res_users__message_has_error
 msgid "Message Delivery error"
-msgstr "Thông báo gửi đi gặp lỗi"
+msgstr "Gửi tin nhắn bị lỗi"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__mail_message_id
@@ -4325,7 +4323,7 @@ msgstr "Message-Id"
 #: model_terms:ir.ui.view,arch_db:mail.view_message_tree
 #, python-format
 msgid "Messages"
-msgstr "Thông báo"
+msgstr "Tin nhắn"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_message_search
@@ -4776,7 +4774,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_needaction_counter
 #: model:ir.model.fields,field_description:mail.field_res_users__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Số lượng hành động"
+msgstr "Số tác vụ"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__delay_count
@@ -4807,7 +4805,7 @@ msgstr "Số lỗi"
 #: model:ir.model.fields,help:mail.field_res_partner__message_needaction_counter
 #: model:ir.model.fields,help:mail.field_res_users__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "Số thông báo cần xử lý"
+msgstr "Số tin nhắn cần xử lý"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__message_has_error_counter
@@ -4818,7 +4816,7 @@ msgstr "Số thông báo cần xử lý"
 #: model:ir.model.fields,help:mail.field_res_partner__message_has_error_counter
 #: model:ir.model.fields,help:mail.field_res_users__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Số lượng tin gửi đi bị lỗi"
+msgstr "Số tin nhắn gửi đi bị lỗi"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_blacklist__message_unread_counter
@@ -5031,9 +5029,9 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"ID tuỳ chọn của một chủ đề/bản ghi (thread) mà tất cả các thông điệp gửi đến"
-" sẽ được gắn/đính vào, thậm chí khi không có người trả lời. Nếu được thiết "
-"lập, điều này sẽ vô hiệu hoàn toàn việc tạo mới bản ghi."
+"ID tùy chọn của một luồng (hồ sơ) mà mọi tin nhắn nhận được sẽ được đính "
+"kèm, thậm chí nếu tin nhắn không được trả lời. Nếu đặt, việc tạo hồ sơ mới "
+"sẽ bị vô hiệu hoàn toàn. "
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_notification__mail_mail_id
@@ -5134,7 +5132,7 @@ msgstr "Ghi đè email của tác giả"
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_user_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel__alias_user_id
 msgid "Owner"
-msgstr "Người phụ trách"
+msgstr "Người sở hữu"
 
 #. module: mail
 #. openerp-web
@@ -5161,13 +5159,13 @@ msgstr "Thông báo cha"
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_parent_model_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel__alias_parent_model_id
 msgid "Parent Model"
-msgstr "Mô hình cha"
+msgstr "Mô hình gốc"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_parent_thread_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr "Parent Record Thread ID"
+msgstr "ID luồng hồ sơ gốc"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_parent_model_id
@@ -5177,9 +5175,9 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
-"Parent model giữ bí danh. Model giữ tham chiếu bí danh không nhất thiết là "
-"model được đưa ra bởi alias_model_id (ví dụ: project (parent_model) và task "
-"(model))"
+"Mô hình gốc chứa bí danh này. Mô hình chứa tham chiếu bí danh không nhất "
+"thiết phải là mô hình đưa ra bởi alias_model_id (Ví dụ: dự án (parent_model)"
+" và nhiệm vụ (model))"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__parent_id
@@ -5643,7 +5641,7 @@ msgstr "Bản ghi"
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_force_thread_id
 #: model:ir.model.fields,field_description:mail.field_mail_channel__alias_force_thread_id
 msgid "Record Thread ID"
-msgstr "Record Thread ID"
+msgstr "ID luồng hồ sơ"
 
 #. module: mail
 #: code:addons/mail/models/mail_message.py:0
@@ -6212,7 +6210,7 @@ msgstr "Hành động phía Máy chủ"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel__active
 msgid "Set active to false to hide the channel without removing it."
-msgstr "Set active to false to hide the channel without removing it."
+msgstr "Đặt đang hoạt động thành sai để ẩn kênh và không cần xóa bỏ kênh. "
 
 #. module: mail
 #. openerp-web
@@ -6756,9 +6754,9 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
-"Model (kiểu tài liệu Odoo) mà bí danh này ứng với nó. Bất kỳ tin nhắn email "
-"nào không phản hồi lại một bản ghi có sẵn sẽ tự động tạo một bản ghi mới cho"
-" model này (vd: tạo mới một nhiệm vụ dự án nếu model là project.task)"
+"Mô hình (Kiểu tài liệu Odoo) mà bí danh này tương tác. Bất kỳ email nào nhận"
+" được mà không trả lời một hồ sơ cụ thể sẽ tạo ra hồ sơ mới trong mô hình "
+"này. (ví dụ: Nhiệm vụ dự án) "
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_name
@@ -6767,8 +6765,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"Tên của bí danh email, vd 'vieclam' nếu bạn muốn bắt tin nhắn gửi đến địa "
-"chỉ email <vieclam@vidu.odoo.com>"
+"Tên của bí danh email, ví dụ: 'jobs' nếu bạn muốn nhận email gửi đến địa chỉ"
+" <jobs@example.odoo.com>"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_user_id
@@ -6779,10 +6777,10 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
-"Chủ sở hữu của các bản ghi được tạo khi nhận email trên bí danh này. Nếu "
-"trường nàykhông được đặt, hệ thống sẽ cố gắng tìm đúng chủ sở hữu dựa "
-"trênđịa chỉ người gửi (Từ) hoặc sẽ sử dụng tài khoản quản trị viên nếu không"
-" cóngười dùng hệ thống nào được tìm thấy cho địa chỉ đó."
+"Người sở hữu của các hồ sơ được tạo khi nhận email gửi tới bí danh này. Nếu "
+"trường này không được đặt, hệ thống sẽ cố gắng tìm đúng người sở hữu dựa vào"
+" địa chỉ người gửi (Từ), hoặc sẽ dùng tài khoản Quản trị viên nếu không tìm "
+"thấy người dùng hệ thống nào cho địa chỉ đó. "
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__scheduled_date
@@ -6873,8 +6871,8 @@ msgid ""
 "This group is visible by non members. Invisible groups can add members "
 "through the invite button."
 msgstr ""
-"Nhóm này có thể được thấy bởi những người không phải là thành viên. "
-"Invisible groups can add members through the invite button."
+"Nhóm này hiển thị cho người không phải là thành viên. Các nhóm ẩn có thể "
+"thêm thành viên của nút mời. "
 
 #. module: mail
 #. openerp-web
@@ -7226,7 +7224,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_unread
 #: model:ir.model.fields,field_description:mail.field_res_users__message_unread
 msgid "Unread Messages"
-msgstr "Tin chưa đọc"
+msgstr "Tin nhắn chưa đọc"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_unread_counter
@@ -7237,12 +7235,12 @@ msgstr "Tin chưa đọc"
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_unread_counter
 #: model:ir.model.fields,field_description:mail.field_res_users__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "Bộ đếm tin chưa đọc"
+msgstr "Bộ đếm tin nhắn chưa đọc"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_message_search
 msgid "Unread messages"
-msgstr "Thông điệp chưa đọc"
+msgstr "Tin nhắn chưa đọc"
 
 #. module: mail
 #. openerp-web

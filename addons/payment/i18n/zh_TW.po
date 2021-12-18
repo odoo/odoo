@@ -190,7 +190,7 @@ msgstr "已發送 %(amount)s 的退款請求。將很快進行處理。退款交
 #: code:addons/payment/models/account_payment.py:0
 #, python-format
 msgid "A token is required to create a new payment transaction."
-msgstr "建立新的支付交易需要一個指示物。"
+msgstr "建立新的支付交易需要一個代碼(token)。"
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -210,7 +210,7 @@ msgstr "已使用付款方式 %(token_name)s (%(acq_name)s) 發起了號碼為 %
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__access_token
 msgid "Access Token"
-msgstr "訪問指示物"
+msgstr "存取代碼 (token)"
 
 #. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:0
@@ -558,7 +558,7 @@ msgstr "已確認"
 #. module: payment
 #: model:ir.model,name:payment.model_res_partner
 msgid "Contact"
-msgstr "聯繫人"
+msgstr "聯絡人"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__module_id
@@ -1199,7 +1199,7 @@ msgstr "帶重定向的線上支付"
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:0
 #, python-format
 msgid "Only administrators can access this data."
-msgstr "只有系統管理員可以訪問此筆資料。"
+msgstr "只有系統管理員可以存取此筆資料。"
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -1371,7 +1371,7 @@ msgstr "付款退款引導"
 #: model:ir.model,name:payment.model_payment_token
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__token_id
 msgid "Payment Token"
-msgstr "付款指示物"
+msgstr "付款代碼(token)"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_partner__payment_token_count
@@ -1388,7 +1388,7 @@ msgstr "支付密鑰數"
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_list
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_search
 msgid "Payment Tokens"
-msgstr "付款指示物"
+msgstr "付款代碼(token)"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_transaction
@@ -1757,7 +1757,7 @@ msgstr "支援的支付圖示"
 #: model:ir.model.fields,help:payment.field_account_payment__use_electronic_payment_method
 #: model:ir.model.fields,help:payment.field_account_payment_register__use_electronic_payment_method
 msgid "Technical field used to hide or show the payment_token_id if needed."
-msgstr "如果需要，用於隱藏或顯示 payment_token_id 的技術字段。"
+msgstr "如果需要，用於隱藏或顯示 payment_token_id 的技術欄位。"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_test
@@ -1783,7 +1783,7 @@ msgstr "與此服務商一起使用的支付服務供應商"
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
 msgid "The access token is invalid."
-msgstr "訪問密鑰無效。"
+msgstr "存取代碼(token)無效。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__acquirer_ref
@@ -1840,7 +1840,7 @@ msgstr "費用金額；由系統設置，因為它取決於服務商"
 #: code:addons/payment/models/payment_acquirer.py:0
 #, python-format
 msgid "The following fields must be filled: %s"
-msgstr "必須填寫以下字段：%s"
+msgstr "必須填寫以下欄位：%s"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__reference
@@ -2002,7 +2002,7 @@ msgstr ""
 #: model:ir.model.fields,help:payment.field_payment_icon__image_payment_form
 msgid ""
 "This field holds the image used for this payment icon, limited to 64x64 px"
-msgstr "此字段包含用於此付款圖示的圖像，限制為 64x64 像素"
+msgstr "此欄位包含用於此付款圖示的圖像，限制為 64x64 像素"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form

@@ -1463,8 +1463,8 @@ msgid ""
 "field as True to allow users to run this action. If it is set to False the "
 "action cannot be run through the website."
 msgstr ""
-"使用專用控制器可從網站上執行代碼伺服器操作。地址為<base> /website/action/<website_path>。將此字段設定為 "
-"True，可允許使用者執行此操作。如果將此字段設定為 False，則無法通過網站執行該操作。"
+"使用專用控制器可從網站上執行代碼伺服器操作。地址為<base> /website/action/<website_path>。將此欄位設定為 "
+"True，可允許使用者執行此操作。如果將此欄位設定為 False，則無法通過網站執行該操作。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_color_blocks_2
@@ -1563,17 +1563,17 @@ msgstr "存取錯誤"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__access_token
 msgid "Access Token"
-msgstr "訪問指示物"
+msgstr "存取代碼(token)"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.protected_403
 msgid "Access to this page"
-msgstr "訪問此頁面"
+msgstr "存取此頁面"
 
 #. module: website
 #: model:ir.model.constraint,message:website.constraint_website_visitor_access_token_unique
 msgid "Access token should be unique."
-msgstr "訪問token應是唯一的。"
+msgstr "存取代碼(token)應是唯一的。"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
@@ -2087,7 +2087,7 @@ msgstr "已歸檔"
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__specific_user_account
 msgid "Are newly created user accounts website specific"
-msgstr "為新建立的網站使用者帳號"
+msgstr "為新增的網站使用者帳號"
 
 #. module: website
 #. openerp-web
@@ -2298,7 +2298,7 @@ msgstr "Big Icons Subtitles"
 #. module: website
 #: model:ir.model.fields,help:website.field_ir_model_fields__website_form_blacklisted
 msgid "Blacklist this field for web forms"
-msgstr "在表單中為這個字段設定黑名單"
+msgstr "在表單中為這個欄位設定黑名單"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_model_fields__website_form_blacklisted
@@ -3030,7 +3030,7 @@ msgstr "Console Google Search"
 #: model_terms:ir.ui.view,arch_db:website.s_tabs
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Contact"
-msgstr "聯繫人"
+msgstr "聯絡人"
 
 #. module: website
 #: code:addons/website/models/website.py:0
@@ -3083,7 +3083,7 @@ msgstr "Contact us for any issue or question"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_search
 msgid "Contacts"
-msgstr "聯繫人"
+msgstr "聯絡人"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -3277,7 +3277,7 @@ msgstr "Create a link to target this section"
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #, python-format
 msgid "Create new"
-msgstr "新建"
+msgstr "新增"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
@@ -4130,7 +4130,7 @@ msgstr "編輯 robots.txt"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_background_options
 msgid "Edit video"
-msgstr "編輯視頻"
+msgstr "編輯影片"
 
 #. module: website
 #: model:res.groups,name:website.group_website_designer
@@ -4454,12 +4454,12 @@ msgstr "Field Names"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_model__website_form_default_field_id
 msgid "Field for custom form data"
-msgstr "表單自訂字段"
+msgstr "表單自訂欄位"
 
 #. module: website
 #: model:ir.model,name:website.model_ir_model_fields
 msgid "Fields"
-msgstr "字段"
+msgstr "欄位"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -7599,7 +7599,7 @@ msgstr "Portfolio"
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content_options
 msgid "Position"
-msgstr "崗位"
+msgstr "位置"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_media_list
@@ -9494,7 +9494,7 @@ msgid ""
 "This field should be used when accessing view arch. It will use translation.\n"
 "                               Note that it will read `arch_db` or `arch_fs` if in dev-xml mode."
 msgstr ""
-"在訪問視圖拱門時應使用此欄位。它將使用翻譯。\n"
+"在存取視圖拱門時應使用此欄位。它將使用翻譯。\n"
 "                               請注意，如果處於開發 xml 模式，它將讀取\"arch_db\"或\"arch_fs\"。"
 
 #. module: website
@@ -9878,7 +9878,7 @@ msgstr ""
 "301 永久移動：瀏覽器將保留新 URL 的緩存。\n"
 "        302 臨時移動：瀏覽器不會保留緩存新 URL，並在下次新 URL 時再次詢問。\n"
 "        404 找不到：如果你想刪除特定的頁面/控制器（例如，電子商務已安裝，但您不希望 /購物在特定網站上）\n"
-"        308 重定向/重寫：如果要使用新 URL 重命名控制器。（例如： / 商店 -* / 花園 - 兩個 URL 都可以訪問，但 /商店將自動重定向到 /花園）"
+"        308 重定向/重寫：如果要使用新 URL 重命名控制器。（例如： /shop -> /garden - 兩個 URL 都可以訪問，但 /商店將自動重定向到 /花園）"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
@@ -10907,7 +10907,7 @@ msgstr "您只能使用以 dynamic_filter_template_ 為前綴的模板"
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #, python-format
 msgid "You can't duplicate a model field."
-msgstr "您不能複制模型字段。"
+msgstr "您不能複制模型欄位。"
 
 #. module: website
 #. openerp-web
@@ -10921,7 +10921,7 @@ msgstr "您不能複製表單的提交按鈕。"
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #, python-format
 msgid "You can't remove a field that is required by the model itself."
-msgstr "您無法刪除模型本身所需的字段。"
+msgstr "您無法刪除模型本身所需的欄位。"
 
 #. module: website
 #. openerp-web

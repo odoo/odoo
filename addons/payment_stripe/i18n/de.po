@@ -37,7 +37,7 @@ msgstr ""
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
-msgstr ""
+msgstr "Keine Transaktion gefunden, die der Referenz %s entspricht."
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_acquirer
@@ -85,7 +85,7 @@ msgstr ""
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing merchant reference"
-msgstr ""
+msgstr "Daten mit fehlender Händlerreferenz empfangen"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_secret_key
@@ -111,7 +111,7 @@ msgstr ""
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__provider
 msgid "The Payment Service Provider to use with this acquirer"
-msgstr ""
+msgstr "Der mit diesem Zahlungsanbieter zu verwendende Dienstleister"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment_acquirer.py:0
@@ -122,6 +122,9 @@ msgid ""
 "Stripe gave us the following info about the problem:\n"
 "'%s'"
 msgstr ""
+"Die Kommunikation mit der API ist fehlgeschlagen.\n"
+"Stripe hat uns die folgenden Informationen über das Problem gegeben:\n"
+"'%s'"
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__stripe_publishable_key

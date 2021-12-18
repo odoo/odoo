@@ -10,6 +10,7 @@
 # Amin Cheloh <nineamin@hotmail.com>, 2021
 # Odoo Thaidev <odoothaidev@gmail.com>, 2021
 # Seksan Poltree <seksan.poltree@gmail.com>, 2021
+# Krisa C, 2021
 # Wichanon Jamwutthipreecha, 2021
 # 
 msgid ""
@@ -1612,7 +1613,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_request_count__set_count
 msgid "Count"
-msgstr ""
+msgstr "จำนวน"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking
@@ -2742,20 +2743,20 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_replenishment_header
 msgid "Forecasted"
-msgstr ""
+msgstr "คาดการณ์ไว้"
 
 #. module: stock
 #. openerp-web
 #: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
 #, python-format
 msgid "Forecasted Date"
-msgstr ""
+msgstr "วันที่คาดการณ์ไว้"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__report_stock_quantity__state__out
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_view_search
 msgid "Forecasted Deliveries"
-msgstr ""
+msgstr "จำนวนจัดส่งที่คาดการณ์ไว้"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__forecast_expected_date
@@ -2794,7 +2795,7 @@ msgstr "การรับสินค้าที่คาดการณ์ไ
 #: model:ir.actions.report,name:stock.stock_replenishment_report_product_template_action
 #, python-format
 msgid "Forecasted Report"
-msgstr ""
+msgstr "รายงานการคาดการณ์"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__report_stock_quantity__state__forecast
@@ -4154,7 +4155,7 @@ msgstr "ตั้งเป็นสิงที่ต้องทำ"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_max_qty
 msgid "Max Quantity"
-msgstr ""
+msgstr "จำนวนมากที่สุด"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__max_weight
@@ -4229,7 +4230,7 @@ msgstr "วิธีการ"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_min_qty
 msgid "Min Quantity"
-msgstr ""
+msgstr "จำนวนขั้นต่ำ"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse_orderpoint
@@ -4458,7 +4459,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "No Backorder"
-msgstr ""
+msgstr "ไม่สร้างรายการค้างผลิต"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_partner__picking_warn__no-message
@@ -4564,7 +4565,7 @@ msgstr "ปกติ"
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 #, python-format
 msgid "Not Available"
-msgstr ""
+msgstr "ไม่พร้อมใช้"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
@@ -5245,7 +5246,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__route_id
 msgid "Preferred Route"
-msgstr ""
+msgstr "เส้นทางที่ต้องการ"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__route_ids
@@ -5482,7 +5483,7 @@ msgstr "รูปแบบสินค้า"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__product_tmpl_id
 msgid "Product Tmpl"
-msgstr ""
+msgstr "เทมเพลตสินค้า"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__tracking
@@ -6864,7 +6865,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 #, python-format
 msgid "Snooze"
-msgstr ""
+msgstr "ปิดการเตือนชั่วคราว"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_snooze__snoozed_until
@@ -7789,7 +7790,7 @@ msgstr "ที่จะทำ"
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__qty_to_order
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_to_order
 msgid "To Order"
-msgstr ""
+msgstr "จำนวนที่สั่ง"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_immediate_transfer_line__to_immediate
@@ -8822,6 +8823,8 @@ msgid ""
 "You have not recorded <i>done</i> quantities yet, by clicking on "
 "<i>apply</i> Odoo will process all the quantities."
 msgstr ""
+"คุณยังไม่ได้บันทึก <i>จำนวนจัดส่งจริง</i> กดปุ่ม<i>apply</i> เพื่อที่ Odoo "
+"จะดำเนินการตามจำนวนทั้งหมด"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -9024,7 +9027,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
 msgid "from location"
-msgstr ""
+msgstr "จากตำแหน่ง"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
