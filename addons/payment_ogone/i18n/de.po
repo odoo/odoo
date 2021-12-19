@@ -40,7 +40,7 @@ msgstr "Verbindung mit API konnte nicht hergestellt werden."
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
-msgstr ""
+msgstr "Keine Transaktion gefunden, die der Referenz %s entspricht."
 
 #. module: payment_ogone
 #: model:account.payment.method,name:payment_ogone.payment_method_ogone
@@ -82,7 +82,7 @@ msgstr "Anbieter"
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with invalid payment status: %s"
-msgstr ""
+msgstr "Empfangene Daten mit ungültigem Zahlungsstatus: %s"
 
 #. module: payment_ogone
 #: code:addons/payment_ogone/controllers/main.py:0
@@ -91,6 +91,8 @@ msgid ""
 "Received data with invalid signature. expected: %(exp)s ; received: %(rec)s ; data:\n"
 "%(data)s"
 msgstr ""
+"Empfangene Daten mit ungültiger Signatur. Erwartet: %(exp)s; Empfangen: %(rec)s; Daten:\n"
+"%(data)s"
 
 #. module: payment_ogone
 #: code:addons/payment_ogone/models/payment_transaction.py:0
@@ -113,27 +115,35 @@ msgstr "SHA Schlüssel OUT"
 #, python-format
 msgid "Saved payment methods cannot be restored once they have been archived."
 msgstr ""
+"Gespeicherte Zahlungsmethoden können nicht wiederhergestellt werden, nachdem"
+" sie archiviert wurden."
 
 #. module: payment_ogone
 #: code:addons/payment_ogone/models/payment_transaction.py:0
 #, python-format
 msgid "Storing your payment details is necessary for future use."
 msgstr ""
+"Die Speicherung Ihrer Zahlungsdaten ist für die spätere Verwendung "
+"erforderlich."
 
 #. module: payment_ogone
 #: model:ir.model.fields,help:payment_ogone.field_payment_acquirer__ogone_userid
 msgid "The ID solely used to identify the API user with Ogone"
 msgstr ""
+"Die ID wird ausschließlich zur Identifizierung des API-Benutzers mit Ogone "
+"verwendet"
 
 #. module: payment_ogone
 #: model:ir.model.fields,help:payment_ogone.field_payment_acquirer__ogone_pspid
 msgid "The ID solely used to identify the account with Ogone"
 msgstr ""
+"Die ID, die ausschließlich zur Identifizierung des Kontos bei Ogone "
+"verwendet wird"
 
 #. module: payment_ogone
 #: model:ir.model.fields,help:payment_ogone.field_payment_acquirer__provider
 msgid "The Payment Service Provider to use with this acquirer"
-msgstr ""
+msgstr "Der mit diesem Zahlungsanbieter zu verwendende Dienstleister"
 
 #. module: payment_ogone
 #: code:addons/payment_ogone/models/payment_acquirer.py:0
