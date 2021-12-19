@@ -4,7 +4,7 @@
 import re
 from odoo import api, fields, Command, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import email_split, float_is_zero, float_repr
+from odoo.tools import email_split, float_is_zero, float_repr, float_compare, is_html_empty
 from odoo.tools.misc import clean_context, format_date
 from odoo.addons.account.models.account_move import PAYMENT_STATE_SELECTION
 
@@ -62,23 +62,29 @@ class HrExpense(models.Model):
         states={'approved': [('readonly', True)], 'done': [('readonly', True)]},
         default=_default_employee_id, domain=lambda self: self._get_employee_id_domain(), check_company=True)
     # product_id not required to allow create an expense without product via mail alias, but should be required on the view.
-    product_id = fields.Many2one('product.product', string='Category', readonly=True, tracking=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, domain="[('can_be_expensed', '=', True), '|', ('company_id', '=', False), ('company_id', '=', company_id)]", ondelete='restrict')
+    product_id = fields.Many2one('product.product', string='Product', readonly=True, tracking=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, domain="[('can_be_expensed', '=', True), '|', ('company_id', '=', False), ('company_id', '=', company_id)]", ondelete='restrict')
+    product_description = fields.Html(compute='_compute_product_description')
     product_uom_id = fields.Many2one('uom.uom', string='Unit of Measure', compute='_compute_from_product_id_company_id',
         store=True, copy=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]},
         default=_default_product_uom_id, domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id', readonly=True, string="UoM Category")
-    unit_amount = fields.Float("Unit Price", compute='_compute_from_product_id_company_id', store=True, required=True, copy=True,
+    unit_amount = fields.Float("Unit Price", compute='_compute_unit_amount', store=True, required=True, copy=True,
         states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, digits='Product Price')
+    unit_amount_display = fields.Float("Unit Price Display", compute='_compute_unit_amount_display')
     quantity = fields.Float(required=True, readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, digits='Product Unit of Measure', default=1)
     tax_ids = fields.Many2many('account.tax', 'expense_tax', 'expense_id', 'tax_id',
         compute='_compute_from_product_id_company_id', store=True, readonly=False,
-        domain="[('company_id', '=', company_id), ('type_tax_use', '=', 'purchase')]", string='Taxes')
+        domain="[('company_id', '=', company_id), ('type_tax_use', '=', 'purchase'), ('price_include', '=', True)]", string='Included taxes')
+    amount_tax = fields.Monetary(string='Tax amount in Currency', help="Tax amount in currency", compute='_compute_amount_tax', store=True, currency_field='currency_id')
+    amount_tax_company = fields.Monetary('Tax amount', help="Tax amount in company currency", compute='_compute_total_amount_company', store=True, currency_field='company_currency_id')
     amount_residual = fields.Monetary(string='Amount Due', compute='_compute_amount_residual')
-    total_amount = fields.Monetary("Amount paid", compute='_compute_amount', store=True, currency_field='currency_id', tracking=True, readonly=False)
+    total_amount = fields.Monetary("Total In Currency", compute='_compute_amount', store=True, currency_field='currency_id', tracking=True, readonly=False)
+    untaxed_amount = fields.Monetary("Total Untaxed Amount In Currency", compute='_compute_amount_tax', store=True, currency_field='currency_id')
     company_currency_id = fields.Many2one('res.currency', string="Report Company Currency", related='company_id.currency_id', readonly=True)
-    total_amount_company = fields.Monetary("Total (Company Currency)", compute='_compute_total_amount_company', store=True, currency_field='company_currency_id')
+    total_amount_company = fields.Monetary('Total', compute='_compute_total_amount_company', store=True, currency_field='company_currency_id')
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, readonly=False, store=True, states={'reported': [('readonly', True)], 'approved': [('readonly', True)], 'done': [('readonly', True)]}, compute='_compute_currency_id', default=lambda self: self.env.company.currency_id)
+    currency_rate = fields.Float(compute='_compute_currency_rate')
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', check_company=True)
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags', states={'post': [('readonly', True)], 'done': [('readonly', True)]}, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     account_id = fields.Many2one('account.account', compute='_compute_from_product_id_company_id', store=True, readonly=False, string='Account',
@@ -104,24 +110,29 @@ class HrExpense(models.Model):
 
     is_editable = fields.Boolean("Is Editable By Current User", compute='_compute_is_editable')
     is_ref_editable = fields.Boolean("Reference Is Editable By Current User", compute='_compute_is_ref_editable')
-    product_has_cost =  fields.Boolean("Is product with non zero cost selected", compute='_compute_product_has_cost')
+    product_has_cost = fields.Boolean("Is product with non zero cost selected", compute='_compute_product_has_cost')
+    product_has_tax = fields.Boolean("Whether tax is defined on a selected product", compute='_compute_product_has_cost')
     same_currency = fields.Boolean("Is currency_id different from the company_currency_id", compute='_compute_same_currency')
     duplicate_expense_ids = fields.Many2many('hr.expense', compute='_compute_duplicate_expense_ids')
 
     sample = fields.Boolean()
-    label_total_amount_company = fields.Char(compute='_compute_label_total_amount_company')
     label_convert_rate = fields.Char(compute='_compute_label_convert_rate')
 
-    @api.depends("product_has_cost")
+    @api.depends('product_has_cost')
     def _compute_currency_id(self):
         for expense in self.filtered("product_has_cost"):
             expense.currency_id = expense.company_currency_id
 
-    @api.depends_context('lang')
-    @api.depends("company_currency_id")
-    def _compute_label_total_amount_company(self):
+    @api.depends('date', 'currency_id', 'company_currency_id', 'company_id')
+    def _compute_currency_rate(self):
+        date_today = fields.Date.context_today(self.env.user)
         for expense in self:
-            expense.label_total_amount_company = _("Total %s", expense.company_currency_id.name) if expense.company_currency_id else _("Total")
+            expense.currency_rate = self.env['res.currency']._get_conversion_rate(
+                from_currency=expense.currency_id,
+                to_currency=expense.company_currency_id,
+                company=expense.company_id,
+                date=expense.date or date_today,
+            )
 
     @api.depends('currency_id', 'company_currency_id')
     def _compute_same_currency(self):
@@ -131,7 +142,9 @@ class HrExpense(models.Model):
     @api.depends('product_id')
     def _compute_product_has_cost(self):
         for expense in self:
-            expense.product_has_cost = bool(expense.product_id and expense.unit_amount)
+            expense.product_has_cost = expense.product_id and (float_compare(expense.product_id.standard_price, 0.0, precision_digits=2) != 0)
+            tax_ids = expense.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id == expense.company_id)
+            expense.product_has_tax = bool(tax_ids)
 
     @api.depends('sheet_id', 'sheet_id.account_move_id', 'sheet_id.state')
     def _compute_state(self):
@@ -150,8 +163,24 @@ class HrExpense(models.Model):
     @api.depends('quantity', 'unit_amount', 'tax_ids', 'currency_id')
     def _compute_amount(self):
         for expense in self:
-            taxes = expense.tax_ids.compute_all(expense.unit_amount, expense.currency_id, expense.quantity, expense.product_id, expense.employee_id.user_id.partner_id)
-            expense.total_amount = taxes.get('total_included')
+            if expense.product_id and not expense.product_has_cost:
+                continue
+            taxes = expense._get_taxes(price=expense.unit_amount, quantity=expense.quantity)
+            expense.total_amount = taxes['total_included']
+
+    @api.depends('total_amount', 'tax_ids', 'currency_id')
+    def _compute_amount_tax(self):
+        """Note: as total_amount can be set directly by the user (for product without cost) or needs to be computed (for product with cost),
+           `untaxed_amount` can't be computed in the same method as `total_amount`.
+        """
+        for expense in self:
+            taxes = expense._get_taxes(price=expense.total_amount, quantity=1.0)
+            expense.amount_tax = taxes['total_included'] - taxes['total_excluded'] if expense.tax_ids else 0.0
+            expense.untaxed_amount = taxes['total_excluded']
+
+    def _get_taxes(self, price, quantity):
+        self.ensure_one()
+        return self.tax_ids.compute_all(price_unit=price, currency=self.currency_id, quantity=quantity, product=self.product_id, partner=self.employee_id.user_id.partner_id)
 
     @api.depends("sheet_id.account_move_id.line_ids")
     def _compute_amount_residual(self):
@@ -167,28 +196,18 @@ class HrExpense(models.Model):
                 .filtered(lambda line: line.expense_id == self and line.account_internal_type in ('receivable', 'payable'))
             expense.amount_residual = -sum(payment_term_lines.mapped(residual_field))
 
-    @api.depends('date', 'total_amount', 'currency_id', 'company_currency_id')
+    @api.depends('currency_rate', 'total_amount', 'amount_tax')
     def _compute_total_amount_company(self):
         for expense in self:
-            amount = 0
-            if expense.same_currency:
-                amount = expense.total_amount
-            else:
-                date_expense = expense.date or fields.Date.today()
-                amount = expense.currency_id._convert(
-                    expense.total_amount, expense.company_currency_id,
-                    expense.company_id, date_expense)
-            expense.total_amount_company = amount
+            expense.total_amount_company = expense.total_amount * expense.currency_rate
+            expense.amount_tax_company = expense.amount_tax * expense.currency_rate
 
-    @api.depends('date', 'total_amount', 'currency_id', 'company_currency_id')
+    @api.depends('currency_rate')
     def _compute_label_convert_rate(self):
         records_with_diff_currency = self.filtered(lambda x: not x.same_currency and x.currency_id)
         (self - records_with_diff_currency).label_convert_rate = False
         for expense in records_with_diff_currency:
-            date_expense = expense.date or fields.Date.today()
-            rate = expense.currency_id._get_conversion_rate(
-                expense.currency_id, expense.company_currency_id, expense.company_id, date_expense)
-            rate_txt = _('1 %(exp_cur)s = %(rate)s %(comp_cur)s', exp_cur=expense.currency_id.name, rate=float_repr(rate, expense.company_currency_id.decimal_places), comp_cur=expense.company_currency_id.name)
+            rate_txt = _('1 %(exp_cur)s = %(rate)s %(comp_cur)s', exp_cur=expense.currency_id.name, rate=float_repr(expense.currency_rate, 6), comp_cur=expense.company_currency_id.name)
             expense.label_convert_rate = rate_txt
 
     def _compute_attachment_number(self):
@@ -217,17 +236,35 @@ class HrExpense(models.Model):
             else:
                 expense.is_ref_editable = is_account_manager
 
+    @api.depends_context('lang')
+    @api.depends('product_id')
+    def _compute_product_description(self):
+        for expense in self:
+            expense.product_description = not is_html_empty(expense.product_id.description) and expense.product_id.description
+
+    @api.depends('product_id', 'company_id')
+    def _compute_unit_amount(self):
+        for expense in self:
+            if not expense.product_id or not expense.product_has_cost or expense.attachment_number or (not expense.attachment_number and expense.unit_amount):
+                continue
+            expense.unit_amount = expense.product_id.price_compute(
+                'standard_price',
+                uom=expense.product_uom_id,
+                currency=expense.currency_id)[expense.product_id.id]
+
+    @api.depends('unit_amount', 'total_amount_company', 'product_has_cost')
+    def _compute_unit_amount_display(self):
+        for expense in self:
+            expense.unit_amount_display = expense.unit_amount if expense.product_has_cost else expense.total_amount_company
+
     @api.depends('product_id', 'company_id')
     def _compute_from_product_id_company_id(self):
-        for expense in self.filtered('product_id'):
+        for expense in self:
+            if not expense.product_id:
+                continue
             expense = expense.with_company(expense.company_id)
             expense.name = expense.name or expense.product_id.display_name
             expense.product_uom_id = expense.product_id.uom_id
-            if not expense.attachment_number or (expense.attachment_number and not expense.unit_amount):
-                expense.unit_amount = expense.product_id.price_compute(
-                    'standard_price',
-                    uom=expense.product_uom_id,
-                    currency=expense.currency_id)[expense.product_id.id]
             expense.tax_ids = expense.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id == expense.company_id)  # taxes only from the same company
             account = expense.product_id.product_tmpl_id._get_product_accounts()['expense']
             if account:
@@ -268,6 +305,7 @@ class HrExpense(models.Model):
                 exp.duplicate_expense_ids = [(6, 0, ids)]
                 expenses = expenses - exp
 
+    # sgv todo replace with depends?
     @api.onchange('product_id', 'date', 'account_id')
     def _onchange_product_id_date_account_id(self):
         rec = self.env['account.analytic.default'].sudo().account_get(
@@ -290,7 +328,7 @@ class HrExpense(models.Model):
 
     def create_expense_from_attachments(self, attachment_ids=None, view_type='tree'):
         ''' Create the expenses from files.
-         :return: An action redirecting to hr.expense tree/form view.
+         :return: An action redirecting to hr.expense tree view.
         '''
         if attachment_ids is None:
             attachment_ids = []
@@ -310,32 +348,23 @@ class HrExpense(models.Model):
 
         for attachment in attachments:
             expense = self.env['hr.expense'].create({
-                'name': attachment.name.split('.')[0],
+                'name': product.display_name,
                 'unit_amount': 0,
-                'product_id': product.id
+                'product_id': product.id,
             })
-            expense.message_post(body=_('Uploaded Attachment'))
             attachment.write({
                 'res_model': 'hr.expense',
                 'res_id': expense.id,
             })
+
             attachment.register_as_main_attachment()
             expenses += expense
-        if len(expenses) == 1:
-            return {
-                'name': _('Generated Expense'),
-                'view_mode': 'form',
-                'res_model': 'hr.expense',
-                'type': 'ir.actions.act_window',
-                'views': [[False, 'form']],
-                'res_id': expenses[0].id,
-            }
         return {
-            'name': _('Generated Expenses'),
-            'domain': [('id', 'in', expenses.ids)],
+            'name': _('Generate Expenses'),
             'res_model': 'hr.expense',
             'type': 'ir.actions.act_window',
             'views': [[False, view_type], [False, "form"]],
+            'context': {'search_default_my_expenses': 1, 'search_default_no_report': 1},
         }
 
     # ----------------------------------------
@@ -387,42 +416,68 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
         }
 
     def _get_default_expense_sheet_values(self):
-        if any(expense.state != 'draft' or expense.sheet_id for expense in self):
+        # If there is an expense with total_amount_company == 0, it means that expense has not been processed by OCR yet
+        expenses_with_amount = self.filtered(lambda expense: not float_compare(expense.total_amount_company, 0.0, precision_rounding=expense.company_currency_id.rounding) == 0)
+
+        if any(expense.state != 'draft' or expense.sheet_id for expense in expenses_with_amount):
             raise UserError(_("You cannot report twice the same line!"))
-        if len(self.mapped('employee_id')) != 1:
+        if not expenses_with_amount:
+            raise UserError(_("You cannot report the expenses without amount!"))
+        if len(expenses_with_amount.mapped('employee_id')) != 1:
             raise UserError(_("You cannot report expenses for different employees in the same report."))
-        if any(not expense.product_id for expense in self):
+        if any(not expense.product_id for expense in expenses_with_amount):
             raise UserError(_("You can not create report without category."))
 
-        todo = self.filtered(lambda x: x.payment_mode=='own_account') or self.filtered(lambda x: x.payment_mode=='company_account')
-        if len(todo) == 1:
-            expense_name = todo.name
-        else:
-            dates = todo.mapped('date')
-            min_date = format_date(self.env, min(dates))
-            max_date = format_date(self.env, max(dates))
-            expense_name = min_date if max_date == min_date else "%s - %s" % (min_date, max_date)
+        # Check if two reports should be created
+        own_expenses = expenses_with_amount.filtered(lambda x: x.payment_mode == 'own_account')
+        company_expenses = expenses_with_amount - own_expenses
+        create_two_reports = own_expenses and company_expenses
 
-        values = {
-            'default_company_id': self.company_id.id,
-            'default_employee_id': self[0].employee_id.id,
-            'default_name': expense_name,
-            'default_expense_line_ids': [Command.set(todo.ids)],
-            'default_state': 'draft',
-            'create': False
-        }
+        sheets = [own_expenses, company_expenses] if create_two_reports else [expenses_with_amount]
+        values = []
+        for todo in sheets:
+            if len(todo) == 1:
+                expense_name = todo.name
+            else:
+                dates = todo.mapped('date')
+                min_date = format_date(self.env, min(dates))
+                max_date = format_date(self.env, max(dates))
+                expense_name = min_date if max_date == min_date else "%s - %s" % (min_date, max_date)
+
+            vals = {
+                'company_id': self.company_id.id,
+                'employee_id': self[0].employee_id.id,
+                'name': expense_name,
+                'expense_line_ids': [Command.set(todo.ids)],
+                'state': 'draft',
+            }
+            values.append(vals)
         return values
 
     def action_submit_expenses(self):
         context_vals = self._get_default_expense_sheet_values()
-        return {
-            'name': _('New Expense Report'),
-            'type': 'ir.actions.act_window',
-            'view_mode': 'form',
-            'res_model': 'hr.expense.sheet',
-            'target': 'current',
-            'context': context_vals,
-        }
+        if len(context_vals) > 1:
+            sheets = self.env['hr.expense.sheet'].create(context_vals)
+            return {
+                'name': _('New Expense Reports'),
+                'type': 'ir.actions.act_window',
+                'view_mode': 'list,form',
+                'res_model': 'hr.expense.sheet',
+                'domain': [('id', 'in', sheets.ids)],
+                'context': self.env.context,
+            }
+        else:
+            context_vals_def = {}
+            for key in context_vals[0]:
+                context_vals_def['default_' + key] = context_vals[0][key]
+            return {
+                'name': _('New Expense Report'),
+                'type': 'ir.actions.act_window',
+                'view_mode': 'form',
+                'res_model': 'hr.expense.sheet',
+                'target': 'current',
+                'context': context_vals_def,
+            }
 
     def action_get_attachment_view(self):
         self.ensure_one()
@@ -518,9 +573,11 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
             company_currency = expense.company_id.currency_id
 
             move_line_values = []
-            unit_amount = expense.unit_amount or expense.total_amount
+            unit_amount = expense.unit_amount if expense.product_has_cost else expense.total_amount
             quantity = expense.quantity if expense.unit_amount else 1
-            taxes = expense.tax_ids.with_context(round=True).compute_all(unit_amount, expense.currency_id,quantity,expense.product_id)
+
+            # sgv todo - chage so that we do not recompute again. We have all the info from expense
+            taxes = expense.tax_ids.with_context(round=True).compute_all(unit_amount, expense.currency_id, quantity, expense.product_id)
             total_amount = 0.0
             total_amount_currency = 0.0
             partner_id = expense.employee_id.sudo().address_home_id.commercial_partner_id.id
@@ -840,6 +897,9 @@ class HrExpenseSheet(models.Model):
     @api.model
     def _default_journal_id(self):
         """ The journal is determining the company of the accounting entries generated from expense. We need to force journal company and expense sheet company to be the same. """
+        company_journal_id = self.env.company.expense_journal_id
+        if company_journal_id:
+            return company_journal_id.id
         default_company_id = self.default_get(['company_id'])['company_id']
         journal = self.env['account.journal'].search([('type', '=', 'purchase'), ('company_id', '=', default_company_id)], limit=1)
         return journal.id
@@ -851,6 +911,7 @@ class HrExpenseSheet(models.Model):
 
     name = fields.Char('Expense Report Summary', required=True, tracking=True)
     expense_line_ids = fields.One2many('hr.expense', 'sheet_id', string='Expense Lines', copy=False)
+    expense_number = fields.Integer(compute='_compute_expense_number', string='Number of Expenses')
     state = fields.Selection([
         ('draft', 'Draft'),
         ('submit', 'Submitted'),
@@ -866,6 +927,9 @@ class HrExpenseSheet(models.Model):
     payment_mode = fields.Selection(related='expense_line_ids.payment_mode', readonly=True, string="Paid By", tracking=True)
     user_id = fields.Many2one('res.users', 'Manager', compute='_compute_from_employee_id', store=True, readonly=True, copy=False, states={'draft': [('readonly', False)]}, tracking=True, domain=lambda self: [('groups_id', 'in', self.env.ref('hr_expense.group_hr_expense_team_approver').id)])
     total_amount = fields.Monetary('Total Amount', currency_field='currency_id', compute='_compute_amount', store=True, tracking=True)
+    untaxed_amount = fields.Monetary('Untaxed Amount', currency_field='currency_id', compute='_compute_amount', store=True)
+    total_amount_taxes = fields.Monetary('Taxes', currency_field='currency_id', compute='_compute_amount', store=True)
+    # sgv FIXME - this has a problem for expense in when there is one foreign currency. Maybe use amount_residual_signed
     amount_residual = fields.Monetary(
         string="Amount Due", store=True,
         currency_field='currency_id',
@@ -889,10 +953,12 @@ class HrExpenseSheet(models.Model):
         ('journal_id_required_posted', "CHECK((state IN ('post', 'done') AND journal_id IS NOT NULL) OR (state NOT IN ('post', 'done')))", 'The journal must be set on posted expense'),
     ]
 
-    @api.depends('expense_line_ids.total_amount_company')
+    @api.depends('expense_line_ids.total_amount_company', 'expense_line_ids.amount_tax_company')
     def _compute_amount(self):
         for sheet in self:
             sheet.total_amount = sum(sheet.expense_line_ids.mapped('total_amount_company'))
+            sheet.total_amount_taxes = sum(sheet.expense_line_ids.mapped('amount_tax_company'))
+            sheet.untaxed_amount = sheet.total_amount - sheet.total_amount_taxes
 
     @api.depends('account_move_id.payment_state')
     def _compute_payment_state(self):
@@ -922,6 +988,13 @@ class HrExpenseSheet(models.Model):
         for sheet in self:
             sheet.can_approve = is_manager or (is_approver and sheet.employee_id.user_id != self.env.user)
 
+    @api.depends('expense_line_ids')
+    def _compute_expense_number(self):
+        read_group_result = self.env['hr.expense'].read_group([('sheet_id', 'in', self.ids)], ['sheet_id'], ['sheet_id'])
+        result = dict((data['sheet_id'][0], data['sheet_id_count']) for data in read_group_result)
+        for sheet in self:
+            sheet.expense_number = result.get(sheet.id, 0)
+
     @api.depends('employee_id')
     def _compute_from_employee_id(self):
         for sheet in self:
@@ -934,7 +1007,7 @@ class HrExpenseSheet(models.Model):
         for sheet in self:
             expense_lines = sheet.mapped('expense_line_ids')
             if expense_lines and any(expense.payment_mode != expense_lines[0].payment_mode for expense in expense_lines):
-                raise ValidationError(_("Expenses must be paid by the same entity (Company or employee)."))
+                raise ValidationError(_("Expenses must have the same To Reimburse status."))
 
     @api.constrains('expense_line_ids', 'employee_id')
     def _check_employee(self):
@@ -1004,7 +1077,7 @@ class HrExpenseSheet(models.Model):
             raise UserError(_("You can only generate accounting entry for approved expense(s)."))
 
         if any(not sheet.journal_id for sheet in self):
-            raise UserError(_("Specify expense journal in tab Other Info to generate accounting entries."))
+            raise UserError(_("Specify expense journal to generate accounting entries."))
 
         expense_line_ids = self.mapped('expense_line_ids')\
             .filtered(lambda r: not float_is_zero(r.total_amount, precision_rounding=(r.currency_id or self.env.company.currency_id).rounding))
@@ -1017,6 +1090,13 @@ class HrExpenseSheet(models.Model):
         self.activity_update()
         return res
 
+    def action_unpost(self):
+        for sheet in self:
+            move = sheet.account_move_id
+            sheet.account_move_id = False
+            move._reverse_moves(cancel=True)
+            sheet.write({'state': 'draft'})
+
     def action_get_attachment_view(self):
         res = self.env['ir.actions.act_window']._for_xml_id('base.action_attachment')
         res['domain'] = [('res_model', '=', 'hr.expense'), ('res_id', 'in', self.expense_line_ids.ids)]
@@ -1027,6 +1107,16 @@ class HrExpenseSheet(models.Model):
             'edit': False,
         }
         return res
+
+    def action_get_expense_view(self):
+        self.ensure_one()
+        return {
+            'name': _('Expenses'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'list,form',
+            'res_model': 'hr.expense',
+            'domain': [('id', 'in', self.expense_line_ids.ids)],
+        }
 
     def action_open_account_move(self):
         self.ensure_one()
@@ -1164,6 +1254,7 @@ class HrExpenseSheet(models.Model):
             'context': {
                 'active_model': 'account.move',
                 'active_ids': self.account_move_id.ids,
+                'partner_bank_id': self.employee_id.bank_account_id.id
             },
             'target': 'new',
             'type': 'ir.actions.act_window',
