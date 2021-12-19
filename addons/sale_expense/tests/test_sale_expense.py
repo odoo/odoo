@@ -67,6 +67,7 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
             'list_price': 0.50,
             'uom_id': self.env.ref('uom.product_uom_km').id,
             'uom_po_id': self.env.ref('uom.product_uom_km').id,
+            'standard_price': 1,
         })
         # Submit to Manager
         sheet = self.env['hr.expense.sheet'].create({
