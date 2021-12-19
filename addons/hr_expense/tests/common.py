@@ -52,3 +52,6 @@ class TestExpenseCommon(AccountTestInvoicingCommon):
 
         # Ensure products can be expensed.
         (cls.product_a + cls.product_b).write({'can_be_expensed': True})
+        # Taxes on the products are included in price
+        (cls.product_a.supplier_taxes_id + cls.product_b.supplier_taxes_id).write({'price_include': True})
+        cls.company_data['default_tax_purchase'].write({'price_include': True})
