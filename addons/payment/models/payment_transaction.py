@@ -1046,8 +1046,8 @@ class PaymentTransaction(models.Model):
                 acq_name=self.acquirer_id.name
             )
             if self.payment_id:
-                message += _(
-                    "\nThe related payment is posted: %s",
+                message += "<br />" + _(
+                    "The related payment is posted: %s",
                     self.payment_id._get_payment_chatter_link()
                 )
         elif self.state == 'error':
@@ -1057,14 +1057,14 @@ class PaymentTransaction(models.Model):
                 ref=self.reference, amount=formatted_amount, acq_name=self.acquirer_id.name
             )
             if self.state_message:
-                message += _("\nError: %s", self.state_message)
+                message += "<br />" + _("Error: %s", self.state_message)
         else:
             message = _(
                 "The transaction with reference %(ref)s for %(amount)s is canceled (%(acq_name)s).",
                 ref=self.reference, amount=formatted_amount, acq_name=self.acquirer_id.name
             )
             if self.state_message:
-                message += _("\nReason: %s", self.state_message)
+                message += "<br />" + _("Reason: %s", self.state_message)
         return message
 
     def _get_last(self):
