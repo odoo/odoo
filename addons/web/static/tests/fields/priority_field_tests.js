@@ -221,23 +221,23 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsOnce(
             form.el,
-            ".o_field_widget.o_priority:not(.o_field_empty)",
+            ".o_field_widget .o_priority:not(.o_field_empty)",
             "widget should be considered set, even though there is no value for this field"
         );
         assert.containsN(
             form.el,
-            ".o_field_widget.o_priority a.o_priority_star",
+            ".o_field_widget .o_priority a.o_priority_star",
             2,
             "should have two stars for representing each possible value: no star, one star and two stars"
         );
         assert.containsNone(
             form.el,
-            ".o_field_widget.o_priority a.o_priority_star.fa-star",
+            ".o_field_widget .o_priority a.o_priority_star.fa-star",
             "should have no full star since there is no value"
         );
         assert.containsN(
             form.el,
-            ".o_field_widget.o_priority a.o_priority_star.fa-star-o",
+            ".o_field_widget .o_priority a.o_priority_star.fa-star-o",
             2,
             "should have two empty stars since there is no value"
         );
@@ -264,64 +264,64 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsOnce(
             form.el,
-            ".o_field_widget.o_priority:not(.o_field_empty)",
+            ".o_field_widget .o_priority:not(.o_field_empty)",
             "widget should be considered set"
         );
         assert.containsN(
             form.el,
-            ".o_field_widget.o_priority a.o_priority_star",
+            ".o_field_widget .o_priority a.o_priority_star",
             2,
             "should have two stars for representing each possible value: no star, one star and two stars"
         );
         assert.containsOnce(
             form.el,
-            ".o_field_widget.o_priority a.o_priority_star.fa-star",
+            ".o_field_widget .o_priority a.o_priority_star.fa-star",
             "should have one full star since the value is the second value"
         );
         assert.containsOnce(
             form.el,
-            ".o_field_widget.o_priority a.o_priority_star.fa-star-o",
+            ".o_field_widget .o_priority a.o_priority_star.fa-star-o",
             "should have one empty star since the value is the second value"
         );
 
         // hover last star
         let stars = form.el.querySelectorAll(
-            ".o_field_widget.o_priority a.o_priority_star.fa-star-o"
+            ".o_field_widget .o_priority a.o_priority_star.fa-star-o"
         );
         await triggerEvent(stars[stars.length - 1], null, "mouseenter");
         assert.containsN(
             form.el,
-            ".o_field_widget.o_priority a.o_priority_star",
+            ".o_field_widget .o_priority a.o_priority_star",
             2,
             "should have two stars for representing each possible value: no star, one star and two stars"
         );
         assert.containsN(
             form.el,
-            ".o_field_widget.o_priority a.o_priority_star.fa-star",
+            ".o_field_widget .o_priority a.o_priority_star.fa-star",
             2,
             "should temporary have two full stars since we are hovering the third value"
         );
         assert.containsNone(
             form.el,
-            ".o_field_widget.o_priority a.o_priority_star.fa-star-o",
+            ".o_field_widget .o_priority a.o_priority_star.fa-star-o",
             "should temporary have no empty star since we are hovering the third value"
         );
 
         await triggerEvent(stars[stars.length - 1], null, "mouseleave");
         assert.containsN(
             form.el,
-            ".o_field_widget.o_priority a.o_priority_star",
+            ".o_field_widget .o_priority a.o_priority_star",
             2,
             "should have two stars for representing each possible value: no star, one star and two stars"
         );
         assert.containsOnce(
             form.el,
-            ".o_field_widget.o_priority a.o_priority_star.fa-star",
+            ".o_field_widget .o_priority a.o_priority_star.fa-star",
             "should temporary have two full stars since we are hovering the third value"
         );
         assert.containsOnce(
             form.el,
-            ".o_field_widget.o_priority a.o_priority_star.fa-star-o",
+            ".o_field_widget .o_priority a.o_priority_star.fa-star-o",
             "should temporary have no empty star since we are hovering the third value"
         );
 
@@ -329,18 +329,18 @@ QUnit.module("Fields", (hooks) => {
         await click(form.el, ".o_form_button_edit");
         assert.containsN(
             form.el,
-            ".o_field_widget.o_priority a.o_priority_star",
+            ".o_field_widget .o_priority a.o_priority_star",
             2,
             "should still have two stars"
         );
         assert.containsOnce(
             form.el,
-            ".o_field_widget.o_priority a.o_priority_star.fa-star",
+            ".o_field_widget .o_priority a.o_priority_star.fa-star",
             "should still have one full star since the value is the second value"
         );
         assert.containsOnce(
             form.el,
-            ".o_field_widget.o_priority a.o_priority_star.fa-star-o",
+            ".o_field_widget .o_priority a.o_priority_star.fa-star-o",
             "should still have one empty star since the value is the second value"
         );
 
@@ -348,18 +348,18 @@ QUnit.module("Fields", (hooks) => {
         await click(form.el, ".o_form_button_save");
         assert.containsN(
             form.el,
-            ".o_field_widget.o_priority a.o_priority_star",
+            ".o_field_widget .o_priority a.o_priority_star",
             2,
             "should still have two stars"
         );
         assert.containsOnce(
             form.el,
-            ".o_field_widget.o_priority a.o_priority_star.fa-star",
+            ".o_field_widget .o_priority a.o_priority_star.fa-star",
             "should still have one full star since the value is the second value"
         );
         assert.containsOnce(
             form.el,
-            ".o_field_widget.o_priority a.o_priority_star.fa-star-o",
+            ".o_field_widget .o_priority a.o_priority_star.fa-star-o",
             "should still have one empty star since the value is the second value"
         );
 
@@ -368,40 +368,40 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsN(
             form.el,
-            ".o_field_widget.o_priority a.o_priority_star",
+            ".o_field_widget .o_priority a.o_priority_star",
             2,
             "should still have two stars"
         );
         assert.containsOnce(
             form.el,
-            ".o_field_widget.o_priority a.o_priority_star.fa-star",
+            ".o_field_widget .o_priority a.o_priority_star.fa-star",
             "should still have one full star since the value is the second value"
         );
         assert.containsOnce(
             form.el,
-            ".o_field_widget.o_priority a.o_priority_star.fa-star-o",
+            ".o_field_widget .o_priority a.o_priority_star.fa-star-o",
             "should still have one empty star since the value is the second value"
         );
 
         // click on the second star in edit mode
-        stars = form.el.querySelectorAll(".o_field_widget.o_priority a.o_priority_star.fa-star-o");
+        stars = form.el.querySelectorAll(".o_field_widget .o_priority a.o_priority_star.fa-star-o");
         await click(stars[stars.length - 1]);
 
         assert.containsN(
             form.el,
-            ".o_field_widget.o_priority a.o_priority_star",
+            ".o_field_widget .o_priority a.o_priority_star",
             2,
             "should still have two stars"
         );
         assert.containsN(
             form.el,
-            ".o_field_widget.o_priority a.o_priority_star.fa-star",
+            ".o_field_widget .o_priority a.o_priority_star.fa-star",
             2,
             "should now have two full stars since the value is the third value"
         );
         assert.containsNone(
             form.el,
-            ".o_field_widget.o_priority a.o_priority_star.fa-star-o",
+            ".o_field_widget .o_priority a.o_priority_star.fa-star-o",
             "should now have no empty star since the value is the third value"
         );
 
@@ -409,19 +409,19 @@ QUnit.module("Fields", (hooks) => {
         await click(form.el, ".o_form_button_save");
         assert.containsN(
             form.el,
-            ".o_field_widget.o_priority a.o_priority_star",
+            ".o_field_widget .o_priority a.o_priority_star",
             2,
             "should still have two stars"
         );
         assert.containsN(
             form.el,
-            ".o_field_widget.o_priority a.o_priority_star.fa-star",
+            ".o_field_widget .o_priority a.o_priority_star.fa-star",
             2,
             "should now have two full stars since the value is the third value"
         );
         assert.containsNone(
             form.el,
-            ".o_field_widget.o_priority a.o_priority_star.fa-star-o",
+            ".o_field_widget .o_priority a.o_priority_star.fa-star-o",
             "should now have no empty star since the value is the third value"
         );
     });
@@ -632,7 +632,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsN(
             form,
-            ".o_field_widget.o_priority span",
+            ".o_field_widget .o_priority span",
             2,
             "stars of priority widget should rendered with span tag if readonly"
         );
