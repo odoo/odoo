@@ -3,7 +3,6 @@
 import { Domain } from "@web/core/domain";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
-import { useEffect } from "@web/core/utils/hooks";
 import { isBroadlyFalsy } from "@web/core/utils/misc";
 import { snakeToCamel } from "@web/core/utils/strings";
 import { isAttr } from "@web/core/utils/xml";
@@ -15,17 +14,6 @@ const fieldRegistry = registry.category("fields");
 const viewRegistry = registry.category("views");
 
 export class Field extends Component {
-    setup() {
-        useEffect(() => {
-            this.el.classList.add("o_field_widget");
-            this.el.classList.add(`o_field_${this.type}`);
-            this.el.setAttribute("name", this.props.name);
-            this.el.classList.toggle("o_required_modifier", this.evalModifier("required"));
-            this.el.classList.toggle("o_readonly_modifier", this.evalModifier("readonly"));
-            this.applyDecorations();
-        });
-    }
-
     // AAB: no need to pre-optimize anything, but as it stands, this method is called
     // twice at each patch for "required" and twice for "readonly"
     evalModifier(modifier) {
@@ -35,6 +23,28 @@ export class Field extends Component {
             modifierValue = new Domain(modifierValue).contains(this.props.record.evalContext);
         }
         return !!modifierValue;
+    }
+
+    get classNames() {
+        const classNames = {
+            o_field_widget: true,
+            o_readonly_modifier: this.evalModifier("readonly"),
+            o_required_modifier: this.evalModifier("required"),
+            [`o_field_${this.type}`]: true,
+        };
+
+        // generate field decorations classNames (only if field-specific decorations
+        // have been defined in an attribute, e.g. decoration-danger="other_field = 5")
+        const { decorations } = this.props.record.activeFields[this.props.name];
+        const getClassFromDecoration =
+            this.effectiveFieldComponent.getClassFromDecoration || ((d) => `text-${d}`);
+        const evalContext = this.props.record.evalContext;
+        for (const decoName in decorations) {
+            const value = evaluateExpr(decorations[decoName], evalContext);
+            classNames[getClassFromDecoration(decoName)] = value;
+        }
+
+        return classNames;
     }
 
     get effectiveFieldComponent() {
@@ -111,25 +121,11 @@ export class Field extends Component {
             return value;
         }
     }
-
-    /**
-     * Apply field decorations (only if field-specific decorations have been
-     * defined in an attribute, e.g. decoration-danger="other_field = 5")
-     */
-    applyDecorations() {
-        const { decorations } = this.props.record.activeFields[this.props.name];
-        const getClassFromDecoration =
-            this.effectiveFieldComponent.getClassFromDecoration || ((d) => `text-${d}`);
-        const evalContext = this.props.record.evalContext;
-        for (const decoName in decorations) {
-            const value = evaluateExpr(decorations[decoName], evalContext);
-            this.el.classList.toggle(getClassFromDecoration(decoName), value);
-        }
-    }
 }
 Field.template = tags.xml/* xml */ `
-    <t t-component="effectiveFieldComponent" t-props="effectiveFieldComponentProps" t-key="props.record.id"/>
-`;
+    <div t-att-name="props.name" t-att-class="classNames">
+        <t t-component="effectiveFieldComponent" t-props="effectiveFieldComponentProps" t-key="props.record.id"/>
+    </div>`;
 
 class DefaultField extends Component {
     onChange(ev) {
