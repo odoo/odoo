@@ -2507,6 +2507,10 @@ options.registry.CoverProperties = options.Class.extend({
             $defaultSizeBtn.click();
             $defaultSizeBtn.closest('we-select').click();
         }
+
+        if (!previewMode) {
+            this._updateSavingDataset();
+        }
     },
     /**
      * @see this.selectClass for parameters
@@ -2514,47 +2518,30 @@ options.registry.CoverProperties = options.Class.extend({
     filterValue: function (previewMode, widgetValue, params) {
         this.$filter.css('opacity', widgetValue || 0);
         this.$filter.toggleClass('oe_black', parseFloat(widgetValue) !== 0);
+
+        if (!previewMode) {
+            this._updateSavingDataset();
+        }
     },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
     /**
-     * @private
+     * @override
      */
-    updateUI: async function () {
+    selectStyle: async function (previewMode, widgetValue, params) {
         await this._super(...arguments);
 
-        // TODO: `o_record_has_cover` should be handled using model field, not
-        // resize_class to avoid all of this.
-        let coverClass = this.$el.find('[data-cover-opt-name="size"] we-button.active').data('selectClass') || '';
-        const bg = this.$image.css('background-image');
-        if (bg && bg !== 'none') {
-            coverClass += " o_record_has_cover";
+        if (!previewMode) {
+            this._updateSavingDataset(widgetValue);
         }
-        // Update saving dataset
-        this.$target[0].dataset.coverClass = coverClass;
-        this.$target[0].dataset.textAlignClass = this.$el.find('[data-cover-opt-name="text_align"] we-button.active').data('selectClass') || '';
-        this.$target[0].dataset.filterValue = this.$filterValueOpts.filter('.active').data('filterValue') || 0.0;
-        const colorPickerWidget = this._requestUserValueWidgets('bg_color_opt')[0];
-        // TODO there is probably a better way and this should be refactored to
-        // use more standard colorpicker+imagepicker structure
-        const ccValue = colorPickerWidget._ccValue;
-        const colorOrGradient = colorPickerWidget._value;
-        const isGradient = weUtils.isColorGradient(colorOrGradient);
-        const isCSSColor = !isGradient && ColorpickerWidget.isCSSColor(colorOrGradient);
-        const colorNames = [];
-        if (ccValue) {
-            colorNames.push(ccValue);
+    },
+    /**
+     * @override
+     */
+    selectClass: async function (previewMode, widgetValue, params) {
+        await this._super(...arguments);
+
+        if (!previewMode) {
+            this._updateSavingDataset();
         }
-        if (!isGradient && !isCSSColor) {
-            colorNames.push(colorOrGradient);
-        }
-        this.$target[0].dataset.bgColorClass = weUtils.computeColorClasses(colorNames).join(' ');
-        this.$target[0].dataset.bgColorStyle =
-            isCSSColor ? `background-color: ${colorOrGradient};` :
-            isGradient ? `background-color: rgba(0, 0, 0, 0); background-image: ${colorOrGradient};` : '';
     },
 
     //--------------------------------------------------------------------------
@@ -2587,6 +2574,81 @@ options.registry.CoverProperties = options.Class.extend({
             return this.$target.data(`use_${params.coverOptName}`) === 'True';
         }
         return this._super(...arguments);
+    },
+    /**
+     * TODO: update in master to set data-name values in XML.
+     *
+     * @override
+     */
+    async _renderCustomXML(uiFragment) {
+        uiFragment.querySelectorAll('[data-cover-opt-name]').forEach(el => {
+            el.dataset.name = `${el.dataset.coverOptName}_opt`;
+        });
+    },
+    /**
+     * @private
+     */
+    _updateColorDataset(bgColorStyle = '', bgColorClass = '') {
+        this.$target[0].dataset.bgColorStyle = bgColorStyle;
+        if (bgColorClass) {
+            this.$target[0].dataset.bgColorClass = bgColorClass;
+        }
+    },
+    /**
+     * Updates the cover properties dataset used for saving.
+     *
+     * @private
+     */
+    _updateSavingDataset(colorValue) {
+        const [colorPickerWidget, sizeWidget, textAlignWidget] = this._requestUserValueWidgets('bg_color_opt', 'size_opt', 'text_align_opt');
+        if (!colorPickerWidget) {
+            // Saving without closing the color palette, but the last picked
+            // color was already taken into account (we still need to update the
+            // dataset when a custom color is selected).
+            if (colorValue) {
+                this._updateColorDataset(`background-color: ${colorValue};`);
+            }
+            return;
+        }
+        // TODO: `o_record_has_cover` should be handled using model field, not
+        // resize_class to avoid all of this.
+        // Get values from DOM (selected values in options are only available
+        // after updateUI)
+        const sizeOptValues = sizeWidget.getMethodsParams('selectClass').possibleValues;
+        let coverClass = [...this.$target[0].classList].filter(
+            value => sizeOptValues.includes(value)
+        ).join(' ');
+        const bg = this.$image.css('background-image');
+        if (bg && bg !== 'none') {
+            coverClass += " o_record_has_cover";
+        }
+        const textAlignOptValues = textAlignWidget.getMethodsParams('selectClass').possibleValues;
+        const textAlignClass = [...this.$target[0].classList].filter(
+            value => textAlignOptValues.includes(value)
+        ).join(' ');
+        const filterEl = this.$target[0].querySelector('.o_record_cover_filter');
+        const filterValue = filterEl && filterEl.style.opacity;
+        // Update saving dataset
+        this.$target[0].dataset.coverClass = coverClass;
+        this.$target[0].dataset.textAlignClass = textAlignClass;
+        this.$target[0].dataset.filterValue = filterValue || 0.0;
+        // TODO there is probably a better way and this should be refactored to
+        // use more standard colorpicker+imagepicker structure
+        const ccValue = colorPickerWidget._ccValue;
+        const colorOrGradient = colorPickerWidget._value;
+        const isGradient = weUtils.isColorGradient(colorOrGradient);
+        const isCSSColor = !isGradient && ColorpickerWidget.isCSSColor(colorOrGradient);
+        const colorNames = [];
+        if (ccValue) {
+            colorNames.push(ccValue);
+        }
+        if (!isGradient && !isCSSColor) {
+            colorNames.push(colorOrGradient);
+        }
+        const bgColorClass = weUtils.computeColorClasses(colorNames).join(' ');
+        const bgColorStyle = isCSSColor ? `background-color: ${colorOrGradient};` :
+            isGradient ? `background-color: rgba(0, 0, 0, 0); background-image: ${colorOrGradient};` : '';
+        this._updateColorDataset(bgColorStyle, bgColorClass);
     },
 });
 
