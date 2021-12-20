@@ -150,6 +150,10 @@ class PaymentTransaction(models.Model):
                 if confirmed_orders:
                     confirmed_orders._force_lines_to_invoice_policy_order()
                     invoices = confirmed_orders._create_invoices()
+                    # Setup access token in advance to avoid serialization failure between
+                    # edi postprocessing of invoice and displaying the sale order on the portal
+                    for invoice in invoices:
+                        invoice._portal_ensure_token()
                     trans.invoice_ids = [(6, 0, invoices.ids)]
 
     @api.model
