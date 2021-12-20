@@ -65,7 +65,6 @@ class AccountFrFec(models.TransientModel):
             am.date < %s
             AND am.company_id = %s
             AND aat.include_initial_balance IS NOT TRUE
-            AND (aml.debit != 0 OR aml.credit != 0)
         '''
         # For official report: only use posted entries
         if self.export_type == "official":
@@ -93,14 +92,10 @@ class AccountFrFec(models.TransientModel):
         """
         dom_tom_group = self.env.ref('l10n_fr.dom-tom')
         is_dom_tom = company.account_fiscal_country_id.code in dom_tom_group.country_ids.mapped('code')
-        if not is_dom_tom and not company.vat:
-            raise UserError(_("Missing VAT number for company %s", company.name))
-        if not is_dom_tom and company.vat[0:2] != 'FR':
-            raise UserError(_("FEC is for French companies only !"))
-
-        return {
-            'siren': company.vat[4:13] if not is_dom_tom else '',
-        }
+        if not company.vat or is_dom_tom:
+            return {'siren': ''}
+        else:
+            return {'siren': company.vat[4:13]}
 
     def generate_fec(self):
         self.ensure_one()
@@ -183,7 +178,6 @@ class AccountFrFec(models.TransientModel):
             am.date < %s
             AND am.company_id = %s
             AND aat.include_initial_balance = 't'
-            AND (aml.debit != 0 OR aml.credit != 0)
         '''
 
         # For official report: only use posted entries
@@ -194,8 +188,7 @@ class AccountFrFec(models.TransientModel):
 
         sql_query += '''
         GROUP BY aml.account_id, aat.type
-        HAVING round(sum(aml.balance), %s) != 0
-        AND aat.type not in ('receivable', 'payable')
+        HAVING aat.type not in ('receivable', 'payable')
         '''
         formatted_date_from = fields.Date.to_string(self.date_from).replace('-', '')
         date_from = self.date_from
@@ -203,7 +196,7 @@ class AccountFrFec(models.TransientModel):
         currency_digits = 2
 
         self._cr.execute(
-            sql_query, (formatted_date_year, formatted_date_from, formatted_date_from, formatted_date_from, self.date_from, company.id, currency_digits))
+            sql_query, (formatted_date_year, formatted_date_from, formatted_date_from, formatted_date_from, self.date_from, company.id))
 
         for row in self._cr.fetchall():
             listrow = list(row)
@@ -281,7 +274,6 @@ class AccountFrFec(models.TransientModel):
             am.date < %s
             AND am.company_id = %s
             AND aat.include_initial_balance = 't'
-            AND (aml.debit != 0 OR aml.credit != 0)
         '''
 
         # For official report: only use posted entries
@@ -292,11 +284,10 @@ class AccountFrFec(models.TransientModel):
 
         sql_query += '''
         GROUP BY aml.account_id, aat.type, rp.ref, rp.id
-        HAVING round(sum(aml.balance), %s) != 0
-        AND aat.type in ('receivable', 'payable')
+        HAVING aat.type in ('receivable', 'payable')
         '''
         self._cr.execute(
-            sql_query, (formatted_date_year, formatted_date_from, formatted_date_from, formatted_date_from, self.date_from, company.id, currency_digits))
+            sql_query, (formatted_date_year, formatted_date_from, formatted_date_from, formatted_date_from, self.date_from, company.id))
 
         for row in self._cr.fetchall():
             listrow = list(row)
@@ -362,7 +353,6 @@ class AccountFrFec(models.TransientModel):
             am.date >= %s
             AND am.date <= %s
             AND am.company_id = %s
-            AND (aml.debit != 0 OR aml.credit != 0)
         '''
 
         # For official report: only use posted entries
