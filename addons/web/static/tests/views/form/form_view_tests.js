@@ -2513,54 +2513,51 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["onchange", "create", "read", "execute_action", "read"]);
     });
 
-    QUnit.skip("change and save char", async function (assert) {
+    QUnit.test("change and save char", async function (assert) {
         assert.expect(6);
+
         const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch: '<form string="Partners">' + '<group><field name="foo"/></group>' + "</form>",
+            arch: '<form><group><field name="foo"/></group></form>',
             mockRPC: function (route, args) {
                 if (args.method === "write") {
                     assert.ok(true, "should call the /write route");
                 }
-                return this._super(route, args);
             },
             resId: 2,
         });
 
-        assert.strictEqual(form.mode, "readonly", "form view should be in readonly mode");
+        assert.containsOnce(form, ".o_form_readonly", "form view should be in readonly mode");
         assert.containsOnce(form, "span:contains(blip)", "should contain span with field value");
 
         await click(form.el.querySelector(".o_form_button_edit"));
 
-        assert.strictEqual(form.mode, "edit", "form view should be in edit mode");
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=foo] input"), "tralala");
+        assert.containsOnce(form, ".o_form_editable", "form view should be in edit mode");
+        await editInput(form.el, ".o_field_widget[name=foo] input", "tralala");
         await click(form.el.querySelector(".o_form_button_save"));
 
-        assert.strictEqual(form.mode, "readonly", "form view should be in readonly mode");
+        assert.containsOnce(form, ".o_form_readonly", "form view should be in readonly mode");
         assert.containsOnce(form, "span:contains(tralala)", "should contain span with field value");
     });
 
-    QUnit.skip("properly reload data from server", async function (assert) {
-        assert.expect(1);
-
+    QUnit.test("properly reload data from server", async function (assert) {
         const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch: '<form string="Partners">' + '<group><field name="foo"/></group>' + "</form>",
+            arch: '<form><group><field name="foo"/></group></form>',
             mockRPC: function (route, args) {
                 if (args.method === "write") {
                     args.args[1].foo = "apple";
                 }
-                return this._super(route, args);
             },
             resId: 2,
         });
 
         await click(form.el.querySelector(".o_form_button_edit"));
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=foo] input"), "tralala");
+        await editInput(form.el, ".o_field_widget[name=foo] input", "tralala");
         await click(form.el.querySelector(".o_form_button_save"));
         assert.containsOnce(form, "span:contains(apple)", "should contain span with field value");
     });
