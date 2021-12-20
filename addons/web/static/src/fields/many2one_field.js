@@ -15,14 +15,17 @@ export class Many2OneField extends Component {
         this.orm = useService("orm");
         this.action = useService("action");
 
+        this.displayName = "";
         this.extraLines = [];
 
         onWillStart(async () => {
-            this.extraLines = await this.loadExtraLines(this.props.value);
+            [this.displayName, ...this.extraLines] = await this.loadDisplayName(this.props.value);
         });
         onWillUpdateProps(async (nextProps) => {
             if (this.props.value !== nextProps.value) {
-                this.extraLines = await this.loadExtraLines(nextProps.value);
+                [this.displayName, ...this.extraLines] = await this.loadDisplayName(
+                    nextProps.value
+                );
             }
         });
     }
@@ -38,9 +41,6 @@ export class Many2OneField extends Component {
     }
     get hasExternalButton() {
         return !this.noOpen && !this.isFloating && !!this.props.value;
-    }
-    get displayName() {
-        return this.props.value ? this.getDisplayName(this.props.value[1]) : "";
     }
     get isFloating() {
         return false;
@@ -62,18 +62,14 @@ export class Many2OneField extends Component {
         return this.canCreate && !this.props.options.no_create_edit;
     }
 
-    getDisplayName(value) {
-        return value.split("\n")[0].trim();
-    }
-
-    async loadExtraLines(value) {
+    async loadDisplayName(value) {
         if (this.props.options.always_reload && value) {
             const nameGet = await this.orm.call(this.relation, "name_get", [value[0]], {
                 context: this.props.record.getFieldContext(this.props.name),
             });
-            return nameGet[0][1].split("\n").slice(1);
+            return nameGet[0][1].split("\n").map((line) => line.trim());
         }
-        return [];
+        return [this.props.formatValue(value)];
     }
     async fetchAutoCompleteSources(request) {
         const trimmedRequest = request.trim();
@@ -146,13 +142,13 @@ async function searchRecords(request, suggestions, ctx) {
     });
 
     suggestions.push(
-        ...results.map(([id, fullName]) => {
-            const displayName = ctx.getDisplayName(fullName);
+        ...results.map((result) => {
+            const displayName = ctx.props.formatValue(result);
             return {
                 label: owl.utils.escape(displayName),
                 onSelected: ({ setValue }) => {
                     setValue(displayName);
-                    ctx.props.update([id, fullName]);
+                    ctx.props.update(result);
                 },
             };
         })

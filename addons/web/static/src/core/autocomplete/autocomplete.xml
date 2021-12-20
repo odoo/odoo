@@ -16,7 +16,7 @@
                 <ul class="o-autocomplete--dropdown-menu dropdown-menu ui-widget ui-autocomplete show">
                     <t t-foreach="state.suggestions" t-as="suggestion" t-key="suggestion.id">
                         <li class="o-autocomplete--dropdown-item ui-menu-item" t-att-class="suggestion.classList" t-on-click.prevent="onSuggestionSelected(suggestion)">
-                            <a class="dropdown-item" href="#" t-esc="suggestion.label" />
+                            <a class="dropdown-item ui-menu-item-wrapper" href="#" t-esc="suggestion.label" />
                         </li>
                     </t>
                 </ul>

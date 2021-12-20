@@ -2699,11 +2699,7 @@ QUnit.module("Fields", (hooks) => {
                 `,
                 mockRPC(route, { kwargs, method }) {
                     if (method === "name_search") {
-                        assert.deepEqual(
-                            kwargs.args,
-                            [["bar", "=", true]],
-                            "should not have a domain"
-                        );
+                        assert.deepEqual(kwargs.args, [["bar", "=", true]], "should have a domain");
                     }
                 },
             });
@@ -2713,7 +2709,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("creating record with many2one with option always_reload", async function (assert) {
+    QUnit.test("creating record with many2one with option always_reload", async function (assert) {
         assert.expect(2);
 
         serverData.models.partner.fields.trululu.default = 1;
@@ -2750,7 +2746,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.skip("selecting a many2one, then discarding", async function (assert) {
+    QUnit.test("selecting a many2one, then discarding", async function (assert) {
         assert.expect(3);
 
         const form = await makeView({
@@ -2765,14 +2761,14 @@ QUnit.module("Fields", (hooks) => {
             `,
         });
         assert.strictEqual(
-            form.el.querySelector("a[name='product_id']").textContent,
+            form.el.querySelector(".o_field_widget[name='product_id']").textContent,
             "",
             "the tag a should be empty"
         );
         await click(form.el, ".o_form_button_edit");
 
-        await testUtils.fields.many2one.clickOpenDropdown("product_id");
-        await testUtils.fields.many2one.clickItem("product_id", "xphone");
+        await click(form.el, ".o_field_widget[name='product_id'] input");
+        await click(form.el.querySelector(".o_field_widget[name='product_id'] .dropdown-item"));
         assert.strictEqual(
             form.el.querySelector(".o_field_widget[name='product_id'] input").value,
             "xphone",
@@ -2781,7 +2777,7 @@ QUnit.module("Fields", (hooks) => {
 
         await click(form.el, ".o_form_button_cancel");
         assert.strictEqual(
-            form.el.querySelector("a[name='product_id']").textContent,
+            form.el.querySelector(".o_field_widget[name='product_id']").textContent,
             "",
             "the tag a should be empty"
         );
@@ -3145,18 +3141,12 @@ QUnit.module("Fields", (hooks) => {
             `,
         });
 
-        form.el
-            .querySelectorAll(".o_field_many2one input")
-            .focus()
-            .val("xph")
-            .trigger("input")
-            .trigger("keyup");
-        await nextTick();
-        form.el.querySelectorAll(".o_field_many2one input").trigger("blur");
-        await nextTick();
+        const input = form.el.querySelector(".o_field_many2one input");
+        input.value = "xph";
+        await triggerEvents(input, null, ["input", "change"]);
 
         assert.containsNone(document.body, ".modal");
-        assert.strictEqual(form.el.querySelectorAll(".o_field_many2one input").value, "xphone");
+        assert.strictEqual(form.el.querySelector(".o_field_many2one input").value, "xphone");
         assert.containsOnce(form, ".o_external_button");
     });
 
