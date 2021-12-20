@@ -371,10 +371,14 @@ QUnit.module("Fields", (hooks) => {
             `,
         });
 
-        assert.containsOnce(form, "div.o_field_radio.o_vertical", "should have o_vertical class");
         assert.containsOnce(
             form,
-            "div.o_field_radio.o_horizontal",
+            ".o_field_radio > div.o_vertical",
+            "should have o_vertical class"
+        );
+        assert.containsOnce(
+            form,
+            ".o_field_radio div.o_horizontal",
             "should have o_horizontal class"
         );
     });

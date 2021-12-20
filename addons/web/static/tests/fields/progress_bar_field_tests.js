@@ -86,7 +86,7 @@ QUnit.module("Fields", (hooks) => {
         await click(form.el.querySelector(".o_form_button_edit"));
 
         // trigger the onchange
-        const field = form.el.querySelector(".o_input[name=display_name]");
+        const field = form.el.querySelector(".o_field_widget[name=display_name] input");
         field.value = "new name";
         await triggerEvent(field, null, "change");
         await click(form.el.querySelector(".o_form_button_save"));

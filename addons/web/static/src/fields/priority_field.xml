@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.PriorityField" owl="1">
-        <div class="o-priority-field o_priority o_field_widget" role="radiogroup" name="priority" aria-label="Priority">
+        <div class="o-priority-field o_priority" role="radiogroup" name="priority" aria-label="Priority">
             <t t-set="values" t-value="selection" />
             <t t-foreach="values" t-as="value" t-key="value">
                 <t t-if="!value_first">

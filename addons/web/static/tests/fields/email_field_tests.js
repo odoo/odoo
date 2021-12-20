@@ -191,12 +191,16 @@ QUnit.module("Fields", (hooks) => {
             resModel: "partner",
             arch: '<form><field name="foo" widget="email"/></form>',
         });
-        const mailField = form.el.querySelector('input[name="foo"]');
-        mailField.value = "  abc@abc.com  ";
-        await triggerEvent(mailField, null, "change");
+        const mailFieldInput = form.el.querySelector('.o_field_widget[name="foo"] input');
+        mailFieldInput.value = "  abc@abc.com  ";
+        await triggerEvent(mailFieldInput, null, "change");
         await click(form.el.querySelector(".o_form_button_save"));
         await click(form.el.querySelector(".o_form_button_edit"));
-        assert.strictEqual(mailField.value, "abc@abc.com", "Foo value should have been trimmed");
+        assert.strictEqual(
+            mailFieldInput.value,
+            "abc@abc.com",
+            "Foo value should have been trimmed"
+        );
     });
 
     QUnit.test(
@@ -238,7 +242,7 @@ QUnit.module("Fields", (hooks) => {
 
             // edit the phone field, but with the mail in readonly mode
             await click(form.el.querySelector(".o_form_button_edit"));
-            const field = form.el.querySelector('input[name="int_field"]');
+            const field = form.el.querySelector('.o_field_widget[name="int_field"] input');
             field.value = 3;
             await triggerEvent(field, null, "change");
             await click(form.el.querySelector(".o_form_button_save"));

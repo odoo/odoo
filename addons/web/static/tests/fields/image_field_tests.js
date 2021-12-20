@@ -94,28 +94,28 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.hasClass(
-            form.el.querySelector("div[name='document']"),
+            form.el.querySelector(".o_field_widget[name='document']"),
             "o_field_image",
             "the widget should have the correct class"
         );
         assert.containsOnce(
             form.el,
-            "div[name='document'] > img",
+            ".o_field_widget[name='document'] > div > img",
             "the widget should contain an image"
         );
         assert.hasClass(
-            form.el.querySelector("div[name='document'] > img"),
+            form.el.querySelector(".o_field_widget[name='document'] > div > img"),
             "img-fluid",
             "the image should have the correct class"
         );
         assert.hasAttrValue(
-            form.el.querySelector("div[name='document'] > img"),
+            form.el.querySelector(".o_field_widget[name='document'] > div > img"),
             "width",
             "90",
             "the image should correctly set its attributes"
         );
         assert.strictEqual(
-            form.el.querySelector("div[name='document'] > img").style.maxWidth,
+            form.el.querySelector(".o_field_widget[name='document'] > div > img").style.maxWidth,
             "90px",
             "the image should correctly set its attributes"
         );
@@ -168,28 +168,29 @@ QUnit.module("Fields", (hooks) => {
             });
 
             assert.hasClass(
-                form.el.querySelector('div[name="document"]'),
+                form.el.querySelector('.o_field_widget[name="document"]'),
                 "o_field_image",
                 "the widget should have the correct class"
             );
             assert.containsOnce(
                 form,
-                "div[name='document'] > img",
+                ".o_field_widget[name='document'] > div > img",
                 "the widget should contain an image"
             );
             assert.hasClass(
-                form.el.querySelector("div[name='document'] > img"),
+                form.el.querySelector(".o_field_widget[name='document'] > div > img"),
                 "img-fluid",
                 "the image should have the correct class"
             );
             assert.hasAttrValue(
-                form.el.querySelector("div[name='document'] > img"),
+                form.el.querySelector(".o_field_widget[name='document'] > div > img"),
                 "width",
                 "90",
                 "the image should correctly set its attributes"
             );
             assert.strictEqual(
-                form.el.querySelector("div[name='document'] > img").style.maxWidth,
+                form.el.querySelector(".o_field_widget[name='document'] > div > img").style
+                    .maxWidth,
                 "90px",
                 "the image should correctly set its attributes"
             );

@@ -235,24 +235,35 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(cells[6].textContent, "06/08/2017");
         assert.strictEqual(cells[7].textContent, "");
 
-        assert.hasAttrValue(cells[0].querySelector(".o_field_widget"), "title", "10/08/2017");
-
-        assert.hasClass(cells[0].querySelector("div"), "font-weight-bold text-warning");
+        assert.hasAttrValue(cells[0].querySelector(".o_field_widget > div"), "title", "10/08/2017");
+        assert.hasClass(
+            cells[0].querySelector(".o_field_widget > div"),
+            "font-weight-bold text-warning"
+        );
         assert.doesNotHaveClass(
-            cells[1].querySelector("div"),
+            cells[1].querySelector(".o_field_widget > div"),
             "font-weight-bold text-warning text-danger"
         );
-        assert.hasClass(cells[2].querySelector("div"), "font-weight-bold text-danger");
+        assert.hasClass(
+            cells[2].querySelector(".o_field_widget > div"),
+            "font-weight-bold text-danger"
+        );
         assert.doesNotHaveClass(
-            cells[3].querySelector("div"),
+            cells[3].querySelector(".o_field_widget > div"),
             "font-weight-bold text-warning text-danger"
         );
-        assert.hasClass(cells[4].querySelector("div"), "font-weight-bold text-danger");
+        assert.hasClass(
+            cells[4].querySelector(".o_field_widget > div"),
+            "font-weight-bold text-danger"
+        );
         assert.doesNotHaveClass(
-            cells[5].querySelector("div"),
+            cells[5].querySelector(".o_field_widget > div"),
             "font-weight-bold text-warning text-danger"
         );
-        assert.hasClass(cells[6].querySelector("div"), "font-weight-bold text-danger");
+        assert.hasClass(
+            cells[6].querySelector(".o_field_widget > div"),
+            "font-weight-bold text-danger"
+        );
     });
 
     QUnit.skip(
@@ -393,7 +404,10 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(form.el.querySelector(".o_field_widget").textContent, "Today");
-        assert.hasClass(form.el.querySelector(".o_field_widget"), "font-weight-bold text-warning");
+        assert.hasClass(
+            form.el.querySelector(".o_field_widget > div "),
+            "font-weight-bold text-warning"
+        );
 
         // in edit mode, this widget should be editable.
         await click(form.el, ".o_form_button_edit");
@@ -417,7 +431,7 @@ QUnit.module("Fields", (hooks) => {
         await click(document.body, ".bootstrap-datetimepicker-widget .day[data-day='10/07/2017']");
         await click(form.el, ".o_form_button_save");
         assert.strictEqual(form.el.querySelector(".o_field_widget").textContent, "Yesterday");
-        assert.hasClass(form.el.querySelector(".o_field_widget"), "text-danger");
+        assert.hasClass(form.el.querySelector(".o_field_widget > div"), "text-danger");
     });
 
     QUnit.test("RemainingDaysField on a datetime field in form view", async function (assert) {
@@ -440,7 +454,7 @@ QUnit.module("Fields", (hooks) => {
             `,
         });
         assert.strictEqual(form.el.querySelector(".o_field_widget").textContent, "Today");
-        assert.hasClass(form.el.querySelector(".o_field_widget"), "text-warning");
+        assert.hasClass(form.el.querySelector(".o_field_widget > div"), "text-warning");
 
         // in edit mode, this widget should be editable.
         await click(form.el, ".o_form_button_edit");
@@ -458,7 +472,7 @@ QUnit.module("Fields", (hooks) => {
         await click(document.body, ".bootstrap-datetimepicker-widget .day[data-day='10/09/2017']");
         await click(document.body, "a[data-action='close']");
         await click(form.el, ".o_form_button_save");
-        assert.strictEqual(form.el.querySelector(".o_field_widget").textContent, "Tomorrow");
+        assert.strictEqual(form.el.querySelector(".o_field_widget > div").textContent, "Tomorrow");
     });
 
     QUnit.skip(

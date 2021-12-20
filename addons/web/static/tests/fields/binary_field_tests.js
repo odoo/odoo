@@ -118,7 +118,8 @@ QUnit.module("Fields", (hooks) => {
             "the binary field should not be rendered as a downloadable link in edit"
         );
         assert.strictEqual(
-            form.el.querySelector('div.o_field_binary_file[name="document"] span').innerText,
+            form.el.querySelector('.o_field_widget[name="document"] div.o_field_binary_file span')
+                .innerText,
             "coucou.txt",
             "the binary field should display the file name in the input edit mode"
         );
@@ -128,7 +129,7 @@ QUnit.module("Fields", (hooks) => {
             "there shoud be a button to clear the file"
         );
         assert.strictEqual(
-            form.el.querySelector("input.o_field_char").value,
+            form.el.querySelector(".o_field_char input").value,
             "coucou.txt",
             "the filename field should have the file name as value"
         );
@@ -136,7 +137,7 @@ QUnit.module("Fields", (hooks) => {
         await click(form.el.querySelector(".o_field_binary_file .o_clear_file_button"));
 
         assert.isNotVisible(
-            form.el.querySelector(".o_field_binary_file > input"),
+            form.el.querySelector(".o_field_binary_file input"),
             "the input should be hidden"
         );
         assert.containsOnce(
@@ -145,7 +146,7 @@ QUnit.module("Fields", (hooks) => {
             "there shoud be a button to upload the file"
         );
         assert.strictEqual(
-            form.el.querySelector("input.o_field_char").value,
+            form.el.querySelector(".o_field_char input").value,
             "",
             "the filename field should be empty since we removed the file"
         );

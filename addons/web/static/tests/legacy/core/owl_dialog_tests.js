@@ -2,9 +2,12 @@ odoo.define('web.owl_dialog_tests', function (require) {
     "use strict";
 
     const LegacyDialog = require('web.Dialog');
+    const FormView = require('web.FormView');
     const makeTestEnvironment = require('web.test_env');
     const Dialog = require('web.OwlDialog');
     const testUtils = require('web.test_utils');
+    const { registry } = require("@web/core/registry");
+    const legacyViewRegistry = require('web.view_registry');
 
     const { makeLegacyDialogMappingTestEnv } = require('@web/../tests/helpers/legacy_env_utils');
     const { Dialog: WowlDialog } = require("@web/core/dialog/dialog");
@@ -415,6 +418,9 @@ odoo.define('web.owl_dialog_tests', function (require) {
         });
 
         QUnit.test("remove tabindex on inactive dialog", async (assert) => {
+            registry.category("views").remove("form"); // remove new form from registry
+            legacyViewRegistry.add("form", FormView); // add legacy form -> will be wrapped and added to new registry
+
             const serverData = {
                 actions: {
                     1: {
