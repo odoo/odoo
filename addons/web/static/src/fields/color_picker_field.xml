@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.ColorPickerField" owl="1">
-        <div class="o_field_color_picker">
+        <div>
             <t t-if="!state.isExpanded">
                 <div t-on-click.prevent.stop="toggle" role="menuitem"  t-att-title="currentColor" t-att-aria-label="currentColor">
                     <a href="#" t-att-class="{ 'o_field_cursor_disabled': isReadonly  }" t-attf-class="o_field_color_picker_color_{{ props.value || 0 }}" />
