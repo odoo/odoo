@@ -286,7 +286,7 @@ QUnit.module("Fields", (hooks) => {
             "should have rendered the many2one field correctly"
         );
         assert.hasAttrValue(
-            form.el.querySelector(".o_field_widget[name='product_id']"),
+            form.el.querySelector(".o_field_widget[name='product_id'] span"),
             "raw-value",
             "37",
             "should have set the raw-value attr for many2one field correctly"
@@ -303,7 +303,7 @@ QUnit.module("Fields", (hooks) => {
             "should have rendered the selection field correctly"
         );
         assert.hasAttrValue(
-            form.el.querySelector(".o_field_widget[name='color']"),
+            form.el.querySelector(".o_field_widget[name='color'] span"),
             "raw-value",
             "red",
             "should have set the raw-value attr for selection field correctly"
@@ -314,37 +314,37 @@ QUnit.module("Fields", (hooks) => {
         assert.containsN(form.el, "select", 3);
         assert.containsOnce(
             form.el,
-            "select[name='product_id'] option[value='37']",
+            ".o_field_widget[name='product_id'] select option[value='37']",
             "should have fetched xphone option"
         );
         assert.containsOnce(
             form.el,
-            "select[name='product_id'] option[value='41']",
+            ".o_field_widget[name='product_id'] select option[value='41']",
             "should have fetched xpad option"
         );
         assert.strictEqual(
-            form.el.querySelector("select[name='product_id']").value,
+            form.el.querySelector(".o_field_widget[name='product_id'] select").value,
             "37",
             "should have correct product_id value"
         );
         assert.strictEqual(
-            form.el.querySelector("select[name='trululu']").value,
+            form.el.querySelector(".o_field_widget[name='trululu'] select").value,
             "false",
             "should not have any value in trululu field"
         );
 
-        const select = form.el.querySelector("select[name='product_id']");
+        const select = form.el.querySelector(".o_field_widget[name='product_id'] select");
         select.value = "41";
         await triggerEvent(select, null, "change");
 
         assert.strictEqual(
-            form.el.querySelector("select[name='product_id']").value,
+            form.el.querySelector(".o_field_widget[name='product_id'] select").value,
             "41",
             "should have a value of xphone"
         );
 
         assert.strictEqual(
-            form.el.querySelector("select[name='color']").value,
+            form.el.querySelector(".o_field_widget[name='color'] select").value,
             `"red"`,
             "should have correct value in color field"
         );
@@ -589,7 +589,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // change value to update widget modifier values
-        const select = form.el.querySelector(".o_field_widget[name='feedback_value']");
+        const select = form.el.querySelector(".o_field_widget[name='feedback_value'] select");
         select.value = `"bad"`;
         await triggerEvent(select, null, "change");
 

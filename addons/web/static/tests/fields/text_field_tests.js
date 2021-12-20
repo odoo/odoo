@@ -223,8 +223,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         await click(form.el, ".o_form_button_edit");
-
-        const textarea = form.el.querySelector("textarea.o_field_text");
+        const textarea = form.el.querySelector(".o_field_text textarea");
         assert.ok(textarea, "should have a text area");
         assert.strictEqual(textarea.value, "yop", "should still be 'yop' in edit");
 

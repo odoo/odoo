@@ -65,17 +65,17 @@ QUnit.module("Fields", (hooks) => {
         await click(form.el.querySelector(".o_form_button_edit"));
         assert.containsOnce(
             form,
-            'input[type="text"].o_field_widget',
+            '.o_field_widget input[type="text"]',
             "should have an input for the char field"
         );
         assert.strictEqual(
-            form.el.querySelector('input[type="text"].o_field_widget').value,
+            form.el.querySelector('.o_field_widget input[type="text"]').value,
             "yop",
             "input should contain field value in edit mode"
         );
 
         // change value in edit mode
-        let editField = form.el.querySelector('input[type="text"].o_field_widget');
+        let editField = form.el.querySelector('.o_field_widget input[type="text"]');
         editField.value = "limbo";
         await triggerEvent(editField, null, "change");
 
@@ -92,7 +92,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(editedElement.innerText, "limbo", "the new value should be displayed");
 
         await click(form.el.querySelector(".o_form_button_edit"));
-        editField = form.el.querySelector('input[type="text"].o_field_widget');
+        editField = form.el.querySelector('.o_field_widget input[type="text"]');
         editField.value = "/web/limbo";
         await triggerEvent(editField, null, "change");
 
@@ -120,7 +120,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(
-            form.el.querySelector('a[name="foo"]').innerText,
+            form.el.querySelector('.o_field_widget[name="foo"] a').innerText,
             "kebeclibre",
             "url text should come from the text attribute"
         );
@@ -164,19 +164,19 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
         });
         assert.strictEqual(
-            form.el.querySelector('[name="url1"]').getAttribute("href"),
+            form.el.querySelector('.o_field_widget[name="url1"] a').getAttribute("href"),
             "http://www.url1.com"
         );
         assert.strictEqual(
-            form.el.querySelector('[name="url2"]').getAttribute("href"),
+            form.el.querySelector('.o_field_widget[name="url2"] a').getAttribute("href"),
             "www.url2.com"
         );
         assert.strictEqual(
-            form.el.querySelector('[name="url3"]').getAttribute("href"),
+            form.el.querySelector('.o_field_widget[name="url3"] a').getAttribute("href"),
             "http://www.url3.com"
         );
         assert.strictEqual(
-            form.el.querySelector('[name="url4"]').getAttribute("href"),
+            form.el.querySelector('.o_field_widget[name="url4"] a').getAttribute("href"),
             "https://url4.com"
         );
     });
@@ -257,8 +257,8 @@ QUnit.module("Fields", (hooks) => {
 
         await click(form.el.querySelector(".o_form_button_edit"));
 
-        assert.containsOnce(form, "input[name=foo]");
-        assert.strictEqual(form.el.querySelector("[name=foo]").value, "");
+        assert.containsOnce(form, ".o_field_widget[name=foo] input");
+        assert.strictEqual(form.el.querySelector("[name=foo] input").value, "");
     });
 
     QUnit.test("UrlField: url old content is cleaned on render edit", async function (assert) {
@@ -294,11 +294,11 @@ QUnit.module("Fields", (hooks) => {
         await click(form.el.querySelector(".o_form_button_edit"));
 
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget[name=foo2]").value,
+            form.el.querySelector(".o_field_widget[name=foo2] input").value,
             "foo2",
             "input should contain field value in edit mode"
         );
-        const field = form.el.querySelector(".o_field_widget[name=foo2]");
+        const field = form.el.querySelector(".o_field_widget[name=foo2] input");
         field.value = "bonjour";
         await triggerEvent(field, null, "change");
         assert.strictEqual(
