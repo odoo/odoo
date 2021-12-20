@@ -137,7 +137,9 @@ class PaymentTransaction(models.Model):
                 ('is_move_sent', '=', False),
                 ('state', '=', 'posted'),
             ])),
-            ('sale_order_ids.state', 'in', ('sale', 'done')),
+            "|",
+                ('sale_order_ids', '=', False),
+                ('sale_order_ids.state', 'in', ('sale', 'done')),
             ('last_state_change', '>=', retry_limit_date),
         ])._send_invoice()
 
