@@ -82,7 +82,6 @@
 </template>
 
 <template id="newsletter_subscribe_options" name="Newsletter Subscribe Options" inherit_id="website.snippet_options">
-    <xpath expr="//*[@t-set='so_snippet_addition_selector']" position="inside">, .o_newsletter_popup</xpath>
     <xpath expr="//div" position="after">
         <t t-set="selector" t-value="'.js_subscribe'"/>
         <div data-js="mailing_list_subscribe"
@@ -95,9 +94,6 @@
             <we-checkbox t-if="recaptcha_public_key" string="Show reCaptcha Policy" data-toggle-recaptcha-legal="" data-no-preview="true"/>
         </div>
         <div t-att-data-selector="selector" data-drop-near="p, h1, h2, h3, blockquote, .card"/>
-    </xpath>
-    <xpath expr="//div[@data-js='anchor']" position="attributes">
-        <attribute name="data-exclude" add=".o_newsletter_popup" separator=","/>
     </xpath>
 </template>
 
