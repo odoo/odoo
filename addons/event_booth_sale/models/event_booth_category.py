@@ -45,7 +45,7 @@ class EventBoothCategory(models.Model):
         for category in self:
             product = category.product_id
             list_price = product.list_price + product.price_extra
-            discount = (list_price - product.price) / list_price if list_price else 0.0
+            discount = (list_price - product._get_contextual_price()) / list_price if list_price else 0.0
             category.price_reduce = (1.0 - discount) * category.price
 
     def _init_column(self, column_name):

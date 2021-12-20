@@ -182,12 +182,12 @@ class AccountMoveLine(models.Model):
         amount = (self.credit or 0.0) - (self.debit or 0.0)
 
         if self.product_id.expense_policy == 'sales_price':
-            return self.product_id.with_context(
-                partner=order.partner_id,
-                date_order=order.date_order,
-                pricelist=order.pricelist_id.id,
-                uom=self.product_uom_id.id
-            ).price
+            return order.pricelist_id._get_product_price(
+                self.product_id,
+                1.0,
+                self.product_uom_id,
+                date=order.date_order,
+            )
 
         uom_precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         if float_is_zero(unit_amount, precision_digits=uom_precision_digits):

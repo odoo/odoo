@@ -75,10 +75,6 @@ class ProductProduct(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'priority desc, default_code, name, id'
 
-    # price: total price, context dependent (partner, pricelist, quantity)
-    price = fields.Float(
-        'Price', compute='_compute_product_price',
-        digits='Product Price', inverse='_set_product_price')
     # price_extra: catalog extra value only, sum of variant extra attributes
     price_extra = fields.Float(
         'Variant Price Extra', compute='_compute_product_price_extra',
@@ -233,41 +229,6 @@ class ProductProduct(models.Model):
 
     def _compute_is_product_variant(self):
         self.is_product_variant = True
-
-    @api.depends_context('pricelist', 'quantity', 'uom', 'date', 'no_variant_attributes_price_extra')
-    def _compute_product_price(self):
-        prices = {}
-        pricelist_id_or_name = self._context.get('pricelist')
-        if pricelist_id_or_name:
-            pricelist = None
-
-            # Support context pricelists specified as list, display_name or ID for compatibility
-            if isinstance(pricelist_id_or_name, list):
-                pricelist_id_or_name = pricelist_id_or_name[0]
-            if isinstance(pricelist_id_or_name, str):
-                pricelist_name_search = self.env['product.pricelist'].name_search(pricelist_id_or_name, operator='=', limit=1)
-                if pricelist_name_search:
-                    pricelist = self.env['product.pricelist'].browse([pricelist_name_search[0][0]])
-            elif isinstance(pricelist_id_or_name, int):
-                pricelist = self.env['product.pricelist'].browse(pricelist_id_or_name)
-
-            if pricelist:
-                quantity = self.env.context.get('quantity', 1.0)
-                uom = self.env['uom.uom'].browse(self.env.context.get('uom'))
-                date = self.env.context.get('date')
-                prices = pricelist._get_products_price(self, quantity, uom=uom, date=date)
-
-        for product in self:
-            product.price = prices.get(product.id, 0.0)
-
-    def _set_product_price(self):
-        for product in self:
-            if self._context.get('uom'):
-                value = self.env['uom.uom'].browse(self._context['uom'])._compute_price(product.price, product.uom_id)
-            else:
-                value = product.price
-            value -= product.price_extra
-            product.write({'list_price': value})
 
     @api.onchange('lst_price')
     def _set_product_lst_price(self):
@@ -749,6 +710,18 @@ class ProductProduct(models.Model):
                                                           and product.product_tmpl_id.product_variant_ids)).mapped('product_tmpl_id')
         (tmpl_to_deactivate + tmpl_to_activate).toggle_active()
         return result
+
+    def _get_contextual_price(self):
+        self.ensure_one()
+        # YTI TODO: During website_sale cleaning, we should get rid of those crappy context thing
+        if not self._context.get('pricelist'):
+            return 0.0
+        pricelist = self.env['product.pricelist'].browse(self._context.get('pricelist'))
+
+        quantity = self.env.context.get('quantity', 1.0)
+        uom = self.env['uom.uom'].browse(self.env.context.get('uom'))
+        date = self.env.context.get('date')
+        return pricelist._get_product_price(self, quantity, uom=uom, date=date)
 
 
 class ProductPackaging(models.Model):

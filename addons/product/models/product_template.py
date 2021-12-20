@@ -69,11 +69,6 @@ class ProductTemplate(models.Model):
     cost_currency_id = fields.Many2one(
         'res.currency', 'Cost Currency', compute='_compute_cost_currency_id')
 
-    # price fields
-    # price: total template price, context dependent (pricelist, quantity)
-    price = fields.Float(
-        'Price', compute='_compute_template_price', inverse='_set_template_price',
-        digits='Product Price')
     # list_price: catalog price, user defined
     list_price = fields.Float(
         'Sales Price', default=1.0,
@@ -99,10 +94,6 @@ class ProductTemplate(models.Model):
 
     sale_ok = fields.Boolean('Can be Sold', default=True)
     purchase_ok = fields.Boolean('Can be Purchased', default=True)
-    # TODO VFE remove this search magic & the price field?
-    pricelist_id = fields.Many2one(
-        'product.pricelist', 'Pricelist', store=False,
-        help='Technical field. Used for searching on pricelists, not stored in database.')
     uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure',
         default=_get_default_uom_id, required=True,
@@ -188,47 +179,6 @@ class ProductTemplate(models.Model):
     @api.depends_context('company')
     def _compute_cost_currency_id(self):
         self.cost_currency_id = self.env.company.currency_id.id
-
-    @api.depends_context('pricelist', 'partner', 'quantity', 'uom', 'date', 'company')
-    def _compute_template_price(self):
-        prices = self._compute_template_price_no_inverse()
-        for template in self:
-            template.price = prices.get(template.id, 0.0)
-
-    def _compute_template_price_no_inverse(self):
-        """The _compute_template_price writes the 'list_price' field with an inverse method
-        This method allows computing the price without writing the 'list_price'
-        """
-        prices = {}
-        pricelist_id_or_name = self._context.get('pricelist')
-        if pricelist_id_or_name:
-            pricelist = None
-
-            # Support context pricelists specified as list, display_name or ID for compatibility
-            if isinstance(pricelist_id_or_name, list):
-                pricelist_id_or_name = pricelist_id_or_name[0]
-            if isinstance(pricelist_id_or_name, str):
-                pricelist_data = self.env['product.pricelist'].name_search(pricelist_id_or_name, operator='=', limit=1)
-                if pricelist_data:
-                    pricelist = self.env['product.pricelist'].browse(pricelist_data[0][0])
-            elif isinstance(pricelist_id_or_name, int):
-                pricelist = self.env['product.pricelist'].browse(pricelist_id_or_name)
-
-            if pricelist:
-                quantity = self.env.context.get('quantity', 1.0)
-                uom = self.env['uom.uom'].browse(self.env.context.get('uom'))
-                date = self.env.context.get('date')
-                prices = pricelist._get_products_price(self, quantity, uom=uom, date=date)
-
-        return prices
-
-    def _set_template_price(self):
-        if self._context.get('uom'):
-            for template in self:
-                value = self.env['uom.uom'].browse(self._context['uom'])._compute_price(template.price, template.uom_id)
-                template.write({'list_price': value})
-        else:
-            self.write({'list_price': self.price})
 
     @api.depends_context('company')
     @api.depends('product_variant_ids', 'product_variant_ids.standard_price')
@@ -1332,3 +1282,15 @@ class ProductTemplate(models.Model):
             'label': _('Import Template for Products'),
             'template': '/product/static/xls/product_template.xls'
         }]
+
+    def _get_contextual_price(self):
+        self.ensure_one()
+        # YTI TODO: During website_sale cleaning, we should get rid of those crappy context thing
+        if not self._context.get('pricelist'):
+            return 0.0
+        pricelist = self.env['product.pricelist'].browse(self._context.get('pricelist'))
+
+        quantity = self.env.context.get('quantity', 1.0)
+        uom = self.env['uom.uom'].browse(self.env.context.get('uom'))
+        date = self.env.context.get('date')
+        return pricelist._get_product_price(self, quantity, uom=uom, date=date)

@@ -73,7 +73,7 @@ class TestWebsiteSaleProductAttributeValueConfig(TestSaleProductAttributeValueCo
 
         test_product = self.env['product.template'].create({
             'name': 'Test Product',
-            'price': 2000,
+            'list_price': 2000,
         }).with_context(website_id=current_website.id)
 
         # Add fixed price for pricelist
@@ -146,7 +146,7 @@ class TestWebsiteSaleProductPricelist(TestSaleProductAttributeValueCommon):
 
         test_product = self.env['product.template'].create({
             'name': 'Test Product',
-            'price': 110,
+            'list_price': 110,
             'taxes_id': [(6, 0, [tax10.id])],
         }).with_context(website_id=current_website.id)
 

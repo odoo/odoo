@@ -12,8 +12,10 @@ class TestPricelist(TransactionCase):
         self.datacard = self.env['product.product'].create({'name': 'Office Lamp'})
         self.usb_adapter = self.env['product.product'].create({'name': 'Office Chair'})
         self.uom_ton = self.env.ref('uom.product_uom_ton')
-        self.uom_unit_id = self.ref('uom.product_uom_unit')
-        self.uom_dozen_id = self.ref('uom.product_uom_dozen')
+        self.uom_unit = self.env.ref('uom.product_uom_unit')
+        self.uom_unit_id = self.uom_unit.id
+        self.uom_dozen = self.env.ref('uom.product_uom_dozen')
+        self.uom_dozen_id = self.uom_dozen.id
         self.uom_kgm_id = self.ref('uom.product_uom_kgm')
 
         self.public_pricelist = self.env.ref('product.list0')
@@ -37,31 +39,23 @@ class TestPricelist(TransactionCase):
     def test_10_discount(self):
         # Make sure the price using a pricelist is the same than without after
         # applying the computation manually
-        context = {}
 
-        public_context = dict(context, pricelist=self.public_pricelist.id)
-        pricelist_context = dict(context, pricelist=self.sale_pricelist_id.id)
+        self.assertEqual(
+            self.public_pricelist._get_product_price(self.usb_adapter, 1.0)*0.9,
+            self.sale_pricelist_id._get_product_price(self.usb_adapter, 1.0))
 
-        usb_adapter_without_pricelist = self.usb_adapter.with_context(public_context)
-        usb_adapter_with_pricelist = self.usb_adapter.with_context(pricelist_context)
-        self.assertEqual(usb_adapter_with_pricelist.price, usb_adapter_without_pricelist.price*0.9)
+        self.assertEqual(
+            self.public_pricelist._get_product_price(self.datacard, 1.0)-0.5,
+            self.sale_pricelist_id._get_product_price(self.datacard, 1.0))
 
-        datacard_without_pricelist = self.datacard.with_context(public_context)
-        datacard_with_pricelist = self.datacard.with_context(pricelist_context)
-        self.assertEqual(datacard_with_pricelist.price, datacard_without_pricelist.price-0.5)
+        self.assertAlmostEqual(
+            self.sale_pricelist_id._get_product_price(self.usb_adapter, 1.0, uom=self.uom_unit)*12,
+            self.sale_pricelist_id._get_product_price(self.usb_adapter, 1.0, uom=self.uom_dozen))
 
-        # Make sure that changing the unit of measure does not break the unit
-        # price (after converting)
-        unit_context = dict(context, pricelist=self.sale_pricelist_id.id, uom=self.uom_unit_id)
-        dozen_context = dict(context, pricelist=self.sale_pricelist_id.id, uom=self.uom_dozen_id)
-
-        usb_adapter_unit = self.usb_adapter.with_context(unit_context)
-        usb_adapter_dozen = self.usb_adapter.with_context(dozen_context)
-        self.assertAlmostEqual(usb_adapter_unit.price*12, usb_adapter_dozen.price)
-        datacard_unit = self.datacard.with_context(unit_context)
-        datacard_dozen = self.datacard.with_context(dozen_context)
         # price_surcharge applies to product default UoM, here "Units", so surcharge will be multiplied
-        self.assertAlmostEqual(datacard_unit.price*12, datacard_dozen.price)
+        self.assertAlmostEqual(
+            self.sale_pricelist_id._get_product_price(self.datacard, 1.0, uom=self.uom_unit)*12,
+            self.sale_pricelist_id._get_product_price(self.datacard, 1.0, uom=self.uom_dozen))
 
     def test_20_pricelist_uom(self):
         # Verify that the pricelist rules are correctly using the product's default UoM
