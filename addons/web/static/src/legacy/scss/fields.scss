@@ -596,18 +596,6 @@
         display: inline-block;
     }
 
-    &.o_field_badge {
-        border: 0;
-        font-size: 12px;
-        user-select: none;
-        background-color: rgba(lightgray, 0.5);
-        font-weight: 500;
-        @include o-text-overflow;
-        transition: none; // remove transition to prevent badges from flickering at reload
-        &.o_field_empty {
-            display: none !important;
-        }
-    }
 }
 
 span.o_field_copy:empty {
