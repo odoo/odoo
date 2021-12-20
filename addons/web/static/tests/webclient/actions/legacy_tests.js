@@ -59,7 +59,7 @@ QUnit.module("ActionManager", (hooks) => {
         await testUtils.nextTick();
         await legacyExtraNextTick();
         assert.containsOnce(target, ".o_list_view");
-        assert.containsOnce(document.body, ".o_notification.bg-warning");
+        assert.containsOnce(document.body, ".o_notification.border-warning");
         assert.strictEqual($(".o_notification_title").text(), "Warning!!!");
         assert.strictEqual($(".o_notification_content").text(), "This is a warning...");
     });
