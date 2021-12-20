@@ -41,7 +41,7 @@
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_product_tree_view"/>
             <field name="arch" type="xml">
-                <field name="price" position="after">
+                <field name="type" position="after">
                     <field name="qty_available" attrs="{'invisible':[('type', '!=', 'product')]}" optional="show" decoration-danger="virtual_available &lt; 0" decoration-warning="virtual_available == 0" decoration-bf="1"/>
                     <field name="virtual_available" attrs="{'invisible':[('type', '!=', 'product')]}" string="Forecasted Quantity" optional="show" decoration-danger="virtual_available &lt; 0" decoration-warning="virtual_available == 0"/>
                 </field>
@@ -71,7 +71,7 @@
             <field name="mode">primary</field>
             <field name="inherit_id" ref="product.product_template_search_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='pricelist_id']" position="after">
+                <xpath expr="//field[@name='attribute_line_ids']" position="after">
                     <separator/>
                     <field name="location_id" context="{'location': self}" filter_domain="[]"/>
                     <field name="warehouse_id" context="{'warehouse': self}" filter_domain="[]"/>
@@ -199,10 +199,10 @@
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_search_form_view"/>
             <field name="arch" type="xml">
-                <field name="pricelist_id" position="before">
+                <filter name="activities_overdue" position="after">
                     <field name="location_id" options="{'no_create': True}" context="{'location': self}"/>
                     <field name="warehouse_id" context="{'warehouse': self}"/>
-                </field>
+                </filter>
             </field>
         </record>
 

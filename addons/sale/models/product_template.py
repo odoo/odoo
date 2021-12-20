@@ -201,8 +201,7 @@ class ProductTemplate(models.Model):
 
         display_image = True
         quantity = self.env.context.get('quantity', add_qty)
-        context = dict(self.env.context, quantity=quantity, pricelist=pricelist.id if pricelist else False)
-        product_template = self.with_context(context)
+        product_template = self
 
         combination = combination or product_template.env['product.template.attribute.value']
 
@@ -233,13 +232,19 @@ class ProductTemplate(models.Model):
                     no_variant_attributes_price_extra=tuple(no_variant_attributes_price_extra)
                 )
             list_price = product.price_compute('list_price')[product.id]
-            price = product.price if pricelist else list_price
+            if pricelist:
+                price = pricelist._get_product_price(product, quantity)
+            else:
+                price = list_price
             display_image = bool(product.image_1920)
             display_name = product.display_name
         else:
             product_template = product_template.with_context(current_attributes_price_extra=[v.price_extra or 0.0 for v in combination])
             list_price = product_template.price_compute('list_price')[product_template.id]
-            price = product_template.price if pricelist else list_price
+            if pricelist:
+                price = pricelist._get_product_price(product_template, quantity)
+            else:
+                price = list_price
             display_image = bool(product_template.image_1920)
 
             combination_name = combination._get_combination_name()

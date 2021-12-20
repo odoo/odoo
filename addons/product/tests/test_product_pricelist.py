@@ -160,74 +160,74 @@ class TestProductPricelist(TransactionCase):
         # I check sale price of Customizable Desk
         context = {}
         context.update({'pricelist': self.customer_pricelist.id, 'quantity': 1})
-        ipad_retina_display = self.ipad_retina_display.with_context(context)
-        msg = "Wrong sale price: Customizable Desk. should be %s instead of %s" % (ipad_retina_display.price, (ipad_retina_display.lst_price-ipad_retina_display.lst_price*(0.10)))
-        self.assertEqual(float_compare(ipad_retina_display.price, (ipad_retina_display.lst_price-ipad_retina_display.lst_price*(0.10)), precision_digits=2), 0, msg)
+        product = self.ipad_retina_display
+        price = self.customer_pricelist._get_product_price(product, quantity=1.0)
+        msg = "Wrong sale price: Customizable Desk. should be %s instead of %s" % (price, (product.lst_price-product.lst_price*(0.10)))
+        self.assertEqual(float_compare(
+            price, (product.lst_price-product.lst_price*(0.10)), precision_digits=2), 0, msg)
 
         # I check sale price of Laptop.
-        laptop_E5023 = self.laptop_E5023.with_context(context)
-        msg = "Wrong sale price: Laptop. should be %s instead of %s" % (laptop_E5023.price, (laptop_E5023.lst_price + 1))
-        self.assertEqual(float_compare(laptop_E5023.price, laptop_E5023.lst_price + 1, precision_digits=2), 0, msg)
+        product = self.laptop_E5023
+        price = self.customer_pricelist._get_product_price(product, quantity=1.0)
+        msg = "Wrong sale price: Laptop. should be %s instead of %s" % (price, (product.lst_price + 1))
+        self.assertEqual(float_compare(price, product.lst_price + 1, precision_digits=2), 0, msg)
 
         # I check sale price of IT component.
-        apple_headphones = self.apple_in_ear_headphones.with_context(context)
-        msg = "Wrong sale price: IT component. should be %s instead of %s" % (apple_headphones.price, apple_headphones.lst_price)
-        self.assertEqual(float_compare(apple_headphones.price, apple_headphones.lst_price, precision_digits=2), 0, msg)
+        product = self.apple_in_ear_headphones
+        price = self.customer_pricelist._get_product_price(product, quantity=1.0)
+        msg = "Wrong sale price: IT component. should be %s instead of %s" % (price, product.lst_price)
+        self.assertEqual(float_compare(price, product.lst_price, precision_digits=2), 0, msg)
 
         # I check sale price of IT component if more than 3 Unit.
         context.update({'quantity': 5})
-        laptop_S3450 = self.laptop_S3450.with_context(context)
-        msg = "Wrong sale price: IT component if more than 3 Unit. should be %s instead of %s" % (laptop_S3450.price, (laptop_S3450.lst_price-laptop_S3450.lst_price*(0.05)))
-        self.assertEqual(float_compare(laptop_S3450.price, laptop_S3450.lst_price-laptop_S3450.lst_price*(0.05), precision_digits=2), 0, msg)
+        product = self.laptop_S3450
+        price = self.customer_pricelist._get_product_price(product, quantity=5.0)
+        msg = "Wrong sale price: IT component if more than 3 Unit. should be %s instead of %s" % (price, (product.lst_price-product.lst_price*(0.05)))
+        self.assertEqual(float_compare(price, product.lst_price-product.lst_price*(0.05), precision_digits=2), 0, msg)
 
         # I check sale price of LCD Monitor.
-        context.update({'quantity': 1})
-        ipad_mini = self.ipad_mini.with_context(context)
-        msg = "Wrong sale price: LCD Monitor. should be %s instead of %s" % (ipad_mini.price, ipad_mini.lst_price)
-        self.assertEqual(float_compare(ipad_mini.price, ipad_mini.lst_price, precision_digits=2), 0, msg)
+        product = self.ipad_mini
+        price = self.customer_pricelist._get_product_price(product, quantity=1.0)
+        msg = "Wrong sale price: LCD Monitor. should be %s instead of %s" % (price, product.lst_price)
+        self.assertEqual(float_compare(price, product.lst_price, precision_digits=2), 0, msg)
 
         # I check sale price of LCD Monitor on end of year.
-        context.update({'quantity': 1, 'date': '2011-12-31'})
-        ipad_mini = self.ipad_mini.with_context(context)
-        msg = "Wrong sale price: LCD Monitor on end of year. should be %s instead of %s" % (ipad_mini.price, ipad_mini.lst_price-ipad_mini.lst_price*(0.30))
-        self.assertEqual(float_compare(ipad_mini.price, ipad_mini.lst_price-ipad_mini.lst_price*(0.30), precision_digits=2), 0, msg)
+        price = self.customer_pricelist._get_product_price(product, quantity=1.0, date='2011-12-31')
+        msg = "Wrong sale price: LCD Monitor on end of year. should be %s instead of %s" % (price, product.lst_price-product.lst_price*(0.30))
+        self.assertEqual(float_compare(price, product.lst_price-product.lst_price*(0.30), precision_digits=2), 0, msg)
+
+        # Supplierinfo pricing
 
         # I check cost price of LCD Monitor.
-        context.update({'quantity': 1, 'date': False, 'partner_id': self.res_partner_4.id})
-        ipad_mini = self.ipad_mini.with_context(context)
-        partner = self.res_partner_4.with_context(context)
-        msg = "Wrong cost price: LCD Monitor. should be 790 instead of %s" % ipad_mini._select_seller(partner_id=partner, quantity=1.0).price
-        self.assertEqual(float_compare(ipad_mini._select_seller(partner_id=partner, quantity=1.0).price, 790, precision_digits=2), 0, msg)
+        price = product._select_seller(partner_id=self.res_partner_4, quantity=1.0).price
+        msg = "Wrong cost price: LCD Monitor. should be 790 instead of %s" % price
+        self.assertEqual(float_compare(price, 790, precision_digits=2), 0, msg)
 
         # I check cost price of LCD Monitor if more than 3 Unit.
-        context.update({'quantity': 3})
-        ipad_mini = self.ipad_mini.with_context(context)
-        partner = self.res_partner_4.with_context(context)
-        msg = "Wrong cost price: LCD Monitor if more than 3 Unit.should be 785 instead of %s" % ipad_mini._select_seller(partner_id=partner, quantity=3.0).price
-        self.assertEqual(float_compare(ipad_mini._select_seller(partner_id=partner, quantity=3.0).price, 785, precision_digits=2), 0, msg)
+        price = product._select_seller(partner_id=self.res_partner_4, quantity=3.0).price
+        msg = "Wrong cost price: LCD Monitor if more than 3 Unit.should be 785 instead of %s" % price
+        self.assertEqual(float_compare(price, 785, precision_digits=2), 0, msg)
 
         # Check if the pricelist is applied at precise datetime
+        product = self.monitor
+        price = self.customer_pricelist._get_product_price(product, quantity=1.0, date='2020-04-05 08:00:00')
         context.update({'quantity': 1, 'date': datetime.strptime('2020-04-05 08:00:00', '%Y-%m-%d %H:%M:%S')})
-        monitor = self.monitor.with_context(context)
-        partner = self.res_partner_4.with_context(context)
-        msg = "Wrong cost price: LCD Monitor. should be 1000 instead of %s" % monitor._select_seller(
-            partner_id=partner, quantity=1.0).price
+        msg = "Wrong cost price: LCD Monitor. should be 1000 instead of %s" % price
         self.assertEqual(
-            float_compare(monitor.price, monitor.lst_price, precision_digits=2), 0,
+            float_compare(price, product.lst_price, precision_digits=2), 0,
             msg)
-        context.update({'quantity': 1, 'date': datetime.strptime('2020-04-06 10:00:00', '%Y-%m-%d %H:%M:%S')})
-        monitor = self.monitor.with_context(context)
-        msg = "Wrong cost price: LCD Monitor. should be 500 instead of %s" % monitor._select_seller(
-            partner_id=partner, quantity=1.0).price
+        price = self.customer_pricelist._get_product_price(product, quantity=1.0, date='2020-04-06 10:00:00')
+        msg = "Wrong cost price: LCD Monitor. should be 500 instead of %s" % price
         self.assertEqual(
-            float_compare(monitor.price, monitor.lst_price/2, precision_digits=2), 0,
+            float_compare(price, product.lst_price/2, precision_digits=2), 0,
             msg)
 
         # Check if the price is different when we change the pricelist
-        product = self.product_multi_price.product_tmpl_id.with_context(pricelist=self.customer_pricelist.id, quantity=1)
-        msg = "Wrong price: Multi Product Price. should be 99 instead of %s" % product.price
-        self.assertEqual(float_compare(product.price, 99, precision_digits=2), 0)
+        product = self.product_multi_price
+        price = self.customer_pricelist._get_product_price(product, quantity=1.0)
+        msg = "Wrong price: Multi Product Price. should be 99 instead of %s" % price
+        self.assertEqual(float_compare(price, 99, precision_digits=2), 0)
 
-        product = self.product_multi_price.product_tmpl_id.with_context(pricelist=self.business_pricelist.id, quantity=1)
-        msg = "Wrong price: Multi Product Price. should be 50 instead of %s" % product.price
-        self.assertEqual(float_compare(product.price, 50, precision_digits=2), 0)
+        price = self.business_pricelist._get_product_price(product, quantity=1.0)
+        msg = "Wrong price: Multi Product Price. should be 50 instead of %s" % price
+        self.assertEqual(float_compare(price, 50, precision_digits=2), 0)
