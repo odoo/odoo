@@ -31,11 +31,7 @@
                         Add attachments
                     </button>
                 </div>
-                <FileUploader
-                    threadLocalId="attachmentBoxView.chatter.thread.localId"
-                    onAttachmentCreated="attachmentBoxView.onAttachmentCreated"
-                    t-ref="fileUploader"
-                />
+                <FileUploader localId="attachmentBoxView.fileUploaderView.localId"/>
             </t>
         </div>
     </t>

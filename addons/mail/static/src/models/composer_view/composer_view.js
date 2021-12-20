@@ -886,6 +886,13 @@ registerModel({
         extraSuggestedRecords: many2many('Model', {
             compute: '_computeExtraSuggestedRecords',
         }),
+        fileUploaderView: one2one('FileUploaderView', {
+            default: insertAndReplace(),
+            inverse: 'composerView',
+            isCausal: true,
+            readonly: true,
+            required: true,
+        }),
         hasFocus: attr({
             default: false,
         }),

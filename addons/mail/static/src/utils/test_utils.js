@@ -807,6 +807,7 @@ async function start(param0 = {}) {
     await waitUntilEventPromise;
     return {
         ...result,
+        afterNextRender,
         createChatterContainerComponent: getCreateChatterContainerComponent({ components, env: testEnv, widget }),
         createComposerComponent: getCreateComposerComponent({ components, env: testEnv, modelManager, widget }),
         createComposerSuggestionComponent: getCreateComposerSuggestionComponent({ components, env: testEnv, modelManager, widget }),

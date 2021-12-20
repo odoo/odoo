@@ -340,6 +340,9 @@ registerModel({
         hasMessageListScrollAdjust: attr({
             default: false,
         }),
+        hasParentReloadOnAttachmentsChanged: attr({
+            default: false,
+        }),
         /**
          * Determines whether `this.thread` should be displayed.
          */
