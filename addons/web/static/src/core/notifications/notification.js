@@ -2,26 +2,7 @@
 
 const { Component } = owl;
 
-export class Notification extends Component {
-    get className() {
-        let className;
-        switch (this.props.type) {
-            case "danger":
-                className = "bg-danger";
-                break;
-            case "warning":
-                className = "bg-warning";
-                break;
-            case "success":
-                className = "bg-success";
-                break;
-            case "info":
-                className = "bg-info";
-                break;
-        }
-        return className ? `${className} ${this.props.className}` : this.props.className;
-    }
-}
+export class Notification extends Component {}
 
 Notification.template = "web.NotificationWowl";
 Notification.props = {

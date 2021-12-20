@@ -37,7 +37,7 @@ QUnit.module('Product Pricelist', {
         },
 }, function () {
     QUnit.test('Pricelist Client Action', async function (assert) {
-        assert.expect(21);
+        assert.expect(23);
 
         let Qty = [1, 5, 10]; // default quantities
         patchWithCleanup(GeneratePriceList.prototype, {
@@ -88,9 +88,10 @@ QUnit.module('Product Pricelist', {
 
         // existing quantity can not be added.
         await testUtils.dom.click($(target).find('.o_add_qty'));
-        let notificationElement = document.body.querySelector('.o_notification_manager .o_notification.bg-info');
+        let notificationElement = document.body.querySelector('.o_notification_manager .o_notification');
         assert.strictEqual(notificationElement.querySelector('.o_notification_content').textContent,
             "Quantity already present (1).", "Existing Quantity can not be added");
+        assert.hasClass(notificationElement, "border-info");
 
         // adding few more quantities to check.
         $(target).find('.o_product_qty').val(2);
@@ -104,11 +105,11 @@ QUnit.module('Product Pricelist', {
         $(target).find('.o_product_qty').val(4);
         await testUtils.dom.click($(target).find('.o_add_qty'));
 
-        notificationElement = document.body.querySelector('.o_notification_manager .o_notification.bg-warning');
+        notificationElement = document.body.querySelector('.o_notification_manager .o_notification:nth-child(2)');
         assert.strictEqual(notificationElement.querySelector('.o_notification_content').textContent,
             "At most 5 quantities can be displayed simultaneously. Remove a selected quantity to add others.",
             "Can not add more then 5 quantities");
-
+        assert.hasClass(notificationElement, "border-warning");
         // removing all the quantities should work
         Qty.pop(10);
         await testUtils.dom.click($(target).find('.o_badges .badge:contains("10") .o_remove_qty'));

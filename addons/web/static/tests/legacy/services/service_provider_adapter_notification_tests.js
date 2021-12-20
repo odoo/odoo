@@ -64,7 +64,7 @@ QUnit.module("Service Provider Adapter Notification", (hooks) => {
         notif.querySelector(".o_notification_content").textContent,
         "I'm a danger notification"
       );
-      assert.hasClass(notif, "bg-danger");
+      assert.hasClass(notif, "border-danger");
 
       //Close the notification
       await doAction(webClient, "CloseTestLeg");

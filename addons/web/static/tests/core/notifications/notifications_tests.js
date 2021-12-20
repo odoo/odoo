@@ -35,7 +35,7 @@ QUnit.test("can display a basic notification", async (assert) => {
         notif.querySelector(".o_notification_content").textContent,
         "I'm a basic notification"
     );
-    assert.hasClass(notif, "bg-warning");
+    assert.hasClass(notif, "border-warning");
 });
 
 QUnit.test("title and message are escaped by default", async (assert) => {
@@ -94,7 +94,7 @@ QUnit.test("can display a notification of type danger", async (assert) => {
         notif.querySelector(".o_notification_content").textContent,
         "I'm a danger notification"
     );
-    assert.hasClass(notif, "bg-danger");
+    assert.hasClass(notif, "border-danger");
 });
 
 QUnit.test("can display a danger notification with a title", async (assert) => {
@@ -114,7 +114,7 @@ QUnit.test("can display a danger notification with a title", async (assert) => {
         notif.querySelector(".o_notification_content").textContent,
         "I'm a danger notification"
     );
-    assert.hasClass(notif, "bg-danger");
+    assert.hasClass(notif, "border-danger");
 });
 
 QUnit.test("can display a notification with a button", async (assert) => {
