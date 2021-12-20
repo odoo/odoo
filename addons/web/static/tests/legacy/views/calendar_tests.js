@@ -217,11 +217,13 @@ QUnit.module('Views', {
         assert.containsN($sidebar, 'tr:has(.ui-state-active) td', 7,
             "week scale should highlight 7 days in mini calendar");
 
+        await testUtils.dom.click(calendar.$buttons.find('.scale_button_selection'));
         await testUtils.dom.click(calendar.$buttons.find('.o_calendar_button_day')); // display only one day
         assert.containsN(calendar, '.fc-event', 2, "should display 2 events on the day");
         assert.containsOnce($sidebar, '.o_selected_range',
             "should highlight the target day in mini calendar");
 
+        await testUtils.dom.click(calendar.$buttons.find('.scale_button_selection'));
         await testUtils.dom.click(calendar.$buttons.find('.o_calendar_button_month')); // display all the month
 
         // We display the events or partner 1 2 and 4. Partner 2 has nothing and Event 6 is for partner 6 (not displayed)
@@ -330,16 +332,19 @@ QUnit.module('Views', {
             'Meetings Test (Dec 11 – 17, 2016)', "should display the current week");
 
         // switch to day mode
+        await testUtils.dom.click($('.o_control_panel .scale_button_selection'));
         await testUtils.dom.click($('.o_control_panel .o_calendar_button_day'));
         assert.strictEqual($('.o_control_panel .breadcrumb-item').text(),
             'Meetings Test (December 12, 2016)', "should display the current day");
 
         // switch to month mode
+        await testUtils.dom.click($('.o_control_panel .scale_button_selection'));
         await testUtils.dom.click($('.o_control_panel .o_calendar_button_month'));
         assert.strictEqual($('.o_control_panel .breadcrumb-item').text(),
             'Meetings Test (December 2016)', "should display the current month");
 
         // switch to year mode
+        await testUtils.dom.click($('.o_control_panel .scale_button_selection'));
         await testUtils.dom.click($('.o_control_panel .o_calendar_button_year'));
         assert.strictEqual($('.o_control_panel .breadcrumb-item').text(),
             'Meetings Test (2016)', "should display the current year");
@@ -1997,6 +2002,7 @@ QUnit.module('Views', {
         assert.strictEqual(calendar.$('.fc-event:contains(event 5) .fc-content .fc-time').text(), "",
             "should not display a time for multiple days event");
         // switch to week mode
+        await testUtils.dom.click(calendar.$buttons.find('.scale_button_selection'));
         await testUtils.dom.click(calendar.$('.o_calendar_button_week'));
         assert.strictEqual(calendar.$('.fc-event:contains(event 2) .fc-content .fc-time').text(), "",
             "should not show time in week mode as week mode already have time on y-axis");
