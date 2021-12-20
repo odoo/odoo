@@ -301,9 +301,8 @@ export class ViewCompiler {
         if (isOuterGroup) {
             group = this.document.createElement("div");
             group.setAttribute("class", "o_group");
-
             if (node.hasAttribute("string")) {
-                this.append(group, this.makeGroupTitleRow(node));
+                this.append(group, this.makeSeparator(node.getAttribute("string")));
             }
 
             const nbCols = node.hasAttribute("col")
@@ -340,7 +339,7 @@ export class ViewCompiler {
                 const td = this.document.createElement("td");
                 td.setAttribute("colspan", colAttr);
                 td.setAttribute("style", "width: 100%");
-                this.append(td, this.makeGroupTitleRow(node));
+                this.append(td, this.makeSeparator(node.getAttribute("string")));
                 this.append(tbody, td);
             }
 
@@ -442,11 +441,17 @@ export class ViewCompiler {
         return group;
     }
 
-    makeGroupTitleRow(node) {
-        const titleDiv = this.document.createElement("div");
-        titleDiv.classList.add("o_horizontal_separator");
-        titleDiv.textContent = node.getAttribute("string");
-        return titleDiv;
+    compileSeparator(node, params = {}) {
+        const separator = this.makeSeparator(node.getAttribute("string"));
+        this.copyAttributes(node, separator);
+        return this.applyInvisible(this.getModifier(node, "invisible"), separator, params);
+    }
+
+    makeSeparator(title) {
+        const separator = this.document.createElement("div");
+        separator.classList.add("o_horizontal_separator");
+        separator.textContent = title;
+        return separator;
     }
 
     handleEmpty(compiled, params) {

@@ -273,7 +273,7 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.skip("duplicate fields rendered properly", async function (assert) {
         assert.expect(6);
-        this.data.partner.records.push({
+        serverData.models.partner.records.push({
             id: 6,
             bar: true,
             foo: "blip",
@@ -338,7 +338,7 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.skip("duplicate fields rendered properly (one2many)", async function (assert) {
         assert.expect(7);
-        this.data.partner.records.push({
+        serverData.models.partner.records.push({
             id: 6,
             p: [1],
         });
@@ -1612,7 +1612,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("two occurrences of invalid field in form view", async function (assert) {
         assert.expect(2);
 
-        this.data.partner.fields.trululu.required = true;
+        serverData.models.partner.fields.trululu.required = true;
 
         const form = await makeView({
             type: "form",
@@ -1627,7 +1627,7 @@ QUnit.module("Views", (hooks) => {
                 </form>`,
         });
 
-        await testUtils.form.clickSave(form);
+        await click(form.el.querySelector(".o_form_button_save"));
 
         assert.containsN(form, ".o_form_label.o_field_invalid", 2);
         assert.containsN(form, ".o_field_many2one.o_field_invalid", 2);
@@ -1639,8 +1639,8 @@ QUnit.module("Views", (hooks) => {
         const initialDebugMode = odoo.debug;
         odoo.debug = false;
 
-        this.data.partner.fields.foo.help = "foo tooltip";
-        this.data.partner.fields.bar.help = "bar tooltip";
+        serverData.models.partner.fields.foo.help = "foo tooltip";
+        serverData.models.partner.fields.bar.help = "bar tooltip";
 
         const form = await createView({
             type: "form",
@@ -1739,9 +1739,9 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(4);
 
-            this.data.partner.records[0].product_ids = [37];
-            this.data.partner.records[0].trululu = false;
-            this.data.partner.onchanges = {
+            serverData.models.partner.records[0].product_ids = [37];
+            serverData.models.partner.records[0].trululu = false;
+            serverData.models.partner.onchanges = {
                 trululu(record) {
                     // when trululu changes, push another record in product_ids.
                     // only push a second record once.
@@ -1802,11 +1802,11 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("empty fields have o_form_empty class in readonly mode", async function (assert) {
         assert.expect(8);
 
-        this.data.partner.fields.foo.default = false; // no default value for this test
-        this.data.partner.records[1].foo = false; // 1 is record with id=2
-        this.data.partner.records[1].trululu = false; // 1 is record with id=2
-        this.data.partner.fields.int_field.readonly = true;
-        this.data.partner.onchanges.foo = function (obj) {
+        serverData.models.partner.fields.foo.default = false; // no default value for this test
+        serverData.models.partner.records[1].foo = false; // 1 is record with id=2
+        serverData.models.partner.records[1].trululu = false; // 1 is record with id=2
+        serverData.models.partner.fields.int_field.readonly = true;
+        serverData.models.partner.onchanges.foo = function (obj) {
             if (obj.foo === "hello") {
                 obj.int_field = false;
             }
@@ -1842,7 +1842,7 @@ QUnit.module("Views", (hooks) => {
             "should have 2 muted labels (for the empty fieds) in readonly"
         );
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
 
         assert.containsOnce(
             form,
@@ -1975,11 +1975,11 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(8);
 
-            this.data.partner.fields.foo.default = false; // no default value for this test
-            this.data.partner.records[1].foo = false; // 1 is record with id=2
-            this.data.partner.records[1].trululu = false; // 1 is record with id=2
-            this.data.partner.fields.int_field.readonly = true;
-            this.data.partner.onchanges.foo = function (obj) {
+            serverData.models.partner.fields.foo.default = false; // no default value for this test
+            serverData.models.partner.records[1].foo = false; // 1 is record with id=2
+            serverData.models.partner.records[1].trululu = false; // 1 is record with id=2
+            serverData.models.partner.fields.int_field.readonly = true;
+            serverData.models.partner.onchanges.foo = function (obj) {
                 if (obj.foo === "hello") {
                     obj.int_field = false;
                 }
@@ -2015,7 +2015,7 @@ QUnit.module("Views", (hooks) => {
                 "should have 2 muted labels (for the empty fieds) in readonly"
             );
 
-            await testUtils.form.clickEdit(form);
+            await click(form.el.querySelector(".o_form_button_edit"));
 
             assert.containsOnce(
                 form,
@@ -2117,84 +2117,78 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skip(
-        "required fields should have o_required_modifier in readonly mode",
-        async function (assert) {
-            assert.expect(2);
-
-            this.data.partner.fields.foo.required = true;
-            const form = await makeView({
-                type: "form",
-                resModel: "partner",
-                serverData,
-                arch:
-                    '<form string="Partners">' +
-                    "<sheet>" +
-                    "<group>" +
-                    '<field name="foo"/>' +
-                    "</group>" +
-                    "</sheet>" +
-                    "</form>",
-                resId: 1,
-            });
-
-            assert.containsOnce(form, "span.o_required_modifier", form);
-
-            await testUtils.form.clickEdit(form);
-            assert.containsOnce(
-                form,
-                "input.o_required_modifier",
-                "in edit mode, should have 1 input with o_required_modifier"
-            );
-        }
-    );
-
-    QUnit.skip("required float fields works as expected", async function (assert) {
-        assert.expect(10);
-
-        this.data.partner.fields.qux.required = true;
+    QUnit.test("required fields should have o_required_modifier", async function (assert) {
+        serverData.models.partner.fields.foo.required = true;
         const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                "<group>" +
-                '<field name="qux"/>' +
-                "</group>" +
-                "</sheet>" +
-                "</form>",
+            arch: `
+                    <form>
+                        <sheet>
+                            <group>
+                                <field name="foo"/>
+                            </group>
+                        </sheet>
+                    </form>`,
+            resId: 1,
+        });
+
+        assert.containsOnce(form, ".o_field_widget.o_required_modifier", form);
+
+        await click(form.el.querySelector(".o_form_button_edit"));
+        assert.containsOnce(form, ".o_field_widget.o_required_modifier");
+    });
+
+    QUnit.skip("required float fields works as expected", async function (assert) {
+        assert.expect(10);
+
+        serverData.models.partner.fields.qux.required = true;
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="qux"/>
+                        </group>
+                    </sheet>
+                </form>`,
             mockRPC: function (route, args) {
                 assert.step(args.method);
-                return this._super.apply(this, arguments);
             },
         });
 
-        assert.hasClass(form.$('.o_field_widget[name="qux"]'), "o_required_modifier");
+        assert.hasClass(
+            form.el.querySelector('.o_field_widget[name="qux"]'),
+            "o_required_modifier"
+        );
         assert.strictEqual(
-            form.$('.o_field_widget[name="qux"] input').val(),
+            form.el.querySelector('.o_field_widget[name="qux"] input').value,
             "0.0",
             "qux input is 0 by default (float field)"
         );
 
-        await testUtils.form.clickSave(form);
+        await click(form.el.querySelector(".o_form_button_save"));
 
         assert.containsNone(
-            form.$('.o_field_widget[name="qux"] input'),
+            form.el,
+            '.o_field_widget[name="qux"] input',
             "should have switched to readonly"
         );
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
 
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=qux] input"), "1");
+        await editInput(form.el.querySelector(".o_field_widget[name=qux] input"), "1");
 
-        await testUtils.form.clickSave(form);
+        await click(form.el.querySelector(".o_form_button_save"));
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
 
         assert.strictEqual(
-            form.$('.o_field_widget[name="qux"] input').val(),
+            form.el.querySelector('.o_field_widget[name="qux"] input').value,
             "1.0",
             "qux input is properly formatted"
         );
@@ -2202,48 +2196,48 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["onchange", "create", "read", "write", "read"]);
     });
 
-    QUnit.skip("separators", async function (assert) {
+    QUnit.test("separators", async function (assert) {
         assert.expect(1);
 
         const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                "<group>" +
-                '<separator string="Geolocation"/>' +
-                '<field name="foo"/>' +
-                "</group>" +
-                "</sheet>" +
-                "</form>",
+            arch: `
+                <form>
+                    <sheet>
+                    <group>
+                        <separator string="Geolocation"/>
+                        <field name="foo"/>
+                    </group>
+                    </sheet>
+                </form>`,
             resId: 1,
         });
 
         assert.containsOnce(form, "div.o_horizontal_separator");
     });
 
-    QUnit.skip("invisible attrs on separators", async function (assert) {
+    QUnit.test("invisible attrs on separators", async function (assert) {
         assert.expect(1);
 
         const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                "<group>" +
-                '<separator string="Geolocation" attrs=\'{"invisible": [["bar", "=", True]]}\'/>' +
-                '<field name="bar"/>' +
-                "</group>" +
-                "</sheet>" +
-                "</form>",
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <separator string="Geolocation" attrs='{"invisible": [["bar", "=", True]]}'/>
+                            <field name="bar"/>
+                        </group>
+                    </sheet>
+                </form>`,
             resId: 1,
         });
 
-        assert.hasClass(form.$("div.o_horizontal_separator"), "o_invisible_modifier");
+        assert.containsNone(form, "div.o_horizontal_separator");
     });
 
     QUnit.skip("buttons in form view", async function (assert) {
@@ -2538,11 +2532,11 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(form.mode, "readonly", "form view should be in readonly mode");
         assert.containsOnce(form, "span:contains(blip)", "should contain span with field value");
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
 
         assert.strictEqual(form.mode, "edit", "form view should be in edit mode");
         await testUtils.fields.editInput(form.$(".o_field_widget[name=foo] input"), "tralala");
-        await testUtils.form.clickSave(form);
+        await click(form.el.querySelector(".o_form_button_save"));
 
         assert.strictEqual(form.mode, "readonly", "form view should be in readonly mode");
         assert.containsOnce(form, "span:contains(tralala)", "should contain span with field value");
@@ -2565,9 +2559,9 @@ QUnit.module("Views", (hooks) => {
             resId: 2,
         });
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
         await testUtils.fields.editInput(form.$(".o_field_widget[name=foo] input"), "tralala");
-        await testUtils.form.clickSave(form);
+        await click(form.el.querySelector(".o_form_button_save"));
         assert.containsOnce(form, "span:contains(apple)", "should contain span with field value");
     });
 
@@ -2593,9 +2587,9 @@ QUnit.module("Views", (hooks) => {
         });
 
         var def = testUtils.makeTestPromise();
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
         await testUtils.fields.editInput(form.$(".o_field_widget[name=foo] input"), "tralala");
-        await testUtils.form.clickSave(form);
+        await click(form.el.querySelector(".o_form_button_save"));
 
         // Save button should be disabled
         assert.hasAttrValue(form.$buttons.find(".o_form_button_save"), "disabled", "disabled");
@@ -2610,7 +2604,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("properly apply onchange in simple case", async function (assert) {
         assert.expect(2);
 
-        this.data.partner.onchanges = {
+        serverData.models.partner.onchanges = {
             foo: function (obj) {
                 obj.int_field = obj.foo.length + 1000;
             },
@@ -2626,7 +2620,7 @@ QUnit.module("Views", (hooks) => {
             resId: 2,
         });
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
 
         assert.strictEqual(
             form.$(".o_field_widget[name=int_field] input").val(),
@@ -2648,7 +2642,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(3);
 
-            this.data.partner.onchanges = {
+            serverData.models.partner.onchanges = {
                 int_field: function (obj) {
                     obj.int_field = 14;
                 },
@@ -2682,7 +2676,7 @@ QUnit.module("Views", (hooks) => {
                 "value should have been set to 14 by onchange"
             );
 
-            await testUtils.form.clickSave(form);
+            await click(form.el.querySelector(".o_form_button_save"));
 
             assert.strictEqual(
                 form.$(".o_field_widget[name=int_field]").text(),
@@ -2694,8 +2688,8 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.skip("onchange send only the present fields to the server", async function (assert) {
         assert.expect(1);
-        this.data.partner.records[0].product_id = false;
-        this.data.partner.onchanges.foo = function (obj) {
+        serverData.models.partner.records[0].product_id = false;
+        serverData.models.partner.onchanges.foo = function (obj) {
             obj.foo = obj.foo + " alligator";
         };
 
@@ -2737,13 +2731,13 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
         await testUtils.fields.editInput(form.$(".o_field_widget[name=foo] input"), "tralala");
     });
 
     QUnit.skip("onchange only send present fields value", async function (assert) {
         assert.expect(1);
-        this.data.partner.onchanges.foo = function (obj) {};
+        serverData.models.partner.onchanges.foo = function (obj) {};
 
         let checkOnchange = false;
         const form = await makeView({
@@ -2785,7 +2779,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
 
         // add a o2m row
         await testUtils.dom.click(".o_field_x2many_list_row_add a");
@@ -2879,7 +2873,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(3);
 
-            this.data.partner.onchanges.foo = function () {};
+            serverData.models.partner.onchanges.foo = function () {};
 
             const form = await makeView({
                 type: "form",
@@ -2915,7 +2909,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("reference field in one2many list", async function (assert) {
         assert.expect(1);
 
-        this.data.partner.records[0].reference = "partner,2";
+        serverData.models.partner.records[0].reference = "partner,2";
 
         const form = await makeView({
             type: "form",
@@ -2942,7 +2936,7 @@ QUnit.module("Views", (hooks) => {
             resId: 17,
         });
         // current form
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
 
         // open the modal form view of the record pointed by the reference field
         await testUtils.dom.click(form.$('table td[title="first record"]'));
@@ -2981,7 +2975,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsOnce(form, ".o_cp_action_menus");
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
 
         assert.containsNone(form, ".o_cp_action_menus");
 
@@ -3011,7 +3005,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("make default record with non empty one2many", async function (assert) {
         assert.expect(4);
 
-        this.data.partner.fields.p.default = [
+        serverData.models.partner.fields.p.default = [
             [6, 0, []], // replace with zero ids
             [0, 0, { foo: "new foo1", product_id: 41, p: [] }], // create a new value
             [0, 0, { foo: "new foo2", product_id: 37, p: [] }], // create a new value
@@ -3060,7 +3054,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("make default record with non empty many2one", async function (assert) {
         assert.expect(2);
 
-        this.data.partner.fields.trululu.default = 4;
+        serverData.models.partner.fields.trululu.default = 4;
 
         var nameGetCount = 0;
 
@@ -3121,7 +3115,7 @@ QUnit.module("Views", (hooks) => {
         assert.expect(10);
 
         // add active field on partner model to have archive option
-        this.data.partner.fields.active = { string: "Active", type: "char", default: true };
+        serverData.models.partner.fields.active = { string: "Active", type: "char", default: true };
 
         const form = await createView({
             type: "form",
@@ -3133,11 +3127,11 @@ QUnit.module("Views", (hooks) => {
             mockRPC: function (route, args) {
                 assert.step(args.method);
                 if (args.method === "action_archive") {
-                    this.data.partner.records[0].active = false;
+                    serverData.models.partner.records[0].active = false;
                     return Promise.resolve();
                 }
                 if (args.method === "action_unarchive") {
-                    this.data.partner.records[0].active = true;
+                    serverData.models.partner.records[0].active = true;
                     return Promise.resolve();
                 }
                 return this._super(...arguments);
@@ -3165,7 +3159,7 @@ QUnit.module("Views", (hooks) => {
         assert.expect(2);
 
         // add active field on partner model, but do not put it in the view
-        this.data.partner.fields.active = { string: "Active", type: "char", default: true };
+        serverData.models.partner.fields.active = { string: "Active", type: "char", default: true };
 
         const form = await createView({
             type: "form",
@@ -3297,7 +3291,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
 
         var count = 0;
         await testUtils.mock.intercept(form, "execute_action", function (event) {
@@ -3352,7 +3346,7 @@ QUnit.module("Views", (hooks) => {
             "second record",
             "should have correct display_name"
         );
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
         await testUtils.fields.editInput(
             form.$(".o_field_widget[name=name] input"),
             "some other name"
@@ -3394,7 +3388,7 @@ QUnit.module("Views", (hooks) => {
             executeActionCount++;
         });
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
 
         // make the record dirty
         await testUtils.fields.editInput(form.$(".o_field_widget[name=foo] input"), "tralala");
@@ -3532,13 +3526,13 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.skip("circular many2many's", async function (assert) {
         assert.expect(4);
-        this.data.partner_type.fields.partner_ids = {
+        serverData.models.partner_type.fields.partner_ids = {
             string: "partners",
             type: "many2many",
             relation: "partner",
         };
-        this.data.partner.records[0].timmy = [12];
-        this.data.partner_type.records[0].partner_ids = [1];
+        serverData.models.partner.records[0].timmy = [12];
+        serverData.models.partner_type.records[0].partner_ids = [1];
 
         const form = await makeView({
             type: "form",
@@ -3609,7 +3603,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         // switch to edit mode
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
         assert.strictEqual(
             form.$(".o_field_widget[name=foo] input").val(),
             "yop",
@@ -3647,7 +3641,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         // switch to edit mode and edit the foo field
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
         assert.strictEqual(
             form.$(".o_field_widget[name=foo] input").val(),
             "yop",
@@ -3680,7 +3674,7 @@ QUnit.module("Views", (hooks) => {
         // dates are saved as moment object, and were at one point stringified,
         // then parsed into string, which is wrong.
 
-        this.data.partner.fields.date.default = "2017-01-25";
+        serverData.models.partner.fields.date.default = "2017-01-25";
         const form = await makeView({
             type: "form",
             resModel: "partner",
@@ -3757,7 +3751,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(3);
 
-            this.data.partner.fields.foo.default = "ABC";
+            serverData.models.partner.fields.foo.default = "ABC";
 
             const form = await makeView({
                 type: "form",
@@ -3787,7 +3781,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("discard changes on a new (dirty) form view", async function (assert) {
         assert.expect(7);
 
-        this.data.partner.fields.foo.default = "ABC";
+        serverData.models.partner.fields.foo.default = "ABC";
 
         const form = await makeView({
             type: "form",
@@ -3833,9 +3827,9 @@ QUnit.module("Views", (hooks) => {
             resId: 1,
             viewOptions: { hasActionMenus: true },
         });
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
         await testUtils.fields.editInput(form.$(".o_field_widget[name=foo] input"), "tralala");
-        await testUtils.form.clickSave(form);
+        await click(form.el.querySelector(".o_form_button_save"));
 
         await testUtils.controlPanel.toggleActionMenu(form);
         await testUtils.controlPanel.toggleMenuItem(form, "Duplicate");
@@ -3885,7 +3879,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // switch to edit mode
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
         assert.strictEqual(
             form.$(".o_field_widget[name=foo] input").val(),
             "yop",
@@ -3952,7 +3946,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // switch to edit mode
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
         assert.strictEqual(
             form.$(".o_field_widget[name=foo] input").val(),
             "yop",
@@ -3967,7 +3961,7 @@ QUnit.module("Views", (hooks) => {
             "input should contain new value"
         );
 
-        await testUtils.form.clickSave(form);
+        await click(form.el.querySelector(".o_form_button_save"));
 
         // click on the pager to switch to the next record and cancel the confirm request
         await testUtils.controlPanel.pagerNext(form);
@@ -4010,7 +4004,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // switch to edit mode
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
         assert.strictEqual(
             form.$(".o_field_widget[name=foo] input").val(),
             "new value",
@@ -4147,9 +4141,9 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("empty readonly fields are visible on new records", async function (assert) {
         assert.expect(2);
 
-        this.data.partner.fields.foo.readonly = true;
-        this.data.partner.fields.foo.default = undefined;
-        this.data.partner.records[0].foo = undefined;
+        serverData.models.partner.fields.foo.readonly = true;
+        serverData.models.partner.fields.foo.default = undefined;
+        serverData.models.partner.records[0].foo = undefined;
 
         const form = await makeView({
             type: "form",
@@ -4291,8 +4285,8 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("empty required fields cannot be saved", async function (assert) {
         assert.expect(5);
 
-        this.data.partner.fields.foo.required = true;
-        delete this.data.partner.fields.foo.default;
+        serverData.models.partner.fields.foo.required = true;
+        delete serverData.models.partner.fields.foo.default;
 
         const form = await makeView({
             type: "form",
@@ -4320,7 +4314,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await testUtils.form.clickSave(form);
+        await click(form.el.querySelector(".o_form_button_save"));
         assert.hasClass(form.$("label.o_form_label"), "o_field_invalid");
         assert.hasClass(form.$(".o_field_widget[name=foo]"), "o_field_invalid");
 
@@ -4376,7 +4370,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // switch to edit mode and edit the value again
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
         assert.containsN(
             form,
             ".o_priority .o_priority_star",
@@ -4398,7 +4392,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // save
-        await testUtils.form.clickSave(form);
+        await click(form.el.querySelector(".o_form_button_save"));
         assert.strictEqual(nbWrite, 2, "should not have saved directly");
         assert.containsN(
             form,
@@ -4411,7 +4405,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("display a dialog if onchange result is a warning", async function (assert) {
         assert.expect(5);
 
-        this.data.partner.onchanges = { foo: true };
+        serverData.models.partner.onchanges = { foo: true };
 
         const form = await makeView({
             type: "form",
@@ -4456,7 +4450,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
 
         assert.strictEqual(form.$(".o_field_widget[name=int_field] input").val(), "9");
 
@@ -4470,7 +4464,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(5);
 
-            this.data.partner.onchanges = { foo: true };
+            serverData.models.partner.onchanges = { foo: true };
 
             const form = await makeView({
                 type: "form",
@@ -4515,7 +4509,7 @@ QUnit.module("Views", (hooks) => {
                 },
             });
 
-            await testUtils.form.clickEdit(form);
+            await click(form.el.querySelector(".o_form_button_edit"));
 
             assert.strictEqual(form.$(".o_field_widget[name=int_field] input").val(), "9");
 
@@ -4528,7 +4522,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("can create record even if onchange returns a warning", async function (assert) {
         assert.expect(2);
 
-        this.data.partner.onchanges = { foo: true };
+        serverData.models.partner.onchanges = { foo: true };
 
         const form = await makeView({
             type: "form",
@@ -4568,7 +4562,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(3);
 
-            this.data.partner.onchanges = { foo: true };
+            serverData.models.partner.onchanges = { foo: true };
 
             const form = await makeView({
                 type: "form",
@@ -4603,7 +4597,7 @@ QUnit.module("Views", (hooks) => {
             });
 
             // go to edit mode, click to add a record in the o2m
-            await testUtils.form.clickEdit(form);
+            await click(form.el.querySelector(".o_form_button_edit"));
             await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
             assert.containsNone(form, "tr.o_data_row", "should not have added a line");
             assert.verifySteps(["should have triggered a warning"]);
@@ -4632,7 +4626,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(form, ".oe_stat_button", "button box should be displayed in readonly");
 
         // edit mode
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
 
         assert.containsOnce(
             form,
@@ -4653,8 +4647,8 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("properly apply onchange on one2many fields", async function (assert) {
         assert.expect(5);
 
-        this.data.partner.records[0].p = [4];
-        this.data.partner.onchanges = {
+        serverData.models.partner.records[0].p = [4];
+        serverData.models.partner.onchanges = {
             foo: function (obj) {
                 obj.p = [
                     [5],
@@ -4691,7 +4685,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // switch to edit mode
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
         await testUtils.fields.editInput(
             form.$(".o_field_widget[name=foo] input"),
             "let us trigger an onchange"
@@ -4715,8 +4709,8 @@ QUnit.module("Views", (hooks) => {
 
         var def = testUtils.makeTestPromise();
 
-        this.data.partner.records[0].p = [2, 4];
-        this.data.partner.onchanges = {
+        serverData.models.partner.records[0].p = [2, 4];
+        serverData.models.partner.onchanges = {
             int_field: function (obj) {
                 obj.p = [
                     [5],
@@ -4781,8 +4775,8 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("update many2many value in one2many after onchange", async function (assert) {
         assert.expect(2);
 
-        this.data.partner.records[1].p = [4];
-        this.data.partner.onchanges = {
+        serverData.models.partner.records[1].p = [4];
+        serverData.models.partner.onchanges = {
             foo: function (obj) {
                 obj.p = [
                     [5],
@@ -4818,7 +4812,7 @@ QUnit.module("Views", (hooks) => {
             "aaaNo records",
             "should have proper initial content"
         );
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
 
         await testUtils.fields.editInput(form.$(".o_field_widget[name=foo] input"), "tralala");
 
@@ -4832,7 +4826,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("delete a line in a one2many while editing another line", async function (assert) {
         assert.expect(2);
 
-        this.data.partner.records[0].p = [1, 2];
+        serverData.models.partner.records[0].p = [1, 2];
 
         const form = await makeView({
             type: "form",
@@ -4849,7 +4843,7 @@ QUnit.module("Views", (hooks) => {
             resId: 1,
         });
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
         await testUtils.dom.click(form.$(".o_data_cell").first());
         await testUtils.fields.editInput(form.$(".o_field_widget[name=display_name] input"), "");
         await testUtils.dom.click(form.$(".fa-trash-o").eq(1));
@@ -4869,7 +4863,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("properly apply onchange on many2many fields", async function (assert) {
         assert.expect(14);
 
-        this.data.partner.onchanges = {
+        serverData.models.partner.onchanges = {
             foo: function (obj) {
                 obj.timmy = [[5], [4, 12], [4, 14]];
             },
@@ -4911,7 +4905,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // switch to edit mode
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
         await testUtils.fields.editInput(
             form.$(".o_field_widget[name=foo] input"),
             "let us trigger an onchange"
@@ -4933,7 +4927,7 @@ QUnit.module("Views", (hooks) => {
             "the 'display_name' of the second m2m record should be correctly displayed"
         );
 
-        await testUtils.form.clickSave(form);
+        await click(form.el.querySelector(".o_form_button_save"));
 
         assert.verifySteps(["read", "onchange", "read", "write", "read", "read"]);
     });
@@ -4944,7 +4938,7 @@ QUnit.module("Views", (hooks) => {
             assert.expect(0);
 
             // We just test that there is no crash in this situation
-            this.data.partner.records[0].timmy = [12];
+            serverData.models.partner.records[0].timmy = [12];
             const form = await createView({
                 type: "form",
                 model: "partner",
@@ -4967,7 +4961,7 @@ QUnit.module("Views", (hooks) => {
             });
 
             // switch to edit mode
-            await testUtils.form.clickEdit(form);
+            await click(form.el.querySelector(".o_form_button_edit"));
 
             // open a form view and save many2many record
             await testUtils.dom.click(form.$(".o_data_row .o_data_cell:first"));
@@ -4978,11 +4972,11 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("display_name not sent for onchanges if not in view", async function (assert) {
         assert.expect(7);
 
-        this.data.partner.records[0].timmy = [12];
-        this.data.partner.onchanges = {
+        serverData.models.partner.records[0].timmy = [12];
+        serverData.models.partner.onchanges = {
             foo: function () {},
         };
-        this.data.partner_type.onchanges = {
+        serverData.models.partner_type.onchanges = {
             name: function () {},
         };
         var readInModal = false;
@@ -5088,7 +5082,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("onchanges on date(time) fields", async function (assert) {
         assert.expect(6);
 
-        this.data.partner.onchanges = {
+        serverData.models.partner.onchanges = {
             foo: function (obj) {
                 obj.date = "2021-12-12";
                 obj.datetime = "2021-12-12 10:55:05";
@@ -5125,7 +5119,7 @@ QUnit.module("Views", (hooks) => {
             "the initial datetime should be correct"
         );
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
 
         assert.strictEqual(
             form.$(".o_field_widget[name=date] input").val(),
@@ -5159,7 +5153,7 @@ QUnit.module("Views", (hooks) => {
 
         var onchangeNbr = 0;
 
-        this.data.partner.onchanges = {
+        serverData.models.partner.onchanges = {
             foo: function (obj) {
                 obj.int_field = obj.foo.length + 1000;
             },
@@ -5188,7 +5182,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
 
         testUtils.fields.editInput(form.$(".o_field_widget[name=foo] input"), "1");
         assert.strictEqual(onchangeNbr, 0, "no onchange has been called yet");
@@ -5226,7 +5220,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("onchanges are not sent for invalid values", async function (assert) {
         assert.expect(6);
 
-        this.data.partner.onchanges = {
+        serverData.models.partner.onchanges = {
             int_field: function (obj) {
                 obj.foo = String(obj.int_field);
             },
@@ -5246,7 +5240,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
 
         // edit int_field, and check that an onchange has been applied
         await testUtils.fields.editInput(form.$('.o_field_widget[name="int_field"] input'), "123");
@@ -5266,7 +5260,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // save, and check that the int_field input is marked as invalid
-        await testUtils.form.clickSave(form);
+        await click(form.el.querySelector(".o_form_button_save"));
         assert.hasClass(
             form.$('.o_field_widget[name="int_field"]'),
             "o_field_invalid",
@@ -5302,7 +5296,7 @@ QUnit.module("Views", (hooks) => {
 
         var def1 = testUtils.makeTestPromise();
 
-        this.data.partner.onchanges = {
+        serverData.models.partner.onchanges = {
             foo: function (obj) {
                 obj.int_field = obj.foo.length + 1000;
             },
@@ -5334,7 +5328,7 @@ QUnit.module("Views", (hooks) => {
             "blip",
             "field foo should be displayed to initial value"
         );
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
 
         // edit a value
         await testUtils.fields.editInput(form.$(".o_field_widget[name=foo] input"), "1234");
@@ -5385,7 +5379,7 @@ QUnit.module("Views", (hooks) => {
         await testUtils.fields.editInput(form.$(".o_field_widget[name=foo] input"), "1234");
 
         // save the value and discard directly
-        await testUtils.form.clickSave(form);
+        await click(form.el.querySelector(".o_form_button_save"));
         form.discardChanges();
 
         assert.strictEqual(
@@ -5409,8 +5403,8 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("unchanged relational data is sent for onchanges", async function (assert) {
         assert.expect(1);
 
-        this.data.partner.records[1].p = [4];
-        this.data.partner.onchanges = {
+        serverData.models.partner.records[1].p = [4];
+        serverData.models.partner.onchanges = {
             foo: function (obj) {
                 obj.int_field = obj.foo.length + 1000;
             },
@@ -5445,7 +5439,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
         await testUtils.fields.editInput(
             form.$(".o_field_widget[name=foo] input"),
             "trigger an onchange"
@@ -5459,8 +5453,8 @@ QUnit.module("Views", (hooks) => {
         // dataPoint id, which may cause errors later (e.g. when saving).
         assert.expect(2);
 
-        this.data.partner.records[1].p = [4];
-        this.data.partner.onchanges = {
+        serverData.models.partner.records[1].p = [4];
+        serverData.models.partner.onchanges = {
             foo: function () {},
         };
         const form = await makeView({
@@ -5522,7 +5516,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
         await testUtils.fields.editInput(
             form.$(".o_field_widget[name=foo] input"),
             "trigger an onchange"
@@ -5535,14 +5529,14 @@ QUnit.module("Views", (hooks) => {
             "onchange should have been correctly applied on field in o2m list"
         );
 
-        await testUtils.form.clickSave(form);
+        await click(form.el.querySelector(".o_form_button_save"));
     });
 
     QUnit.skip("onchange value are not discarded on o2m edition", async function (assert) {
         assert.expect(4);
 
-        this.data.partner.records[1].p = [4];
-        this.data.partner.onchanges = {
+        serverData.models.partner.records[1].p = [4];
+        serverData.models.partner.onchanges = {
             foo: function () {},
         };
         const form = await makeView({
@@ -5594,7 +5588,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
 
         assert.strictEqual(
             form.$(".o_data_row td:first").text(),
@@ -5632,10 +5626,10 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(3);
 
-            this.data.partner.records[1].p = [4];
-            this.data.partner.fields.p.relation_field = "rel_field";
-            this.data.partner.fields.int_field.default = 14;
-            this.data.partner.onchanges = {
+            serverData.models.partner.records[1].p = [4];
+            serverData.models.partner.fields.p.relation_field = "rel_field";
+            serverData.models.partner.fields.int_field.default = 14;
+            serverData.models.partner.onchanges = {
                 int_field: function (obj) {
                     obj.foo = "[" + obj.rel_field.foo + "] " + obj.int_field;
                 },
@@ -5659,7 +5653,7 @@ QUnit.module("Views", (hooks) => {
                 resId: 2,
             });
 
-            await testUtils.form.clickEdit(form);
+            await click(form.el.querySelector(".o_form_button_edit"));
 
             assert.strictEqual(
                 form.$(".o_data_row td:first").text(),
@@ -5691,10 +5685,10 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(6);
 
-            this.data.partner.records[1].p = [4];
-            this.data.partner.fields.p.relation_field = "rel_field";
-            this.data.partner.fields.int_field.default = 14;
-            this.data.partner.onchanges = {
+            serverData.models.partner.records[1].p = [4];
+            serverData.models.partner.fields.p.relation_field = "rel_field";
+            serverData.models.partner.fields.int_field.default = 14;
+            serverData.models.partner.onchanges = {
                 int_field: function (obj) {
                     obj.foo = "[" + obj.rel_field.foo + "] " + obj.int_field;
                 },
@@ -5721,7 +5715,7 @@ QUnit.module("Views", (hooks) => {
                 resId: 2,
             });
 
-            await testUtils.form.clickEdit(form);
+            await click(form.el.querySelector(".o_form_button_edit"));
 
             assert.strictEqual(
                 form.$(".o_data_row td:first").text(),
@@ -5771,7 +5765,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(2);
 
-            this.data.partner.onchanges = {
+            serverData.models.partner.onchanges = {
                 foo: function () {},
             };
             const form = await makeView({
@@ -5803,7 +5797,7 @@ QUnit.module("Views", (hooks) => {
                 resId: 2,
             });
 
-            await testUtils.form.clickEdit(form);
+            await click(form.el.querySelector(".o_form_button_edit"));
             await testUtils.fields.editInput(form.$(".o_field_widget[name=foo] input"), "coucou");
         }
     );
@@ -5829,7 +5823,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         // go to edit mode
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
 
         // focus first input, trigger tab
         form.$('.o_field_widget[name="foo"]').focus();
@@ -5866,7 +5860,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("navigation with tab key in readonly form view", async function (assert) {
         assert.expect(3);
 
-        this.data.partner.records[1].product_id = 37;
+        serverData.models.partner.records[1].product_id = 37;
 
         const form = await makeView({
             type: "form",
@@ -5927,7 +5921,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("skip invisible fields when navigating with TAB", async function (assert) {
         assert.expect(1);
 
-        this.data.partner.records[0].bar = true;
+        serverData.models.partner.records[0].bar = true;
 
         const form = await makeView({
             type: "form",
@@ -5945,7 +5939,7 @@ QUnit.module("Views", (hooks) => {
             resId: 1,
         });
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
         form.$('.o_field_widget[name="foo"] input').focus();
         form.$('.o_field_widget[name="foo"] input').trigger(
             $.Event("keydown", { which: $.ui.keyCode.TAB })
@@ -6234,8 +6228,8 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("one2many default value creation", async function (assert) {
         assert.expect(1);
 
-        this.data.partner.records[0].product_ids = [37];
-        this.data.partner.fields.product_ids.default = [
+        serverData.models.partner.records[0].product_ids = [37];
+        serverData.models.partner.fields.product_ids.default = [
             [0, 0, { name: "xdroid", partner_type_id: 12 }],
         ];
 
@@ -6267,7 +6261,7 @@ QUnit.module("Views", (hooks) => {
                 return this._super.apply(this, arguments);
             },
         });
-        await testUtils.form.clickSave(form);
+        await click(form.el.querySelector(".o_form_button_save"));
     });
 
     QUnit.skip("many2manys inside one2manys are saved correctly", async function (assert) {
@@ -6313,7 +6307,7 @@ QUnit.module("Views", (hooks) => {
         await testUtils.fields.many2one.clickOpenDropdown("timmy");
         await testUtils.fields.many2one.clickHighlightedItem("timmy");
 
-        await testUtils.form.clickSave(form);
+        await click(form.el.querySelector(".o_form_button_save"));
     });
 
     QUnit.skip(
@@ -6387,7 +6381,7 @@ QUnit.module("Views", (hooks) => {
                 "the cell should contains the number of record: 1"
             );
 
-            await testUtils.form.clickSave(form);
+            await click(form.el.querySelector(".o_form_button_save"));
         }
     );
 
@@ -6420,7 +6414,7 @@ QUnit.module("Views", (hooks) => {
             assert.isNotVisible(form.$(".o_field_widget[name=bar]"));
             assert.isNotVisible(form.$("label:contains(Bar)"));
 
-            await testUtils.form.clickEdit(form);
+            await click(form.el.querySelector(".o_form_button_edit"));
             assert.hasClass(
                 form.$(".o_form_view"),
                 "o_form_editable",
@@ -6465,7 +6459,7 @@ QUnit.module("Views", (hooks) => {
             "display_name cell should be visible in readonly mode"
         );
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
 
         assert.strictEqual(
             form.el.querySelector('th[data-name="foo"]').style.width,
@@ -6524,7 +6518,7 @@ QUnit.module("Views", (hooks) => {
             "display_name cell should not be visible in readonly mode"
         );
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
         assert.hasClass(form.$(".o_form_view"), "o_form_editable", "form should be in edit mode");
         assert.isVisible(
             form.$('.o_field_one2many .o_list_view thead th[data-name="display_name"]'),
@@ -6622,7 +6616,7 @@ QUnit.module("Views", (hooks) => {
         // basically, a field defined as readonly may be edited.
         assert.expect(3);
 
-        this.data.partner.fields.foo.readonly = true;
+        serverData.models.partner.fields.foo.readonly = true;
         const form = await makeView({
             type: "form",
             resModel: "partner",
@@ -6649,7 +6643,7 @@ QUnit.module("Views", (hooks) => {
 
         // bar being set to true, foo shouldn't be readonly and thus its value
         // could be saved, even if in its field description it is readonly
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
 
         assert.containsOnce(
             form,
@@ -6661,7 +6655,7 @@ QUnit.module("Views", (hooks) => {
             "New foo value"
         );
 
-        await testUtils.form.clickSave(form);
+        await click(form.el.querySelector(".o_form_button_save"));
 
         assert.strictEqual(
             form.$(".o_field_widget[name=foo]").text(),
@@ -6673,7 +6667,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("readonly set by modifier do not break many2many_tags", async function (assert) {
         assert.expect(0);
 
-        this.data.partner.onchanges = {
+        serverData.models.partner.onchanges = {
             bar: function (obj) {
                 obj.timmy = [[6, false, [12]]];
             },
@@ -6692,7 +6686,7 @@ QUnit.module("Views", (hooks) => {
             resId: 5,
         });
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
         await testUtils.dom.click(form.$(".o_field_widget[name=bar] input"));
     });
 
@@ -6816,7 +6810,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("open new record even with warning message", async function (assert) {
         assert.expect(3);
 
-        this.data.partner.onchanges = { foo: true };
+        serverData.models.partner.onchanges = { foo: true };
 
         const form = await makeView({
             type: "form",
@@ -6836,7 +6830,7 @@ QUnit.module("Views", (hooks) => {
                 return this._super.apply(this, arguments);
             },
         });
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
         assert.strictEqual(form.$("input").val(), "blip", "input should contain record value");
         await testUtils.fields.editInput(form.$('.o_field_widget[name="foo"] input'), "tralala");
         assert.strictEqual(form.$("input").val(), "tralala", "input should contain new value");
@@ -6900,7 +6894,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("open one2many form containing one2many", async function (assert) {
         assert.expect(9);
 
-        this.data.partner.records[0].product_ids = [37];
+        serverData.models.partner.records[0].product_ids = [37];
         this.data.product.fields.partner_type_ids = {
             string: "one2many partner",
             type: "one2many",
@@ -6985,7 +6979,7 @@ QUnit.module("Views", (hooks) => {
                 "</form>",
             resId: 1,
         });
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
 
         assert.strictEqual(
             document.activeElement,
@@ -7013,7 +7007,7 @@ QUnit.module("Views", (hooks) => {
                 "</form>",
             resId: 1,
         });
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
         assert.strictEqual(
             document.activeElement,
             form.$('.o_field_widget[name="foo"] input')[0],
@@ -7129,7 +7123,7 @@ QUnit.module("Views", (hooks) => {
             // set max-height to have scroll forcefully so that we can test scroll position after modal close
             $(".o_content").css({ overflow: "auto", "max-height": "300px" });
             // Open many2one modal, lastActivatedFieldIndex will not set as we directly click on external button
-            await testUtils.form.clickEdit(form);
+            await click(form.el.querySelector(".o_form_button_edit"));
             assert.strictEqual($(".o_content").scrollTop(), 0, "scroll position should be 0");
 
             form.$(".o_field_many2one[name='trululu'] .o_input").focus();
@@ -7206,7 +7200,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await testUtils.form.clickSave(form);
+        await click(form.el.querySelector(".o_form_button_save"));
     });
 
     QUnit.skip("autofocus first visible field", async function (assert) {
@@ -7266,7 +7260,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("open one2many form containing many2many_tags", async function (assert) {
         assert.expect(4);
 
-        this.data.partner.records[0].product_ids = [37];
+        serverData.models.partner.records[0].product_ids = [37];
         this.data.product.fields.partner_type_ids = {
             string: "many2many partner_type",
             type: "many2many",
@@ -7315,8 +7309,8 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("onchanges are applied before checking if it can be saved", async function (assert) {
         assert.expect(4);
 
-        this.data.partner.onchanges.foo = function (obj) {};
-        this.data.partner.fields.foo.required = true;
+        serverData.models.partner.onchanges.foo = function (obj) {};
+        serverData.models.partner.fields.foo.required = true;
 
         var def = testUtils.makeTestPromise();
 
@@ -7350,9 +7344,9 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
         await testUtils.fields.editInput(form.$('.o_field_widget[name="foo"] input'), "");
-        await testUtils.form.clickSave(form);
+        await click(form.el.querySelector(".o_form_button_save"));
 
         def.resolve();
         await testUtils.nextTick();
@@ -7430,7 +7424,7 @@ QUnit.module("Views", (hooks) => {
             relation: "product",
         };
 
-        this.data.partner.records[0].product_id = 37;
+        serverData.models.partner.records[0].product_id = 37;
 
         const form = await makeView({
             type: "form",
@@ -7472,7 +7466,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
         // Open first dialog
         await testUtils.dom.click(form.$(".o_external_button"));
         assert.strictEqual($(".modal").length, 1, "One FormViewDialog should be opened");
@@ -7646,7 +7640,7 @@ QUnit.module("Views", (hooks) => {
             // isn't really costly, and it still checks rpcs done when creating a new record with a m2o.
             assert.expect(2);
 
-            this.data.partner.fields.trululu.default = 2;
+            serverData.models.partner.fields.trululu.default = 2;
 
             const form = await makeView({
                 type: "form",
@@ -7671,9 +7665,9 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("do not perform extra RPC to read invisible x2many fields", async function (assert) {
         assert.expect(2);
 
-        this.data.partner.records[0].p = [2]; // one2many
-        this.data.partner.records[0].product_ids = [37]; // one2many
-        this.data.partner.records[0].timmy = [12]; // many2many
+        serverData.models.partner.records[0].p = [2]; // one2many
+        serverData.models.partner.records[0].product_ids = [37]; // one2many
+        serverData.models.partner.records[0].timmy = [12]; // many2many
 
         const form = await makeView({
             type: "form",
@@ -7702,8 +7696,8 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("default_order on x2many embedded view", async function (assert) {
         assert.expect(11);
 
-        this.data.partner.fields.display_name.sortable = true;
-        this.data.partner.records[0].p = [1, 4];
+        serverData.models.partner.fields.display_name.sortable = true;
+        serverData.models.partner.records[0].p = [1, 4];
 
         const form = await makeView({
             type: "form",
@@ -7737,7 +7731,7 @@ QUnit.module("Views", (hooks) => {
             form.$(".o_field_one2many tbody tr:first td:contains(yop)").length,
             "record 1 should be first"
         );
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
         await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
         assert.strictEqual($(".modal").length, 1, "FormViewDialog should be opened");
         await testUtils.fields.editInput($('.modal .o_field_widget[name="foo"] input'), "xop");
@@ -7760,7 +7754,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // server-side sort
-        await testUtils.form.clickSave(form);
+        await click(form.el.querySelector(".o_form_button_save"));
         assert.ok(
             form.$(".o_field_one2many tbody tr:eq(0) td:contains(zop)").length,
             "record zop should be first"
@@ -7775,7 +7769,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // client-side sort on edit
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
         await testUtils.dom.click(form.$(".o_field_one2many tbody tr:eq(1) td:contains(yop)"));
         await testUtils.fields.editInput($('.modal .o_field_widget[name="foo"] input'), "zzz");
         await testUtils.dom.click($(".modal-footer button:first"));
@@ -7821,7 +7815,7 @@ QUnit.module("Views", (hooks) => {
                 return this._super.apply(this, arguments);
             },
         });
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
         await testUtils.dom.click(form.$('.o_field_widget[name="trululu"] input'));
     });
 
@@ -8189,7 +8183,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("custom open record dialog title", async function (assert) {
         assert.expect(1);
 
-        this.data.partner.records[0].p = [2];
+        serverData.models.partner.records[0].p = [2];
         const form = await makeView({
             type: "form",
             resModel: "partner",
@@ -8220,8 +8214,8 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("display translation alert", async function (assert) {
         assert.expect(2);
 
-        this.data.partner.fields.foo.translate = true;
-        this.data.partner.fields.display_name.translate = true;
+        serverData.models.partner.fields.foo.translate = true;
+        serverData.models.partner.fields.display_name.translate = true;
 
         var multi_lang = _t.database.multi_lang;
         _t.database.multi_lang = true;
@@ -8242,21 +8236,21 @@ QUnit.module("Views", (hooks) => {
             resId: 1,
         });
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
         await testUtils.fields.editInput(form.$('.o_field_widget[name="foo"] input'), "test");
-        await testUtils.form.clickSave(form);
+        await click(form.el.querySelector(".o_form_button_save"));
         assert.containsOnce(
             form,
             ".o_form_view .alert > div .oe_field_translate",
             "should have single translation alert"
         );
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
         await testUtils.fields.editInput(
             form.$('.o_field_widget[name="display_name"] input'),
             "test2"
         );
-        await testUtils.form.clickSave(form);
+        await click(form.el.querySelector(".o_form_button_save"));
         assert.containsN(
             form,
             ".o_form_view .alert > div .oe_field_translate",
@@ -8270,7 +8264,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("translation alerts are preserved on pager change", async function (assert) {
         assert.expect(5);
 
-        this.data.partner.fields.foo.translate = true;
+        serverData.models.partner.fields.foo.translate = true;
 
         var multi_lang = _t.database.multi_lang;
         _t.database.multi_lang = true;
@@ -8292,9 +8286,9 @@ QUnit.module("Views", (hooks) => {
             resId: 1,
         });
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
         await testUtils.fields.editInput(form.$('.o_field_widget[name="foo"] input'), "test");
-        await testUtils.form.clickSave(form);
+        await click(form.el.querySelector(".o_form_button_save"));
 
         assert.containsOnce(form, ".o_form_view .alert > div", "should have a translation alert");
 
@@ -8410,7 +8404,7 @@ QUnit.module("Views", (hooks) => {
             assert.expect(3);
 
             this.data.product.fields.name.translate = true;
-            this.data.partner.records[0].product_id = 37;
+            serverData.models.partner.records[0].product_id = 37;
             var nbTranslateCalls = 0;
 
             var multi_lang = _t.database.multi_lang;
@@ -8466,7 +8460,7 @@ QUnit.module("Views", (hooks) => {
                 },
             });
 
-            await testUtils.form.clickEdit(form);
+            await click(form.el.querySelector(".o_form_button_edit"));
             await testUtils.dom.click(form.$('[name="product_id"] .o_external_button'));
             assert.containsOnce(
                 $(".modal-body"),
@@ -8507,7 +8501,7 @@ QUnit.module("Views", (hooks) => {
             resId: 1,
         });
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
         await testUtils.fields.many2one.createAndEdit("product_id", "Ralts");
         await testUtils.dom.click($(".modal-footer button.btn-primary"));
         testUtils.mock.unpatch(ViewDialogs.FormViewDialog);
@@ -8849,10 +8843,10 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
         await testUtils.fields.editInput(form.$('.o_field_widget[name="foo"] input'), "test");
-        await testUtils.form.clickSave(form);
-        await testUtils.form.clickSave(form);
+        await click(form.el.querySelector(".o_form_button_save"));
+        await click(form.el.querySelector(".o_form_button_save"));
 
         def.resolve();
         await testUtils.nextTick();
@@ -8888,19 +8882,19 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
         await testUtils.fields.editInput(
             form.$('.o_field_widget[name="foo"] input'),
             "incorrect value"
         );
-        await testUtils.form.clickSave(form);
+        await click(form.el.querySelector(".o_form_button_save"));
 
         await testUtils.fields.editInput(
             form.$('.o_field_widget[name="foo"] input'),
             "correct value"
         );
 
-        await testUtils.form.clickSave(form);
+        await click(form.el.querySelector(".o_form_button_save"));
 
         assert.verifySteps([
             "read", // initial read to render the view
@@ -8996,7 +8990,7 @@ QUnit.module("Views", (hooks) => {
             "***",
             "password should be displayed with stars"
         );
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
         assert.strictEqual(
             form.$('.o_field_widget[name="foo"] input').val(),
             "yop",
@@ -9023,7 +9017,7 @@ QUnit.module("Views", (hooks) => {
             resId: 1,
         });
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
         assert.hasAttrValue(
             form.$('.o_field_widget[name="display_name"] input'),
             "autocomplete",
@@ -9043,7 +9037,7 @@ QUnit.module("Views", (hooks) => {
             resId: 1,
         });
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
         assert.hasAttrValue(
             form.$('.o_field_widget[name="display_name"] input'),
             "autocomplete",
@@ -9093,7 +9087,7 @@ QUnit.module("Views", (hooks) => {
                     return this._super.apply(this, arguments);
                 },
             });
-            await testUtils.form.clickEdit(form);
+            await click(form.el.querySelector(".o_form_button_edit"));
             await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
             await testUtils.nextTick();
             assert.strictEqual($(".modal").length, 1, "One FormViewDialog should be opened");
@@ -9113,7 +9107,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("render domain field widget without model", async function (assert) {
         assert.expect(3);
 
-        this.data.partner.fields.model_name = { string: "Model name", type: "char" };
+        serverData.models.partner.fields.model_name = { string: "Model name", type: "char" };
 
         const form = await makeView({
             type: "form",
@@ -9165,7 +9159,7 @@ QUnit.module("Views", (hooks) => {
 
         // define an onchange on display_name to check that the value of readonly
         // fields is correctly sent for onchanges
-        this.data.partner.onchanges = {
+        serverData.models.partner.onchanges = {
             display_name: function () {},
             p: function () {},
         };
@@ -9255,7 +9249,7 @@ QUnit.module("Views", (hooks) => {
         await testUtils.dom.clickFirst($(".modal-footer .btn-primary"));
         await testUtils.nextTick();
 
-        await testUtils.form.clickSave(form); // save the record
+        await click(form.el.querySelector(".o_form_button_save")); // save the record
     });
 
     QUnit.skip("id is False in evalContext for new records", async function (assert) {
@@ -9278,8 +9272,8 @@ QUnit.module("Views", (hooks) => {
             "foo should be readonly in 'Create' mode"
         );
 
-        await testUtils.form.clickSave(form);
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_save"));
+        await click(form.el.querySelector(".o_form_button_edit"));
 
         assert.doesNotHaveClass(
             form.$(".o_field_widget[name=foo]"),
@@ -9328,7 +9322,7 @@ QUnit.module("Views", (hooks) => {
             "first record (copy)",
             "duplicated record should have correct name"
         );
-        await testUtils.form.clickSave(form); // save duplicated record
+        await click(form.el.querySelector(".o_form_button_save")); // save duplicated record
 
         // delete duplicated record
         await testUtils.controlPanel.toggleActionMenu(form);
@@ -9450,7 +9444,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("process the context for inline subview", async function (assert) {
         assert.expect(1);
 
-        this.data.partner.records[0].p = [2];
+        serverData.models.partner.records[0].p = [2];
 
         const form = await makeView({
             type: "form",
@@ -9480,7 +9474,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("process the context for subview not inline", async function (assert) {
         assert.expect(1);
 
-        this.data.partner.records[0].p = [2];
+        serverData.models.partner.records[0].p = [2];
 
         const form = await makeView({
             type: "form",
@@ -9509,8 +9503,8 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("can toggle column in x2many in sub form view", async function (assert) {
         assert.expect(2);
 
-        this.data.partner.records[2].p = [1, 2];
-        this.data.partner.fields.foo.sortable = true;
+        serverData.models.partner.records[2].p = [1, 2];
+        serverData.models.partner.fields.foo.sortable = true;
         const form = await makeView({
             type: "form",
             resModel: "partner",
@@ -9746,7 +9740,7 @@ QUnit.module("Views", (hooks) => {
         assert.hasClass(form.$(".o_form_button_edit"), "o_catch_attention");
 
         // in edit
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
         await testUtils.dom.click(form.$('[name="display_name"]'));
         // await testUtils.nextTick();
         assert.containsNone(form, "button.o_catch_attention:visible");
@@ -9816,9 +9810,9 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(4);
 
-            this.data.partner.fields.text_field = { string: "Text field", type: "text" };
-            this.data.partner.fields.text_field.default = "some\n\nmulti\n\nline\n\ntext\n";
-            this.data.partner.records[0].text_field = "a\nb\nc\nd\ne\nf";
+            serverData.models.partner.fields.text_field = { string: "Text field", type: "text" };
+            serverData.models.partner.fields.text_field.default = "some\n\nmulti\n\nline\n\ntext\n";
+            serverData.models.partner.records[0].text_field = "a\nb\nc\nd\ne\nf";
 
             const form = await makeView({
                 type: "form",
@@ -9835,7 +9829,7 @@ QUnit.module("Views", (hooks) => {
             });
 
             // switch to edit mode to ensure that autoresize is correctly done
-            await testUtils.form.clickEdit(form);
+            await click(form.el.querySelector(".o_form_button_edit"));
             var height = form.$(".o_field_widget[name=text_field]").height();
             // focus the field to manually trigger autoresize
             form.$(".o_field_widget[name=text_field]").trigger("focus");
@@ -9849,7 +9843,7 @@ QUnit.module("Views", (hooks) => {
             assert.ok(height > 80, "textarea should have an height of at least 80px");
 
             // save and create a new record to ensure that autoresize is correctly done
-            await testUtils.form.clickSave(form);
+            await click(form.el.querySelector(".o_form_button_save"));
             await testUtils.form.clickCreate(form);
             height = form.$(".o_field_widget[name=text_field]").height();
             // focus the field to manually trigger autoresize
@@ -9866,10 +9860,10 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("autoresize of text fields is done on notebook page show", async function (assert) {
         assert.expect(5);
 
-        this.data.partner.fields.text_field = { string: "Text field", type: "text" };
-        this.data.partner.fields.text_field.default = "some\n\nmulti\n\nline\n\ntext\n";
-        this.data.partner.records[0].text_field = "a\nb\nc\nd\ne\nf";
-        this.data.partner.fields.text_field_empty = { string: "Text field", type: "text" };
+        serverData.models.partner.fields.text_field = { string: "Text field", type: "text" };
+        serverData.models.partner.fields.text_field.default = "some\n\nmulti\n\nline\n\ntext\n";
+        serverData.models.partner.records[0].text_field = "a\nb\nc\nd\ne\nf";
+        serverData.models.partner.fields.text_field_empty = { string: "Text field", type: "text" };
 
         const form = await makeView({
             type: "form",
@@ -9894,7 +9888,7 @@ QUnit.module("Views", (hooks) => {
             resId: 1,
         });
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
         assert.hasClass(form.$(".o_notebook .nav .nav-link:first()"), "active");
 
         await testUtils.dom.click(form.$(".o_notebook .nav .nav-link:nth(1)"));
@@ -10003,7 +9997,7 @@ QUnit.module("Views", (hooks) => {
             "pager should indicate that we are on second record"
         );
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
         await testUtils.form.clickDiscard(form);
 
         assert.strictEqual(
@@ -10022,7 +10016,7 @@ QUnit.module("Views", (hooks) => {
         "Form view from ordered, grouped list view correct context",
         async function (assert) {
             assert.expect(10);
-            this.data.partner.records[0].timmy = [12];
+            serverData.models.partner.records[0].timmy = [12];
 
             const form = await makeView({
                 type: "form",
@@ -10084,7 +10078,7 @@ QUnit.module("Views", (hooks) => {
         core.bus.on("clear_cache", form, assert.step.bind(assert, "clear_cache"));
 
         await testUtils.fields.editInput(form.$(".o_field_widget[name=display_name]"), "new value");
-        await testUtils.form.clickSave(form);
+        await click(form.el.querySelector(".o_form_button_save"));
 
         assert.verifySteps(["write", "clear_cache"]);
         await testUtils.mock.unpatch(BasicModel);
@@ -10114,7 +10108,7 @@ QUnit.module("Views", (hooks) => {
         core.bus.on("clear_cache", form, assert.step.bind(assert, "clear_cache"));
 
         await testUtils.fields.editInput(form.$(".o_field_widget[name=display_name]"), "value");
-        await testUtils.form.clickSave(form);
+        await click(form.el.querySelector(".o_form_button_save"));
 
         assert.verifySteps(["create", "clear_cache"]);
         await testUtils.mock.unpatch(BasicModel);
@@ -10191,7 +10185,7 @@ QUnit.module("Views", (hooks) => {
                 form.$(".o_field_widget[name=display_name]"),
                 "new value"
             );
-            await testUtils.form.clickSave(form);
+            await click(form.el.querySelector(".o_form_button_save"));
 
             assert.verifySteps(["read", "write", "reload currencies", "read"]);
         }
@@ -10260,7 +10254,7 @@ QUnit.module("Views", (hooks) => {
         values = {
             product_id: 37,
         };
-        await testUtils.form.clickSave(form);
+        await click(form.el.querySelector(".o_form_button_save"));
     });
 
     QUnit.skip("asynchronous rendering of a widget tag", async function (assert) {
@@ -10345,8 +10339,8 @@ QUnit.module("Views", (hooks) => {
             // and sets the value of the required field)
             assert.expect(6);
 
-            this.data.partner.fields.foo.default = undefined;
-            this.data.partner.onchanges = {
+            serverData.models.partner.fields.foo.default = undefined;
+            serverData.models.partner.onchanges = {
                 display_name: function (obj) {
                     obj.foo = obj.display_name ? "foo value" : undefined;
                 },
@@ -10403,7 +10397,7 @@ QUnit.module("Views", (hooks) => {
                 "some value"
             );
 
-            await testUtils.form.clickSave(form);
+            await click(form.el.querySelector(".o_form_button_save"));
 
             assert.step("resolve");
             onchangeDef.resolve();
@@ -10416,7 +10410,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("call canBeRemoved while saving", async function (assert) {
         assert.expect(10);
 
-        this.data.partner.onchanges = {
+        serverData.models.partner.onchanges = {
             foo: function (obj) {
                 obj.display_name = obj.foo === "trigger onchange" ? "changed" : "default";
             },
@@ -10515,7 +10509,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("domain returned by onchange is cleared on discard", async function (assert) {
         assert.expect(5);
 
-        this.data.partner.onchanges = {
+        serverData.models.partner.onchanges = {
             foo: function () {},
         };
 
@@ -10673,7 +10667,7 @@ QUnit.module("Views", (hooks) => {
             await testUtils.dom.click(form.$(".o_field_widget[name=bar]"));
 
             // switch to edit mode
-            await testUtils.form.clickEdit(form);
+            await click(form.el.querySelector(".o_form_button_edit"));
 
             assert.hasClass(form.$(".o_form_view"), "o_form_readonly"); // should wait for the RPC to return
 
@@ -10972,7 +10966,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         // in edit
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
         form.$('.o_field_widget[name="display_name"] input')
             .focus()
             .trigger($.Event("keydown", { which: $.ui.keyCode.TAB }));
@@ -11273,7 +11267,7 @@ QUnit.module("Views", (hooks) => {
 
         var onchangeNum = 0;
 
-        this.data.partner.onchanges = {
+        serverData.models.partner.onchanges = {
             p: function (obj) {
                 onchangeNum++;
                 obj.foo = obj.p ? obj.p.length.toString() : "0";
@@ -11400,7 +11394,7 @@ QUnit.module("Views", (hooks) => {
                 form.$('.o_field_widget[name="name"] input'),
                 "Test Company"
             );
-            await testUtils.form.clickSave(form);
+            await click(form.el.querySelector(".o_form_button_save"));
 
             assert.verifySteps(["onchange", "create", "reload company", "read"]);
         }
@@ -11446,7 +11440,7 @@ QUnit.module("Views", (hooks) => {
                 form.$('.o_field_widget[name="name"] input'),
                 "Test Company2"
             );
-            await testUtils.form.clickSave(form);
+            await click(form.el.querySelector(".o_form_button_save"));
 
             assert.verifySteps(["read", "write", "reload company", "read"]);
         }
@@ -11457,9 +11451,9 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(2);
 
-            this.data.partner.fields.product_id.company_dependent = true;
-            this.data.partner.fields.product_id.help = "this is a tooltip";
-            this.data.partner.fields.foo.company_dependent = true;
+            serverData.models.partner.fields.product_id.company_dependent = true;
+            serverData.models.partner.fields.product_id.help = "this is a tooltip";
+            serverData.models.partner.fields.foo.company_dependent = true;
 
             const form = await createView({
                 type: "form",
@@ -11502,8 +11496,8 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(1);
 
-            this.data.partner.fields.product_id.company_dependent = true;
-            this.data.partner.fields.product_id.help = "this is a tooltip";
+            serverData.models.partner.fields.product_id.company_dependent = true;
+            serverData.models.partner.fields.product_id.help = "this is a tooltip";
 
             const form = await createView({
                 type: "form",
@@ -11816,7 +11810,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
         assert.notStrictEqual(form.$('.o_field_widget[name="display_name"]').val(), "test");
 
         await testUtils.fields.editInput(form.$('.o_field_widget[name="display_name"]'), "test");
@@ -11846,7 +11840,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
         await testUtils.fields.editInput(form.$('.o_field_widget[name="display_name"]'), "");
         window.dispatchEvent(new Event("beforeunload"));
         await testUtils.nextTick();
@@ -11876,7 +11870,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
 
         window.dispatchEvent(new Event("beforeunload"));
         await testUtils.nextTick();
@@ -11946,7 +11940,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("Auto save: save on closing tab/browser (onchanges)", async function (assert) {
         assert.expect(1);
 
-        this.data.partner.onchanges = {
+        serverData.models.partner.onchanges = {
             display_name: function (obj) {
                 obj.name = `copy: ${obj.display_name}`;
             },
@@ -11976,7 +11970,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
         await testUtils.fields.editInput(form.$('.o_field_widget[name="display_name"]'), "test");
 
         window.dispatchEvent(new Event("beforeunload"));
@@ -11986,7 +11980,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("Auto save: save on closing tab/browser (onchanges 2)", async function (assert) {
         assert.expect(1);
 
-        this.data.partner.onchanges = {
+        serverData.models.partner.onchanges = {
             display_name: function () {},
         };
 
@@ -12014,7 +12008,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
         await testUtils.fields.editInput(form.$('.o_field_widget[name="display_name"]'), "test");
         await testUtils.fields.editInput(form.$('.o_field_widget[name="name"]'), "test");
 
@@ -12041,7 +12035,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
 
         // edit 'foo' but do not focusout -> the model isn't aware of the change
         // until the 'beforeunload' event is triggered
@@ -12059,7 +12053,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(5);
 
-            this.data.partner.onchanges = {
+            serverData.models.partner.onchanges = {
                 display_name: function (obj) {
                     obj.name = `copy: ${obj.display_name}`;
                 },
@@ -12093,7 +12087,7 @@ QUnit.module("Views", (hooks) => {
                 },
             });
 
-            await testUtils.form.clickEdit(form);
+            await click(form.el.querySelector(".o_form_button_edit"));
             // edit 'display_name' and simulate a focusout (trigger the 'change' event)
             // -> notifies the model of the change and performs the onchange
             form.$('.o_field_widget[name="display_name"]').val("test");
@@ -12125,7 +12119,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(3);
 
-            this.data.partner.onchanges = {
+            serverData.models.partner.onchanges = {
                 display_name: function (obj) {
                     obj.name = `copy: ${obj.display_name}`;
                 },
@@ -12156,7 +12150,7 @@ QUnit.module("Views", (hooks) => {
                 },
             });
 
-            await testUtils.form.clickEdit(form);
+            await click(form.el.querySelector(".o_form_button_edit"));
             await testUtils.fields.editInput(
                 form.$('.o_field_widget[name="display_name"]'),
                 "test"
@@ -12306,7 +12300,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(form, ".o_form_view.o_form_editable");
         assert.containsNone(form, ".o_field_boolean input:checked");
 
-        await testUtils.form.clickSave(form);
+        await click(form.el.querySelector(".o_form_button_save"));
 
         assert.containsOnce(form, ".o_form_view.o_form_readonly");
         assert.containsNone(form, ".o_field_boolean input:checked");
@@ -12345,7 +12339,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(form, ".o_form_view.o_form_editable");
         assert.containsNone(form, ".o_field_boolean input:checked");
 
-        await testUtils.form.clickSave(form);
+        await click(form.el.querySelector(".o_form_button_save"));
 
         assert.containsOnce(form, ".o_form_view.o_form_readonly");
         assert.containsNone(form, ".o_field_boolean input:checked");
@@ -12360,7 +12354,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("Quick Edition: Readonly one2many list", async function (assert) {
         assert.expect(4);
 
-        this.data.partner.records[0].p.push(2);
+        serverData.models.partner.records[0].p.push(2);
 
         const form = await createView({
             type: "form",
@@ -12403,7 +12397,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(3);
 
-            this.data.partner.records[0].p.push(2);
+            serverData.models.partner.records[0].p.push(2);
 
             const form = await createView({
                 type: "form",
@@ -12441,7 +12435,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(5);
 
-            this.data.partner.records[0].p.push(2);
+            serverData.models.partner.records[0].p.push(2);
 
             const form = await createView({
                 type: "form",
@@ -12562,7 +12556,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(6);
 
-            this.data.partner.records[0].p = [1, 2];
+            serverData.models.partner.records[0].p = [1, 2];
 
             const form = await createView({
                 type: "form",
@@ -12606,7 +12600,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(6);
 
-            this.data.partner.records[0].p = [1, 2];
+            serverData.models.partner.records[0].p = [1, 2];
 
             const form = await createView({
                 type: "form",
@@ -13208,7 +13202,7 @@ QUnit.module("Views", (hooks) => {
         const initialWidget = form.$(".custom-widget")[0];
         testPromise = testUtils.makeTestPromise();
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el.querySelector(".o_form_button_edit"));
 
         assert.containsOnce(form, ".custom-widget");
         assert.strictEqual(
@@ -13237,8 +13231,8 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip('field "length" with value 0: can apply onchange', async function (assert) {
         assert.expect(1);
 
-        this.data.partner.fields.length = { string: "Length", type: "float", default: 0 };
-        this.data.partner.fields.foo.default = "foo default";
+        serverData.models.partner.fields.length = { string: "Length", type: "float", default: 0 };
+        serverData.models.partner.fields.foo.default = "foo default";
 
         const form = await createView({
             type: "form",
@@ -13259,12 +13253,16 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(3);
 
-            this.data.partner.fields.length = { string: "Length", type: "float", default: 0 };
-            this.data.partner.fields.foo.default = "foo default";
+            serverData.models.partner.fields.length = {
+                string: "Length",
+                type: "float",
+                default: 0,
+            };
+            serverData.models.partner.fields.foo.default = "foo default";
 
             // define an onchange on display_name to check that the value of readonly
             // fields is correctly sent for onchanges
-            this.data.partner.onchanges = {
+            serverData.models.partner.onchanges = {
                 display_name: function () {},
                 p: function () {},
             };
@@ -13323,7 +13321,7 @@ QUnit.module("Views", (hooks) => {
             );
             await testUtils.dom.clickFirst($(".modal-footer .btn-primary"));
 
-            await testUtils.form.clickSave(form); // save the record
+            await click(form.el.querySelector(".o_form_button_save")); // save the record
         }
     );
 });
