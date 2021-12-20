@@ -394,7 +394,7 @@
                 <nav t-if="request.params.get('url_origin') and request.params.get('name_origin')" aria-label="breadcrumb">
                     <ol class="breadcrumb p-0 bg-white">
                         <li class="breadcrumb-item">
-                            <a t-att-href="request.website._get_http_domain() + request.params.get('url_origin')" t-esc="request.params.get('name_origin')"/>
+                            <a t-att-href="request.website._get_http_domain() + '/' + request.params.get('url_origin').lstrip('/')" t-esc="request.params.get('name_origin')"/>
                         </li>
                         <li class="breadcrumb-item">Badges</li>
                     </ol>
