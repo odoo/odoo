@@ -2,9 +2,8 @@
 
 import { makeContext } from "@web/core/context";
 import { Domain } from "@web/core/domain";
-import { formatDateTime, serializeDate, serializeDateTime } from "@web/core/l10n/dates";
+import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { ORM } from "@web/core/orm_service";
-import { evaluateExpr } from "@web/core/py_js/py";
 import { Deferred, KeepLast, Mutex } from "@web/core/utils/concurrency";
 import { session } from "@web/session";
 import { Model } from "@web/views/helpers/model";
@@ -161,6 +160,7 @@ class DataPoint {
         return parsedValues;
     }
 }
+
 export class Record extends DataPoint {
     constructor(model, params) {
         super(...arguments);

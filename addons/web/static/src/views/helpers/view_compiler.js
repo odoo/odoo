@@ -449,38 +449,6 @@ export class ViewCompiler {
         return titleDiv;
     }
 
-    // handleReadonly(node, compiled) {
-    //     const readonly = this.getModifier(node, "readonly");
-    //     if (readonly) {
-    //         const roClass = "o_readonly_modifier";
-    //         let readonlyExpr;
-    //         if (!Array.isArray(readonly)) {
-    //             readonlyExpr = readonly;
-    //         } else {
-    //             readonlyExpr = `evalDomain(record,${JSON.stringify(readonly)})`;
-    //         }
-    //         const tAttClass = `${roClass}: ${readonlyExpr}`;
-    //         appendAttr(compiled, "class", tAttClass);
-    //     }
-    // }
-
-    // handleRequired(node, compiled) {
-    //     const required = this.getModifier(node, "required");
-    //     if (required) {
-    //         const reqClass = "o_required_modifier";
-    //         let reqExpr;
-    //         if (!Array.isArray(required)) {
-    //             reqExpr = required;
-    //         } else {
-    //             reqExpr = `evalDomain(record,${JSON.stringify(required)})`;
-    //         }
-    //         const tAttClass = `${reqClass}: ${reqExpr}`;
-    //         appendAttr(compiled, "class", tAttClass);
-
-    //         compiled.setAttribute("required", reqExpr);
-    //     }
-    // }
-
     handleEmpty(compiled, params) {
         // handle Empty field
         let emptyClass;

@@ -14,8 +14,15 @@ const fieldRegistry = registry.category("fields");
 const viewRegistry = registry.category("views");
 
 export class Field extends Component {
-    // AAB: no need to pre-optimize anything, but as it stands, this method is called
-    // twice at each patch for "required" and twice for "readonly"
+    /**
+     * FIXME: no need to pre-optimize anything, but as it stands, this method is called
+     * twice at each patch for "required" and twice for "readonly"
+     * FIXME2: maybe move this function on the RecordDatapoint (maybe 2 methods "isReadonly" and
+     * "isRequired" that take a fieldName in argument)
+     *
+     * @param {"readonly"|"required"} modifier
+     * @returns {boolean}
+     */
     evalModifier(modifier) {
         const activeField = this.props.record.activeFields[this.props.name];
         let modifierValue = activeField.modifiers[modifier];
