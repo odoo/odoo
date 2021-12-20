@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
-import { useRefToModel } from '@mail/component_hooks/use_ref_to_model/use_ref_to_model';
 
 import {
     auto_str_to_date,
@@ -12,14 +11,6 @@ import {
 const { Component } = owl;
 
 export class Activity extends Component {
-
-    /**
-     * @override
-     */
-    setup() {
-        super.setup();
-        useRefToModel({ fieldName: 'fileUploaderRef', modelName: 'ActivityView', propNameAsRecordLocalId: 'activityViewLocalId', refName: 'fileUploader' });
-    }
 
     //--------------------------------------------------------------------------
     // Public

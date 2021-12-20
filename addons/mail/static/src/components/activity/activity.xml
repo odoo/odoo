@@ -115,7 +115,7 @@
 
                     <t t-if="activityView.activity.canWrite">
                         <div name="tools" class="o_Activity_tools">
-                            <t t-if="activityView.activity.category !== 'upload_file'">
+                            <t t-if="!activityView.fileUploaderView">
                                 <Popover position="'right'" title="MARK_DONE">
                                     <button class="o_Activity_toolButton o_Activity_markDoneButton btn btn-link" t-att-title="MARK_DONE">
                                         <i class="fa fa-check"/> Mark Done
@@ -125,16 +125,11 @@
                                     </t>
                                 </Popover>
                             </t>
-                            <t t-else="">
+                            <t t-if="activityView.fileUploaderView">
                                 <button class="o_Activity_toolButton o_Activity_uploadButton btn btn-link" t-on-click="activityView.onClickUploadDocument">
                                     <i class="fa fa-upload"/> Upload Document
                                 </button>
-                                <FileUploader
-                                    t-if="activityView.activity.thread"
-                                    threadLocalId="activityView.activity.thread.localId"
-                                    onAttachmentCreated="activityView.onAttachmentCreated"
-                                    t-ref="fileUploader"
-                                />
+                                <FileUploader localId="activityView.fileUploaderView.localId"/>
                             </t>
                             <button class="o_Activity_toolButton o_Activity_editButton btn btn-link" t-on-click="activityView.onClickEdit">
                                 <i class="fa fa-pencil"/> Edit

@@ -94,6 +94,10 @@ Object.assign(ChatterContainer, {
             type: Boolean,
             optional: true,
         },
+        hasParentReloadOnAttachmentsChanged: {
+            type: Boolean,
+            optional: true,
+        },
         hasTopbarCloseButton: {
             type: Boolean,
             optional: true,
