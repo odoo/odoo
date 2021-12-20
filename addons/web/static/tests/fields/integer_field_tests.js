@@ -126,12 +126,12 @@ QUnit.module("Fields", (hooks) => {
         await click(form.el, ".o_form_button_edit");
 
         assert.ok(
-            form.el.querySelector(".o_field_widget").hasAttribute("type"),
+            form.el.querySelector(".o_field_widget input").hasAttribute("type"),
             "Integer field with option type must have a type attribute."
         );
 
         assert.hasAttrValue(
-            form.el.querySelector(".o_field_widget"),
+            form.el.querySelector(".o_field_widget input"),
             "type",
             "number",
             'Integer field with option type must have a type attribute equals to "number".'
@@ -142,7 +142,7 @@ QUnit.module("Fields", (hooks) => {
         await click(form.el, ".o_form_button_edit");
 
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget").value,
+            form.el.querySelector(".o_field_widget input").value,
             "1234567890",
             "Integer value must be not formatted if input type is number."
         );
@@ -170,7 +170,7 @@ QUnit.module("Fields", (hooks) => {
         await click(form.el, ".o_form_button_edit");
 
         assert.hasAttrValue(
-            form.el.querySelector(".o_field_widget"),
+            form.el.querySelector(".o_field_widget input"),
             "type",
             "text",
             "Integer field without option type must have a text type (default type)."
@@ -181,7 +181,7 @@ QUnit.module("Fields", (hooks) => {
         await click(form.el, ".o_form_button_edit");
 
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget").value,
+            form.el.querySelector(".o_field_widget input").value,
             "1,234,567,890",
             "Integer value must be formatted if input type isn't number."
         );
@@ -207,7 +207,7 @@ QUnit.module("Fields", (hooks) => {
         await click(form.el, ".o_form_button_edit");
 
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget").value,
+            form.el.querySelector(".o_field_widget input").value,
             "8069",
             "Integer value must not be formatted"
         );
@@ -233,7 +233,7 @@ QUnit.module("Fields", (hooks) => {
         await click(form.el, ".o_form_button_edit");
 
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget").value,
+            form.el.querySelector(".o_field_widget input").value,
             "8,069",
             "Integer value must be formatted by default"
         );

@@ -875,7 +875,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsOnce(
             form,
-            "span.o_field_widget[name='trululu']",
+            ".o_field_widget[name='trululu'] > span",
             "should be displayed inside a span (sanity check)"
         );
         assert.containsNone(form, "span.o_form_uri", "should not have an anchor");
