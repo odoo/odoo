@@ -16,12 +16,15 @@ function disableButtons(el) {
     return manuallyDisabledButtons;
 }
 
-export function useViewButtons(model) {
+export function useViewButtons(model, beforeExecuteAction = () => {}) {
     const action = useService("action");
     const comp = owl.hooks.useComponent();
 
     async function handler(ev) {
         const manuallyDisabledButtons = disableButtons(comp.el);
+
+        await beforeExecuteAction();
+
         const { clickParams, record } = ev.detail;
 
         const resId = record.resId;
@@ -48,7 +51,10 @@ export function useViewButtons(model) {
             resIds,
             context: envContext,
             buttonContext,
-            onClose: () => model.load(),
+            onClose: async () => {
+                await model.root.load();
+                comp.render();
+            },
         });
 
         try {

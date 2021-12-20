@@ -162,10 +162,16 @@ class DataPoint {
 }
 
 export class Record extends DataPoint {
-    constructor(model, params) {
+    constructor(model, params, state) {
         super(...arguments);
 
-        this.resId = params.resId;
+        if ("resId" in params) {
+            this.resId = params.resId;
+        } else if (state) {
+            this.resId = state.resId;
+        } else {
+            this.resId = false;
+        }
         this._values = params.values;
         this._changes = {};
         this.data = { ...this._values };
@@ -214,6 +220,12 @@ export class Record extends DataPoint {
         // Relational data
         await this.loadRelationalData();
         await this.loadPreloadedData();
+    }
+
+    exportState() {
+        return {
+            resId: this.resId,
+        };
     }
 
     getFieldContext(fieldName) {

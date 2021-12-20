@@ -2156,7 +2156,7 @@ QUnit.module("Views", (hooks) => {
                         </group>
                     </sheet>
                 </form>`,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 assert.step(args.method);
             },
         });
@@ -2197,8 +2197,6 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("separators", async function (assert) {
-        assert.expect(1);
-
         const form = await makeView({
             type: "form",
             resModel: "partner",
@@ -2219,8 +2217,6 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("invisible attrs on separators", async function (assert) {
-        assert.expect(1);
-
         const form = await makeView({
             type: "form",
             resModel: "partner",
@@ -2240,227 +2236,226 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(form, "div.o_horizontal_separator");
     });
 
-    QUnit.skip("buttons in form view", async function (assert) {
-        assert.expect(8);
+    QUnit.test("buttons in form view", async function (assert) {
+        assert.expect(9);
 
-        var rpcCount = 0;
+        const mockedActionService = {
+            start() {
+                return {
+                    doActionButton(params) {
+                        assert.step(params.name);
+                        if (params.name === "post") {
+                            assert.strictEqual(params.resId, 2);
+                            params.onClose();
+                        } else {
+                            return Promise.reject();
+                        }
+                    },
+                };
+            },
+        };
+        serviceRegistry.add("action", mockedActionService, { force: true });
 
         const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                '<form string="Partners">' +
-                '<field name="state" invisible="1"/>' +
-                "<header>" +
-                '<button name="post" class="p" string="Confirm" type="object"/>' +
-                '<button name="some_method" class="s" string="Do it" type="object"/>' +
-                '<button name="some_other_method" states="ab,ef" string="Do not" type="object"/>' +
-                "</header>" +
-                "<sheet>" +
-                "<group>" +
-                '<button string="Geolocate" name="geo_localize" icon="fa-check" type="object"/>' +
-                "</group>" +
-                "</sheet>" +
-                "</form>",
+            arch: `
+                <form>
+                    <field name="state" invisible="1"/>
+                    <header>
+                        <button name="post" class="p" string="Confirm" type="object"/>
+                        <button name="some_method" class="s" string="Do it" type="object"/>
+                        <button name="some_other_method" states="ab,ef" string="Do not" type="object"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <button string="Geolocate" name="geo_localize" icon="fa-check" type="object"/>
+                        </group>
+                    </sheet>
+                </form>`,
             resId: 2,
-            mockRPC: function () {
-                rpcCount++;
-                return this._super.apply(this, arguments);
+            mockRPC(route, args) {
+                assert.step(args.method);
             },
         });
         assert.containsOnce(form, "button.btn i.fa.fa-check");
-        assert.containsN(form, ".o_form_statusbar button", 3);
+        assert.containsN(form, ".o_form_statusbar button", 2);
         assert.containsOnce(form, 'button.p[name="post"]:contains(Confirm)');
-        assert.containsN(form, ".o_form_statusbar button:visible", 2);
 
-        await testUtils.mock.intercept(form, "execute_action", function (ev) {
-            assert.strictEqual(
-                ev.data.action_data.name,
-                "post",
-                "should trigger execute_action with correct method name"
-            );
-            assert.deepEqual(ev.data.env.currentID, 2, "should have correct id in ev data");
-            ev.data.on_success();
-            ev.data.on_closed();
-        });
-        rpcCount = 0;
-        await testUtils.dom.click(".o_form_statusbar button.p", form);
+        // click on p (will succeed and reload)
+        await click(form.el.querySelector(".o_form_statusbar button.p"));
 
-        assert.strictEqual(rpcCount, 1, "should have done 1 rpcs to reload");
+        // click on s (will fail and won't reload)
+        await click(form.el.querySelector(".o_form_statusbar button.s"));
 
-        await testUtils.mock.intercept(form, "execute_action", function (ev) {
-            ev.data.on_fail();
-        });
-        await testUtils.dom.click(".o_form_statusbar button.s", form);
-
-        assert.strictEqual(
-            rpcCount,
-            1,
-            "should have done 1 rpc, because we do not reload anymore if the server action fails"
-        );
+        assert.verifySteps([
+            "read", // initial read
+            "post",
+            "read", // reload (successfully clicked on p)
+            "some_method",
+        ]);
     });
 
-    QUnit.skip("buttons classes in form view", async function (assert) {
-        assert.expect(16);
-
+    QUnit.test("buttons classes in form view", async function (assert) {
         const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                '<form string="Partners">' +
-                "<header>" +
-                '<button name="0"/>' +
-                '<button name="1" class="btn-primary"/>' +
-                '<button name="2" class="oe_highlight"/>' +
-                '<button name="3" class="btn-secondary"/>' +
-                '<button name="4" class="btn-link"/>' +
-                '<button name="5" class="oe_link"/>' +
-                '<button name="6" class="btn-success"/>' +
-                '<button name="7" class="o_this_is_a_button"/>' +
-                "</header>" +
-                "<sheet>" +
-                '<button name="8"/>' +
-                '<button name="9" class="btn-primary"/>' +
-                '<button name="10" class="oe_highlight"/>' +
-                '<button name="11" class="btn-secondary"/>' +
-                '<button name="12" class="btn-link"/>' +
-                '<button name="13" class="oe_link"/>' +
-                '<button name="14" class="btn-success"/>' +
-                '<button name="15" class="o_this_is_a_button"/>' +
-                "</sheet>" +
-                "</form>",
+            arch: `
+                <form>
+                    <header>
+                        <button name="0"/>
+                        <button name="1" class="btn-primary"/>
+                        <button name="2" class="oe_highlight"/>
+                        <button name="3" class="btn-secondary"/>
+                        <button name="4" class="btn-link"/>
+                        <button name="5" class="oe_link"/>
+                        <button name="6" class="btn-success"/>
+                        <button name="7" class="o_this_is_a_button"/>
+                    </header>
+                    <sheet>
+                        <button name="8"/>
+                        <button name="9" class="btn-primary"/>
+                        <button name="10" class="oe_highlight"/>
+                        <button name="11" class="btn-secondary"/>
+                        <button name="12" class="btn-link"/>
+                        <button name="13" class="oe_link"/>
+                        <button name="14" class="btn-success"/>
+                        <button name="15" class="o_this_is_a_button"/>
+                    </sheet>
+                </form>`,
             resId: 2,
         });
 
-        assert.hasAttrValue(form.$('button[name="0"]'), "class", "btn btn-secondary");
-        assert.hasAttrValue(form.$('button[name="1"]'), "class", "btn btn-primary");
-        assert.hasAttrValue(form.$('button[name="2"]'), "class", "btn btn-primary");
-        assert.hasAttrValue(form.$('button[name="3"]'), "class", "btn btn-secondary");
-        assert.hasAttrValue(form.$('button[name="4"]'), "class", "btn btn-link");
-        assert.hasAttrValue(form.$('button[name="5"]'), "class", "btn btn-link");
-        assert.hasAttrValue(form.$('button[name="6"]'), "class", "btn btn-success");
-        assert.hasAttrValue(
-            form.$('button[name="7"]'),
-            "class",
+        assert.hasClass(form.el.querySelector('button[name="0"]'), "btn btn-secondary");
+        assert.hasClass(form.el.querySelector('button[name="1"]'), "btn btn-primary");
+        assert.hasClass(form.el.querySelector('button[name="2"]'), "btn btn-primary");
+        assert.hasClass(form.el.querySelector('button[name="3"]'), "btn btn-secondary");
+        assert.hasClass(form.el.querySelector('button[name="4"]'), "btn btn-link");
+        assert.hasClass(form.el.querySelector('button[name="5"]'), "btn btn-link");
+        assert.hasClass(form.el.querySelector('button[name="6"]'), "btn btn-success");
+        assert.hasClass(
+            form.el.querySelector('button[name="7"]'),
             "btn o_this_is_a_button btn-secondary"
         );
-        assert.hasAttrValue(form.$('button[name="8"]'), "class", "btn btn-secondary");
-        assert.hasAttrValue(form.$('button[name="9"]'), "class", "btn btn-primary");
-        assert.hasAttrValue(form.$('button[name="10"]'), "class", "btn btn-primary");
-        assert.hasAttrValue(form.$('button[name="11"]'), "class", "btn btn-secondary");
-        assert.hasAttrValue(form.$('button[name="12"]'), "class", "btn btn-link");
-        assert.hasAttrValue(form.$('button[name="13"]'), "class", "btn btn-link");
-        assert.hasAttrValue(form.$('button[name="14"]'), "class", "btn btn-success");
-        assert.hasAttrValue(form.$('button[name="15"]'), "class", "btn o_this_is_a_button");
+        assert.hasClass(form.el.querySelector('button[name="8"]'), "btn btn-secondary");
+        assert.hasClass(form.el.querySelector('button[name="9"]'), "btn btn-primary");
+        assert.hasClass(form.el.querySelector('button[name="10"]'), "btn btn-primary");
+        assert.hasClass(form.el.querySelector('button[name="11"]'), "btn btn-secondary");
+        assert.hasClass(form.el.querySelector('button[name="12"]'), "btn btn-link");
+        assert.hasClass(form.el.querySelector('button[name="13"]'), "btn btn-link");
+        assert.hasClass(form.el.querySelector('button[name="14"]'), "btn btn-success");
+        assert.hasClass(form.el.querySelector('button[name="15"]'), "btn o_this_is_a_button");
     });
 
-    QUnit.skip("button in form view and long willStart", async function (assert) {
-        assert.expect(6);
+    QUnit.test("button in form view and long willStart", async function (assert) {
+        const mockedActionService = {
+            start() {
+                return {
+                    doActionButton(params) {
+                        params.onClose();
+                    },
+                };
+            },
+        };
+        serviceRegistry.add("action", mockedActionService, { force: true });
 
-        var rpcCount = 0;
-
-        var FieldChar = fieldRegistry.get("char");
-        fieldRegistry.add(
-            "asyncwidget",
-            FieldChar.extend({
-                willStart: function () {
-                    assert.step("load " + rpcCount);
-                    if (rpcCount === 2) {
-                        return new Promise(() => {});
-                    }
-                    return Promise.resolve();
-                },
-            })
-        );
+        let rpcCount = 0;
+        class AsyncField extends CharField {
+            willStart() {
+                assert.step("load " + rpcCount);
+                return Promise.resolve();
+            }
+            willUpdateProps() {
+                assert.step("load " + rpcCount);
+                if (rpcCount === 2) {
+                    return new Promise(() => {});
+                }
+                return Promise.resolve();
+            }
+        }
+        fieldRegistry.add("asyncwidget", AsyncField);
 
         const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                '<form string="Partners">' +
-                '<field name="state" invisible="1"/>' +
-                "<header>" +
-                '<button name="post" class="p" string="Confirm" type="object"/>' +
-                "</header>" +
-                "<sheet>" +
-                "<group>" +
-                '<field name="foo" widget="asyncwidget"/>' +
-                "</group>" +
-                "</sheet>" +
-                "</form>",
+            arch: `
+                <form>
+                    <field name="state" invisible="1"/>
+                    <header>
+                        <button name="post" class="p" string="Confirm" type="object"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="foo" widget="asyncwidget"/>
+                        </group>
+                    </sheet>
+                </form>`,
             resId: 2,
-            mockRPC: function () {
+            mockRPC() {
                 rpcCount++;
-                return this._super.apply(this, arguments);
             },
         });
         assert.verifySteps(["load 1"]);
 
-        testUtils.mock.intercept(form, "execute_action", function (ev) {
-            ev.data.on_success();
-            ev.data.on_closed();
-        });
-
-        await testUtils.dom.click(".o_form_statusbar button.p", form);
+        await click(form.el.querySelector(".o_form_statusbar button.p"));
         assert.verifySteps(["load 2"]);
 
-        await testUtils.dom.click(".o_form_statusbar button.p", form);
+        await click(form.el.querySelector(".o_form_statusbar button.p"));
         assert.verifySteps(["load 3"]);
     });
 
-    QUnit.skip("buttons in form view, new record", async function (assert) {
-        // this simulates a situation similar to the settings forms.
+    QUnit.test("buttons in form view, new record", async function (assert) {
+        // this test simulates a situation similar to the settings forms.
         assert.expect(7);
 
-        var resID;
+        serverData.models.partner.records = []; // such that we know the created record will be id 1
+        const mockedActionService = {
+            start() {
+                return {
+                    doActionButton(params) {
+                        assert.step("execute_action");
+                        assert.deepEqual(
+                            params.resId,
+                            1,
+                            "execute action should be done on correct record id"
+                        );
+                        params.onClose();
+                    },
+                };
+            },
+        };
+        serviceRegistry.add("action", mockedActionService, { force: true });
 
         const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                '<form string="Partners">' +
-                "<header>" +
-                '<button name="post" class="p" string="Confirm" type="object"/>' +
-                '<button name="some_method" class="s" string="Do it" type="object"/>' +
-                "</header>" +
-                "<sheet>" +
-                "<group>" +
-                '<button string="Geolocate" name="geo_localize" icon="fa-check" type="object"/>' +
-                "</group>" +
-                "</sheet>" +
-                "</form>",
+            arch: `
+                <form>
+                    <header>
+                        <button name="post" class="p" string="Confirm" type="object"/>
+                        <button name="some_method" class="s" string="Do it" type="object"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <button string="Geolocate" name="geo_localize" icon="fa-check" type="object"/>
+                        </group>
+                    </sheet>
+                </form>`,
             mockRPC: function (route, args) {
                 assert.step(args.method);
-                if (args.method === "create") {
-                    return this._super.apply(this, arguments).then(function (result) {
-                        resID = result;
-                        return resID;
-                    });
-                }
-                return this._super.apply(this, arguments);
             },
         });
 
-        await testUtils.mock.intercept(form, "execute_action", function (event) {
-            assert.step("execute_action");
-            assert.deepEqual(
-                event.data.env.currentID,
-                resID,
-                "execute action should be done on correct record id"
-            );
-            event.data.on_success();
-            event.data.on_closed();
-        });
-        await testUtils.dom.click(".o_form_statusbar button.p", form);
+        await click(form.el.querySelector(".o_form_statusbar button.p"));
 
         assert.verifySteps(["onchange", "create", "read", "execute_action", "read"]);
     });
 
-    QUnit.skip("buttons in form view, new record, with field id in view", async function (assert) {
+    QUnit.test("buttons in form view, new record, with field id in view", async function (assert) {
         assert.expect(7);
         // buttons in form view are one of the rare example of situation when we
         // save a record without reloading it immediately, because we only care
@@ -2468,47 +2463,45 @@ QUnit.module("Views", (hooks) => {
         // is in the view, it was registered in the changes, and caused invalid
         // values in the record (data.id was set to null)
 
-        var resID;
-
+        serverData.models.partner.records = []; // such that we know the created record will be id 1
+        const mockedActionService = {
+            start() {
+                return {
+                    doActionButton(params) {
+                        assert.step("execute_action");
+                        assert.deepEqual(
+                            params.resId,
+                            1,
+                            "execute action should be done on correct record id"
+                        );
+                        params.onClose();
+                    },
+                };
+            },
+        };
+        serviceRegistry.add("action", mockedActionService, { force: true });
         const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                '<form string="Partners">' +
-                "<header>" +
-                '<button name="post" class="p" string="Confirm" type="object"/>' +
-                "</header>" +
-                "<sheet>" +
-                "<group>" +
-                '<field name="id" invisible="1"/>' +
-                '<field name="foo"/>' +
-                "</group>" +
-                "</sheet>" +
-                "</form>",
+            arch: `
+                <form>
+                    <header>
+                        <button name="post" class="p" string="Confirm" type="object"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="id" invisible="1"/>
+                            <field name="foo"/>
+                        </group>
+                    </sheet>
+                </form>`,
             mockRPC: function (route, args) {
                 assert.step(args.method);
-                if (args.method === "create") {
-                    return this._super.apply(this, arguments).then(function (result) {
-                        resID = result;
-                        return resID;
-                    });
-                }
-                return this._super.apply(this, arguments);
             },
         });
 
-        await testUtils.mock.intercept(form, "execute_action", function (event) {
-            assert.step("execute_action");
-            assert.deepEqual(
-                event.data.env.currentID,
-                resID,
-                "execute action should be done on correct record id"
-            );
-            event.data.on_success();
-            event.data.on_closed();
-        });
-        await testUtils.dom.click(".o_form_statusbar button.p", form);
+        await click(form.el.querySelector(".o_form_statusbar button.p"));
 
         assert.verifySteps(["onchange", "create", "read", "execute_action", "read"]);
     });

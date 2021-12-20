@@ -72,7 +72,7 @@ class FormView extends Component {
             this.router.pushState({ id: this.model.root.resId || undefined });
         });
 
-        useViewButtons(this.model);
+        useViewButtons(this.model, () => this.model.root.save());
         useSetupView({
             beforeLeave: () => {
                 if (this.model.root.isDirty) {
