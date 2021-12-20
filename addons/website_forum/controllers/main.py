@@ -172,7 +172,10 @@ class WebsiteForum(WebsiteProfile):
             fields=['id', 'name'],
             limit=int(limit),
         )
-        return json.dumps(data)
+        return request.make_response(
+            json.dumps(data),
+            headers=[("Content-Type", "application/json")]
+        )
 
     @http.route(['/forum/<model("forum.forum"):forum>/tag', '/forum/<model("forum.forum"):forum>/tag/<string:tag_char>'], type='http', auth="public", website=True, sitemap=False)
     def tags(self, forum, tag_char=None, **post):
