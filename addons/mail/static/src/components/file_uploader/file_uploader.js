@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model/use_component_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { replace } from '@mail/model/model_field_command';
 
@@ -23,6 +24,7 @@ export class FileUploader extends Component {
      */
     setup() {
         super.setup();
+        useComponentToModel({ fieldName: 'component', modelName: 'FileUploaderView', propNameAsRecordLocalId: 'localId' });
         this._fileInputRef = useRef('fileInput');
         this._fileUploadId = _.uniqueId('o_FileUploader_fileupload');
     }
@@ -31,8 +33,8 @@ export class FileUploader extends Component {
     // Public
     //--------------------------------------------------------------------------
 
-    get composerView() {
-        return this.messaging.models['ComposerView'].get(this.props.composerViewLocalId);
+    get fileUploaderView() {
+        return this.messaging && this.messaging.models['FileUploaderView'].get(this.props.localId);
     }
 
     /**
@@ -40,20 +42,12 @@ export class FileUploader extends Component {
      * @returns {Promise}
      */
     async uploadFiles(files) {
-        await this._performUpload({
-            composer: this.composerView && this.composerView.composer,
-            files,
-            thread: this.thread,
-        });
+        await this._performUpload({ files });
         this._fileInputRef.el.value = '';
     }
 
     openBrowserFileUploader() {
         this._fileInputRef.el.click();
-    }
-
-    get thread() {
-        return this.messaging.models['Thread'].get(this.props.threadLocalId);
     }
 
     //--------------------------------------------------------------------------
@@ -81,12 +75,14 @@ export class FileUploader extends Component {
     /**
      * @private
      * @param {Object} param0
-     * @param {Composer} param0.composer
      * @param {FileList|Array} param0.files
-     * @param {Thread} param0.thread
      * @returns {Promise}
      */
-    async _performUpload({ composer, files, thread }) {
+    async _performUpload({ files }) {
+        const composer = this.fileUploaderView.composerView && this.fileUploaderView.composerView.composer; // save before async
+        const thread = this.fileUploaderView.thread; // save before async
+        const chatter = this.fileUploaderView.attachmentBoxView && this.fileUploaderView.attachmentBoxView.chatter; // save before async
+        const activity = this.fileUploaderView.activityView && this.fileUploaderView.activityView.activity; // save before async
         const uploadingAttachments = new Map();
         for (const file of files) {
             uploadingAttachments.set(file, this.messaging.models['Attachment'].insert({
@@ -99,6 +95,7 @@ export class FileUploader extends Component {
                 originThread: (!composer && thread) ? replace(thread) : undefined,
             }));
         }
+        const attachments = [];
         for (const file of files) {
             const uploadingAttachment = uploadingAttachments.get(file);
             if (!uploadingAttachment.exists()) {
@@ -121,12 +118,19 @@ export class FileUploader extends Component {
                 if ((composer && !composer.exists()) || (thread && !thread.exists())) {
                     return;
                 }
-                this._onAttachmentUploaded({ attachmentData, composer, thread });
+                const attachment = this._onAttachmentUploaded({ attachmentData, composer, thread });
+                attachments.push(attachment);
             } catch (e) {
                 if (e.name !== 'AbortError') {
                     throw e;
                 }
             }
+        }
+        if (chatter && chatter.exists() && chatter.hasParentReloadOnAttachmentsChanged) {
+            chatter.reloadParentView();
+        }
+        if (activity && activity.exists()) {
+            activity.markAsDone({ attachments });
         }
     }
 
@@ -137,9 +141,10 @@ export class FileUploader extends Component {
     /**
      * @private
      * @param {Object} param0
-     * @param {Object} attachmentData
+     * @param {Object} param0.attachmentData
      * @param {Composer} param0.composer
      * @param {Thread} param0.thread
+     * @returns {Attachment}
      */
     _onAttachmentUploaded({ attachmentData, composer, thread }) {
         if (attachmentData.error || !attachmentData.id) {
@@ -149,14 +154,11 @@ export class FileUploader extends Component {
             });
             return;
         }
-        const attachment = this.messaging.models['Attachment'].insert({
+        return this.messaging.models['Attachment'].insert({
             composer: composer && replace(composer),
             originThread: (!composer && thread) ? replace(thread) : undefined,
             ...attachmentData,
         });
-        if (this.props.onAttachmentCreated) {
-            this.props.onAttachmentCreated({ attachment });
-        }
     }
 
     /**
@@ -174,20 +176,7 @@ export class FileUploader extends Component {
 }
 
 Object.assign(FileUploader, {
-    props: {
-        composerViewLocalId: {
-            type: String,
-            optional: true,
-        },
-        onAttachmentCreated: {
-            type: Function,
-            optional: true,
-        },
-        threadLocalId: {
-            type: String,
-            optional: true,
-        },
-    },
+    props: { localId: String },
     template: 'mail.FileUploader',
 });
 

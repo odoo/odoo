@@ -1,14 +1,14 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many2one } from '@mail/model/model_field';
+import { attr, many2one, one2one } from '@mail/model/model_field';
+import { clear, insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'ActivityView',
     identifyingFields: ['activityBoxView', 'activity'],
     lifecycleHooks: {
         _created() {
-            this.onAttachmentCreated = this.onAttachmentCreated.bind(this);
             this.onClickActivity = this.onClickActivity.bind(this);
             this.onClickCancel = this.onClickCancel.bind(this);
             this.onClickDetailsButton = this.onClickDetailsButton.bind(this);
@@ -17,13 +17,6 @@ registerModel({
         }
     },
     recordMethods: {
-        /**
-         * @param {Object} detail
-         * @param {Attachment} detail.attachment
-         */
-        onAttachmentCreated(detail) {
-            this.activity.markAsDone({ attachments: [detail.attachment] });
-        },
         /**
          * Handles the click on a link inside the activity.
          *
@@ -68,7 +61,14 @@ registerModel({
          * explorer for upload.
          */
         onClickUploadDocument() {
-            this.fileUploaderRef.comp.openBrowserFileUploader();
+            this.fileUploaderView.component.openBrowserFileUploader();
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeFileUploaderView() {
+            return this.activity.category === 'upload_file' ? insertAndReplace() : clear();
         },
     },
     fields: {
@@ -88,9 +88,10 @@ registerModel({
         areDetailsVisible: attr({
             default: false,
         }),
-        /**
-         * States the OWL FileUploader component of this activity view.
-         */
-        fileUploaderRef: attr(),
+        fileUploaderView: one2one('FileUploaderView', {
+            compute: '_computeFileUploaderView',
+            inverse: 'activityView',
+            isCausal: true,
+        }),
     },
 });

@@ -1,12 +1,6 @@
 /** @odoo-module **/
 
-import {
-    afterEach,
-    beforeEach,
-    createRootMessagingComponent,
-    nextAnimationFrame,
-    start,
-} from '@mail/utils/test_utils';
+import { afterEach, beforeEach, start } from '@mail/utils/test_utils';
 
 import { file } from 'web.test_utils';
 
@@ -19,19 +13,13 @@ QUnit.module('file_uploader_tests.js', {
         beforeEach(this);
         this.components = [];
 
-        this.createFileUploaderComponent = async props => {
-            await createRootMessagingComponent(this, "FileUploader", {
-                props,
-                target: this.widget.el,
-            });
-        };
-
         this.start = async params => {
-            const { env, widget } = await start(Object.assign({}, params, {
-                data: this.data,
-            }));
+            const res = await start({ ...params, data: this.data });
+            const { components, env, widget } = res;
             this.env = env;
+            this.components = components;
             this.widget = widget;
+            return res;
         };
     },
     afterEach() {
@@ -42,19 +30,27 @@ QUnit.module('file_uploader_tests.js', {
 QUnit.test('no conflicts between file uploaders', async function (assert) {
     assert.expect(2);
 
-    await this.start();
-    await this.createFileUploaderComponent();
-    await this.createFileUploaderComponent();
+    this.data['res.partner'].records.push({ id: 100 }, { id: 101 });
+    const { afterNextRender, createChatterContainerComponent } = await this.start();
+    await createChatterContainerComponent({
+        threadId: 100,
+        threadModel: 'res.partner',
+    });
+    await createChatterContainerComponent({
+        threadId: 101,
+        threadModel: 'res.partner',
+    });
+    await afterNextRender(() => {
+        document.querySelectorAll('.o_ChatterTopbar_buttonAttachments')[0].click();
+        document.querySelectorAll('.o_ChatterTopbar_buttonAttachments')[1].click();
+    });
+
     const file1 = await createFile({
         name: 'text1.txt',
         content: 'hello, world',
         contentType: 'text/plain',
     });
-    inputFiles(
-        document.querySelectorAll('.o_FileUploader_input')[0],
-        [file1]
-    );
-    await nextAnimationFrame(); // we can't use afterNextRender as fileInput are display:none
+    await afterNextRender(() => inputFiles(document.querySelectorAll('.o_FileUploader_input')[0], [file1]));
     assert.strictEqual(
         this.messaging.models['Attachment'].all().length,
         1,
@@ -66,11 +62,7 @@ QUnit.test('no conflicts between file uploaders', async function (assert) {
         content: 'hello, world',
         contentType: 'text/plain',
     });
-    inputFiles(
-        document.querySelectorAll('.o_FileUploader_input')[1],
-        [file2]
-    );
-    await nextAnimationFrame();
+    await afterNextRender(() => inputFiles(document.querySelectorAll('.o_FileUploader_input')[1], [file2]));
     assert.strictEqual(
         this.messaging.models['Attachment'].all().length,
         2,

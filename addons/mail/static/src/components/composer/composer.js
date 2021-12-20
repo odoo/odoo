@@ -24,11 +24,6 @@ export class Composer extends Component {
          */
         this._emojisPopoverRef = useRef('emojisPopover');
         /**
-         * Reference of the file uploader.
-         * Useful to programmatically prompts the browser file uploader.
-         */
-        this._fileUploaderRef = useRef('fileUploader');
-        /**
          * Reference of the text input component. Useful to save state in store
          * before inserting emoji.
          */
@@ -165,7 +160,7 @@ export class Composer extends Component {
      * @private
      */
     _onClickAddAttachment() {
-        this._fileUploaderRef.comp.openBrowserFileUploader();
+        this.composerView.fileUploaderView.component.openBrowserFileUploader();
         if (!this.messaging.device.isMobileDevice) {
             this.composerView.update({ doFocus: true });
         }
@@ -236,7 +231,7 @@ export class Composer extends Component {
      * @param {FileList} detail.files
      */
     async _onDropZoneFilesDropped(detail) {
-        await this._fileUploaderRef.comp.uploadFiles(detail.files);
+        await this.composerView.fileUploaderView.component.uploadFiles(detail.files);
         this.isDropZoneVisible.value = false;
     }
 
@@ -294,7 +289,7 @@ export class Composer extends Component {
         if (!ev.clipboardData || !ev.clipboardData.files) {
             return;
         }
-        await this._fileUploaderRef.comp.uploadFiles(ev.clipboardData.files);
+        await this.composerView.fileUploaderView.component.uploadFiles(ev.clipboardData.files);
     }
 
 }
