@@ -2,7 +2,16 @@
 
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { Many2OneField } from "@web/fields/many2one_field";
-import { click, patchWithCleanup, triggerEvent, triggerEvents } from "../helpers/utils";
+import { browser } from "@web/core/browser/browser";
+import {
+    click,
+    getFixture,
+    makeDeferred,
+    nextTick,
+    patchWithCleanup,
+    triggerEvent,
+    triggerEvents,
+} from "../helpers/utils";
 import { makeView, setupViewRegistries } from "../views/helpers";
 
 let serverData;
@@ -211,26 +220,33 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.skip("many2ones in form views", async function (assert) {
         assert.expect(5);
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                "<group>" +
-                '<field name="trululu" string="custom label"/>' +
-                "</group>" +
-                "</sheet>" +
-                "</form>",
-            archs: {
-                "partner,false,form": '<form string="Partners"><field name="display_name"/></form>',
-            },
-            res_id: 1,
-            mockRPC: function (route, args) {
-                if (args.method === "get_formview_action") {
+
+        serverData.views = {
+            "partner,false,form": `
+                <form>
+                    <field name="display_name" />
+                </form>
+            `,
+        };
+
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="trululu" />
+                        </group>
+                    </sheet>
+                </form>
+            `,
+            mockRPC(route, { args, method }) {
+                if (method === "get_formview_action") {
                     assert.deepEqual(
-                        args.args[0],
+                        args[0],
                         [4],
                         "should call get_formview_action with correct id"
                     );
@@ -241,15 +257,10 @@ QUnit.module("Fields", (hooks) => {
                         res_model: "res.partner",
                     });
                 }
-                if (args.method === "get_formview_id") {
-                    assert.deepEqual(
-                        args.args[0],
-                        [4],
-                        "should call get_formview_id with correct id"
-                    );
+                if (method === "get_formview_id") {
+                    assert.deepEqual(args[0], [4], "should call get_formview_id with correct id");
                     return Promise.resolve(false);
                 }
-                return this._super(route, args);
             },
         });
 
@@ -261,65 +272,66 @@ QUnit.module("Fields", (hooks) => {
             );
         });
 
-        assert.strictEqual(form.$("a.o_form_uri:contains(aaa)").length, 1, "should contain a link");
-        await testUtils.dom.click(form.$("a.o_form_uri"));
+        assert.containsOnce(form.el, "a.o_form_uri:contains(aaa)", "should contain a link");
+        await click(form.el, "a.o_form_uri");
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el, ".o_form_button_edit");
 
-        await testUtils.dom.click(form.$(".o_external_button"));
+        await click(form.el, ".o_external_button");
         assert.strictEqual(
-            $(".modal .modal-title").text().trim(),
+            document.body.querySelector(".modal .modal-title").textContent.trim(),
             "Open: custom label",
             "dialog title should display the custom string label"
         );
 
         // TODO: test that we can edit the record in the dialog, and that
         // the value is correctly updated on close
-        form.destroy();
     });
 
     QUnit.skip("editing a many2one, but not changing anything", async function (assert) {
         assert.expect(2);
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                '<field name="trululu"/>' +
-                "</sheet>" +
-                "</form>",
-            archs: {
-                "partner,false,form": '<form string="Partners"><field name="display_name"/></form>',
-            },
-            res_id: 1,
-            mockRPC: function (route, args) {
-                if (args.method === "get_formview_id") {
-                    assert.deepEqual(
-                        args.args[0],
-                        [4],
-                        "should call get_formview_id with correct id"
-                    );
+
+        serverData.views = {
+            "partner,false,form": `
+                <form>
+                    <field name="display_name" />
+                </form>
+            `,
+        };
+
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <field name="trululu" />
+                    </sheet>
+                </form>
+            `,
+            mockRPC(route, { args, method }) {
+                if (method === "get_formview_id") {
+                    assert.deepEqual(args[0], [4], "should call get_formview_id with correct id");
                     return Promise.resolve(false);
                 }
-                return this._super(route, args);
             },
             viewOptions: {
                 ids: [1, 2],
             },
         });
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el, ".o_form_button_edit");
 
         // click on the external button (should do an RPC)
-        await testUtils.dom.click(form.$(".o_external_button"));
+        await click(form.el, ".o_external_button");
         // save and close modal
-        await testUtils.dom.click($(".modal .modal-footer .btn-primary:first"));
+        await click(document.body, ".modal .modal-footer .btn-primary");
         // save form
-        await testUtils.form.clickSave(form);
+        await click(form.el, ".o_form_button_save");
         // click next on pager
-        await testUtils.dom.click(form.el.querySelector(".o_pager .o_pager_next"));
+        await click(form.el, ".o_pager .o_pager_next");
 
         // this checks that the view did not ask for confirmation that the
         // record is dirty
@@ -328,80 +340,84 @@ QUnit.module("Fields", (hooks) => {
             "2 / 2",
             "pager should be at second page"
         );
-        form.destroy();
     });
 
-    QUnit.skip("context in many2one and default get", async function (assert) {
+    QUnit.test("context in many2one and default get", async function (assert) {
         assert.expect(1);
 
-        this.data.partner.fields.int_field.default = 14;
-        this.data.partner.fields.trululu.default = 2;
+        serverData.models.partner.fields.int_field.default = 14;
+        serverData.models.partner.fields.trululu.default = 2;
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                '<field name="int_field"/>' +
-                '<field name="trululu"  context="{\'blip\':int_field}" options=\'{"always_reload": True}\'/>' +
-                "</form>",
-            mockRPC: function (route, args) {
-                if (args.method === "name_get") {
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="int_field" />
+                    <field name="trululu" context="{'blip': int_field}" options="{'always_reload': 1}" />
+                </form>
+            `,
+            mockRPC(route, { method, kwargs }) {
+                if (method === "name_get") {
                     assert.strictEqual(
-                        args.kwargs.context.blip,
+                        kwargs.context.blip,
                         14,
                         "context should have been properly sent to the nameget rpc"
                     );
                 }
-                return this._super(route, args);
             },
         });
-        form.destroy();
     });
 
     QUnit.skip(
         "editing a many2one (with form view opened with external button)",
         async function (assert) {
             assert.expect(1);
-            var form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
-                arch:
-                    '<form string="Partners">' +
-                    "<sheet>" +
-                    '<field name="trululu"/>' +
-                    "</sheet>" +
-                    "</form>",
-                archs: {
-                    "partner,false,form": '<form string="Partners"><field name="foo"/></form>',
-                },
-                res_id: 1,
-                mockRPC: function (route, args) {
-                    if (args.method === "get_formview_id") {
+
+            serverData.views = {
+                "partner,false,form": `
+                    <form>
+                        <field name="foo" />
+                    </form>
+                `,
+            };
+
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
+                    <form>
+                        <sheet>
+                            <field name="trululu" />
+                        </sheet>
+                    </form>
+                `,
+                mockRPC(route, { method }) {
+                    if (method === "get_formview_id") {
                         return Promise.resolve(false);
                     }
-                    return this._super(route, args);
                 },
                 viewOptions: {
                     ids: [1, 2],
                 },
             });
 
-            await testUtils.form.clickEdit(form);
+            await click(form.el, ".o_form_button_edit");
 
             // click on the external button (should do an RPC)
-            await testUtils.dom.click(form.$(".o_external_button"));
+            await click(form.el, ".o_external_button");
 
             await testUtils.fields.editInput($('.modal input[name="foo"]'), "brandon");
 
             // save and close modal
-            await testUtils.dom.click($(".modal .modal-footer .btn-primary:first"));
+            await click(document.body, ".modal .modal-footer .btn-primary");
             // save form
-            await testUtils.form.clickSave(form);
+            await click(form.el, ".o_form_button_save");
             // click next on pager
-            await testUtils.dom.click(form.el.querySelector(".o_pager .o_pager_next"));
+            await click(form.el, ".o_pager .o_pager_next");
 
             // this checks that the view did not ask for confirmation that the
             // record is dirty
@@ -410,7 +426,6 @@ QUnit.module("Fields", (hooks) => {
                 "2 / 2",
                 "pager should be at second page"
             );
-            form.destroy();
         }
     );
 
@@ -528,52 +543,57 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(2);
 
-            this.data.turtle.records[1].turtle_trululu = 2;
+            serverData.models.turtle.records[1].turtle_trululu = 2;
+            serverData.views = {
+                "turtle,false,form": `
+                    <form>
+                        <field name="display_name" />
+                        <field name="turtle_trululu" context="{'show_address': 1}" options="{'always_reload': 1}" />
+                    </form>
+                `,
+                "turtle,false,list": `
+                    <tree>
+                        <field name="display_name" />
+                    </tree>
+                `,
+            };
 
-            var form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
-                arch:
-                    '<form string="Partners">' +
-                    '<field name="display_name"/>' +
-                    '<field name="turtles"/>' +
-                    "</form>",
-                res_id: 1,
-                archs: {
-                    "turtle,false,form":
-                        '<form string="T">' +
-                        '<field name="display_name"/>' +
-                        '<field name="turtle_trululu" context="{\'show_address\': 1}" options="{\'always_reload\': True}"/>' +
-                        "</form>",
-                    "turtle,false,list": "<tree>" + '<field name="display_name"/>' + "</tree>",
-                },
-                mockRPC: function (route, args) {
-                    if (args.method === "name_get") {
-                        return this._super(route, args).then(function (result) {
-                            if (args.model === "partner" && args.kwargs.context.show_address) {
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                resId: 1,
+                arch: `
+                    <form>
+                        <field name="display_name" />
+                        <field name="turtles" />
+                    </form>
+                `,
+                mockRPC(route, { kwargs, method, model }, performRPC) {
+                    if (method === "name_get") {
+                        return performRPC(...arguments).then((result) => {
+                            if (model === "partner" && kwargs.context.show_address) {
                                 result[0][1] += "\nrue morgue\nparis 75013";
                             }
                             return result;
                         });
                     }
-                    return this._super(route, args);
                 },
             });
             // click the turtle field, opens a modal with the turtle form view
-            await testUtils.dom.click(form.$(".o_data_row:first td.o_data_cell"));
+            await click(form.el, ".o_data_row td.o_data_cell");
 
             assert.strictEqual(
-                $('[name="turtle_trululu"] .o_input').val(),
+                document.body.querySelector('[name="turtle_trululu"] .o_input').value,
                 "second record",
                 "many2one value should be displayed in input"
             );
             assert.strictEqual(
-                $('[name="turtle_trululu"] .o_field_many2one_extra').text(),
+                document.body.querySelector('[name="turtle_trululu"] .o_field_many2one_extra')
+                    .textContent,
                 "rue morgueparis 75013",
                 "The partner's address should be displayed"
             );
-            form.destroy();
         }
     );
 
@@ -582,114 +602,103 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(2);
 
-            this.data.turtle.records[1].turtle_trululu = 2;
+            serverData.models.turtle.records[1].turtle_trululu = 2;
+            serverData.views = {
+                "turtle,false,form": `
+                    <form>
+                        <field name="display_name" />
+                        <field name="turtle_trululu" context="{'show_address': 1}" options="{'always_reload': 1}" />
+                    </form>
+                `,
+                "turtle,false,list": `
+                    <tree>
+                        <field name="display_name" />
+                        <field name="turtle_trululu" />
+                    </tree>
+                `,
+            };
 
-            var form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
-                arch:
-                    '<form string="Partners">' +
-                    '<field name="display_name"/>' +
-                    '<field name="turtles"/>' +
-                    "</form>",
-                res_id: 1,
-                archs: {
-                    "turtle,false,form":
-                        '<form string="T">' +
-                        '<field name="display_name"/>' +
-                        '<field name="turtle_trululu" context="{\'show_address\': 1}" options="{\'always_reload\': True}"/>' +
-                        "</form>",
-                    "turtle,false,list":
-                        "<tree>" +
-                        '<field name="display_name"/>' +
-                        '<field name="turtle_trululu"/>' +
-                        "</tree>",
-                },
-                mockRPC: function (route, args) {
-                    if (args.method === "name_get") {
-                        return this._super(route, args).then(function (result) {
-                            if (args.model === "partner" && args.kwargs.context.show_address) {
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                resId: 1,
+                arch: `
+                    <form>
+                        <field name="display_name" />
+                        <field name="turtles" />
+                    </form>
+                `,
+                mockRPC(route, { kwargs, method, model }, performRPC) {
+                    if (method === "name_get") {
+                        return performRPC(...arguments).then((result) => {
+                            if (model === "partner" && kwargs.context.show_address) {
                                 result[0][1] += "\nrue morgue\nparis 75013";
                             }
                             return result;
                         });
                     }
-                    return this._super(route, args);
                 },
             });
             // click the turtle field, opens a modal with the turtle form view
-            await testUtils.dom.click(form.$(".o_data_row:first"));
+            await click(form.el, ".o_data_row");
 
             assert.strictEqual(
-                $('.modal [name="turtle_trululu"] .o_input').val(),
+                document.body.querySelector('.modal [name="turtle_trululu"] .o_input').value,
                 "second record",
                 "many2one value should be displayed in input"
             );
             assert.strictEqual(
-                $(".modal [name=turtle_trululu] .o_field_many2one_extra").text(),
+                document.body.querySelector(".modal [name=turtle_trululu] .o_field_many2one_extra")
+                    .textContent,
                 "rue morgueparis 75013",
                 "The partner's address should be displayed"
             );
-            form.destroy();
         }
     );
 
     QUnit.skip("many2ones in form views with search more", async function (assert) {
         assert.expect(3);
-        this.data.partner.records.push(
-            {
-                id: 5,
-                display_name: "Partner 4",
-            },
-            {
-                id: 6,
-                display_name: "Partner 5",
-            },
-            {
-                id: 7,
-                display_name: "Partner 6",
-            },
-            {
-                id: 8,
-                display_name: "Partner 7",
-            },
-            {
-                id: 9,
-                display_name: "Partner 8",
-            },
-            {
-                id: 10,
-                display_name: "Partner 9",
-            }
-        );
-        this.data.partner.fields.datetime.searchable = true;
+
+        for (let i = 5; i < 11; i++) {
+            serverData.models.partner.records.push({ id: i, display_name: `Partner ${i}` });
+        }
+        serverData.models.partner.fields.datetime.searchable = true;
+        serverData.views = {
+            "partner,false,search": `
+                <search>
+                    <field name="datetime" />
+                </search>
+            `,
+            "partner,false,list": `
+                <tree>
+                    <field name="display_name" />
+                </tree>
+            `,
+        };
 
         // add custom filter needs this
         patchWithCleanup(browser, {
             setTimeout: (fn) => fn(),
         });
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                "<group>" +
-                '<field name="trululu"/>' +
-                "</group>" +
-                "</sheet>" +
-                "</form>",
-            archs: {
-                "partner,false,list": '<tree><field name="display_name"/></tree>',
-                "partner,false,search": '<search><field name="datetime"/></search>',
-            },
-            res_id: 1,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="trululu" />
+                        </group>
+                    </sheet>
+                </form>
+            `,
         });
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el, ".o_form_button_edit");
 
         await testUtils.fields.many2one.clickOpenDropdown("trululu");
         await testUtils.fields.many2one.clickItem("trululu", "Search");
@@ -708,7 +717,6 @@ QUnit.module("Fields", (hooks) => {
         await cpHelpers.applyFilter(modal);
 
         assert.strictEqual($("tr.o_data_row").length, 0, "should display 0 records");
-        form.destroy();
     });
 
     QUnit.skip(
@@ -716,47 +724,52 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(10);
 
-            this.data.partner.onchanges.user_id = function () {};
-            this.data.user.fields.other_field = { string: "Other Field", type: "char" };
-            var form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
-                arch:
-                    '<form string="Partners">' +
-                    "<sheet>" +
-                    "<group>" +
-                    '<field name="user_id"/>' +
-                    "</group>" +
-                    "</sheet>" +
-                    "</form>",
-                archs: {
-                    "user,false,form": '<form string="Users"><field name="other_field"/></form>',
-                },
-                res_id: 1,
-                mockRPC: function (route, args) {
-                    assert.step(args.method);
-                    if (args.method === "get_formview_id") {
+            serverData.models.partner.onchanges.user_id = function () {};
+            serverData.models.user.fields.other_field = { string: "Other Field", type: "char" };
+            serverData.views = {
+                "user,false,form": `
+                    <form>
+                        <field name="other_field" />
+                    </form>
+                `,
+            };
+
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
+                    <form>
+                        <sheet>
+                            <group>
+                                <field name="user_id" />
+                            </group>
+                        </sheet>
+                    </form>
+                `,
+                mockRPC(route, { args, method }) {
+                    assert.step(method);
+                    if (method === "get_formview_id") {
                         return Promise.resolve(false);
                     }
-                    if (args.method === "onchange") {
+                    if (method === "onchange") {
                         assert.strictEqual(
-                            args.args[1].user_id,
+                            args[1].user_id,
                             17,
                             "onchange is triggered with correct user_id"
                         );
                     }
-                    return this._super(route, args);
                 },
             });
 
             // open the many2one in form view and change something
-            await testUtils.form.clickEdit(form);
-            await testUtils.dom.click(form.$(".o_external_button"));
+            await click(form.el, ".o_form_button_edit");
+            await click(form.el, ".o_external_button");
             await testUtils.fields.editInput($('.modal-body input[name="other_field"]'), "wood");
 
             // save the modal and make sure an onchange is triggered
-            await testUtils.dom.click($(".modal .modal-footer .btn-primary").first());
+            await click(document.body, ".modal .modal-footer .btn-primary");
             assert.verifySteps([
                 "read",
                 "get_formview_id",
@@ -769,32 +782,32 @@ QUnit.module("Fields", (hooks) => {
 
             // save the main record, and check that no extra rpcs are done (record
             // is not dirty, only a related record was modified)
-            await testUtils.form.clickSave(form);
+            await click(form.el, ".o_form_button_save");
             assert.verifySteps([]);
-            form.destroy();
         }
     );
 
     QUnit.skip("many2one doesn't trigger field_change when being emptied", async function (assert) {
         assert.expect(2);
 
-        const list = await createView({
+        const list = await makeView({
+            type: "list",
+            resModel: "partner",
+            serverData,
             arch: `
                 <tree multi_edit="1">
                     <field name="trululu"/>
-                </tree>`,
-            data: this.data,
-            model: "partner",
-            View: ListView,
+                </tree>
+            `,
         });
 
         // Select two records
-        await testUtils.dom.click(list.$(".o_data_row:eq(0) .o_list_record_selector input"));
-        await testUtils.dom.click(list.$(".o_data_row:eq(1) .o_list_record_selector input"));
+        await click(list.el.querySelectorAll(".o_data_row")[0], ".o_list_record_selector input");
+        await click(list.el.querySelectorAll(".o_data_row")[1], ".o_list_record_selector input");
 
-        await testUtils.dom.click(list.$(".o_data_row:first() .o_data_cell:first()"));
+        await click(list.el.querySelector(".o_data_row .o_data_cell"));
 
-        const $input = list.$(".o_field_widget[name=trululu] input");
+        const $input = list.el.querySelector(".o_field_widget[name=trululu] input");
 
         await testUtils.fields.editInput($input, "");
         await testUtils.dom.triggerEvents($input, ["keyup"]);
@@ -812,29 +825,36 @@ QUnit.module("Fields", (hooks) => {
             ".modal",
             "Saving should be triggered when selecting a value"
         );
-        await testUtils.dom.click($(".modal .btn-primary"));
-
-        list.destroy();
+        await click(document.body, ".modal .btn-primary");
     });
 
     QUnit.skip("focus tracking on a many2one in a list", async function (assert) {
         assert.expect(4);
 
-        const list = await createView({
-            arch: '<tree editable="top"><field name="trululu"/></tree>',
-            archs: {
-                "partner,false,form": '<form string="Partners"><field name="foo"/></form>',
-            },
-            data: this.data,
-            model: "partner",
-            View: ListView,
+        serverData.views = {
+            "partner,false,form": `
+                <form>
+                    <field name="foo" />
+                </form>
+            `,
+        };
+
+        const list = await makeView({
+            type: "list",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <tree editable="top">
+                    <field name="trululu"/>
+                </tree>
+            `,
         });
 
         // Select two records
-        await testUtils.dom.click(list.$(".o_data_row:eq(0) .o_list_record_selector input"));
-        await testUtils.dom.click(list.$(".o_data_row:eq(1) .o_list_record_selector input"));
+        await click(list.el.querySelectorAll(".o_data_row")[0], ".o_list_record_selector input");
+        await click(list.el.querySelectorAll(".o_data_row")[1], ".o_list_record_selector input");
 
-        await testUtils.dom.click(list.$(".o_data_row:first() .o_data_cell:first()"));
+        await click(list, ".o_data_row .o_data_cell");
 
         const input = list.$(".o_data_row:first() .o_data_cell:first() input")[0];
 
@@ -846,7 +866,7 @@ QUnit.module("Fields", (hooks) => {
         // should be only one modal (the "Create" one) and none for saving changes.
         assert.containsOnce(document.body, ".modal", "There should be only one modal");
 
-        await testUtils.dom.click($(".modal .btn:not(.btn-primary)"));
+        await click(document.body, ".modal .btn:not(.btn-primary)");
 
         assert.strictEqual(
             document.activeElement,
@@ -854,8 +874,6 @@ QUnit.module("Fields", (hooks) => {
             "Input should be focused after dialog closes"
         );
         assert.strictEqual(input.value, "", "Input should be empty after discard");
-
-        list.destroy();
     });
 
     QUnit.test('many2one fields with option "no_open"', async function (assert) {
@@ -977,36 +995,42 @@ QUnit.module("Fields", (hooks) => {
         assert.expect(17);
 
         // create 10 partners to have the 'Search More' option in the autocomplete dropdown
-        for (var i = 0; i < 10; i++) {
-            var id = 20 + i;
-            this.data.partner.records.push({ id: id, display_name: "Partner " + id });
+        for (let i = 0; i < 10; i++) {
+            const id = 20 + i;
+            serverData.models.partner.records.push({ id, display_name: `Partner ${id}` });
         }
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                "<group>" +
-                '<field name="trululu"/>' +
-                "</group>" +
-                "</sheet>" +
-                "</form>",
-            res_id: 1,
-            archs: {
-                "partner,false,list": '<tree string="Partners"><field name="display_name"/></tree>',
-                "partner,false,search":
-                    '<search string="Partners">' +
-                    '<field name="display_name" string="Name"/>' +
-                    "</search>",
-            },
-            mockRPC: function (route, args) {
+        serverData.views = {
+            "partner,false,list": `
+                <list>
+                    <field name="display_name" />
+                </list>
+            `,
+            "partner,false,search": `
+                <search>
+                    <field name="display_name" string="Name" />
+                </search>
+            `,
+        };
+
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="trululu" />
+                        </group>
+                    </sheet>
+                </form>
+            `,
+            mockRPC(route, { args }) {
                 if (route === "/web/dataset/call_kw/partner/write") {
-                    assert.strictEqual(args.args[1].trululu, 20, "should write the correct id");
+                    assert.strictEqual(args[1].trululu, 20, "should write the correct id");
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
@@ -1016,9 +1040,9 @@ QUnit.module("Fields", (hooks) => {
             event.data.callback({ user_context: {} });
         });
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el, ".o_form_button_edit");
 
-        var $dropdown = form.$(".o_field_many2one input").autocomplete("widget");
+        var $dropdown = form.el.querySelectorAll(".o_field_many2one input").autocomplete("widget");
 
         await testUtils.fields.many2one.clickOpenDropdown("trululu");
         assert.ok(
@@ -1052,7 +1076,7 @@ QUnit.module("Fields", (hooks) => {
         await testUtils.fields.many2one.clickHighlightedItem("trululu");
         assert.ok(!$dropdown.is(":visible"), "clicking on a value should close the dropdown");
         assert.strictEqual(
-            form.$(".o_field_many2one input").val(),
+            form.el.querySelectorAll(".o_field_many2one input").value,
             "first record",
             "value of the m2o should have been correctly updated"
         );
@@ -1061,43 +1085,51 @@ QUnit.module("Fields", (hooks) => {
         await testUtils.fields.many2one.clickOpenDropdown("trululu");
         // click on 'Search More' (mouseenter required by ui-autocomplete)
         await testUtils.fields.many2one.clickItem("trululu", "Search");
-        assert.ok($(".modal .o_list_view").length, "should have opened a list view in a modal");
-        assert.ok(
-            !$(".modal .o_list_view .o_list_record_selector").length,
+        assert.containsOnce(
+            document.body,
+            ".modal .o_list_view",
+            "should have opened a list view in a modal"
+        );
+        assert.containsNone(
+            document.body,
+            ".modal .o_list_view .o_list_record_selector",
             "there should be no record selector in the list view"
         );
-        assert.ok(
-            !$(".modal .modal-footer .o_select_button").length,
+        assert.containsNone(
+            document.body,
+            ".modal .modal-footer .o_select_button",
             "there should be no 'Select' button in the footer"
         );
-        assert.ok($(".modal tbody tr").length > 10, "list should contain more than 10 records");
+        assert.ok(
+            document.body.querySelectorAll(".modal tbody tr").length > 10,
+            "list should contain more than 10 records"
+        );
         const modal = document.body.querySelector(".modal");
         await cpHelpers.editSearch(modal, "P");
         await cpHelpers.validateSearch(modal);
-        assert.strictEqual(
-            $(".modal tbody tr").length,
+        assert.containsN(
+            document.body,
+            ".modal tbody tr",
             10,
             "list should be restricted to records containing a P (10 records)"
         );
         // choose a record
-        await testUtils.dom.click($(".modal tbody tr:contains(Partner 20)"));
-        assert.ok(!$(".modal").length, "should have closed the modal");
+        await click(document.body, ".modal tbody tr:contains(Partner 20)");
+        assert.containsNone(document.body, ".modal", "should have closed the modal");
         assert.ok(!$dropdown.is(":visible"), "should have closed the dropdown");
         assert.strictEqual(
-            form.$(".o_field_many2one input").val(),
+            form.el.querySelector(".o_field_many2one input").value,
             "Partner 20",
             "value of the m2o should have been correctly updated"
         );
 
         // save
-        await testUtils.form.clickSave(form);
+        await click(form.el, ".o_form_button_save");
         assert.strictEqual(
-            form.$("a.o_form_uri").text(),
+            form.el.querySelector("a.o_form_uri").textContent,
             "Partner 20",
             "should display correct value after save"
         );
-
-        form.destroy();
     });
 
     QUnit.test("many2one in non edit mode", async function (assert) {
@@ -1142,20 +1174,29 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skip("many2one with co-model whose name field is a many2one", async function (assert) {
         assert.expect(4);
 
-        this.data.product.fields.name = {
+        serverData.models.product.fields.name = {
             string: "User Name",
             type: "many2one",
             relation: "user",
         };
 
-        const form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch: '<form><field name="product_id"/></form>',
-            archs: {
-                "product,false,form": '<form><field name="name"/></form>',
-            },
+        serverData.views = {
+            "product,false,form": `
+                <form>
+                    <field name="name" />
+                </form>
+            `,
+        };
+
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="product_id" />
+                </form>
+            `,
         });
 
         await testUtils.fields.many2one.createAndEdit("product_id", "ABC");
@@ -1163,13 +1204,14 @@ QUnit.module("Fields", (hooks) => {
 
         // quick create 'new value'
         await testUtils.fields.many2one.searchAndClickItem("name", { search: "new value" });
-        assert.strictEqual($(".modal .o_field_many2one input").val(), "new value");
+        assert.strictEqual(
+            document.body.querySelector(".modal .o_field_many2one input").value,
+            "new value"
+        );
 
-        await testUtils.dom.click($(".modal .modal-footer .btn-primary")); // save in modal
+        await click(document.body, ".modal .modal-footer .btn-primary"); // save in modal
         assert.containsNone(document.body, ".modal .o_form_view");
-        assert.strictEqual(form.$(".o_field_many2one input").val(), "new value");
-
-        form.destroy();
+        assert.strictEqual(form.el.querySelector(".o_field_many2one input").value, "new value");
     });
 
     QUnit.test("many2one searches with correct value", async function (assert) {
@@ -1324,15 +1366,19 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skip("many2one field and list navigation", async function (assert) {
         assert.expect(3);
 
-        var list = await createView({
-            View: ListView,
-            model: "partner",
-            data: this.data,
-            arch: '<tree editable="bottom"><field name="trululu"/></tree>',
+        const list = await makeView({
+            type: "list",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <tree editable="bottom">
+                    <field name="trululu"/>
+                </tree>
+            `,
         });
 
         // edit first input, to trigger autocomplete
-        await testUtils.dom.click(list.$(".o_data_row .o_data_cell").first());
+        await click(list.el, ".o_data_row .o_data_cell");
         await testUtils.fields.editInput(list.$(".o_data_cell input"), "");
 
         // press keydown, to select first choice
@@ -1343,28 +1389,23 @@ QUnit.module("Fields", (hooks) => {
         var $dropdown = list.$(".o_field_many2one input").autocomplete("widget");
         assert.ok($dropdown.is(":visible"), "dropdown should be visible");
         assert.hasClass(
-            list.$(".o_data_row:eq(0)"),
+            list.el.querySelector(".o_data_row"),
             "o_selected_row",
             "first data row should still be selected"
         );
         assert.doesNotHaveClass(
-            list.$(".o_data_row:eq(1)"),
+            list.el.querySelectorAll(".o_data_row")[1],
             "o_selected_row",
             "second data row should not be selected"
         );
-
-        list.destroy();
     });
 
     QUnit.skip("standalone many2one field", async function (assert) {
         assert.expect(4);
 
-        var fixture = $("#qunit-fixture");
-        var self = this;
-
         var model = await testUtils.createModel({
             Model: BasicModel,
-            data: this.data,
+            serverData,
         });
         var record;
         model
@@ -1379,7 +1420,7 @@ QUnit.module("Fields", (hooks) => {
             .then(function (recordID) {
                 record = model.get(recordID);
             });
-        await testUtils.nextTick();
+        await nextTick();
         // create a new widget that uses the StandaloneFieldManagerMixin
         var StandaloneWidget = Widget.extend(StandaloneFieldManagerMixin, {
             init: function (parent) {
@@ -1391,7 +1432,7 @@ QUnit.module("Fields", (hooks) => {
         model.setParent(parent);
         await testUtils.mock.addMockEnvironment(parent, {
             data: self.data,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 assert.step(args.method);
                 return this._super.apply(this, arguments);
             },
@@ -1402,8 +1443,8 @@ QUnit.module("Fields", (hooks) => {
             noOpen: true,
         });
 
-        relField.appendTo(fixture);
-        await testUtils.nextTick();
+        relField.appendTo(getFixture());
+        await nextTick();
         await testUtils.fields.editInput($("input.o_input"), "xyzzrot");
 
         await testUtils.fields.many2one.clickItem("partner_id", "Create");
@@ -1414,9 +1455,6 @@ QUnit.module("Fields", (hooks) => {
             "should not have the button to open the record"
         );
         assert.verifySteps(["name_search", "name_create"]);
-
-        parent.destroy();
-        model.destroy();
     });
 
     // QUnit.skip('onchange on a many2one to a different model', async function (assert) {
@@ -1425,228 +1463,232 @@ QUnit.module("Fields", (hooks) => {
     // by the server, so it's hard to emulate it correctly
     //     assert.expect(2);
 
-    //     this.data.partner.records[0].product_id = 41;
-    //     this.data.partner.onchanges = {
+    //     serverData.models.partner.records[0].product_id = 41;
+    //     serverData.models.partner.onchanges = {
     //         foo: function(obj) {
     //             obj.product_id = 37;
     //         },
     //     };
 
-    //     var form = await createView({
-    //         View: FormView,
-    //         model: 'partner',
-    //         data: this.data,
+    //     const form = await makeView({
+    //         type: "form",
+    //         resModel: "partner",
+    //         serverData,
     //         arch: '<form>' +
     //                 '<field name="foo"/>' +
     //                 '<field name="product_id"/>' +
     //             '</form>',
-    //         res_id: 1,
+    //         resId: 1,
     //     });
-    //     await testUtils.form.clickEdit(form);
-    //     assert.strictEqual(form.$('input').eq(1).val(), 'xpad', "initial product_id val should be xpad");
+    //     await click(form.el, ".o_form_button_edit");
+    //     assert.strictEqual(form.el.querySelectorAll('input').eq(1).value, 'xpad', "initial product_id val should be xpad");
 
-    //     testUtils.fields.editInput(form.$('input').eq(0), "let us trigger an onchange");
+    //     testUtils.fields.editInput(form.el.querySelectorAll('input').eq(0), "let us trigger an onchange");
 
-    //     assert.strictEqual(form.$('input').eq(1).val(), 'xphone', "onchange should have been applied");
+    //     assert.strictEqual(form.el.querySelectorAll('input').eq(1).value, 'xphone', "onchange should have been applied");
     // });
 
     QUnit.skip("form: quick create then save directly", async function (assert) {
         assert.expect(5);
 
-        var prom = testUtils.makeTestPromise();
-        var newRecordID;
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch: "<form>" + '<field name="trululu"/>' + "</form>",
-            mockRPC: function (route, args) {
-                var result = this._super.apply(this, arguments);
-                if (args.method === "name_create") {
+        const def = makeDeferred();
+        let newRecordId;
+
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="trululu" />
+                </form>
+            `,
+            mockRPC(route, { args, method }, performRPC) {
+                if (method === "name_create") {
                     assert.step("name_create");
-                    return prom.then(_.constant(result)).then(function (nameGet) {
-                        newRecordID = nameGet[0];
+                    return def.then(performRPC(...arguments)).then((nameGet) => {
+                        newRecordId = nameGet[0];
                         return nameGet;
                     });
                 }
-                if (args.method === "create") {
+                if (method === "create") {
                     assert.step("create");
                     assert.strictEqual(
-                        args.args[0].trululu,
-                        newRecordID,
+                        args[0].trululu,
+                        newRecordId,
                         "should create with the correct m2o id"
                     );
                 }
-                return result;
             },
         });
         await testUtils.fields.many2one.searchAndClickItem("trululu", { search: "b" });
-        await testUtils.form.clickSave(form);
+        await click(form.el, ".o_form_button_save");
 
         assert.verifySteps(
             ["name_create"],
             "should wait for the name_create before creating the record"
         );
 
-        await prom.resolve();
-        await testUtils.nextTick();
+        await def.resolve();
+        await nextTick();
 
         assert.verifySteps(["create"]);
-        form.destroy();
     });
 
     QUnit.skip(
         "form: quick create for field that returns false after name_create call",
         async function (assert) {
             assert.expect(3);
-            const form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
-                arch: '<form><field name="trululu"/></form>',
-                mockRPC: function (route, args) {
-                    const result = this._super.apply(this, arguments);
-                    if (args.method === "name_create") {
+
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <form>
+                        <field name="trululu" />
+                    </form>
+                `,
+                mockRPC(route, { method }) {
+                    if (method === "name_create") {
                         assert.step("name_create");
                         // Resolve the name_create call to false. This is possible if
                         // _rec_name for the model of the field is unassigned.
                         return Promise.resolve(false);
                     }
-                    return result;
                 },
             });
             await testUtils.fields.many2one.searchAndClickItem("trululu", { search: "beam" });
             assert.verifySteps(["name_create"], "attempt to name_create");
             assert.strictEqual(
-                form.$(".o_input_dropdown input").val(),
+                form.el.querySelectorAll(".o_input_dropdown input").value,
                 "",
                 "the input should contain no text after search and click"
             );
-            form.destroy();
         }
     );
 
     QUnit.skip("list: quick create then save directly", async function (assert) {
         assert.expect(8);
 
-        var prom = testUtils.makeTestPromise();
-        var newRecordID;
-        var list = await createView({
-            View: ListView,
-            model: "partner",
-            data: this.data,
-            arch: '<tree editable="top">' + '<field name="trululu"/>' + "</tree>",
-            mockRPC: function (route, args) {
-                var result = this._super.apply(this, arguments);
-                if (args.method === "name_create") {
+        const def = makeDeferred();
+        let newRecordId;
+
+        const list = await makeView({
+            type: "list",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <tree editable="top">
+                    <field name="trululu" />
+                </tree>
+            `,
+            mockRPC(route, { args, method }, performRPC) {
+                if (method === "name_create") {
                     assert.step("name_create");
-                    return prom.then(_.constant(result)).then(function (nameGet) {
-                        newRecordID = nameGet[0];
+                    return def.then(performRPC(...arguments)).then((nameGet) => {
+                        newRecordId = nameGet[0];
                         return nameGet;
                     });
                 }
-                if (args.method === "create") {
+                if (method === "create") {
                     assert.step("create");
                     assert.strictEqual(
-                        args.args[0].trululu,
-                        newRecordID,
+                        args[0].trululu,
+                        newRecordId,
                         "should create with the correct m2o id"
                     );
                 }
-                return result;
             },
         });
 
-        await testUtils.dom.click(list.$buttons.find(".o_list_button_add"));
+        await click(list.el, ".o_list_button_add");
 
         await testUtils.fields.many2one.searchAndClickItem("trululu", { search: "b" });
         list.$buttons.find(".o_list_button_add").show();
-        testUtils.dom.click(list.$buttons.find(".o_list_button_add"));
+        click(list.el, ".o_list_button_add");
 
         assert.verifySteps(
             ["name_create"],
             "should wait for the name_create before creating the record"
         );
         assert.containsN(
-            list,
+            list.el,
             ".o_data_row",
             4,
             "should wait for the name_create before adding the new row"
         );
 
-        await prom.resolve();
-        await testUtils.nextTick();
+        await def.resolve();
+        await nextTick();
 
         assert.verifySteps(["create"]);
         assert.strictEqual(
-            list.$(".o_data_row:nth(1) .o_data_cell").text(),
+            list.el.querySelectorAll(".o_data_row")[1].querySelector(".o_data_cell").textContent,
             "b",
             "created row should have the correct m2o value"
         );
         assert.containsN(list, ".o_data_row", 5, "should have added the fifth row");
-
-        list.destroy();
     });
 
     QUnit.skip("list in form: quick create then save directly", async function (assert) {
         assert.expect(6);
 
-        var prom = testUtils.makeTestPromise();
-        var newRecordID;
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                "<form>" +
-                "<sheet>" +
-                '<field name="p">' +
-                '<tree editable="bottom">' +
-                '<field name="trululu"/>' +
-                "</tree>" +
-                "</field>" +
-                "</sheet>" +
-                "</form>",
-            mockRPC: function (route, args) {
-                var result = this._super.apply(this, arguments);
-                if (args.method === "name_create") {
+        const def = makeDeferred();
+        let newRecordId;
+
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <field name="p">
+                            <tree editable="bottom">
+                                <field name="trululu" />
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>
+            `,
+            mockRPC(route, { args, method }, performRPC) {
+                if (method === "name_create") {
                     assert.step("name_create");
-                    return prom.then(_.constant(result)).then(function (nameGet) {
-                        newRecordID = nameGet[0];
+                    return def.then(performRPC(...arguments)).then((nameGet) => {
+                        newRecordId = nameGet[0];
                         return nameGet;
                     });
                 }
-                if (args.method === "create") {
+                if (method === "create") {
                     assert.step("create");
                     assert.strictEqual(
-                        args.args[0].p[0][2].trululu,
-                        newRecordID,
+                        args[0].p[0][2].trululu,
+                        newRecordId,
                         "should create with the correct m2o id"
                     );
                 }
-                return result;
             },
         });
 
-        await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+        await click(form.el, ".o_field_x2many_list_row_add a");
         await testUtils.fields.many2one.searchAndClickItem("trululu", { search: "b" });
-        await testUtils.form.clickSave(form);
+        await click(form.el, ".o_form_button_save");
 
         assert.verifySteps(
             ["name_create"],
             "should wait for the name_create before creating the record"
         );
 
-        await prom.resolve();
-        await testUtils.nextTick();
+        await def.resolve();
+        await nextTick();
 
         assert.verifySteps(["create"]);
         assert.strictEqual(
-            form.$(".o_data_row:first .o_data_cell").text(),
+            form.el.querySelector(".o_data_row .o_data_cell").textContent,
             "b",
             "first row should have the correct m2o value"
         );
-        form.destroy();
     });
 
     QUnit.skip("list in form: quick create then add a new line directly", async function (assert) {
@@ -1657,72 +1699,74 @@ QUnit.module("Fields", (hooks) => {
         // wait for the name_create to return before trying to save the line.
         assert.expect(8);
 
-        this.data.partner.onchanges = {
+        serverData.models.partner.onchanges = {
             trululu: function () {},
         };
 
-        var M2O_DELAY = relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY;
-        relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = 0;
+        const def = makeDeferred();
+        let newRecordId;
 
-        var prom = testUtils.makeTestPromise();
-        var newRecordID;
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                "<form>" +
-                "<sheet>" +
-                '<field name="p">' +
-                '<tree editable="bottom">' +
-                '<field name="trululu" required="1"/>' +
-                "</tree>" +
-                "</field>" +
-                "</sheet>" +
-                "</form>",
-            mockRPC: function (route, args) {
-                var result = this._super.apply(this, arguments);
-                if (args.method === "name_create") {
-                    return prom.then(_.constant(result)).then(function (nameGet) {
-                        newRecordID = nameGet[0];
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <field name="p">
+                            <tree editable="bottom">
+                                <field name="trululu" required="1" />
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>
+            `,
+            mockRPC(route, { args, method }, performRPC) {
+                if (method === "name_create") {
+                    assert.step("name_create");
+                    return def.then(performRPC(...arguments)).then((nameGet) => {
+                        newRecordId = nameGet[0];
                         return nameGet;
                     });
                 }
-                if (args.method === "create") {
-                    assert.deepEqual(args.args[0].p[0][2].trululu, newRecordID);
+                if (method === "create") {
+                    assert.deepEqual(args[0].p[0][2].trululu, newRecordId);
                 }
-                return result;
             },
         });
 
-        await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
-        await testUtils.fields.editAndTrigger(form.$(".o_field_many2one input"), "b", "keydown");
+        await click(form.el, ".o_field_x2many_list_row_add a");
+        await testUtils.fields.editAndTrigger(
+            form.el.querySelectorAll(".o_field_many2one input"),
+            "b",
+            "keydown"
+        );
         await testUtils.fields.many2one.clickHighlightedItem("trululu");
-        await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+        await click(form.el, ".o_field_x2many_list_row_add a");
 
         assert.containsOnce(form, ".o_data_row", "there should still be only one row");
         assert.hasClass(
-            form.$(".o_data_row"),
+            form.el.querySelectorAll(".o_data_row"),
             "o_selected_row",
             "the row should still be in edition"
         );
 
-        await prom.resolve();
-        await testUtils.nextTick();
+        await def.resolve();
+        await nextTick();
 
         assert.strictEqual(
-            form.$(".o_data_row:first .o_data_cell").text(),
+            form.el.querySelector(".o_data_row .o_data_cell").textContent,
             "b",
             "first row should have the correct m2o value"
         );
         assert.containsN(form, ".o_data_row", 2, "there should now be 2 rows");
         assert.hasClass(
-            form.$(".o_data_row:nth(1)"),
+            form.el.querySelectorAll(".o_data_row")[1],
             "o_selected_row",
             "the second row should be in edition"
         );
 
-        await testUtils.form.clickSave(form);
+        await click(form.el, ".o_form_button_save");
 
         assert.containsOnce(
             form,
@@ -1730,50 +1774,47 @@ QUnit.module("Fields", (hooks) => {
             "there should be 1 row saved (the second one was empty and invalid)"
         );
         assert.strictEqual(
-            form.$(".o_data_row .o_data_cell").text(),
+            form.el.querySelector(".o_data_row .o_data_cell").textContent,
             "b",
             "should have the correct m2o value"
         );
-
-        relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;
-        form.destroy();
     });
 
     QUnit.skip("list in form: create with one2many with many2one", async function (assert) {
         assert.expect(1);
 
-        this.data.partner.fields.p.default = [[0, 0, { display_name: "new record", p: [] }]];
+        serverData.models.partner.fields.p.default = [
+            [0, 0, { display_name: "new record", p: [] }],
+        ];
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                "<form>" +
-                "<sheet>" +
-                '<field name="p">' +
-                '<tree editable="bottom">' +
-                '<field name="display_name"/>' +
-                '<field name="trululu"/>' +
-                "</tree>" +
-                "</field>" +
-                "</sheet>" +
-                "</form>",
-            mockRPC: function (route, args) {
-                if (args.method === "name_get") {
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <field name="p">
+                            <tree editable="bottom">
+                                <field name="display_name" />
+                                <field name="trululu" />
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>
+            `,
+            mockRPC(route, { method }) {
+                if (method === "name_get") {
                     throw new Error("Nameget should not be called");
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
         assert.strictEqual(
-            $("td.o_data_cell:first").text(),
+            form.el.querySelector("td.o_data_cell").textContent,
             "new record",
             "should have created the new record in the o2m with the correct name"
         );
-
-        form.destroy();
     });
 
     QUnit.skip(
@@ -1784,40 +1825,38 @@ QUnit.module("Fields", (hooks) => {
             // which is stupid, but this happens, so we have to handle it
             assert.expect(1);
 
-            this.data.partner.fields.p.default = [
+            serverData.models.partner.fields.p.default = [
                 [0, 0, { display_name: "new record", trululu: false, p: [] }],
             ];
 
-            var form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
-                arch:
-                    "<form>" +
-                    "<sheet>" +
-                    '<field name="p">' +
-                    '<tree editable="bottom">' +
-                    '<field name="display_name"/>' +
-                    '<field name="trululu"/>' +
-                    "</tree>" +
-                    "</field>" +
-                    "</sheet>" +
-                    "</form>",
-                mockRPC: function (route, args) {
-                    if (args.method === "name_get") {
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <form>
+                        <sheet>
+                            <field name="p">
+                                <tree editable="bottom">
+                                    <field name="display_name" />
+                                    <field name="trululu" />
+                                </tree>
+                            </field>
+                        </sheet>
+                    </form>
+                `,
+                mockRPC(route, { method }) {
+                    if (method === "name_get") {
                         throw new Error("Nameget should not be called");
                     }
-                    return this._super.apply(this, arguments);
                 },
             });
 
             assert.strictEqual(
-                $("td.o_data_cell:first").text(),
+                form.el.querySelector("td.o_data_cell").textContent,
                 "new record",
                 "should have created the new record in the o2m with the correct name"
             );
-
-            form.destroy();
         }
     );
 
@@ -1830,34 +1869,35 @@ QUnit.module("Fields", (hooks) => {
             // abandonned, since it has been added (even though it is a new record).
             assert.expect(8);
 
-            this.data.partner.fields.p.default = [
+            serverData.models.partner.fields.p.default = [
                 [0, 0, { display_name: "new record", trululu: false, p: [] }],
             ];
 
-            var form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
-                arch:
-                    "<form>" +
-                    "<sheet>" +
-                    '<field name="p">' +
-                    '<tree editable="bottom">' +
-                    '<field name="display_name"/>' +
-                    '<field name="trululu" required="1"/>' +
-                    "</tree>" +
-                    "</field>" +
-                    "</sheet>" +
-                    "</form>",
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <form>
+                        <sheet>
+                            <field name="p">
+                                <tree editable="bottom">
+                                    <field name="display_name" />
+                                    <field name="trululu" required="1" />
+                                </tree>
+                            </field>
+                        </sheet>
+                    </form>
+                `,
             });
 
-            assert.strictEqual(
-                $("tr.o_data_row").length,
-                1,
+            assert.containsOnce(
+                form.el,
+                "tr.o_data_row",
                 "should have created the new record in the o2m"
             );
             assert.strictEqual(
-                $("td.o_data_cell").first().text(),
+                $("td.o_data_cell").first().textContent,
                 "new record",
                 "should have the correct displayed name"
             );
@@ -1869,14 +1909,14 @@ QUnit.module("Fields", (hooks) => {
                 "should have a required field on this record"
             );
             assert.strictEqual(
-                requiredElement.text(),
+                requiredElement.textContent,
                 "",
                 "should have empty string in the required field on this record"
             );
 
-            testUtils.dom.click(requiredElement);
+            click(requiredElement);
             // discard by clicking on body
-            testUtils.dom.click($("body"));
+            click($("body"));
 
             assert.strictEqual(
                 $("tr.o_data_row").length,
@@ -1884,7 +1924,7 @@ QUnit.module("Fields", (hooks) => {
                 "should still have the record in the o2m"
             );
             assert.strictEqual(
-                $("td.o_data_cell").first().text(),
+                $("td.o_data_cell").first().textContent,
                 "new record",
                 "should still have the correct displayed name"
             );
@@ -1897,52 +1937,49 @@ QUnit.module("Fields", (hooks) => {
                 "should still have the required field on this record"
             );
             assert.strictEqual(
-                requiredElement.text(),
+                requiredElement.textContent,
                 "",
                 "should still have empty string in the required field on this record"
             );
-            form.destroy();
         }
     );
 
     QUnit.skip("list in form: name_get with unique ids (default_get)", async function (assert) {
         assert.expect(1);
 
-        this.data.partner.records[0].display_name = "MyTrululu";
-        this.data.partner.fields.p.default = [
+        serverData.models.partner.records[0].display_name = "MyTrululu";
+        serverData.models.partner.fields.p.default = [
             [0, 0, { trululu: 1, p: [] }],
             [0, 0, { trululu: 1, p: [] }],
         ];
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                "<form>" +
-                "<sheet>" +
-                '<field name="p">' +
-                '<tree editable="bottom">' +
-                '<field name="trululu"/>' +
-                "</tree>" +
-                "</field>" +
-                "</sheet>" +
-                "</form>",
-            mockRPC: function (route, args) {
-                if (args.method === "name_get") {
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <field name="p">
+                            <tree editable="bottom">
+                                <field name="trululu" />
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>
+            `,
+            mockRPC(route, { method }) {
+                if (method === "name_get") {
                     throw new Error("should not call name_get");
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
         assert.strictEqual(
-            form.$("td.o_data_cell").text(),
+            form.el.querySelector("td.o_data_cell").textContent,
             "MyTrululuMyTrululu",
             "both records should have the correct display_name for trululu field"
         );
-
-        form.destroy();
     });
 
     QUnit.skip(
@@ -1950,53 +1987,52 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(4);
 
-            this.data.partner.fields.p.default = [
+            serverData.models.partner.fields.p.default = [
                 [0, 0, { display_name: "record1", trululu: 1, p: [] }],
                 [0, 0, { display_name: "record2", trululu: 2, p: [] }],
             ];
 
-            var form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
-                arch:
-                    "<form>" +
-                    "<sheet>" +
-                    '<field name="p">' +
-                    '<tree editable="bottom" limit="1">' +
-                    '<field name="display_name"/>' +
-                    '<field name="trululu"/>' +
-                    "</tree>" +
-                    "</field>" +
-                    "</sheet>" +
-                    "</form>",
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <form>
+                        <sheet>
+                            <field name="p">
+                                <tree editable="bottom" limit="1">
+                                    <field name="display_name" />
+                                    <field name="trululu" />
+                                </tree>
+                            </field>
+                        </sheet>
+                    </form>
+                `,
             });
 
             assert.strictEqual(
-                form.$("td.o_data_cell").first().text(),
+                form.el.querySelectorAll("td.o_data_cell")[0].textContent,
                 "record1",
                 "should show display_name of 1st record"
             );
             assert.strictEqual(
-                form.$("td.o_data_cell").first().next().text(),
+                form.el.querySelectorAll("td.o_data_cell")[1].textContent,
                 "first record",
                 "should show display_name of trululu of 1st record"
             );
 
-            await testUtils.dom.click(form.$("button.o_pager_next"));
+            await click(form.el, "button.o_pager_next");
 
             assert.strictEqual(
-                form.$("td.o_data_cell").first().text(),
+                form.el.querySelectorAll("td.o_data_cell")[0].textContent,
                 "record2",
                 "should show display_name of 2nd record"
             );
             assert.strictEqual(
-                form.$("td.o_data_cell").first().next().text(),
+                form.el.querySelectorAll("td.o_data_cell")[1].textContent,
                 "second record",
                 "should show display_name of trululu of 2nd record"
             );
-
-            form.destroy();
         }
     );
 
@@ -2010,38 +2046,36 @@ QUnit.module("Fields", (hooks) => {
             // to records created directly by `default_get`
             assert.expect(7);
 
-            var M2O_DELAY = relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY;
-            relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = 0;
-
-            this.data.partner.fields.product_id.default = 37;
-            this.data.partner.onchanges = {
-                product_id: function (obj) {
+            serverData.models.partner.fields.product_id.default = 37;
+            serverData.models.partner.onchanges = {
+                product_id(obj) {
                     if (obj.product_id === 37) {
                         obj.p = [[0, 0, { display_name: "entry", trululu: false }]];
                     }
                 },
             };
 
-            var form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
-                arch:
-                    "<form>" +
-                    '<field name="product_id"/>' +
-                    '<field name="p">' +
-                    '<tree editable="bottom">' +
-                    '<field name="display_name"/>' +
-                    '<field name="trululu" required="1"/>' +
-                    "</tree>" +
-                    "</field>" +
-                    "</form>",
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <form>
+                        <field name="product_id" />
+                        <field name="p">
+                            <tree editable="bottom">
+                                <field name="display_name" />
+                                <field name="trululu" required="1" />
+                            </tree>
+                        </field>
+                    </form>
+                `,
             });
 
             // check that there is a record in the editable list with empty string as required field
             assert.containsOnce(form, ".o_data_row", "should have a row in the editable list");
             assert.strictEqual(
-                $("td.o_data_cell").first().text(),
+                $("td.o_data_cell").first().textContent,
                 "entry",
                 "should have the correct displayed name"
             );
@@ -2052,15 +2086,15 @@ QUnit.module("Fields", (hooks) => {
                 "should have a required field on this record"
             );
             assert.strictEqual(
-                requiredField.text(),
+                requiredField.textContent,
                 "",
                 "should have empty string in the required field on this record"
             );
 
             // click on empty required field in editable list record
-            testUtils.dom.click(requiredField);
+            click(requiredField);
             // click off so that the required field still stay empty
-            testUtils.dom.click($("body"));
+            click($("body"));
 
             // record should not be dropped
             assert.containsOnce(
@@ -2069,18 +2103,15 @@ QUnit.module("Fields", (hooks) => {
                 "should not have dropped record in the editable list"
             );
             assert.strictEqual(
-                $("td.o_data_cell").first().text(),
+                $("td.o_data_cell").first().textContent,
                 "entry",
                 "should still have the correct displayed name"
             );
             assert.strictEqual(
-                $("td.o_data_cell.o_required_modifier").text(),
+                $("td.o_data_cell.o_required_modifier").textContent,
                 "",
                 "should still have empty string in the required field"
             );
-
-            relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;
-            form.destroy();
         }
     );
 
@@ -2094,44 +2125,42 @@ QUnit.module("Fields", (hooks) => {
             // a record is added, this record should not be dropped on discard
             assert.expect(8);
 
-            var M2O_DELAY = relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY;
-            relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = 0;
-
-            this.data.partner.onchanges = {
-                product_id: function (obj) {
+            serverData.models.partner.onchanges = {
+                product_id(obj) {
                     if (obj.product_id === 37) {
                         obj.p = [[0, 0, { display_name: "entry", trululu: false }]];
                     }
                 },
             };
 
-            var form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
-                arch:
-                    "<form>" +
-                    '<field name="product_id"/>' +
-                    '<field name="p">' +
-                    '<tree editable="bottom">' +
-                    '<field name="display_name"/>' +
-                    '<field name="trululu" required="1"/>' +
-                    "</tree>" +
-                    "</field>" +
-                    "</form>",
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <form>
+                        <field name="product_id" />
+                        <field name="p">
+                            <tree editable="bottom">
+                                <field name="display_name" />
+                                <field name="trululu" required="1" />
+                            </tree>
+                        </field>
+                    </form>
+                `,
             });
 
             // check no record in list
             assert.containsNone(form, ".o_data_row", "should have no row in the editable list");
 
             // select product_id to force on_change in editable list
-            await testUtils.dom.click(form.$('.o_field_widget[name="product_id"] .o_input'));
-            await testUtils.dom.click($(".ui-menu-item").first());
+            await click(form.el, '.o_field_widget[name="product_id"] .o_input');
+            await click($(".ui-menu-item").first());
 
             // check that there is a record in the editable list with empty string as required field
             assert.containsOnce(form, ".o_data_row", "should have a row in the editable list");
             assert.strictEqual(
-                $("td.o_data_cell").first().text(),
+                $("td.o_data_cell").first().textContent,
                 "entry",
                 "should have the correct displayed name"
             );
@@ -2142,15 +2171,15 @@ QUnit.module("Fields", (hooks) => {
                 "should have a required field on this record"
             );
             assert.strictEqual(
-                requiredField.text(),
+                requiredField.textContent,
                 "",
                 "should have empty string in the required field on this record"
             );
 
             // click on empty required field in editable list record
-            await testUtils.dom.click(requiredField);
+            await click(requiredField);
             // click off so that the required field still stay empty
-            await testUtils.dom.click($("body"));
+            await click($("body"));
 
             // record should not be dropped
             assert.containsOnce(
@@ -2159,18 +2188,15 @@ QUnit.module("Fields", (hooks) => {
                 "should not have dropped record in the editable list"
             );
             assert.strictEqual(
-                $("td.o_data_cell").first().text(),
+                $("td.o_data_cell").first().textContent,
                 "entry",
                 "should still have the correct displayed name"
             );
             assert.strictEqual(
-                $("td.o_data_cell.o_required_modifier").text(),
+                $("td.o_data_cell.o_required_modifier").textContent,
                 "",
                 "should still have empty string in the required field"
             );
-
-            relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;
-            form.destroy();
         }
     );
 
@@ -2182,25 +2208,30 @@ QUnit.module("Fields", (hooks) => {
             // at the record creation.
             assert.expect(6);
 
-            var form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
-                arch:
-                    "<form>" +
-                    '<field name="p">' +
-                    '<tree editable="bottom">' +
-                    '<field name="display_name"/>' +
-                    '<field name="trululu" required="1"/>' +
-                    "</tree>" +
-                    "</field>" +
-                    "</form>",
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <form>
+                        <field name="p">
+                            <tree editable="bottom">
+                                <field name="display_name" />
+                                <field name="trululu" required="1" />
+                            </tree>
+                        </field>
+                    </form>
+                `,
             });
 
             // Click on "Add an item"
-            await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
-            var charField = form.$('.o_field_widget.o_field_char[name="display_name"]');
-            var requiredField = form.$('.o_field_widget.o_required_modifier[name="trululu"]');
+            await click(form.el, ".o_field_x2many_list_row_add a");
+            var charField = form.el.querySelector(
+                '.o_field_widget.o_field_char[name="display_name"]'
+            );
+            var requiredField = form.el.querySelector(
+                '.o_field_widget.o_required_modifier[name="trululu"]'
+            );
             charField.val("some text");
             assert.strictEqual(
                 charField.length,
@@ -2213,7 +2244,7 @@ QUnit.module("Fields", (hooks) => {
                 "the char field should not be required on this record"
             );
             assert.strictEqual(
-                charField.val(),
+                charField.value,
                 "some text",
                 "should have entered text in the char field on this record"
             );
@@ -2223,15 +2254,15 @@ QUnit.module("Fields", (hooks) => {
                 "should have a required field 'trululu' on this record"
             );
             assert.strictEqual(
-                requiredField.val().trim(),
+                requiredField.value.trim(),
                 "",
                 "should have empty string in the required field on this record"
             );
 
             // click on empty required field in editable list record
-            await testUtils.dom.click(requiredField);
+            await click(requiredField);
             // click off so that the required field still stay empty
-            await testUtils.dom.click($("body"));
+            await click($("body"));
 
             // record should be dropped
             assert.containsNone(
@@ -2239,8 +2270,6 @@ QUnit.module("Fields", (hooks) => {
                 ".o_data_row",
                 "should have dropped record in the editable list"
             );
-
-            form.destroy();
         }
     );
 
@@ -2254,22 +2283,20 @@ QUnit.module("Fields", (hooks) => {
             // dropped.
             assert.expect(8);
 
-            var M2O_DELAY = relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY;
-            relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = 0;
-
-            var form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
-                arch:
-                    "<form>" +
-                    '<field name="p">' +
-                    '<tree editable="bottom">' +
-                    '<field name="display_name"/>' +
-                    '<field name="trululu" required="1"/>' +
-                    "</tree>" +
-                    "</field>" +
-                    "</form>",
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <form>
+                        <field name="p">
+                            <tree editable="bottom">
+                                <field name="display_name" />
+                                <field name="trululu" required="1" />
+                            </tree>
+                        </field>
+                    </form>
+                `,
             });
 
             assert.containsNone(
@@ -2279,10 +2306,10 @@ QUnit.module("Fields", (hooks) => {
             );
 
             // Click on "Add an item"
-            await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+            await click(form.el, ".o_field_x2many_list_row_add a");
             assert.containsOnce(form, ".o_data_row", "should have a temporary record in the list");
 
-            var $inputEditMode = form.$(
+            var $inputEditMode = form.el.querySelectorAll(
                 '.o_field_widget.o_required_modifier[name="trululu"] input'
             );
             assert.strictEqual(
@@ -2291,75 +2318,75 @@ QUnit.module("Fields", (hooks) => {
                 "should have a required field 'trululu' on this record"
             );
             assert.strictEqual(
-                $inputEditMode.val(),
+                $inputEditMode.value,
                 "",
                 "should have empty string in the required field on this record"
             );
 
             // add something to required field and leave edit mode of the record
-            await testUtils.dom.click($inputEditMode);
-            await testUtils.dom.click($("li.ui-menu-item").first());
-            await testUtils.dom.click($("body"));
+            await click($inputEditMode);
+            await click($("li.ui-menu-item").first());
+            await click($("body"));
 
-            var $inputReadonlyMode = form.$(".o_data_cell.o_required_modifier");
+            var $inputReadonlyMode = form.el.querySelectorAll(".o_data_cell.o_required_modifier");
             assert.containsOnce(
                 form,
                 ".o_data_row",
                 "should not have dropped valid record when leaving edit mode"
             );
             assert.strictEqual(
-                $inputReadonlyMode.text(),
+                $inputReadonlyMode.textContent,
                 "first record",
                 "should have put some content in the required field on this record"
             );
 
             // remove the required field and leave edit mode of the record
-            await testUtils.dom.click($(".o_data_row"));
+            await click($(".o_data_row"));
             assert.containsOnce(
                 form,
                 ".o_data_row",
                 "should not have dropped record in the list on discard (invalid on UPDATE)"
             );
             assert.strictEqual(
-                $inputReadonlyMode.text(),
+                $inputReadonlyMode.textContent,
                 "first record",
                 "should keep previous valid required field content on this record"
             );
-
-            relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;
-            form.destroy();
         }
     );
 
+    // WARNING: this does not seem to be a many2one field test
     QUnit.skip("list in form: default_get with x2many create", async function (assert) {
         assert.expect(3);
-        this.data.partner.fields.timmy.default = [
+
+        serverData.models.partner.fields.timmy.default = [
             [0, 0, { display_name: "brandon is the new timmy", name: "brandon" }],
         ];
-        var displayName = "brandon is the new timmy";
-        this.data.partner.onchanges.timmy = function (obj) {
+        serverData.models.partner.onchanges.timmy = (obj) => {
             obj.int_field = obj.timmy.length;
         };
+        let displayName = "brandon is the new timmy";
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                "<form>" +
-                "<sheet>" +
-                '<field name="timmy">' +
-                '<tree editable="bottom">' +
-                '<field name="display_name"/>' +
-                "</tree>" +
-                "</field>" +
-                '<field name="int_field"/>' +
-                "</sheet>" +
-                "</form>",
-            mockRPC: function (route, args) {
-                if (args.method === "create") {
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <field name="timmy">
+                            <tree editable="bottom">
+                                <field name="display_name" />
+                            </tree>
+                        </field>
+                        <field name="int_field" />
+                    </sheet>
+                </form>
+            `,
+            mockRPC(route, { args, method }) {
+                if (method === "create") {
                     assert.deepEqual(
-                        args.args[0],
+                        args[0],
                         {
                             int_field: 2,
                             timmy: [
@@ -2369,63 +2396,65 @@ QUnit.module("Fields", (hooks) => {
                                 // We can't distinguish a value coming from a default_get
                                 // from one coming from the onchange, and so we can either store and
                                 // send it all the time, or never.
-                                // [0, args.args[0].timmy[1][1], { display_name: displayName, name: 'brandon' }],
-                                [0, args.args[0].timmy[1][1], { display_name: displayName }],
+                                // [0, args[0].timmy[1][1], { display_name: displayName, name: 'brandon' }],
+                                [0, args[0].timmy[1][1], { display_name: displayName }],
                             ],
                         },
                         "should send the correct values to create"
                     );
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
         assert.strictEqual(
-            $("td.o_data_cell:first").text(),
+            $("td.o_data_cell:first").textContent,
             "brandon is the new timmy",
             "should have created the new record in the m2m with the correct name"
         );
         assert.strictEqual(
-            $("input.o_field_integer").val(),
+            $("input.o_field_integer").value,
             "1",
             "should have called and executed the onchange properly"
         );
 
         // edit the subrecord and save
         displayName = "new value";
-        await testUtils.dom.click(form.$(".o_data_cell"));
-        await testUtils.fields.editInput(form.$(".o_data_cell input"), displayName);
-        await testUtils.form.clickSave(form);
-
-        form.destroy();
+        await click(form.el, ".o_data_cell");
+        await testUtils.fields.editInput(
+            form.el.querySelectorAll(".o_data_cell input"),
+            displayName
+        );
+        await click(form.el, ".o_form_button_save");
     });
 
+    // WARNING: this does not seem to be a many2one field test
     QUnit.skip(
         "list in form: default_get with x2many create and onchange",
         async function (assert) {
             assert.expect(1);
 
-            this.data.partner.fields.turtles.default = [[6, 0, [2, 3]]];
+            serverData.models.partner.fields.turtles.default = [[6, 0, [2, 3]]];
 
-            var form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
-                arch:
-                    "<form>" +
-                    "<sheet>" +
-                    '<field name="turtles">' +
-                    '<tree editable="bottom">' +
-                    '<field name="turtle_foo"/>' +
-                    "</tree>" +
-                    "</field>" +
-                    '<field name="int_field"/>' +
-                    "</sheet>" +
-                    "</form>",
-                mockRPC: function (route, args) {
-                    if (args.method === "create") {
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <form>
+                        <sheet>
+                            <field name="turtles">
+                                <tree editable="bottom">
+                                    <field name="turtle_foo" />
+                                </tree>
+                            </field>
+                            <field name="int_field" />
+                        </sheet>
+                    </form>
+                `,
+                mockRPC(route, { args, method }) {
+                    if (method === "create") {
                         assert.deepEqual(
-                            args.args[0].turtles,
+                            args[0].turtles,
                             [
                                 [4, 2, false],
                                 [4, 3, false],
@@ -2433,43 +2462,52 @@ QUnit.module("Fields", (hooks) => {
                             "should send proper commands to create method"
                         );
                     }
-                    return this._super.apply(this, arguments);
                 },
             });
 
-            await testUtils.form.clickSave(form);
-
-            form.destroy();
+            await click(form.el, ".o_form_button_save");
         }
     );
 
     QUnit.skip("list in form: call button in sub view", async function (assert) {
         assert.expect(11);
 
-        this.data.partner.records[0].p = [2];
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                "<form>" +
-                "<sheet>" +
-                '<field name="p">' +
-                '<tree editable="bottom">' +
-                '<field name="product_id"/>' +
-                "</tree>" +
-                "</field>" +
-                "</sheet>" +
-                "</form>",
-            res_id: 1,
-            mockRPC: function (route, args) {
+        serverData.models.partner.records[0].p = [2];
+        serverData.views = {
+            "product,false,form": `
+                <form>
+                    <header>
+                        <button name="action" type="action" string="Just do it !" />
+                        <button name="object" type="object" string="Just don't do it !" />
+                        <field name="display_name" />
+                    </header>
+                </form>
+            `,
+        };
+
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <field name="p">
+                            <tree editable="bottom">
+                                <field name="product_id" />
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>
+            `,
+            mockRPC(route) {
                 if (route === "/web/dataset/call_kw/product/get_formview_id") {
                     return Promise.resolve(false);
                 }
-                return this._super.apply(this, arguments);
             },
             intercepts: {
-                execute_action: function (event) {
+                execute_action(event) {
                     assert.strictEqual(
                         event.data.env.model,
                         "product",
@@ -2488,41 +2526,30 @@ QUnit.module("Fields", (hooks) => {
                     assert.step(event.data.action_data.name);
                 },
             },
-            archs: {
-                "product,false,form":
-                    '<form string="Partners">' +
-                    "<header>" +
-                    '<button name="action" type="action" string="Just do it !"/>' +
-                    '<button name="object" type="object" string="Just don\'t do it !"/>' +
-                    '<field name="display_name"/>' +
-                    "</header>" +
-                    "</form>",
-            },
         });
 
-        await testUtils.form.clickEdit(form);
-        await testUtils.dom.click(form.$("td.o_data_cell:first"));
-        await testUtils.dom.click(form.$(".o_external_button"));
-        await testUtils.dom.click($('button:contains("Just do it !")'));
+        await click(form.el, ".o_form_button_edit");
+        await click(form.el.querySelector("td.o_data_cell"));
+        await click(form.el, ".o_external_button");
+        await click($('button:contains("Just do it !")'));
         assert.verifySteps(["action"]);
-        await testUtils.dom.click($('button:contains("Just don\'t do it !")'));
+        await click($('button:contains("Just don\'t do it !")'));
         assert.verifySteps([]); // the second button is disabled, it can't be clicked
 
-        await testUtils.dom.click($(".modal .btn-secondary:contains(Discard)"));
-        await testUtils.dom.click(form.$(".o_external_button"));
-        await testUtils.dom.click($('button:contains("Just don\'t do it !")'));
+        await click(document.body.querySelector(".modal .btn-secondary:contains(Discard)"));
+        await click(form.el, ".o_external_button");
+        await click($('button:contains("Just don\'t do it !")'));
         assert.verifySteps(["object"]);
-        form.destroy();
     });
 
     QUnit.skip("X2Many sequence list in modal", async function (assert) {
         assert.expect(5);
 
-        this.data.partner.fields.sequence = { string: "Sequence", type: "integer" };
-        this.data.partner.records[0].sequence = 1;
-        this.data.partner.records[1].sequence = 2;
-        this.data.partner.onchanges = {
-            sequence: function (obj) {
+        serverData.models.partner.fields.sequence = { string: "Sequence", type: "integer" };
+        serverData.models.partner.records[0].sequence = 1;
+        serverData.models.partner.records[1].sequence = 2;
+        serverData.models.partner.onchanges = {
+            sequence(obj) {
                 if (obj.id === 2) {
                     obj.sequence = 1;
                     assert.step("onchange sequence");
@@ -2530,54 +2557,61 @@ QUnit.module("Fields", (hooks) => {
             },
         };
 
-        this.data.product.fields.turtle_ids = {
+        serverData.models.product.fields.turtle_ids = {
             string: "Turtles",
             type: "one2many",
             relation: "turtle",
         };
-        this.data.product.records[0].turtle_ids = [1];
+        serverData.models.product.records[0].turtle_ids = [1];
 
-        this.data.turtle.fields.partner_types_ids = {
+        serverData.models.turtle.fields.partner_types_ids = {
             string: "Partner",
             type: "one2many",
             relation: "partner",
         };
-        this.data.turtle.fields.type_id = {
+        serverData.models.turtle.fields.type_id = {
             string: "Partner Type",
             type: "many2one",
             relation: "partner_type",
         };
 
-        this.data.partner_type.fields.partner_ids = {
+        serverData.models.partner_type.fields.partner_ids = {
             string: "Partner",
             type: "one2many",
             relation: "partner",
         };
-        this.data.partner_type.records[0].partner_ids = [1, 2];
+        serverData.models.partner_type.records[0].partner_ids = [1, 2];
 
-        var form = await createView({
-            View: FormView,
-            model: "product",
-            data: this.data,
-            arch:
-                "<form>" +
-                '<field name="name"/>' +
-                '<field name="turtle_ids" widget="one2many">' +
-                '<tree string="Turtles" editable="bottom">' +
-                '<field name="type_id"/>' +
-                "</tree>" +
-                "</field>" +
-                "</form>",
-            archs: {
-                "partner_type,false,form": '<form><field name="partner_ids"/></form>',
-                "partner,false,list":
-                    '<tree string="Vendors">' +
-                    '<field name="display_name"/>' +
-                    '<field name="sequence" widget="handle"/>' +
-                    "</tree>",
-            },
-            res_id: 37,
-            mockRPC: function (route, args) {
+        serverData.views = {
+            "partner_type,false,form": `
+                <form>
+                    <field name="partner_ids" />
+                </form>
+            `,
+            "partner,false,list": `
+                <tree>
+                    <field name="display_name" />
+                    <field name="sequence" widget="handle" />
+                </tree>
+            `,
+        };
+
+        const form = await makeView({
+            type: "form",
+            resModel: "product",
+            resId: 37,
+            serverData,
+            arch: `
+                <form>
+                    <field name="name" />
+                    <field name="turtle_ids" widget="one2many">
+                        <tree editable="bottom">
+                            <field name="type_id" />
+                        </tree>
+                    </field>
+                </form>
+            `,
+            mockRPC(route) {
                 if (route === "/web/dataset/call_kw/product/read") {
                     return Promise.resolve([
                         { id: 37, name: "xphone", display_name: "leonardo", turtle_ids: [1] },
@@ -2595,15 +2629,14 @@ QUnit.module("Fields", (hooks) => {
                 if (route === "/web/dataset/call_kw/partner_type/write") {
                     assert.step("partner_type write");
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
-        await testUtils.form.clickEdit(form);
-        await testUtils.dom.click(form.$(".o_data_cell"));
-        await testUtils.dom.click(form.$(".o_external_button"));
+        await click(form.el, ".o_form_button_edit");
+        await click(form.el, ".o_data_cell");
+        await click(form.el, ".o_external_button");
 
-        var $modal = $(".modal");
+        var $modal = document.body.querySelector(".modal");
         assert.equal($modal.length, 1, "There should be 1 modal opened");
 
         var $handles = $modal.find(".ui-sortable-handle");
@@ -2614,37 +2647,37 @@ QUnit.module("Fields", (hooks) => {
         });
 
         // Saving the modal and then the original model
-        await testUtils.dom.click($modal.find(".modal-footer .btn-primary"));
-        await testUtils.form.clickSave(form);
+        await click($modal.find(".modal-footer .btn-primary"));
+        await click(form.el, ".o_form_button_save");
 
         assert.verifySteps(["onchange sequence", "partner_type write"]);
-
-        form.destroy();
     });
 
     QUnit.skip("autocompletion in a many2one, in form view with a domain", async function (assert) {
         assert.expect(1);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch: "<form>" + '<field name="product_id"/>' + "</form>",
-            res_id: 1,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="product_id" />
+                </form>
+            `,
+            resId: 1,
             viewOptions: {
                 domain: [["trululu", "=", 4]],
             },
-            mockRPC: function (route, args) {
-                if (args.method === "name_search") {
-                    assert.deepEqual(args.kwargs.args, [], "should not have a domain");
+            mockRPC(route, { kwargs, method }) {
+                if (method === "name_search") {
+                    assert.deepEqual(kwargs.args, [], "should not have a domain");
                 }
-                return this._super(route, args);
             },
         });
-        await testUtils.form.clickEdit(form);
+        await click(form.el, ".o_form_button_edit");
 
-        testUtils.dom.click(form.$(".o_field_widget[name=product_id] input"));
-        form.destroy();
+        click(form.el, ".o_field_widget[name=product_id] input");
     });
 
     QUnit.skip(
@@ -2652,97 +2685,106 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(1);
 
-            var form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
-                arch:
-                    "<form>" +
-                    '<field name="bar"/>' +
-                    '<field name="date"/>' +
-                    "<field name=\"trululu\" domain=\"[('bar','=',True)]\"/>" +
-                    "</form>",
-                res_id: 2,
-                mockRPC: function (route, args) {
-                    if (args.method === "name_search") {
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 2,
+                serverData,
+                arch: `
+                    <form>
+                        <field name="bar" />
+                        <field name="date" />
+                        <field name="trululu" domain="[('bar', '=', True)]" />
+                    </form>
+                `,
+                mockRPC(route, { kwargs, method }) {
+                    if (method === "name_search") {
                         assert.deepEqual(
-                            args.kwargs.args,
+                            kwargs.args,
                             [["bar", "=", true]],
                             "should not have a domain"
                         );
                     }
-                    return this._super(route, args);
                 },
             });
-            await testUtils.form.clickEdit(form);
+            await click(form.el, ".o_form_button_edit");
 
-            testUtils.dom.click(form.$(".o_field_widget[name=trululu] input"));
-            form.destroy();
+            click(form.el, ".o_field_widget[name='trululu'] input");
         }
     );
 
     QUnit.skip("creating record with many2one with option always_reload", async function (assert) {
         assert.expect(2);
 
-        this.data.partner.fields.trululu.default = 1;
-        this.data.partner.onchanges = {
-            trululu: function (obj) {
+        serverData.models.partner.fields.trululu.default = 1;
+        serverData.models.partner.onchanges = {
+            trululu(obj) {
                 obj.trululu = 2; //[2, "second record"];
             },
         };
 
-        var count = 0;
+        let count = 0;
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                "<form>" +
-                '<field name="trululu" options="{\'always_reload\': True}"/>' +
-                "</form>",
-            mockRPC: function (route, args) {
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="trululu" options="{'always_reload': 1}" />
+                </form>
+            `,
+            mockRPC(route, { args, method }) {
                 count++;
-                if (args.method === "name_get" && args.args[0] === 2) {
+                if (method === "name_get" && args[0] === 2) {
                     return Promise.resolve([[2, "hello world\nso much noise"]]);
                 }
-                return this._super(route, args);
             },
         });
 
         assert.strictEqual(count, 2, "should have done 2 rpcs (onchange and name_get)");
         assert.strictEqual(
-            form.$(".o_field_widget[name=trululu] input").val(),
+            form.el.querySelector(".o_field_widget[name='trululu'] input").value,
             "hello world",
             "should have taken the correct display name"
         );
-        form.destroy();
     });
 
     QUnit.skip("selecting a many2one, then discarding", async function (assert) {
         assert.expect(3);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch: '<form string="Partners">' + '<field name="product_id"/>' + "</form>",
-            res_id: 1,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="product_id" />
+                </form>
+            `,
         });
-        assert.strictEqual(form.$("a[name=product_id]").text(), "", "the tag a should be empty");
-        await testUtils.form.clickEdit(form);
+        assert.strictEqual(
+            form.el.querySelector("a[name='product_id']").textContent,
+            "",
+            "the tag a should be empty"
+        );
+        await click(form.el, ".o_form_button_edit");
 
         await testUtils.fields.many2one.clickOpenDropdown("product_id");
         await testUtils.fields.many2one.clickItem("product_id", "xphone");
         assert.strictEqual(
-            form.$(".o_field_widget[name=product_id] input").val(),
+            form.el.querySelector(".o_field_widget[name='product_id'] input").value,
             "xphone",
             "should have selected xphone"
         );
 
-        await testUtils.form.clickDiscard(form);
-        assert.strictEqual(form.$("a[name=product_id]").text(), "", "the tag a should be empty");
-        form.destroy();
+        await click(form.el, ".o_form_button_cancel");
+        assert.strictEqual(
+            form.el.querySelector("a[name='product_id']").textContent,
+            "",
+            "the tag a should be empty"
+        );
     });
 
     QUnit.skip(
@@ -2750,27 +2792,26 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(4);
 
-            this.data.partner.records[0].timmy = [12];
+            serverData.models.partner.records[0].timmy = [12];
 
-            var form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
-                arch:
-                    '<form string="Partners">' +
-                    '<field name="product_id" ' +
-                    "domain=\"[['foo', '=', 'bar'], ['foo', '=', foo]]\" " +
-                    "context=\"{'hello': 'world', 'test': foo}\"/>" +
-                    '<field name="foo"/>' +
-                    "<field name=\"trululu\" context=\"{'timmy': timmy}\" domain=\"[['id', 'in', timmy]]\"/>" +
-                    '<field name="timmy" widget="many2many_tags" invisible="1"/>' +
-                    "</form>",
-                res_id: 1,
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
+                    <form>
+                        <field name="product_id" domain="[('foo', '=', 'bar'), ('foo', '=', foo)]" context="{'hello': 'world', 'test': foo}" />
+                        <field name="foo" />
+                        <field name="trululu" context="{'timmy': timmy}" domain="[('id', 'in', timmy)]" />
+                        <field name="timmy" widget="many2many_tags" invisible="1" />
+                    </form>
+                `,
                 session: { user_context: { hey: "ho" } },
-                mockRPC: function (route, args) {
-                    if (args.method === "name_search" && args.model === "product") {
+                mockRPC(route, { kwargs, method, model }) {
+                    if (method === "name_search" && model === "product") {
                         assert.deepEqual(
-                            args.kwargs.args,
+                            kwargs.args,
                             [
                                 ["foo", "=", "bar"],
                                 ["foo", "=", "yop"],
@@ -2778,97 +2819,98 @@ QUnit.module("Fields", (hooks) => {
                             "the field attr domain should have been used for the RPC (and evaluated)"
                         );
                         assert.deepEqual(
-                            args.kwargs.context,
+                            kwargs.context,
                             { hey: "ho", hello: "world", test: "yop" },
-                            "the field attr context should have been used for the " +
-                                "RPC (evaluated and merged with the session one)"
+                            "the field attr context should have been used for the RPC (evaluated and merged with the session one)"
                         );
                         return Promise.resolve([]);
                     }
-                    if (args.method === "name_search" && args.model === "partner") {
+                    if (method === "name_search" && model === "partner") {
                         assert.deepEqual(
-                            args.kwargs.args,
+                            kwargs.args,
                             [["id", "in", [12]]],
                             "the field attr domain should have been used for the RPC (and evaluated)"
                         );
                         assert.deepEqual(
-                            args.kwargs.context,
+                            kwargs.context,
                             { hey: "ho", timmy: [[6, false, [12]]] },
                             "the field attr context should have been used for the RPC (and evaluated)"
                         );
                         return Promise.resolve([]);
                     }
-                    return this._super.apply(this, arguments);
                 },
             });
 
-            await testUtils.form.clickEdit(form);
-            testUtils.dom.click(form.$(".o_field_widget[name=product_id] input"));
-
-            testUtils.dom.click(form.$(".o_field_widget[name=trululu] input"));
-
-            form.destroy();
+            await click(form.el, ".o_form_button_edit");
+            click(form.el, ".o_field_widget[name='poduct_id'] input");
+            click(form.el, ".o_field_widget[name='trululu'] input");
         }
     );
 
     QUnit.skip("quick create on a many2one", async function (assert) {
         assert.expect(2);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                '<field name="product_id"/>' +
-                "</sheet>" +
-                "</form>",
-            mockRPC: function (route, args) {
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <field name="product_id" />
+                    </sheet>
+                </form>
+            `,
+            mockRPC(route, { args }) {
                 if (route === "/web/dataset/call_kw/product/name_create") {
-                    assert.strictEqual(
-                        args.args[0],
-                        "new partner",
-                        "should name create a new product"
-                    );
+                    assert.strictEqual(args[0], "new partner", "should name create a new product");
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
-        await testUtils.dom.triggerEvent(form.$(".o_field_many2one input"), "focus");
-        await testUtils.fields.editAndTrigger(form.$(".o_field_many2one input"), "new partner", [
-            "keyup",
-            "blur",
-        ]);
-        await testUtils.dom.click($(".modal .modal-footer .btn-primary").first());
+        await testUtils.dom.triggerEvent(
+            form.el.querySelectorAll(".o_field_many2one input"),
+            "focus"
+        );
+        await testUtils.fields.editAndTrigger(
+            form.el.querySelectorAll(".o_field_many2one input"),
+            "new partner",
+            ["keyup", "blur"]
+        );
+        await click(document.body, ".modal .modal-footer .btn-primary");
         assert.strictEqual(
-            $(".modal .modal-body").text().trim(),
+            document.body.querySelector(".modal .modal-body").textContent.trim(),
             "Create new partner as a new Product?"
         );
-
-        form.destroy();
     });
 
     QUnit.skip("failing quick create on a many2one", async function (assert) {
         assert.expect(4);
 
-        const form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch: '<form><field name="product_id"/></form>',
-            archs: {
-                "product,false,form": '<form><field name="name"/></form>',
-            },
-            mockRPC(route, args) {
-                if (args.method === "name_create") {
+        serverData.views = {
+            "product,false,form": `
+                <form>
+                    <field name="name" />
+                </form>
+            `,
+        };
+
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="product_id" />
+                </form>
+            `,
+            mockRPC(route, { args, method }) {
+                if (method === "name_create") {
                     return Promise.reject();
                 }
-                if (args.method === "create") {
-                    assert.deepEqual(args.args[0], { name: "xyz" });
+                if (method === "create") {
+                    assert.deepEqual(args[0], { name: "xyz" });
                 }
-                return this._super(...arguments);
             },
         });
 
@@ -2877,27 +2919,47 @@ QUnit.module("Fields", (hooks) => {
             item: 'Create "abcd"',
         });
         assert.containsOnce(document.body, ".modal .o_form_view");
-        assert.strictEqual($(".o_field_widget[name=name]").val(), "abcd");
+        assert.strictEqual(
+            document.body.querySelector(".o_field_widget[name='name']").value,
+            "abcd"
+        );
 
-        await testUtils.fields.editInput($(".modal .o_field_widget[name=name]"), "xyz");
-        await testUtils.dom.click($(".modal .modal-footer .btn-primary"));
-        assert.strictEqual(form.$(".o_field_widget[name=product_id] input").val(), "xyz");
-
-        form.destroy();
+        await testUtils.fields.editInput(
+            document.body.querySelector(".modal .o_field_widget[name=name]"),
+            "xyz"
+        );
+        await click(document.body, ".modal .modal-footer .btn-primary");
+        assert.strictEqual(
+            form.el.querySelector(".o_field_widget[name='product_id'] input").value,
+            "xyz"
+        );
     });
 
     QUnit.skip("failing quick create on a many2one inside a one2many", async function (assert) {
         assert.expect(4);
 
-        const form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch: '<form><field name="p"/></form>',
-            archs: {
-                "partner,false,list": '<tree editable="bottom"><field name="product_id"/></tree>',
-                "product,false,form": '<form><field name="name"/></form>',
-            },
+        serverData.views = {
+            "partner,false,list": `
+                <tree editable="bottom">
+                    <field name="product_id" />
+                </tree>
+            `,
+            "product,false,form": `
+                <form>
+                    <field name="name" />
+                </form>
+            `,
+        };
+
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="p" />
+                </form>
+            `,
             mockRPC(route, args) {
                 if (args.method === "name_create") {
                     return Promise.reject();
@@ -2909,212 +2971,271 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+        await click(form.el, ".o_field_x2many_list_row_add a");
         await testUtils.fields.many2one.searchAndClickItem("product_id", {
             search: "abcd",
             item: 'Create "abcd"',
         });
         assert.containsOnce(document.body, ".modal .o_form_view");
-        assert.strictEqual($(".o_field_widget[name=name]").val(), "abcd");
+        assert.strictEqual(
+            document.body.querySelector(".o_field_widget[name='name']").value,
+            "abcd"
+        );
 
-        await testUtils.fields.editInput($(".modal .o_field_widget[name=name]"), "xyz");
-        await testUtils.dom.click($(".modal .modal-footer .btn-primary"));
-        assert.strictEqual(form.$(".o_field_widget[name=product_id] input").val(), "xyz");
-
-        form.destroy();
+        await testUtils.fields.editInput(
+            document.body.querySelector(".modal .o_field_widget[name='name']"),
+            "xyz"
+        );
+        await click(document.body, ".modal .modal-footer .btn-primary");
+        assert.strictEqual(
+            form.el.querySelector(".o_field_widget[name='product_id'] input").value,
+            "xyz"
+        );
     });
 
     QUnit.skip("slow create on a many2one", async function (assert) {
         assert.expect(11);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                "<form>" +
-                "<sheet>" +
-                '<field name="product_id" options="{\'quick_create\': False}"/>' +
-                "</sheet>" +
-                "</form>",
-            archs: {
-                "product,false,form": "<form>" + '<field name="name"/>' + "</form>",
-            },
+        serverData.views = {
+            "product,false,form": `
+                <form>
+                    <field name="name" />
+                </form>
+            `,
+        };
+
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <field name="product_id" options="{'quick_create': 0}" />
+                    </sheet>
+                </form>
+            `,
         });
 
         // cancel the many2one creation with Discard button
-        form.$(".o_field_many2one input")
+        form.el
+            .querySelectorAll(".o_field_many2one input")
             .focus()
             .val("new product")
             .trigger("input")
             .trigger("keyup");
-        await testUtils.nextTick();
-        form.$(".o_field_many2one input").trigger("blur");
-        await testUtils.nextTick();
-        assert.strictEqual($(".modal").length, 1, "there should be one opened modal");
-
-        await testUtils.dom.click($(".modal .modal-footer .btn:contains(Discard)"));
-        assert.strictEqual($(".modal").length, 0, "the modal should be closed");
+        await nextTick();
+        form.el.querySelectorAll(".o_field_many2one input").trigger("blur");
+        await nextTick();
         assert.strictEqual(
-            form.$(".o_field_many2one input").val(),
+            document.body.querySelector(".modal").length,
+            1,
+            "there should be one opened modal"
+        );
+
+        await click(document.body.querySelector(".modal .modal-footer .btn:contains(Discard)"));
+        assert.strictEqual(
+            document.body.querySelector(".modal").length,
+            0,
+            "the modal should be closed"
+        );
+        assert.strictEqual(
+            form.el.querySelectorAll(".o_field_many2one input").value,
             "",
             "the many2one should not set a value as its creation has been cancelled (with Cancel button)"
         );
 
         // cancel the many2one creation with Close button
-        form.$(".o_field_many2one input")
+        form.el
+            .querySelectorAll(".o_field_many2one input")
             .focus()
             .val("new product")
             .trigger("input")
             .trigger("keyup");
-        await testUtils.nextTick();
-        form.$(".o_field_many2one input").trigger("blur");
-        await testUtils.nextTick();
-        assert.strictEqual($(".modal").length, 1, "there should be one opened modal");
-        await testUtils.dom.click($(".modal .modal-header button"));
+        await nextTick();
+        form.el.querySelectorAll(".o_field_many2one input").trigger("blur");
+        await nextTick();
         assert.strictEqual(
-            form.$(".o_field_many2one input").val(),
+            document.body.querySelector(".modal").length,
+            1,
+            "there should be one opened modal"
+        );
+        await click(document.body.querySelector(".modal .modal-header button"));
+        assert.strictEqual(
+            form.el.querySelectorAll(".o_field_many2one input").value,
             "",
             "the many2one should not set a value as its creation has been cancelled (with Close button)"
         );
-        assert.strictEqual($(".modal").length, 0, "the modal should be closed");
+        assert.strictEqual(
+            document.body.querySelector(".modal").length,
+            0,
+            "the modal should be closed"
+        );
 
         // select a new value then cancel the creation of the new one --> restore the previous
         await testUtils.fields.many2one.clickOpenDropdown("product_id");
         await testUtils.fields.many2one.clickItem("product_id", "o");
         assert.strictEqual(
-            form.$(".o_field_many2one input").val(),
+            form.el.querySelectorAll(".o_field_many2one input").value,
             "xphone",
             "should have selected xphone"
         );
 
-        form.$(".o_field_many2one input")
+        form.el
+            .querySelectorAll(".o_field_many2one input")
             .focus()
             .val("new product")
             .trigger("input")
             .trigger("keyup");
-        await testUtils.nextTick();
-        form.$(".o_field_many2one input").trigger("blur");
-        await testUtils.nextTick();
-        assert.strictEqual($(".modal").length, 1, "there should be one opened modal");
-
-        await testUtils.dom.click($(".modal .modal-footer .btn:contains(Discard)"));
+        await nextTick();
+        form.el.querySelectorAll(".o_field_many2one input").trigger("blur");
+        await nextTick();
         assert.strictEqual(
-            form.$(".o_field_many2one input").val(),
+            document.body.querySelector(".modal").length,
+            1,
+            "there should be one opened modal"
+        );
+
+        await click(document.body.querySelector(".modal .modal-footer .btn:contains(Discard)"));
+        assert.strictEqual(
+            form.el.querySelectorAll(".o_field_many2one input").value,
             "xphone",
             "should have restored the many2one with its previous selected value (xphone)"
         );
 
         // confirm the many2one creation
-        form.$(".o_field_many2one input")
+        form.el
+            .querySelectorAll(".o_field_many2one input")
             .focus()
             .val("new product")
             .trigger("input")
             .trigger("keyup");
-        await testUtils.nextTick();
-        form.$(".o_field_many2one input").trigger("blur");
-        await testUtils.nextTick();
-        assert.strictEqual($(".modal").length, 1, "there should be one opened modal");
-
-        await testUtils.dom.click($(".modal .modal-footer .btn-primary:contains(Create)"));
+        await nextTick();
+        form.el.querySelectorAll(".o_field_many2one input").trigger("blur");
+        await nextTick();
         assert.strictEqual(
-            $(".modal .o_form_view").length,
+            document.body.querySelector(".modal").length,
+            1,
+            "there should be one opened modal"
+        );
+
+        await click(
+            document.body.querySelector(".modal .modal-footer .btn-primary:contains(Create)")
+        );
+        assert.strictEqual(
+            document.body.querySelector(".modal .o_form_view").length,
             1,
             "a new modal should be opened and contain a form view"
         );
 
-        await testUtils.dom.click($(".modal .o_form_button_cancel"));
-
-        form.destroy();
+        await click(document.body.querySelector(".modal .o_form_button_cancel"));
     });
 
     QUnit.skip("select a many2one value by focusing out", async function (assert) {
         assert.expect(3);
 
-        const form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch: `<form><field name="product_id"/></form>`,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="product_id" />
+                </form>
+            `,
         });
 
-        form.$(".o_field_many2one input").focus().val("xph").trigger("input").trigger("keyup");
-        await testUtils.nextTick();
-        form.$(".o_field_many2one input").trigger("blur");
-        await testUtils.nextTick();
+        form.el
+            .querySelectorAll(".o_field_many2one input")
+            .focus()
+            .val("xph")
+            .trigger("input")
+            .trigger("keyup");
+        await nextTick();
+        form.el.querySelectorAll(".o_field_many2one input").trigger("blur");
+        await nextTick();
 
         assert.containsNone(document.body, ".modal");
-        assert.strictEqual(form.$(".o_field_many2one input").val(), "xphone");
+        assert.strictEqual(form.el.querySelectorAll(".o_field_many2one input").value, "xphone");
         assert.containsOnce(form, ".o_external_button");
-
-        form.destroy();
     });
 
     QUnit.skip("no_create option on a many2one", async function (assert) {
         assert.expect(2);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                '<field name="product_id" options="{\'no_create\': True}"/>' +
-                "</sheet>" +
-                "</form>",
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <field name="product_id" options="{'no_create': 1}" />
+                    </sheet>
+                </form>
+            `,
         });
 
-        await testUtils.fields.editInput(form.$(".o_field_many2one input"), "new partner");
-        form.$(".o_field_many2one input").trigger("keyup").trigger("focusout");
-        assert.strictEqual($(".modal").length, 0, "should not display the create modal");
+        await testUtils.fields.editInput(
+            form.el.querySelectorAll(".o_field_many2one input"),
+            "new partner"
+        );
+        form.el.querySelectorAll(".o_field_many2one input").trigger("keyup").trigger("focusout");
         assert.strictEqual(
-            form.$(".o_field_many2one input").val(),
+            document.body.querySelector(".modal").length,
+            0,
+            "should not display the create modal"
+        );
+        assert.strictEqual(
+            form.el.querySelectorAll(".o_field_many2one input").value,
             "",
             "many2one value should cleared on focusout if many2one is no_create"
         );
-        form.destroy();
     });
 
     QUnit.skip("can_create and can_write option on a many2one", async function (assert) {
         assert.expect(5);
 
-        this.data.product.options = {
+        serverData.models.product.options = {
             can_create: "false",
             can_write: "false",
         };
+        serverData.views = {
+            "product,false,form": `
+                <form>
+                    <field name="display_name" />
+                </form>
+            `,
+        };
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                '<field name="product_id" can_create="false" can_write="false"/>' +
-                "</sheet>" +
-                "</form>",
-            archs: {
-                "product,false,form": '<form string="Products"><field name="display_name"/></form>',
-            },
-            mockRPC: function (route) {
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <field name="product_id" can_create="false" can_write="false" />
+                    </sheet>
+                </form>
+            `,
+            mockRPC(route) {
                 if (route === "/web/dataset/call_kw/product/get_formview_id") {
                     return Promise.resolve(false);
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
-        await testUtils.dom.click(form.$(".o_field_many2one input"));
+        await click(form.el, ".o_field_many2one input");
         assert.strictEqual(
             $(".ui-autocomplete .o_m2o_dropdown_option:contains(Create)").length,
             0,
             "there shouldn't be any option to search and create"
         );
 
-        await testUtils.dom.click($(".ui-autocomplete li:contains(xpad)").mouseenter());
+        await click($(".ui-autocomplete li:contains(xpad)").mouseenter());
         assert.strictEqual(
-            form.$(".o_field_many2one input").val(),
+            form.el.querySelectorAll(".o_field_many2one input").value,
             "xpad",
             "the correct record should be selected"
         );
@@ -3124,21 +3245,25 @@ QUnit.module("Fields", (hooks) => {
             "there should be an external button displayed"
         );
 
-        await testUtils.dom.click(form.$(".o_field_many2one .o_external_button"));
+        await click(form.el, ".o_field_many2one .o_external_button");
         assert.strictEqual(
-            $(".modal .o_form_view.o_form_readonly").length,
+            document.body.querySelector(".modal .o_form_view.o_form_readonly").length,
             1,
             "there should be a readonly form view opened"
         );
 
-        await testUtils.dom.click($(".modal .o_form_button_cancel"));
+        await click(document.body.querySelector(".modal .o_form_button_cancel"));
 
-        await testUtils.fields.editAndTrigger(form.$(".o_field_many2one input"), "new product", [
-            "keyup",
-            "focusout",
-        ]);
-        assert.strictEqual($(".modal").length, 0, "should not display the create modal");
-        form.destroy();
+        await testUtils.fields.editAndTrigger(
+            form.el.querySelectorAll(".o_field_many2one input"),
+            "new product",
+            ["keyup", "focusout"]
+        );
+        assert.strictEqual(
+            document.body.querySelector(".modal").length,
+            0,
+            "should not display the create modal"
+        );
     });
 
     QUnit.skip(
@@ -3146,24 +3271,26 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(2);
 
-            const form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
-                arch: `<form string="Partners">
-                <sheet>
-                    <field name="product_id" can_create="false" can_write="false"/>
-                </sheet>
-            </form>`,
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <form>
+                        <sheet>
+                            <field name="product_id" can_create="false" can_write="false" />
+                        </sheet>
+                    </form>
+                `,
             });
 
-            await testUtils.dom.click(form.$(".o_field_many2one input"));
+            await click(form.el, ".o_field_many2one input");
             await testUtils.fields.editAndTrigger(
-                form.$('.o_field_many2one[name="product_id"] input'),
+                form.el.querySelectorAll('.o_field_many2one[name="product_id"] input'),
                 "abc",
                 "keydown"
             );
-            await testUtils.nextTick();
+            await nextTick();
             assert.strictEqual(
                 $(".ui-autocomplete .o_m2o_dropdown_option:contains(Create)").length,
                 0,
@@ -3174,24 +3301,24 @@ QUnit.module("Fields", (hooks) => {
                 1,
                 "there should be option for 'No records'"
             );
-
-            form.destroy();
         }
     );
 
     QUnit.skip("pressing enter in a m2o in an editable list", async function (assert) {
         assert.expect(8);
-        var M2O_DELAY = relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY;
-        relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = 0;
 
-        var list = await createView({
-            View: ListView,
-            model: "partner",
-            data: this.data,
-            arch: '<tree editable="bottom"><field name="product_id"/></tree>',
+        const list = await makeView({
+            type: "list",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <tree editable="bottom">
+                    <field name="product_id" />
+                </tree>
+            `,
         });
 
-        await testUtils.dom.click(list.$("td.o_data_cell:first"));
+        await click(list.$("td.o_data_cell:first"));
         assert.containsOnce(list, ".o_selected_row", "should have a row in edit mode");
 
         // we now write 'a' and press enter to check that the selection is
@@ -3229,8 +3356,6 @@ QUnit.module("Fields", (hooks) => {
             "o_selected_row",
             "third row should now be selected"
         );
-        list.destroy();
-        relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;
     });
 
     QUnit.skip(
@@ -3238,38 +3363,42 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(2);
 
-            var M2O_DELAY = relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY;
-            relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = 0;
+            serverData.views = {
+                "partner,false,form": `
+                    <form>
+                        <field name="display_name" />
+                    </form>
+                `,
+            };
 
-            var form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
-                arch:
-                    "<form>" +
-                    '<field name="trululu" options="{\'no_quick_create\': True}"/>' +
-                    '<field name="foo"/>' +
-                    "</form>",
-                archs: {
-                    "partner,false,form":
-                        '<form string="Partners"><field name="display_name"/></form>',
-                },
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <form>
+                        <field name="trululu" options="{'no_quick_create': 1}" />
+                        <field name="foo" />
+                    </form>
+                `,
             });
 
-            var $input = form.$(".o_field_many2one input");
+            var $input = form.el.querySelectorAll(".o_field_many2one input");
             await testUtils.fields.editInput($input, "Something that does not exist");
             $(".ui-autocomplete .ui-menu-item a:contains(Create and)").trigger("mouseenter");
-            await testUtils.nextTick();
+            await nextTick();
             await testUtils.fields.triggerKey("down", $input, "enter");
             await testUtils.fields.triggerKey("press", $input, "enter");
             await testUtils.fields.triggerKey("up", $input, "enter");
             $input.blur();
-            assert.strictEqual($(".modal").length, 1, "should have one modal in body");
+            assert.strictEqual(
+                document.body.querySelector(".modal").length,
+                1,
+                "should have one modal in body"
+            );
             // Check that discarding clears $input
-            await testUtils.dom.click($(".modal .o_form_button_cancel"));
-            assert.strictEqual($input.val(), "", "the field should be empty");
-            form.destroy();
-            relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;
+            await click(document.body.querySelector(".modal .o_form_button_cancel"));
+            assert.strictEqual($input.value, "", "the field should be empty");
         }
     );
 
@@ -3278,35 +3407,31 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(3);
 
-            this.data.partner.onchanges.trululu = function () {};
+            serverData.models.partner.onchanges.trululu = () => {};
 
-            var M2O_DELAY = relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY;
-            relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = 0;
-            var prom = testUtils.makeTestPromise();
+            const def = makeDeferred();
 
-            var form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
-                arch:
-                    "<form>" +
-                    '<field name="trululu"/>' +
-                    '<field name="display_name"/>' +
-                    "</form>",
-                mockRPC: function (route, args) {
-                    var result = this._super.apply(this, arguments);
-                    if (args.method === "onchange") {
-                        return prom.then(_.constant(result));
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
+                    <form>
+                        <field name="trululu" />
+                        <field name="display_name" />
+                    </form>
+                `,
+                mockRPC(route, { method }, performRPC) {
+                    if (method === "onchange") {
+                        return def.then(performRPC(...arguments));
                     }
-                    return result;
-                },
-                res_id: 1,
-                viewOptions: {
-                    mode: "edit",
                 },
             });
 
-            var $input = form.$(".o_field_many2one input");
+            await click(form.el, ".o_form_button_edit");
+
+            var $input = form.el.querySelectorAll(".o_field_many2one input");
             await testUtils.fields.editAndTrigger($input, "first", ["keydown", "keyup"]);
             await testUtils.fields.triggerKey("down", $input, "tab");
             await testUtils.fields.triggerKey("press", $input, "tab");
@@ -3314,64 +3439,71 @@ QUnit.module("Fields", (hooks) => {
 
             // simulate a focusout (e.g. because the user clicks outside)
             // before the onchange returns
-            form.$(".o_field_char").focus();
-
-            assert.strictEqual($(".modal").length, 0, "there shouldn't be any modal in body");
-
-            // unlock the onchange
-            prom.resolve();
-            await testUtils.nextTick();
+            form.el.querySelectorAll(".o_field_char").focus();
 
             assert.strictEqual(
-                $input.val(),
+                document.body.querySelector(".modal").length,
+                0,
+                "there shouldn't be any modal in body"
+            );
+
+            // unlock the onchange
+            def.resolve();
+            await nextTick();
+
+            assert.strictEqual(
+                $input.value,
                 "first record",
                 "first record should have been selected"
             );
-            assert.strictEqual($(".modal").length, 0, "there shouldn't be any modal in body");
-            relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;
-            form.destroy();
+            assert.strictEqual(
+                document.body.querySelector(".modal").length,
+                0,
+                "there shouldn't be any modal in body"
+            );
         }
     );
 
     QUnit.skip("leaving a many2one by pressing tab", async function (assert) {
         assert.expect(3);
 
-        const form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch: `<form>
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
                     <field name="trululu"/>
                     <field name="display_name"/>
-                </form>`,
+                </form>
+            `,
         });
 
-        const $input = form.$(".o_field_many2one input");
-        await testUtils.dom.click($input);
+        const $input = form.el.querySelectorAll(".o_field_many2one input");
+        await click($input);
         await testUtils.fields.triggerKeydown($input, "tab");
-        assert.strictEqual($input.val(), "", "no record should have been selected");
+        assert.strictEqual($input.value, "", "no record should have been selected");
 
         // open autocomplete dropdown and manually select item by UP/DOWN key and press TAB
-        await testUtils.dom.click($input);
+        await click($input);
         await testUtils.fields.triggerKeydown($input, "down");
         await testUtils.fields.triggerKeydown($input, "tab");
         assert.strictEqual(
-            $input.val(),
+            $input.value,
             "second record",
             "second record should have been selected"
         );
 
         // clear many2one and then open autocomplete, write something and press TAB
-        await testUtils.fields.editAndTrigger(form.$(".o_field_many2one input"), "", [
-            "keyup",
-            "blur",
-        ]);
+        await testUtils.fields.editAndTrigger(
+            form.el.querySelectorAll(".o_field_many2one input"),
+            "",
+            ["keyup", "blur"]
+        );
         await testUtils.dom.triggerEvent($input, "focus");
         await testUtils.fields.editInput($input, "se");
         await testUtils.fields.triggerKeydown($input, "tab");
-        assert.strictEqual($input.val(), "second record", "first record should have been selected");
-
-        form.destroy();
+        assert.strictEqual($input.value, "second record", "first record should have been selected");
     });
 
     QUnit.skip(
@@ -3379,41 +3511,40 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(4);
 
-            const form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
-                arch: `<form>
-                    <field name="trululu"/>
-                    <field name="display_name"/>
-                </form>`,
-                res_id: 1,
-                viewOptions: {
-                    mode: "edit",
-                },
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
+                    <form>
+                        <field name="trululu"/>
+                        <field name="display_name"/>
+                    </form>
+                `,
             });
 
-            const $input = form.$(".o_field_many2one input");
-            assert.ok($input.val(), "many2one should have value");
+            await click(form.el, ".o_form_button_edit");
+
+            const $input = form.el.querySelectorAll(".o_field_many2one input");
+            assert.ok($input.value, "many2one should have value");
 
             // simulate backspace to remove values and press TAB
             await testUtils.fields.editInput($input, "");
             await testUtils.fields.triggerKeyup($input, "backspace");
             await testUtils.fields.triggerKeydown($input, "tab");
-            assert.strictEqual($input.val(), "", "no record should have been selected");
+            assert.strictEqual($input.value, "", "no record should have been selected");
 
             // reset a value
             await testUtils.fields.many2one.clickOpenDropdown("trululu");
             await testUtils.fields.many2one.clickItem("trululu", "first record");
-            assert.ok($input.val(), "many2one should have value");
+            assert.ok($input.value, "many2one should have value");
 
             // simulate delete to remove values and press TAB
             await testUtils.fields.editInput($input, "");
             await testUtils.fields.triggerKeyup($input, "delete");
             await testUtils.fields.triggerKeydown($input, "tab");
-            assert.strictEqual($input.val(), "", "no record should have been selected");
-
-            form.destroy();
+            assert.strictEqual($input.value, "", "no record should have been selected");
         }
     );
 
@@ -3421,45 +3552,47 @@ QUnit.module("Fields", (hooks) => {
         "many2one in editable list + onchange, with enter [REQUIRE FOCUS]",
         async function (assert) {
             assert.expect(6);
-            var M2O_DELAY = relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY;
-            relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = 0;
 
-            this.data.partner.onchanges.product_id = function (obj) {
+            serverData.models.partner.onchanges.product_id = (obj) => {
                 obj.int_field = obj.product_id || 0;
             };
 
-            var prom = testUtils.makeTestPromise();
+            const def = makeDeferred();
 
-            var list = await createView({
-                View: ListView,
-                model: "partner",
-                data: this.data,
-                arch:
-                    '<tree editable="bottom"><field name="product_id"/><field name="int_field"/></tree>',
-                mockRPC: function (route, args) {
-                    if (args.method) {
-                        assert.step(args.method);
+            const list = await makeView({
+                type: "list",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <tree editable="bottom">
+                        <field name="product_id" />
+                        <field name="int_field" />
+                    </tree>
+                `,
+                mockRPC(route, { method }, performRPC) {
+                    if (method) {
+                        assert.step(method);
                     }
-                    var result = this._super.apply(this, arguments);
-                    if (args.method === "onchange") {
-                        return prom.then(_.constant(result));
+                    if (method === "onchange") {
+                        return def.then(performRPC(...arguments));
                     }
-                    return result;
                 },
             });
 
-            await testUtils.dom.click(list.$("td.o_data_cell:first"));
+            await click(list.$("td.o_data_cell:first"));
             await testUtils.fields.editInput(list.$("td.o_data_cell input:first"), "a");
             var $input = list.$("td.o_data_cell input:first");
             await testUtils.fields.triggerKeydown($input, "enter");
             await testUtils.fields.triggerKey("up", $input, "enter");
-            prom.resolve();
-            await testUtils.nextTick();
+            def.resolve();
+            await nextTick();
             await testUtils.fields.triggerKeydown($input, "enter");
-            assert.strictEqual($(".modal").length, 0, "should not have any modal in DOM");
+            assert.strictEqual(
+                document.body.querySelector(".modal").length,
+                0,
+                "should not have any modal in DOM"
+            );
             assert.verifySteps(["name_search", "onchange", "write", "read"]);
-            list.destroy();
-            relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;
         }
     );
 
@@ -3469,64 +3602,71 @@ QUnit.module("Fields", (hooks) => {
             // this is the same test as the previous one, but the onchange is just
             // resolved slightly later
             assert.expect(6);
-            var M2O_DELAY = relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY;
-            relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = 0;
 
-            this.data.partner.onchanges.product_id = function (obj) {
+            serverData.models.partner.onchanges.product_id = (obj) => {
                 obj.int_field = obj.product_id || 0;
             };
 
-            var prom = testUtils.makeTestPromise();
+            const def = makeDeferred();
 
-            var list = await createView({
-                View: ListView,
-                model: "partner",
-                data: this.data,
-                arch:
-                    '<tree editable="bottom"><field name="product_id"/><field name="int_field"/></tree>',
-                mockRPC: function (route, args) {
-                    if (args.method) {
-                        assert.step(args.method);
+            const list = await makeView({
+                type: "list",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <tree editable="bottom">
+                        <field name="product_id" />
+                        <field name="int_field" />
+                    </tree>
+                `,
+                mockRPC(route, { method }, performRPC) {
+                    if (method) {
+                        assert.step(method);
                     }
-                    var result = this._super.apply(this, arguments);
-                    if (args.method === "onchange") {
-                        return prom.then(_.constant(result));
+                    if (method === "onchange") {
+                        return def.then(performRPC(...arguments));
                     }
-                    return result;
                 },
             });
 
-            await testUtils.dom.click(list.$("td.o_data_cell:first"));
+            await click(list.$("td.o_data_cell:first"));
             await testUtils.fields.editInput(list.$("td.o_data_cell input:first"), "a");
             var $input = list.$("td.o_data_cell input:first");
             await testUtils.fields.triggerKeydown($input, "enter");
             await testUtils.fields.triggerKey("up", $input, "enter");
             await testUtils.fields.triggerKeydown($input, "enter");
-            prom.resolve();
-            await testUtils.nextTick();
-            assert.strictEqual($(".modal").length, 0, "should not have any modal in DOM");
+            def.resolve();
+            await nextTick();
+            assert.strictEqual(
+                document.body.querySelector(".modal").length,
+                0,
+                "should not have any modal in DOM"
+            );
             assert.verifySteps(["name_search", "onchange", "write", "read"]);
-            list.destroy();
-            relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = M2O_DELAY;
         }
     );
 
     QUnit.skip("many2one: domain updated by an onchange", async function (assert) {
         assert.expect(2);
 
-        this.data.partner.onchanges = {
-            int_field: function () {},
+        serverData.models.partner.onchanges = {
+            int_field() {},
         };
 
-        var domain = [];
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch: "<form>" + '<field name="int_field"/>' + '<field name="trululu"/>' + "</form>",
-            res_id: 1,
-            mockRPC: function (route, args) {
-                if (args.method === "onchange") {
+        let domain = [];
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="int_field" />
+                    <field name="trululu" />
+                </form>
+            `,
+            mockRPC(route, { kwargs, method }) {
+                if (method === "onchange") {
                     domain = [["id", "in", [10]]];
                     return Promise.resolve({
                         domain: {
@@ -3535,89 +3675,85 @@ QUnit.module("Fields", (hooks) => {
                         },
                     });
                 }
-                if (args.method === "name_search") {
-                    assert.deepEqual(args.kwargs.args, domain, "sent domain should be correct");
+                if (method === "name_search") {
+                    assert.deepEqual(kwargs.args, domain, "sent domain should be correct");
                 }
-                return this._super(route, args);
-            },
-            viewOptions: {
-                mode: "edit",
             },
         });
 
-        // trigger a name_search (domain should be [])
-        await testUtils.dom.click(form.$(".o_field_widget[name=trululu] input"));
-        // close the dropdown
-        await testUtils.dom.click(form.$(".o_field_widget[name=trululu] input"));
-        // trigger an onchange that will update the domain
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=int_field]"), 2);
-        // trigger a name_search (domain should be [['id', 'in', [10]]])
-        await testUtils.dom.click(form.$(".o_field_widget[name=trululu] input"));
+        await click(form.el, ".o_form_button_edit");
 
-        form.destroy();
+        // trigger a name_search (domain should be [])
+        await click(form.el, ".o_field_widget[name=trululu] input");
+        // close the dropdown
+        await click(form.el, ".o_field_widget[name=trululu] input");
+        // trigger an onchange that will update the domain
+        await testUtils.fields.editInput(
+            form.el.querySelectorAll(".o_field_widget[name=int_field]"),
+            2
+        );
+        // trigger a name_search (domain should be [['id', 'in', [10]]])
+        await click(form.el, ".o_field_widget[name=trululu] input");
     });
 
     QUnit.skip("many2one in one2many: domain updated by an onchange", async function (assert) {
         assert.expect(3);
 
-        this.data.partner.onchanges = {
-            trululu: function () {},
+        serverData.models.partner.onchanges = {
+            trululu() {},
         };
 
-        var domain = [];
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                "<form>" +
-                '<field name="p">' +
-                '<tree editable="bottom">' +
-                '<field name="foo"/>' +
-                '<field name="trululu"/>' +
-                "</tree>" +
-                "</field>" +
-                "</form>",
-            res_id: 1,
-            mockRPC: function (route, args) {
-                if (args.method === "onchange") {
+        let domain = [];
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="p">
+                        <tree editable="bottom">
+                            <field name="foo" />
+                            <field name="trululu" />
+                        </tree>
+                    </field>
+                </form>
+            `,
+            mockRPC(route, { kwargs, method }) {
+                if (method === "onchange") {
                     return Promise.resolve({
                         domain: {
                             trululu: domain,
                         },
                     });
                 }
-                if (args.method === "name_search") {
-                    assert.deepEqual(args.kwargs.args, domain, "sent domain should be correct");
+                if (method === "name_search") {
+                    assert.deepEqual(kwargs.args, domain, "sent domain should be correct");
                 }
-                return this._super(route, args);
-            },
-            viewOptions: {
-                mode: "edit",
             },
         });
 
+        await click(form.el, ".o_form_button_edit");
+
         // add a first row with a specific domain for the m2o
         domain = [["id", "in", [10]]]; // domain for subrecord 1
-        await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
-        await testUtils.dom.click(form.$(".o_field_widget[name=trululu] input"));
+        await click(form.el, ".o_field_x2many_list_row_add a");
+        await click(form.el, ".o_field_widget[name=trululu] input");
         // add some value to foo field to make record dirty
         await testUtils.fields.editInput(
-            form.$('tr.o_selected_row input[name="foo"]'),
+            form.el.querySelectorAll('tr.o_selected_row input[name="foo"]'),
             "new value"
         );
 
         // add a second row with another domain for the m2o
         domain = [["id", "in", [5]]]; // domain for subrecord 2
-        await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
-        await testUtils.dom.click(form.$(".o_field_widget[name=trululu] input"));
+        await click(form.el, ".o_field_x2many_list_row_add a");
+        await click(form.el, ".o_field_widget[name=trululu] input");
 
         // check again the first row to ensure that the domain hasn't change
         domain = [["id", "in", [10]]]; // domain for subrecord 1 should have been kept
-        await testUtils.dom.click(form.$(".o_data_row:first .o_data_cell:eq(1)"));
-        await testUtils.dom.click(form.$(".o_field_widget[name=trululu] input"));
-
-        form.destroy();
+        await click(form.el, ".o_data_row:first .o_data_cell:eq(1)");
+        await click(form.el, ".o_field_widget[name=trululu] input");
     });
 
     QUnit.skip("search more in many2one: no text in input", async function (assert) {
@@ -3626,29 +3762,36 @@ QUnit.module("Fields", (hooks) => {
         // return a list of preselected ids to filter on in the list view (opened in a dialog)
         assert.expect(6);
 
-        for (var i = 0; i < 8; i++) {
-            this.data.partner.records.push({ id: 100 + i, display_name: "test_" + i });
+        for (let i = 0; i < 8; i++) {
+            serverData.models.partner.records.push({ id: 100 + i, display_name: `test_${i}` });
         }
+        serverData.views = {
+            "partner,false,list": `
+                <list>
+                    <field name="display_name" />
+                </list>
+            `,
+            "partner,false,search": `<search />`,
+        };
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch: '<form><field name="trululu"/></form>',
-            archs: {
-                "partner,false,list": '<list><field name="display_name"/></list>',
-                "partner,false,search": "<search></search>",
-            },
-            mockRPC: function (route, args) {
-                assert.step(args.method || route);
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="trululu" />
+                </form>
+            `,
+            mockRPC(route, { domain, method }) {
+                assert.step(method || route);
                 if (route === "/web/dataset/search_read") {
                     assert.deepEqual(
-                        args.domain,
+                        domain,
                         [],
                         "should not preselect ids as there as nothing in the m2o input"
                     );
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
@@ -3663,8 +3806,6 @@ QUnit.module("Fields", (hooks) => {
             "load_views", // list view in dialog
             "/web/dataset/search_read", // to display results in the dialog
         ]);
-
-        form.destroy();
     });
 
     QUnit.skip("search more in many2one: text in input", async function (assert) {
@@ -3674,26 +3815,33 @@ QUnit.module("Fields", (hooks) => {
         // that the user can remove this filter to bypass the limit
         assert.expect(12);
 
-        for (var i = 0; i < 8; i++) {
-            this.data.partner.records.push({ id: 100 + i, display_name: "test_" + i });
+        for (let i = 0; i < 8; i++) {
+            serverData.models.partner.records.push({ id: 100 + i, display_name: `test_${i}` });
         }
+        serverData.views = {
+            "partner,false,list": `
+                <list>
+                    <field name="display_name" />
+                </list>
+            `,
+            "partner,false,search": `<search />`,
+        };
 
-        var expectedDomain;
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch: '<form><field name="trululu"/></form>',
-            archs: {
-                "partner,false,list": '<list><field name="display_name"/></list>',
-                "partner,false,search": "<search></search>",
-            },
-            mockRPC: function (route, args) {
-                assert.step(args.method || route);
+        let expectedDomain;
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="trululu" />
+                </form>
+            `,
+            mockRPC(route, { domain, method }) {
+                assert.step(method || route);
                 if (route === "/web/dataset/search_read") {
-                    assert.deepEqual(args.domain, expectedDomain);
+                    assert.deepEqual(domain, expectedDomain);
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
@@ -3712,7 +3860,7 @@ QUnit.module("Fields", (hooks) => {
 
         // remove the filter on ids
         expectedDomain = [];
-        await testUtils.dom.click($(".modal .o_cp_searchview .o_facet_remove"));
+        await click(document.body.querySelector(".modal .o_cp_searchview .o_facet_remove"));
 
         assert.verifySteps([
             "onchange",
@@ -3723,16 +3871,22 @@ QUnit.module("Fields", (hooks) => {
             "/web/dataset/search_read", // to display results in the dialog
             "/web/dataset/search_read", // after removal of dynamic filter
         ]);
-
-        form.destroy();
     });
 
     QUnit.skip("search more in many2one: dropdown click", async function (assert) {
         assert.expect(8);
 
         for (let i = 0; i < 8; i++) {
-            this.data.partner.records.push({ id: 100 + i, display_name: "test_" + i });
+            serverData.models.partner.records.push({ id: 100 + i, display_name: `test_${i}` });
         }
+        serverData.views = {
+            "partner,false,list": `
+                <list>
+                    <field name="display_name" />
+                </list>
+            `,
+            "partner,false,search": `<search />`,
+        };
 
         // simulate modal-like element rendered by the field html
         const $fakeDialog = $(`<div>
@@ -3742,15 +3896,15 @@ QUnit.module("Fields", (hooks) => {
         </div>`);
         $("body").append($fakeDialog);
 
-        const form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch: '<form><field name="trululu"/></form>',
-            archs: {
-                "partner,false,list": '<list><field name="display_name"/></list>',
-                "partner,false,search": "<search></search>",
-            },
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="trululu" />
+                </form>
+            `,
         });
         await testUtils.fields.many2one.searchAndClickItem("trululu", {
             item: "Search More",
@@ -3761,7 +3915,7 @@ QUnit.module("Fields", (hooks) => {
         let filterMenuCss = ".o_search_options > .o_filter_menu";
         let groupByMenuCss = ".o_search_options > .o_group_by_menu";
 
-        await testUtils.dom.click(document.querySelector(`${filterMenuCss} > .dropdown-toggle`));
+        await click(document.querySelector(`${filterMenuCss} > .dropdown-toggle`));
 
         assert.hasClass(document.querySelector(filterMenuCss), "show");
         assert.isVisible(
@@ -3774,7 +3928,7 @@ QUnit.module("Fields", (hooks) => {
             "the Group by dropdown menu should be not visible"
         );
 
-        await testUtils.dom.click(document.querySelector(`${groupByMenuCss} > .dropdown-toggle`));
+        await click(document.querySelector(`${groupByMenuCss} > .dropdown-toggle`));
         assert.hasClass(document.querySelector(groupByMenuCss), "show");
         assert.isVisible(
             document.querySelector(`${groupByMenuCss} > .dropdown-menu`),
@@ -3785,67 +3939,70 @@ QUnit.module("Fields", (hooks) => {
             document.querySelector(`${filterMenuCss} > .dropdown-menu`),
             "the filter dropdown menu should be not visible"
         );
-
-        $fakeDialog.remove();
-        form.destroy();
     });
 
     QUnit.skip("updating a many2one from a many2many", async function (assert) {
         assert.expect(4);
 
-        this.data.turtle.records[1].turtle_trululu = 1;
+        serverData.models.turtle.records[1].turtle_trululu = 1;
+        serverData.views = {
+            "partner,false,form": `
+                <form>
+                    <field name="display_name" />
+                </form>
+            `,
+        };
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                "<group>" +
-                '<field name="turtles">' +
-                '<tree editable="bottom">' +
-                '<field name="display_name"/>' +
-                '<field name="turtle_trululu"/>' +
-                "</tree>" +
-                "</field>" +
-                "</group>" +
-                "</form>",
-            res_id: 1,
-            archs: {
-                "partner,false,form": '<form string="Trululu"><field name="display_name"/></form>',
-            },
-            mockRPC: function (route, args) {
-                if (args.method === "get_formview_id") {
-                    assert.deepEqual(
-                        args.args[0],
-                        [1],
-                        "should call get_formview_id with correct id"
-                    );
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <group>
+                        <field name="turtles">
+                            <tree editable="bottom">
+                                <field name="display_name" />
+                                <field name="turtle_trululu" />
+                            </tree>
+                        </field>
+                    </group>
+                </form>
+            `,
+            mockRPC(route, { args, method }) {
+                if (method === "get_formview_id") {
+                    assert.deepEqual(args[0], [1], "should call get_formview_id with correct id");
                     return Promise.resolve(false);
                 }
-                return this._super(route, args);
             },
         });
 
         // Opening the modal
-        await testUtils.form.clickEdit(form);
-        await testUtils.dom.click(form.$(".o_data_row td:contains(first record)"));
-        await testUtils.dom.click(form.$(".o_external_button"));
-        assert.strictEqual($(".modal").length, 1, "should have one modal in body");
+        await click(form.el, ".o_form_button_edit");
+        await click(form.el, ".o_data_row td:contains(first record)");
+        await click(form.el, ".o_external_button");
+        assert.strictEqual(
+            document.body.querySelector(".modal").length,
+            1,
+            "should have one modal in body"
+        );
 
         // Changing the 'trululu' value
         await testUtils.fields.editInput($('.modal input[name="display_name"]'), "test");
-        await testUtils.dom.click($(".modal button.btn-primary"));
+        await click(document.body.querySelector(".modal button.btn-primary"));
 
         // Test whether the value has changed
-        assert.strictEqual($(".modal").length, 0, "the modal should be closed");
+        assert.strictEqual(
+            document.body.querySelector(".modal").length,
+            0,
+            "the modal should be closed"
+        );
         assert.equal(
-            form.$(".o_data_cell:contains(test)").text(),
+            form.el.querySelectorAll(".o_data_cell:contains(test)").textContent,
             "test",
             "the partner name should have been updated to 'test'"
         );
-
-        form.destroy();
     });
 
     QUnit.skip("search more in many2one: resequence inside dialog", async function (assert) {
@@ -3853,34 +4010,38 @@ QUnit.module("Fields", (hooks) => {
         // the dialog works
         assert.expect(10);
 
-        this.data.partner.fields.sequence = { string: "Sequence", type: "integer" };
-        for (var i = 0; i < 8; i++) {
-            this.data.partner.records.push({ id: 100 + i, display_name: "test_" + i });
+        serverData.models.partner.fields.sequence = { string: "Sequence", type: "integer" };
+        for (let i = 0; i < 8; i++) {
+            serverData.models.partner.records.push({ id: 100 + i, display_name: `test_${i}` });
         }
+        serverData.views = {
+            "partner,false,list": `
+                <list>
+                    <field name="sequence" widget="handle" />
+                    <field name="display_name" />
+                </list>
+            `,
+            "partner,false,search": `<search />`,
+        };
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch: '<form><field name="trululu"/></form>',
-            archs: {
-                "partner,false,list":
-                    "<list>" +
-                    '<field name="sequence" widget="handle"/>' +
-                    '<field name="display_name"/>' +
-                    "</list>",
-                "partner,false,search": "<search></search>",
-            },
-            mockRPC: function (route, args) {
-                assert.step(args.method || route);
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="trululu" />
+                </form>
+            `,
+            mockRPC(route, { domain, method }) {
+                assert.step(method || route);
                 if (route === "/web/dataset/search_read") {
                     assert.deepEqual(
-                        args.domain,
+                        domain,
                         [],
                         "should not preselect ids as there as nothing in the m2o input"
                     );
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
@@ -3889,7 +4050,7 @@ QUnit.module("Fields", (hooks) => {
             search: "",
         });
 
-        var $modal = $(".modal");
+        var $modal = document.body.querySelector(".modal");
         assert.equal($modal.length, 1, "There should be 1 modal opened");
 
         var $handles = $modal.find(".ui-sortable-handle");
@@ -3907,8 +4068,6 @@ QUnit.module("Fields", (hooks) => {
             "/web/dataset/resequence", // resequencing lines
             "read",
         ]);
-
-        form.destroy();
     });
 
     QUnit.test("many2one dropdown disappears on scroll", async function (assert) {
@@ -3946,92 +4105,97 @@ QUnit.module("Fields", (hooks) => {
     QUnit.skip("x2many list sorted by many2one", async function (assert) {
         assert.expect(3);
 
-        this.data.partner.records[0].p = [1, 2, 4];
-        this.data.partner.fields.trululu.sortable = true;
+        serverData.models.partner.records[0].p = [1, 2, 4];
+        serverData.models.partner.fields.trululu.sortable = true;
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                "<form>" +
-                '<field name="p">' +
-                "<tree>" +
-                '<field name="id"/>' +
-                '<field name="trululu"/>' +
-                "</tree>" +
-                "</field>" +
-                "</form>",
-            res_id: 1,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="p">
+                        <tree>
+                            <field name="id" />
+                            <field name="trululu" />
+                        </tree>
+                    </field>
+                </form>
+            `,
         });
 
         assert.strictEqual(
-            form.$(".o_data_row .o_list_number").text(),
+            form.el.querySelectorAll(".o_data_row .o_list_number").textContent,
             "124",
             "should have correct order initially"
         );
 
-        await testUtils.dom.click(form.$(".o_list_view thead th:nth(1)"));
+        await click(form.el, ".o_list_view thead th:nth(1)");
 
         assert.strictEqual(
-            form.$(".o_data_row .o_list_number").text(),
+            form.el.querySelectorAll(".o_data_row .o_list_number").textContent,
             "412",
             "should have correct order (ASC)"
         );
 
-        await testUtils.dom.click(form.$(".o_list_view thead th:nth(1)"));
+        await click(form.el, ".o_list_view thead th:nth(1)");
 
         assert.strictEqual(
-            form.$(".o_data_row .o_list_number").text(),
+            form.el.querySelectorAll(".o_data_row .o_list_number").textContent,
             "214",
             "should have correct order (DESC)"
         );
-
-        form.destroy();
     });
 
     QUnit.skip("one2many with extra field from server not in form", async function (assert) {
         assert.expect(6);
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                '<field name="p" >' +
-                "<tree>" +
-                '<field name="datetime"/>' +
-                '<field name="display_name"/>' +
-                "</tree>" +
-                "</field>" +
-                "</form>",
-            res_id: 1,
-            archs: {
-                "partner,false,form": "<form>" + '<field name="display_name"/>' + "</form>",
-            },
-            mockRPC: function (route, args) {
+        serverData.views = {
+            "partner,false,form": `
+                <form>
+                    <field name="display_name" />
+                </form>
+            `,
+            "partner,false,search": `<search />`,
+        };
+
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="p">
+                        <tree>
+                            <field name="datetime" />
+                            <field name="display_name" />
+                        </tree>
+                    </field>
+                </form>
+            `,
+            mockRPC(route, { args }) {
                 if (route === "/web/dataset/call_kw/partner/write") {
-                    args.args[1].p[0][2].datetime = "2018-04-05 12:00:00";
+                    args[1].p[0][2].datetime = "2018-04-05 12:00:00";
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
-        await testUtils.form.clickEdit(form);
+        await click(form.el, ".o_form_button_edit");
 
-        var x2mList = form.$(".o_field_x2many_list[name=p]");
+        var x2mList = form.el.querySelectorAll(".o_field_x2many_list[name=p]");
 
         // Add a record in the list
-        await testUtils.dom.click(x2mList.find(".o_field_x2many_list_row_add a"));
+        await click(x2mList.find(".o_field_x2many_list_row_add a"));
 
-        var modal = $(".modal-lg");
+        var modal = document.body.querySelector(".modal-lg");
 
         var nameInput = modal.find("input.o_input[name=display_name]");
         await testUtils.fields.editInput(nameInput, "michelangelo");
 
         // Save the record in the modal (though it is still virtual)
-        await testUtils.dom.click(modal.find(".btn-primary").first());
+        await click(modal.find(".btn-primary").first());
 
         assert.equal(
             x2mList.find(".o_data_row").length,
@@ -4042,20 +4206,20 @@ QUnit.module("Fields", (hooks) => {
         var newlyAdded = x2mList.find(".o_data_row").eq(0);
 
         assert.equal(
-            newlyAdded.find(".o_data_cell").first().text(),
+            newlyAdded.find(".o_data_cell").first().textContent,
             "",
             "The create_date field should be empty"
         );
         assert.equal(
-            newlyAdded.find(".o_data_cell").eq(1).text(),
+            newlyAdded.find(".o_data_cell").eq(1).textContent,
             "michelangelo",
             "The display name field should have the right value"
         );
 
         // Save the whole thing
-        await testUtils.form.clickSave(form);
+        await click(form.el, ".o_form_button_save");
 
-        x2mList = form.$(".o_field_x2many_list[name=p]");
+        x2mList = form.el.querySelectorAll(".o_field_x2many_list[name=p]");
 
         // Redo asserts in RO mode after saving
         assert.equal(
@@ -4067,17 +4231,15 @@ QUnit.module("Fields", (hooks) => {
         newlyAdded = x2mList.find(".o_data_row").eq(0);
 
         assert.equal(
-            newlyAdded.find(".o_data_cell").first().text(),
+            newlyAdded.find(".o_data_cell").first().textContent,
             "04/05/2018 12:00:00",
             "The create_date field should have the right value"
         );
         assert.equal(
-            newlyAdded.find(".o_data_cell").eq(1).text(),
+            newlyAdded.find(".o_data_cell").eq(1).textContent,
             "michelangelo",
             "The display name field should have the right value"
         );
-
-        form.destroy();
     });
 
     QUnit.skip(
@@ -4085,48 +4247,46 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(1);
 
-            var form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
-                arch:
-                    '<form string="Partners">' +
-                    '<field name="p" >' +
-                    "<tree>" +
-                    '<field name="datetime"/>' +
-                    '<field name="display_name"/>' +
-                    "</tree>" +
-                    "<form>" +
-                    '<field name="display_name"/>' +
-                    "</form>" +
-                    "</field>" +
-                    "</form>",
-                res_id: 1,
-                viewOptions: {
-                    mode: "edit",
-                },
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
+                    <form>
+                        <field name="p">
+                            <tree>
+                                <field name="datetime" />
+                                <field name="display_name" />
+                            </tree>
+                            <form>
+                                <field name="display_name" />
+                            </form>
+                        </field>
+                    </form>
+                `,
             });
 
-            var x2mList = form.$(".o_field_x2many_list[name=p]");
+            await click(form.el, ".o_form_button_edit");
+
+            var x2mList = form.el.querySelectorAll(".o_field_x2many_list[name=p]");
 
             // Add a record in the list
-            await testUtils.dom.click(x2mList.find(".o_field_x2many_list_row_add a"));
+            await click(x2mList.find(".o_field_x2many_list_row_add a"));
 
-            var modal = $(".modal-lg");
+            var modal = document.body.querySelector(".modal-lg");
 
             var nameInput = modal.find("input.o_input[name=display_name]");
             await testUtils.fields.editInput(nameInput, "michelangelo");
 
             // Save the record in the modal (though it is still virtual)
-            await testUtils.dom.click(modal.find(".btn-primary").first());
+            await click(modal.find(".btn-primary").first());
 
             assert.equal(
                 x2mList.find(".o_data_row").length,
                 1,
                 "There should be 1 records in the x2m list"
             );
-
-            form.destroy();
         }
     );
 
@@ -4135,77 +4295,76 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(1);
 
-            var form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
-                arch:
-                    '<form string="Partners">' +
-                    '<field name="p" >' +
-                    "<tree>" +
-                    '<field name="turtles"/>' +
-                    '<field name="display_name"/>' +
-                    "</tree>" +
-                    "<form>" +
-                    '<field name="display_name"/>' +
-                    "</form>" +
-                    "</field>" +
-                    "</form>",
-                res_id: 1,
-                viewOptions: {
-                    mode: "edit",
-                },
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
+                    <form>
+                        <field name="p">
+                            <tree>
+                                <field name="turtles" />
+                                <field name="display_name" />
+                            </tree>
+                            <form>
+                                <field name="display_name" />
+                            </form>
+                        </field>
+                    </form>
+                `,
             });
 
-            var x2mList = form.$(".o_field_x2many_list[name=p]");
+            await click(form.el, ".o_form_button_edit");
+
+            var x2mList = form.el.querySelectorAll(".o_field_x2many_list[name=p]");
 
             // Add a first record in the list
-            await testUtils.dom.click(x2mList.find(".o_field_x2many_list_row_add a"));
+            await click(x2mList.find(".o_field_x2many_list_row_add a"));
 
             // Save & New
-            await testUtils.dom.click($(".modal-lg").find(".btn-primary").eq(1));
+            await click(document.body.querySelector(".modal-lg").find(".btn-primary").eq(1));
 
             // Save & Close
-            await testUtils.dom.click($(".modal-lg").find(".btn-primary").eq(0));
+            await click(document.body.querySelector(".modal-lg").find(".btn-primary").eq(0));
 
             assert.equal(
                 x2mList.find(".o_data_row").length,
                 2,
                 "There should be 2 records in the x2m list"
             );
-
-            form.destroy();
         }
     );
 
     QUnit.skip("one2many invisible depends on parent field", async function (assert) {
         assert.expect(4);
 
-        this.data.partner.records[0].p = [2];
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                "<group>" +
-                '<field name="product_id"/>' +
-                "</group>" +
-                "<notebook>" +
-                '<page string="Partner page">' +
-                '<field name="bar"/>' +
-                '<field name="p">' +
-                "<tree>" +
-                "<field name=\"foo\" attrs=\"{'column_invisible': [('parent.product_id', '!=', False)]}\"/>" +
-                "<field name=\"bar\" attrs=\"{'column_invisible': [('parent.bar', '=', False)]}\"/>" +
-                "</tree>" +
-                "</field>" +
-                "</page>" +
-                "</notebook>" +
-                "</sheet>" +
-                "</form>",
-            res_id: 1,
+        serverData.models.partner.records[0].p = [2];
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="product_id" />
+                        </group>
+                        <notebook>
+                            <page string="Partner page">
+                                <field name="bar" />
+                                <field name="p">
+                                    <tree>
+                                        <field name="foo" attrs="{'column_invisible': [('parent.product_id', '!=', False)]}" />
+                                        <field name="bar" attrs="{'column_invisible': [('parent.bar', '=', False)]}" />
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            `,
         });
         assert.containsN(
             form,
@@ -4213,9 +4372,9 @@ QUnit.module("Fields", (hooks) => {
             2,
             "should be 2 columns in the one2many"
         );
-        await testUtils.form.clickEdit(form);
-        await testUtils.dom.click(form.$('.o_field_many2one[name="product_id"] input'));
-        await testUtils.dom.click($("li.ui-menu-item a:contains(xpad)").trigger("mouseenter"));
+        await click(form.el, ".o_form_button_edit");
+        await click(form.el, '.o_field_many2one[name="product_id"] input');
+        await click($("li.ui-menu-item a:contains(xpad)").trigger("mouseenter"));
         await testUtils.owlCompatibilityExtraNextTick();
         assert.containsOnce(
             form,
@@ -4223,7 +4382,7 @@ QUnit.module("Fields", (hooks) => {
             "should be 1 column when the product_id is set"
         );
         await testUtils.fields.editAndTrigger(
-            form.$('.o_field_many2one[name="product_id"] input'),
+            form.el.querySelectorAll('.o_field_many2one[name="product_id"] input'),
             "",
             "keyup"
         );
@@ -4234,14 +4393,13 @@ QUnit.module("Fields", (hooks) => {
             2,
             "should be 2 columns in the one2many when product_id is not set"
         );
-        await testUtils.dom.click(form.$('.o_field_boolean[name="bar"] input'));
+        await click(form.el, '.o_field_boolean[name="bar"] input');
         await testUtils.owlCompatibilityExtraNextTick();
         assert.containsOnce(
             form,
             "th:not(.o_list_record_remove_header)",
             "should be 1 column after the value change"
         );
-        form.destroy();
     });
 
     QUnit.skip(
@@ -4249,31 +4407,32 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(3);
 
-            this.data.partner.records[0].p = [2];
-            this.data.partner.records[0].bar = false;
+            serverData.models.partner.records[0].p = [2];
+            serverData.models.partner.records[0].bar = false;
 
-            this.data.partner.onchanges.p = function (obj) {
+            serverData.models.partner.onchanges.p = (obj) => {
                 // set bar to true when line is added
                 if (obj.p.length > 1 && obj.p[1][2].foo === "New line") {
                     obj.bar = true;
                 }
             };
 
-            var form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
-                arch:
-                    "<form>" +
-                    '<field name="bar"/>' +
-                    '<field name="p">' +
-                    '<tree editable="bottom">' +
-                    '<field name="foo"/>' +
-                    "<field name=\"int_field\" attrs=\"{'column_invisible': [('parent.bar', '=', False)]}\"/>" +
-                    "</tree>" +
-                    "</field>" +
-                    "</form>",
-                res_id: 1,
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
+                    <form>
+                        <field name="bar" />
+                        <field name="p">
+                            <tree editable="bottom">
+                                <field name="foo" />
+                                <field name="int_field" attrs="{'column_invisible': [('parent.bar', '=', False)]}" />
+                            </tree>
+                        </field>
+                    </form>
+                `,
             });
 
             // bar is false so there should be 1 column
@@ -4284,13 +4443,16 @@ QUnit.module("Fields", (hooks) => {
             );
             assert.containsOnce(form, ".o_list_view .o_data_row", "should contain one row");
 
-            await testUtils.form.clickEdit(form);
+            await click(form.el, ".o_form_button_edit");
 
             // add a new o2m record
-            await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
-            form.$(".o_field_one2many input:first").focus();
-            await testUtils.fields.editInput(form.$(".o_field_one2many input:first"), "New line");
-            await testUtils.dom.click(form.$el);
+            await click(form.el, ".o_field_x2many_list_row_add a");
+            form.el.querySelectorAll(".o_field_one2many input:first").focus();
+            await testUtils.fields.editInput(
+                form.el.querySelectorAll(".o_field_one2many input:first"),
+                "New line"
+            );
+            await click(formllel);
 
             assert.containsN(
                 form,
@@ -4298,41 +4460,42 @@ QUnit.module("Fields", (hooks) => {
                 2,
                 "should be 2 columns('foo' + 'int_field')"
             );
-
-            form.destroy();
         }
     );
 
     QUnit.skip("one2many column_invisible on view not inline", async function (assert) {
         assert.expect(4);
 
-        this.data.partner.records[0].p = [2];
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                "<group>" +
-                '<field name="product_id"/>' +
-                "</group>" +
-                "<notebook>" +
-                '<page string="Partner page">' +
-                '<field name="bar"/>' +
-                '<field name="p"/>' +
-                "</page>" +
-                "</notebook>" +
-                "</sheet>" +
-                "</form>",
-            res_id: 1,
-            archs: {
-                "partner,false,list":
-                    "<tree>" +
-                    "<field name=\"foo\" attrs=\"{'column_invisible': [('parent.product_id', '!=', False)]}\"/>" +
-                    "<field name=\"bar\" attrs=\"{'column_invisible': [('parent.bar', '=', False)]}\"/>" +
-                    "</tree>",
-            },
+        serverData.models.partner.records[0].p = [2];
+        serverData.views = {
+            "partner,false,list": `
+                <list>
+                    <field name="foo" attrs="{'column_invisible': [('parent.product_id', '!=', False)]}" />
+                    <field name="bar" attrs="{'column_invisible': [('parent.bar', '=', False)]}" />
+                </list>
+            `,
+        };
+
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="product_id" />
+                        </group>
+                        <notebook>
+                            <page string="Partner page">
+                                <field name="bar" />
+                                <field name="p" />
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            `,
         });
         assert.containsN(
             form,
@@ -4340,9 +4503,9 @@ QUnit.module("Fields", (hooks) => {
             2,
             "should be 2 columns in the one2many"
         );
-        await testUtils.form.clickEdit(form);
-        await testUtils.dom.click(form.$('.o_field_many2one[name="product_id"] input'));
-        await testUtils.dom.click($("li.ui-menu-item a:contains(xpad)").trigger("mouseenter"));
+        await click(form.el, ".o_form_button_edit");
+        await click(form.el, '.o_field_many2one[name="product_id"] input');
+        await click($("li.ui-menu-item a:contains(xpad)").trigger("mouseenter"));
         await testUtils.owlCompatibilityExtraNextTick();
         assert.containsOnce(
             form,
@@ -4350,7 +4513,7 @@ QUnit.module("Fields", (hooks) => {
             "should be 1 column when the product_id is set"
         );
         await testUtils.fields.editAndTrigger(
-            form.$('.o_field_many2one[name="product_id"] input'),
+            form.el.querySelectorAll('.o_field_many2one[name="product_id"] input'),
             "",
             "keyup"
         );
@@ -4361,7 +4524,7 @@ QUnit.module("Fields", (hooks) => {
             2,
             "should be 2 columns in the one2many when product_id is not set"
         );
-        await testUtils.dom.click(form.$('.o_field_boolean[name="bar"] input'));
+        await click(form.el, '.o_field_boolean[name="bar"] input');
         await testUtils.owlCompatibilityExtraNextTick();
         assert.containsOnce(
             form,
