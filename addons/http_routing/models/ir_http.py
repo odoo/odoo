@@ -673,7 +673,8 @@ class IrHttp(models.AbstractModel):
         except werkzeug.exceptions.MethodNotAllowed:
             endpoint = router.match(path, method='GET', query_args=query_args)
         except werkzeug.routing.RequestRedirect as e:
-            new_url = e.new_url[7:]  # remove scheme
+            # get path from http://{path}?{current query string}
+            new_url = e.new_url.split('?')[0][7:]
             _, endpoint = self.url_rewrite(new_url, query_args)
             endpoint = endpoint and [endpoint]
         except werkzeug.exceptions.NotFound:
