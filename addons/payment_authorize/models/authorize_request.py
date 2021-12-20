@@ -58,9 +58,17 @@ class AuthorizeAPI:
 
         messages = response.get('messages')
         if messages and messages.get('resultCode') == 'Error':
+            err_msg = messages.get('message')[0].get('text', '')
+
+            tx_errors = response.get('transactionResponse', {}).get('errors')
+            if tx_errors:
+                if err_msg:
+                    err_msg += '\n'
+                err_msg += '\n'.join([e.get('errorText', '') for e in tx_errors])
+
             return {
                 'err_code': messages.get('message')[0].get('code'),
-                'err_msg': messages.get('message')[0].get('text')
+                'err_msg': err_msg,
             }
 
         return response
