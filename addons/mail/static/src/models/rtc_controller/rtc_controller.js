@@ -92,7 +92,6 @@ registerModel({
             default: insertAndReplace(),
             inverse: 'rtcController',
             isCausal: true,
-            required: true,
         }),
     },
 });

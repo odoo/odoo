@@ -87,7 +87,6 @@ registerModel({
         userSetting: one2one('UserSetting', {
             inverse: 'rtcConfigurationMenu',
             readonly: true,
-            required: true,
         }),
     },
 });

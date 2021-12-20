@@ -135,10 +135,6 @@ registerModel({
             compute: '_computeCanPostMessage',
             default: false,
         }),
-        composerViews: one2many('ComposerView', {
-            inverse: 'composer',
-            isCausal: true,
-        }),
         /**
          * This field determines whether some attachments linked to this
          * composer are being uploaded.

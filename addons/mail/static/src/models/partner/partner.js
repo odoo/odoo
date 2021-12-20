@@ -446,10 +446,6 @@ registerModel({
         nameOrDisplayName: attr({
             compute: '_computeNameOrDisplayName',
         }),
-        partnerSeenInfos: one2many('ThreadPartnerSeenInfo', {
-            inverse: 'partner',
-            isCausal: true,
-        }),
         rtcSessions: one2many('RtcSession', {
             inverse: 'partner',
         }),

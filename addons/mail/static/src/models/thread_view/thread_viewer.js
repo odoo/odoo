@@ -61,10 +61,12 @@ registerModel({
     fields: {
         chatter: one2one('Chatter', {
             inverse: 'threadViewer',
+            isCausal: true,
             readonly: true,
         }),
         chatWindow: one2one('ChatWindow', {
             inverse: 'threadViewer',
+            isCausal: true,
             readonly: true,
         }),
         /**
@@ -75,6 +77,7 @@ registerModel({
         }),
         discuss: one2one('Discuss', {
             inverse: 'threadViewer',
+            isCausal: true,
             readonly: true,
         }),
         discussPublicView: one2one('DiscussPublicView', {
