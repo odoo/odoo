@@ -366,7 +366,6 @@ registerModel({
         rtcController: one2one('RtcController', {
             default: insertAndReplace(),
             readonly: true,
-            required: true,
             inverse: 'callViewer',
             isCausal: true,
         }),

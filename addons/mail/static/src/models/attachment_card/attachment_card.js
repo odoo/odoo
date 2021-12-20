@@ -66,7 +66,6 @@ registerModel({
          * Determines the attachment of this card.
          */
         attachment: many2one('Attachment', {
-            inverse: 'attachmentCards',
             readonly: true,
             required: true,
         }),

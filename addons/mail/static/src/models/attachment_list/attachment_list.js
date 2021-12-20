@@ -81,13 +81,6 @@ registerModel({
             isCausal: true,
         }),
         /**
-         * Determines the attachment viewers displaying this attachment list (if any).
-         */
-        attachmentViewers: one2many('AttachmentViewer', {
-            inverse: 'attachmentList',
-            isCausal: true,
-        }),
-        /**
          * Link with a chatter to handle attachments.
          */
         chatter: one2one('Chatter', {

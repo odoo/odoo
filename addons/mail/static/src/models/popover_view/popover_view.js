@@ -68,7 +68,6 @@ registerModel({
          * The record that represents the content inside the popover view.
          */
         channelInvitationForm: one2one('ChannelInvitationForm', {
-            inverse: 'popoverView',
             isCausal: true,
             readonly: true,
             required: true,

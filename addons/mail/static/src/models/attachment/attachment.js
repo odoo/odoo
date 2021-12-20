@@ -280,26 +280,9 @@ registerModel({
             inverse: 'attachments',
         }),
         /**
-         * States the attachment cards that are displaying this attachment.
-         */
-        attachmentCards: one2many('AttachmentCard', {
-            inverse: 'attachment',
-            isCausal: true,
-        }),
-        /**
-         * States the attachment images that are displaying this attachment.
-         */
-        attachmentImages: one2many('AttachmentImage', {
-            inverse: 'attachment',
-            isCausal: true,
-        }),
-        /**
          * States the attachment lists that are displaying this attachment.
          */
         attachmentLists: many2many('AttachmentList', {
-            inverse: 'attachments',
-        }),
-        attachmentViewers: many2many('AttachmentViewer', {
             inverse: 'attachments',
         }),
         checksum: attr(),
