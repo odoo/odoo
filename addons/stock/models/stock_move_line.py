@@ -174,7 +174,7 @@ class StockMoveLine(models.Model):
                         message = _('You cannot use the same serial number twice. Please correct the serial numbers encoded.')
                     else:
                         # check if in correct source location
-                        message, recommended_location = self.env['stock.quant']._check_serial_number(self.product_id,
+                        message, recommended_location = self.env['stock.quant'].sudo()._check_serial_number(self.product_id,
                                                                                                      self.lot_id,
                                                                                                      self.company_id,
                                                                                                      self.location_id,
