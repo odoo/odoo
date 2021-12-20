@@ -35,13 +35,13 @@ export class Field extends Component {
 
         // generate field decorations classNames (only if field-specific decorations
         // have been defined in an attribute, e.g. decoration-danger="other_field = 5")
+        // only handle the text-decoration.
         const { decorations } = this.props.record.activeFields[this.props.name];
-        const getClassFromDecoration =
-            this.effectiveFieldComponent.getClassFromDecoration || ((d) => `text-${d}`);
+        const classNameFn = (d) => `text-${d}`;
         const evalContext = this.props.record.evalContext;
         for (const decoName in decorations) {
             const value = evaluateExpr(decorations[decoName], evalContext);
-            classNames[getClassFromDecoration(decoName)] = value;
+            classNames[classNameFn(decoName)] = value;
         }
 
         return classNames;
@@ -63,6 +63,15 @@ export class Field extends Component {
         const readonlyFromModifiers = this.evalModifier("readonly");
         const readonlyFromViewMode = this.props.readonly;
 
+        // Decoration props
+        const decorationMap = {};
+        const { decorations } = this.props.record.activeFields[this.props.name];
+        const evalContext = this.props.record.evalContext;
+        for (const decoName in decorations) {
+            const value = evaluateExpr(decorations[decoName], evalContext);
+            decorationMap[decoName] = value;
+        }
+
         return {
             attrs: activeField.attrs || {},
             options: activeField.options || {},
@@ -77,6 +86,7 @@ export class Field extends Component {
             value: this.props.record.data[this.props.name],
             formatValue: this.formatValue.bind(this),
             parseValue: this.parseValue.bind(this),
+            decorations: decorationMap,
             ...this.props,
             type: field.type,
             readonly: readonlyFromViewMode || readonlyFromModifiers || false,
