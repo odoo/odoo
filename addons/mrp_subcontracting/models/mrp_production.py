@@ -3,7 +3,7 @@
 
 from collections import defaultdict
 from odoo import fields, models, _, api
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.tools.float_utils import float_compare, float_is_zero
 
 
@@ -16,6 +16,8 @@ class MrpProduction(models.Model):
         inverse='_inverse_move_line_raw_ids', compute='_compute_move_line_raw_ids'
     )
     subcontracting_has_been_recorded = fields.Boolean("Has been recorded?", copy=False)
+    subcontractor_id = fields.Many2one('res.partner', string="Subcontractor", help="Used to restrict access to the portal user through Record Rules")
+    bom_product_ids = fields.Many2many('product.product', compute="_compute_bom_product_ids", help="List of Products used in the BoM, used to filter the list of products in the subcontracting portal view")
 
     incoming_picking = fields.Many2one(related='move_finished_ids.move_dest_ids.picking_id')
 
@@ -31,6 +33,10 @@ class MrpProduction(models.Model):
         for production in self:
             production.move_line_raw_ids = production.move_raw_ids.move_line_ids
 
+    def _compute_bom_product_ids(self):
+        for production in self:
+            production.bom_product_ids = production.bom_id.bom_line_ids.product_id
+
     def _inverse_move_line_raw_ids(self):
         for production in self:
             line_by_product = defaultdict(lambda: self.env['stock.move.line'])
@@ -44,6 +50,13 @@ class MrpProduction(models.Model):
                 move['additional'] = True
                 production.move_raw_ids = [(0, 0, move)]
                 production.move_raw_ids.filtered(lambda m: m.product_id == product_id)[:1].move_line_ids = lines
+
+    def write(self, vals):
+        if self.env.user.has_group('base.group_portal') and not self.env.su:
+            unauthorized_fields = set(vals.keys()) - set(self._get_writeable_fields_portal_user())
+            if unauthorized_fields:
+                raise AccessError(_("You cannot write on fields %s in mrp.production.", ', '.join(unauthorized_fields)))
+        return super().write(vals)
 
     def action_merge(self):
         if any(production._get_subcontract_move() for production in self):
@@ -72,7 +85,7 @@ class MrpProduction(models.Model):
 
         quantity_issues = self._get_quantity_produced_issues()
         if quantity_issues:
-            backorder = self._split_productions()[1:]
+            backorder = self.sudo()._split_productions()[1:]
             # No qty to consume to avoid propagate additional move
             # TODO avoid : stock move created in backorder with 0 as qty
             backorder.move_raw_ids.filtered(lambda m: m.additional).product_uom_qty = 0.0
@@ -175,5 +188,14 @@ class MrpProduction(models.Model):
     def _has_tracked_component(self):
         return any(m.has_tracking != 'none' for m in self.move_raw_ids)
 
+    def _has_workorders(self):
+        if self.subcontractor_id:
+            return False
+        else:
+            return super()._has_workorders()
+
     def _get_subcontract_move(self):
         return self.move_finished_ids.move_dest_ids.filtered(lambda m: m.is_subcontract)
+
+    def _get_writeable_fields_portal_user(self):
+        return ['move_line_raw_ids', 'lot_producing_id', 'subcontracting_has_been_recorded', 'qty_producing', 'product_qty']

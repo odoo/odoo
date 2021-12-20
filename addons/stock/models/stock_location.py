@@ -223,6 +223,7 @@ class Location(models.Model):
         The quantity should be in the default UOM of the product, it is used when
         no package is specified.
         """
+        self = self._check_access_putaway()
         # find package type on package or packaging
         package_type = self.env['stock.package.type']
         if package:
@@ -235,7 +236,7 @@ class Location(models.Model):
         categ = product.categ_id
         while categ:
             putaway_rules |= self.putaway_rule_ids.filtered(lambda x: x.category_id == categ and (package_type in x.package_type_ids or package_type == x.package_type_ids))
-            categ = categ.parent_id
+            categ = categ.sudo().parent_id
         if package_type:
             putaway_rules |= self.putaway_rule_ids.filtered(lambda x: not x.product_id and (package_type in x.package_type_ids or package_type == x.package_type_ids))
 
@@ -318,6 +319,9 @@ class Location(models.Model):
     def should_bypass_reservation(self):
         self.ensure_one()
         return self.usage in ('supplier', 'customer', 'inventory', 'production') or self.scrap_location or (self.usage == 'transit' and not self.company_id)
+
+    def _check_access_putaway(self):
+        return self
 
     def _check_can_be_used(self, product, quantity=0, package=None, location_qty=0):
         """Check if product/package can be stored in the location. Quantity

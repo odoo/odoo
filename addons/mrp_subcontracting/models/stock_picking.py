@@ -10,6 +10,7 @@ from dateutil.relativedelta import relativedelta
 
 
 class StockPicking(models.Model):
+    _name = 'stock.picking'
     _inherit = 'stock.picking'
 
     display_action_record_components = fields.Selection(
@@ -123,6 +124,8 @@ class StockPicking(models.Model):
         vals = {
             'company_id': subcontract_move.company_id.id,
             'procurement_group_id': group.id,
+            'subcontractor_id': subcontract_move.picking_id.partner_id.commercial_partner_id.id,
+            'picking_ids': [subcontract_move.picking_id.id],
             'product_id': product.id,
             'product_uom_id': subcontract_move.product_uom.id,
             'bom_id': bom.id,

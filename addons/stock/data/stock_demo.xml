@@ -212,6 +212,9 @@
         <record id="base.group_user" model="res.groups">
             <field name="implied_ids" eval="[(4, ref('stock.group_production_lot'))]"/>
         </record>
+        <record id="base.group_portal" model="res.groups">
+            <field name="implied_ids" eval="[(4, ref('stock.group_production_lot'))]"/>
+        </record>
 
     </data>
 </odoo>

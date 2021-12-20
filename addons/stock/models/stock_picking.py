@@ -320,7 +320,9 @@ class Picking(models.Model):
         check_company=True, readonly=True, required=True,
         states={'draft': [('readonly', False)]})
     move_ids = fields.One2many('stock.move', 'picking_id', string="Stock Moves", copy=True)
-    move_ids_without_package = fields.One2many('stock.move', 'picking_id', string="Stock moves not in package", compute='_compute_move_without_package', inverse='_set_move_without_package')
+    move_ids_without_package = fields.One2many(
+        'stock.move', 'picking_id', string="Stock moves not in package", compute='_compute_move_without_package',
+        inverse='_set_move_without_package', compute_sudo=True)
     has_scrap_move = fields.Boolean(
         'Has Scrap Moves', compute='_has_scrap_move')
     picking_type_id = fields.Many2one(
