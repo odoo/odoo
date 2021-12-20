@@ -70,7 +70,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.strictEqual(
             document.activeElement,
-            form.el.querySelector('input[name="foo"]'),
+            form.el.querySelector('.o_field_widget[name="foo"] input'),
             "foo field should be focused"
         );
     });
@@ -159,7 +159,7 @@ QUnit.module("Fields", (hooks) => {
 
         await click(form.el, "a");
 
-        await click(form.el.querySelector('input[name="foo"]'));
+        await click(form.el.querySelector('.o_field_widget[name="foo"] input'));
 
         assert.strictEqual(
             form.el.querySelectorAll("a").length,

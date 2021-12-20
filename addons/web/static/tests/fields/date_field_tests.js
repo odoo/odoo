@@ -227,7 +227,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // focus another field
-        form.el.querySelector(".o_field_widget[name='foo']").focus();
+        form.el.querySelector(".o_field_widget[name='foo'] input").focus();
         assert.containsNone(
             document.body,
             ".bootstrap-datetimepicker-widget",
@@ -235,52 +235,55 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("DateField: toggle datepicker far in the future", async function (assert) {
-        assert.expect(3);
+    QUnit.test(
+        "DateField: toggle datepicker far in the future [REQUIRE FOCUS]",
+        async function (assert) {
+            assert.expect(3);
 
-        serverData.models.partner.records = [
-            {
-                id: 1,
-                date: "9999-12-30",
-                foo: "yop",
-            },
-        ];
+            serverData.models.partner.records = [
+                {
+                    id: 1,
+                    date: "9999-12-30",
+                    foo: "yop",
+                },
+            ];
 
-        const form = await makeView({
-            type: "form",
-            resModel: "partner",
-            resId: 1,
-            serverData,
-            arch: `
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
                 <form>
                     <field name="foo" />
                     <field name="date" />
                 </form>
             `,
-        });
+            });
 
-        await click(form.el, ".o_form_button_edit");
-        assert.containsNone(
-            document.body,
-            ".bootstrap-datetimepicker-widget",
-            "datepicker should be closed initially"
-        );
+            await click(form.el, ".o_form_button_edit");
+            assert.containsNone(
+                document.body,
+                ".bootstrap-datetimepicker-widget",
+                "datepicker should be closed initially"
+            );
 
-        await click(form.el, ".o_datepicker input");
-        assert.containsOnce(
-            document.body,
-            ".bootstrap-datetimepicker-widget",
-            "datepicker should be opened"
-        );
+            await click(form.el, ".o_datepicker input");
+            assert.containsOnce(
+                document.body,
+                ".bootstrap-datetimepicker-widget",
+                "datepicker should be opened"
+            );
 
-        // focus another field
-        form.el.querySelector(".o_field_widget[name='foo']").focus();
-        assert.containsNone(
-            document.body,
-            ".bootstrap-datetimepicker-widget",
-            "datepicker should close itself when the user clicks outside"
-        );
-    });
+            // focus another field
+            form.el.querySelector(".o_field_widget[name='foo'] input").focus();
+            assert.containsNone(
+                document.body,
+                ".bootstrap-datetimepicker-widget",
+                "datepicker should close itself when the user clicks outside"
+            );
+        }
+    );
 
     QUnit.test("date field is empty if no date is set", async function (assert) {
         assert.expect(2);
@@ -299,11 +302,11 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsOnce(
             form.el,
-            "span.o_field_widget",
+            ".o_field_widget > span",
             "should have one span in the form view"
         );
         assert.strictEqual(
-            form.el.querySelector("span.o_field_widget").textContent,
+            form.el.querySelector(".o_field_widget > span").textContent,
             "",
             "and it should be empty"
         );

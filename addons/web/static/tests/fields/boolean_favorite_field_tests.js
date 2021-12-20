@@ -52,24 +52,24 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsOnce(
             kanban.el,
-            ".o_kanban_record .o_field_widget.o_favorite > a i.fa.fa-star",
+            ".o_kanban_record .o_field_widget .o_favorite > a i.fa.fa-star",
             "should be favorite"
         );
         assert.strictEqual(
-            kanban.el.querySelector(".o_kanban_record .o_field_widget.o_favorite > a").textContent,
+            kanban.el.querySelector(".o_kanban_record .o_field_widget .o_favorite > a").textContent,
             " Remove from Favorites",
             'the label should say "Remove from Favorites"'
         );
 
         // click on favorite
-        await click(kanban.el, ".o_field_widget.o_favorite");
+        await click(kanban.el, ".o_field_widget .o_favorite");
         assert.containsNone(
             kanban.el,
-            ".o_kanban_record  .o_field_widget.o_favorite > a i.fa.fa-star",
+            ".o_kanban_record  .o_field_widget .o_favorite > a i.fa.fa-star",
             "should not be favorite"
         );
         assert.strictEqual(
-            kanban.el.querySelector(".o_kanban_record .o_field_widget.o_favorite > a").textContent,
+            kanban.el.querySelector(".o_kanban_record .o_field_widget .o_favorite > a").textContent,
             " Add to Favorites",
             'the label should say "Add to Favorites"'
         );
@@ -96,24 +96,24 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsOnce(
             form.el,
-            ".o_field_widget.o_favorite > a i.fa.fa-star",
+            ".o_field_widget .o_favorite > a i.fa.fa-star",
             "should be favorite"
         );
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget.o_favorite > a").textContent,
+            form.el.querySelector(".o_field_widget .o_favorite > a").textContent,
             " Remove from Favorites",
             'the label should say "Remove from Favorites"'
         );
 
         // click on favorite
-        await click(form.el, ".o_field_widget.o_favorite");
+        await click(form.el, ".o_field_widget .o_favorite");
         assert.containsNone(
             form.el,
-            ".o_field_widget.o_favorite > a i.fa.fa-star",
+            ".o_field_widget .o_favorite > a i.fa.fa-star",
             "should not be favorite"
         );
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget.o_favorite > a").textContent,
+            form.el.querySelector(".o_field_widget .o_favorite > a").textContent,
             " Add to Favorites",
             'the label should say "Add to Favorites"'
         );
@@ -122,24 +122,24 @@ QUnit.module("Fields", (hooks) => {
         await click(form.el, ".o_form_button_edit");
         assert.containsOnce(
             form.el,
-            ".o_field_widget.o_favorite > a i.fa.fa-star-o",
+            ".o_field_widget .o_favorite > a i.fa.fa-star-o",
             "should not be favorite"
         );
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget.o_favorite > a").textContent,
+            form.el.querySelector(".o_field_widget .o_favorite > a").textContent,
             " Add to Favorites",
             'the label should say "Add to Favorites"'
         );
 
         // click on favorite
-        await click(form.el, ".o_field_widget.o_favorite");
+        await click(form.el, ".o_field_widget .o_favorite");
         assert.containsOnce(
             form.el,
-            ".o_field_widget.o_favorite > a i.fa.fa-star",
+            ".o_field_widget .o_favorite > a i.fa.fa-star",
             "should be favorite"
         );
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget.o_favorite > a").textContent,
+            form.el.querySelector(".o_field_widget .o_favorite > a").textContent,
             " Remove from Favorites",
             'the label should say "Remove from Favorites"'
         );
@@ -148,11 +148,11 @@ QUnit.module("Fields", (hooks) => {
         await click(form.el, ".o_form_button_save");
         assert.containsOnce(
             form.el,
-            ".o_field_widget.o_favorite > a i.fa.fa-star",
+            ".o_field_widget .o_favorite > a i.fa.fa-star",
             "should be favorite"
         );
         assert.strictEqual(
-            form.el.querySelector(".o_field_widget.o_favorite > a").textContent,
+            form.el.querySelector(".o_field_widget .o_favorite > a").textContent,
             " Remove from Favorites",
             'the label should say "Remove from Favorites"'
         );
@@ -174,7 +174,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsOnce(
             list.el,
-            ".o_data_row:first .o_field_widget.o_favorite > a i.fa.fa-star",
+            ".o_data_row:first .o_field_widget .o_favorite > a i.fa.fa-star",
             "should be favorite"
         );
 
@@ -182,15 +182,15 @@ QUnit.module("Fields", (hooks) => {
         await click(list.el.querySelector("tbody td:not(.o_list_record_selector)"));
         assert.containsOnce(
             list.el,
-            ".o_data_row:first .o_field_widget.o_favorite > a i.fa.fa-star",
+            ".o_data_row:first .o_field_widget .o_favorite > a i.fa.fa-star",
             "should be favorite"
         );
 
         // click on favorite
-        await click(list.el.querySelector(".o_data_row .o_field_widget.o_favorite"));
+        await click(list.el.querySelector(".o_data_row .o_field_widget .o_favorite"));
         assert.containsNone(
             list.el,
-            ".o_data_row:first .o_field_widget.o_favorite > a i.fa.fa-star",
+            ".o_data_row:first .o_field_widget .o_favorite > a i.fa.fa-star",
             "should not be favorite"
         );
 
@@ -198,7 +198,7 @@ QUnit.module("Fields", (hooks) => {
         await click(list.el, ".o_list_button_save");
         assert.containsOnce(
             list.el,
-            ".o_data_row:first .o_field_widget.o_favorite > a i.fa.fa-star-o",
+            ".o_data_row:first .o_field_widget .o_favorite > a i.fa.fa-star-o",
             "should not be favorite"
         );
     });
