@@ -134,7 +134,7 @@ class AccountEdiProxyClientUser(models.Model):
                     'company_id': company.id,
                     'edi_format_code': edi_format.code,
                     'edi_identification': edi_identification,
-                    'public_key': base64.b64encode(public_pem)
+                    'public_key': base64.b64encode(public_pem).decode()
                 })
             except AccountEdiProxyError as e:
                 raise UserError(e.message)
