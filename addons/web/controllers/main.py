@@ -128,9 +128,8 @@ def redirect_with_hash(*args, **kw):
     return http.redirect_with_hash(*args, **kw)
 
 def abort_and_redirect(url):
-    r = request.httprequest
     response = werkzeug.utils.redirect(url, 302)
-    response = r.app.get_response(r, response, explicit_session=False)
+    response = http.root.get_response(request.httprequest, response, explicit_session=False)
     werkzeug.exceptions.abort(response)
 
 def ensure_db(redirect='/web/database/selector'):
@@ -647,6 +646,10 @@ class HomeStaticTemplateHelpers(object):
     def get_qweb_templates(cls, addons, db=None, debug=False):
         return cls(addons, db, debug=debug)._get_qweb_templates()[0]
 
+# Shared parameters for all login/signup flows
+SIGN_UP_REQUEST_PARAMS = {'db', 'login', 'debug', 'token', 'message', 'error', 'scope', 'mode',
+                          'redirect', 'redirect_hostname', 'email', 'name', 'partner_id',
+                          'password', 'confirm_password', 'city', 'country_id', 'lang'}
 
 class GroupsTreeNode:
     """
@@ -934,7 +937,7 @@ class Home(http.Controller):
         if not request.uid:
             request.uid = odoo.SUPERUSER_ID
 
-        values = request.params.copy()
+        values = {k: v for k, v in request.params.items() if k in SIGN_UP_REQUEST_PARAMS}
         try:
             values['databases'] = http.db_list()
         except odoo.exceptions.AccessDenied:
@@ -1102,7 +1105,7 @@ class Proxy(http.Controller):
             from werkzeug.wrappers import BaseResponse
             base_url = request.httprequest.base_url
             query_string = request.httprequest.query_string
-            client = Client(request.httprequest.app, BaseResponse)
+            client = Client(http.root, BaseResponse)
             headers = {'X-Openerp-Session-Id': request.session.sid}
             return client.post('/' + path, base_url=base_url, query_string=query_string,
                                headers=headers, data=data)

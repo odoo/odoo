@@ -5,7 +5,7 @@ import werkzeug
 
 from odoo import http, _
 from odoo.addons.auth_signup.models.res_users import SignupError
-from odoo.addons.web.controllers.main import ensure_db, Home
+from odoo.addons.web.controllers.main import ensure_db, Home, SIGN_UP_REQUEST_PARAMS
 from odoo.addons.base_setup.controllers.main import BaseSetup
 from odoo.exceptions import UserError
 from odoo.http import request
@@ -101,7 +101,7 @@ class AuthSignupHome(Home):
 
     def get_auth_signup_qcontext(self):
         """ Shared helper returning the rendering context for signup and reset password """
-        qcontext = request.params.copy()
+        qcontext = {k: v for (k, v) in request.params.items() if k in SIGN_UP_REQUEST_PARAMS}
         qcontext.update(self.get_auth_signup_config())
         if not qcontext.get('token') and request.session.get('auth_signup_token'):
             qcontext['token'] = request.session.get('auth_signup_token')
