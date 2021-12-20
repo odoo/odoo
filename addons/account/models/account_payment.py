@@ -2,6 +2,10 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
 
+synchronize_depends_fields = [
+    'date', 'amount', 'payment_type', 'partner_type', 'payment_reference', 'is_internal_transfer',
+    'currency_id', 'partner_id', 'destination_account_id', 'partner_bank_id',
+]
 
 class AccountPayment(models.Model):
     _name = "account.payment"
@@ -820,10 +824,7 @@ class AccountPayment(models.Model):
         if self._context.get('skip_account_move_synchronization'):
             return
 
-        if not any(field_name in changed_fields for field_name in (
-            'date', 'amount', 'payment_type', 'partner_type', 'payment_reference', 'is_internal_transfer',
-            'currency_id', 'partner_id', 'destination_account_id', 'partner_bank_id',
-        )):
+        if not any(field_name in changed_fields for field_name in synchronize_depends_fields):
             return
 
         for pay in self.with_context(skip_account_move_synchronization=True):

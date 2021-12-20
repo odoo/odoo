@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_payment_form_inherit_l10n_in" model="ir.ui.view">
+        <field name="name">account.payment.form.inherit.l10n.in</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='group2']" position="inside">
+                <field name="tax_ids"
+                    attrs="{'readonly': [('state', '!=', 'draft')]}"
+                    options="{'no_create': True}"
+                    context="{'append_type_to_tax_name': True}"
+                    domain="[('company_id', '=', company_id)]"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>
