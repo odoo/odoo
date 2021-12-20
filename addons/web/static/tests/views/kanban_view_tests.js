@@ -39,7 +39,11 @@ const quickCreateRecord = async (kanban, group = 1) => {
     await click(kanban.el, `.o_kanban_group:nth-child(${group}) .o_kanban_quick_add`);
 };
 const editQuickCreateInput = async (kanban, field, value) => {
-    await editInput(kanban.el, `.o_kanban_quick_create .o_field_widget[name=${field}]`, value);
+    await editInput(
+        kanban.el,
+        `.o_kanban_quick_create .o_field_widget[name=${field}] input`,
+        value
+    );
 };
 const validateRecord = async (kanban) => {
     await click(kanban.el, ".o_kanban_quick_create .o_kanban_add");
@@ -847,7 +851,10 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsOnce(quickCreate, ".o_form_view.o_xxs_form_view");
         assert.containsOnce(quickCreate, "input");
-        assert.containsOnce(quickCreate, "input.o_required_modifier[placeholder=Title]");
+        assert.containsOnce(
+            quickCreate,
+            ".o_field_widget.o_required_modifier input[placeholder=Title]"
+        );
 
         // fill the quick create and validate
         await editQuickCreateInput(kanban, "display_name", "new partner");
@@ -1111,7 +1118,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsOnce(kanban, ".o_kanban_group:first-child .o_kanban_quick_create");
         assert.strictEqual(
-            quickCreate.querySelector(".o_field_widget[name=int_field]").value,
+            quickCreate.querySelector(".o_field_widget[name=int_field] input").value,
             "4",
             "default value should be set"
         );
@@ -1120,7 +1127,7 @@ QUnit.module("Views", (hooks) => {
         await editQuickCreateInput(kanban, "foo", "new partner");
 
         assert.strictEqual(
-            quickCreate.querySelector(".o_field_widget[name=int_field]").value,
+            quickCreate.querySelector(".o_field_widget[name=int_field] input").value,
             "8",
             "onchange should have been triggered"
         );
@@ -1376,7 +1383,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsN(kanban, ".o_kanban_record", 5, "should have created a new record");
         assert.strictEqual(
-            kanban.el.querySelector(".o_kanban_quick_create input[name=foo]").value,
+            kanban.el.querySelector(".o_kanban_quick_create .o_field_widget[name=foo] input").value,
             "",
             "quick create should now be empty"
         );
@@ -1416,13 +1423,18 @@ QUnit.module("Views", (hooks) => {
         // add an element and press ENTER twice
         await quickCreateRecord(kanban);
         await editQuickCreateInput(kanban, "foo", "new partner");
-        await triggerEvent(kanban.el, ".o_kanban_quick_create input[name=foo]", "keydown", {
-            key: "Enter",
-        });
+        await triggerEvent(
+            kanban.el,
+            ".o_kanban_quick_create .o_field_widget[name=foo] input",
+            "keydown",
+            {
+                key: "Enter",
+            }
+        );
 
         assert.containsN(kanban, ".o_kanban_record", 4, "should not have created the record yet");
         assert.strictEqual(
-            kanban.el.querySelector(".o_kanban_quick_create input[name=foo]").value,
+            kanban.el.querySelector(".o_kanban_quick_create .o_field_widget[name=foo] input").value,
             "new partner",
             "quick create should not be empty yet"
         );
@@ -1437,7 +1449,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsN(kanban, ".o_kanban_record", 5, "should have created a new record");
         assert.strictEqual(
-            kanban.el.querySelector(".o_kanban_quick_create input[name=foo]").value,
+            kanban.el.querySelector(".o_kanban_quick_create .o_field_widget[name=foo] input").value,
             "",
             "quick create should now be empty"
         );
@@ -1488,7 +1500,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsN(kanban, ".o_kanban_record", 4, "should not have created the record yet");
         assert.strictEqual(
-            kanban.el.querySelector(".o_kanban_quick_create input[name=foo]").value,
+            kanban.el.querySelector(".o_kanban_quick_create .o_field_widget[name=foo] input").value,
             "new partner",
             "quick create should not be empty yet"
         );
@@ -1503,7 +1515,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsN(kanban, ".o_kanban_record", 5, "should have created a new record");
         assert.strictEqual(
-            kanban.el.querySelector(".o_kanban_quick_create input[name=foo]").value,
+            kanban.el.querySelector(".o_kanban_quick_create .o_field_widget[name=foo] input").value,
             "",
             "quick create should now be empty"
         );
@@ -1574,9 +1586,14 @@ QUnit.module("Views", (hooks) => {
             await quickCreateRecord(kanban);
             shouldDelayOnchange = true;
             await editQuickCreateInput(kanban, "foo", "new partner");
-            await triggerEvent(kanban.el, ".o_kanban_quick_create input[name=foo]", "keydown", {
-                key: "Enter",
-            });
+            await triggerEvent(
+                kanban.el,
+                ".o_kanban_quick_create .o_field_widget[name=foo] input",
+                "keydown",
+                {
+                    key: "Enter",
+                }
+            );
 
             assert.containsN(
                 kanban,
@@ -1585,7 +1602,8 @@ QUnit.module("Views", (hooks) => {
                 "should not have created the record yet"
             );
             assert.strictEqual(
-                kanban.el.querySelector(".o_kanban_quick_create input[name=foo]").value,
+                kanban.el.querySelector(".o_kanban_quick_create .o_field_widget[name=foo] input")
+                    .value,
                 "new partner",
                 "quick create should not be empty yet"
             );
@@ -1600,7 +1618,8 @@ QUnit.module("Views", (hooks) => {
 
             assert.containsN(kanban, ".o_kanban_record", 5, "should have created a new record");
             assert.strictEqual(
-                kanban.el.querySelector(".o_kanban_quick_create input[name=foo]").value,
+                kanban.el.querySelector(".o_kanban_quick_create .o_field_widget[name=foo] input")
+                    .value,
                 "",
                 "quick create should now be empty"
             );
@@ -1684,7 +1703,8 @@ QUnit.module("Views", (hooks) => {
                 "should not have created the record yet"
             );
             assert.strictEqual(
-                kanban.el.querySelector(".o_kanban_quick_create input[name=foo]").value,
+                kanban.el.querySelector(".o_kanban_quick_create .o_field_widget[name=foo] input")
+                    .value,
                 "new partner",
                 "quick create should not be empty yet"
             );
@@ -1699,7 +1719,8 @@ QUnit.module("Views", (hooks) => {
             await nextTick();
             assert.containsN(kanban, ".o_kanban_record", 5, "should have created a new record");
             assert.strictEqual(
-                kanban.el.querySelector(".o_kanban_quick_create input[name=foo]").value,
+                kanban.el.querySelector(".o_kanban_quick_create .o_field_widget[name=foo] input")
+                    .value,
                 "",
                 "quick create should now be empty"
             );
@@ -2631,7 +2652,7 @@ QUnit.module("Views", (hooks) => {
             );
             assert.strictEqual(
                 kanban.el.querySelector(
-                    ".o_kanban_group:first-child .o_kanban_quick_create .o_datepicker[name=date] input"
+                    ".o_kanban_group:first-child .o_kanban_quick_create .o_field_widget[name=date] .o_datepicker input"
                 ).value,
                 "01/31/2017"
             );
@@ -2654,7 +2675,7 @@ QUnit.module("Views", (hooks) => {
             );
             assert.strictEqual(
                 kanban.el.querySelector(
-                    ".o_kanban_group:first-child .o_kanban_quick_create .o_datepicker[name=datetime] input"
+                    ".o_kanban_group:first-child .o_kanban_quick_create .o_field_widget[name=datetime] .o_datepicker input"
                 ).value,
                 "01/31/2017 23:59:59"
             );
