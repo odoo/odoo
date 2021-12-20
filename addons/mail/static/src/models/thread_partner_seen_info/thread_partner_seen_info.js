@@ -13,7 +13,6 @@ registerModel({
          * Partner that this seen info is related to.
          */
         partner: many2one('Partner', {
-            inverse: 'partnerSeenInfos',
             readonly: true,
             required: true,
         }),

@@ -210,10 +210,6 @@ registerModel({
         inviteButtonText: attr({
             compute: '_computeInviteButtonText',
         }),
-        popoverView: one2one('PopoverView', {
-            inverse: 'channelInvitationForm',
-            isCausal: true,
-        }),
         /**
          * States the OWL ref of the "search" input of this channel invitation
          * form. Useful to be able to focus it.

@@ -40,12 +40,10 @@ registerModel({
         }),
         attachment: many2one('Attachment'),
         attachmentList: many2one('AttachmentList', {
-            inverse: 'attachmentViewers',
             readonly: true,
             required: true,
         }),
         attachments: many2many('Attachment', {
-            inverse: 'attachmentViewers',
             related: 'attachmentList.viewableAttachments',
         }),
         /**

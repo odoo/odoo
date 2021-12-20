@@ -701,10 +701,6 @@ registerModel({
             isCausal: true,
         }),
         message_type: attr(),
-        messageSeenIndicators: one2many('MessageSeenIndicator', {
-            inverse: 'message',
-            isCausal: true,
-        }),
         /**
          * States the views that are displaying this message.
          */

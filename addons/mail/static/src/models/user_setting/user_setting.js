@@ -255,7 +255,6 @@ registerModel({
             default: insertAndReplace(),
             inverse: 'userSetting',
             isCausal: true,
-            required: true,
         }),
         /**
          * layout of the rtc session display chosen by the user
@@ -281,13 +280,6 @@ registerModel({
          */
         voiceActiveDuration: attr({
             default: 0,
-        }),
-        /**
-         * Models that represent the volume chosen by the user for each partner.
-         */
-        volumeSettings: one2many('VolumeSetting', {
-            inverse: 'userSetting',
-            isCausal: true,
         }),
     },
 });
