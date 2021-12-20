@@ -202,7 +202,7 @@ const LinkPopoverWidget = Widget.extend({
             }).removeClass('d-none');
             this.$previewFaviconFa.addClass('d-none');
         } else {
-            await this._dp.add($.get(this.target.href)).then(content => {
+            await this._dp.add($.get({url: this.target.href, dataType: 'html'})).then(content => {
                 const parser = new window.DOMParser();
                 const doc = parser.parseFromString(content, "text/html");
 
