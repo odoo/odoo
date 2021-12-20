@@ -111,8 +111,7 @@ contract_costs AS (
         ve.id,
         date_start
 )
-SELECT
-    vehicle_id AS id,
+SELECT row_number() OVER (ORDER BY vehicle_id ASC) as id,
     company_id,
     vehicle_id,
     name,
@@ -121,12 +120,9 @@ SELECT
     date_start,
     vehicle_type,
     COST,
-    'service' as cost_type
-FROM
-    service_costs sc
-UNION ALL (
+    cost_type
+FROM (
     SELECT
-        vehicle_id AS id,
         company_id,
         vehicle_id,
         name,
@@ -135,9 +131,23 @@ UNION ALL (
         date_start,
         vehicle_type,
         COST,
-        'contract' as cost_type
+        'service' as cost_type
     FROM
-        contract_costs cc)
+        service_costs sc
+    UNION ALL (
+        SELECT
+            company_id,
+            vehicle_id,
+            name,
+            driver_id,
+            fuel_type,
+            date_start,
+            vehicle_type,
+            COST,
+            'contract' as cost_type
+        FROM
+            contract_costs cc)
+) c
 """
         tools.drop_view_if_exists(self.env.cr, self._table)
         self.env.cr.execute(
