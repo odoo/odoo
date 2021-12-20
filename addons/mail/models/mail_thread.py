@@ -1888,6 +1888,8 @@ class MailThread(models.AbstractModel):
             raise exceptions.UserError(_("Only logged notes can have their content updated on model '%s'", self._name))
         if message.tracking_value_ids:
             raise exceptions.UserError(_("Messages with tracking values cannot be modified"))
+        if not message.message_type == 'comment':
+            raise exceptions.UserError(_("Only messages type comment can have their content updated"))
 
     # ------------------------------------------------------
     # MESSAGE POST TOOLS
