@@ -33,8 +33,8 @@
                 </a>
                 <t t-if="activityBoxView.isActivityListVisible">
                     <div class="o_ActivityBox_activityList">
-                        <t t-foreach="activityBoxView.chatter.thread.activities" t-as="activity" t-key="activity.localId">
-                            <Activity className="'o_ActivityBox_activity'" activityLocalId="activity.localId"/>
+                        <t t-foreach="activityBoxView.activityViews" t-as="activityView" t-key="activityView.localId">
+                            <Activity className="'o_ActivityBox_activity'" activityViewLocalId="activityView.localId"/>
                         </t>
                     </div>
                 </t>

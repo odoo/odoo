@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model/use_component_to_model';
 import { useUpdate } from '@mail/component_hooks/use_update/use_update';
 import { useRefToModel } from '@mail/component_hooks/use_ref_to_model/use_ref_to_model';
 
@@ -15,6 +16,7 @@ export class Chatter extends Component {
     setup() {
         super.setup();
         useUpdate({ func: () => this._update() });
+        useComponentToModel({ fieldName: 'component', modelName: 'Chatter', propNameAsRecordLocalId: 'chatterLocalId' });
         useRefToModel({ fieldName: 'threadRef', modelName: 'Chatter', propNameAsRecordLocalId: 'chatterLocalId', refName: 'thread' });
         /**
          * Reference of the scroll Panel (Real scroll element). Useful to pass the Scroll element to
