@@ -110,6 +110,10 @@ function factory(dependencies) {
         // Public
         //----------------------------------------------------------------------
 
+        async deafen() {
+            await this._setDeafState(true);
+        }
+
         /**
          * Removes and disconnects all the peerConnections that are not current members of the call.
          *
@@ -214,6 +218,11 @@ function factory(dependencies) {
             }
         }
 
+        async mute() {
+            this.currentRtcSession.updateAndBroadcast({ isMuted: true });
+            await this._updateLocalAudioTrackEnabledState();
+        }
+
         /**
          * Resets the state of the model and cleanly ends all connections and
          * streams.
@@ -249,23 +258,6 @@ function factory(dependencies) {
         }
 
         /**
-         * Mutes and unmutes the microphone, will not unmute if deaf.
-         *
-         * @param {Object} [param0]
-         * @param {string} [param0.requestAudioDevice] true if requesting the audio input device
-         *                 from the user
-         */
-        async toggleMicrophone({ requestAudioDevice = true } = {}) {
-            const shouldMute = this.currentRtcSession.isDeaf || !this.currentRtcSession.isMuted;
-            this.currentRtcSession.updateAndBroadcast({ isMuted: shouldMute || !this.audioTrack });
-            if (!this.audioTrack && !shouldMute && requestAudioDevice) {
-                // if we don't have an audioTrack, we try to request it again
-                await this.updateLocalAudioTrack(true);
-            }
-            await this.async(() => this._updateLocalAudioTrackEnabledState());
-        }
-
-        /**
          * toggles screen broadcasting to peers.
          */
         async toggleScreenShare() {
@@ -277,6 +269,20 @@ function factory(dependencies) {
          */
         async toggleUserVideo() {
             this._toggleVideoBroadcast({ type: 'user-video' });
+        }
+
+        async unDeafen() {
+            await this._setDeafState(false);
+        }
+
+        async unMute() {
+            if (this.audioTrack) {
+                this.currentRtcSession.updateAndBroadcast({ isMuted: false });
+                await this._updateLocalAudioTrackEnabledState();
+            } else {
+                // if we don't have an audioTrack, we try to request it again
+                await this.updateLocalAudioTrack(true);
+            }
         }
 
         /**
@@ -321,7 +327,7 @@ function factory(dependencies) {
                     await this.async(() => this._updateLocalAudioTrackEnabledState());
                 });
                 this.currentRtcSession.updateAndBroadcast({ isMuted: false });
-                audioTrack.enabled = !this.currentRtcSession.isMuted && this.currentRtcSession.isTalking;
+                audioTrack.enabled = !this.currentRtcSession.isMuteOrDeaf && this.currentRtcSession.isTalking;
                 this.update({ audioTrack });
                 await this.async(() => this.updateVoiceActivation());
                 for (const [token, peerConnection] of Object.entries(this._peerConnections)) {
@@ -347,6 +353,7 @@ function factory(dependencies) {
             this._disconnectAudioMonitor && this._disconnectAudioMonitor();
             if (this.messaging.userSetting.usePushToTalk || !this.channel || !this.audioTrack) {
                 this.currentRtcSession.update({ isTalking: false });
+                await this._updateLocalAudioTrackEnabledState();
                 return;
             }
             try {
@@ -368,6 +375,7 @@ function factory(dependencies) {
                 });
                 this.currentRtcSession.update({ isTalking: true });
             }
+            await this._updateLocalAudioTrackEnabledState();
         }
 
         //----------------------------------------------------------------------
@@ -514,7 +522,10 @@ function factory(dependencies) {
                         type: 'peerToPeer',
                         payload: {
                             type: 'audio',
-                            state: { isTalking: this.currentRtcSession.isTalking, isMuted: this.currentRtcSession.isMuted },
+                            state: {
+                                isTalking: this.audioTrack && this.audioTrack.enabled,
+                                isMuted: this.currentRtcSession.isMuted,
+                            },
                         },
                     });
                 } catch (e) {
@@ -881,6 +892,20 @@ function factory(dependencies) {
         }
 
         /**
+         * @param {Boolean} deafen
+         */
+        async _setDeafState(deafen) {
+            this.currentRtcSession.updateAndBroadcast({ isDeaf: deafen });
+            for (const session of this.messaging.models['mail.rtc_session'].all()) {
+                if (!session.audioElement) {
+                    continue;
+                }
+                session.audioElement.muted = deafen;
+            }
+            await this._updateLocalAudioTrackEnabledState();
+        }
+
+        /**
          * Updates the "isTalking" state of the current user and sets the
          * enabled state of its audio track accordingly.
          *
@@ -895,7 +920,7 @@ function factory(dependencies) {
                 return;
             }
             this.currentRtcSession.update({ isTalking });
-            if (!this.currentRtcSession.isMuted) {
+            if (!this.currentRtcSession.isMuteOrDeaf) {
                 await this._updateLocalAudioTrackEnabledState();
             }
         }
@@ -976,8 +1001,8 @@ function factory(dependencies) {
         }
 
         /**
-         * Sets the enabled property of the local audio track based on the
-         * current session state. And notifies peers of the new audio state.
+         * Sets the enabled property of the local audio track and notifies
+         * peers of the new state.
          *
          * @private
          */
@@ -985,14 +1010,14 @@ function factory(dependencies) {
             if (!this.audioTrack) {
                 return;
             }
-            this.audioTrack.enabled = !this.currentRtcSession.isMuted && this.currentRtcSession.isTalking;
+            this.audioTrack.enabled = !this.currentRtcSession.isMuteOrDeaf && this.currentRtcSession.isTalking;
             await this._notifyPeers(Object.keys(this._peerConnections), {
                 event: 'trackChange',
                 type: 'peerToPeer',
                 payload: {
                     type: 'audio',
                     state: {
-                        isTalking: this.currentRtcSession.isTalking && !this.currentRtcSession.isMuted,
+                        isTalking: this.audioTrack.enabled,
                         isMuted: this.currentRtcSession.isMuted,
                         isDeaf: this.currentRtcSession.isDeaf,
                     },
@@ -1177,19 +1202,22 @@ function factory(dependencies) {
             if (!this.channel) {
                 return;
             }
-            if (this.messaging.userSetting.rtcConfigurationMenu.isRegisteringKey) {
+            if (!this.messaging.userSetting.usePushToTalk || !this.messaging.userSetting.isPushToTalkKey(ev)) {
                 return;
             }
-            if (!this.messaging.userSetting.usePushToTalk || !this.messaging.userSetting.isPushToTalkKey(ev)) {
+            if (this.currentRtcSession.isMuteOrDeaf) {
+                return;
+            }
+            if (this.messaging.userSetting.rtcConfigurationMenu.isRegisteringKey) {
                 return;
             }
             if (this._pushToTalkTimeoutId) {
                 browser.clearTimeout(this._pushToTalkTimeoutId);
             }
-            if (!this.currentRtcSession.isTalking && !this.currentRtcSession.isMuted) {
+            if (!this.currentRtcSession.isTalking) {
                 this.messaging.soundEffects.pushToTalk.play({ volume: 0.3 });
+                this._setSoundBroadcast(true);
             }
-            this._setSoundBroadcast(true);
         }
 
         /**
@@ -1206,7 +1234,7 @@ function factory(dependencies) {
             if (!this.currentRtcSession.isTalking) {
                 return;
             }
-            if (!this.currentRtcSession.isMuted) {
+            if (!this.currentRtcSession.isMuteOrDeaf) {
                 this.messaging.soundEffects.pushToTalk.play({ volume: 0.3 });
             }
             this._pushToTalkTimeoutId = browser.setTimeout(
