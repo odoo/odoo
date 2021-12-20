@@ -3399,11 +3399,12 @@ class TestFieldParametersValidation(common.TransactionCase):
         ))
 
 
-def insert(model, *fnames):
+def insert(model, *fnames, rowcount=1):
     """ Return the expected query string to INSERT the given columns. """
     columns = sorted(fnames + ('create_uid', 'create_date', 'write_uid', 'write_date'))
     header = ", ".join(f'"{column}"' for column in columns)
-    return f'INSERT INTO "{model._table}" ({header}) VALUES %s RETURNING id'
+    template = ", ".join("%s" for _index in range(rowcount))
+    return f'INSERT INTO "{model._table}" ({header}) VALUES {template} RETURNING "id"'
 
 
 def update(model, *fnames):
@@ -3499,6 +3500,23 @@ class TestComputeQueries(common.TransactionCase):
             record = model.create({'foo': 'Foo', 'bar': 'Bar'})
         self.assertEqual(record.foo, 'Bar')
         self.assertEqual(record.bar, 'Bar')
+
+    def test_multi_create(self):
+        model = self.env['test_new_api.foo']
+        model.create({})
+
+        with self.assertQueries([insert(model, 'name', 'value1', 'value2', rowcount=4)]):
+            create_values = [
+                {'name': 'Foo1', 'value1': 10},
+                {'name': 'Foo2', 'value2': 12},
+                {'name': 'Foo3'},
+                {},
+            ]
+            records = model.create(create_values)
+        self.assertEqual(records.mapped('name'), ['Foo1', 'Foo2', 'Foo3', False])
+        self.assertEqual(records.mapped('value1'), [10, 0, 0, 0])
+        self.assertEqual(records.mapped('value2'), [0, 12, 0, 0])
+
 
 class test_shared_cache(TransactionCaseWithUserDemo):
     def test_shared_cache_computed_field(self):
