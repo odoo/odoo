@@ -557,7 +557,7 @@ QUnit.test('activity details layout', async function (assert) {
     assert.strictEqual(
         document.querySelector('.o_Activity_details .o_Activity_type').textContent,
         "Email",
-        "activity details type should be 'Fake type'"
+        "activity details type should be 'Email'"
     );
     assert.strictEqual(
         document.querySelectorAll('.o_Activity_detailsCreation').length,

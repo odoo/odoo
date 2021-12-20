@@ -60,7 +60,7 @@ registerModel({
          * @param {MouseEvent} ev
          */
         onClickChatterTopbarClose(ev) {
-            this.componentChatterTopbar.trigger('o-close-chatter');
+            this.component.trigger('o-close-chatter');
         },
         /**
          * Handles click on "log note" button.
@@ -96,12 +96,7 @@ registerModel({
             return this.env.bus.trigger('do-action', {
                 action,
                 options: {
-                    on_close: () => {
-                        if (!this.componentChatterTopbar) {
-                            return;
-                        }
-                        this.componentChatterTopbar.trigger('reload', { keepChanges: true });
-                    },
+                    on_close: () => this.reloadParentView(),
                 },
             });
         },
@@ -138,6 +133,11 @@ registerModel({
             }
             if (this.hasMessageList) {
                 this.thread.refresh();
+            }
+        },
+        reloadParentView() {
+            if (this.component) {
+                this.component.trigger('reload', { keepChanges: true });
             }
         },
         showLogNote() {
@@ -296,9 +296,9 @@ registerModel({
             readonly: true,
         }),
         /**
-         * States the OWL component of this chatter top bar.
+         * States the OWL Chatter component of this chatter.
          */
-        componentChatterTopbar: attr(),
+        component: attr(),
         /**
          * Determines the composer view used to post in this chatter (if any).
          */
