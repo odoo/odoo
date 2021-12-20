@@ -728,9 +728,9 @@ class MrpProduction(models.Model):
     @api.onchange('lot_producing_id')
     def _onchange_lot_producing(self):
         if self.product_id.tracking == 'serial' and self.lot_producing_id:
-            message, dummy = self.env['stock.quant']._check_serial_number(self.product_id,
-                                                                      self.lot_producing_id,
-                                                                      self.company_id)
+            message, dummy = self.env['stock.quant'].sudo()._check_serial_number(self.product_id,
+                                                                                 self.lot_producing_id,
+                                                                                 self.company_id)
             if message:
                 return {'warning': {'title': _('Warning'), 'message': message}}
 
@@ -782,8 +782,7 @@ class MrpProduction(models.Model):
                     finished_move_lines.write({'lot_id': vals.get('lot_producing_id')})
                 if 'qty_producing' in vals:
                     finished_move_lines.write({'qty_done': vals.get('qty_producing')})
-
-            if not production.workorder_ids.operation_id and vals.get('date_planned_start') and not vals.get('date_planned_finished'):
+            if self._has_workorders() and not production.workorder_ids.operation_id and vals.get('date_planned_start') and not vals.get('date_planned_finished'):
                 new_date_planned_start = fields.Datetime.to_datetime(vals.get('date_planned_start'))
                 if not production.date_planned_finished or new_date_planned_start >= production.date_planned_finished:
                     production.date_planned_finished = new_date_planned_start + datetime.timedelta(hours=1)
@@ -2035,6 +2034,9 @@ class MrpProduction(models.Model):
             'res_id': production.id,
             'target': 'main',
         }
+
+    def _has_workorders(self):
+        return self.workorder_ids
 
     @api.model
     def _prepare_procurement_group_vals(self, values):

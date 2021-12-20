@@ -3,8 +3,8 @@
 
 from collections import defaultdict
 
-from odoo import fields, models, _
-from odoo.exceptions import UserError
+from odoo import fields, models, api, _
+from odoo.exceptions import UserError, AccessError
 from odoo.tools.float_utils import float_compare, float_is_zero
 
 
@@ -37,6 +37,9 @@ class StockMove(models.Model):
         for move in self:
             if not move.is_subcontract:
                 continue
+            if self.env.user.has_group('base.group_portal'):
+                move.show_details_visible = any(not p._has_been_recorded() for p in move._get_subcontract_production())
+                continue
             if not move._get_subcontract_production()._has_tracked_component():
                 continue
             move.show_details_visible = True
@@ -55,6 +58,7 @@ class StockMove(models.Model):
         """ If the initial demand is updated then also update the linked
         subcontract order to the new quantity.
         """
+        self._check_access_if_subcontractor(values)
         if 'product_uom_qty' in values and self.env.context.get('cancel_backorder') is not False:
             self.filtered(lambda m: m.is_subcontract and m.state not in ['draft', 'cancel', 'done'])._update_subcontract_order_qty(values['product_uom_qty'])
         res = super().write(values)
@@ -67,6 +71,12 @@ class StockMove(models.Model):
                     'date_planned_start': move.date,
                 })
         return res
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            self._check_access_if_subcontractor(vals)
+        return super().create(vals_list)
 
     def action_show_details(self):
         """ Open the produce wizard in order to register tracked components for
@@ -82,6 +92,11 @@ class StockMove(models.Model):
                 'show_lots_m2o': self.has_tracking != 'none',
                 'show_lots_text': False,
             })
+        elif self.env.user.has_group('base.group_portal'):
+            if self.picking_type_id.show_reserved:
+                action['views'] = [(self.env.ref('mrp_subcontracting.mrp_subcontracting_view_stock_move_operations').id, 'form')]
+            else:
+                action['views'] = [(self.env.ref('mrp_subcontracting.mrp_subcontracting_view_stock_move_nosuggest_operations').id, 'form')]
         return action
 
     def action_show_subcontract_details(self):
@@ -90,6 +105,9 @@ class StockMove(models.Model):
         tree_view = self.env.ref('mrp_subcontracting.mrp_subcontracting_move_tree_view')
         form_view = self.env.ref('mrp_subcontracting.mrp_subcontracting_move_form_view')
         ctx = dict(self._context, search_default_by_product=True)
+        if self.env.user.has_group('base.group_portal'):
+            form_view = self.env.ref('mrp_subcontracting.mrp_subcontracting_portal_move_form_view')
+            ctx.update(no_breadcrumbs=False)
         return {
             'name': _('Raw Materials for %s') % (self.product_id.display_name),
             'type': 'ir.actions.act_window',
@@ -147,6 +165,8 @@ class StockMove(models.Model):
         self.ensure_one()
         production = self._get_subcontract_production()[-1:]
         view = self.env.ref('mrp_subcontracting.mrp_production_subcontracting_form_view')
+        if self.env.user.has_group('base.group_portal'):
+            view = self.env.ref('mrp_subcontracting.mrp_production_subcontracting_portal_form_view')
         return {
             'name': _('Subcontract'),
             'type': 'ir.actions.act_window',
@@ -221,3 +241,8 @@ class StockMove(models.Model):
                         'mo_id': production.id,
                         'product_qty': production.product_uom_qty - quantity_to_remove
                     }).change_prod_qty()
+
+    def _check_access_if_subcontractor(self, vals):
+        if self.env.user.has_group('base.group_portal') and not self.env.su:
+            if vals.get('state') == 'done':
+                raise AccessError(_("Portal users cannot create a stock move with a state 'Done' or change the current state to 'Done'."))

@@ -249,12 +249,12 @@ class ProductProduct(models.Model):
     @api.depends_context('partner_id')
     def _compute_product_code(self):
         for product in self:
-            for supplier_info in product.seller_ids:
-                if supplier_info.partner_id.id == product._context.get('partner_id'):
-                    product.code = supplier_info.product_code or product.default_code
-                    break
-            else:
-                product.code = product.default_code
+            product.code = product.default_code
+            if self.env['ir.model.access'].check('product.supplierinfo', 'read', False):
+                for supplier_info in product.seller_ids:
+                    if supplier_info.partner_id.id == product._context.get('partner_id'):
+                        product.code = supplier_info.product_code or product.default_code
+                        break
 
     @api.depends_context('partner_id')
     def _compute_partner_ref(self):

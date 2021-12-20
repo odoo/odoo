@@ -5,7 +5,7 @@
             <field name="product_tmpl_id" ref="product.product_delivery_02"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="type">subcontract</field>
-            <field name="subcontractor_ids" eval="[(4, ref('base.res_partner_12'))]"/>
+            <field name="subcontractor_ids" eval="[(4, ref('base.res_partner_12')), (4, ref('base.partner_demo_portal'))]"/>
         </record>
 
         <record id="mrp_bom_line_subcontract" model="mrp.bom.line">

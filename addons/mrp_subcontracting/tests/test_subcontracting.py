@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
+from odoo.exceptions import AccessError, UserError
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase
 from odoo.addons.mrp_subcontracting.tests.common import TestMrpSubcontractingCommon
@@ -957,3 +958,146 @@ class TestSubcontractingTracking(TransactionCase):
                 wizard.process()
 
             self.assertEqual(picking_receipt.state, 'done')
+
+
+class TestSubcontractingPortal(TransactionCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        # 1: Create a subcontracting partner
+        main_partner = cls.env['res.partner'].create({'name': 'main_partner'})
+        cls.subcontractor_partner1 = cls.env['res.partner'].create({
+            'name': 'subcontractor_partner',
+            'parent_id': main_partner.id,
+            'company_id': cls.env.ref('base.main_company').id,
+        })
+        # Make the subcontracting partner a portal user
+        cls.portal_user = cls.env['res.users'].create({
+            'name': 'portal user (subcontractor)',
+            'partner_id': cls.subcontractor_partner1.id,
+            'login': 'subcontractor',
+            'password': 'subcontractor',
+            'email': 'subcontractor@subcontracting.portal',
+            'groups_id': [(6, 0, [cls.env.ref('base.group_portal').id])]
+        })
+
+        # 2. Create a BOM of subcontracting type
+        # 2.1. Comp1 has tracking by lot
+        cls.comp1_sn = cls.env['product.product'].create({
+            'name': 'Component1',
+            'type': 'product',
+            'categ_id': cls.env.ref('product.product_category_all').id,
+            'tracking': 'serial'
+        })
+        cls.comp2 = cls.env['product.product'].create({
+            'name': 'Component2',
+            'type': 'product',
+            'categ_id': cls.env.ref('product.product_category_all').id,
+        })
+        cls.product_not_in_bom = cls.env['product.product'].create({
+            'name': 'Product not in the BoM',
+            'type': 'product',
+        })
+
+        # 2.2. Finished prodcut has tracking by serial number
+        cls.finished_product = cls.env['product.product'].create({
+            'name': 'finished',
+            'type': 'product',
+            'categ_id': cls.env.ref('product.product_category_all').id,
+            'tracking': 'lot'
+        })
+        bom_form = Form(cls.env['mrp.bom'])
+        bom_form.type = 'subcontract'
+        bom_form.consumption = 'warning'
+        bom_form.subcontractor_ids.add(cls.subcontractor_partner1)
+        bom_form.product_tmpl_id = cls.finished_product.product_tmpl_id
+        with bom_form.bom_line_ids.new() as bom_line:
+            bom_line.product_id = cls.comp1_sn
+            bom_line.product_qty = 1
+        with bom_form.bom_line_ids.new() as bom_line:
+            bom_line.product_id = cls.comp2
+            bom_line.product_qty = 1
+        cls.bom_tracked = bom_form.save()
+
+    def test_flow_subcontracting_portal(self):
+        # Create a receipt picking from the subcontractor
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+        picking_form.partner_id = self.subcontractor_partner1
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = self.finished_product
+            move.product_uom_qty = 2
+        picking_receipt = picking_form.save()
+        picking_receipt.action_confirm()
+
+        # Using the subcontractor (portal user)
+        lot1 = self.env['stock.lot'].with_user(self.portal_user).create({
+            'name': 'lot1',
+            'product_id': self.finished_product.id,
+            'company_id': self.env.company.id,
+        })
+        lot2 = self.env['stock.lot'].with_user(self.portal_user).create({
+            'name': 'lot2',
+            'product_id': self.finished_product.id,
+            'company_id': self.env.company.id,
+        })
+        serial1 = self.env['stock.lot'].with_user(self.portal_user).create({
+            'name': 'lot1',
+            'product_id': self.comp1_sn.id,
+            'company_id': self.env.company.id,
+        })
+        serial2 = self.env['stock.lot'].with_user(self.portal_user).create({
+            'name': 'lot2',
+            'product_id': self.comp1_sn.id,
+            'company_id': self.env.company.id,
+        })
+        serial3 = self.env['stock.lot'].with_user(self.portal_user).create({
+            'name': 'lot3',
+            'product_id': self.comp1_sn.id,
+            'company_id': self.env.company.id,
+        })
+        action = picking_receipt.with_user(self.portal_user).with_context({'is_subcontracting_portal': 1}).move_ids.action_show_details()
+        mo = self.env['mrp.production'].with_user(self.portal_user).browse(action['res_id'])
+        mo_form = Form(mo.with_context(action['context']), view=action['view_id'])
+        # Registering components for the first manufactured product
+        mo_form.qty_producing = 1
+        mo_form.lot_producing_id = lot1
+        with mo_form.move_line_raw_ids.edit(0) as ml:
+            ml.lot_id = serial1
+        mo = mo_form.save()
+        mo.subcontracting_record_component()
+        mo_form = Form(mo.with_context(action['context']), view=action['view_id'])
+        # Registering components for the second manufactured product with over-consumption, which leads to a warning
+        mo_form.qty_producing = 1
+        mo_form.lot_producing_id = lot2
+        with mo_form.move_line_raw_ids.edit(0) as ml:
+            ml.lot_id = serial2
+        with mo_form.move_line_raw_ids.new() as ml:
+            ml.product_id = self.comp1_sn
+            ml.lot_id = serial3
+        with mo_form.move_line_raw_ids.edit(1) as ml:
+            ml.qty_done = 2
+        # The portal user should not be able to add a product not in the BoM
+        with self.assertRaises(AccessError):
+            with mo_form.move_line_raw_ids.new() as ml:
+                ml.product_id = self.product_not_in_bom
+        mo = mo_form.save()
+        action_warning = mo.subcontracting_record_component()
+        warning = Form(self.env['mrp.consumption.warning'].with_context(**action_warning['context']))
+        warning = warning.save()
+        warning.action_confirm()
+
+        # Attempt to validate from the portal user should give an error
+        with self.assertRaises(UserError):
+            picking_receipt.with_user(self.portal_user).button_validate()
+
+        # Validation from the backend user
+        picking_receipt.button_validate()
+        self.assertEqual(mo.state, 'done')
+        self.assertEqual(mo.move_line_raw_ids[0].qty_done, 1)
+        self.assertEqual(mo.move_line_raw_ids[0].lot_id, serial2)
+        self.assertEqual(mo.move_line_raw_ids[1].qty_done, 1)
+        self.assertEqual(mo.move_line_raw_ids[1].lot_id, serial3)
+        self.assertEqual(mo.move_line_raw_ids[2].qty_done, 2)
