@@ -1,7 +1,8 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, one2one } from '@mail/model/model_field';
+import { attr, one2many, one2one } from '@mail/model/model_field';
+import { insertAndReplace, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'ActivityBoxView',
@@ -19,8 +20,22 @@ registerModel({
         onClickActivityBoxTitle() {
             this.update({ isActivityListVisible: !this.isActivityListVisible });
         },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeActivityViews() {
+            return insertAndReplace(this.chatter.thread.activities.map(activity => {
+                return { activity: replace(activity) };
+            }));
+        },
     },
     fields: {
+        activityViews: one2many('ActivityView', {
+            compute: '_computeActivityViews',
+            inverse: 'activityBoxView',
+            isCausal: true,
+        }),
         chatter: one2one('Chatter', {
             inverse: 'activityBoxView',
             readonly: true,
@@ -29,6 +44,6 @@ registerModel({
         isActivityListVisible: attr({
             default: true,
         }),
-    },  
+    },
 
 });

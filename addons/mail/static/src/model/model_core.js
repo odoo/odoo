@@ -65,7 +65,7 @@ export function addLifecycleHooks(modelName, hooks) {
             assertIsFunction(handler);
             assertIsValidHookName(name);
             assertSectionDoesNotHaveKey('lifecycleHooks', name, definition);
-        }, `Cannot add lifecycle hook "${name}" to model "${modelName}":`);
+        }, `Cannot add lifecycle hook "${name}" to model "${modelName}": `);
         definition.get('lifecycleHooks').set(name, handler);
     }
 }
@@ -281,6 +281,7 @@ export function patchLifecycleHooks(modelName, hooks) {
     for (const [name, handler] of Object.entries(hooks)) {
         addContextToErrors(() => {
             assertIsFunction(handler);
+            assertIsValidHookName(name);
             assertSectionHasKey('lifecycleHooks', name, definition);
         }, `Cannot patch lifecycle hook "${name}" on model "${modelName}": `);
         const hookBeforePatch = definition.get('lifecycleHooks').get(name);
