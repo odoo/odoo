@@ -84,7 +84,7 @@
                             <h2>
                                 <field name="job_title" placeholder="Job Position" />
                             </h2>
-                            <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Tags"  groups="hr.group_hr_manager"/>
+                            <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Tags"  groups="hr.group_hr_user"/>
                         </div>
                         <group>
                             <group>
@@ -300,7 +300,7 @@
                                        <span t-if="record.job_title.raw_value" class="o_kanban_record_subtitle"><field name="job_title"/></span>
                                    </div>
                                </div>
-                               <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color'}" groups="hr.group_hr_manager"/>
+                               <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color'}" groups="hr.group_hr_user"/>
                                <ul>
                                    <li id="last_login"/>
                                    <li t-if="record.work_email.raw_value" class="o_text_overflow"><field name="work_email" /></li>
