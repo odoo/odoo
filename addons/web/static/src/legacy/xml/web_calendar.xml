@@ -126,11 +126,15 @@
     </t>
 
     <t t-name="CalendarView.scale_buttons">
-        <div class="btn-group">
-            <button type="button" t-if="scales.includes('day')" class="o_calendar_button_day btn btn-secondary" data-hotkey="d">Day</button>
-            <button type="button" t-if="scales.includes('week')" class="o_calendar_button_week btn btn-secondary" data-hotkey="w">Week</button>
-            <button type="button" t-if="scales.includes('month')" class="o_calendar_button_month btn btn-secondary" data-hotkey="m">Month</button>
-            <button type="button" t-if="scales.includes('year')" class="o_calendar_button_year btn btn-secondary" data-hotkey="y">Year</button>
+        <div class="btn-group dropdown">
+            <button class="btn btn-secondary dropdown-toggle scale_button_selection text-uppercase" data-hotkey="v" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <button type="button" t-if="scales.includes('day')" class="dropdown-item o_calendar_button_day btn btn-secondary text-uppercase" data-hotkey="d">Day</button>
+                <button type="button" t-if="scales.includes('week')" class="dropdown-item o_calendar_button_week btn btn-secondary text-uppercase" data-hotkey="w">Week</button>
+                <button type="button" t-if="scales.includes('month')" class="dropdown-item o_calendar_button_month btn btn-secondary text-uppercase" data-hotkey="m">Month</button>
+                <button type="button" t-if="scales.includes('year')" class="dropdown-item o_calendar_button_year btn btn-secondary text-uppercase" data-hotkey="y">Year</button>
+            </div>
         </div>
     </t>
 
