@@ -12,7 +12,8 @@
                     <TicketButton isTicketScreenShown="isTicketScreenShown" />
                 </div>
                 <div class="pos-rightheader">
-                    <TicketButton isTicketScreenShown="isTicketScreenShown" t-if="env.isMobile" />
+                    <CashMoveButton t-if="showCashMoveButton() and env.isMobile" />
+                    <TicketButton isTicketScreenShown="isTicketScreenShown" t-if="env.isMobile and !state.mobileSearchBarIsShown" />
                     <div class="search-bar-portal" />
                     <div class="status-buttons-portal" />
                 </div>
