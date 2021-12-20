@@ -568,7 +568,7 @@ class PosOrder(models.Model):
                 maxDiff = currency.round(self.config_id.rounding_method.rounding)
 
             diff = currency.round(self.amount_total - self.amount_paid)
-            if not abs(diff) < maxDiff:
+            if not abs(diff) <= maxDiff:
                 raise UserError(_("Order %s is not fully paid.", self.name))
 
         self.write({'state': 'paid'})
