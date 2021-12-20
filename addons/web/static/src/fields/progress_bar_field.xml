@@ -11,7 +11,11 @@
                     <div class="o_progressbar_value" t-esc="state.currentValue + ' / ' + state.maxValue"/>
                 </t>
                 <t t-else="">
-                    <div class="o_progressbar_value" t-esc="state.currentValue + '%'"/>
+                    <PercentageViewer
+                        fieldClass="'o_progressbar_value'"
+                        isPercentage="true"
+                        value="state.currentValue"
+                    />
                 </t>
             </div>
         </t>
@@ -50,14 +54,13 @@
                     </t>
                 </t>
                 <t t-else="">
-                    <input
-                        class="o_progressbar_value o_input"
-                        type="text"
-                        t-att-value="state.currentValue"
-                        t-on-change="onChangeCurrentValue"
-                        t-on-keydown="onKeyDownCurrentValue"
+                    <PercentageEditor
+                        fieldClass="'o_progressbar_value'"
+                        isPercentage="true"
+                        onChange="(ev) => onChangeCurrentValue(ev)"
+                        onKeydown="(ev) => onKeyDownCurrentValue(ev)"
+                        value="state.currentValue"
                     />
-                    <span>%</span>
                 </t>
             </div>
         </t>

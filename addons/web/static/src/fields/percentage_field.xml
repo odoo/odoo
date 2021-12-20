@@ -3,20 +3,16 @@
 
     <t t-name="web.PercentageField" owl="1">
         <t t-if="props.readonly">
-            <span t-esc="formattedValue"/>
+            <PercentageViewer
+                value="props.value"
+            />
         </t>
         <t t-else="">
-            <div class="d-flex">
-                <input
-                    class="o-percentage-field o_input"
-                    type="text"
-                    inputmode="numeric"
-                    t-att-value="percentageValue or ''"
-                    t-att-required="props.required"
-                    t-on-change="onChange"
-                />
-                <span>%</span>
-            </div>
+            <PercentageEditor
+                fieldClass="'o_percentage_field'"
+                onChange="(ev) => onChange(ev)"
+                value="props.value"
+            />
         </t>
     </t>
 

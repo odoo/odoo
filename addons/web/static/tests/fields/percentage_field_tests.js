@@ -70,7 +70,7 @@ QUnit.module("Fields", (hooks) => {
             "%",
             "The input should be followed by a span containing the percentage symbol."
         );
-        const field = form.el.querySelector(".o-percentage-field");
+        const field = form.el.querySelector(".o_percentage_field");
         field.value = "24";
         await triggerEvent(field, null, "change");
         assert.strictEqual(field.value, "24", "The value should not be formated yet.");

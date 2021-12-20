@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.PercentageViewer" owl="1">
+        <span t-att-class="props.fieldClass" t-esc="formattedValue"/>
+    </t>
+
+    <t t-name="web.PercentageEditor" owl="1">
+        <div class="d-flex">
+            <input
+                t-attf-class="o_input {{ props.fieldClass or '' }}"
+                type="text"
+                inputmode="numeric"
+                t-att-value="percentageValue or ''"
+                t-att-required="props.required"
+                t-on-change="props.onChange"
+                t-on-keydown="props.onKeydown"
+            />
+            <span>%</span>
+        </div>
+    </t>
+
+</templates>

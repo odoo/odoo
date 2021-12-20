@@ -3,11 +3,19 @@
 import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "./standard_field_props";
-import { PercentageEditor, PercentageViewer } from "./percentage";
+import { PercentageViewer } from "./percentage";
 
 const { Component } = owl;
 
-export class PercentageField extends Component {
+export class PercentPieField extends Component {
+    get transform() {
+        const rotateDeg = (360 * this.props.value) / 100;
+        return {
+            left: rotateDeg < 180 ? 180 : rotateDeg,
+            right: rotateDeg < 180 ? rotateDeg : 0,
+            value: rotateDeg,
+        };
+    }
     /**
      * @param {Event} ev
      */
@@ -21,18 +29,17 @@ export class PercentageField extends Component {
     }
 }
 
-Object.assign(PercentageField, {
+Object.assign(PercentPieField, {
     components: {
-        PercentageEditor,
         PercentageViewer,
     },
-    template: "web.PercentageField",
+    template: "web.PercentPieField",
     props: {
         ...standardFieldProps,
     },
 
-    displayName: _lt("Percentage"),
+    displayName: _lt("PercentPie"),
     supportedTypes: ["integer", "float"],
 });
 
-registry.category("fields").add("percentage", PercentageField);
+registry.category("fields").add("percentpie", PercentPieField);

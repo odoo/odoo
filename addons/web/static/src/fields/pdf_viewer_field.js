@@ -3,16 +3,11 @@
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
-import { download } from "@web/core/network/download";
 import { standardFieldProps } from "./standard_field_props";
 import { FileDownloader, FileUploader } from "./file_handler";
 
 const { Component } = owl;
 const { onWillUpdateProps, useState } = owl.hooks;
-
-function isBinarySize(value) {
-    return /^\d+(\.\d*)? [^0-9]+$/.test(value);
-}
 
 export class PdfViewerField extends Component {
     setup() {

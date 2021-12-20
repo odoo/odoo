@@ -4,6 +4,7 @@ import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { standardFieldProps } from "./standard_field_props";
+import { PercentageEditor, PercentageViewer } from "./percentage";
 
 const { Component } = owl;
 const { onWillUnmount, onWillUpdateProps, useState } = owl.hooks;
@@ -102,6 +103,10 @@ export class ProgressBarField extends Component {
         }, 100);
     }
 }
+ProgressBarField.components = {
+    PercentageEditor,
+    PercentageViewer,
+};
 ProgressBarField.props = standardFieldProps;
 ProgressBarField.template = "web.ProgressBarField";
 
