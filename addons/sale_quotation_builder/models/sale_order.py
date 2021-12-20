@@ -63,15 +63,17 @@ class SaleOrderLine(models.Model):
 class SaleOrderOption(models.Model):
     _inherit = "sale.order.option"
 
-    website_description = fields.Html('Website Description', sanitize_attributes=False, translate=html_translate)
+    website_description = fields.Html(
+        'Website Description', sanitize_attributes=False, translate=html_translate,
+        compute='_compute_website_description', store=True, readonly=False, precompute=True)
 
-    @api.onchange('product_id', 'uom_id')
-    def _onchange_product_id(self):
-        ret = super(SaleOrderOption, self)._onchange_product_id()
-        if self.product_id:
-            product = self.product_id.with_context(lang=self.order_id.partner_id.lang)
-            self.website_description = product.quotation_description
-        return ret
+    @api.depends('product_id', 'uom_id')
+    def _compute_website_description(self):
+        for option in self:
+            if not option.product_id:
+                continue
+            product = option.product_id.with_context(lang=option.order_id.partner_id.lang)
+            option.website_description = product.quotation_description
 
     def _get_values_to_add_to_order(self):
         values = super(SaleOrderOption, self)._get_values_to_add_to_order()

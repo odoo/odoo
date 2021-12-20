@@ -87,11 +87,13 @@ class SaleOrder(models.Model):
 
     def update_prices(self):
         self.ensure_one()
-        res = super().update_prices()
-        # TODO env.add_to_compute after onchange conversion to computes
-        for line in self.sale_order_option_ids:
-            line.price_unit = self.pricelist_id._get_product_price(line.product_id, line.quantity, uom=line.uom_id)
-        return res
+        super().update_prices()
+        # Special case: we want to overwrite the existing discount on update_prices call
+        # i.e. to make sure the discount is correctly reset
+        # if pricelist discount_policy is different than when the price was first computed.
+        self.sale_order_option_ids.discount = 0.0
+        self.sale_order_option_ids._compute_price_unit()
+        self.sale_order_option_ids._compute_discount()
 
     @api.onchange('sale_order_template_id')
     def onchange_sale_order_template_id(self):
@@ -146,9 +148,6 @@ class SaleOrder(models.Model):
         self.require_signature = template.require_signature
         self.require_payment = template.require_payment
 
-        if not is_html_empty(template.note):
-            self.note = template.note
-
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
         for order in self:
@@ -194,17 +193,27 @@ class SaleOrderOption(models.Model):
     _description = "Sale Options"
     _order = 'sequence, id'
 
-    is_present = fields.Boolean(string="Present on Quotation",
-                           help="This field will be checked if the option line's product is "
-                                "already present in the quotation.",
-                           compute="_compute_is_present", search="_search_is_present")
+    is_present = fields.Boolean(
+        string="Present on Quotation",
+        compute="_compute_is_present", search="_search_is_present",
+        help="This field will be checked if the option line's product is "
+             "already present in the quotation.")
     order_id = fields.Many2one('sale.order', 'Sales Order Reference', ondelete='cascade', index=True)
     line_id = fields.Many2one('sale.order.line', ondelete="set null", copy=False)
-    name = fields.Text('Description', required=True)
+    name = fields.Text(
+        'Description', required=True,
+        compute='_compute_name', store=True, readonly=False, precompute=True)
     product_id = fields.Many2one('product.product', 'Product', required=True, domain=[('sale_ok', '=', True)])
-    price_unit = fields.Float('Unit Price', required=True, digits='Product Price')
-    discount = fields.Float('Discount (%)', digits='Discount')
-    uom_id = fields.Many2one('uom.uom', 'Unit of Measure ', required=True, domain="[('category_id', '=', product_uom_category_id)]")
+    price_unit = fields.Float(
+        'Unit Price', required=True, digits='Product Price',
+        compute='_compute_price_unit', store=True, readonly=False, precompute=True)
+    discount = fields.Float(
+        'Discount (%)', digits='Discount',
+        compute='_compute_discount', store=True, readonly=False, precompute=True)
+    uom_id = fields.Many2one(
+        'uom.uom', 'Unit of Measure ', required=True,
+        compute='_compute_uom_id', store=True, readonly=False, precompute=True,
+        domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id', readonly=True)
     quantity = fields.Float('Quantity', required=True, digits='Product Unit of Measure', default=1)
     sequence = fields.Integer('Sequence', help="Gives the sequence order when displaying a list of optional products.")
@@ -221,23 +230,42 @@ class SaleOrderOption(models.Model):
             return [('line_id', '=', False)]
         return [('line_id', '!=', False)]
 
-    # TODO convert to compute (+ precompute)
-    @api.onchange('product_id', 'uom_id', 'quantity')
-    def _onchange_product_id(self):
-        if not self.product_id:
-            return
-        product_lang = self.product_id.with_context(lang=self.order_id.partner_id.lang)
+    @api.depends('product_id')
+    def _compute_name(self):
+        for option in self:
+            if not option.product_id:
+                continue
+            product_lang = option.product_id.with_context(lang=option.order_id.partner_id.lang)
+            option.name = product_lang.get_product_multiline_description_sale()
 
-        self.name = product_lang.get_product_multiline_description_sale()
-        self.uom_id = self.uom_id or self.product_id.uom_id
-        # To compute the discount a so line is created in cache
-        values = self._get_values_to_add_to_order()
-        new_sol = self.env['sale.order.line'].new(values)
-        new_sol._compute_discount()
+    @api.depends('product_id')
+    def _compute_uom_id(self):
+        for option in self:
+            if not option.product_id or option.uom_id:
+                continue
+            option.uom_id = option.product_id.uom_id
 
-        self.discount = new_sol.discount
-        if self.order_id.pricelist_id:
-            self.price_unit = new_sol._get_display_price()
+    @api.depends('product_id', 'uom_id', 'quantity')
+    def _compute_price_unit(self):
+        for option in self:
+            if not option.product_id or not option.order_id.pricelist_id:
+                continue
+            # To compute the price_unit a so line is created in cache
+            values = option._get_values_to_add_to_order()
+            new_sol = self.env['sale.order.line'].new(values)
+            new_sol._compute_price_unit()
+            option.price_unit = new_sol.price_unit
+
+    @api.depends('product_id', 'uom_id', 'quantity')
+    def _compute_discount(self):
+        for option in self:
+            if not option.product_id:
+                continue
+            # To compute the discount a so line is created in cache
+            values = option._get_values_to_add_to_order()
+            new_sol = self.env['sale.order.line'].new(values)
+            new_sol._compute_discount()
+            option.discount = new_sol.discount
 
     def button_add_to_order(self):
         self.add_option_to_order()
