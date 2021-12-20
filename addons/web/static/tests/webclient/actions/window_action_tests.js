@@ -615,7 +615,7 @@ QUnit.module("ActionManager", (hooks) => {
         );
         // switch to edit mode and change the display_name
         await click(webClient.el.querySelector(".o_control_panel .o_form_button_edit"));
-        await editInput(webClient.el, ".o_field_widget[name=display_name]", "New name");
+        await editInput(webClient.el, ".o_field_widget[name=display_name] input", "New name");
         await click(webClient.el.querySelector(".o_control_panel .o_form_button_save"));
         assert.containsN(
             webClient.el,
@@ -1200,7 +1200,7 @@ QUnit.module("ActionManager", (hooks) => {
         await click(webClient.el.querySelector(".o_kanban_record"));
         // edit record
         await click(webClient.el.querySelector(".o_control_panel button.o_form_button_edit"));
-        await editInput(webClient.el, 'input[name="foo"]', "pinkypie");
+        await editInput(webClient.el, '.o_field_widget[name="foo"] input', "pinkypie");
         // go back to kanban view
         await click(webClient.el.querySelector(".o_control_panel .breadcrumb-item a"));
         assert.containsNone(document.body, ".modal", "should not display a modal dialog");
@@ -1754,7 +1754,7 @@ QUnit.module("ActionManager", (hooks) => {
                 "Second record"
             );
             // push another action in the breadcrumb
-            await click(webClient.el, ".o_field_many2one.o_form_uri");
+            await click(webClient.el, ".o_field_many2one .o_form_uri");
             assert.strictEqual(
                 webClient.el.querySelector(".o_control_panel .breadcrumb").textContent,
                 "Second recordThird record"
@@ -1835,7 +1835,11 @@ QUnit.module("ActionManager", (hooks) => {
             await click(webClient.el.querySelector(".o_list_button_add"));
             assert.containsOnce(webClient.el, ".o_form_view");
             assert.containsOnce(webClient, ".o_form_view .o_form_editable");
-            await editInput(webClient.el, ".o_field_widget[name=display_name]", "another record");
+            await editInput(
+                webClient.el,
+                ".o_field_widget[name=display_name] input",
+                "another record"
+            );
             await click(webClient.el.querySelector(".o_form_button_save"));
             assert.containsOnce(webClient, ".o_form_view .o_form_readonly");
             // execute an action from the second record
@@ -1953,7 +1957,7 @@ QUnit.module("ActionManager", (hooks) => {
             assert.containsOnce(webClient, ".o_form_view .o_form_readonly");
             await click(webClient.el.querySelector(".o_control_panel .o_form_button_edit"));
             assert.containsOnce(webClient, ".o_form_view .o_form_editable");
-            await editInput(webClient.el, "input[name=foo]", "val");
+            await editInput(webClient.el, ".o_field_widget[name=foo] input", "val");
             clearUncommittedChanges(webClient.env);
             await nextTick();
             assert.containsNone(document.body, ".modal");
@@ -2014,7 +2018,7 @@ QUnit.module("ActionManager", (hooks) => {
             // Open Partner form view and enter some text
             await doAction(webClient, 3, { viewType: "form" });
             assert.containsOnce(webClient, ".o_action_manager .o_form_view .o_form_editable");
-            await editInput(webClient.el, ".o_input[name=display_name]", "TEST");
+            await editInput(webClient.el, ".o_field_widget[name=display_name] input", "TEST");
             // Open dialog without saving should not ask to discard
             await doAction(webClient, 5);
             assert.containsOnce(webClient, ".o_action_manager .o_form_view .o_form_editable");
