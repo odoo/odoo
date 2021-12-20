@@ -6,19 +6,19 @@
             <t t-if="rtcController and messaging">
                 <div class="o_RtcController_buttons">
                     <t t-if="rtcController.callViewer.threadView.thread.rtc and messaging.rtc.currentRtcSession">
-                        <t t-if="messaging.rtc.currentRtcSession.isMuted"><t t-set="microphoneTitle">Unmute</t></t>
+                        <t t-if="messaging.rtc.currentRtcSession.isMuteOrDeaf"><t t-set="microphoneTitle">Unmute</t></t>
                         <t t-else=""><t t-set="microphoneTitle">Mute</t></t>
                         <button class="o_RtcController_button"
-                            t-att-class="{ 'o-isActive': !messaging.rtc.currentRtcSession.isMuted, 'o-isSmall': rtcController.isSmall }"
+                            t-att-class="{ 'o-isActive': !messaging.rtc.currentRtcSession.isMuteOrDeaf, 'o-isSmall': rtcController.isSmall }"
                             t-att-aria-label="microphoneTitle"
                             t-att-title="microphoneTitle"
                             t-on-click="rtcController.onClickMicrophone">
                             <div class="o_RtcController_buttonIconWrapper" t-att-class="{ 'o-isSmall': rtcController.isSmall }">
                                 <i class="fa" t-att-class="{
                                     'fa-lg': !rtcController.isSmall,
-                                    'fa-microphone': !messaging.rtc.currentRtcSession.isMuted,
-                                    'fa-microphone-slash': messaging.rtc.currentRtcSession.isMuted,
-                                    'text-danger': messaging.rtc.currentRtcSession.isMuted,
+                                    'fa-microphone': !messaging.rtc.currentRtcSession.isMuteOrDeaf,
+                                    'fa-microphone-slash': messaging.rtc.currentRtcSession.isMuteOrDeaf,
+                                    'text-danger': messaging.rtc.currentRtcSession.isMuteOrDeaf,
                                 }"/>
                             </div>
                         </button>

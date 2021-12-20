@@ -147,23 +147,10 @@ function factory(dependencies) {
             if (!this.rtc) {
                 return;
             }
-            this.updateAndBroadcast({
-                isDeaf: !this.isDeaf,
-            });
-            for (const session of this.messaging.models['mail.rtc_session'].all()) {
-                if (!session.audioElement) {
-                    continue;
-                }
-                session.audioElement.muted = this.isDeaf;
-            }
-            if (this.channel.rtc) {
-                /**
-                 * Ensures that the state of the microphone matches the deaf state
-                 * and notifies peers.
-                 */
-                await this.async(() => this.channel.rtc.toggleMicrophone({
-                    requestAudioDevice: false,
-                }));
+            if (this.rtc.currentRtcSession.isDeaf) {
+                await this.rtc.undeafen();
+            } else {
+                await this.rtc.deafen();
             }
         }
 
@@ -219,6 +206,14 @@ function factory(dependencies) {
             if (this.guest) {
                 return `/mail/channel/${this.channel.id}/guest/${this.guest.id}/avatar_128?unique=${this.guest.name}`;
             }
+        }
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsMuteOrDeaf() {
+            return this.isMuted || this.isDeaf;
         }
 
         /**
@@ -382,6 +377,13 @@ function factory(dependencies) {
          * voice activation (isTalking) state.
          */
         isMuted: attr({
+            default: false,
+        }),
+        /**
+         * Determine whether current session is either muted or deaf.
+         */
+        isMuteOrDeaf: attr({
+            compute: '_computeIsMuteOrDeaf',
             default: false,
         }),
         /**
