@@ -2,9 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.ColorField" owl="1">
-        <div>
-            <button class="o_field_color" t-att-class="{ 'o_field_cursor_disabled': isReadonly  }" t-att-disabled="isReadonly" t-attf-style="background-color: {{props.value}}" t-on-click="onClick" />
-        </div>
+        <button class="o_field_color" t-att-class="{ 'o_field_cursor_disabled': isReadonly  }" t-att-disabled="isReadonly" t-attf-style="background-color: {{props.value}}" t-on-click="onClick" />
     </t>
 
 </templates>
