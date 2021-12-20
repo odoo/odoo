@@ -11,5 +11,8 @@ Yoshi Tashiro tashiro@quartile.co https://github.com/yostashiro
 List of contributors:
 
 Yoshi Tashiro tashiro@quartile.co https://github.com/yostashiro
-Tim Lai tl@quartile.co https://github.com/TimLai125
-Tomoko Matsumura nako@quartile.co https://github.com/nakometal
+Ryoko Tsuda ryoko@quartile.co https://github.com/Ryoko04
+Ai Kakurai ai@quartile.co https://github.com/kakurai8
+Tomohiro Abe tomohiro@quartile.co https://github.com/TomohiroAbe-Quartile
+Takahiro Yabe yabe@quartile.co https://github.com/tack-yabeQuartile
+Takuya Tokunaga tokunaga@quartile.co https://github.com/takuyatokunaga
