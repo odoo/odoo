@@ -142,7 +142,8 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo):
         p = self.env.user.partner_id
         so = self._create_so(p.id)
 
-        with MockRequest(self.env, website=self.website, sale_order_id=so.id):
+        with MockRequest(self.env, website=self.website, sale_order_id=so.id) as req:
+            req.httprequest.method = "POST"
             self.WebsiteSaleController.address(**self.default_address_values)
             self.assertFalse(self._get_last_address(p).website_id, "New shipping address should not have a website set on it (no specific_user_account).")
 
@@ -186,7 +187,9 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo):
 
         env = api.Environment(self.env.cr, self.demo_user.id, {})
         # change also website env for `sale_get_order` to not change order partner_id
-        with MockRequest(env, website=self.website.with_env(env), sale_order_id=so.id):
+        with MockRequest(env, website=self.website.with_env(env), sale_order_id=so.id) as req:
+            req.httprequest.method = "POST"
+
             # 1. Logged in user, new shipping
             self.WebsiteSaleController.address(**self.default_address_values)
             new_shipping = self._get_last_address(self.demo_partner)
@@ -207,7 +210,9 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo):
 
         env = api.Environment(self.env.cr, self.website.user_id.id, {})
         # change also website env for `sale_get_order` to not change order partner_id
-        with MockRequest(env, website=self.website.with_env(env), sale_order_id=so.id):
+        with MockRequest(env, website=self.website.with_env(env), sale_order_id=so.id) as req:
+            req.httprequest.method = "POST"
+
             # 1. Public user, new billing
             self.default_address_values['partner_id'] = -1
             self.WebsiteSaleController.address(**self.default_address_values)
