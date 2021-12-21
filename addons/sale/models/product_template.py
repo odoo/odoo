@@ -15,11 +15,12 @@ _logger = logging.getLogger(__name__)
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    service_type = fields.Selection([('manual', 'Manually set quantities on order')], string='Track Service',
+    service_type = fields.Selection(
+        [('manual', 'Manually set quantities on order')], string='Track Service',
+        compute='_compute_service_type', store=True, readonly=False, precompute=True,
         help="Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.\n"
              "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
-             "Create a task and track hours: Create a task on the sales order validation and track the work hours.",
-        default='manual')
+             "Create a task and track hours: Create a task on the sales order validation and track the work hours.")
     sale_line_warn = fields.Selection(WARNING_MESSAGE, 'Sales Order Line', help=WARNING_HELP, required=True, default="no-message")
     sale_line_warn_msg = fields.Text('Message for Sales Order Line')
     expense_policy = fields.Selection(
@@ -33,12 +34,12 @@ class ProductTemplate(models.Model):
     visible_expense_policy = fields.Boolean("Re-Invoice Policy visible", compute='_compute_visible_expense_policy')
     sales_count = fields.Float(compute='_compute_sales_count', string='Sold')
     visible_qty_configurator = fields.Boolean("Quantity visible in configurator", compute='_compute_visible_qty_configurator')
-    invoice_policy = fields.Selection([
-        ('order', 'Ordered quantities'),
-        ('delivery', 'Delivered quantities')], string='Invoicing Policy',
+    invoice_policy = fields.Selection(
+        [('order', 'Ordered quantities'),
+         ('delivery', 'Delivered quantities')], string='Invoicing Policy',
+        compute='_compute_invoice_policy', store=True, readonly=False, precompute=True,
         help='Ordered Quantity: Invoice quantities ordered by the customer.\n'
-             'Delivered Quantity: Invoice quantities delivered to the customer.',
-        default='order')
+             'Delivered Quantity: Invoice quantities delivered to the customer.')
 
     def _compute_visible_qty_configurator(self):
         for product_template in self:
@@ -49,7 +50,6 @@ class ProductTemplate(models.Model):
         visibility = self.user_has_groups('analytic.group_analytic_accounting')
         for product_template in self:
             product_template.visible_expense_policy = visibility
-
 
     @api.depends('sale_ok')
     def _compute_expense_policy(self):
@@ -126,15 +126,13 @@ class ProductTemplate(models.Model):
 
         return self._create_product_variant(combination, log_warning=True).id or 0
 
-    @api.onchange('type')
-    def _onchange_type(self):
-        """ Force values to stay consistent with integrity constraints """
-        res = super(ProductTemplate, self)._onchange_type()
-        if self.type == 'consu':
-            if not self.invoice_policy:
-                self.invoice_policy = 'order'
-            self.service_type = 'manual'
-        return res
+    @api.depends('type')
+    def _compute_service_type(self):
+        self.filtered(lambda t: t.type == 'consu' or not t.service_type).service_type = 'manual'
+
+    @api.depends('type')
+    def _compute_invoice_policy(self):
+        self.filtered(lambda t: t.type == 'consu' or not t.invoice_policy).invoice_policy = 'order'
 
     @api.model
     def get_import_templates(self):

@@ -24,7 +24,7 @@ class ProductTemplate(models.Model):
     ], string="Service Invoicing Policy", compute='_compute_service_policy', inverse='_inverse_service_policy')
     service_type = fields.Selection(selection_add=[
         ('timesheet', 'Timesheets on project (one fare per SO/Project)'),
-    ], ondelete={'timesheet': 'set default'})
+    ], ondelete={'timesheet': 'set manual'})
     # override domain
     project_id = fields.Many2one(domain="[('company_id', '=', current_company_id), ('allow_billable', '=', True), ('pricing_type', '=', 'task_rate'), ('allow_timesheets', 'in', [service_policy == 'delivered_timesheet', True])]")
     project_template_id = fields.Many2one(domain="[('company_id', '=', current_company_id), ('allow_billable', '=', True), ('allow_timesheets', 'in', [service_policy == 'delivered_timesheet', True])]")

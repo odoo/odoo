@@ -624,7 +624,10 @@ class ProductTemplate(models.Model):
     tracking = fields.Selection([
         ('serial', 'By Unique Serial Number'),
         ('lot', 'By Lots'),
-        ('none', 'No Tracking')], string="Tracking", help="Ensure the traceability of a storable product in your warehouse.", default='none', required=True)
+        ('none', 'No Tracking')],
+        string="Tracking", required=True,
+        compute='_compute_tracking', store=True, readonly=False, precompute=True,
+        help="Ensure the traceability of a storable product in your warehouse.")
     description_picking = fields.Text('Description on Picking', translate=True)
     description_pickingout = fields.Text('Description on Delivery Orders', translate=True)
     description_pickingin = fields.Text('Description on Receptions', translate=True)
@@ -799,25 +802,28 @@ class ProductTemplate(models.Model):
     def _onchange_tracking(self):
         return self.mapped('product_variant_ids')._onchange_tracking()
 
+    @api.depends('type')
+    def _compute_tracking(self):
+        self.filtered(
+            lambda t: not t.tracking or t.type == 'consu' and t.tracking != 'none'
+        ).tracking = 'none'
+
     @api.onchange('type')
     def _onchange_type(self):
-        res = super(ProductTemplate, self)._onchange_type() or {}
-        if self.type == 'consu' and self.tracking != 'none':
-            self.tracking = 'none'
-
         # Return a warning when trying to change the product type
         if self.ids and self.product_variant_ids.ids and self.env['stock.move.line'].sudo().search_count([
             ('product_id', 'in', self.product_variant_ids.ids), ('state', '!=', 'cancel')
         ]):
-            res['warning'] = {
-                'title': _('Warning!'),
-                'message': _(
-                    'This product has been used in at least one inventory movement. '
-                    'It is not advised to change the Product Type since it can lead to inconsistencies. '
-                    'A better solution could be to archive the product and create a new one instead.'
-                )
+            return {
+                'warning': {
+                    'title': _('Warning!'),
+                    'message': _(
+                        'This product has been used in at least one inventory movement. '
+                        'It is not advised to change the Product Type since it can lead to inconsistencies. '
+                        'A better solution could be to archive the product and create a new one instead.'
+                    )
+                }
             }
-        return res
 
     def write(self, vals):
         self._sanitize_vals(vals)

@@ -3,8 +3,6 @@
 
 from odoo.addons.website_sale_stock.tests.test_website_sale_stock_product_warehouse import TestWebsiteSaleStockProductWarehouse
 
-from odoo.tests import tagged
-
 
 class TestWishlistEmail(TestWebsiteSaleStockProductWarehouse):
     @classmethod
