@@ -3514,7 +3514,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.strictEqual(
-            list.el.querySelector('th[data-name="foo"]').style.width,
+            [...list.el.querySelectorAll("th")].find((el) => el.textContent === "Foo").style.width,
             "50%",
             "Field column should be frozen"
         );
@@ -3837,10 +3837,12 @@ QUnit.module("Views", (hooks) => {
             arch: '<tree><field name="foo"/><field name="text"/></tree>',
         });
 
-        const foo = list.el.querySelector('th[data-name="foo"]');
+        const foo = [...list.el.querySelectorAll("th")].find((el) => el.textContent === "Foo");
         const fooWidth = Math.ceil(foo.getBoundingClientRect().width);
 
-        const text = list.el.querySelector('th[data-name="text"]');
+        const text = [...list.el.querySelectorAll("th")].find(
+            (el) => el.textContent === "text field"
+        );
         const textWidth = Math.ceil(text.getBoundingClientRect().width);
 
         assert.strictEqual(
@@ -4840,7 +4842,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skip("can display a list with a many2many field", async function (assert) {
+    QUnit.test("can display a list with a many2many field", async function (assert) {
         assert.expect(3);
 
         const list = await makeView({
@@ -4849,11 +4851,10 @@ QUnit.module("Views", (hooks) => {
             serverData,
             arch: "<tree>" + '<field name="m2m"/>' + "</tree>",
             mockRPC: function (route, args) {
-                assert.step(route);
-                return this._super(route, args);
+                assert.step(args.method);
             },
         });
-        assert.verifySteps(["/web/dataset/search_read"], "should have done 1 search_read");
+        assert.verifySteps(["web_search_read"], "should have done 1 web_search_read");
         assert.ok(
             $(list.el).find("td:contains(3 records)").length,
             "should have a td with correct formatted value"

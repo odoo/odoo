@@ -2,10 +2,9 @@
 
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "./standard_field_props";
+import { Many2ManyTagsField } from "./many2many_tags_field";
 
-const { Component } = owl;
-
-export class KanbanMany2ManyTagsField extends Component {}
+export class KanbanMany2ManyTagsField extends Many2ManyTagsField {}
 
 KanbanMany2ManyTagsField.props = {
     ...standardFieldProps,

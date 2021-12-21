@@ -46,7 +46,7 @@ QUnit.module("Form Compiler", (hooks) => {
                 <div t-attf-class="{{props.readonly ? 'o_form_readonly' : 'o_form_editable'}}" class="o_form_nosheet">
                     <div class="someClass">
                         lol
-                        <Field id="&quot;field_display_name_0&quot;" name="&quot;display_name&quot;" record="record" archs="&quot;views&quot; in props.fields.display_name and props.fields.display_name.views" readonly="props.readonly" t-att-class="{ o_field_empty: isFieldEmpty(record,&quot;display_name&quot;, &quot;null&quot;) }"/>
+                        <Field id="&quot;field_display_name_0&quot;" name="&quot;display_name&quot;" record="record" archs="&quot;views&quot; in props.fields.display_name and props.fields.display_name.views" readonly="props.readonly" t-att-class="{ o_field_empty: isFieldEmpty(record,&quot;display_name&quot;) }"/>
                     </div>
                 </div>
             </t>`;
@@ -68,10 +68,10 @@ QUnit.module("Form Compiler", (hooks) => {
                     <tbody>
                         <tr>
                             <td class="o_td_label">
-                                <label class="o_form_label" for="field_display_name_0" t-esc="record.fields.display_name.string" t-att-class="{ o_form_label_empty: isFieldEmpty(record,&quot;display_name&quot;, &quot;null&quot;) }"/>
+                                <label class="o_form_label" for="field_display_name_0" t-esc="record.fields.display_name.string" t-att-class="{ o_form_label_empty: isFieldEmpty(record,&quot;display_name&quot;) }"/>
                             </td>
                             <td style="width: 100%">
-                                <Field id="&quot;field_display_name_0&quot;" name="&quot;display_name&quot;" record="record" archs="&quot;views&quot; in props.fields.display_name and props.fields.display_name.views" readonly="props.readonly" t-att-class="{ o_field_empty: isFieldEmpty(record,&quot;display_name&quot;, &quot;null&quot;) }"/>
+                                <Field id="&quot;field_display_name_0&quot;" name="&quot;display_name&quot;" record="record" archs="&quot;views&quot; in props.fields.display_name and props.fields.display_name.views" readonly="props.readonly" t-att-class="{ o_field_empty: isFieldEmpty(record,&quot;display_name&quot;) }"/>
                             </td>
                         </tr>
                     </tbody>
@@ -80,10 +80,10 @@ QUnit.module("Form Compiler", (hooks) => {
                     <tbody>
                         <tr>
                             <td class="o_td_label">
-                                <label class="o_form_label" for="field_charfield_1" t-esc="record.fields.charfield.string" t-att-class="{ o_form_label_empty: isFieldEmpty(record,&quot;charfield&quot;, &quot;null&quot;) }"/>
+                                <label class="o_form_label" for="field_charfield_1" t-esc="record.fields.charfield.string" t-att-class="{ o_form_label_empty: isFieldEmpty(record,&quot;charfield&quot;) }"/>
                             </td>
                             <td style="width: 100%">
-                                <Field id="&quot;field_charfield_1&quot;" name="&quot;charfield&quot;" record="record" archs="&quot;views&quot; in props.fields.charfield and props.fields.charfield.views" readonly="props.readonly" t-att-class="{ o_field_empty: isFieldEmpty(record,&quot;charfield&quot;, &quot;null&quot;) }"/>
+                                <Field id="&quot;field_charfield_1&quot;" name="&quot;charfield&quot;" record="record" archs="&quot;views&quot; in props.fields.charfield and props.fields.charfield.views" readonly="props.readonly" t-att-class="{ o_field_empty: isFieldEmpty(record,&quot;charfield&quot;) }"/>
                             </td>
                         </tr>
                     </tbody>
@@ -121,10 +121,10 @@ QUnit.module("Form Compiler", (hooks) => {
             </div>
             <div class="tab-content">
                 <div t-if="notebook_0 === &quot;page_1&quot;" class="tab-pane active">
-                    <Field id="&quot;field_charfield_2&quot;" name="&quot;charfield&quot;" record="record" archs="&quot;views&quot; in props.fields.charfield and props.fields.charfield.views" readonly="props.readonly" t-att-class="{ o_field_empty: isFieldEmpty(record,&quot;charfield&quot;, &quot;null&quot;) }"/>
+                    <Field id="&quot;field_charfield_2&quot;" name="&quot;charfield&quot;" record="record" archs="&quot;views&quot; in props.fields.charfield and props.fields.charfield.views" readonly="props.readonly" t-att-class="{ o_field_empty: isFieldEmpty(record,&quot;charfield&quot;) }"/>
                 </div>
                 <div t-if="notebook_0 === &quot;page_3&quot;" class="tab-pane active">
-                    <Field id="&quot;field_display_name_4&quot;" name="&quot;display_name&quot;" record="record" archs="&quot;views&quot; in props.fields.display_name and props.fields.display_name.views" readonly="props.readonly" t-att-class="{ o_field_empty: isFieldEmpty(record,&quot;display_name&quot;, &quot;null&quot;) }"/>
+                    <Field id="&quot;field_display_name_4&quot;" name="&quot;display_name&quot;" record="record" archs="&quot;views&quot; in props.fields.display_name and props.fields.display_name.views" readonly="props.readonly" t-att-class="{ o_field_empty: isFieldEmpty(record,&quot;display_name&quot;) }"/>
                 </div>
             </div>
         </div>`;
@@ -139,7 +139,7 @@ QUnit.module("Form Compiler", (hooks) => {
             </form>`;
 
         const expected = /*xml*/ `
-        <Field id="&quot;field_display_name_0&quot;" name="&quot;display_name&quot;" record="record" archs="&quot;views&quot; in props.fields.display_name and props.fields.display_name.views" readonly="props.readonly" t-att-class="{ o_field_empty: isFieldEmpty(record,&quot;display_name&quot;, &quot;null&quot;) }" placeholder="&quot;e.g. Contact's Name or //someinfo...&quot;"/>
+        <Field id="&quot;field_display_name_0&quot;" name="&quot;display_name&quot;" record="record" archs="&quot;views&quot; in props.fields.display_name and props.fields.display_name.views" readonly="props.readonly" t-att-class="{ o_field_empty: isFieldEmpty(record,&quot;display_name&quot;) }" placeholder="&quot;e.g. Contact's Name or //someinfo...&quot;"/>
         `;
 
         assert.areContentEquivalent(compileTemplate(arch), expected);

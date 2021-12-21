@@ -3,11 +3,11 @@
 
     <t t-name="web.KanbanMany2ManyTagsField" owl="1">
         <div class="o_field_many2manytags o_kanban_tags">
-            <t t-foreach="data" t-as="tag" t-key="tag.id">
-                <span class="o_tag" t-attf-class="o_tag_color_{{ tag.data.color }}">
+            <t t-foreach="tags" t-as="tag" t-key="tag.id or tag_index">
+                <div class="o_tag" t-attf-class="o_tag_color_{{ tag.colorIndex }}">
                     <span />
-                    <t t-esc="tag.data.display_name" />
-                </span>
+                    <t t-esc="tag.name or 'tag' + tag_index" />
+                </div>
             </t>
         </div>
     </t>

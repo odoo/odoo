@@ -14,6 +14,11 @@ const fieldRegistry = registry.category("fields");
 const viewRegistry = registry.category("views");
 
 export class Field extends Component {
+    setup() {
+        this.FieldComponent =
+            this.props.record.activeFields[this.props.name].FieldComponent ||
+            Field.getFieldComponent(this.type);
+    }
     /**
      * FIXME: no need to pre-optimize anything, but as it stands, this method is called
      * twice at each patch for "required" and twice for "readonly"
@@ -54,15 +59,11 @@ export class Field extends Component {
         return classNames;
     }
 
-    get effectiveFieldComponent() {
-        return Field.getEffectiveFieldComponent(this.props.record, this.type, this.props.name);
-    }
-
     get type() {
         return this.props.type || this.props.record.fields[this.props.name].type;
     }
 
-    get effectiveFieldComponentProps() {
+    get fieldComponentProps() {
         const record = this.props.record;
         const field = record.fields[this.props.name];
         const activeField = record.activeFields[this.props.name];
@@ -141,7 +142,7 @@ export class Field extends Component {
 }
 Field.template = tags.xml/* xml */ `
     <div t-att-name="props.name" t-att-class="classNames">
-        <t t-component="effectiveFieldComponent" t-props="effectiveFieldComponentProps" t-key="props.record.id"/>
+        <t t-component="FieldComponent" t-props="fieldComponentProps" t-key="props.record.id"/>
     </div>`;
 
 class DefaultField extends Component {
@@ -156,16 +157,13 @@ DefaultField.template = tags.xml`
     </t>
 `;
 
-Field.getEffectiveFieldComponent = function (record, type, fieldName) {
-    if (record.viewMode) {
-        const specificType = `${record.viewMode}.${type}`;
+Field.getFieldComponent = function (fieldType, widget, viewType) {
+    const type = widget || fieldType;
+    if (viewType) {
+        const specificType = `${viewType}.${type}`;
         if (fieldRegistry.contains(specificType)) {
             return fieldRegistry.get(specificType);
         }
-    }
-    if (!fieldRegistry.contains(type)) {
-        const fields = record.fields;
-        type = fields[fieldName].type;
     }
     // todo: remove fallback? yep
     return fieldRegistry.get(type, DefaultField);
@@ -182,7 +180,7 @@ Field.parseFieldNode = function (node, fields, viewType) {
         options: evaluateExpr(node.getAttribute("options") || "{}"),
         modifiers: JSON.parse(node.getAttribute("modifiers") || "{}"),
         onChange: isAttr(node, "on_change").truthy(),
-        FieldComponent: Field.getEffectiveFieldComponent({ fields, viewType }, widget, name),
+        FieldComponent: Field.getFieldComponent(fields[name].type, widget, viewType),
         decorations: {}, // populated below
         attrs: {},
     };

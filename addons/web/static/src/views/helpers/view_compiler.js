@@ -463,9 +463,7 @@ export class ViewCompiler {
             emptyClass = "o_form_label_empty";
         }
         if (emptyClass) {
-            const tAttClass = `${emptyClass}: isFieldEmpty(record,"${params.fieldName}", "${
-                params.widgetName || null
-            }")`;
+            const tAttClass = `${emptyClass}: isFieldEmpty(record,"${params.fieldName}")`;
             appendAttr(compiled, "class", tAttClass);
         }
     }
@@ -735,8 +733,8 @@ export const useViewCompiler = (ViewCompiler, templateKey, fields, xmlDoc) => {
                 ToImplement.template = xml`<div>${widgetName}</div>`;
                 return ToImplement;
             },
-            isFieldEmpty(record, fieldName, widgetName) {
-                const cls = Field.getEffectiveFieldComponent(record, widgetName, fieldName);
+            isFieldEmpty(record, fieldName) {
+                const cls = record.activeFields[fieldName].FieldComponent;
                 if ("isEmpty" in cls) {
                     return cls.isEmpty(record, fieldName);
                 }
