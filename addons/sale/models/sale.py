@@ -82,7 +82,6 @@ class SaleOrder(models.Model):
             (d['order_id'][0], d['invoice_status'])
             for d in self.env['sale.order.line'].read_group([
                     ('order_id', 'in', confirmed_orders.ids),
-                    ('is_downpayment', '=', False),
                     ('display_type', '=', False),
                 ],
                 ['order_id', 'invoice_status'],
