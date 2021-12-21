@@ -18,7 +18,6 @@ export class Activity extends Component {
      */
     setup() {
         super.setup();
-        useRefToModel({ fieldName: 'fileUploaderRef', modelName: 'ActivityView', propNameAsRecordLocalId: 'activityViewLocalId', refName: 'fileUploader' });
     }
 
     //--------------------------------------------------------------------------

@@ -131,9 +131,8 @@
                                 </button>
                                 <FileUploader
                                     t-if="activityView.activity.thread"
-                                    threadLocalId="activityView.activity.thread.localId"
+                                    fileUploaderLocalId="activityView.fileUploader.localId"
                                     onAttachmentCreated="activityView.onAttachmentCreated"
-                                    t-ref="fileUploader"
                                 />
                             </t>
                             <button class="o_Activity_toolButton o_Activity_editButton btn btn-link" t-on-click="activityView.onClickEdit">

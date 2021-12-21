@@ -16,7 +16,7 @@ const geAttachmentNextTemporaryId = (function() {
 
 registerModel({
     name: 'FileUploader',
-    identifyingFields: [['composerView', 'attachmentBoxView']],
+    identifyingFields: [['activityView', 'attachmentBoxView', 'composerView']],
     lifecycleHooks: {
         _created() {
             this._onChangeAttachment = this._onChangeAttachment.bind(this);
@@ -147,10 +147,17 @@ registerModel({
             if (this.attachmentBoxView) {
                 return link(this.attachmentBoxView.chatter.thread);
             }
+            if (this.activityView) {
+                return link(this.activityView.activity.thread);
+            }
             return clear();
         }
     },
     fields: {
+        activityView: one2one('ActivityView', {
+            inverse: 'fileUploader',
+            readonly: true,
+        }),
         attachmentBoxView: one2one('AttachmentBoxView', {
             inverse: 'fileUploader',
             readonly: true,

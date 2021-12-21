@@ -1,7 +1,8 @@
 /** @odoo-module **/
 
 import { registerModel } from '@mail/model/model_core';
-import { attr, many2one } from '@mail/model/model_field';
+import { attr, many2one, one2one } from '@mail/model/model_field';
+import { insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'ActivityView',
@@ -68,7 +69,7 @@ registerModel({
          * explorer for upload.
          */
         onClickUploadDocument() {
-            this.fileUploaderRef.comp.openBrowserFileUploader();
+            this.fileUploader.openBrowserFileUploader();
         },
     },
     fields: {
@@ -88,9 +89,10 @@ registerModel({
         areDetailsVisible: attr({
             default: false,
         }),
-        /**
-         * States the OWL FileUploader component of this activity view.
-         */
-        fileUploaderRef: attr(),
+        fileUploader: one2one('FileUploader', {
+            default: insertAndReplace(),
+            inverse: 'activityView',
+            isCausal: true,
+        }),
     },
 });
