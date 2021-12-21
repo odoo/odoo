@@ -141,16 +141,15 @@
 
                                                 <field name="match_same_currency"
                                                        attrs="{'invisible': [('rule_type', '!=', 'invoice_matching')]}"/>
-                                                
+
                                             </group>
-                                            
+
                                         </group>
 
                                         <group id="right column" class="col">
                                             <group style="width:100% !important"
                                                    attrs="{'invisible': [('rule_type', '!=', 'invoice_matching')]}">
-                                                <label for="match_text_location_label"
-                                                       string="Match Invoice/bill with"/>
+                                                <span class="o_form_label o_td_label">Match Invoice/bill with</span>
                                                 <div>
                                                     <span class="o_form_label" style="width: 2% !important">   </span>
                                                     <label for="match_text_location_label" string="Label"/>
