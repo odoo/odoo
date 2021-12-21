@@ -782,7 +782,7 @@ QUnit.module('relational_fields', {
         });
 
         assert.strictEqual(count, 1, 'once search_read should have been done to fetch the relational values');
-        assert.strictEqual(nb_fields_fetched, 1, 'search_read should only fetch field id');
+        assert.strictEqual(nb_fields_fetched, 2, 'search_read should only fetch field id and display name');
         assert.containsN(form, '.o_statusbar_status button:not(.dropdown-toggle)', 2);
         assert.containsN(form, '.o_statusbar_status button:disabled', 2);
         assert.hasClass(form.$('.o_statusbar_status button[data-value="4"]'), 'btn-primary');
