@@ -2801,7 +2801,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(form.el.querySelector(".o_field_widget").innerText, "ok");
     });
 
-    QUnit.skip("can create a record with default values", async function (assert) {
+    QUnit.test("can create a record with default values", async function (assert) {
         assert.expect(5);
 
         const form = await makeView({
@@ -2810,12 +2810,8 @@ QUnit.module("Views", (hooks) => {
             serverData,
             arch: `
                 <form>
-                    <sheet>
-                        <group>
-                            <field name="foo"/>
-                            <field name="bar"/>
-                        </group>
-                    </sheet>
+                    <field name="foo"/>
+                    <field name="bar"/>
                 </form>`,
             resId: 1,
             context: { active_field: 2 },
