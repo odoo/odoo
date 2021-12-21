@@ -2323,7 +2323,7 @@ export class OdooEditor extends EventTarget {
             'CL LI': 'To-do',
         };
 
-        for (const hint of this.document.querySelectorAll('.oe-hint')) {
+        for (const hint of this.editable.querySelectorAll('.oe-hint')) {
             if (hint.classList.contains('oe-command-temporary-hint') || !isEmptyBlock(hint)) {
                 this.observerUnactive();
                 hint.classList.remove('oe-hint', 'oe-command-temporary-hint');
