@@ -85,8 +85,6 @@ export class Field extends Component {
             required: this.evalModifier("required"), // AAB: does the field really need this?
             update: async (value, options = { name: null }) => {
                 await record.update(options.name || this.props.name, value);
-                // not a fan of that, but that makes sure we don't save wrong values.
-                this.parseValue(String(value), true);
                 // We save only if we're on view mode readonly and no readonly field modifier
                 if (readonlyFromViewMode && !readonlyFromModifiers) {
                     return record.save();
@@ -102,7 +100,7 @@ export class Field extends Component {
         };
     }
 
-    formatValue(value, options = {}) {
+    formatValue(value) {
         const record = this.props.record;
         const field = record.fields[this.props.name];
         const activeField = record.activeFields[this.props.name];
@@ -113,18 +111,19 @@ export class Field extends Component {
         if ("format" in activeField.options && isBroadlyFalsy(activeField.options.format)) {
             return value;
         }
+
         const formatterRegistry = registry.category("formatters");
         if (formatterRegistry.contains(activeField.widget)) {
-            return formatterRegistry.get(activeField.widget)(value, options);
+            return formatterRegistry.get(activeField.widget)(value, { field });
         } else if (formatterRegistry.contains(field.type)) {
-            return formatterRegistry.get(field.type)(value, options);
+            return formatterRegistry.get(field.type)(value, { field });
         } else {
             console.warn(`No formatter found for ${field.type} field. It should be implemented.`);
             return String(value);
         }
     }
 
-    parseValue(value, silent = false) {
+    parseValue(value) {
         const record = this.props.record;
         const field = record.fields[this.props.name];
         const activeField = record.activeFields[this.props.name];
@@ -135,9 +134,7 @@ export class Field extends Component {
         } else if (parserRegistry.contains(field.type)) {
             return parserRegistry.get(field.type)(value);
         } else {
-            if (!silent) {
-                console.warn(`No parser found for ${field.type} field. It should be implemented.`);
-            }
+            console.warn(`No parser found for ${field.type} field. It should be implemented.`);
             return value;
         }
     }
