@@ -10,7 +10,7 @@ from odoo.tests.common import users, warmup, Form
 from odoo.tests import tagged
 
 
-@tagged('event_performance')
+@tagged('event_performance', 'post_install', '-at_install')
 class EventPerformanceCase(TestEventFullCommon):
 
     def setUp(self):
@@ -26,7 +26,7 @@ class EventPerformanceCase(TestEventFullCommon):
         self.cr.flush()
 
 
-@tagged('event_performance')
+@tagged('event_performance', 'post_install', '-at_install')
 class TestEventPerformance(EventPerformanceCase):
 
     @users('event_user')
@@ -107,7 +107,7 @@ class TestEventPerformance(EventPerformanceCase):
         has_social = 'social_menu' in self.env['event.event']  # otherwise view may crash in enterprise
 
         # no type, no website
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=240):  # tef only: 186 - com runbot: 185
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=228):  # tef only: 178 - com runbot: 177
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             with Form(self.env['event.event']) as event_form:
                 event_form.name = 'Test Event'
@@ -125,7 +125,7 @@ class TestEventPerformance(EventPerformanceCase):
         has_social = 'social_menu' in self.env['event.event']  # otherwise view may crash in enterprise
 
         # no type, website
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=748):  # tef only: 632 - com runbot: 632
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=736):  # tef only: 624 - com runbot: 624
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             with Form(self.env['event.event']) as event_form:
                 event_form.name = 'Test Event'
@@ -144,7 +144,7 @@ class TestEventPerformance(EventPerformanceCase):
         has_social = 'social_menu' in self.env['event.event']  # otherwise view may crash in enterprise
 
         # type and website
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=795):  # tef only: 681 - com runbot: 683
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=783):  # tef only: 673 - com runbot: 675
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             with Form(self.env['event.event']) as event_form:
                 event_form.name = 'Test Event'
@@ -212,7 +212,7 @@ class TestEventPerformance(EventPerformanceCase):
             self.env['event.event'].create([event_values])
 
 
-@tagged('event_performance', 'registration_performance')
+@tagged('event_performance', 'registration_performance', 'post_install', '-at_install')
 class TestRegistrationPerformance(EventPerformanceCase):
 
     @users('event_user')
@@ -292,7 +292,7 @@ class TestRegistrationPerformance(EventPerformanceCase):
         """ Test a single registration creation using Form """
         event = self.env['event.event'].browse(self.test_event.ids)
 
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=237):  # tef only: 217 - com runbot 222
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=231):  # tef only: 211 - com runbot 216
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             with Form(self.env['event.registration']) as reg_form:
                 reg_form.event_id = event
@@ -308,7 +308,7 @@ class TestRegistrationPerformance(EventPerformanceCase):
         """ Test a single registration creation using Form """
         event = self.env['event.event'].browse(self.test_event.ids)
 
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=240):  # tef only: 220 - com runbot 224
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=234):  # tef only: 214 - com runbot 218
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             with Form(self.env['event.registration']) as reg_form:
                 reg_form.event_id = event
@@ -321,7 +321,7 @@ class TestRegistrationPerformance(EventPerformanceCase):
         """ Test a single registration creation using Form """
         event = self.env['event.event'].browse(self.test_event.ids)
 
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=147):  # tef only: 129 - com runbot 130
+        with freeze_time(self.reference_now), self.assertQueryCount(event_user=141):  # tef only: 123 - com runbot 124
             self.env.cr._now = self.reference_now  # force create_date to check schedulers
             with Form(self.env['event.registration'].with_context(event_lead_rule_skip=True)) as reg_form:
                 reg_form.event_id = event
