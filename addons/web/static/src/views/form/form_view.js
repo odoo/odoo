@@ -22,8 +22,6 @@ const { onWillStart, useRef } = hooks;
 
 const viewRegistry = registry.category("views");
 
-const { Component, useState } = owl;
-
 // -----------------------------------------------------------------------------
 
 export class FormArchParser extends XMLParser {

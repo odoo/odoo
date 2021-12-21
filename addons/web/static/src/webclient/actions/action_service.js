@@ -751,7 +751,9 @@ function makeActionManager(env) {
         controller.__info__ = {
             id: ++id,
             Component: ControllerComponent,
-            componentProps: controller.props,
+            componentProps: Object.assign(controller.props, {
+                resModel: controller.action.resModel || controller.action.res_model, // @GES: aaron, why did I need to add this ?
+            }),
         };
         env.bus.trigger("ACTION_MANAGER:UPDATE", controller.__info__);
         return Promise.all([currentActionProm, closingProm]).then((r) => r[0]);

@@ -7,17 +7,19 @@ import { isBroadlyFalsy } from "@web/core/utils/misc";
 import { snakeToCamel } from "@web/core/utils/strings";
 import { isAttr } from "@web/core/utils/xml";
 import { getX2MViewModes, X2M_TYPES } from "@web/views/helpers/view_utils";
+import { getFieldClassFromRegistry } from "./utils";
+import { DefaultField } from "./default";
 
 const { Component, tags } = owl;
 
-const fieldRegistry = registry.category("fields");
 const viewRegistry = registry.category("views");
 
 export class Field extends Component {
     setup() {
-        this.FieldComponent =
-            this.props.record.activeFields[this.props.name].FieldComponent ||
-            Field.getFieldComponent(this.type);
+        this.FieldComponent = this.props.record.activeFields[this.props.name].FieldComponent;
+        if (!this.FieldComponent) {
+            this.FieldComponent = Field.getFieldComponent(null, this.type, this.props.name);
+        }
     }
     /**
      * FIXME: no need to pre-optimize anything, but as it stands, this method is called
@@ -148,28 +150,8 @@ Field.template = tags.xml/* xml */ `
         <t t-component="FieldComponent" t-props="fieldComponentProps" t-key="props.record.id"/>
     </div>`;
 
-class DefaultField extends Component {
-    onChange(ev) {
-        this.props.update(ev.target.value);
-    }
-}
-DefaultField.template = tags.xml`
-    <t>
-        <span t-if="props.readonly" t-esc="props.value" />
-        <input t-else="" class="o_input" t-att-value="props.value" t-att-id="props.id" t-on-change="onChange" />
-    </t>
-`;
-
-Field.getFieldComponent = function (fieldType, widget, viewType) {
-    const type = widget || fieldType;
-    if (viewType) {
-        const specificType = `${viewType}.${type}`;
-        if (fieldRegistry.contains(specificType)) {
-            return fieldRegistry.get(specificType);
-        }
-    }
-    // todo: remove fallback? yep
-    return fieldRegistry.get(type, DefaultField);
+Field.getFieldComponent = function (viewType, fieldType, widget) {
+    return getFieldClassFromRegistry(viewType, fieldType, widget) || DefaultField;
 };
 
 Field.parseFieldNode = function (node, fields, viewType) {
@@ -184,7 +166,7 @@ Field.parseFieldNode = function (node, fields, viewType) {
         options: evaluateExpr(node.getAttribute("options") || "{}"),
         modifiers: JSON.parse(node.getAttribute("modifiers") || "{}"),
         onChange: isAttr(node, "on_change").truthy(),
-        FieldComponent: Field.getFieldComponent(fields[name].type, widget, viewType),
+        FieldComponent: Field.getFieldComponent(viewType, fields[name].type, widget),
         decorations: {}, // populated below
         attrs: {},
     };

@@ -29,7 +29,6 @@ export const defaultLocalization = {
     multiLang: false,
     thousandsSep: ",",
     weekStart: 7,
-    shouldParsersFallBackOnEnglishLocalization: false,
 };
 
 /**

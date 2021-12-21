@@ -39,9 +39,9 @@ function evaluateMathematicalExpression(expr, context = {}) {
  */
 function parseNumber(value, options = {}) {
     // a number can have the thousand separator multiple times. ex: 1,000,000.00
-    value = value.replaceAll(options.thousandsSep || ",", "");
+    value = value.replaceAll(new RegExp(escapeRegExp(options.thousandsSep), "g") || ",", "");
     // a number only have one decimal separator
-    value = value.replace(options.decimalPoint || ".", ".");
+    value = value.replace(new RegExp(escapeRegExp(options.decimalPoint), "g") || ".", ".");
 
     if (value.startsWith("=")) {
         value = evaluateMathematicalExpression(value.substring(1));
@@ -66,13 +66,21 @@ export class InvalidNumberError extends Error {}
  * @returns {number} a float
  */
 export function parseFloat(value) {
-    const thousandsSepRegex = new RegExp(escapeRegExp(localization.thousandsSep), "g");
-    const decimalPointRegex = new RegExp(escapeRegExp(localization.decimalPoint), "g");
-    const parsed = parseNumber(value, {
+    const thousandsSepRegex = localization.thousandsSep;
+    const decimalPointRegex = localization.decimalPoint;
+    let parsed = parseNumber(value, {
         thousandsSep: thousandsSepRegex,
         decimalPoint: decimalPointRegex,
     });
     if (isNaN(parsed)) {
+        // TODO GES skipped while on vacation.
+        // parsed = parseNumber(value, {
+        //     thousandsSep: ",",
+        //     decimalPoint: ".",
+        // });
+        // if (isNaN(parsed)) {
+        //     throw new InvalidNumberError(`"${value}" is not a correct number`);
+        // }
         throw new InvalidNumberError(`"${value}" is not a correct number`);
     }
     return parsed;
@@ -110,14 +118,23 @@ export function parseFloatTime(value) {
  * @returns {number} an integer
  */
 export function parseInteger(value) {
-    const thousandsSepRegex = new RegExp(escapeRegExp(localization.thousandsSep), "g");
-    const decimalPointRegex = new RegExp(escapeRegExp(localization.decimalPoint), "g");
-    const parsed = parseNumber(value, {
+    const thousandsSepRegex = localization.thousandsSep;
+    const decimalPointRegex = localization.decimalPoint;
+    let parsed = parseNumber(value, {
         thousandsSep: thousandsSepRegex,
         decimalPoint: decimalPointRegex,
         truncate: true,
     });
     if (!Number.isInteger(parsed)) {
+        // TODO GES skipped while on vacation.
+        // parsed = parseNumber(value, {
+        //     thousandsSep: ",",
+        //     decimalPoint: ".",
+        //     truncate: true,
+        // });
+        // if (!Number.isInteger(parsed)) {
+        //     throw new InvalidNumberError(`"${value}" is not a correct number`);
+        // }
         throw new InvalidNumberError(`"${value}" is not a correct number`);
     }
     return parsed;

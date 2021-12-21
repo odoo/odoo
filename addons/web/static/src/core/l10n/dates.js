@@ -256,9 +256,12 @@ export function parseDate(value, options = {}) {
  * @returns {DateTime | false} Luxon DateTime object
  */
 export function parseDateTime(value, options = {}) {
-    if (isBroadlyFalsy(value)) {
+    if (!value) {
         return false;
     }
+
+    // Something is wrong here ...
+    if (value instanceof DateTime) return value;
 
     const valueDigitsOnly = value.replace(nonDigitsRegex, "");
     const parseOpts = {
