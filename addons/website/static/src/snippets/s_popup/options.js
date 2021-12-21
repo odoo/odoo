@@ -8,15 +8,23 @@ options.registry.SnippetPopup = options.Class.extend({
      * @override
      */
     start: function () {
+        const $popup = this.$target.closest('.s_popup');
+
         // Note: the link are excluded here so that internal modal buttons do
         // not close the popup as we want to allow edition of those buttons.
         this.$target.on('click.SnippetPopup', '.js_close_popup:not(a, .btn)', ev => {
             ev.stopPropagation();
             this.onTargetHide();
-            this.trigger_up('snippet_option_visibility_update', {show: false});
+            this.trigger_up('snippet_option_visibility_update', {
+                $snippet: $popup,
+                show: false,
+            });
         });
         this.$target.on('shown.bs.modal.SnippetPopup', () => {
-            this.trigger_up('snippet_option_visibility_update', {show: true});
+            this.trigger_up('snippet_option_visibility_update', {
+                $snippet: $popup,
+                show: true,
+            });
             // TODO duplicated code from the popup public widget, this should
             // be moved to a *video* public widget and be reviewed in master
             this.$target[0].querySelectorAll('.media_iframe_video').forEach(media => {
@@ -25,7 +33,10 @@ options.registry.SnippetPopup = options.Class.extend({
             });
         });
         this.$target.on('hidden.bs.modal.SnippetPopup', () => {
-            this.trigger_up('snippet_option_visibility_update', {show: false});
+            this.trigger_up('snippet_option_visibility_update', {
+                $snippet: $popup,
+                show: false,
+            });
             this._removeIframeSrc();
         });
         // The video might be playing before entering edit mode (possibly with
