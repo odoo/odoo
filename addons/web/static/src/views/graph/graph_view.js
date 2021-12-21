@@ -71,6 +71,12 @@ export class GraphView extends Component {
     onGraphClicked(domain) {
         const { context, resModel, title } = this.model.metaData;
 
+        Object.keys(context).forEach((x) => {
+            if (x === "group_by" || x.startsWith("search_default_")) {
+                delete context[x];
+            }
+        });
+
         const views = {};
         for (const [viewId, viewType] of this.env.config.views || []) {
             views[viewType] = viewId;
