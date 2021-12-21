@@ -3,6 +3,7 @@
 
     <t t-name="website.WebsiteEditorClientAction" owl="1">
         <div class="o_website_editor">
+            <iframe t-att-src="iframeFallbackUrl" t-ref="iframefallback"/>
             <iframe t-att-src="initialUrl" t-ref="iframe"/>
         </div>
     </t>

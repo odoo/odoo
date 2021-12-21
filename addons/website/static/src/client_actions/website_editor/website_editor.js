@@ -10,7 +10,10 @@ export class WebsiteEditorClientAction extends Component {
         super.setup(...arguments);
         this.websiteService = useService('website');
 
+        this.iframeFallbackUrl = '/website/iframefallback';
+
         this.iframe = useRef('iframe');
+        this.iframefallback = useRef('iframefallback');
 
         onWillStart(async () => {
             await this.websiteService.fetchWebsites();
@@ -21,6 +24,11 @@ export class WebsiteEditorClientAction extends Component {
             this.iframe.el.addEventListener('load', () => {
                 this.currentUrl = this.iframe.el.contentDocument.location.href;
                 history.pushState({}, this.props.action.display_name, this.currentUrl);
+
+                this.iframe.el.contentWindow.addEventListener('beforeunload', () => {
+                    this.iframefallback.el.contentDocument.body.replaceWith(this.iframe.el.contentDocument.body.cloneNode(true));
+                    $().getScrollingElement(this.iframefallback.el.contentDocument)[0].scrollTop = $().getScrollingElement(this.iframe.el.contentDocument)[0].scrollTop;
+                });
             });
         });
     }

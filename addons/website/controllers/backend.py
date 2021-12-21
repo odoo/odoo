@@ -51,6 +51,10 @@ class WebsiteBackend(http.Controller):
 
         return results
 
+    @http.route('/website/iframefallback', type="http", auth='user', website=True)
+    def get_iframe_fallback(self):
+        return request.render('website.layout')
+
     @http.route('/website/dashboard/set_ga_data', type='json', auth='user')
     def website_set_ga_data(self, website_id, ga_client_id, ga_analytics_key):
         if not request.env.user.has_group('base.group_system'):
