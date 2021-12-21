@@ -2666,7 +2666,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("onchange send only the present fields to the server", async function (assert) {
         assert.expect(1);
         serverData.models.partner.records[0].product_id = false;
-        serverData.models.partner.onchanges.foo = function (obj) {
+        serverData.models.partner.onchanges.foo = (obj) => {
             obj.foo = obj.foo + " alligator";
         };
         serverData.views = {
@@ -2714,24 +2714,25 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.skip("onchange only send present fields value", async function (assert) {
         assert.expect(1);
-        serverData.models.partner.onchanges.foo = function (obj) {};
+
+        serverData.models.partner.onchanges.foo = () => {};
 
         let checkOnchange = false;
         const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                '<form string="Partners">' +
-                '<field name="display_name"/>' +
-                '<field name="foo"/>' +
-                '<field name="p">' +
-                '<tree editable="top">' +
-                '<field name="display_name"/>' +
-                '<field name="qux"/>' +
-                "</tree>" +
-                "</field>" +
-                "</form>",
+            arch: `
+                <form>
+                    <field name="display_name"/>
+                    <field name="foo"/>
+                    <field name="p">
+                        <tree editable="top">
+                            <field name="display_name"/>
+                            <field name="qux"/>
+                        </tree>
+                    </field>
+                </form>`,
             resId: 1,
             mockRPC: function (route, args) {
                 if (args.method === "onchange" && checkOnchange) {
@@ -2759,7 +2760,7 @@ QUnit.module("Views", (hooks) => {
         await click(form.el.querySelector(".o_form_button_edit"));
 
         // add a o2m row
-        await testUtils.dom.click(".o_field_x2many_list_row_add a");
+        await click(form.el.querySelector(".o_field_x2many_list_row_add a"));
         form.$(".o_field_one2many input:first").focus();
         await testUtils.nextTick();
         await testUtils.fields.editInput(
@@ -2778,31 +2779,26 @@ QUnit.module("Views", (hooks) => {
         await testUtils.fields.editInput(form.$(".o_field_widget[name=foo] input"), "tralala");
     });
 
-    QUnit.skip("evaluate in python field options", async function (assert) {
-        assert.expect(1);
+    QUnit.test("evaluate in python field options", async function (assert) {
+        assert.expect(2);
 
-        var isOk = false;
-        var tmp = py.eval;
-        py.eval = function (expr) {
-            if (expr === "{'horizontal': true}") {
-                isOk = true;
+        class MyField extends owl.Component {
+            setup() {
+                assert.deepEqual(this.props.options, { horizontal: true });
             }
-            return tmp.apply(tmp, arguments);
-        };
+        }
+        MyField.template = owl.tags.xml`<div>ok</div>`;
+        fieldRegistry.add("my_field", MyField);
+
         const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                '<form string="Partners">' +
-                '<field name="foo" options="{\'horizontal\': true}"/>' +
-                "</form>",
+            arch: `<form><field name="foo" widget="my_field" options="{'horizontal': True}"/></form>`,
             resId: 2,
         });
 
-        py.eval = tmp;
-
-        assert.ok(isOk, "should have evaluated the field options");
+        assert.strictEqual(form.el.querySelector(".o_field_widget").innerText, "ok");
     });
 
     QUnit.skip("can create a record with default values", async function (assert) {
