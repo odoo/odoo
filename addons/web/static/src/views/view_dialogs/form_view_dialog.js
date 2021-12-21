@@ -19,7 +19,7 @@ export class FormViewDialog extends Dialog {
             const { form } = await this.viewService.loadViews({
                 resModel: this.props.record.resModel,
                 context: this.props.record.context,
-                views: [[false, "form"]], // FIXME: get view_id somewhere?
+                views: [[this.props.viewId || false, "form"]],
             });
             const archInfo = new FormArchParser().parse(form.arch, form.fields);
             this.archInfo = {
@@ -29,7 +29,7 @@ export class FormViewDialog extends Dialog {
             };
         }
         // FIXME: here we override the fields of the list/kanban view
-        Object.assign(this.props.record.activeFields, this.archInfo.fields);
+        Object.assign(this.props.record.activeFields, this.archInfo.activeFields);
         Object.assign(this.props.record.fields, this.archInfo.fields);
         this.props.record.fieldNames = Object.keys(this.props.record.activeFields);
         await this.props.record.load();

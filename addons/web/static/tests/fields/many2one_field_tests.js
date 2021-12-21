@@ -3,6 +3,7 @@
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { Many2OneField } from "@web/fields/many2one_field";
 import { browser } from "@web/core/browser/browser";
+import { registry } from "@web/core/registry";
 import {
     click,
     getFixture,
@@ -218,8 +219,29 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("Many2oneField");
 
-    QUnit.skip("many2ones in form views", async function (assert) {
+    QUnit.test("many2ones in form views", async function (assert) {
         assert.expect(5);
+
+        function createMockActionService(assert) {
+            return {
+                dependencies: [],
+                start() {
+                    return {
+                        doAction(params) {
+                            assert.strictEqual(
+                                params.res_id,
+                                17,
+                                "should do a do_action with correct parameters"
+                            );
+                        },
+                        loadState() {},
+                    };
+                },
+            };
+        }
+        registry
+            .category("services")
+            .add("action", createMockActionService(assert), { force: true });
 
         serverData.views = {
             "partner,false,form": `
@@ -238,7 +260,7 @@ QUnit.module("Fields", (hooks) => {
                 <form>
                     <sheet>
                         <group>
-                            <field name="trululu" />
+                            <field name="trululu" string="custom label" />
                         </group>
                     </sheet>
                 </form>
@@ -264,14 +286,6 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        testUtils.mock.intercept(form, "do_action", function (event) {
-            assert.strictEqual(
-                event.data.action.res_id,
-                17,
-                "should do a do_action with correct parameters"
-            );
-        });
-
         assert.containsOnce(form.el, "a.o_form_uri:contains(aaa)", "should contain a link");
         await click(form.el, "a.o_form_uri");
 
@@ -288,7 +302,7 @@ QUnit.module("Fields", (hooks) => {
         // the value is correctly updated on close
     });
 
-    QUnit.skip("editing a many2one, but not changing anything", async function (assert) {
+    QUnit.test("editing a many2one, but not changing anything", async function (assert) {
         assert.expect(2);
 
         serverData.views = {
@@ -303,6 +317,7 @@ QUnit.module("Fields", (hooks) => {
             type: "form",
             resModel: "partner",
             resId: 1,
+            resIds: [1, 2],
             serverData,
             arch: `
                 <form>
@@ -316,9 +331,6 @@ QUnit.module("Fields", (hooks) => {
                     assert.deepEqual(args[0], [4], "should call get_formview_id with correct id");
                     return Promise.resolve(false);
                 }
-            },
-            viewOptions: {
-                ids: [1, 2],
             },
         });
 
@@ -370,7 +382,7 @@ QUnit.module("Fields", (hooks) => {
         });
     });
 
-    QUnit.skip(
+    QUnit.test(
         "editing a many2one (with form view opened with external button)",
         async function (assert) {
             assert.expect(1);
@@ -387,6 +399,7 @@ QUnit.module("Fields", (hooks) => {
                 type: "form",
                 resModel: "partner",
                 resId: 1,
+                resIds: [1, 2],
                 serverData,
                 arch: `
                     <form>
@@ -400,9 +413,6 @@ QUnit.module("Fields", (hooks) => {
                         return Promise.resolve(false);
                     }
                 },
-                viewOptions: {
-                    ids: [1, 2],
-                },
             });
 
             await click(form.el, ".o_form_button_edit");
@@ -410,7 +420,9 @@ QUnit.module("Fields", (hooks) => {
             // click on the external button (should do an RPC)
             await click(form.el, ".o_external_button");
 
-            await testUtils.fields.editInput($('.modal input[name="foo"]'), "brandon");
+            const input = document.body.querySelector(".modal .o_field_widget[name='foo'] input");
+            input.value = "brandon";
+            await triggerEvent(input, null, "change");
 
             // save and close modal
             await click(document.body, ".modal .modal-footer .btn-primary");

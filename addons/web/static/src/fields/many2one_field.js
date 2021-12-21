@@ -7,6 +7,7 @@ import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { standardFieldProps } from "./standard_field_props";
 import { Domain } from "@web/core/domain";
+import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 
 const { Component } = owl;
 const { onWillStart, onWillUpdateProps } = owl.hooks;
@@ -15,6 +16,7 @@ export class Many2OneField extends Component {
     setup() {
         this.orm = useService("orm");
         this.action = useService("action");
+        this.dialog = useService("dialog");
 
         this.displayName = "";
         this.extraLines = [];
@@ -95,22 +97,34 @@ export class Many2OneField extends Component {
         );
         await this.action.doAction(action);
     }
-    async openDialog() {
-        // FIXME: should open a form dialog
-        const action = await this.orm.call(
+    async openDialog(resId) {
+        const viewId = await this.orm.call(
             this.props.record.fields[this.props.name].relation,
-            "get_formview_action",
+            "get_formview_id",
             [[this.props.value[0]]],
             { context: this.props.record.getFieldContext(this.props.name) }
         );
-        await this.action.doAction(action);
+
+        const record = this.env.model.createDataPoint("record", {
+            activeFields: {},
+            fields: {},
+            resId,
+            resModel: this.relation,
+            context: this.props.record.getFieldContext(this.props.name),
+            viewId,
+        });
+        this.dialog.add(FormViewDialog, {
+            record,
+            readonly: this.props.readonly,
+            title: this.props.record.activeFields[this.props.name].string,
+        });
     }
 
     onClick() {
         this.openAction();
     }
     onExternalBtnClick() {
-        this.openDialog();
+        this.openDialog(this.props.value[0]);
     }
     onChange(value) {
         if (!value) {
@@ -136,6 +150,8 @@ Object.assign(Many2OneField, {
 });
 
 registry.category("fields").add("many2one", Many2OneField);
+
+// FIXME: sources shouldn't be managed outside of many2one
 
 async function searchRecords(request, suggestions, ctx) {
     const results = await ctx.orm.call(ctx.relation, "name_search", [], {
