@@ -523,6 +523,22 @@ class TestOnChange(common.TransactionCase):
 
         self.assertFalse(called[0], "discussion.messages has been read")
 
+    def test_display_name(self):
+        self.env['ir.ui.view'].create({
+            'name': 'test_new_api.multi.tag form view',
+            'model': 'test_new_api.multi.tag',
+            'arch': """
+                <form>
+                    <field name="name"/>
+                    <field name="display_name"/>
+                </form>
+            """,
+        })
+
+        form = common.Form(self.env['test_new_api.multi.tag'])
+        self.assertEqual(form.name, False)
+        self.assertEqual(form.display_name, False)
+
 
 class TestComputeOnchange(common.TransactionCase):
 
