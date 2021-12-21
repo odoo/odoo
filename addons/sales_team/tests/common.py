@@ -50,7 +50,6 @@ class TestSalesCommon(TransactionCase):
             notification_type='inbox',
             groups='sales_team.group_sale_salesman',
         )
-        cls.user_admin = cls.env.ref('base.user_admin')
 
         cls.env['crm.team'].search([]).write({'sequence': 9999})
         cls.sales_team_1 = cls.env['crm.team'].create({
