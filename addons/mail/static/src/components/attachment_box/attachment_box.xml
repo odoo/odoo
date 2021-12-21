@@ -26,13 +26,13 @@
                             onAttachmentRemoved="attachmentBoxView.onAttachmentRemoved"
                         />
                     </t>
-                    <button class="o_AttachmentBox_buttonAdd btn btn-link" type="button" t-on-click="attachmentBoxView.onClickAddAttachment">
+                    <button class="o_AttachmentBox_buttonAdd btn btn-link" type="button" t-on-click="attachmentBoxView.fileUploader.openBrowserFileUploader">
                         <i class="fa fa-plus-square"/>
                         Add attachments
                     </button>
                 </div>
                 <FileUploader
-                    threadLocalId="attachmentBoxView.chatter.thread.localId"
+                    fileUploaderLocalId="attachmentBoxView.fileUploader.localId"
                     onAttachmentCreated="attachmentBoxView.onAttachmentCreated"
                     t-ref="fileUploader"
                 />

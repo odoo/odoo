@@ -16,10 +16,11 @@ const geAttachmentNextTemporaryId = (function() {
 
 registerModel({
     name: 'FileUploader',
-    identifyingFields: ['composerView'],
+    identifyingFields: [['composerView', 'attachmentBoxView']],
     lifecycleHooks: {
         _created() {
             this._onChangeAttachment = this._onChangeAttachment.bind(this);
+            this.openBrowserFileUploader = this.openBrowserFileUploader.bind(this);
         },
     },
     recordMethods: {
@@ -45,7 +46,9 @@ registerModel({
         _createFormData(file) {
             const formData = new window.FormData();
             formData.append('csrf_token', core.csrf_token);
-            formData.append('is_pending', Boolean(this.composerView.composer));
+            if (this.composerView) {
+                formData.append('is_pending', Boolean(this.composerView.composer));
+            }
             formData.append('thread_id', this.thread && this.thread.id);
             formData.append('thread_model', this.thread && this.thread.model);
             formData.append('ufile', file, file.name);
@@ -63,13 +66,13 @@ registerModel({
             const uploadingAttachments = new Map();
             for (const file of files) {
                 uploadingAttachments.set(file, this.messaging.models['Attachment'].insert({
-                    composer: this.composerView.composer && replace(this.composerView.composer),
+                    composer: this.composerView && this.composerView.composer && replace(this.composerView.composer),
                     filename: file.name,
                     id: geAttachmentNextTemporaryId(),
                     isUploading: true,
                     mimetype: file.type,
                     name: file.name,
-                    originThread: (!this.composerView.composer && this.thread) ? replace(this.thread) : undefined,
+                    originThread: (this.thread) ? replace(this.thread) : undefined,
                 }));
             }
             for (const file of files) {
@@ -78,7 +81,7 @@ registerModel({
                     // This happens when a pending attachment is being deleted by user before upload.
                     continue;
                 }
-                if ((this.composerView.composer && !this.composerView.composer.exists()) || (this.thread && !this.thread.exists())) {
+                if ((this.composerView && this.composerView.composer && !this.composerView.composer.exists()) || (this.thread && !this.thread.exists())) {
                     return;
                 }
                 try {
@@ -91,10 +94,10 @@ registerModel({
                     if (uploadingAttachment.exists()) {
                         uploadingAttachment.delete();
                     }
-                    if ((this.composer && !this.composer.exists()) || (this.thread && !this.thread.exists())) {
+                    if ((this.composerView && this.composerView.composer && !this.composerView.composer.exists()) || (this.thread && !this.thread.exists())) {
                         return;
                     }
-                    this._onAttachmentUploaded({ attachmentData, composer: this.composerView.composer, thread: this.thread });
+                    this._onAttachmentUploaded(attachmentData);
                 } catch (e) {
                     if (e.name !== 'AbortError') {
                         throw e;
@@ -109,7 +112,7 @@ registerModel({
          * @param {Composer} param0.composer
          * @param {Thread} param0.thread
          */
-        _onAttachmentUploaded({ attachmentData, composer, thread }) {
+        _onAttachmentUploaded(attachmentData) {
             if (attachmentData.error || !attachmentData.id) {
                 this.env.services['notification'].notify({
                     type: 'danger',
@@ -118,13 +121,13 @@ registerModel({
                 return;
             }
             const attachment = this.messaging.models['Attachment'].insert({
-                composer: composer && replace(composer),
-                originThread: (!composer && thread) ? replace(thread) : undefined,
+                composer: this.composerView && this.composerView.composer && replace(this.composerView.composer),
+                originThread: (this.thread) ? replace(this.thread) : undefined,
                 ...attachmentData,
             });
-            if (this.props.onAttachmentCreated) {
-                this.props.onAttachmentCreated({ attachment });
-            }
+            // if (this.props.onAttachmentCreated) {
+            //     this.props.onAttachmentCreated({ attachment });
+            // }
         },
         /**
          * Called when there are changes in the file input.
@@ -141,13 +144,19 @@ registerModel({
             if (this.composerView) {
                 return link(this.composerView.composer.activeThread);
             }
+            if (this.attachmentBoxView) {
+                return link(this.attachmentBoxView.chatter.thread);
+            }
             return clear();
         }
     },
     fields: {
+        attachmentBoxView: one2one('AttachmentBoxView', {
+            inverse: 'fileUploader',
+            readonly: true,
+        }),
         composerView: one2one('ComposerView', {
             inverse: 'fileUploader',
-            required: true,
             readonly: true,
         }),
         fileInputRef: attr(),

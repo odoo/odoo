@@ -2,6 +2,7 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one2one } from '@mail/model/model_field';
+import { insertAndReplace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'AttachmentBoxView',
@@ -45,6 +46,11 @@ registerModel({
          * States the OWL component displaying this attachment box.
          */
         component: attr(),
+        fileUploader: one2one('FileUploader', {
+            default: insertAndReplace(),
+            inverse: 'attachmentBoxView',
+            isCausal: true,
+        }),
         /**
          * States the OWL ref of the "fileUploader" of this attachment box.
          */
