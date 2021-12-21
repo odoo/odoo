@@ -889,6 +889,11 @@ registerModel({
         hasFocus: attr({
             default: false,
         }),
+        fileUploader: one2one('FileUploader', {
+            default: insertAndReplace(),
+            inverse: 'composerView',
+            isCausal: true,
+        }),
         /**
          * States whether there is any result currently found for the current
          * suggestion delimiter and search term, if applicable.

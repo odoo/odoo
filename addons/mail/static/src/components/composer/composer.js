@@ -165,7 +165,7 @@ export class Composer extends Component {
      * @private
      */
     _onClickAddAttachment() {
-        this._fileUploaderRef.comp.openBrowserFileUploader();
+        this.composerView.fileUploader.openBrowserFileUploader();
         if (!this.messaging.device.isMobileDevice) {
             this.composerView.update({ doFocus: true });
         }
