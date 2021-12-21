@@ -51,14 +51,9 @@ class ProductTemplate(models.Model):
              'A consumable product is a product for which stock is not managed.\n'
              'A service is a non-material product you provide.')
     type = fields.Selection(
-        selection=[
-            ('consu', 'Consumable'),
-            ('service', 'Service')
-        ],
-        compute='_compute_type',
-        store=True,
-        readonly=False,
-    )
+        [('consu', 'Consumable'),
+         ('service', 'Service')],
+        compute='_compute_type', store=True, readonly=False, precompute=True)
     categ_id = fields.Many2one(
         'product.category', 'Product Category',
         change_default=True, default=_get_default_category_id, group_expand='_read_group_categ_id',
@@ -388,11 +383,6 @@ class ProductTemplate(models.Model):
     def _onchange_uom(self):
         if self.uom_id and self.uom_po_id and self.uom_id.category_id != self.uom_po_id.category_id:
             self.uom_po_id = self.uom_id
-
-    @api.onchange('type')
-    def _onchange_type(self):
-        # Do nothing but needed for inheritance
-        return {}
 
     def _sanitize_vals(self, vals):
         """Sanitize vales for writing/creating product templates and variants.
