@@ -37,13 +37,12 @@ class PatchedHTTPAdapter(requests.adapters.HTTPAdapter):
         # still made without checking temporary files exist.
         super().cert_verify(conn, url, verify, None)
         conn.cert_file = cert
-        conn.key_file = cert
+        conn.key_file = None
 
     def get_connection(self, url, proxies=None):
         # OVERRIDE
         # Patch the OpenSSLContext to decode the certificate in-memory.
         conn = super().get_connection(url, proxies=proxies)
-
         context = conn.conn_kw['ssl_context']
 
         def patched_load_cert_chain(l10n_es_odoo_certificate, keyfile=None, password=None):

@@ -70,7 +70,6 @@ class TestEdiWebServices(TestEsEdiCommon):
 
     def test_edi_bizkaia(self):
         self.env.company.l10n_es_edi_tax_agency = 'bizkaia'
-
         self.moves.action_process_edi_web_services()
         generated_files = self._process_documents_web_services(self.moves, {'es_sii'})
         self.assertTrue(generated_files)
