@@ -1284,6 +1284,34 @@ QUnit.test('basic rendering of message', async function (assert) {
     );
 });
 
+QUnit.test('should not be able to reply to temporary/transient messages', async function (assert) {
+    assert.expect(1);
+
+    this.data['mail.channel'].records.push({ id: 20 });
+    await this.start({
+        discuss: {
+            params: {
+                default_active_id: 'mail.channel_20',
+            },
+        },
+    });
+    // these user interactions is to forge a transient message response from channel command "/who"
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "/who");
+    });
+    await afterNextRender(() =>
+        document.querySelector('.o_Composer_buttonSend').click()
+    );
+    // click on message to show actions on the transient message resulting from the "/who" command
+    await afterNextRender(() => document.querySelector('.o_Message').click());
+    assert.containsNone(
+        document.body,
+        '.o_MessageActionList_actionReply',
+        "should not have action to reply to temporary/transient messages"
+    );
+});
+
 QUnit.test('basic rendering of squashed message', async function (assert) {
     // messages are squashed when "close", e.g. less than 1 minute has elapsed
     // from messages of same author and same thread. Note that this should
