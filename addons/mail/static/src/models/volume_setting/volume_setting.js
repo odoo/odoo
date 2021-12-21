@@ -39,6 +39,7 @@ registerModel({
             inverse: 'volumeSetting',
         }),
         userSetting: many2one('UserSetting', {
+            inverse: 'volumeSettings',
             required: true,
         }),
         volume: attr({
