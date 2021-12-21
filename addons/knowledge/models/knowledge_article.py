@@ -9,8 +9,9 @@ class Article(models.Model):
     _description = "Contains the knowledge of a specific subject."
     _order = "is_user_favourite, favourite_count, last_edition_date desc"
 
-    name = fields.Char(string="Title")
+    name = fields.Char(string="Title", default='New file')
     body = fields.Html(string="Article Body")
+    icon = fields.Char(string='Article Icon', default='fa-file')
 
     parent_id = fields.Many2one("knowledge.article", string="Parent Article")
     child_ids = fields.One2many("knowledge.article", "parent_id", string="Child Articles")
@@ -185,3 +186,9 @@ class Article(models.Model):
         for sequence in write_vals_by_sequence:
             write_vals_by_sequence[sequence].write({'sequence': sequence})
 
+    def show_article(self):
+        action = self.env['ir.actions.act_window']._for_xml_id('knowledge.knowledge_article_dashboard_action')
+        if 'res_id' in self.env.context:
+            action['res_id'] = self.env.context['res_id']
+        # TODO: else -> Provide the res_id of an article or show an action helper ?
+        return action
