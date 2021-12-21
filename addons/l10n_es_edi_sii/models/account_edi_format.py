@@ -669,5 +669,5 @@ class AccountEdiFormat(models.Model):
                     'res_model': inv._name,
                     'res_id': inv.id,
                 })
-                res[inv] = {'attachment': attachment}
+                res[inv]['attachment'] = attachment
         return res
