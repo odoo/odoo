@@ -239,11 +239,11 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Hej ${object.partner_id.name}<br/><br/>\n"
-"        Tack för Er betalning.\n"
-"        Här är Ert kvitto <strong>${(object.name or '').replace('/','-')}</strong> som uppgår\n"
-"        till<strong>${format_amount(object.amount, object.currency_id)}</strong> från ${object.company_id.name}.\n"
+"        Tack för er betalning.\n"
+"        Här är ert kvitto <strong>${(object.name or '').replace('/','-')}</strong> som uppgår\n"
+"        till <strong>${format_amount(object.amount, object.currency_id)}</strong> från ${object.company_id.name}.\n"
 "        <br/><br/>\n"
-"        Tveka inte på att kontakta oss om du har några frågor.\n"
+"        Tveka inte att kontakta oss om ni har några frågor.\n"
 "        <br/><br/>\n"
 "        Vänliga hälsningar,\n"
 "        % if user.signature:\n"
@@ -302,7 +302,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Bästa\n"
+"        Hej\n"
 "        % if object.partner_id.parent_id:\n"
 "            ${object.partner_id.name} (${object.partner_id.parent_id.name}),\n"
 "        % else:\n"
@@ -1026,8 +1026,7 @@ msgid ""
 "the sum of line subtotals equals the total with taxes."
 msgstr ""
 "En avrundning per rad är rekommenderad om era priser är inklusive moms. På "
-"så sätt är summan av radernas delsummor lika med hela summan inklusive "
-"skatter."
+"så sätt är summan av radernas delsummor lika med hela summan inklusive moms."
 
 #. module: account
 #: code:addons/account/models/account_account_tag.py:0
@@ -4428,7 +4427,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Default Expense Account"
-msgstr ""
+msgstr "Standard kostnadskonto"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -5266,7 +5265,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__general_account_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 msgid "Financial Account"
-msgstr "Finansiellt konto"
+msgstr "Bokföringskonto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__tag_ids
@@ -11330,12 +11329,12 @@ msgstr "Skatt att applicera"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_config_settings__show_line_subtotals_tax_selection__tax_excluded
 msgid "Tax-Excluded"
-msgstr ""
+msgstr "Exklusive moms"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_config_settings__show_line_subtotals_tax_selection__tax_included
 msgid "Tax-Included"
-msgstr ""
+msgstr "Inklusive moms"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -13122,7 +13121,7 @@ msgstr ""
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Undistributed Profits/Losses"
-msgstr "Outdeladvinst / förlust"
+msgstr "Outdelad vinst / förlust"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__price_unit
@@ -13208,7 +13207,7 @@ msgstr "Oavstämd"
 #: model:ir.model.fields,field_description:account.field_account_move__amount_untaxed
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_untaxed
 msgid "Untaxed Amount"
-msgstr "Obeskattat belopp"
+msgstr "Summa ex. moms"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_untaxed_signed
