@@ -58,7 +58,7 @@ class AccountEdiFormat(models.Model):
         if not edi_document.attachment_id:
             return
 
-        pdf_writer.embed_odoo_attachment(edi_document.attachment_id)
+        pdf_writer.embed_odoo_attachment(edi_document.attachment_id, subtype='application/xml')
         if not pdf_writer.is_pdfa and str2bool(self.env['ir.config_parameter'].sudo().get_param('edi.use_pdfa', 'False')):
             try:
                 pdf_writer.convert_to_pdfa()
@@ -137,7 +137,7 @@ class AccountEdiFormat(models.Model):
         return self.env['ir.attachment'].create({
             'name': 'factur-x.xml',
             'datas': base64.encodebytes(xml_content),
-            'mimetype': '/application#2Fxml'
+            'mimetype': 'application/xml'
         })
 
     def _is_facturx(self, filename, tree):
