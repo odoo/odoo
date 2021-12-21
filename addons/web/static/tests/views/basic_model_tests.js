@@ -80,6 +80,41 @@ odoo.define('web.basic_model_tests', function (require) {
     }, function () {
         QUnit.module('BasicModel');
 
+        QUnit.test('context is given when using a resequence', async function (assert) {
+            assert.expect(2);
+            delete this.params["res_id"];
+            this.data.product.fields.sequence = {string: "Sequence", type: "integer"};
+
+            const model = await createModel({
+                Model: BasicModel,
+                data: this.data,
+                mockRPC: function (route, args) {
+                    if (route === '/web/dataset/resequence') {
+                        assert.deepEqual(args.context, { active_field: 2 },
+                            "context should be correct after a resequence");
+                    }
+                    else if (args.method === "read") {
+                        assert.deepEqual(args.kwargs.context, { active_field: 2 },
+                            "context should be correct after a 'read' RPC");
+                    }
+                    return this._super.apply(this, arguments);
+                },
+            });
+            const params = _.extend(this.params, {
+                context: { active_field: 2 },
+                groupedBy: ['product_id'],
+                fieldNames: ['foo'],
+            });
+    
+            model.load(params)
+                .then(function (stateID) {
+                    return model.resequence('product', [41, 37], stateID);
+                })
+                .then(function () {
+                    model.destroy();
+                });
+        });
+
         QUnit.test('can process x2many commands', async function (assert) {
             assert.expect(6);
 
