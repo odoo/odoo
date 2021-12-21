@@ -2663,11 +2663,14 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skip("onchange send only the present fields to the server", async function (assert) {
+    QUnit.test("onchange send only the present fields to the server", async function (assert) {
         assert.expect(1);
         serverData.models.partner.records[0].product_id = false;
         serverData.models.partner.onchanges.foo = function (obj) {
             obj.foo = obj.foo + " alligator";
+        };
+        serverData.views = {
+            "partner_type,false,list": '<tree><field name="name"/></tree>',
         };
 
         const form = await makeView({
@@ -2685,15 +2688,13 @@ QUnit.module("Views", (hooks) => {
                     </field>
                     <field name="timmy"/>
                 </form>`,
-            // archs: {
-            //     "partner_type,false,list": '<tree><field name="name"/></tree>',
-            // },
             resId: 1,
             mockRPC(route, args) {
                 if (args.method === "onchange") {
                     assert.deepEqual(
                         args.args[3],
                         {
+                            display_name: "",
                             foo: "1",
                             p: "",
                             "p.bar": "",

@@ -175,6 +175,7 @@ Field.parseFieldNode = function (node, fields, viewType) {
     const field = fields[name];
     const fieldInfo = {
         name,
+        context: node.getAttribute("context") || "{}",
         string: node.getAttribute("string") || field.string,
         widget,
         options: evaluateExpr(node.getAttribute("options") || "{}"),
@@ -203,23 +204,23 @@ Field.parseFieldNode = function (node, fields, viewType) {
         fieldInfo.viewMode = getX2MViewModes(node.getAttribute("mode"))[0];
     }
 
-    if (field.views) {
-        fieldInfo.views = {};
-        for (let viewType in field.views) {
-            const subView = field.views[viewType];
-            viewType = viewType === "tree" ? "list" : viewType; // FIXME: get rid of this
-            const { ArchParser } = viewRegistry.get(viewType);
-            const archInfo = new ArchParser().parse(subView.arch, subView.fields);
-            fieldInfo.views[viewType] = {
-                ...archInfo,
-                activeFields: archInfo.fields,
-                fields: subView.fields,
-            };
-        }
-    }
-
     if (!fieldInfo.invisible && X2M_TYPES.includes(field.type)) {
-        fieldInfo.relation = field.relation;
+        if (field.views) {
+            fieldInfo.views = {};
+            for (let viewType in field.views) {
+                const subView = field.views[viewType];
+                viewType = viewType === "tree" ? "list" : viewType; // FIXME: get rid of this
+                const { ArchParser } = viewRegistry.get(viewType);
+                const archInfo = new ArchParser().parse(subView.arch, subView.fields);
+                fieldInfo.views[viewType] = {
+                    ...archInfo,
+                    activeFields: archInfo.fields,
+                    fields: subView.fields,
+                };
+            }
+        }
+
+        fieldInfo.relation = field.relation; // not really necessary
         const relatedFields = {};
         if (fieldInfo.FieldComponent.useSubView) {
             const firstView = fieldInfo.views && fieldInfo.views[fieldInfo.viewMode];

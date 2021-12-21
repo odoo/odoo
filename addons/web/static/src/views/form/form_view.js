@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { makeContext } from "@web/core/context";
 import { registry } from "@web/core/registry";
 import { useEffect, useService } from "@web/core/utils/hooks";
 import { XMLParser } from "@web/core/utils/xml";
@@ -8,14 +9,16 @@ import { FormRenderer } from "@web/views/form/form_renderer";
 import { useModel } from "@web/views/helpers/model";
 import { standardViewProps } from "@web/views/helpers/standard_view_props";
 import { useSetupView } from "@web/views/helpers/view_hook";
-import { getActiveActions } from "@web/views/helpers/view_utils";
+import { getActiveActions, isX2Many } from "@web/views/helpers/view_utils";
 import { Layout } from "@web/views/layout";
 import { RelationalModel } from "@web/views/relational_model";
 import { useViewButtons } from "@web/views/view_button/hook";
 import { Field } from "@web/fields/field";
 
 const { Component, hooks, useState } = owl;
-const { useRef } = hooks;
+const { onWillStart, useRef } = hooks;
+
+const viewRegistry = registry.category("views");
 
 // -----------------------------------------------------------------------------
 
@@ -28,6 +31,7 @@ export class FormArchParser extends XMLParser {
             if (node.tagName === "field") {
                 const fieldInfo = Field.parseFieldNode(node, fields, "form");
                 activeFields[fieldInfo.name] = fieldInfo;
+                return false;
             }
         });
         return { arch, activeActions, fields: activeFields, xmlDoc };
@@ -39,6 +43,9 @@ export class FormArchParser extends XMLParser {
 class FormView extends Component {
     setup() {
         this.router = useService("router");
+        this.user = useService("user");
+        this.viewService = useService("view");
+
         this.archInfo = new FormArchParser().parse(this.props.arch, this.props.fields);
         const activeFields = this.archInfo.fields;
         if (!activeFields.display_name) {
@@ -97,6 +104,10 @@ class FormView extends Component {
                 onUpdate: ({ offset }) => this.model.load({ resId: this.props.resIds[offset] }),
             };
         });
+
+        onWillStart(async () => {
+            await this.loadSubViews();
+        });
     }
 
     /**
@@ -105,6 +116,61 @@ class FormView extends Component {
     __render() {
         this.env.config.setDisplayName(this.model.root.data.display_name || this.env._t("New"));
         return super.__render(...arguments);
+    }
+
+    async loadSubViews() {
+        const activeFields = this.model.root.activeFields;
+        for (const fieldName in activeFields) {
+            const field = this.model.root.fields[fieldName];
+            if (!isX2Many(field)) {
+                continue; // what follows only concerns x2many fields
+            }
+            const fieldInfo = activeFields[fieldName];
+            if (fieldInfo.modifiers.invisible === true) {
+                continue; // no need to fetch the sub view if the field is always invisible
+            }
+            if (fieldInfo.views[fieldInfo.viewMode]) {
+                continue; // the sub view is inline in the main form view
+            }
+            if (!fieldInfo.FieldComponent.useSubView) {
+                continue; // the FieldComponent used to render the field doesn't need a sub view
+            }
+
+            // extract *_view_ref keys from field context, to fetch the adequate view
+            const fieldContext = {};
+            const regex = /'([a-z]*_view_ref)' *: *'(.*?)'/g;
+            let matches;
+            while ((matches = regex.exec(fieldInfo.context)) !== null) {
+                fieldContext[matches[1]] = matches[2];
+            }
+            // filter out *_view_ref keys from general context
+            const refinedContext = {};
+            for (const key in this.props.context) {
+                if (key.indexOf("_view_ref") === -1) {
+                    refinedContext[key] = this.props.context[key];
+                }
+            }
+            // specify the main model to prevent access rights defined in the context
+            // (e.g. create: 0) to apply to sub views (same logic as the one applied by
+            // the server for inline views)
+            refinedContext.base_model_name = this.props.resModel;
+
+            const viewType = fieldInfo.viewMode;
+            const views = await this.viewService.loadViews({
+                resModel: field.relation,
+                views: [[null, viewType]],
+                context: makeContext([fieldContext, this.user.context, refinedContext]),
+            });
+            const subView = views[viewType];
+            const { ArchParser } = viewRegistry.get(viewType);
+            const archInfo = new ArchParser().parse(subView.arch, subView.fields);
+            fieldInfo.views[viewType] = {
+                ...archInfo,
+                activeFields: archInfo.fields,
+                fields: subView.fields,
+            };
+            fieldInfo.relatedFields = subView.fields;
+        }
     }
 
     disableButtons() {

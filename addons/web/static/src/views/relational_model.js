@@ -383,9 +383,18 @@ export class Record extends DataPoint {
 
     _getOnchangeSpec() {
         const specs = {};
-        for (const fieldName of this.fieldNames) {
-            specs[fieldName] = this.activeFields[fieldName].onChange ? "1" : "";
+        function buildSpec(activeFields, prefix) {
+            for (const fieldName in activeFields) {
+                const activeField = activeFields[fieldName];
+                const key = prefix ? `${prefix}.${fieldName}` : fieldName;
+                specs[key] = activeField.onChange ? "1" : "";
+                const subViewInfo = activeField.views && activeField.views[activeField.viewMode];
+                if (subViewInfo) {
+                    buildSpec(subViewInfo.activeFields, key);
+                }
+            }
         }
+        buildSpec(this.activeFields);
         return specs;
     }
 

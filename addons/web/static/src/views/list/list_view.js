@@ -158,7 +158,8 @@ export class ListArchParser extends XMLParser {
                     .filter((button) => button.modifiers.invisible !== true);
                 return false;
             } else if (node.tagName === "tree") {
-                config.limit = parseInt(node.getAttribute("limit"));
+                const limit = node.getAttribute("limit");
+                config.limit = limit && parseInt(limit, 10);
             }
         });
 
