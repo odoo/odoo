@@ -12,7 +12,7 @@
     </t>
 
     <t t-name="web.FormView.Buttons" owl="1">
-        <div class="o_cp_buttons" role="toolbar" aria-label="Main actions">
+        <div class="o_cp_buttons" role="toolbar" aria-label="Main actions" t-ref="cpButtons">
             <div t-if="state.inEditMode" class="o_form_buttons_edit">
                 <button type="button" class="btn btn-primary o_form_button_save" data-tooltip="Save record" data-hotkey="s" t-on-click="save">
                     Save

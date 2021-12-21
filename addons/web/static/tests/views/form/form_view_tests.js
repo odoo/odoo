@@ -2555,40 +2555,37 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(form, "span:contains(apple)", "should contain span with field value");
     });
 
-    QUnit.skip("disable buttons until reload data from server", async function (assert) {
-        assert.expect(2);
-
+    QUnit.test("disable buttons until reload data from server", async function (assert) {
+        let def;
         const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch: '<form string="Partners">' + '<group><field name="foo"/></group>' + "</form>",
-            mockRPC: function (route, args) {
+            arch: '<form><group><field name="foo"/></group></form>',
+            async mockRPC(route, args) {
                 if (args.method === "write") {
                     args.args[1].foo = "apple";
                 } else if (args.method === "read") {
                     // Block the 'read' call
-                    var result = this._super.apply(this, arguments);
-                    return Promise.resolve(def).then(result);
+                    await Promise.resolve(def);
                 }
-                return this._super(route, args);
             },
             resId: 2,
         });
 
-        var def = testUtils.makeTestPromise();
+        def = makeDeferred();
         await click(form.el.querySelector(".o_form_button_edit"));
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=foo] input"), "tralala");
+        await editInput(form.el, ".o_field_widget[name=foo] input", "tralala");
         await click(form.el.querySelector(".o_form_button_save"));
 
         // Save button should be disabled
-        assert.hasAttrValue(form.$buttons.find(".o_form_button_save"), "disabled", "disabled");
+        assert.hasAttrValue(form.el.querySelector(".o_form_button_save"), "disabled", "disabled");
         // Release the 'read' call
-        await def.resolve();
-        await testUtils.nextTick();
+        def.resolve();
+        await nextTick();
 
         // Edit button should be enabled after the reload
-        assert.hasAttrValue(form.$buttons.find(".o_form_button_edit"), "disabled", undefined);
+        assert.hasAttrValue(form.el.querySelector(".o_form_button_edit"), "disabled", undefined);
     });
 
     QUnit.skip("properly apply onchange in simple case", async function (assert) {
@@ -3683,7 +3680,7 @@ QUnit.module("Views", (hooks) => {
         // when the 'blur' event is triggered by the re-rendering)
         form.$buttons.find(".o_form_button_cancel").focus();
         await testUtils.dom.click(".o_form_button_cancel");
-        form.$buttons.find(".o_form_button_save").focus();
+        form.el.querySelector(".o_form_button_save").focus();
         await testUtils.dom.click(".o_form_button_save");
         assert.containsOnce(form, "span:contains(2017)");
     });
@@ -10432,7 +10429,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(form.$(".o_field_widget[name=display_name]").val(), "default");
 
         // save (will wait for the onchange to return), and will be delayed as well
-        await testUtils.dom.click(form.$buttons.find(".o_form_button_save"));
+        await testUtils.dom.click(form.el.querySelector(".o_form_button_save"));
 
         assert.hasClass(form.$(".o_form_view"), "o_form_editable");
         assert.strictEqual(form.$(".o_field_widget[name=display_name]").val(), "default");
@@ -11068,7 +11065,7 @@ QUnit.module("Views", (hooks) => {
                 resId: 2,
             });
             assert.strictEqual(
-                form.$buttons.find(".o_form_button_edit")[0],
+                form.el.querySelector(".o_form_button_edit"),
                 document.activeElement,
                 "in read mode, when there are no primary buttons on the form, the default button with the focus should be edit"
             );

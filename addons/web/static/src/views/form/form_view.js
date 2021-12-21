@@ -14,7 +14,8 @@ import { RelationalModel } from "@web/views/relational_model";
 import { useViewButtons } from "@web/views/view_button/hook";
 import { Field } from "@web/fields/field";
 
-const { Component, useState } = owl;
+const { Component, hooks, useState } = owl;
+const { useRef } = hooks;
 
 // -----------------------------------------------------------------------------
 
@@ -64,6 +65,8 @@ class FormView extends Component {
         this.canCreate = create;
         this.canEdit = edit;
 
+        this.cpButtonsRef = useRef("cpButtons");
+
         this.state = useState({
             inEditMode: !resId,
         });
@@ -104,14 +107,23 @@ class FormView extends Component {
         return super.__render(...arguments);
     }
 
+    disableButtons() {
+        const btns = this.cpButtonsRef.el.querySelectorAll(".o_cp_buttons button");
+        for (const btn of btns) {
+            btn.setAttribute("disabled", "1");
+        }
+    }
+
     edit() {
         this.state.inEditMode = true;
     }
     async create() {
+        this.disableButtons();
         await this.model.load({ resId: null });
         this.state.inEditMode = true;
     }
     async save() {
+        this.disableButtons();
         await this.model.root.save();
         this.state.inEditMode = false;
     }
