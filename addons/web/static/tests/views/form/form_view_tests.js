@@ -2588,7 +2588,7 @@ QUnit.module("Views", (hooks) => {
         assert.hasAttrValue(form.el.querySelector(".o_form_button_edit"), "disabled", undefined);
     });
 
-    QUnit.skip("properly apply onchange in simple case", async function (assert) {
+    QUnit.test("properly apply onchange in simple case", async function (assert) {
         assert.expect(2);
 
         serverData.models.partner.onchanges = {
@@ -2600,35 +2600,30 @@ QUnit.module("Views", (hooks) => {
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                '<form string="Partners">' +
-                '<group><field name="foo"/><field name="int_field"/></group>' +
-                "</form>",
+            arch: '<form><field name="foo"/><field name="int_field"/></form>',
             resId: 2,
         });
 
         await click(form.el.querySelector(".o_form_button_edit"));
 
         assert.strictEqual(
-            form.$(".o_field_widget[name=int_field] input").val(),
+            form.el.querySelector(".o_field_widget[name=int_field] input").value,
             "9",
             "should contain input with initial value"
         );
 
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=foo] input"), "tralala");
+        await editInput(form.el, ".o_field_widget[name=foo] input", "tralala");
 
         assert.strictEqual(
-            form.$(".o_field_widget[name=int_field] input").val(),
-            "1007",
+            form.el.querySelector(".o_field_widget[name=int_field] input").value,
+            "1,007",
             "should contain input with onchange applied"
         );
     });
 
-    QUnit.skip(
+    QUnit.test(
         "properly apply onchange when changed field is active field",
         async function (assert) {
-            assert.expect(3);
-
             serverData.models.partner.onchanges = {
                 int_field: function (obj) {
                     obj.int_field = 14;
@@ -2638,27 +2633,22 @@ QUnit.module("Views", (hooks) => {
                 type: "form",
                 resModel: "partner",
                 serverData,
-                arch:
-                    '<form string="Partners">' +
-                    '<group><field name="int_field"/></group>' +
-                    "</form>",
+                arch: '<form><field name="int_field"/></form>',
                 resId: 2,
-                viewOptions: { mode: "edit" },
             });
 
+            await click(form.el.querySelector(".o_form_button_edit"));
+
             assert.strictEqual(
-                form.$(".o_field_widget[name=int_field] input").val(),
+                form.el.querySelector(".o_field_widget[name=int_field] input").value,
                 "9",
                 "should contain input with initial value"
             );
 
-            await testUtils.fields.editInput(
-                form.$(".o_field_widget[name=int_field] input"),
-                "666"
-            );
+            await editInput(form.el, ".o_field_widget[name=int_field] input", "666");
 
             assert.strictEqual(
-                form.$(".o_field_widget[name=int_field] input").val(),
+                form.el.querySelector(".o_field_widget[name=int_field] input").value,
                 "14",
                 "value should have been set to 14 by onchange"
             );
@@ -2666,7 +2656,7 @@ QUnit.module("Views", (hooks) => {
             await click(form.el.querySelector(".o_form_button_save"));
 
             assert.strictEqual(
-                form.$(".o_field_widget[name=int_field]").text(),
+                form.el.querySelector(".o_field_widget[name=int_field]").innerText,
                 "14",
                 "value should still be 14"
             );
@@ -2684,22 +2674,22 @@ QUnit.module("Views", (hooks) => {
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                '<form string="Partners">' +
-                '<field name="foo"/>' +
-                '<field name="p">' +
-                "<tree>" +
-                '<field name="bar"/>' +
-                '<field name="product_id"/>' +
-                "</tree>" +
-                "</field>" +
-                '<field name="timmy"/>' +
-                "</form>",
-            archs: {
-                "partner_type,false,list": '<tree><field name="name"/></tree>',
-            },
+            arch: `
+                <form>
+                    <field name="foo"/>
+                    <field name="p">
+                        <tree>
+                            <field name="bar"/>
+                            <field name="product_id"/>
+                        </tree>
+                    </field>
+                    <field name="timmy"/>
+                </form>`,
+            // archs: {
+            //     "partner_type,false,list": '<tree><field name="name"/></tree>',
+            // },
             resId: 1,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "onchange") {
                     assert.deepEqual(
                         args.args[3],
@@ -2714,12 +2704,11 @@ QUnit.module("Views", (hooks) => {
                         "should send only the fields used in the views"
                     );
                 }
-                return this._super(route, args);
             },
         });
 
         await click(form.el.querySelector(".o_form_button_edit"));
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=foo] input"), "tralala");
+        await editInput(form.el, ".o_field_widget[name=foo] input", "tralala");
     });
 
     QUnit.skip("onchange only send present fields value", async function (assert) {
@@ -4439,11 +4428,17 @@ QUnit.module("Views", (hooks) => {
 
         await click(form.el.querySelector(".o_form_button_edit"));
 
-        assert.strictEqual(form.$(".o_field_widget[name=int_field] input").val(), "9");
+        assert.strictEqual(
+            form.el.querySelector(".o_field_widget[name=int_field] input").value,
+            "9"
+        );
 
         await testUtils.fields.editInput(form.$(".o_field_widget[name=foo] input"), "tralala");
 
-        assert.strictEqual(form.$(".o_field_widget[name=int_field] input").val(), "10");
+        assert.strictEqual(
+            form.el.querySelector(".o_field_widget[name=int_field] input").value,
+            "10"
+        );
     });
 
     QUnit.skip(
@@ -4498,11 +4493,17 @@ QUnit.module("Views", (hooks) => {
 
             await click(form.el.querySelector(".o_form_button_edit"));
 
-            assert.strictEqual(form.$(".o_field_widget[name=int_field] input").val(), "9");
+            assert.strictEqual(
+                form.el.querySelector(".o_field_widget[name=int_field] input").value,
+                "9"
+            );
 
             await testUtils.fields.editInput(form.$(".o_field_widget[name=foo] input"), "tralala");
 
-            assert.strictEqual(form.$(".o_field_widget[name=int_field] input").val(), "10");
+            assert.strictEqual(
+                form.el.querySelector(".o_field_widget[name=int_field] input").value,
+                "10"
+            );
         }
     );
 
