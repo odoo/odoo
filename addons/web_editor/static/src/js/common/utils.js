@@ -358,6 +358,38 @@ function _getColorClass(el, colorNames, prefix) {
     const prefixedColorNames = _computeColorClasses(colorNames, prefix);
     return el.classList.value.split(' ').filter(cl => prefixedColorNames.includes(cl)).join(' ');
 }
+/**
+ * Checks if an element has the data-invisible attribute set or not.
+ *
+ * @private
+ * @param {Element} el element that needs to be checked
+ * @returns {boolean} a boolean indicating the absence of the data-invisible
+ * attribute
+ */
+function _isTargetVisible(el) {
+    return (el.dataset.invisible !== '1');
+}
+/**
+ * Toggles the data-invisible attribute on an element.
+ *
+ * @private
+ * @param {Element} el element that needs to be toggled
+ * @param {Element} [show] an optional boolean argument indicating the
+ * requested visibility state of the element
+ * @returns {boolean} a boolean indicating the absence of the data-invisible
+ * attribute
+ */
+function _toggleVisibilityStatus(el, show) {
+    if (show === undefined) {
+        show = !(_isTargetVisible(el));
+    }
+    if (show) {
+        delete el.dataset.invisible;
+    } else {
+        el.dataset.invisible = '1';
+    }
+    return show;
+}
 
 return {
     CSS_SHORTHANDS: CSS_SHORTHANDS,
@@ -378,5 +410,7 @@ return {
     backgroundImagePartsToCss: _backgroundImagePartsToCss,
     generateHTMLId: _generateHTMLId,
     getColorClass: _getColorClass,
+    isTargetVisible: _isTargetVisible,
+    toggleVisibilityStatus: _toggleVisibilityStatus,
 };
 });

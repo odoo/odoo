@@ -10,7 +10,7 @@ var Widget = require('web.Widget');
 var options = require('web_editor.snippets.options');
 const {ColorPaletteWidget} = require('web_editor.ColorPalette');
 const SmoothScrollOnDrag = require('web/static/src/js/core/smooth_scroll_on_drag.js');
-const {getCSSVariableValue} = require('web_editor.utils');
+const {getCSSVariableValue, isTargetVisible, toggleVisibilityStatus} = require('web_editor.utils');
 const QWeb = core.qweb;
 
 var _t = core._t;
@@ -135,7 +135,6 @@ var SnippetEditor = Widget.extend({
     custom_events: {
         'option_update': '_onOptionUpdate',
         'user_value_widget_request': '_onUserValueWidgetRequest',
-        'snippet_option_visibility_update': '_onSnippetOptionVisibilityUpdate',
     },
     layoutElementsSelector: [
         '.o_we_shape',
@@ -420,12 +419,6 @@ var SnippetEditor = Widget.extend({
         return this.$el && this.$el.hasClass('o_we_overlay_sticky');
     },
     /**
-     * @returns {boolean}
-     */
-    isTargetVisible: function () {
-        return (this.$target[0].dataset.invisible !== '1');
-    },
-    /**
      * Removes the associated snippet from the DOM and destroys the associated
      * editor (itself).
      *
@@ -630,7 +623,7 @@ var SnippetEditor = Widget.extend({
      * @returns {Promise<boolean>}
      */
     toggleTargetVisibility: async function (show) {
-        show = this._toggleVisibilityStatus(show);
+        show = toggleVisibilityStatus(this.$target[0], show);
         var styles = _.values(this.styles);
         const proms = _.sortBy(styles, '__order').map(style => {
             return show ? style.onTargetShow() : style.onTargetHide();
@@ -821,21 +814,6 @@ var SnippetEditor = Widget.extend({
             });
             $optionsSection.toggleClass('d-none', options.length === 0);
         });
-    },
-    /**
-     * @private
-     * @param {boolean} [show]
-     */
-    _toggleVisibilityStatus: function (show) {
-        if (show === undefined) {
-            show = !this.isTargetVisible();
-        }
-        if (show) {
-            delete this.$target[0].dataset.invisible;
-        } else {
-            this.$target[0].dataset.invisible = '1';
-        }
-        return show;
     },
 
     //--------------------------------------------------------------------------
@@ -1072,13 +1050,6 @@ var SnippetEditor = Widget.extend({
         ev.preventDefault();
         ev.stopPropagation();
         this.removeSnippet();
-    },
-    /**
-     * @private
-     * @param {OdooEvent} ev
-     */
-    _onSnippetOptionVisibilityUpdate: function (ev) {
-        ev.data.show = this._toggleVisibilityStatus(ev.data.show);
     },
     /**
      * @private
@@ -1808,7 +1779,7 @@ var SnippetsMenu = Widget.extend({
                 const $invisEntry = $('<div/>', {
                     class: 'o_we_invisible_entry d-flex align-items-center justify-content-between',
                     text: editor.getName(),
-                }).append($('<i/>', {class: `fa ${editor.isTargetVisible() ? 'fa-eye' : 'fa-eye-slash'} ml-2`}));
+                }).append($('<i/>', {class: `fa ${isTargetVisible(editor.$target[0]) ? 'fa-eye' : 'fa-eye-slash'} ml-2`}));
                 $invisibleDOMPanelEl.append($invisEntry);
                 this.invisibleDOMMap.set($invisEntry[0], el);
             });
@@ -3232,6 +3203,8 @@ var SnippetsMenu = Widget.extend({
      * @param {OdooEvent} ev
      */
     _onSnippetOptionVisibilityUpdate: async function (ev) {
+        const $snippet = ev.data.$snippet || ev.target.$target;
+        toggleVisibilityStatus($snippet[0], ev.data.show);
         if (!ev.data.show) {
             await this._activateSnippet(false);
         }
