@@ -367,6 +367,13 @@ export class Record extends DataPoint {
                 [[], this._getChanges(true), fieldName ? [fieldName] : [], this._getOnchangeSpec()],
                 { context: this.context }
             );
+            // for x2many fields, the onchange returns commands, not ids, so we need to process them
+            // for now, we simply return an empty list
+            for (const fieldName in result.value) {
+                if (isX2Many(this.fields[fieldName])) {
+                    result.value[fieldName] = [];
+                }
+            }
             const onChangeValues = this._parseServerValues(result.value);
             Object.assign(this.data, onChangeValues);
             Object.assign(this._changes, onChangeValues);
