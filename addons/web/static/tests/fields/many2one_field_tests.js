@@ -2653,22 +2653,20 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["onchange sequence", "partner_type write"]);
     });
 
-    QUnit.skip("autocompletion in a many2one, in form view with a domain", async function (assert) {
+    QUnit.test("autocompletion in a many2one, in form view with a domain", async function (assert) {
         assert.expect(1);
 
         const form = await makeView({
             type: "form",
             resModel: "partner",
+            resId: 1,
             serverData,
+            domain: [["trululu", "=", 4]],
             arch: `
                 <form>
                     <field name="product_id" />
                 </form>
             `,
-            resId: 1,
-            viewOptions: {
-                domain: [["trululu", "=", 4]],
-            },
             mockRPC(route, { kwargs, method }) {
                 if (method === "name_search") {
                     assert.deepEqual(kwargs.args, [], "should not have a domain");
@@ -2680,7 +2678,7 @@ QUnit.module("Fields", (hooks) => {
         click(form.el, ".o_field_widget[name=product_id] input");
     });
 
-    QUnit.skip(
+    QUnit.test(
         "autocompletion in a many2one, in form view with a date field",
         async function (assert) {
             assert.expect(1);
@@ -3636,7 +3634,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.skip("many2one: domain updated by an onchange", async function (assert) {
+    QUnit.test("many2one: domain updated by an onchange", async function (assert) {
         assert.expect(2);
 
         serverData.models.partner.onchanges = {
@@ -3678,12 +3676,10 @@ QUnit.module("Fields", (hooks) => {
         // close the dropdown
         await click(form.el, ".o_field_widget[name=trululu] input");
         // trigger an onchange that will update the domain
-        await testUtils.fields.editInput(
-            form.el.querySelectorAll(".o_field_widget[name=int_field]"),
-            2
-        );
+        await triggerEvent(form.el, ".o_field_widget[name='int_field']", "onchange");
+
         // trigger a name_search (domain should be [['id', 'in', [10]]])
-        await click(form.el, ".o_field_widget[name=trululu] input");
+        await click(form.el, ".o_field_widget[name='trululu'] input");
     });
 
     QUnit.skip("many2one in one2many: domain updated by an onchange", async function (assert) {

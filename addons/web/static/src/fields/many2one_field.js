@@ -6,6 +6,7 @@ import { _lt } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { standardFieldProps } from "./standard_field_props";
+import { Domain } from "@web/core/domain";
 
 const { Component } = owl;
 const { onWillStart, onWillUpdateProps } = owl.hooks;
@@ -62,6 +63,11 @@ export class Many2OneField extends Component {
         return this.canCreate && !this.props.options.no_create_edit;
     }
 
+    getDomain() {
+        return new Domain(this.props.attrs.domain).toList(
+            this.props.record.getFieldContext(this.props.name)
+        );
+    }
     async loadDisplayName(value) {
         if (this.props.options.always_reload && value) {
             const nameGet = await this.orm.call(this.relation, "name_get", [value[0]], {
@@ -80,7 +86,6 @@ export class Many2OneField extends Component {
         }
         return suggestions;
     }
-
     async openAction() {
         const action = await this.orm.call(
             this.props.record.fields[this.props.name].relation,
@@ -107,7 +112,6 @@ export class Many2OneField extends Component {
     onExternalBtnClick() {
         this.openDialog();
     }
-
     onChange(value) {
         if (!value) {
             this.props.update(false);
@@ -136,9 +140,10 @@ registry.category("fields").add("many2one", Many2OneField);
 async function searchRecords(request, suggestions, ctx) {
     const results = await ctx.orm.call(ctx.relation, "name_search", [], {
         name: request,
-        args: [],
+        args: ctx.getDomain(),
         operator: "ilike",
         limit: ctx.searchLimit + 1,
+        context: ctx.props.record.getFieldContext(ctx.props.name),
     });
 
     suggestions.push(
