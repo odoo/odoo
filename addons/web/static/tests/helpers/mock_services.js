@@ -29,6 +29,7 @@ export const defaultLocalization = {
     multiLang: false,
     thousandsSep: ",",
     weekStart: 7,
+    shouldParsersFallBackOnEnglishLocalization: false,
 };
 
 /**
@@ -257,12 +258,16 @@ export function makeFakeUserService(hasGroup = () => false) {
 }
 
 export function makeFakeHTTPService(getResponse, postResponse) {
-    getResponse = getResponse || ((route, readMethod) => {
-        return readMethod === "json" ? {} : "";
-    });
-    postResponse = postResponse || ((route, params, readMethod) => {
-        return readMethod === "json" ? {} : "";
-    });
+    getResponse =
+        getResponse ||
+        ((route, readMethod) => {
+            return readMethod === "json" ? {} : "";
+        });
+    postResponse =
+        postResponse ||
+        ((route, params, readMethod) => {
+            return readMethod === "json" ? {} : "";
+        });
     return {
         start() {
             return {
@@ -271,7 +276,7 @@ export function makeFakeHTTPService(getResponse, postResponse) {
                 },
                 async post(...args) {
                     return postResponse(...args);
-                }
+                },
             };
         },
     };

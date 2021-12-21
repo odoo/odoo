@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import { Field } from "./field";
 
 const { Component } = owl;
 export class IntegerField extends Component {
@@ -15,11 +16,14 @@ export class IntegerField extends Component {
 
     get formattedInputValue() {
         if (this.inputType === "number") return this.props.value;
-        return this.props.formatValue(this.props.value);
+        return this.props.formatValue(this.props.value, {
+            field: this.props.record.fields[this.props.name],
+        });
     }
 }
 
 IntegerField.template = "web.IntegerField";
 IntegerField.isEmpty = () => false;
+IntegerField.isValid = (value) => Number.isInteger(Field.parseFieldValue(value));
 
 registry.category("fields").add("integer", IntegerField);
