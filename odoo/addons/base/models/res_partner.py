@@ -240,6 +240,10 @@ class Partner(models.Model):
         ('check_name', "CHECK( (type='contact' AND name IS NOT NULL) or (type!='contact') )", 'Contacts require a name'),
     ]
 
+    def _get_street_split(self):
+        self.ensure_one()
+        return tools.street_split(self.street or '')
+
     @api.depends('name', 'user_ids.share', 'image_1920', 'is_company', 'type')
     def _compute_avatar_1920(self):
         super()._compute_avatar_1920()
