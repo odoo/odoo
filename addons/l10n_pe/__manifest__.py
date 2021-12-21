@@ -10,7 +10,6 @@
     'depends': [
         'base_vat',
         'base_address_extended',
-        'base_address_city',
         'l10n_latam_base',
         'l10n_latam_invoice_document',
         'account_debit_note',
