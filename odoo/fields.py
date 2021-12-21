@@ -921,7 +921,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
     def convert_to_display_name(self, value, record):
         """ Convert ``value`` from the record format to a suitable display name. """
-        return ustr(value)
+        return ustr(value) if value else False
 
     ############################################################################
     #
@@ -2639,7 +2639,7 @@ class Reference(Selection):
         return value.display_name if value else ''
 
     def convert_to_display_name(self, value, record):
-        return ustr(value and value.display_name)
+        return value.display_name if value else False
 
 
 class _Relational(Field):
@@ -2882,7 +2882,7 @@ class Many2one(_Relational):
         return value.display_name if value else ''
 
     def convert_to_display_name(self, value, record):
-        return ustr(value.display_name)
+        return value.display_name
 
     def convert_to_onchange(self, value, record, names):
         if not value.id:
