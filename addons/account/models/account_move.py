@@ -1961,9 +1961,9 @@ class AccountMove(models.Model):
             raise ValidationError(_('Posted journal entry must have an unique sequence number per company.\n'
                                     'Problematic numbers: %s\n') % ', '.join(r[1] for r in res))
 
-    @api.constrains('ref', 'move_type', 'partner_id', 'journal_id', 'invoice_date')
+    @api.constrains('ref', 'move_type', 'partner_id', 'journal_id', 'invoice_date', 'state')
     def _check_duplicate_supplier_reference(self):
-        moves = self.filtered(lambda move: move.is_purchase_document() and move.ref)
+        moves = self.filtered(lambda move: move.state == 'posted' and move.is_purchase_document() and move.ref)
         if not moves:
             return
 
