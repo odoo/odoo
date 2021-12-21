@@ -2805,6 +2805,56 @@ QUnit.module("Views", (hooks) => {
         await clickOnDataset(graph);
     });
 
+    QUnit.test("Clicking on bar charts removes group_by and search_default_* context keys", async function(assert) {
+        assert.expect(2);
+
+        serviceRegistry.add(
+            "action",
+            {
+                start() {
+                    return {
+                        doAction(actionRequest, options) {
+                            assert.deepEqual(actionRequest, {
+                                context: {
+                                    lang: "en",
+                                    tz: "taht",
+                                    uid: 7,
+                                },
+                                domain: [["bar", "=", true]],
+                                name: "Foo Analysis",
+                                res_model: "foo",
+                                target: "current",
+                                type: "ir.actions.act_window",
+                                views: [
+                                    [false, "list"],
+                                    [false, "form"],
+                                ],
+                            });
+                            assert.deepEqual(options, { viewType: "list" });
+                        },
+                    };
+                },
+            },
+            { force: true }
+        );
+        const graph = await makeView({
+            serverData,
+            type: "graph",
+            resModel: "foo",
+            arch: `
+                <graph string="Foo Analysis">
+                    <field name="bar"/>
+                </graph>
+            `,
+            context: {
+                search_default_user: 1,
+                group_by: 'bar',
+            },
+        });
+
+        await clickOnDataset(graph);
+    });
+
     QUnit.test(
         "clicking on a pie chart trigger a do_action with correct views",
         async function (assert) {
