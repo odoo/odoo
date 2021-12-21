@@ -281,5 +281,12 @@ registerModel({
         voiceActiveDuration: attr({
             default: 0,
         }),
+        /**
+         * Determines the volume chosen by the current user for each other user.
+         */
+        volumeSettings: one2many('VolumeSetting', {
+            inverse: 'userSetting',
+            isCausal: true,
+        }),
     },
 });
