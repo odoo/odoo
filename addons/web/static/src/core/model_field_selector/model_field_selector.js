@@ -47,6 +47,9 @@ export class ModelFieldSelector extends Component {
     }
 
     async loadChain(fieldName) {
+        if ("01".includes(fieldName)) {
+            return [{ resModel: this.props.resModel, field: { string: fieldName } }];
+        }
         const fieldNameChain = this.getFieldNameChain(fieldName);
         let currentNode = {
             resModel: this.props.resModel,
@@ -85,6 +88,7 @@ export class ModelFieldSelector extends Component {
                 showSearchInput: this.props.showSearchInput,
                 isDebugMode: this.props.isDebugMode,
                 loadChain: this.loadChain.bind(this),
+                filter: this.props.filter,
             },
             {
                 closeOnClickAway: true,
@@ -92,11 +96,26 @@ export class ModelFieldSelector extends Component {
         );
     }
 }
-ModelFieldSelector.template = "web._ModelFieldSelector";
-ModelFieldSelector.components = {
-    Popover: ModelFieldSelectorPopover,
-};
-ModelFieldSelector.defaultProps = {
-    showSearchInput: true,
-    update: () => {},
-};
+
+Object.assign(ModelFieldSelector, {
+    template: "web._ModelFieldSelector",
+    components: {
+        Popover: ModelFieldSelectorPopover,
+    },
+    props: {
+        fieldName: String,
+        resModel: String,
+        readonly: { type: Boolean, optional: true },
+        showSearchInput: { type: Boolean, optional: true },
+        isDebugMode: { type: Boolean, optional: true },
+        update: { type: Function, optional: true },
+        filter: { type: Function, optional: true },
+    },
+    defaultProps: {
+        readonly: true,
+        isDebugMode: false,
+        showSearchInput: true,
+        update: () => {},
+        filter: () => true,
+    },
+});

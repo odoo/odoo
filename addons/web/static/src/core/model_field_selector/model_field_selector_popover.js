@@ -90,4 +90,15 @@ export class ModelFieldSelectorPopover extends Component {
         }
     }
 }
-ModelFieldSelectorPopover.template = "web.ModelFieldSelectorPopover";
+
+Object.assign(ModelFieldSelectorPopover, {
+    template: "web.ModelFieldSelectorPopover",
+    props: {
+        chain: Array,
+        update: Function,
+        showSearchInput: Boolean,
+        isDebugMode: Boolean,
+        loadChain: Function,
+        filter: Function,
+    },
+});

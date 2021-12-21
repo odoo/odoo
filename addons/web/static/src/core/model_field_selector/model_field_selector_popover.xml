@@ -32,17 +32,19 @@
                 <ul class="o_field_selector_page">
                     <t t-foreach="fieldKeys" t-as="fieldKey" t-key="fieldKey">
                         <t t-set="field" t-value="fields[fieldKey]" />
-                        <li class="o_field_selector_item" t-on-click="onFieldSelected({ ...field, name: fieldKey })">
-                            <t t-esc="field.string" />
-                            <t t-if="field.relation">
-                                <i
-                                    class="fa fa-chevron-right o_field_selector_relation_icon"
-                                    role="img"
-                                    aria-label="Relation to follow"
-                                    title="Relation to follow"
-                                />
-                            </t>
-                        </li>
+                        <t t-if="field.searchable and props.filter(field)">
+                            <li class="o_field_selector_item" t-on-click="onFieldSelected({ ...field, name: fieldKey })">
+                                <t t-esc="field.string" />
+                                <t t-if="field.relation">
+                                    <i
+                                        class="fa fa-chevron-right o_field_selector_relation_icon"
+                                        role="img"
+                                        aria-label="Relation to follow"
+                                        title="Relation to follow"
+                                    />
+                                </t>
+                            </li>
+                        </t>
                     </t>
                 </ul>
             </div>
