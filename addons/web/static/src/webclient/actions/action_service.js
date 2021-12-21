@@ -740,8 +740,9 @@ function makeActionManager(env) {
      *
      * @private
      * @param {ActURLAction} action
+     * @param {ActionOptions} options
      */
-    function _executeActURLAction(action) {
+    function _executeActURLAction(action, options) {
         if (action.target === "self") {
             env.services.router.redirect(action.url);
         } else {
@@ -755,6 +756,9 @@ function makeActionManager(env) {
                     sticky: true,
                     type: "warning",
                 });
+            }
+            if (options.onClose) {
+                options.onClose();
             }
         }
     }
@@ -1097,7 +1101,7 @@ function makeActionManager(env) {
         action = _preprocessAction(action, options.additionalContext);
         switch (action.type) {
             case "ir.actions.act_url":
-                return _executeActURLAction(action);
+                return _executeActURLAction(action, options);
             case "ir.actions.act_window":
                 if (action.target !== "new") {
                     await clearUncommittedChanges(env);
