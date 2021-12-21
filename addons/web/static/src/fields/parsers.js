@@ -66,26 +66,14 @@ export class InvalidNumberError extends Error {}
  * @returns {number} a float
  */
 export function parseFloat(value) {
-    let parsed;
-    try {
-        const thousandsSepRegex = new RegExp(escapeRegExp(localization.thousandsSep), "g");
-        const decimalPointRegex = new RegExp(escapeRegExp(localization.decimalPoint), "g");
-        parsed = parseNumber(value, {
-            thousandsSep: thousandsSepRegex,
-            decimalPoint: decimalPointRegex,
-        });
-        if (isNaN(parsed)) {
-            throw new InvalidNumberError(`"${value}" is not a correct number`);
-        }
-    } catch (e) {
-        // It failed, let's try with an english localisation fallback
-        parsed = parseNumber(value, {
-            thousandsSep: ",",
-            decimalPoint: ".",
-        });
-        if (isNaN(parsed)) {
-            throw e;
-        }
+    const thousandsSepRegex = new RegExp(escapeRegExp(localization.thousandsSep), "g");
+    const decimalPointRegex = new RegExp(escapeRegExp(localization.decimalPoint), "g");
+    const parsed = parseNumber(value, {
+        thousandsSep: thousandsSepRegex,
+        decimalPoint: decimalPointRegex,
+    });
+    if (isNaN(parsed)) {
+        throw new InvalidNumberError(`"${value}" is not a correct number`);
     }
     return parsed;
 }
@@ -122,28 +110,15 @@ export function parseFloatTime(value) {
  * @returns {number} an integer
  */
 export function parseInteger(value) {
-    let parsed;
-    try {
-        const thousandsSepRegex = new RegExp(escapeRegExp(localization.thousandsSep), "g");
-        const decimalPointRegex = new RegExp(escapeRegExp(localization.decimalPoint), "g");
-        parsed = parseNumber(value, {
-            thousandsSep: thousandsSepRegex,
-            decimalPoint: decimalPointRegex,
-            truncate: true,
-        });
-        if (!Number.isInteger(parsed)) {
-            throw new InvalidNumberError(`"${value}" is not a correct number`);
-        }
-    } catch (e) {
-        // It failed, let's try with an english localisation fallback
-        parsed = parseNumber(value, {
-            thousandsSep: ".",
-            decimalPoint: ",",
-            truncate: true,
-        });
-        if (!Number.isInteger(parsed)) {
-            throw e;
-        }
+    const thousandsSepRegex = new RegExp(escapeRegExp(localization.thousandsSep), "g");
+    const decimalPointRegex = new RegExp(escapeRegExp(localization.decimalPoint), "g");
+    const parsed = parseNumber(value, {
+        thousandsSep: thousandsSepRegex,
+        decimalPoint: decimalPointRegex,
+        truncate: true,
+    });
+    if (!Number.isInteger(parsed)) {
+        throw new InvalidNumberError(`"${value}" is not a correct number`);
     }
     return parsed;
 }
