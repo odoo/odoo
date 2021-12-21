@@ -153,37 +153,23 @@ class PaymentLinkWizard(models.TransientModel):
             company_id = related_document.company_id
             partner_id = related_document.partner_id
             currency_id = related_document.currency_id
-            if res_model == "sale.order":
-                # If the Order contains a recurring product but is not already linked to a
-                # subscription, the payment acquirer must support tokenization. The res_id allows
-                # the overrides of sale_subscription to check this condition.
-                selection.extend(
-                    self._get_payment_acquirer_available(
-                        company_id.id, partner_id.id, currency_id.id, res_id,
-                    ).name_get()
-                )
-            else:
-                selection.extend(
-                    self._get_payment_acquirer_available(
-                        company_id.id, partner_id.id, currency_id.id,
-                    ).name_get()
-                )
+            selection.extend(
+                self._get_payment_acquirer_available(
+                    res_model=res_model,
+                    res_id=res_id,
+                    company_id=company_id.id,
+                    partner_id=partner_id.id,
+                    currency_id=currency_id.id,
+                ).name_get()
+            )
         return selection
 
-    def _get_payment_acquirer_available(self, company_id=None, partner_id=None, currency_id=None):
+    def _get_payment_acquirer_available(self, **kwargs):
         """ Select and return the acquirers matching the criteria.
-
-        :param int company_id: The company to which acquirers must belong, as a `res.company` id
-        :param int partner_id: The partner making the payment, as a `res.partner` id
-        :param int currency_id: The payment currency if known beforehand, as a `res.currency` id
         :return: The compatible acquirers
         :rtype: recordset of `payment.acquirer`
         """
-        return self.env['payment.acquirer'].sudo()._get_compatible_acquirers(
-            company_id=company_id or self.company_id.id,
-            partner_id=partner_id or self.partner_id.id,
-            currency_id=currency_id or self.currency_id.id
-        )
+        return self.env['payment.acquirer'].sudo()._get_compatible_acquirers(**kwargs)
 
     @api.depends('available_acquirer_ids')
     def _compute_has_multiple_acquirers(self):

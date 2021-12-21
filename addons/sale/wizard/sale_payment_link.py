@@ -24,22 +24,16 @@ class PaymentLinkWizard(models.TransientModel):
             })
         return res
 
-    def _get_payment_acquirer_available(self, company_id=None, partner_id=None, currency_id=None, sale_order_id=None):
+    def _get_payment_acquirer_available(self, res_model, res_id, **kwargs):
         """ Select and return the acquirers matching the criteria.
-
-        :param int company_id: The company to which acquirers must belong, as a `res.company` id
-        :param int partner_id: The partner making the payment, as a `res.partner` id
-        :param int currency_id: The payment currency if known beforehand, as a `res.currency` id
-        :param int sale_order_id: The sale order currency if known beforehand, as a `sale.order` id
+        :param str res_model: active model
+        :param int res_id: id of 'active_model' record
         :return: The compatible acquirers
         :rtype: recordset of `payment.acquirer`
         """
-        return self.env['payment.acquirer'].sudo()._get_compatible_acquirers(
-            company_id=company_id or self.company_id.id,
-            partner_id=partner_id or self.partner_id.id,
-            currency_id=currency_id or self.currency_id.id,
-            sale_order_id=sale_order_id or self.res_id,
-        )
+        if res_model == 'sale.order':
+            kwargs['sale_order_id'] = res_id
+        return super()._get_payment_acquirer_available(**kwargs)
 
     def _generate_link(self):
         """ Override of payment to add the sale_order_id in the link. """
