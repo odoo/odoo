@@ -1073,3 +1073,61 @@ class TestTax(TestTaxCommon):
             ],
             (tax_10_fix + tax_21).compute_all(1210),
         )
+
+    def test_price_included_repartition_sum_0(self):
+        """ Tests the case where a tax with a non-zero value has a sum
+        of tax repartition factors of zero and is included in price. It
+        shouldn't behave in the same way as a 0% tax.
+        """
+        test_tax = self.env['account.tax'].create({
+            'name': "Definitely not a 0% tax",
+            'amount_type': 'percent',
+            'amount': 42,
+            'price_include': True,
+            'invoice_repartition_line_ids': [
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+
+                (0,0, {
+                    'factor_percent': -100,
+                    'repartition_type': 'tax',
+                }),
+            ],
+            'refund_repartition_line_ids': [
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
+
+                (0,0, {
+                    'factor_percent': -100,
+                    'repartition_type': 'tax',
+                }),
+            ],
+        })
+
+        compute_all_res = test_tax.compute_all(100)
+        self._check_compute_all_results(
+            100,         # 'total_included'
+            100,         # 'total_excluded'
+            [
+                # base , amount
+                # ---------------
+                (100, 42),
+                (100, -42),
+                # ---------------
+            ],
+            compute_all_res
+        )
