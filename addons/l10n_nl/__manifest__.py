@@ -13,7 +13,6 @@
         'account',
         'base_iban',
         'base_vat',
-        'base_address_extended',
     ],
     'data': [
         'data/account_account_tag.xml',

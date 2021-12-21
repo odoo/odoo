@@ -13,7 +13,6 @@ Plan contable chileno e impuestos de acuerdo a disposiciones vigentes.
     'category': 'Accounting/Localizations/Account Charts',
     'depends': [
         'contacts',
-        'base_address_city',
         'base_vat',
         'l10n_latam_base',
         'l10n_latam_invoice_document',
