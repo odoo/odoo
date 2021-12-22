@@ -8,7 +8,10 @@ from odoo.tools.translate import html_translate
 class SaleOrderTemplate(models.Model):
     _inherit = "sale.order.template"
 
-    website_description = fields.Html('Website Description', translate=html_translate, sanitize_attributes=False, sanitize_form=False)
+    website_description = fields.Html(
+        string="Website Description",
+        translate=html_translate,
+        sanitize_attributes=False, sanitize_form=False)
 
     def open_template(self):
         self.ensure_one()
@@ -22,40 +25,34 @@ class SaleOrderTemplate(models.Model):
 class SaleOrderTemplateLine(models.Model):
     _inherit = "sale.order.template.line"
 
-    website_description = fields.Html('Website Description', related='product_id.product_tmpl_id.quotation_only_description', translate=html_translate, readonly=False, sanitize_form=False)
+    # FIXME ANVFE why are the sanitize_* attributes different between this field
+    # and the one on option lines, doesn't make any sense ???
+    website_description = fields.Html(
+        string="Website Description",
+        compute='_compute_website_description',
+        store=True, readonly=False,
+        translate=html_translate,
+        sanitize_form=False)
 
-    @api.onchange('product_id')
-    def _onchange_product_id(self):
-        ret = super(SaleOrderTemplateLine, self)._onchange_product_id()
-        if self.product_id:
-            self.website_description = self.product_id.quotation_description
-        return ret
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        vals_list = [self._inject_quotation_description(vals) for vals in vals_list]
-        return super().create(vals_list)
-
-    def write(self, values):
-        values = self._inject_quotation_description(values)
-        return super(SaleOrderTemplateLine, self).write(values)
-
-    def _inject_quotation_description(self, values):
-        values = dict(values or {})
-        if not values.get('website_description') and values.get('product_id'):
-            product = self.env['product.product'].browse(values['product_id'])
-            values['website_description'] = product.quotation_description
-        return values
+    def _compute_website_description(self):
+        for line in self:
+            if not line.product_id:
+                continue
+            line.website_description = line.product_id.quotation_description
 
 
 class SaleOrderTemplateOption(models.Model):
     _inherit = "sale.order.template.option"
 
-    website_description = fields.Html('Website Description', translate=html_translate, sanitize_attributes=False)
+    website_description = fields.Html(
+        string="Website Description",
+        compute="_compute_website_description",
+        store=True, readonly=False,
+        translate=html_translate,
+        sanitize_attributes=False)
 
-    @api.onchange('product_id')
-    def _onchange_product_id(self):
-        ret = super(SaleOrderTemplateOption, self)._onchange_product_id()
-        if self.product_id:
-            self.website_description = self.product_id.quotation_description
-        return ret
+    def _compute_website_description(self):
+        for option in self:
+            if not option.product_id:
+                continue
+            option.website_description = option.product_id.quotation_description
