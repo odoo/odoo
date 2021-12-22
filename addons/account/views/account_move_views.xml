@@ -332,8 +332,8 @@
                     <field name="tax_line_id" string="Originator Tax"/>
                     <field name="reconcile_model_id"/>
                     <separator/>
-                    <filter string="Unposted" name="unposted" domain="[('move_id.state', '=', 'draft')]" help="Unposted Journal Items"/>
-                    <filter string="Posted" name="posted" domain="[('move_id.state', '=', 'posted')]" help="Posted Journal Items"/>
+                    <filter string="Unposted" name="unposted" domain="[('parent_state', '=', 'draft')]" help="Unposted Journal Items"/>
+                    <filter string="Posted" name="posted" domain="[('parent_state', '=', 'posted')]" help="Posted Journal Items"/>
                     <separator/>
                     <filter string="To Check" name="to_check" domain="[('move_id.to_check', '=', True)]"/>
                     <separator/>
@@ -1300,7 +1300,7 @@
             <field name="context">{'journal_type':'general', 'search_default_posted':1}</field>
             <field name="name">Journal Items</field>
             <field name="res_model">account.move.line</field>
-            <field name="domain">[('display_type', 'not in', ('line_section', 'line_note')), ('move_id.state', '!=', 'cancel')]</field>
+            <field name="domain">[('display_type', 'not in', ('line_section', 'line_note')), ('parent_state', '!=', 'cancel')]</field>
             <field name="view_id" ref="view_move_line_tree"/>
             <field name="view_mode">tree,pivot,graph,form,kanban</field>
         </record>
