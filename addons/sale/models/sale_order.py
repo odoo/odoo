@@ -10,6 +10,21 @@ from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import float_is_zero, html_keep_url, is_html_empty
 
+OPEN_FIELD_STATES = {
+    state: [('readonly', False)]
+    for state in {'draft', 'sent'}
+}
+
+READONLY_FIELD_STATES = {
+    state: [('readonly', True)]
+    for state in {'sale', 'done', 'cancel'}
+}
+
+LOCKED_FIELD_STATES = {
+    state: [('readonly', True)]
+    for state in {'done', 'cancel'}
+}
+
 
 class SaleOrder(models.Model):
     _name = "sale.order"
@@ -17,19 +32,6 @@ class SaleOrder(models.Model):
     _description = "Sales Order"
     _order = 'date_order desc, id desc'
     _check_company_auto = True
-
-    def _default_validity_date(self):
-        if self.env['ir.config_parameter'].sudo().get_param('sale.use_quotation_validity_days'):
-            days = self.env.company.quotation_validity_days
-            if days > 0:
-                return fields.Datetime.now() + timedelta(days)
-        return False
-
-    def _get_default_require_signature(self):
-        return self.env.company.portal_confirmation_sign
-
-    def _get_default_require_payment(self):
-        return self.env.company.portal_confirmation_pay
 
     @api.depends('order_line.price_total')
     def _amount_all(self):
@@ -153,16 +155,29 @@ class SaleOrder(models.Model):
         ('done', 'Locked'),
         ('cancel', 'Cancelled'),
         ], string='Status', readonly=True, copy=False, index=True, tracking=3, default='draft')
-    date_order = fields.Datetime(string='Order Date', required=True, readonly=True, index=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, copy=False, default=fields.Datetime.now, help="Creation date of draft/sent orders,\nConfirmation date of confirmed orders.")
-    validity_date = fields.Date(string='Expiration', readonly=True, copy=False, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
-                                default=_default_validity_date)
+    date_order = fields.Datetime(
+        string='Order Date', required=True, readonly=True, index=True,
+        states=OPEN_FIELD_STATES,
+        copy=False, default=fields.Datetime.now,
+        help="Creation date of draft/sent orders,\nConfirmation date of confirmed orders.")
+    validity_date = fields.Date(
+        string="Expiration",
+        compute='_compute_validity_date',
+        store=True, readonly=False, copy=False, precompute=True,
+        states=READONLY_FIELD_STATES)
     is_expired = fields.Boolean(compute='_compute_is_expired', string="Is expired")
-    require_signature = fields.Boolean('Online Signature', default=_get_default_require_signature, readonly=True,
-        states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
-        help='Request a online signature to the customer in order to confirm orders automatically.')
-    require_payment = fields.Boolean('Online Payment', default=_get_default_require_payment, readonly=True,
-        states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
-        help='Request an online payment to the customer in order to confirm orders automatically.')
+    require_signature = fields.Boolean(
+        string="Online Signature",
+        compute='_compute_require_signature',
+        store=True, readonly=False, precompute=True,
+        states=READONLY_FIELD_STATES,
+        help="Request a online signature to the customer in order to confirm orders automatically.")
+    require_payment = fields.Boolean(
+        string="Online Payment",
+        compute='_compute_require_payment',
+        store=True, readonly=False, precompute=True,
+        states=READONLY_FIELD_STATES,
+        help="Request an online payment to the customer in order to confirm orders automatically.")
     create_date = fields.Datetime(string='Creation Date', readonly=True, index=True, help="Date on which sales order is created.")
 
     user_id = fields.Many2one(
@@ -171,7 +186,7 @@ class SaleOrder(models.Model):
         domain=lambda self: [('groups_id', 'in', self.env.ref('sales_team.group_sale_salesman').id)])
     partner_id = fields.Many2one(
         'res.partner', string='Customer', readonly=False,
-        states={'sale': [('readonly', True)], 'done': [('readonly', True)], 'cancel': [('readonly', True)]},
+        states=READONLY_FIELD_STATES,
         required=True, change_default=True, index=True, tracking=1,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
     partner_invoice_id = fields.Many2one(
@@ -188,7 +203,7 @@ class SaleOrder(models.Model):
     pricelist_id = fields.Many2one(
         'product.pricelist', string='Pricelist', required=False, check_company=True,  # Unrequired company
         compute='_compute_pricelist_id', store=True, precompute=True, readonly=False,
-        states={'sale': [('readonly', True)], 'done': [('readonly', True)], 'cancel': [('readonly', True)]},
+        states=READONLY_FIELD_STATES,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", tracking=1,
         help="If you change the pricelist, only newly added lines will be affected.")
     currency_id = fields.Many2one(
@@ -196,11 +211,13 @@ class SaleOrder(models.Model):
     analytic_account_id = fields.Many2one(
         'account.analytic.account', 'Analytic Account',
         readonly=True, copy=False, check_company=True,  # Unrequired company
-        states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
+        states=OPEN_FIELD_STATES,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         help="The analytic account related to a sales order.")
 
-    order_line = fields.One2many('sale.order.line', 'order_id', string='Order Lines', states={'cancel': [('readonly', True)], 'done': [('readonly', True)]}, copy=True, auto_join=True)
+    order_line = fields.One2many(
+        'sale.order.line', 'order_id', string='Order Lines',
+        states=LOCKED_FIELD_STATES, copy=True, auto_join=True)
 
     invoice_count = fields.Integer(string='Invoice Count', compute='_get_invoiced')
     invoice_ids = fields.Many2many("account.move", string='Invoices', compute="_get_invoiced", copy=False, search="_search_invoice_ids")
@@ -255,7 +272,7 @@ class SaleOrder(models.Model):
 
     commitment_date = fields.Datetime(
         'Delivery Date', copy=False,
-        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
+        states=LOCKED_FIELD_STATES,
         help="This is the delivery date promised to the customer. "
              "If set, the delivery order will be scheduled based on "
              "this date rather than product lead times.")
@@ -296,6 +313,31 @@ class SaleOrder(models.Model):
                     quote_company=order.company_id.display_name,
                     bad_products=', '.join(bad_products.mapped('display_name')),
                 ))
+
+    @api.depends('company_id')
+    def _compute_validity_date(self):
+        enabled_feature = bool(self.env['ir.config_parameter'].sudo().get_param('sale.use_quotation_validity_days'))
+        if not enabled_feature:
+            self.validity_date = False
+            return
+
+        today = fields.Date.context_today(self)
+        for order in self:
+            days = order.company_id.quotation_validity_days
+            if days > 0:
+                order.validity_date = today + timedelta(days)
+            else:
+                order.validity_date = False
+
+    @api.depends('company_id')
+    def _compute_require_signature(self):
+        for order in self:
+            order.require_signature = order.company_id.portal_confirmation_sign
+
+    @api.depends('company_id')
+    def _compute_require_payment(self):
+        for order in self:
+            order.require_payment = order.company_id.portal_confirmation_pay
 
     @api.depends('currency_id', 'date_order', 'company_id')
     def _compute_currency_rate(self):
