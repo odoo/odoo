@@ -339,11 +339,11 @@
                     <separator/>
                     <filter string="Unreconciled" domain="[('full_reconcile_id', '=', False), ('balance', '!=', 0), ('account_id.reconcile', '=', True)]" help="Journal items where matching number isn't set" name="unreconciled"/>
                     <separator/>
-                    <filter string="Sales" name="sales" domain="[('move_id.journal_id.type', '=', 'sale')]" context="{'default_journal_type': 'sale'}"/>
-                    <filter string="Purchases" name="purchases" domain="[('move_id.journal_id.type', '=', 'purchase')]" context="{'default_journal_type': 'purchase'}"/>
-                    <filter string="Bank" name="bank" domain="[('move_id.journal_id.type', '=', 'bank')]" context="{'default_journal_type': 'bank'}"/>
-                    <filter string="Cash" name="cash" domain="[('move_id.journal_id.type', '=', 'cash')]" context="{'default_journal_type': 'cash'}"/>
-                    <filter string="Miscellaneous" domain="[('move_id.journal_id.type', '=', 'general')]" name="misc_filter" context="{'default_journal_type': 'general'}"/>
+                    <filter string="Sales" name="sales" domain="[('journal_id.type', '=', 'sale')]" context="{'default_journal_type': 'sale'}"/>
+                    <filter string="Purchases" name="purchases" domain="[('journal_id.type', '=', 'purchase')]" context="{'default_journal_type': 'purchase'}"/>
+                    <filter string="Bank" name="bank" domain="[('journal_id.type', '=', 'bank')]" context="{'default_journal_type': 'bank'}"/>
+                    <filter string="Cash" name="cash" domain="[('journal_id.type', '=', 'cash')]" context="{'default_journal_type': 'cash'}"/>
+                    <filter string="Miscellaneous" domain="[('journal_id.type', '=', 'general')]" name="misc_filter" context="{'default_journal_type': 'general'}"/>
                     <separator/>
                     <filter string="Payable" domain="[('account_id.internal_type', '=', 'payable')]" help="From Payable accounts" name="payable"/>
                     <filter string="Receivable" domain="[('account_id.internal_type', '=', 'receivable')]" help="From Receivable accounts" name="receivable"/>
