@@ -49,17 +49,13 @@ class TestSaleOrder(TestSaleCommon):
         })
 
         SaleOrderTemplateLine.create({
-            'name': 'Product 1',
             'sale_order_template_id': cls.quotation_template_no_discount.id,
             'product_id': cls.product_1.id,
-            'product_uom_id': cls.product_1.uom_id.id
         })
 
         SaleOrderTemplateOption.create({
-            'name': 'Optional product 1',
             'sale_order_template_id': cls.quotation_template_no_discount.id,
             'product_id': cls.optional_product.id,
-            'uom_id': cls.optional_product.uom_id.id
         })
 
         # create some pricelists
@@ -124,7 +120,7 @@ class TestSaleOrder(TestSaleCommon):
         self.sale_order_no_price_list.write({
             'sale_order_template_id': self.quotation_template_no_discount.id
         })
-        self.sale_order_no_price_list.onchange_sale_order_template_id()
+        self.sale_order_no_price_list._onchange_sale_order_template_id()
 
         self.assertEqual(
             len(self.sale_order_no_price_list.order_line),
@@ -194,7 +190,7 @@ class TestSaleOrder(TestSaleCommon):
             'pricelist_id': self.discount_included_price_list.id,
             'sale_order_template_id': self.quotation_template_no_discount.id
         })
-        self.sale_order.onchange_sale_order_template_id()
+        self.sale_order._onchange_sale_order_template_id()
 
         self.assertEqual(
             self.sale_order.order_line[0].price_unit,
@@ -223,12 +219,13 @@ class TestSaleOrder(TestSaleCommon):
         the price used in the sale order is the product public price and
         the discount is computed according to the price list.
         """
+        self.env.user.groups_id += self.env.ref('product.group_discount_per_so_line')
 
         self.sale_order.write({
             'pricelist_id': self.discount_excluded_price_list.id,
             'sale_order_template_id': self.quotation_template_no_discount.id
         })
-        self.sale_order.onchange_sale_order_template_id()
+        self.sale_order._onchange_sale_order_template_id()
 
         self.assertEqual(
             self.sale_order.order_line[0].price_unit,
