@@ -92,7 +92,7 @@ class AutomaticEntryWizard(models.TransientModel):
         for record in self:
             total = (sum(record.move_line_ids.mapped('balance')) or record.total_amount)
             if total != 0:
-                record.percentage = (record.total_amount / total) * 100
+                record.percentage = min((record.total_amount / total) * 100, 100)  # min() to avoid value being slightly over 100 due to rounding error
             else:
                 record.percentage = 100
 
