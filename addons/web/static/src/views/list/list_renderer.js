@@ -356,8 +356,7 @@ export class ListRenderer extends Component {
         this.props.list.selectDomain(false);
     }
 
-    toggleOptionalField(ev) {
-        const fieldName = ev.detail.payload.name;
+    toggleOptionalField(fieldName) {
         this.optionalActiveFields[fieldName] = !this.optionalActiveFields[fieldName];
         this.state.columns = this.allColumns.filter(
             (col) => !col.optional || this.optionalActiveFields[col.name]

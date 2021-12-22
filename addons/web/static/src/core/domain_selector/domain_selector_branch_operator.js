@@ -3,8 +3,8 @@
 const { Component } = owl;
 
 export class DomainSelectorBranchOperator extends Component {
-    onOperatorSelected(ev) {
-        this.props.node.update(ev.detail.payload.operator);
+    onOperatorSelected(operator) {
+        this.props.node.update(operator);
     }
 }
 DomainSelectorBranchOperator.template = "web.DomainSelectorBranchOperator";

@@ -4,17 +4,14 @@
     <t t-name="web.DomainSelectorBranchOperator" owl="1">
         <t t-if="!props.readonly">
             <div class="btn-group o_domain_tree_operator_selector" aria-atomic="true">
-                <Dropdown
-                    togglerClass="'btn btn-sm btn-primary o_domain_tree_operator_caret'"
-                    t-on-dropdown-item-selected="onOperatorSelected"
-                >
+                <Dropdown togglerClass="'btn btn-sm btn-primary o_domain_tree_operator_caret'">
                     <t t-set-slot="toggler">
                             <t t-if="props.node.operator === '&amp;'">All</t>
                             <t t-elif="props.node.operator === '|'">Any</t>
                             <t t-elif="props.node.operator === '!'">None</t>
                     </t>
-                    <DropdownItem payload="{ operator: '&amp;' }">All</DropdownItem>
-                    <DropdownItem payload="{ operator: '|' }">Any</DropdownItem>
+                    <DropdownItem onSelected="() => onOperatorSelected('&amp;')">All</DropdownItem>
+                    <DropdownItem onSelected="() => onOperatorSelected('|')">Any</DropdownItem>
                 </Dropdown>
             </div>
         </t>

@@ -18,13 +18,6 @@ export class DateField extends Component {
     get datePickerOptions() {
         return Object.assign({}, this.props.options.datepicker);
     }
-
-    /**
-     * @param {CustomEvent} ev
-     */
-    onChange(ev) {
-        this.props.update(ev.detail.date);
-    }
 }
 
 Object.assign(DateField, {

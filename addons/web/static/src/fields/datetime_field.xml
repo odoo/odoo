@@ -9,7 +9,7 @@
             <DateTimePicker
                 t-props="datePickerOptions"
                 date="props.value or null"
-                t-on-datetime-changed="onChange"
+                onDateTimeChanged="(datetime) => props.update(datetime)"
             />
         </t>
     </t>

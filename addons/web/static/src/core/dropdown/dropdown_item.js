@@ -23,10 +23,10 @@ export class DropdownItem extends Component {
         if (this.props.href) {
             ev.preventDefault();
         }
-        this.onSelected();
+        this.itemSelected();
     }
 
-    onSelected() {
+    itemSelected() {
         const { onSelected, parentClosingMode } = this.props;
         if (onSelected) {
             onSelected();

@@ -532,16 +532,16 @@ QUnit.module("Components", ({ beforeEach }) => {
         assert.expect(6);
 
         const picker = await mountPicker(DateTimePicker, {
-            props: {},
-            onDateChange(ev) {
+            onDateTimeChanged(date) {
                 assert.step("datetime-changed");
                 assert.strictEqual(
-                    ev.detail.date.toFormat("dd/MM/yyyy HH:mm:ss"),
+                    date.toFormat("dd/MM/yyyy HH:mm:ss"),
                     "08/02/1997 15:45:05",
                     "Event should transmit the correct date"
                 );
             },
         });
+
         const input = picker.el.querySelector(".o_datepicker_input");
         assert.strictEqual(input.value, "");
 

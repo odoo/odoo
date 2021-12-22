@@ -28,13 +28,6 @@ export class RemainingDaysField extends Component {
     get formattedValue() {
         return this.props.value ? formatDate(this.props.value, { timezone: true }) : "";
     }
-
-    /**
-     * @param {CustomEvent} ev
-     */
-    onChange(ev) {
-        this.props.update(ev.detail.date);
-    }
 }
 
 Object.assign(RemainingDaysField, {
