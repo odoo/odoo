@@ -243,6 +243,39 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    QUnit.skip("PriorityField tooltip", async function (assert) {
+        assert.expect(2);
+
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            data: this.data,
+            arch: `<form string="Partners">
+                    <sheet>
+                        <group>
+                            <field name="selection" widget="priority"/>
+                        </group>
+                    </sheet>
+                </form>`,
+            res_id: 1,
+        });
+
+        // check title attribute (for basic html tooltip on all the stars)
+        const $stars = form.$(".o_field_widget.o_priority").find("a.o_priority_star");
+        assert.strictEqual(
+            $stars[0].title,
+            "Selection: Blocked",
+            "Should set field label and correct selection label as title attribute (tooltip)"
+        );
+        assert.strictEqual(
+            $stars[1].title,
+            "Selection: Done",
+            "Should set field label and correct selection label as title attribute (tooltip)"
+        );
+
+        form.destroy();
+    });
+
     QUnit.test("PriorityField in form view", async function (assert) {
         assert.expect(25);
 
