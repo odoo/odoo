@@ -532,6 +532,64 @@ class AccountPaymentRegister(models.TransientModel):
             'destination_account_id': batch_result['lines'][0].account_id.id
         }
 
+    def _match_balance(self, payments, to_reconcile):
+        # If payments are made using a currency different than the source one, ensure the balance match exactly in
+        # order to fully paid the source journal items.
+        # For example, suppose a new currency B having a rate 100:1 regarding the company currency A.
+        # If you try to pay 12.15A using 0.12B, the computed balance will be 12.00A for the payment instead of 12.15A.
+        for payment, lines in zip(payments, to_reconcile):
+            # Batches are made using the same currency so making 'lines.currency_id' is ok.
+            if payment.currency_id != lines.currency_id:
+                liquidity_lines, counterpart_lines, writeoff_lines = payment._seek_for_lines()
+                source_balance = abs(sum(lines.mapped('amount_residual')))
+                payment_rate = liquidity_lines[0].amount_currency / liquidity_lines[0].balance
+                source_balance_converted = abs(source_balance) * payment_rate
+
+                # Translate the balance into the payment currency is order to be able to compare them.
+                # In case in both have the same value (12.15 * 0.01 ~= 0.12 in our example), it means the user
+                # attempt to fully paid the source lines and then, we need to manually fix them to get a perfect
+                # match.
+                payment_balance = abs(sum(counterpart_lines.mapped('balance')))
+                payment_amount_currency = abs(sum(counterpart_lines.mapped('amount_currency')))
+                if not payment.currency_id.is_zero(source_balance_converted - payment_amount_currency):
+                    continue
+
+                delta_balance = source_balance - payment_balance
+
+                # Balance are already the same.
+                if self.company_currency_id.is_zero(delta_balance):
+                    continue
+
+                # Fix the balance but make sure to peek the liquidity and counterpart lines first.
+                debit_lines = (liquidity_lines + counterpart_lines).filtered('debit')
+                credit_lines = (liquidity_lines + counterpart_lines).filtered('credit')
+
+                payment.move_id.write({'line_ids': [
+                    (1, debit_lines[0].id, {'debit': debit_lines[0].debit + delta_balance}),
+                    (1, credit_lines[0].id, {'credit': credit_lines[0].credit + delta_balance}),
+                ]})
+        return True
+
+    @api.model
+    def _prepare_lines_domain(self):
+        return [('account_internal_type', 'in', ('receivable', 'payable')), ('reconciled', '=', False)]
+
+    def _reconcile_lines(self, payments, to_reconcile):
+        domain = self._prepare_lines_domain()
+        for payment, lines in zip(payments, to_reconcile):
+
+            # When using the payment tokens, the payment could not be posted at this point (e.g. the transaction failed)
+            # and then, we can't perform the reconciliation.
+            if payment.state != 'posted':
+                continue
+
+            payment_lines = payment.line_ids.filtered_domain(domain)
+            for account in payment_lines.account_id:
+                (payment_lines + lines)\
+                    .filtered_domain([('account_id', '=', account.id), ('reconciled', '=', False)])\
+                    .reconcile()
+        return True
+
     def _create_payments(self):
         self.ensure_one()
         batches = self._get_batches()
@@ -561,58 +619,14 @@ class AccountPaymentRegister(models.TransientModel):
 
         payments = self.env['account.payment'].create(payment_vals_list)
 
-        # If payments are made using a currency different than the source one, ensure the balance match exactly in
-        # order to fully paid the source journal items.
-        # For example, suppose a new currency B having a rate 100:1 regarding the company currency A.
-        # If you try to pay 12.15A using 0.12B, the computed balance will be 12.00A for the payment instead of 12.15A.
+        # Match the balance, if payments are made using a currency different than the source one
         if edit_mode:
-            for payment, lines in zip(payments, to_reconcile):
-                # Batches are made using the same currency so making 'lines.currency_id' is ok.
-                if payment.currency_id != lines.currency_id:
-                    liquidity_lines, counterpart_lines, writeoff_lines = payment._seek_for_lines()
-                    source_balance = abs(sum(lines.mapped('amount_residual')))
-                    payment_rate = liquidity_lines[0].amount_currency / liquidity_lines[0].balance
-                    source_balance_converted = abs(source_balance) * payment_rate
-
-                    # Translate the balance into the payment currency is order to be able to compare them.
-                    # In case in both have the same value (12.15 * 0.01 ~= 0.12 in our example), it means the user
-                    # attempt to fully paid the source lines and then, we need to manually fix them to get a perfect
-                    # match.
-                    payment_balance = abs(sum(counterpart_lines.mapped('balance')))
-                    payment_amount_currency = abs(sum(counterpart_lines.mapped('amount_currency')))
-                    if not payment.currency_id.is_zero(source_balance_converted - payment_amount_currency):
-                        continue
-
-                    delta_balance = source_balance - payment_balance
-
-                    # Balance are already the same.
-                    if self.company_currency_id.is_zero(delta_balance):
-                        continue
-
-                    # Fix the balance but make sure to peek the liquidity and counterpart lines first.
-                    debit_lines = (liquidity_lines + counterpart_lines).filtered('debit')
-                    credit_lines = (liquidity_lines + counterpart_lines).filtered('credit')
-
-                    payment.move_id.write({'line_ids': [
-                        (1, debit_lines[0].id, {'debit': debit_lines[0].debit + delta_balance}),
-                        (1, credit_lines[0].id, {'credit': credit_lines[0].credit + delta_balance}),
-                    ]})
+            self._match_balance(payments, to_reconcile)
 
         payments.action_post()
 
-        domain = [('account_internal_type', 'in', ('receivable', 'payable')), ('reconciled', '=', False)]
-        for payment, lines in zip(payments, to_reconcile):
-
-            # When using the payment tokens, the payment could not be posted at this point (e.g. the transaction failed)
-            # and then, we can't perform the reconciliation.
-            if payment.state != 'posted':
-                continue
-
-            payment_lines = payment.line_ids.filtered_domain(domain)
-            for account in payment_lines.account_id:
-                (payment_lines + lines)\
-                    .filtered_domain([('account_id', '=', account.id), ('reconciled', '=', False)])\
-                    .reconcile()
+        # Reconcile lines in payments and journal entry
+        self._reconcile_lines(payments, to_reconcile)
 
         return payments
 
