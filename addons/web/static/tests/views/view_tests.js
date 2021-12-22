@@ -461,6 +461,7 @@ QUnit.module("Views", (hooks) => {
                 arch: `<toy>Specific arch content</toy>`,
                 fields: {},
                 loadActionMenus: true,
+                actionMenus: {},
             };
             await mount(View, target, { env, props });
             assert.containsOnce(target, ".o_toy_view");

@@ -1,9 +1,11 @@
 /** @odoo-module **/
 
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { makeContext } from "@web/core/context";
 import { registry } from "@web/core/registry";
 import { useEffect, useService } from "@web/core/utils/hooks";
 import { XMLParser } from "@web/core/utils/xml";
+import { ActionMenus } from "@web/search/action_menus/action_menus";
 import { usePager } from "@web/search/pager_hook";
 import { FormRenderer } from "@web/views/form/form_renderer";
 import { useModel } from "@web/views/helpers/model";
@@ -42,6 +44,7 @@ export class FormArchParser extends XMLParser {
 
 class FormView extends Component {
     setup() {
+        this.dialogService = useService("dialog");
         this.router = useService("router");
         this.user = useService("user");
         this.viewService = useService("view");
@@ -51,7 +54,6 @@ class FormView extends Component {
         if (!activeFields.display_name) {
             activeFields.display_name = { name: "display_name", type: "char" };
         }
-        const resIds = this.props.resIds || (this.props.resId ? [this.props.resId] : []);
         let resId;
         if ("resId" in this.props) {
             resId = this.props.resId; // could be false, for "create" mode
@@ -61,7 +63,7 @@ class FormView extends Component {
         this.model = useModel(RelationalModel, {
             resModel: this.props.resModel,
             resId,
-            resIds,
+            resIds: this.props.resIds,
             fields: this.props.fields,
             activeFields,
             viewMode: "form",
@@ -82,6 +84,9 @@ class FormView extends Component {
             this.router.pushState({ id: this.model.root.resId || undefined });
         });
 
+        // enable the archive feature in Actions menu only if the active field is in the view
+        this.archiveEnabled = "active" in activeFields || "x_active" in activeFields;
+
         useViewButtons(this.model, () => this.model.root.save());
         useSetupView({
             beforeLeave: () => {
@@ -97,12 +102,15 @@ class FormView extends Component {
 
         // FIXME: handle creation of new records (for now, indicates 0/total)
         usePager(() => {
-            return {
-                offset: resIds.indexOf(this.model.root.resId),
-                limit: 1,
-                total: resIds.length,
-                onUpdate: ({ offset }) => this.model.load({ resId: this.props.resIds[offset] }),
-            };
+            if (this.model.root.resId) {
+                const resIds = this.model.root.resIds;
+                return {
+                    offset: resIds.indexOf(this.model.root.resId),
+                    limit: 1,
+                    total: resIds.length,
+                    onUpdate: ({ offset }) => this.model.load({ resId: resIds[offset] }),
+                };
+            }
         });
 
         onWillStart(async () => {
@@ -173,6 +181,64 @@ class FormView extends Component {
         }
     }
 
+    getActionMenuItems() {
+        const otherActionItems = [];
+        if (this.archiveEnabled) {
+            if (this.model.root.isActive) {
+                otherActionItems.push({
+                    description: this.env._t("Archive"),
+                    callback: () => {
+                        const dialogProps = {
+                            body: this.env._t(
+                                "Are you sure that you want to archive all this record?"
+                            ),
+                            confirm: () => this.model.root.archive(),
+                            cancel: () => {},
+                        };
+                        this.dialogService.add(ConfirmationDialog, dialogProps);
+                    },
+                });
+            } else {
+                otherActionItems.push({
+                    description: this.env._t("Unarchive"),
+                    callback: () => this.model.root.unarchive(),
+                });
+            }
+        }
+        if (this.archInfo.activeActions.create && this.archInfo.activeActions.duplicate) {
+            otherActionItems.push({
+                description: this.env._t("Duplicate"),
+                callback: () => this.duplicateRecord(),
+            });
+        }
+        if (this.archInfo.activeActions.delete) {
+            otherActionItems.push({
+                description: this.env._t("Delete"),
+                callback: () => this.deleteRecord(),
+            });
+        }
+        return Object.assign({}, this.props.info.actionMenus, { other: otherActionItems });
+    }
+
+    async duplicateRecord() {
+        await this.model.root.duplicate();
+        this.state.inEditMode = true;
+    }
+
+    async deleteRecord() {
+        const dialogProps = {
+            body: this.env._t("Are you sure you want to delete this record?"),
+            confirm: async () => {
+                await this.model.root.delete();
+                if (!this.model.root.resId) {
+                    this.trigger("history-back");
+                }
+            },
+            cancel: () => {},
+        };
+        this.dialogService.add(ConfirmationDialog, dialogProps);
+    }
+
     disableButtons() {
         const btns = this.cpButtonsRef.el.querySelectorAll(".o_cp_buttons button");
         for (const btn of btns) {
@@ -209,7 +275,7 @@ FormView.multiRecord = false;
 FormView.template = `web.FormView`;
 FormView.buttonTemplate = "web.FormView.Buttons";
 FormView.display = { controlPanel: { ["top-right"]: false } };
-FormView.components = { Layout, FormRenderer };
+FormView.components = { ActionMenus, FormRenderer, Layout };
 FormView.props = { ...standardViewProps };
 FormView.ArchParser = FormArchParser;
 

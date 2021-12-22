@@ -8,11 +8,11 @@
                     <t t-call="{{ constructor.buttonTemplate }}"/>
                 </div>
                 <t t-if="props.info.actionMenus and model.root.selection.length">
-                    <ActionMenus 
-                        activeIds="model.root.selection.map((r) => r.resId)" 
-                        context="props.context" 
-                        items="getActionMenuItems()" 
-                        isDomainSelected="model.root.isDomainSelected" 
+                    <ActionMenus
+                        activeIds="model.root.selection.map((r) => r.resId)"
+                        context="props.context"
+                        items="getActionMenuItems()"
+                        isDomainSelected="model.root.isDomainSelected"
                         resModel="model.root.resModel"/>
                 </t>
             </t>

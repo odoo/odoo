@@ -80,7 +80,7 @@ export class ActionMenus extends Component {
             });
         }
         const activeIdsContext = {
-            // active_id: activeIds[0], // FGE TODO
+            active_id: activeIds[0],
             active_ids: activeIds,
             active_model: this.props.resModel,
         };

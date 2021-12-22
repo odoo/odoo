@@ -1,6 +1,6 @@
 /** @odoo-module **/
 import { makeView } from "../helpers";
-import { setupControlPanelServiceRegistry } from "../../search/helpers";
+import { setupViewRegistries } from "@web/../tests/views/helpers";
 import { FormCompiler } from "@web/views/form/form_compiler";
 import { registry } from "@web/core/registry";
 
@@ -172,7 +172,7 @@ QUnit.module("Form Renderer", (hooks) => {
     let serverData;
 
     hooks.beforeEach(() => {
-        setupControlPanelServiceRegistry();
+        setupViewRegistries();
         serverData = {
             models: {
                 partner: {

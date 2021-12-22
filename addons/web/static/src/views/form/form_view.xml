@@ -5,6 +5,14 @@
         <Layout viewType="'form'" useSampleModel="model.useSampleModel">
             <t t-set-slot="control-panel-bottom-left">
                 <t t-call="{{ constructor.buttonTemplate }}" />
+                <t t-if="props.info.actionMenus and model.root.resId">
+                    <ActionMenus
+                        activeIds="[model.root.resId]"
+                        context="props.context"
+                        items="getActionMenuItems()"
+                        isDomainSelected="model.root.isDomainSelected"
+                        resModel="model.root.resModel"/>
+                </t>
             </t>
             <t t-set-slot="control-panel-bottom-right"></t>
             <FormRenderer record="model.root" fields="props.fields" info="archInfo" readonly="!state.inEditMode" />

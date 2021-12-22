@@ -452,6 +452,8 @@ export class MockServer {
             case "render_public_asset": {
                 return true;
             }
+            case "copy":
+                return this.mockCopy(args.model, args.args[0]);
             case "create":
                 return this.mockCreate(args.model, args.args[0]);
             case "fields_get":
@@ -497,6 +499,25 @@ export class MockServer {
             return method(args.model, args.args, args.kwargs);
         }
         throw new Error(`Unimplemented route: ${route}`);
+    }
+
+    /**
+     * Simulate a 'copy' operation, so we simply try to duplicate a record in
+     * memory
+     *
+     * @private
+     * @param {string} modelName
+     * @param {integer} id the ID of a valid record
+     * @returns {integer} the ID of the duplicated record
+     */
+    mockCopy(modelName, id) {
+        const model = this.models[modelName];
+        const newID = this.getUnusedID(modelName);
+        const originalRecord = model.records.find((record) => record.id === id);
+        const duplicatedRecord = { ...originalRecord, id: newID };
+        duplicatedRecord.display_name = `${originalRecord.display_name} (copy)`;
+        model.records.push(duplicatedRecord);
+        return newID;
     }
 
     mockCreate(modelName, values) {

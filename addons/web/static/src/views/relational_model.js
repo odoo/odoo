@@ -37,6 +37,27 @@ function stringToOrderBy(string) {
     });
 }
 
+/**
+ * FIXME: don't know where this function should be:
+ *   - on a dataPoint: don't want to make it accessible everywhere (e.g. in Fields)
+ *   - on the model: would still be accessible by views + I like the current light API of the model
+ *
+ * Given a model name and res ids, calls the method "action_archive" or
+ * "action_unarchive", and executes the returned action any.
+ *
+ * @param {string} resModel
+ * @param {integer[]} resIds
+ * @param {boolean} [unarchive=false] if true, unarchive the records, otherwise archive them
+ */
+async function archiveOrUnarchiveRecords(model, resModel, resIds, unarchive) {
+    const method = unarchive === true ? "action_unarchive" : "action_archive";
+    const action = await model.orm.call(resModel, method, [resIds]);
+    if (action && Object.keys(action).length !== 0) {
+        model.action.doAction(action);
+    }
+    //todo fge _invalidateCache
+}
+
 class RequestBatcherORM extends ORM {
     constructor() {
         super(...arguments);
@@ -172,6 +193,7 @@ export class Record extends DataPoint {
         } else {
             this.resId = false;
         }
+        this.resIds = params.resIds || state.resIds || (this.resId ? [this.resId] : []);
         this._values = params.values;
         this._changes = {};
         this.data = { ...this._values };
@@ -203,6 +225,24 @@ export class Record extends DataPoint {
         return Object.keys(this._changes).length > 0;
     }
 
+    /**
+     * Since the ORM can support both `active` and `x_active` fields for
+     * the archiving mechanism, check if any such field exists and prioritize
+     * them. The `active` field should always take priority over its custom
+     * version.
+     *
+     * @returns {boolean} true iff the field is active or there is no `active`
+     *   or `x_active` field on the model
+     */
+    get isActive() {
+        if ("active" in this.activeFields) {
+            return this.data.active;
+        } else if ("x_active" in this.activeFields) {
+            return this.data.x_active;
+        }
+        return true;
+    }
+
     async load() {
         if (!this.fieldNames.length) {
             return;
@@ -229,6 +269,7 @@ export class Record extends DataPoint {
     exportState() {
         return {
             resId: this.resId,
+            resIds: this.resIds,
         };
     }
 
@@ -337,6 +378,46 @@ export class Record extends DataPoint {
         });
     }
 
+    async archive() {
+        await archiveOrUnarchiveRecords(this.model, this.resModel, [this.resId]);
+        await this.load();
+        this.model.notify();
+    }
+
+    async unarchive() {
+        await archiveOrUnarchiveRecords(this.model, this.resModel, [this.resId], true);
+        await this.load();
+        this.model.notify();
+    }
+
+    // FIXME AAB: to discuss: not sure we want to keep resIds in the model (this concerns
+    // "duplicate" and "delete"). Alternative: handle this in form_view (but then what's the
+    // point of calling a Record method to do the operation?)
+    async duplicate() {
+        const kwargs = { context: this.context };
+        const index = this.resIds.indexOf(this.resId);
+        this.resId = await this.model.orm.call(this.resModel, "copy", [this.resId], kwargs);
+        this.resIds.splice(index + 1, 0, this.resId);
+        await this.load();
+        this.model.notify();
+    }
+
+    async delete() {
+        await this.model.orm.unlink(this.resModel, [this.resId], this.context);
+        const index = this.resIds.indexOf(this.resId);
+        this.resIds.splice(index, 1);
+        this.resId = this.resIds[Math.min(index, this.resIds.length - 1)] || false;
+        if (this.resId) {
+            await this.load();
+            this.model.notify();
+        } else {
+            this.data = {};
+            this._values = {};
+            this._changes = {};
+            this.preloadedData = {};
+        }
+    }
+
     toggleSelection(selected) {
         if (typeof selected === "boolean") {
             this.selected = selected;
@@ -359,6 +440,7 @@ export class Record extends DataPoint {
     async _read() {
         const result = await this.model.orm.read(this.resModel, [this.resId], this.fieldNames, {
             bin_size: true,
+            ...this.context,
         });
         return this._parseServerValues(result[0]);
     }
@@ -474,10 +556,7 @@ class DynamicList extends DataPoint {
 
     async archive(isSelected) {
         const resIds = await this.getResIds(isSelected);
-        const action = await this.model.orm.call(this.resModel, "action_archive", [resIds]);
-        if (action && Object.keys(action).length !== 0) {
-            this.model.action.doAction(action);
-        }
+        await archiveOrUnarchiveRecords(this.model, this.resModel, resIds);
         await this.model.load();
         return resIds;
         //todo fge _invalidateCache
@@ -485,10 +564,7 @@ class DynamicList extends DataPoint {
 
     async unarchive(isSelected) {
         const resIds = await this.getResIds(isSelected);
-        const action = await this.model.orm.call(this.resModel, "action_unarchive", [resIds]);
-        if (action && Object.keys(action).length !== 0) {
-            this.model.action.doAction(action);
-        }
+        await archiveOrUnarchiveRecords(this.model, this.resModel, resIds, true);
         await this.model.load();
         return resIds;
         //todo fge _invalidateCache
@@ -1004,6 +1080,7 @@ export class RelationalModel extends Model {
         };
         if (this.rootType === "record") {
             this.rootParams.resId = params.resId;
+            this.rootParams.resIds = params.resIds;
         } else {
             this.rootParams.openGroupsByDefault = params.openGroupsByDefault || false;
             this.rootParams.limit = params.limit;

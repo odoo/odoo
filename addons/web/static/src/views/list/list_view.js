@@ -1,7 +1,6 @@
 /** @odoo-module */
 
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { isAttr, XMLParser } from "@web/core/utils/xml";

@@ -11,6 +11,7 @@ import {
     nextTick,
     patchWithCleanup,
 } from "@web/../tests/helpers/utils";
+import { toggleActionMenu, toggleMenuItem } from "@web/../tests/search/helpers";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 
@@ -1642,7 +1643,7 @@ QUnit.module("Views", (hooks) => {
         serverData.models.partner.fields.foo.help = "foo tooltip";
         serverData.models.partner.fields.bar.help = "bar tooltip";
 
-        const form = await createView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -1985,7 +1986,7 @@ QUnit.module("Views", (hooks) => {
                 }
             };
 
-            const form = await createView({
+            const form = await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -2445,7 +2446,7 @@ QUnit.module("Views", (hooks) => {
                         </group>
                     </sheet>
                 </form>`,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 assert.step(args.method);
             },
         });
@@ -2496,7 +2497,7 @@ QUnit.module("Views", (hooks) => {
                         </group>
                     </sheet>
                 </form>`,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 assert.step(args.method);
             },
         });
@@ -2514,7 +2515,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch: '<form><group><field name="foo"/></group></form>',
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "write") {
                     assert.ok(true, "should call the /write route");
                 }
@@ -2541,7 +2542,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch: '<form><group><field name="foo"/></group></form>',
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "write") {
                     args.args[1].foo = "apple";
                 }
@@ -2734,7 +2735,7 @@ QUnit.module("Views", (hooks) => {
                     </field>
                 </form>`,
             resId: 1,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "onchange" && checkOnchange) {
                     assert.deepEqual(
                         args.args[1],
@@ -2815,7 +2816,7 @@ QUnit.module("Views", (hooks) => {
                 </form>`,
             resId: 1,
             context: { active_field: 2 },
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "create") {
                     assert.strictEqual(
                         args.kwargs.context.active_field,
@@ -2856,7 +2857,7 @@ QUnit.module("Views", (hooks) => {
                     "</tree>" +
                     "</field>" +
                     "</form>",
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     assert.step(args.method);
                     if (args.method === "onchange") {
                         assert.deepEqual(
@@ -2896,7 +2897,7 @@ QUnit.module("Views", (hooks) => {
             archs: {
                 "partner,false,form": '<form><field name="display_name"/></form>',
             },
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "get_formview_id") {
                     return Promise.resolve(false);
                 }
@@ -2925,35 +2926,28 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skip("toolbar is hidden when switching to edit mode", async function (assert) {
-        assert.expect(3);
-
+    QUnit.test("there is no Actions menu when creating a new record", async function (assert) {
         const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                '<field name="foo"/>' +
-                "</sheet>" +
-                "</form>",
-            viewOptions: { hasActionMenus: true },
+            arch: '<form><field name="foo"/></form>',
+            actionMenus: {},
             resId: 1,
         });
 
         assert.containsOnce(form, ".o_cp_action_menus");
 
-        await click(form.el.querySelector(".o_form_button_edit"));
+        await click(form.el.querySelector(".o_form_button_create"));
 
         assert.containsNone(form, ".o_cp_action_menus");
 
-        await testUtils.form.clickDiscard(form);
+        await click(form.el.querySelector(".o_form_button_save"));
 
         assert.containsOnce(form, ".o_cp_action_menus");
     });
 
-    QUnit.skip("basic default record", async function (assert) {
+    QUnit.test("basic default record", async function (assert) {
         serverData.models.partner.fields.foo.default = "default foo value";
 
         let count = 0;
@@ -2967,7 +2961,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.strictEqual(form.el.querySelector$("input").value, "default foo value");
+        assert.strictEqual(form.el.querySelector("input").value, "default foo value");
         assert.strictEqual(count, 1, "should do only one rpc");
     });
 
@@ -2995,7 +2989,7 @@ QUnit.module("Views", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "name_get") {
                     nameGetCount++;
                 }
@@ -3020,32 +3014,25 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(nameGetCount, 0, "should have done no nameget");
     });
 
-    QUnit.skip("make default record with non empty many2one", async function (assert) {
-        assert.expect(2);
-
+    QUnit.test("make default record with non empty many2one", async function (assert) {
         serverData.models.partner.fields.trululu.default = 4;
-
-        var nameGetCount = 0;
-
-        const form = await createView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
             arch: '<form string="Partners"><field name="trululu"/></form>',
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "name_get") {
-                    nameGetCount++;
+                    throw new Error("Should not call name_get");
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
         assert.strictEqual(
-            form.$(".o_field_widget[name=trululu] input").val(),
+            form.el.querySelector(".o_field_widget[name=trululu] input").value,
             "aaa",
             "default value should be correctly displayed"
         );
-        assert.strictEqual(nameGetCount, 0, "should have done no name_get");
     });
 
     QUnit.test("form view properly change its title", async function (assert) {
@@ -3080,148 +3067,141 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skip("archive/unarchive a record", async function (assert) {
-        assert.expect(10);
-
+    QUnit.test("archive/unarchive a record", async function (assert) {
         // add active field on partner model to have archive option
         serverData.models.partner.fields.active = { string: "Active", type: "char", default: true };
 
-        const form = await createView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
             resId: 1,
-            viewOptions: { hasActionMenus: true },
+            actionMenus: {},
             arch: '<form><field name="active"/><field name="foo"/></form>',
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 assert.step(args.method);
                 if (args.method === "action_archive") {
                     serverData.models.partner.records[0].active = false;
-                    return Promise.resolve();
+                    return true;
                 }
                 if (args.method === "action_unarchive") {
                     serverData.models.partner.records[0].active = true;
-                    return Promise.resolve();
+                    return true;
                 }
-                return this._super(...arguments);
             },
         });
 
-        await testUtils.controlPanel.toggleActionMenu(form);
-        assert.containsOnce(form, ".o_cp_action_menus a:contains(Archive)");
+        assert.containsOnce(form, ".o_cp_action_menus");
 
-        await testUtils.controlPanel.toggleMenuItem(form, "Archive");
+        await toggleActionMenu(form);
+        assert.containsOnce(form, ".o_cp_action_menus span:contains(Archive)");
+
+        await toggleMenuItem(form, "Archive");
         assert.containsOnce(document.body, ".modal");
 
-        await testUtils.dom.click($(".modal-footer .btn-primary"));
-        await testUtils.controlPanel.toggleActionMenu(form);
-        assert.containsOnce(form, ".o_cp_action_menus a:contains(Unarchive)");
+        await click(document.body.querySelector(".modal-footer .btn-primary"));
 
-        await testUtils.controlPanel.toggleMenuItem(form, "Unarchive");
-        await testUtils.controlPanel.toggleActionMenu(form);
-        assert.containsOnce(form, ".o_cp_action_menus a:contains(Archive)");
+        await toggleActionMenu(form);
+        assert.containsOnce(form, ".o_cp_action_menus span:contains(Unarchive)");
+
+        await toggleMenuItem(form, "UnArchive");
+
+        await toggleActionMenu(form);
+        assert.containsOnce(form, ".o_cp_action_menus span:contains(Archive)");
 
         assert.verifySteps(["read", "action_archive", "read", "action_unarchive", "read"]);
     });
 
-    QUnit.skip("archive action with active field not in view", async function (assert) {
-        assert.expect(2);
-
+    QUnit.test("archive action with active field not in view", async function (assert) {
         // add active field on partner model, but do not put it in the view
         serverData.models.partner.fields.active = { string: "Active", type: "char", default: true };
 
-        const form = await createView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
             resId: 1,
-            viewOptions: { hasActionMenus: true },
+            actionMenus: {},
             arch: '<form><field name="foo"/></form>',
         });
 
-        await testUtils.controlPanel.toggleActionMenu(form);
-        assert.containsNone(form, ".o_cp_action_menus a:contains(Archive)");
-        assert.containsNone(form, ".o_cp_action_menus a:contains(Unarchive)");
+        assert.containsOnce(form, ".o_cp_action_menus");
+
+        await toggleActionMenu(form);
+        assert.containsNone(form, ".o_cp_action_menus span:contains(Archive)");
+        assert.containsNone(form, ".o_cp_action_menus span:contains(Unarchive)");
     });
 
-    QUnit.skip("can duplicate a record", async function (assert) {
-        assert.expect(3);
-
+    QUnit.test("can duplicate a record", async function (assert) {
         const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
             arch: '<form><field name="foo"/></form>',
             resId: 1,
-            viewOptions: { hasActionMenus: true },
+            actionMenus: {},
         });
 
         assert.strictEqual(
-            form.$(".o_control_panel .breadcrumb").text(),
+            form.el.querySelector(".o_control_panel .breadcrumb").innerText,
             "first record",
             "should have the display name of the record as  title"
         );
 
-        await testUtils.controlPanel.toggleActionMenu(form);
-        await testUtils.controlPanel.toggleMenuItem(form, "Duplicate");
+        await toggleActionMenu(form);
+        await toggleMenuItem(form, "Duplicate");
 
         assert.strictEqual(
-            form.$(".o_control_panel .breadcrumb").text(),
+            form.el.querySelector(".o_control_panel .breadcrumb").innerText,
             "first record (copy)",
             "should have duplicated the record"
         );
-
-        assert.strictEqual(form.mode, "edit", "should be in edit mode");
+        assert.containsOnce(form, ".o_form_editable");
     });
 
-    QUnit.skip("duplicating a record preserve the context", async function (assert) {
-        assert.expect(2);
-
+    QUnit.test("duplicating a record preserves the context", async function (assert) {
         const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
             arch: '<form><field name="foo"/></form>',
             resId: 1,
-            viewOptions: { hasActionMenus: true, context: { hey: "hoy" } },
-            mockRPC: function (route, args) {
+            actionMenus: {},
+            context: { hey: "hoy" },
+            mockRPC(route, args) {
                 if (args.method === "read") {
-                    // should have 2 read, one for initial load, second for
-                    // read after duplicating
-                    assert.strictEqual(
-                        args.kwargs.context.hey,
-                        "hoy",
-                        "should have send the correct context"
-                    );
+                    assert.step(args.kwargs.context.hey);
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
-        await testUtils.controlPanel.toggleActionMenu(form);
-        await testUtils.controlPanel.toggleMenuItem(form, "Duplicate");
+        await toggleActionMenu(form);
+        await toggleMenuItem(form, "Duplicate");
+
+        // should have 2 read, one for initial load, second for read after duplicating
+        assert.verifySteps(["hoy", "hoy"]);
     });
 
-    QUnit.skip("cannot duplicate a record", async function (assert) {
-        assert.expect(2);
-
+    QUnit.test("cannot duplicate a record", async function (assert) {
         const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch: '<form string="Partners" duplicate="false">' + '<field name="foo"/>' + "</form>",
+            arch: '<form duplicate="false"><field name="foo"/></form>',
             resId: 1,
-            viewOptions: { hasActionMenus: true },
+            actionMenus: {},
         });
 
         assert.strictEqual(
-            form.$(".o_control_panel .breadcrumb").text(),
+            form.el.querySelector(".o_control_panel .breadcrumb").innerText,
             "first record",
             "should have the display name of the record as  title"
         );
+        assert.containsOnce(form, ".o_cp_action_menus");
+        await toggleActionMenu(form);
         assert.containsNone(
             form,
-            ".o_cp_action_menus a:contains(Duplicate)",
+            ".o_cp_action_menus span:contains(Duplicate)",
             "should not contains a 'Duplicate' action"
         );
     });
@@ -3247,7 +3227,7 @@ QUnit.module("Views", (hooks) => {
                 "</sheet>" +
                 "</form>",
             resId: 2,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "write") {
                     assert.strictEqual(
                         args.args[1].foo,
@@ -3300,7 +3280,7 @@ QUnit.module("Views", (hooks) => {
                 "</sheet>" +
                 "</form>",
             resId: 2,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "write") {
                     // simulate an override of the model...
                     args.args[1].display_name = "GOLDORAK";
@@ -3346,7 +3326,7 @@ QUnit.module("Views", (hooks) => {
                 '<button string="Or discard" class="btn-secondary" special="cancel"/>' +
                 "</form>",
             resId: 1,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "write") {
                     writeCount++;
                 }
@@ -3392,7 +3372,7 @@ QUnit.module("Views", (hooks) => {
                     assert.step("execute_action");
                 },
             },
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 assert.step(args.method);
                 return this._super(route, args);
             },
@@ -3563,7 +3543,7 @@ QUnit.module("Views", (hooks) => {
             serverData,
             arch: '<form string="Partners"><field name="foo"></field></form>',
             resId: 1,
-            mockRPC: function (route) {
+            mockRPC(route) {
                 if (route === "/web/dataset/call_kw/partner/write") {
                     nbWrite++;
                 }
@@ -3601,7 +3581,7 @@ QUnit.module("Views", (hooks) => {
             serverData,
             arch: '<form string="Partners"><field name="foo"></field></form>',
             resId: 1,
-            mockRPC: function (route) {
+            mockRPC(route) {
                 if (route === "/web/dataset/call_kw/partner/write") {
                     nbWrite++;
                 }
@@ -3800,8 +3780,8 @@ QUnit.module("Views", (hooks) => {
         await testUtils.fields.editInput(form.$(".o_field_widget[name=foo] input"), "tralala");
         await click(form.el.querySelector(".o_form_button_save"));
 
-        await testUtils.controlPanel.toggleActionMenu(form);
-        await testUtils.controlPanel.toggleMenuItem(form, "Duplicate");
+        await toggleActionMenu(form);
+        await toggleMenuItem(form, "Duplicate");
 
         assert.strictEqual(
             form.$(".o_field_widget[name=foo] input").val(),
@@ -3828,7 +3808,7 @@ QUnit.module("Views", (hooks) => {
                 index: 0,
             },
             resId: 1,
-            mockRPC: function (route) {
+            mockRPC(route) {
                 if (route === "/web/dataset/call_kw/partner/write") {
                     nbWrite++;
                 }
@@ -4159,94 +4139,57 @@ QUnit.module("Views", (hooks) => {
         assert.hasClass(form.$(".inner_div"), "o_group_col_6");
     });
 
-    QUnit.skip("deleting a record", async function (assert) {
-        assert.expect(8);
-
+    QUnit.test("deleting a record", async function (assert) {
         const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch: '<form string="Partners"><field name="foo"></field></form>',
-            viewOptions: {
-                ids: [1, 2, 4],
-                index: 0,
-                hasActionMenus: true,
-            },
+            arch: '<form><field name="foo"></field></form>',
+            actionMenus: {},
+            resIds: [1, 2, 4],
             resId: 1,
         });
 
-        assert.strictEqual(
-            testUtils.controlPanel.getPagerValue(form),
-            "1",
-            "pager value should be 1"
-        );
-        assert.strictEqual(
-            testUtils.controlPanel.getPagerSize(form),
-            "3",
-            "pager limit should be 3"
-        );
-        assert.strictEqual(
-            form.$("span:contains(yop)").length,
-            1,
-            "should have a field with foo value for record 1"
-        );
-        assert.ok(!$(".modal:visible").length, "no confirm modal should be displayed");
+        assert.strictEqual(form.el.querySelector(".o_pager_value").innerText, "1");
+        assert.strictEqual(form.el.querySelector(".o_pager_limit").innerText, "3");
 
         // open action menu and delete
-        await testUtils.controlPanel.toggleActionMenu(form);
-        await testUtils.controlPanel.toggleMenuItem(form, "Delete");
+        await toggleActionMenu(form);
+        await toggleMenuItem(form, "Delete");
 
-        assert.ok($(".modal").length, "a confirm modal should be displayed");
+        assert.containsOnce(document.body, ".modal", "a confirm modal should be displayed");
+        await click(document.body.querySelector(".modal-footer button.btn-primary"));
 
-        // confirm the delete
-        await testUtils.dom.click($(".modal-footer button.btn-primary"));
-
-        assert.strictEqual(
-            testUtils.controlPanel.getPagerValue(form),
-            "1",
-            "pager value should be 1"
-        );
-        assert.strictEqual(
-            testUtils.controlPanel.getPagerSize(form),
-            "2",
-            "pager limit should be 2"
-        );
-        assert.strictEqual(
-            form.$("span:contains(blip)").length,
-            1,
+        assert.strictEqual(form.el.querySelector(".o_pager_value").innerText, "1");
+        assert.strictEqual(form.el.querySelector(".o_pager_limit").innerText, "2");
+        assert.containsOnce(
+            form,
+            ".o_field_widget[name=foo]:contains(blip)",
             "should have a field with foo value for record 2"
         );
     });
 
-    QUnit.skip("deleting the last record", async function (assert) {
-        assert.expect(6);
-
+    QUnit.test("deleting the last record", async function (assert) {
         const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch: '<form string="Partners"><field name="foo"></field></form>',
-            viewOptions: {
-                ids: [1],
-                index: 0,
-                hasActionMenus: true,
-            },
+            arch: '<form><field name="foo"></field></form>',
+            resIds: [1],
             resId: 1,
-            mockRPC: function (route, args) {
+            actionMenus: {},
+            mockRPC(route, args) {
                 assert.step(args.method);
-                return this._super.apply(this, arguments);
             },
         });
+        form.el.addEventListener("history-back", () => assert.step("history_back"));
 
-        await testUtils.controlPanel.toggleActionMenu(form);
-        await testUtils.controlPanel.toggleMenuItem(form, "Delete");
+        await toggleActionMenu(form);
+        await toggleMenuItem(form, "Delete");
 
-        await testUtils.mock.intercept(form, "history_back", function () {
-            assert.step("history_back");
-        });
-        assert.strictEqual($(".modal").length, 1, "a confirm modal should be displayed");
-        await testUtils.dom.click($(".modal-footer button.btn-primary"));
-        assert.strictEqual($(".modal").length, 0, "no confirm modal should be displayed");
+        assert.containsOnce(document.body, ".modal", "a confirm modal should be displayed");
+        await click(document.body.querySelector(".modal-footer button.btn-primary"));
+        assert.containsNone(document.body, ".modal", "no confirm modal should be displayed");
 
         assert.verifySteps(["read", "unlink", "history_back"]);
     });
@@ -4307,7 +4250,7 @@ QUnit.module("Views", (hooks) => {
                 '<field name="priority" widget="priority"/>' +
                 "</group>" +
                 "</form>",
-            mockRPC: function (route) {
+            mockRPC(route) {
                 if (route === "/web/dataset/call_kw/partner/write") {
                     nbWrite++;
                 }
@@ -4385,7 +4328,7 @@ QUnit.module("Views", (hooks) => {
                 '<group><field name="foo"/><field name="int_field"/></group>' +
                 "</form>",
             resId: 2,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "onchange") {
                     return Promise.resolve({
                         value: { int_field: 10 },
@@ -4450,7 +4393,7 @@ QUnit.module("Views", (hooks) => {
                     '<group><field name="foo"/><field name="int_field"/></group>' +
                     "</form>",
                 resId: 2,
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     if (args.method === "onchange") {
                         return Promise.resolve({
                             value: { int_field: 10 },
@@ -4513,7 +4456,7 @@ QUnit.module("Views", (hooks) => {
                 '<form string="Partners">' +
                 '<group><field name="foo"/><field name="int_field"/></group>' +
                 "</form>",
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "onchange") {
                     return Promise.resolve({
                         value: { int_field: 10 },
@@ -4558,7 +4501,7 @@ QUnit.module("Views", (hooks) => {
                     "</field>" +
                     "</form>",
                 resId: 2,
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     if (args.method === "onchange") {
                         return Promise.resolve({
                             value: {},
@@ -4719,7 +4662,7 @@ QUnit.module("Views", (hooks) => {
                 "</field>" +
                 "</form>",
             resId: 1,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "onchange") {
                     var self = this;
                     var my_args = arguments;
@@ -4862,7 +4805,7 @@ QUnit.module("Views", (hooks) => {
                 "</tree>" +
                 "</field>" +
                 "</form>",
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 assert.step(args.method);
                 if (args.method === "read" && args.model === "partner_type") {
                     assert.deepEqual(args.args[0], [12, 14], "should read both m2m with one RPC");
@@ -4920,7 +4863,7 @@ QUnit.module("Views", (hooks) => {
 
             // We just test that there is no crash in this situation
             serverData.models.partner.records[0].timmy = [12];
-            const form = await createView({
+            const form = await makeView({
                 type: "form",
                 model: "partner",
                 serverData,
@@ -4980,7 +4923,7 @@ QUnit.module("Views", (hooks) => {
                 "</field>" +
                 "</group>" +
                 "</form>",
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "read" && args.model === "partner") {
                     assert.deepEqual(
                         args.args[1],
@@ -5150,7 +5093,7 @@ QUnit.module("Views", (hooks) => {
                 "</form>",
             resId: 2,
             fieldDebounce: 3,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 var result = this._super.apply(this, arguments);
                 if (args.method === "onchange") {
                     onchangeNbr++;
@@ -5215,7 +5158,7 @@ QUnit.module("Views", (hooks) => {
                 '<group><field name="foo"/><field name="int_field"/></group>' +
                 "</form>",
             resId: 2,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 assert.step(args.method);
                 return this._super.apply(this, arguments);
             },
@@ -5291,7 +5234,7 @@ QUnit.module("Views", (hooks) => {
                 '<group><field name="foo"/><field name="int_field"/></group>' +
                 "</form>",
             resId: 2,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 var result = this._super.apply(this, arguments);
                 if (args.method === "onchange") {
                     assert.step("onchange is done");
@@ -5345,7 +5288,7 @@ QUnit.module("Views", (hooks) => {
             serverData,
             arch: "<form>" + '<group><field name="foo"/></group>' + "</form>",
             resId: 2,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 var result = this._super.apply(this, arguments);
                 if (args.method === "write") {
                     return def.then(_.constant(result));
@@ -5408,7 +5351,7 @@ QUnit.module("Views", (hooks) => {
                 "</group>" +
                 "</form>",
             resId: 2,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "onchange") {
                     assert.deepEqual(
                         args.args[1].p,
@@ -5460,7 +5403,7 @@ QUnit.module("Views", (hooks) => {
                 "</group>" +
                 "</form>",
             resId: 2,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "onchange") {
                     return Promise.resolve({
                         value: {
@@ -5542,7 +5485,7 @@ QUnit.module("Views", (hooks) => {
                 "</group>" +
                 "</form>",
             resId: 2,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "onchange") {
                     return Promise.resolve({
                         value: {
@@ -5760,7 +5703,7 @@ QUnit.module("Views", (hooks) => {
                     '<field name="int_field" context="{\'int_ctx\': 1}"/>' +
                     "</group>" +
                     "</form>",
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     if (args.method === "onchange") {
                         assert.strictEqual(
                             args.kwargs.context.test,
@@ -5935,7 +5878,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("navigation with tab key selects a value in form view", async function (assert) {
         assert.expect(5);
 
-        const form = await createView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -6230,7 +6173,7 @@ QUnit.module("Views", (hooks) => {
                 "</group>" +
                 "</sheet>" +
                 "</form>",
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "create") {
                     var command = args.args[0].product_ids[0];
                     assert.strictEqual(
@@ -6262,7 +6205,7 @@ QUnit.module("Views", (hooks) => {
                 "</field>" +
                 "</sheet>" +
                 "</form>",
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "create") {
                     var command = args.args[0].p;
                     assert.deepEqual(
@@ -6320,7 +6263,7 @@ QUnit.module("Views", (hooks) => {
                         "</field>" +
                         "</form>",
                 },
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     if (args.method === "create") {
                         assert.deepEqual(
                             args.args[0].p,
@@ -6371,7 +6314,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(10);
 
-            const form = await createView({
+            const form = await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -6546,7 +6489,7 @@ QUnit.module("Views", (hooks) => {
             viewOptions: {
                 context: { some_context: false },
             },
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "read") {
                     assert.strictEqual(
                         "some_context" in args.kwargs.context && !args.kwargs.context.some_context,
@@ -6567,7 +6510,7 @@ QUnit.module("Views", (hooks) => {
         // the create=0 should apply on the main view (form), but not on subviews
         assert.expect(2);
 
-        const form = await createView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -6610,7 +6553,7 @@ QUnit.module("Views", (hooks) => {
                 "</sheet>" +
                 "</form>",
             resId: 1,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "write") {
                     assert.deepEqual(
                         args.args[1],
@@ -6692,7 +6635,7 @@ QUnit.module("Views", (hooks) => {
             archs: {
                 "partner,false,form": '<form><field name="trululu"/></form>',
             },
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "onchange" && checkOnchange) {
                     assert.strictEqual(
                         args.kwargs.context.current_id,
@@ -6799,7 +6742,7 @@ QUnit.module("Views", (hooks) => {
             serverData,
             arch: '<form string="Partners">' + '<group><field name="foo"/></group>' + "</form>",
             resId: 2,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "onchange") {
                     return Promise.resolve({
                         warning: {
@@ -6916,7 +6859,7 @@ QUnit.module("Views", (hooks) => {
                     "</sheet>" +
                     "</form>",
             },
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 assert.step(args.method);
                 return this._super.apply(this, arguments);
             },
@@ -7008,7 +6951,7 @@ QUnit.module("Views", (hooks) => {
         var statButtonSelector = ".oe_stat_button:not(.dropdown-item, .dropdown-toggle)";
 
         var createFormWithDeviceSizeClass = async function (size_class) {
-            return await createView({
+            return await makeView({
                 type: "form",
                 resModel: "partner",
                 data: self.data,
@@ -7056,7 +6999,7 @@ QUnit.module("Views", (hooks) => {
             context: {
                 bin_size: false,
             },
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 assert.strictEqual(
                     args.kwargs.context.bin_size,
                     false,
@@ -7093,7 +7036,7 @@ QUnit.module("Views", (hooks) => {
                     "partner,false,form": '<form><field name="trululu"/></form>',
                     "product,false,list": '<tree><field name="name"/></tree>',
                 },
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     if (args.method === "get_formview_id") {
                         return Promise.resolve(false);
                     }
@@ -7169,7 +7112,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch: '<form string="Partners">' + '<group><field name="bar"/></group>' + "</form>",
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "create") {
                     assert.strictEqual(
                         args.args[0].bar,
@@ -7277,7 +7220,7 @@ QUnit.module("Views", (hooks) => {
                 "</group>" +
                 "</sheet>" +
                 "</form>",
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 assert.step(args.method);
                 return this._super.apply(this, arguments);
             },
@@ -7306,7 +7249,7 @@ QUnit.module("Views", (hooks) => {
                 "</group></sheet>" +
                 "</form>",
             resId: 2,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 var result = this._super.apply(this, arguments);
                 assert.step(args.method);
                 if (args.method === "onchange") {
@@ -7358,7 +7301,7 @@ QUnit.module("Views", (hooks) => {
             viewOptions: {
                 hasActionMenus: true,
             },
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (route === "/web/action/load") {
                     assert.strictEqual(args.context.active_id, 1, "the active_id shoud be 1.");
                     assert.deepEqual(
@@ -7375,7 +7318,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(form, ".o_cp_action_menus .dropdown:contains(Print)");
         assert.containsOnce(form, ".o_cp_action_menus .dropdown:contains(Action)");
 
-        await testUtils.controlPanel.toggleActionMenu(form);
+        await toggleActionMenu(form);
 
         assert.containsN(form, ".o_cp_action_menus .dropdown-item", 3, "there should be 3 actions");
         assert.strictEqual(
@@ -7393,7 +7336,7 @@ QUnit.module("Views", (hooks) => {
                 "the active_ids should be an array with 1 inside."
             );
         });
-        await testUtils.controlPanel.toggleMenuItem(form, "Action partner");
+        await toggleMenuItem(form, "Action partner");
     });
 
     QUnit.skip("check interactions between multiple FormViewDialogs", async function (assert) {
@@ -7432,7 +7375,7 @@ QUnit.module("Views", (hooks) => {
                     "</form>",
                 "product,false,list": '<tree><field name="display_name"/></tree>',
             },
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (route === "/web/dataset/call_kw/product/get_formview_id") {
                     return Promise.resolve(false);
                 } else if (args.method === "write") {
@@ -7494,7 +7437,7 @@ QUnit.module("Views", (hooks) => {
                 '<field name="trululu" context="{\'test\': 1}"/>' +
                 "</group>" +
                 "</form>",
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "name_search") {
                     assert.strictEqual(
                         args.kwargs.context.test,
@@ -7633,7 +7576,7 @@ QUnit.module("Views", (hooks) => {
                     '<field name="trululu" invisible="1"/>' +
                     "</sheet>" +
                     "</form>",
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     assert.step(args.method);
                     return this._super.apply(this, arguments);
                 },
@@ -7664,7 +7607,7 @@ QUnit.module("Views", (hooks) => {
                 '<field name="timmy" invisible="1" widget="many2many_tags"/>' + // no view
                 "</sheet>" +
                 "</form>",
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 assert.step(args.method);
                 return this._super.apply(this, arguments);
             },
@@ -7785,7 +7728,7 @@ QUnit.module("Views", (hooks) => {
             viewOptions: {
                 context: { product_ids: [45, 46, 47] },
             },
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "name_search") {
                     assert.deepEqual(
                         args.kwargs.args[0],
@@ -8415,7 +8358,7 @@ QUnit.module("Views", (hooks) => {
                         "</form>",
                 },
                 resId: 1,
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     if (route === "/web/dataset/call_kw/product/get_formview_id") {
                         return Promise.resolve(false);
                     }
@@ -8471,7 +8414,7 @@ QUnit.module("Views", (hooks) => {
         const multi_lang = _t.database.multi_lang;
         _t.database.multi_lang = true;
 
-        const form = await createView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -8690,7 +8633,7 @@ QUnit.module("Views", (hooks) => {
                     '<field name="foo"/>' +
                     "</sheet>" +
                     "</form>",
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     assert.step(args.method);
                     return this._super.apply(this, arguments);
                 },
@@ -8759,7 +8702,7 @@ QUnit.module("Views", (hooks) => {
                         });
                     },
                 },
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     if (args.method === "get_formview_id") {
                         return Promise.resolve(false);
                     }
@@ -8811,7 +8754,7 @@ QUnit.module("Views", (hooks) => {
                 "</sheet>" +
                 "</form>",
             resId: 1,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 var result = this._super.apply(this, arguments);
                 assert.step(args.method);
                 if (args.method === "write") {
@@ -8854,7 +8797,7 @@ QUnit.module("Views", (hooks) => {
                 "</sheet>" +
                 "</form>",
             resId: 1,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 assert.step(args.method);
                 if (args.method === "write" && args.args[1].foo === "incorrect value") {
                     return Promise.reject();
@@ -8901,7 +8844,7 @@ QUnit.module("Views", (hooks) => {
                     '<header><field name="trululu" widget="statusbar" clickable="true"/></header>' +
                     "</form>",
                 resId: 1,
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     if (args.method === "write") {
                         assert.step("write");
                         if (failFlag) {
@@ -9057,7 +9000,7 @@ QUnit.module("Views", (hooks) => {
                         "</form>",
                     "product,false,list": '<tree><field name="display_name"/></tree>',
                 },
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     if (args.method === "name_search") {
                         assert.strictEqual(
                             args.kwargs.context.color,
@@ -9101,7 +9044,7 @@ QUnit.module("Views", (hooks) => {
                 '<field name="display_name" widget="domain" options="{\'model\': \'model_name\'}"/>' +
                 "</group>" +
                 "</form>",
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "search_count") {
                     assert.strictEqual(args.model, "test", "should search_count on test");
                     if (!args.kwargs.domain) {
@@ -9162,7 +9105,7 @@ QUnit.module("Views", (hooks) => {
                 "</form>" +
                 "</field>" +
                 "</form>",
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (checkOnchange && args.method === "onchange") {
                     if (args.args[2] === "display_name") {
                         // onchange on field display_name
@@ -9274,7 +9217,7 @@ QUnit.module("Views", (hooks) => {
             arch: '<form string="Partners">' + '<field name="display_name"/>' + "</form>",
             resId: 1,
             viewOptions: { hasActionMenus: true },
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 var result = this._super.apply(this, arguments);
                 if (args.method === "copy") {
                     return result.then(function (id) {
@@ -9294,8 +9237,8 @@ QUnit.module("Views", (hooks) => {
         });
 
         // duplicate record 1
-        await testUtils.controlPanel.toggleActionMenu(form);
-        await testUtils.controlPanel.toggleMenuItem(form, "Duplicate");
+        await toggleActionMenu(form);
+        await toggleMenuItem(form, "Duplicate");
 
         assert.containsOnce(form, ".o_form_editable", "form should be in edit mode");
         assert.strictEqual(
@@ -9306,8 +9249,8 @@ QUnit.module("Views", (hooks) => {
         await click(form.el.querySelector(".o_form_button_save")); // save duplicated record
 
         // delete duplicated record
-        await testUtils.controlPanel.toggleActionMenu(form);
-        await testUtils.controlPanel.toggleMenuItem(form, "Delete");
+        await toggleActionMenu(form);
+        await toggleMenuItem(form, "Delete");
 
         assert.strictEqual($(".modal").length, 1, "should have opened a confirm dialog");
         await testUtils.dom.click($(".modal-footer .btn-primary"));
@@ -9383,7 +9326,7 @@ QUnit.module("Views", (hooks) => {
                 "partner,false,form": arch,
             },
             resId: 2,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 assert.step(args.method);
                 if (args.method === "get_formview_id") {
                     return Promise.resolve(false);
@@ -9492,7 +9435,7 @@ QUnit.module("Views", (hooks) => {
             serverData,
             arch: '<form string="Partners">' + '<field name="trululu"/>' + "</form>",
             resId: 1,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (route === "/web/dataset/call_kw/partner/get_formview_id") {
                     return Promise.resolve(false);
                 }
@@ -9599,7 +9542,7 @@ QUnit.module("Views", (hooks) => {
         MyComponent.template = owl.tags.xml`<div t-esc="value"/>`;
         widgetRegistryOwl.add("test", MyComponent);
 
-        const form = await createView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -9622,7 +9565,7 @@ QUnit.module("Views", (hooks) => {
             type: "form",
             resModel: "partner",
             serverData,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "my_action") {
                     assert.deepEqual(args.kwargs.attachment_ids, [5, 2]);
                     return Promise.resolve();
@@ -9945,7 +9888,7 @@ QUnit.module("Views", (hooks) => {
             resId: 1,
         };
 
-        const form = await createView(makeView);
+        const form = await makeView(makeView);
         assert.ok(instanceNumber > 0);
         assert.strictEqual(instanceNumber, 0);
 
@@ -10015,7 +9958,7 @@ QUnit.module("Views", (hooks) => {
                     },
                 },
                 resId: 1,
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     assert.step(args.model + ":" + args.method);
                     if (args.method === "read") {
                         assert.ok(args.kwargs.context, "context is present");
@@ -10049,7 +9992,7 @@ QUnit.module("Views", (hooks) => {
             viewOptions: {
                 mode: "edit",
             },
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "write") {
                     assert.step("write");
                 }
@@ -10079,7 +10022,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch: "<form>" + "<sheet>" + '<field name="display_name"/>' + "</sheet>" + "</form>",
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "create") {
                     assert.step("create");
                 }
@@ -10109,7 +10052,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch: "<form>" + "<sheet>" + '<field name="display_name"/>' + "</sheet>" + "</form>",
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "unlink") {
                     assert.step("unlink");
                 }
@@ -10122,8 +10065,8 @@ QUnit.module("Views", (hooks) => {
         });
         core.bus.on("clear_cache", form, assert.step.bind(assert, "clear_cache"));
 
-        await testUtils.controlPanel.toggleActionMenu(form);
-        await testUtils.controlPanel.toggleMenuItem(form, "Delete");
+        await toggleActionMenu(form);
+        await toggleMenuItem(form, "Delete");
         await testUtils.dom.click($(".modal-footer .btn-primary"));
 
         assert.verifySteps(["unlink", "clear_cache"]);
@@ -10151,7 +10094,7 @@ QUnit.module("Views", (hooks) => {
                 viewOptions: {
                     mode: "edit",
                 },
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     assert.step(args.method);
                     return this._super.apply(this, arguments);
                 },
@@ -10197,7 +10140,7 @@ QUnit.module("Views", (hooks) => {
                     ev.data.on_fail();
                 },
             },
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "write") {
                     assert.deepEqual(args.args[1].p[0][2], values);
                 }
@@ -10283,7 +10226,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch: '<form><field name="foo"/></form>',
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 assert.step(args.method);
                 return this._super.apply(this, arguments);
             },
@@ -10341,7 +10284,7 @@ QUnit.module("Views", (hooks) => {
                     "</tree>" +
                     "</field>" +
                     "</form>",
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     var result = this._super.apply(this, arguments);
                     if (args.method === "onchange") {
                         return Promise.resolve(onchangeDef).then(_.constant(result));
@@ -10404,7 +10347,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch: '<form><field name="display_name"/><field name="foo"/></form>',
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 var result = this._super.apply(this, arguments);
                 if (args.method === "onchange") {
                     return Promise.resolve(onchangeDef).then(_.constant(result));
@@ -10458,7 +10401,7 @@ QUnit.module("Views", (hooks) => {
         assert.expect(4);
 
         let writeCalls = 0;
-        const form = await createView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -10501,7 +10444,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch: '<form><field name="foo"/><field name="trululu"/></form>',
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.method === "onchange" && args.args[0][0] === 1) {
                     // onchange returns a domain only on record 1
                     return Promise.resolve({
@@ -10624,7 +10567,7 @@ QUnit.module("Views", (hooks) => {
             assert.expect(3);
 
             const prom = testUtils.makeTestPromise();
-            const form = await createView({
+            const form = await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -10632,7 +10575,7 @@ QUnit.module("Views", (hooks) => {
                     <field name="foo"/>
                     <field name="bar" widget="toggle_button"/>
                 </form>`,
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     const result = this._super.apply(this, arguments);
                     if (args.method === "write") {
                         // delay the write RPC
@@ -11169,7 +11112,7 @@ QUnit.module("Views", (hooks) => {
                 viewOptions: {
                     mode: "edit",
                 },
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     if (args.method === "create") {
                         assert.ok(true, "should call the /create route");
                     }
@@ -11198,7 +11141,7 @@ QUnit.module("Views", (hooks) => {
                 viewOptions: {
                     mode: "edit",
                 },
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     if (args.method === "create") {
                         assert.ok(true, "should call the /create route");
                     }
@@ -11227,7 +11170,7 @@ QUnit.module("Views", (hooks) => {
                 viewOptions: {
                     mode: "edit",
                 },
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     if (args.method === "create") {
                         throw new Error("Create should not be called");
                     }
@@ -11316,7 +11259,7 @@ QUnit.module("Views", (hooks) => {
                 viewOptions: {
                     mode: "edit",
                 },
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     if (args.method === "create") {
                         throw new Error("Create should not be called");
                     }
@@ -11355,7 +11298,7 @@ QUnit.module("Views", (hooks) => {
                 model: "res.company",
                 serverData,
                 arch: '<form><field name="name"/></form>',
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     assert.step(args.method);
                     return this._super.apply(this, arguments);
                 },
@@ -11401,7 +11344,7 @@ QUnit.module("Views", (hooks) => {
                 viewOptions: {
                     mode: "edit",
                 },
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     assert.step(args.method);
                     return this._super.apply(this, arguments);
                 },
@@ -11436,7 +11379,7 @@ QUnit.module("Views", (hooks) => {
             serverData.models.partner.fields.product_id.help = "this is a tooltip";
             serverData.models.partner.fields.foo.company_dependent = true;
 
-            const form = await createView({
+            const form = await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -11480,7 +11423,7 @@ QUnit.module("Views", (hooks) => {
             serverData.models.partner.fields.product_id.company_dependent = true;
             serverData.models.partner.fields.product_id.help = "this is a tooltip";
 
-            const form = await createView({
+            const form = await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -11507,7 +11450,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("reload a form view with a pie chart does not crash", async function (assert) {
         assert.expect(3);
 
-        const form = await createView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -11547,7 +11490,7 @@ QUnit.module("Views", (hooks) => {
         }
         fieldRegistryOwl.add("custom", CustomFieldComponent);
 
-        const form = await createView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -11772,7 +11715,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("Auto save: save on closing tab/browser", async function (assert) {
         assert.expect(2);
 
-        const form = await createView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -11802,7 +11745,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("Auto save: save on closing tab/browser (invalid field)", async function (assert) {
         assert.expect(1);
 
-        const form = await createView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -11832,7 +11775,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("Auto save: save on closing tab/browser (not dirty)", async function (assert) {
         assert.expect(1);
 
-        const form = await createView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -11928,7 +11871,7 @@ QUnit.module("Views", (hooks) => {
         };
 
         const def = testUtils.makeTestPromise();
-        const form = await createView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -11966,7 +11909,7 @@ QUnit.module("Views", (hooks) => {
         };
 
         const def = testUtils.makeTestPromise();
-        const form = await createView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -12000,7 +11943,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("Auto save: save on closing tab/browser (pending change)", async function (assert) {
         assert.expect(4);
 
-        const form = await createView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -12041,7 +11984,7 @@ QUnit.module("Views", (hooks) => {
             };
 
             const def = testUtils.makeTestPromise();
-            const form = await createView({
+            const form = await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -12107,7 +12050,7 @@ QUnit.module("Views", (hooks) => {
             };
 
             const def = testUtils.makeTestPromise();
-            const form = await createView({
+            const form = await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -12148,7 +12091,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("Quick Edition: click on a quick editable field", async function (assert) {
         assert.expect(3);
 
-        const form = await createView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -12172,7 +12115,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("Quick Edition: click on a non quick editable field", async function (assert) {
         assert.expect(4);
 
-        const form = await createView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -12197,7 +12140,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("Quick Edition: Label click", async function (assert) {
         assert.expect(3);
 
-        const form = await createView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -12221,7 +12164,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("Quick Edition: Label click (duplicated field)", async function (assert) {
         assert.expect(8);
 
-        const form = await createView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -12258,7 +12201,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("Quick Edition: Checkbox click", async function (assert) {
         assert.expect(11);
 
-        const form = await createView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -12298,7 +12241,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("Quick Edition: Checkbox click on label", async function (assert) {
         assert.expect(8);
 
-        const form = await createView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -12337,7 +12280,7 @@ QUnit.module("Views", (hooks) => {
 
         serverData.models.partner.records[0].p.push(2);
 
-        const form = await createView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -12380,7 +12323,7 @@ QUnit.module("Views", (hooks) => {
 
             serverData.models.partner.records[0].p.push(2);
 
-            const form = await createView({
+            const form = await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -12418,7 +12361,7 @@ QUnit.module("Views", (hooks) => {
 
             serverData.models.partner.records[0].p.push(2);
 
-            const form = await createView({
+            const form = await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -12456,7 +12399,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(4);
 
-            const form = await createView({
+            const form = await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -12498,7 +12441,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(5);
 
-            const form = await createView({
+            const form = await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -12539,7 +12482,7 @@ QUnit.module("Views", (hooks) => {
 
             serverData.models.partner.records[0].p = [1, 2];
 
-            const form = await createView({
+            const form = await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -12583,7 +12526,7 @@ QUnit.module("Views", (hooks) => {
 
             serverData.models.partner.records[0].p = [1, 2];
 
-            const form = await createView({
+            const form = await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -12623,7 +12566,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("Quick Edition: Date picker", async function (assert) {
         assert.expect(4);
 
-        const form = await createView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -12646,7 +12589,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("Quick Edition: Many2one", async function (assert) {
         assert.expect(5);
 
-        const form = await createView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -12672,7 +12615,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("Quick Edition: Many2Many", async function (assert) {
         assert.expect(6);
 
-        const form = await createView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -12715,7 +12658,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("Quick Edition: Many2Many checkbox", async function (assert) {
         assert.expect(7);
 
-        const form = await createView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -12741,7 +12684,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("Quick Edition: Many2Many checkbox readonly", async function (assert) {
         assert.expect(6);
 
-        const form = await createView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -12767,7 +12710,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("Quick Edition: Many2Many checkbox click on label", async function (assert) {
         assert.expect(4);
 
-        const form = await createView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -12792,7 +12735,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("Quick Edition: Many2one radio", async function (assert) {
         assert.expect(6);
 
-        const form = await createView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -12817,7 +12760,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("Quick Edition: Many2Many radio readonly", async function (assert) {
         assert.expect(6);
 
-        const form = await createView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -12843,7 +12786,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("Quick Edition: Many2one radio click on label", async function (assert) {
         assert.expect(4);
 
-        const form = await createView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -12868,7 +12811,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("Quick Edition: Selection radio click on value", async function (assert) {
         assert.expect(5);
 
-        const form = await createView({
+        const form = await makeView({
             type: "form",
             model: "partner",
             serverData,
@@ -12879,7 +12822,7 @@ QUnit.module("Views", (hooks) => {
                     </group>
                 </form>`,
             res_id: 1,
-            mockRPC: function (route, args) {
+            mockRPC(route, args) {
                 if (args.model === "partner" && args.method === "write") {
                     assert.step("Write");
                 }
@@ -12903,7 +12846,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("Quick Edition: non-editable form", async function (assert) {
         assert.expect(3);
 
-        const form = await createView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -12927,7 +12870,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("Quick Edition: CopyToClipboard click on value", async function (assert) {
         assert.expect(4);
 
-        const form = await createView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -12952,7 +12895,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.skip("Quick Edition: CopyToClipboard click on copy button", async function (assert) {
         assert.expect(4);
 
-        const form = await createView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -13002,7 +12945,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        const form = await createView({
+        const form = await makeView({
             type: "form",
             model: "partner",
             serverData,
@@ -13057,7 +13000,7 @@ QUnit.module("Views", (hooks) => {
 
             const MULTI_CLICK_TIME = 50;
 
-            const form = await createView({
+            const form = await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -13083,7 +13026,7 @@ QUnit.module("Views", (hooks) => {
 
             const MULTI_CLICK_TIME = 50;
 
-            const form = await createView({
+            const form = await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -13109,7 +13052,7 @@ QUnit.module("Views", (hooks) => {
 
             const MULTI_CLICK_TIME = 50;
 
-            const form = await createView({
+            const form = await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -13164,7 +13107,7 @@ QUnit.module("Views", (hooks) => {
             })
         );
 
-        const form = await createView({
+        const form = await makeView({
             arch: `<form><field name="bar" widget="customwidget"/></form>`,
             serverData,
             resModel: "partner",
@@ -13215,7 +13158,7 @@ QUnit.module("Views", (hooks) => {
         serverData.models.partner.fields.length = { string: "Length", type: "float", default: 0 };
         serverData.models.partner.fields.foo.default = "foo default";
 
-        const form = await createView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -13248,7 +13191,7 @@ QUnit.module("Views", (hooks) => {
                 p: function () {},
             };
 
-            const form = await createView({
+            const form = await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
@@ -13264,7 +13207,7 @@ QUnit.module("Views", (hooks) => {
                         </form>
                     </field>
                 </form>`,
-                mockRPC: function (route, args) {
+                mockRPC(route, args) {
                     if (args.method === "create") {
                         assert.deepEqual(
                             args.args[0],

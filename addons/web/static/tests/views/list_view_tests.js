@@ -259,7 +259,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            loadActionMenus: true,
+            actionMenus: {},
             arch: '<tree delete="0"><field name="foo"/></tree>',
         });
 
@@ -277,7 +277,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            loadActionMenus: true,
+            actionMenus: {},
             arch: '<tree editable="top" edit="0"><field name="foo"/></tree>',
         });
 
@@ -299,7 +299,7 @@ QUnit.module("Views", (hooks) => {
                 type: "list",
                 resModel: "foo",
                 serverData,
-                loadActionMenus: true,
+                actionMenus: {},
                 arch: '<tree><field name="foo"/></tree>',
                 session: {
                     async user_has_group(group) {
@@ -336,7 +336,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            loadActionMenus: true,
+            actionMenus: {},
             arch: '<tree><field name="foo"/></tree>',
 
             // session: {
@@ -1498,7 +1498,7 @@ QUnit.module("Views", (hooks) => {
                     <field name="foo"/>
                     <field name="m2m" widget="many2many_tags"/>
                 </tree>`,
-            loadActionMenus: true,
+            actionMenus: {},
         });
         await groupByMenu(list, "m2m");
 
@@ -2635,7 +2635,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "foo",
             serverData,
             groupBy: ["foo"],
-            loadActionMenus: true,
+            actionMenus: {},
             arch:
                 "<tree>" +
                 '<field name="foo"/>' +
@@ -4101,7 +4101,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            loadActionMenus: true,
+            actionMenus: {},
             arch: '<tree><field name="foo"/></tree>',
         });
 
@@ -4134,7 +4134,7 @@ QUnit.module("Views", (hooks) => {
                 type: "list",
                 resModel: "foo",
                 serverData,
-                loadActionMenus: true,
+                actionMenus: {},
                 arch: '<tree><field name="foo"/></tree>',
                 mockRPC: function (route, args) {
                     if (args.method === "unlink") {
@@ -4176,7 +4176,7 @@ QUnit.module("Views", (hooks) => {
                     assert.deepEqual(args.args[0], [1, 2, 3, 5]);
                 }
             },
-            loadActionMenus: true,
+            actionMenus: {},
         });
         patchWithCleanup(list.env.services.notification, {
             add: () => {
@@ -4221,7 +4221,7 @@ QUnit.module("Views", (hooks) => {
                     assert.deepEqual(args.args[0], [1, 2, 3, 5]);
                 }
             },
-            loadActionMenus: true,
+            actionMenus: {},
         });
         patchWithCleanup(session, {
             active_ids_limit: 4,
@@ -4264,7 +4264,7 @@ QUnit.module("Views", (hooks) => {
             type: "list",
             resModel: "foo",
             serverData,
-            loadActionMenus: true,
+            actionMenus: {},
             arch: '<tree><field name="foo"/></tree>',
             mockRPC: function (route) {
                 assert.step(route);
@@ -4327,7 +4327,7 @@ QUnit.module("Views", (hooks) => {
                     return true;
                 }
             },
-            loadActionMenus: true,
+            actionMenus: {},
         });
         patchWithCleanup(list.env.services.notification, {
             add: () => {
@@ -4375,7 +4375,7 @@ QUnit.module("Views", (hooks) => {
                     return true;
                 }
             },
-            loadActionMenus: true,
+            actionMenus: {},
         });
 
         patchWithCleanup(session, {
@@ -4430,7 +4430,7 @@ QUnit.module("Views", (hooks) => {
             "bar,false,form": '<form><field name="display_name"/></form>',
         };
 
-        const mockRPC = (route, args) => {
+        const mockRPC = (route) => {
             if (route === "/web/dataset/call_kw/foo/action_archive") {
                 return {
                     type: "ir.actions.act_window",
@@ -5348,7 +5348,7 @@ QUnit.module("Views", (hooks) => {
                         help: '<p class="hello">click to add a partner</p>',
                     },
                 },
-                loadActionMenus: true,
+                actionMenus: {},
             });
 
             // Initial state: all records displayed
@@ -5437,7 +5437,7 @@ QUnit.module("Views", (hooks) => {
                         help: '<p class="hello">click to add a partner</p>',
                     },
                 },
-                loadActionMenus: true,
+                actionMenus: {},
             });
 
             // Initial state: sample data and nocontent helper displayed
@@ -7204,7 +7204,7 @@ QUnit.module("Views", (hooks) => {
                 ],
                 print: [],
             },
-            loadActionMenus: true,
+            actionMenus: {},
         });
 
         assert.containsNone(list.el, "div.o_control_panel .o_cp_action_menus");
@@ -7242,7 +7242,7 @@ QUnit.module("Views", (hooks) => {
                     }
                     return this._super(...arguments);
                 },
-                loadActionMenus: true,
+                actionMenus: {},
             });
 
             assert.containsNone(list.el, "div.o_control_panel .o_cp_action_menus");
@@ -7311,7 +7311,7 @@ QUnit.module("Views", (hooks) => {
                     }
                     return this._super(...arguments);
                 },
-                loadActionMenus: true,
+                actionMenus: {},
             });
 
             assert.containsNone(list.el, "div.o_control_panel .o_cp_action_menus");
@@ -11071,7 +11071,7 @@ QUnit.module("Views", (hooks) => {
                 }
                 return this._super.apply(this, arguments);
             },
-            loadActionMenus: true,
+            actionMenus: {},
         });
         core.bus.on("clear_cache", list, assert.step.bind(assert, "clear_cache"));
 
@@ -11132,7 +11132,7 @@ QUnit.module("Views", (hooks) => {
                     }
                     return this._super.apply(this, arguments);
                 },
-                loadActionMenus: true,
+                actionMenus: {},
             });
 
             assert.strictEqual(
@@ -11186,7 +11186,7 @@ QUnit.module("Views", (hooks) => {
                     }
                     return this._super.apply(this, arguments);
                 },
-                loadActionMenus: true,
+                actionMenus: {},
                 groupBy: ["m2o"],
             });
 
@@ -11250,7 +11250,7 @@ QUnit.module("Views", (hooks) => {
                 resModel: "foo",
                 serverData,
                 arch: '<tree limit="3"><field name="display_name"/></tree>',
-                loadActionMenus: true,
+                actionMenus: {},
                 mockRPC: function (route) {
                     if (route === "/web/dataset/call_kw/foo/action_archive") {
                         serverData.models.foo.records[3].active = false;

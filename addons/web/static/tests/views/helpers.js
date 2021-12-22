@@ -58,12 +58,6 @@ export const makeView = async (params) => {
         const searchViewArch = props.searchViewArch || "<search/>";
         serverData.views[`${props.resModel},${props.searchViewId},search`] = searchViewArch;
         delete props.searchViewArch;
-        if (props.loadActionMenus) {
-            props.actionMenus = props.actionMenus === undefined ? {} : props.actionMenus;
-        }
-        if (props.loadIrFilters) {
-            props.irFilters = props.irFilters === undefined ? [] : props.irFilters;
-        }
     }
 
     const env = await makeTestEnv({ serverData, mockRPC, config });
