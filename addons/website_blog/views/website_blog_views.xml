@@ -253,22 +253,22 @@
         </record>
 
         <menuitem name="Blogs"
-            id="menu_website_blog_root"
-            sequence="20"
-            parent="website.menu_website_configuration"
-            groups="website.group_website_designer"
-            action="action_blog_post"/>
-
-        <menuitem name="Blogs"
             id="menu_website_blog_root_global"
             sequence="100"
             parent="website.menu_website_global_configuration"
             groups="website.group_website_designer"/>
 
-        <menuitem id="menu_website_blog_tag_category_global" parent="menu_website_blog_root_global"
-                  name="Tag Categories" action="action_tag_category" sequence="50" />
+        <menuitem id="menu_blog_global" parent="menu_website_blog_root_global" name="Blogs" action="action_blog_blog" sequence="20"/>
+
+        <menuitem name="Blog Post"
+            id="menu_website_blog_post"
+            sequence="30"
+            parent="menu_website_blog_root_global"
+            groups="website.group_website_designer"
+            action="action_blog_post"/>
 
         <menuitem id="menu_blog_tag_global" parent="menu_website_blog_root_global" name="Tags" action="action_tags" sequence="40" />
 
-        <menuitem id="menu_blog_global" parent="menu_website_blog_root_global" name="Blogs" action="action_blog_blog" sequence="20"/>
+        <menuitem id="menu_website_blog_tag_category_global" parent="menu_website_blog_root_global"
+                  name="Tag Categories" action="action_tag_category" sequence="50" />
 </odoo>
