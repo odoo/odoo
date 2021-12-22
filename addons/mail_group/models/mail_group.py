@@ -424,10 +424,19 @@ class MailGroup(models.Model):
                 # SMTP headers related to the subscription
                 email_url_encoded = urls.url_quote(email_member)
                 headers = {
+                    ** self._notify_email_header_dict(),
                     'List-Archive': f'<{base_url}/groups/{slug(self)}>',
                     'List-Subscribe': f'<{base_url}/groups?email={email_url_encoded}>',
                     'List-Unsubscribe': f'<{base_url}/groups?unsubscribe&email={email_url_encoded}>',
+                    'Precedence': 'list',
+                    'X-Auto-Response-Suppress': 'OOF',  # avoid out-of-office replies from MS Exchange
                 }
+                if self.alias_name and self.alias_domain:
+                    headers.update({
+                        'List-Id': f'<{self.alias_name}.{self.alias_domain}>',
+                        'List-Post': f'<mailto:{self.alias_name}@{self.alias_domain}>',
+                        'X-Forge-To': f'"{self.name}" <{self.alias_name}@{self.alias_domain}>',
+                    })
 
                 if message.mail_message_id.parent_id:
                     headers['In-Reply-To'] = message.mail_message_id.parent_id.message_id
