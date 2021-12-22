@@ -30,11 +30,11 @@
                                 'o-today': activityView.activity.state === 'today',
                             }"
                         >
-                            <t t-esc="delayLabel"/>
+                            <t t-esc="activityView.delayLabel"/>
                         </div>
                         <t t-if="activityView.activity.summary">
                             <div class="o_Activity_summary">
-                                <t t-esc="summary"/>
+                                <t t-esc="activityView.summary"/>
                             </div>
                         </t>
                         <t t-elif="activityView.activity.type">
@@ -44,7 +44,7 @@
                         </t>
                         <t t-if="activityView.activity.assignee">
                             <div class="o_Activity_userName">
-                                <t t-esc="assignedUserText"/>
+                                <t t-esc="activityView.assignedUserText"/>
                             </div>
                         </t>
                         <a class="o_Activity_detailsButton btn btn-link" t-on-click="activityView.onClickDetailsButton" role="button">
@@ -64,7 +64,7 @@
                                 <t t-if="activityView.activity.creator">
                                     <dt>Created</dt>
                                     <dd class="o_Activity_detailsCreation">
-                                        <t t-esc="formattedCreateDatetime"/>
+                                        <t t-esc="activityView.formattedCreateDatetime"/>
                                         <img class="o_Activity_detailsUserAvatar o_Activity_detailsCreatorAvatar" t-attf-src="/web/image/res.users/{{ activityView.activity.creator.id }}/avatar_128" t-att-title="activityView.activity.creator.nameOrDisplayName" t-att-alt="activityView.activity.creator.nameOrDisplayName"/>
                                         <span class="o_Activity_detailsCreator">
                                             <t t-esc="activityView.activity.creator.nameOrDisplayName"/>
@@ -88,7 +88,7 @@
                                             'o-today': activityView.activity.state === 'today',
                                         }"
                                     >
-                                        <t t-esc="formattedDeadlineDate"/>
+                                        <t t-esc="activityView.formattedDeadlineDate"/>
                                     </span>
                                 </dd>
                             </dl>
@@ -116,8 +116,8 @@
                     <t t-if="activityView.activity.canWrite">
                         <div name="tools" class="o_Activity_tools">
                             <t t-if="!activityView.fileUploaderView">
-                                <Popover position="'right'" title="MARK_DONE">
-                                    <button class="o_Activity_toolButton o_Activity_markDoneButton btn btn-link" t-att-title="MARK_DONE">
+                                <Popover position="'right'" title="activityView.markDoneText">
+                                    <button class="o_Activity_toolButton o_Activity_markDoneButton btn btn-link" t-att-title="activityView.markDoneText">
                                         <i class="fa fa-check"/> Mark Done
                                     </button>
                                     <t t-set="opened">
