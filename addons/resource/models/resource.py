@@ -762,6 +762,7 @@ class ResourceResource(models.Model):
 
     _sql_constraints = [
         ('check_time_efficiency', 'CHECK(time_efficiency>0)', 'Time efficiency must be strictly positive'),
+        ('uniq_user_company', 'UNIQUE(company_id, user_id)', 'A user can only have one resource per company'),
     ]
 
     @api.constrains('time_efficiency')
