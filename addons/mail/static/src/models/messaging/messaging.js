@@ -365,6 +365,12 @@ registerModel({
          * Mailbox Starred.
          */
         starred: one2one('Thread'),
+        time: one2one('Time', {
+            default: insertAndReplace(),
+            isCausal: true,
+            readonly: true,
+            required: true,
+        }),
         userSetting: one2one('UserSetting', {
             isCausal: true,
         }),
