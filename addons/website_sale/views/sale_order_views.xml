@@ -4,7 +4,7 @@
         <field name="name">sale.order.ecommerce.search.view</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_sales_order_filter"/>
-        <field name="mode">primary</field> 
+        <field name="mode">primary</field>
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='my_sale_orders_filter']" position="before">
                 <filter string="Confirmed" name="order_confirmed" domain="[('state', 'in', ('sale', 'done'))]"/>
@@ -27,7 +27,7 @@
         <field name="name">sale.order.ecommerce.search.unpaid.view</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_sales_order_filter"/>
-        <field name="mode">primary</field> 
+        <field name="mode">primary</field>
         <field name="priority">32</field>
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='my_sale_orders_filter']" position="attributes">
@@ -189,9 +189,6 @@
     <menuitem id="menu_catalog" name="Products"
         parent="website.menu_website_configuration" sequence="3"
         groups="sales_team.group_sale_salesman"/>
-    <menuitem id="menu_reporting" name="Reporting"
-        parent="website.menu_website_configuration" sequence="99"
-        groups="sales_team.group_sale_manager"/>
     <menuitem id="website.menu_website_global_configuration" name="Configuration"
         parent="website.menu_website_configuration" sequence="100"
         groups="base.group_system,sales_team.group_sale_manager"/>
@@ -230,7 +227,8 @@
     <!-- Reporting sub-menus -->
     <menuitem id="menu_report_sales" name="Online Sales"
         action="sale_report_action_dashboard"
-        parent="menu_reporting" sequence="1"/>
+        parent="website.menu_reporting" sequence="1"
+        groups="sales_team.group_sale_manager"/>
 
     <!-- Configuration sub-menus -->
     <menuitem id="menu_ecommerce_payment_acquirers"
