@@ -399,6 +399,13 @@ export class ModelManager {
      * @returns {boolean} whether any value changed for the current record
      */
     update(record, data) {
+        for (const [fieldName, fieldValue] of Object.entries(data)) {
+            const modelField = record.constructor.__fieldMap[fieldName];
+            if (fieldValue === undefined || !modelField) {
+                continue;
+            }
+            data[fieldName] = modelField.convertToFieldCommandList(fieldValue);
+        }
         const res = this._update(record, data);
         this._flushUpdateCycle();
         return res;
@@ -420,7 +427,7 @@ export class ModelManager {
         const data2 = { ...data };
         for (const field of Model.__fieldList) {
             if (data2[field.fieldName] === undefined && field.default !== undefined) {
-                data2[field.fieldName] = field.default;
+                data2[field.fieldName] = field.convertToFieldCommandList(field.default);
             }
         }
         return data2;
@@ -766,7 +773,7 @@ export class ModelManager {
         for (const field of Model.__fieldList) {
             if (field.fieldType === 'relation') {
                 // ensure inverses are properly unlinked
-                field.parseAndExecuteCommands(record, unlinkAll(), { allowWriteReadonly: true });
+                field.parseAndExecuteCommands(record, [unlinkAll()], { allowWriteReadonly: true });
             }
         }
         this._createdRecordsComputes.delete(record);
@@ -826,7 +833,7 @@ export class ModelManager {
                             this.startListening(listener);
                             const res = record[field.compute]();
                             this.stopListening(listener);
-                            this._update(record, { [field.fieldName]: res }, { allowWriteReadonly: true });
+                            this._update(record, { [field.fieldName]: res === undefined ? res : field.convertToFieldCommandList(res) }, { allowWriteReadonly: true });
                         },
                     });
                     listeners.push(listener);
@@ -839,7 +846,7 @@ export class ModelManager {
                             this.startListening(listener);
                             const res = field.computeRelated(record);
                             this.stopListening(listener);
-                            this._update(record, { [field.fieldName]: res }, { allowWriteReadonly: true });
+                            this._update(record, { [field.fieldName]: res === undefined ? res : field.convertToFieldCommandList(res) }, { allowWriteReadonly: true });
                         },
                     });
                     listeners.push(listener);
@@ -997,14 +1004,21 @@ export class ModelManager {
             if (!fieldName) {
                 throw new Error(`Identifying element "${identifyingElement}" on ${Model} is lacking a value.`);
             }
-            const fieldValue = data[fieldName] !== undefined
-                ? data[fieldName]
-                : Model.__fieldMap[fieldName].default;
+            const fieldValue = (() => {
+                if (data[fieldName] !== undefined) {
+                    return Array.isArray(data[fieldName]) ? data[fieldName][0] : data[fieldName];
+                } else {
+                    return Model.__fieldMap[fieldName].default;
+                }
+            })();
             if (fieldValue === undefined) {
                 throw new Error(`Identifying field "${fieldName}" on ${Model} is lacking a value.`);
             }
             const relationTo = Model.__fieldMap[fieldName].to;
             if (!relationTo) {
+                if (fieldValue instanceof FieldCommand) {
+                    return `${fieldName}: ${fieldValue.value}`;
+                }
                 return `${fieldName}: ${fieldValue}`;
             }
             const OtherModel = this.models[relationTo];
@@ -1035,6 +1049,13 @@ export class ModelManager {
         this._ensureNoLockingListener();
         const records = [];
         for (const data of dataList) {
+            for (const [fieldName, fieldValue] of Object.entries(data)) {
+                const modelField = Model.__fieldMap[fieldName];
+                if (fieldValue === undefined || !modelField) {
+                    continue;
+                }
+                data[fieldName] = modelField.convertToFieldCommandList(fieldValue);
+            }
             const localId = this._getRecordIndex(Model, data);
             let record = Model.get(localId);
             if (!record) {

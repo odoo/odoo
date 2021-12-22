@@ -203,14 +203,15 @@ export class ModelField {
     clear(record, options) {
         let hasChanged = false;
         if (this.fieldType === 'relation') {
-            if (this.parseAndExecuteCommands(record, unlinkAll(), options)) {
+            if (this.parseAndExecuteCommands(record, [unlinkAll()], options)) {
                 hasChanged = true;
             }
             if (!this.default) {
                 return hasChanged;
             }
         }
-        if (this.parseAndExecuteCommands(record, this.default, options)) {
+        const defaultValue = this.default === undefined ? undefined : this.convertToFieldCommandList(this.default);
+        if (this.parseAndExecuteCommands(record, defaultValue, options)) {
             hasChanged = true;
         }
         return hasChanged;
@@ -268,10 +269,11 @@ export class ModelField {
     convertToFieldCommandList(newVal) {
         if (newVal instanceof FieldCommand) {
             return [newVal];
-        } else if (newVal instanceof Array && newVal[0] instanceof FieldCommand) {
+        } else if (Array.isArray(newVal) && newVal[0] instanceof FieldCommand) {
             return newVal;
         } else if (this.fieldType === 'relation') {
-            // Deprecated. Used only to support old syntax: `[...[name, value]]` command
+            // Field commands defined outside of JavaScript (on the python side,
+            // for example) are represented as a couple `(command name, value)`.
             return newVal.map(([name, value]) => new FieldCommand(name, value));
         } else {
             return [new FieldCommand('set', newVal)];
@@ -326,7 +328,7 @@ export class ModelField {
      * Parses newVal for command(s) and executes them.
      *
      * @param {Model} record
-     * @param {any} newVal
+     * @param {FieldCommand[]} [commandList=[]]
      * @param {Object} [options]
      * @param {boolean} [options.hasToUpdateInverse] whether updating the
      *  current field should also update its inverse field. Only applies to
@@ -334,8 +336,7 @@ export class ModelField {
      *  updating the inverse field itself, to avoid unnecessary recursion.
      * @returns {boolean} whether the value changed for the current field
      */
-    parseAndExecuteCommands(record, newVal, options) {
-        const commandList = this.convertToFieldCommandList(newVal);
+    parseAndExecuteCommands(record, commandList = [], options) {
         let hasChanged = false;
         for (const command of commandList) {
             const commandName = command.name;
@@ -617,7 +618,7 @@ export class ModelField {
             if (hasToUpdateInverse) {
                 record.modelManager._update(
                     recordToLink,
-                    { [this.inverse]: link(record) },
+                    { [this.inverse]: [link(record)] },
                     { allowWriteReadonly: true, hasToUpdateInverse: false }
                 );
             }
@@ -655,7 +656,7 @@ export class ModelField {
         if (hasToUpdateInverse) {
             record.modelManager._update(
                 recordToLink,
-                { [this.inverse]: link(record) },
+                { [this.inverse]: [link(record)] },
                 { allowWriteReadonly: true, hasToUpdateInverse: false }
             );
         }
@@ -790,7 +791,7 @@ export class ModelField {
                 } else {
                     record.modelManager._update(
                         recordToUnlink,
-                        { [this.inverse]: unlink(record) },
+                        { [this.inverse]: [unlink(record)] },
                         { allowWriteReadonly: true, hasToUpdateInverse: false }
                     );
                 }
@@ -834,7 +835,7 @@ export class ModelField {
             } else {
                 record.modelManager._update(
                     otherRecord,
-                    { [this.inverse]: unlink(record) },
+                    { [this.inverse]: [unlink(record)] },
                     { allowWriteReadonly: true, hasToUpdateInverse: false }
                 );
             }

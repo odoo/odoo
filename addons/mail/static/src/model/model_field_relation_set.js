@@ -173,7 +173,7 @@ export class RelationSet {
             // remove contribution of current value
             const contribution = this.sumByValueByField.get(sumFieldName).get(value);
             this.sumByValueByField.get(sumFieldName).delete(value);
-            this.record.modelManager._update(this.record, { [sumFieldName]: decrement(contribution) }, { allowWriteReadonly: true });
+            this.record.modelManager._update(this.record, { [sumFieldName]: [decrement(contribution)] }, { allowWriteReadonly: true });
             // remove listener on current value
             const listener = this.sumListenerByValueByField.get(sumFieldName).get(value);
             this.sumListenerByValueByField.get(sumFieldName).delete(value);
