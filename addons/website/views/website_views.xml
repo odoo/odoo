@@ -530,17 +530,33 @@
             sequence="1"
             parent="website.menu_website_configuration"/>
 
+        <menuitem id="menu_reporting"
+            name="Reporting"
+            sequence="99"
+            parent="website.menu_website_configuration"/>
+
         <!-- Force empty action, to ease upgrade -->
         <record id="menu_dashboard" model="ir.ui.menu">
             <field name="action" eval="False"/>
         </record>
 
-        <menuitem id="menu_website_dashboard" parent="menu_dashboard"
-            sequence="10" name="eCommerce Dashboard"
-            action="website.ir_actions_server_website_dashboard" active="0"/>
+        <menuitem id="menu_website_pages_list"
+            parent="menu_site"
+            sequence="20"
+            name="Pages"
+            action="action_website_pages_list"/>
 
-        <menuitem id="menu_website_google_analytics" parent="menu_dashboard"
-            sequence="20" name="Analytics"
+        <menuitem id="menu_website_dashboard"
+            name="eCommerce"
+            sequence="1"
+            parent="menu_reporting"
+            action="website.ir_actions_server_website_dashboard"
+            active="0"/>
+
+        <menuitem id="menu_website_google_analytics"
+            name="Analytics"
+            sequence="20"
+            parent="menu_reporting"
             action="website.ir_actions_server_website_google_analytics"/>
 
         <!-- Configurator actions -->
