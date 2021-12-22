@@ -9,6 +9,7 @@ import viewRegistry from 'web.view_registry';
 
 const ProjectFormController = FormController.extend({
     on_attach_callback() {
+        this._super(...arguments);
         if (!device.isMobile) {
             bus.on("DOM_updated", this, this._onDomUpdated);
         }
@@ -22,6 +23,7 @@ const ProjectFormController = FormController.extend({
         }
     },
     on_detach_callback() {
+        this._super(...arguments);
         bus.off('DOM_updated', this._onDomUpdated);
     },
     _getActionMenuItems(state) {
