@@ -187,7 +187,7 @@ class AccountAnalyticLine(models.Model):
     product_uom_category_id = fields.Many2one(related='product_uom_id.category_id', string='UoM Category', readonly=True)
     account_id = fields.Many2one('account.analytic.account', 'Analytic Account', required=True, ondelete='restrict', index=True, check_company=True)
     partner_id = fields.Many2one('res.partner', string='Partner', check_company=True)
-    user_id = fields.Many2one('res.users', string='User', default=_default_user)
+    user_id = fields.Many2one('res.users', string='User', default=_default_user, index=True)
     tag_ids = fields.Many2many('account.analytic.tag', 'account_analytic_line_tag_rel', 'line_id', 'tag_id', string='Tags', copy=True, check_company=True)
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, default=lambda self: self.env.company)
     currency_id = fields.Many2one(related="company_id.currency_id", string="Currency", readonly=True, store=True, compute_sudo=True)
