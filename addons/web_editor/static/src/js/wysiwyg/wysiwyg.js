@@ -538,7 +538,7 @@ const Wysiwyg = Widget.extend({
         if (this.linkPopover) {
             this.linkPopover.hide();
         }
-
+        window.removeEventListener('beforeunload', this._onBeforeUnload);
         this._super();
     },
     /**
