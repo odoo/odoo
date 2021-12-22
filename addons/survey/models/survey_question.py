@@ -77,7 +77,7 @@ class SurveyQuestion(models.Model):
         ('numerical_box', 'Numerical Value'),
         ('date', 'Date'),
         ('datetime', 'Datetime'),
-        ('simple_choice', 'Multiple choice: only one answer'),
+        ('simple_choice', 'Simple choice: only one answer'),
         ('multiple_choice', 'Multiple choice: multiple answers allowed'),
         ('matrix', 'Matrix')], string='Question Type',
         compute='_compute_question_type', readonly=False, store=True)
