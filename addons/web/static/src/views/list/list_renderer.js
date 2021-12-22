@@ -191,6 +191,13 @@ export class ListRenderer extends Component {
         return classNames.join(" ");
     }
 
+    getRowDecoration(record) {
+        return this.props.info.decorations
+            .filter((decoration) => evaluateExpr(decoration.condition, record.evalContext))
+            .map((decoration) => decoration.class)
+            .join(" ");
+    }
+
     getCellClass(column, record) {
         if (!this.cellClassByColumn[column.name]) {
             const classNames = ["o_data_cell"];

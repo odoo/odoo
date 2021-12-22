@@ -16,7 +16,7 @@ import { Layout } from "@web/views/layout";
 import { ViewNotFoundError } from "@web/views/view";
 import { useViewButtons } from "@web/views/view_button/hook";
 import { ViewButton } from "@web/views/view_button/view_button";
-import { getActiveActions, processButton } from "../helpers/view_utils";
+import { getActiveActions, getDecoration, processButton } from "../helpers/view_utils";
 import { RelationalModel } from "../relational_model";
 import { ListRenderer } from "./list_renderer";
 
@@ -68,6 +68,7 @@ export class ListArchParser extends XMLParser {
             ...getActiveActions(xmlDoc),
             exportXlsx: isAttr(xmlDoc, "export_xlsx").truthy(true),
         };
+        const decorations = getDecoration(xmlDoc);
         const defaultOrder = xmlDoc.getAttribute("default_order");
         const activeFields = {};
         const columns = [];
@@ -171,6 +172,7 @@ export class ListArchParser extends XMLParser {
             columns,
             groupBy,
             defaultOrder,
+            decorations,
         };
     }
 }

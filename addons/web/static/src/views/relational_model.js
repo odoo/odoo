@@ -184,10 +184,14 @@ export class Record extends DataPoint {
         const evalContext = {};
         for (const fieldName in this.activeFields) {
             const value = this.data[fieldName];
-            if ([undefined, null, ""].includes(value)) {
+            if ([null].includes(value)) {
                 evalContext[fieldName] = false;
             } else if (isX2Many(this.fields[fieldName])) {
                 evalContext[fieldName] = value.records.map((r) => r.resId);
+            } else if (value && this.fields[fieldName].type === "date") {
+                evalContext[fieldName] = value.toFormat("yyyy-LL-dd");
+            } else if (value && this.fields[fieldName].type === "datetime") {
+                evalContext[fieldName] = value.toFormat("yyyy-LL-dd HH:mm:ss");
             } else {
                 evalContext[fieldName] = value;
             }

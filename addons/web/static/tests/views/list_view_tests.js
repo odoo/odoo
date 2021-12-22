@@ -4861,27 +4861,12 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skip("list with group_by_no_leaf flag in context", async function (assert) {
-        assert.expect(1);
-
-        const list = await makeView({
-            type: "list",
-            resModel: "foo",
-            serverData,
-            arch: '<tree><field name="foo"/></tree>',
-            context: {
-                group_by_no_leaf: true,
-            },
-        });
-
-        assert.containsNone(list, ".o_list_buttons", "should not have any buttons");
-    });
-
     QUnit.skip("display a tooltip on a field", async function (assert) {
         assert.expect(4);
 
-        var initialDebugMode = odoo.debug;
-        odoo.debug = false;
+        patchWithCleanup(odoo, {
+            debug: false,
+        });
 
         const list = await makeView({
             type: "list",
@@ -4896,18 +4881,23 @@ QUnit.module("Views", (hooks) => {
 
         // this is done to force the tooltip to show immediately instead of waiting
         // 1000 ms. not totally academic, but a short test suite is easier to sell :(
-        $(list.el).find("th[data-name=foo]").tooltip("show", false);
-
-        $(list.el).find("th[data-name=foo]").trigger($.Event("mouseenter"));
+        // $(list.el).find("th[data-name=foo]").tooltip("show", false);
+        const thFoo = [...list.el.querySelectorAll("th")].filter(
+            (el) => el.textContent === "Foo"
+        )[0];
+        mouseEnter(thFoo);
         assert.strictEqual(
             $(".tooltip .oe_tooltip_string").length,
             0,
             "should not have rendered a tooltip"
         );
 
-        odoo.debug = true;
+        patchWithCleanup(odoo, {
+            debug: true,
+        });
         // it is necessary to rerender the list so tooltips can be properly created
-        await list.reload();
+        // reload
+        await triggerEvent(list.el, "input.o_searchview_input", "keydown", { key: "Enter" });
         $(list.el).find("th[data-name=foo]").tooltip("show", false);
         $(list.el).find("th[data-name=foo]").trigger($.Event("mouseenter"));
         assert.strictEqual(
@@ -4916,7 +4906,8 @@ QUnit.module("Views", (hooks) => {
             "should have rendered a tooltip"
         );
 
-        await list.reload();
+        // reload
+        await triggerEvent(list.el, "input.o_searchview_input", "keydown", { key: "Enter" });
         $(list.el).find("th[data-name=bar]").tooltip("show", false);
         $(list.el).find("th[data-name=bar]").trigger($.Event("mouseenter"));
         assert.containsOnce(
@@ -4929,11 +4920,9 @@ QUnit.module("Views", (hooks) => {
             "Button (toggle_button)",
             "widget description should be correct"
         );
-
-        odoo.debug = initialDebugMode;
     });
 
-    QUnit.skip("support row decoration", async function (assert) {
+    QUnit.test("support row decoration", async function (assert) {
         assert.expect(2);
 
         const list = await makeView({
@@ -4986,7 +4975,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skip("support row decoration with date", async function (assert) {
+    QUnit.test("support row decoration with date", async function (assert) {
         assert.expect(3);
 
         serverData.models.foo.records[0].datetime = "2017-02-27 12:51:35";
@@ -5016,7 +5005,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(list, "tbody tr", 4, "should have 4 rows");
     });
 
-    QUnit.skip("support field decoration", async function (assert) {
+    QUnit.test("support field decoration", async function (assert) {
         assert.expect(3);
 
         const list = await makeView({
@@ -5031,7 +5020,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsN(list, "tbody tr", 4, "should have 4 rows");
-        assert.containsN(list, "tbody td.o_list_char.text-danger", 3);
+        assert.containsN(list, "tbody td .text-danger", 3);
         assert.containsNone(list, "tbody td.o_list_number.text-danger");
     });
 

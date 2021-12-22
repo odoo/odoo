@@ -80,3 +80,16 @@ export function getActiveActions(rootNode) {
         duplicate: isAttr(rootNode, "duplicate").truthy(true),
     };
 }
+
+export function getDecoration(rootNode) {
+    const decorations = [];
+    for (const name of rootNode.getAttributeNames()) {
+        if (name.startsWith("decoration-")) {
+            decorations.push({
+                class: name.replace("decoration", "text"),
+                condition: rootNode.getAttribute(name),
+            });
+        }
+    }
+    return decorations;
+}

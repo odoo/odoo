@@ -109,7 +109,7 @@
     </t>
 
     <t t-name="web.ListRenderer.RecordRow" owl="1">
-        <tr class="o_data_row" t-on-click="openRecord(record)">
+        <tr class="o_data_row" t-att-class="getRowDecoration(record)" t-on-click="openRecord(record)">
             <td t-if="props.hasSelectors" class="o_list_record_selector" t-on-click.stop="toggleRecordSelection(record)">
                 <CheckBox value="record.selected" t-on-change="toggleRecordSelection(record)" t-on-click.stop=""/>
             </td>
