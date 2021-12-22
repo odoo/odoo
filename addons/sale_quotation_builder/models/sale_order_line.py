@@ -8,20 +8,17 @@ from odoo.tools.translate import html_translate
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
-    website_description = fields.Html('Website Description', sanitize=False, translate=html_translate, sanitize_form=False)
+    website_description = fields.Html(
+        string="Website Description",
+        compute='_compute_website_description',
+        store=True, readonly=False, precompute=True,
+        sanitize=False, translate=html_translate, sanitize_form=False)
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        vals_list = [self._inject_quotation_description(vals) for vals in vals_list]
-        return super().create(vals_list)
-
-    def write(self, values):
-        values = self._inject_quotation_description(values)
-        return super().write(values)
-
-    def _inject_quotation_description(self, values):
-        values = dict(values or {})
-        if not values.get('website_description') and values.get('product_id'):
-            product = self.env['product.product'].browse(values['product_id'])
-            values.update(website_description=product.quotation_description)
-        return values
+    @api.depends('product_id')
+    def _compute_website_description(self):
+        for line in self:
+            if not line.product_id:
+                continue
+            line.website_description = line.product_id.with_context(
+                lang=line.order_partner_id.lang
+            ).quotation_description
