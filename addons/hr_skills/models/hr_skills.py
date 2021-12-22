@@ -8,7 +8,7 @@ from odoo.exceptions import ValidationError
 class Skill(models.Model):
     _name = 'hr.skill'
     _description = "Skill"
-    _order = "sequence"
+    _order = "sequence, name"
 
     name = fields.Char(required=True)
     sequence = fields.Integer(default=10)
@@ -113,6 +113,7 @@ class SkillLevel(models.Model):
 class SkillType(models.Model):
     _name = 'hr.skill.type'
     _description = "Skill Type"
+    _order = "name"
 
     name = fields.Char(required=True)
     skill_ids = fields.One2many('hr.skill', 'skill_type_id', string="Skills")
