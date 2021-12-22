@@ -532,21 +532,6 @@ class Channel(models.Model):
                 groups[index] = (group_name, lambda partner: False, group_data)
         return groups
 
-    def _notify_email_header_dict(self):
-        headers = super(Channel, self)._notify_email_header_dict()
-        headers['Precedence'] = 'list'
-        # avoid out-of-office replies from MS Exchange
-        # http://blogs.technet.com/b/exchange/archive/2006/10/06/3395024.aspx
-        headers['X-Auto-Response-Suppress'] = 'OOF'
-        if self.alias_domain and self.alias_name:
-            headers['List-Id'] = '<%s.%s>' % (self.alias_name, self.alias_domain)
-            headers['List-Post'] = '<mailto:%s@%s>' % (self.alias_name, self.alias_domain)
-            # Avoid users thinking it was a personal message
-            # X-Forge-To: will replace To: after SMTP envelope is determined by ir.mail.server
-            list_to = '"%s" <%s@%s>' % (self.name, self.alias_name, self.alias_domain)
-            headers['X-Forge-To'] = list_to
-        return headers
-
     def _notify_thread(self, message, msg_vals=False, **kwargs):
         # link message to channel
         rdata = super(Channel, self)._notify_thread(message, msg_vals=msg_vals, **kwargs)
