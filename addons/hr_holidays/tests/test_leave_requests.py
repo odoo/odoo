@@ -461,3 +461,59 @@ class TestLeaveRequests(TestHrHolidaysBase):
             'date_to': datetime(2022, 3, 11, 23, 59, 59),
         })
         self.assertEqual(leave.number_of_days, 1)
+
+    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
+    def test_leaves_after_changing_calendar(self):
+        # create resource calendar with monday off
+        calendar1 = self.env['resource.calendar'].create({
+            'name': '32h/week with monday off',
+            'hours_per_day': 8.0,
+            'attendance_ids': [
+                (0, 0, {'name': 'Tuesday Morning', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Tuesday Afternoon', 'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Wednesday Morning', 'dayofweek': '1', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Wednesday Afternoon', 'dayofweek': '1', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Thursday Morning', 'dayofweek': '2', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Thursday Afternoon', 'dayofweek': '2', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'}),
+                (0, 0, {'name': 'Friday Morning', 'dayofweek': '3', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
+                (0, 0, {'name': 'Friday Afternoon', 'dayofweek': '3', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'})
+            ],
+        })
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Paid Time Off',
+            'request_unit': 'hour',
+            'validation_type': 'both',
+            'allocation_type': 'no',
+        })
+        leave1 = self.env['hr.leave'].create({
+            'name': 'past leave',
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': leave_type.id,
+            'date_from': fields.Datetime.from_string('2019-12-23 06:00:00'),
+            'date_to': fields.Datetime.from_string('2019-12-27 20:00:00'),
+            'number_of_days': 5,
+        })
+        leave1.action_approve()
+        leave1.action_validate()
+        leave2 = self.env['hr.leave'].create({
+            'name': 'future leave',
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': leave_type.id,
+            'date_from': (datetime.today() + relativedelta(days=1)),
+            'date_to': (datetime.today() + relativedelta(days=5)),
+            'number_of_days': 5,
+        })
+        leave2.action_approve()
+        leave2.action_validate()
+        total_leave = self.env['resource.calendar.leaves'].search([
+            ('resource_id', 'in', self.employee_emp.resource_id.ids),
+            ('calendar_id', '=', self.employee_emp.resource_calendar_id.id)
+        ])
+        self.assertEqual(len(total_leave), 2, "There should be 2 leaves in employee's resource calendar")
+        # change the resource calendar of the employee
+        self.employee_emp.resource_calendar_id = calendar1
+        future_leave = self.env['resource.calendar.leaves'].search([
+            ('resource_id', 'in', self.employee_emp.resource_id.ids),
+            ('calendar_id', '=', self.employee_emp.resource_calendar_id.id)
+        ])
+        self.assertEqual(len(future_leave), 1, "Future leave should be moved to new resource calendar of the employee")

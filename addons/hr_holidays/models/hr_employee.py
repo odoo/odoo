@@ -194,6 +194,18 @@ class HrEmployeeBase(models.AbstractModel):
 class HrEmployeePrivate(models.Model):
     _inherit = 'hr.employee'
 
+    def write(self, vals):
+        res = super().write(vals)
+        if 'resource_calendar_id' in vals and vals['resource_calendar_id']:
+            resource_leaves = self.env['resource.calendar.leaves'].search([
+                ('resource_id', 'in', self.resource_id.ids),
+                ('date_from', '>=', fields.Datetime.today()),
+                ('holiday_id', '!=', False),
+            ])
+            if resource_leaves:
+                resource_leaves.write({'calendar_id': vals['resource_calendar_id']})
+        return res
+
 class HrEmployeePublic(models.Model):
     _inherit = 'hr.employee.public'
 
