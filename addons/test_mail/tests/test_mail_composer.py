@@ -69,10 +69,17 @@ class TestMailComposer(TestMailCommon, TestRecipients):
             'auto_delete': True,
         })
 
-    def _generate_attachments_data(self, count):
+    def _generate_attachments_data(self, count, res_model=None, res_id=None):
+        # attachment visibility depends on what they are attached to
+        if res_model is None:
+            res_model = self.template._name
+        if res_id is None:
+            res_id = self.template.id
         return [{
             'name': '%02d.txt' % x,
             'datas': base64.b64encode(b'Att%02d' % x),
+            'res_model': res_model,
+            'res_id': res_id,
         } for x in range(count)]
 
     def _get_web_context(self, records, add_web=True, **values):
