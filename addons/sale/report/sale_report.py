@@ -53,9 +53,9 @@ class SaleReport(models.Model):
 
     discount = fields.Float('Discount %', readonly=True)
     discount_amount = fields.Float('Discount Amount', readonly=True)
-    campaign_id = fields.Many2one('utm.campaign', 'Campaign')
-    medium_id = fields.Many2one('utm.medium', 'Medium')
-    source_id = fields.Many2one('utm.source', 'Source')
+    campaign_id = fields.Many2one('utm.campaign', 'Campaign', readonly=True)
+    medium_id = fields.Many2one('utm.medium', 'Medium', readonly=True)
+    source_id = fields.Many2one('utm.source', 'Source', readonly=True)
 
     order_id = fields.Many2one('sale.order', 'Order #', readonly=True)
 
@@ -158,6 +158,8 @@ class SaleReport(models.Model):
         tools.drop_view_if_exists(self.env.cr, self._table)
         self.env.cr.execute("""CREATE or REPLACE VIEW %s as (%s)""" % (self._table, self._query()))
 
+
+# FIXME is this used somewhere ?
 class SaleOrderReportProforma(models.AbstractModel):
     _name = 'report.sale.report_saleproforma'
     _description = 'Proforma Report'
