@@ -4469,21 +4469,19 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.skip("button box is rendered in create mode", async function (assert) {
-        assert.expect(3);
-
+    QUnit.test("button box is rendered in create mode", async function (assert) {
         const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                '<div name="button_box" class="oe_button_box">' +
-                '<button type="object" class="oe_stat_button" icon="fa-check-square">' +
-                '<field name="bar"/>' +
-                "</button>" +
-                "</div>" +
-                "</form>",
+            arch: `
+                <form>
+                    <div name="button_box" class="oe_button_box">
+                        <button type="object" class="oe_stat_button" icon="fa-check-square">
+                            <field name="bar"/>
+                        </button>
+                    </div>
+                </form>`,
             resId: 2,
         });
 
@@ -5149,6 +5147,7 @@ QUnit.module("Views", (hooks) => {
             resId: 2,
             intercepts: {
                 execute_action: function (event) {
+                    form.destroy();
                     event.data.on_success();
                 },
             },
