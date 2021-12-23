@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { makeContext } from "@web/core/context";
+import { Dialog } from "@web/core/dialog/dialog";
 import { Domain } from "@web/core/domain";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { ORM } from "@web/core/orm_service";
@@ -12,6 +13,16 @@ import { registry } from "../core/registry";
 
 const { DateTime } = luxon;
 const preloadedDataRegistry = registry.category("preloadedData");
+
+const { tags } = owl;
+
+class WarningDialog extends Dialog {
+    setup() {
+        super.setup();
+        this.title = this.props.title;
+    }
+}
+WarningDialog.bodyTemplate = tags.xml`<t t-esc="props.message"/>`;
 
 function orderByToString(orderBy) {
     return orderBy.map((o) => `${o.name} ${o.asc ? "ASC" : "DESC"}`).join(", ");
@@ -454,6 +465,19 @@ export class Record extends DataPoint {
                 [[], this._getChanges(true), fieldName ? [fieldName] : [], this._getOnchangeSpec()],
                 { context: this.context }
             );
+            if (result.warning) {
+                const { type, title, message } = result.warning;
+                if (type === "dialog") {
+                    this.model.dialogService.add(WarningDialog, { title, message });
+                } else {
+                    this.model.notificationService.add(message, {
+                        className: result.warning.className,
+                        sticky: result.warning.sticky,
+                        title,
+                        type: "warning",
+                    });
+                }
+            }
             // for x2many fields, the onchange returns commands, not ids, so we need to process them
             // for now, we simply return an empty list
             for (const fieldName in result.value) {
@@ -1063,8 +1087,10 @@ export class StaticList extends DataPoint {
 StaticList.DEFAULT_LIMIT = 80;
 
 export class RelationalModel extends Model {
-    setup(params, { action, rpc, user }) {
+    setup(params, { action, dialog, notification, rpc, user }) {
         this.action = action;
+        this.dialogService = dialog;
+        this.notificationService = notification;
         this.rpc = rpc;
         this.orm = new RequestBatcherORM(rpc, user);
         this.keepLast = new KeepLast();
@@ -1176,7 +1202,7 @@ export class RelationalModel extends Model {
     // }
 }
 
-RelationalModel.services = ["action", "rpc", "user"];
+RelationalModel.services = ["action", "dialog", "notification", "rpc", "user"];
 RelationalModel.Record = Record;
 RelationalModel.Group = Group;
 RelationalModel.DynamicRecordList = DynamicRecordList;

@@ -3965,42 +3965,37 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skip("restore local state when switching to another record", async function (assert) {
-        assert.expect(4);
-
+    QUnit.test("restore local state when switching to another record", async function (assert) {
         const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                "<notebook>" +
-                '<page string="First Page" name="first">' +
-                '<field name="foo"/>' +
-                "</page>" +
-                '<page string="Second page" name="second">' +
-                '<field name="bar"/>' +
-                "</page>" +
-                "</notebook>" +
-                "</form>",
-            viewOptions: {
-                ids: [1, 2],
-                index: 0,
-            },
+            arch: `
+                <form>
+                    <notebook>
+                        <page string="First Page" name="first">
+                            <field name="foo"/>
+                        </page>
+                        <page string="Second page" name="second">
+                            <field name="bar"/>
+                        </page>
+                    </notebook>
+                </form>`,
+            resIds: [1, 2],
             resId: 1,
         });
 
         // click on second page tab
-        await click(form.el.querySelector(".o_notebook .nav-link:eq(1)"));
+        await click(form.el.querySelectorAll(".o_notebook .nav-link")[1]);
 
-        assert.doesNotHaveClass(form.el.querySelector(".o_notebook .nav-link:eq(0)"), "active");
-        assert.hasClass(form.el.querySelector(".o_notebook .nav-link:eq(1)"), "active");
+        assert.doesNotHaveClass(form.el.querySelector(".o_notebook .nav-link"), "active");
+        assert.hasClass(form.el.querySelectorAll(".o_notebook .nav-link")[1], "active");
 
         // click on the pager to switch to the next record
         await click(form.el.querySelector(".o_pager_next"));
 
-        assert.doesNotHaveClass(form.el.querySelector(".o_notebook .nav-link:eq(0)"), "active");
-        assert.hasClass(form.el.querySelector(".o_notebook .nav-link:eq(1)"), "active");
+        assert.doesNotHaveClass(form.el.querySelector(".o_notebook .nav-link"), "active");
+        assert.hasClass(form.el.querySelectorAll(".o_notebook .nav-link")[1], "active");
     });
 
     QUnit.test("pager is hidden in create mode", async function (assert) {
@@ -4221,26 +4216,23 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(form, ".o_field_invalid");
     });
 
-    QUnit.skip("changes in a readonly form view are saved directly", async function (assert) {
-        assert.expect(10);
-
+    QUnit.test("changes in a readonly form view are saved directly", async function (assert) {
         let nbWrite = 0;
         const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                "<group>" +
-                '<field name="foo"/>' +
-                '<field name="priority" widget="priority"/>' +
-                "</group>" +
-                "</form>",
+            arch: `
+                <form>
+                    <group>
+                    <field name="foo"/>
+                    <field name="priority" widget="priority"/>
+                    </group>
+                </form>`,
             mockRPC(route) {
                 if (route === "/web/dataset/call_kw/partner/write") {
                     nbWrite++;
                 }
-                return this._super.apply(this, arguments);
             },
             resId: 1,
         });
@@ -4259,7 +4251,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // edit the value in readonly
-        await click(form.el.querySelector(".o_priority .fa-star-o:first"));
+        await click(form.el.querySelector(".o_priority .fa-star-o"));
         assert.strictEqual(nbWrite, 1, "should have saved directly");
         assert.containsOnce(
             form,
@@ -4280,7 +4272,7 @@ QUnit.module("Views", (hooks) => {
             ".o_priority .fa-star",
             "priority widget should have correct value"
         );
-        await click(form.el.querySelector(".o_priority .fa-star-o:first"));
+        await click(form.el.querySelector(".o_priority .fa-star-o"));
         assert.strictEqual(nbWrite, 1, "should not have saved directly");
         assert.containsN(
             form,
@@ -4300,7 +4292,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skip("display a dialog if onchange result is a warning", async function (assert) {
+    QUnit.test("display a dialog if onchange result is a warning", async function (assert) {
         assert.expect(5);
 
         serverData.models.partner.onchanges = { foo: true };
@@ -4309,10 +4301,7 @@ QUnit.module("Views", (hooks) => {
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                '<group><field name="foo"/><field name="int_field"/></group>' +
-                "</form>",
+            arch: `<form><field name="foo"/><field name="int_field"/></form>`,
             resId: 2,
             mockRPC(route, args) {
                 if (args.method === "onchange") {
@@ -4325,26 +4314,6 @@ QUnit.module("Views", (hooks) => {
                         },
                     });
                 }
-                return this._super.apply(this, arguments);
-            },
-            intercepts: {
-                warning: function (event) {
-                    assert.strictEqual(
-                        event.data.type,
-                        "dialog",
-                        "should have triggered an event with the correct data"
-                    );
-                    assert.strictEqual(
-                        event.data.title,
-                        "Warning",
-                        "should have triggered an event with the correct data"
-                    );
-                    assert.strictEqual(
-                        event.data.message,
-                        "You must first select a partner",
-                        "should have triggered an event with the correct data"
-                    );
-                },
             },
         });
 
@@ -4361,23 +4330,24 @@ QUnit.module("Views", (hooks) => {
             form.el.querySelector(".o_field_widget[name=int_field] input").value,
             "10"
         );
+        assert.containsOnce(document.body, ".modal");
+        assert.strictEqual(document.body.querySelector(".modal-title").innerText, "Warning");
+        assert.strictEqual(
+            document.body.querySelector(".modal-body").innerText,
+            "You must first select a partner"
+        );
     });
 
-    QUnit.skip(
+    QUnit.test(
         "display a notificaton if onchange result is a warning with type notification",
         async function (assert) {
-            assert.expect(5);
-
             serverData.models.partner.onchanges = { foo: true };
 
             const form = await makeView({
                 type: "form",
                 resModel: "partner",
                 serverData,
-                arch:
-                    "<form>" +
-                    '<group><field name="foo"/><field name="int_field"/></group>' +
-                    "</form>",
+                arch: `<form><field name="foo"/><field name="int_field"/></form>`,
                 resId: 2,
                 mockRPC(route, args) {
                     if (args.method === "onchange") {
@@ -4387,29 +4357,11 @@ QUnit.module("Views", (hooks) => {
                                 title: "Warning",
                                 message: "You must first select a partner",
                                 type: "notification",
+                                className: "abc",
+                                sticky: true,
                             },
                         });
                     }
-                    return this._super.apply(this, arguments);
-                },
-                intercepts: {
-                    warning: function (event) {
-                        assert.strictEqual(
-                            event.data.type,
-                            "notification",
-                            "should have triggered an event with the correct data"
-                        );
-                        assert.strictEqual(
-                            event.data.title,
-                            "Warning",
-                            "should have triggered an event with the correct data"
-                        );
-                        assert.strictEqual(
-                            event.data.message,
-                            "You must first select a partner",
-                            "should have triggered an event with the correct data"
-                        );
-                    },
                 },
             });
 
@@ -4426,10 +4378,21 @@ QUnit.module("Views", (hooks) => {
                 form.el.querySelector(".o_field_widget[name=int_field] input").value,
                 "10"
             );
+
+            assert.containsOnce(document.body, ".o_notification");
+            assert.hasClass(document.body.querySelector(".o_notification"), "abc");
+            assert.strictEqual(
+                document.body.querySelector(".o_notification_title").innerText,
+                "Warning"
+            );
+            assert.strictEqual(
+                document.body.querySelector(".o_notification_content").innerText,
+                "You must first select a partner"
+            );
         }
     );
 
-    QUnit.skip("can create record even if onchange returns a warning", async function (assert) {
+    QUnit.test("can create record even if onchange returns a warning", async function (assert) {
         assert.expect(2);
 
         serverData.models.partner.onchanges = { foo: true };
@@ -4438,10 +4401,7 @@ QUnit.module("Views", (hooks) => {
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                "<form>" +
-                '<group><field name="foo"/><field name="int_field"/></group>' +
-                "</form>",
+            arch: `<form><field name="foo"/><field name="int_field"/></form>`,
             mockRPC(route, args) {
                 if (args.method === "onchange") {
                     return Promise.resolve({
@@ -4452,12 +4412,6 @@ QUnit.module("Views", (hooks) => {
                         },
                     });
                 }
-                return this._super.apply(this, arguments);
-            },
-            intercepts: {
-                warning: function (event) {
-                    assert.ok(true, "should trigger a warning");
-                },
             },
         });
         assert.strictEqual(
@@ -4465,6 +4419,7 @@ QUnit.module("Views", (hooks) => {
             "10",
             "record should have been created and rendered"
         );
+        assert.containsOnce(document.body, ".o_notification");
     });
 
     QUnit.skip(
@@ -8215,10 +8170,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch: "<form>" + "<sheet>" + '<field name="foo"/>' + "</sheet>" + "</form>",
-            viewOptions: {
-                ids: [1, 2],
-                index: 0,
-            },
+            resIds: [1, 2],
             resId: 1,
         });
 
@@ -9915,10 +9867,7 @@ QUnit.module("Views", (hooks) => {
             resModel: "partner",
             serverData,
             arch: '<form><field name="foo"/></form>',
-            viewOptions: {
-                ids: [1, 2],
-                index: 0,
-            },
+            resIds: [1, 2],
             resId: 2,
         });
 
