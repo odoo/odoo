@@ -549,41 +549,39 @@ class ProductTemplate(models.Model):
             },
         }
 
-    def price_compute(self, price_type, uom=False, currency=False, company=None, date=False):
-        # TDE FIXME: delegate to template or not ? fields are reencoded here ...
-        # compatibility about context keys used a bit everywhere in the code
-        if not uom and self._context.get('uom'):
-            uom = self.env['uom.uom'].browse(self._context['uom'])
-        if not currency and self._context.get('currency'):
-            currency = self.env['res.currency'].browse(self._context['currency'])
+    def price_compute(self, price_type, uom=None, currency=None, company=None, date=False):
+        company = company or self.env.company
+        date = date or fields.Date.context_today(self)
 
-        templates = self
+        self = self.with_company(company)
         if price_type == 'standard_price':
             # standard_price field can only be seen by users in base.group_user
             # Thus, in order to compute the sale price from the cost for users not in this group
             # We fetch the standard price as the superuser
-            templates = self.with_company(company).sudo()
-        if not company:
-            company = self.env.company
-        date = date or fields.Date.context_today(self)
+            self = self.sudo()
 
         prices = dict.fromkeys(self.ids, 0.0)
-        for template in templates:
-            prices[template.id] = template[price_type] or 0.0
+        for template in self:
+            price = template[price_type] or 0.0
+            price_currency = template.currency_id
+            if price_type == 'standard_price':
+                price_currency = template.cost_currency_id
+
             # yes, there can be attribute values for product template if it's not a variant YET
             # (see field product.attribute create_variant)
             if price_type == 'list_price' and self._context.get('current_attributes_price_extra'):
                 # we have a list of price_extra that comes from the attribute values, we need to sum all that
-                prices[template.id] += sum(self._context.get('current_attributes_price_extra'))
+                price += sum(self._context.get('current_attributes_price_extra'))
 
             if uom:
-                prices[template.id] = template.uom_id._compute_price(prices[template.id], uom)
+                price = template.uom_id._compute_price(price, uom)
 
             # Convert from current user company currency to asked one
             # This is right cause a field cannot be in more than one currency
             if currency:
-                prices[template.id] = template.currency_id._convert(prices[template.id], currency, company, date)
+                price = price_currency._convert(price, currency, company, date)
 
+            prices[template.id] = price
         return prices
 
     def _create_variant_ids(self):
