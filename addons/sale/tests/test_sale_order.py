@@ -682,8 +682,8 @@ class TestSaleOrder(TestSaleCommon):
                 'compute_price': 'percentage'
             })
         ]
+        self.env.user.groups_id += self.env.ref('product.group_discount_per_so_line')
         pricelist.discount_policy = "without_discount"
-        self.env['product.product'].invalidate_cache(['price'])
         sale_order.update_prices()
 
         self.assertTrue(all(line.discount == 5 for line in sale_order.order_line))
@@ -691,7 +691,6 @@ class TestSaleOrder(TestSaleCommon):
         self.assertEqual(sale_order.amount_total, 0.95*so_amount)
 
         pricelist.discount_policy = "with_discount"
-        self.env['product.product'].invalidate_cache(['price'])
         sale_order.update_prices()
 
         self.assertTrue(all(line.discount == 0 for line in sale_order.order_line))

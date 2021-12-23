@@ -19,13 +19,13 @@ class Product(models.Model):
     base_unit_price = fields.Monetary("Price Per Unit", currency_field="currency_id", compute="_compute_base_unit_price")
     base_unit_name = fields.Char(compute='_compute_base_unit_name', help='Displays the custom unit for the products if defined or the selected unit of measure otherwise.')
 
-    @api.depends('price', 'lst_price', 'base_unit_count')
+    @api.depends('lst_price', 'base_unit_count')
     def _compute_base_unit_price(self):
         for product in self:
             if not product.id:
                 product.base_unit_price = 0
             else:
-                product.base_unit_price = product.base_unit_count and (product.price or product.lst_price) / product.base_unit_count
+                product.base_unit_price = product.base_unit_count and product.lst_price / product.base_unit_count
 
     @api.depends('uom_name', 'base_unit_id')
     def _compute_base_unit_name(self):

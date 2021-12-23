@@ -283,7 +283,7 @@ def depends_context(*args):
                     pricelist = self.env['product.pricelist'].browse(product.env.context['pricelist'])
                 else:
                     pricelist = self.env['product.pricelist'].get_default_pricelist()
-                product.price = pricelist.get_products_price(product).get(product.id, 0.0)
+                product.price = pricelist._get_products_price(product).get(product.id, 0.0)
 
     All dependencies must be hashable.  The following keys have special
     support:
