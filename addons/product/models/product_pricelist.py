@@ -168,12 +168,6 @@ class Pricelist(models.Model):
         # Fetch all rules potentially matching specified products/templates/categories and date
         rules = self._get_applicable_rules(date, product_tmpl_ids, product_ids, category_ids)
 
-        if 'currency' in products.env.context:
-            # Remove currency from product context to avoid any
-            # side-effect currency conversion in price_compute calls
-            # since we manage currency conversion without the context fallbacks
-            product = products.with_context(currency=False)
-
         results = {}
         for product in products:
             suitable_rule = self.env['product.pricelist.item']
