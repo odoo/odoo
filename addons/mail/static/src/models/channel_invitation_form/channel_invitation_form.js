@@ -7,7 +7,7 @@ import { cleanSearchTerm } from '@mail/utils/utils';
 
 registerModel({
     name: 'ChannelInvitationForm',
-    identifyingFields: [['chatWindow', 'threadView']],
+    identifyingFields: [['chatWindow', 'popoverViewOwner']],
     lifecycleHooks: {
         _created() {
             // Bind necessary until OWL supports arrow function in handlers: https://github.com/odoo/owl/issues/876
@@ -168,8 +168,12 @@ registerModel({
          * @returns {FieldCommand}
          */
         _computeThread() {
-            if (this.threadView && this.threadView.thread) {
-                return replace(this.threadView.thread);
+            if (
+                this.popoverViewOwner &&
+                this.popoverViewOwner.threadViewTopbarOwnerAsInvite &&
+                this.popoverViewOwner.threadViewTopbarOwnerAsInvite.thread
+            ) {
+                return replace(this.popoverViewOwner.threadViewTopbarOwnerAsInvite.thread);
             }
             if (this.chatWindow && this.chatWindow.thread) {
                 return replace(this.chatWindow.thread);
@@ -211,6 +215,13 @@ registerModel({
             compute: '_computeInviteButtonText',
         }),
         /**
+         * If set, this channel invitation form is content of related popover view.
+         */
+        popoverViewOwner: one2one('PopoverView', {
+            inverse: 'channelInvitationForm',
+            readonly: true,
+        }),
+        /**
          * States the OWL ref of the "search" input of this channel invitation
          * form. Useful to be able to focus it.
          */
@@ -243,13 +254,6 @@ registerModel({
             compute: '_computeThread',
             readonly: true,
             required: true,
-        }),
-        /**
-         * States the thread view on which this list operates (if any).
-         */
-        threadView: one2one('ThreadView', {
-            inverse: 'channelInvitationForm',
-            readonly: true,
         }),
     },
 });

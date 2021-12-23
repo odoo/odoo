@@ -1,14 +1,12 @@
 /** @odoo-module **/
 
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model/use_component_to_model';
 import { useDragVisibleDropZone } from '@mail/component_hooks/use_drag_visible_dropzone/use_drag_visible_dropzone';
+import { useRefToModel } from '@mail/component_hooks/use_ref_to_model/use_ref_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
-import {
-    isEventHandled,
-    markEventHandled,
-} from '@mail/utils/utils';
+import { isEventHandled } from '@mail/utils/utils';
 
 const { Component } = owl;
-const { onMounted, onWillUnmount, useRef } = owl.hooks;
 
 export class Composer extends Component {
 
@@ -18,31 +16,11 @@ export class Composer extends Component {
     setup() {
         super.setup();
         this.isDropZoneVisible = useDragVisibleDropZone();
-        /**
-         * Reference of the emoji list. Useful to include emoji list as
-         * contained "inside" the composer.
-         */
-        this._emojiListRef = useRef('emojiList');
-        /**
-         * Reference of the text input component. Useful to save state in store
-         * before inserting emoji.
-         */
-        this._textInputRef = useRef('textInput');
-        this._onClickCaptureGlobal = this._onClickCaptureGlobal.bind(this);
-        onMounted(() => this._mounted());
-        onWillUnmount(() => this._willUnmount());
+        useComponentToModel({ fieldName: 'component', modelName: 'ComposerView', propNameAsRecordLocalId: 'composerViewLocalId' });
+        useRefToModel({ fieldName: 'buttonEmojisRef', modelName: 'ComposerView', propNameAsRecordLocalId: 'composerViewLocalId', refName: 'buttonEmojis' });
         this._onDropZoneFilesDropped = this._onDropZoneFilesDropped.bind(this);
         this._onComposerTextInputSendShortcut = this._onComposerTextInputSendShortcut.bind(this);
         this._onPasteTextInput = this._onPasteTextInput.bind(this);
-        this._onEmojiSelection = this._onEmojiSelection.bind(this);
-    }
-
-    _mounted() {
-        document.addEventListener('click', this._onClickCaptureGlobal, true);
-    }
-
-    _willUnmount() {
-        document.removeEventListener('click', this._onClickCaptureGlobal, true);
     }
 
     //--------------------------------------------------------------------------
@@ -54,22 +32,6 @@ export class Composer extends Component {
      */
     get composerView() {
         return this.messaging && this.messaging.models['ComposerView'].get(this.props.composerViewLocalId);
-    }
-
-    /**
-     * Returns whether the given node is self or a children of self, including
-     * the emoji list.
-     *
-     * @param {Node} node
-     * @returns {boolean}
-     */
-    contains(node) {
-        // emoji list is outside but should be considered inside
-        const emojiList = this._emojiListRef.comp;
-        if (emojiList && emojiList.contains(node)) {
-            return true;
-        }
-        return Boolean(this.root.el && this.root.el.contains(node));
     }
 
     /**
@@ -167,27 +129,6 @@ export class Composer extends Component {
     }
 
     /**
-     * Discards the composer when clicking away.
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    async _onClickCaptureGlobal(ev) {
-        if (this.contains(ev.target)) {
-            return;
-        }
-        // Let event be handled by bubbling handlers first
-        await new Promise(this.env.browser.setTimeout);
-        if (isEventHandled(ev, 'MessageActionList.replyTo')) {
-            return;
-        }
-        if (!this.composerView) {
-            return;
-        }
-        this.composerView.discard();
-    }
-
-    /**
      * Called when clicking on "expand" button.
      *
      * @private
@@ -236,21 +177,6 @@ export class Composer extends Component {
     }
 
     /**
-     * Handles `onEmojiSelection` callback from the emoji list.
-     *
-     * @private
-     * @param {Object} detail
-     * @param {string} detail.unicode
-     */
-    _onEmojiSelection(detail) {
-        this._textInputRef.comp.saveStateInStore();
-        this.composerView.insertIntoTextInput(detail.unicode);
-        if (!this.messaging.device.isMobileDevice) {
-            this.composerView.update({ doFocus: true });
-        }
-    }
-
-    /**
      * @private
      * @param {KeyboardEvent} ev
      */
@@ -264,20 +190,6 @@ export class Composer extends Component {
             }
             ev.preventDefault();
             this.composerView.discard();
-        }
-    }
-
-    /**
-     * @private
-     * @param {KeyboardEvent} ev
-     */
-    _onKeydownEmojiButton(ev) {
-        if (ev.key === 'Escape') {
-            if (this._emojiListRef.comp) {
-                this._emojiListRef.comp.close();
-                this.composerView.update({ doFocus: true });
-                markEventHandled(ev, 'Composer.closeEmojisPopover');
-            }
         }
     }
 

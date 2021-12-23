@@ -287,14 +287,6 @@ registerModel({
             related: 'threadViewer.compact',
         }),
         /**
-         * States which channel invitation form is operating this thread view.
-         * Only applies if this thread is a channel.
-         */
-        channelInvitationForm: one2one('ChannelInvitationForm', {
-            inverse: 'threadView',
-            isCausal: true,
-        }),
-        /**
          * List of component hints. Hints contain information that help
          * components make UI/UX decisions based on their UI state.
          * For instance, on receiving new messages and the last message
