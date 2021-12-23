@@ -30,8 +30,9 @@ This module contains all the common features of Sales Management and eCommerce.
         'wizard/sale_order_cancel_views.xml',
         'wizard/sale_payment_link_views.xml',
 
+        'views/sale_views.xml',  # TODO Split into SO & SOL views
+
         'views/account_views.xml',
-        'views/sale_views.xml',
         'views/crm_team_views.xml',
         'views/res_partner_views.xml',
         'views/mail_activity_views.xml',
