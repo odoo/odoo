@@ -1,25 +1,17 @@
-.o_debug_profiling_item {
-    .o_profiling_switch {
-        padding-top: 3px;
-        padding-bottom: 3px;
-        .custom-switch {
-            display: inline-block;
-        }
-        .custom-control-label {
-            cursor: pointer;
-        }
-        .o_open_profiling {
-            padding-top: 3px;
-        }
+.o_debug_manager {
+    .dropdown-menu .o_debug_profiling_item_wrapper.dropdown-item.focus {
+        background: inherit;
     }
-}
 
-.o_debug_manager .fa-bug {
-    position: relative;
+    .o_debug_profiling_item {
+        cursor: auto;
+    }
+
+    .custom-switch {
+        cursor: pointer;
+    }
+
     .o_recording {
-        position: absolute;
-        bottom: -0.1em;
-        right: -0.4em;
-        font-size: 0.8em;
+        animation: 2s flash infinite;
     }
 }
