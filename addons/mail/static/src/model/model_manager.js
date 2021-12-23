@@ -321,9 +321,10 @@ export class ModelManager {
      * @returns {Model|Model[]} created or updated record(s).
      */
     insert(Model, data) {
-        const res = this._insert(Model, data);
+        const isMulti = typeof data[Symbol.iterator] === 'function';
+        const records = this._insert(Model, isMulti ? data : [data]);
         this._flushUpdateCycle();
-        return res;
+        return isMulti ? records : records[0];
     }
 
     /**
@@ -1030,13 +1031,11 @@ export class ModelManager {
     /**
      * @private
      * @param {Model}
-     * @param {Object|Object[]} [data={}]
-     * @returns {Model|Model[]}
+     * @param {Object[]} dataList
+     * @returns {Model[]}
      */
-    _insert(Model, data = {}) {
+    _insert(Model, dataList) {
         this._ensureNoLockingListener();
-        const isMulti = typeof data[Symbol.iterator] === 'function';
-        const dataList = isMulti ? data : [data];
         const records = [];
         for (const data of dataList) {
             const localId = this._getRecordIndex(Model, data);
@@ -1049,7 +1048,7 @@ export class ModelManager {
             }
             records.push(record);
         }
-        return isMulti ? records : records[0];
+        return records;
     }
 
     /**
