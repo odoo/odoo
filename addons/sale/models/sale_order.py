@@ -10,11 +10,6 @@ from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import float_is_zero, html_keep_url, is_html_empty
 
-OPEN_FIELD_STATES = {
-    state: [('readonly', False)]
-    for state in {'draft', 'sent'}
-}
-
 READONLY_FIELD_STATES = {
     state: [('readonly', True)]
     for state in {'sale', 'done', 'cancel'}
@@ -156,8 +151,8 @@ class SaleOrder(models.Model):
         ('cancel', 'Cancelled'),
         ], string='Status', readonly=True, copy=False, index=True, tracking=3, default='draft')
     date_order = fields.Datetime(
-        string='Order Date', required=True, readonly=True, index=True,
-        states=OPEN_FIELD_STATES,
+        string='Order Date', required=True, index=True,
+        states=READONLY_FIELD_STATES,
         copy=False, default=fields.Datetime.now,
         help="Creation date of draft/sent orders,\nConfirmation date of confirmed orders.")
     validity_date = fields.Date(
@@ -210,8 +205,8 @@ class SaleOrder(models.Model):
         related='pricelist_id.currency_id', depends=["pricelist_id"], store=True, precompute=True, ondelete="restrict")
     analytic_account_id = fields.Many2one(
         'account.analytic.account', 'Analytic Account',
-        readonly=True, copy=False, check_company=True,  # Unrequired company
-        states=OPEN_FIELD_STATES,
+        copy=False, check_company=True,  # Unrequired company
+        states=READONLY_FIELD_STATES,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         help="The analytic account related to a sales order.")
 
