@@ -593,7 +593,7 @@ registerModel({
          */
         invitePopoverView: one2one('PopoverView', {
             isCausal: true,
-            inverse: 'threadViewTopbarOwner',
+            inverse: 'threadViewTopbarOwnerAsInvite',
         }),
         /**
          * Determines whether this thread is currently being renamed.

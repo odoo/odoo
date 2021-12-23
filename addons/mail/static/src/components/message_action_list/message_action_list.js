@@ -12,7 +12,7 @@ export class MessageActionList extends Component {
      */
     setup() {
         super.setup();
-        useRefToModel({ fieldName: 'reactionPopoverRef', modelName: 'MessageActionList', propNameAsRecordLocalId: 'messageActionListLocalId', refName: 'reactionPopover' });
+        useRefToModel({ fieldName: 'actionReactionRef', modelName: 'MessageActionList', propNameAsRecordLocalId: 'messageActionListLocalId', refName: 'actionReaction' });
         this.ADD_A_REACTION = this.env._t("Add a Reaction");
     }
 

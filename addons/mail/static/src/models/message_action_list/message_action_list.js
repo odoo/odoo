@@ -12,16 +12,14 @@ registerModel({
         _created() {
             // bind handlers so they can be used in templates
             this.onClick = this.onClick.bind(this);
+            this.onClickActionReaction = this.onClickActionReaction.bind(this);
             this.onClickConfirmDelete = this.onClickConfirmDelete.bind(this);
             this.onClickDelete = this.onClickDelete.bind(this);
             this.onClickEdit = this.onClickEdit.bind(this);
             this.onClickMarkAsRead = this.onClickMarkAsRead.bind(this);
-            this.onReactionPopoverOpened = this.onReactionPopoverOpened.bind(this);
-            this.onReactionPopoverClosed = this.onReactionPopoverClosed.bind(this);
             this.onClickReplyTo = this.onClickReplyTo.bind(this);
             this.onClickToggleStar = this.onClickToggleStar.bind(this);
             this.onDeleteConfirmDialogClosed = this.onDeleteConfirmDialogClosed.bind(this);
-            this.onEmojiSelection = this.onEmojiSelection.bind(this);
         },
     },
     recordMethods: {
@@ -64,18 +62,21 @@ registerModel({
             this.message.markAsRead();
         },
         /**
-         * @private
-         * @param {Event} ev
+         * Handles click on the reaction icon.
          */
-        onReactionPopoverClosed(ev) {
-            this.update({ isReactionPopoverOpened: false });
+        onClickActionReaction() {
+            if (!this.reactionPopoverView) {
+                this.update({ reactionPopoverView: insertAndReplace() });
+            } else {
+                this.update({ reactionPopoverView: clear() });
+            }
         },
         /**
          * @private
-         * @param {Event} ev
+         * @param {MouseEvent} ev 
          */
-        onReactionPopoverOpened(ev) {
-            this.update({ isReactionPopoverOpened: true });
+        onClickReaction(ev) {
+            this.message.addReaction(ev.currentTarget.dataset.unicode);
         },
         /**
          * Opens the reply composer for this message (or closes it if it was
@@ -103,16 +104,6 @@ registerModel({
             this.update({ showDeleteConfirm: false });
         },
         /**
-         * Handles `onEmojiSelection` calback from the emoji list.
-         *
-         * @private
-         * @param {Object} detail
-         * @param {string} detail.unicode
-         */
-        onEmojiSelection(detail) {
-            this.message.addReaction(detail.unicode);
-        },
-        /**
          * @private
          * @returns {boolean}
          */
@@ -137,13 +128,6 @@ registerModel({
                 )
             );
         },
-        _computeIsReactionPopoverOpened() {
-            return Boolean(
-                this.reactionPopoverRef &&
-                this.reactionPopoverRef.comp &&
-                this.reactionPopoverRef.comp.state.displayed
-            );
-        },
         /**
          * @private
          * @returns {MessageView}
@@ -156,6 +140,10 @@ registerModel({
     },
     fields: {
         /**
+         * States the reference to the reaction action in the component.
+         */
+        actionReactionRef: attr(),
+        /**
          * Determines whether this message action list has mark as read icon.
          */
         hasMarkAsReadIcon: attr({
@@ -166,12 +154,6 @@ registerModel({
          */
         hasReplyIcon: attr({
             compute: '_computeHasReplyIcon',
-        }),
-        /**
-         * States whether the reaction popover is currently opened.
-         */
-        isReactionPopoverOpened: attr({
-            compute: '_computeIsReactionPopoverOpened',
         }),
         /**
          * States the message on which this action message list operates.
@@ -197,9 +179,12 @@ registerModel({
             isCausal: true,
         }),
         /**
-         * States the reference to the reaction popover component (if any).
+         * Determines the reaction popover that is active on this message action list.
          */
-        reactionPopoverRef: attr(),
+        reactionPopoverView: one2one('PopoverView', {
+            inverse: 'messageActionListOwnerAsReaction',
+            isCausal: true,
+        }),
         /**
          * Determines whether to show the message delete-confirm dialog.
          */

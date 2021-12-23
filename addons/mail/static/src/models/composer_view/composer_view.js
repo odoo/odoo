@@ -6,6 +6,7 @@ import { attr, many2many, many2one, one2one } from '@mail/model/model_field';
 import { clear, insertAndReplace, link, replace, unlink, unlinkAll } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 import { addLink, escapeAndCompactTextContent, parseAndTransform } from '@mail/js/utils';
+import { isEventHandled, markEventHandled } from '@mail/utils/utils';
 
 registerModel({
     name: 'ComposerView',
@@ -24,14 +25,19 @@ registerModel({
             this._nextMentionRpcFunction = undefined;
         },
         _created() {
+            this.onClickButtonEmojis = this.onClickButtonEmojis.bind(this);
             this.onClickCancelLink = this.onClickCancelLink.bind(this);
+            this.onClickCaptureGlobal = this.onClickCaptureGlobal.bind(this);
             this.onClickSaveLink = this.onClickSaveLink.bind(this);
             this.onClickStopReplying = this.onClickStopReplying.bind(this);
+            this.onKeydownButtonEmojis = this.onKeydownButtonEmojis.bind(this);
+            document.addEventListener('click', this.onClickCaptureGlobal, true);
         },
         _willDelete() {
             // Clears the mention queue on deleting the record to prevent
             // unnecessary RPC.
             this._nextMentionRpcFunction = undefined;
+            document.removeEventListener('click', this.onClickCaptureGlobal, true);
         },
     },
     recordMethods: {
@@ -40,6 +46,20 @@ registerModel({
          */
         closeSuggestions() {
             this.update({ suggestionDelimiterPosition: clear() });
+        },
+        /**
+         * Returns whether the given html node is inside this composer view,
+         * including whether its inside the emoji popover when active.
+         *
+         * @param {Element} node
+         * @returns {boolean}
+         */
+        contains(node) {
+            // emoji popover is outside but should be considered inside
+            if (this.emojisPopoverView && this.emojisPopoverView.contains(node)) {
+                return true;
+            }
+            return Boolean(this.component && this.component.root.el && this.component.root.el.contains(node));
         },
         /**
          * Hides the composer, which only makes sense if the composer is
@@ -152,6 +172,16 @@ registerModel({
             this.composer.update(updateData);
         },
         /**
+         * Handles click on the emojis button.
+         */
+        onClickButtonEmojis() {
+            if (!this.emojisPopoverView) {
+                this.update({ emojisPopoverView: insertAndReplace() });
+            } else {
+                this.update({ emojisPopoverView: clear() });
+            }
+        },
+        /**
          * Handles click on the cancel link.
          *
          * @param {MouseEvent} ev
@@ -159,6 +189,33 @@ registerModel({
         onClickCancelLink(ev) {
             ev.preventDefault();
             this.discard();
+        },
+        /**
+         * Discards the composer when clicking away.
+         *
+         * @private
+         * @param {MouseEvent} ev
+         */
+        async onClickCaptureGlobal(ev) {
+            if (this.contains(ev.target)) {
+                return;
+            }
+            // Let event be handled by bubbling handlers first
+            await new Promise(this.env.browser.setTimeout);
+            if (isEventHandled(ev, 'MessageActionList.replyTo')) {
+                return;
+            }
+            this.discard();
+        },
+        /**
+         * @private
+         * @param {MouseEvent} ev 
+         */
+        onClickEmoji(ev) {
+            this.insertIntoTextInput(ev.currentTarget.dataset.unicode);
+            if (!this.messaging.device.isMobileDevice) {
+                this.update({ doFocus: true });
+            }
         },
         /**
          * Handles click on the save link.
@@ -191,6 +248,19 @@ registerModel({
             this.threadView.update({
                 replyingToMessageView: clear(),
             });
+        },
+        /**
+         * @private
+         * @param {KeyboardEvent} ev
+         */
+        onKeydownButtonEmojis(ev) {
+            if (ev.key === 'Escape' && this.emojisPopoverView) {
+                this.update({
+                    doFocus: true,
+                    emojisPopoverView: clear(),
+                });
+                markEventHandled(ev, 'Composer.closeEmojisPopover');
+            }
         },
         /**
          * Open the full composer modal.
@@ -860,12 +930,20 @@ registerModel({
             readonly: true,
         }),
         /**
+         * States the ref to the html node of the emojis button.
+         */
+        buttonEmojisRef: attr(),
+        /**
          * States the chatter which this composer allows editing (if any).
          */
         chatter: one2one('Chatter', {
             inverse: 'composerView',
             readonly: true,
         }),
+        /**
+         * States the OWL component of this composer view.
+         */
+        component: attr(),
         /**
          * States the composer state that is displayed by this composer view.
          */
@@ -877,6 +955,13 @@ registerModel({
          * Determines whether this composer should be focused at next render.
          */
         doFocus: attr(),
+        /**
+         * Determines the emojis popover that is active on this composer view.
+         */
+        emojisPopoverView: one2one('PopoverView', {
+            inverse: 'composerViewOwnerAsEmoji',
+            isCausal: true,
+        }),
         /**
          * Determines the extra records that are currently suggested.
          * Allows to have different model types of mentions through a dynamic

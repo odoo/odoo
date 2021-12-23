@@ -210,10 +210,6 @@ QUnit.test('add an emoji', async function (assert) {
         "😊",
         "emoji should be inserted in the composer text input"
     );
-    // ensure popover is closed
-    await nextAnimationFrame();
-    await nextAnimationFrame();
-    await nextAnimationFrame();
 });
 
 QUnit.test('add an emoji after some text', async function (assert) {
@@ -247,10 +243,6 @@ QUnit.test('add an emoji after some text', async function (assert) {
         "Blabla😊",
         "emoji should be inserted after the text"
     );
-    // ensure popover is closed
-    await nextAnimationFrame();
-    await nextAnimationFrame();
-    await nextAnimationFrame();
 });
 
 QUnit.test('add emoji replaces (keyboard) text selection', async function (assert) {
@@ -278,8 +270,9 @@ QUnit.test('add emoji replaces (keyboard) text selection', async function (asser
 
     // simulate selection of all the content by keyboard
     composerTextInputTextArea.setSelectionRange(0, composerTextInputTextArea.value.length);
-
-    // select emoji
+    await afterNextRender(
+        () => document.querySelector(`.o_ComposerTextInput_textarea`).dispatchEvent(new window.KeyboardEvent('focusout'))
+    );
     await afterNextRender(() => document.querySelector('.o_Composer_buttonEmojis').click());
     await afterNextRender(() =>
         document.querySelector('.o_EmojiList_emoji[data-unicode="😊"]').click()
@@ -289,10 +282,6 @@ QUnit.test('add emoji replaces (keyboard) text selection', async function (asser
         "😊",
         "whole text selection should have been replaced by emoji"
     );
-    // ensure popover is closed
-    await nextAnimationFrame();
-    await nextAnimationFrame();
-    await nextAnimationFrame();
 });
 
 QUnit.test('display canned response suggestions on typing ":"', async function (assert) {
@@ -509,8 +498,6 @@ QUnit.test('add an emoji after a canned response', async function (assert) {
         "Hello! How are you? 😊",
         "text content of composer should have previous canned response substitution and selected emoji just after"
     );
-    // ensure popover is closed
-    await nextAnimationFrame();
 });
 
 QUnit.test('display channel mention suggestions on typing "#"', async function (assert) {
@@ -712,8 +699,6 @@ QUnit.test('add an emoji after a channel mention', async function (assert) {
         "#General 😊",
         "text content of composer should have previous channel mention and selected emoji just after"
     );
-    // ensure popover is closed
-    await nextAnimationFrame();
 });
 
 QUnit.test('display command suggestions on typing "/"', async function (assert) {
@@ -948,8 +933,6 @@ QUnit.test('add an emoji after a command', async function (assert) {
         "/who 😊",
         "text content of composer should have previous command and selected emoji just after"
     );
-    // ensure popover is closed
-    await nextAnimationFrame();
 });
 
 QUnit.test('display partner mention suggestions on typing "@"', async function (assert) {
@@ -1204,8 +1187,6 @@ QUnit.test('add an emoji after a partner mention', async function (assert) {
         "@TestPartner 😊",
         "text content of composer should have previous mention and selected emoji just after"
     );
-    // ensure popover is closed
-    await nextAnimationFrame();
 });
 
 QUnit.test('composer: add an attachment', async function (assert) {
