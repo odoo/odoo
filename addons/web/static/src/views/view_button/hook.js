@@ -22,10 +22,9 @@ export function useViewButtons(model, beforeExecuteAction = () => {}) {
 
     async function handler(ev) {
         const manuallyDisabledButtons = disableButtons(comp.el);
-
-        await beforeExecuteAction();
-
         const { clickParams, record } = ev.detail;
+
+        await beforeExecuteAction(clickParams);
 
         const resId = record.resId;
         const resIds = record.resIds || model.resIds;

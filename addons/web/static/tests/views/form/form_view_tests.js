@@ -1298,6 +1298,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("rendering stat buttons with action", async function (assert) {
         assert.expect(3);
 
+        // FIXME: there should be no dependency from views to actionService
         const fakeActionService = {
             start() {
                 return {
@@ -1338,6 +1339,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("rendering stat buttons without action", async function (assert) {
+        // FIXME: there should be no dependency from views to actionService
         const fakeActionService = {
             start() {
                 return {
@@ -1379,6 +1381,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("readonly stat buttons stays disabled", async function (assert) {
         assert.expect(4);
 
+        // FIXME: there should be no dependency from views to actionService
         const fakeActionService = {
             start() {
                 return {
@@ -2240,6 +2243,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("buttons in form view", async function (assert) {
         assert.expect(9);
 
+        // FIXME: there should be no dependency from views to actionService
         const mockedActionService = {
             start() {
                 return {
@@ -2351,6 +2355,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("button in form view and long willStart", async function (assert) {
+        // FIXME: there should be no dependency from views to actionService
         const mockedActionService = {
             start() {
                 return {
@@ -2413,6 +2418,7 @@ QUnit.module("Views", (hooks) => {
         assert.expect(7);
 
         serverData.models.partner.records = []; // such that we know the created record will be id 1
+        // FIXME: there should be no depencency from views to actionService
         const mockedActionService = {
             start() {
                 return {
@@ -2465,6 +2471,7 @@ QUnit.module("Views", (hooks) => {
         // values in the record (data.id was set to null)
 
         serverData.models.partner.records = []; // such that we know the created record will be id 1
+        // FIXME: there should be no dependency from views to actionService
         const mockedActionService = {
             start() {
                 return {
@@ -3206,26 +3213,37 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.skip("clicking on stat buttons in edit mode", async function (assert) {
-        assert.expect(9);
+    QUnit.test("clicking on stat buttons in edit mode", async function (assert) {
+        // FIXME: there should be no dependency from views to actionService
+        let count = 0;
+        const fakeActionService = {
+            start() {
+                return {
+                    doActionButton() {
+                        count++;
+                    },
+                };
+            },
+        };
+        serviceRegistry.add("action", fakeActionService, { force: true });
 
         const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                '<div name="button_box">' +
-                '<button class="oe_stat_button" name="some_action" type="action">' +
-                '<field name="bar"/>' +
-                "</button>" +
-                "</div>" +
-                "<group>" +
-                '<field name="foo"/>' +
-                "</group>" +
-                "</sheet>" +
-                "</form>",
+            arch: `
+                <form>
+                    <sheet>
+                        <div name="button_box">
+                            <button class="oe_stat_button" name="some_action" type="action">
+                                <field name="bar"/>
+                            </button>
+                        </div>
+                        <group>
+                            <field name="foo"/>
+                        </group>
+                    </sheet>
+                </form>`,
             resId: 2,
             mockRPC(route, args) {
                 if (args.method === "write") {
@@ -3236,49 +3254,51 @@ QUnit.module("Views", (hooks) => {
                     );
                 }
                 assert.step(args.method);
-                return this._super(route, args);
             },
         });
 
         await click(form.el.querySelector(".o_form_button_edit"));
 
-        var count = 0;
-        await testUtils.mock.intercept(form, "execute_action", function (event) {
-            event.stopPropagation();
-            count++;
-        });
-        await testUtils.dom.click(".oe_stat_button");
+        await click(form.el.querySelector(".oe_stat_button"));
         assert.strictEqual(count, 1, "should have triggered a execute action");
-        assert.strictEqual(form.mode, "edit", "form view should be in edit mode");
+        assert.containsOnce(form, ".o_form_editable", "form view should be in edit mode");
 
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=foo] input"), "tralala");
-        await testUtils.dom.click(".oe_stat_button:first");
+        await editInput(form.el, ".o_field_widget[name=foo] input", "tralala");
+        await click(form.el.querySelector(".oe_stat_button"));
 
-        assert.strictEqual(form.mode, "edit", "form view should be in edit mode");
+        assert.containsOnce(form, ".o_form_editable", "form view should be in edit mode");
         assert.strictEqual(count, 2, "should have triggered a execute action");
         assert.verifySteps(["read", "write", "read"]);
     });
 
-    QUnit.skip("clicking on stat buttons save and reload in edit mode", async function (assert) {
-        assert.expect(2);
+    QUnit.test("clicking on stat buttons save and reload in edit mode", async function (assert) {
+        // FIXME: there should be no dependency from views to actionService
+        const fakeActionService = {
+            start() {
+                return {
+                    doActionButton() {},
+                };
+            },
+        };
+        serviceRegistry.add("action", fakeActionService, { force: true });
 
         const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                '<form string="Partners">' +
-                "<sheet>" +
-                '<div name="button_box">' +
-                '<button class="oe_stat_button" type="action">' +
-                '<field name="int_field" widget="statinfo" string="Some number"/>' +
-                "</button>" +
-                "</div>" +
-                "<group>" +
-                '<field name="name"/>' +
-                "</group>" +
-                "</sheet>" +
-                "</form>",
+            arch: `
+                <form>
+                    <sheet>
+                        <div name="button_box">
+                            <button class="oe_stat_button" type="action">
+                                <field name="int_field" widget="statinfo" string="Some number"/>
+                            </button>
+                        </div>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                    </sheet>
+                </form>`,
             resId: 2,
             mockRPC(route, args) {
                 if (args.method === "write") {
@@ -3286,107 +3306,108 @@ QUnit.module("Views", (hooks) => {
                     args.args[1].display_name = "GOLDORAK";
                     args.args[1].name = "GOLDORAK";
                 }
-                return this._super.apply(this, arguments);
             },
         });
 
         assert.strictEqual(
-            form.$(".o_control_panel .breadcrumb").text(),
+            form.el.querySelector(".o_control_panel .breadcrumb").innerText,
             "second record",
             "should have correct display_name"
         );
         await click(form.el.querySelector(".o_form_button_edit"));
-        await testUtils.fields.editInput(
-            form.$(".o_field_widget[name=name] input"),
-            "some other name"
-        );
+        await editInput(form.el, ".o_field_widget[name=name] input", "some other name");
 
-        await testUtils.dom.click(".oe_stat_button");
+        await click(form.el.querySelector(".oe_stat_button"));
         assert.strictEqual(
-            form.$(".o_control_panel .breadcrumb").text(),
+            form.el.querySelector(".o_control_panel .breadcrumb").innerText,
             "GOLDORAK",
             "should have correct display_name"
         );
     });
 
-    QUnit.skip('buttons with attr "special" do not trigger a save', async function (assert) {
-        assert.expect(4);
-
-        var executeActionCount = 0;
-        var writeCount = 0;
+    QUnit.test('buttons with attr "special" do not trigger a save', async function (assert) {
+        let writeCount = 0;
+        // FIXME: there should be no dependency from views to actionService
+        let doActionButtonCount = 0;
+        const fakeActionService = {
+            start() {
+                return {
+                    doActionButton() {
+                        doActionButtonCount++;
+                    },
+                };
+            },
+        };
+        serviceRegistry.add("action", fakeActionService, { force: true });
 
         const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                '<form string="Partners">' +
-                '<field name="foo"/>' +
-                '<button string="Do something" class="btn-primary" name="abc" type="object"/>' +
-                '<button string="Or discard" class="btn-secondary" special="cancel"/>' +
-                "</form>",
+            arch: `
+                <form>
+                    <field name="foo"/>
+                    <button string="Do something" class="btn-primary" name="abc" type="object"/>
+                    <button string="Or discard" class="btn-secondary" special="cancel"/>
+                </form>`,
             resId: 1,
             mockRPC(route, args) {
                 if (args.method === "write") {
                     writeCount++;
                 }
-                return this._super(route, args);
             },
-        });
-        await testUtils.mock.intercept(form, "execute_action", function () {
-            executeActionCount++;
         });
 
         await click(form.el.querySelector(".o_form_button_edit"));
 
         // make the record dirty
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=foo] input"), "tralala");
+        await editInput(form.el, ".o_field_widget[name=foo] input", "tralala");
+        await click(form.el.querySelector(".o_content button.btn-primary"));
 
-        await testUtils.dom.click(form.$("button:contains(Do something)"));
-        //TODO: VSC: add a next tick ?
         assert.strictEqual(writeCount, 1, "should have triggered a write");
-        assert.strictEqual(executeActionCount, 1, "should have triggered a execute action");
+        assert.strictEqual(doActionButtonCount, 1, "should have triggered a execute action");
 
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=foo] input"), "abcdef");
+        await editInput(form.el, ".o_field_widget[name=foo] input", "abcdef");
 
-        await testUtils.dom.click(form.$("button:contains(Or discard)"));
+        await click(form.el.querySelector(".o_content button.btn-secondary"));
         assert.strictEqual(writeCount, 1, "should not have triggered a write");
-        assert.strictEqual(executeActionCount, 2, "should have triggered a execute action");
+        assert.strictEqual(doActionButtonCount, 2, "should have triggered a execute action");
     });
 
-    QUnit.skip('buttons with attr "special=save" save', async function (assert) {
-        assert.expect(5);
-
+    QUnit.test('buttons with attr "special=save" save', async function (assert) {
+        // FIXME: there should be no dependency from views to actionService
+        const fakeActionService = {
+            start() {
+                return {
+                    doActionButton() {
+                        assert.step("execute_action");
+                    },
+                };
+            },
+        };
+        serviceRegistry.add("action", fakeActionService, { force: true });
         const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                '<form string="Partners">' +
-                '<field name="foo"/>' +
-                '<button string="Save" class="btn-primary" special="save"/>' +
-                "</form>",
+            arch: `
+                <form>
+                    <field name="foo"/>
+                    <button string="Save" class="btn-primary" special="save"/>
+                </form>`,
             resId: 1,
-            intercepts: {
-                execute_action: function () {
-                    assert.step("execute_action");
-                },
-            },
             mockRPC(route, args) {
                 assert.step(args.method);
-                return this._super(route, args);
-            },
-            viewOptions: {
-                mode: "edit",
             },
         });
 
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=foo] input"), "tralala");
-        await testUtils.dom.click(form.$('button[special="save"]'));
+        await click(form.el.querySelector(".o_form_button_edit"));
+        await editInput(form.el, ".o_field_widget[name=foo] input", "tralala");
+        await click(form.el.querySelector(".o_content button.btn-primary"));
         assert.verifySteps(["read", "write", "read", "execute_action"]);
     });
 
-    QUnit.skip("missing widgets do not crash", async function (assert) {
+    QUnit.test("missing widgets do not crash", async function (assert) {
         serverData.models.partner.fields.foo.type = "new field type without widget";
         const form = await makeView({
             type: "form",

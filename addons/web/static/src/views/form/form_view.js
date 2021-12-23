@@ -87,7 +87,11 @@ class FormView extends Component {
         // enable the archive feature in Actions menu only if the active field is in the view
         this.archiveEnabled = "active" in activeFields || "x_active" in activeFields;
 
-        useViewButtons(this.model, () => this.model.root.save());
+        useViewButtons(this.model, (clickParams) => {
+            if (clickParams.special !== "cancel") {
+                return this.model.root.save();
+            }
+        });
         useSetupView({
             beforeLeave: () => {
                 if (this.model.root.isDirty) {
