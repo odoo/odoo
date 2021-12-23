@@ -16,6 +16,7 @@
 # UteHaus, 2020
 # Max-Milan Stoyanov, 2020
 # Martin Trigaux, 2020
+# Friederike Fasterling-Nesselbosch, 2021
 # 
 msgid ""
 msgstr ""
@@ -23,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Martin Trigaux, 2020\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -242,7 +243,7 @@ msgstr "Datum"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_config_settings__lc_journal_id
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.res_config_settings_view_form
 msgid "Default Journal"
-msgstr ""
+msgstr "Standard-Journal"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_product__split_method_landed_cost
@@ -382,6 +383,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock_landed_costs.field_product_template__landed_cost_ok
 msgid "Indicates whether the product is a landed cost."
 msgstr ""
+"Gibt an, ob es sich bei dem Produkt um einen Wareneinstandspreis handelt."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_is_follower
@@ -530,7 +532,7 @@ msgstr "Neu"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__final_cost
 msgid "New Value"
-msgstr ""
+msgstr "Neuer Wert"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_date_deadline
@@ -599,6 +601,8 @@ msgstr "Bitte Lagerkostenart für Produkt %s pflegen."
 #, python-format
 msgid "Please define %s on which those additional costs should apply."
 msgstr ""
+"Bitte legen Sie %s fest, auf die die zusätzlichen Kosten angewendet werden "
+"sollen."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost__state__done
@@ -787,8 +791,7 @@ msgstr "Gewicht"
 #, python-format
 msgid ""
 "You cannot apply landed costs on the chosen %s(s). Landed costs can only be "
-"applied for products with automated inventory valuation and FIFO or average "
-"costing method."
+"applied for products with FIFO or average costing method."
 msgstr ""
 
 #. module: stock_landed_costs
@@ -798,3 +801,6 @@ msgid ""
 "You cannot change the product type or disable landed cost option because the"
 " product is used in an account move line."
 msgstr ""
+"Sie können die Produktart nicht ändern oder die Option "
+"\"Wareneinstandspreis\" deaktivieren, da das Produkt in einer "
+"Kontobewegungszeile verwendet wird."

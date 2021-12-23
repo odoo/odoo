@@ -28,10 +28,10 @@ class SaleOrder(models.Model):
                     .with_context(default_sale_order_id=so.id) \
                     ._for_xml_id('event_sale.action_sale_order_event_registration')
         return res
-    
-    def action_cancel(self):
+
+    def _action_cancel(self):
         self.order_line._cancel_associated_registrations()
-        return super(SaleOrder, self).action_cancel()
+        return super()._action_cancel()
 
     def action_view_attendee_list(self):
         action = self.env["ir.actions.actions"]._for_xml_id("event.event_registration_action_tree")

@@ -317,3 +317,68 @@ class TestSaleToInvoice(TestSaleCommon):
                     self.assertEqual(line.untaxed_amount_to_invoice, 170.0, "")
                     self.assertEqual(line.untaxed_amount_invoiced, 100.0, "")
                     self.assertEqual(len(line.invoice_lines), 3, "The line 'ordered service' is invoiced, so it should be linked to 2 invoice lines (invoice and refund), even after validation")
+
+    def test_refund_invoice_with_downpayment(self):
+        sale_order_refund = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+            'pricelist_id': self.company_data['default_pricelist'].id,
+        })
+        sol_product = self.env['sale.order.line'].create({
+            'name': self.company_data['product_order_no'].name,
+            'product_id': self.company_data['product_order_no'].id,
+            'product_uom_qty': 5,
+            'product_uom': self.company_data['product_order_no'].uom_id.id,
+            'price_unit': self.company_data['product_order_no'].list_price,
+            'order_id': sale_order_refund.id,
+            'tax_id': False,
+        })
+
+        sale_order_refund.action_confirm()
+        so_context = {
+            'active_model': 'sale.order',
+            'active_ids': [sale_order_refund.id],
+            'active_id': sale_order_refund.id,
+            'default_journal_id': self.company_data['default_journal_sale'].id,
+        }
+
+        downpayment = self.env['sale.advance.payment.inv'].with_context(so_context).create({
+            'advance_payment_method': 'percentage',
+            'amount': 50,
+            'deposit_account_id': self.company_data['default_account_revenue'].id
+        })
+        downpayment.create_invoices()
+        sale_order_refund.invoice_ids[0].action_post()
+        sol_downpayment = sale_order_refund.order_line[1]
+
+        payment = self.env['sale.advance.payment.inv'].with_context(so_context).create({
+            'deposit_account_id': self.company_data['default_account_revenue'].id
+        })
+        payment.create_invoices()
+
+        so_invoice = max(sale_order_refund.invoice_ids)
+        self.assertEqual(len(so_invoice.invoice_line_ids.filtered(lambda l: not (l.display_type == 'line_section' and l.name == "Down Payments"))), len(sale_order_refund.order_line), 'All lines should be invoiced')
+        self.assertEqual(len(so_invoice.invoice_line_ids.filtered(lambda l: l.display_type == 'line_section' and l.name == "Down Payments")), 1, 'A single section for downpayments should be present')
+        self.assertEqual(so_invoice.amount_total, sale_order_refund.amount_total - sol_downpayment.price_unit, 'Downpayment should be applied')
+        so_invoice.action_post()
+
+        credit_note_wizard = self.env['account.move.reversal'].with_context({'active_ids': [so_invoice.id], 'active_id': so_invoice.id, 'active_model': 'account.move'}).create({
+            'refund_method': 'refund',
+            'reason': 'reason test refund with downpayment',
+        })
+        credit_note_wizard.reverse_moves()
+        invoice_refund = sale_order_refund.invoice_ids.sorted(key=lambda inv: inv.id, reverse=False)[-1]
+        invoice_refund.action_post()
+
+        self.assertEqual(sol_product.qty_to_invoice, 5.0, "As the refund still exists, the quantity to invoice is the ordered quantity")
+        self.assertEqual(sol_product.qty_invoiced, 0.0, "The qty invoiced should be zero as, with the refund, the quantities cancel each other")
+        self.assertEqual(sol_product.untaxed_amount_to_invoice, sol_product.price_unit * 5, "Amount to invoice is now set as qty to invoice * unit price since no price change on invoice, as refund is validated")
+        self.assertEqual(sol_product.untaxed_amount_invoiced, 0.0, "Amount invoiced decreased as the refund is now confirmed")
+        self.assertEqual(len(sol_product.invoice_lines), 2, "The product line is invoiced, so it should be linked to 2 invoice lines (invoice and refund)")
+
+        self.assertEqual(sol_downpayment.qty_to_invoice, -1.0, "As the downpayment was invoiced separately, it will still have to be deducted from the total invoice (hence -1.0), after the refund.")
+        self.assertEqual(sol_downpayment.qty_invoiced, 1.0, "The qty to invoice should be 1 as, with the refund, the products are not invoiced anymore, but the downpayment still is")
+        self.assertEqual(sol_downpayment.untaxed_amount_to_invoice, -(sol_product.price_unit * 5)/2, "Amount to invoice decreased as the refund is now confirmed")
+        self.assertEqual(sol_downpayment.untaxed_amount_invoiced, (sol_product.price_unit * 5)/2, "Amount invoiced is now set as half of all products' total amount to invoice, as refund is validated")
+        self.assertEqual(len(sol_downpayment.invoice_lines), 3, "The product line is invoiced, so it should be linked to 3 invoice lines (downpayment invoice, partial invoice and refund)")

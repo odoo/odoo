@@ -26,7 +26,7 @@ odoo.define('point_of_sale.NumberPopup', function(require) {
             useListener('close-this-popup', this.cancel);
             let startingBuffer = '';
             if (typeof this.props.startingValue === 'number' && this.props.startingValue > 0) {
-                startingBuffer = this.props.startingValue.toString();
+                startingBuffer = this.props.startingValue.toString().replace('.', this.decimalSeparator);
             }
             this.state = useState({ buffer: startingBuffer });
             NumberBuffer.use({

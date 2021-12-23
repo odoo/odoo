@@ -12,11 +12,11 @@
     <!-- Editor top bar which contains the summernote tools and save/discard buttons -->
     <t t-name="website.editorbar">
         <div class="o_we_website_top_actions">
-            <div class="o_we_external_history_buttons">
+            <div class="o_we_external_history_buttons d-flex">
                 <button type="button" data-action="undo" class="btn btn-secondary fa fa-undo"/>
                 <button type="button" data-action="redo" class="btn btn-secondary fa fa-repeat"/>
             </div>
-            <form class="ml-auto">
+            <form class="ml-auto d-flex">
                 <button type="button" class="btn btn-secondary" data-action="cancel" accesskey="j">Discard</button>
                 <button type="button" class="btn btn-primary" data-action="save" accesskey="s">Save</button>
             </form>

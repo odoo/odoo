@@ -204,7 +204,8 @@
                 </p>
             </td>
             <td class="text-center" name="move_line_aggregated_qty_done">
-                <span t-esc="aggregated_lines[line]['qty_done']"/>
+                <span t-esc="aggregated_lines[line]['qty_done']"
+                    t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/>
                 <span t-esc="aggregated_lines[line]['product_uom']"/>
             </td>
         </tr>

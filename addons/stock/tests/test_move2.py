@@ -9,6 +9,8 @@ from odoo.exceptions import UserError
 from odoo.tests import Form
 from odoo.tools import float_is_zero, float_compare
 
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 class TestPickShip(TestStockCommon):
     def create_pick_ship(self):
@@ -122,7 +124,7 @@ class TestPickShip(TestStockCommon):
         picking_client._action_done()  # no new in order to create backorder
 
         backorder = self.env['stock.picking'].search([('backorder_id', '=', picking_client.id)])
-        self.assertEqual(backorder.state, 'waiting', 'Backorder should be waiting for reservation')
+        self.assertEqual(backorder.state, 'assigned', 'Backorder should be started')
 
     def test_mto_moves_transfer(self):
         """
@@ -293,7 +295,7 @@ class TestPickShip(TestStockCommon):
         # create a backorder
         picking_pick._action_done()
         picking_pick_backorder = self.env['stock.picking'].search([('backorder_id', '=', picking_pick.id)])
-        self.assertEqual(picking_pick_backorder.state, 'confirmed')
+        self.assertEqual(picking_pick_backorder.state, 'assigned')
         self.assertEqual(picking_pick_backorder.move_lines.product_qty, 5.0)
 
         self.assertEqual(picking_client.state, 'assigned')
@@ -773,11 +775,8 @@ class TestSinglePicking(TestStockCommon):
         delivery_order.move_lines[0].move_line_ids[0].qty_done = 1
         delivery_order._action_done()
         self.assertNotEqual(delivery_order.date_done, False)
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, pack_location), 1.0)
 
         backorder = self.env['stock.picking'].search([('backorder_id', '=', delivery_order.id)])
-        self.assertEqual(backorder.state, 'confirmed')
-        backorder.action_assign()
         self.assertEqual(backorder.state, 'assigned')
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, pack_location), 0.0)
 
@@ -910,6 +909,64 @@ class TestSinglePicking(TestStockCommon):
         self.assertFalse(backorder)
         self.assertEqual(delivery_order.state, 'done')
         self.assertEqual(delivery_order.move_lines[1].state, 'cancel')
+
+    def test_assign_deadline(self):
+        """ Check if similar items with shorter deadline are prioritized.
+        """
+        delivery_order = self.PickingObj.create({
+            'location_id': self.pack_location,
+            'location_dest_id': self.customer_location,
+            'picking_type_id': self.picking_type_out,
+        })
+        self.MoveObj.create({
+            'name': "move1",
+            'product_id': self.productA.id,
+            'product_uom_qty': 4,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': delivery_order.id,
+            'location_id': self.pack_location,
+            'location_dest_id': self.customer_location,
+            'date_deadline': datetime.now() + relativedelta(days=1)
+        })
+        self.MoveObj.create({
+            'name': "move2",
+            'product_id': self.productA.id,
+            'product_uom_qty': 4,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': delivery_order.id,
+            'location_id': self.pack_location,
+            'location_dest_id': self.customer_location,
+            'date_deadline': datetime.now() + relativedelta(days=2)
+        })
+
+        # make some stock
+        pack_location = self.env['stock.location'].browse(self.pack_location)
+        self.StockQuantObj._update_available_quantity(self.productA, pack_location, 2)
+
+        # assign to partially available
+        delivery_order.action_confirm()
+        delivery_order.action_assign()
+        reservedMove1 = sum([x.reserved_availability for x in delivery_order.move_lines if x.name == "move1"])
+        reservedMove2 = sum([x.reserved_availability for x in delivery_order.move_lines if x.name == "move2"])
+
+        self.assertEqual(reservedMove1, 2, "Earlier deadline should have reserved quantity")
+        self.assertEqual(reservedMove2, 0, "Later deadline should not have reserved quantity")
+
+        delivery_order.move_lines[0].move_line_ids[0].qty_done = 2
+        delivery_order._action_done()
+
+        # add new stock
+        self.StockQuantObj._update_available_quantity(self.productA, pack_location, 2)
+
+        # assign new stock to backorder
+        backorder = delivery_order.backorder_ids
+        backorder.action_assign()
+
+        reservedMove1 = sum([x.reserved_availability for x in backorder.move_lines if x.name == "move1"])
+        reservedMove2 = sum([x.reserved_availability for x in backorder.move_lines if x.name == "move2"])
+
+        self.assertEqual(reservedMove1, 2, "Earlier deadline should have reserved quantity")
+        self.assertEqual(reservedMove2, 0, "Later deadline should not have reserved quantity")
 
     def test_extra_move_1(self):
         """ Check the good behavior of creating an extra move in a delivery order. This usecase

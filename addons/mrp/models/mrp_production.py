@@ -1555,7 +1555,7 @@ class MrpProduction(models.Model):
         action = {
             'res_model': 'mrp.production',
             'type': 'ir.actions.act_window',
-            'context': dict(context, mo_ids_to_backorder=None)
+            'context': dict(context, mo_ids_to_backorder=None, button_mark_done_production_ids=None)
         }
         if len(backorders) == 1:
             action.update({

@@ -49,7 +49,7 @@
             <div class="orderlines">
                 <t t-foreach="receipt.orderlines" t-as="line" t-key="line.id">
                     <t t-if="isSimple(line)">
-                        <div>
+                        <div class="responsive-price">
                             <t t-esc="line.product_name_wrapped[0]" />
                             <span t-esc="env.pos.format_currency_no_symbol(line.price_display)" class="price_display pos-receipt-right-align"/>
                         </div>
@@ -111,7 +111,7 @@
                 <br/>
                 <div>Subtotal<span t-esc="env.pos.format_currency(receipt.subtotal)" class="pos-receipt-right-align"/></div>
                 <t t-foreach="receipt.tax_details" t-as="tax" t-key="tax.name">
-                    <div>
+                    <div class="responsive-price">
                         <t t-esc="tax.name" />
                         <span t-esc='env.pos.format_currency_no_symbol(tax.amount)' class="pos-receipt-right-align"/>
                     </div>

@@ -505,3 +505,32 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         self.assertEqual(finished_product_SML.product_uom_qty, 2)
         self.assertEqual(secondary_product_SML.product_uom.id, four_units_uom.id)
         self.assertEqual(secondary_product_SML.product_uom_qty, 1)
+
+    def test_2_steps_and_additional_moves(self):
+        """ Suppose a 2-steps configuration. If a user adds a product to an existing draft MO and then
+        confirms it, the associated picking should includes this new product"""
+        self.warehouse.manufacture_steps = 'pbm'
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.bom.product_id
+        mo_form.picking_type_id = self.warehouse.manu_type_id
+        mo = mo_form.save()
+
+        component_move = mo.move_raw_ids[0]
+        mo.with_context(default_raw_material_production_id=mo.id).move_raw_ids = [
+            [0, 0, {
+                'location_id': component_move.location_id.id,
+                'location_dest_id': component_move.location_dest_id.id,
+                'picking_type_id': component_move.picking_type_id.id,
+                'product_id': self.product_2.id,
+                'name': self.product_2.display_name,
+                'product_uom_qty': 1,
+                'product_uom': self.product_2.uom_id.id,
+                'warehouse_id': component_move.warehouse_id.id,
+                'raw_material_production_id': mo.id,
+            }]
+        ]
+
+        mo.action_confirm()
+
+        self.assertEqual(self.bom.bom_line_ids.product_id + self.product_2, mo.picking_ids.move_lines.product_id)

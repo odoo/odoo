@@ -182,12 +182,13 @@ class OdooSuite(unittest.suite.TestSuite):
                 finally:
                     unittest.suite._call_if_exists(result, '_restoreStdout')
                     if currentClass._classSetupFailed is True:
-                        currentClass.doClassCleanups()
-                        if len(currentClass.tearDown_exceptions) > 0:
-                            for exc in currentClass.tearDown_exceptions:
-                                self._createClassOrModuleLevelException(
-                                        result, exc[1], 'setUpClass', className,
-                                        info=exc)
+                        if hasattr(currentClass, 'doClassCleanups'):
+                            currentClass.doClassCleanups()
+                            if len(currentClass.tearDown_exceptions) > 0:
+                                for exc in currentClass.tearDown_exceptions:
+                                    self._createClassOrModuleLevelException(
+                                            result, exc[1], 'setUpClass', className,
+                                            info=exc)
 
         def _createClassOrModuleLevelException(self, result, exc, method_name, parent, info=None):
             errorName = f'{method_name} ({parent})'
@@ -230,14 +231,15 @@ class OdooSuite(unittest.suite.TestSuite):
                                                             className)
                 finally:
                     unittest.suite._call_if_exists(result, '_restoreStdout')
-                    previousClass.doClassCleanups()
-                    if len(previousClass.tearDown_exceptions) > 0:
-                        for exc in previousClass.tearDown_exceptions:
-                            className = unittest.util.strclass(previousClass)
-                            self._createClassOrModuleLevelException(result, exc[1],
-                                                                    'tearDownClass',
-                                                                    className,
-                                                                    info=exc)
+                    if hasattr(previousClass, 'doClassCleanups'):
+                        previousClass.doClassCleanups()
+                        if len(previousClass.tearDown_exceptions) > 0:
+                            for exc in previousClass.tearDown_exceptions:
+                                className = unittest.util.strclass(previousClass)
+                                self._createClassOrModuleLevelException(result, exc[1],
+                                                                        'tearDownClass',
+                                                                        className,
+                                                                        info=exc)
 
 
 class TreeCase(unittest.TestCase):
@@ -759,7 +761,7 @@ class ChromeBrowser():
             port_file = pathlib.Path(self.user_data_dir, 'DevToolsActivePort')
             for _ in range(100):
                 time.sleep(0.1)
-                if port_file.is_file():
+                if port_file.is_file() and port_file.stat().st_size > 5:
                     with port_file.open('r', encoding='utf-8') as f:
                         self.devtools_port = int(f.readline())
                     break

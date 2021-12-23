@@ -125,6 +125,10 @@ class SaleOrder(models.Model):
                     # but we still want to use the price defined on the pricelist
                     discount = 0
                     pu = price
+            else:
+                # In case the price_unit equal 0 and therefore not able to calculate the discount,
+                # we fallback on the price defined on the pricelist.
+                pu = price
         else:
             pu = product.price
             if order.pricelist_id and order.partner_id:

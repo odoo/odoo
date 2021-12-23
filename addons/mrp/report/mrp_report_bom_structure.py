@@ -16,7 +16,7 @@ class ReportBomStructure(models.AbstractModel):
             bom = self.env['mrp.bom'].browse(bom_id)
             variant = data.get('variant')
             candidates = variant and self.env['product.product'].browse(variant) or bom.product_id or bom.product_tmpl_id.product_variant_ids
-            quantity = float(data.get('quantity', 1))
+            quantity = float(data.get('quantity', bom.product_qty))
             for product_variant_id in candidates.ids:
                 if data and data.get('childs'):
                     doc = self._get_pdf_line(bom_id, product_id=product_variant_id, qty=quantity, child_bom_ids=json.loads(data.get('childs')))
@@ -110,7 +110,7 @@ class ReportBomStructure(models.AbstractModel):
             # Use the product template instead of the variant
             price = bom.product_tmpl_id.uom_id._compute_price(bom.product_tmpl_id.with_company(company).standard_price, bom.product_uom_id) * bom_quantity
             attachments = self.env['mrp.document'].search([('res_model', '=', 'product.template'), ('res_id', '=', bom.product_tmpl_id.id)])
-        operations = self._get_operation_line(bom, float_round(bom_quantity / bom.product_qty, precision_rounding=1, rounding_method='UP'), 0)
+        operations = self._get_operation_line(bom, float_round(bom_quantity, precision_rounding=1, rounding_method='UP'), 0)
         lines = {
             'bom': bom,
             'bom_qty': bom_quantity,
@@ -141,7 +141,7 @@ class ReportBomStructure(models.AbstractModel):
             company = bom.company_id or self.env.company
             price = line.product_id.uom_id._compute_price(line.product_id.with_company(company).standard_price, line.product_uom_id) * line_quantity
             if line.child_bom_id:
-                factor = line.product_uom_id._compute_quantity(line_quantity, line.child_bom_id.product_uom_id) / line.child_bom_id.product_qty
+                factor = line.product_uom_id._compute_quantity(line_quantity, line.child_bom_id.product_uom_id)
                 sub_total = self._get_price(line.child_bom_id, factor, line.product_id)
             else:
                 sub_total = price
@@ -169,9 +169,10 @@ class ReportBomStructure(models.AbstractModel):
     def _get_operation_line(self, bom, qty, level):
         operations = []
         total = 0.0
+        qty = bom.product_uom_id._compute_quantity(qty, bom.product_tmpl_id.uom_id)
         for operation in bom.operation_ids:
             operation_cycle = float_round(qty / operation.workcenter_id.capacity, precision_rounding=1, rounding_method='UP')
-            duration_expected = operation_cycle * operation.time_cycle + operation.workcenter_id.time_stop + operation.workcenter_id.time_start
+            duration_expected = operation_cycle * (operation.time_cycle + (operation.workcenter_id.time_stop + operation.workcenter_id.time_start))
             total = ((duration_expected / 60.0) * operation.workcenter_id.costs_hour)
             operations.append({
                 'level': level or 0,
@@ -199,11 +200,11 @@ class ReportBomStructure(models.AbstractModel):
             if line._skip_bom_line(product):
                 continue
             if line.child_bom_id:
-                qty = line.product_uom_id._compute_quantity(line.product_qty * factor, line.child_bom_id.product_uom_id) / line.child_bom_id.product_qty
+                qty = line.product_uom_id._compute_quantity(line.product_qty * (factor / bom.product_qty) , line.child_bom_id.product_uom_id) / line.child_bom_id.product_qty
                 sub_price = self._get_price(line.child_bom_id, qty, line.product_id)
                 price += sub_price
             else:
-                prod_qty = line.product_qty * factor
+                prod_qty = line.product_qty * factor / bom.product_qty
                 company = bom.company_id or self.env.company
                 not_rounded_price = line.product_id.uom_id._compute_price(line.product_id.with_context(force_comany=company.id).standard_price, line.product_uom_id) * prod_qty
                 price += company.currency_id.round(not_rounded_price)

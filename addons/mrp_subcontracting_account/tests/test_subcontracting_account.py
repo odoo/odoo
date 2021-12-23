@@ -64,6 +64,20 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         self.assertEqual(picking_receipt.move_lines.stock_valuation_layer_ids.value, 0)
         self.assertEqual(picking_receipt.move_lines.product_id.value_svl, 60)
 
+        # Do the same without any additionnal cost
+        picking_receipt = picking_receipt.copy()
+        picking_receipt.move_lines.price_unit = 0
+
+        picking_receipt.action_confirm()
+        picking_receipt.move_lines.quantity_done = 1.0
+        picking_receipt._action_done()
+
+        mo = picking_receipt._get_subcontracted_productions()
+        # In this case, since there isn't any additionnal cost, the total cost of the subcontracting
+        # is the sum of the components' costs: 10 + 20 = 30
+        self.assertEqual(mo.move_finished_ids.stock_valuation_layer_ids.value, 30)
+        self.assertEqual(picking_receipt.move_lines.product_id.value_svl, 90)
+
     def test_subcontracting_account_backorder(self):
         """ This test uses tracked (serial and lot) component and tracked (serial) finished product
         The original subcontracting production order will be split into 4 backorders. This test

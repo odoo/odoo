@@ -30,6 +30,8 @@ msgid ""
 "${object.create_uid.name} from ${object.company_id.name} invites you to "
 "connect to Odoo"
 msgstr ""
+"${object.create_uid.name} från ${object.company_id.name} bjuder in dig till "
+"Odoo"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:0
@@ -111,7 +113,7 @@ msgstr ""
 "                </td>\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    <div>\n"
-"                        Vänligen ${object.name or ''},<br/> <br/>\n"
+"                        Hej ${object.name or ''},<br/> <br/>\n"
 "                        Du lade till följande användare till databasen, men de är ännu ej registrerade:\n"
 "                        <ul>\n"
 "                            % for invited_user in invited_users:\n"
@@ -690,7 +692,7 @@ msgstr "Skicka instruktioner för lösenordsåterställning"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
 msgid "Send an Invitation Email"
-msgstr "Skicka inbjudningse-post"
+msgstr "Skicka ett inbjudningsmail"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
@@ -808,7 +810,7 @@ msgstr ""
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_user_signup_account_created
 msgid "Welcome to ${object.company_id.name}!"
-msgstr ""
+msgstr "Välkommen till ${object.company_id.name}!"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:0

@@ -3,7 +3,7 @@
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models
+from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.tools import format_datetime
 from odoo.exceptions import AccessError, ValidationError
 
@@ -160,7 +160,7 @@ class EventRegistration(models.Model):
         if vals.get('state') == 'open':
             # auto-trigger after_sub (on subscribe) mail schedulers, if needed
             onsubscribe_schedulers = self.mapped('event_id.event_mail_ids').filtered(lambda s: s.interval_type == 'after_sub')
-            onsubscribe_schedulers.sudo().execute()
+            onsubscribe_schedulers.with_user(SUPERUSER_ID).execute()
 
         return ret
 

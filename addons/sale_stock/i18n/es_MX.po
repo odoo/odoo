@@ -123,7 +123,7 @@ msgid ""
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
 "Según la configuración del producto, el mecanismo puede calcular automáticamente la cantidad enviada:\n"
-"  - Manual: la cantidad se establece manualmente en la línea.\n"
+"  - Manual: la cantidad se establece de forma manual en la línea.\n"
 "  - Analítica de gastos: la cantidad equivale a la suma de los gastos registrados.\n"
 "  - Hojas de horas: la cantidad equivale a la suma de las horas registradas en las tareas vinculadas a esta línea de venta\n"
 "  - Movimientos del inventario: la cantidad viene de las recolecciones confirmadas\n"
@@ -131,7 +131,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_aftersale
 msgid "After-Sale"
-msgstr "Post-venta"
+msgstr "Postventa"
 
 #. module: sale_stock
 #. openerp-web
@@ -277,7 +277,7 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Display incoterms on orders &amp; invoices"
-msgstr "Mostrar incoterms en las órdenes &amp; facturas"
+msgstr "Mostrar incoterms en las órdenes y facturas"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
@@ -476,18 +476,18 @@ msgstr "Última modificación el"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_production_lot
 msgid "Lot/Serial"
-msgstr "Número de lote / serie "
+msgstr "Número de lote/serie"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Lots &amp; Serial numbers will appear on the invoice"
-msgstr "Lotes &amp; Los números de serie aparecerán en la factura"
+msgstr "Los lotes y números de serie aparecerán en la factura"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
 #, python-format
 msgid "Make To Order"
-msgstr "Fabricación sobre pedido"
+msgstr "Fabricación sobre pedido (MTO)"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
@@ -554,7 +554,7 @@ msgstr "En"
 #: code:addons/sale_stock/models/sale_order.py:0
 #, python-format
 msgid "Ordered quantity decreased!"
-msgstr "Se ha reducido la cantidad pedida."
+msgstr "Se ha reducido la cantidad ordenada."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__product_packaging
@@ -871,8 +871,8 @@ msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
 "the delivery order if needed."
 msgstr ""
-"Está reduciendo la cantidad pedida. No olvide actualizar la orden de entrega"
-" de forma manual si es necesario."
+"Está reduciendo la cantidad ordenada. No olvide actualizar la orden de "
+"entrega de forma manual si es necesario."
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
@@ -881,7 +881,7 @@ msgid ""
 "You cannot decrease the ordered quantity below the delivered quantity.\n"
 "Create a return first."
 msgstr ""
-"No puede disminuir la cantidad pedida por debajo de la cantidad entregada.\n"
+"No puede disminuir la cantidad ordenada por debajo de la cantidad entregada.\n"
 "Cree un retorno primero."
 
 #. module: sale_stock

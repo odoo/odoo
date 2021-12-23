@@ -24,11 +24,12 @@
 # Martin Trigaux, 2020
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2020
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2020
-# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2020
 # santeri valjakka <santeri.valjakka@avoin.systems>, 2020
 # Janne Rättyä <janne.rattya@web-veistamo.fi>, 2020
 # Mikko Virtanen <mikko.virtanen2013@gmail.com>, 2021
 # Miika Nissi <miika.nissi@tawasta.fi>, 2021
+# Antti Oksman <antti.oksman@web-veistamo.fi>, 2021
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2021
 # 
 msgid ""
 msgstr ""
@@ -36,7 +37,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:23+0000\n"
 "PO-Revision-Date: 2020-09-07 08:14+0000\n"
-"Last-Translator: Miika Nissi <miika.nissi@tawasta.fi>, 2021\n"
+"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2021\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -61,7 +62,7 @@ msgstr ""
 #: code:addons/mail/models/mail_activity.py:0
 #, python-format
 msgid "%(activity_name)s: %(summary)s assigned to you"
-msgstr ""
+msgstr "%(activity_name)s: %(summary)s määrätty sinulle"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:0
@@ -81,7 +82,7 @@ msgstr "%(user_name)s kutsui sinut seuraamaan uutta dokumenttia."
 #: code:addons/mail/static/src/models/messaging_notification_handler/messaging_notification_handler.js:0
 #, python-format
 msgid "%d Message"
-msgstr ""
+msgstr "%d Viesti"
 
 #. module: mail
 #. openerp-web
@@ -102,7 +103,7 @@ msgstr "%d päivää myöhässä"
 #: code:addons/mail/static/src/components/activity/activity.js:0
 #, python-format
 msgid "%d days overdue:"
-msgstr ""
+msgstr "%d päivää myöhässä:"
 
 #. module: mail
 #: code:addons/mail/models/mail_template.py:0
@@ -128,14 +129,14 @@ msgstr "%s luotu"
 #: code:addons/mail/static/src/models/messaging_notification_handler/messaging_notification_handler.js:0
 #, python-format
 msgid "%s from %s"
-msgstr ""
+msgstr "%s käyttäjältä %s"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/notification_request/notification_request.js:0
 #, python-format
 msgid "%s has a request"
-msgstr ""
+msgstr "%s on pyytänyt"
 
 #. module: mail
 #. openerp-web
@@ -202,6 +203,8 @@ msgid ""
 "<b attrs=\"{'invisible': [('no_record', '=', False)]}\" class=\"text-"
 "warning\">No record for this model</b>"
 msgstr ""
+"<b attrs=\"{'invisible': [('no_record', '=', False)]}\" class=\"text-"
+"warning\">Ei tietueita tälle mallille</b>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -257,7 +260,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
 msgid "<i class=\"fa fa-globe\" aria-label=\"Document url\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-globe\" aria-label=\"Document url\"/>"
 
 #. module: mail
 #. openerp-web
@@ -268,6 +271,9 @@ msgid ""
 "messages.</p><p><i>You might need to invite users from the Settings app "
 "first.</i></p>"
 msgstr ""
+"<p><b>Keskustele kollegoiden kanssa</b> reaaliajassa käyttäen "
+"viestejä.</p><p><i>Käyttäjä pitää mahdollisesti kutusa ensin "
+"'Asetukset'-sovelluksen kautta.</i></p>"
 
 #. module: mail
 #. openerp-web
@@ -850,6 +856,8 @@ msgid ""
 "Are you sure you want to discard %s mail delivery failures? You won't be "
 "able to re-send these mails later!"
 msgstr ""
+"Oletko varma, että haluat hylätä %s sähköpostin toimitusvirheet? Et pysty "
+"lähettämään näitä sähköposteja uudelleen!"
 
 #. module: mail
 #. openerp-web
@@ -1311,7 +1319,7 @@ msgstr "Sulje"
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #, python-format
 msgid "Close (Esc)"
-msgstr ""
+msgstr "Sulje (Esc)"
 
 #. module: mail
 #. openerp-web
@@ -1325,7 +1333,7 @@ msgstr "Sulje keskusteluikkuna"
 #: code:addons/mail/static/src/components/chat_window_header/chat_window_header.xml:0
 #, python-format
 msgid "Close conversation"
-msgstr ""
+msgstr "Sulje keskustelu"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel_partner__fold_state__closed
@@ -1402,7 +1410,7 @@ msgstr "Konfiguroi aktiviteettien tyypit"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Configure your own email servers"
-msgstr ""
+msgstr "Konfiguroi oma sähköpostipalvelin"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_remove_view_form
@@ -1505,7 +1513,7 @@ msgstr "Luojan UID"
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "Create new %(document)s"
-msgstr ""
+msgstr "Luo uusi %(document)s"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0
@@ -1589,7 +1597,7 @@ msgstr "Luotu"
 #: code:addons/mail/static/src/models/chatter/chatter.js:0
 #, python-format
 msgid "Creating a new record..."
-msgstr ""
+msgstr "Luo uusi tietue..."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
@@ -5664,7 +5672,7 @@ msgstr "Tähdelliset"
 #: code:addons/mail/static/src/components/discuss_sidebar/discuss_sidebar.xml:0
 #, python-format
 msgid "Start a conversation"
-msgstr ""
+msgstr "Aloita keskustelu"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__state

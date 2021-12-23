@@ -189,7 +189,7 @@ msgstr ""
 "* Wachten op een andere verplaatsing: Deze status kan worden gezien wanneer de verplaatsing wacht op een andere verplaatsing, bijvoorbeeld bij een gekoppeld proces. \n"
 "* Wacht op beschikbaarheid: Deze staat wordt bereikt wanneer de verwerving niet gelijk gedaan kan worden. Het kan zijn dat de planner moet worden gestart. \n"
 "* Beschikbaar: Wanneer de producten zijn gereserveerd, krijgt de verplaatsing de status 'Beschikbaar' \n"
-"* Gereed: Wanneer de levering is verwerkt, krijgt de verplaatsing de status 'Gereed'"
+"* Gereed: Wanneer de levering is verwerkt, krijgt de verplaatsing de status 'Gereed'."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__usage
@@ -1716,8 +1716,8 @@ msgstr "Klantlocaties"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
-msgid "DHL USA Connector"
-msgstr "DHL US connector"
+msgid "DHL Express Connector"
+msgstr "DHL Express Connector"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__date
@@ -1831,10 +1831,11 @@ msgstr "Standaard routes door het magazijn"
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint
 msgid ""
 "Define a minimum stock rule so that Odoo creates automatically requests for "
-"quotations or draft manufacturing orders to resupply your stock."
+"quotations or confirmed manufacturing orders to resupply your stock."
 msgstr ""
 "Definieer een minimale voorraadregel, zodat Odoo automatisch aanvragen voor "
-"offertes of productieorders kan aanmaken om uw voorraad te aan te vullen."
+"offertes of bevestigde productieorders kan aanmaken om je voorraad te aan te"
+" vullen."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_warehouse_form
@@ -3348,19 +3349,24 @@ msgstr "Is de hoeveelheid gereed te bewerken"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"It is not possible to reserve more products of %s than you have in stock."
+"It is not possible to unreserve more products of %s than you have in "
+"stock.The correction could unreserve some operations with problematics "
+"products."
 msgstr ""
-"Het is niet mogelijk om meer te reserveren van %s dan op uw op voorraad "
-"heeft."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"It is not possible to unreserve more products of %s than you have in stock."
+"It is not possible to unreserve more products of %s than you have in stock. "
+"Contact an administrator."
 msgstr ""
-"Het is niet mogelijk om de reservering ongedaan te maken voor meer producten"
-" van %s dan uw op voorraad heeft."
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Try our automated action to fix it"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_type

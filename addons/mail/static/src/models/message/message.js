@@ -515,6 +515,10 @@ function factory(dependencies) {
          * @returns {string}
          */
         _computePrettyBody() {
+            if (!this.body) {
+                // body null in db, body will be false instead of empty string
+                return clear();
+            }
             let prettyBody;
             for (const emoji of emojis) {
                 const { unicode } = emoji;
@@ -585,9 +589,10 @@ function factory(dependencies) {
         checkedThreadCaches: many2many('mail.thread_cache', {
             inverse: 'checkedMessages',
         }),
-        date: attr({
-            default: moment(),
-        }),
+        /**
+         * Determines the date of the message as a moment object.
+         */
+        date: attr(),
         /**
          * States the time elapsed since date up to now.
          */
@@ -771,6 +776,7 @@ function factory(dependencies) {
          */
         prettyBody: attr({
             compute: '_computePrettyBody',
+            default: "",
             dependencies: ['body'],
         }),
         subject: attr(),

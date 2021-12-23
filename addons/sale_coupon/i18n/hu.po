@@ -7,6 +7,7 @@
 # Tamás Németh <ntomasz81@gmail.com>, 2021
 # gezza <geza.nagy@oregional.hu>, 2021
 # Ákos Nagy <akos.nagy@oregional.hu>, 2021
+# Krisztián Juhász <juhasz.krisztian@josafar.hu>, 2021
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:29+0000\n"
 "PO-Revision-Date: 2020-09-07 08:18+0000\n"
-"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2021\n"
+"Last-Translator: Krisztián Juhász <juhasz.krisztian@josafar.hu>, 2021\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,13 +26,13 @@ msgstr ""
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_view_coupon_program_kanban
 msgid "<strong>Sales</strong>"
-msgstr "<strong>Eladások</strong>"
+msgstr "<strong>Értékesítések</strong>"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon.py:0
 #, python-format
 msgid "A Coupon is already applied for the same reward"
-msgstr ""
+msgstr "Ugyanerre a jutalomra már alkalmaztak egy kupont"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon.py:0
@@ -40,36 +41,37 @@ msgstr ""
 msgid ""
 "A minimum of %(amount)s %(currency)s should be purchased to get the reward"
 msgstr ""
+"Legalább %(amount)s %(currency)s kell rendelni, hogy megkapd a jutalmad"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_order__applied_coupon_ids
 msgid "Applied Coupons"
-msgstr ""
+msgstr "Felhasznált kuponok"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_order__no_code_promo_program_ids
 msgid "Applied Immediate Promo Programs"
-msgstr ""
+msgstr "Felhasznált azonnali promóciós programok"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_order__code_promo_program_id
 msgid "Applied Promo Program"
-msgstr ""
+msgstr "Felhasznál promóciós program"
 
 #. module: sale_coupon
 #: model:ir.model.fields,help:sale_coupon.field_sale_order__promo_code
 msgid "Applied program code"
-msgstr ""
+msgstr "Felhasznált program kód"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_apply_code_view_form
 msgid "Apply"
-msgstr "Alkalmaz"
+msgstr "Alkalmazás"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_apply_code_view_form
 msgid "Apply coupon"
-msgstr ""
+msgstr "Használja a Kupont"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon.py:0
@@ -77,11 +79,12 @@ msgstr ""
 #, python-format
 msgid "At least one of the required conditions is not met to get the reward!"
 msgstr ""
+"A jutalom elnyeréséhez szükséges feltételek közül legalább egy nem teljesül!"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_apply_code_view_form
 msgid "Cancel"
-msgstr "Visszavonás"
+msgstr "Mégse"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_apply_code__coupon_code
@@ -97,13 +100,13 @@ msgstr "Kupon"
 #. module: sale_coupon
 #: model:ir.model,name:sale_coupon.model_coupon_program
 msgid "Coupon Program"
-msgstr ""
+msgstr "Kupon program"
 
 #. module: sale_coupon
 #: model:ir.ui.menu,name:sale_coupon.menu_coupon_type_config
 #: model_terms:ir.ui.view,arch_db:sale_coupon.res_config_settings_view_form
 msgid "Coupon Programs"
-msgstr ""
+msgstr "Kupon Programok"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_apply_code__create_uid
@@ -119,14 +122,14 @@ msgstr "Létrehozva"
 #: code:addons/sale_coupon/models/sale_order.py:0
 #, python-format
 msgid "Discount: %(program)s - On product with following taxes: %(taxes)s"
-msgstr ""
+msgstr "Kedvezmény: %(program)s - terméken az alábbi adókkal: %(taxes)s"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/sale_order.py:0
 #: code:addons/sale_coupon/models/sale_order.py:0
 #, python-format
 msgid "Discount: %s"
-msgstr ""
+msgstr "Kedvezmény: %s"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_coupon_coupon__display_name
@@ -135,12 +138,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_order__display_name
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_order_line__display_name
 msgid "Display Name"
-msgstr "Név megjelenítése"
+msgstr "Megjelenített név"
 
 #. module: sale_coupon
 #: model:ir.actions.act_window,name:sale_coupon.sale_coupon_apply_code_action
 msgid "Enter Promotion or Coupon Code"
-msgstr ""
+msgstr "Add meg a promóciós vagy kuponkódot"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/sale_order.py:0
@@ -152,13 +155,13 @@ msgstr "Ingyenes termék"
 #: code:addons/sale_coupon/models/coupon.py:0
 #, python-format
 msgid "Global discounts are not cumulable."
-msgstr ""
+msgstr "A globális kedvezmények nem halmozhatók."
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon_program.py:0
 #, python-format
 msgid "Global discounts are not cumulative."
-msgstr ""
+msgstr "A globális kedvezmények nem halmozhatók."
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_coupon_coupon__id
@@ -173,12 +176,12 @@ msgstr "Azonosító"
 #: code:addons/sale_coupon/models/coupon.py:0
 #, python-format
 msgid "Invalid partner."
-msgstr ""
+msgstr "Érvénytelen partner."
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_order_line__is_reward_line
 msgid "Is a program reward line"
-msgstr ""
+msgstr "Ez egy program jutalom sor"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_coupon_coupon____last_update
@@ -187,7 +190,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_order____last_update
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_order_line____last_update
 msgid "Last Modified on"
-msgstr "Legutóbb módosítva"
+msgstr "Legutóbb frissítve"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_apply_code__write_uid
@@ -197,120 +200,120 @@ msgstr "Frissítette"
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_coupon_apply_code__write_date
 msgid "Last Updated on"
-msgstr "Frissítve "
+msgstr "Frissítve ekkor"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_order__generated_coupon_ids
 msgid "Offered Coupons"
-msgstr ""
+msgstr "Felajánlott kuponok"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_coupon_program__order_count
 msgid "Order Count"
-msgstr "Rendelések száma"
+msgstr "Rendelés száma"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_coupon_coupon__order_id
 msgid "Order Reference"
-msgstr "Rendelés hivatkozás"
+msgstr "Rendeléshivatkozás"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon_program.py:0
 #, python-format
 msgid "Promo code %s has been expired."
-msgstr ""
+msgstr "A(z) %s promóciós kód lejárt."
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon_program.py:0
 #, python-format
 msgid "Promo code is expired"
-msgstr ""
+msgstr "A promóciós kód lejárt"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon_program.py:0
 #, python-format
 msgid "Promo code is invalid"
-msgstr ""
+msgstr "A promóciós kód érvénytelen"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_order__promo_code
 msgid "Promotion Code"
-msgstr ""
+msgstr "Promóciós kód"
 
 #. module: sale_coupon
 #: model:ir.ui.menu,name:sale_coupon.menu_promotion_type_config
 #: model_terms:ir.ui.view,arch_db:sale_coupon.res_config_settings_view_form
 msgid "Promotion Programs"
-msgstr ""
+msgstr "Promóciós Programok"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon_program.py:0
 #, python-format
 msgid "Promotionals codes are not cumulative."
-msgstr ""
+msgstr "A promóciós kódok nem halmozódnak fel."
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_order_view_form
 msgid "Promotions"
-msgstr ""
+msgstr "Promóciók"
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_sale_order__reward_amount
 msgid "Reward Amount"
-msgstr ""
+msgstr "Jutalom összege"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_coupon_program_form
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_coupon_program_view_promo_program_form
 msgid "Sales"
-msgstr "Értékesítés"
+msgstr "Értékesítések"
 
 #. module: sale_coupon
 #: model:ir.model,name:sale_coupon.model_sale_coupon_apply_code
 msgid "Sales Coupon Apply Code"
-msgstr ""
+msgstr "Értékesítési kupon alkalmazási kód"
 
 #. module: sale_coupon
 #: model:ir.actions.act_window,name:sale_coupon.sale_order_action
 #: model:ir.model,name:sale_coupon.model_sale_order
 msgid "Sales Order"
-msgstr "Értékesítési rendelés"
+msgstr "Vevői rendelések"
 
 #. module: sale_coupon
 #: model:ir.model,name:sale_coupon.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Értékesítési rendelés sor"
+msgstr "Értékesítési megrendelés sor"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon_program.py:0
 #, python-format
 msgid "Sales Orders"
-msgstr "Értékesítési rendelések"
+msgstr "Vevői megrendelések"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon.py:0
 #, python-format
 msgid "The coupon program for %s is in draft or closed state"
-msgstr ""
+msgstr "A %s kuponprogramja piszkozat vagy lezárt állapotban van"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon.py:0
 #: code:addons/sale_coupon/models/coupon_program.py:0
 #, python-format
 msgid "The customer doesn't have access to this reward."
-msgstr ""
+msgstr "Az ügyfél nem fér hozzá ehhez a jutalomhoz."
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon_program.py:0
 #, python-format
 msgid "The promo code is already applied on this order"
-msgstr ""
+msgstr "A promóciós kódot már felhasználtad ebben a rendelésben"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon_program.py:0
 #, python-format
 msgid "The promotional offer is already applied on this order"
-msgstr ""
+msgstr "A promóciós ajánlat már érvényes erre a megrendelésre"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon.py:0
@@ -320,51 +323,55 @@ msgid ""
 "The reward products should be in the sales order lines to apply the "
 "discount."
 msgstr ""
+"A jutalomtermékeknek szerepelniük kell a rendelés soraiban a kedvezmény "
+"érvényesítéséhez."
 
 #. module: sale_coupon
 #: model:ir.model.fields,help:sale_coupon.field_coupon_coupon__order_id
 msgid "The sales order from which coupon is generated"
-msgstr ""
+msgstr "Az értékesítési rendelés, amelyből a kupon generálodott"
 
 #. module: sale_coupon
 #: model:ir.model.fields,help:sale_coupon.field_coupon_coupon__sales_order_id
 msgid "The sales order on which the coupon is applied"
-msgstr ""
+msgstr "Az értékesítési rendelés, amelyre a kupont felhasználták"
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon.py:0
 #, python-format
 msgid "This coupon %s exists but the origin sales order is not validated yet."
 msgstr ""
+"Ez a kupon %s létezik, de az eredeti értékesítési rendelés még nincs "
+"megerősítve."
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon.py:0
 #, python-format
 msgid "This coupon has already been used (%s)."
-msgstr ""
+msgstr "Ezt a kupont már felhasználták (%s)."
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon.py:0
 #, python-format
 msgid "This coupon has been cancelled (%s)."
-msgstr ""
+msgstr "Ezt a kupont visszavonták (%s)."
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon.py:0
 #, python-format
 msgid "This coupon is expired (%s)."
-msgstr ""
+msgstr "Ez a kupon lejárt (%s)."
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/wizard/sale_coupon_apply_code.py:0
 #, python-format
 msgid "This coupon is invalid (%s)."
-msgstr ""
+msgstr "Ez a kupon érvénytelen (%s)."
 
 #. module: sale_coupon
 #: model:ir.model.fields,field_description:sale_coupon.field_coupon_coupon__sales_order_id
 msgid "Used in"
-msgstr ""
+msgstr "Használva"
 
 #. module: sale_coupon
 #: model_terms:ir.ui.view,arch_db:sale_coupon.sale_order_view_form
@@ -372,6 +379,8 @@ msgid ""
 "When clicked, the content of the order will be checked to detect (and apply)"
 " possible promotion programs."
 msgstr ""
+"Ha rákattint, a rendelés tartalma ellenőrzésre kerül az esetleges promóciós "
+"programok felderítése (és alkalmazása) érdekében."
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon.py:0
@@ -381,6 +390,9 @@ msgid ""
 "products should be recorded on the sales order. (Example: You need to have 3"
 " T-shirts on your sales order if the promotion is 'Buy 2, Get 1 Free')."
 msgstr ""
+"A rendelésben nem szerepel a szükséges termékmennyiség. Minden terméket "
+"rögzíteni kell a rendelésen. (Példa: 3 pólónak kell szerepelnie az "
+"értékesítési rendelésen, ha a promóció „Vegyél 2-t, kapsz 1-et ingyen”)."
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/coupon_program.py:0
@@ -391,9 +403,13 @@ msgid ""
 "recorded on the sales order (Example: You need to have 3 T-shirts on your "
 "sales order if the promotion is 'Buy 2, Get 1 Free'."
 msgstr ""
+"A rendelésben nem szerepel a szükséges termékmennyiség. Ha a jutalom "
+"megegyezik a termékmennyiséggel, kérjük, győződj meg arról, hogy az összes "
+"termék szerepel a rendelésen (Példa: Ha a promóció „Vásárolj 2-t, kapsz 1-et"
+" ingyen”, 3 pólónak kell szerepelnie a rendelésben."
 
 #. module: sale_coupon
 #: code:addons/sale_coupon/models/sale_order.py:0
 #, python-format
 msgid "limited to "
-msgstr "korlátozva"
+msgstr "korlátozva "

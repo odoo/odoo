@@ -40,6 +40,18 @@
             </field>
         </record>
 
+        <record id="stock_move_line_view_search" model="ir.ui.view">
+            <field name="name">stock.move.line.search</field>
+            <field name="model">stock.move.line</field>
+            <field name="inherit_id" ref="stock.stock_move_line_view_search" />
+            <field name="arch" type="xml">
+                <filter name="manufacturing" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                    <attribute name="domain">[('move_id.production_id', '!=', False)]</attribute>
+                </filter>
+            </field>
+        </record>
+
     <menuitem id="menu_mrp_traceability"
           name="Lots/Serial Numbers"
           parent="menu_mrp_bom"

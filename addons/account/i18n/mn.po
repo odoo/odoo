@@ -8,7 +8,7 @@
 # Tsog Tsog <ts.tsogoo@gmail.com>, 2020
 # Nurbahyt Kh <nurbahyt.kh@gmail.com>, 2020
 # Batmunkh Ganbat <batmunkh.g@bumanit.mn>, 2020
-# nasaaskii <nasaaskii@gmail.com>, 2020
+# Насан-Очир <nasaaskii@gmail.com>, 2020
 # Uuganbayar Batbaatar <uuganaaub33@gmail.com>, 2020
 # Onii Onii <onii0223@yahoo.com>, 2020
 # Minj P <pminj322@gmail.com>, 2020
@@ -352,7 +352,7 @@ msgstr "<i class=\"fa fa-calendar\"/> Эхлэх"
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_kanban
 msgid "<i class=\"fa fa-clock-o\" aria-label=\"Date\" role=\"img\" title=\"Date\"/>"
-msgstr "<i class=\"fa fa-clock-o\" aria-label=\"Огноо\" role=\"img\" title=\"Огноо\"/>"
+msgstr "<i class=\"fa fa-clock-o\" aria-label=\"Date\" role=\"img\" title=\"Date\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_kanban
@@ -464,8 +464,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
 msgid ""
 "<span class=\"badge badge-pill badge-info\"><i class=\"fa fa-fw fa-clock-o\""
-" aria-label=\"Opened\" title=\"Opened\" role=\"img\"/><span class=\"d-none d"
-"-md-inline\"> Waiting for Payment</span></span>"
+" aria-label=\"Opened\" title=\"Opened\" role=\"img\"/><span class=\"d-none "
+"d-md-inline\"> Waiting for Payment</span></span>"
 msgstr ""
 "<span class=\"badge badge-pill badge-info\"><i class=\"fa fa-fw fa-clock-o\""
 " aria-label=\"Нээлттэй\" title=\"Opened\" role=\"img\"/><span class=\"d-none"
@@ -1426,7 +1426,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_tour_upload_bill_email_confirm
 msgid "Account tour upload bill email confirm"
-msgstr ""
+msgstr "Санхүүгийн дадлага, төлбөрийн нэхэмжлэл имэйлээр хүлээн авч батлах"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__revenue_accrual_account
@@ -3637,7 +3637,7 @@ msgstr "Тохируулга"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 #, python-format
 msgid "Confirm"
-msgstr "Илгээх"
+msgstr "Батлах"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_bnk_stmt_check
@@ -5179,13 +5179,13 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Entries are not from the same account: %s != %s"
-msgstr ""
+msgstr "Гүйлгээнүүд нь ижил биш данстай байна: %s != %s"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Entries doesn't belong to the same company: %s != %s"
-msgstr ""
+msgstr "Гүйлгээнүүд ижил компанид харьяалагдаагүй байна: %s != %s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_validate_account_move__force_post
@@ -5203,7 +5203,7 @@ msgstr "Хянагдах гүйлгээнүүд"
 #: code:addons/account/models/account_analytic_line.py:0
 #, python-format
 msgid "Entries: %(account)s"
-msgstr ""
+msgstr "Гүйлгээ: %(account)s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__move_line_ids
@@ -5258,12 +5258,12 @@ msgstr "Ханшийн зөрүүний гүйлгээ"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__exclude_from_invoice_tab
 msgid "Exclude From Invoice Tab"
-msgstr ""
+msgstr "Нэхэмжлэлийн мөрт тооцогдохгүй"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_group__excluded_journal_ids
 msgid "Excluded Journals"
-msgstr ""
+msgstr "Хасагдсан журналууд"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__expects_chart_of_accounts
@@ -5371,7 +5371,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__general_account_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 msgid "Financial Account"
-msgstr "Нягтлан бодох бүртгэл"
+msgstr "Санхүүгийн данс"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__tag_ids
@@ -5386,12 +5386,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_partner_mapping__narration_regex
 msgid "Find Text in Notes"
-msgstr ""
+msgstr "Тэмдэглэлээс үг хайх"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.dashboard_onboarding_bill_step
 msgid "First Bill"
-msgstr ""
+msgstr "Анхны төлбөрийн нэхэмжлэл"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__first_date
@@ -5411,12 +5411,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__first_name
 msgid "First New Sequence"
-msgstr ""
+msgstr "Анхны шинэ дугаарлалт"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_create_invoice_step
 msgid "First invoice sent!"
-msgstr ""
+msgstr "Анхны нэхэмжлэл илгээгдлээ!"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_fiscal_country_id
@@ -5532,7 +5532,7 @@ msgstr "Үндсэн хөрөнгө"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__amount
 msgid "Float Amount"
-msgstr ""
+msgstr "Хөвөгч таслалтай тоон утга"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -5590,7 +5590,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__force_post
 msgid "Force"
-msgstr ""
+msgstr "Хүчээр"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model_line__force_tax_included
@@ -5796,7 +5796,7 @@ msgstr "Сайн зээлдэгч"
 #: model:ir.model.fields.selection,name:account.selection__account_tax__tax_scope__consu
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Goods"
-msgstr ""
+msgstr "Бараа"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__group_id
@@ -5821,7 +5821,7 @@ msgstr "Бүлэглэлт"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__group_payment
 msgid "Group Payments"
-msgstr ""
+msgstr "Төлбөрийн бүлэг"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__amount_type__group
@@ -6312,7 +6312,7 @@ msgstr "Барааны загвар дээрх орлогын данс"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Incoming Payments"
-msgstr ""
+msgstr "Орлогын төлбөрүүд"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__payment_debit_account_id
@@ -6687,7 +6687,7 @@ msgstr "Нэхэмжлэл"
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_invoice
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
 msgid "Invoices &amp; Bills"
-msgstr ""
+msgstr "Нэхэмжлэл &amp; Төлбөр"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_invoice_report_all
@@ -6770,7 +6770,7 @@ msgstr "Их эсэх"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__is_internal_transfer
 msgid "Is Internal Transfer"
-msgstr ""
+msgstr "Дотоод шилжүүлгэ эсэх"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_amount__lower
@@ -6781,7 +6781,7 @@ msgstr "Бага эсэх"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__is_matched
 msgid "Is Matched With a Bank Statement"
-msgstr ""
+msgstr "Банкны хуулгатай таарсан эсэх"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_move_sent
@@ -6804,7 +6804,7 @@ msgstr "Хэвлэгдсэн эсэх"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_reconciled
 #: model:ir.model.fields,field_description:account.field_account_payment__is_reconciled
 msgid "Is Reconciled"
-msgstr ""
+msgstr "Тулгагдсан эсэх"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_rounding_line
@@ -6845,7 +6845,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "It was previously '%(previous)s' and it is now '%(now)s'."
-msgstr ""
+msgstr "Өмнө нь '%(previous)s' байсан ба одоо '%(now)s' болсон."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -6894,7 +6894,7 @@ msgstr "Журнал"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__currency_id
 msgid "Journal Currency"
-msgstr ""
+msgstr "Журналын валют"
 
 #. module: account
 #. openerp-web
@@ -6934,7 +6934,7 @@ msgstr "Ажил гүйлгээ"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_reversal__date_mode__entry
 msgid "Journal Entry Date"
-msgstr ""
+msgstr "Ажил гүйлгээний огноо"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_print_journal__sort_selection__move_name
@@ -7009,7 +7009,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__line_ids
 msgid "Journal items"
-msgstr ""
+msgstr "Журналын бичилтүүд"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -7096,7 +7096,7 @@ msgstr "Канбан самбар граффик"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_resequence_wizard__ordering__keep
 msgid "Keep current order"
-msgstr ""
+msgstr "Одоогийн захиалгыг үлдээх"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -7659,12 +7659,12 @@ msgstr "Ашгийн шинжилгээ"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "Mark as Sent"
-msgstr ""
+msgstr "Илгээгдсэнээр тэмдэглэх"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_register__payment_difference_handling__reconcile
 msgid "Mark as fully paid"
-msgstr ""
+msgstr "Бүрэн төлөгдсөнөөр тэмдэглэх"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -8381,7 +8381,7 @@ msgstr ""
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Once your invoice is ready, press CONFIRM."
-msgstr ""
+msgstr "Нэхэмжлэл тань бэлэн болмогц БАТЛАХ товч дээр дарна уу."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -9433,7 +9433,7 @@ msgstr "Нийлүүлэгчиддээ төлөх төлбөрийн чекий�
 #: model:ir.model.fields.selection,name:account.selection__account_bank_statement__state__posted
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Processing"
-msgstr ""
+msgstr "Хийгдэж буй"
 
 #. module: account
 #: model:ir.model,name:account.model_product_product
@@ -9969,7 +9969,7 @@ msgstr "Шинэ болгох"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "Reset to Processing"
-msgstr ""
+msgstr "Хийгдэж буй төлөвт шилжүүлэх"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__residual
@@ -11040,7 +11040,7 @@ msgstr "Хуулга"
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "Statement %s confirmed."
-msgstr ""
+msgstr "Хуулга %s батлагдлаа."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_line_id
@@ -12203,6 +12203,11 @@ msgid ""
 "entries, ready for the reconciliation.- Validated: All lines are reconciled."
 " There is nothing left to process."
 msgstr ""
+"Банк ба кассын хуулганы одоогийн төлөв: - Шинэ: Гүйлгээнүүдийг нооргоор "
+"бүртгэж засварлах боломжтой. - Хийгдэж буй: Гүйлгээнүүд батлагдсан байх ба "
+"засах боломжгүй, харин тэдгээрийг холбогдох төлбөр, нэхэмжлэлүүдтэй тулгах "
+"үйлдлийг хийх. - Батлагдсан: Бүх гүйлгээнүүд тулгагдсан байх ба хийх зүйл "
+"үлдээгүй."
 
 #. module: account
 #: code:addons/account/models/account_payment_term.py:0
@@ -13166,7 +13171,7 @@ msgstr "Дуусах"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "To Check"
-msgstr ""
+msgstr "Шалгах"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -14039,25 +14044,27 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You can only reconcile posted entries."
-msgstr ""
+msgstr "Та батлагдаагүй ажил гүйлгээг тулгалт хийж холбохыг завдаж байна."
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid "You can only register payment for posted journal entries."
 msgstr ""
+"Та зөвхөн батлагдсан ажил гүйлгээнд холбогдуулж төлбөр бүртгэх боломжтой."
 
 #. module: account
 #: code:addons/account/wizard/account_resequence.py:0
 #, python-format
 msgid "You can only resequence items from the same journal"
 msgstr ""
+"Та ижил журналд бүртгэгдсэн гүйлгээнд дарааллыг дахин тогтоох боломжтой"
 
 #. module: account
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
 msgid "You can only reverse posted moves."
-msgstr ""
+msgstr "Та зөвхөн батлагдсан гүйлгээнээс эсрэг гүйлгээ үүсгэх боломжтой."
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_send.py:0

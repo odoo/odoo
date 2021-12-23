@@ -13,11 +13,13 @@ except ImportError:
     # If the `sass` python library isn't found, we fallback on the
     # `sassc` executable in the path.
     libsass = None
+from contextlib import closing
 from datetime import datetime
 from subprocess import Popen, PIPE
 from collections import OrderedDict
 from odoo import fields, tools, SUPERUSER_ID
 from odoo.tools.pycompat import to_text
+from odoo.tools.misc import file_open
 from odoo.http import request
 from odoo.modules.module import get_resource_path
 from .qweb import escape
@@ -26,6 +28,8 @@ from odoo.tools import func, misc
 
 import logging
 _logger = logging.getLogger(__name__)
+
+EXTENSIONS = (".js", ".css", ".scss", ".sass", ".less")
 
 
 class CompileError(RuntimeError): pass
@@ -422,7 +426,7 @@ class AssetsBundle(object):
 
     def is_css_preprocessed(self):
         preprocessed = True
-        attachments = None
+        old_attachments = self.env['ir.attachment'].sudo()
         asset_types = [SassStylesheetAsset, ScssStylesheetAsset, LessStylesheetAsset]
         if self.user_direction == 'rtl':
             asset_types.append(StylesheetAsset)
@@ -433,6 +437,7 @@ class AssetsBundle(object):
             if assets:
                 assets_domain = self._get_assets_domain_for_already_processed_css(assets)
                 attachments = self.env['ir.attachment'].sudo().search(assets_domain)
+                old_attachments += attachments
                 for attachment in attachments:
                     asset = assets[attachment.url]
                     if asset.last_modified > attachment['__last_update']:
@@ -449,7 +454,7 @@ class AssetsBundle(object):
                 if outdated:
                     preprocessed = False
 
-        return preprocessed, attachments
+        return preprocessed, old_attachments
 
     def preprocess_css(self, debug=False, old_attachments=None):
         """
@@ -676,7 +681,7 @@ class WebAsset(object):
         try:
             self.stat()
             if self._filename:
-                with open(self._filename, 'rb') as fp:
+                with closing(file_open(self._filename, 'rb', filter_ext=EXTENSIONS)) as fp:
                     return fp.read().decode('utf-8')
             else:
                 return base64.b64decode(self._ir_attach['datas']).decode('utf-8')

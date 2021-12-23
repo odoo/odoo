@@ -10,7 +10,6 @@
 # Mikko Salmela <salmemik@gmail.com>, 2020
 # Sanna Edelman <direct@generare.com>, 2020
 # Kari Lindgren <karisatu@gmail.com>, 2020
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2020
 # Jukka Paulin <jukka.paulin@gmail.com>, 2020
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2020
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2020
@@ -18,6 +17,8 @@
 # Heikki Katajisto <heikki.katajisto@myyntivoima.fi>, 2020
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2020
 # Janne Rättyä <janne.rattya@web-veistamo.fi>, 2020
+# Miika Nissi <miika.nissi@tawasta.fi>, 2021
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -25,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:46+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Janne Rättyä <janne.rattya@web-veistamo.fi>, 2020\n"
+"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2021\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -68,7 +69,7 @@ msgstr "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
 msgid "<i class=\"fa fa-pencil mx-1\"/>Edit Security Settings"
-msgstr ""
+msgstr "<i class=\"fa fa-pencil mx-1\"/>Muokkaa suojausasetuksia"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
@@ -280,7 +281,7 @@ msgstr "Käyttövaroitus"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
 msgid "Account Security"
-msgstr ""
+msgstr "Tilin tietoturva"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
@@ -360,7 +361,7 @@ msgstr ""
 #: code:addons/portal/static/src/js/portal.js:0
 #, python-format
 msgid "Check failed"
-msgstr ""
+msgstr "Tarkistus epäonnistui"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -421,7 +422,7 @@ msgstr "Yhteystiedot"
 #: code:addons/portal/static/src/js/portal_composer.js:0
 #, python-format
 msgid "Could not save file <strong>%s</strong>"
-msgstr ""
+msgstr "Tallentaminen epäonnistui tiedostolle <strong>%s</strong>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -455,6 +456,8 @@ msgid ""
 "Currently available to everyone viewing this document, click to restrict to "
 "internal employees."
 msgstr ""
+"Tämä dokumentti on tällä hetkellä kaikkien katselijoiden nähtävillä. "
+"Klikkaa, jos haluat rajoittaa katseluoikeudet sisäisiin työntekijöihin."
 
 #. module: portal
 #. openerp-web
@@ -464,6 +467,8 @@ msgid ""
 "Currently restricted to internal employees, click to make it available to "
 "everyone viewing this document."
 msgstr ""
+"Tämä dokumentti on tällä hetkellä rajoitettu sisäisille työntekijöille. "
+"Klikkaa, jos haluat, että se on kaikkien nähtävillä."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_mixin__access_url
@@ -536,14 +541,14 @@ msgstr "Sähköpostiviestiketju"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Employees Only"
-msgstr ""
+msgstr "Vain työntekijät"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/js/portal.js:0
 #, python-format
 msgid "Forgot password?"
-msgstr ""
+msgstr "Unohtuiko salasana?"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard
@@ -662,6 +667,8 @@ msgid ""
 "Model %(model_name)s does not support token signature, as it does not have "
 "%(field_name)s field."
 msgstr ""
+"Malli %(model_name)s ei tue tunnuksen allekirjoitusta, sillä sillä ei ole "
+"%(field_name)s kenttää."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_account_link
@@ -676,7 +683,7 @@ msgstr "Nimi"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "New Password:"
-msgstr ""
+msgstr "Uusi salasana:"
 
 #. module: portal
 #. openerp-web
@@ -714,12 +721,12 @@ msgstr "Salasana"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Password Updated!"
-msgstr ""
+msgstr "Salasana päivitetty!"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Password:"
-msgstr ""
+msgstr "Salasana:"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -731,7 +738,7 @@ msgstr "Puhelin"
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Please confirm your password to continue"
-msgstr ""
+msgstr "Vahvista salasanasi jatkaaksesi"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_url
@@ -801,14 +808,14 @@ msgstr "Haku"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Security"
-msgstr "Turvallisuus"
+msgstr "Tietoturva"
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/js/portal.js:0
 #, python-format
 msgid "Security Control"
-msgstr ""
+msgstr "Suojaustarkastus"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_token
@@ -966,6 +973,8 @@ msgid ""
 "This is necessary for security-related changes. The authorization will last "
 "for a few minutes."
 msgstr ""
+"Tämä tarvitaan tietoturvallisuuteen liittyviin muutoksiin. Valtuutus kestää "
+"muutaman minuutin."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -1011,7 +1020,7 @@ msgstr "Y-tunnus"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Verify New Password:"
-msgstr ""
+msgstr "Vahvista uusi salasana:"
 
 #. module: portal
 #: model:ir.model,name:portal.model_ir_ui_view
@@ -1190,7 +1199,7 @@ msgstr "odoo"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "password"
-msgstr ""
+msgstr "salasana"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details

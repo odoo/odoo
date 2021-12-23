@@ -6,6 +6,7 @@ from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import float_compare, float_is_zero
+from odoo.tools.misc import OrderedSet
 
 
 class Inventory(models.Model):
@@ -302,6 +303,7 @@ class Inventory(models.Model):
         self.ensure_one()
         quants_groups = self._get_quantities()
         vals = []
+        product_ids = OrderedSet()
         for (product_id, location_id, lot_id, package_id, owner_id), quantity in quants_groups.items():
             line_values = {
                 'inventory_id': self.id,
@@ -313,8 +315,11 @@ class Inventory(models.Model):
                 'location_id': location_id,
                 'package_id': package_id
             }
-            line_values['product_uom_id'] = self.env['product.product'].browse(product_id).uom_id.id
+            product_ids.add(product_id)
             vals.append(line_values)
+        product_id_to_product = dict(zip(product_ids, self.env['product.product'].browse(product_ids)))
+        for val in vals:
+            val['product_uom_id'] = product_id_to_product[val['product_id']].product_tmpl_id.uom_id.id
         if self.exhausted:
             vals += self._get_exhausted_inventory_lines_vals({(l['product_id'], l['location_id']) for l in vals})
         return vals
@@ -452,7 +457,8 @@ class InventoryLine(models.Model):
         set in an onchange of `product_id`.
         Finally, this override checks we don't try to create a duplicated line.
         """
-        for values in vals_list:
+        products = self.env['product.product'].browse([vals.get('product_id') for vals in vals_list])
+        for product, values in zip(products, vals_list):
             if 'theoretical_qty' not in values:
                 theoretical_qty = self.env['product.product'].get_theoretical_quantity(
                     values['product_id'],
@@ -464,7 +470,7 @@ class InventoryLine(models.Model):
                 )
                 values['theoretical_qty'] = theoretical_qty
             if 'product_id' in values and 'product_uom_id' not in values:
-                values['product_uom_id'] = self.env['product.product'].browse(values['product_id']).uom_id.id
+                values['product_uom_id'] = product.product_tmpl_id.uom_id.id
         res = super(InventoryLine, self).create(vals_list)
         res._check_no_duplicate_line()
         return res
@@ -475,17 +481,16 @@ class InventoryLine(models.Model):
         return res
 
     def _check_no_duplicate_line(self):
+        # Performance: restrict domain on 'not null' fields of stock_inventory_line.
+        domain = [('product_id', 'in', self.product_id.ids), ('location_id', 'in', self.location_id.ids)]
+        groupby_fields = ['product_id', 'location_id', 'partner_id', 'package_id', 'prod_lot_id', 'inventory_id']
+        lines_count = {}
+        for group in self.read_group(domain, ['product_id'], groupby_fields, lazy=False):
+            key = tuple([group[field] and group[field][0] for field in groupby_fields])
+            lines_count[key] = group['__count']
         for line in self:
-            domain = [
-                ('id', '!=', line.id),
-                ('product_id', '=', line.product_id.id),
-                ('location_id', '=', line.location_id.id),
-                ('partner_id', '=', line.partner_id.id),
-                ('package_id', '=', line.package_id.id),
-                ('prod_lot_id', '=', line.prod_lot_id.id),
-                ('inventory_id', '=', line.inventory_id.id)]
-            existings = self.search_count(domain)
-            if existings:
+            key = (line.product_id.id, line.location_id.id, line.partner_id.id, line.package_id.id, line.prod_lot_id.id, line.inventory_id.id)
+            if lines_count[key] > 1:
                 raise UserError(_("There is already one inventory adjustment line for this product,"
                                   " you should rather modify this one instead of creating a new one."))
 
@@ -575,7 +580,7 @@ class InventoryLine(models.Model):
         if not self.env.context.get('default_inventory_id'):
             raise NotImplementedError(_('Unsupported search on %s outside of an Inventory Adjustment', 'difference_qty'))
         lines = self.search([('inventory_id', '=', self.env.context.get('default_inventory_id'))])
-        line_ids = lines.filtered(lambda line: float_is_zero(line.difference_qty, line.product_id.uom_id.rounding) == result).ids
+        line_ids = lines.filtered(lambda line: float_is_zero(line.difference_qty, precision_rounding=line.product_id.uom_id.rounding) == result).ids
         return [('id', 'in', line_ids)]
 
     def _search_outdated(self, operator, value):

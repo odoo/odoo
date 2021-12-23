@@ -16,7 +16,7 @@ except ImportError:
     slugify_lib = None
 
 import odoo
-from odoo import api, models, registry, exceptions, tools
+from odoo import api, models, registry, exceptions, tools, http
 from odoo.addons.base.models.ir_http import RequestUID, ModelConverter
 from odoo.addons.base.models.qweb import QWebException
 from odoo.http import request
@@ -653,8 +653,7 @@ class IrHttp(models.AbstractModel):
     @tools.ormcache('path')
     def url_rewrite(self, path):
         new_url = False
-        req = request.httprequest
-        router = req.app.get_db_router(request.db).bind('')
+        router = http.root.get_db_router(request.db).bind('')
         try:
             _ = router.match(path, method='POST')
         except werkzeug.exceptions.MethodNotAllowed:
@@ -672,7 +671,7 @@ class IrHttp(models.AbstractModel):
     @api.model
     @tools.cache('path', 'query_args')
     def _get_endpoint_qargs(self, path, query_args=None):
-        router = request.httprequest.app.get_db_router(request.db).bind('')
+        router = http.root.get_db_router(request.db).bind('')
         endpoint = False
         try:
             endpoint = router.match(path, method='POST', query_args=query_args)

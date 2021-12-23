@@ -10,6 +10,7 @@
 # Stefano Consolaro <stefano.consolaro@mymage.it>, 2020
 # Cécile Collart <cco@odoo.com>, 2021
 # Sergio Zanchetta <primes2h@gmail.com>, 2021
+# Friederike Fasterling-Nesselbosch, 2021
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:29+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2021\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -131,7 +132,7 @@ msgstr "Abbandona"
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_res_config_settings__group_expiry_date_on_delivery_slip
 msgid "Display Expiration Dates on Delivery Slips"
-msgstr ""
+msgstr "Visualizza le date di scadenza sulle bolle di consegna"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__display_name
@@ -245,6 +246,9 @@ msgid ""
 "stock after production) after which the goods may become dangerous and must "
 "not be consumed. It will be computed on the lot/serial number."
 msgstr ""
+"Numero di giorni dopo il ricevimento dei prodotti (dal venditore o in "
+"magazzino dopo la produzione) dopo i quali la merce può diventare pericolosa"
+" e non deve essere consumata. Sarà calcolato sul numero di lotto/seriale."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__alert_time
@@ -254,6 +258,9 @@ msgid ""
 "raised on the lot/serial number. It will be computed on the lot/serial "
 "number."
 msgstr ""
+"Numero di giorni prima della data di scadenza dopo i quali dovrebbe essere "
+"generato un allarme sul lotto/numero di serie. Sarà calcolato sul numero di "
+"lotto/seriale."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__removal_time
@@ -262,6 +269,8 @@ msgid ""
 "Number of days before the Expiration Date after which the goods should be "
 "removed from the stock. It will be computed on the lot/serial number."
 msgstr ""
+"Numero di giorni prima della data di scadenza dopo i quali la merce deve "
+"essere rimossa dallo stock. Sarà calcolato sul numero di lotto/seriale."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__use_time
@@ -271,6 +280,9 @@ msgid ""
 "deteriorating, without being dangerous yet. It will be computed on the "
 "lot/serial number."
 msgstr ""
+"Numero di giorni prima della data di scadenza dopo i quali la merce inizia a"
+" deteriorarsi, senza essere ancora pericolosa. Sarà calcolato sul numero di "
+"lotto/seriale."
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__picking_ids
@@ -386,7 +398,7 @@ msgstr ""
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_expiry
 msgid "Use by:"
-msgstr ""
+msgstr "Utilizzare entro:"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__use_expiration_date
@@ -399,6 +411,9 @@ msgid ""
 " product expiration, on the product and on the corresponding lot/serial "
 "numbers"
 msgstr ""
+"Quando questa casella è spuntata, si ha la possibilità di specificare le "
+"date per gestire la scadenza del prodotto, sul prodotto e sui numeri di "
+"lotto/serie corrispondenti"
 
 #. module: product_expiry
 #: code:addons/product_expiry/wizard/confirm_expiry.py:0

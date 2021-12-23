@@ -14,7 +14,7 @@
 
 {
     "name" : "Spain - Accounting (PGCE 2008)",
-    "version" : "4.0",
+    "version" : "5.0",
     "author" : "Spanish Localization Team",
     'category': 'Accounting/Localizations/Account Charts',
     "description": """

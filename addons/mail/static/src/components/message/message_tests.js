@@ -51,6 +51,7 @@ QUnit.test('basic rendering', async function (assert) {
     const message = this.env.models['mail.message'].create({
         author: [['insert', { id: 7, display_name: "Demo User" }]],
         body: "<p>Test</p>",
+        date: moment(),
         id: 100,
     });
     await this.createMessageComponent(message);

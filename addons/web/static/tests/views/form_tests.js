@@ -1377,6 +1377,60 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('readonly attrs on lines are re-evaluated on field change 2', async function (assert) {
+        assert.expect(4);
+
+        this.data.partner.records[0].product_ids = [37];
+        this.data.partner.records[0].trululu = false;
+        this.data.partner.onchanges = {
+            trululu(record) {
+                // when trululu changes, push another record in product_ids.
+                // only push a second record once.
+                if (record.product_ids.map(command => command[1]).includes(41)) {
+                    return;
+                }
+                // copy the list to force it as different from the original
+                record.product_ids = record.product_ids.slice();
+                record.product_ids.push([4,41,false]);
+            }
+        };
+
+        this.data.product.records[0].name = 'test';
+        // This one is necessary to have a valid, rendered widget
+        this.data.product.fields.int_field = { type:"integer", string: "intField" };
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+            <form>
+                <field name="trululu"/>
+                <field name="product_ids" attrs="{'readonly': [['trululu', '=', False]]}">
+                    <tree editable="top"><field name="int_field" widget="handle" /><field name="name"/></tree>
+                </field>
+            </form>
+            `,
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        for (let value of [true, false, true, false]) {
+            if (value) {
+                await testUtils.fields.many2one.clickOpenDropdown('trululu')
+                await testUtils.fields.many2one.clickHighlightedItem('trululu')
+                assert.notOk($('.o_field_one2many[name="product_ids"]').hasClass("o_readonly_modifier"), 'lines should not be readonly')
+            } else {
+                await testUtils.fields.editAndTrigger(form.$('.o_field_many2one[name="trululu"] input'), '', ['keyup'])
+                assert.ok($('.o_field_one2many[name="product_ids"]').hasClass("o_readonly_modifier"), 'lines should be readonly')
+            }
+        }
+
+        form.destroy();
+    });
+
     QUnit.test('empty fields have o_form_empty class in readonly mode', async function (assert) {
         assert.expect(8);
 

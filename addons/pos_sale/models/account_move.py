@@ -13,7 +13,9 @@ class AccountMove(models.Model):
         if self.state == 'draft':
             return lot_values
 
-        for order in self.pos_order_ids:
+        # user may not have access to POS orders, but it's ok if they have
+        # access to the invoice
+        for order in self.sudo().pos_order_ids:
             for line in order.lines:
                 lots = line.pack_lot_ids or False
                 if lots:

@@ -3,17 +3,18 @@
 # 	* website_sale_coupon
 # 
 # Translators:
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020
 # Duy BQ <duybq86@gmail.com>, 2020
 # Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2020
+# thanhnguyen.icsc <thanhnguyen.icsc@gmail.com>, 2020
+# Vo Thanh Thuy, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"POT-Creation-Date: 2020-11-27 14:13+0000\n"
 "PO-Revision-Date: 2020-09-07 08:22+0000\n"
-"Last-Translator: Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2020\n"
+"Last-Translator: Vo Thanh Thuy, 2021\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,9 +23,14 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_sale_coupon
+#: model:ir.model,name:website_sale_coupon.model_coupon_coupon
+msgid "Coupon"
+msgstr "Phiếu giảm giá"
+
+#. module: website_sale_coupon
 #: model:ir.model,name:website_sale_coupon.model_coupon_program
 msgid "Coupon Program"
-msgstr ""
+msgstr "Chương trình phiếu khuyến mãi"
 
 #. module: website_sale_coupon
 #: model:ir.ui.menu,name:website_sale_coupon.menu_coupon_type_config
@@ -40,15 +46,17 @@ msgstr "Chiết khấu:"
 #. module: website_sale_coupon
 #: model_terms:ir.ui.view,arch_db:website_sale_coupon.cart_discount
 msgid "Discounted amount"
-msgstr ""
+msgstr "Số tiền chiết khấu"
 
 #. module: website_sale_coupon
+#: model:ir.model.fields,field_description:website_sale_coupon.field_coupon_coupon__display_name
 #: model:ir.model.fields,field_description:website_sale_coupon.field_coupon_program__display_name
 #: model:ir.model.fields,field_description:website_sale_coupon.field_sale_order__display_name
 msgid "Display Name"
 msgstr "Tên hiển thị"
 
 #. module: website_sale_coupon
+#: model:ir.model.fields,field_description:website_sale_coupon.field_coupon_coupon__id
 #: model:ir.model.fields,field_description:website_sale_coupon.field_coupon_program__id
 #: model:ir.model.fields,field_description:website_sale_coupon.field_sale_order__id
 msgid "ID"
@@ -57,9 +65,10 @@ msgstr "ID"
 #. module: website_sale_coupon
 #: model_terms:ir.ui.view,arch_db:website_sale_coupon.sale_coupon_result
 msgid "Invalid or expired promo code."
-msgstr ""
+msgstr "Mã khuyến mãi không hợp lệ hoặc đã quá hạn. "
 
 #. module: website_sale_coupon
+#: model:ir.model.fields,field_description:website_sale_coupon.field_coupon_coupon____last_update
 #: model:ir.model.fields,field_description:website_sale_coupon.field_coupon_program____last_update
 #: model:ir.model.fields,field_description:website_sale_coupon.field_sale_order____last_update
 msgid "Last Modified on"
@@ -85,7 +94,7 @@ msgstr "Đơn bán hàng"
 #: code:addons/website_sale_coupon/models/sale_coupon_program.py:0
 #, python-format
 msgid "The program code must be unique by website!"
-msgstr ""
+msgstr "Mã chương trình phải là duy nhất cho website!"
 
 #. module: website_sale_coupon
 #: model:ir.model.fields,field_description:website_sale_coupon.field_coupon_program__website_id

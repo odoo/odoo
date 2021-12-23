@@ -16,6 +16,7 @@
             </xpath>
             <group name='carrier_data' position="after">
                 <group string="DDT Information" attrs="{'invisible': ['|', ('l10n_it_country_code', '!=', 'IT'), ('picking_type_code', '!=', 'outgoing')]}">
+                    <field name="l10n_it_country_code" invisible="1"/>
                     <field name="l10n_it_ddt_number"/>
                     <field name="l10n_it_transport_reason"/>
                     <field name="l10n_it_transport_method"/>

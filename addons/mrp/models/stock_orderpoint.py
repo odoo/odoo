@@ -96,5 +96,6 @@ class StockWarehouseOrderpoint(models.Model):
         self.env['mrp.production'].sudo().search([
             ('orderpoint_id', 'in', self.ids),
             ('move_raw_ids', '!=', False),
+            ('state', '=', 'draft'),
         ]).action_confirm()
         return super()._post_process_scheduler()

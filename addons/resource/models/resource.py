@@ -950,6 +950,7 @@ class ResourceResource(models.Model):
             search_range = None
             tz = timezone(resource.tz)
             if calendar_start and start.astimezone(tz).date() == end.astimezone(tz).date():
+                end = end.astimezone(tz)
                 # Make sure to only search end after start
                 search_range = (
                     start,

@@ -46,11 +46,6 @@ class TestStructure(SavepointCase):
             "vat": "ATU12345675",
             "company_type": "company",
         })
-        contact = self.env["res.partner"].create({
-            "name": "Sylvestre",
-            "parent_id": company.id,
-            "company_type": "person",
-        })
 
         # reactivate it and correct the vat number
         with patch('odoo.addons.base_vat.models.res_partner.check_vies', type(self)._vies_check_func):

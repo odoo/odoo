@@ -7,6 +7,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools import html2plaintext, is_html_empty, plaintext2html, email_normalize
 
 ATTENDEE_CONVERTER_O2M = {
     'needsAction': 'notresponded',
@@ -38,8 +39,9 @@ class Meeting(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        return super().create([
-            dict(vals, need_sync_m=False) if vals.get('recurrency') else vals
+        notify_context = self.env.context.get('dont_notify', False)
+        return super(Meeting, self.with_context(dont_notify=notify_context)).create([
+            dict(vals, need_sync_m=False) if vals.get('recurrence_id') or vals.get('recurrency') else vals
             for vals in vals_list
         ])
 
@@ -54,10 +56,26 @@ class Meeting(models.Model):
             if previous_event_before_write != previous_event_after_write:
                 # Outlook returns a 400 error if you try to synchronize an occurrence of this type.
                 raise UserError(_("Modified occurrence is crossing or overlapping adjacent occurrence."))
-        return super().write(values)
+        notify_context = self.env.context.get('dont_notify', False)
+        res = super(Meeting, self.with_context(dont_notify=notify_context)).write(values)
+        if recurrence_update_setting in ('all_events',) and len(self) == 1 and values.keys() & self._get_microsoft_synced_fields():
+            self.recurrence_id.need_sync_m = True
+        return res
 
     def _get_microsoft_sync_domain(self):
-        return [('partner_ids.user_ids', 'in', self.env.user.id)]
+        # in case of full sync, limit to a range of 1y in past and 1y in the future by default
+        ICP = self.env['ir.config_parameter'].sudo()
+        day_range = int(ICP.get_param('microsoft_calendar.sync.range_days', default=365))
+        lower_bound = fields.Datetime.subtract(fields.Datetime.now(), days=day_range)
+        upper_bound = fields.Datetime.add(fields.Datetime.now(), days=day_range)
+        return [
+            ('partner_ids.user_ids', 'in', self.env.user.id),
+            ('stop', '>', lower_bound),
+            ('start', '<', upper_bound),
+            # Do not sync events that follow the recurrence, they are already synced at recurrence creation
+            '!', '&', '&', ('recurrency', '=', True), ('recurrence_id', '!=', False), ('follow_recurrence', '=', True)
+        ]
+
 
     @api.model
     def _microsoft_to_odoo_values(self, microsoft_event, default_reminders=(), default_values={}):
@@ -86,13 +104,20 @@ class Meeting(models.Model):
             'user_id': microsoft_event.owner(self.env).id,
             'privacy': sensitivity_o2m.get(microsoft_event.sensitivity, self.default_get(['privacy'])['privacy']),
             'attendee_ids': commands_attendee,
-            'partner_ids': commands_partner,
             'allday': microsoft_event.isAllDay,
             'start': start,
             'stop': stop,
             'show_as': 'free' if microsoft_event.showAs == 'free' else 'busy',
             'recurrency': microsoft_event.is_recurrent()
         }
+        if commands_partner:
+            # Add partner_commands only if set from Microsoft. The write method on calendar_events will
+            # override attendee commands if the partner_ids command is set but empty.
+            values['partner_ids'] = commands_partner
+
+        if microsoft_event.is_recurrent() and not microsoft_event.is_recurrence():
+            # Propagate the follow_recurrence according to the outlook result
+            values['follow_recurrence'] = not microsoft_event.is_recurrence_outlier()
 
         values['microsoft_id'] = microsoft_event.id
         if microsoft_event.is_recurrent():
@@ -125,7 +150,7 @@ class Meeting(models.Model):
         commands_partner = []
 
         microsoft_attendees = microsoft_event.attendees or []
-        emails = [a.get('emailAddress').get('address') for a in microsoft_attendees]
+        emails = [a.get('emailAddress').get('address') for a in microsoft_attendees if email_normalize(a.get('emailAddress').get('address'))]
         existing_attendees = self.env['calendar.attendee']
         if microsoft_event.exists(self.env):
             existing_attendees = self.env['calendar.attendee'].search([
@@ -134,21 +159,19 @@ class Meeting(models.Model):
         elif self.env.user.partner_id.email not in emails:
             commands_attendee += [(0, 0, {'state': 'accepted', 'partner_id': self.env.user.partner_id.id})]
             commands_partner += [(4, self.env.user.partner_id.id)]
+        partners = self.env['mail.thread']._mail_find_partner_from_emails(emails, records=self, force_create=True)
         attendees_by_emails = {a.email: a for a in existing_attendees}
-        for attendee in microsoft_attendees:
-            email = attendee.get('emailAddress').get('address')
-            state = ATTENDEE_CONVERTER_M2O.get(attendee.get('status').get('response'))
-
+        for email, partner, m_attendee in zip(emails, partners, microsoft_attendees):
+            state = ATTENDEE_CONVERTER_M2O.get(m_attendee.get('status').get('response'))
             if email in attendees_by_emails:
                 # Update existing attendees
                 commands_attendee += [(1, attendees_by_emails[email].id, {'state': state})]
             else:
                 # Create new attendees
-                partner = self.env['res.partner'].find_or_create(email)
                 commands_attendee += [(0, 0, {'state': state, 'partner_id': partner.id})]
                 commands_partner += [(4, partner.id)]
-                if attendee.get('emailAddress').get('name') and not partner.name:
-                    partner.name = attendee.get('emailAddress').get('name')
+                if m_attendee.get('emailAddress').get('name') and not partner.name:
+                    partner.name = m_attendee.get('emailAddress').get('name')
         for odoo_attendee in attendees_by_emails.values():
             # Remove old attendees
             if odoo_attendee.email not in emails:
@@ -241,7 +264,7 @@ class Meeting(models.Model):
 
         if 'description' in fields_to_sync:
             values['body'] = {
-                'content': self.description or '',
+                'content': html2plaintext(self.description) if not is_html_empty(self.description) else '',
                 'contentType': "text",
             }
 
@@ -298,7 +321,7 @@ class Meeting(models.Model):
                 pattern['type'] = recurrence.rrule_type
             else:
                 prefix = 'absolute' if recurrence.month_by == 'date' else 'relative'
-                pattern['type'] = prefix + recurrence.rrule_type.capitalize()
+                pattern['type'] = recurrence.rrule_type and prefix + recurrence.rrule_type.capitalize()
 
             if recurrence.month_by == 'date':
                 pattern['dayOfMonth'] = recurrence.day
@@ -326,8 +349,9 @@ class Meeting(models.Model):
                 }
                 pattern['index'] = byday_selection[recurrence.byday]
 
+            dtstart = recurrence.dtstart or fields.Datetime.now()
             rule_range = {
-                'startDate': (recurrence.dtstart.date()).isoformat()
+                'startDate': (dtstart.date()).isoformat()
             }
 
             if recurrence.end_type == 'count':  # e.g. stop after X occurence
@@ -401,11 +425,4 @@ class Meeting(models.Model):
         my_cancelled_records = self.filtered(lambda e: e.user_id == user)
         super(Meeting, my_cancelled_records)._cancel_microsoft()
         attendees = (self - my_cancelled_records).attendee_ids.filtered(lambda a: a.partner_id == user.partner_id)
-        attendees.state = 'declined'
-
-    def _notify_attendees(self):
-        # filter events before notifying attendees through calendar_alarm_manager
-        need_notifs = self.filtered(lambda event: event.alarm_ids and event.stop >= fields.Datetime.now())
-        partners = need_notifs.partner_ids
-        if partners:
-            self.env['calendar.alarm_manager']._notify_next_alarm(partners.ids)
+        attendees.do_decline()

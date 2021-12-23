@@ -192,3 +192,57 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_08_website_style_custo(self):
         self.start_tour("/", "website_style_edition", login="admin")
+
+    def test_09_carousel_snippet_content_removal(self):
+        self.start_tour("/", "carousel_content_removal", login='admin')
+
+    def test_10_editor_focus_blur_unit_test(self):
+        # TODO this should definitely not be a website python tour test but
+        # while waiting for a proper web_editor qunit JS test suite for the
+        # editor, it is better than no test at all as this was broken multiple
+        # times already.
+        self.env["ir.ui.view"].create([{
+            'name': 's_focusblur',
+            'key': 'website.s_focusblur',
+            'type': 'qweb',
+            'arch': """
+                <section class="s_focusblur bg-success py-5">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-6 s_focusblur_child1 bg-warning py-5"></div>
+                            <div class="col-lg-6 s_focusblur_child2 bg-danger py-5"></div>
+                        </div>
+                    </div>
+                </section>
+            """,
+        }, {
+            'name': 's_focusblur_snippets',
+            'mode': 'extension',
+            'inherit_id': self.env.ref('website.snippets').id,
+            'key': 'website.s_focusblur_snippets',
+            'type': 'qweb',
+            'arch': """
+                <data>
+                    <xpath expr="//*[@id='snippet_structure']//t[@t-snippet]" position="before">
+                        <t t-snippet="website.s_focusblur"/>
+                    </xpath>
+                </data>
+            """,
+        }, {
+            'name': 's_focusblur_options',
+            'mode': 'extension',
+            'inherit_id': self.env.ref('web_editor.snippet_options').id,
+            'key': 'website.s_focusblur_options',
+            'type': 'qweb',
+            'arch': """
+                <data>
+                    <xpath expr=".">
+                        <div data-js="FocusBlurParent" data-selector=".s_focusblur"/>
+                        <div data-js="FocusBlurChild1" data-selector=".s_focusblur_child1"/>
+                        <div data-js="FocusBlurChild2" data-selector=".s_focusblur_child2"/>
+                    </xpath>
+                </data>
+            """,
+        }])
+
+        self.start_tour("/?enable_editor=1", "focus_blur_snippets", login="admin")

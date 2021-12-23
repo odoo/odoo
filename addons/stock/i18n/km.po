@@ -1620,7 +1620,7 @@ msgstr "ទីតាំងអតិថិជន"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
-msgid "DHL USA Connector"
+msgid "DHL Express Connector"
 msgstr ""
 
 #. module: stock
@@ -1736,10 +1736,8 @@ msgstr "បទបញ្ញត្តិនៃកិច្ចសន្យាទៅ
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint
 msgid ""
 "Define a minimum stock rule so that Odoo creates automatically requests for "
-"quotations or draft manufacturing orders to resupply your stock."
+"quotations or confirmed manufacturing orders to resupply your stock."
 msgstr ""
-"កំណត់វិធានភាគហ៊ុនអប្បបរមាដូច្នេះ Odoo "
-"បង្កើតសំណើដោយស្វ័យប្រវត្តិសម្រាប់ការដកស្រង់ឬសេចក្តីព្រាងការបញ្ជាទិញផលិតកម្មដើម្បីគាំទ្រភាគហ៊ុនរបស់អ្នកឡើងវិញ។"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_warehouse_form
@@ -2846,8 +2844,7 @@ msgid ""
 "If this shipment was split, then this field links to the shipment which "
 "contains the already processed part."
 msgstr ""
-"ប្រសិនបើការដឹកជញ្ជូននេះត្រូវបានបំបែកបន្ទាប់មកវាលនេះភ្ជាប់ទៅនឹងការដឹកជញ្ជូនដែលមានផ្នែកដែលបានដំណើរការរួចហើយ។"
-" "
+"ប្រសិនបើការដឹកជញ្ជូននេះត្រូវបានបំបែកបន្ទាប់មកវាលនេះភ្ជាប់ទៅនឹងការដឹកជញ្ជូនដែលមានផ្នែកដែលបានដំណើរការរួចហើយ។ "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__picking_type_entire_packs
@@ -3221,17 +3218,24 @@ msgstr "គឺបរិមាណដែលអាចកែបាន"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"It is not possible to reserve more products of %s than you have in stock."
-msgstr "គឺវាមិនមានលទ្ធភាពរក្សាទុកផលិតផលបន្ថែមទៀតទេ%s ជាងអ្នកមាននៅក្នុងស្តុក។"
+"It is not possible to unreserve more products of %s than you have in "
+"stock.The correction could unreserve some operations with problematics "
+"products."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"It is not possible to unreserve more products of %s than you have in stock."
+"It is not possible to unreserve more products of %s than you have in stock. "
+"Contact an administrator."
 msgstr ""
-"គឺវាមិនអាចទៅរួចទេក្នុងការធ្វើឱ្យខូចគុណភាពផលិតផលបន្ថែមទៀត%s "
-"ជាអ្នកមាននៅក្នុងស្តុក។"
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Try our automated action to fix it"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_type

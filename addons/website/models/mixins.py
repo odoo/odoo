@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import json
 import logging
 
 
@@ -9,6 +8,7 @@ from odoo import api, fields, models, _
 from odoo.http import request
 from odoo.osv import expression
 from odoo.exceptions import AccessError
+from odoo.tools.json import scriptsafe as json_scriptsafe
 
 logger = logging.getLogger(__name__)
 
@@ -102,7 +102,7 @@ class WebsiteCoverPropertiesMixin(models.AbstractModel):
     _name = 'website.cover_properties.mixin'
     _description = 'Cover Properties Website Mixin'
 
-    cover_properties = fields.Text('Cover Properties', default=lambda s: json.dumps(s._default_cover_properties()))
+    cover_properties = fields.Text('Cover Properties', default=lambda s: json_scriptsafe.dumps(s._default_cover_properties()))
 
     def _default_cover_properties(self):
         return {
@@ -111,6 +111,29 @@ class WebsiteCoverPropertiesMixin(models.AbstractModel):
             "opacity": "0.2",
             "resize_class": "o_half_screen_height",
         }
+
+    def write(self, vals):
+        if 'cover_properties' not in vals:
+            return super().write(vals)
+
+        cover_properties = json_scriptsafe.loads(vals['cover_properties'])
+        resize_classes = cover_properties.get('resize_class', '').split()
+        classes = ['o_half_screen_height', 'o_full_screen_height', 'cover_auto']
+        if not set(resize_classes).isdisjoint(classes):
+            # Updating cover properties and the given 'resize_class' set is
+            # valid, normal write.
+            return super().write(vals)
+
+        # If we do not receive a valid resize_class via the cover_properties, we
+        # keep the original one (prevents updates on list displays from
+        # destroying resize_class).
+        copy_vals = dict(vals)
+        for item in self:
+            old_cover_properties = json_scriptsafe.loads(item.cover_properties)
+            cover_properties['resize_class'] = old_cover_properties.get('resize_class', classes[0])
+            copy_vals['cover_properties'] = json_scriptsafe.dumps(cover_properties)
+            super(WebsiteCoverPropertiesMixin, item).write(copy_vals)
+        return True
 
 
 class WebsiteMultiMixin(models.AbstractModel):

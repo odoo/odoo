@@ -10,6 +10,7 @@
 # Chris Egal <sodaswed@web.de>, 2020
 # Max-Milan Stoyanov, 2020
 # Robert Förster <hello@suppliot.eu>, 2021
+# Friederike Fasterling-Nesselbosch, 2021
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:46+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Robert Förster <hello@suppliot.eu>, 2021\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,7 +37,7 @@ msgstr "%d Tage überfällig"
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "%s is not the reference of a report"
-msgstr ""
+msgstr "%s  ist nicht die Referenz eines Berichts"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
@@ -60,7 +61,7 @@ msgstr "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
 msgid "<i class=\"fa fa-pencil mx-1\"/>Edit Security Settings"
-msgstr ""
+msgstr "<i class=\"fa fa-pencil mx-1\"/>Sicherheitseinstellungen bearbeiten"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
@@ -301,7 +302,7 @@ msgstr ""
 #: code:addons/portal/controllers/mail.py:0
 #, python-format
 msgid "An access token must be provided for each attachment."
-msgstr ""
+msgstr "Für jede Anlage muss ein Zugangstoken angegeben werden."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -346,13 +347,16 @@ msgid ""
 "Changing company name is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
+"Eine Änderung des Firmennamens ist nicht mehr möglich, sobald Dokumente für "
+"Ihr Konto ausgestellt wurden. Bitte wenden Sie sich für diesen Vorgang "
+"direkt an uns."
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/js/portal.js:0
 #, python-format
 msgid "Check failed"
-msgstr ""
+msgstr "Check fehlgeschlagen"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -411,7 +415,7 @@ msgstr "Kontakte"
 #: code:addons/portal/static/src/js/portal_composer.js:0
 #, python-format
 msgid "Could not save file <strong>%s</strong>"
-msgstr ""
+msgstr "Datei <strong>%s</strong> konnte nicht gespeichert werden"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -445,6 +449,8 @@ msgid ""
 "Currently available to everyone viewing this document, click to restrict to "
 "internal employees."
 msgstr ""
+"Derzeit für jeden zugänglich, der dieses Dokument anschaut, klicken Sie "
+"hier, um es den Zugriff auf interne Mitarbeiter zu beschränken."
 
 #. module: portal
 #. openerp-web
@@ -454,6 +460,8 @@ msgid ""
 "Currently restricted to internal employees, click to make it available to "
 "everyone viewing this document."
 msgstr ""
+"Zurzeit beschränkt auf interne Mitarbeiter, klicken Sie hier um es für alle "
+"zugänglich zu machen, die sich dieses Dokument ansehen."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_mixin__access_url
@@ -526,7 +534,7 @@ msgstr "E-Mail Thread"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Employees Only"
-msgstr ""
+msgstr "Nur Mitarbeiter"
 
 #. module: portal
 #. openerp-web
@@ -585,7 +593,7 @@ msgstr ""
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "Invalid report type: %s"
-msgstr ""
+msgstr "Ungültiger Berichtstyp: %s"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__welcome_message
@@ -653,6 +661,8 @@ msgid ""
 "Model %(model_name)s does not support token signature, as it does not have "
 "%(field_name)s field."
 msgstr ""
+"Das Modell %(model_name)s unterstützt die Token-Signatur nicht, da es "
+"kein%(field_name)s Feld hat."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_account_link
@@ -734,12 +744,12 @@ msgstr "Portalzugriffs-URL"
 #. module: portal
 #: model:ir.model,name:portal.model_portal_mixin
 msgid "Portal Mixin"
-msgstr ""
+msgstr "Portal Mixin"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_share
 msgid "Portal Sharing"
-msgstr ""
+msgstr "Portalfreigabe"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard_user
@@ -801,7 +811,7 @@ msgstr "Sicherheit"
 #: code:addons/portal/static/src/js/portal.js:0
 #, python-format
 msgid "Security Control"
-msgstr ""
+msgstr "Sicherheitskontrolle"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_token
@@ -889,27 +899,29 @@ msgstr "Vielen Dank!"
 #, python-format
 msgid "The attachment %s cannot be removed because it is linked to a message."
 msgstr ""
+"Der Anhang %s kann nicht entfernt werden, da er mit einer Nachricht "
+"verknüpft ist."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid ""
 "The attachment %s cannot be removed because it is not in a pending state."
-msgstr ""
+msgstr "Der Anhang %s kann nicht entfernt werden, da er nicht ausstehend ist."
 
 #. module: portal
 #: code:addons/portal/controllers/mail.py:0
 #, python-format
 msgid ""
 "The attachment %s does not exist or you do not have the rights to access it."
-msgstr ""
+msgstr "Der Anhang %s existiert nicht oder Sie besitzen keine Zugriffsrechte."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid ""
 "The attachment does not exist or you do not have the rights to access it."
-msgstr ""
+msgstr "Der Anhang existiert nicht oder Sie besitzen keine Zugriffsrechte."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -917,6 +929,8 @@ msgstr ""
 msgid ""
 "The document does not exist or you do not have the rights to access it."
 msgstr ""
+"Das Dokument existiert nicht oder Sie verfügen nicht über eine "
+"Zugriffsberechtigung."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -944,7 +958,7 @@ msgstr "Momentan sind keine Kommentare vorhanden."
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "This document does not exist."
-msgstr ""
+msgstr "Dieses Dokument existiert nicht."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
@@ -989,7 +1003,7 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "Toggle filters"
-msgstr ""
+msgstr "Filter umschalten"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__user_ids

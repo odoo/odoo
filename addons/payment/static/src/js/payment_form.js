@@ -505,7 +505,7 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
         ev.stopPropagation();
         ev.preventDefault();
         var self = this;
-        var pm_id = parseInt(ev.target.value);
+        var pm_id = parseInt(ev.currentTarget.value);
 
         var tokenDelete = function () {
             self._rpc({

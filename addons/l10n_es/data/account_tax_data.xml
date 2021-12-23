@@ -244,7 +244,28 @@
         <field name="country_id" ref="base.es"/>
     </record>
     <record id="mod_303_61" model="account.account.tag">
+        <!--Not used anymore since Q3 2021; replaced by grids 120, 122, 123 and 124-->
         <field name="name">mod303[61]</field>
+        <field name="applicability">taxes</field>
+        <field name="country_id" ref="base.es"/>
+    </record>
+    <record id="mod_303_120" model="account.account.tag">
+        <field name="name">mod303[120]</field>
+        <field name="applicability">taxes</field>
+        <field name="country_id" ref="base.es"/>
+    </record>
+    <record id="mod_303_122" model="account.account.tag">
+        <field name="name">mod303[122]</field>
+        <field name="applicability">taxes</field>
+        <field name="country_id" ref="base.es"/>
+    </record>
+    <record id="mod_303_123" model="account.account.tag">
+        <field name="name">mod303[123]</field>
+        <field name="applicability">taxes</field>
+        <field name="country_id" ref="base.es"/>
+    </record>
+    <record id="mod_303_124" model="account.account.tag">
+        <field name="name">mod303[124]</field>
         <field name="applicability">taxes</field>
         <field name="country_id" ref="base.es"/>
     </record>
@@ -1118,7 +1139,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'tag_ids': [ref('mod_303_61')],
+                'tag_ids': [ref('mod_303_120')],
             }),
 
             (0,0, {
@@ -1131,7 +1152,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'tag_ids': [ref('mod_303_61')],
+                'tag_ids': [ref('mod_303_120')],
             }),
 
             (0,0, {
@@ -1152,7 +1173,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'tag_ids': [ref('mod_303_61')],
+                'tag_ids': [ref('mod_303_120')],
             }),
 
             (0,0, {
@@ -1165,7 +1186,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'tag_ids': [ref('mod_303_61')],
+                'tag_ids': [ref('mod_303_120')],
             }),
 
             (0,0, {
@@ -1186,7 +1207,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'tag_ids': [ref('mod_303_61')],
+                'tag_ids': [ref('mod_303_122')],
             }),
 
             (0,0, {
@@ -1199,7 +1220,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'tag_ids': [ref('mod_303_61')],
+                'tag_ids': [ref('mod_303_122')],
             }),
 
             (0,0, {
@@ -2589,7 +2610,7 @@
     </record>
     <record id="account_tax_template_p_irpf24" model="account.tax.template">
         <field name="type_tax_use">purchase</field>
-        <field name="name">Retenciones IRPF 14%</field>
+        <field name="name">Retenciones IRPF 24%</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount" eval="-24"/>
         <field name="amount_type">percent</field>
@@ -3607,7 +3628,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'tag_ids': [ref('mod_303_61')],
+                'tag_ids': [ref('mod_303_122')],
             }),
 
             (0,0, {
@@ -3620,7 +3641,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'tag_ids': [ref('mod_303_61')],
+                'tag_ids': [ref('mod_303_122')],
             }),
 
             (0,0, {

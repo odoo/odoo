@@ -107,20 +107,22 @@
                             <tbody>
                                 <t t-set="total_value" t-value="0"/>
                                 <t t-foreach="o.move_lines" t-as="move">
-                                    <tr>
-                                        <td>
-                                            <span t-field="move.product_id"/>
-                                        </td>
-                                        <td>
-                                            <span t-field="move.product_uom_qty"/>
-                                            <span t-field="move.product_uom" groups="uom.group_uom"/>
-                                        </td>
-                                        <td>
-                                            <t t-set="lst_price" t-value="move.product_id.lst_price * move.product_qty"/>
-                                            <span t-esc="lst_price"  t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
-                                            <t t-set="total_value" t-value="total_value + lst_price"/>
-                                        </td>
-                                    </tr>
+                                    <t t-if="move.quantity_done">
+                                        <tr>
+                                            <td>
+                                                <span t-field="move.product_id"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="move.quantity_done"/>
+                                                <span t-field="move.product_uom" groups="uom.group_uom"/>
+                                            </td>
+                                            <td>
+                                                <t t-set="lst_price" t-value="move.product_id.lst_price * move.quantity_done"/>
+                                                <span t-esc="lst_price"  t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                                                <t t-set="total_value" t-value="total_value + lst_price"/>
+                                            </td>
+                                        </tr>
+                                    </t>
                                 </t>
                                 <tr>
                                     <td>

@@ -62,6 +62,7 @@
 # Titan Li <lghbeta@gmail.com>, 2021
 # 卓忆科技 <zhanghao@jointd.com>, 2021
 # liAnGjiA <liangjia@qq.com>, 2021
+# Chris H, 2021
 # Jeffery CHEN <jeffery9@gmail.com>, 2021
 # 
 msgid ""
@@ -3602,7 +3603,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"通过帮助台创建退款单 "
+"从帮助台创建退款通知 "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_slides
@@ -4842,10 +4843,10 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"在许多国家/地区，借方票据用作现有结算单金额的增加\n"
-"或在某些情况下取消贷方通知单。\n"
+"在许多国家/地区，借记单用作现有结算单金额的增加\n"
+"或在某些情况下取消退款通知。\n"
 "它就像普通结算单，但我们需要跟踪与原始结算单的链接。 \n"
-"使用的向导与贷方通知单的向导类似。\n"
+"使用的向导与退款通知的向导类似。\n"
 "    "
 
 #. module: base
@@ -9170,7 +9171,7 @@ msgid ""
 msgstr ""
 " 用于将多个公司之间的文档同步的模块。例如，该模块可以实现您在验证一个采购单时候自动生成一个销售订单（需为系统内用户），反之亦然。\n"
 "\n"
-"支持的文档为销售订单、采购单以及结算单/信用凭证。\n"
+"支持的文档为销售订单、采购单以及结算单/退款通知。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_approvals_purchase_stock
@@ -9685,12 +9686,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid ""
 "<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
-"                                <b attrs=\"{'invisible': [('company_type', '!=', 'company')]}\">Company Address</b>\n"
-"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'invoice'), ('company_type', '=', 'company')]}\">Invoice Address</b>\n"
-"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'delivery'), ('company_type', '=', 'company')]}\">Delivery Address</b>\n"
-"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'other'), ('company_type', '=', 'company')]}\">Other Address</b>\n"
-"                                <b attrs=\"{'invisible': ['|', ('type', '!=', 'private'), ('company_type', '=', 'company')]}\">Private Address</b>\n"
-"                                <b attrs=\"{'invisible': ['|', ('type', 'not in', (False, 'contact')), ('company_type', '=', 'company')]}\">Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'contact')]}\">Company Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'invoice')]}\">Invoice Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'delivery')]}\">Delivery Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'other')]}\">Other Address</b>\n"
+"                                <b attrs=\"{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'private')]}\">Private Address</b>\n"
+"                                <b attrs=\"{'invisible': ['&amp;', ('parent_id', '!=', False), ('type', '!=', False)]}\">Address</b>\n"
 "                            </span>"
 msgstr ""
 
@@ -26157,7 +26158,7 @@ msgstr "从'打印'菜单中移走"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "Remove the contextual action related to this report"
-msgstr ""
+msgstr "删除与此报告相关的操作"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_renting
@@ -27842,7 +27843,7 @@ msgstr "在文档模块中存储员工合同"
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_hr_holidays
 msgid "Store employee's time off documents in the Document app"
-msgstr ""
+msgstr "将雇员休假记录保存至“文档”应用"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__store
@@ -27945,7 +27946,7 @@ msgstr "订阅中使用借记卡付款"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_subscription_timesheet
 msgid "Subscription and Timesheet"
-msgstr ""
+msgstr "订阅和工时"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_sales_subscriptions
@@ -28083,7 +28084,7 @@ msgstr "与外部的计工单应用同步"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_timesheet
 msgid "Synchronize data between timesheet and subscriptions"
-msgstr ""
+msgstr "在排班表和订阅之间同步数据"
 
 #. module: base
 #: model:res.country,name:base.sy
@@ -31255,7 +31256,7 @@ msgstr "你不能激活超级用户。"
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "You cannot archive a contact linked to a portal or internal user."
-msgstr ""
+msgstr "不能删除已与门户或其它内部用户绑定的联系人"
 
 #. module: base
 #: code:addons/base/models/res_partner.py:0
@@ -31367,7 +31368,7 @@ msgstr "通过编辑在设置/用户菜单下的新建用户，你将能够定�
 msgid ""
 "You won't be able to reduce the number of decimal places of a currency which"
 " has already been used to make accounting entries."
-msgstr ""
+msgstr "不能减少已用于记帐记录的货币的小数位数"
 
 #. module: base
 #: code:addons/base/models/ir_mail_server.py:0

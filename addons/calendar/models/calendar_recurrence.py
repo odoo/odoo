@@ -131,7 +131,7 @@ class RecurrenceRule(models.Model):
     def _compute_name(self):
         for recurrence in self:
             period = dict(RRULE_TYPE_SELECTION)[recurrence.rrule_type]
-            every = _("Every %(count)s %(period)s, ", count=recurrence.interval, period=period)
+            every = _("Every %(count)s %(period)s", count=recurrence.interval, period=period)
 
             if recurrence.end_type == 'count':
                 end = _("for %s events", recurrence.count)
@@ -140,19 +140,22 @@ class RecurrenceRule(models.Model):
             else:
                 end = ''
 
-            if recurrence.rrule_type == 'weeky':
+            if recurrence.rrule_type == 'weekly':
                 weekdays = recurrence._get_week_days()
-                weekday_fields = (self._fields[weekday_to_field(w)] for w in weekdays)
-                on = _("on %s,") % ", ".join([field.string for field in weekday_fields])
+                # Convert Weekday object
+                weekdays = [str(w) for w in weekdays]
+                day_strings = [d[1] for d in WEEKDAY_SELECTION if d[0] in weekdays]
+                on = _("on %s") % ", ".join([day_name for day_name in day_strings])
             elif recurrence.rrule_type == 'monthly':
                 if recurrence.month_by == 'day':
-                    weekday_label = dict(BYDAY_SELECTION)[recurrence.byday]
-                    on = _("on the %(position)s %(weekday)s, ", position=recurrence.byday, weekday=weekday_label)
+                    position_label = dict(BYDAY_SELECTION)[recurrence.byday]
+                    weekday_label = dict(WEEKDAY_SELECTION)[recurrence.weekday]
+                    on = _("on the %(position)s %(weekday)s", position=position_label, weekday=weekday_label)
                 else:
-                    on = _("day %s, ", recurrence.day)
+                    on = _("day %s", recurrence.day)
             else:
                 on = ''
-            recurrence.name = every + on + end
+            recurrence.name = ', '.join(filter(lambda s: s, [every, on, end]))
 
     @api.depends('calendar_event_ids.start')
     def _compute_dtstart(self):

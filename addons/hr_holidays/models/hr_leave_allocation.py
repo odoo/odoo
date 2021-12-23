@@ -300,7 +300,7 @@ class HolidaysAllocation(models.Model):
     def _compute_can_approve(self):
         for allocation in self:
             try:
-                if allocation.state == 'confirm' and allocation.validation_type == 'both':
+                if allocation.state == 'confirm' and allocation.holiday_status_id.allocation_type == "fixed_allocation" and allocation.validation_type == 'both':
                     allocation._check_approval_update('validate1')
                 else:
                     allocation._check_approval_update('validate')

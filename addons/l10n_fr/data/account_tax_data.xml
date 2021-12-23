@@ -53,7 +53,7 @@
         <field name="amount" eval="10.0"/>
         <field name="amount_type">percent</field>
         <field name="tax_exigibility">on_payment</field>
-        <field name="cash_basis_transition_account_id" ref="pcg_44571" />
+        <field name="cash_basis_transition_account_id" ref="pcg_445800" />
         <field name="sequence" eval="10"/>
         <field name="type_tax_use">sale</field>
         <field name="tax_group_id" ref="tax_group_tva_10"/>
@@ -68,7 +68,7 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'plus_report_line_ids': [ref('l10n_fr.tax_report_9B_taxe')],
-                'account_id': ref('pcg_445800'),
+                'account_id': ref('pcg_44571'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -412,7 +412,7 @@
         <field name="amount" eval="10"/>
         <field name="amount_type">percent</field>
         <field name="tax_exigibility">on_payment</field>
-        <field name="cash_basis_transition_account_id" ref="pcg_44571" />
+        <field name="cash_basis_transition_account_id" ref="pcg_445800" />
         <field name="sequence" eval="10"/>
         <field name="type_tax_use">sale</field>
         <field name="tax_group_id" ref="tax_group_tva_10"/>
@@ -427,7 +427,7 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'plus_report_line_ids': [ref('l10n_fr.tax_report_9B_taxe')],
-                'account_id': ref('pcg_445800'),
+                'account_id': ref('pcg_44571'),
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
@@ -1678,6 +1678,7 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'plus_report_line_ids': [ref('l10n_fr.tax_report_17'),
+                                         ref('l10n_fr.tax_report_20'),
                                          ref('l10n_fr.tax_report_08_taxe')],
                 'account_id': ref('pcg_44566'),
             }),
@@ -1699,7 +1700,8 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'minus_report_line_ids': [ref('l10n_fr.tax_report_17'),
-                                         ref('l10n_fr.tax_report_08_taxe')],
+                                          ref('l10n_fr.tax_report_20'),
+                                          ref('l10n_fr.tax_report_08_taxe')],
                 'account_id': ref('pcg_44566'),
             }),
             (0,0, {
@@ -1731,6 +1733,7 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'plus_report_line_ids': [ref('l10n_fr.tax_report_17'),
+                                         ref('l10n_fr.tax_report_20'),
                                          ref('l10n_fr.tax_report_10_taxe')],
                 'account_id': ref('pcg_44566'),
             }),
@@ -1752,7 +1755,8 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'minus_report_line_ids': [ref('l10n_fr.tax_report_17'),
-                                         ref('l10n_fr.tax_report_10_taxe')],
+                                          ref('l10n_fr.tax_report_20'),
+                                          ref('l10n_fr.tax_report_10_taxe')],
                 'account_id': ref('pcg_44566'),
             }),
             (0,0, {
@@ -1784,6 +1788,7 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'plus_report_line_ids': [ref('l10n_fr.tax_report_17'),
+                                         ref('l10n_fr.tax_report_20'),
                                          ref('l10n_fr.tax_report_9B_taxe')],
                 'account_id': ref('pcg_44566'),
             }),
@@ -1805,7 +1810,8 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'minus_report_line_ids': [ref('l10n_fr.tax_report_17'),
-                                         ref('l10n_fr.tax_report_9B_taxe')],
+                                          ref('l10n_fr.tax_report_20'),
+                                          ref('l10n_fr.tax_report_9B_taxe')],
                 'account_id': ref('pcg_44566'),
             }),
             (0,0, {
@@ -1837,6 +1843,7 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'plus_report_line_ids': [ref('l10n_fr.tax_report_17'),
+                                         ref('l10n_fr.tax_report_20'),
                                          ref('l10n_fr.tax_report_09_taxe')],
                 'account_id': ref('pcg_44566'),
             }),
@@ -1858,7 +1865,8 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'minus_report_line_ids': [ref('l10n_fr.tax_report_17'),
-                                         ref('l10n_fr.tax_report_09_taxe')],
+                                          ref('l10n_fr.tax_report_20'),
+                                          ref('l10n_fr.tax_report_09_taxe')],
                 'account_id': ref('pcg_44566'),
             }),
             (0,0, {
@@ -1890,6 +1898,7 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'plus_report_line_ids': [ref('l10n_fr.tax_report_17'),
+                                         ref('l10n_fr.tax_report_20'),
                                          ref('l10n_fr.tax_report_11_taxe')],
                 'account_id': ref('pcg_44566'),
             }),
@@ -1911,7 +1920,8 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'minus_report_line_ids': [ref('l10n_fr.tax_report_17'),
-                                         ref('l10n_fr.tax_report_11_taxe')],
+                                          ref('l10n_fr.tax_report_20'),
+                                          ref('l10n_fr.tax_report_11_taxe')],
                 'account_id': ref('pcg_44566'),
             }),
             (0,0, {

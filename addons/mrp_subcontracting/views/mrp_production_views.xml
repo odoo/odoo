@@ -18,7 +18,7 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//field[@name='lot_producing_id']" position="attributes">
-                <attribute name="attrs">{'invisible': [('product_tracking', 'in', ('none', False))], 'required': [('product_tracking', 'not in', ('none', False))]}</attribute>
+                <attribute name="attrs">{'invisible': [('product_tracking', 'in', ('none', False))]}</attribute>
             </xpath>
             <xpath expr="//page[@name='miscellaneous']" position="attributes">
                 <attribute name="invisible">1</attribute>
@@ -48,7 +48,7 @@
                 <footer>
                     <button name="subcontracting_record_component" attrs="{'invisible': ['|', ('state', '=', 'to_close'), ('qty_producing', '&lt;', 0.001)]}" string="Continue" type="object" class="oe_highlight"/>
                     <button name="subcontracting_record_component" attrs="{'invisible': [('state', '!=', 'to_close')]}" string="Record Production" type="object" class="oe_highlight"/>
-                    <button string="Discard" special="cancel" />
+                    <button name="action_subcontracting_discard_remaining_components" string="Discard" type="object"/>
                 </footer>
             </xpath>
         </field>

@@ -7,6 +7,7 @@
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2020
 # gsong <gsong2014@foxmail.com>, 2020
 # Odoo Thaidev <odoothaidev@gmail.com>, 2020
+# Wichanon Jamwutthipreecha, 2021
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-02 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:20+0000\n"
-"Last-Translator: Odoo Thaidev <odoothaidev@gmail.com>, 2020\n"
+"Last-Translator: Wichanon Jamwutthipreecha, 2021\n"
 "Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,7 +36,7 @@ msgstr "&amp;times;"
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_aside
 msgid "<b>&amp;#9900;&amp;nbsp;</b>"
-msgstr ""
+msgstr "<b>&amp;#9900;&amp;nbsp;</b>"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_main
@@ -47,17 +48,17 @@ msgstr ""
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_aside
 msgid "<span class=\"h5 mb-0 pt-0 pt-md-3 pb-0 pb-md-2\">Other Rooms</span>"
-msgstr ""
+msgstr "<span class=\"h5 mb-0 pt-0 pt-md-3 pb-0 pb-md-2\">ห้องอื่น ๆ</span>"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.community_aside
 msgid "<span>Create a Room</span>"
-msgstr ""
+msgstr "<span>สร้างห้อง</span>"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.community_main
 msgid "<span>Join a room</span>"
-msgstr ""
+msgstr "<span>เข้าร่วมห้อง</span>"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_main
@@ -65,6 +66,7 @@ msgid ""
 "<span>Oops! This room is full !</span><br/>Come back later to have a chat "
 "with us!"
 msgstr ""
+"<span>อ๊ะ! ห้องนี้เต็มแล้ว !</span><br/>กลับมาใหม่ภายหลังเพื่อพูดคุยกับเรา!"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_card
@@ -72,11 +74,13 @@ msgid ""
 "<span>This room is not open right now!</span><br/>\n"
 "                        Join us here on the"
 msgstr ""
+"<span>ห้องนี้ยังไม่เปิดในขณะนี้!</span><br/>\n"
+"                        เข้าร่วมกับเราที่นี้บน"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_main
 msgid "A chat among"
-msgstr ""
+msgstr "การพูดคุยระหว่าง"
 
 #. module: website_event_meet
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__active
@@ -86,7 +90,7 @@ msgstr "เปิดใช้งาน"
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.community_main
 msgid "All Languages"
-msgstr ""
+msgstr "ภาษาทั้งหมด"
 
 #. module: website_event_meet
 #. openerp-web
@@ -95,27 +99,27 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event_meet.field_event_type__meeting_room_allow_creation
 #, python-format
 msgid "Allow Room Creation"
-msgstr ""
+msgstr "อนุญาตให้สร้างห้อง"
 
 #. module: website_event_meet
 #. openerp-web
 #: code:addons/website_event_meet/static/src/js/website_event_meeting_room.js:0
 #, python-format
 msgid "Are you sure you want to close this room ?"
-msgstr ""
+msgstr "คุณแน่ใจหรือไม่ว่าต้องการปิดห้องนี้"
 
 #. module: website_event_meet
 #. openerp-web
 #: code:addons/website_event_meet/static/src/js/website_event_meeting_room.js:0
 #, python-format
 msgid "Are you sure you want to duplicate this room ?"
-msgstr ""
+msgstr "คุณแน่ใจหรือไม่ว่าต้องการทำซ้ำห้องนี้?"
 
 #. module: website_event_meet
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__target_audience
 #: model_terms:ir.ui.view,arch_db:website_event_meet.event_meeting_room_view_search
 msgid "Audience"
-msgstr ""
+msgstr "ผู้ฟัง"
 
 #. module: website_event_meet
 #: model:ir.model,name:website_event_meet.model_ir_autovacuum
@@ -130,11 +134,13 @@ msgid ""
 "Be sure you are ready to spend at least 10 minutes in the room if you want "
 "to initiate a new topic."
 msgstr ""
+"แน่ใจว่าคุณพร้อมที่จะใช้เวลาอย่างน้อย 10 "
+"นาทีในห้องถ้าคุณต้องการเริ่มต้นหัวข้อใหม่"
 
 #. module: website_event_meet
 #: model:event.meeting.room,name:website_event_meet.event_meeting_room_0
 msgid "Best wood for furniture"
-msgstr ""
+msgstr "ไม้ที่ดีที่สุดสำหรับเฟอร์นิเจอร์"
 
 #. module: website_event_meet
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__can_publish
@@ -146,12 +152,12 @@ msgstr "Can Publish"
 #: code:addons/website_event_meet/static/src/xml/website_event_meeting_room.xml:0
 #, python-format
 msgid "Capacity"
-msgstr ""
+msgstr "ความจุ"
 
 #. module: website_event_meet
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__chat_room_id
 msgid "Chat Room"
-msgstr ""
+msgstr "ห้องแชท"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.community_main
@@ -159,6 +165,8 @@ msgid ""
 "Choose a topic that interests you and start talking with the community. "
 "<br/> Don't forget to setup your camera and microphone."
 msgstr ""
+"เลือกหัวข้อที่คุณสนใจและเริ่มพูดคุยกับชุมชน<br/> "
+"อย่าลืมตั้งค่ากล้องและไมโครโฟนของคุณ"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_card
@@ -175,12 +183,12 @@ msgstr "สร้าง"
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.community_aside
 msgid "Create a Room"
-msgstr ""
+msgstr "สร้างห้อง"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.community_main
 msgid "Create one to get conversations going"
-msgstr ""
+msgstr "สร้างเพื่อให้การสนทนาดำเนินต่อไป"
 
 #. module: website_event_meet
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__create_uid
@@ -229,17 +237,17 @@ msgstr "เหตุการณ์"
 #. module: website_event_meet
 #: model:ir.model,name:website_event_meet.model_event_meeting_room
 msgid "Event Meeting Room"
-msgstr ""
+msgstr "ห้องประชุมอีเวนต์"
 
 #. module: website_event_meet
 #: model:ir.model.fields.selection,name:website_event_meet.selection__website_event_menu__menu_type__meeting_room
 msgid "Event Meeting Room Menus"
-msgstr ""
+msgstr "เมนูห้องประชุมอีเวนต์"
 
 #. module: website_event_meet
 #: model:ir.model,name:website_event_meet.model_event_type
 msgid "Event Template"
-msgstr ""
+msgstr "เทมเพลตอีเวนต์"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_card
@@ -263,7 +271,7 @@ msgstr "รหัส"
 #. module: website_event_meet
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__is_pinned
 msgid "Is Pinned"
-msgstr ""
+msgstr "ปักหมุด"
 
 #. module: website_event_meet
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__is_published
@@ -274,12 +282,12 @@ msgstr "Is Published"
 #: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_card
 #: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_main
 msgid "Join us next time to chat about"
-msgstr ""
+msgstr "เข้าร่วมกับเราในครั้งต่อไปเพื่อพูดคุยเกี่ยวกับ"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_main
 msgid "Join us there to chat about"
-msgstr ""
+msgstr "เข้าร่วมกับเราที่นั่นเพื่อพูดคุยเกี่ยวกับ"
 
 #. module: website_event_meet
 #. openerp-web
@@ -292,7 +300,7 @@ msgstr "ภาษา"
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.community_main
 msgid "Languages Menu"
-msgstr ""
+msgstr "เมนูภาษา"
 
 #. module: website_event_meet
 #: model:ir.model.fields,field_description:website_event_meet.field_event_event____last_update
@@ -316,72 +324,72 @@ msgstr "อัพเดทครั้งสุดท้ายเมื่อ"
 #. module: website_event_meet
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__room_last_activity
 msgid "Last activity"
-msgstr ""
+msgstr "กิจกรรมสุดท้าย"
 
 #. module: website_event_meet
 #. openerp-web
 #: code:addons/website_event_meet/static/src/xml/website_event_meeting_room.xml:0
 #, python-format
 msgid "Launch a new topic"
-msgstr ""
+msgstr "เปิดหัวข้อใหม่"
 
 #. module: website_event_meet
 #: model:ir.model.fields,help:website_event_meet.field_event_event__meeting_room_allow_creation
 #: model:ir.model.fields,help:website_event_meet.field_event_type__meeting_room_allow_creation
 msgid "Let Visitors Create Rooms"
-msgstr ""
+msgstr "ให้ผู้มาเยี่ยมชมสร้างห้อง"
 
 #. module: website_event_meet
 #: model:event.meeting.room,summary:website_event_meet.event_meeting_room_0
 msgid "Let's talk about wood types for furniture"
-msgstr ""
+msgstr "มาว่ากันด้วยเรื่องประเภทไม้สำหรับเฟอร์นิเจอร์"
 
 #. module: website_event_meet
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__room_max_capacity
 msgid "Max capacity"
-msgstr ""
+msgstr "ความจุสูงสุด"
 
 #. module: website_event_meet
 #: model:ir.model.fields,help:website_event_meet.field_event_meeting_room__room_max_participant_reached
 msgid "Maximum number of participant reached in the room at the same time"
-msgstr ""
+msgstr "ถึงจำนวนสูงสุดของผู้เข้าร่วมในห้องในเวลาเดียวกัน"
 
 #. module: website_event_meet
 #: model:ir.actions.act_window,name:website_event_meet.event_meeting_room_action
 #: model_terms:ir.ui.view,arch_db:website_event_meet.event_meeting_room_view_form
 #: model_terms:ir.ui.view,arch_db:website_event_meet.event_meeting_room_view_tree
 msgid "Meeting Room"
-msgstr ""
+msgstr "ห้องประชุม"
 
 #. module: website_event_meet
 #: model:ir.model.fields,field_description:website_event_meet.field_event_event__meeting_room_ids
 msgid "Meeting rooms"
-msgstr ""
+msgstr "ห้องประชุม"
 
 #. module: website_event_meet
 #: model:ir.model.fields,field_description:website_event_meet.field_website_event_menu__menu_type
 msgid "Menu Type"
-msgstr ""
+msgstr "ประเภทเมนู"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.community_main
 msgid "No Room Open"
-msgstr ""
+msgstr "ไม่มีห้องเปิด"
 
 #. module: website_event_meet
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__room_participant_count
 msgid "Participant count"
-msgstr ""
+msgstr "จำนวนผู้เข้าร่วม"
 
 #. module: website_event_meet
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__room_max_participant_reached
 msgid "Peak participants"
-msgstr ""
+msgstr "ผู้เข้าร่วมสูงสุด"
 
 #. module: website_event_meet
 #: model:event.meeting.room,name:website_event_meet.event_meeting_room_1
 msgid "Reducing the ecological footprint with wood ?"
-msgstr ""
+msgstr "ลดรอยเท้านิเวศด้วยไม้ ?"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.event_meeting_room_view_form
@@ -391,7 +399,7 @@ msgstr "การรายงาน"
 #. module: website_event_meet
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__room_is_full
 msgid "Room Is Full"
-msgstr ""
+msgstr "ห้องเต็ม"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_card
@@ -401,46 +409,46 @@ msgstr ""
 #. module: website_event_meet
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__room_name
 msgid "Room Name"
-msgstr ""
+msgstr "ชื่อห้อง"
 
 #. module: website_event_meet
 #. openerp-web
 #: code:addons/website_event_meet/static/src/xml/website_event_meeting_room.xml:0
 #, python-format
 msgid "Room Topic"
-msgstr ""
+msgstr "หัวข้อห้อง"
 
 #. module: website_event_meet
 #: model:ir.model.fields,field_description:website_event_meet.field_event_event__meeting_room_count
 msgid "Room count"
-msgstr ""
+msgstr "จำนวนห้อง"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.community_aside
 msgid "Room creation will be available when event starts at"
-msgstr ""
+msgstr "การสร้างห้องจะพร้อมใช้งานเมื่องานเริ่มที่"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.event_event_view_form
 msgid "Rooms"
-msgstr ""
+msgstr "ห้อง"
 
 #. module: website_event_meet
 #: model:event.meeting.room,summary:website_event_meet.event_meeting_room_1
 msgid "Share your tips to reduce your ecological footprint using wood."
-msgstr ""
+msgstr "แบ่งปันเคล็ดลับของคุณเพื่อลดรอยเท้าทางนิเวศโดยใช้ไม้"
 
 #. module: website_event_meet
 #. openerp-web
 #: code:addons/website_event_meet/static/src/xml/website_event_meeting_room.xml:0
 #, python-format
 msgid "Short Summary"
-msgstr ""
+msgstr "สรุปสั้น ๆ"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.community_aside
 msgid "Start a topic"
-msgstr ""
+msgstr "เริ่มหัวข้อ"
 
 #. module: website_event_meet
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__summary
@@ -453,12 +461,12 @@ msgstr "สรุป"
 #: code:addons/website_event_meet/static/src/xml/website_event_meeting_room.xml:0
 #, python-format
 msgid "Target People"
-msgstr ""
+msgstr "กลุ่มเป้าหมาย"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_main
 msgid "The event"
-msgstr ""
+msgstr "อีเวนต์"
 
 #. module: website_event_meet
 #: code:addons/website_event_meet/controllers/website_event_main.py:0
@@ -467,6 +475,8 @@ msgid ""
 "The event %s starts on %s (%s). \n"
 "Join us there to chat about \"%s\" !"
 msgstr ""
+"อีเวนต์ %s เริ่มบน %s (%s). \n"
+"เข้าร่วมกับเราที่นั่นเพื่อพูดคุยเกี่ยวกับ \"%s\" !"
 
 #. module: website_event_meet
 #: model:ir.model.fields,help:website_event_meet.field_event_meeting_room__website_url
@@ -477,7 +487,7 @@ msgstr "The full URL to access the document through the website."
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__name
 #: model_terms:ir.ui.view,arch_db:website_event_meet.event_meeting_room_view_search
 msgid "Topic"
-msgstr ""
+msgstr "หัวข้อ"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.event_meeting_room_view_search
@@ -489,6 +499,7 @@ msgstr "ยกเลิกการเป็นสมาชิก"
 msgid ""
 "Venez partager vos meubles préférés et l'utilisation que vous en faites."
 msgstr ""
+"Venez partager vos meubles préférés et l'utilisation que vous en faites."
 
 #. module: website_event_meet
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__website_published
@@ -498,17 +509,17 @@ msgstr "Visible on current website"
 #. module: website_event_meet
 #: model:event.meeting.room,name:website_event_meet.event_meeting_room_2
 msgid "Vos meubles préférés ?"
-msgstr ""
+msgstr "Vos meubles préférés ?"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.community_aside
 msgid "Want to create your own discussion room ?"
-msgstr ""
+msgstr "ต้องการสร้างห้องสนทนาของคุณเองหรือ ?"
 
 #. module: website_event_meet
 #: model:ir.model,name:website_event_meet.model_website_event_menu
 msgid "Website Event Menu"
-msgstr ""
+msgstr "เมนูอีเวนต์เว็บไซต์"
 
 #. module: website_event_meet
 #: model:ir.model.fields,field_description:website_event_meet.field_event_meeting_room__website_url
@@ -518,7 +529,7 @@ msgstr "URL เว็บไซต์"
 #. module: website_event_meet
 #: model:event.meeting.room,target_audience:website_event_meet.event_meeting_room_2
 msgid "client(s)"
-msgstr ""
+msgstr "ลูกค้า"
 
 #. module: website_event_meet
 #. openerp-web
@@ -526,7 +537,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_meet.event_meeting_room_view_form
 #, python-format
 msgid "e.g. Accountants"
-msgstr ""
+msgstr "เช่น นักบัญชี"
 
 #. module: website_event_meet
 #. openerp-web
@@ -534,7 +545,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_meet.event_meeting_room_view_form
 #, python-format
 msgid "e.g. Finance"
-msgstr ""
+msgstr "เช่น การเงิน"
 
 #. module: website_event_meet
 #. openerp-web
@@ -542,12 +553,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_meet.event_meeting_room_view_form
 #, python-format
 msgid "e.g. Let's talk about Corporate Finance"
-msgstr ""
+msgstr "เช่น มาคุยกันเรื่องการเงินขององค์กร"
 
 #. module: website_event_meet
 #: model:event.meeting.room,target_audience:website_event_meet.event_meeting_room_1
 msgid "ecologist(s)"
-msgstr ""
+msgstr "นักนิเวศวิทยา"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_card
@@ -555,6 +566,8 @@ msgid ""
 "is over.\n"
 "                        <br/>"
 msgstr ""
+"จบแล้ว\n"
+"                        <br/>"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_main
@@ -562,28 +575,30 @@ msgid ""
 "is over.\n"
 "                <br/>"
 msgstr ""
+"จบแล้ว\n"
+"                <br/>"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_card
 msgid "participant(s)"
-msgstr ""
+msgstr "ผู้เข้าร่วม"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_main
 msgid "starts in"
-msgstr ""
+msgstr "เริ่มใน"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_main
 msgid "starts on"
-msgstr ""
+msgstr "เริ่มบน"
 
 #. module: website_event_meet
 #: model_terms:ir.ui.view,arch_db:website_event_meet.meeting_room_card
 msgid "to have a chat with us!"
-msgstr ""
+msgstr "ที่จะพูดคุยกับเรา!"
 
 #. module: website_event_meet
 #: model:event.meeting.room,target_audience:website_event_meet.event_meeting_room_0
 msgid "wood expert(s)"
-msgstr ""
+msgstr "ผู้เชี่ยวชาญด้านไม้"

@@ -80,7 +80,7 @@
                 <filter string="Incoming" name="incoming" domain="[('picking_id.picking_type_id.code', '=', 'incoming')]"/>
                 <filter string="Outgoing" name="outgoing" domain="[('picking_id.picking_type_id.code', '=', 'outgoing')]"/>
                 <filter string="Internal" name="internal" domain="[('picking_id.picking_type_id.code', '=', 'internal')]"/>
-                <filter string="Manufacturing" name="manufacturing" domain="[('picking_id.picking_type_id.code', '=', 'mrp_operation')]"/>
+                <filter string="Manufacturing" name="manufacturing" domain="[('picking_id.picking_type_id.code', '=', 'mrp_operation')]" invisible="1"/>
                 <separator/>
                 <group expand="0" string="Group By">
                     <filter string="Product" name="groupby_product_id" domain="[]" context="{'group_by': 'product_id'}"/>
@@ -96,6 +96,8 @@
         <field name="model">stock.move.line</field>
         <field name="arch" type="xml">
             <kanban class="o_kanban_mobile">
+                <field name="location_id" invisible="1"/>
+                <field name="location_dest_id" invisible="1"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_card oe_kanban_global_click">

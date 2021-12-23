@@ -176,8 +176,25 @@ class ProfitabilityAnalysis(models.Model):
                                     JOIN account_analytic_line AAL ON AAL.account_id = AA.id
                                     LEFT JOIN sale_order_line_invoice_rel SOINV ON SOINV.invoice_line_id = AAL.move_id
                                     LEFT JOIN sale_order_line SOL ON SOINV.order_line_id = SOL.id
+                                    LEFT JOIN account_move_line AML ON AAL.move_id = AML.id
+                                                                   AND AML.parent_state = 'posted'
+                                                                   AND AML.exclude_from_invoice_tab = 'f'
+                                    -- Check if it's not a Credit Note for a Vendor Bill
+                                    LEFT JOIN account_move RBILL ON RBILL.id = AML.move_id
+                                    LEFT JOIN account_move_line BILLL ON BILLL.move_id = RBILL.reversed_entry_id
+                                                                  AND BILLL.parent_state = 'posted'
+                                                                  AND BILLL.exclude_from_invoice_tab = 'f'
+                                                                  AND BILLL.product_id = AML.product_id
+                                    -- Check if it's not an Invoice reversed by a Credit Note
+                                    LEFT JOIN account_move RINV ON RINV.reversed_entry_id = AML.move_id
+                                    LEFT JOIN account_move_line RINVL ON RINVL.move_id = RINV.id
+                                                                  AND RINVL.parent_state = 'posted'
+                                                                  AND RINVL.exclude_from_invoice_tab = 'f'
+                                                                  AND RINVL.product_id = AML.product_id
                                 WHERE AAL.amount > 0.0 AND AAL.project_id IS NULL AND P.active = 't'
                                     AND P.allow_timesheets = 't'
+                                    AND BILLL.id IS NULL
+                                    AND RINVL.id IS NULL
                                     AND (SOL.id IS NULL
                                         OR (SOL.is_expense IS NOT TRUE AND SOL.is_downpayment IS NOT TRUE AND SOL.is_service IS NOT TRUE))
 
@@ -200,23 +217,28 @@ class ProfitabilityAnalysis(models.Model):
                                 FROM project_project P
                                     JOIN account_analytic_account AA ON P.analytic_account_id = AA.id
                                     JOIN account_analytic_line AAL ON AAL.account_id = AA.id
-                                    LEFT JOIN account_move_line RINVL ON AAL.move_id = RINVL.id
-                                                                     AND RINVL.parent_state = 'posted'
-                                                                     AND RINVL.exclude_from_invoice_tab = 'f'
-                                    -- Check if the AAL is not related to a reversed credit note
-                                    LEFT JOIN account_move RINV ON RINV.id = RINVL.move_id
+                                    LEFT JOIN account_move_line AML ON AAL.move_id = AML.id
+                                                                   AND AML.parent_state = 'posted'
+                                                                   AND AML.exclude_from_invoice_tab = 'f'
+                                    -- Check if it's not a Credit Note for an Invoice
+                                    LEFT JOIN account_move RINV ON RINV.id = AML.move_id
                                     LEFT JOIN account_move_line INVL ON INVL.move_id = RINV.reversed_entry_id
                                                                     AND INVL.parent_state = 'posted'
                                                                     AND INVL.exclude_from_invoice_tab = 'f'
-                                                                    AND INVL.product_id = RINVL.product_id
-                                    LEFT JOIN sale_order_line_invoice_rel SOINV ON SOINV.invoice_line_id = INVL.id
-                                    LEFT JOIN sale_order_line SOL ON SOINV.order_line_id = SOL.id
-                                                                 AND SOL.product_id = AAL.product_id
+                                                                    AND INVL.product_id = AML.product_id
+                                    -- Check if it's not a Bill reversed by a Credit Note
+                                    LEFT JOIN account_move RBILL ON RBILL.reversed_entry_id = AML.move_id
+                                    LEFT JOIN account_move_line RBILLL ON RBILLL.move_id = RBILL.id
+                                                                      AND RBILLL.parent_state = 'posted'
+                                                                      AND RBILLL.exclude_from_invoice_tab = 'f'
+                                                                      AND RBILLL.product_id = AML.product_id
                                     -- Check if the AAL is not related to a consumed downpayment (when the SOL is fully invoiced - with downpayment discounted.)
-                                    LEFT JOIN sale_order_line_invoice_rel SOINVDOWN ON SOINVDOWN.invoice_line_id = RINVL.id
+                                    LEFT JOIN sale_order_line_invoice_rel SOINVDOWN ON SOINVDOWN.invoice_line_id = AML.id
                                     LEFT JOIN sale_order_line SOLDOWN on SOINVDOWN.order_line_id = SOLDOWN.id AND SOLDOWN.is_downpayment = 't'
                                 WHERE AAL.amount < 0.0 AND AAL.project_id IS NULL
-                                  AND SOL.id IS NULL AND SOLDOWN.id IS NULL -- Not linked to a credit note and not a downpayment
+                                  AND INVL.id IS NULL
+                                  AND RBILLL.id IS NULL
+                                  AND SOLDOWN.id IS NULL
                                   AND P.active = 't' AND P.allow_timesheets = 't'
 
                                 UNION ALL

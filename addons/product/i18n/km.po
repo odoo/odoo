@@ -2866,7 +2866,14 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete the value %s because it is used on the following products:\n"
-"%s"
+"%s\n"
+"If the value has been associated to a product in the past, you will not be able to delete it."
+msgstr ""
+
+#. module: product
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid "You cannot delete value %s because it was used in some products."
 msgstr ""
 
 #. module: product
@@ -2925,10 +2932,10 @@ msgid ""
 "                The product form contains information to simplify the sale process:\n"
 "                price, notes in the quotation, accounting data, procurement methods, etc."
 msgstr ""
-"អ្នកត្រូវកំណត់ផលិតផលសម្រាប់អ្វីគ្រប់យ៉ាងដែលអ្នកលក់មិនថាជាផលិតផលរូបវ័ន្ត"
-"                 សេវាកម្មដែលអាចប្រើប្រាស់បានឬសេវាកម្មដែលអ្នកផ្តល់ជូនអតិថិជន។"
-"                 សំណុំបែបបទផលិតផលមានព័ត៌មានដើម្បីសម្រួលដល់ដំណើរការលក់៖"
-"                 តម្លៃកំណត់ចំណាំនៅក្នុងសម្រង់ទិន្នន័យគណនេយ្យវិធីលទ្ធកម្ម។ ល។"
+"អ្នកត្រូវកំណត់ផលិតផលសម្រាប់អ្វីគ្រប់យ៉ាងដែលអ្នកលក់មិនថាជាផលិតផលរូបវ័ន្ត "
+"                សេវាកម្មដែលអាចប្រើប្រាស់បានឬសេវាកម្មដែលអ្នកផ្តល់ជូនអតិថិជន។ "
+"                សំណុំបែបបទផលិតផលមានព័ត៌មានដើម្បីសម្រួលដល់ដំណើរការលក់៖ "
+"                តម្លៃកំណត់ចំណាំនៅក្នុងសម្រង់ទិន្នន័យគណនេយ្យវិធីលទ្ធកម្ម។ ល។"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view

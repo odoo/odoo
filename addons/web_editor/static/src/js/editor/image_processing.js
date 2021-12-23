@@ -230,6 +230,11 @@ async function applyModifications(img) {
     result.width = resizeWidth || croppedImg.width;
     result.height = croppedImg.height * result.width / croppedImg.width;
     const ctx = result.getContext('2d');
+    ctx.imageSmoothingQuality = "high";
+    ctx.mozImageSmoothingEnabled = true;
+    ctx.webkitImageSmoothingEnabled = true;
+    ctx.msImageSmoothingEnabled = true;
+    ctx.imageSmoothingEnabled = true;
     ctx.drawImage(croppedImg, 0, 0, croppedImg.width, croppedImg.height, 0, 0, result.width, result.height);
 
     // GL filter

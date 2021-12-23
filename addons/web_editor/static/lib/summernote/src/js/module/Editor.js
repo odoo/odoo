@@ -703,8 +703,10 @@ define([
       // ODOO MODIFICATION START
       if (currentSelection && document.getSelection) {
         selection = document.getSelection();
-        selection.removeAllRanges();
-        selection.addRange(currentSelection);
+        if (!selection || selection.rangeCount === 0) {
+          selection.removeAllRanges();
+          selection.addRange(currentSelection);
+        }
       }
       // ODOO MODIFICATION END
 

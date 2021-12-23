@@ -5,7 +5,8 @@ from odoo.tests import tagged, Form
 from odoo import fields
 
 
-from datetime import timedelta
+from datetime import timedelta, datetime
+from freezegun import freeze_time
 
 
 @tagged('-at_install', 'post_install')
@@ -44,6 +45,19 @@ class TestPurchase(AccountTestInvoicingCommon):
         new_date_planned = orig_date_planned - timedelta(hours=72)
         po.order_line[1].date_planned = new_date_planned
         self.assertAlmostEqual(po.order_line[1].date_planned, po.date_planned, delta=timedelta(seconds=10))
+
+    @freeze_time("2021-12-02 21:00")
+    def test_date_planned_02(self):
+        """Check the planned date definition when server is UTC and user is UTC+11"""
+        # UTC:  2021-12-02 21:00
+        # User: 2021-12-03 08:00 (UTC+11)
+        self.env.user.tz = "Australia/Sydney"
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_a
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product_a
+        self.assertEqual(po_form.date_planned, datetime.fromisoformat("2021-12-03 01:00:00"),
+                         "Should be 2021-12-03 01:00:00, i.e. 2021-12-03 12:00:00 UTC+11")
 
     def test_purchase_order_sequence(self):
         PurchaseOrder = self.env['purchase.order'].with_context(tracking_disable=True)

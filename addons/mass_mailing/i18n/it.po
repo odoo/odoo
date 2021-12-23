@@ -234,6 +234,8 @@ msgid ""
 "<span class=\"fa fa-hourglass-o mr-2 small my-auto\" aria-label=\"Scheduled date\"/>\n"
 "                                            <span class=\"align-self-baseline\">Next Batch</span>"
 msgstr ""
+"<span class=\"fa fa-hourglass-o mr-2 small my-auto\" aria-label=\"Scheduled date\"/>\n"
+"                                            <span class=\"align-self-baseline\">Gruppo successivo</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -317,7 +319,8 @@ msgstr "Gestione <strong>completa</strong>"
 msgid ""
 "A mailing contact cannot subscribe to the same mailing list multiple times."
 msgstr ""
-"Un contatto non può iscriversi più di una volta alla stessa mailing list."
+"Un contatto non può iscriversi più di una volta alla stessa lista di invio "
+"e-mail."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_three_cols
@@ -468,8 +471,8 @@ msgid ""
 "At least one of the mailing list you are trying to archive is used in an "
 "ongoing mailing campaign."
 msgstr ""
-"Almeno una delle mailing list che si sta tentando di archiviare è utilizzata"
-" in una campagna di invio e-mail in corso."
+"Almeno una delle liste che si sta tentando di archiviare è utilizzata in una"
+" campagna di invio e-mail in corso."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -796,7 +799,7 @@ msgstr "Crea un"
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.open_create_mass_mailing_list
 msgid "Create a Mailing List"
-msgstr "Crea una mailing list"
+msgstr "Crea una lista di invio e-mail"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_utm_campaigns
@@ -818,7 +821,7 @@ msgstr "Crea un nuovo invio e-mail"
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_lists
 msgid "Create a new mailing list"
-msgstr "Crea una nuova mailing list"
+msgstr "Crea una nuova lista di invio e-mail"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__create_uid
@@ -960,7 +963,7 @@ msgstr "Firma dimostrativa"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list_merge__dest_list_id
 msgid "Destination Mailing List"
-msgstr "Mailing list di destinazione"
+msgstr "Lista invio e-mail di destinazione"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_form_simplified
@@ -1534,7 +1537,7 @@ msgstr "Contatto per invio e-mail"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_subscription__list_id
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__name
 msgid "Mailing List"
-msgstr "Mailing list"
+msgstr "Lista invio e-mail"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailing_contacts
@@ -1545,18 +1548,18 @@ msgstr "Mailing list"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_search
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_tree
 msgid "Mailing List Contacts"
-msgstr "Contatti mailing list"
+msgstr "Contatti lista invio e-mail"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_subscription_view_form
 msgid "Mailing List Subscription"
-msgstr "Iscrizione mailing list"
+msgstr "Iscrizione lista invio e-mail"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_subscription_view_search
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_subscription_view_tree
 msgid "Mailing List Subscriptions"
-msgstr "Iscrizioni mailing list"
+msgstr "Iscrizioni lista invio e-mail"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailing_lists
@@ -1569,7 +1572,7 @@ msgstr "Iscrizioni mailing list"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_search
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_tree
 msgid "Mailing Lists"
-msgstr "Mailing list"
+msgstr "Liste invio e-mail"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_trace
@@ -1743,7 +1746,7 @@ msgstr "Accorpa"
 #: model:ir.model,name:mass_mailing.model_mailing_list_merge
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_merge_view_form
 msgid "Merge Mass Mailing List"
-msgstr "Accorpamento mailing list massive"
+msgstr "Accorpamento lista invio e-mail massivo"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list_merge__merge_options
@@ -1753,17 +1756,17 @@ msgstr "Opzione di accorpamento"
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.mailing_list_merge_action
 msgid "Merge Selected Mailing Lists"
-msgstr "Accorpa le mailing list selezionate"
+msgstr "Accorpa le liste di invio e-mail selezionate"
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_list_merge__merge_options__new
 msgid "Merge into a new mailing list"
-msgstr "Accorpa in una nuova mailing list"
+msgstr "Accorpa in una nuova lista di invio e-mail"
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_list_merge__merge_options__existing
 msgid "Merge into an existing mailing list"
-msgstr "Accorpa in una mailing list esistente"
+msgstr "Accorpa in una lista di invio e-mail esistente"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_has_error
@@ -1829,7 +1832,7 @@ msgstr "Nome / E-mail"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list_merge__new_list_name
 msgid "New Mailing List Name"
-msgstr "Nuovo nome mailing list"
+msgstr "Nuovo nome per lista invio e-mail"
 
 #. module: mass_mailing
 #: model:utm.campaign,name:mass_mailing.mass_mail_campaign_1
@@ -2003,8 +2006,9 @@ msgid ""
 "Opt out flag for a specific mailing list.This field should not be used in a "
 "view without a unique and active mailing list context."
 msgstr ""
-"Spunta di disattivazione per una specifica mailing list. Usare il campo in "
-"una vista solo nel contesto di una mailing list univoca e attiva."
+"Spunta di disattivazione per una specifica lista di invio e-mail. Il campo "
+"non deve essere usato in una vista senza un contesto di lista univoca e "
+"attiva."
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__lang
@@ -2322,12 +2326,12 @@ msgstr "Seleziona un modello"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Select mailing lists..."
-msgstr "Seleziona mailing list..."
+msgstr "Seleziona liste di invio e-mail..."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Select mailing lists:"
-msgstr "Selezione mailing list:"
+msgstr "Selezione liste invio e-mail:"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__model_object_field
@@ -2574,8 +2578,9 @@ msgid ""
 "The mailing list can be accessible by recipient in the unsubscription page "
 "to allows him to update his subscription preferences."
 msgstr ""
-"Il destinatario può accedere alla mailing list dalla pagina di annullamento "
-"dell'iscrizione, consentendogli di aggiornare le sue preferenze."
+"Il destinatario può accedere alla lista di invio e-mail dalla pagina di "
+"annullamento dell'iscrizione, consentendogli di aggiornare le sue "
+"preferenze."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_paragraph
@@ -2601,14 +2606,15 @@ msgstr ""
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "The recipient <strong>subscribed to %s</strong> mailing list(s)"
-msgstr "Mailing list - Il destinatario <strong>si è iscritto a %s</strong>"
+msgstr ""
+"Liste invio e-mail - Il destinatario <strong>si è iscritto a %s</strong>"
 
 #. module: mass_mailing
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "The recipient <strong>unsubscribed from %s</strong> mailing list(s)"
 msgstr ""
-"Mailing list - Il destinatario <strong>ha annullato l'iscrizione a "
+"Liste invio e-mail - Il destinatario <strong>ha annullato l'iscrizione a "
 "%s</strong>"
 
 #. module: mass_mailing
@@ -2937,7 +2943,7 @@ msgstr "Nessuna autorizzazione per effettuare l'operazione."
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe
 msgid "You are not subscribed to any of our mailing list."
-msgstr "Non sei iscritto a nessuna delle nostre mailing list."
+msgstr "Non sei iscritto a nessuna delle nostre liste di invio e-mail."
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_create_mass_mailings_from_campaign
@@ -2948,7 +2954,7 @@ msgid ""
 "                send emails<br> to any contact saved in other Odoo apps."
 msgstr ""
 "È possibile inviare e-mail in modo facile a tutti i contatti salvati in\n"
-"                altre applicazioni<br> Odoo, senza dover importare le mailing list."
+"                altre applicazioni<br> Odoo; non è necessario importare le liste di invio e-mail."
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.action_view_mass_mailing_lists
@@ -2956,8 +2962,8 @@ msgid ""
 "You don't need to import your mailing lists, you can easily\n"
 "            send emails<br> to any contact saved in other Odoo apps."
 msgstr ""
-"È possibile inviare facilmente e-mail a tutti i contatti salvati in altre\n"
-"            applicazioni<br> Odoo, senza dover importare le mailing list."
+"È possibile inviare e-mail in modo facile a tutti i contatti salvati in altre\n"
+"            applicazioni<br> Odoo; non è necessario importare le liste di invio e-mail."
 
 #. module: mass_mailing
 #. openerp-web

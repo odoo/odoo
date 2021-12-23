@@ -253,37 +253,46 @@
             </thead>
             <tbody>
               <t t-foreach="order.order_line" t-as="ol">
-                <tr>
-                  <td>
-                    <img t-att-src="image_data_uri(resize_to_48(ol.product_id.image_1024))" alt="Product" class="d-none d-lg-inline"/>
-                    <span t-esc="ol.name"/>
-                  </td>
-                  <td class="text-right d-none d-sm-table-cell">
-                    <span t-field="ol.price_unit" t-options='{"widget": "monetary", "display_currency": order.currency_id}'/>
-                  </td>
-                  <td class="text-right">
-                    <span t-esc="ol.product_qty"/>
-                  </td>
-                  <td class="text-right">
-                    <span t-esc="ol.date_planned.date()"/>
-                  </td>
-                  <td class="text-right">
-                    <form t-attf-action="/my/purchase/#{order.id}/update?access_token=#{order.access_token}" method="post">
-                      <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                      <div class="container">
-                        <div class="form-group">
-                          <div class="input-group date">
-                              <input type="text" class="form-control datetimepicker-input o-purchase-datetimepicker" t-attf-id="datetimepicker_#{ol.id}" t-att-name="ol.id"
-                                data-toggle="datetimepicker" data-date-format="YYYY-MM-DD" t-attf-data-target="#datetimepicker_#{ol.id}"/>
+                <t t-if="not ol.display_type">
+                  <tr>
+                    <td>
+                      <img t-att-src="image_data_uri(resize_to_48(ol.product_id.image_1024))" alt="Product" class="d-none d-lg-inline"/>
+                      <span t-esc="ol.name"/>
+                    </td>
+                    <td class="text-right d-none d-sm-table-cell">
+                      <span t-field="ol.price_unit" t-options='{"widget": "monetary", "display_currency": order.currency_id}'/>
+                    </td>
+                    <td class="text-right">
+                      <span t-esc="ol.product_qty"/>
+                    </td>
+                    <td class="text-right">
+                      <span t-esc="ol.date_planned.date()"/>
+                    </td>
+                    <td class="text-right">
+                      <form t-attf-action="/my/purchase/#{order.id}/update?access_token=#{order.access_token}" method="post">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <div class="container">
+                          <div class="form-group">
+                            <div class="input-group date">
+                                <input type="text" class="form-control datetimepicker-input o-purchase-datetimepicker" t-attf-id="datetimepicker_#{ol.id}" t-att-name="ol.id"
+                                  data-toggle="datetimepicker" data-date-format="YYYY-MM-DD" t-attf-data-target="#datetimepicker_#{ol.id}"/>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </form>
-                  </td>
-                  <td class="text-right">
-                    <span t-field="ol.price_subtotal" t-options='{"widget": "monetary", "display_currency": order.currency_id}'/>
-                  </td>
-                </tr>
+                      </form>
+                    </td>
+                    <td class="text-right">
+                      <span t-field="ol.price_subtotal" t-options='{"widget": "monetary", "display_currency": order.currency_id}'/>
+                    </td>
+                  </tr>
+                </t>
+                <t t-if="ol.display_type">
+                  <tr>
+                    <td colspan="99">
+                      <span t-esc="ol.name"/>
+                    </td>
+                  </tr>
+                </t>
               </t>
             </tbody>
           </table>

@@ -1213,7 +1213,7 @@
                     <xpath expr="//field[@name='partner_id']" position="after">
                        <field name="partner_shipping_id"
                               groups="sale.group_delivery_invoice_address"
-                              attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}"/>
+                              attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'out_receipt'))]}"/>
                    </xpath>
                     <xpath expr="//field[@name='invoice_line_ids']//field[@name='discount']" position="attributes">
                         <attribute name="groups">product.group_discount_per_so_line</attribute>

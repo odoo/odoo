@@ -14,21 +14,35 @@ class TestAccountPayment(AccountTestInvoicingCommon):
         cls.payment_debit_account_id = cls.copy_account(cls.company_data['default_journal_bank'].payment_debit_account_id)
         cls.payment_credit_account_id = cls.copy_account(cls.company_data['default_journal_bank'].payment_credit_account_id)
 
-        cls.partner_bank_account = cls.env['res.partner.bank'].create({
-            'acc_number': 'BE32707171912447',
+        cls.bank_journal_1 = cls.company_data['default_journal_bank']
+        cls.bank_journal_2 = cls.company_data['default_journal_bank'].copy()
+
+        cls.partner_bank_account1 = cls.env['res.partner.bank'].create({
+            'acc_number': "0123456789",
             'partner_id': cls.partner_a.id,
             'acc_type': 'bank',
         })
+        cls.partner_bank_account2 = cls.env['res.partner.bank'].create({
+            'acc_number': "9876543210",
+            'partner_id': cls.partner_a.id,
+            'acc_type': 'bank',
+        })
+        cls.comp_bank_account1 = cls.env['res.partner.bank'].create({
+            'acc_number': "985632147",
+            'partner_id': cls.env.company.partner_id.id,
+            'acc_type': 'bank',
+        })
+        cls.comp_bank_account2 = cls.env['res.partner.bank'].create({
+            'acc_number': "741258963",
+            'partner_id': cls.env.company.partner_id.id,
+            'acc_type': 'bank',
+        })
 
-        cls.company_data['default_journal_bank'].write({
+        cls.bank_journal_1.write({
             'payment_debit_account_id': cls.payment_debit_account_id.id,
             'payment_credit_account_id': cls.payment_credit_account_id.id,
             'inbound_payment_method_ids': [(6, 0, cls.env.ref('account.account_payment_method_manual_in').ids)],
             'outbound_payment_method_ids': [(6, 0, cls.env.ref('account.account_payment_method_manual_out').ids)],
-        })
-
-        cls.partner_a.write({
-            'bank_ids': [(6, 0, cls.partner_bank_account.ids)],
         })
 
     def test_payment_move_sync_create_write(self):
@@ -51,12 +65,10 @@ class TestAccountPayment(AccountTestInvoicingCommon):
             'partner_id': False,
             'destination_account_id': copy_receivable.id,
             'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
-            'partner_bank_id': False,
         }
         expected_move_values = {
             'currency_id': self.company_data['currency'].id,
             'partner_id': False,
-            'partner_bank_id': False,
         }
         expected_liquidity_line = {
             'debit': 50.0,
@@ -94,13 +106,11 @@ class TestAccountPayment(AccountTestInvoicingCommon):
             'destination_account_id': self.partner_a.property_account_payable_id.id,
             'currency_id': self.currency_data['currency'].id,
             'partner_id': self.partner_a.id,
-            'partner_bank_id': self.partner_bank_account.id,
         }])
         self.assertRecordValues(payment.move_id, [{
             **expected_move_values,
             'currency_id': self.currency_data['currency'].id,
             'partner_id': self.partner_a.id,
-            'partner_bank_id': self.partner_bank_account.id,
         }])
         self.assertRecordValues(payment.line_ids.sorted('balance'), [
             {
@@ -124,7 +134,6 @@ class TestAccountPayment(AccountTestInvoicingCommon):
 
         liquidity_lines, counterpart_lines, writeoff_lines = payment._seek_for_lines()
         payment.move_id.write({
-            'partner_bank_id': False,
             'line_ids': [
                 (1, counterpart_lines.id, {
                     'debit': 0.0,
@@ -764,3 +773,35 @@ class TestAccountPayment(AccountTestInvoicingCommon):
                 'account_id': self.company_data['default_journal_cash'].payment_debit_account_id.id,
             },
         ])
+
+    def test_suggested_default_partner_bank(self):
+        """ Ensure the 'partner_bank_id' is well computed on payments. When the payment is inbound, the money must be
+        received by a bank account linked to the company. In case of outbound payment, the bank account must be found
+        on the partner.
+        """
+        payment = self.env['account.payment'].create({
+            'journal_id': self.bank_journal_1.id,
+            'amount': 50.0,
+            'payment_type': 'outbound',
+            'partner_type': 'supplier',
+            'partner_id': self.partner_a.id,
+        })
+        self.assertRecordValues(payment, [{
+            'available_partner_bank_ids': self.partner_a.bank_ids.ids,
+            'partner_bank_id': self.partner_bank_account1.id,
+        }])
+
+        payment.payment_type = 'inbound'
+        self.assertRecordValues(payment, [{
+            'available_partner_bank_ids': [],
+            'partner_bank_id': False,
+        }])
+
+        self.bank_journal_2.bank_account_id = self.comp_bank_account2
+        # A sequence is automatically added on the first move. We need to clean it before changing the journal.
+        payment.name = False
+        payment.journal_id = self.bank_journal_2
+        self.assertRecordValues(payment, [{
+            'available_partner_bank_ids': self.comp_bank_account2.ids,
+            'partner_bank_id': self.comp_bank_account2.id,
+        }])

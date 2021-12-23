@@ -62,6 +62,9 @@
             @include print-variable('o-cc#{$index}-btn-secondary-border', $-btn-secondary or theme-color('secondary'));
         }
     }
+
+    @include print-variable('o-grid-gutter-width', $grid-gutter-width);
+    @include print-variable('o-md-container-max-width', map-get($container-max-widths, md));
 }
 
 html, body {
@@ -400,10 +403,13 @@ a.o_underline {
         @mixin ace-line-error-mixin {
             content: "";
             z-index: 1000;
-            display: block;
-            background-color: theme-color('danger');
-            opacity: 0.5;
-            pointer-events: none;
+            display: flex;
+            background-color: $o-we-color-danger;
+            color: white;
+            font-size: 1.2em;
+            align-items: center;
+            justify-content: center;
+            cursor: help;
         }
 
         height: 70%; // in case flex is not supported
@@ -415,9 +421,16 @@ a.o_underline {
             .ace_gutter-cell.o_error {
                 position: relative;
 
+                &::before {
+                    @include o-position-absolute(-100vh, 0, -100vh);
+                    @include ace-line-error-mixin;
+                    width: 2px;
+                }
                 &::after {
                     @include o-position-absolute(-100%, 0, -100%, 0);
                     @include ace-line-error-mixin;
+                    font-family: FontAwesome;
+                    content: "\f071";
                 }
             }
         }
@@ -428,12 +441,28 @@ a.o_underline {
             height: 100%;
             cursor: ew-resize;
         }
+    }
+}
 
-        .ace_scroller.o_error::after {
-            @include o-position-absolute(0, auto, 0, 0);
-            width: 3px;
-            @include ace-line-error-mixin;
-        }
+.o_ace_error_popover {
+    max-width: 40vw;
+
+    .popover-body {
+        background-color: lighten($o-we-ace-color, 10%);
+        color: #ebecee;
+    }
+    &.bs-popover-left .arrow::after {
+        border-left-color: lighten($o-we-ace-color, 10%);
+    }
+    &.bs-popover-right .arrow::after {
+        border-right-color: lighten($o-we-ace-color, 10%);
+    }
+    code {
+        display: block;
+        max-width: 100%;
+        overflow-x: auto;
+        white-space: pre;
+        color: cyan;
     }
 }
 

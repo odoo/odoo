@@ -6,6 +6,7 @@
 # Martin Trigaux, 2020
 # Leon Grill <leg@odoo.com>, 2020
 # Robert Förster <hello@suppliot.eu>, 2021
+# Friederike Fasterling-Nesselbosch, 2021
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:29+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Robert Förster <hello@suppliot.eu>, 2021\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +25,7 @@ msgstr ""
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
 msgid "<span class=\"o_form_label oe_edit_only\">Allowed Employees </span>"
-msgstr ""
+msgstr "<span class=\"o_form_label oe_edit_only\">Zugelassene Mitarbeiter </span>"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_order__cashier
@@ -67,12 +68,12 @@ msgstr "Mitarbeiter"
 #: code:addons/pos_hr/models/hr_employee.py:0
 #, python-format
 msgid "Employee: %s - PoS Config(s): %s \n"
-msgstr ""
+msgstr "Mitarbeiter: %s - Kassenkonfiguration: %s \n"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_config__employee_ids
 msgid "Employees with access"
-msgstr ""
+msgstr "Mitarbeiter mit Zugriff"
 
 #. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_hr_employee__id
@@ -85,7 +86,7 @@ msgstr "ID"
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_config__employee_ids
 msgid "If left empty, all employees can log in to the PoS session"
-msgstr ""
+msgstr "Falls leer, können Mitarbeiter sich in der PoS-Sitzung anmelden"
 
 #. module: pos_hr
 #. openerp-web
@@ -107,7 +108,7 @@ msgstr "Zuletzt geändert am"
 #: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
 #, python-format
 msgid "Log in to"
-msgstr ""
+msgstr "Anmelden bei"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
@@ -180,6 +181,8 @@ msgid ""
 "You cannot delete an employee that may be used in an active PoS session, "
 "close the session(s) first: \n"
 msgstr ""
+"Mitarbeiter, die in aktiven PoS-Sitzungen verwendet werden, können nicht "
+"gelöscht werden. Schließen Sie erst die Sitzung(en):\n"
 
 #. module: pos_hr
 #. openerp-web

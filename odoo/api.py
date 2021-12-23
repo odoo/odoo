@@ -285,6 +285,9 @@ def split_context(method, args, kwargs):
     """ Extract the context from a pair of positional and keyword arguments.
         Return a triple ``context, args, kwargs``.
     """
+    # altering kwargs is a cause of errors, for instance when retrying a request
+    # after a serialization error: the retry is done without context!
+    kwargs = kwargs.copy()
     return kwargs.pop('context', None), args, kwargs
 
 
