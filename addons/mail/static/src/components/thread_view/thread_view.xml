@@ -17,13 +17,12 @@
                                 <span><i class="o_ThreadView_loadingIcon fa fa-circle-o-notch fa-spin" title="Loading..." role="img"/>Loading...</span>
                             </div>
                         </t>
-                        <t t-elif="threadView.threadCache.isLoaded or threadView.thread.isTemporary">
+                        <t t-elif="threadView.messageListView">
                             <MessageList
                                 className="'o_ThreadView_messageList'"
                                 getScrollableElement= "props.getScrollableElement"
                                 hasScrollAdjust="props.hasScrollAdjust"
-                                threadViewLocalId="threadView.localId"
-                                t-ref="messageList"
+                                localId="threadView.messageListView.localId"
                             />
                         </t>
                         <t t-elif="threadView.threadCache.hasLoadingFailed">
