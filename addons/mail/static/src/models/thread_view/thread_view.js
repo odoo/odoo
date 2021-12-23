@@ -3,7 +3,7 @@
 import { registerModel } from '@mail/model/model_core';
 import { RecordDeletedError } from '@mail/model/model_errors';
 import { attr, many2many, many2one, one2many, one2one } from '@mail/model/model_field';
-import { clear, insertAndReplace, link, replace, unlink, update } from '@mail/model/model_field_command';
+import { clear, insertAndReplace, link, replace, unlink } from '@mail/model/model_field_command';
 import { OnChange } from '@mail/model/model_onchange';
 
 registerModel({
@@ -102,6 +102,16 @@ registerModel({
         _computeLastMessageView() {
             const { length, [length - 1]: lastMessageView } = this.messageViews;
             return lastMessageView ? replace(lastMessageView) : clear();
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeMessageListView() {
+            return (
+                (this.thread && this.thread.isTemporary) ||
+                (this.threadCache && this.threadCache.isLoaded)
+            ) ? insertAndReplace() : clear();
         },
         /**
          * @private
@@ -404,6 +414,11 @@ registerModel({
          * current partner in the currently displayed thread cache.
          */
         lastVisibleMessage: many2one('Message'),
+        messageListView: one2one('MessageListView', {
+            compute: '_computeMessageListView',
+            inverse: 'threadViewOwner',
+            isCausal: true,
+        }),
         messages: many2many('Message', {
             related: 'threadCache.messages',
         }),
