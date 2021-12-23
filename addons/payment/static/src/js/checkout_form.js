@@ -74,6 +74,10 @@ odoo.define('payment.checkout_form', require => {
             // Make the payment
             this._hideError(); // Don't keep the error displayed if the user is going through 3DS2
             this._disableButton(true); // Disable until it is needed again
+            $('body').block({
+                message: false,
+                overlayCSS: {backgroundColor: "#000", opacity: 0, zIndex: 1050},
+            });
             this._processPayment(provider, paymentOptionId, flow);
         },
 
