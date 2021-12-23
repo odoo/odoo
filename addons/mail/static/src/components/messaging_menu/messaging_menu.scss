@@ -2,12 +2,6 @@
 // Layout
 // ------------------------------------------------------------------
 
-.o_MessagingMenu_counter {
-    position: relative;
-    transform: translate(-5px, -5px);
-    margin-right: -10px; // "cancel" right padding of systray items
-}
-
 .o_MessagingMenu_dropdownMenu {
     display: flex;
     flex-flow: column;
@@ -105,10 +99,6 @@
 // Make hightlight more consistent, due to messaging menu looking quite similar to discuss app in mobile
 .o_MessagingMenu.show {
     background-color: rgba($black, 0.1);
-}
-
-.o_MessagingMenu_counter {
-    background-color: $o-enterprise-primary-color;
 }
 
 .o_MessagingMenu_dropdownMenu.o-mobile {

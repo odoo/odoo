@@ -14,25 +14,25 @@
 
         <!-- App Brand -->
         <DropdownItem
-          t-if="currentApp and !env.isSmall"
+          t-if="currentApp"
           href="getMenuItemHref(currentApp)"
           t-esc="currentApp.name"
-          class="o_menu_brand"
+          class="o_menu_brand d-none d-md-block"
           dataset="{ menuXmlid: currentApp.xmlid, section: currentApp.id }"
           onSelected="() => this.onNavBarDropdownItemSelection(currentApp)"
         />
 
         <!-- Current App Sections -->
-        <t t-if="currentAppSections.length and !env.isSmall" t-call="web.NavBar.SectionsMenu">
+        <t t-if="currentAppSections.length" t-call="web.NavBar.SectionsMenu">
           <t t-set="sections" t-value="currentAppSections" />
         </t>
 
         <!-- Systray -->
-        <div class="o_menu_systray" role="menu">
+        <div class="o_menu_systray d-flex flex-shrink-0 ml-auto" role="menu">
           <t t-foreach="systrayItems" t-as="item" t-key="item.key">
             <NotUpdatable>
                 <ErrorHandler onError="error => this.handleItemError(error, item)">
-                    <t t-component="item.Component" t-props="item.props" />
+                    <t t-component="item.Component" t-props="item.props" class="o_menu_systray_item"/>
                 </ErrorHandler>
             </NotUpdatable>
           </t>
@@ -61,7 +61,7 @@
   </t>
 
   <t t-name="web.NavBar.SectionsMenu" owl="1">
-    <div class="o_menu_sections" t-ref="appSubMenus" role="menu">
+    <div class="o_menu_sections d-none d-md-flex flex-grow-1 flex-shrink-1" t-ref="appSubMenus" role="menu">
 
       <t t-foreach="sections" t-as="section" t-key="section.id">
         <t
@@ -119,7 +119,7 @@
         t-if="!item.childrenTree.length"
         href="getMenuItemHref(item)"
         class="dropdown-item"
-        t-esc="item.name" 
+        t-esc="item.name"
         dataset="{ menuXmlid: item.xmlid, section: item.id }"
         onSelected="() => this.onNavBarDropdownItemSelection(item)"
       />
