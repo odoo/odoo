@@ -302,7 +302,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.hasClass(
-            form.$('div.o_group .o_field_widget[name="foo"]:eq(0)'),
+            form.el.querySelector('div.o_group .o_field_widget[name="foo"]:eq(0)'),
             "o_invisible_modifier",
             "first foo widget should be invisible"
         );
@@ -317,11 +317,11 @@ QUnit.module("Views", (hooks) => {
             "third foo widget should be visible"
         );
         await testUtils.fields.editInput(
-            form.$('div.o_group .o_field_widget[name="foo"]:eq(2)'),
+            form.el.querySelector('div.o_group .o_field_widget[name="foo"]:eq(2)'),
             "hello"
         );
         assert.strictEqual(
-            form.$('div.o_group .o_field_widget[name="foo"]:eq(1) input').val(),
+            form.el.querySelector('div.o_group .o_field_widget[name="foo"]:eq(1) input').value,
             "hello",
             "second foo widget should be 'hello'"
         );
@@ -331,7 +331,7 @@ QUnit.module("Views", (hooks) => {
             "first int_field widget should not be readonly"
         );
         assert.hasClass(
-            form.$('div.o_group .o_field_widget[name="int_field"]:eq(0)'),
+            form.el.querySelector('div.o_group .o_field_widget[name="int_field"]:eq(0)'),
             "o_readonly_modifier",
             "second int_field widget should be readonly"
         );
@@ -377,60 +377,54 @@ QUnit.module("Views", (hooks) => {
             "first one2many widget should not be readonly"
         );
         assert.hasClass(
-            form.$("div.o_field_one2many:eq(1)"),
+            form.el.querySelector("div.o_field_one2many:eq(1)"),
             "o_readonly_modifier",
             "second one2many widget should be readonly"
         );
         await testUtils.dom.click(
-            form.$("div.tab-content table.o_list_table:eq(0) tr.o_data_row td.o_data_cell:eq(0)")
+            form.el.querySelector(
+                "div.tab-content table.o_list_table:eq(0) tr.o_data_row td.o_data_cell:eq(0)"
+            )
         );
         assert.strictEqual(
-            form
-                .$(
-                    'div.tab-content table.o_list_table tr.o_selected_row .o_field_widget[name="foo"] input'
-                )
-                .val(),
+            form.$(
+                'div.tab-content table.o_list_table tr.o_selected_row .o_field_widget[name="foo"] input'
+            ).value,
             "yop",
             "first line in one2many of first tab contains yop"
         );
         assert.strictEqual(
-            form
-                .$("div.tab-content table.o_list_table:eq(1) tr.o_data_row td.o_data_cell:eq(0)")
-                .text(),
+            form.$("div.tab-content table.o_list_table:eq(1) tr.o_data_row td.o_data_cell:eq(0)")
+                .innerText,
             "yop",
             "first line in one2many of second tab contains yop"
         );
         await testUtils.fields.editInput(
-            form.$(
+            form.el.querySelector(
                 'div.tab-content table.o_list_table tr.o_selected_row .o_field_widget[name="foo"] input'
             ),
             "hello"
         );
         assert.strictEqual(
-            form
-                .$("div.tab-content table.o_list_table:eq(1) tr.o_data_row td.o_data_cell:eq(0)")
-                .text(),
+            form.$("div.tab-content table.o_list_table:eq(1) tr.o_data_row td.o_data_cell:eq(0)")
+                .innerText,
             "hello",
             "first line in one2many of second tab contains hello"
         );
         await testUtils.dom.click(
-            form.$("div.tab-content table.o_list_table:eq(0) a:contains(Add a line)")
+            form.el.querySelector("div.tab-content table.o_list_table:eq(0) a:contains(Add a line)")
         );
         assert.strictEqual(
-            form
-                .$(
-                    'div.tab-content table.o_list_table tr.o_selected_row .o_field_widget[name="foo"] input'
-                )
-                .val(),
+            form.$(
+                'div.tab-content table.o_list_table tr.o_selected_row .o_field_widget[name="foo"] input'
+            ).value,
             "My little Foo Value",
             "second line in one2many of first tab contains 'My little Foo Value'"
         );
         assert.strictEqual(
-            form
-                .$(
-                    "div.tab-content table.o_list_table:eq(1) tr.o_data_row:eq(1) td.o_data_cell:eq(0)"
-                )
-                .text(),
+            form.$(
+                "div.tab-content table.o_list_table:eq(1) tr.o_data_row:eq(1) td.o_data_cell:eq(0)"
+            ).innerText,
             "My little Foo Value",
             "first line in one2many of second tab contains hello"
         );
@@ -1066,8 +1060,11 @@ QUnit.module("Views", (hooks) => {
             resId: 1,
         });
 
-        assert.doesNotHaveClass(form.$(".o_notebook .nav .nav-link:first()"), "active");
-        assert.hasClass(form.$(".o_notebook .nav .nav-link:nth(1)"), "active");
+        assert.doesNotHaveClass(
+            form.el.querySelector(".o_notebook .nav .nav-link:first()"),
+            "active"
+        );
+        assert.hasClass(form.el.querySelector(".o_notebook .nav .nav-link:nth(1)"), "active");
     });
 
     QUnit.skip(
@@ -1484,8 +1481,12 @@ QUnit.module("Views", (hooks) => {
                 </form>`,
             });
 
-            const fieldIdAttrs = [...form.$(".o_field_widget")].map((n) => n.getAttribute("id"));
-            const labelForAttrs = [...form.$(".o_form_label")].map((n) => n.getAttribute("for"));
+            const fieldIdAttrs = [...form.el.querySelector(".o_field_widget")].map((n) =>
+                n.getAttribute("id")
+            );
+            const labelForAttrs = [...form.el.querySelector(".o_form_label")].map((n) =>
+                n.getAttribute("for")
+            );
 
             assert.strictEqual(
                 [...new Set(fieldIdAttrs)].length,
@@ -1533,7 +1534,7 @@ QUnit.module("Views", (hooks) => {
                 </form>`,
             });
 
-            await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+            await testUtils.dom.click(form.el.querySelector(".o_field_x2many_list_row_add a"));
 
             assert.containsOnce(document.body, ".modal .o_form_view");
 
@@ -1589,7 +1590,7 @@ QUnit.module("Views", (hooks) => {
                 },
             });
 
-            await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+            await testUtils.dom.click(form.el.querySelector(".o_field_x2many_list_row_add a"));
 
             assert.containsOnce(document.body, ".modal .o_form_view");
 
@@ -1665,28 +1666,28 @@ QUnit.module("Views", (hooks) => {
                 </form>`,
         });
 
-        const $fooLabel1 = form.$(".o_form_label:nth(0)");
+        const $fooLabel1 = form.el.querySelector(".o_form_label:nth(0)");
         $fooLabel1.tooltip("show", false);
         $fooLabel1.trigger($.Event("mouseenter"));
-        assert.strictEqual($(".tooltip .oe_tooltip_help").text().trim(), "foo tooltip");
+        assert.strictEqual($(".tooltip .oe_tooltip_help").innerText.trim(), "foo tooltip");
         $fooLabel1.trigger($.Event("mouseleave"));
 
-        const $fooLabel2 = form.$(".o_form_label:nth(2)");
+        const $fooLabel2 = form.el.querySelector(".o_form_label:nth(2)");
         $fooLabel2.tooltip("show", false);
         $fooLabel2.trigger($.Event("mouseenter"));
-        assert.strictEqual($(".tooltip .oe_tooltip_help").text().trim(), "foo tooltip");
+        assert.strictEqual($(".tooltip .oe_tooltip_help").innerText.trim(), "foo tooltip");
         $fooLabel2.trigger($.Event("mouseleave"));
 
-        const $barLabel1 = form.$(".o_form_label:nth(1)");
+        const $barLabel1 = form.el.querySelector(".o_form_label:nth(1)");
         $barLabel1.tooltip("show", false);
         $barLabel1.trigger($.Event("mouseenter"));
-        assert.strictEqual($(".tooltip .oe_tooltip_help").text().trim(), "bar tooltip");
+        assert.strictEqual($(".tooltip .oe_tooltip_help").innerText.trim(), "bar tooltip");
         $barLabel1.trigger($.Event("mouseleave"));
 
-        const $barLabel2 = form.$(".o_form_label:nth(3)");
+        const $barLabel2 = form.el.querySelector(".o_form_label:nth(3)");
         $barLabel2.tooltip("show", false);
         $barLabel2.trigger($.Event("mouseenter"));
-        assert.strictEqual($(".tooltip .oe_tooltip_help").text().trim(), "bar tooltip");
+        assert.strictEqual($(".tooltip .oe_tooltip_help").innerText.trim(), "bar tooltip");
         $barLabel2.trigger($.Event("mouseleave"));
 
         odoo.debug = initialDebugMode;
@@ -1790,7 +1791,7 @@ QUnit.module("Views", (hooks) => {
                     );
                 } else {
                     await testUtils.fields.editAndTrigger(
-                        form.$('.o_field_many2one[name="trululu"] input'),
+                        form.el.querySelector('.o_field_many2one[name="trululu"] input'),
                         "",
                         ["keyup"]
                     );
@@ -1859,7 +1860,7 @@ QUnit.module("Views", (hooks) => {
             "in edit mode, only labels associated to empty readonly fields should have the o_form_label_empty class"
         );
 
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=foo] input"), "test");
+        await editInput(form.el, ".o_field_widget[name=foo] input", "test");
 
         assert.containsNone(
             form,
@@ -1872,7 +1873,7 @@ QUnit.module("Views", (hooks) => {
             "after readonly modifier change, the o_form_label_empty class should have been removed"
         );
 
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=foo] input"), "hello");
+        await editInput(form.el, ".o_field_widget[name=foo] input", "hello");
 
         assert.containsOnce(
             form,
@@ -2032,7 +2033,7 @@ QUnit.module("Views", (hooks) => {
                 "in edit mode, only labels associated to empty readonly fields should have the o_form_label_empty class"
             );
 
-            await testUtils.fields.editInput(form.$(".o_field_widget[name=foo] input"), "test");
+            await editInput(form.el, ".o_field_widget[name=foo] input", "test");
 
             assert.containsNone(
                 form,
@@ -2045,7 +2046,7 @@ QUnit.module("Views", (hooks) => {
                 "after readonly modifier change, the o_form_label_empty class should have been removed"
             );
 
-            await testUtils.fields.editInput(form.$(".o_field_widget[name=foo] input"), "hello");
+            await editInput(form.el, ".o_field_widget[name=foo] input", "hello");
 
             assert.containsOnce(
                 form,
@@ -2769,22 +2770,22 @@ QUnit.module("Views", (hooks) => {
 
         // add a o2m row
         await click(form.el.querySelector(".o_field_x2many_list_row_add a"));
-        form.$(".o_field_one2many input:first").focus();
+        form.el.querySelector(".o_field_one2many input:first").focus();
         await testUtils.nextTick();
         await testUtils.fields.editInput(
-            form.$(".o_field_one2many .o_field_widget[name=display_name] input"),
+            form.el.querySelector(".o_field_one2many .o_field_widget[name=display_name] input"),
             "valid line"
         );
-        form.$(".o_field_one2many input:last").focus();
+        form.el.querySelector(".o_field_one2many input:last").focus();
         await testUtils.nextTick();
         await testUtils.fields.editInput(
-            form.$(".o_field_one2many .o_field_widget[name=qux] input"),
+            form.el.querySelector(".o_field_one2many .o_field_widget[name=qux] input"),
             "12.4"
         );
 
         // trigger an onchange by modifying foo
         checkOnchange = true;
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=foo] input"), "tralala");
+        await editInput(form.el, ".o_field_widget[name=foo] input", "tralala");
     });
 
     QUnit.test("evaluate in python field options", async function (assert) {
@@ -2916,8 +2917,8 @@ QUnit.module("Views", (hooks) => {
         await click(form.el.querySelector(".o_form_button_edit"));
 
         // open the modal form view of the record pointed by the reference field
-        await testUtils.dom.click(form.$('table td[title="first record"]'));
-        await testUtils.dom.click(form.$("table td button.o_external_button"));
+        await testUtils.dom.click(form.el.querySelector('table td[title="first record"]'));
+        await testUtils.dom.click(form.el.querySelector("table td button.o_external_button"));
 
         // edit the record in the modal
         await testUtils.fields.editInput(
@@ -3444,18 +3445,18 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsN(form, "label.o_form_label", 2);
         assert.strictEqual(
-            form.$("label.o_form_label").first().text(),
+            form.el.querySelector("label.o_form_label").first().innerText,
             "Product",
             "one should be the one for the product field"
         );
         assert.strictEqual(
-            form.$("label.o_form_label").eq(1).text(),
+            form.el.querySelector("label.o_form_label").eq(1).innerText,
             "Bar",
             "one should be the one for the bar field"
         );
 
         assert.hasAttrValue(
-            form.$(".firstgroup td").first(),
+            form.el.querySelector(".firstgroup td").first(),
             "colspan",
             undefined,
             "foo td should have a default colspan (1)"
@@ -3534,7 +3535,7 @@ QUnit.module("Views", (hooks) => {
             "td:contains(gold)",
             "should display the name of the many2many on the original form"
         );
-        await testUtils.dom.click(form.$("td:contains(gold)"));
+        await testUtils.dom.click(form.el.querySelector("td:contains(gold)"));
         await testUtils.nextTick(); // wait for quick edit
 
         assert.containsOnce(document.body, ".modal");
@@ -3575,16 +3576,16 @@ QUnit.module("Views", (hooks) => {
         // switch to edit mode
         await click(form.el.querySelector(".o_form_button_edit"));
         assert.strictEqual(
-            form.$(".o_field_widget[name=foo] input").val(),
+            form.el.querySelector(".o_field_widget[name=foo] input").value,
             "yop",
             "input should contain yop"
         );
 
         // click on discard
-        await testUtils.form.clickDiscard(form);
+        await click(form.el.querySelector(".o_form_button_cancel"));
         assert.containsNone(document.body, ".modal", "no confirm modal should be displayed");
         assert.strictEqual(
-            form.$(".o_field_widget").text(),
+            form.el.querySelector(".o_field_widget").innerText,
             "yop",
             "field in readonly should display yop"
         );
@@ -3613,22 +3614,22 @@ QUnit.module("Views", (hooks) => {
         // switch to edit mode and edit the foo field
         await click(form.el.querySelector(".o_form_button_edit"));
         assert.strictEqual(
-            form.$(".o_field_widget[name=foo] input").val(),
+            form.el.querySelector(".o_field_widget[name=foo] input").value,
             "yop",
             "input should contain yop"
         );
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=foo] input"), "new value");
+        await editInput(form.el, ".o_field_widget[name=foo] input", "new value");
         assert.strictEqual(
-            form.$(".o_field_widget[name=foo] input").val(),
+            form.el.querySelector(".o_field_widget[name=foo] input").value,
             "new value",
             "input should contain new value"
         );
 
         // click on discard
-        await testUtils.form.clickDiscard(form);
+        await click(form.el.querySelector(".o_form_button_cancel"));
         assert.containsNone(document.body, ".modal", "no confirm modal should be displayed");
         assert.strictEqual(
-            form.$(".o_field_widget").text(),
+            form.el.querySelector(".o_field_widget").innerText,
             "yop",
             "field in readonly should display yop"
         );
@@ -3696,18 +3697,18 @@ QUnit.module("Views", (hooks) => {
         });
 
         // edit the p field
-        await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+        await testUtils.dom.click(form.el.querySelector(".o_field_x2many_list_row_add a"));
         await testUtils.fields.many2one.clickOpenDropdown("product_id");
         await testUtils.fields.many2one.clickHighlightedItem("product_id");
 
         assert.strictEqual(
-            form.$(".o_field_widget[name=product_id] input").val(),
+            form.el.querySelector(".o_field_widget[name=product_id] input").value,
             "xphone",
             "input should contain xphone"
         );
 
         // click on discard
-        await testUtils.form.clickDiscard(form);
+        await click(form.el.querySelector(".o_form_button_cancel"));
         assert.containsNone(form, ".modal", "modal should not be displayed");
 
         assert.notOk(
@@ -3737,12 +3738,12 @@ QUnit.module("Views", (hooks) => {
 
             // edit the foo field
             assert.strictEqual(
-                form.$(".o_field_widget[name=foo] input").val(),
+                form.el.querySelector(".o_field_widget[name=foo] input").value,
                 "ABC",
                 "input should contain ABC"
             );
 
-            await testUtils.form.clickDiscard(form);
+            await click(form.el.querySelector(".o_form_button_cancel"));
 
             assert.containsNone(document.body, ".modal", "there should not be a confirm modal");
         }
@@ -3771,19 +3772,19 @@ QUnit.module("Views", (hooks) => {
         });
 
         // edit the foo field
-        assert.strictEqual(form.$("input").val(), "ABC", "input should contain ABC");
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=foo] input"), "DEF");
+        assert.strictEqual(form.el.querySelector("input").value, "ABC", "input should contain ABC");
+        await editInput(form.el, ".o_field_widget[name=foo] input", "DEF");
 
         // discard the changes and check it has properly been discarded
-        assert.strictEqual(form.$("input").val(), "DEF", "input should be DEF");
-        await testUtils.form.clickDiscard(form);
-        assert.strictEqual(form.$("input").val(), "ABC", "input should now be ABC");
+        assert.strictEqual(form.el.querySelector("input").value, "DEF", "input should be DEF");
+        await click(form.el.querySelector(".o_form_button_cancel"));
+        assert.strictEqual(form.el.querySelector("input").value, "ABC", "input should now be ABC");
 
         // redirty and discard the field foo (to make sure initial changes haven't been lost)
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=foo] input"), "GHI");
-        assert.strictEqual(form.$("input").val(), "GHI", "input should be GHI");
-        await testUtils.form.clickDiscard(form);
-        assert.strictEqual(form.$("input").val(), "ABC", "input should now be ABC");
+        await editInput(form.el, ".o_field_widget[name=foo] input", "GHI");
+        assert.strictEqual(form.el.querySelector("input").value, "GHI", "input should be GHI");
+        await click(form.el.querySelector(".o_form_button_cancel"));
+        assert.strictEqual(form.el.querySelector("input").value, "ABC", "input should now be ABC");
     });
 
     QUnit.skip("discard changes on a duplicated record", async function (assert) {
@@ -3798,19 +3799,19 @@ QUnit.module("Views", (hooks) => {
             viewOptions: { hasActionMenus: true },
         });
         await click(form.el.querySelector(".o_form_button_edit"));
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=foo] input"), "tralala");
+        await editInput(form.el, ".o_field_widget[name=foo] input", "tralala");
         await click(form.el.querySelector(".o_form_button_save"));
 
         await toggleActionMenu(form);
         await toggleMenuItem(form, "Duplicate");
 
         assert.strictEqual(
-            form.$(".o_field_widget[name=foo] input").val(),
+            form.el.querySelector(".o_field_widget[name=foo] input").value,
             "tralala",
             "input should contain ABC"
         );
 
-        await testUtils.form.clickDiscard(form);
+        await click(form.el.querySelector(".o_form_button_cancel"));
 
         assert.containsNone(document.body, ".modal", "there should not be a confirm modal");
     });
@@ -3851,14 +3852,18 @@ QUnit.module("Views", (hooks) => {
         // switch to edit mode
         await click(form.el.querySelector(".o_form_button_edit"));
         assert.strictEqual(
-            form.$(".o_field_widget[name=foo] input").val(),
+            form.el.querySelector(".o_field_widget[name=foo] input").value,
             "yop",
             "input should contain yop"
         );
 
         // edit the foo field
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=foo] input"), "new value");
-        assert.strictEqual(form.$("input").val(), "new value", "input should contain new value");
+        await editInput(form.el, ".o_field_widget[name=foo] input", "new value");
+        assert.strictEqual(
+            form.el.querySelector("input").value,
+            "new value",
+            "input should contain new value"
+        );
 
         // click on the pager to switch to the next record (will save record)
         await testUtils.controlPanel.pagerNext(form);
@@ -3869,7 +3874,7 @@ QUnit.module("Views", (hooks) => {
             "pager value should be 2"
         );
         assert.strictEqual(
-            form.$(".o_field_widget[name=foo] input").val(),
+            form.el.querySelector(".o_field_widget[name=foo] input").value,
             "blip",
             "input should contain blip"
         );
@@ -3882,7 +3887,7 @@ QUnit.module("Views", (hooks) => {
             "pager value should be 1"
         );
         assert.strictEqual(
-            form.$(".o_field_widget[name=foo] input").val(),
+            form.el.querySelector(".o_field_widget[name=foo] input").value,
             "new value",
             "input should contain new value"
         );
@@ -3918,15 +3923,15 @@ QUnit.module("Views", (hooks) => {
         // switch to edit mode
         await click(form.el.querySelector(".o_form_button_edit"));
         assert.strictEqual(
-            form.$(".o_field_widget[name=foo] input").val(),
+            form.el.querySelector(".o_field_widget[name=foo] input").value,
             "yop",
             "input should contain yop"
         );
 
         // edit the foo field
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=foo] input"), "new value");
+        await editInput(form.el, ".o_field_widget[name=foo] input", "new value");
         assert.strictEqual(
-            form.$(".o_field_widget[name=foo] input").val(),
+            form.el.querySelector(".o_field_widget[name=foo] input").value,
             "new value",
             "input should contain new value"
         );
@@ -3954,7 +3959,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // edit the value in readonly
-        await testUtils.dom.click(form.$(".o_priority .fa-star-o:first")); // click on the first star
+        await testUtils.dom.click(form.el.querySelector(".o_priority .fa-star-o:first")); // click on the first star
         assert.containsOnce(
             form,
             ".o_priority .fa-star",
@@ -3976,15 +3981,15 @@ QUnit.module("Views", (hooks) => {
         // switch to edit mode
         await click(form.el.querySelector(".o_form_button_edit"));
         assert.strictEqual(
-            form.$(".o_field_widget[name=foo] input").val(),
+            form.el.querySelector(".o_field_widget[name=foo] input").value,
             "new value",
             "input should contain yop"
         );
 
         // edit the foo field
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=foo] input"), "wrong value");
+        await editInput(form.el, ".o_field_widget[name=foo] input", "wrong value");
 
-        await testUtils.form.clickDiscard(form);
+        await click(form.el.querySelector(".o_form_button_cancel"));
         assert.containsNone(document.body, ".modal", "no confirm modal should be displayed");
         await testUtils.controlPanel.pagerNext(form);
         assert.strictEqual(
@@ -4020,16 +4025,16 @@ QUnit.module("Views", (hooks) => {
         });
 
         // click on second page tab
-        await testUtils.dom.click(form.$(".o_notebook .nav-link:eq(1)"));
+        await testUtils.dom.click(form.el.querySelector(".o_notebook .nav-link:eq(1)"));
 
-        assert.doesNotHaveClass(form.$(".o_notebook .nav-link:eq(0)"), "active");
-        assert.hasClass(form.$(".o_notebook .nav-link:eq(1)"), "active");
+        assert.doesNotHaveClass(form.el.querySelector(".o_notebook .nav-link:eq(0)"), "active");
+        assert.hasClass(form.el.querySelector(".o_notebook .nav-link:eq(1)"), "active");
 
         // click on the pager to switch to the next record
         await testUtils.controlPanel.pagerNext(form);
 
-        assert.doesNotHaveClass(form.$(".o_notebook .nav-link:eq(0)"), "active");
-        assert.hasClass(form.$(".o_notebook .nav-link:eq(1)"), "active");
+        assert.doesNotHaveClass(form.el.querySelector(".o_notebook .nav-link:eq(0)"), "active");
+        assert.hasClass(form.el.querySelector(".o_notebook .nav-link:eq(1)"), "active");
     });
 
     QUnit.skip("pager is hidden in create mode", async function (assert) {
@@ -4100,12 +4105,12 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsOnce(form, "span.foo_field");
-        assert.isNotVisible(form.$("span.foo_field"));
+        assert.isNotVisible(form.el.querySelector("span.foo_field"));
 
         await testUtils.form.clickCreate(form);
 
         assert.containsOnce(form, "input.foo_field");
-        assert.isVisible(form.$("input.foo_field"));
+        assert.isVisible(form.el.querySelector("input.foo_field"));
     });
 
     QUnit.skip("empty readonly fields are visible on new records", async function (assert) {
@@ -4156,8 +4161,8 @@ QUnit.module("Views", (hooks) => {
             resId: 1,
         });
 
-        assert.hasClass(form.$(".inner_group"), "o_group_col_6");
-        assert.hasClass(form.$(".inner_div"), "o_group_col_6");
+        assert.hasClass(form.el.querySelector(".inner_group"), "o_group_col_6");
+        assert.hasClass(form.el.querySelector(".inner_div"), "o_group_col_6");
     });
 
     QUnit.test("deleting a record", async function (assert) {
@@ -4248,10 +4253,10 @@ QUnit.module("Views", (hooks) => {
         });
 
         await click(form.el.querySelector(".o_form_button_save"));
-        assert.hasClass(form.$("label.o_form_label"), "o_field_invalid");
-        assert.hasClass(form.$(".o_field_widget[name=foo]"), "o_field_invalid");
+        assert.hasClass(form.el.querySelector("label.o_form_label"), "o_field_invalid");
+        assert.hasClass(form.el.querySelector(".o_field_widget[name=foo]"), "o_field_invalid");
 
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=foo] input"), "tralala");
+        await editInput(form.el, ".o_field_widget[name=foo] input", "tralala");
 
         assert.containsNone(form, ".o_field_invalid");
     });
@@ -4294,7 +4299,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // edit the value in readonly
-        await testUtils.dom.click(form.$(".o_priority .fa-star-o:first"));
+        await testUtils.dom.click(form.el.querySelector(".o_priority .fa-star-o:first"));
         assert.strictEqual(nbWrite, 1, "should have saved directly");
         assert.containsOnce(
             form,
@@ -4315,7 +4320,7 @@ QUnit.module("Views", (hooks) => {
             ".o_priority .fa-star",
             "priority widget should have correct value"
         );
-        await testUtils.dom.click(form.$(".o_priority .fa-star-o:first"));
+        await testUtils.dom.click(form.el.querySelector(".o_priority .fa-star-o:first"));
         assert.strictEqual(nbWrite, 1, "should not have saved directly");
         assert.containsN(
             form,
@@ -4390,7 +4395,7 @@ QUnit.module("Views", (hooks) => {
             "9"
         );
 
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=foo] input"), "tralala");
+        await editInput(form.el, ".o_field_widget[name=foo] input", "tralala");
 
         assert.strictEqual(
             form.el.querySelector(".o_field_widget[name=int_field] input").value,
@@ -4455,7 +4460,7 @@ QUnit.module("Views", (hooks) => {
                 "9"
             );
 
-            await testUtils.fields.editInput(form.$(".o_field_widget[name=foo] input"), "tralala");
+            await editInput(form.el, ".o_field_widget[name=foo] input", "tralala");
 
             assert.strictEqual(
                 form.el.querySelector(".o_field_widget[name=int_field] input").value,
@@ -4496,7 +4501,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
         assert.strictEqual(
-            form.$('.o_field_widget[name="int_field"] input').val(),
+            form.el.querySelector('.o_field_widget[name="int_field"] input').value,
             "10",
             "record should have been created and rendered"
         );
@@ -4543,7 +4548,7 @@ QUnit.module("Views", (hooks) => {
 
             // go to edit mode, click to add a record in the o2m
             await click(form.el.querySelector(".o_form_button_edit"));
-            await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+            await testUtils.dom.click(form.el.querySelector(".o_field_x2many_list_row_add a"));
             assert.containsNone(form, "tr.o_data_row", "should not have added a line");
             assert.verifySteps(["should have triggered a warning"]);
         }
@@ -4580,7 +4585,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // create mode (leave edition first!)
-        await testUtils.form.clickDiscard(form);
+        await click(form.el.querySelector(".o_form_button_cancel"));
         await testUtils.form.clickCreate(form);
         assert.containsOnce(
             form,
@@ -4624,7 +4629,7 @@ QUnit.module("Views", (hooks) => {
             "there should be one one2many record linked at first"
         );
         assert.strictEqual(
-            form.$(".o_field_one2many .o_data_row td:first").text(),
+            form.el.querySelector(".o_field_one2many .o_data_row td:first").innerText,
             "aaa",
             "the 'display_name' of the one2many record should be correct"
         );
@@ -4632,18 +4637,18 @@ QUnit.module("Views", (hooks) => {
         // switch to edit mode
         await click(form.el.querySelector(".o_form_button_edit"));
         await testUtils.fields.editInput(
-            form.$(".o_field_widget[name=foo] input"),
+            form.el.querySelector(".o_field_widget[name=foo] input"),
             "let us trigger an onchange"
         );
-        var $o2m = form.$(".o_field_one2many");
+        var $o2m = form.el.querySelector(".o_field_one2many");
         assert.strictEqual($o2m.find(".o_data_row").length, 2, "there should be two linked record");
         assert.strictEqual(
-            $o2m.find(".o_data_row:first td:first").text(),
+            $o2m.find(".o_data_row:first td:first").innerText,
             "updated record",
             "the 'display_name' of the first one2many record should have been updated"
         );
         assert.strictEqual(
-            $o2m.find(".o_data_row:nth(1) td:first").text(),
+            $o2m.find(".o_data_row:nth(1) td:first").innerText,
             "created record",
             "the 'display_name' of the second one2many record should be correct"
         );
@@ -4703,10 +4708,10 @@ QUnit.module("Views", (hooks) => {
             },
         });
         // Trigger the onchange
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=int_field] input"), "2");
+        await editInput(form.el, ".o_field_widget[name=int_field] input", "2");
 
         // Open first record in one2many
-        await testUtils.dom.click(form.$(".o_data_row:first"));
+        await testUtils.dom.click(form.el.querySelector(".o_data_row:first"));
 
         assert.containsNone(document.body, ".modal");
 
@@ -4714,7 +4719,7 @@ QUnit.module("Views", (hooks) => {
         await testUtils.nextTick();
 
         assert.containsOnce(document.body, ".modal");
-        assert.strictEqual($(".modal").find(".o_field_widget[name=int_field] input").val(), "2");
+        assert.strictEqual($(".modal").find(".o_field_widget[name=int_field] input").value, "2");
     });
 
     QUnit.skip("update many2many value in one2many after onchange", async function (assert) {
@@ -4753,16 +4758,16 @@ QUnit.module("Views", (hooks) => {
             resId: 2,
         });
         assert.strictEqual(
-            $('.o_field_widget[name="p"] .o_data_row td').text().trim(),
+            $('.o_field_widget[name="p"] .o_data_row td').innerText.trim(),
             "aaaNo records",
             "should have proper initial content"
         );
         await click(form.el.querySelector(".o_form_button_edit"));
 
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=foo] input"), "tralala");
+        await editInput(form.el, ".o_field_widget[name=foo] input", "tralala");
 
         assert.strictEqual(
-            $('.o_field_widget[name="p"] .o_data_row td').text().trim(),
+            $('.o_field_widget[name="p"] .o_data_row td').innerText.trim(),
             "goldNo records",
             "should have proper initial content"
         );
@@ -4789,16 +4794,16 @@ QUnit.module("Views", (hooks) => {
         });
 
         await click(form.el.querySelector(".o_form_button_edit"));
-        await testUtils.dom.click(form.$(".o_data_cell").first());
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=display_name] input"), "");
-        await testUtils.dom.click(form.$(".fa-trash-o").eq(1));
+        await testUtils.dom.click(form.el.querySelector(".o_data_cell").first());
+        await editInput(form.el, ".o_field_widget[name=display_name] input", "");
+        await testUtils.dom.click(form.el.querySelector(".fa-trash-o").eq(1));
 
         // use of owlCompatibilityExtraNextTick because there are two sequential updates of the
         // control panel (which is written in owl): each of them waits for the next animation frame
         // to complete
         await testUtils.owlCompatibilityExtraNextTick();
         assert.hasClass(
-            form.$(".o_data_cell").first(),
+            form.el.querySelector(".o_data_cell").first(),
             "o_invalid_cell",
             "Cell should be invalidated."
         );
@@ -4852,22 +4857,22 @@ QUnit.module("Views", (hooks) => {
         // switch to edit mode
         await click(form.el.querySelector(".o_form_button_edit"));
         await testUtils.fields.editInput(
-            form.$(".o_field_widget[name=foo] input"),
+            form.el.querySelector(".o_field_widget[name=foo] input"),
             "let us trigger an onchange"
         );
-        var $m2m = form.$(".o_field_many2many");
+        var $m2m = form.el.querySelector(".o_field_many2many");
         assert.strictEqual(
             $m2m.find(".o_data_row").length,
             2,
             "there should be two linked records"
         );
         assert.strictEqual(
-            $m2m.find(".o_data_row:first td:first").text(),
+            $m2m.find(".o_data_row:first td:first").innerText,
             "gold",
             "the 'display_name' of the first m2m record should be correctly displayed"
         );
         assert.strictEqual(
-            $m2m.find(".o_data_row:nth(1) td:first").text(),
+            $m2m.find(".o_data_row:nth(1) td:first").innerText,
             "silver",
             "the 'display_name' of the second m2m record should be correctly displayed"
         );
@@ -4909,7 +4914,7 @@ QUnit.module("Views", (hooks) => {
             await click(form.el.querySelector(".o_form_button_edit"));
 
             // open a form view and save many2many record
-            await testUtils.dom.click(form.$(".o_data_row .o_data_cell:first"));
+            await testUtils.dom.click(form.el.querySelector(".o_data_row .o_data_cell:first"));
             await testUtils.dom.click($(".modal-dialog footer button:first-child"));
         }
     );
@@ -5016,11 +5021,11 @@ QUnit.module("Views", (hooks) => {
         });
 
         // trigger the onchange
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=foo]"), "coucou");
+        await editInput(form.el, ".o_field_widget[name=foo]", "coucou");
 
         // open a subrecord and trigger an onchange
         readInModal = true;
-        await testUtils.dom.click(form.$(".o_data_row .o_data_cell:first"));
+        await testUtils.dom.click(form.el.querySelector(".o_data_row .o_data_cell:first"));
         await testUtils.fields.editInput($(".modal .o_field_widget[name=name]"), "new name");
     });
 
@@ -5054,12 +5059,12 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.strictEqual(
-            form.$(".o_field_widget[name=date]").text(),
+            form.el.querySelector(".o_field_widget[name=date]").innerText,
             "01/25/2017",
             "the initial date should be correct"
         );
         assert.strictEqual(
-            form.$(".o_field_widget[name=datetime]").text(),
+            form.el.querySelector(".o_field_widget[name=datetime]").innerText,
             "12/12/2016 12:55:05",
             "the initial datetime should be correct"
         );
@@ -5067,26 +5072,26 @@ QUnit.module("Views", (hooks) => {
         await click(form.el.querySelector(".o_form_button_edit"));
 
         assert.strictEqual(
-            form.$(".o_field_widget[name=date] input").val(),
+            form.el.querySelector(".o_field_widget[name=date] input").value,
             "01/25/2017",
             "the initial date should be correct in edit"
         );
         assert.strictEqual(
-            form.$(".o_field_widget[name=datetime] input").val(),
+            form.el.querySelector(".o_field_widget[name=datetime] input").value,
             "12/12/2016 12:55:05",
             "the initial datetime should be correct in edit"
         );
 
         // trigger the onchange
-        await testUtils.fields.editInput(form.$('.o_field_widget[name="foo"]'), "coucou");
+        await editInput(form.el, '.o_field_widget[name="foo"]', "coucou");
 
         assert.strictEqual(
-            form.$(".o_field_widget[name=date] input").val(),
+            form.el.querySelector(".o_field_widget[name=date] input").value,
             "12/12/2021",
             "the initial date should be correct in edit"
         );
         assert.strictEqual(
-            form.$(".o_field_widget[name=datetime] input").val(),
+            form.el.querySelector(".o_field_widget[name=datetime] input").value,
             "12/12/2021 12:55:05",
             "the initial datetime should be correct in edit"
         );
@@ -5129,9 +5134,9 @@ QUnit.module("Views", (hooks) => {
 
         await click(form.el.querySelector(".o_form_button_edit"));
 
-        testUtils.fields.editInput(form.$(".o_field_widget[name=foo] input"), "1");
+        editInput(form.el, ".o_field_widget[name=foo] input", "1");
         assert.strictEqual(onchangeNbr, 0, "no onchange has been called yet");
-        testUtils.fields.editInput(form.$(".o_field_widget[name=foo] input"), "12");
+        editInput(form.el, ".o_field_widget[name=foo] input", "12");
         assert.strictEqual(onchangeNbr, 0, "no onchange has been called yet");
 
         return waitForFinishedOnChange()
@@ -5140,7 +5145,7 @@ QUnit.module("Views", (hooks) => {
 
                 // add something in the input, then focus another input
                 await testUtils.fields.editAndTrigger(
-                    form.$(".o_field_widget[name=foo] input"),
+                    form.el.querySelector(".o_field_widget[name=foo] input"),
                     "123",
                     ["change"]
                 );
@@ -5188,18 +5193,18 @@ QUnit.module("Views", (hooks) => {
         await click(form.el.querySelector(".o_form_button_edit"));
 
         // edit int_field, and check that an onchange has been applied
-        await testUtils.fields.editInput(form.$('.o_field_widget[name="int_field"] input'), "123");
+        await editInput(form.el, '.o_field_widget[name="int_field"] input', "123");
         assert.strictEqual(
-            form.$('.o_field_widget[name="foo"] input').val(),
+            form.el.querySelector('.o_field_widget[name="foo"] input').value,
             "123",
             "the onchange has been applied"
         );
 
         // enter an invalid value in a float, and check that no onchange has
         // been applied
-        await testUtils.fields.editInput(form.$('.o_field_widget[name="int_field"] input'), "123a");
+        await editInput(form.el, '.o_field_widget[name="int_field"] input', "123a");
         assert.strictEqual(
-            form.$('.o_field_widget[name="foo"] input').val(),
+            form.el.querySelector('.o_field_widget[name="foo"] input').value,
             "123",
             "the onchange has not been applied"
         );
@@ -5207,7 +5212,7 @@ QUnit.module("Views", (hooks) => {
         // save, and check that the int_field input is marked as invalid
         await click(form.el.querySelector(".o_form_button_save"));
         assert.hasClass(
-            form.$('.o_field_widget[name="int_field"]'),
+            form.el.querySelector('.o_field_widget[name="int_field"]'),
             "o_field_invalid",
             "input int_field is marked as invalid"
         );
@@ -5233,7 +5238,7 @@ QUnit.module("Views", (hooks) => {
                 },
             },
         });
-        await testUtils.dom.click(form.$(".o_form_button_update"));
+        await testUtils.dom.click(form.el.querySelector(".o_form_button_update"));
     });
 
     QUnit.skip("onchanges that complete after discarding", async function (assert) {
@@ -5269,20 +5274,20 @@ QUnit.module("Views", (hooks) => {
 
         // go into edit mode
         assert.strictEqual(
-            form.$('.o_field_widget[name="foo"]').text(),
+            form.el.querySelector('.o_field_widget[name="foo"]').innerText,
             "blip",
             "field foo should be displayed to initial value"
         );
         await click(form.el.querySelector(".o_form_button_edit"));
 
         // edit a value
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=foo] input"), "1234");
+        await editInput(form.el, ".o_field_widget[name=foo] input", "1234");
 
         // discard changes
-        await testUtils.form.clickDiscard(form);
+        await click(form.el.querySelector(".o_form_button_cancel"));
         assert.containsNone(form, ".modal");
         assert.strictEqual(
-            form.$('.o_field_widget[name="foo"]').text(),
+            form.el.querySelector('.o_field_widget[name="foo"]').innerText,
             "blip",
             "field foo should still be displayed to initial value"
         );
@@ -5291,7 +5296,7 @@ QUnit.module("Views", (hooks) => {
         def1.resolve();
         await testUtils.nextTick();
         assert.strictEqual(
-            form.$('.o_field_widget[name="foo"]').text(),
+            form.el.querySelector('.o_field_widget[name="foo"]').innerText,
             "blip",
             "field foo should still be displayed to initial value"
         );
@@ -5321,14 +5326,14 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=foo] input"), "1234");
+        await editInput(form.el, ".o_field_widget[name=foo] input", "1234");
 
         // save the value and discard directly
         await click(form.el.querySelector(".o_form_button_save"));
         form.discardChanges();
 
         assert.strictEqual(
-            form.$('.o_field_widget[name="foo"]').val(),
+            form.el.querySelector('.o_field_widget[name="foo"]').value,
             "1234",
             "field foo should still contain new value"
         );
@@ -5339,7 +5344,7 @@ QUnit.module("Views", (hooks) => {
         await testUtils.nextTick();
         assert.strictEqual($(".modal").length, 0, "Confirm dialog should not be displayed");
         assert.strictEqual(
-            form.$('.o_field_widget[name="foo"]').text(),
+            form.el.querySelector('.o_field_widget[name="foo"]').innerText,
             "1234",
             "value should have been saved and rerendered in readonly"
         );
@@ -5386,7 +5391,7 @@ QUnit.module("Views", (hooks) => {
 
         await click(form.el.querySelector(".o_form_button_edit"));
         await testUtils.fields.editInput(
-            form.$(".o_field_widget[name=foo] input"),
+            form.el.querySelector(".o_field_widget[name=foo] input"),
             "trigger an onchange"
         );
     });
@@ -5463,13 +5468,13 @@ QUnit.module("Views", (hooks) => {
 
         await click(form.el.querySelector(".o_form_button_edit"));
         await testUtils.fields.editInput(
-            form.$(".o_field_widget[name=foo] input"),
+            form.el.querySelector(".o_field_widget[name=foo] input"),
             "trigger an onchange"
         );
         await testUtils.owlCompatibilityExtraNextTick();
 
         assert.strictEqual(
-            form.$(".o_data_row td:first").text(),
+            form.el.querySelector(".o_data_row td:first").innerText,
             "foo changed",
             "onchange should have been correctly applied on field in o2m list"
         );
@@ -5536,31 +5541,31 @@ QUnit.module("Views", (hooks) => {
         await click(form.el.querySelector(".o_form_button_edit"));
 
         assert.strictEqual(
-            form.$(".o_data_row td:first").text(),
+            form.el.querySelector(".o_data_row td:first").innerText,
             "My little Foo Value",
             "the initial value should be the default one"
         );
 
         await testUtils.fields.editInput(
-            form.$(".o_field_widget[name=foo] input"),
+            form.el.querySelector(".o_field_widget[name=foo] input"),
             "trigger an onchange"
         );
         await testUtils.owlCompatibilityExtraNextTick();
 
         assert.strictEqual(
-            form.$(".o_data_row td:first").text(),
+            form.el.querySelector(".o_data_row td:first").innerText,
             "foo changed",
             "onchange should have been correctly applied on field in o2m list"
         );
 
-        await testUtils.dom.click(form.$(".o_data_row"));
+        await testUtils.dom.click(form.el.querySelector(".o_data_row"));
         assert.strictEqual(
-            $(".modal .modal-title").text().trim(),
+            $(".modal .modal-title").innerText.trim(),
             "Open: one2many field",
             "the field string is displayed in the modal title"
         );
         assert.strictEqual(
-            $(".modal .o_field_widget").val(),
+            $(".modal .o_field_widget").value,
             "foo changed",
             "the onchange value hasn't been discarded when opening the o2m"
         );
@@ -5601,24 +5606,24 @@ QUnit.module("Views", (hooks) => {
             await click(form.el.querySelector(".o_form_button_edit"));
 
             assert.strictEqual(
-                form.$(".o_data_row td:first").text(),
+                form.el.querySelector(".o_data_row td:first").innerText,
                 "My little Foo Value",
                 "the initial value should be the default one"
             );
 
-            await testUtils.dom.click(form.$(".o_data_row td:nth(1)"));
-            await testUtils.fields.editInput(form.$(".o_data_row input:nth(1)"), 77);
+            await testUtils.dom.click(form.el.querySelector(".o_data_row td:nth(1)"));
+            await editInput(form.el, ".o_data_row input:nth(1)", 77);
 
             assert.strictEqual(
-                form.$(".o_data_row input:first").val(),
+                form.el.querySelector(".o_data_row input:first").value,
                 "[blip] 77",
                 "onchange should have been correctly applied"
             );
 
             // create a new o2m record
-            await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+            await testUtils.dom.click(form.el.querySelector(".o_field_x2many_list_row_add a"));
             assert.strictEqual(
-                form.$(".o_data_row input:first").val(),
+                form.el.querySelector(".o_data_row input:first").value,
                 "[blip] 14",
                 "onchange should have been correctly applied after default get"
             );
@@ -5663,42 +5668,42 @@ QUnit.module("Views", (hooks) => {
             await click(form.el.querySelector(".o_form_button_edit"));
 
             assert.strictEqual(
-                form.$(".o_data_row td:first").text(),
+                form.el.querySelector(".o_data_row td:first").innerText,
                 "My little Foo Value",
                 "the initial value should be the default one"
             );
 
-            await testUtils.dom.click(form.$(".o_data_row td:first"));
+            await testUtils.dom.click(form.el.querySelector(".o_data_row td:first"));
             await testUtils.nextTick();
             await testUtils.fields.editInput($(".modal input:nth(1)"), 77);
             assert.strictEqual(
-                $(".modal input:first").val(),
+                $(".modal input:first").value,
                 "[blip] 77",
                 "onchange should have been correctly applied"
             );
             await testUtils.dom.click($(".modal-footer .btn-primary"));
             assert.strictEqual(
-                form.$(".o_data_row td:first").text(),
+                form.el.querySelector(".o_data_row td:first").innerText,
                 "[blip] 77",
                 "onchange should have been correctly applied"
             );
 
             // create a new o2m record
-            await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+            await testUtils.dom.click(form.el.querySelector(".o_field_x2many_list_row_add a"));
             assert.strictEqual(
-                $(".modal .modal-title").text().trim(),
+                $(".modal .modal-title").innerText.trim(),
                 "Create custom label",
                 "the custom field label is applied in the modal title"
             );
             assert.strictEqual(
-                $(".modal input:first").val(),
+                $(".modal input:first").value,
                 "[blip] 14",
                 "onchange should have been correctly applied after default get"
             );
             await testUtils.dom.clickFirst($(".modal-footer .btn-primary"));
             await testUtils.nextTick();
             assert.strictEqual(
-                form.$(".o_data_row:nth(1) td:first").text(),
+                form.el.querySelector(".o_data_row:nth(1) td:first").innerText,
                 "[blip] 14",
                 "onchange should have been correctly applied after default get"
             );
@@ -5743,7 +5748,7 @@ QUnit.module("Views", (hooks) => {
             });
 
             await click(form.el.querySelector(".o_form_button_edit"));
-            await testUtils.fields.editInput(form.$(".o_field_widget[name=foo] input"), "coucou");
+            await editInput(form.el, ".o_field_widget[name=foo] input", "coucou");
         }
     );
 
@@ -5771,22 +5776,25 @@ QUnit.module("Views", (hooks) => {
         await click(form.el.querySelector(".o_form_button_edit"));
 
         // focus first input, trigger tab
-        form.$('.o_field_widget[name="foo"]').focus();
+        form.el.querySelector('.o_field_widget[name="foo"]').focus();
 
         const tabKey = { keyCode: $.ui.keyCode.TAB, which: $.ui.keyCode.TAB };
         await testUtils.dom.triggerEvent(
-            form.$('.o_field_widget[name="foo"] input'),
+            form.el.querySelector('.o_field_widget[name="foo"] input'),
             "keydown",
             tabKey
         );
         assert.ok(
-            $.contains(form.$('.o_field_widget[name="bar"]')[0], document.activeElement),
+            $.contains(
+                form.el.querySelector('.o_field_widget[name="bar"]')[0],
+                document.activeElement
+            ),
             "bar checkbox should be focused"
         );
 
         await testUtils.dom.triggerEvent(document.activeElement, "keydown", tabKey);
         assert.strictEqual(
-            form.$('.o_field_widget[name="display_name"] input')[0],
+            form.el.querySelector('.o_field_widget[name="display_name"] input')[0],
             document.activeElement,
             "display_name should be focused"
         );
@@ -5797,7 +5805,7 @@ QUnit.module("Views", (hooks) => {
         await testUtils.dom.triggerEvent(document.activeElement, "keydown", shiftTabKey);
         assert.strictEqual(
             document.activeElement,
-            form.$('.o_field_widget[name="foo"] input')[0],
+            form.el.querySelector('.o_field_widget[name="foo"] input')[0],
             "first input should be focused"
         );
     });
@@ -5827,18 +5835,26 @@ QUnit.module("Views", (hooks) => {
         });
 
         // focus first field, trigger tab
-        form.$('[name="trululu"]').focus();
-        form.$('[name="trululu"]').trigger($.Event("keydown", { which: $.ui.keyCode.TAB }));
-        form.$('[name="foo"]').trigger($.Event("keydown", { which: $.ui.keyCode.TAB }));
+        form.el.querySelector('[name="trululu"]').focus();
+        form.el
+            .querySelector('[name="trululu"]')
+            .trigger($.Event("keydown", { which: $.ui.keyCode.TAB }));
+        form.el
+            .querySelector('[name="foo"]')
+            .trigger($.Event("keydown", { which: $.ui.keyCode.TAB }));
         assert.strictEqual(
-            form.$('[name="product_id"]')[0],
+            form.el.querySelector('[name="product_id"]')[0],
             document.activeElement,
             "product_id should be focused"
         );
-        form.$('[name="product_id"]').trigger($.Event("keydown", { which: $.ui.keyCode.TAB }));
-        form.$('[name="foo"]:eq(1)').trigger($.Event("keydown", { which: $.ui.keyCode.TAB }));
+        form.el
+            .querySelector('[name="product_id"]')
+            .trigger($.Event("keydown", { which: $.ui.keyCode.TAB }));
+        form.el
+            .querySelector('[name="foo"]:eq(1)')
+            .trigger($.Event("keydown", { which: $.ui.keyCode.TAB }));
         assert.strictEqual(
-            form.$('.o_field_widget[name="display_name"].o_field_url > a')[0],
+            form.el.querySelector('.o_field_widget[name="display_name"].o_field_url > a')[0],
             document.activeElement,
             "display_name should be focused"
         );
@@ -5858,7 +5874,7 @@ QUnit.module("Views", (hooks) => {
         );
         assert.strictEqual(
             document.activeElement,
-            form.$('[name="trululu"]')[0],
+            form.el.querySelector('[name="trululu"]')[0],
             "first many2one should be focused"
         );
     });
@@ -5885,12 +5901,12 @@ QUnit.module("Views", (hooks) => {
         });
 
         await click(form.el.querySelector(".o_form_button_edit"));
-        form.$('.o_field_widget[name="foo"] input').focus();
-        form.$('.o_field_widget[name="foo"] input').trigger(
-            $.Event("keydown", { which: $.ui.keyCode.TAB })
-        );
+        form.el.querySelector('.o_field_widget[name="foo"] input').focus();
+        form.el
+            .querySelector('.o_field_widget[name="foo"] input')
+            .trigger($.Event("keydown", { which: $.ui.keyCode.TAB }));
         assert.strictEqual(
-            form.$('.o_field_widget[name="int_field"] input')[0],
+            form.el.querySelector('.o_field_widget[name="int_field"] input')[0],
             document.activeElement,
             "int_field should be focused"
         );
@@ -5991,7 +6007,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await testUtils.dom.click(form.$(".oe_stat_button"));
+        await testUtils.dom.click(form.el.querySelector(".oe_stat_button"));
     });
 
     QUnit.skip("clicking on a stat button with no context", async function (assert) {
@@ -6026,7 +6042,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await testUtils.dom.click(form.$(".oe_stat_button"));
+        await testUtils.dom.click(form.el.querySelector(".oe_stat_button"));
     });
 
     QUnit.skip("diplay a stat button outside a buttonbox", async function (assert) {
@@ -6053,12 +6069,12 @@ QUnit.module("Views", (hooks) => {
             "a field widget should be display inside the button"
         );
         assert.strictEqual(
-            form.$("button .o_field_widget").children().length,
+            form.el.querySelector("button .o_field_widget").children().length,
             2,
             "the field widget should have 2 children, the text and the value"
         );
         assert.strictEqual(
-            parseInt(form.$("button .o_field_widget .o_stat_value").text()),
+            parseInt(form.el.querySelector("button .o_field_widget .o_stat_value").innerText),
             9,
             "the value rendered should be the same as the field value"
         );
@@ -6084,7 +6100,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.strictEqual(
-            form.$(".oe_button_box").children().length,
+            form.el.querySelector(".oe_button_box").children().length,
             2,
             "button box should contain two children"
         );
@@ -6127,12 +6143,12 @@ QUnit.module("Views", (hooks) => {
             });
 
             assert.strictEqual(
-                form.$(".oe_button_box").children().length,
+                form.el.querySelector(".oe_button_box").children().length,
                 1,
                 "button box should contain only one child"
             );
             assert.hasClass(
-                form.$(".oe_button_box"),
+                form.el.querySelector(".oe_button_box"),
                 "o_not_full",
                 "the buttonbox should not be full"
             );
@@ -6164,7 +6180,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.strictEqual(
-            form.$(".oe_button_box").children().length,
+            form.el.querySelector(".oe_button_box").children().length,
             2,
             "button box should contain two children"
         );
@@ -6248,7 +6264,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         // add a o2m subrecord with a m2m tag
-        await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+        await testUtils.dom.click(form.el.querySelector(".o_field_x2many_list_row_add a"));
         await testUtils.fields.many2one.clickOpenDropdown("timmy");
         await testUtils.fields.many2one.clickHighlightedItem("timmy");
 
@@ -6311,7 +6327,7 @@ QUnit.module("Views", (hooks) => {
             });
 
             // add a o2m subrecord
-            await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+            await testUtils.dom.click(form.el.querySelector(".o_field_x2many_list_row_add a"));
             await testUtils.dom.click(
                 $(".modal-body .o_field_one2many .o_field_x2many_list_row_add a")
             );
@@ -6319,7 +6335,7 @@ QUnit.module("Views", (hooks) => {
             await testUtils.dom.click($(".modal-footer button:first"));
             assert.strictEqual($(".modal").length, 0, "dialog should be closed");
 
-            var row = form.$(".o_field_one2many .o_list_view .o_data_row");
+            var row = form.el.querySelector(".o_field_one2many .o_list_view .o_data_row");
             assert.strictEqual(
                 row.children()[0].textContent,
                 "1 record",
@@ -6350,25 +6366,25 @@ QUnit.module("Views", (hooks) => {
             });
 
             assert.hasClass(
-                form.$(".o_form_view"),
+                form.el.querySelector(".o_form_view"),
                 "o_form_readonly",
                 "form should be in readonly mode"
             );
-            assert.isVisible(form.$(".o_field_widget[name=foo]"));
-            assert.isVisible(form.$("label:contains(Foo)"));
-            assert.isNotVisible(form.$(".o_field_widget[name=bar]"));
-            assert.isNotVisible(form.$("label:contains(Bar)"));
+            assert.isVisible(form.el.querySelector(".o_field_widget[name=foo]"));
+            assert.isVisible(form.el.querySelector("label:contains(Foo)"));
+            assert.isNotVisible(form.el.querySelector(".o_field_widget[name=bar]"));
+            assert.isNotVisible(form.el.querySelector("label:contains(Bar)"));
 
             await click(form.el.querySelector(".o_form_button_edit"));
             assert.hasClass(
-                form.$(".o_form_view"),
+                form.el.querySelector(".o_form_view"),
                 "o_form_editable",
                 "form should be in readonly mode"
             );
-            assert.isNotVisible(form.$(".o_field_widget[name=foo]"));
-            assert.isNotVisible(form.$("label:contains(Foo)"));
-            assert.isVisible(form.$(".o_field_widget[name=bar]"));
-            assert.isVisible(form.$("label:contains(Bar)"));
+            assert.isNotVisible(form.el.querySelector(".o_field_widget[name=foo]"));
+            assert.isNotVisible(form.el.querySelector("label:contains(Foo)"));
+            assert.isVisible(form.el.querySelector(".o_field_widget[name=bar]"));
+            assert.isVisible(form.el.querySelector("label:contains(Bar)"));
         }
     );
 
@@ -6395,12 +6411,14 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.hasClass(
-            form.$(".o_form_view"),
+            form.el.querySelector(".o_form_view"),
             "o_form_readonly",
             "form should be in readonly mode"
         );
         assert.isVisible(
-            form.$('.o_field_one2many .o_list_view thead th[data-name="display_name"]'),
+            form.el.querySelector(
+                '.o_field_one2many .o_list_view thead th[data-name="display_name"]'
+            ),
             "display_name cell should be visible in readonly mode"
         );
 
@@ -6417,16 +6435,24 @@ QUnit.module("Views", (hooks) => {
             '"oe_read_only" in edit mode should have a 0px width'
         );
 
-        assert.hasClass(form.$(".o_form_view"), "o_form_editable", "form should be in edit mode");
+        assert.hasClass(
+            form.el.querySelector(".o_form_view"),
+            "o_form_editable",
+            "form should be in edit mode"
+        );
         assert.isNotVisible(
-            form.$('.o_field_one2many .o_list_view thead th[data-name="display_name"]'),
+            form.el.querySelector(
+                '.o_field_one2many .o_list_view thead th[data-name="display_name"]'
+            ),
             "display_name cell should not be visible in edit mode"
         );
 
-        await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+        await testUtils.dom.click(form.el.querySelector(".o_field_x2many_list_row_add a"));
         await testUtils.owlCompatibilityExtraNextTick();
         assert.hasClass(
-            form.$('.o_form_view .o_list_view tbody tr:first .o_field_widget[name="display_name"]'),
+            form.el.querySelector(
+                '.o_form_view .o_list_view tbody tr:first .o_field_widget[name="display_name"]'
+            ),
             "oe_read_only",
             "display_name input should have oe_read_only class"
         );
@@ -6454,26 +6480,34 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.hasClass(
-            form.$(".o_form_view"),
+            form.el.querySelector(".o_form_view"),
             "o_form_readonly",
             "form should be in readonly mode"
         );
         assert.isNotVisible(
-            form.$('.o_field_one2many .o_list_view thead th[data-name="display_name"]'),
+            form.el.querySelector(
+                '.o_field_one2many .o_list_view thead th[data-name="display_name"]'
+            ),
             "display_name cell should not be visible in readonly mode"
         );
 
         await click(form.el.querySelector(".o_form_button_edit"));
-        assert.hasClass(form.$(".o_form_view"), "o_form_editable", "form should be in edit mode");
+        assert.hasClass(
+            form.el.querySelector(".o_form_view"),
+            "o_form_editable",
+            "form should be in edit mode"
+        );
         assert.isVisible(
-            form.$('.o_field_one2many .o_list_view thead th[data-name="display_name"]'),
+            form.el.querySelector(
+                '.o_field_one2many .o_list_view thead th[data-name="display_name"]'
+            ),
             "display_name cell should be visible in edit mode"
         );
 
-        await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+        await testUtils.dom.click(form.el.querySelector(".o_field_x2many_list_row_add a"));
         await testUtils.owlCompatibilityExtraNextTick();
         assert.hasClass(
-            form.$(
+            form.el.querySelector(
                 '.o_form_view .o_list_view tbody tr:first .o_field_widget[name="display_name"] input'
             ),
             "oe_edit_only",
@@ -6596,14 +6630,14 @@ QUnit.module("Views", (hooks) => {
             "foo field should be editable"
         );
         await testUtils.fields.editInput(
-            form.$('.o_field_widget[name="foo"] input'),
+            form.el.querySelector('.o_field_widget[name="foo"] input'),
             "New foo value"
         );
 
         await click(form.el.querySelector(".o_form_button_save"));
 
         assert.strictEqual(
-            form.$(".o_field_widget[name=foo]").text(),
+            form.el.querySelector(".o_field_widget[name=foo]").innerText,
             "New foo value",
             "new value for foo field should have been saved"
         );
@@ -6632,7 +6666,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         await click(form.el.querySelector(".o_form_button_edit"));
-        await testUtils.dom.click(form.$(".o_field_widget[name=bar] input"));
+        await testUtils.dom.click(form.el.querySelector(".o_field_widget[name=bar] input"));
     });
 
     QUnit.skip("check if id and active_id are defined", async function (assert) {
@@ -6674,7 +6708,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         checkOnchange = true;
-        await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+        await testUtils.dom.click(form.el.querySelector(".o_field_x2many_list_row_add a"));
     });
 
     QUnit.skip("modifiers are considered on multiple <footer/> tags", async function (assert) {
@@ -6708,7 +6742,7 @@ QUnit.module("Views", (hooks) => {
             "only the first button section should be visible"
         );
 
-        await testUtils.dom.click(form.$(".o_field_boolean input"));
+        await testUtils.dom.click(form.el.querySelector(".o_field_boolean input"));
 
         assert.deepEqual(
             getVisibleButtonTexts(),
@@ -6742,14 +6776,14 @@ QUnit.module("Views", (hooks) => {
             viewOptions: { footerToButtons: true },
         });
 
-        assert.containsOnce(form.$(".o_control_panel"), "button.infooter");
-        assert.containsNone(form.$(".o_form_view"), "button.infooter");
+        assert.containsOnce(form.el.querySelector(".o_control_panel"), "button.infooter");
+        assert.containsNone(form.el.querySelector(".o_form_view"), "button.infooter");
 
         // check that this still works after a reload
         await testUtils.form.reload(form);
 
-        assert.containsOnce(form.$(".o_control_panel"), "button.infooter");
-        assert.containsNone(form.$(".o_form_view"), "button.infooter");
+        assert.containsOnce(form.el.querySelector(".o_control_panel"), "button.infooter");
+        assert.containsNone(form.el.querySelector(".o_form_view"), "button.infooter");
     });
 
     QUnit.skip("open new record even with warning message", async function (assert) {
@@ -6776,12 +6810,24 @@ QUnit.module("Views", (hooks) => {
             },
         });
         await click(form.el.querySelector(".o_form_button_edit"));
-        assert.strictEqual(form.$("input").val(), "blip", "input should contain record value");
-        await testUtils.fields.editInput(form.$('.o_field_widget[name="foo"] input'), "tralala");
-        assert.strictEqual(form.$("input").val(), "tralala", "input should contain new value");
+        assert.strictEqual(
+            form.el.querySelector("input").value,
+            "blip",
+            "input should contain record value"
+        );
+        await editInput(form.el, '.o_field_widget[name="foo"] input', "tralala");
+        assert.strictEqual(
+            form.el.querySelector("input").value,
+            "tralala",
+            "input should contain new value"
+        );
 
         await form.reload({ currentId: false });
-        assert.strictEqual(form.$("input").val(), "", "input should have no value after reload");
+        assert.strictEqual(
+            form.el.querySelector("input").value,
+            "",
+            "input should have no value after reload"
+        );
     });
 
     QUnit.skip("render stat button with string inline", async function (assert) {
@@ -6801,9 +6847,11 @@ QUnit.module("Views", (hooks) => {
                 "</sheet>" +
                 "</form>",
         });
-        var $button = form.$(".o_form_view .o_form_sheet .oe_button_box .oe_stat_button span");
+        var $button = form.el.querySelector(
+            ".o_form_view .o_form_sheet .oe_button_box .oe_stat_button span"
+        );
         assert.strictEqual(
-            $button.text(),
+            $button.innerText,
             "Inventory Moves",
             "the stat button should contain a span with the string attribute value"
         );
@@ -6885,7 +6933,7 @@ QUnit.module("Views", (hooks) => {
                 return this._super.apply(this, arguments);
             },
         });
-        var row = form.$(".o_field_one2many .o_list_view .o_data_row");
+        var row = form.el.querySelector(".o_field_one2many .o_list_view .o_data_row");
         assert.strictEqual(
             row.children()[1].textContent,
             "1 record",
@@ -6900,7 +6948,7 @@ QUnit.module("Views", (hooks) => {
             "the row should contains the 2 fields defined in the form view"
         );
         assert.strictEqual(
-            $(modal_row).text(),
+            $(modal_row).innerText,
             "gold2",
             "the value of the fields should be fetched and displayed"
         );
@@ -6928,11 +6976,11 @@ QUnit.module("Views", (hooks) => {
 
         assert.strictEqual(
             document.activeElement,
-            form.$('.o_field_widget[name="foo"] input')[0],
+            form.el.querySelector('.o_field_widget[name="foo"] input')[0],
             "foo field should have focus"
         );
         assert.strictEqual(
-            form.$('.o_field_widget[name="foo"] input')[0].selectionStart,
+            form.el.querySelector('.o_field_widget[name="foo"] input')[0].selectionStart,
             3,
             "cursor should be at the end"
         );
@@ -6955,7 +7003,7 @@ QUnit.module("Views", (hooks) => {
         await click(form.el.querySelector(".o_form_button_edit"));
         assert.strictEqual(
             document.activeElement,
-            form.$('.o_field_widget[name="foo"] input')[0],
+            form.el.querySelector('.o_field_widget[name="foo"] input')[0],
             "foo field should have focus"
         );
     });
@@ -7071,14 +7119,14 @@ QUnit.module("Views", (hooks) => {
             await click(form.el.querySelector(".o_form_button_edit"));
             assert.strictEqual($(".o_content").scrollTop(), 0, "scroll position should be 0");
 
-            form.$(".o_field_many2one[name='trululu'] .o_input").focus();
+            form.el.querySelector(".o_field_many2one[name='trululu'] .o_input").focus();
             assert.notStrictEqual(
                 $(".o_content").scrollTop(),
                 0,
                 "scroll position should not be 0"
             );
 
-            await testUtils.dom.click(form.$(".o_external_button"));
+            await testUtils.dom.click(form.el.querySelector(".o_external_button"));
             // Close modal
             await testUtils.dom.click($(".modal").last().find('button[class="close"]'));
             assert.notStrictEqual(
@@ -7100,7 +7148,7 @@ QUnit.module("Views", (hooks) => {
             );
             assert.notStrictEqual(
                 document.activeElement,
-                form.$('.o_field_many2one[name="trululu"] .o_input'),
+                form.el.querySelector('.o_field_many2one[name="trululu"] .o_input'),
                 "field widget should not be focused when lastActivatedFieldIndex is -1"
             );
         }
@@ -7121,7 +7169,7 @@ QUnit.module("Views", (hooks) => {
         });
         assert.strictEqual(
             document.activeElement,
-            form.$('.o_field_widget[name="foo"] input')[0],
+            form.el.querySelector('.o_field_widget[name="foo"] input')[0],
             "foo field should have focus"
         );
     });
@@ -7163,7 +7211,7 @@ QUnit.module("Views", (hooks) => {
         });
         assert.strictEqual(
             document.activeElement,
-            form.$('.o_field_widget[name="foo"] input')[0],
+            form.el.querySelector('.o_field_widget[name="foo"] input')[0],
             "foo field should have focus"
         );
     });
@@ -7188,7 +7236,7 @@ QUnit.module("Views", (hooks) => {
             });
             assert.notStrictEqual(
                 document.activeElement,
-                form.$('.o_field_widget[name="int_field"] input')[0],
+                form.el.querySelector('.o_field_widget[name="int_field"] input')[0],
                 "int_field field should not have focus"
             );
 
@@ -7196,7 +7244,7 @@ QUnit.module("Views", (hooks) => {
 
             assert.notStrictEqual(
                 document.activeElement,
-                form.$('.o_field_widget[name="int_field"] input')[0],
+                form.el.querySelector('.o_field_widget[name="int_field"] input')[0],
                 "int_field field should not have focus"
             );
         }
@@ -7246,7 +7294,7 @@ QUnit.module("Views", (hooks) => {
                 return this._super.apply(this, arguments);
             },
         });
-        var row = form.$(".o_field_one2many .o_list_view .o_data_row");
+        var row = form.el.querySelector(".o_field_one2many .o_list_view .o_data_row");
         await testUtils.dom.click(row);
         assert.verifySteps(["read", "read", "read"], "there should be 3 read rpcs");
     });
@@ -7290,7 +7338,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         await click(form.el.querySelector(".o_form_button_edit"));
-        await testUtils.fields.editInput(form.$('.o_field_widget[name="foo"] input'), "");
+        await editInput(form.el, '.o_field_widget[name="foo"] input', "");
         await click(form.el.querySelector(".o_form_button_save"));
 
         def.resolve();
@@ -7343,7 +7391,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsN(form, ".o_cp_action_menus .dropdown-item", 3, "there should be 3 actions");
         assert.strictEqual(
-            form.$(".o_cp_action_menus .dropdown-item:last").text().trim(),
+            form.el.querySelector(".o_cp_action_menus .dropdown-item:last").innerText.trim(),
             "Action partner",
             "the custom action should have 'Action partner' as name"
         );
@@ -7413,16 +7461,16 @@ QUnit.module("Views", (hooks) => {
 
         await click(form.el.querySelector(".o_form_button_edit"));
         // Open first dialog
-        await testUtils.dom.click(form.$(".o_external_button"));
+        await testUtils.dom.click(form.el.querySelector(".o_external_button"));
         assert.strictEqual($(".modal").length, 1, "One FormViewDialog should be opened");
         var $firstModal = $(".modal");
         assert.strictEqual(
-            $(".modal .modal-title").first().text().trim(),
+            $(".modal .modal-title").first().innerText.trim(),
             "Open: Product",
             "dialog title should display the python field string as label"
         );
         assert.strictEqual(
-            $firstModal.find("input").val(),
+            $firstModal.find("input").value,
             "xphone",
             "display_name should be correctly displayed"
         );
@@ -7438,7 +7486,7 @@ QUnit.module("Views", (hooks) => {
 
         // Check that data in first dialog is correctly updated
         assert.strictEqual(
-            $firstModal.find("tr.o_data_row td").text(),
+            $firstModal.find("tr.o_data_row td").innerText,
             "xtv",
             "should have added a line with xtv as new record"
         );
@@ -7479,7 +7527,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await testUtils.dom.click(form.$(".o_field_widget[name=trululu] input"));
+        await testUtils.dom.click(form.el.querySelector(".o_field_widget[name=trululu] input"));
     });
 
     QUnit.skip(
@@ -7512,12 +7560,12 @@ QUnit.module("Views", (hooks) => {
             });
 
             assert.strictEqual(
-                form.$(".o_notebook .nav-item:not(.o_invisible_modifier)").length,
+                form.el.querySelector(".o_notebook .nav-item:not(.o_invisible_modifier)").length,
                 2,
                 "both tabs should be visible"
             );
             assert.hasClass(
-                form.$(".o_notebook .nav-link:first"),
+                form.el.querySelector(".o_notebook .nav-link:first"),
                 "active",
                 "first tab should be active"
             );
@@ -7526,12 +7574,12 @@ QUnit.module("Views", (hooks) => {
             await testUtils.controlPanel.pagerNext(form);
 
             assert.strictEqual(
-                form.$(".o_notebook .nav-item:not(.o_invisible_modifier)").length,
+                form.el.querySelector(".o_notebook .nav-item:not(.o_invisible_modifier)").length,
                 1,
                 "only the second tab should be visible"
             );
             assert.hasClass(
-                form.$(".o_notebook .nav-item:not(.o_invisible_modifier) .nav-link"),
+                form.el.querySelector(".o_notebook .nav-item:not(.o_invisible_modifier) .nav-link"),
                 "active",
                 "the visible tab should be active"
             );
@@ -7540,12 +7588,12 @@ QUnit.module("Views", (hooks) => {
             await testUtils.controlPanel.pagerPrevious(form);
 
             assert.strictEqual(
-                form.$(".o_notebook .nav-item:not(.o_invisible_modifier)").length,
+                form.el.querySelector(".o_notebook .nav-item:not(.o_invisible_modifier)").length,
                 2,
                 "both tabs should be visible again"
             );
             assert.hasClass(
-                form.$(".o_notebook .nav-link:nth(1)"),
+                form.el.querySelector(".o_notebook .nav-link:nth(1)"),
                 "active",
                 "second tab should be active"
             );
@@ -7574,7 +7622,7 @@ QUnit.module("Views", (hooks) => {
                 },
             },
         });
-        await testUtils.dom.click(form.$('a[type="action"]'));
+        await testUtils.dom.click(form.el.querySelector('a[type="action"]'));
     });
 
     QUnit.skip(
@@ -7673,11 +7721,11 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.ok(
-            form.$(".o_field_one2many tbody tr:first td:contains(yop)").length,
+            form.el.querySelector(".o_field_one2many tbody tr:first td:contains(yop)").length,
             "record 1 should be first"
         );
         await click(form.el.querySelector(".o_form_button_edit"));
-        await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+        await testUtils.dom.click(form.el.querySelector(".o_field_x2many_list_row_add a"));
         assert.strictEqual($(".modal").length, 1, "FormViewDialog should be opened");
         await testUtils.fields.editInput($('.modal .o_field_widget[name="foo"] input'), "xop");
         await testUtils.dom.click($(".modal-footer button:eq(1)"));
@@ -7686,48 +7734,50 @@ QUnit.module("Views", (hooks) => {
 
         // client-side sort
         assert.ok(
-            form.$(".o_field_one2many tbody tr:eq(0) td:contains(zop)").length,
+            form.el.querySelector(".o_field_one2many tbody tr:eq(0) td:contains(zop)").length,
             "record zop should be first"
         );
         assert.ok(
-            form.$(".o_field_one2many tbody tr:eq(1) td:contains(yop)").length,
+            form.el.querySelector(".o_field_one2many tbody tr:eq(1) td:contains(yop)").length,
             "record yop should be second"
         );
         assert.ok(
-            form.$(".o_field_one2many tbody tr:eq(2) td:contains(xop)").length,
+            form.el.querySelector(".o_field_one2many tbody tr:eq(2) td:contains(xop)").length,
             "record xop should be third"
         );
 
         // server-side sort
         await click(form.el.querySelector(".o_form_button_save"));
         assert.ok(
-            form.$(".o_field_one2many tbody tr:eq(0) td:contains(zop)").length,
+            form.el.querySelector(".o_field_one2many tbody tr:eq(0) td:contains(zop)").length,
             "record zop should be first"
         );
         assert.ok(
-            form.$(".o_field_one2many tbody tr:eq(1) td:contains(yop)").length,
+            form.el.querySelector(".o_field_one2many tbody tr:eq(1) td:contains(yop)").length,
             "record yop should be second"
         );
         assert.ok(
-            form.$(".o_field_one2many tbody tr:eq(2) td:contains(xop)").length,
+            form.el.querySelector(".o_field_one2many tbody tr:eq(2) td:contains(xop)").length,
             "record xop should be third"
         );
 
         // client-side sort on edit
         await click(form.el.querySelector(".o_form_button_edit"));
-        await testUtils.dom.click(form.$(".o_field_one2many tbody tr:eq(1) td:contains(yop)"));
+        await testUtils.dom.click(
+            form.el.querySelector(".o_field_one2many tbody tr:eq(1) td:contains(yop)")
+        );
         await testUtils.fields.editInput($('.modal .o_field_widget[name="foo"] input'), "zzz");
         await testUtils.dom.click($(".modal-footer button:first"));
         assert.ok(
-            form.$(".o_field_one2many tbody tr:eq(0) td:contains(zzz)").length,
+            form.el.querySelector(".o_field_one2many tbody tr:eq(0) td:contains(zzz)").length,
             "record zzz should be first"
         );
         assert.ok(
-            form.$(".o_field_one2many tbody tr:eq(1) td:contains(zop)").length,
+            form.el.querySelector(".o_field_one2many tbody tr:eq(1) td:contains(zop)").length,
             "record zop should be second"
         );
         assert.ok(
-            form.$(".o_field_one2many tbody tr:eq(2) td:contains(xop)").length,
+            form.el.querySelector(".o_field_one2many tbody tr:eq(2) td:contains(xop)").length,
             "record xop should be third"
         );
     });
@@ -7761,7 +7811,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
         await click(form.el.querySelector(".o_form_button_edit"));
-        await testUtils.dom.click(form.$('.o_field_widget[name="trululu"] input'));
+        await testUtils.dom.click(form.el.querySelector('.o_field_widget[name="trululu"] input'));
     });
 
     QUnit.skip("form rendering with groups with col/colspan", async function (assert) {
@@ -7808,11 +7858,11 @@ QUnit.module("Views", (hooks) => {
             resId: 1,
         });
 
-        var $parentGroup = form.$(".parent_group");
-        var $group4 = form.$(".group_4");
-        var $group3 = form.$(".group_3");
-        var $group1 = form.$(".group_1");
-        var $fieldGroup = form.$(".field_group");
+        var $parentGroup = form.el.querySelector(".parent_group");
+        var $group4 = form.el.querySelector(".group_4");
+        var $group3 = form.el.querySelector(".group_3");
+        var $group1 = form.el.querySelector(".group_1");
+        var $fieldGroup = form.el.querySelector(".field_group");
 
         // Verify outergroup/innergroup
         assert.strictEqual($parentGroup[0].tagName, "DIV", ".parent_group should be an outergroup");
@@ -8023,9 +8073,9 @@ QUnit.module("Views", (hooks) => {
             resId: 1,
         });
 
-        var $parentGroup = form.$(".parent_group");
-        var $group1 = form.$(".group_1");
-        var $group2 = form.$(".group_2");
+        var $parentGroup = form.el.querySelector(".parent_group");
+        var $group1 = form.el.querySelector(".group_1");
+        var $group2 = form.el.querySelector(".group_2");
 
         assert.containsN(form, "table.o_inner_group", 2, "should contain two inner groups");
         assert.strictEqual(
@@ -8120,7 +8170,9 @@ QUnit.module("Views", (hooks) => {
 
         // Outer group
         assert.ok(
-            form.$(".bottom_group").position().top - form.$(".top_group").position().top >= 200,
+            form.el.querySelector(".bottom_group").position().top -
+                form.el.querySelector(".top_group").position().top >=
+                200,
             "outergroup children should not be on the same line"
         );
     });
@@ -8148,9 +8200,9 @@ QUnit.module("Views", (hooks) => {
             resId: 1,
         });
 
-        await testUtils.dom.click(form.$(".o_data_row:first"));
+        await testUtils.dom.click(form.el.querySelector(".o_data_row:first"));
         assert.strictEqual(
-            $(".modal .modal-title").first().text().trim(),
+            $(".modal .modal-title").first().innerText.trim(),
             "Open: custom label",
             "modal should use the python field string as title"
         );
@@ -8182,7 +8234,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         await click(form.el.querySelector(".o_form_button_edit"));
-        await testUtils.fields.editInput(form.$('.o_field_widget[name="foo"] input'), "test");
+        await editInput(form.el, '.o_field_widget[name="foo"] input', "test");
         await click(form.el.querySelector(".o_form_button_save"));
         assert.containsOnce(
             form,
@@ -8192,7 +8244,7 @@ QUnit.module("Views", (hooks) => {
 
         await click(form.el.querySelector(".o_form_button_edit"));
         await testUtils.fields.editInput(
-            form.$('.o_field_widget[name="display_name"] input'),
+            form.el.querySelector('.o_field_widget[name="display_name"] input'),
             "test2"
         );
         await click(form.el.querySelector(".o_form_button_save"));
@@ -8232,7 +8284,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         await click(form.el.querySelector(".o_form_button_edit"));
-        await testUtils.fields.editInput(form.$('.o_field_widget[name="foo"] input'), "test");
+        await editInput(form.el, '.o_field_widget[name="foo"] input', "test");
         await click(form.el.querySelector(".o_form_button_save"));
 
         assert.containsOnce(form, ".o_form_view .alert > div", "should have a translation alert");
@@ -8250,7 +8302,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(form, ".o_form_view .alert > div", "should have a translation alert");
 
         // remove translation alert by click X and check alert even after form reload
-        await testUtils.dom.click(form.$(".o_form_view .alert > .close"));
+        await testUtils.dom.click(form.el.querySelector(".o_form_view .alert > .close"));
         assert.containsNone(
             form,
             ".o_form_view .alert > div",
@@ -8406,7 +8458,9 @@ QUnit.module("Views", (hooks) => {
             });
 
             await click(form.el.querySelector(".o_form_button_edit"));
-            await testUtils.dom.click(form.$('[name="product_id"] .o_external_button'));
+            await testUtils.dom.click(
+                form.el.querySelector('[name="product_id"] .o_external_button')
+            );
             assert.containsOnce(
                 $(".modal-body"),
                 "span.o_field_translate",
@@ -8495,17 +8549,17 @@ QUnit.module("Views", (hooks) => {
             "control panel buttons should be enabled"
         );
         assert.strictEqual(
-            form.$(".o_form_statusbar button:not(:disabled)").length,
+            form.el.querySelector(".o_form_statusbar button:not(:disabled)").length,
             2,
             "status bar buttons should be enabled"
         );
         assert.strictEqual(
-            form.$(".oe_button_box button:not(:disabled)").length,
+            form.el.querySelector(".oe_button_box button:not(:disabled)").length,
             1,
             "stat buttons should be enabled"
         );
 
-        await testUtils.dom.clickFirst(form.$(".o_form_statusbar button"));
+        await testUtils.dom.clickFirst(form.el.querySelector(".o_form_statusbar button"));
 
         // The unresolved promise lets us check the state of the buttons
         assert.strictEqual(
@@ -8533,12 +8587,12 @@ QUnit.module("Views", (hooks) => {
             "control panel buttons should be enabled"
         );
         assert.strictEqual(
-            form.$(".o_form_statusbar button:not(:disabled)").length,
+            form.el.querySelector(".o_form_statusbar button:not(:disabled)").length,
             2,
             "status bar buttons should be enabled"
         );
         assert.strictEqual(
-            form.$(".oe_button_box button:not(:disabled)").length,
+            form.el.querySelector(".oe_button_box button:not(:disabled)").length,
             1,
             "stat buttons should be enabled"
         );
@@ -8586,17 +8640,17 @@ QUnit.module("Views", (hooks) => {
             "control panel buttons should be enabled"
         );
         assert.strictEqual(
-            form.$(".o_form_statusbar button:not(:disabled)").length,
+            form.el.querySelector(".o_form_statusbar button:not(:disabled)").length,
             2,
             "status bar buttons should be enabled"
         );
         assert.strictEqual(
-            form.$(".oe_button_box button:not(:disabled)").length,
+            form.el.querySelector(".oe_button_box button:not(:disabled)").length,
             1,
             "stat buttons should be enabled"
         );
 
-        await testUtils.dom.click(form.$(".oe_button_box button"));
+        await testUtils.dom.click(form.el.querySelector(".oe_button_box button"));
 
         // The unresolved promise lets us check the state of the buttons
         assert.strictEqual(
@@ -8624,12 +8678,12 @@ QUnit.module("Views", (hooks) => {
             "control panel buttons should be enabled"
         );
         assert.strictEqual(
-            form.$(".o_form_statusbar button:not(:disabled)").length,
+            form.el.querySelector(".o_form_statusbar button:not(:disabled)").length,
             2,
             "status bar buttons should be enabled"
         );
         assert.strictEqual(
-            form.$(".oe_button_box button:not(:disabled)").length,
+            form.el.querySelector(".oe_button_box button:not(:disabled)").length,
             1,
             "stat buttons should be enabled"
         );
@@ -8667,21 +8721,21 @@ QUnit.module("Views", (hooks) => {
             });
 
             // click on button, and cancel in confirm dialog
-            await testUtils.dom.click(form.$(".o_statusbar_buttons button"));
+            await testUtils.dom.click(form.el.querySelector(".o_statusbar_buttons button"));
             assert.ok(
-                form.$(".o_statusbar_buttons button").prop("disabled"),
+                form.el.querySelector(".o_statusbar_buttons button").prop("disabled"),
                 "button should be disabled"
             );
             await testUtils.dom.click($(".modal-footer button.btn-secondary"));
             assert.ok(
-                !form.$(".o_statusbar_buttons button").prop("disabled"),
+                !form.el.querySelector(".o_statusbar_buttons button").prop("disabled"),
                 "button should no longer be disabled"
             );
 
             assert.verifySteps(["onchange"]);
 
             // click on button, and click on ok in confirm dialog
-            await testUtils.dom.click(form.$(".o_statusbar_buttons button"));
+            await testUtils.dom.click(form.el.querySelector(".o_statusbar_buttons button"));
             assert.verifySteps([]);
             await testUtils.dom.click($(".modal-footer button.btn-primary"));
             assert.verifySteps(["create", "read", "execute_action"]);
@@ -8734,7 +8788,7 @@ QUnit.module("Views", (hooks) => {
                 },
             });
 
-            await testUtils.dom.click(form.$(".o_external_button"));
+            await testUtils.dom.click(form.el.querySelector(".o_external_button"));
 
             assert.notOk(
                 $(".modal .oe_button_box button").attr("disabled"),
@@ -8789,7 +8843,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         await click(form.el.querySelector(".o_form_button_edit"));
-        await testUtils.fields.editInput(form.$('.o_field_widget[name="foo"] input'), "test");
+        await editInput(form.el, '.o_field_widget[name="foo"] input', "test");
         await click(form.el.querySelector(".o_form_button_save"));
         await click(form.el.querySelector(".o_form_button_save"));
 
@@ -8829,13 +8883,13 @@ QUnit.module("Views", (hooks) => {
 
         await click(form.el.querySelector(".o_form_button_edit"));
         await testUtils.fields.editInput(
-            form.$('.o_field_widget[name="foo"] input'),
+            form.el.querySelector('.o_field_widget[name="foo"] input'),
             "incorrect value"
         );
         await click(form.el.querySelector(".o_form_button_save"));
 
         await testUtils.fields.editInput(
-            form.$('.o_field_widget[name="foo"] input'),
+            form.el.querySelector('.o_field_widget[name="foo"] input'),
             "correct value"
         );
 
@@ -8878,18 +8932,24 @@ QUnit.module("Views", (hooks) => {
                 },
             });
 
-            var $selectedState = form.$('.o_statusbar_status button[data-value="4"]');
+            var $selectedState = form.el.querySelector(
+                '.o_statusbar_status button[data-value="4"]'
+            );
             assert.ok(
                 $selectedState.hasClass("btn-primary") && $selectedState.hasClass("disabled"),
                 "selected status should be btn-primary and disabled"
             );
 
             failFlag = true;
-            var $clickableState = form.$('.o_statusbar_status button[data-value="1"]');
+            var $clickableState = form.el.querySelector(
+                '.o_statusbar_status button[data-value="1"]'
+            );
             await testUtils.dom.click($clickableState);
 
-            var $lastActiveState = form.$('.o_statusbar_status button[data-value="4"]');
-            $selectedState = form.$(".o_statusbar_status button.btn-primary");
+            var $lastActiveState = form.el.querySelector(
+                '.o_statusbar_status button[data-value="4"]'
+            );
+            $selectedState = form.el.querySelector(".o_statusbar_status button.btn-primary");
             assert.strictEqual(
                 $selectedState[0],
                 $lastActiveState[0],
@@ -8897,11 +8957,13 @@ QUnit.module("Views", (hooks) => {
             );
 
             failFlag = false;
-            $clickableState = form.$('.o_statusbar_status button[data-value="1"]');
+            $clickableState = form.el.querySelector('.o_statusbar_status button[data-value="1"]');
             await testUtils.dom.click($clickableState);
 
-            var $lastClickedState = form.$('.o_statusbar_status button[data-value="1"]');
-            $selectedState = form.$(".o_statusbar_status button.btn-primary");
+            var $lastClickedState = form.el.querySelector(
+                '.o_statusbar_status button[data-value="1"]'
+            );
+            $selectedState = form.el.querySelector(".o_statusbar_status button.btn-primary");
             assert.strictEqual(
                 $selectedState[0],
                 $lastClickedState[0],
@@ -8931,18 +8993,18 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.strictEqual(
-            form.$('.o_field_widget[name="foo"]').text(),
+            form.el.querySelector('.o_field_widget[name="foo"]').innerText,
             "***",
             "password should be displayed with stars"
         );
         await click(form.el.querySelector(".o_form_button_edit"));
         assert.strictEqual(
-            form.$('.o_field_widget[name="foo"] input').val(),
+            form.el.querySelector('.o_field_widget[name="foo"] input').value,
             "yop",
             "input value should be the password"
         );
         assert.strictEqual(
-            form.$('.o_field_widget[name="foo"] input').prop("type"),
+            form.el.querySelector('.o_field_widget[name="foo"] input').prop("type"),
             "password",
             "input should be of type password"
         );
@@ -8964,7 +9026,7 @@ QUnit.module("Views", (hooks) => {
 
         await click(form.el.querySelector(".o_form_button_edit"));
         assert.hasAttrValue(
-            form.$('.o_field_widget[name="display_name"] input'),
+            form.el.querySelector('.o_field_widget[name="display_name"] input'),
             "autocomplete",
             "coucou",
             "attribute autocomplete should be set"
@@ -8984,7 +9046,7 @@ QUnit.module("Views", (hooks) => {
 
         await click(form.el.querySelector(".o_form_button_edit"));
         assert.hasAttrValue(
-            form.$('.o_field_widget[name="display_name"] input'),
+            form.el.querySelector('.o_field_widget[name="display_name"] input'),
             "autocomplete",
             "off",
             "attribute autocomplete should be set to none by default"
@@ -9033,7 +9095,7 @@ QUnit.module("Views", (hooks) => {
                 },
             });
             await click(form.el.querySelector(".o_form_button_edit"));
-            await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+            await testUtils.dom.click(form.el.querySelector(".o_field_x2many_list_row_add a"));
             await testUtils.nextTick();
             assert.strictEqual($(".modal").length, 1, "One FormViewDialog should be opened");
             // set a value on the m2o
@@ -9084,16 +9146,16 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.strictEqual(
-            form.$('.o_field_widget[name="display_name"]').text(),
+            form.el.querySelector('.o_field_widget[name="display_name"]').innerText,
             "Select a model to add a filter.",
             "should contain an error message saying the model is missing"
         );
         await testUtils.fields.editInput(
-            form.$('.o_field_widget[name="model_name"] input'),
+            form.el.querySelector('.o_field_widget[name="model_name"] input'),
             "test"
         );
         assert.notStrictEqual(
-            form.$('.o_field_widget[name="display_name"]').text(),
+            form.el.querySelector('.o_field_widget[name="display_name"]').innerText,
             "Select a model to add a filter.",
             "should not contain an error message anymore"
         );
@@ -9163,7 +9225,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+        await testUtils.dom.click(form.el.querySelector(".o_field_x2many_list_row_add a"));
         await testUtils.nextTick();
         assert.strictEqual(
             $(".modal input.o_field_widget[name=foo]").length,
@@ -9185,9 +9247,9 @@ QUnit.module("Views", (hooks) => {
         await testUtils.nextTick();
         checkOnchange = false;
 
-        await testUtils.dom.click(form.$(".o_data_row"));
+        await testUtils.dom.click(form.el.querySelector(".o_data_row"));
         assert.strictEqual(
-            $(".modal .o_field_widget[name=foo]").text(),
+            $(".modal .o_field_widget[name=foo]").innerText,
             "foo value",
             "the edited value should have been kept"
         );
@@ -9212,7 +9274,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.hasClass(
-            form.$(".o_field_widget[name=foo]"),
+            form.el.querySelector(".o_field_widget[name=foo]"),
             "o_readonly_modifier",
             "foo should be readonly in 'Create' mode"
         );
@@ -9221,7 +9283,7 @@ QUnit.module("Views", (hooks) => {
         await click(form.el.querySelector(".o_form_button_edit"));
 
         assert.doesNotHaveClass(
-            form.$(".o_field_widget[name=foo]"),
+            form.el.querySelector(".o_field_widget[name=foo]"),
             "o_readonly_modifier",
             "foo should not be readonly anymore"
         );
@@ -9263,7 +9325,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsOnce(form, ".o_form_editable", "form should be in edit mode");
         assert.strictEqual(
-            form.$(".o_field_widget").val(),
+            form.el.querySelector(".o_field_widget").value,
             "first record (copy)",
             "duplicated record should have correct name"
         );
@@ -9277,7 +9339,7 @@ QUnit.module("Views", (hooks) => {
         await testUtils.dom.click($(".modal-footer .btn-primary"));
 
         assert.strictEqual(
-            form.$(".o_field_widget").text(),
+            form.el.querySelector(".o_field_widget").innerText,
             "first record",
             "should have come back to previous record"
         );
@@ -9302,7 +9364,7 @@ QUnit.module("Views", (hooks) => {
                 "</form>",
         });
 
-        var $button = form.$(".o_form_statusbar button");
+        var $button = form.el.querySelector(".o_form_statusbar button");
         $button.tooltip("show", false);
         $button.trigger($.Event("mouseenter"));
 
@@ -9313,7 +9375,7 @@ QUnit.module("Views", (hooks) => {
         );
         $button.trigger($.Event("mouseleave"));
 
-        var $secondButton = form.$('button[name="other_method"]');
+        var $secondButton = form.el.querySelector('button[name="other_method"]');
         $secondButton.tooltip("show", false);
         $secondButton.trigger($.Event("mouseenter"));
 
@@ -9359,7 +9421,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await testUtils.dom.click(form.$(".o_external_button"));
+        await testUtils.dom.click(form.el.querySelector(".o_external_button"));
         await testUtils.dom.click($(".modal .o_external_button"));
 
         await testUtils.fields.editInput(
@@ -9369,7 +9431,7 @@ QUnit.module("Views", (hooks) => {
         await testUtils.dom.click($(".modal:nth(1) footer .btn-primary").first());
 
         assert.strictEqual(
-            $(".modal .o_field_widget[name=trululu] input").val(),
+            $(".modal .o_field_widget[name=trululu] input").value,
             "new name",
             "record should have been reloaded"
         );
@@ -9474,16 +9536,16 @@ QUnit.module("Views", (hooks) => {
             },
             viewOptions: { mode: "edit" },
         });
-        await testUtils.dom.click(form.$(".o_external_button"));
+        await testUtils.dom.click(form.el.querySelector(".o_external_button"));
         assert.strictEqual(
-            $(".modal-body .o_form_view .o_list_view .o_data_cell").text(),
+            $(".modal-body .o_form_view .o_list_view .o_data_cell").innerText,
             "yopblip",
             "table has some initial order"
         );
 
         await testUtils.dom.click($(".modal-body .o_form_view .o_list_view th.o_column_sortable"));
         assert.strictEqual(
-            $(".modal-body .o_form_view .o_list_view .o_data_cell").text(),
+            $(".modal-body .o_form_view .o_list_view .o_data_cell").innerText,
             "blipyop",
             "table is now sorted"
         );
@@ -9514,7 +9576,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await testUtils.dom.click(form.$(".o_form_statusbar .btn-secondary"));
+        await testUtils.dom.click(form.el.querySelector(".o_form_statusbar .btn-secondary"));
     });
 
     QUnit.skip("basic support for widgets", async function (assert) {
@@ -9545,7 +9607,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.strictEqual(
-            form.$(".o_widget").text(),
+            form.el.querySelector(".o_widget").innerText,
             '{"foo":"My little Foo Value","bar":false}',
             "widget should have been instantiated"
         );
@@ -9575,7 +9637,10 @@ QUnit.module("Views", (hooks) => {
             </form>`,
         });
 
-        assert.strictEqual(form.$(".o_widget").text(), '{"foo":"My little Foo Value","bar":false}');
+        assert.strictEqual(
+            form.el.querySelector(".o_widget").innerText,
+            '{"foo":"My little Foo Value","bar":false}'
+        );
         delete widgetRegistryOwl.map.test;
     });
 
@@ -9596,7 +9661,7 @@ QUnit.module("Views", (hooks) => {
             arch: "<form>" + '<widget name="attach_document" action="my_action"/>' + "</form>",
         });
 
-        var onFileLoadedEventName = form.$(".o_form_binary_form").attr("target");
+        var onFileLoadedEventName = form.el.querySelector(".o_form_binary_form").attr("target");
         // trigger _onFileLoaded function
         $(window).trigger(onFileLoadedEventName, [{ id: 5 }, { id: 2 }]);
     });
@@ -9622,7 +9687,7 @@ QUnit.module("Views", (hooks) => {
             "should have 1 attach_document widget in the statusbar"
         );
         assert.strictEqual(
-            form.$("span.o_attach_document").text().trim(),
+            form.el.querySelector("span.o_attach_document").innerText.trim(),
             "Attach document",
             "widget should have been instantiated"
         );
@@ -9655,9 +9720,9 @@ QUnit.module("Views", (hooks) => {
                 "</form>",
         });
 
-        await testUtils.fields.editInput(form.$('.o_field_widget[name="foo"] input'), "I am alive");
+        await editInput(form.el, '.o_field_widget[name="foo"] input', "I am alive");
         assert.strictEqual(
-            form.$(".o_widget").text(),
+            form.el.querySelector(".o_widget").innerText,
             "I am alive!",
             "widget should have been updated"
         );
@@ -9681,12 +9746,12 @@ QUnit.module("Views", (hooks) => {
         });
 
         // in readonly
-        await testUtils.dom.click(form.$("div.oe_title"));
-        assert.hasClass(form.$(".o_form_button_edit"), "o_catch_attention");
+        await testUtils.dom.click(form.el.querySelector("div.oe_title"));
+        assert.hasClass(form.el.querySelector(".o_form_button_edit"), "o_catch_attention");
 
         // in edit
         await click(form.el.querySelector(".o_form_button_edit"));
-        await testUtils.dom.click(form.$('[name="display_name"]'));
+        await testUtils.dom.click(form.el.querySelector('[name="display_name"]'));
         // await testUtils.nextTick();
         assert.containsNone(form, "button.o_catch_attention:visible");
     });
@@ -9711,7 +9776,7 @@ QUnit.module("Views", (hooks) => {
                 "</form>",
         });
 
-        var $field = form.$('[name="product_id"]');
+        var $field = form.el.querySelector('[name="product_id"]');
         $field.tooltip("show", true);
         $field.trigger($.Event("mouseenter"));
         assert.strictEqual(
@@ -9775,11 +9840,11 @@ QUnit.module("Views", (hooks) => {
 
             // switch to edit mode to ensure that autoresize is correctly done
             await click(form.el.querySelector(".o_form_button_edit"));
-            var height = form.$(".o_field_widget[name=text_field]").height();
+            var height = form.el.querySelector(".o_field_widget[name=text_field]").height();
             // focus the field to manually trigger autoresize
-            form.$(".o_field_widget[name=text_field]").trigger("focus");
+            form.el.querySelector(".o_field_widget[name=text_field]").trigger("focus");
             assert.strictEqual(
-                form.$(".o_field_widget[name=text_field]").height(),
+                form.el.querySelector(".o_field_widget[name=text_field]").height(),
                 height,
                 "autoresize should have been done automatically at rendering"
             );
@@ -9790,11 +9855,11 @@ QUnit.module("Views", (hooks) => {
             // save and create a new record to ensure that autoresize is correctly done
             await click(form.el.querySelector(".o_form_button_save"));
             await testUtils.form.clickCreate(form);
-            height = form.$(".o_field_widget[name=text_field]").height();
+            height = form.el.querySelector(".o_field_widget[name=text_field]").height();
             // focus the field to manually trigger autoresize
-            form.$(".o_field_widget[name=text_field]").trigger("focus");
+            form.el.querySelector(".o_field_widget[name=text_field]").trigger("focus");
             assert.strictEqual(
-                form.$(".o_field_widget[name=text_field]").height(),
+                form.el.querySelector(".o_field_widget[name=text_field]").height(),
                 height,
                 "autoresize should have been done automatically at rendering"
             );
@@ -9834,18 +9899,18 @@ QUnit.module("Views", (hooks) => {
         });
 
         await click(form.el.querySelector(".o_form_button_edit"));
-        assert.hasClass(form.$(".o_notebook .nav .nav-link:first()"), "active");
+        assert.hasClass(form.el.querySelector(".o_notebook .nav .nav-link:first()"), "active");
 
-        await testUtils.dom.click(form.$(".o_notebook .nav .nav-link:nth(1)"));
-        assert.hasClass(form.$(".o_notebook .nav .nav-link:nth(1)"), "active");
+        await testUtils.dom.click(form.el.querySelector(".o_notebook .nav .nav-link:nth(1)"));
+        assert.hasClass(form.el.querySelector(".o_notebook .nav .nav-link:nth(1)"), "active");
 
-        var height = form.$(".o_field_widget[name=text_field]").height();
+        var height = form.el.querySelector(".o_field_widget[name=text_field]").height();
         assert.ok(height > 80, "textarea should have an height of at least 80px");
 
-        await testUtils.dom.click(form.$(".o_notebook .nav .nav-link:nth(2)"));
-        assert.hasClass(form.$(".o_notebook .nav .nav-link:nth(2)"), "active");
+        await testUtils.dom.click(form.el.querySelector(".o_notebook .nav .nav-link:nth(2)"));
+        assert.hasClass(form.el.querySelector(".o_notebook .nav .nav-link:nth(2)"), "active");
 
-        var height = form.$(".o_field_widget[name=text_field_empty]").css("height");
+        var height = form.el.querySelector(".o_field_widget[name=text_field_empty]").css("height");
         assert.strictEqual(height, "50px", "empty textarea should have height of 50px");
     });
 
@@ -9943,7 +10008,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         await click(form.el.querySelector(".o_form_button_edit"));
-        await testUtils.form.clickDiscard(form);
+        await click(form.el.querySelector(".o_form_button_cancel"));
 
         assert.strictEqual(
             testUtils.controlPanel.getPagerValue(form),
@@ -10022,7 +10087,7 @@ QUnit.module("Views", (hooks) => {
         });
         core.bus.on("clear_cache", form, assert.step.bind(assert, "clear_cache"));
 
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=display_name]"), "new value");
+        await editInput(form.el, ".o_field_widget[name=display_name]", "new value");
         await click(form.el.querySelector(".o_form_button_save"));
 
         assert.verifySteps(["write", "clear_cache"]);
@@ -10052,7 +10117,7 @@ QUnit.module("Views", (hooks) => {
         });
         core.bus.on("clear_cache", form, assert.step.bind(assert, "clear_cache"));
 
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=display_name]"), "value");
+        await editInput(form.el, ".o_field_widget[name=display_name]", "value");
         await click(form.el.querySelector(".o_form_button_save"));
 
         assert.verifySteps(["create", "clear_cache"]);
@@ -10127,7 +10192,7 @@ QUnit.module("Views", (hooks) => {
             });
 
             await testUtils.fields.editInput(
-                form.$(".o_field_widget[name=display_name]"),
+                form.el.querySelector(".o_field_widget[name=display_name]"),
                 "new value"
             );
             await click(form.el.querySelector(".o_form_button_save"));
@@ -10173,25 +10238,25 @@ QUnit.module("Views", (hooks) => {
         });
 
         // add a row and partially fill it
-        await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=display_name] input"), "abc");
+        await testUtils.dom.click(form.el.querySelector(".o_field_x2many_list_row_add a"));
+        await editInput(form.el, ".o_field_widget[name=display_name] input", "abc");
 
         // click button which will trigger_up 'execute_action' (this will save)
         values = {
             display_name: "abc",
             product_id: false,
         };
-        await testUtils.dom.click(form.$("button.p"));
+        await testUtils.dom.click(form.el.querySelector("button.p"));
         // edit the new row again and set a many2one value
         await testUtils.dom.clickLast(
-            form.$(".o_form_view .o_field_one2many .o_data_row .o_data_cell")
+            form.el.querySelector(".o_form_view .o_field_one2many .o_data_row .o_data_cell")
         );
         await testUtils.nextTick();
         await testUtils.fields.many2one.clickOpenDropdown("product_id");
         await testUtils.fields.many2one.clickHighlightedItem("product_id");
 
         assert.strictEqual(
-            form.$(".o_field_many2one input").val(),
+            form.el.querySelector(".o_field_many2one input").value,
             "xphone",
             "value of the m2o should have been correctly updated"
         );
@@ -10257,7 +10322,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         await testUtils.fields.editInput(
-            form.$(".o_field_widget[name=foo] input"),
+            form.el.querySelector(".o_field_widget[name=foo] input"),
             "some foo value"
         );
         // manually save the record, to prevent the field widget to notify the model of its new
@@ -10268,7 +10333,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsOnce(form, ".o_form_readonly", "form view should be in readonly");
         assert.strictEqual(
-            form.$(".o_form_view").text().trim(),
+            form.el.querySelector(".o_form_view").innerText.trim(),
             "some foo value",
             "foo field should have correct value"
         );
@@ -10322,15 +10387,15 @@ QUnit.module("Views", (hooks) => {
                 },
             });
 
-            await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+            await testUtils.dom.click(form.el.querySelector(".o_field_x2many_list_row_add a"));
 
             assert.strictEqual(
-                form.$(".o_field_widget[name=display_name]").val(),
+                form.el.querySelector(".o_field_widget[name=display_name]").value,
                 "",
                 "display_name should be the empty string by default"
             );
             assert.strictEqual(
-                form.$(".o_field_widget[name=foo]").val(),
+                form.el.querySelector(".o_field_widget[name=foo]").value,
                 "",
                 "foo should be the empty string by default"
             );
@@ -10338,7 +10403,7 @@ QUnit.module("Views", (hooks) => {
             onchangeDef = testUtils.makeTestPromise(); // delay the onchange
 
             await testUtils.fields.editInput(
-                form.$(".o_field_widget[name=display_name]"),
+                form.el.querySelector(".o_field_widget[name=display_name]"),
                 "some value"
             );
 
@@ -10382,35 +10447,50 @@ QUnit.module("Views", (hooks) => {
 
         // edit foo to trigger a delayed onchange
         onchangeDef = testUtils.makeTestPromise();
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=foo]"), "trigger onchange");
+        await editInput(form.el, ".o_field_widget[name=foo]", "trigger onchange");
 
-        assert.strictEqual(form.$(".o_field_widget[name=display_name]").val(), "default");
+        assert.strictEqual(
+            form.el.querySelector(".o_field_widget[name=display_name]").value,
+            "default"
+        );
 
         // save (will wait for the onchange to return), and will be delayed as well
         await testUtils.dom.click(form.el.querySelector(".o_form_button_save"));
 
-        assert.hasClass(form.$(".o_form_view"), "o_form_editable");
-        assert.strictEqual(form.$(".o_field_widget[name=display_name]").val(), "default");
+        assert.hasClass(form.el.querySelector(".o_form_view"), "o_form_editable");
+        assert.strictEqual(
+            form.el.querySelector(".o_field_widget[name=display_name]").value,
+            "default"
+        );
 
         // simulate a click on the breadcrumbs to leave the form view
         form.canBeRemoved();
         await testUtils.nextTick();
 
-        assert.hasClass(form.$(".o_form_view"), "o_form_editable");
-        assert.strictEqual(form.$(".o_field_widget[name=display_name]").val(), "default");
+        assert.hasClass(form.el.querySelector(".o_form_view"), "o_form_editable");
+        assert.strictEqual(
+            form.el.querySelector(".o_field_widget[name=display_name]").value,
+            "default"
+        );
 
         // unlock the onchange
         onchangeDef.resolve();
         await testUtils.nextTick();
-        assert.hasClass(form.$(".o_form_view"), "o_form_editable");
-        assert.strictEqual(form.$(".o_field_widget[name=display_name]").val(), "changed");
+        assert.hasClass(form.el.querySelector(".o_form_view"), "o_form_editable");
+        assert.strictEqual(
+            form.el.querySelector(".o_field_widget[name=display_name]").value,
+            "changed"
+        );
 
         // unlock the create
         createDef.resolve();
         await testUtils.nextTick();
 
-        assert.hasClass(form.$(".o_form_view"), "o_form_readonly");
-        assert.strictEqual(form.$(".o_field_widget[name=display_name]").text(), "changed");
+        assert.hasClass(form.el.querySelector(".o_form_view"), "o_form_readonly");
+        assert.strictEqual(
+            form.el.querySelector(".o_field_widget[name=display_name]").innerText,
+            "changed"
+        );
         assert.containsNone(
             document.body,
             ".modal",
@@ -10440,7 +10520,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsOnce(form, ".o_form_editable");
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=foo]"), "some value");
+        await editInput(form.el, ".o_field_widget[name=foo]", "some value");
 
         await form.canBeRemoved();
         assert.containsNone(document.body, ".modal");
@@ -10487,13 +10567,13 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.strictEqual(
-            form.$(".o_field_widget[name=foo] input").val(),
+            form.el.querySelector(".o_field_widget[name=foo] input").value,
             "yop",
             "should be on record 1"
         );
 
         // change foo to trigger the onchange
-        await testUtils.fields.editInput(form.$(".o_field_widget[name=foo] input"), "new value");
+        await editInput(form.el, ".o_field_widget[name=foo] input", "new value");
 
         // open many2one dropdown to check if the domain is applied
         await testUtils.fields.many2one.clickOpenDropdown("trululu");
@@ -10504,7 +10584,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(document.body, ".modal", "should not open modal");
 
         assert.strictEqual(
-            form.$(".o_field_widget[name=foo] input").val(),
+            form.el.querySelector(".o_field_widget[name=foo] input").value,
             "blip",
             "should be on record 2"
         );
@@ -10571,7 +10651,7 @@ QUnit.module("Views", (hooks) => {
             });
 
             await testUtils.form.clickCreate(form);
-            await testUtils.dom.click(form.$(".o-kanban-button-new"));
+            await testUtils.dom.click(form.el.querySelector(".o-kanban-button-new"));
 
             assert.containsOnce(document.body, ".modal");
             assert.strictEqual(
@@ -10609,18 +10689,18 @@ QUnit.module("Views", (hooks) => {
             });
 
             // edit the record (in readonly) with toogle_button widget (and delay the write RPC)
-            await testUtils.dom.click(form.$(".o_field_widget[name=bar]"));
+            await testUtils.dom.click(form.el.querySelector(".o_field_widget[name=bar]"));
 
             // switch to edit mode
             await click(form.el.querySelector(".o_form_button_edit"));
 
-            assert.hasClass(form.$(".o_form_view"), "o_form_readonly"); // should wait for the RPC to return
+            assert.hasClass(form.el.querySelector(".o_form_view"), "o_form_readonly"); // should wait for the RPC to return
 
             // make write RPC return
             prom.resolve();
             await testUtils.nextTick();
 
-            assert.hasClass(form.$(".o_form_view"), "o_form_editable");
+            assert.hasClass(form.el.querySelector(".o_form_view"), "o_form_editable");
         }
     );
 
@@ -10645,9 +10725,9 @@ QUnit.module("Views", (hooks) => {
                     },
                 },
             });
-            await testUtils.dom.click(form.$(".o_form_view button.btn-primary"));
+            await testUtils.dom.click(form.el.querySelector(".o_form_view button.btn-primary"));
             assert.verifySteps(["execute_action"]);
-            await testUtils.dom.click(form.$(".o_form_view button.mybutton"));
+            await testUtils.dom.click(form.el.querySelector(".o_form_view button.mybutton"));
             assert.verifySteps([]);
         }
     );
@@ -10698,15 +10778,20 @@ QUnit.module("Views", (hooks) => {
 
             assert.containsN(form, "th", 2, "should have 2 th, 1 for selector, 1 for foo column");
 
-            assert.ok(form.$("th:contains(Foo)").is(":visible"), "should have a visible foo field");
+            assert.ok(
+                form.el.querySelector("th:contains(Foo)").is(":visible"),
+                "should have a visible foo field"
+            );
 
             assert.notOk(
-                form.$("th:contains(Bar)").is(":visible"),
+                form.el.querySelector("th:contains(Bar)").is(":visible"),
                 "should not have a visible bar field"
             );
 
             // optional fields
-            await testUtils.dom.click(form.$("table .o_optional_columns_dropdown_toggle"));
+            await testUtils.dom.click(
+                form.el.querySelector("table .o_optional_columns_dropdown_toggle")
+            );
             assert.containsN(
                 form,
                 "div.o_optional_columns div.dropdown-item",
@@ -10715,7 +10800,9 @@ QUnit.module("Views", (hooks) => {
             );
 
             // enable optional field
-            await testUtils.dom.click(form.$("div.o_optional_columns div.dropdown-item input"));
+            await testUtils.dom.click(
+                form.el.querySelector("div.o_optional_columns div.dropdown-item input")
+            );
 
             assert.verifySteps([
                 "setItem " + localStorageKey + ' to ["bar"]',
@@ -10724,9 +10811,15 @@ QUnit.module("Views", (hooks) => {
 
             assert.containsN(form, "th", 3, "should have 3 th, 1 for selector, 2 for columns");
 
-            assert.ok(form.$("th:contains(Foo)").is(":visible"), "should have a visible foo field");
+            assert.ok(
+                form.el.querySelector("th:contains(Foo)").is(":visible"),
+                "should have a visible foo field"
+            );
 
-            assert.ok(form.$("th:contains(Bar)").is(":visible"), "should have a visible bar field");
+            assert.ok(
+                form.el.querySelector("th:contains(Bar)").is(":visible"),
+                "should have a visible bar field"
+            );
         }
     );
 
@@ -10781,17 +10874,19 @@ QUnit.module("Views", (hooks) => {
             assert.containsN(form, "th", 2, "should have 2 th, 1 for selector, 1 for foo column");
 
             assert.notOk(
-                form.$("th:contains(Foo)").is(":visible"),
+                form.el.querySelector("th:contains(Foo)").is(":visible"),
                 "should have a visible foo field"
             );
 
             assert.ok(
-                form.$("th:contains(Bar)").is(":visible"),
+                form.el.querySelector("th:contains(Bar)").is(":visible"),
                 "should not have a visible bar field"
             );
 
             // optional fields
-            await testUtils.dom.click(form.$("table .o_optional_columns_dropdown_toggle"));
+            await testUtils.dom.click(
+                form.el.querySelector("table .o_optional_columns_dropdown_toggle")
+            );
             assert.containsN(
                 form,
                 "div.o_optional_columns div.dropdown-item",
@@ -10800,7 +10895,9 @@ QUnit.module("Views", (hooks) => {
             );
 
             // enable optional field
-            await testUtils.dom.click(form.$("div.o_optional_columns div.dropdown-item input"));
+            await testUtils.dom.click(
+                form.el.querySelector("div.o_optional_columns div.dropdown-item input")
+            );
 
             assert.verifySteps([
                 "setItem " + localStorageKey + ' to ["foo"]',
@@ -10809,9 +10906,15 @@ QUnit.module("Views", (hooks) => {
 
             assert.containsN(form, "th", 3, "should have 3 th, 1 for selector, 2 for columns");
 
-            assert.ok(form.$("th:contains(Foo)").is(":visible"), "should have a visible foo field");
+            assert.ok(
+                form.el.querySelector("th:contains(Foo)").is(":visible"),
+                "should have a visible foo field"
+            );
 
-            assert.ok(form.$("th:contains(Bar)").is(":visible"), "should have a visible bar field");
+            assert.ok(
+                form.el.querySelector("th:contains(Bar)").is(":visible"),
+                "should have a visible bar field"
+            );
         }
     );
 
@@ -10835,22 +10938,24 @@ QUnit.module("Views", (hooks) => {
                     "</form>",
             });
 
-            await testUtils.dom.click(form.$(".o_field_widget[name=display_name] input"));
+            await testUtils.dom.click(
+                form.el.querySelector(".o_field_widget[name=display_name] input")
+            );
             assert.strictEqual(
-                form.$('.o_field_widget[name="display_name"] input')[0],
+                form.el.querySelector('.o_field_widget[name="display_name"] input')[0],
                 document.activeElement,
                 "display_name should be focused"
             );
-            form.$('.o_field_widget[name="display_name"] input').trigger(
-                $.Event("keydown", { which: $.ui.keyCode.TAB })
-            );
+            form.el
+                .querySelector('.o_field_widget[name="display_name"] input')
+                .trigger($.Event("keydown", { which: $.ui.keyCode.TAB }));
             assert.strictEqual(
-                form.$('.o_field_widget[name="display_name"] input')[0],
+                form.el.querySelector('.o_field_widget[name="display_name"] input')[0],
                 document.activeElement,
                 "display_name should still be focused because it is empty and required"
             );
             assert.hasClass(
-                form.$('.o_field_widget[name="display_name"]'),
+                form.el.querySelector('.o_field_widget[name="display_name"]'),
                 "o_field_invalid",
                 "display_name should have the o_field_invalid class"
             );
@@ -10877,17 +10982,17 @@ QUnit.module("Views", (hooks) => {
                     "</form>",
             });
 
-            await testUtils.dom.click(form.$(".o_field_widget[name=date] input"));
+            await testUtils.dom.click(form.el.querySelector(".o_field_widget[name=date] input"));
             assert.strictEqual(
-                form.$('.o_field_widget[name="date"] input')[0],
+                form.el.querySelector('.o_field_widget[name="date"] input')[0],
                 document.activeElement,
                 "display_name should be focused"
             );
-            form.$('.o_field_widget[name="date"] input').trigger(
-                $.Event("keydown", { which: $.ui.keyCode.TAB })
-            );
+            form.el
+                .querySelector('.o_field_widget[name="date"] input')
+                .trigger($.Event("keydown", { which: $.ui.keyCode.TAB }));
             assert.strictEqual(
-                form.$('.o_field_widget[name="date"] input')[0],
+                form.el.querySelector('.o_field_widget[name="date"] input')[0],
                 document.activeElement,
                 "date should still be focused because it is empty and required"
             );
@@ -10912,7 +11017,8 @@ QUnit.module("Views", (hooks) => {
 
         // in edit
         await click(form.el.querySelector(".o_form_button_edit"));
-        form.$('.o_field_widget[name="display_name"] input')
+        form.el
+            .querySelector('.o_field_widget[name="display_name"] input')
             .focus()
             .trigger($.Event("keydown", { which: $.ui.keyCode.TAB }));
         assert.strictEqual(
@@ -10951,7 +11057,8 @@ QUnit.module("Views", (hooks) => {
                 },
             });
 
-            form.$('.o_field_widget[name="display_name"] input')
+            form.el
+                .querySelector('.o_field_widget[name="display_name"] input')
                 .focus()
                 .trigger($.Event("keydown", { which: $.ui.keyCode.TAB }));
             assert.strictEqual(
@@ -10989,7 +11096,7 @@ QUnit.module("Views", (hooks) => {
                 resId: 2,
             });
             assert.strictEqual(
-                form.$("button.firstButton")[0],
+                form.el.querySelector("button.firstButton")[0],
                 document.activeElement,
                 "by default the focus in edit mode should go to the first primary button of the form (not edit)"
             );
@@ -11054,11 +11161,11 @@ QUnit.module("Views", (hooks) => {
                 },
             });
 
-            form.$('.o_field_widget[name="foo"] input').focus();
+            form.el.querySelector('.o_field_widget[name="foo"] input').focus();
             $(document.activeElement).trigger($.Event("keydown", { which: $.ui.keyCode.TAB }));
 
             assert.strictEqual(
-                form.$('.o_field_widget[name="bar"]>input')[0],
+                form.el.querySelector('.o_field_widget[name="bar"]>input')[0],
                 document.activeElement,
                 "foo is not required, so hitting TAB on foo should have moved the focus to BAR"
             );
@@ -11089,12 +11196,12 @@ QUnit.module("Views", (hooks) => {
                 },
             });
 
-            await testUtils.dom.click(form.$('.o_field_widget[name="bar"]>input'));
-            form.$('.o_field_widget[name="foo"] input').focus();
+            await testUtils.dom.click(form.el.querySelector('.o_field_widget[name="bar"]>input'));
+            form.el.querySelector('.o_field_widget[name="foo"] input').focus();
             $(document.activeElement).trigger($.Event("keydown", { which: $.ui.keyCode.TAB }));
 
             assert.strictEqual(
-                form.$('.o_field_widget[name="foo"] input')[0],
+                form.el.querySelector('.o_field_widget[name="foo"] input')[0],
                 document.activeElement,
                 "foo is required, so hitting TAB on foo should keep the focus on foo"
             );
@@ -11234,37 +11341,53 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.strictEqual(onchangeNum, 1, "one onchange happens when form is opened");
-        assert.strictEqual(form.$('[name="foo"]').val(), "0", "onchange worked there is 0 line");
+        assert.strictEqual(
+            form.el.querySelector('[name="foo"]').value,
+            "0",
+            "onchange worked there is 0 line"
+        );
 
         // Add one line
-        await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
-        form.$(".o_field_one2many input:first").focus();
+        await testUtils.dom.click(form.el.querySelector(".o_field_x2many_list_row_add a"));
+        form.el.querySelector(".o_field_one2many input:first").focus();
         await testUtils.nextTick();
-        form.$(".o_field_one2many input:first").val("first line").trigger("input");
+        form.el.querySelector(".o_field_one2many input:first").val("first line").trigger("input");
         await testUtils.nextTick();
-        await testUtils.dom.click(form.$('.o_field_widget[name="foo"] input'));
+        await testUtils.dom.click(form.el.querySelector('.o_field_widget[name="foo"] input'));
         assert.strictEqual(onchangeNum, 2, "one onchange happens when a line is added");
-        assert.strictEqual(form.$('[name="foo"]').val(), "1", "onchange worked there is 1 line");
+        assert.strictEqual(
+            form.el.querySelector('[name="foo"]').value,
+            "1",
+            "onchange worked there is 1 line"
+        );
 
         // Drag and drop second line before first one (with 1 draft and invalid line)
-        await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+        await testUtils.dom.click(form.el.querySelector(".o_field_x2many_list_row_add a"));
         await testUtils.dom.dragAndDrop(
-            form.$(".ui-sortable-handle").eq(0),
-            form.$(".o_data_row").last(),
+            form.el.querySelector(".ui-sortable-handle").eq(0),
+            form.el.querySelector(".o_data_row").last(),
             { position: "bottom" }
         );
         assert.strictEqual(onchangeNum, 3, "one onchange happens when lines are resequenced");
-        assert.strictEqual(form.$('[name="foo"]').val(), "1", "onchange worked there is 1 line");
+        assert.strictEqual(
+            form.el.querySelector('[name="foo"]').value,
+            "1",
+            "onchange worked there is 1 line"
+        );
 
         // Add a second line
-        await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
-        form.$(".o_field_one2many input:first").focus();
+        await testUtils.dom.click(form.el.querySelector(".o_field_x2many_list_row_add a"));
+        form.el.querySelector(".o_field_one2many input:first").focus();
         await testUtils.nextTick();
-        form.$(".o_field_one2many input:first").val("second line").trigger("input");
+        form.el.querySelector(".o_field_one2many input:first").val("second line").trigger("input");
         await testUtils.nextTick();
-        await testUtils.dom.click(form.$('.o_field_widget[name="foo"] input'));
+        await testUtils.dom.click(form.el.querySelector('.o_field_widget[name="foo"] input'));
         assert.strictEqual(onchangeNum, 4, "one onchange happens when a line is added");
-        assert.strictEqual(form.$('[name="foo"]').val(), "2", "onchange worked there is 2 lines");
+        assert.strictEqual(
+            form.el.querySelector('[name="foo"]').value,
+            "2",
+            "onchange worked there is 2 lines"
+        );
     });
 
     QUnit.skip(
@@ -11336,7 +11459,7 @@ QUnit.module("Views", (hooks) => {
             });
 
             await testUtils.fields.editInput(
-                form.$('.o_field_widget[name="name"] input'),
+                form.el.querySelector('.o_field_widget[name="name"] input'),
                 "Test Company"
             );
             await click(form.el.querySelector(".o_form_button_save"));
@@ -11382,7 +11505,7 @@ QUnit.module("Views", (hooks) => {
             });
 
             await testUtils.fields.editInput(
-                form.$('.o_field_widget[name="name"] input'),
+                form.el.querySelector('.o_field_widget[name="name"] input'),
                 "Test Company2"
             );
             await click(form.el.querySelector(".o_form_button_save"));
@@ -11416,20 +11539,20 @@ QUnit.module("Views", (hooks) => {
                 },
             });
 
-            const $productLabel = form.$(".o_form_label:eq(1)");
+            const $productLabel = form.el.querySelector(".o_form_label:eq(1)");
             $productLabel.tooltip("show", false);
             await testUtils.dom.triggerMouseEvent($productLabel, "mouseenter");
             assert.strictEqual(
-                $(".tooltip .oe_tooltip_help").text().trim(),
+                $(".tooltip .oe_tooltip_help").innerText.trim(),
                 "this is a tooltip\n\nValues set here are company-specific."
             );
             await testUtils.dom.triggerMouseEvent($productLabel, "mouseleave");
 
-            const $fooLabel = form.$(".o_form_label:first");
+            const $fooLabel = form.el.querySelector(".o_form_label:first");
             $fooLabel.tooltip("show", false);
             await testUtils.dom.triggerMouseEvent($fooLabel, "mouseenter");
             assert.strictEqual(
-                $(".tooltip .oe_tooltip_help").text().trim(),
+                $(".tooltip .oe_tooltip_help").innerText.trim(),
                 "Values set here are company-specific."
             );
             await testUtils.dom.triggerMouseEvent($fooLabel, "mouseleave");
@@ -11459,11 +11582,14 @@ QUnit.module("Views", (hooks) => {
                 },
             });
 
-            const $productLabel = form.$(".o_form_label");
+            const $productLabel = form.el.querySelector(".o_form_label");
 
             $productLabel.tooltip("show", false);
             await testUtils.dom.triggerMouseEvent($productLabel, "mouseenter");
-            assert.strictEqual($(".tooltip .oe_tooltip_help").text().trim(), "this is a tooltip");
+            assert.strictEqual(
+                $(".tooltip .oe_tooltip_help").innerText.trim(),
+                "this is a tooltip"
+            );
             await testUtils.dom.triggerMouseEvent($productLabel, "mouseleave");
         }
     );
@@ -11564,7 +11690,7 @@ QUnit.module("Views", (hooks) => {
 
         await testUtils.dom.click($(webClient.el).find(".o_data_row:first"));
         await legacyExtraNextTick();
-        assert.strictEqual($(webClient.el).find(".breadcrumb").text(), "Partnerfirst record");
+        assert.strictEqual($(webClient.el).find(".breadcrumb").innerText, "Partnerfirst record");
 
         await testUtils.dom.click($(webClient.el).find(".o_form_button_edit"));
         await testUtils.fields.editInput(
@@ -11575,18 +11701,18 @@ QUnit.module("Views", (hooks) => {
         await testUtils.controlPanel.pagerNext(webClient);
         await legacyExtraNextTick();
         assert.containsOnce(webClient, ".o_form_editable");
-        assert.strictEqual($(webClient.el).find(".breadcrumb").text(), "Partnersecond record");
-        assert.strictEqual($(webClient.el).find('.o_field_widget[name="name"]').val(), "name");
+        assert.strictEqual($(webClient.el).find(".breadcrumb").innerText, "Partnersecond record");
+        assert.strictEqual($(webClient.el).find('.o_field_widget[name="name"]').value, "name");
 
         await testUtils.dom.click($(webClient.el).find(".o_form_button_cancel"));
-        assert.strictEqual($(webClient.el).find(".breadcrumb").text(), "Partnersecond record");
-        assert.strictEqual($(webClient.el).find('.o_field_widget[name="name"]').text(), "name");
+        assert.strictEqual($(webClient.el).find(".breadcrumb").innerText, "Partnersecond record");
+        assert.strictEqual($(webClient.el).find('.o_field_widget[name="name"]').innerText, "name");
 
         await testUtils.controlPanel.pagerPrevious(webClient);
         await legacyExtraNextTick();
         assert.containsOnce(webClient, ".o_form_readonly");
-        assert.strictEqual($(webClient.el).find(".breadcrumb").text(), "Partnerfirst record");
-        assert.strictEqual($(webClient.el).find('.o_field_widget[name="name"]').text(), "aaa");
+        assert.strictEqual($(webClient.el).find(".breadcrumb").innerText, "Partnerfirst record");
+        assert.strictEqual($(webClient.el).find('.o_field_widget[name="name"]').innerText, "aaa");
     });
 
     QUnit.skip("Auto save: save when breadcrumb clicked", async function (assert) {
@@ -11631,7 +11757,7 @@ QUnit.module("Views", (hooks) => {
 
         await testUtils.dom.click($(webClient.el).find(".o_data_row:first"));
         await legacyExtraNextTick();
-        assert.strictEqual($(webClient.el).find(".breadcrumb").text(), "Partnerfirst record");
+        assert.strictEqual($(webClient.el).find(".breadcrumb").innerText, "Partnerfirst record");
 
         await testUtils.dom.click($(webClient.el).find(".o_form_button_edit"));
         await testUtils.fields.editInput(
@@ -11642,14 +11768,17 @@ QUnit.module("Views", (hooks) => {
         await testUtils.dom.click($(webClient.el).find(".breadcrumb-item.o_back_button"));
         await legacyExtraNextTick();
 
-        assert.strictEqual($(webClient.el).find(".breadcrumb").text(), "Partner");
-        assert.strictEqual($(webClient.el).find('.o_field_cell[name="name"]:first').text(), "aaa");
+        assert.strictEqual($(webClient.el).find(".breadcrumb").innerText, "Partner");
+        assert.strictEqual(
+            $(webClient.el).find('.o_field_cell[name="name"]:first').innerText,
+            "aaa"
+        );
 
         await testUtils.dom.click($(webClient.el).find(".o_data_row:first"));
         await legacyExtraNextTick();
         assert.containsOnce(webClient, ".o_form_readonly");
-        assert.strictEqual($(webClient.el).find(".breadcrumb").text(), "Partnerfirst record");
-        assert.strictEqual($(webClient.el).find('.o_field_widget[name="name"]').text(), "aaa");
+        assert.strictEqual($(webClient.el).find(".breadcrumb").innerText, "Partnerfirst record");
+        assert.strictEqual($(webClient.el).find('.o_field_widget[name="name"]').innerText, "aaa");
     });
 
     QUnit.skip("Auto save: save when action changed", async function (assert) {
@@ -11712,7 +11841,7 @@ QUnit.module("Views", (hooks) => {
 
         await testUtils.dom.click($(webClient.el).find(".o_data_row:first"));
         await legacyExtraNextTick();
-        assert.strictEqual($(webClient.el).find(".breadcrumb").text(), "Partnerfirst record");
+        assert.strictEqual($(webClient.el).find(".breadcrumb").innerText, "Partnerfirst record");
 
         await testUtils.dom.click($(webClient.el).find(".o_form_button_edit"));
         await testUtils.fields.editInput(
@@ -11722,15 +11851,15 @@ QUnit.module("Views", (hooks) => {
 
         await doAction(webClient, 2, { clearBreadcrumbs: true });
 
-        assert.strictEqual($(webClient.el).find(".breadcrumb").text(), "Other action");
+        assert.strictEqual($(webClient.el).find(".breadcrumb").innerText, "Other action");
 
         await doAction(webClient, 1, { clearBreadcrumbs: true });
 
         await testUtils.dom.click($(webClient.el).find(".o_data_row:first"));
         await legacyExtraNextTick();
         assert.containsOnce(webClient, ".o_form_readonly");
-        assert.strictEqual($(webClient.el).find(".breadcrumb").text(), "Partnerfirst record");
-        assert.strictEqual($(webClient.el).find('.o_field_widget[name="name"]').text(), "aaa");
+        assert.strictEqual($(webClient.el).find(".breadcrumb").innerText, "Partnerfirst record");
+        assert.strictEqual($(webClient.el).find('.o_field_widget[name="name"]').innerText, "aaa");
     });
 
     QUnit.skip("Auto save: save on closing tab/browser", async function (assert) {
@@ -11756,9 +11885,12 @@ QUnit.module("Views", (hooks) => {
         });
 
         await click(form.el.querySelector(".o_form_button_edit"));
-        assert.notStrictEqual(form.$('.o_field_widget[name="display_name"]').val(), "test");
+        assert.notStrictEqual(
+            form.el.querySelector('.o_field_widget[name="display_name"]').value,
+            "test"
+        );
 
-        await testUtils.fields.editInput(form.$('.o_field_widget[name="display_name"]'), "test");
+        await editInput(form.el, '.o_field_widget[name="display_name"]', "test");
         window.dispatchEvent(new Event("beforeunload"));
         await testUtils.nextTick();
     });
@@ -11786,7 +11918,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         await click(form.el.querySelector(".o_form_button_edit"));
-        await testUtils.fields.editInput(form.$('.o_field_widget[name="display_name"]'), "");
+        await editInput(form.el, '.o_field_widget[name="display_name"]', "");
         window.dispatchEvent(new Event("beforeunload"));
         await testUtils.nextTick();
 
@@ -11866,12 +11998,12 @@ QUnit.module("Views", (hooks) => {
         // Click on a row to open a record
         await testUtils.dom.click($(webClient.el).find(".o_data_row:first"));
         await legacyExtraNextTick();
-        assert.strictEqual($(webClient.el).find(".breadcrumb").text(), "Partnerfirst record");
+        assert.strictEqual($(webClient.el).find(".breadcrumb").innerText, "Partnerfirst record");
 
         // Return in the list view to detach the form view
         await testUtils.dom.click($(webClient.el).find(".o_back_button"));
         await legacyExtraNextTick();
-        assert.strictEqual($(webClient.el).find(".breadcrumb").text(), "Partner");
+        assert.strictEqual($(webClient.el).find(".breadcrumb").innerText, "Partner");
 
         // Simulate tab/browser close in the list
         window.dispatchEvent(new Event("beforeunload"));
@@ -11916,7 +12048,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         await click(form.el.querySelector(".o_form_button_edit"));
-        await testUtils.fields.editInput(form.$('.o_field_widget[name="display_name"]'), "test");
+        await editInput(form.el, '.o_field_widget[name="display_name"]', "test");
 
         window.dispatchEvent(new Event("beforeunload"));
         await testUtils.nextTick();
@@ -11954,8 +12086,8 @@ QUnit.module("Views", (hooks) => {
         });
 
         await click(form.el.querySelector(".o_form_button_edit"));
-        await testUtils.fields.editInput(form.$('.o_field_widget[name="display_name"]'), "test");
-        await testUtils.fields.editInput(form.$('.o_field_widget[name="name"]'), "test");
+        await editInput(form.el, '.o_field_widget[name="display_name"]', "test");
+        await editInput(form.el, '.o_field_widget[name="name"]', "test");
 
         window.dispatchEvent(new Event("beforeunload"));
         await testUtils.nextTick();
@@ -11984,8 +12116,11 @@ QUnit.module("Views", (hooks) => {
 
         // edit 'foo' but do not focusout -> the model isn't aware of the change
         // until the 'beforeunload' event is triggered
-        form.$('.o_field_widget[name="foo"]').val("test");
-        await testUtils.dom.triggerEvent(form.$('.o_field_widget[name="foo"]'), "input");
+        form.el.querySelector('.o_field_widget[name="foo"]').val("test");
+        await testUtils.dom.triggerEvent(
+            form.el.querySelector('.o_field_widget[name="foo"]'),
+            "input"
+        );
 
         window.dispatchEvent(new Event("beforeunload"));
         await testUtils.nextTick();
@@ -12035,21 +12170,27 @@ QUnit.module("Views", (hooks) => {
             await click(form.el.querySelector(".o_form_button_edit"));
             // edit 'display_name' and simulate a focusout (trigger the 'change' event)
             // -> notifies the model of the change and performs the onchange
-            form.$('.o_field_widget[name="display_name"]').val("test");
+            form.el.querySelector('.o_field_widget[name="display_name"]').val("test");
             await testUtils.dom.triggerEvent(
-                form.$('.o_field_widget[name="display_name"]'),
+                form.el.querySelector('.o_field_widget[name="display_name"]'),
                 "change"
             );
 
             // edit 'name' and simulate a focusout (trigger the 'change' event)
             // -> waits for the mutex (i.e. the onchange) to notify the model
-            form.$('.o_field_widget[name="name"]').val("test");
-            await testUtils.dom.triggerEvent(form.$('.o_field_widget[name="name"]'), "change");
+            form.el.querySelector('.o_field_widget[name="name"]').val("test");
+            await testUtils.dom.triggerEvent(
+                form.el.querySelector('.o_field_widget[name="name"]'),
+                "change"
+            );
 
             // edit 'foo' but do not focusout -> the model isn't aware of the change
             // until the 'beforeunload' event is triggered
-            form.$('.o_field_widget[name="foo"]').val("test");
-            await testUtils.dom.triggerEvent(form.$('.o_field_widget[name="foo"]'), "input");
+            form.el.querySelector('.o_field_widget[name="foo"]').val("test");
+            await testUtils.dom.triggerEvent(
+                form.el.querySelector('.o_field_widget[name="foo"]'),
+                "input"
+            );
 
             // trigger the 'beforeunload' event -> notifies the model directly and saves
             window.dispatchEvent(new Event("beforeunload"));
@@ -12097,10 +12238,10 @@ QUnit.module("Views", (hooks) => {
 
             await click(form.el.querySelector(".o_form_button_edit"));
             await testUtils.fields.editInput(
-                form.$('.o_field_widget[name="display_name"]'),
+                form.el.querySelector('.o_field_widget[name="display_name"]'),
                 "test"
             );
-            await testUtils.fields.editInput(form.$('.o_field_widget[name="name"]'), "");
+            await editInput(form.el, '.o_field_widget[name="name"]', "");
 
             window.dispatchEvent(new Event("beforeunload"));
             await testUtils.nextTick();
@@ -12127,7 +12268,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsOnce(form, ".o_form_view.o_form_readonly");
 
-        await testUtils.dom.click(form.$('.o_field_widget[name="display_name"]'));
+        await testUtils.dom.click(form.el.querySelector('.o_field_widget[name="display_name"]'));
 
         assert.containsOnce(form, ".o_form_view.o_form_editable");
         assert.strictEqual(document.activeElement, $('.o_field_widget[name="display_name"]')[0]);
@@ -12152,7 +12293,9 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(form, ".o_form_view.o_form_readonly");
         assert.containsNone(form, '.o_priority_star[aria-checked="true"]');
 
-        await testUtils.dom.click(form.$('.o_field_widget[name="priority"] a:first'));
+        await testUtils.dom.click(
+            form.el.querySelector('.o_field_widget[name="priority"] a:first')
+        );
 
         assert.containsOnce(form, ".o_form_view.o_form_readonly");
         assert.containsOnce(form, '.o_priority_star[aria-checked="true"]');
@@ -12176,10 +12319,13 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsOnce(form, ".o_form_view.o_form_readonly");
 
-        await testUtils.dom.click(form.$(".o_form_label:first"));
+        await testUtils.dom.click(form.el.querySelector(".o_form_label:first"));
 
         assert.containsOnce(form, ".o_form_view.o_form_editable");
-        assert.strictEqual(document.activeElement, form.$('input.o_field_widget[name="foo"]')[0]);
+        assert.strictEqual(
+            document.activeElement,
+            form.el.querySelector('input.o_field_widget[name="foo"]')[0]
+        );
     });
 
     QUnit.skip("Quick Edition: Label click (duplicated field)", async function (assert) {
@@ -12210,13 +12356,16 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(form, ".o_form_label", 2);
         assert.containsOnce(form, ".o_invisible_modifier .o_form_label");
 
-        await testUtils.dom.click(form.$(".o_form_label")[1]);
+        await testUtils.dom.click(form.el.querySelector(".o_form_label")[1]);
 
         assert.containsOnce(form, ".o_form_view.o_form_editable");
         assert.containsN(form, ".o_form_label", 2);
         assert.containsOnce(form, ".o_invisible_modifier .o_form_label");
         assert.containsOnce(form, 'input.o_field_widget[name="foo"]');
-        assert.strictEqual(document.activeElement, form.$('input.o_field_widget[name="foo"]')[0]);
+        assert.strictEqual(
+            document.activeElement,
+            form.el.querySelector('input.o_field_widget[name="foo"]')[0]
+        );
     });
 
     QUnit.skip("Quick Edition: Checkbox click", async function (assert) {
@@ -12239,7 +12388,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(form, ".o_field_boolean input:checked");
         assert.containsNone(form, ".o_field_boolean input:disabled");
 
-        await testUtils.dom.click(form.$('.o_field_widget[name="bar"]'));
+        await testUtils.dom.click(form.el.querySelector('.o_field_widget[name="bar"]'));
         await testUtils.nextTick(); // wait for quick edit
 
         assert.containsOnce(form, ".o_form_view.o_form_editable");
@@ -12251,7 +12400,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(form, ".o_field_boolean input:checked");
         assert.containsNone(form, ".o_field_boolean input:disabled");
 
-        await testUtils.dom.click(form.$('.o_field_widget[name="bar"]'));
+        await testUtils.dom.click(form.el.querySelector('.o_field_widget[name="bar"]'));
         await testUtils.nextTick(); // wait for quick edit
 
         assert.containsOnce(form, ".o_form_view.o_form_editable");
@@ -12278,7 +12427,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(form, ".o_form_view.o_form_readonly");
         assert.containsOnce(form, ".o_field_boolean input:checked");
 
-        await testUtils.dom.click(form.$(".o_td_label .o_form_label"));
+        await testUtils.dom.click(form.el.querySelector(".o_td_label .o_form_label"));
         await testUtils.nextTick(); // wait for quick edit
 
         assert.containsOnce(form, ".o_form_view.o_form_editable");
@@ -12289,7 +12438,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(form, ".o_form_view.o_form_readonly");
         assert.containsNone(form, ".o_field_boolean input:checked");
 
-        await testUtils.dom.click(form.$(".o_td_label .o_form_label"));
+        await testUtils.dom.click(form.el.querySelector(".o_td_label .o_form_label"));
         await testUtils.nextTick(); // wait for quick edit
 
         assert.containsOnce(form, ".o_form_view.o_form_editable");
@@ -12328,7 +12477,7 @@ QUnit.module("Views", (hooks) => {
             "remove buttons should not be displayed"
         );
 
-        await testUtils.dom.click(form.$(".o_field_cell:first"));
+        await testUtils.dom.click(form.el.querySelector(".o_field_cell:first"));
 
         assert.containsOnce(
             form,
@@ -12361,7 +12510,7 @@ QUnit.module("Views", (hooks) => {
 
             assert.containsOnce(form, ".o_form_view.o_form_readonly");
 
-            await testUtils.dom.click(form.$('.o_field_cell[name="foo"]'));
+            await testUtils.dom.click(form.el.querySelector('.o_field_cell[name="foo"]'));
 
             assert.containsOnce(
                 form,
@@ -12370,7 +12519,7 @@ QUnit.module("Views", (hooks) => {
             );
             assert.strictEqual(
                 document.activeElement,
-                form.$('.o_field_cell[name="foo"] input')[0]
+                form.el.querySelector('.o_field_cell[name="foo"] input')[0]
             );
         }
     );
@@ -12403,7 +12552,7 @@ QUnit.module("Views", (hooks) => {
             assert.containsOnce(form, ".o_form_view.o_form_readonly");
             assert.containsNone(document.body, ".modal");
 
-            await testUtils.dom.click(form.$('.o_field_cell[name="foo"]'));
+            await testUtils.dom.click(form.el.querySelector('.o_field_cell[name="foo"]'));
 
             assert.containsOnce(
                 form,
@@ -12442,7 +12591,7 @@ QUnit.module("Views", (hooks) => {
                 "create line should be displayed"
             );
 
-            await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+            await testUtils.dom.click(form.el.querySelector(".o_field_x2many_list_row_add a"));
             await testUtils.nextTick(); // wait for quick edit
 
             assert.containsOnce(
@@ -12452,7 +12601,7 @@ QUnit.module("Views", (hooks) => {
             );
             assert.strictEqual(
                 document.activeElement,
-                form.$('.o_field_cell[name="foo"] input')[0]
+                form.el.querySelector('.o_field_cell[name="foo"] input')[0]
             );
         }
     );
@@ -12483,7 +12632,7 @@ QUnit.module("Views", (hooks) => {
             assert.containsOnce(form, ".o_form_view.o_form_readonly");
             assert.containsNone(document.body, ".modal");
 
-            await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+            await testUtils.dom.click(form.el.querySelector(".o_field_x2many_list_row_add a"));
             await testUtils.nextTick(); // wait for quick edit
 
             assert.containsOnce(
@@ -12525,9 +12674,12 @@ QUnit.module("Views", (hooks) => {
                 2,
                 "remove buttons should be displayed"
             );
-            assert.strictEqual(form.$('.o_field_cell[name="foo"]').text(), "yopblip");
+            assert.strictEqual(
+                form.el.querySelector('.o_field_cell[name="foo"]').innerText,
+                "yopblip"
+            );
 
-            await testUtils.dom.click(form.$(".o_list_record_remove button")[0]);
+            await testUtils.dom.click(form.el.querySelector(".o_list_record_remove button")[0]);
             await testUtils.nextTick(); // wait for quick edit
 
             assert.containsOnce(
@@ -12536,7 +12688,10 @@ QUnit.module("Views", (hooks) => {
                 "should switch into edit mode"
             );
             assert.containsOnce(form, ".o_data_row", "only one record should remain");
-            assert.strictEqual(form.$('.o_field_cell[name="foo"]').text(), "blip");
+            assert.strictEqual(
+                form.el.querySelector('.o_field_cell[name="foo"]').innerText,
+                "blip"
+            );
         }
     );
 
@@ -12569,9 +12724,12 @@ QUnit.module("Views", (hooks) => {
                 2,
                 "remove buttons should be displayed"
             );
-            assert.strictEqual(form.$('.o_field_cell[name="foo"]').text(), "yopblip");
+            assert.strictEqual(
+                form.el.querySelector('.o_field_cell[name="foo"]').innerText,
+                "yopblip"
+            );
 
-            await testUtils.dom.click(form.$(".o_list_record_remove button")[0]);
+            await testUtils.dom.click(form.el.querySelector(".o_list_record_remove button")[0]);
             await testUtils.nextTick(); // wait for quick edit
 
             assert.containsOnce(
@@ -12580,7 +12738,10 @@ QUnit.module("Views", (hooks) => {
                 "should switch into edit mode"
             );
             assert.containsOnce(form, ".o_data_row", "only one record should remain");
-            assert.strictEqual(form.$('.o_field_cell[name="foo"]').text(), "blip");
+            assert.strictEqual(
+                form.el.querySelector('.o_field_cell[name="foo"]').innerText,
+                "blip"
+            );
         }
     );
 
@@ -12600,10 +12761,13 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsOnce(form, ".o_form_view.o_form_readonly");
 
-        await testUtils.dom.click(form.$('.o_field_widget[name="date"]'));
+        await testUtils.dom.click(form.el.querySelector('.o_field_widget[name="date"]'));
 
         assert.containsOnce(form, ".o_form_view.o_form_editable", "should switch into edit mode");
-        assert.strictEqual(document.activeElement, form.$('.o_field_widget[name="date"] input')[0]);
+        assert.strictEqual(
+            document.activeElement,
+            form.el.querySelector('.o_field_widget[name="date"] input')[0]
+        );
         assert.containsOnce(document.body, ".bootstrap-datetimepicker-widget");
     });
 
@@ -12627,7 +12791,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsOnce(form, ".o_form_view.o_form_readonly");
 
-        await testUtils.dom.click(form.$('.o_field_widget[name="trululu"]'));
+        await testUtils.dom.click(form.el.querySelector('.o_field_widget[name="trululu"]'));
 
         assert.containsOnce(form, ".o_form_view.o_form_readonly");
         assert.verifySteps(["read", "get_formview_action"]);
@@ -12665,7 +12829,7 @@ QUnit.module("Views", (hooks) => {
             "create line should be displayed"
         );
 
-        await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+        await testUtils.dom.click(form.el.querySelector(".o_field_x2many_list_row_add a"));
         await testUtils.nextTick(); // wait for quick edit
 
         assert.containsOnce(form, ".o_form_view.o_form_editable", "should switch into edit mode");
@@ -12694,7 +12858,9 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(form, 'input[type="checkbox"]:checked');
         assert.containsNone(form, 'input[type="checkbox"]:disabled');
 
-        await testUtils.dom.click(form.$('.o_field_widget[name="timmy"] label:eq(1)'));
+        await testUtils.dom.click(
+            form.el.querySelector('.o_field_widget[name="timmy"] label:eq(1)')
+        );
 
         assert.containsOnce(form, ".o_form_view.o_form_editable");
         assert.containsOnce(form, 'input[type="checkbox"]:checked');
@@ -12721,7 +12887,9 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(form, 'input[type="checkbox"]:checked');
         assert.containsNone(form, 'input[type="checkbox"]:not(:disabled)');
 
-        await testUtils.dom.click(form.$('.o_field_widget[name="timmy"] label:eq(1)'));
+        await testUtils.dom.click(
+            form.el.querySelector('.o_field_widget[name="timmy"] label:eq(1)')
+        );
 
         assert.containsOnce(form, ".o_form_view.o_form_readonly");
         assert.containsNone(form, 'input[type="checkbox"]:not(:disabled)');
@@ -12747,7 +12915,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(form, ".o_form_view.o_form_readonly");
         assert.containsNone(form, 'input[type="checkbox"]:checked');
 
-        await testUtils.dom.click(form.$(".o_td_label .o_form_label"));
+        await testUtils.dom.click(form.el.querySelector(".o_td_label .o_form_label"));
 
         assert.containsOnce(form, ".o_form_view.o_form_editable");
         assert.containsNone(form, 'input[type="checkbox"]:checked');
@@ -12771,7 +12939,9 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(form, 'input[type="radio"]:eq(1):checked');
         assert.containsNone(form, 'input[type="radio"]:disabled');
 
-        await testUtils.dom.click(form.$('.o_field_widget[name="trululu"] label:eq(1)'));
+        await testUtils.dom.click(
+            form.el.querySelector('.o_field_widget[name="trululu"] label:eq(1)')
+        );
 
         assert.containsOnce(form, ".o_form_view.o_form_editable");
         assert.containsOnce(form, 'input[type="radio"]:eq(1):checked');
@@ -12797,7 +12967,9 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(form, 'input[type="radio"]:eq(2):checked');
         assert.containsNone(form, 'input[type="radio"]:not(:disabled)');
 
-        await testUtils.dom.click(form.$('.o_field_widget[name="trululu"] label:eq(1)'));
+        await testUtils.dom.click(
+            form.el.querySelector('.o_field_widget[name="trululu"] label:eq(1)')
+        );
 
         assert.containsOnce(form, ".o_form_view.o_form_readonly");
         assert.containsOnce(form, 'input[type="radio"]:eq(2):checked');
@@ -12823,7 +12995,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(form, ".o_form_view.o_form_readonly");
         assert.containsOnce(form, 'input[type="radio"]:eq(2):checked');
 
-        await testUtils.dom.click(form.$(".o_td_label .o_form_label"));
+        await testUtils.dom.click(form.el.querySelector(".o_td_label .o_form_label"));
 
         assert.containsOnce(form, ".o_form_view.o_form_editable");
         assert.containsOnce(form, 'input[type="radio"]:eq(2):checked');
@@ -12855,7 +13027,9 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(form, 'input[type="radio"]:eq(0):checked');
 
         // click on the last value
-        await testUtils.dom.click(form.$(".o_radio_item .o_form_label:contains(EF)"));
+        await testUtils.dom.click(
+            form.el.querySelector(".o_radio_item .o_form_label:contains(EF)")
+        );
 
         // should be switched in edit mode
         assert.containsOnce(form, ".o_form_view.o_form_editable");
@@ -12881,10 +13055,10 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsOnce(form, ".o_form_view.o_form_readonly");
-        await testUtils.dom.click(form.$(".o_form_label"));
+        await testUtils.dom.click(form.el.querySelector(".o_form_label"));
         assert.containsOnce(form, ".o_form_view.o_form_readonly");
 
-        await testUtils.dom.click(form.$(".o_field_widget"));
+        await testUtils.dom.click(form.el.querySelector(".o_field_widget"));
         assert.containsOnce(form, ".o_form_view.o_form_readonly");
     });
 
@@ -12907,7 +13081,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(form, ".o_form_view.o_form_readonly");
         assert.containsOnce(form, ".o_clipboard_button");
 
-        await testUtils.dom.click(form.$(".o_field_copy"));
+        await testUtils.dom.click(form.el.querySelector(".o_field_copy"));
 
         assert.containsOnce(form, ".o_form_view.o_form_editable");
         assert.containsNone(form, ".o_clipboard_button");
@@ -12932,7 +13106,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(form, ".o_form_view.o_form_readonly");
         assert.containsOnce(form, ".o_clipboard_button");
 
-        await testUtils.dom.click(form.$(".o_field_copy .o_clipboard_button"));
+        await testUtils.dom.click(form.el.querySelector(".o_field_copy .o_clipboard_button"));
 
         assert.containsOnce(form, ".o_form_view.o_form_readonly");
         assert.containsOnce(form, ".o_clipboard_button");
@@ -12985,26 +13159,26 @@ QUnit.module("Views", (hooks) => {
         // text selected by holding and dragging doesn't start quick edit
         window.getSelection().removeAllRanges();
         const range = document.createRange();
-        await range.selectNode(form.$('.o_field_widget[name="display_name"]')[0]);
+        await range.selectNode(form.el.querySelector('.o_field_widget[name="display_name"]')[0]);
         window.getSelection().addRange(range);
-        await testUtils.dom.click(form.$('.o_field_widget[name="display_name"]'));
+        await testUtils.dom.click(form.el.querySelector('.o_field_widget[name="display_name"]'));
         await testUtils.nextTick();
         assert.strictEqual(quickEditCB, undefined, "no quickEdit callback should have been set");
         assert.containsOnce(form, ".o_legacy_form_view.o_form_readonly");
 
         // double click selecting text doesn't start quick edit
         window.getSelection().removeAllRanges();
-        testUtils.dom.click(form.$('.o_field_widget[name="display_name"]'));
-        range.selectNode(form.$('.o_field_widget[name="display_name"]')[0]);
+        testUtils.dom.click(form.el.querySelector('.o_field_widget[name="display_name"]'));
+        range.selectNode(form.el.querySelector('.o_field_widget[name="display_name"]')[0]);
         window.getSelection().addRange(range);
-        await testUtils.dom.click(form.$('.o_field_widget[name="display_name"]'));
+        await testUtils.dom.click(form.el.querySelector('.o_field_widget[name="display_name"]'));
         await testUtils.nextTick();
         assert.strictEqual(quickEditCB, undefined, "no quickEdit callback should have been set");
         assert.containsOnce(form, ".o_legacy_form_view.o_form_readonly");
 
         // quick edit happens after timeout
         window.getSelection().removeAllRanges();
-        await testUtils.dom.click(form.$('.o_field_widget[name="display_name"]'));
+        await testUtils.dom.click(form.el.querySelector('.o_field_widget[name="display_name"]'));
         await testUtils.nextTick();
         assert.containsOnce(form, ".o_legacy_form_view.o_form_readonly");
         assert.ok(quickEditCB, "quickEdit callback should have been set");
@@ -13035,7 +13209,7 @@ QUnit.module("Views", (hooks) => {
                 resId: 1,
             });
 
-            await testUtils.dom.click(form.$(".o_form_label"));
+            await testUtils.dom.click(form.el.querySelector(".o_form_label"));
             assert.containsNone(form, "button.o_catch_attention:visible");
         }
     );
@@ -13061,7 +13235,7 @@ QUnit.module("Views", (hooks) => {
                 resId: 1,
             });
 
-            await testUtils.dom.click(form.$(".o_field_widget"));
+            await testUtils.dom.click(form.el.querySelector(".o_field_widget"));
             assert.containsNone(form, "button.o_catch_attention:visible");
         }
     );
@@ -13087,7 +13261,7 @@ QUnit.module("Views", (hooks) => {
                 resId: 1,
             });
 
-            await testUtils.dom.click(form.$(".o_field_widget"));
+            await testUtils.dom.click(form.el.querySelector(".o_field_widget"));
             assert.containsNone(form, "button.o_catch_attention:visible");
         }
     );
@@ -13144,7 +13318,7 @@ QUnit.module("Views", (hooks) => {
             "widget.on_attach_callback", // Initial widget attached
         ]);
 
-        const initialWidget = form.$(".custom-widget")[0];
+        const initialWidget = form.el.querySelector(".custom-widget")[0];
         testPromise = testUtils.makeTestPromise();
 
         await click(form.el.querySelector(".o_form_button_edit"));
@@ -13152,7 +13326,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(form, ".custom-widget");
         assert.strictEqual(
             initialWidget,
-            form.$(".custom-widget")[0],
+            form.el.querySelector(".custom-widget")[0],
             "Widgets have yet to be replaced"
         );
         assert.verifySteps([]);
@@ -13163,7 +13337,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(form, ".custom-widget");
         assert.notStrictEqual(
             initialWidget,
-            form.$(".custom-widget")[0],
+            form.el.querySelector(".custom-widget")[0],
             "Widgets have been replaced"
         );
         assert.verifySteps([
@@ -13187,7 +13361,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.strictEqual(
-            form.$(".o_field_widget[name=foo] input").val(),
+            form.el.querySelector(".o_field_widget[name=foo] input").value,
             "foo default",
             "should contain input with initial value"
         );
@@ -13248,7 +13422,7 @@ QUnit.module("Views", (hooks) => {
                 },
             });
 
-            await testUtils.dom.click(form.$(".o_field_x2many_list_row_add a"));
+            await testUtils.dom.click(form.el.querySelector(".o_field_x2many_list_row_add a"));
             assert.containsOnce(
                 document.body,
                 ".modal input.o_field_widget[name=foo]",
