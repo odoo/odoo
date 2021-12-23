@@ -535,6 +535,7 @@ form: module.record_id""" % (xml_id,)
         res = {}
         sub_records = []
         for field in rec.findall('./field'):
+            o2m_have_sub_records = False
             #TODO: most of this code is duplicated above (in _eval_xml)...
             f_name = field.get("name")
             f_ref = field.get("ref")
@@ -582,8 +583,11 @@ form: module.record_id""" % (xml_id,)
                         if isinstance(f_val, str):
                             f_val = None
                         for child in field.findall('./record'):
+                            o2m_have_sub_records = True
                             sub_records.append((child, model._fields[f_name].inverse_name))
-            res[f_name] = f_val
+            # Not add in vals becouse it's added by sub_records
+            if not o2m_have_sub_records:
+                res[f_name] = f_val
         if extra_vals:
             res.update(extra_vals)
 
