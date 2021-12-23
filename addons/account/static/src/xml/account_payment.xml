@@ -37,8 +37,11 @@
                         <td>
                            <a role="button" tabindex="0" class="js_payment_info fa fa-info-circle" t-att-index="line.index" style="margin-right:5px;" aria-label="Info" title="Journal Entry Info" data-toggle="tooltip"></a>
                         </td>
-                        <td>
-                            <i class="o_field_widget text-right o_payment_label">Paid on <t t-esc="line.date"></t></i>
+                        <td t-if="!line.is_exchange">
+                            <i class="o_field_widget text-left o_payment_label">Paid on <t t-esc="line.date"></t></i>
+                        </td>
+                        <td t-if="line.is_exchange">
+                            <i class="o_field_widget text-left o_payment_label text-muted">Exchange Difference</i>
                         </td>
                     </t>
                         <td style="text-align:right;">
@@ -46,7 +49,12 @@
                                 <t t-if="line.position === 'before'">
                                     <t t-esc="line.currency"/>
                                 </t>
-                                <t t-esc="line.amount"></t>
+                                <t t-if="!line.is_exchange">
+                                    <t t-esc="line.amount"/>
+                                </t>
+                                <t t-if="line.is_exchange">
+                                    <i class="text-muted"><t t-esc="line.amount"/></i>
+                                </t>
                                 <t t-if="line.position === 'after'">
                                     <t t-esc="line.currency"/>
                                 </t>
@@ -64,12 +72,9 @@
                 <tr>
                     <td><strong>Amount: </strong></td>
                     <td>
-                        <t t-if="position === 'before'">
-                            <t t-esc="currency"/>
-                        </t>
-                        <t t-esc="amount"></t>
-                        <t t-if="position === 'after'">
-                            <t t-esc="currency"/>
+                        <t t-esc="amount_company_currency"></t>
+                        <t t-if="amount_foreign_currency">
+                            (<span class="fa fa-money"/> <t t-esc="amount_foreign_currency"/>)
                         </t>
                     </td>
                 </tr>
