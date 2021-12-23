@@ -598,7 +598,7 @@ options.Class.include({
         return this._rpc({
             route: '/website/theme_customize_data',
             params: {
-                'isViewData': isViewData,
+                'is_view_data': isViewData,
                 'enable': enableDataKeys,
                 'disable': disableDataKeys,
                 'reset_view_arch': resetViewArch,
@@ -636,7 +636,7 @@ options.Class.include({
             route: '/website/theme_customize_data_get',
             params: {
                 'keys': allDataKeys,
-                'isViewData': isViewData,
+                'is_view_data': isViewData,
             },
         });
         let mostValuesStr = '';
