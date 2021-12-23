@@ -62,9 +62,9 @@ class TestWishlistEmail(TestWebsiteSaleStockProductWarehouse):
         # email notifications
         Wishlist = self.env['product.wishlist']
 
-        wish_1 = Wishlist._add_to_wishlist(product_id=self.product_1.id, partner_id=self.partner.id, website_id=self.current_website.id, currency_id=self.currency.id, pricelist_id=self.pricelist.id, price=self.product_1.price)
+        wish_1 = Wishlist._add_to_wishlist(product_id=self.product_1.id, partner_id=self.partner.id, website_id=self.current_website.id, currency_id=self.currency.id, pricelist_id=self.pricelist.id, price=self.product_1.list_price)
         self.assertEqual(wish_1.stock_notification, False)
-        wish_2 = Wishlist._add_to_wishlist(product_id=self.product_2.id, partner_id=self.partner.id, website_id=self.current_website.id, currency_id=self.currency.id, pricelist_id=self.pricelist.id, price=self.product_2.price)
+        wish_2 = Wishlist._add_to_wishlist(product_id=self.product_2.id, partner_id=self.partner.id, website_id=self.current_website.id, currency_id=self.currency.id, pricelist_id=self.pricelist.id, price=self.product_2.list_price)
         self.assertEqual(wish_2.stock_notification, True)
 
         # No email should be sent

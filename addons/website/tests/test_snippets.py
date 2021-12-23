@@ -3,13 +3,12 @@
 
 from lxml import html
 
-import odoo
-import odoo.tests
+from odoo.tests import HttpCase, tagged
 from odoo.addons.website.tools import MockRequest
 
 
-@odoo.tests.common.tagged('post_install', '-at_install', 'website_snippets')
-class TestSnippets(odoo.tests.HttpCase):
+@tagged('post_install', '-at_install', 'website_snippets')
+class TestSnippets(HttpCase):
 
     def test_01_empty_parents_autoremove(self):
         self.start_tour("/?enable_editor=1", "snippet_empty_parent_autoremove", login='admin')

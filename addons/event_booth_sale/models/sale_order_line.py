@@ -93,7 +93,7 @@ class SaleOrderLine(models.Model):
             return booths._get_booth_multiline_description()
         return super(SaleOrderLine, self).get_sale_order_line_multiline_description_sale(product)
 
-    def _get_display_price(self, product):
+    def _get_display_price(self):
         if self.event_booth_pending_ids and self.event_id:
             company = self.event_id.company_id or self.env.company
             currency = company.currency_id
@@ -102,4 +102,4 @@ class SaleOrderLine(models.Model):
                 total_price, self.order_id.currency_id,
                 self.order_id.company_id or self.env.company.id,
                 self.order_id.date_order or fields.Date.today())
-        return super(SaleOrderLine, self)._get_display_price(product)
+        return super()._get_display_price()

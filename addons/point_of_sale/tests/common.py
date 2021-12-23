@@ -406,7 +406,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         fiscal_position = customer.property_account_position_id if customer else default_fiscal_position
 
         def create_order_line(product, quantity):
-            price_unit = self.pricelist.get_product_price(product, quantity, False)
+            price_unit = self.pricelist._get_product_price(product, quantity)
             tax_ids = fiscal_position.map_tax(product.taxes_id)
             tax_values = (
                 tax_ids.compute_all(price_unit, self.currency, quantity)

@@ -44,7 +44,7 @@ class RepairLine(models.Model):
         product = bom_line.product_id
         uom = bom_line.product_uom_id
         partner = self.repair_id.partner_id
-        price = self.repair_id.pricelist_id.get_product_price(product, qty, partner, uom_id=uom.id)
+        price = self.repair_id.pricelist_id._get_product_price(product, qty, uom=uom)
         tax = self.env['account.tax']
         if partner:
             partner_invoice = self.repair_id.partner_invoice_id or partner

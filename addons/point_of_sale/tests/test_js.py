@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import odoo.tests
+from odoo.tests import tagged, HttpCase
 
 
-@odoo.tests.tagged("post_install", "-at_install")
-class WebSuite(odoo.tests.HttpCase):
+@tagged("post_install", "-at_install")
+class WebSuite(HttpCase):
     def setUp(self):
         super().setUp()
         env = self.env(user=self.env.ref('base.user_admin'))

@@ -104,55 +104,52 @@ class SaleOrder(models.Model):
 
     def _website_product_id_change(self, order_id, product_id, qty=0, **kwargs):
         order = self.sudo().browse(order_id)
-        product_context = dict(self.env.context)
-        product_context.setdefault('lang', order.partner_id.lang)
-        product_context.update({
-            'partner': order.partner_id,
-            'quantity': qty,
-            'date': order.date_order,
-            'pricelist': order.pricelist_id.id,
-        })
-        product = self.env['product.product'].with_context(product_context).with_company(order.company_id.id).browse(product_id)
-        discount = 0
+        order = order.with_company(order.company_id)
+        product = order.env['product.product'].browse(product_id)
 
-        if order.pricelist_id.discount_policy == 'without_discount':
-            # This part is pretty much a copy-paste of the method '_compute_discount' of
+        discount = 0
+        order_date = order.date_order or fields.Date.today()
+        qty = qty or 1.0
+
+        pricelist = order.pricelist_id
+        pricelist_price, pricelist_rule_id = pricelist._get_product_price_rule(product, qty, date=order_date)
+        # TODO VFE factorize discount computation or delegate discount computation to sale computes
+        if pricelist.discount_policy == 'without_discount':
+            # This part is pretty much a copy-paste of the method '_onchange_discount' of
             # 'sale.order.line'.
-            price, rule_id = order.pricelist_id.with_context(product_context).get_product_price_rule(product, qty or 1.0, order.partner_id)
-            pu, currency = request.env['sale.order.line'].with_context(product_context)._get_real_price_currency(product, rule_id, qty, product.uom_id, order.pricelist_id.id)
-            if order.pricelist_id and order.partner_id:
-                order_line = order._cart_find_product_line(product.id)
-                if order_line:
-                    price = self.env['account.tax']._fix_tax_included_price_company(price, product.taxes_id, order_line[0].tax_id, self.company_id)
-                    pu = self.env['account.tax']._fix_tax_included_price_company(pu, product.taxes_id, order_line[0].tax_id, self.company_id)
-            if pu != 0:
-                if order.pricelist_id.currency_id != currency:
+            pricelist_base_price, currency = request.env['sale.order.line']._get_real_price_currency(
+                product, pricelist_rule_id, qty, product.uom_id, date=order_date)
+            if pricelist_base_price != 0:
+                if order.currency_id != currency:
                     # we need new_list_price in the same currency as price, which is in the SO's pricelist's currency
-                    date = order.date_order or fields.Date.today()
-                    pu = currency._convert(pu, order.pricelist_id.currency_id, order.company_id, date)
-                discount = (pu - price) / pu * 100
+                    pricelist_base_price = currency._convert(
+                        pricelist_base_price, order.currency_id, order.company_id, order_date)
+
+                price = pricelist_base_price
+                discount = (pricelist_base_price - pricelist_price) / pricelist_base_price * 100
                 if discount < 0:
                     # In case the discount is negative, we don't want to show it to the customer,
                     # but we still want to use the price defined on the pricelist
                     discount = 0
-                    pu = price
+                    price = pricelist_price
             else:
                 # In case the price_unit equal 0 and therefore not able to calculate the discount,
                 # we fallback on the price defined on the pricelist.
-                pu = price
+                price = pricelist_price
         else:
-            pu = product.price
-            if order.pricelist_id and order.partner_id:
-                order_line = order._cart_find_product_line(product.id)
-                if order_line:
-                    pu = self.env['account.tax']._fix_tax_included_price_company(pu, product.taxes_id, order_line[0].tax_id, self.company_id)
+            price = pricelist_price
+
+        if order.pricelist_id and order.partner_id:
+            order_line = order._cart_find_product_line(product.id)
+            if order_line:
+                price = self.env['account.tax']._fix_tax_included_price_company(
+                    price, product.taxes_id, order_line[0].tax_id, order.company_id)
 
         return {
             'product_id': product_id,
             'product_uom_qty': qty,
             'order_id': order_id,
-            'product_uom': product.uom_id.id,
-            'price_unit': pu,
+            'price_unit': price,
             'discount': discount,
         }
 
@@ -266,15 +263,9 @@ class SaleOrder(models.Model):
             no_variant_attributes_price_extra = [ptav.price_extra for ptav in order_line.product_no_variant_attribute_value_ids]
             values = self.with_context(no_variant_attributes_price_extra=tuple(no_variant_attributes_price_extra))._website_product_id_change(self.id, product_id, qty=quantity, **kwargs)
             order = self.sudo().browse(self.id)
-            if self.pricelist_id.discount_policy == 'with_discount' and not self.env.context.get('fixed_price'):
-                product_context.update({
-                    'partner': order.partner_id,
-                    'quantity': quantity,
-                    'date': order.date_order,
-                    'pricelist': order.pricelist_id.id,
-                })
-            product_with_context = self.env['product.product'].with_context(product_context).with_company(order.company_id.id)
-            product = product_with_context.browse(product_id)
+
+            product = product.with_company(order.company_id)
+            product_with_context = product_with_context.with_company(order.company_id)
 
             order_line.write(values)
 

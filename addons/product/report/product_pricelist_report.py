@@ -52,7 +52,7 @@ class ProductPricelistReport(models.AbstractModel):
             'uom': product.uom_id.name,
         }
         for qty in quantities:
-            data['price'][qty] = pricelist.get_product_price(product, qty, False)
+            data['price'][qty] = pricelist._get_product_price(product, qty)
 
         if is_product_tmpl and product.product_variant_count > 1:
             data['variants'] = [

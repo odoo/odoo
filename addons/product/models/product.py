@@ -75,10 +75,6 @@ class ProductProduct(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'priority desc, default_code, name, id'
 
-    # price: total price, context dependent (partner, pricelist, quantity)
-    price = fields.Float(
-        'Price', compute='_compute_product_price',
-        digits='Product Price', inverse='_set_product_price')
     # price_extra: catalog extra value only, sum of variant extra attributes
     price_extra = fields.Float(
         'Variant Price Extra', compute='_compute_product_price_extra',
@@ -233,42 +229,6 @@ class ProductProduct(models.Model):
 
     def _compute_is_product_variant(self):
         self.is_product_variant = True
-
-    @api.depends_context('pricelist', 'partner', 'quantity', 'uom', 'date', 'no_variant_attributes_price_extra')
-    def _compute_product_price(self):
-        prices = {}
-        pricelist_id_or_name = self._context.get('pricelist')
-        if pricelist_id_or_name:
-            pricelist = None
-            partner = self.env.context.get('partner', False)
-            quantity = self.env.context.get('quantity', 1.0)
-
-            # Support context pricelists specified as list, display_name or ID for compatibility
-            if isinstance(pricelist_id_or_name, list):
-                pricelist_id_or_name = pricelist_id_or_name[0]
-            if isinstance(pricelist_id_or_name, str):
-                pricelist_name_search = self.env['product.pricelist'].name_search(pricelist_id_or_name, operator='=', limit=1)
-                if pricelist_name_search:
-                    pricelist = self.env['product.pricelist'].browse([pricelist_name_search[0][0]])
-            elif isinstance(pricelist_id_or_name, int):
-                pricelist = self.env['product.pricelist'].browse(pricelist_id_or_name)
-
-            if pricelist:
-                quantities = [quantity] * len(self)
-                partners = [partner] * len(self)
-                prices = pricelist.get_products_price(self, quantities, partners)
-
-        for product in self:
-            product.price = prices.get(product.id, 0.0)
-
-    def _set_product_price(self):
-        for product in self:
-            if self._context.get('uom'):
-                value = self.env['uom.uom'].browse(self._context['uom'])._compute_price(product.price, product.uom_id)
-            else:
-                value = product.price
-            value -= product.price_extra
-            product.write({'list_price': value})
 
     @api.onchange('lst_price')
     def _set_product_lst_price(self):
@@ -663,40 +623,41 @@ class ProductProduct(models.Model):
                 res |= seller
         return res.sorted('price')[:1]
 
-    def price_compute(self, price_type, uom=False, currency=False, company=None):
-        # TDE FIXME: delegate to template or not ? fields are reencoded here ...
-        # compatibility about context keys used a bit everywhere in the code
-        if not uom and self._context.get('uom'):
-            uom = self.env['uom.uom'].browse(self._context['uom'])
-        if not currency and self._context.get('currency'):
-            currency = self.env['res.currency'].browse(self._context['currency'])
+    def price_compute(self, price_type, uom=None, currency=None, company=None, date=False):
+        company = company or self.env.company
+        date = date or fields.Date.context_today(self)
 
-        products = self
+        self = self.with_company(company)
         if price_type == 'standard_price':
             # standard_price field can only be seen by users in base.group_user
             # Thus, in order to compute the sale price from the cost for users not in this group
             # We fetch the standard price as the superuser
-            products = self.with_company(company or self.env.company).sudo()
+            self = self.sudo()
 
         prices = dict.fromkeys(self.ids, 0.0)
-        for product in products:
-            prices[product.id] = product[price_type] or 0.0
+        for product in self:
+            price = product[price_type] or 0.0
+            price_currency = product.currency_id
+            if price_type == 'standard_price':
+                price_currency = product.cost_currency_id
+
             if price_type == 'list_price':
-                prices[product.id] += product.price_extra
+                price += product.price_extra
                 # we need to add the price from the attributes that do not generate variants
                 # (see field product.attribute create_variant)
                 if self._context.get('no_variant_attributes_price_extra'):
                     # we have a list of price_extra that comes from the attribute values, we need to sum all that
-                    prices[product.id] += sum(self._context.get('no_variant_attributes_price_extra'))
+                    price += sum(self._context.get('no_variant_attributes_price_extra'))
 
             if uom:
-                prices[product.id] = product.uom_id._compute_price(prices[product.id], uom)
+                price = product.uom_id._compute_price(price, uom)
 
             # Convert from current user company currency to asked one
             # This is right cause a field cannot be in more than one currency
             if currency:
-                prices[product.id] = product.currency_id._convert(
-                    prices[product.id], currency, product.company_id, fields.Date.today())
+                price = price_currency._convert(price, currency, company, date)
+
+            prices[product.id] = price
 
         return prices
 
@@ -746,6 +707,18 @@ class ProductProduct(models.Model):
                                                           and product.product_tmpl_id.product_variant_ids)).mapped('product_tmpl_id')
         (tmpl_to_deactivate + tmpl_to_activate).toggle_active()
         return result
+
+    def _get_contextual_price(self):
+        self.ensure_one()
+        # YTI TODO: During website_sale cleaning, we should get rid of those crappy context thing
+        if not self._context.get('pricelist'):
+            return 0.0
+        pricelist = self.env['product.pricelist'].browse(self._context.get('pricelist'))
+
+        quantity = self.env.context.get('quantity', 1.0)
+        uom = self.env['uom.uom'].browse(self.env.context.get('uom'))
+        date = self.env.context.get('date')
+        return pricelist._get_product_price(self, quantity, uom=uom, date=date)
 
 
 class ProductPackaging(models.Model):

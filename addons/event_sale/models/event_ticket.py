@@ -44,7 +44,7 @@ class EventTemplateTicket(models.Model):
                 ticket.description = False
 
     # TODO clean this feature in master
-    # Feature broken by design, depending on the hacky `price` field on products
+    # Feature broken by design, depending on the hacky `_get_contextual_price` field on products
     # context_dependent, core part of the pricelist mess
     # This field usage should be restricted to the UX, and any use in effective
     # price computation should be replaced by clear calls to the pricelist API
@@ -53,7 +53,12 @@ class EventTemplateTicket(models.Model):
     def _compute_price_reduce(self):
         for ticket in self:
             product = ticket.product_id
-            discount = (product.lst_price - product.price) / product.lst_price if product.lst_price else 0.0
+            # TODO drop price field usage
+            # and ideally remove this whole price_reduce logic
+            # seems strange to not apply pricelist logic but still use pricelist discount...
+            discount = (
+                product.lst_price - product._get_contextual_price()
+            ) / product.lst_price if product.lst_price else 0.0
             ticket.price_reduce = (1.0 - discount) * ticket.price
 
     def _init_column(self, column_name):

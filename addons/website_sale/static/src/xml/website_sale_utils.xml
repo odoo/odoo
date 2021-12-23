@@ -27,7 +27,7 @@
                     <br/>
                 </t>
                 <b class="text-nowrap">
-                    <t t-out="product['price']"/>
+                    <t t-out="product._get_contextual_price()"/>
                 </b>
             </div>
         </div>
