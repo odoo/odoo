@@ -544,6 +544,7 @@ form: module.record_id""" % (xml_id,)
                 f_model = model._fields[f_name].comodel_name
             f_use = field.get("use",'') or 'id'
             f_val = False
+            has_value = True
 
             if f_search:
                 idref2 = _get_idref(self, env, f_model, self.idref)
@@ -580,10 +581,12 @@ form: module.record_id""" % (xml_id,)
                         f_val = str2bool(f_val)
                     elif field_type == 'one2many':
                         if isinstance(f_val, str):
-                            f_val = None
+                            has_value = False
                         for child in field.findall('./record'):
                             sub_records.append((child, model._fields[f_name].inverse_name))
-            res[f_name] = f_val
+            if has_value:
+                res[f_name] = f_val
+
         if extra_vals:
             res.update(extra_vals)
 
