@@ -196,7 +196,7 @@ odoo.define('payment_adyen.payment_form', require => {
          * @param {string} flow - The online payment flow of the transaction
          * @return {Promise}
          */
-        _processPayment: function (provider, paymentOptionId, flow) {
+        async _processPayment(provider, paymentOptionId, flow) {
             if (provider !== 'adyen' || flow === 'token') {
                 return this._super(...arguments); // Tokens are handled by the generic flow
             }
@@ -205,7 +205,7 @@ odoo.define('payment_adyen.payment_form', require => {
                     _t("Server Error"), _t("We are not able to process your payment.")
                 );
             } else {
-                return this.adyenDropin.submit();
+                return await this.adyenDropin.submit();
             }
         },
 
