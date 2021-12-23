@@ -85,6 +85,7 @@ class Http(models.AbstractModel):
                         comp.id: {
                             'id': comp.id,
                             'name': comp.name,
+                            'sequence': comp.sequence,
                         } for comp in user.company_ids
                     },
                 },
