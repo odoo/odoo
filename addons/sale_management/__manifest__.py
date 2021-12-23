@@ -38,17 +38,21 @@ The Dashboard for the Sales Manager will include
     'website': 'https://www.odoo.com/app/sales',
     'depends': ['sale', 'digest'],
     'data': [
-        'security/sale_management_security.xml',
+        # TODO VFE add data validation on manifest loading
+        # We were loading digest_data twice...
         'data/digest_data.xml',
+
+        'security/ir.model.access.csv',
+        'security/sale_management_security.xml',
+
+        'report/sale_report_templates.xml',
+
         'views/sale_portal_templates.xml',
         'views/sale_order_template_views.xml',
-        'security/ir.model.access.csv',
         'views/res_config_settings_views.xml',
-        'data/digest_data.xml',
-        'views/sale_management_views.xml',
         'views/digest_views.xml',
         'views/sale_order_views.xml',
-        'report/sale_report_templates.xml',
+        'views/sale_management_menus.xml',
     ],
     'demo': [
         'data/sale_order_template_demo.xml',

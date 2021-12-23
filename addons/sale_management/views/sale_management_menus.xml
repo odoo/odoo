@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="sale.sale_menu_root" model="ir.ui.menu">
+        <field name="active" eval="True"/>
+    </record>
+
+    <menuitem id="sale_order_template_menu"
+        name="Quotation Templates"
+        action="sale_order_template_action"
+        parent="sale.menu_sales_config"
+        groups="sale_management.group_sale_order_template"
+        sequence="1"/>
+
+    <menuitem id="menu_product_attribute_action"
+        action="product.attribute_action"
+        parent="sale.prod_config_main"
+        groups="product.group_product_variant"
+        sequence="1"/>
+
+</odoo>

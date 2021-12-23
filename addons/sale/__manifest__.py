@@ -25,7 +25,10 @@ This module contains all the common features of Sales Management and eCommerce.
         'data/mail_template_data.xml',
         'data/mail_templates.xml',
         'data/sale_data.xml',
+
         'wizard/sale_make_invoice_advance_views.xml',
+        'wizard/sale_order_cancel_views.xml',
+        'wizard/sale_payment_link_views.xml',
 
         'views/account_views.xml',
         'views/sale_views.xml',
@@ -41,8 +44,7 @@ This module contains all the common features of Sales Management and eCommerce.
         'views/product_views.xml',
         'views/product_packaging_views.xml',
         'views/utm_campaign_views.xml',
-        'wizard/sale_order_cancel_views.xml',
-        'wizard/sale_payment_link_views.xml',
+        'views/sale_menus.xml',
     ],
     'demo': [
         'data/product_product_demo.xml',
