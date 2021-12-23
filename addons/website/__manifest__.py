@@ -122,6 +122,7 @@
             ('replace', 'web/static/src/legacy/js/public/public_root_instance.js', 'website/static/src/js/content/website_root_instance.js'),
             'website/static/src/scss/website.scss',
             'website/static/src/scss/website.ui.scss',
+            'website/static/src/scss/website.navbar.scss',
             'website/static/src/js/utils.js',
             'website/static/src/js/content/website_root.js',
             'website/static/src/js/widgets/dialog.js',
