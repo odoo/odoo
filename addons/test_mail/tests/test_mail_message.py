@@ -293,7 +293,9 @@ class TestMessageAccess(TestMailCommon):
     def test_mail_message_access_read_notification(self):
         attachment = self.env['ir.attachment'].create({
             'datas': base64.b64encode(b'My attachment'),
-            'name': 'doc.txt'})
+            'name': 'doc.txt',
+            'res_model': self.message._name,
+            'res_id': self.message.id})
         # attach the attachment to the message
         self.message.write({'attachment_ids': [(4, attachment.id)]})
         self.message.write({'partner_ids': [(4, self.user_employee.partner_id.id)]})

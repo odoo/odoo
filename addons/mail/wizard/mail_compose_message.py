@@ -334,9 +334,17 @@ class MailComposer(models.TransientModel):
                 'subject': record.subject or False,
                 'body_html': record.body or False,
                 'model_id': model.id or False,
-                'attachment_ids': [Command.set(record.attachment_ids.ids)],
             }
             template = self.env['mail.template'].create(values)
+
+            if record.attachment_ids:
+                # transfer pending attachments to the new template
+                attachments = self.env['ir.attachment'].sudo().browse(record.attachment_ids).filtered(
+                    lambda a: a.res_model == 'mail.compose.message' and a.create_uid.id == self._uid)
+                if attachments:
+                    attachments.write({'res_model': template._name, 'res_id': template.id})
+                template.attachment_ids |= record.attachment_ids
+
             # generate the saved template
             record.write({'template_id': template.id})
             record._onchange_template_id_wrapper()
