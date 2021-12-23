@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model/use_component_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 import { useUpdate } from '@mail/component_hooks/use_update/use_update';
 import { markEventHandled } from '@mail/utils/utils';
@@ -14,6 +15,7 @@ export class ComposerTextInput extends Component {
      */
     setup() {
         super.setup();
+        useComponentToModel({ fieldName: 'textInputComponent', modelName: 'ComposerView', propNameAsRecordLocalId: 'composerViewLocalId' });
         /**
          * Updates the composer text input content when composer is mounted
          * as textarea content can't be changed from the DOM.

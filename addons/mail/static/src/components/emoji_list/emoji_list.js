@@ -17,6 +17,10 @@ export class EmojiList extends Component {
         useUpdate({ func: () => this._update() });
     }
 
+    get emojiListView() {
+        return this.messaging && this.messaging.models['EmojiListView'].get(this.props.localId);
+    }
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -46,31 +50,11 @@ export class EmojiList extends Component {
         return Boolean(this.root.el && this.root.el.contains(node));
     }
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickEmoji(ev) {
-        this.close();
-        if (this.props.onEmojiSelection) {
-            this.props.onEmojiSelection({
-                unicode: ev.currentTarget.dataset.unicode,
-            });
-        }
-    }
-
 }
 
 Object.assign(EmojiList, {
     props: {
-        onEmojiSelection: {
-            type: Function,
-            optional: true,
-        },
+        localId: String,
     },
     template: 'mail.EmojiList',
 });

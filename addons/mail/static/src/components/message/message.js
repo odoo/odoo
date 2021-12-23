@@ -151,7 +151,7 @@ export class Message extends Component {
                 this.messageView &&
                 this.messageView.messageActionList &&
                 (
-                    this.messageView.messageActionList.isReactionPopoverOpened ||
+                    this.messageView.messageActionList.reactionPopoverView ||
                     this.messageView.messageActionList.showDeleteConfirm
                 )
             )

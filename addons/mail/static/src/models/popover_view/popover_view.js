@@ -2,11 +2,11 @@
 
 import { registerModel } from '@mail/model/model_core';
 import { attr, one2one } from '@mail/model/model_field';
-import { clear } from '@mail/model/model_field_command';
+import { clear, insertAndReplace, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'PopoverView',
-    identifyingFields: ['threadViewTopbarOwner', 'channelInvitationForm'],
+    identifyingFields: [['composerViewOwnerAsEmoji', 'messageActionListOwnerAsReaction', 'threadViewTopbarOwnerAsInvite']],
     lifecycleHooks: {
         _created() {
             this._onClickCaptureGlobal = this._onClickCaptureGlobal.bind(this);
@@ -18,12 +18,90 @@ registerModel({
     },
     recordMethods: {
         /**
+         * Returns whether the given html element is inside the component
+         * of this popover view.
+         *
+         * @param {Element} element
+         * @returns {boolean}
+         */
+        contains(element) {
+            return Boolean(this.component && this.component.root.el.contains(element));
+        },
+        /**
          * @private
          * @returns {owl.Ref}
          */
         _computeAnchorRef() {
-            if (this.threadViewTopbarOwner) {
-                return this.threadViewTopbarOwner.inviteButtonRef;
+            if (this.threadViewTopbarOwnerAsInvite) {
+                return this.threadViewTopbarOwnerAsInvite.inviteButtonRef;
+            }
+            if (this.composerViewOwnerAsEmoji) {
+                return this.composerViewOwnerAsEmoji.buttonEmojisRef;
+            }
+            if (this.messageActionListOwnerAsReaction) {
+                return this.messageActionListOwnerAsReaction.actionReactionRef;
+            }
+            return clear();
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeChannelInvitationForm() {
+            if (this.threadViewTopbarOwnerAsInvite) {
+                return insertAndReplace();
+            }
+            return clear();
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeContent() {
+            if (this.channelInvitationForm) {
+                return replace(this.channelInvitationForm);
+            }
+            if (this.emojiListView) {
+                return replace(this.emojiListView);
+            }
+            return clear();
+        },
+        /**
+         * @private
+         * @returns {string|FieldCommand}
+         */
+        _computeContentClassName() {
+            if (this.channelInvitationForm) {
+                return 'o_PopoverView_channelInvitationForm';
+            }
+            if (this.emojiListView) {
+                return 'o_PopoverView_emojiList';
+            }
+            return clear();
+        },
+        /**
+         * @private
+         * @returns {string|FieldCommand}
+         */
+        _computeContentComponentName() {
+            if (this.channelInvitationForm) {
+                return 'ChannelInvitationForm';
+            }
+            if (this.emojiListView) {
+                return 'EmojiList';
+            }
+            return clear();
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeEmojiListView() {
+            if (this.composerViewOwnerAsEmoji) {
+                return insertAndReplace();
+            }
+            if (this.messageActionListOwnerAsReaction) {
+                return insertAndReplace();
             }
             return clear();
         },
@@ -32,8 +110,14 @@ registerModel({
          * @returns {string}
          */
         _computePosition() {
-            if (this.threadViewTopbarOwner) {
+            if (this.threadViewTopbarOwnerAsInvite) {
                 return 'bottom';
+            }
+            if (this.composerViewOwnerAsEmoji) {
+                return 'top';
+            }
+            if (this.messageActionListOwnerAsReaction) {
+                return 'top';
             }
             return clear();
         },
@@ -68,14 +152,61 @@ registerModel({
          * The record that represents the content inside the popover view.
          */
         channelInvitationForm: one2one('ChannelInvitationForm', {
+            compute: '_computeChannelInvitationForm',
+            inverse: 'popoverViewOwner',
             isCausal: true,
             readonly: true,
-            required: true,
         }),
         /**
          * States the OWL component of this popover view.
          */
         component: attr(),
+        /**
+         * If set, this popover view is owned by a composer view.
+         */
+        composerViewOwnerAsEmoji: one2one('ComposerView', {
+            inverse: 'emojisPopoverView',
+            readonly: true,
+        }),
+        /**
+         * Determines the record that is content of this popover view.
+         */
+        content: one2one('Model', {
+            compute: '_computeContent',
+            required: true,
+        }),
+        /**
+         * Determines the class name for the component
+         * that is content of this popover view.
+         */
+        contentClassName: attr({
+            compute: '_computeContentClassName',
+            default: '',
+        }),
+        /**
+         * Determines the component name of the content.
+         */
+        contentComponentName: attr({
+            compute: '_computeContentComponentName',
+            default: '',
+            required: true,
+        }),
+        /**
+         * If set, the content of this popover view is a list of emojis.
+         */
+        emojiListView: one2one('EmojiListView', {
+            compute: '_computeEmojiListView',
+            inverse: 'popoverViewOwner',
+            isCausal: true,
+            readonly: true,
+        }),
+        /**
+         * If set, this popover view is owned by a message action list.
+         */
+        messageActionListOwnerAsReaction: one2one('MessageActionList', {
+            inverse: 'reactionPopoverView',
+            readonly: true,
+        }),
         /**
          * Position of the popover view relative to its anchor point.
          * Valid values: 'top', 'right', 'bottom', 'left'
@@ -87,7 +218,7 @@ registerModel({
         /**
          * If set, this popover view is owned by a thread view topbar record.
          */
-        threadViewTopbarOwner: one2one('ThreadViewTopbar', {
+        threadViewTopbarOwnerAsInvite: one2one('ThreadViewTopbar', {
             inverse: 'invitePopoverView',
             readonly: true,
         }),
