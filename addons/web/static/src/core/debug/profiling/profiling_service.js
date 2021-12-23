@@ -21,10 +21,10 @@ const profilingService = {
 
         let recordingIcon = null;
         function updateDebugIcon() {
-            const debugItem = document.querySelector(".o_main_navbar .o_debug_manager .fa-bug");
+            const debugItem = document.querySelector(".o_debug_manager .dropdown-toggle");
             if (state.isEnabled) {
-                recordingIcon = document.createElement("span");
-                recordingIcon.classList.add("o_recording", "text-danger", "fa", "fa-circle");
+                recordingIcon = document.createElement("i");
+                recordingIcon.classList.add("o_recording", "badge", "badge-pill", "d-inline", "p-2", "bg-danger", "border");
                 debugItem.appendChild(recordingIcon);
             } else if (recordingIcon) {
                 debugItem.removeChild(recordingIcon);
