@@ -6,12 +6,12 @@
         <field name="model">account.invoice.report</field>
         <field name="inherit_id" ref="account.view_account_invoice_report_search"/>
         <field name="arch" type="xml">
-            <xpath expr="//group/filter[@name='user']" position="after">
-                <filter string="Sales Team" name="sales_channel" domain="[]" context="{'group_by':'team_id'}"/>
-            </xpath>
-            <xpath expr="//field[@name='invoice_user_id']" position="after">
+            <filter name="user" position="after">
+                <filter string="Sales Team" name="sales_channel" context="{'group_by':'team_id'}"/>
+            </filter>
+            <field name="invoice_user_id" position="after">
                 <field name="team_id"/>
-            </xpath>
+            </field>
         </field>
     </record>
 

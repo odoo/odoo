@@ -49,8 +49,8 @@
             <search string="Sales Analysis">
                 <field name="date"/>
                 <filter string="Date" name="year" invisible="1" date="date" default_period="this_year"/>
-                <filter name="Quotations" string="Quotations" domain="[('state','in', ('draft', 'sent'))]"/>
-                <filter name="Sales" string="Sales Orders" domain="[('state','not in',('draft', 'cancel', 'sent'))]"/>
+                <filter string="Quotations" name="Quotations" domain="[('state','in', ('draft', 'sent'))]"/>
+                <filter string="Sales Orders" name="Sales" domain="[('state','not in',('draft', 'cancel', 'sent'))]"/>
                 <separator/>
                 <filter name="filter_date" date="date" default_period="this_month"/>
                 <separator/>
@@ -73,7 +73,7 @@
                     <filter string="Customer Industry" name="industry_id" context="{'group_by':'industry_id'}"/>
                     <filter string="Product" name="Product" context="{'group_by':'product_id'}"/>
                     <filter string="Product Category" name="Category" context="{'group_by':'categ_id'}"/>
-                    <filter name="status" string="Status" context="{'group_by':'state'}"/>
+                    <filter string="Status" name="status" context="{'group_by':'state'}"/>
                     <filter string="Company" name="company" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
                     <separator/>
                     <filter string="Order Date" name="date" context="{'group_by':'date'}"
