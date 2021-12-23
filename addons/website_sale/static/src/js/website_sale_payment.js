@@ -54,26 +54,6 @@ odoo.define('website_sale.payment', require => {
         //----------------------------------------------------------------------
 
         /**
-         * @override
-         */
-        _disableButton(showLoadingAnimation = true) {
-            $("body").block({
-                message: false,
-                overlayCSS: {backgroundColor: "#000", opacity: 0, zIndex: 1050},
-            });
-            this._super(...arguments);
-        },
-        /**
-         * @override
-         */
-        _enableButton() {
-            const res = this._super(...arguments);
-            if (res) {
-                $('body').unblock();
-            }
-            return res;
-        },
-        /**
          * Verify that the Terms and Condition checkbox is checked.
          *
          * @override method from payment.payment_form_mixin
