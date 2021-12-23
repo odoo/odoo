@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<!-- Owl Templates -->
+
+<div t-name="web.BurgerMenu" owl="1">
+    <a type="button"
+        class="o_mobile_menu_toggle dropdown-toggle o-no-caret d-md-none"
+        title="Toggle menu" aria-label="Toggle menu"
+        t-on-click="_openBurger">
+        <i class="oi oi-lg oi-open-panel--filled--right"/>
+    </a>
+    <Portal target="'body.o_web_client'">
+      <div t-if="state.isBurgerOpened" class="o_burger_menu d-flex d-md-none flex-column flex-nowrap position-fixed" t-on-touchstart.stop="_onSwipeStart" t-on-touchend.stop="_onSwipeEnd" t-transition="burgerslide">
+        <div class="o_burger_menu_topbar d-flex align-items-center justify-content-between"
+            t-on-click.stop='_toggleUserMenu'>
+            <span class="dropdown-toggle small d-flex align-items-center justify-content-between o-no-caret" t-att-class="{active: state.isUserMenuOpened}">
+                <img class="o_burger_menu_avatar o_image_24_cover rounded-circle" t-att-src="'/web/image?model=res.users&amp;field=avatar_128&amp;id=' + user.userId" alt="Menu"/>
+                <span class="o_burger_menu_username px-2"><t t-esc="user.name"/></span>
+                <i t-if="currentApp" class="oi" t-att-class="state.isUserMenuOpened ? 'oi-caret--down' : 'oi-caret--left'"/>
+            </span>
+            <span type="button" class="o_burger_menu_close oi oi-close" aria-label="Close menu" title="Close menu" t-on-click.stop="_closeBurger"/>
+        </div>
+        <div class="o_burger_menu_content flex-grow-1 flex-shrink-1 overflow-auto"
+            t-att-class="{o_burger_menu_dark: !state.isUserMenuOpened and currentApp}">
+            <div t-if="!currentApp or state.isUserMenuOpened" class="o_burger_menu_user">
+                <MobileSwitchCompanyMenu t-if="Object.values(company.availableCompanies).length > 1" />
+                <BurgerUserMenu/>
+            </div>
+
+            <!-- Current App Sections -->
+            <div class="o_burger_menu_app" t-if="!state.isUserMenuOpened and currentApp">
+                <div class="o_menu_sections">
+                    <t t-foreach="currentAppSections" t-as="subMenu">
+                        <t t-call="web.BurgerSection">
+                            <t t-set="section" t-value="subMenu" />
+                        </t>
+                    </t>
+                </div>
+            </div>
+        </div>
+      </div>
+      <div t-else="" />
+    </Portal>
+    <Portal target="'body.o_web_client'">
+        <div t-if="state.isBurgerOpened" class="o_burger_menu_backdrop d-md-none" t-on-click.stop="_closeBurger" t-on-touchstart.stop="_onSwipeStart" t-on-touchend.stop="_onSwipeEnd" />
+        <div t-else="" />
+    </Portal>
+</div>
+
+<t t-name="web.BurgerSection" owl="1">
+    <div t-if="section.childrenTree.length" t-key="section.id" class="dropdown o_burger_menu_section show">
+        <button class="dropdown-toggle" t-att-data-menu-xmlid="section.xmlid">
+            <span t-esc="section.name"/>
+        </button>
+        <div class="dropdown-menu d-block">
+            <t t-foreach="section.childrenTree" t-as="subSection" >
+                <t t-call="web.BurgerSection">
+                    <t t-set="section" t-value="subSection" />
+                </t>
+            </t>
+        </div>
+    </div>
+    <DropdownItem t-else="" t-key="section.id" t-on-click.stop="_onMenuClicked(section)" dataset="{ menuXmlid: section.xmlid }">
+        <span t-esc="section.name" />
+    </DropdownItem>
+</t>
+
+</templates>

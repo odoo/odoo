@@ -155,7 +155,7 @@
     async function ensureHomeMenu() {
         const homeMenu = document.querySelector(".o_home_menu");
         if (!homeMenu) {
-            const menuToggle = document.querySelector("nav.o_main_navbar > a.o_menu_toggle.fa-th");
+            const menuToggle = document.querySelector("nav.o_main_navbar > a.o_menu_toggle");
             await triggerClick(menuToggle, "home menu toggle button");
             await waitForCondition(() => document.querySelector(".o_home_menu"));
         }

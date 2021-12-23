@@ -2,11 +2,10 @@
 <templates xml:space="preserve">
 
 <t t-name="web.SwitchCompanyMenu" owl="1">
-    <Dropdown class="o_switch_company_menu" position="'bottom-end'">
+    <Dropdown class="o_switch_company_menu d-none d-md-block" position="'bottom-end'">
         <t t-set-slot="toggler">
-            <span t-attf-class="{{env.isSmall ? 'fa fa-building-o' : 'oe_topbar_name'}}">
-                <t t-if="!env.isSmall"><t t-esc="currentCompany.name"/></t>
-            </span>
+            <i class="oi oi-lg oi-connection--two-way d-lg-none"/>
+            <span class="oe_topbar_name d-none d-lg-block" t-esc="currentCompany.name"/>
         </t>
         <t t-foreach="Object.values(companyService.availableCompanies).sort((c1, c2) => c1.sequence - c2.sequence)" t-as="company">
             <t t-call="web.SwitchCompanyItem">

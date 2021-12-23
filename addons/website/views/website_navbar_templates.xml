@@ -30,9 +30,9 @@
                     <br/>pointer to build the perfect page in 7 steps.
                 </p>
             </div>
-            <nav groups="base.group_user" t-if="website" id="oe_main_menu_navbar" class="o_main_navbar">
+            <nav groups="base.group_user" t-if="website" id="oe_main_menu_navbar" class="o_main_navbar d-flex align-items-center">
                 <div id="oe_applications">
-                    <div class="dropdown active">
+                    <div class="dropdown active pl-3">
                         <a class="dropdown-toggle full" data-toggle="dropdown" href="#" accesskey="h">
                             <i class="fa fa-th-large mr-2"/> WEBSITE
                         </a>
@@ -42,9 +42,9 @@
                     </div>
                 </div>
 
-                <button type="button" class="btn fa fa-bars float-right d-block d-md-none o_mobile_menu_toggle" aria-label="Menu" title="Menu" groups="website.group_website_designer"/>
+                <button type="button" class="btn fa fa-bars float-right ml-auto d-block d-md-none o_mobile_menu_toggle" aria-label="Menu" title="Menu" groups="website.group_website_designer"/>
 
-                <div class="o_menu_sections" groups="website.group_website_designer">
+                <div class="o_menu_sections d-flex flex-grow-1 flex-shrink-1" groups="website.group_website_designer">
                     <!-- Content -->
                     <div t-if="editable" class="dropdown" id="content-menu">
                         <a id="content-menu-button" class="dropdown-toggle o-no-caret waves" data-toggle="dropdown" data-display="static" href="#">Pages</a>
@@ -75,16 +75,16 @@
                     </t>
                 </div>
 
-                <div class="o_menu_systray d-none d-md-flex" groups="website.group_website_publisher">
+                <div class="o_menu_systray d-none d-md-flex ml-auto" groups="website.group_website_publisher">
                     <t t-call="website.website_publisher">
-                        <t t-set="extra_classes" t-value=""/>
+                        <t t-set="extra_classes" t-valuef="o_menu_systray_item"/>
                         <t t-set="desktop_navbar" t-value="true"/>
                     </t>
                     <!-- Mobile preview -->
-                    <div class="o_mobile_preview" id="mobile-menu">
-                        <a data-action="show-mobile-preview" href="#" accesskey="v"><span title="Mobile preview" role="img" aria-label="Mobile preview" class="fa fa-mobile"/></a>
+                    <div class="o_mobile_preview o_menu_systray_item" id="mobile-menu">
+                        <a data-action="show-mobile-preview" href="#" accesskey="v"><span title="Mobile preview" role="img" aria-label="Mobile preview" class="oi oi-mobile"/></a>
                     </div>
-                    <div groups="website.group_multi_website" t-if="multi_website_websites" id="website_switcher">
+                    <div groups="website.group_multi_website" t-if="multi_website_websites" id="website_switcher" class="o_menu_systray_item">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#" accesskey="w">
                             <i class="fa fa-globe d-lg-none"/>
                             <span class="d-none d-lg-inline-block">
@@ -108,8 +108,8 @@
                     </div>
 
                     <!-- Page Edition -->
-                    <div class="o_new_content_menu" id="new-content-menu">
-                        <a href="#" accesskey="c"><span class="fa fa-plus mr-2"/>New</a>
+                    <div class="o_new_content_menu o_menu_systray_item" id="new-content-menu">
+                        <a href="#" accesskey="c"><span class="oi oi-add--thick mr-1"/>New</a>
                         <div id="o_new_content_menu_choices" class="o_hidden">
                             <div class="container pt32 pb32">
                                 <div class="row">
@@ -198,11 +198,11 @@
                             </div>
                         </div>
                     </div>
-                    <div t-if="not translatable" id="edit-page-menu">
-                        <a data-action="edit" href="#" accesskey="a"><span class="fa fa-pencil mr-2"/>Edit</a>
+                    <div t-if="not translatable" id="edit-page-menu" class="o_menu_systray_item">
+                        <a data-action="edit" href="#" accesskey="a"><span class="oi oi-pencil mr-1"/>Edit</a>
                     </div>
-                    <div t-if="edit_in_backend or ('website_published' in main_object.fields_get() and main_object._name != 'website.page')">
-                        <a role="button" class="btn pl-1 rounded-0 dropdown-toggle css_edit_dynamic" data-toggle="dropdown">
+                    <div t-if="edit_in_backend or ('website_published' in main_object.fields_get() and main_object._name != 'website.page')" class="o_menu_systray_item">
+                        <a role="button" class="btn pl-0 rounded-0 dropdown-toggle css_edit_dynamic" data-toggle="dropdown" href="#">
                             <span class="sr-only">Toggle Dropdown</span>
                         </a>
                         <div class="dropdown-menu" role="menu">

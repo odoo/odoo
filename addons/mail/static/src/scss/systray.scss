@@ -11,15 +11,6 @@
         display: flex;
         flex-flow: column nowrap;
     }
-    .o_notification_counter {
-        margin-top: -0.8rem;
-        margin-right: 0;
-        margin-left: -0.6rem;
-        background: $o-enterprise-primary-color;
-        color: white;
-        vertical-align: super;
-        font-size: 0.7em;
-    }
     .o_mail_systray_dropdown {
         direction: ltr;
         width: 350px;
@@ -102,11 +93,7 @@
 // Goal: mock the design of Discuss in mobile
 @include media-breakpoint-down(sm) {
     .o_mail_systray_item {
-        .o_notification_counter {
-            top: 10%;
-        }
         .o_mail_systray_dropdown {
-
             position: fixed;
             top: $o-mail-chat-window-header-height-mobile;
             bottom: 0;

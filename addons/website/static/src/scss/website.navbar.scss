@@ -1,0 +1,15 @@
+// Emluate navbar backend values and ad avoid website customizations
+
+#oe_main_menu_navbar.o_main_navbar {
+    .o_menu_brand, .o_menu_toggle {
+        font-size: 17px;
+    }
+
+    .o_menu_sections, .o_menu_systray {
+        &, > div {
+            > a, > button, > label {
+                font-size: 13px;
+            }
+        }
+    }
+}
