@@ -687,4 +687,37 @@ QUnit.module("Search", (hooks) => {
             ["id", "=", 9],
         ]);
     });
+
+    QUnit.test("delete button is visible", async function (assert) {
+        const controlPanel = await makeWithSearch({
+            serverData,
+            resModel: "foo",
+            Component: ControlPanel,
+            searchViewId: false,
+            searchMenuTypes: ["filter"],
+        });
+
+        await toggleFilterMenu(controlPanel);
+        await toggleAddCustomFilter(controlPanel);
+
+        assert.containsNone(
+            controlPanel,
+            ".o_generator_menu_delete",
+            "There is no delete button by default"
+        );
+
+        await addCondition(controlPanel);
+        assert.containsN(
+            controlPanel,
+            ".o_generator_menu_delete",
+            2,
+            "A delete button has been added to each condition"
+        );
+        assert.containsN(
+            controlPanel,
+            "i.o_generator_menu_delete.fa-trash-o",
+            2,
+            "The delete button is shown as a trash icon"
+        );
+    });
 });
