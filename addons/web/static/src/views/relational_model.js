@@ -370,6 +370,7 @@ export class Record extends DataPoint {
                 } else {
                     this.resId = await this.model.orm.create(this.resModel, changes, this.context);
                 }
+                this.resIds.push(this.resId);
             }
             if (reload) {
                 await this.load();

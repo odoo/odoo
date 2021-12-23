@@ -104,7 +104,6 @@ class FormView extends Component {
             },
         });
 
-        // FIXME: handle creation of new records (for now, indicates 0/total)
         usePager(() => {
             if (this.model.root.resId) {
                 const resIds = this.model.root.resIds;
@@ -112,7 +111,12 @@ class FormView extends Component {
                     offset: resIds.indexOf(this.model.root.resId),
                     limit: 1,
                     total: resIds.length,
-                    onUpdate: ({ offset }) => this.model.load({ resId: resIds[offset] }),
+                    onUpdate: async ({ offset }) => {
+                        if (this.model.root.isDirty) {
+                            await this.model.root.save();
+                        }
+                        this.model.load({ resId: resIds[offset] });
+                    },
                 };
             }
         });

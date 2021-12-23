@@ -463,7 +463,7 @@ export class ViewCompiler {
             emptyClass = "o_form_label_empty";
         }
         if (emptyClass) {
-            const tAttClass = `${emptyClass}: isFieldEmpty(record,"${params.fieldName}")`;
+            const tAttClass = `${emptyClass}: record.resId and isFieldEmpty(record,"${params.fieldName}")`;
             appendAttr(compiled, "class", tAttClass);
         }
     }
