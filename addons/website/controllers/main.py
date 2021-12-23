@@ -708,13 +708,13 @@ class Website(Home):
     def _get_customize_views(self, xml_ids):
         self._get_customize_data(self, xml_ids, True)
 
-    def _get_customize_data(self, keys, isViewData):
-        model = 'ir.ui.view' if isViewData else 'ir.asset'
-        Data = request.env[model].with_context(active_test=False)
+    def _get_customize_data(self, keys, is_view_data):
+        model = 'ir.ui.view' if is_view_data else 'ir.asset'
+        Model = request.env[model].with_context(active_test=False)
         if not keys:
-            return Data
+            return Model
         domain = [("key", "in", keys)] + request.website.website_domain()
-        return Data.search(domain).filter_duplicate()
+        return Model.search(domain).filter_duplicate()
 
     # TODO Remove this route in master because it only stays here for
     # compatibility.
@@ -723,9 +723,9 @@ class Website(Home):
         self.theme_customize_data_get(xml_ids, True)
 
     @http.route(['/website/theme_customize_data_get'], type='json', auth='user', website=True)
-    def theme_customize_data_get(self, keys, isViewData):
-        Data = self._get_customize_data(keys, isViewData)
-        return Data.filtered('active').mapped('key')
+    def theme_customize_data_get(self, keys, is_view_data):
+        records = self._get_customize_data(keys, is_view_data)
+        return records.filtered('active').mapped('key')
 
     # TODO Remove this route in Master because it only stays here for
     # compatibility.
@@ -734,20 +734,20 @@ class Website(Home):
         self.theme_customize_data(True, enable, disable, reset_view_arch)
 
     @http.route(['/website/theme_customize_data'], type='json', auth='user', website=True)
-    def theme_customize_data(self, isViewData, enable=None, disable=None, reset_view_arch=False):
+    def theme_customize_data(self, is_view_data, enable=None, disable=None, reset_view_arch=False):
         """
         Enables and/or disables views/assets according to list of keys.
 
-        :param isViewData: True = "ir.ui.view", False = "ir.asset"
+        :param is_view_data: True = "ir.ui.view", False = "ir.asset"
         :param enable: list of views/assets keys to enable
         :param disable: list of views/assets keys to disable
         :param reset_view_arch: restore the default template after disabling
         """
-        disabled_data = self._get_customize_data(disable, isViewData).filtered('active')
+        disabled_data = self._get_customize_data(disable, is_view_data).filtered('active')
         if reset_view_arch:
             disabled_data.reset_arch(mode='hard')
         disabled_data.write({'active': False})
-        self._get_customize_data(enable, isViewData).filtered(lambda x: not x.active).write({'active': True})
+        self._get_customize_data(enable, is_view_data).filtered(lambda x: not x.active).write({'active': True})
 
     @http.route(['/website/theme_customize_bundle_reload'], type='json', auth='user', website=True)
     def theme_customize_bundle_reload(self):
