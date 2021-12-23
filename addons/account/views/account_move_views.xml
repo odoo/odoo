@@ -332,18 +332,18 @@
                     <field name="tax_line_id" string="Originator Tax"/>
                     <field name="reconcile_model_id"/>
                     <separator/>
-                    <filter string="Unposted" name="unposted" domain="[('move_id.state', '=', 'draft')]" help="Unposted Journal Items"/>
-                    <filter string="Posted" name="posted" domain="[('move_id.state', '=', 'posted')]" help="Posted Journal Items"/>
+                    <filter string="Unposted" name="unposted" domain="[('parent_state', '=', 'draft')]" help="Unposted Journal Items"/>
+                    <filter string="Posted" name="posted" domain="[('parent_state', '=', 'posted')]" help="Posted Journal Items"/>
                     <separator/>
                     <filter string="To Check" name="to_check" domain="[('move_id.to_check', '=', True)]"/>
                     <separator/>
                     <filter string="Unreconciled" domain="[('full_reconcile_id', '=', False), ('balance', '!=', 0), ('account_id.reconcile', '=', True)]" help="Journal items where matching number isn't set" name="unreconciled"/>
                     <separator/>
-                    <filter string="Sales" name="sales" domain="[('move_id.journal_id.type', '=', 'sale')]" context="{'default_journal_type': 'sale'}"/>
-                    <filter string="Purchases" name="purchases" domain="[('move_id.journal_id.type', '=', 'purchase')]" context="{'default_journal_type': 'purchase'}"/>
-                    <filter string="Bank" name="bank" domain="[('move_id.journal_id.type', '=', 'bank')]" context="{'default_journal_type': 'bank'}"/>
-                    <filter string="Cash" name="cash" domain="[('move_id.journal_id.type', '=', 'cash')]" context="{'default_journal_type': 'cash'}"/>
-                    <filter string="Miscellaneous" domain="[('move_id.journal_id.type', '=', 'general')]" name="misc_filter" context="{'default_journal_type': 'general'}"/>
+                    <filter string="Sales" name="sales" domain="[('journal_id.type', '=', 'sale')]" context="{'default_journal_type': 'sale'}"/>
+                    <filter string="Purchases" name="purchases" domain="[('journal_id.type', '=', 'purchase')]" context="{'default_journal_type': 'purchase'}"/>
+                    <filter string="Bank" name="bank" domain="[('journal_id.type', '=', 'bank')]" context="{'default_journal_type': 'bank'}"/>
+                    <filter string="Cash" name="cash" domain="[('journal_id.type', '=', 'cash')]" context="{'default_journal_type': 'cash'}"/>
+                    <filter string="Miscellaneous" domain="[('journal_id.type', '=', 'general')]" name="misc_filter" context="{'default_journal_type': 'general'}"/>
                     <separator/>
                     <filter string="Payable" domain="[('account_id.internal_type', '=', 'payable')]" help="From Payable accounts" name="payable"/>
                     <filter string="Receivable" domain="[('account_id.internal_type', '=', 'receivable')]" help="From Receivable accounts" name="receivable"/>
@@ -1300,7 +1300,7 @@
             <field name="context">{'journal_type':'general', 'search_default_posted':1}</field>
             <field name="name">Journal Items</field>
             <field name="res_model">account.move.line</field>
-            <field name="domain">[('display_type', 'not in', ('line_section', 'line_note')), ('move_id.state', '!=', 'cancel')]</field>
+            <field name="domain">[('display_type', 'not in', ('line_section', 'line_note')), ('parent_state', '!=', 'cancel')]</field>
             <field name="view_id" ref="view_move_line_tree"/>
             <field name="view_mode">tree,pivot,graph,form,kanban</field>
         </record>
