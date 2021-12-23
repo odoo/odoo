@@ -45,12 +45,13 @@ class ResourceMixin(models.AbstractModel):
                 if tz:
                     resource_vals['tz'] = tz
                 resources_vals_list.append(resource_vals)
-        resources = self.env['resource.resource'].create(resources_vals_list)
-        resources_iter = iter(resources.ids)
-        for vals in vals_list:
-            if not vals.get('resource_id'):
-                vals['resource_id'] = next(resources_iter)
-        return super().create(vals_list)
+        if resources_vals_list:
+            resources = self.env['resource.resource'].create(resources_vals_list)
+            resources_iter = iter(resources.ids)
+            for vals in vals_list:
+                if not vals.get('resource_id'):
+                    vals['resource_id'] = next(resources_iter)
+        return super(ResourceMixin, self).create(vals_list)
 
     def copy_data(self, default=None):
         if default is None:
