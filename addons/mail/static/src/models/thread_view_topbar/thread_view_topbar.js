@@ -343,17 +343,12 @@ registerModel({
          * Open the invite popover view in this thread view topbar.
          */
         openInvitePopoverView() {
-            this.threadView.update({ channelInvitationForm: insertAndReplace() });
-            this.update({
-                invitePopoverView: insertAndReplace({
-                    channelInvitationForm: replace(this.threadView.channelInvitationForm),
-                }),
-            });
+            this.update({ invitePopoverView: insertAndReplace() });
             if (this.messaging.isCurrentUserGuest) {
                 return;
             }
-            this.threadView.channelInvitationForm.update({ doFocusOnSearchInput: true });
-            this.threadView.channelInvitationForm.searchPartnersToInvite();
+            this.invitePopoverView.channelInvitationForm.update({ doFocusOnSearchInput: true });
+            this.invitePopoverView.channelInvitationForm.searchPartnersToInvite();
         },
         /**
          * @private
@@ -593,7 +588,7 @@ registerModel({
          */
         invitePopoverView: one2one('PopoverView', {
             isCausal: true,
-            inverse: 'threadViewTopbarOwner',
+            inverse: 'threadViewTopbarOwnerAsInvite',
         }),
         /**
          * Determines whether this thread is currently being renamed.
