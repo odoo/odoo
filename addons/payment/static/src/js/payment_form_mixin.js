@@ -104,6 +104,7 @@ odoo.define('payment.payment_form_mixin', require => {
                     .scrollIntoView({behavior: 'smooth', block: 'center'});
             }
             this._enableButton(); // Enable button back after it was disabled before processing
+            $('body').unblock(); // The page is blocked at this point, unblock it
         },
 
         /**
