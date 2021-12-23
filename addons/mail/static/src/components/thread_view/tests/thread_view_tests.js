@@ -2016,12 +2016,12 @@ QUnit.test('failure on loading more messages should display error and prompt ret
     await afterNextRender(() => document.querySelector('.o_MessageList_loadMore').click());
     assert.containsOnce(
         document.body,
-        '.o_ThreadView_alertLoadingFailed',
+        '.o_MessageList_alertLoadingFailed',
         "should show loading error message"
     );
     assert.containsOnce(
         document.body,
-        '.o_ThreadView_alertLoadingFailedRetryButton',
+        '.o_MessageList_alertLoadingFailedRetryButton',
         "should show loading error message button"
     );
     assert.containsNone(
@@ -2078,7 +2078,7 @@ QUnit.test('Retry loading more messages on failed load more messages should load
     messageFetchShouldFail = false;
     await this.afterEvent({
         eventName: 'o-thread-view-hint-processed',
-        func: () => document.querySelector('.o_ThreadView_alertLoadingFailedRetryButton').click(),
+        func: () => document.querySelector('.o_MessageList_alertLoadingFailedRetryButton').click(),
         message: "should wait until channel 20 loaded more messages after clicked on load more",
         predicate: ({ hint, threadViewer }) => {
             return (

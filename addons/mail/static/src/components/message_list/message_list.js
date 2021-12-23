@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model/use_component_to_model';
 import { useRenderedValues } from '@mail/component_hooks/use_rendered_values/use_rendered_values';
 import { useUpdate } from '@mail/component_hooks/use_update/use_update';
 
@@ -14,6 +15,7 @@ export class MessageList extends Component {
      */
     setup() {
         super.setup();
+        useComponentToModel({ fieldName: 'component', modelName: 'MessageListView' });
         /**
          * States whether there was at least one programmatic scroll since the
          * last scroll event was handled (which is particularly async due to
@@ -37,7 +39,8 @@ export class MessageList extends Component {
          * properly handle async code.
          */
         this._lastRenderedValues = useRenderedValues(() => {
-            const threadView = this.threadView;
+            const messageListView = this.messageListView;
+            const threadView = messageListView && messageListView.threadViewOwner;
             const thread = threadView && threadView.thread;
             const threadCache = threadView && threadView.threadCache;
             return {
@@ -156,10 +159,10 @@ export class MessageList extends Component {
     }
 
     /**
-     * @returns {ThreadView}
+     * @returns {MessageListView}
      */
-    get threadView() {
-        return this.messaging && this.messaging.models['ThreadView'].get(this.props.threadViewLocalId);
+    get messageListView() {
+        return this.messaging && this.messaging.models['MessageListView'].get(this.props.localId);
     }
 
     //--------------------------------------------------------------------------
@@ -239,7 +242,7 @@ export class MessageList extends Component {
         if (!threadView || !threadView.exists()) {
             return;
         }
-        const { lastMessageView } = this.threadView;
+        const { lastMessageView } = this.messageListView.threadViewOwner;
         if (lastMessageView && lastMessageView.component && lastMessageView.component.isPartiallyVisible()) {
             threadView.handleVisibleMessage(lastMessageView.message);
         }
@@ -317,13 +320,16 @@ export class MessageList extends Component {
      * @private
      */
     _onClickRetryLoadMoreMessages() {
-        if (!this.threadView) {
+        if (!this.messageListView) {
             return;
         }
-        if (!this.threadView.threadCache) {
+        if (!this.messageListView.threadViewOwner) {
             return;
         }
-        this.threadView.threadCache.update({ hasLoadingFailed: false });
+        if (!this.messageListView.threadViewOwner.threadCache) {
+            return;
+        }
+        this.messageListView.threadViewOwner.threadCache.update({ hasLoadingFailed: false });
         this._loadMore();
     }
 
@@ -397,7 +403,7 @@ Object.assign(MessageList, {
             optional: true,
         },
         hasScrollAdjust: Boolean,
-        threadViewLocalId: String,
+        localId: String,
     },
     template: 'mail.MessageList',
 });
