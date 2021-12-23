@@ -118,10 +118,10 @@ registerModel({
          * @param {Event} ev
          */
         onScrollScrollPanel(ev) {
-            if (!this.threadRef.comp) {
+            if (!this.threadView || !this.threadView.component) {
                 return;
             }
-            this.threadRef.comp.onScroll(ev);
+            this.threadView.component.onScroll(ev);
         },
         async refresh() {
             if (this.hasActivities) {
@@ -386,10 +386,6 @@ registerModel({
          * Determines the model of the thread that will be displayed by `this`.
          */
         threadModel: attr(),
-        /**
-         * States the OWL ref of the "thread" (ThreadView) of this chatter.
-         */
-        threadRef: attr(),
         /**
          * States the `ThreadView` displaying `this.thread`.
          */

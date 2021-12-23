@@ -295,6 +295,10 @@ registerModel({
             isCausal: true,
         }),
         /**
+         * States the OWL component of this thread view.
+         */
+        component: attr(),
+        /**
          * List of component hints. Hints contain information that help
          * components make UI/UX decisions based on their UI state.
          * For instance, on receiving new messages and the last message

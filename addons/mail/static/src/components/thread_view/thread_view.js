@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model/use_component_to_model';
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
@@ -12,6 +13,7 @@ export class ThreadView extends Component {
      */
     setup() {
         super.setup();
+        useComponentToModel({ fieldName: 'component', modelName: 'ThreadView', propNameAsRecordLocalId: 'threadViewLocalId' });
         /**
          * Reference of the message list. Useful to determine scroll positions.
          */
