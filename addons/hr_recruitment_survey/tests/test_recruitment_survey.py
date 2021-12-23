@@ -52,6 +52,8 @@ class TestRecruitmentSurvey(common.SingleTransactionCase):
         invite = invite_form.save()
         invite.action_invite()
 
+        self.assertEqual(action['context']['active_model'], 'hr.applicant')
+        self.assertEqual(invite.applicant_id, self.job_sysadmin)
         self.assertNotEqual(self.job_sysadmin.response_id.id, False)
         answers = Answer.search([('survey_id', '=', self.survey_sysadmin.id)])
         self.assertEqual(len(answers), 1)
@@ -67,3 +69,14 @@ class TestRecruitmentSurvey(common.SingleTransactionCase):
         self.job_sysadmin.response_id = self.env['survey.user_input'].create({'survey_id': self.survey_sysadmin.id})
         action_print_with_response = self.job_sysadmin.action_print_survey()
         self.assertIn(self.job_sysadmin.response_id.access_token, action_print_with_response['url'])
+
+    def test_send_survey_no_applicant(self):
+        action = self.job_sysadmin.action_send_survey()
+        invite_form = Form(self.env['survey.invite'].with_context({
+            **action['context'],
+            'active_id': 1,
+            'active_model': 'dummy.model',
+        }))
+        invite = invite_form.save()
+
+        self.assertFalse(invite.applicant_id, "Should not have an applicant")
