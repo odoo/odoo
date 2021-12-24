@@ -291,6 +291,9 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
                                 // do not count the orders that are already finalized
                                 !o.finalized
                         ).length;
+                    if (table_obj.order_count < table.orders) {
+                        this.env.pos.update_orders_for_table(table_obj);
+                    }
                     table_obj.order_count = table.orders + unsynced_orders;
                 });
                 this.render();

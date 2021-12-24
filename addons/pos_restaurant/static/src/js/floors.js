@@ -298,6 +298,20 @@ models.PosModel = models.PosModel.extend({
         }
     },
 
+    update_orders_for_table(table) {
+        const self = this;
+        this._get_from_server(table.id).then(server_orders => {
+            server_orders.forEach(server_order => {
+                if (server_order.lines.length) {
+                    const new_order = new models.Order({}, { pos: self, json: server_order });
+                    self.get("orders").add(new_order);
+                }
+            })
+            posbus.trigger('table-set');
+        });
+
+    },
+
     // we need to prevent the creation of orders when there is no
     // table selected.
     add_new_order: function() {
