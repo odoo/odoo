@@ -535,7 +535,6 @@ form: module.record_id""" % (xml_id,)
         res = {}
         sub_records = []
         for field in rec.findall('./field'):
-            o2m_have_sub_records = False
             #TODO: most of this code is duplicated above (in _eval_xml)...
             f_name = field.get("name")
             f_ref = field.get("ref")
@@ -545,6 +544,7 @@ form: module.record_id""" % (xml_id,)
                 f_model = model._fields[f_name].comodel_name
             f_use = field.get("use",'') or 'id'
             f_val = False
+            has_value = True
 
             if f_search:
                 idref2 = _get_idref(self, env, f_model, self.idref)
@@ -579,15 +579,14 @@ form: module.record_id""" % (xml_id,)
                         f_val = float(f_val)
                     elif field_type == 'boolean' and isinstance(f_val, str):
                         f_val = str2bool(f_val)
-                    elif field_type in 'one2many':
+                    elif field_type == 'one2many':
                         if isinstance(f_val, str):
-                            f_val = None
+                            has_value = False
                         for child in field.findall('./record'):
-                            o2m_have_sub_records = True
                             sub_records.append((child, model._fields[f_name].inverse_name))
-            # Not add in vals becouse it's added by sub_records
-            if not o2m_have_sub_records:
+            if has_value:
                 res[f_name] = f_val
+
         if extra_vals:
             res.update(extra_vals)
 
