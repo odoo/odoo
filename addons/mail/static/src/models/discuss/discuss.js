@@ -161,9 +161,7 @@ registerModel({
             this.update({ discussView: insertAndReplace() });
         },
         /**
-         * Open thread from init active id. `initActiveId` is used to refer to
-         * a thread that we may not have full data yet, such as when messaging
-         * is not yet initialized.
+         * Opens thread from init active id if the thread exists.
          */
         openInitThread() {
             const [model, id] = typeof this.initActiveId === 'number'
@@ -394,6 +392,14 @@ registerModel({
          */
         isAddingChat: attr({
             compute: '_computeIsAddingChat',
+            default: false,
+        }),
+        /**
+         * Determines if the logic for opening a thread via the `initActiveId`
+         * has been processed. This is necessary to ensure that this only
+         * happens once.
+         */
+        isInitThreadHandled: attr({
             default: false,
         }),
         /**
