@@ -456,7 +456,6 @@ QUnit.test('rendering with multiple partner followers', async function (assert) 
     );
     const chatter = this.messaging.models['Chatter'].create({
         id: 11,
-        followerIds: [1, 2],
         threadId: 100,
         threadModel: 'res.partner',
     });
