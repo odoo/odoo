@@ -808,8 +808,8 @@ QUnit.test('chat window: close on ESCAPE', async function (assert) {
     );
     assert.containsOnce(
         document.body,
-        '.o_EmojisPopover',
-        "emojis popover should be opened after click on emojis button"
+        '.o_EmojiList',
+        "emoji list should be opened after click on emojis button"
     );
 
     await afterNextRender(() => {
@@ -818,8 +818,8 @@ QUnit.test('chat window: close on ESCAPE', async function (assert) {
     });
     assert.containsNone(
         document.body,
-        '.o_EmojisPopover',
-        "emojis popover should be closed after pressing escape on emojis button"
+        '.o_EmojiList',
+        "emoji list should be closed after pressing escape on emojis button"
     );
     assert.containsOnce(
         document.body,

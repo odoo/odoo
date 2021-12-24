@@ -6,7 +6,7 @@ import emojis from '@mail/js/emojis';
 
 const { Component } = owl;
 
-export class EmojisPopover extends Component {
+export class EmojiList extends Component {
 
     /**
      * @override
@@ -65,14 +65,14 @@ export class EmojisPopover extends Component {
 
 }
 
-Object.assign(EmojisPopover, {
+Object.assign(EmojiList, {
     props: {
         onEmojiSelection: {
             type: Function,
             optional: true,
         },
     },
-    template: 'mail.EmojisPopover',
+    template: 'mail.EmojiList',
 });
 
-registerMessagingComponent(EmojisPopover);
+registerMessagingComponent(EmojiList);

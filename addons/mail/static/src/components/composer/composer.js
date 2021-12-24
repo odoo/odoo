@@ -19,10 +19,10 @@ export class Composer extends Component {
         super.setup();
         this.isDropZoneVisible = useDragVisibleDropZone();
         /**
-         * Reference of the emoji popover. Useful to include emoji popover as
+         * Reference of the emoji list. Useful to include emoji list as
          * contained "inside" the composer.
          */
-        this._emojisPopoverRef = useRef('emojisPopover');
+        this._emojiListRef = useRef('emojiList');
         /**
          * Reference of the text input component. Useful to save state in store
          * before inserting emoji.
@@ -58,15 +58,15 @@ export class Composer extends Component {
 
     /**
      * Returns whether the given node is self or a children of self, including
-     * the emoji popover.
+     * the emoji list.
      *
      * @param {Node} node
      * @returns {boolean}
      */
     contains(node) {
-        // emoji popover is outside but should be considered inside
-        const emojisPopover = this._emojisPopoverRef.comp;
-        if (emojisPopover && emojisPopover.contains(node)) {
+        // emoji list is outside but should be considered inside
+        const emojiList = this._emojiListRef.comp;
+        if (emojiList && emojiList.contains(node)) {
             return true;
         }
         return Boolean(this.root.el && this.root.el.contains(node));
@@ -236,7 +236,7 @@ export class Composer extends Component {
     }
 
     /**
-     * Handles `onEmojiSelection` callback from the emoji popover.
+     * Handles `onEmojiSelection` callback from the emoji list.
      *
      * @private
      * @param {Object} detail
@@ -273,8 +273,8 @@ export class Composer extends Component {
      */
     _onKeydownEmojiButton(ev) {
         if (ev.key === 'Escape') {
-            if (this._emojisPopoverRef.comp) {
-                this._emojisPopoverRef.comp.close();
+            if (this._emojiListRef.comp) {
+                this._emojiListRef.comp.close();
                 this.composerView.update({ doFocus: true });
                 markEventHandled(ev, 'Composer.closeEmojisPopover');
             }

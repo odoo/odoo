@@ -103,7 +103,7 @@ registerModel({
             this.update({ showDeleteConfirm: false });
         },
         /**
-         * Handles `onEmojiSelection` calback from the emoji popover.
+         * Handles `onEmojiSelection` calback from the emoji list.
          *
          * @private
          * @param {Object} detail
