@@ -26,8 +26,6 @@ export class Discuss extends Component {
         }
         if (this.discussView.discuss.thread) {
             this.trigger('o-push-state-action-manager');
-        } else if (!this._activeThreadCache) {
-            this.discussView.discuss.openInitThread();
         }
         if (
             this.discussView.discuss.thread &&
@@ -38,7 +36,6 @@ export class Discuss extends Component {
         ) {
             this.trigger('o-show-rainbow-man');
         }
-        this._activeThreadCache = this.discussView.discuss.threadView && this.discussView.discuss.threadView.threadCache;
         this._updateLocalStoreProps();
     }
 
