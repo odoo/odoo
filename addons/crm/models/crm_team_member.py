@@ -169,7 +169,7 @@ class TeamMember(models.Model):
                 weights[member_index] = weights[member_index] - 1
 
                 lead.with_context(mail_auto_subscribe_no_notify=True).convert_opportunity(
-                    lead.partner_id.id,
+                    lead.partner_id,
                     user_ids=member_data['team_member'].user_id.ids
                 )
 

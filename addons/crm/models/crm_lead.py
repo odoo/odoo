@@ -1532,10 +1532,8 @@ class Lead(models.Model):
             upd_values['stage_id'] = stage.id
         return upd_values
 
-    def convert_opportunity(self, partner_id, user_ids=False, team_id=False):
-        customer = False
-        if partner_id:
-            customer = self.env['res.partner'].browse(partner_id)
+    def convert_opportunity(self, partner, user_ids=False, team_id=False):
+        customer = partner if partner else self.env['res.partner']
         for lead in self:
             if not lead.active or lead.probability == 100:
                 continue
