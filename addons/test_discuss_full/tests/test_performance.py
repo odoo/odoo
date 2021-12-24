@@ -739,13 +739,11 @@ class TestDiscussFullPerformance(TransactionCase):
             'mail_failures': [],
             'shortcodes': [
                 {
-                    'description': False,
                     'id': 1,
                     'source': 'hello',
                     'substitution': 'Hello. How may I help you?',
                 },
                 {
-                    'description': False,
                     'id': 2,
                     'source': 'bye',
                     'substitution': 'Thanks for your feedback. Good bye!',
