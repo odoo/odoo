@@ -12,7 +12,7 @@ const { useRef } = owl.hooks;
 const geAttachmentNextTemporaryId = (function () {
     let tmpId = 0;
     return () => {
-        tmpId += 1;
+        tmpId -= 1;
         return tmpId;
     };
 })();
