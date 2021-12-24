@@ -252,6 +252,7 @@ class TestMessageValues(TestMailCommon):
         self.assertNotIn('-%d-' % self.alias_record.id, msg.message_id.split('@')[0])
 
 
+@tagged('mail_message')
 class TestMessageAccess(TestMailCommon):
 
     @classmethod
@@ -450,7 +451,7 @@ class TestMessageAccess(TestMailCommon):
 
         new_mail = self.env['mail.mail'].sudo().search([
             ('mail_message_id', '=', new_msg.id),
-            ('references', '=', message.message_id),
+            ('references', '=', f'{message.message_id} {new_msg.message_id}'),
         ])
 
         self.assertTrue(new_mail)

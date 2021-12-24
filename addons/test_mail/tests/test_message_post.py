@@ -233,7 +233,7 @@ class TestMessagePost(TestMailCommon, TestRecipients):
         self.assertFalse(self.env['mail.mail'].sudo().search([('mail_message_id', '=', msg.id)]),
                          'message_post: mail.mail notifications should have been auto-deleted')
 
-    @mute_logger('odoo.addons.mail.models.mail_mail')
+    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.tests')
     def test_post_notifications_keep_emails(self):
         self.test_record.message_subscribe(partner_ids=[self.user_admin.partner_id.id])
 
@@ -298,34 +298,60 @@ class TestMessagePost(TestMailCommon, TestRecipients):
     def test_post_answer(self):
         with self.mock_mail_gateway():
             parent_msg = self.test_record.with_user(self.user_employee).message_post(
-                body='<p>Test</p>', subject='Test Subject',
-                message_type='comment', subtype_xmlid='mail.mt_comment')
+                body='<p>Test</p>',
+                message_type='comment',
+                subject='Test Subject',
+                subtype_xmlid='mail.mt_comment',
+            )
 
         self.assertEqual(parent_msg.partner_ids, self.env['res.partner'])
         self.assertNotSentEmail()
 
+        # post a first reply
         with self.assertPostNotifications([{'content': '<p>Test Answer</p>', 'notif': [{'partner': self.partner_1, 'type': 'email'}]}]):
             msg = self.test_record.with_user(self.user_employee).message_post(
                 body='<p>Test Answer</p>',
-                message_type='comment', subtype_xmlid='mail.mt_comment',
+                message_type='comment',
+                subject='Welcome',
+                subtype_xmlid='mail.mt_comment',
+                parent_id=parent_msg.id,
                 partner_ids=[self.partner_1.id],
-                parent_id=parent_msg.id)
+            )
 
         self.assertEqual(msg.parent_id.id, parent_msg.id)
         self.assertEqual(msg.partner_ids, self.partner_1)
         self.assertEqual(parent_msg.partner_ids, self.env['res.partner'])
 
         # check notification emails: references
-        self.assertSentEmail(self.user_employee.partner_id, [self.partner_1], ref_content='openerp-%d-mail.test.simple' % self.test_record.id)
-        # self.assertTrue(all('openerp-%d-mail.test.simple' % self.test_record.id in m['references'] for m in self._mails))
+        self.assertSentEmail(
+            self.user_employee.partner_id,
+            [self.partner_1],
+            references_content='openerp-%d-mail.test.simple' % self.test_record.id,
+            # references should be sorted from the oldest to the newest
+            references='%s %s' % (parent_msg.message_id, msg.message_id),
+        )
 
-        new_msg = self.test_record.with_user(self.user_employee).message_post(
-            body='<p>Test Answer Bis</p>',
-            message_type='comment', subtype_xmlid='mail.mt_comment',
-            parent_id=msg.id)
+        # post a reply to the reply: check parent is the first one
+        with self.mock_mail_gateway():
+            new_msg = self.test_record.with_user(self.user_employee).message_post(
+                body='<p>Test Answer Bis</p>',
+                message_type='comment',
+                subtype_xmlid='mail.mt_comment',
+                parent_id=msg.id,
+                partner_ids=[self.partner_2.id],
+            )
 
         self.assertEqual(new_msg.parent_id.id, parent_msg.id, 'message_post: flatten error')
-        self.assertEqual(new_msg.partner_ids, self.env['res.partner'])
+        self.assertEqual(new_msg.partner_ids, self.partner_2)
+        self.assertSentEmail(
+            self.user_employee.partner_id,
+            [self.partner_2],
+            body_content='<p>Test Answer Bis</p>',
+            reply_to=msg.reply_to,
+            subject='Re: %s' % self.test_record.name,
+            references_content='openerp-%d-mail.test.simple' % self.test_record.id,
+            references='%s %s' % (parent_msg.message_id, new_msg.message_id),
+        )
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_post_email_with_multiline_subject(self):

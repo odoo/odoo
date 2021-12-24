@@ -756,6 +756,10 @@ class MailCase(MockEmail):
                 self.assertMessageBusNotifications(message)
 
             # check emails that should be sent (hint: mail.mail per group, email par recipient)
+            email_values = {'body_content': mbody,
+                            'references_content': message.message_id}
+            if message_info.get('email_values'):
+                email_values.update(message_info['email_values'])
             for recipients in email_groups.values():
                 partners = self.env['res.partner'].sudo().concat(*recipients)
                 if all(p in mail_groups['failure'] for p in partners):
@@ -772,12 +776,14 @@ class MailCase(MockEmail):
                             partners, 'sent',
                             author=message.author_id if message.author_id else message.email_from,
                             mail_message=message,
-                            email_values={'body_content': mbody}
+                            email_values=email_values,
                         )
                     else:
                         for recipient in partners:
-                            self.assertSentEmail(message.author_id if message.author_id else message.email_from, [recipient],
-                                                 email_values={'body_content': mbody})
+                            self.assertSentEmail(message.author_id if message.author_id else message.email_from,
+                                                 [recipient],
+                                                 **email_values
+                                                )
             if not any(p for recipients in email_groups.values() for p in recipients):
                 self.assertNoMail(partners, mail_message=message, author=message.author_id)
 
