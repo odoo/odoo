@@ -29,7 +29,7 @@ registerModel({
             // Flux specific: 'closed' fold state should only be saved on the
             // server when manually closing the chat window. Delete at destroy
             // or sync from server value for example should not save the value.
-            if (this.thread && notifyServer && !this.messaging.currentGuest) {
+            if (this.thread && notifyServer && this.messaging.currentUser) {
                 this.thread.notifyFoldStateToServer('closed');
             }
             if (this.exists()) {
@@ -76,7 +76,7 @@ registerModel({
             this.update({ isFolded: true });
             // Flux specific: manually folding the chat window should save the
             // new state on the server.
-            if (this.thread && notifyServer && !this.messaging.currentGuest) {
+            if (this.thread && notifyServer && this.messaging.currentUser) {
                 this.thread.notifyFoldStateToServer('folded');
             }
         },
@@ -136,7 +136,7 @@ registerModel({
                 }),
                 isMemberListOpened: false,
             });
-            if (!this.messaging.isCurrentUserGuest) {
+            if (this.messaging.currentUser) {
                 this.channelInvitationForm.searchPartnersToInvite();
             }
         },
@@ -181,7 +181,7 @@ registerModel({
             this.update({ isFolded: false });
             // Flux specific: manually opening the chat window should save the
             // new state on the server.
-            if (this.thread && notifyServer && !this.messaging.currentGuest) {
+            if (this.thread && notifyServer && this.messaging.currentUser) {
                 this.thread.notifyFoldStateToServer('open');
             }
         },

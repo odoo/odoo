@@ -329,7 +329,7 @@ registerModel({
          * @returns {boolean}
          */
         _computeCanStarBeToggled() {
-            return !this.messaging.isCurrentUserGuest && !this.isTemporary && !this.isTransient;
+            return this.messaging.currentUser && !this.isTemporary && !this.isTransient;
         },
         /**
          * @returns {string}

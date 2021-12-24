@@ -200,6 +200,8 @@ registerModel({
          * Will be used to update the current guest's name when joining the
          * channel by clicking on the 'joinButton'.
          */
-        pendingGuestName: attr(),
+        pendingGuestName: attr({
+            default: "",
+        }),
     },
 });

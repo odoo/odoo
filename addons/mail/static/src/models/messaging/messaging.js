@@ -24,13 +24,8 @@ registerModel({
          */
         async start() {
             this.env.services['bus_service'].on('window_focus', null, this._handleGlobalWindowFocus);
-            await this.initializer.start();
-            if (!this.exists()) {
-                return;
-            }
+            this.initializer.start();
             this.notificationHandler.start();
-            this.update({ isInitialized: true });
-            this.initializedPromise.resolve();
         },
         /**
          * Open the form view of the record with provided id and model.
@@ -157,13 +152,6 @@ registerModel({
         },
         /**
          * @private
-         * @returns {Promise}
-         */
-        _computeInitializedPromise() {
-            return makeDeferred();
-        },
-        /**
-         * @private
          * @returns {boolean}
          */
         _computeIsCurrentUserGuest() {
@@ -262,6 +250,10 @@ registerModel({
             readonly: true,
         }),
         focusedRtcSession: one2one('RtcSession'),
+        discussPublicView: one2one('DiscussPublicView', {
+            inverse: 'messaging',
+            isCausal: true,
+        }),
         /**
          * Mailbox History.
          */
@@ -270,19 +262,20 @@ registerModel({
          * Mailbox Inbox.
          */
         inbox: one2one('Thread'),
-        /**
-         * Promise that will be resolved when messaging is initialized.
-         */
-        initializedPromise: attr({
-            compute: '_computeInitializedPromise',
-            required: true,
-            readonly: true,
-        }),
         initializer: one2one('MessagingInitializer', {
             default: insertAndReplace(),
             isCausal: true,
             readonly: true,
         }),
+        /**
+         * States whether the current user is a guest, not logged in, and for
+         * which the guest record is known. Useful to ignore old guest
+         * information when a guest is now logged in. This field only makes
+         * sense when its value is true, which guarantees the current user is
+         * not logged in and the guest record is known. The negation of this
+         * field is not necessarily a logged in user, it could also be the guest
+         * record not yet known.
+         */
         isCurrentUserGuest: attr({
             compute: '_computeIsCurrentUserGuest',
         }),
@@ -372,7 +365,11 @@ registerModel({
             required: true,
         }),
         userSetting: one2one('UserSetting', {
+            default: insertAndReplace({
+                id: -1, // fake id for guest or user setting record not yet known
+            }),
             isCausal: true,
+            required: true,
         }),
     },
     onChanges: [

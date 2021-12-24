@@ -95,7 +95,7 @@ QUnit.test('messaging not initialized', async function (assert) {
         waitUntilMessagingCondition: 'created',
     });
     assert.strictEqual(
-        document.querySelectorAll('.o_Discuss_messagingNotInitialized').length,
+        document.querySelectorAll('.o_ThreadViewTopbar_loadingIcon').length,
         1,
         "should display messaging not initialized"
     );
@@ -117,14 +117,14 @@ QUnit.test('messaging becomes initialized', async function (assert) {
         waitUntilMessagingCondition: 'created',
     });
     assert.strictEqual(
-        document.querySelectorAll('.o_Discuss_messagingNotInitialized').length,
+        document.querySelectorAll('.o_ThreadViewTopbar_loadingIcon').length,
         1,
         "should display messaging not initialized"
     );
 
     await afterNextRender(() => messagingInitializedProm.resolve());
     assert.strictEqual(
-        document.querySelectorAll('.o_Discuss_messagingNotInitialized').length,
+        document.querySelectorAll('.o_ThreadViewTopbar_loadingIcon').length,
         0,
         "should no longer display messaging not initialized"
     );

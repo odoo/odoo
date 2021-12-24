@@ -225,7 +225,7 @@ registerModel({
                 id: channelId,
                 model: 'mail.channel',
             });
-            if (!channel && this.messaging.isCurrentUserGuest) {
+            if (!channel && !this.messaging.currentUser) {
                 return; // guests should not receive messages for channels they don't know, and they can't make the channel_info RPC
             }
             const convertedData = this.messaging.models['Message'].convertData(messageData);
@@ -267,7 +267,7 @@ registerModel({
                         message,
                     });
                 }
-                if (channel.model === 'mail.channel' && channel.channel_type !== 'channel' && !this.messaging.currentGuest) {
+                if (channel.model === 'mail.channel' && channel.channel_type !== 'channel' && this.messaging.currentUser) {
                     // disabled on non-channel threads and
                     // on `channel` channels for performance reasons
                     channel.markAsFetched();

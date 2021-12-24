@@ -3,7 +3,7 @@
 
     <t t-name="mail.NotificationList" owl="1">
         <div class="o_NotificationList" t-att-class="{ 'o-empty': notificationListView and notificationListView.notificationViews.length === 0 }" t-attf-class="{{ className }}" t-ref="root">
-            <t t-if="notificationListView">
+            <t t-if="messaging and messaging.isInitialized and notificationListView">
                 <t t-if="notificationListView.notificationViews.length === 0">
                     <div class="o_NotificationList_noConversation">
                         No conversation yet...
@@ -43,6 +43,11 @@
                         </t>
                     </t>
                 </t>
+            </t>
+            <t t-if="!messaging or !messaging.isInitialized">
+                <div class="o_NotificationList_loading d-flex align-items-center justify-content-center px-3 py-4">
+                    <span><i class="o_NotificationList_loadingIcon fa fa-circle-o-notch fa-spin"/>Please wait...</span>
+                </div>
             </t>
         </div>
     </t>

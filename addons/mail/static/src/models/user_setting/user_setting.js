@@ -109,7 +109,7 @@ registerModel({
         setDelayValue(value) {
             const voiceActiveDuration = parseInt(value, 10);
             this.update({ voiceActiveDuration });
-            if (!this.messaging.isCurrentUserGuest) {
+            if (this.messaging.currentUser) {
                 this._saveSettings();
             }
         },
@@ -119,7 +119,7 @@ registerModel({
         async setPushToTalkKey(ev) {
             const pushToTalkKey = `${ev.shiftKey || ''}.${ev.ctrlKey || ev.metaKey || ''}.${ev.altKey || ''}.${ev.key}`;
             this.update({ pushToTalkKey });
-            if (!this.messaging.isCurrentUserGuest) {
+            if (this.messaging.currentUser) {
                 this._saveSettings();
             }
         },
@@ -159,7 +159,7 @@ registerModel({
         async togglePushToTalk() {
             this.update({ usePushToTalk: !this.usePushToTalk });
             await this.messaging.rtc.updateVoiceActivation();
-            if (!this.messaging.isCurrentUserGuest) {
+            if (this.messaging.currentUser) {
                 this._saveSettings();
             }
         },

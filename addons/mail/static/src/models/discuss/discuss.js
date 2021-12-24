@@ -7,6 +7,21 @@ import { clear, insertAndReplace, link, unlink } from '@mail/model/model_field_c
 registerModel({
     name: 'Discuss',
     identifyingFields: ['messaging'],
+    lifecycleHooks: {
+        _created() {
+            // Update strings here due to lack of env._t in default
+            this.categoryChannel.update({
+                commandAddTitleText: this.env._t("Add or join a channel"),
+                name: this.env._t("Channels"),
+                newItemPlaceholderText: this.env._t("Find or create a channel..."),
+            });
+            this.categoryChat.update({
+                commandAddTitleText: this.env._t("Start a conversation"),
+                name: this.env._t("Direct Messages"),
+                newItemPlaceholderText: this.env._t("Find or start a conversation..."),
+            });
+        },
+    },
     recordMethods: {
         clearIsAddingItem() {
             this.update({
@@ -161,16 +176,18 @@ registerModel({
          * a thread that we may not have full data yet, such as when messaging
          * is not yet initialized.
          */
-        openInitThread() {
+        async openInitThread() {
             const [model, id] = typeof this.initActiveId === 'number'
                 ? ['mail.channel', this.initActiveId]
                 : this.initActiveId.split('_');
-            const thread = this.messaging.models['Thread'].findFromIdentifyingData({
+            const threadData = {
                 id: model !== 'mail.box' ? Number(id) : id,
                 model,
-            });
+            };
+            let thread = this.messaging.models['Thread'].findFromIdentifyingData(threadData);
             if (!thread) {
-                return;
+                thread = this.messaging.models['Thread'].insert(threadData);
+                await this.messaging.models['Thread'].performRpcChannelInfo({ ids: thread.id });
             }
             thread.open();
             if (this.messaging.device.isMobile && thread.channel_type) {
@@ -345,15 +362,36 @@ registerModel({
          * Discuss sidebar category for `channel` type channel threads.
          */
         categoryChannel: one2one('DiscussSidebarCategory', {
+            default: insertAndReplace({
+                autocompleteMethod: 'channel',
+                hasAddCommand: true,
+                hasViewCommand: true,
+                isServerOpen: true,
+                serverStateKey: 'is_discuss_sidebar_category_channel_open',
+                sortComputeMethod: 'name',
+                supportedChannelTypes: ['channel'],
+            }),
             inverse: 'discussAsChannel',
             isCausal: true,
+            readonly: true,
+            required: true,
         }),
         /**
          * Discuss sidebar category for `chat` type channel threads.
          */
         categoryChat: one2one('DiscussSidebarCategory', {
+            default: insertAndReplace({
+                autocompleteMethod: 'chat',
+                hasAddCommand: true,
+                isServerOpen: true,
+                serverStateKey: 'is_discuss_sidebar_category_chat_open',
+                sortComputeMethod: 'last_action',
+                supportedChannelTypes: ['chat', 'group'],
+            }),
             inverse: 'discussAsChat',
             isCausal: true,
+            readonly: true,
+            required: true,
         }),
         /**
          * Determines whether `this.thread` should be displayed.

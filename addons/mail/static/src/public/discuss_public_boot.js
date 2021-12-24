@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { data } from 'mail.discuss_public_channel_template';
-
+import { insertAndReplace } from '@mail/model/model_field_command';
 import { MessagingService } from '@mail/services/messaging/messaging';
 import { getMessagingComponent } from '@mail/utils/messaging_component';
 
@@ -71,7 +71,8 @@ async function createAndMountDiscussPublicView() {
     const dialogManagerComponent = new DialogManager(null, {});
     await dialogManagerComponent.mount(document.body);
     messaging.models['Thread'].insert(messaging.models['Thread'].convertData(data.channelData));
-    const discussPublicView = messaging.models['DiscussPublicView'].create(data.discussPublicViewData);
+    messaging.update({ discussPublicView: insertAndReplace(data.discussPublicViewData) });
+    const discussPublicView = messaging.discussPublicView;
     if (discussPublicView.shouldDisplayWelcomeViewInitially) {
         discussPublicView.switchToWelcomeView();
     } else {

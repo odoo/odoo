@@ -127,7 +127,7 @@ registerModel({
                 chatWindow.makeActive({ focus, notifyServer: false });
             }
             // Flux specific: notify server of chat window being opened.
-            if (notifyServer && !this.messaging.currentGuest) {
+            if (notifyServer && this.messaging.currentUser) {
                 const foldState = chatWindow.isFolded ? 'folded' : 'open';
                 thread.notifyFoldStateToServer(foldState);
             }

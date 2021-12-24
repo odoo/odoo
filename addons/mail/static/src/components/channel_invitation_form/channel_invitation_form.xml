@@ -5,7 +5,7 @@
         <div class="o_ChannelInvitationForm d-flex flex-column" t-attf-class="{{ className }}" t-ref="root">
             <t t-if="channelInvitationForm">
                 <h3 class="mx-3 mt-3 mb-2">Invite people</h3>
-                <t t-if="!messaging.isCurrentUserGuest">
+                <t t-if="messaging.currentUser">
                     <div class="mx-3 my-2">
                         <input class="o_ChannelInvitationForm_searchInput" type="text" t-att-value="channelInvitationForm.searchTerm" placeholder="Type the name of a person" t-on-input="channelInvitationForm.onInputSearch" t-ref="searchInput"/>
                     </div>

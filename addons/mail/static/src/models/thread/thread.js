@@ -848,7 +848,7 @@ registerModel({
          * @param {Message} message the message to be considered as last seen.
          */
         async markAsSeen(message) {
-            if (this.messaging.currentGuest) {
+            if (!this.messaging.currentUser) {
                 return;
             }
             if (this.model !== 'mail.channel') {
@@ -902,6 +902,9 @@ registerModel({
         async notifyPinStateToServer() {
             if (this.channel_type === 'channel') {
                 await this.leave();
+                return;
+            }
+            if (!this.uuid) {
                 return;
             }
             await this.messaging.models['Thread'].performRpcChannelPin({
@@ -981,7 +984,7 @@ registerModel({
          */
         async pin() {
             this.update({ isPendingPinned: true });
-            if (this.messaging.currentGuest) {
+            if (!this.messaging.currentUser) {
                 return;
             }
             await this.notifyPinStateToServer();
@@ -1154,7 +1157,7 @@ registerModel({
          */
         async unpin() {
             this.update({ isPendingPinned: false });
-            if (this.messaging.currentGuest) {
+            if (!this.messaging.currentUser) {
                 return;
             }
             await this.notifyPinStateToServer();

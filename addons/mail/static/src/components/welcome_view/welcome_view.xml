@@ -12,7 +12,7 @@
                 <div class="d-flex justify-content-center">
                     <MediaPreview t-if="welcomeView.mediaPreview" className="'mr-5'" localId="welcomeView.mediaPreview.localId"/>
                     <div class="d-flex flex-column justify-content-center">
-                        <t t-if="messaging.currentGuest">
+                        <t t-if="messaging.isCurrentUserGuest">
                             <label class="o_WelcomeView_guestNameInputLabel text-center" t-att-for="welcomeView.guestNameInputUniqueId">What's your name?</label>
                             <input class="form-control mb-3" type="text" placeholder="Your name" t-att-name="welcomeView.guestNameInputUniqueId" t-att-id="welcomeView.guestNameInputUniqueId" t-att-value="welcomeView.pendingGuestName" t-ref="guestNameInput" t-on-input="welcomeView.onInputGuestNameInput" t-on-keydown="welcomeView.onKeydownGuestNameInput"/>
                         </t>

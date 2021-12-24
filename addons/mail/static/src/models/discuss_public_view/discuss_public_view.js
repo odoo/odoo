@@ -61,6 +61,11 @@ registerModel({
         isChannelTokenSecret: attr({
             default: true,
         }),
+        messaging: one2one('Messaging', {
+            inverse: 'discussPublicView',
+            required: true,
+            readonly: true,
+        }),
         shouldAddGuestAsMemberOnJoin: attr({
             default: false,
             readonly: true,

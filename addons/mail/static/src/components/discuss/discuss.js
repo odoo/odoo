@@ -29,7 +29,7 @@ export class Discuss extends Component {
         this.discuss.update({ isOpen: true });
         if (this.discuss.thread) {
             this.trigger('o-push-state-action-manager');
-        } else if (!this._activeThreadCache && this.discuss.messaging.isInitialized) {
+        } else if (!this._activeThreadCache) {
             this.discuss.openInitThread();
         }
         if (

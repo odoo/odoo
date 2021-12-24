@@ -79,16 +79,15 @@ QUnit.test('messaging not initialized', async function (assert) {
         waitUntilMessagingCondition: 'created',
     });
     await createMessagingMenuComponent();
-    assert.strictEqual(
-        document.querySelectorAll('.o_MessagingMenu_loading').length,
-        1,
-        "should display loading icon on messaging menu when messaging not yet initialized"
-    );
 
     await afterNextRender(() => document.querySelector(`.o_MessagingMenu_toggler`).click());
     assert.strictEqual(
-        document.querySelector('.o_MessagingMenu_dropdownMenu').textContent,
-        "Please wait...",
+        document.querySelectorAll('.o_NotificationList_loadingIcon').length,
+        1,
+        "should display loading icon on messaging menu when messaging not yet initialized"
+    );
+    assert.ok(
+        document.querySelector('.o_MessagingMenu_dropdownMenu').textContent.includes("Please wait..."),
         "should prompt loading when opening messaging menu"
     );
 });
@@ -114,7 +113,7 @@ QUnit.test('messaging becomes initialized', async function (assert) {
     // simulate messaging becomes initialized
     await afterNextRender(() => messagingInitializedProm.resolve());
     assert.strictEqual(
-        document.querySelectorAll('.o_MessagingMenu_loading').length,
+        document.querySelectorAll('.o_NotificationList_loadingIcon').length,
         0,
         "should no longer display loading icon on messaging menu when messaging becomes initialized"
     );

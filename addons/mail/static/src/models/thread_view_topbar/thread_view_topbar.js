@@ -63,7 +63,7 @@ registerModel({
                 return;
             }
             // Guests cannot edit thread name
-            if (this.messaging.isCurrentUserGuest) {
+            if (!this.messaging.currentUser) {
                 return;
             }
             const selection = window.getSelection();
@@ -87,7 +87,7 @@ registerModel({
                 return;
             }
             // Guests cannot edit description
-            if (this.messaging.isCurrentUserGuest) {
+            if (!this.messaging.currentUser) {
                 return;
             }
             const selection = window.getSelection();
@@ -322,7 +322,7 @@ registerModel({
          */
         openInvitePopoverView() {
             this.update({ invitePopoverView: insertAndReplace() });
-            if (this.messaging.isCurrentUserGuest) {
+            if (!this.messaging.currentUser) {
                 return;
             }
             this.invitePopoverView.channelInvitationForm.update({ doFocusOnSearchInput: true });
@@ -383,7 +383,10 @@ registerModel({
                 }
                 return `/mail/channel/${this.thread.id}/guest/${this.messaging.currentGuest.id}/avatar_128?unique=${this.messaging.currentGuest.name}`;
             }
-            return this.messaging.currentPartner.avatarUrl;
+            if (this.messaging.currentPartner) {
+                return this.messaging.currentPartner.avatarUrl;
+            }
+            return '';
         },
         /**
          * @private

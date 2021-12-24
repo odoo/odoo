@@ -4,13 +4,18 @@
     <t t-name="mail.ThreadViewTopbar" owl="1">
         <div class="o_ThreadViewTopbar d-flex flex-shrink-0 w-100 px-3" t-attf-class="{{ className }}" t-ref="root">
             <t t-if="threadViewTopbar">
+                <t t-if="!messaging.isInitialized">
+                    <div class="d-flex mr-2 align-items-center justify-content-center">
+                        <i class="o_ThreadViewTopbar_loadingIcon fa fa-circle-o-notch fa-spin"/>
+                    </div>
+                </t>
                 <t t-if="threadViewTopbar.thread">
                     <ThreadIcon className="'o_ThreadViewTopbar_threadIcon mr-2 align-self-center'" threadLocalId="threadViewTopbar.thread.localId"/>
                 </t>
                 <div class="o_ThreadViewTopbar_title d-flex flex-grow-1 align-self-center align-items-center">
                     <t t-if="threadViewTopbar.thread">
                         <t t-if="!threadViewTopbar.isEditingThreadName">
-                            <div class="o_ThreadViewTopbar_threadName o_ThreadViewTopbar_editableItem flex-shrink-0 px-1 text-truncate lead font-weight-bold" t-att-title="threadViewTopbar.thread.displayName" t-on-click="threadViewTopbar.onClickTopbarThreadName" t-on-mouseenter="threadViewTopbar.onMouseEnterTopbarThreadName" t-on-mouseleave="threadViewTopbar.onMouseLeaveTopbarThreadName" t-att-class="{ 'o-threadNameEditable': threadViewTopbar.isMouseOverThreadName and !messaging.isCurrentUserGuest }">
+                            <div class="o_ThreadViewTopbar_threadName o_ThreadViewTopbar_editableItem flex-shrink-0 px-1 text-truncate lead font-weight-bold" t-att-title="threadViewTopbar.thread.displayName" t-on-click="threadViewTopbar.onClickTopbarThreadName" t-on-mouseenter="threadViewTopbar.onMouseEnterTopbarThreadName" t-on-mouseleave="threadViewTopbar.onMouseLeaveTopbarThreadName" t-att-class="{ 'o-threadNameEditable': threadViewTopbar.isMouseOverThreadName and messaging.currentUser }">
                                 <t t-esc="threadViewTopbar.thread.displayName"/>
                             </div>
                         </t>
@@ -27,11 +32,11 @@
                         <div class="o_ThreadViewTopbar_threadDescriptionSeparator flex-shrink-0 mx-2"/>
                         <t t-if="!threadViewTopbar.isEditingThreadDescription">
                             <t t-if="threadViewTopbar.thread.description">
-                                <div class="o_ThreadViewTopbar_threadDescription o_ThreadViewTopbar_editableItem text-truncate px-1" t-att-title="threadViewTopbar.thread.description" t-on-click="threadViewTopbar.onClickTopbarThreadDescription" t-on-mouseenter="threadViewTopbar.onMouseEnterTopbarThreadDescription" t-on-mouseleave="threadViewTopbar.onMouseLeaveTopbarThreadDescription" t-att-class="{ 'o-threadDescriptionEditable': threadViewTopbar.isMouseOverThreadDescription and !messaging.isCurrentUserGuest }">
+                                <div class="o_ThreadViewTopbar_threadDescription o_ThreadViewTopbar_editableItem text-truncate px-1" t-att-title="threadViewTopbar.thread.description" t-on-click="threadViewTopbar.onClickTopbarThreadDescription" t-on-mouseenter="threadViewTopbar.onMouseEnterTopbarThreadDescription" t-on-mouseleave="threadViewTopbar.onMouseLeaveTopbarThreadDescription" t-att-class="{ 'o-threadDescriptionEditable': threadViewTopbar.isMouseOverThreadDescription and messaging.currentUser }">
                                     <t t-esc="threadViewTopbar.thread.description"/>
                                 </div>
                             </t>
-                            <t t-if="!messaging.isCurrentUserGuest and !threadViewTopbar.thread.description and threadViewTopbar.thread.isChannelDescriptionChangeable">
+                            <t t-if="messaging.currentUser and !threadViewTopbar.thread.description and threadViewTopbar.thread.isChannelDescriptionChangeable">
                                 <div class="o_ThreadViewTopbar_threadAddDescriptionEmptyLabel text-truncate" t-on-click="threadViewTopbar.onClickTopbarThreadDescription">
                                     Add a description
                                 </div>
@@ -66,7 +71,7 @@
                         </t>
                     </t>
                     <!-- FIXME: guests should be able to see members but there currently is no route for it, so hide it for now -->
-                    <t t-if="!messaging.isCurrentUserGuest and threadViewTopbar.thread and threadViewTopbar.thread.hasMemberListFeature and threadViewTopbar.threadView.hasMemberList and !threadViewTopbar.threadView.isMemberListOpened">
+                    <t t-if="messaging.currentUser and threadViewTopbar.thread and threadViewTopbar.thread.hasMemberListFeature and threadViewTopbar.threadView.hasMemberList and !threadViewTopbar.threadView.isMemberListOpened">
                         <button class="o_ThreadViewTopbar_showMemberListButton o_ThreadViewTopbar_button" title="Show Member List" t-on-click="threadViewTopbar.onClickShowMemberList">
                             <i class="fa fa-lg fa-users"/>
                         </button>
@@ -83,7 +88,8 @@
                         <img class="o_ThreadViewTopbar_avatar ml-1 mr-1 rounded-circle" t-att-src="threadViewTopbar.avatarUrl" alt="Avatar"/>
                         <t t-if="!threadViewTopbar.isEditingGuestName">
                             <span class="o_ThreadViewTopbar_userName o_ThreadViewTopbar_editableItem px-1 font-weight-bold text-truncate" t-att-class="{ 'o-userNameEditable': threadViewTopbar.isMouseOverUserName and messaging.isCurrentUserGuest }" t-on-click="threadViewTopbar.onClickUserName" t-on-mouseenter="threadViewTopbar.onMouseEnterUserName" t-on-mouseleave="threadViewTopbar.onMouseLeaveUserName">
-                                <t t-esc="messaging.isCurrentUserGuest ? messaging.currentGuest.name : messaging.currentUser.nameOrDisplayName"/>
+                                <t t-if="messaging.isCurrentUserGuest" t-esc="messaging.currentGuest.name"/>
+                                <t t-if="messaging.currentUser" t-esc="messaging.currentUser.nameOrDisplayName"/>
                             </span>
                         </t>
                         <t t-if="threadViewTopbar.isEditingGuestName">

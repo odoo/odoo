@@ -225,10 +225,12 @@ registerModel({
         }),
         discussAsChannel: one2one('Discuss', {
             inverse: 'categoryChannel',
+            isCausal: true,
             readonly: true,
         }),
         discussAsChat: one2one('Discuss', {
             inverse: 'categoryChat',
+            isCausal: true,
             readonly: true,
         }),
         /**

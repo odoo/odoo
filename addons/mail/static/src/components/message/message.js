@@ -123,7 +123,7 @@ export class Message extends Component {
      * @returns {boolean}
      */
     get hasAuthorOpenChat() {
-        if (this.messaging.currentGuest) {
+        if (!this.messaging.currentUser) {
             return false;
         }
         if (!this.messageView.message.author) {
