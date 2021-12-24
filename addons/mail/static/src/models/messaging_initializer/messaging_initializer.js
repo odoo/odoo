@@ -35,14 +35,10 @@ registerModel({
             });
             const device = this.messaging.device;
             device.start();
-            const discuss = this.messaging.discuss;
             const data = await this.async(() => this.env.services.rpc({
                 route: '/mail/init_messaging',
             }, { shadow: true }));
             await this.async(() => this._init(data));
-            if (discuss.isOpen) {
-                discuss.openInitThread();
-            }
             if (this.messaging.autofetchPartnerImStatus) {
                 this.messaging.models['mail.partner'].startLoopFetchImStatus();
             }
