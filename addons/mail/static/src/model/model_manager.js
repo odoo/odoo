@@ -417,12 +417,9 @@ export class ModelManager {
      * @param {Object} [data={}]
      */
     _addDefaultData(Model, data = {}) {
-        const data2 = {};
+        const data2 = { ...data };
         for (const field of Model.__fieldList) {
-            // `undefined` should have the same effect as not passing the field
-            if (data[field.fieldName] !== undefined) {
-                data2[field.fieldName] = data[field.fieldName];
-            } else if (field.default !== undefined) {
+            if (data2[field.fieldName] === undefined && field.default !== undefined) {
                 data2[field.fieldName] = field.default;
             }
         }
