@@ -210,7 +210,7 @@ class TestMessagePost(BaseFunctionalTest, TestRecipients, MockEmails):
             [[self.partner_1], [self.partner_2], [self.user_admin.partner_id]],
             reply_to=msg.reply_to, subject=_subject,
             body_content=_body, body_alt_content=_body_alt,
-            references=False)
+            references=msg.message_id)
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_post_notifications_keep_emails(self):
@@ -281,27 +281,51 @@ class TestMessagePost(BaseFunctionalTest, TestRecipients, MockEmails):
         self.assertEqual(parent_msg.partner_ids, self.env['res.partner'])
         self.assertEmails(self.user_employee.partner_id, [])
 
+        # post a first reply
+        self._init_mock_build_email()
         msg = self.test_record.with_user(self.user_employee).message_post(
             body='<p>Test Answer</p>',
-            message_type='comment', subtype='mt_comment',
+            message_type='comment',
+            subject='Welcome',
+            subtype='mt_comment',
+            parent_id=parent_msg.id,
             partner_ids=[self.partner_1.id],
-            parent_id=parent_msg.id)
+        )
 
         self.assertEqual(msg.parent_id.id, parent_msg.id)
         self.assertEqual(msg.partner_ids, self.partner_1)
         self.assertEqual(parent_msg.partner_ids, self.env['res.partner'])
 
-        # check notification emails: references
-        self.assertEmails(self.user_employee.partner_id, [[self.partner_1]], ref_content='openerp-%d-mail.test.simple' % self.test_record.id)
-        # self.assertTrue(all('openerp-%d-mail.test.simple' % self.test_record.id in m['references'] for m in self._mails))
+        # check notification emails, among other references
+        self.assertEmails(
+            self.user_employee.partner_id,
+            [[self.partner_1]],
+            subject='Welcome',
+            ref_content='openerp-%d-mail.test.simple' % self.test_record.id,
+            # references should be sorted from the oldest to the newest
+            references='%s %s' % (parent_msg.message_id, msg.message_id),
+        )
 
+        # post a reply to the reply: check parent is the first one
+        self._init_mock_build_email()
         new_msg = self.test_record.with_user(self.user_employee).message_post(
             body='<p>Test Answer Bis</p>',
-            message_type='comment', subtype='mt_comment',
-            parent_id=msg.id)
+            message_type='comment',
+            subtype='mt_comment',
+            parent_id=msg.id,
+            partner_ids=[self.partner_2.id],
+        )
 
         self.assertEqual(new_msg.parent_id.id, parent_msg.id, 'message_post: flatten error')
-        self.assertEqual(new_msg.partner_ids, self.env['res.partner'])
+        self.assertEqual(new_msg.partner_ids, self.partner_2)
+        self.assertEmails(
+            self.user_employee.partner_id, [[self.partner_2]],
+            body_content='<p>Test Answer Bis</p>',
+            reply_to=msg.reply_to,
+            subject='Re: %s' % self.test_record.name,
+            ref_content='openerp-%d-mail.test.simple' % self.test_record.id,
+            references='%s %s' % (parent_msg.message_id, new_msg.message_id),
+        )
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_post_email_with_multiline_subject(self):
