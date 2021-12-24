@@ -20,7 +20,7 @@
         </xpath>
         <xpath expr="//t[@t-esc='receipt.cashier']/.." position="after">
             <div t-if="receipt.is_gcc_country" t-translation="off">
-                <div>Served by/خدم بواسطة <t t-esc="receipt.cashier"/></div>
+                <div>Served by / خدم بواسطة <t t-esc="receipt.cashier"/></div>
             </div>
         </xpath>
 
@@ -29,7 +29,7 @@
         </xpath>
         <xpath expr="//span[@t-esc='env.pos.format_currency(receipt.subtotal)']/.." position="after">
             <div t-if="receipt.is_gcc_country" t-translation="off">
-                Subtotal/الإجمالي الفرعي
+                Subtotal / الإجمالي الفرعي
                 <span t-esc="env.pos.format_currency(receipt.subtotal)" class="pos-receipt-right-align"/>
             </div>
         </xpath>
@@ -39,7 +39,7 @@
         </xpath>
         <xpath expr="//span[@t-esc='env.pos.format_currency(receipt.total_with_tax)']/.." position="after">
             <div t-if="receipt.is_gcc_country" class="pos-receipt-amount pos-receipt-amount-arabic" t-translation="off">
-                TOTAL/الإجمالي
+                TOTAL / الإجمالي
                 <span t-esc="env.pos.format_currency(receipt.total_with_tax)" class="pos-receipt-right-align"/>
             </div>
         </xpath>
@@ -49,7 +49,7 @@
         </xpath>
         <xpath expr="//span[@t-esc='env.pos.format_currency(receipt.rounding_applied)']/.." position="after">
             <div t-if="receipt.is_gcc_country" class="pos-receipt-amount pos-receipt-amount-arabic" t-translation="off">
-                Rounding/التقريب
+                Rounding / التقريب
                 <span t-esc="env.pos.format_currency(receipt.rounding_applied)" class="pos-receipt-right-align"/>
             </div>
         </xpath>
@@ -59,7 +59,7 @@
         </xpath>
         <xpath expr="//span[@t-esc='env.pos.format_currency(receipt.total_rounded)']/.." position="after">
             <div t-if="receipt.is_gcc_country" class="pos-receipt-amount pos-receipt-amount-arabic" t-translation="off">
-                To Pay/للسداد
+                To Pay / للسداد
                 <span t-esc="env.pos.format_currency(receipt.total_rounded)" class="pos-receipt-right-align"/>
             </div>
         </xpath>
@@ -69,7 +69,7 @@
         </xpath>
         <xpath expr="//span[@t-esc='env.pos.format_currency(receipt.change)']/.." position="after">
             <div t-if="receipt.is_gcc_country" class="pos-receipt-amount receipt-change pos-receipt-amount-arabic" t-translation="off">
-                CHANGE/الباقي
+                CHANGE / الباقي
                 <span t-esc="env.pos.format_currency(receipt.change)" class="pos-receipt-right-align"/>
             </div>
         </xpath>
@@ -79,7 +79,7 @@
         </xpath>
         <xpath expr="//span[@t-esc='env.pos.format_currency(receipt.total_discount)']/.." position="after">
             <div t-if="receipt.is_gcc_country" t-translation="off">
-                Discounts/الخصومات
+                Discounts / الخصومات
                 <span t-esc="env.pos.format_currency(receipt.total_discount)" class="pos-receipt-right-align"/>
             </div>
         </xpath>
@@ -89,7 +89,7 @@
         </xpath>
         <xpath expr="//span[@t-esc='env.pos.format_currency(receipt.total_tax)']/.." position="after">
             <div t-if="receipt.is_gcc_country" t-translation="off">
-                Total Taxes/إجمالي الضرائب
+                Total Taxes / إجمالي الضرائب
                 <span t-esc="env.pos.format_currency(receipt.total_tax)" class="pos-receipt-right-align"/>
             </div>
         </xpath>
@@ -102,7 +102,7 @@
         <xpath expr="//t[@t-if='isSimple(line)']/div/span[hasclass('price_display')]" position="after">
             <div class="responsive-price" t-if="receipt.is_gcc_country">
                 <div class="pos-receipt-left-padding" style="display: inline-flex;">
-                    <div t-translation="off">Taxes/الضرائب</div>:<span t-esc="env.pos.format_currency_no_symbol(line.tax)" style="margin-left: 5px"/>
+                    <div t-translation="off">Taxes / الضرائب</div>:<span t-esc="env.pos.format_currency_no_symbol(line.tax)" style="margin-left: 5px"/>
                 </div>
                 <span t-esc="env.pos.format_currency_no_symbol(line.price_display)" class="price_display pos-receipt-right-align"/>
             </div>
@@ -121,7 +121,7 @@
                 </div>
                 <div class="responsive-price">
                     <div class="pos-receipt-left-padding" style="display: inline-flex;">
-                        <div t-translation="off">Taxes/الضرائب</div>:<span t-esc="env.pos.format_currency_no_symbol(line.tax)" style="margin-left: 5px"/>
+                        <div t-translation="off">Taxes / الضرائب</div>:<span t-esc="env.pos.format_currency_no_symbol(line.tax)" style="margin-left: 5px"/>
                     </div>
                     <span t-esc="env.pos.format_currency_no_symbol(line.price_display)" class="price_display pos-receipt-right-align"/>
                 </div>
@@ -133,7 +133,7 @@
         </xpath>
         <xpath expr="//t[@t-esc='line.discount']/.." position="after">
             <div class="pos-receipt-left-padding" style="display: inline-flex;" t-if="receipt.is_gcc_country" t-translation="off">
-                <div>Discount/الخصم</div>: <t t-esc="line.discount" />%
+                <div>Discount / الخصم</div>: <t t-esc="line.discount" />%
             </div>
         </xpath>
     </t>
