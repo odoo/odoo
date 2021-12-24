@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.CopyClipboard" owl="1">
+        <div class="o_field_copy o_field_widget" t-att-class="{'o_text_overflow': props.isInline}">
+            <span t-esc="props.value"/>
+            <button 
+            t-attf-class="btn btn-sm btn-primary o_clipboard_button {{'o_btn_' + props.type + '_copy'}}"
+            title=""
+            t-on-click="onCopyClicked"
+            t-att-data-clipboard-text="props.value">
+                <span class="fa fa-clipboard mx-1"></span>
+                <span>Copy</span>
+            </button>
+        </div>
+    </t>
+
+    <t t-name="web.CopyClipboardCharField" owl="1">
+        <CopyClipboard isInline="true" type="'char'" value="props.value"/>
+    </t>
+
+    <t t-name="web.CopyClipboardTextField" owl="1">
+        <CopyClipboard type="'text'" value="props.value"/>
+    </t>
+
+    <t t-name="web.CopyClipboardUrlField" owl="1">
+        <CopyClipboard isInline="true" type="'url'" value="props.value"/>
+    </t>
+
+</templates>
