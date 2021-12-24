@@ -14,7 +14,7 @@
                             icon="fa-book"
                             type="object"
                             groups="hr_contract.group_hr_contract_manager"
-                            attrs="{'invisible' : [('employee_type', 'not in', ['employee', 'student'])]}">
+                            attrs="{'invisible' : [('employee_type', 'not in', ['employee', 'student', 'trainee'])]}">
                             <div attrs="{'invisible' : [('first_contract_date', '=', False)]}" class="o_stat_info">
                                 <span class="o_stat_text text-success" attrs="{'invisible' : [('contract_warning', '=', True)]}" title="In Contract Since"> In Contract Since</span>
                                 <span class="o_stat_value text-success" attrs="{'invisible' : [('contract_warning', '=', True)]}">
