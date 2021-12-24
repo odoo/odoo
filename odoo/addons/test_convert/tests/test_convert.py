@@ -89,7 +89,7 @@ class TestEvalXML(common.TransactionCase):
         sub_xml.append(Field('Test child model', name='name'))
         xml = ET.Element('record', attrib=record_attrs)
         xml.append(Field("Test parent model" ,name="name"))
-        xml.append(Field(sub_xml ,name="test_model_o2m_ids"))
+        xml.append(Field(sub_xml, name="test_model_o2m_ids"))
         # pass filename just becosue it's set in context by _tag_record method
         obj = xml_import(self.cr, 'test_convert', None, 'init', xml_filename="test_convert_usered.xml")
         # raise from model method _load_records if vals have o2m null record
