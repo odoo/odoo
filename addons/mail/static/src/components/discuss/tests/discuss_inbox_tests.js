@@ -89,8 +89,8 @@ QUnit.test('reply: discard on pressing escape', async function (assert) {
     );
     assert.containsOnce(
         document.body,
-        '.o_EmojisPopover',
-        "emojis popover should be opened after click on emojis button"
+        '.o_EmojiList',
+        "emoji list should be opened after click on emojis button"
     );
 
     await afterNextRender(() => {
@@ -99,8 +99,8 @@ QUnit.test('reply: discard on pressing escape', async function (assert) {
     });
     assert.containsNone(
         document.body,
-        '.o_EmojisPopover',
-        "emojis popover should be closed after pressing escape on emojis button"
+        '.o_EmojiList',
+        "emoji list should be closed after pressing escape on emojis button"
     );
     assert.containsOnce(
         document.body,
@@ -333,17 +333,17 @@ QUnit.test('reply: discard on click away', async function (assert) {
     );
     assert.containsOnce(
         document.body,
-        '.o_EmojisPopover',
-        "emojis popover should be opened after clicking on emojis button"
+        '.o_EmojiList',
+        "emoji list should be opened after clicking on emojis button"
     );
 
     await afterNextRender(() => {
-        document.querySelector(`.o_EmojisPopover_emoji`).click();
+        document.querySelector(`.o_EmojiList_emoji`).click();
     });
     assert.containsNone(
         document.body,
-        '.o_EmojisPopover',
-        "emojis popover should be closed after selecting an emoji"
+        '.o_EmojiList',
+        "emoji list should be closed after selecting an emoji"
     );
     assert.containsOnce(
         document.body,
