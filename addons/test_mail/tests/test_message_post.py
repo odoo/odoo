@@ -641,6 +641,7 @@ class TestMessagePost(TestMessagePostCommon):
         self.assertFalse(parent_msg.partner_ids)
         self.assertNotSentEmail()
 
+        # post a first reply
         with self.assertPostNotifications(
                 [{'content': '<p>Test Answer</p>', 'notif': [{'partner': self.partner_1, 'type': 'email'}]}]
             ):
@@ -649,6 +650,7 @@ class TestMessagePost(TestMessagePostCommon):
                 message_type='comment',
                 parent_id=parent_msg.id,
                 partner_ids=[self.partner_1.id],
+                subject='Welcome',
                 subtype_xmlid='mail.mt_comment',
             )
         self.assertEqual(msg.parent_id, parent_msg)
@@ -657,19 +659,33 @@ class TestMessagePost(TestMessagePostCommon):
 
         # check notification emails: references
         self.assertSentEmail(
-            self.user_employee.partner_id, [self.partner_1],
-            ref_content='openerp-%d-mail.test.simple' % self.test_record.id
+            self.user_employee.partner_id,
+            [self.partner_1],
+            references_content='openerp-%d-mail.test.simple' % self.test_record.id,
+            # references should be sorted from the oldest to the newest
+            references='%s %s' % (parent_msg.message_id, msg.message_id),
         )
 
+        # post a reply to the reply: check parent is the first one
         with self.mock_mail_gateway():
             new_msg = test_record.message_post(
                 body='<p>Test Answer Bis</p>',
                 message_type='comment',
-                parent_id=msg.id,
                 subtype_xmlid='mail.mt_comment',
+                parent_id=msg.id,
+                partner_ids=[self.partner_2.id],
             )
         self.assertEqual(new_msg.parent_id, parent_msg, 'message_post: flatten error')
-        self.assertFalse(new_msg.partner_ids)
+        self.assertEqual(new_msg.partner_ids, self.partner_2)
+        self.assertSentEmail(
+            self.user_employee.partner_id,
+            [self.partner_2],
+            body_content='<p>Test Answer Bis</p>',
+            reply_to=msg.reply_to,
+            subject='Re: %s' % self.test_record.name,
+            references_content='openerp-%d-mail.test.simple' % self.test_record.id,
+            references='%s %s' % (parent_msg.message_id, new_msg.message_id),
+        )
 
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.addons.mail.models.mail_thread')
     @users('employee')
