@@ -186,7 +186,7 @@ class CrmLead(models.Model):
             message += '<p>%s</p>' % html_escape(comment)
         for lead in self:
             lead.message_post(body=message)
-            lead.sudo().convert_opportunity(lead.partner_id.id)  # sudo required to convert partner data
+            lead.sudo().convert_opportunity(lead.partner_id)  # sudo required to convert partner data
 
     def partner_desinterested(self, comment=False, contacted=False, spam=False):
         if contacted:
@@ -274,7 +274,7 @@ class CrmLead(models.Model):
 
         lead = self.create(values)
         lead.assign_salesman_of_assigned_partner()
-        lead.convert_opportunity(lead.partner_id.id)
+        lead.convert_opportunity(lead.partner_id)
         return {
             'id': lead.id
         }

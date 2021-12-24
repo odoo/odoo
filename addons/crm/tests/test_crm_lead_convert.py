@@ -143,7 +143,7 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
         self.assertEqual(lead.stage_id, self.stage_team1_1)
         self.assertEqual(lead.email_from, 'amy.wong@test.example.com')
         self.assertEqual(lead.lang_id, self.lang_fr)
-        lead.convert_opportunity(self.contact_2.id)
+        lead.convert_opportunity(self.contact_2)
 
         self.assertEqual(lead.type, 'opportunity')
         self.assertEqual(lead.partner_id, self.contact_2)
@@ -162,7 +162,7 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
         lead = self.lead_1.with_user(self.env.user)
         lead.action_archive()
         self.assertFalse(lead.active)
-        lead.convert_opportunity(self.contact_2.id)
+        lead.convert_opportunity(self.contact_2)
 
         self.assertEqual(lead.type, 'lead')
         self.assertEqual(lead.partner_id, self.env['res.partner'])
@@ -177,7 +177,7 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
         self.assertEqual(lead.stage_id, self.stage_gen_won)
         self.assertEqual(lead.probability, 100)
 
-        lead.convert_opportunity(self.contact_2.id)
+        lead.convert_opportunity(self.contact_2)
         self.assertEqual(lead.type, 'lead')
         self.assertEqual(lead.partner_id, self.env['res.partner'])
 
@@ -356,7 +356,7 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
             'street': 'my street',
             'city': 'my city',
         })
-        lead.convert_opportunity(partner.id)
+        lead.convert_opportunity(partner)
         self.assertEqual(lead.email_from, 'demo@test.com', 'Email From should be preserved during conversion')
         self.assertEqual(lead.lang_id, self.lang_fr, 'Lang should be preserved during conversion')
         self.assertEqual(lead.street, 'my street', 'Street should be preserved during conversion')

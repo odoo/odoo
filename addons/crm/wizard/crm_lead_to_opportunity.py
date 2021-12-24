@@ -152,7 +152,7 @@ class Lead2OpportunityPartner(models.TransientModel):
                 self._convert_handle_partner(
                     lead, self.action, self.partner_id.id or lead.partner_id.id)
 
-            lead.convert_opportunity(lead.partner_id.id, user_ids=False, team_id=False)
+            lead.convert_opportunity(lead.partner_id, user_ids=False, team_id=False)
 
         leads_to_allocate = leads
         if not self.force_assignment:
