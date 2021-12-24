@@ -51,6 +51,36 @@ class Partner(models.Model):
             WHERE R.res_partner_id = %s """, (self.id,))
         return self.env.cr.dictfetchall()[0].get('starred_count')
 
+    @api.model
+    def _is_same_email(self, new_email):
+        """Calculate if we should write the email on the related partner. When
+        the email of the partner is an empty string, we force it to False
+        to not propagate a False on an empty string.
+
+        Done in a separate method so it can be used in both ribbon and inverse
+        and compute of email update methods.
+        """
+        if self.id and new_email != self.email:
+            email_normalized = tools.email_normalize(new_email) or new_email or False
+            partner_email_normalized = tools.email_normalize(self.email) or self.email or False
+            return email_normalized != partner_email_normalized
+        return False
+
+    @api.model
+    def _is_same_phone(self, record, field):
+        """Calculate if we should write the phone on the related partner. When
+        the phone of the partner is an empty string, we force it to False
+        to not propagate a False on an empty string.
+
+        Done in a separate method so it can be used in both ribbon and inverse
+        and compute of phone update methods.
+        """
+        if self.id and record[field] != self.phone:
+            phone_formatted = record.phone_get_sanitized_number(number_fname=field) or record[field] or False
+            partner_phone_formatted = self.phone_get_sanitized_number(number_fname='phone') or self.phone or False
+            return phone_formatted != partner_phone_formatted
+        return False
+
     # ------------------------------------------------------------
     # MESSAGING
     # ------------------------------------------------------------
