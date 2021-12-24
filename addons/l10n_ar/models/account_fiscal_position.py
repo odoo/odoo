@@ -13,35 +13,18 @@ class AccountFiscalPosition(models.Model):
 
     @api.model
     def get_fiscal_position(self, partner_id, delivery_id=None):
-        """ Take into account the partner afip responsibility in order to auto-detect the fiscal position """
         company = self.env.company
+        partner = self.env['res.partner'].browse(partner_id)
         if company.country_id.code == "AR":
-            PartnerObj = self.env['res.partner']
-            partner = PartnerObj.browse(partner_id)
-
-            # if no delivery use invoicing
-            if delivery_id:
-                delivery = PartnerObj.browse(delivery_id)
-            else:
-                delivery = partner
-
-            # partner manually set fiscal position always win
-            if delivery.property_account_position_id or partner.property_account_position_id:
-                return delivery.property_account_position_id or partner.property_account_position_id
-            domain = [
-                ('auto_apply', '=', True),
-                ('l10n_ar_afip_responsibility_type_ids', '=', self.env['res.partner'].browse(
-                    partner_id).l10n_ar_afip_responsibility_type_id.id),
-                ('company_id', '=', company.id),
-            ]
-            return self.sudo().search(domain, limit=1)
+            self = self.with_context(l10n_ar_afip_responsibility_type_id=partner.l10n_ar_afip_responsibility_type_id.id)
         return super().get_fiscal_position(partner_id, delivery_id=delivery_id)
 
-    @api.onchange('l10n_ar_afip_responsibility_type_ids', 'country_group_id', 'country_id', 'zip_from', 'zip_to')
-    def _onchange_afip_responsibility(self):
-        if self.company_id.account_fiscal_country_id.code == "AR":
-            if self.l10n_ar_afip_responsibility_type_ids and any(['country_group_id', 'country_id', 'zip_from', 'zip_to']):
-                return {'warning': {
-                    'title': _("Warning"),
-                    'message': _('If use AFIP Responsibility then the country / zip codes will be not take into account'),
-                }}
+    @api.model
+    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
+        """ Take into account the partner afip responsibility in order to auto-detect the fiscal position """
+        if 'l10n_ar_afip_responsibility_type_id' in self._context:
+            args += [
+                '|',
+                ('l10n_ar_afip_responsibility_type_ids', '=', False),
+                ('l10n_ar_afip_responsibility_type_ids', '=', self._context.get('l10n_ar_afip_responsibility_type_id'))]
+        return super()._search(args, offset, limit, order, count=count, access_rights_uid=access_rights_uid)
