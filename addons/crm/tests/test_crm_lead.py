@@ -455,7 +455,7 @@ class TestCRMLead(TestCrmCommon):
         lead = self.lead_1.with_user(self.env.user)
         self.assertEqual(lead.team_id, self.sales_team_1)
 
-        lead.convert_opportunity(self.contact_1.id)
+        lead.convert_opportunity(self.contact_1)
         self.assertEqual(lead.team_id, self.sales_team_1)
 
         lead.action_set_won()
