@@ -2858,7 +2858,7 @@ msgstr "銀行對帳單"
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_suspense_account_id
 #, python-format
 msgid "Bank Suspense Account"
-msgstr "銀行存款"
+msgstr "銀行暫時性帳戶"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -2871,7 +2871,7 @@ msgid ""
 "Bank Transactions are posted immediately after import or synchronization. Their counterparty is the bank suspense account.\n"
 "Reconciliation replaces the latter by the definitive account(s)."
 msgstr ""
-"銀行交易在匯入或同步後立即過帳。他們的交易對手是銀行暫記帳戶。\n"
+"銀行交易在匯入或同步後立即過帳。他們的交易對手是銀行暫時性帳戶。\n"
 "對帳將後者替換為最終帳戶。"
 
 #. module: account
@@ -2897,7 +2897,7 @@ msgstr "銀行設定通用設定"
 msgid ""
 "Bank statements transactions will be posted on the suspense account until "
 "the final reconciliation allowing finding the right account."
-msgstr "銀行對帳單交易將過帳在暫記帳戶中，直到最終核對允許找到正確的帳戶為止."
+msgstr "銀行對帳單交易將過帳在暫時性帳戶中，直到最終核對允許找到正確的帳戶為止."
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -7542,7 +7542,7 @@ msgstr "日記帳未收收款項目"
 #: model:ir.model.fields,field_description:account.field_account_chart_template__account_journal_suspense_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_suspense_account_id
 msgid "Journal Suspense Account"
-msgstr "日記帳暫記帳"
+msgstr "日記帳暫時性帳戶"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_journal_code_company_uniq
@@ -12008,7 +12008,7 @@ msgstr "供應商排名"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__suspense_account_id
 msgid "Suspense Account"
-msgstr "銀行存款"
+msgstr "暫時性帳戶"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note
@@ -15160,7 +15160,7 @@ msgstr "如果未在公司或 %s 日記帳中的 %s 付款方式中設置未結�
 msgid ""
 "You can't create a new statement line without a suspense account set on the "
 "%s journal."
-msgstr "如果未在 %s 日記帳上設置暫記帳戶，則無法建立新的對帳單明細。"
+msgstr "如果未在 %s 日記帳上設置暫時性帳戶，則無法建立新的對帳單明細。"
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0

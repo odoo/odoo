@@ -84,6 +84,10 @@ msgid ""
 "secret on the Google APIs plateform or try to stop and restart your calendar"
 " synchronisation."
 msgstr ""
+"เกิดข้อผิดพลาดขณะสร้างโทเคน "
+"โค้ดการให้สิทธิ์ของคุณอาจไม่ถูกต้องหรือหมดอายุแล้ว [%s] "
+"คุณควรตรวจสอบไอดีลูกค้าและรหัสบนแพลตฟอร์ม Google APIs "
+"หรือพยายามหยุดและเริ่มต้นการซิงโครไนซ์ปฏิทินของคุณใหม่"
 
 #. module: google_calendar
 #. openerp-web
@@ -185,12 +189,12 @@ msgstr "ลบจาก Odoo "
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__delete_both
 msgid "Delete from both"
-msgstr ""
+msgstr "ลบจากทั้งสอง"
 
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__delete_google
 msgid "Delete from the current Google Calendar account"
-msgstr ""
+msgstr "ลบออกจากบัญชีปฏิทิน Google ปัจจุบัน"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__display_name
@@ -279,8 +283,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the event "
 "alarm information without removing it."
 msgstr ""
-"หากช่องที่ใช้งานอยู่ถูกตั้งค่าเป็น \"เท็จ\" "
-"จะช่วยให้คุณสามารถซ่อนข้อมูลการเตือนเหตุการณ์โดยไม่ต้องลบออก"
+"หากฟิลด์ที่ใช้งานอยู่ถูกตั้งค่าเป็น \"เท็จ\" "
+"จะช่วยให้คุณสามารถซ่อนข้อมูลการเตือนอีเวนต์โดยไม่ต้องลบออก"
 
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_google_calendar_credentials__calendar_cal_id
@@ -289,6 +293,8 @@ msgid ""
 "Last Calendar ID who has been synchronized. If it is changed, we remove all "
 "links between GoogleID and Odoo Google Internal ID"
 msgstr ""
+"ไอดีปฏิทินล่าสุดที่ได้รับการซิงโครไนซ์ หากมีการเปลี่ยนแปลง "
+"เราจะลบลิงก์ทั้งหมดระหว่าง GoogleID และ Odoo Google Internal ID"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset____last_update
@@ -311,7 +317,7 @@ msgstr "อัปเดตครั้งล่าสุดเมื่อ"
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__dont_delete
 msgid "Leave them untouched"
-msgstr "ปล่อยให้พวกเขาไม่มีใครแตะต้อง"
+msgstr "ปล่อยไว้ไม่แตะต้อง"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__need_sync
@@ -390,12 +396,14 @@ msgid ""
 "The Google Synchronization needs to be configured before you can use it, do "
 "you want to do it now?"
 msgstr ""
+"จำเป็นต้องกำหนดค่า Google Synchronization ก่อน คุณจึงจะสามารถใช้งานได้ "
+"คุณต้องการทำตอนนี้หรือไม่?"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_credentials.py:0
 #, python-format
 msgid "The account for the Google Calendar service is not configured."
-msgstr ""
+msgstr "ไม่ได้กำหนดค่าบัญชีสำหรับบริการปฏิทิน Google "
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_sync.py:0
@@ -404,29 +412,31 @@ msgid ""
 "The following event could not be synced with Google Calendar. </br>It will "
 "not be synced as long at it is not updated.</br>%(reason)s"
 msgstr ""
+"ไม่สามารถซิงค์อีเวนต์ต่อไปนี้กับ Google "
+"ปฏิทินได้</br>จะไม่มีการซิงค์ตราบใดที่ยังไม่อัปเดต</br>%(reason)s"
 
 #. module: google_calendar
 #. openerp-web
 #: code:addons/google_calendar/static/src/js/google_calendar.js:0
 #, python-format
 msgid "The synchronization with Google calendar was successfully stopped."
-msgstr ""
+msgstr "หยุดการซิงโครไนซ์กับปฏิทิน Google สำเร็จแล้ว"
 
 #. module: google_calendar
 #: model:ir.model.constraint,message:google_calendar.constraint_res_users_google_token_uniq
 msgid "The user has already a google account"
-msgstr ""
+msgstr "ผู้ใช้มีบัญชี Google แล้ว"
 
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_google_calendar_account_reset__delete_policy
 msgid "This will only affect events for which the user is the owner"
-msgstr "ซึ่งจะมีผลกับเหตุการณ์ที่ผู้ใช้เป็นเจ้าของเท่านั้น"
+msgstr "ซึ่งจะมีผลกับอีเวนต์ที่ผู้ใช้เป็นเจ้าของเท่านั้น"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__calendar_token_validity
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_token_validity
 msgid "Token Validity"
-msgstr "ความถูกต้องของโทเค็น"
+msgstr "ความถูกต้องของโทเคน"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__user_id
@@ -438,12 +448,12 @@ msgstr "ผู้ใช้"
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_credentials__calendar_token
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_token
 msgid "User token"
-msgstr ""
+msgstr "โทเคนผู้ใช้"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__delete_policy
 msgid "User's Existing Events"
-msgstr "เหตุการณ์ที่มีอยู่ของผู้ใช้"
+msgstr "อีเวนต์ที่มีอยู่ของผู้ใช้"
 
 #. module: google_calendar
 #: model:ir.model,name:google_calendar.model_res_users
@@ -458,24 +468,26 @@ msgid ""
 "You are about to stop the synchronization of your calendar with Google. Are "
 "you sure you want to continue?"
 msgstr ""
+"คุณกำลังจะหยุดการซิงโครไนซ์ปฏิทินของคุณกับ Google "
+"คุณแน่ใจหรือไม่ว่าต้องการดำเนินการต่อ"
 
 #. module: google_calendar
 #. openerp-web
 #: code:addons/google_calendar/static/src/js/google_calendar.js:0
 #, python-format
 msgid "You will be redirected to Google to authorize access to your calendar!"
-msgstr ""
+msgstr "คุณจะถูกเปลี่ยนเส้นทางไปยัง Google เพื่ออนุญาตให้เข้าถึงปฏิทินของคุณ!"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_sync.py:0
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
 msgid "undefined time"
-msgstr ""
+msgstr "ไม่ได้กำหนดเวลา"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
 msgid ""
 "you don't seem to have permission to modify this event on Google Calendar"
-msgstr ""
+msgstr "ดูเหมือนคุณจะไม่ได้รับอนุญาตให้แก้ไขอีเวนต์นี้ในปฏิทิน Google "

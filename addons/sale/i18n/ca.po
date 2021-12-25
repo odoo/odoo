@@ -75,6 +75,8 @@ msgid ""
 "(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
 "'Order - %s' % (object.name)"
 msgstr ""
+"(object.state in ('draft', 'sent') and 'Pressupost - %s' % (object.name)) or"
+" 'Comanda - %s' % (object.name)"
 
 #. module: sale
 #: model:product.product,description_sale:sale.product_product_4e
@@ -1282,7 +1284,7 @@ msgstr "Personalitzeu pressupostos i comandes."
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
 msgid "DHL Express Connector"
-msgstr ""
+msgstr "Connector DHL Express"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -2496,6 +2498,7 @@ msgstr "Signatura online"
 #, python-format
 msgid "Only draft orders can be marked as sent directly."
 msgstr ""
+"Només les comandes esborrany es poden marcar com a enviades directament."
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_product_attribute_custom_value_sol_custom_value_unique

@@ -3,7 +3,6 @@
 # 	* sale_timesheet
 # 
 # Translators:
-# Vo Thanh Thuy, 2021
 # fanha99 <fanha99@hotmail.com>, 2021
 # Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2021
 # Dung Nguyen Thi <dungnt@trobz.com>, 2021
@@ -11,6 +10,7 @@
 # thanhnguyen.icsc <thanhnguyen.icsc@gmail.com>, 2021
 # Duy BQ <duybq86@gmail.com>, 2021
 # Trần Hà <tranthuha13590@gmail.com>, 2021
+# Vo Thanh Thuy, 2021
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:54+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Trần Hà <tranthuha13590@gmail.com>, 2021\n"
+"Last-Translator: Vo Thanh Thuy, 2021\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,11 +43,11 @@ msgid ""
 msgstr ""
 "\n"
 "                <p class=\"o_view_nocontent_smiling_face\">\n"
-"                    Ghi nhận thời gian biểu\n"
+"                    Ghi bảng chấm công\n"
 "                </p><p>\n"
 "                    Bạn có thể ghi nhận và theo dõi số giờ làm việc của bạn theo dự án mỗi\n"
-"                    ngày. Thời gian làm việc cho dự án sẽ được ghi nhận lại thành chi phí và có thể yêu cầu\n"
-"                    khách hàng thanh toán lại nếu cần thiết.\n"
+"                    ngày. Thời gian làm việc cho dự án sẽ được ghi nhận lại thành chi phí và có thể xuất lại hóa đơn\n"
+"                    cho khách hàng nếu cần thiết.\n"
 "                </p>\n"
 "            "
 
@@ -67,7 +67,7 @@ msgstr ""
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
 #, python-format
 msgid "%(amount)s %(label)s will be added to the new Sales Order."
-msgstr "%(amount)s %(label)s will be added to the new Sales Order."
+msgstr "%(amount)s %(label)s sẽ được thêm vào đơn bán hàng mới. "
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
@@ -103,7 +103,7 @@ msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
 "title=\"Arrow\"/>"
 msgstr ""
-"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Hình mũi tên\" "
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
 "title=\"Mũi tên\"/>"
 
 #. module: sale_timesheet
@@ -187,7 +187,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__amount_untaxed_invoiced
 msgid "Amount Invoiced"
-msgstr "Giá trị Đã xuất hoá đơn"
+msgstr "Số tiền đã xuất hóa đơn"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__expense_amount_untaxed_invoiced
@@ -207,7 +207,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__amount_to_invoice
 msgid "Amount to invoice"
-msgstr "Tổng lên hóa đơn"
+msgstr "Số tiền cần xuất hóa đơn"
 
 #. module: sale_timesheet
 #: model:ir.model.constraint,message:sale_timesheet.constraint_project_create_sale_order_line_unique_employee_per_wizard
@@ -227,12 +227,12 @@ msgstr "Tài khoản phân tích"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "Chi tiết phân tích"
+msgstr "Dòng phân tích"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__analytic_line_ids
 msgid "Analytic lines"
-msgstr "Chi tiết phân tích"
+msgstr "Dòng phân tích"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
@@ -400,7 +400,7 @@ msgstr "Tạo đơn bán hàng từ dự án"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 #, python-format
 msgid "Create Sales Order"
-msgstr "Tạo đơn hàng"
+msgstr "Tạo đơn bán hàng"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_invoice_view_form
@@ -760,7 +760,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__margin
 #, python-format
 msgid "Margin"
-msgstr "Lợi nhuận biên"
+msgstr "Biên lợi nhuận"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__qty_delivered_method
@@ -961,7 +961,7 @@ msgstr "Dự án mẫu"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_update
 msgid "Project Update"
-msgstr ""
+msgstr "Cập nhật dự án"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__project_id
@@ -1151,19 +1151,19 @@ msgstr "Sales order to which the task is linked."
 #: code:addons/sale_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Invoice"
-msgstr ""
+msgstr "Tìm kiếm trong hóa đơn"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order"
-msgstr ""
+msgstr "Tìm kiếm trong đơn bán hàng"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order Item"
-msgstr ""
+msgstr "Tìm kiếm trong mục đơn bán hàng"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__timesheet_product_id
@@ -1488,7 +1488,7 @@ msgstr ""
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Timesheets of %s"
-msgstr "Thời gian biểu của %s"
+msgstr "Bảng chấm công của %s"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_type__timesheet
@@ -1498,7 +1498,7 @@ msgstr "Bảng chấm cômg theo dự án (một việc theo từng SO/Dự án)
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
 msgid "Timesheets taken into account when invoicing your time"
-msgstr ""
+msgstr "Bảng chấm công được tính đến khi xuất hóa đơn thời gian của bạn"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_res_config_settings__invoice_policy
@@ -1579,7 +1579,7 @@ msgstr "Cái"
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Value does not exist in the pricing type"
-msgstr ""
+msgstr "Giá trị không tồn tại trong loại định giá"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_invoice_page_inherit
@@ -1616,6 +1616,8 @@ msgid ""
 "You cannot link a billable project to a sales order item that comes from an "
 "expense or a vendor bill."
 msgstr ""
+"Bạn không thể liên kết dự án có thể tính phí với mục đơn bán hàng đến từ chi"
+" phí hoặc hóa đơn nhà cung cấp. "
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -1624,6 +1626,8 @@ msgid ""
 "You cannot link a billable project to a sales order item that is not a "
 "service."
 msgstr ""
+"Bạn không thể liên kết dự án có thể tính phí với đơn bán hàng không phải là "
+"dịch vụ. "
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/account.py:0

@@ -85,6 +85,10 @@ msgid ""
 "secret on the Microsoft Azure portal or try to stop and restart your "
 "calendar synchronisation."
 msgstr ""
+"เกิดข้อผิดพลาดขณะสร้างโทเคน "
+"โค้ดการให้สิทธิ์ของคุณอาจไม่ถูกต้องหรือหมดอายุแล้ว [%s] "
+"คุณควรตรวจสอบไอดีลูกค้าและรหัสบนพอร์ทัล Microsoft Azure "
+"หรือพยายามหยุดและเริ่มต้นการซิงโครไนซ์ปฏิทินของคุณใหม่"
 
 #. module: microsoft_calendar
 #. openerp-web
@@ -168,12 +172,12 @@ msgstr "ลบจาก Odoo "
 #. module: microsoft_calendar
 #: model:ir.model.fields.selection,name:microsoft_calendar.selection__microsoft_calendar_account_reset__delete_policy__delete_both
 msgid "Delete from both"
-msgstr ""
+msgstr "ลบจากทั้งสอง"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields.selection,name:microsoft_calendar.selection__microsoft_calendar_account_reset__delete_policy__delete_microsoft
 msgid "Delete from the current Microsoft Calendar account"
-msgstr ""
+msgstr "ลบออกจากบัญชี Microsoft Calendar ปัจจุบัน"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__display_name
@@ -193,6 +197,9 @@ msgid ""
 "Either update the events/attendees or archive these events %s:\n"
 "%s"
 msgstr ""
+"สำหรับการซิงโครไนซ์ที่ถูกต้องระหว่าง Odoo และปฏิทิน Outlook ผู้เข้าร่วมทุกคนต้องมีที่อยู่อีเมล อย่างไรก็ตาม บางอีเวนต์ไม่เคารพเงื่อนไขนี้ ตราบใดที่อีเวนต์ไม่ถูกต้อง ปฏิทินจะไม่ถูกซิงโครไนซ์\n"
+"อัปเดตอีเวนต์/ผู้เข้าร่วมหรือเก็บถาวรอีเวนต์เหล่านี้ %s:\n"
+"%s"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__id
@@ -205,7 +212,7 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the event "
 "alarm information without removing it."
 msgstr ""
-"หากช่องที่ใช้งานอยู่ถูกตั้งค่าเป็น \"เท็จ\" "
+"หากฟิลด์ที่ใช้งานอยู่ถูกตั้งค่าเป็น \"เท็จ\" "
 "จะช่วยให้คุณสามารถซ่อนข้อมูลการเตือนเหตุการณ์โดยไม่ต้องลบออก"
 
 #. module: microsoft_calendar
@@ -226,7 +233,7 @@ msgstr "อัปเดตครั้งล่าสุดเมื่อ"
 #. module: microsoft_calendar
 #: model:ir.model.fields.selection,name:microsoft_calendar.selection__microsoft_calendar_account_reset__delete_policy__dont_delete
 msgid "Leave them untouched"
-msgstr "ปล่อยให้พวกเขาไม่มีใครแตะต้อง"
+msgstr "ปล่อยไว้ไม่แตะต้อง"
 
 #. module: microsoft_calendar
 #: model:ir.actions.act_window,name:microsoft_calendar.microsoft_calendar_reset_account_action
@@ -262,7 +269,7 @@ msgstr "Microsoft Client_key"
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_res_users__microsoft_calendar_sync_token
 msgid "Microsoft Next Sync Token"
-msgstr "โทเค็นการซิงค์ถัดไปของ Microsoft"
+msgstr "โทเคนการซิงค์ถัดไปของ Microsoft"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_event__microsoft_recurrence_master_id
@@ -280,7 +287,7 @@ msgstr "เหตุการณ์ที่แก้ไขกำลังข้
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_recurrence__need_sync_m
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_sync__need_sync_m
 msgid "Need Sync M"
-msgstr "Need Sync M"
+msgstr "จำเป็นต้องซิงค์ M"
 
 #. module: microsoft_calendar
 #: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_users_form
@@ -342,7 +349,7 @@ msgstr "ตั้งค่าบัญชีใหม่"
 #. module: microsoft_calendar
 #: model_terms:ir.ui.view,arch_db:microsoft_calendar.microsoft_calendar_reset_account_view_form
 msgid "Reset Outlook Calendar Account"
-msgstr "รีเซ็ตบัญชีปฏิทิน Outlook"
+msgstr "ตั้งค่าบัญชีปฏิทิน Outlook ใหม่"
 
 #. module: microsoft_calendar
 #. openerp-web
@@ -354,7 +361,7 @@ msgstr "สำเร็จ"
 #. module: microsoft_calendar
 #: model:ir.model,name:microsoft_calendar.model_microsoft_calendar_sync
 msgid "Synchronize a record with Microsoft Calendar"
-msgstr "ซิงโครไนซ์บันทึกกับ Microsoft Calendar"
+msgstr "ซิงโครไนซ์การบันทึกกับปฏิทิน Microsoft "
 
 #. module: microsoft_calendar
 #: model:ir.model.fields.selection,name:microsoft_calendar.selection__microsoft_calendar_account_reset__sync_policy__all
@@ -375,7 +382,7 @@ msgid ""
 " you want to do it now?"
 msgstr ""
 "จำเป็นต้องกำหนดค่าการซิงโครไนซ์ Outlook ก่อน คุณจึงจะสามารถใช้งานได้ "
-"คุณต้องการทำตอนนี้หรือไม่"
+"คุณต้องการทำตอนนี้หรือไม่?"
 
 #. module: microsoft_calendar
 #: code:addons/microsoft_calendar/models/res_users.py:0
@@ -393,7 +400,7 @@ msgstr "หยุดการซิงโครไนซ์กับปฏิท
 #. module: microsoft_calendar
 #: model:ir.model.fields,help:microsoft_calendar.field_microsoft_calendar_account_reset__delete_policy
 msgid "This will only affect events for which the user is the owner"
-msgstr "ซึ่งจะมีผลกับเหตุการณ์ที่ผู้ใช้เป็นเจ้าของเท่านั้น"
+msgstr "ซึ่งจะมีผลกับอีเวนต์ที่ผู้ใช้เป็นเจ้าของเท่านั้น"
 
 #. module: microsoft_calendar
 #: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_users_form
