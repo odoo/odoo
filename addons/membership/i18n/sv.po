@@ -9,10 +9,9 @@
 # Haojun Zou <apollo_zhj@msn.com>, 2021
 # Zou Haojun <haojunzou84@gmail.com>, 2021
 # lynnliuying <lynn.liu1971@gmail.com>, 2021
-# Chrille Hedberg <hedberg.chrille@gmail.com>, 2021
 # Michael Tanzi <michael.tanzi@vertel.se>, 2021
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2021
-# Kim Asplund <kim.asplund@gmail.com>, 2021
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -20,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:29+0000\n"
 "PO-Revision-Date: 2020-09-07 08:14+0000\n"
-"Last-Translator: Kim Asplund <kim.asplund@gmail.com>, 2021\n"
+"Last-Translator: Chrille Hedberg <hedberg.chrille@gmail.com>, 2021\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -75,12 +74,12 @@ msgstr ""
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__account_invoice_line
 msgid "Account Invoice line"
-msgstr "Konto faktura rad"
+msgstr "Bokföring fakturarad"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_products_form
 msgid "Add a description..."
-msgstr "Lägg på beskrivning..."
+msgstr "Lägg till beskrivning..."
 
 #. module: membership
 #: model_terms:ir.actions.act_window,help:membership.action_membership_members
@@ -103,7 +102,7 @@ msgstr "Associerad medlem"
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Associated Partner"
-msgstr "Associerade företag"
+msgstr "Associerat företag"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_partner_form
@@ -119,19 +118,19 @@ msgstr "Avbryt"
 #: model:ir.model.fields,field_description:membership.field_res_partner__membership_cancel
 #: model:ir.model.fields,field_description:membership.field_res_users__membership_cancel
 msgid "Cancel Membership Date"
-msgstr "Avbryt medlemskapsdatum"
+msgstr "Datum för uppsägning av medlemskap"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__date_cancel
 msgid "Cancel date"
-msgstr "Avbruted datum"
+msgstr "Avbruten datum"
 
 #. module: membership
 #: model:ir.model.fields.selection,name:membership.selection__membership_membership_line__state__canceled
 #: model:ir.model.fields.selection,name:membership.selection__report_membership__membership_state__canceled
 #: model:ir.model.fields.selection,name:membership.selection__res_partner__membership_state__canceled
 msgid "Cancelled Member"
-msgstr "Avbruten medlemskap"
+msgstr "Medlemskap upphört"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.membership_product_search_form_view
@@ -149,12 +148,12 @@ msgstr "Kontrollera om produkten är kvalificerad för medlemskap."
 #: model:ir.model.fields,field_description:membership.field_report_membership__company_id
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Company"
-msgstr "Bolag"
+msgstr "Företag"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_membership_membership_line__company_id
 msgid "Company related to this journal"
-msgstr "Bolag relaterat till denna journal"
+msgstr "Företag relaterat till denna journal"
 
 #. module: membership
 #: model:ir.ui.menu,name:membership.menu_marketing_config_association
@@ -187,7 +186,7 @@ msgstr "Skapad den"
 #: model:ir.model.fields,field_description:membership.field_report_membership__membership_state
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Current Membership State"
-msgstr "Aktuellt medlemskapsstatus"
+msgstr "Aktuell medlemsstatus"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_res_partner__membership_state
@@ -211,7 +210,7 @@ msgstr "Datum när medlemskapet blev aktivt."
 #. module: membership
 #: model:ir.model.fields,help:membership.field_membership_membership_line__date
 msgid "Date on which member has joined the membership"
-msgstr "Datum som personen blev medlem"
+msgstr "Datum då personen blev medlem"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner__membership_cancel
@@ -252,12 +251,12 @@ msgstr "Slutdatum"
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "End Membership Date"
-msgstr "Avslutad medlemsdatum"
+msgstr "Medlemskap avslutat datum"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_report_membership__date_to
 msgid "End membership date"
-msgstr "Avslutad medlemsdatum"
+msgstr "Medlemskap avslutad datum"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
@@ -267,7 +266,7 @@ msgstr "Slutdatum för medlemskap"
 #. module: membership
 #: model:ir.model.constraint,message:membership.constraint_product_template_membership_date_greater
 msgid "Error ! Ending Date cannot be set before Beginning Date."
-msgstr "Error ! Slutdatum kan inte ställas in före startdatum."
+msgstr "Error! Slutdatum kan inte anges före startdatum."
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
@@ -281,7 +280,7 @@ msgstr "Prognos"
 #: model:ir.model.fields.selection,name:membership.selection__report_membership__membership_state__free
 #: model:ir.model.fields.selection,name:membership.selection__res_partner__membership_state__free
 msgid "Free Member"
-msgstr "Fritt medlemsskap"
+msgstr "Gratis medlemsskap"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__date_from
@@ -335,7 +334,7 @@ msgstr "Fakturerad medlem"
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Invoiced/Paid/Free"
-msgstr "Fakturerad / Betald / Gratis"
+msgstr "Fakturerad/Betald/Gratis"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner__membership_state
@@ -349,9 +348,9 @@ msgid ""
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
 msgstr ""
-"Det indikerar medlemsstatus.\n"
+"Det indikerar medlemsstatusen.\n"
 "-Icke medlem: En partner som inte har ansökt om något medlemskap.\n"
-"-Avbruten medlem: En medlem som har annullerat sitt medlemskap.\n"
+"-Avbruten medlem: En medlem som har avbrutit sitt medlemskap.\n"
 "-Före detta medlem: En medlem vars medlemskap har gått ut.\n"
 "-Väntar på medlemskap: En medlem som har ansökt om medlemskap vars faktura kommer att skapas.\n"
 "-Fakturerad medlem: En medlem vars faktura har skapats.\n"
@@ -368,9 +367,9 @@ msgid ""
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paid Member: A member who has paid the membership amount."
 msgstr ""
-"Det indikerar medlemsstatus.\n"
+"Det indikerar medlemsstatusen.\n"
 "-Icke medlem: En medlem som inte har ansökt om något medlemskap.\n"
-"-Avbruten Medlem: En medlem som har annullerat sitt medlemskap.\n"
+"-Avbruten Medlem: En medlem som har avbrutit sitt medlemskap.\n"
 "-Före detta medlem: En medlem vars medlemskap har gått ut.\n"
 "-Väntar på medlemskap: En medlem som har ansökt om medlemskap vars faktura kommer att skapas.\n"
 "-Fakturerad medlem: En medlem vars faktura har skapats.\n"
@@ -384,7 +383,7 @@ msgstr "Anslutnings datum"
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_invoice_view
 msgid "Join Membership"
-msgstr "Bli Medlem"
+msgstr "Bli medlem"
 
 #. module: membership
 #: model:ir.model,name:membership.model_account_move
@@ -427,7 +426,7 @@ msgstr "Medlem"
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_invoice__member_price
 msgid "Member Price"
-msgstr "Medlems pris"
+msgstr "Medlemsavgift"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_members
@@ -441,7 +440,7 @@ msgstr "Medlemmar"
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_report_membership_tree
 msgid "Members Analysis"
-msgstr "Medlemmarnas analys"
+msgstr "Medlemsanalys"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_invoice__product_id
@@ -461,7 +460,7 @@ msgstr "Medlemskap"
 #: model:ir.model.fields,field_description:membership.field_res_partner__membership_amount
 #: model:ir.model.fields,field_description:membership.field_res_users__membership_amount
 msgid "Membership Amount"
-msgstr "Medlemskapsbelopp"
+msgstr "Medlemsavgift"
 
 #. module: membership
 #: model:ir.model,name:membership.model_report_membership
@@ -497,7 +496,7 @@ msgstr "Medlemskapsfaktura"
 #. module: membership
 #: model:ir.model,name:membership.model_membership_membership_line
 msgid "Membership Line"
-msgstr "Medlemskap Linje"
+msgstr "Medlemskapslinje"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
@@ -516,7 +515,7 @@ msgstr "Medlemskapprodukt"
 #: model:ir.ui.menu,name:membership.menu_membership_products
 #: model_terms:ir.ui.view,arch_db:membership.membership_product_search_form_view
 msgid "Membership Products"
-msgstr "Medlemsprodukter"
+msgstr "Medlemskapsprodukter"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_product_product__membership_date_from
@@ -529,7 +528,7 @@ msgstr "Startdatum för medlemskap"
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Membership State"
-msgstr "Medlemskaps tillstånd"
+msgstr "Medlemskapstillstånd"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__state
@@ -578,14 +577,14 @@ msgid ""
 "                  Current Membership Status, Discussions and History of Membership, etc."
 msgstr ""
 "Odoo hjälper dig att enkelt spåra alla aktiviteter relaterade till en medlem:\n"
-"Aktuell medlemsstatus, diskussioner och historia om medlemskap etc."
+"Aktuell medlemsstatus, diskussioner och historik om medlemskap etc."
 
 #. module: membership
 #: model:ir.model.fields.selection,name:membership.selection__membership_membership_line__state__old
 #: model:ir.model.fields.selection,name:membership.selection__report_membership__membership_state__old
 #: model:ir.model.fields.selection,name:membership.selection__res_partner__membership_state__old
 msgid "Old Member"
-msgstr "Före detta medlem"
+msgstr "Föredetta medlem"
 
 #. module: membership
 #: model:ir.model.fields.selection,name:membership.selection__membership_membership_line__state__paid
@@ -597,7 +596,7 @@ msgstr "Betalande medlem"
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__partner
 msgid "Partner"
-msgstr "Samarbetspartner"
+msgstr "Partner"
 
 #. module: membership
 #: code:addons/membership/models/partner.py:0
@@ -647,7 +646,7 @@ msgstr "Säljare"
 #: model:ir.model.fields,help:membership.field_res_partner__free_member
 #: model:ir.model.fields,help:membership.field_res_users__free_member
 msgid "Select if you want to give free membership."
-msgstr "Välj om du vill ge gratis medlemskap."
+msgstr "Välj om du vill ge bort gratis medlemskap."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership__start_date
@@ -685,13 +684,12 @@ msgstr "Den här anteckningen kommer att visas på offerter ..."
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "This will display paid, old and total earned columns"
-msgstr "Detta visar betalda, gamla och totala intjänade kolumner"
+msgstr "Detta visar kolumnerna betalda, gamla och totalt intjänat"
 
 #. module: membership
 #: model_terms:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "This will display waiting, invoiced and total pending columns"
-msgstr ""
-"Detta visar kolumner på väntande, fakturerade och totala väntande kolumner"
+msgstr "Detta visar kolumnerna väntande, fakturerade och totalt väntande"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line__date_to
