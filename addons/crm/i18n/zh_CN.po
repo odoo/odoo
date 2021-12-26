@@ -44,6 +44,7 @@
 # guohuadeng <guohuadeng@hotmail.com>, 2021
 # JZH-Odoo <jzh@odoo.com>, 2021
 # Summer Xia <sxi@odoo.com>, 2021
+# 深圳市耀影科技有限公司_QQ1006399173, 2021
 # 
 msgid ""
 msgstr ""
@@ -51,7 +52,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-07 10:46+0000\n"
 "PO-Revision-Date: 2016-08-05 12:57+0000\n"
-"Last-Translator: Summer Xia <sxi@odoo.com>, 2021\n"
+"Last-Translator: 深圳市耀影科技有限公司_QQ1006399173, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -124,7 +125,7 @@ msgstr ""
 #: code:addons/crm/models/res_config_settings.py:0
 #, python-format
 msgid "%s and %s"
-msgstr ""
+msgstr "%s 和 %s"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
@@ -304,6 +305,11 @@ msgid ""
 "                                        specified otherwise.\n"
 "                                    </span>"
 msgstr ""
+"<span>根据规则定期分配潜在客户线索</span><br/>\n"
+"                                    <span attrs=\"{'invisible': [('crm_use_auto_assignment', '=', False)]}\">\n"
+"                                       除非另有说明，否则所有销售团队都将默认使用此设置。\n"
+"                                        \n"
+"                                    </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -520,7 +526,7 @@ msgstr "指派商机给"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Assign salespersons into multiple Sales Teams."
-msgstr ""
+msgstr "将销售人员分配到多个销售团队。"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
@@ -2194,7 +2200,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__is_membership_multi
 msgid "Multi Teams"
-msgstr ""
+msgstr "多团队"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_my_activities
@@ -2873,7 +2879,7 @@ msgstr "相关客户"
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__crm_auto_assignment_interval_number
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Repeat every"
-msgstr ""
+msgstr "重复间隔为每"
 
 #. module: crm
 #: code:addons/crm/models/res_config_settings.py:0
@@ -2884,7 +2890,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__crm_auto_assignment_action__auto
 msgid "Repeatedly"
-msgstr ""
+msgstr "循环"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_menu_report
@@ -2915,7 +2921,7 @@ msgstr "还原"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__crm_use_auto_assignment
 msgid "Rule-Based Assignment"
-msgstr ""
+msgstr "基于规则的分配"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -2953,7 +2959,7 @@ msgstr "销售团队"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_team_member
 msgid "Sales Team Member"
-msgstr ""
+msgstr "销售团队成员"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
@@ -3322,7 +3328,7 @@ msgstr "这笔交易达成的概率应该在0%到100%之间！"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "The success rate is computed based on"
-msgstr ""
+msgstr "成功率的计算基于"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_pls_update_view_form
@@ -3816,7 +3822,7 @@ msgstr "例如：https://www.odoo.com"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "for the leads created as of the"
-msgstr ""
+msgstr "对于目前创建的潜在客户日期截至"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__team_count
