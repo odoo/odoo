@@ -19,11 +19,11 @@
 # Patrik Lermon <patrik.lermon@gmail.com>, 2021
 # Martin Trigaux, 2021
 # STefan Rundgren <stefanrundgren@cellglas.com>, 2021
-# Chrille Hedberg <hedberg.chrille@gmail.com>, 2021
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2021
 # Kim Asplund <kim.asplund@gmail.com>, 2021
 # Victor Ekström, 2021
 # Simon S, 2021
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -31,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:23+0000\n"
 "PO-Revision-Date: 2020-09-07 08:14+0000\n"
-"Last-Translator: Simon S, 2021\n"
+"Last-Translator: Chrille Hedberg <hedberg.chrille@gmail.com>, 2021\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1068,7 +1068,7 @@ msgstr "Vänliga hälsningar,"
 #: model:ir.model.fields,field_description:mail.field_res_users__is_blacklisted
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_form
 msgid "Blacklist"
-msgstr ""
+msgstr "Svartlista"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_tree
@@ -1501,7 +1501,7 @@ msgstr "Konversationer"
 #: model:ir.model.fields,help:mail.field_res_partner__message_bounce
 #: model:ir.model.fields,help:mail.field_res_users__message_bounce
 msgid "Counter of the number of bounced emails for this contact"
-msgstr ""
+msgstr "Antal studsade e-post för denna kontakt"
 
 #. module: mail
 #. openerp-web
@@ -1632,7 +1632,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_alias_mixin__alias_bounced_content
 #: model:ir.model.fields,field_description:mail.field_mail_channel__alias_bounced_content
 msgid "Custom Bounced Message"
-msgstr ""
+msgstr "Anpassat studs-meddelande"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner__custom_channel_name
@@ -2791,6 +2791,8 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
 msgstr ""
+"ID på överliggande post med aliaset (exempel: projekt som har alias för "
+"skapa uppgift)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__icon
@@ -2888,6 +2890,8 @@ msgid ""
 "If set, this content will automatically be sent out to unauthorized users "
 "instead of the default message."
 msgstr ""
+"Om angiven kommer detta innehåll automatiskt att skickas ut till obehöriga "
+"användare istället för standardmeddelandet."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_thread_blacklist__is_blacklisted
@@ -2897,6 +2901,8 @@ msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
 msgstr ""
+"Om e-postadressen finns med på listan över svartlistade kommer kontakten "
+"inte få massutskick alls, från någon lista"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_followers__is_active
@@ -3299,7 +3305,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_thread_cc__email_cc
 msgid "List of cc from incoming emails."
-msgstr ""
+msgstr "Lista på CC från inkommande e-post"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_wizard_invite__channel_ids
@@ -5323,7 +5329,7 @@ msgstr "Planera"
 #: code:addons/mail/static/src/models/activity/activity.js:0
 #, python-format
 msgid "Schedule Activity"
-msgstr ""
+msgstr "Planera aktivitet"
 
 #. module: mail
 #. openerp-web
@@ -5338,7 +5344,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/activity_view.xml:0
 #, python-format
 msgid "Schedule activity"
-msgstr "Planera en aktivitet"
+msgstr "Planera aktivitet"
 
 #. module: mail
 #: code:addons/mail/models/mail_activity.py:0
@@ -5791,7 +5797,7 @@ msgstr "Sammanfattning"
 #. module: mail
 #: model:ir.model,name:mail.model_ir_config_parameter
 msgid "System Parameter"
-msgstr ""
+msgstr "Systemparameter"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__message_type__notification
