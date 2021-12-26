@@ -1014,6 +1014,7 @@ var BasicModel = AbstractModel.extend({
         var params = {
             model: modelName,
             ids: resIDs,
+            context: data.getContext(),
         };
         if (options.offset) {
             params.offset = options.offset;
@@ -1037,6 +1038,7 @@ var BasicModel = AbstractModel.extend({
                     model: modelName,
                     method: 'read',
                     args: [resIDs, [field]],
+                    context: data.getContext(),
                 }).then(function (records) {
                     if (data.data.length) {
                         var dataType = self.localData[data.data[0]].type;

@@ -231,9 +231,9 @@ class account_journal(models.Model):
             last_balance = last_statement.balance_end
             has_at_least_one_statement = bool(last_statement)
             bank_account_balance, nb_lines_bank_account_balance = self._get_journal_bank_account_balance(
-                domain=[('move_id.state', '=', 'posted')])
+                domain=[('parent_state', '=', 'posted')])
             outstanding_pay_account_balance, nb_lines_outstanding_pay_account_balance = self._get_journal_outstanding_payments_account_balance(
-                domain=[('move_id.state', '=', 'posted')])
+                domain=[('parent_state', '=', 'posted')])
 
             self._cr.execute('''
                 SELECT COUNT(st_line.id)

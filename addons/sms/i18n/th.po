@@ -144,12 +144,12 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__mobile_blacklisted
 msgid "Blacklisted Phone Is Mobile"
-msgstr ""
+msgstr "โทรศัพท์ในบัญชีดำคือมือถือ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__phone_blacklisted
 msgid "Blacklisted Phone is Phone"
-msgstr ""
+msgstr "โทรศัพท์ในบัญชีดำคือมือถือ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__body
@@ -365,6 +365,7 @@ msgid ""
 "Field used to store sanitized phone number. Helps speeding up searches and "
 "comparisons."
 msgstr ""
+"ช่องที่ใช้เก็บหมายเลขโทรศัพท์ที่ถูกสุขอนามัย ช่วยเร่งการค้นหาและเปรียบเทียบ"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__copyvalue
@@ -496,6 +497,8 @@ msgid ""
 "If the sanitized phone number is on the blacklist, the contact won't receive"
 " mass mailing sms anymore, from any list"
 msgstr ""
+"หากหมายเลขโทรศัพท์ที่ถูกฆ่าเชื้ออยู่ในบัญชีดำ ผู้ติดต่อจะไม่ได้รับ SMS "
+"ทางไปรษณีย์อีกต่อไปจากรายชื่อใดๆ"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_cancel
@@ -522,6 +525,9 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
+"ระบุว่าหมายเลขโทรศัพท์ที่ถูกฆ่าเชื้อในบัญชีดำเป็นหมายเลขโทรศัพท์มือถือหรือไม่"
+" "
+"ช่วยแยกแยะว่าหมายเลขใดถูกขึ้นบัญชีดำเมื่อมีทั้งช่องโทรศัพท์มือถือและโทรศัพท์ในแบบจำลอง"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__phone_blacklisted
@@ -530,6 +536,8 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
+"ระบุว่าหมายเลขโทรศัพท์ที่ถูกฆ่าเชื้อในบัญชีดำเป็นหมายเลขโทรศัพท์หรือไม่ "
+"ช่วยแยกแยะว่าหมายเลขใดถูกขึ้นบัญชีดำเมื่อมีทั้งช่องโทรศัพท์มือถือและโทรศัพท์ในแบบจำลอง"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__comment_single_recipient
@@ -786,7 +794,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__phone_sanitized_blacklisted
 msgid "Phone Blacklisted"
-msgstr ""
+msgstr "โทรศัพท์ขึ้นบัญชีดำ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__copyvalue
@@ -998,7 +1006,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_res_partner__phone_sanitized
 #: model:ir.model.fields,field_description:sms.field_sms_composer__sanitized_numbers
 msgid "Sanitized Number"
-msgstr ""
+msgstr "เบอร์สุขภัณฑ์"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_search
@@ -1169,6 +1177,7 @@ msgstr ""
 msgid ""
 "This phone number is blacklisted for SMS Marketing. Click to unblacklist."
 msgstr ""
+"หมายเลขโทรศัพท์นี้ถูกขึ้นบัญชีดำสำหรับการตลาดผ่าน SMS คลิกเพื่อยกเลิกบัญชีดำ"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_mail__message_type
