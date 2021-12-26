@@ -140,12 +140,12 @@ msgstr "ลบจาก Odoo "
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__delete_both
 msgid "Delete from both"
-msgstr ""
+msgstr "ลบจากทั้งสอง"
 
 #. module: google_calendar
 #: model:ir.model.fields.selection,name:google_calendar.selection__google_calendar_account_reset__delete_policy__delete_google
 msgid "Delete from the current Google Calendar account"
-msgstr ""
+msgstr "ลบออกจากบัญชีปฏิทิน Google ปัจจุบัน"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event__display_name
@@ -222,6 +222,8 @@ msgid ""
 "Last Calendar ID who has been synchronized. If it is changed, we remove all "
 "links between GoogleID and Odoo Google Internal ID"
 msgstr ""
+"ไอดีปฏิทินล่าสุดที่ได้รับการซิงโครไนซ์ หากมีการเปลี่ยนแปลง "
+"เราจะลบลิงก์ทั้งหมดระหว่าง GoogleID และ Odoo Google Internal ID"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_calendar_event____last_update
@@ -338,12 +340,14 @@ msgid ""
 "The Google Synchronization needs to be configured before you can use it, do "
 "you want to do it now?"
 msgstr ""
+"จำเป็นต้องกำหนดค่า Google Synchronization ก่อน คุณจึงจะสามารถใช้งานได้ "
+"คุณต้องการทำตอนนี้หรือไม่?"
 
 #. module: google_calendar
 #: code:addons/google_calendar/models/res_users.py:0
 #, python-format
 msgid "The account for the Google Calendar service is not configured."
-msgstr ""
+msgstr "ไม่ได้กำหนดค่าบัญชีสำหรับบริการปฏิทินGoogle "
 
 #. module: google_calendar
 #: model:ir.model.fields,help:google_calendar.field_google_calendar_account_reset__delete_policy
@@ -363,7 +367,7 @@ msgstr "ผู้ใช้งาน"
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_res_users__google_calendar_token
 msgid "User token"
-msgstr ""
+msgstr "โทเคนผู้ใช้"
 
 #. module: google_calendar
 #: model:ir.model.fields,field_description:google_calendar.field_google_calendar_account_reset__delete_policy
@@ -380,4 +384,4 @@ msgstr "ผู้ใช้งาน"
 #: code:addons/google_calendar/static/src/js/google_calendar.js:0
 #, python-format
 msgid "You will be redirected to Google to authorize access to your calendar!"
-msgstr ""
+msgstr "คุณจะถูกเปลี่ยนเส้นทางไปยัง Google เพื่ออนุญาตให้เข้าถึงปฏิทินของคุณ!"
