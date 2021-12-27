@@ -89,5 +89,6 @@ class ReportProjectTaskUser(models.Model):
               %s
               FROM project_task t
                 WHERE t.active = 'true'
+                AND t.project_id IS NOT NULL
                 %s
         """ % (self._table, self._select(), self._group_by()))
