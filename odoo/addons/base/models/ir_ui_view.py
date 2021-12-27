@@ -1846,11 +1846,6 @@ actual arch.
 
     # apply ormcache_context decorator unless in dev mode...
     @api.model
-    @tools.conditional(
-        'xml' not in config['dev_mode'],
-        tools.ormcache('frozenset(self.env.user.groups_id.ids)', 'view_id',
-                       'tuple(self._context.get(k) for k in self._read_template_keys())'),
-    )
     def _read_template(self, view_id):
         arch_tree = self.browse(view_id)._get_combined_arch()
         self.distribute_branding(arch_tree)
