@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+#pylint: disable=import-outside-toplevel
+
 from __future__ import print_function
 import code
 import logging
+import optparse
 import os
 import signal
 import sys
@@ -39,15 +42,15 @@ def raise_keyboard_interrupt(*a):
 
 
 class Console(code.InteractiveConsole):
-    def __init__(self, locals=None, filename="<console>"):
-        code.InteractiveConsole.__init__(self, locals, filename)
+    def __init__(self, local_vars=None, filename="<console>"):
+        code.InteractiveConsole.__init__(self, local_vars, filename)
         try:
             import readline
             import rlcompleter
         except ImportError:
             print('readline or rlcompleter not available, autocomplete disabled.')
         else:
-            readline.set_completer(rlcompleter.Completer(locals).complete)
+            readline.set_completer(rlcompleter.Completer(local_vars).complete)
             readline.parse_and_bind("tab: complete")
 
 
@@ -56,10 +59,27 @@ class Shell(Command):
     supported_shells = ['ipython', 'ptpython', 'bpython', 'python']
 
     def init(self, args):
+        parser = config.parser
+
+        # Only display those options when running odoo-bin shell --help
+        group = optparse.OptionGroup(parser, "Shell options")
+        group.add_option('--shell-file', dest='shell_file', type="string",
+                         help="Specify a python script to be run after the start of the shell mode.")
+        group.add_option('--shell-interface', dest='shell_interface', type="string",
+                         help="Specify a preferred REPL to use in shell mode. Supported REPLs are: "
+                              "[ipython|ptpython|bpython|python]")
+        parser.add_option_group(group)
+
         config.parse_config(args)
         odoo.cli.server.report_configuration()
         odoo.service.server.start(preload=[], stop=True)
         signal.signal(signal.SIGINT, raise_keyboard_interrupt)
+
+    def _compile_file(self, filename):
+        if filename and os.path.exists(filename):
+            with open(filename, "r", encoding="utf-8") as f:
+                return compile(f.read(), filename, "exec")
+        return None
 
     def console(self, local_vars):
         if not os.isatty(sys.stdin.fileno()):
@@ -88,18 +108,38 @@ class Shell(Command):
 
     def ipython(self, local_vars):
         from IPython import start_ipython
-        start_ipython(argv=[], user_ns=local_vars)
+        from traitlets.config.loader import Config
+        # https://ipython.org/ipython-doc/3/config/intro.html
+        ipython_config = None
+        if config.get('shell_file') and os.path.exists(config['shell_file']):
+            ipython_config = Config()
+            ipython_config.InteractiveShellApp.exec_files = [config['shell_file']]
+        start_ipython(argv=[], user_ns=local_vars, config=ipython_config)
 
     def ptpython(self, local_vars):
         from ptpython.repl import embed
-        embed({}, local_vars)
+        # https://github.com/prompt-toolkit/ptpython/tree/master/ptpython/repl.py#L656
+        code = self._compile_file(config.get('shell_file'))
+        def configure(repl):
+            if code:
+                exec(code, repl.get_globals(), repl.get_locals())
+        embed({}, local_vars, configure=configure)
 
     def bpython(self, local_vars):
         from bpython import embed
-        embed(local_vars)
+        args = None
+        # https://github.com/bpython/bpython/blob/master/bpython/__init__.py#L39
+        if config.get('shell_file') and os.path.exists(config['shell_file']):
+            args = ["-i", config['shell_file']]
+        embed(local_vars, args=args)
 
     def python(self, local_vars):
-        Console(locals=local_vars).interact()
+        console = Console(local_vars)
+        # https://docs.python.org/3/library/code.html#code.InteractiveInterpreter.runcode
+        code = self._compile_file(config.get('shell_file'))
+        if code:
+            console.runcode(code)
+        console.interact()
 
     def shell(self, dbname):
         local_vars = {

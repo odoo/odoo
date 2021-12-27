@@ -82,7 +82,7 @@ class configmanager(object):
         # Not exposed in the configuration file.
         self.blacklist_for_save = set([
             'publisher_warranty_url', 'load_language', 'root_path',
-            'init', 'save', 'config', 'update', 'stop_after_init', 'dev_mode', 'shell_interface'
+            'init', 'save', 'config', 'update', 'stop_after_init', 'dev_mode'
         ])
 
         # dictionary mapping option destination (keys in self.options) to MyOptions.
@@ -286,9 +286,6 @@ class configmanager(object):
         group.add_option('--dev', dest='dev_mode', type="string",
                          help="Enable developer mode. Param: List of options separated by comma. "
                               "Options : all, [pudb|wdb|ipdb|pdb], reload, qweb, werkzeug, xml")
-        group.add_option('--shell-interface', dest='shell_interface', type="string",
-                         help="Specify a preferred REPL to use in shell mode. Supported REPLs are: "
-                              "[ipython|ptpython|bpython|python]")
         group.add_option("--stop-after-init", action="store_true", dest="stop_after_init", my_default=False,
                           help="stop the server after its initialization")
         group.add_option("--osv-memory-count-limit", dest="osv_memory_count_limit", my_default=0,
@@ -448,7 +445,7 @@ class configmanager(object):
                 'db_maxconn', 'import_partial', 'addons_path', 'upgrade_path',
                 'syslog', 'without_demo', 'screencasts', 'screenshots',
                 'dbfilter', 'log_level', 'log_db',
-                'log_db_level', 'geoip_database', 'dev_mode', 'shell_interface'
+                'log_db_level', 'geoip_database', 'dev_mode'
         ]
 
         for arg in keys:
@@ -467,7 +464,7 @@ class configmanager(object):
         # if defined but None take the configfile value
         keys = [
             'language', 'translate_out', 'translate_in', 'overwrite_existing_translations',
-            'dev_mode', 'shell_interface', 'smtp_ssl', 'load_language',
+            'dev_mode', 'smtp_ssl', 'load_language',
             'stop_after_init', 'without_demo', 'http_enable', 'syslog',
             'list_db', 'proxy_mode',
             'test_file', 'test_tags',
