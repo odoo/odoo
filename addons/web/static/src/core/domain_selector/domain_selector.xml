@@ -2,13 +2,19 @@
 <templates xml:space="preserve">
 
     <t t-name="web._DomainSelector" owl="1">
-        <DomainSelectorRootNode
-            value="props.value"
-            node="buildTree()"
-            readonly="props.readonly"
-            resModel="props.resModel"
-            isDebugMode="props.isDebugMode"
-        />
+        <t t-set="tree" t-value="buildTree()" />
+        <t t-if="tree">
+            <DomainSelectorRootNode
+                value="props.value"
+                node="tree"
+                readonly="props.readonly"
+                resModel="props.resModel"
+                isDebugMode="props.isDebugMode"
+            />
+        </t>
+        <t t-else="">
+            <div>This domain is not supported.</div>
+        </t>
     </t>
 
 </templates>

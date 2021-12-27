@@ -11,27 +11,31 @@ export class DomainSelector extends Component {
     }
 
     buildTree() {
-        const domain = new Domain(this.props.value);
-        const ctx = {
-            parent: null,
-            index: 0,
-            domain: domain.toList(),
-            get currentElement() {
-                return ctx.domain[ctx.index];
-            },
-            next() {
-                ctx.index++;
-            },
-            getFullDomain() {
-                return rootNode.computeDomain().toString();
-            },
-        };
+        try {
+            const domain = new Domain(this.props.value);
+            const ctx = {
+                parent: null,
+                index: 0,
+                domain: domain.toList(),
+                get currentElement() {
+                    return ctx.domain[ctx.index];
+                },
+                next() {
+                    ctx.index++;
+                },
+                getFullDomain() {
+                    return rootNode.computeDomain().toString();
+                },
+            };
 
-        const rootNode = this.makeRootNode(ctx);
-        ctx.parent = rootNode;
-        this.traverseNode(ctx);
+            const rootNode = this.makeRootNode(ctx);
+            ctx.parent = rootNode;
+            this.traverseNode(ctx);
 
-        return ctx.parent;
+            return ctx.parent;
+        } catch (e) {
+            return false;
+        }
     }
 
     traverseNode(ctx) {
@@ -131,7 +135,7 @@ export class DomainSelector extends Component {
         };
     }
     makeRootNode(ctx) {
-        const updateDomain = (value) => this.props.update(value);
+        const updateDomain = (...args) => this.props.update(...args);
         const makeFakeNode = this.makeFakeNode.bind(this);
 
         return {
@@ -145,11 +149,11 @@ export class DomainSelector extends Component {
                     "AND"
                 );
             },
-            update(payload) {
-                if (typeof payload === "string") {
-                    updateDomain(payload);
+            update(newValue, fromDebug) {
+                if (typeof newValue === "string") {
+                    updateDomain(newValue, fromDebug);
                 } else if (this.operands.length) {
-                    this.operands[0].update(payload);
+                    this.operands[0].update(newValue);
                 }
             },
             insert(newNodeType) {
@@ -167,27 +171,35 @@ export class DomainSelector extends Component {
     }
 
     makeFakeNode(ctx, type) {
+        const [field, op, value] = this.props.defaultLeafValue;
         if (type === "branch") {
             return this.makeBranchNode(ctx, ctx.parent.operator === "&" ? "|" : "&", [
-                this.makeLeafNode(ctx, "=", ["id", 1]),
-                this.makeLeafNode(ctx, "=", ["id", 1]),
+                this.makeLeafNode(ctx, op, [field, value]),
+                this.makeLeafNode(ctx, op, [field, value]),
             ]);
         } else {
-            return this.makeLeafNode(ctx, "=", ["id", 1]);
+            return this.makeLeafNode(ctx, op, [field, value]);
         }
     }
 }
-DomainSelector.template = "web._DomainSelector";
-DomainSelector.components = {
-    DomainSelectorRootNode,
-};
-DomainSelector.props = {
-    resModel: String,
-    value: String,
-    readonly: Boolean,
-    update: Function,
-    isDebugMode: Boolean,
-};
-DomainSelector.defaultProps = {
-    isDebugMode: false,
-};
+
+Object.assign(DomainSelector, {
+    template: "web._DomainSelector",
+    components: {
+        DomainSelectorRootNode,
+    },
+    props: {
+        resModel: String,
+        value: String,
+        readonly: Boolean,
+        update: Function,
+        isDebugMode: Boolean,
+        defaultLeafValue: Array,
+    },
+    defaultProps: {
+        readonly: true,
+        update: () => {},
+        isDebugMode: false,
+        defaultLeafValue: ["id", "=", 1],
+    },
+});

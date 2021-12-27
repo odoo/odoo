@@ -22,7 +22,7 @@ export class DomainSelectorRootNode extends Component {
         this.props.node.update(ev.detail.payload.operator);
     }
     onChange(ev) {
-        this.props.node.update(ev.target.value);
+        this.props.node.update(ev.target.value, true);
     }
 }
 DomainSelectorRootNode.template = "web.DomainSelectorRootNode";

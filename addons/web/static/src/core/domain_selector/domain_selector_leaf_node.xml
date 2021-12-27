@@ -61,10 +61,10 @@
                                 </div>
                             </t>
                             <t t-elif="fieldInfo.type === 'date'">
-                                <DatePicker date="dateValue" t-on-datetime-changed="onDateValueChange" />
+                                <DatePicker date="dateValue" onDateTimeChanged="(value) => this.onDateValueChange(value)" />
                             </t>
                             <t t-elif="fieldInfo.type === 'datetime'">
-                                <DateTimePicker date="dateTimeValue" t-on-datetime-changed="onDateTimeValueChange" />
+                                <DateTimePicker date="dateTimeValue" onDateTimeChanged="(value) => this.onDateValueChange(value)" />
                             </t>
                             <t t-else="">
                                 <input

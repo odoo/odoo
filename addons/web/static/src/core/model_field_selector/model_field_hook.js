@@ -2,19 +2,15 @@
 
 import { useService } from "@web/core/utils/hooks";
 
-const cache = {};
-
 export function useModelField() {
     const orm = useService("orm");
 
     const loadModelFields = (resModel) => {
-        if (!(resModel in cache)) {
-            cache[resModel] = orm.call(resModel, "fields_get", [
-                false,
-                ["store", "searchable", "type", "string", "relation", "selection", "related"],
-            ]);
-        }
-        return cache[resModel];
+        // should be cached
+        return orm.call(resModel, "fields_get", [
+            false,
+            ["store", "searchable", "type", "string", "relation", "selection", "related"],
+        ]);
     };
 
     const loadChain = async (resModel, fieldName) => {

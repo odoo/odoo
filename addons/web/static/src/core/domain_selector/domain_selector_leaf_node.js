@@ -138,8 +138,8 @@ export class DomainSelectorLeafNode extends Component {
         switch (this.fieldInfo.type) {
             case "boolean":
                 return [
-                    [0, this.env._t("not set (false)")],
                     [1, this.env._t("set (true)")],
+                    [0, this.env._t("not set (false)")],
                 ];
             case "selection":
                 return this.fieldInfo.selection;
@@ -204,7 +204,7 @@ export class DomainSelectorLeafNode extends Component {
         const fieldInfo = await this.loadField(fieldName);
         if (fieldInfo && fieldInfo.type !== this.fieldInfo.type) {
             if (fieldInfo.type === "boolean") {
-                changes.value = false;
+                changes.value = true;
             } else if (fieldInfo.type === "selection") {
                 changes.value = fieldInfo.selection[0][0];
             } else if (["float", "integer"].includes(fieldInfo.type)) {
@@ -254,14 +254,14 @@ export class DomainSelectorLeafNode extends Component {
         value.splice(index, 1);
         this.props.node.update({ value });
     }
-    onDateValueChange(ev) {
+    onDateValueChange(date) {
         this.props.node.update({
-            value: serializeDate(ev.detail.date),
+            value: serializeDate(date),
         });
     }
-    onDateTimeValueChange(ev) {
+    onDateTimeValueChange(date) {
         this.props.node.update({
-            value: serializeDateTime(ev.detail.date.toUTC(0, { keepLocalTime: true })),
+            value: serializeDateTime(date.toUTC(0, { keepLocalTime: true })),
         });
     }
 }

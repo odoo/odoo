@@ -5,10 +5,11 @@ import { MainComponentsContainer } from "@web/core/main_components_container";
 import { ormService } from "@web/core/orm_service";
 import { popoverService } from "@web/core/popover/popover_service";
 import { registry } from "@web/core/registry";
+import { uiService } from "@web/core/ui/ui_service";
 import { makeTestEnv } from "../helpers/mock_env";
 import { click, getFixture, triggerEvent } from "../helpers/utils";
 import { registerCleanup } from "../helpers/cleanup";
-import { makeFakeUserService } from "../helpers/mock_services";
+import { makeFakeLocalizationService, makeFakeUserService } from "../helpers/mock_services";
 
 const { Component, mount } = owl;
 const { xml } = owl.tags;
@@ -53,7 +54,8 @@ QUnit.module("Components", (hooks) => {
 
         registry.category("services").add("popover", popoverService);
         registry.category("services").add("orm", ormService);
-        registry.category("services").add("ui", makeFakeUserService());
+        registry.category("services").add("localization", makeFakeLocalizationService());
+        registry.category("services").add("ui", uiService);
 
         env = await makeTestEnv({ serverData });
         target = getFixture();
