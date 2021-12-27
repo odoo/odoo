@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model/use_component_to_model';
 import { useRefs } from '@mail/component_hooks/use_refs/use_refs';
 import { link } from '@mail/model/model_field_command';
 
@@ -20,6 +21,7 @@ export class AttachmentViewer extends Component {
      */
     setup() {
         super.setup();
+        useComponentToModel({ fieldName: 'component', modelName: 'AttachmentViewer', propNameAsRecordLocalId: 'localId' });
         this.MIN_SCALE = MIN_SCALE;
         /**
          * Used to ensure that the ref is always up to date, which seems to be needed if the element
@@ -27,12 +29,6 @@ export class AttachmentViewer extends Component {
          * This was made to remove the display of the previous image as soon as the src changes.
          */
         this._getRefs = useRefs();
-        /**
-         * Determine whether the user is currently dragging the image.
-         * This is useful to determine whether a click outside of the image
-         * should close the attachment viewer or not.
-         */
-        this._isDragging = false;
         /**
          * Reference of the zoomer node. Useful to apply translate
          * transformation on image visualisation.
@@ -107,17 +103,6 @@ export class AttachmentViewer extends Component {
                 `max-width: 100%;`;
         }
         return style;
-    }
-
-    /**
-     * Mandatory method for dialog components.
-     * Prevent closing the dialog when clicking on the mask when the user is
-     * currently dragging the image.
-     *
-     * @returns {boolean}
-     */
-    isCloseable() {
-        return !this._isDragging;
     }
 
     //--------------------------------------------------------------------------
@@ -250,7 +235,7 @@ export class AttachmentViewer extends Component {
      * @private
      */
     _stopDragging() {
-        this._isDragging = false;
+        this.attachmentViewer.update({ isDragging: false });
         this._translate.x += this._translate.dx;
         this._translate.y += this._translate.dy;
         this._translate.dx = 0;
@@ -342,7 +327,7 @@ export class AttachmentViewer extends Component {
      * @param {MouseEvent} ev
      */
     _onClick(ev) {
-        if (this._isDragging) {
+        if (this.attachmentViewer.isDragging) {
             return;
         }
         // TODO: clicking on the background should probably be handled by the dialog?
@@ -376,7 +361,10 @@ export class AttachmentViewer extends Component {
      * @param {MouseEvent} ev
      */
     _onClickGlobal(ev) {
-        if (!this._isDragging) {
+        if (!this.attachmentViewer) {
+            return;
+        }
+        if (!this.attachmentViewer.isDragging) {
             return;
         }
         ev.stopPropagation();
@@ -402,7 +390,7 @@ export class AttachmentViewer extends Component {
      * @param {MouseEvent} ev
      */
     _onClickImage(ev) {
-        if (this._isDragging) {
+        if (this.attachmentViewer.isDragging) {
             return;
         }
         ev.stopPropagation();
@@ -539,6 +527,9 @@ export class AttachmentViewer extends Component {
      * @param {Event} ev
      */
     _onLoadImage(ev) {
+        if (!this.attachmentViewer) {
+            return;
+        }
         ev.stopPropagation();
         this.attachmentViewer.update({ isImageLoading: false });
     }
@@ -548,14 +539,17 @@ export class AttachmentViewer extends Component {
      * @param {DragEvent} ev
      */
     _onMousedownImage(ev) {
-        if (this._isDragging) {
+        if (!this.attachmentViewer) {
+            return;
+        }
+        if (this.attachmentViewer.isDragging) {
             return;
         }
         if (ev.button !== 0) {
             return;
         }
         ev.stopPropagation();
-        this._isDragging = true;
+        this.attachmentViewer.update({ isDragging: true });
         this._dragstartX = ev.clientX;
         this._dragstartY = ev.clientY;
     }
@@ -565,7 +559,10 @@ export class AttachmentViewer extends Component {
      * @param {DragEvent}
      */
     _onMousemoveView(ev) {
-        if (!this._isDragging) {
+        if (!this.attachmentViewer) {
+            return;
+        }
+        if (!this.attachmentViewer.isDragging) {
             return;
         }
         this._translate.dx = ev.clientX - this._dragstartX;
