@@ -911,7 +911,7 @@ class Task(models.Model):
         return stages.search(['|', ('id', 'in', stages.ids), ('user_id', '=', self.env.user.id)])
 
     active = fields.Boolean(default=True)
-    name = fields.Char(string='Title', tracking=True, required=True, index=True, translate=True)
+    name = fields.Char(string='Title', tracking=True, required=True, index=True)
     description = fields.Html(string='Description')
     priority = fields.Selection([
         ('0', 'Normal'),
