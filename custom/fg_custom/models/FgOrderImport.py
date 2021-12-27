@@ -314,11 +314,12 @@ class FgImportOrders(models.TransientModel):
                                discount = float(orderLine[14])
 
                             taxes = product_template.taxes_id
-                            tax = ''
-                            if taxes:
-                                tax = taxes[0].id
 
                             notes = orderLine[14]
+
+                            #get in product_product
+                            product_product = self.env['product.product'].search([('product_tmpl_id', '=', product_template.id)])
+
                             jsonOrder = {
                                             "company": company.id,
                                             "session": session_id,
@@ -326,7 +327,7 @@ class FgImportOrders(models.TransientModel):
                                             "orderSource": orderSource,
                                             "itemDescription": itemDescription,
                                             "itemCode": sku,
-                                            "product": product_template,
+                                            "product": product_product,
                                             "price": price,
                                             "discount": discount,
                                             "quantity": quantity,
@@ -417,6 +418,7 @@ class FgImportOrders(models.TransientModel):
                 orderCount += 1
                 orderLines = []
             computeAmount = self._compute_amount(order)
+
             orderLine = [
                             0,
                             0,
@@ -431,7 +433,7 @@ class FgImportOrders(models.TransientModel):
                                 "tax_ids": [
                                     [
                                         6, False,
-                                        [order['taxes'][0].id]
+                                        [x.id for x in order['taxes']]
                                     ]
                                 ]
                             }
