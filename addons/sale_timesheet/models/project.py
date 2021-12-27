@@ -175,11 +175,15 @@ class Project(models.Model):
             project.sale_line_id = sol or project.sale_line_employee_ids.sale_line_id[:1]  # get the first SOL containing in the employee mappings if no sol found in the search
 
     def _get_all_sales_orders(self):
-        return super()._get_all_sales_orders() | self.sale_line_employee_ids.sale_line_id.order_id
+        if self.allow_billable:
+            return super()._get_all_sales_orders() | self.sale_line_employee_ids.sale_line_id.order_id
+        return self.env['sale.order']
 
-    @api.depends('sale_line_employee_ids.sale_line_id')
+    @api.depends('sale_line_employee_ids.sale_line_id', 'allow_billable')
     def _compute_sale_order_count(self):
-        super()._compute_sale_order_count()
+        billable_projects = self.filtered('allow_billable')
+        super(Project, billable_projects)._compute_sale_order_count()
+        (self - billable_projects).sale_order_count = 0
 
     @api.constrains('sale_line_id')
     def _check_sale_line_type(self):
