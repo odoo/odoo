@@ -47,6 +47,8 @@ import {
     unwrapContents,
     peek,
     rightPos,
+    getAdjacentPreviousSiblings,
+    getAdjacentNextSiblings,
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -1721,6 +1723,30 @@ export class OdooEditor extends EventTarget {
                     this.commandbarTablePicker.show();
                 },
             },
+            {
+                groupName: 'Widgets',
+                title: '3 Stars',
+                description: 'Insert a rating over 3 stars.',
+                fontawesome: 'fa-star-o',
+                callback: () => {
+                    let html = '<span contenteditable="false" class="o_stars o_three_stars">';
+                    html += Array(3).fill().map(() => '<i class="fa fa-star-o"></i>').join('');
+                    html += '</span>';
+                    this.execCommand('insertHTML', html);
+                },
+            },
+            {
+                groupName: 'Widgets',
+                title: '5 Stars',
+                description: 'Insert a rating over 5 stars.',
+                fontawesome: 'fa-star',
+                callback: () => {
+                    let html = '<span contenteditable="false" class="o_stars o_five_stars">';
+                    html += Array(5).fill().map(() => '<i class="fa fa-star-o"></i>').join('');
+                    html += '</span>';
+                    this.execCommand('insertHTML', html);
+                },
+            },
         ];
         this.commandBar = new Powerbox({
             editable: this.editable,
@@ -2522,6 +2548,29 @@ export class OdooEditor extends EventTarget {
                 toggleClass(node, 'o_checked');
                 ev.preventDefault();
                 this.historyStep();
+            }
+        }
+
+        // handle stars
+        if (node.nodeType === Node.ELEMENT_NODE && node.className.includes('fa-star') &&
+            node.parentElement && node.parentElement.className.includes('o_stars')) {
+            const previousStars = getAdjacentPreviousSiblings(node, sib => (
+                sib.nodeType === Node.ELEMENT_NODE && sib.className.includes('fa-star')
+            ));
+            const nextStars = getAdjacentNextSiblings(node, sib => (
+                sib.nodeType === Node.ELEMENT_NODE && sib.className.includes('fa-star')
+            ));
+            if (nextStars.length || previousStars.length) {
+                const shouldToggleOff = node.classList.contains('fa-star') &&
+                    (!nextStars[0] || !nextStars[0].classList.contains('fa-star'));
+                for (const star of [...previousStars, node]) {
+                    star.classList.toggle('fa-star-o', shouldToggleOff);
+                    star.classList.toggle('fa-star', !shouldToggleOff);
+                };
+                for (const star of nextStars) {
+                    star.classList.toggle('fa-star-o', true);
+                    star.classList.toggle('fa-star', false);
+                };
             }
         }
     }
