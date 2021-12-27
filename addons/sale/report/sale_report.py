@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import tools
-from odoo import api, fields, models
+from odoo import api, fields, models, tools
 
 
 class SaleReport(models.Model):
@@ -157,19 +156,3 @@ class SaleReport(models.Model):
         # self._table = sale_report
         tools.drop_view_if_exists(self.env.cr, self._table)
         self.env.cr.execute("""CREATE or REPLACE VIEW %s as (%s)""" % (self._table, self._query()))
-
-
-# FIXME is this used somewhere ?
-class SaleOrderReportProforma(models.AbstractModel):
-    _name = 'report.sale.report_saleproforma'
-    _description = 'Proforma Report'
-
-    @api.model
-    def _get_report_values(self, docids, data=None):
-        docs = self.env['sale.order'].browse(docids)
-        return {
-            'doc_ids': docs.ids,
-            'doc_model': 'sale.order',
-            'docs': docs,
-            'proforma': True
-        }
