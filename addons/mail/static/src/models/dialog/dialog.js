@@ -9,6 +9,27 @@ registerModel({
     identifyingFields: ['manager', ['attachmentViewer', 'followerSubtypeList']],
     recordMethods: {
         /**
+         * @param {Element} element
+         * @returns {boolean}
+         */
+        hasElementInContent(element) {
+            return Boolean(this.record && this.record.containsElement(element));
+        },
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsCloseable() {
+            if (this.attachmentViewer) {
+                /**
+                 * Prevent closing the dialog when clicking on the mask when the user is
+                 * currently dragging the image.
+                 */
+                return !this.attachmentViewer.isDragging;
+            }
+            return true;
+        },
+        /**
          * @private
          * @returns {FieldCommand}
          */
@@ -44,6 +65,10 @@ registerModel({
             isCausal: true,
             inverse: 'dialog',
             readonly: true,
+        }),
+        isCloseable: attr({
+            compute: '_computeIsCloseable',
+            default: true,
         }),
         manager: many2one('DialogManager', {
             inverse: 'dialogs',

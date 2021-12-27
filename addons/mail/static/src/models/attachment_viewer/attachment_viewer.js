@@ -17,6 +17,15 @@ registerModel({
             }
         },
         /**
+         * Returns whether the given html element is inside this attachment viewer.
+         *
+         * @param {Element} element
+         * @returns {boolean}
+         */
+        containsElement(element) {
+            return Boolean(this.component && this.component.root.el && this.component.root.el.contains(element));
+        },
+        /**
          * @private
          * @returns {string}
          */
@@ -47,6 +56,10 @@ registerModel({
             related: 'attachmentList.viewableAttachments',
         }),
         /**
+         * States the OWL component of this attachment viewer.
+         */
+        component: attr(),
+        /**
          * Determines the dialog displaying this attachment viewer.
          */
         dialog: one2one('Dialog', {
@@ -60,6 +73,14 @@ registerModel({
         imageUrl: attr({
             compute: '_computeImageUrl',
             readonly: true,
+        }),
+        /**
+         * Determine whether the user is currently dragging the image.
+         * This is useful to determine whether a click outside of the image
+         * should close the attachment viewer or not.
+         */
+        isDragging: attr({
+            default: false,
         }),
         /**
          * Determine whether the image is loading or not. Useful to diplay
