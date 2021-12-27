@@ -13,7 +13,6 @@ patchRecordMethods('DiscussSidebarCategoryItem', {
             if (this.channel.correspondent && this.channel.correspondent.id > 0) {
                 return this.channel.correspondent.avatarUrl;
             }
-            return '/mail/static/src/img/smiley/avatar.jpg';
         }
         return this._super();
     },

@@ -95,6 +95,14 @@ class Channel(models.Model):
         ('uuid_unique', 'UNIQUE(uuid)', 'The channel UUID must be unique'),
     ]
 
+    # CHAT CONSTRAINT
+
+    @api.constrains('channel_last_seen_partner_ids', 'channel_partner_ids')
+    def _constraint_partners_chat(self):
+        for ch in self.filtered(lambda ch: ch.channel_type == 'chat'):
+            if len(ch.channel_last_seen_partner_ids) > 2 or len(ch.channel_partner_ids) > 2:
+                raise ValidationError(_("A channel of type 'chat' cannot have more than two users."))
+
     # COMPUTE / INVERSE
 
     @api.depends('channel_type')
