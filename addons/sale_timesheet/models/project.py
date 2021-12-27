@@ -398,6 +398,11 @@ class Project(models.Model):
             })
         return result
 
+    def _get_sale_order_stat_button(self):
+        so_button = super()._get_sale_order_stat_button()
+        so_button['show'] &= self.allow_billable
+        return so_button
+
     def _get_stat_buttons(self):
         buttons = super(Project, self)._get_stat_buttons()
         if self.user_has_groups('hr_timesheet.group_hr_timesheet_approver'):

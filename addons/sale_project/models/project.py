@@ -88,17 +88,21 @@ class Project(models.Model):
     #  Project Updates
     # ----------------------------
 
+    def _get_sale_order_stat_button(self):
+        self.ensure_one()
+        return {
+            'icon': 'dollar',
+            'text': _('Sales Order'),
+            'action_type': 'object',
+            'action': 'action_view_so',
+            'show': bool(self.sale_order_id),
+            'sequence': 1,
+        }
+
     def _get_stat_buttons(self):
         buttons = super(Project, self)._get_stat_buttons()
         if self.user_has_groups('sales_team.group_sale_salesman_all_leads'):
-            buttons.append({
-                'icon': 'dollar',
-                'text': _('Sales Order'),
-                'action_type': 'object',
-                'action': 'action_view_so',
-                'show': bool(self.sale_order_id),
-                'sequence': 1,
-            })
+            buttons.append(self._get_sale_order_stat_button())
         return buttons
 
 class ProjectTask(models.Model):
