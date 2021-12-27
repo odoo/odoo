@@ -356,12 +356,12 @@ class MailActivity(models.Model):
             self._cr.execute("""
                 SELECT DISTINCT activity.id, activity.res_model, activity.res_id
                 FROM "%s" activity
-                WHERE activity.id = ANY (%%(ids)s)""" % self._table, dict(ids=list(sub_ids)))
+                WHERE activity.id = ANY (%%(ids)s) AND activity.res_id != 0""" % self._table, dict(ids=list(sub_ids)))
             activities_to_check += self._cr.dictfetchall()
 
         activity_to_documents = {}
         for activity in activities_to_check:
-            activity_to_documents.setdefault(activity['res_model'], list()).append(activity['res_id'])
+            activity_to_documents.setdefault(activity['res_model'], set()).add(activity['res_id'])
 
         allowed_ids = set()
         for doc_model, doc_ids in activity_to_documents.items():
