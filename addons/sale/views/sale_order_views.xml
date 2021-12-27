@@ -714,7 +714,7 @@
         </field>
     </record>
 
-    <!-- ACTIONS -->
+    <!-- ACTIONS (WINDOW) -->
 
     <record id="action_orders" model="ir.actions.act_window">
         <field name="name">Sales Orders</field>
@@ -773,54 +773,6 @@
         <field name="view_mode">graph</field>
         <field name="view_id" ref="sale.view_sale_order_graph"/>
         <field name="act_window_id" ref="action_orders"/>
-    </record>
-
-    <record id="action_orders_to_invoice" model="ir.actions.act_window">
-        <field name="name">Orders to Invoice</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">sale.order</field>
-        <field name="view_mode">tree,form,calendar,graph,pivot,kanban,activity</field>
-        <field name="context">{'create': False}</field>
-        <field name="domain">[('invoice_status','=','to invoice')]</field>
-        <field name="search_view_id" ref="view_sales_order_filter"/>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-            No orders to invoice found
-            </p><p>
-            You can select all orders and invoice them in batch,<br/>
-            or check every order and invoice them one by one.
-            </p>
-        </field>
-    </record>
-
-    <record id="model_sale_order_action_quotation_sent" model="ir.actions.server">
-        <field name="name">Mark Quotation as Sent</field>
-        <field name="model_id" ref="sale.model_sale_order"/>
-        <field name="binding_model_id" ref="sale.model_sale_order"/>
-        <field name="binding_view_types">form,list</field>
-        <field name="state">code</field>
-        <field name="code">action = records.action_quotation_sent()</field>
-    </record>
-
-    <record id="action_orders_upselling" model="ir.actions.act_window">
-        <field name="name">Orders to Upsell</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">sale.order</field>
-        <field name="view_mode">tree,form,calendar,graph,pivot,kanban,activity</field>
-        <field name="domain">[('invoice_status','=','upselling')]</field>
-        <field name="context">{'create': False}</field>
-        <field name="search_view_id" ref="view_sales_order_filter"/>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-            No orders to upsell found.
-            </p><p>
-            An order is to upsell when delivered quantities are above initially
-            ordered quantities, and the invoicing policy is based on ordered quantities.
-            </p><p>
-            As an example, if you sell pre-paid hours of services, Odoo recommends you
-            to sell extra hours when all ordered hours have been consumed.
-            </p>
-        </field>
     </record>
 
     <record id="action_quotations_with_onboarding" model="ir.actions.act_window">
@@ -898,61 +850,54 @@
         <field name="act_window_id" ref="action_quotations"/>
     </record>
 
-    <!-- search by Salesteams -->
-    <record id="action_orders_salesteams" model="ir.actions.act_window">
-        <field name="name">Sales Orders</field>
+    <record id="action_orders_to_invoice" model="ir.actions.act_window">
+        <field name="name">Orders to Invoice</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">sale.order</field>
-        <field name="view_mode">tree,form,calendar,graph,kanban,pivot</field>
-        <field name="search_view_id" ref="sale.sale_order_view_search_inherit_sale"/>
-        <field name="domain">[('state','not in',('draft','sent','cancel'))]</field>
-        <field name="context">{
-                'search_default_team_id': [active_id],
-                'default_team_id': active_id,
-            }
-        </field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-            Create a new quotation, the first step of a new sale!
-            </p><p>
-            Once the quotation is confirmed by the customer, it becomes a sales order.<br/> You will be able to create an invoice and collect the payment.
-            </p>
-        </field>
-    </record>
-    <record id="action_orders_to_invoice_salesteams" model="ir.actions.act_window">
-        <field name="name">Sales Orders</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">sale.order</field>
-        <field name="view_mode">tree,form,calendar,graph,kanban,pivot</field>
-        <field name="search_view_id" ref="sale.sale_order_view_search_inherit_sale"/>
+        <field name="view_mode">tree,form,calendar,graph,pivot,kanban,activity</field>
+        <field name="context">{'create': False}</field>
         <field name="domain">[('invoice_status','=','to invoice')]</field>
-        <field name="context">{
-                'search_default_team_id': [active_id],
-                'default_team_id': active_id,
-            }
-        </field>
-    </record>
-    <record id="action_quotations_salesteams" model="ir.actions.act_window">
-        <field name="name">Quotations</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">sale.order</field>
-        <field name="view_id" ref="sale.view_quotation_tree"/>
-        <field name="view_mode">tree,form,calendar,graph,kanban,pivot</field>
-        <field name="context">{
-                'search_default_team_id': [active_id],
-                'default_team_id': active_id,
-                'show_address': 1,
-            }
-        </field>
-        <field name="domain">[]</field>
-        <field name="search_view_id" ref="sale.sale_order_view_search_inherit_quotation"/>
+        <field name="search_view_id" ref="view_sales_order_filter"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-            Create a new quotation, the first step of a new sale!
+            No orders to invoice found
             </p><p>
-            Once the quotation is confirmed by the customer, it becomes a sales order.<br/> You will be able to create an invoice and collect the payment.
+            You can select all orders and invoice them in batch,<br/>
+            or check every order and invoice them one by one.
             </p>
         </field>
+    </record>
+
+    <record id="action_orders_upselling" model="ir.actions.act_window">
+        <field name="name">Orders to Upsell</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">tree,form,calendar,graph,pivot,kanban,activity</field>
+        <field name="domain">[('invoice_status','=','upselling')]</field>
+        <field name="context">{'create': False}</field>
+        <field name="search_view_id" ref="view_sales_order_filter"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            No orders to upsell found.
+            </p><p>
+            An order is to upsell when delivered quantities are above initially
+            ordered quantities, and the invoicing policy is based on ordered quantities.
+            </p><p>
+            As an example, if you sell pre-paid hours of services, Odoo recommends you
+            to sell extra hours when all ordered hours have been consumed.
+            </p>
+        </field>
+    </record>
+
+    <!-- ACTIONS (SERVER) -->
+
+    <record id="model_sale_order_action_quotation_sent" model="ir.actions.server">
+        <field name="name">Mark Quotation as Sent</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_view_types">form,list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_quotation_sent()</field>
     </record>
 
 </odoo>

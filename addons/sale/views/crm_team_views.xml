@@ -1,7 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- Sales Team Dashboard Views -->
+    <!-- Dedicated actions used in views below -->
+    <record id="action_quotations_salesteams" model="ir.actions.act_window">
+        <field name="name">Quotations</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_id" ref="sale.view_quotation_tree"/>
+        <field name="view_mode">tree,form,calendar,graph,kanban,pivot</field>
+        <field name="context">{
+                'search_default_team_id': [active_id],
+                'default_team_id': active_id,
+                'show_address': 1,
+            }
+        </field>
+        <field name="domain">[]</field>
+        <field name="search_view_id" ref="sale.sale_order_view_search_inherit_quotation"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Create a new quotation, the first step of a new sale!
+            </p><p>
+            Once the quotation is confirmed by the customer, it becomes a sales order.<br/> You will be able to create an invoice and collect the payment.
+            </p>
+        </field>
+    </record>
+
     <record id="action_quotation_form" model="ir.actions.act_window">
         <field name="name">New Quotation</field>
         <field name="res_model">sale.order</field>
@@ -15,6 +38,43 @@
         </field>
         <field name="search_view_id" ref="sale_order_view_search_inherit_quotation"/>
     </record>
+
+    <record id="action_orders_salesteams" model="ir.actions.act_window">
+        <field name="name">Sales Orders</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">tree,form,calendar,graph,kanban,pivot</field>
+        <field name="search_view_id" ref="sale.sale_order_view_search_inherit_sale"/>
+        <field name="domain">[('state','not in',('draft','sent','cancel'))]</field>
+        <field name="context">{
+                'search_default_team_id': [active_id],
+                'default_team_id': active_id,
+            }
+        </field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Create a new quotation, the first step of a new sale!
+            </p><p>
+            Once the quotation is confirmed by the customer, it becomes a sales order.<br/> You will be able to create an invoice and collect the payment.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_orders_to_invoice_salesteams" model="ir.actions.act_window">
+        <field name="name">Sales Orders</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">tree,form,calendar,graph,kanban,pivot</field>
+        <field name="search_view_id" ref="sale.sale_order_view_search_inherit_sale"/>
+        <field name="domain">[('invoice_status','=','to invoice')]</field>
+        <field name="context">{
+                'search_default_team_id': [active_id],
+                'default_team_id': active_id,
+            }
+        </field>
+    </record>
+
+    <!-- crm.team views (& actions) -->
 
     <record id="crm_team_salesteams_view_form" model="ir.ui.view">
         <field name="name">crm.team.form</field>
