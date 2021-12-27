@@ -10,13 +10,13 @@
 
 {
     "name": "Romania - Accounting",
-    "author": "Fekete Mihai (NextERP Romania SRL)",
-    "website": "https://www.nexterp.ro",
+    "author": ["Fekete Mihai (NextERP Romania SRL)", "Odoo S.A."],
     'category': 'Accounting/Localizations/Account Charts',
     'version': '1.0',
     "depends": [
         'account',
         'base_vat',
+        'l10n_multilang',
     ],
     "description": """
 This is the module to manage the Accounting Chart, VAT structure, Fiscal Position and Tax Mapping.
