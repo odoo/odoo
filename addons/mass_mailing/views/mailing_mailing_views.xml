@@ -276,22 +276,21 @@
                                             attrs="{'required': [('ab_testing_enabled', '=', True), ('mailing_type', '=', 'mail')], 'invisible': ['|', ('ab_testing_enabled', '=', False), ('mailing_type', '!=', 'mail')], 'readonly': [('state', '!=', 'draft')]}"/>
                                         <field name="ab_testing_schedule_datetime"
                                             attrs="{'required': [('ab_testing_enabled', '=', True), ('ab_testing_winner_selection', '!=', 'manual')], 'readonly': ['|', ('ab_testing_enabled', '=', False), ('state', '!=', 'draft')], 'invisible': ['|', ('ab_testing_enabled', '=', False), ('ab_testing_winner_selection', '=', 'manual')]}"/>
+                                        <field name="is_ab_test_sent" invisible="1"/>
                                     </group>
                                     <div>
                                         <field name="ab_testing_mailings_count" invisible="1"/>
                                         <field name="ab_testing_completed" invisible="1"/>
                                         <field name="ab_testing_description" nolabel="1"/>
-                                        <div attrs="{'invisible': ['|', ('ab_testing_mailings_count', '&lt;', 2), ('ab_testing_enabled', '=', False)]}">
+                                        <div id="mailing_form_ab_buttons" attrs="{'invisible': ['|', ('ab_testing_mailings_count', '&lt;', 2), ('ab_testing_enabled', '=', False)]}">
                                             <button name="action_compare_versions" type="object" class="btn btn-link d-block">
                                                 <i class="fa fa-bar-chart"/> Compare Version
                                             </button>
                                             <button name="action_duplicate" type="object" class="btn btn-link d-block" attrs="{'invisible': [('ab_testing_completed', '=', True)]}">
                                                 <i class="fa fa-copy"/> Create an Alternative
                                             </button>
-                                            <button name="action_send_winner_mailing" type="object" class="btn btn-link d-block" attrs="{'invisible': [('ab_testing_completed', '=', True)]}">
-                                                <i class="fa fa-envelope"/> <span name="ab_test_manual" attrs="{'invisible': [('ab_testing_winner_selection', '!=', 'manual')]}">
-                                                    Send this version to remaining recipients
-                                                </span> <span name="ab_test_auto" attrs="{'invisible': [('ab_testing_winner_selection', '=', 'manual')]}">
+                                            <button name="action_send_winner_mailing" type="object" class="btn btn-link d-block" attrs="{'invisible': ['|', ('is_ab_test_sent', '!=', True), '|', ('ab_testing_completed', '=', True), ('ab_testing_winner_selection', '=', 'manual')]}">
+                                                <i class="fa fa-envelope"/><span name="ab_test_auto">
                                                     Send Winner Now
                                                 </span>
                                             </button>

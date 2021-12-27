@@ -159,6 +159,9 @@
                     ('mail_server_available', '=', False)], 'readonly': [('state', 'in', ('sending', 'done'))]}</attribute>
             </xpath>
             <!-- A/B Testing -->
+            <xpath expr="//field[@name='ab_testing_mailings_count']" position="after">
+                <field name="ab_testing_mailings_sms_count" invisible="1"/>
+            </xpath>
             <xpath expr="//field[@name='ab_testing_winner_selection']" position="after">
                 <label for="ab_testing_sms_winner_selection" string="Winner Selection"
                     attrs="{'invisible': ['|', ('ab_testing_enabled', '=', False), ('mailing_type', '!=', 'sms')]}"/>
@@ -169,18 +172,20 @@
                  <field name="ab_testing_schedule_datetime"
                         attrs="{'required': [('ab_testing_enabled', '=', True), ('ab_testing_winner_selection', '!=', 'manual'), ('ab_testing_sms_winner_selection', '!=', 'manual')], 'readonly': ['|', ('ab_testing_enabled', '=', False), ('state', '!=', 'draft')], 'invisible': ['|', '|', ('ab_testing_enabled', '=', False), ('ab_testing_winner_selection', '=', 'manual'), ('ab_testing_sms_winner_selection', '=', 'manual')]}"/>
             </xpath>
-            <xpath expr="//span[@name='ab_test_manual']" position="attributes">
-                <attribute name="attrs">{'invisible': ['|', ('ab_testing_winner_selection', '!=', 'manual'),
-                    ('ab_testing_sms_winner_selection', '!=', 'manual')]}</attribute>
+            <xpath expr="//div[@id='mailing_form_ab_buttons']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('ab_testing_enabled', '=', False), '&amp;',
+                    ('ab_testing_mailings_count', '&lt;', 2),
+                    ('ab_testing_mailings_sms_count', '&lt;', 2)]}</attribute>
             </xpath>
-            <xpath expr="//span[@name='ab_test_auto']" position="attributes">
-                <attribute name="attrs">{'invisible': [('ab_testing_winner_selection', '=', 'manual'),
-                    ('ab_testing_sms_winner_selection', '=', 'manual')]}</attribute>
-            </xpath>
-            <xpath expr="//button[@name='action_select_as_winner']" position="attributes">
-                <attribute name="attrs">{'invisible': ['|', ('ab_testing_completed', '!=', False), '|',
+            <xpath expr="//button[@name='action_send_winner_mailing']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('is_ab_test_sent', '!=', True), '|', ('ab_testing_completed', '=', True), '|',
                     ('ab_testing_winner_selection', '=', 'manual'),
                     ('ab_testing_sms_winner_selection', '=', 'manual')]}</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_duplicate'][hasclass('btn-primary')]" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', '|', ('ab_testing_enabled', '=', False),
+                    ('ab_testing_mailings_count', '&gt;=', 2),
+                    ('ab_testing_mailings_sms_count', '&gt;=', 2)]}</attribute>
             </xpath>
         </field>
     </record>
