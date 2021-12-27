@@ -61,6 +61,7 @@ class PaymentAcquirerOgone(models.Model):
             'ogone_direct_order_url': 'https://secure.ogone.com/ncol/%s/orderdirect_utf8.asp' % (environment,),
             'ogone_direct_query_url': 'https://secure.ogone.com/ncol/%s/querydirect_utf8.asp' % (environment,),
             'ogone_afu_agree_url': 'https://secure.ogone.com/ncol/%s/AFU_agree.asp' % (environment,),
+            'ogone_maintenance_direct_url': 'https://secure.ogone.com/ncol/%s/maintenancedirect.asp' % (environment,),
         }
 
     def _ogone_generate_shasign(self, inout, values):
@@ -390,7 +391,7 @@ class PaymentTxOgone(models.Model):
 
         data['SHASIGN'] = self.acquirer_id._ogone_generate_shasign('in', data)
 
-        direct_order_url = 'https://secure.ogone.com/ncol/%s/orderdirect.asp' % ('prod' if self.acquirer_id.state == 'enabled' else 'test')
+        direct_order_url = self.acquirer_id._get_ogone_urls('prod' if self.acquirer_id.state == 'enabled' else 'test')['ogone_direct_order_url']
 
         logged_data = data.copy()
         logged_data.pop('PSWD')
@@ -424,7 +425,7 @@ class PaymentTxOgone(models.Model):
         }
         data['SHASIGN'] = self.acquirer_id._ogone_generate_shasign('in', data)
 
-        direct_order_url = 'https://secure.ogone.com/ncol/%s/maintenancedirect.asp' % ('prod' if self.acquirer_id.state == 'enabled' else 'test')
+        direct_order_url = self.acquirer_id._get_ogone_urls('prod' if self.acquirer_id.state == 'enabled' else 'test')['ogone_maintenance_direct_url']
 
         logged_data = data.copy()
         logged_data.pop('PSWD')
@@ -516,7 +517,7 @@ class PaymentTxOgone(models.Model):
             'PSWD': account.ogone_password,
         }
 
-        query_direct_url = 'https://secure.ogone.com/ncol/%s/querydirect.asp' % ('prod' if self.acquirer_id.state == 'enabled' else 'test')
+        query_direct_url = self.acquirer_id._get_ogone_urls('prod' if self.acquirer_id.state == 'enabled' else 'test')['ogone_direct_query_url']
 
         logged_data = data.copy()
         logged_data.pop('PSWD')
@@ -563,7 +564,7 @@ class PaymentToken(models.Model):
                 'PROCESS_MODE': 'CHECKANDPROCESS',
             }
 
-            url = 'https://secure.ogone.com/ncol/%s/AFU_agree.asp' % ('prod' if acquirer.state == 'enabled' else 'test')
+            url = acquirer._get_ogone_urls('prod' if acquirer.state == 'enabled' else 'test')['ogone_afu_agree_url']
             _logger.info("ogone_create: Creating new alias %s via url %s", alias, url)
             result = requests.post(url, data=data).content
 
