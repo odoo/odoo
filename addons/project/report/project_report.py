@@ -99,5 +99,6 @@ class ReportProjectTaskUser(models.Model):
               FROM project_task t
               LEFT JOIN project_task_user_rel tu on t.id=tu.task_id
                 WHERE t.active = 'true'
+                AND t.project_id IS NOT NULL
                 %s
         """ % (self._table, self._select(), self._group_by()))
