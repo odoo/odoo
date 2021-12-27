@@ -10,6 +10,20 @@ registerModel({
     recordMethods: {
         /**
          * @private
+         * @returns {boolean}
+         */
+        _computeIsCloseable() {
+            if (this.attachmentViewer) {
+                /**
+                 * Prevent closing the dialog when clicking on the mask when the user is
+                 * currently dragging the image.
+                 */
+                return this.attachmentViewer.isDragging;
+            }
+            return clear();
+        },
+        /**
+         * @private
          * @returns {FieldCommand}
          */
         _computeRecord() {
@@ -44,6 +58,10 @@ registerModel({
             isCausal: true,
             inverse: 'dialog',
             readonly: true,
+        }),
+        isCloseable: attr({
+            compute: '_computeIsCloseable',
+            default: true,
         }),
         manager: many2one('DialogManager', {
             inverse: 'dialogs',

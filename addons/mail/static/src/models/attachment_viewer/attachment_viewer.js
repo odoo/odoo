@@ -62,6 +62,14 @@ registerModel({
             readonly: true,
         }),
         /**
+         * Determine whether the user is currently dragging the image.
+         * This is useful to determine whether a click outside of the image
+         * should close the attachment viewer or not.
+         */
+        isDragging: attr({
+            default: false,
+        }),
+        /**
          * Determine whether the image is loading or not. Useful to diplay
          * a spinner when loading image initially.
          */

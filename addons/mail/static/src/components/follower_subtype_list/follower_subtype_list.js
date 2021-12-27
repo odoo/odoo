@@ -28,6 +28,9 @@ export class FollowerSubtypeList extends Component {
      * @param {MouseEvent} ev
      */
     _onClickCancel(ev) {
+        if (!this.followerSubtypeList.follower) {
+            return;
+        }
         this.followerSubtypeList.follower.closeSubtypes();
     }
 
@@ -38,6 +41,9 @@ export class FollowerSubtypeList extends Component {
      * @param {MouseEvent} ev
      */
     _onClickApply(ev) {
+        if (!this.followerSubtypeList.follower) {
+            return;
+        }
         this.followerSubtypeList.follower.updateSubtypes();
     }
 

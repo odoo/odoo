@@ -3,7 +3,7 @@
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
-const { onMounted, onWillUnmount, useRef } = owl.hooks;
+const { onMounted, onWillUnmount } = owl.hooks;
 
 export class Dialog extends Component {
 
@@ -12,10 +12,6 @@ export class Dialog extends Component {
      */
     setup() {
         super.setup();
-        /**
-         * Reference to the component used inside this dialog.
-         */
-        this._componentRef = useRef('component');
         this._onClickGlobal = this._onClickGlobal.bind(this);
         this._onKeydownDocument = this._onKeydownDocument.bind(this);
         onMounted(() => this._mounted());
@@ -65,16 +61,7 @@ export class Dialog extends Component {
      * @param {MouseEvent} ev
      */
     _onClickGlobal(ev) {
-        if (this._componentRef.el && this._componentRef.el.contains(ev.target)) {
-            return;
-        }
-        // TODO: this should be child logic (will crash if child doesn't have isCloseable!!)
-        // task-2092965
-        if (
-            this._componentRef.comp &&
-            this._componentRef.comp.isCloseable &&
-            !this._componentRef.comp.isCloseable()
-        ) {
+        if (!this.dialog.isCloseable) {
             return;
         }
         this.dialog.delete();
