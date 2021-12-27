@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import json
 from collections import defaultdict
 
-from odoo import api, fields, models, _, _lt
+from odoo import api, fields, models, _
 from odoo.osv import expression
 from odoo.exceptions import ValidationError, UserError
 from odoo.tools import format_amount, float_is_zero, formatLang
@@ -437,23 +436,6 @@ class Project(models.Model):
             })
         return result
 
-    def _get_stat_buttons(self):
-        buttons = super(Project, self)._get_stat_buttons()
-        if self.user_has_groups('hr_timesheet.group_hr_timesheet_approver'):
-            buttons.append({
-                'icon': 'clock-o',
-                'text': _lt('Billable Time'),
-                'number': '%s %%' % (self.billable_percentage),
-                'action_type': 'object',
-                'action': 'action_billable_time_button',
-                'additional_context': json.dumps({
-                    'active_id': self.id,
-                    'default_project_id': self.id
-                }),
-                'show': self.allow_timesheets and bool(self.analytic_account_id),
-                'sequence': 9,
-            })
-        return buttons
 
 class ProjectTask(models.Model):
     _inherit = "project.task"
