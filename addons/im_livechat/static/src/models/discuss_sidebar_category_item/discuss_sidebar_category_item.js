@@ -16,7 +16,6 @@ registerInstancePatchModel('mail.discuss_sidebar_category_item', 'im_livechat/st
             if (this.channel.correspondent && this.channel.correspondent.id > 0) {
                 return this.channel.correspondent.avatarUrl;
             }
-            return '/mail/static/src/img/smiley/avatar.jpg';
         }
         return this._super();
     },

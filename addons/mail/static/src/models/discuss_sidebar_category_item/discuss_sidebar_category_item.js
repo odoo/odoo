@@ -34,8 +34,11 @@ function factory(dependencies) {
                 case 'group':
                     return `/web/image/mail.channel/${this.channel.id}/avatar_128?unique=${this.channel.avatarCacheKey}`;
                 case 'chat':
-                    return this.channel.correspondent.avatarUrl;
+                    if (this.channel.correspondent) {
+                        return this.channel.correspondent.avatarUrl;
+                    }
             }
+            return '/mail/static/src/img/smiley/avatar.jpg';
         }
 
         /**
