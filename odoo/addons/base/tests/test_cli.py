@@ -1,31 +1,37 @@
+import os
 import re
 import sys
 import subprocess as sp
+import unittest
+from pathlib import Path
 
 from odoo.cli.command import commands, load_addons_commands, load_internal_commands
-from odoo.tools import config
-from odoo.tests import BaseCase
-
+from odoo.tools import config, file_path
+from odoo.tests import BaseCase, Like
 
 class TestCommand(BaseCase):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.odoo_bin = sys.argv[0]
-        assert 'odoo-bin' in cls.odoo_bin
+        cls.odoo_bin = Path(__file__).parents[4].resolve() / 'odoo-bin'
+        addons_path = config.format('addons_path', config['addons_path'])
+        cls.run_args = (sys.executable, cls.odoo_bin, f'--addons-path={addons_path}')
 
     def run_command(self, *args, check=True, capture_output=True, text=True, **kwargs):
-        addons_path = config.format('addons_path', config['addons_path'])
         return sp.run(
-            [
-                sys.executable,
-                self.odoo_bin,
-                f'--addons-path={addons_path}',
-                *args,
-            ],
+            [*self.run_args, *args],
             capture_output=capture_output,
             check=check,
+            text=text,
+            **kwargs
+        )
+
+    def popen_command(self, *args, capture_output=True, text=True, **kwargs):
+        if capture_output:
+            kwargs['stdout'] = kwargs['stderr'] = sp.PIPE
+        return sp.Popen(
+            [*self.run_args, *args],
             text=text,
             **kwargs
         )
@@ -82,3 +88,30 @@ class TestCommand(BaseCase):
         self.assertIn("usage: ", proc.stdout)
         self.assertIn("Rewrite the entire source code", proc.stdout)
         self.assertFalse(proc.stderr)
+
+    @unittest.skipIf(os.name != 'posix', '`os.openpty` only available on POSIX systems')
+    def test_shell(self):
+
+        main, child = os.openpty()
+
+        shell = self.popen_command(
+            'shell',
+            '--shell-interface=python',
+            '--shell-file', file_path('base/tests/shell_file.txt'),
+            stdin=main,
+            close_fds=True,
+        )
+        with os.fdopen(child, 'w', encoding="utf-8") as stdin_file:
+            stdin_file.write(
+                'print(message)\n'
+                'exit()\n'
+            )
+        shell.wait()
+
+        self.assertEqual(shell.stdout.read().splitlines(), [
+            Like("No environment set..."),
+            Like("odoo: <module 'odoo' from '/.../odoo/__init__.py'>"),
+            Like("openerp: <module 'odoo' from '/.../odoo/__init__.py'>"),
+            ">>> Hello from Python!",
+            '>>> '
+        ])
