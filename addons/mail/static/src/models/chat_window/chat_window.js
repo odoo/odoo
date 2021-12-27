@@ -15,7 +15,6 @@ registerModel({
             this.onClickHideMemberList = this.onClickHideMemberList.bind(this);
             this.onClickShowInviteForm = this.onClickShowInviteForm.bind(this);
             this.onClickShowMemberList = this.onClickShowMemberList.bind(this);
-            this.onFocusInNewMessageFormInput = this.onFocusInNewMessageFormInput.bind(this);
         },
     },
     recordMethods: {
@@ -160,13 +159,14 @@ registerModel({
                 isMemberListOpened: true,
             });
         },
-        /**
-         * @param {Event} ev
-         */
-        onFocusInNewMessageFormInput(ev) {
-            if (this.exists()) {
-                this.update({ isFocused: true });
+        onComponentUpdate() {
+            if (this.isDoFocus) {
+                this.update({ isDoFocus: false });
+                if (this.newMessageFormInputView) {
+                    this.newMessageFormInputView.doFocus();
+                }
             }
+            this._applyVisibleOffset();
         },
         /**
          * Swap this chat window with the previous one.
@@ -194,6 +194,18 @@ registerModel({
             if (this.thread && notifyServer && !this.messaging.currentGuest) {
                 this.thread.notifyFoldStateToServer('open');
             }
+        },
+        /**
+         * Apply visual position of the chat window.
+         *
+         * @private
+         */
+        _applyVisibleOffset() {
+            const textDirection = this.messaging.locale.textDirection;
+            const offsetFrom = textDirection === 'rtl' ? 'left' : 'right';
+            const oppositeFrom = offsetFrom === 'right' ? 'left' : 'right';
+            this.component.root.el.style[offsetFrom] = this.visibleOffset + 'px';
+            this.component.root.el.style[oppositeFrom] = 'auto';
         },
         /**
          * @private
@@ -285,6 +297,16 @@ registerModel({
                 return this.thread.displayName;
             }
             return this.env._t("New message");
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeNewMessageFormInputView() {
+            if (this.hasNewMessageForm) {
+                return insertAndReplace();
+            }
+            return clear();
         },
         /**
          * @private
@@ -380,6 +402,10 @@ registerModel({
             isCausal: true,
         }),
         /**
+         * States the OWL component of this chat window.
+         */
+        component: attr(),
+        /**
          * Determines whether the buttons to start a RTC call should be displayed.
          */
         hasCallButtons: attr({
@@ -458,6 +484,11 @@ registerModel({
         }),
         name: attr({
             compute: '_computeName',
+        }),
+        newMessageFormInputView: one2one('AutocompleteInputView', {
+            compute: '_computeNewMessageFormInputView',
+            inverse: 'chatWindowOwnerAsNewMessageFormInput',
+            isCausal: true,
         }),
         /**
          * Determines the `Thread` that should be displayed by `this`.

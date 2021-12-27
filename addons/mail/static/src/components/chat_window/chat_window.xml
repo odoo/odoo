@@ -34,18 +34,14 @@
                         onFocusin="_onFocusinThread"
                     />
                 </t>
-                <t t-if="chatWindow.hasNewMessageForm">
+                <t t-if="chatWindow.newMessageFormInputView">
                     <div class="o_ChatWindow_newMessageForm">
                         <span class="o_ChatWindow_newMessageFormLabel">
                             To:
                         </span>
                         <AutocompleteInput
                             className="'o_ChatWindow_newMessageFormInput'"
-                            placeholder="newMessageFormInputPlaceholder"
-                            select="_onAutocompleteSelect"
-                            source="_onAutocompleteSource"
-                            onFocusin="chatWindow.onFocusInNewMessageFormInput"
-                            t-ref="input"
+                            localId="chatWindow.newMessageFormInputView.localId"
                         />
                     </div>
                 </t>

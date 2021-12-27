@@ -91,6 +91,16 @@ registerModel({
         },
         /**
          * @private
+         * @returns {FieldCommand}
+         */
+        _computeItemNewInputView() {
+            if (this.isAddingItem) {
+                return insertAndReplace();
+            }
+            return clear();
+        },
+        /**
+         * @private
          * @returns {boolean}
          */
         _computeIsOpen() {
@@ -248,6 +258,11 @@ registerModel({
         filteredCategoryItems: one2many('DiscussSidebarCategoryItem', {
             compute: '_computeFilteredCategoryItems',
             readonly: true,
+        }),
+        itemNewInputView: one2one('AutocompleteInputView', {
+            compute: '_computeItemNewInputView',
+            inverse: 'discussSidebarCategoryAsItemNewInput',
+            isCausal: true,
         }),
         /**
          * Display name of the category.

@@ -59,6 +59,16 @@ registerModel({
             }
             return clear();
         },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
+        _computeMobileNewMessageInputView() {
+            if (this.messaging.device.isMobile && this.isMobileNewMessageToggled) {
+                return insertAndReplace();
+            }
+            return clear();
+        },
     },
     fields: {
         /**
@@ -94,6 +104,11 @@ registerModel({
          mobileMessagingNavbarView: one2one('MobileMessagingNavbarView', {
             compute: '_computeMobileMessagingNavbarView',
             inverse: 'messagingMenu',
+            isCausal: true,
+        }),
+        mobileNewMessageInputView: one2one('AutocompleteInputView', {
+            compute: '_computeMobileNewMessageInputView',
+            inverse: 'messagingMenuAsMobileNewMessageInput',
             isCausal: true,
         }),
         /**

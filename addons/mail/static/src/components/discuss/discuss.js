@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
-import { link, unlink } from '@mail/model/model_field_command';
 import { useUpdate } from '@mail/component_hooks/use_update/use_update';
 
 const { Component } = owl;
@@ -15,12 +14,8 @@ export class Discuss extends Component {
     setup() {
         super.setup();
         this._updateLocalStoreProps();
-        // bind since passed as props
-        this._onMobileAddItemHeaderInputSelect = this._onMobileAddItemHeaderInputSelect.bind(this);
-        this._onMobileAddItemHeaderInputSource = this._onMobileAddItemHeaderInputSource.bind(this);
         useUpdate({ func: () => this._update() });
         onWillUnmount(() => this._willUnmount());
-        this._onHideMobileAddItemHeader = this._onHideMobileAddItemHeader.bind(this);
     }
 
     _update() {
@@ -106,47 +101,6 @@ export class Discuss extends Component {
             this.discuss.thread &&
             this.discuss.thread.counter
         );
-    }
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _onHideMobileAddItemHeader() {
-        this.discuss.clearIsAddingItem();
-    }
-
-    /**
-     * @private
-     * @param {Event} ev
-     * @param {Object} ui
-     * @param {Object} ui.item
-     * @param {integer} ui.item.id
-     */
-    _onMobileAddItemHeaderInputSelect(ev, ui) {
-        const discuss = this.discuss;
-        if (discuss.isAddingChannel) {
-            discuss.handleAddChannelAutocompleteSelect(ev, ui);
-        } else {
-            discuss.handleAddChatAutocompleteSelect(ev, ui);
-        }
-    }
-
-    /**
-     * @private
-     * @param {Object} req
-     * @param {string} req.term
-     * @param {function} res
-     */
-    _onMobileAddItemHeaderInputSource(req, res) {
-        if (this.discuss.isAddingChannel) {
-            this.discuss.handleAddChannelAutocompleteSource(req, res);
-        } else {
-            this.discuss.handleAddChatAutocompleteSource(req, res);
-        }
     }
 
 }

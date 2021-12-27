@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
-import { useUpdate } from '@mail/component_hooks/use_update/use_update';
+import { useComponentToModel } from '@mail/component_hooks/use_component_to_model/use_component_to_model';
+import { useUpdateToModel } from '@mail/component_hooks/use_update_to_model/use_update_to_model';
 import { isEventHandled } from '@mail/utils/utils';
 
 const { Component } = owl;
-const { useRef } = owl.hooks;
 
 export class ChatWindow extends Component {
 
@@ -14,16 +14,8 @@ export class ChatWindow extends Component {
      */
     setup() {
         super.setup();
-        useUpdate({ func: () => this._update() });
-        /**
-         * Reference of the autocomplete input (new_message chat window only).
-         * Useful when focusing this chat window, which consists of focusing
-         * this input.
-         */
-        this._inputRef = useRef('input');
-        // the following are passed as props to children
-        this._onAutocompleteSelect = this._onAutocompleteSelect.bind(this);
-        this._onAutocompleteSource = this._onAutocompleteSource.bind(this);
+        useComponentToModel({ fieldName: 'component', modelName: 'ChatWindow', propNameAsRecordLocalId: 'chatWindowLocalId' });
+        useUpdateToModel({ methodName: 'onComponentUpdate', modelName: 'ChatWindow', propNameAsRecordLocalId: 'chatWindowLocalId' });
         this._onClickedHeader = this._onClickedHeader.bind(this);
         this._onFocusinThread = this._onFocusinThread.bind(this);
     }
@@ -39,32 +31,9 @@ export class ChatWindow extends Component {
         return this.messaging && this.messaging.models['ChatWindow'].get(this.props.chatWindowLocalId);
     }
 
-    /**
-     * Get the content of placeholder for the autocomplete input of
-     * 'new_message' chat window.
-     *
-     * @returns {string}
-     */
-    get newMessageFormInputPlaceholder() {
-        return this.env._t("Search user...");
-    }
-
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
-
-    /**
-     * Apply visual position of the chat window.
-     *
-     * @private
-     */
-    _applyVisibleOffset() {
-        const textDirection = this.messaging.locale.textDirection;
-        const offsetFrom = textDirection === 'rtl' ? 'left' : 'right';
-        const oppositeFrom = offsetFrom === 'right' ? 'left' : 'right';
-        this.root.el.style[offsetFrom] = this.chatWindow.visibleOffset + 'px';
-        this.root.el.style[oppositeFrom] = 'auto';
-    }
 
     /**
      * Save the scroll positions of the chat window in the store.
@@ -99,47 +68,9 @@ export class ChatWindow extends Component {
         );
     }
 
-    /**
-     * @private
-     */
-    _update() {
-        if (!this.chatWindow) {
-            // chat window is being deleted
-            return;
-        }
-        if (this.chatWindow.isDoFocus) {
-            this.chatWindow.update({ isDoFocus: false });
-            if (this._inputRef.comp) {
-                this._inputRef.comp.focus();
-            }
-        }
-        this._applyVisibleOffset();
-    }
-
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
-
-    /**
-     * Called when selecting an item in the autocomplete input of the
-     * 'new_message' chat window.
-     *
-     * @private
-     * @param {Event} ev
-     * @param {Object} ui
-     * @param {Object} ui.item
-     * @param {integer} ui.item.id
-     */
-    async _onAutocompleteSelect(ev, ui) {
-        const chat = await this.messaging.getChat({ partnerId: ui.item.id });
-        if (!chat) {
-            return;
-        }
-        this.messaging.chatWindowManager.openThread(chat, {
-            makeActive: true,
-            replaceNewMessage: true,
-        });
-    }
 
     /**
      * Called when typing in the autocomplete input of the 'new_message' chat

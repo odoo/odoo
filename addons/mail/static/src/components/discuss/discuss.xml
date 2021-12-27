@@ -30,16 +30,11 @@
         <t t-if="messaging.device.isMobile and discuss.activeMobileNavbarTabId === 'mailbox'">
             <DiscussMobileMailboxSelection className="'o_Discuss_mobileMailboxSelection border-bottom'"/>
         </t>
-        <t t-if="messaging.device.isMobile and (discuss.isAddingChannel or discuss.isAddingChat)">
+        <t t-if="discuss.mobileAddItemHeaderInputView">
             <div class="o_Discuss_mobileAddItemHeader border-bottom">
                 <AutocompleteInput
                     className="'o_Discuss_mobileAddItemHeaderInput'"
-                    isFocusOnMount="true"
-                    isHtml="discuss.isAddingChannel"
-                    placeholder="discuss.isAddingChannel ? addChannelInputPlaceholder : addChatInputPlaceholder"
-                    select="_onMobileAddItemHeaderInputSelect"
-                    source="_onMobileAddItemHeaderInputSource"
-                    onHide="_onHideMobileAddItemHeader"
+                    localId="discuss.mobileAddItemHeaderInputView.localId"
                 />
             </div>
         </t>

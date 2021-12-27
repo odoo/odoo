@@ -289,6 +289,19 @@ registerModel({
          * @private
          * @returns {FieldCommand}
          */
+        _computeMobileAddItemHeaderInputView() {
+            if (
+                this.messaging.device.isMobile &&
+                (this.isAddingChannel || this.isAddingChat)
+            ) {
+                return insertAndReplace();
+            }
+            return clear();
+        },
+        /**
+         * @private
+         * @returns {FieldCommand}
+         */
         _computeMobileMessagingNavbarView() {
             if (
                 this.messaging.device &&
@@ -400,6 +413,11 @@ registerModel({
          */
         menu_id: attr({
             default: null,
+        }),
+        mobileAddItemHeaderInputView: one2one('AutocompleteInputView', {
+            compute: '_computeMobileAddItemHeaderInputView',
+            inverse: 'discussAsMobileAddItemHeader',
+            isCausal: true,
         }),
         /**
          * The navbar view on the discuss app when in mobile and when not
