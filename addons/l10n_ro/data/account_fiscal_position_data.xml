@@ -3,7 +3,7 @@
     <!-- Fiscal Position Templates -->
 
     <record id="fiscal_position_template_1" model="account.fiscal.position.template">
-        <field name="name">Regim National (TVA)</field>
+        <field name="name">National Regime (VAT)</field>
         <field name="country_id" ref="base.ro"/>
         <field name="auto_apply" eval="True"/>
         <field name="vat_required" eval="True"/>
@@ -12,7 +12,7 @@
     </record>
 
     <record id="fiscal_position_template_11" model="account.fiscal.position.template">
-        <field name="name">Regim National</field>
+        <field name="name">National Regime</field>
         <field name="country_id" ref="base.ro"/>
         <field name="auto_apply" eval="True"/>
         <field name="sequence">11</field>
@@ -20,7 +20,7 @@
     </record>
 
     <record id="fiscal_position_template_2" model="account.fiscal.position.template">
-        <field name="name">Regim Taxare Inversa</field>
+        <field name="name">Reverse Tax Regime</field>
         <field name="country_id" ref="base.ro"/>
         <field name="vat_required" eval="True"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
@@ -28,7 +28,7 @@
     </record>
 
     <record id="fiscal_position_template_8" model="account.fiscal.position.template">
-        <field name="name">Regim TVA la Incasare</field>
+        <field name="name">VAT collection system</field>
         <field name="vat_required" eval="True"/>
         <field name="country_id" ref="base.ro"/>
         <field name="sequence">13</field>
@@ -36,7 +36,7 @@
     </record>
 
     <record id="fiscal_position_template_3" model="account.fiscal.position.template">
-        <field name="name">Regim Intra-Comunitar (TVA)</field>
+        <field name="name">Intra-Community Scheme (VAT)</field>
         <field name="country_group_id" ref="base.europe"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
         <field name="auto_apply" eval="True"/>
@@ -45,7 +45,7 @@
     </record>
 
     <record id="fiscal_position_template_4" model="account.fiscal.position.template">
-        <field name="name">Regim Intra-Comunitar Scutit</field>
+        <field name="name">Exempted Intra-Community Regime</field>
         <field name="country_group_id" ref="base.europe"/>
         <field name="auto_apply" eval="True"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
@@ -53,30 +53,30 @@
     </record>
 
     <record id="fiscal_position_template_51" model="account.fiscal.position.template">
-        <field name="name">Regim Scutite - cu drept de deducere</field>
+        <field name="name">Exempt regime - with the right of deduction</field>
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="note">Pozitia se refera atat la livrari / achizitii intracomunitare cat si extracomunitare cu drept de deducere</field>
+        <field name="note">The position refers to both intra-Community and non-EU acquisitions with the right to deduct</field>
         <field name="sequence">16</field>
     </record>
 
     <record id="fiscal_position_template_52" model="account.fiscal.position.template">
-        <field name="name">Regim Scutite - fara drept de deducere</field>
+        <field name="name">Exempt regime - no right of deduction</field>
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="note">Pozitia se refera atat la livrari / achizitii intracomunitare cat si extracomunitare fara drept de deducere</field>
+        <field name="note">The position refers to both intra-Community and non-EU acquisitions without the right to deduct</field>
         <field name="sequence">17</field>
     </record>
 
     <record id="fiscal_position_template_6" model="account.fiscal.position.template">
-        <field name="name">Regim Intra-Comunitar Neimpozabile</field>
+        <field name="name">Intra-Community Regime Non-taxable</field>
         <field name="country_group_id" ref="base.europe"/>
         <field name="chart_template_id" ref="ro_chart_template"/>
         <field name="sequence">18</field>
     </record>
 
     <record id="fiscal_position_template_7" model="account.fiscal.position.template">
-        <field name="name">Regim Extra-Comunitar</field>
+        <field name="name">Extra-Community Regime</field>
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="note">Pozitia se refera la livrari extracomunitare care sunt taxabile.</field>
+        <field name="note">The heading refers to non-EU deliveries which are taxable</field>
         <field name="sequence">19</field>
         <field name="auto_apply" eval="True"/>
     </record>
