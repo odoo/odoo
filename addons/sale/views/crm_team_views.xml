@@ -22,18 +22,18 @@
         <field name="priority">9</field>
         <field name="inherit_id" ref="sales_team.crm_team_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[@name='options_active']" position="inside">
+            <div name="options_active" position="inside">
                 <div class="o_row" style="display:inherit">
                     <field name="use_quotations"/><label for="use_quotations"/>
                 </div>
-            </xpath>
-            <xpath expr="//field[@name='company_id']" position="after">
+            </div>
+            <field name="company_id" position="after">
                 <label for="invoiced_target"/>
                 <div class="o_row">
                     <field name="invoiced_target" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                     <span class="oe_read_only">/ Month</span>
                 </div>
-            </xpath>
+            </field>
         </field>
     </record>
 
@@ -105,7 +105,7 @@
                 </div>
             </xpath>
 
-            <xpath expr="//div[hasclass('o_kanban_manage_reports')]/div[@name='o_team_kanban_report_separator']" position="before">
+            <div name="o_team_kanban_report_separator" position="before">
                 <div t-if="record.use_quotations.raw_value">
                      <a name="%(action_order_report_quotation_salesteam)d" type="action">
                          Quotations
@@ -121,7 +121,7 @@
                         Invoices
                     </a>
                 </div>
-            </xpath>
+            </div>
 
         </data>
         </field>

@@ -6,9 +6,9 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_account_invoice_filter"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='invoice_user_id']" position="after">
+            <field name="invoice_user_id" position="after">
                 <field name="team_id"/>
-            </xpath>
+            </field>
             <xpath expr="//group/filter[@name='status']" position="after">
                 <filter string="Sales Team" name="sales_channel" domain="[]" context="{'group_by':'team_id'}"/>
             </xpath>
