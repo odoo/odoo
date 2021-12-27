@@ -80,7 +80,8 @@
                                 </group>
                             </page>
                             <page string="Members" name="members">
-                                <field name="channel_last_seen_partner_ids" mode="tree" context="{'active_test': False}">
+                                <field name="channel_type" invisible="1"/>
+                                <field name="channel_last_seen_partner_ids" mode="tree" context="{'active_test': False}" attrs="{'readonly': [('channel_type', '=', 'chat')]}">
                                     <tree string="Members" editable="bottom">
                                         <field name="partner_id" required="1" attrs="{'readonly': [('id', '!=', False)]}"/>
                                         <field name="partner_email" readonly="1"/>

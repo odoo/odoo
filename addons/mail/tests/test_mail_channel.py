@@ -378,7 +378,7 @@ class TestChannelInternals(MailCommon):
         self.test_channel.with_context(self._test_context).write({
             'channel_partner_ids': [Command.link(self.user_employee.partner_id.id), Command.link(test_partner.id)],
         })
-        test_chat = self.env['mail.channel'].with_context(self._test_context).create({
+        test_chat = self.env['mail.channel'].with_user(self.user_employee).with_context(self._test_context).create({
             'name': 'test',
             'channel_type': 'chat',
             'public': 'private',
