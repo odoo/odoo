@@ -258,7 +258,8 @@ class Base(models.AbstractModel):
 
         Comodel = self.env[field.comodel_name]
         fields = ['display_name']
-        parent_name = Comodel._parent_name if Comodel._parent_name in Comodel._fields else False
+        parent_field = Comodel._fields.get(Comodel._parent_name)
+        parent_name = Comodel._parent_name if parent_field and parent_field.comodel_name == Comodel._name else False
         if parent_name:
             fields.append(parent_name)
         return {

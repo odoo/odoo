@@ -281,7 +281,11 @@ class Slide(models.Model):
         type_stats = self._compute_slides_statistics_type(res)
 
         for record in self:
-            record.update(type_stats.get(record._origin.id, default_vals))
+            vals = {}
+            for k, v in type_stats.get(record._origin.id, default_vals).items():
+                if hasattr(record, k):
+                    vals[k] = v
+            record.update(vals)
 
     def _compute_slides_statistics_type(self, read_group_res):
         """ Compute statistics based on all existing slide types """
