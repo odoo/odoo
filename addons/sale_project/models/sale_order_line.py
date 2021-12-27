@@ -313,3 +313,10 @@ class SaleOrderLine(models.Model):
             ])
             values['analytic_tag_ids'] += [Command.link(tag_id.id) for tag_id in tag_ids]
         return values
+
+    def _get_action_per_item(self):
+        """ Get action per Sales Order Item
+
+            :returns: Dict containing id of SOL as key and the action as value
+        """
+        return {}

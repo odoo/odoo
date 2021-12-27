@@ -63,6 +63,18 @@
         </field>
     </record>
 
+    <record id="view_hr_timesheet_line_pivot_billing_rate" model="ir.ui.view">
+        <field name="name">account.analytic.line.pivot.billing.rate</field>
+        <field name="model">account.analytic.line</field>
+        <field name="arch" type="xml">
+            <pivot string="Timesheets" sample="1">
+                <field name="timesheet_invoice_type" type="col"/>
+                <field name="unit_amount" type="measure" widget="timesheet_uom"/>
+                <field name="amount" string="Timesheet Costs"/>
+            </pivot>
+        </field>
+    </record>
+
     <!--
         Timesheet from Sales Order
     -->
@@ -87,6 +99,62 @@
         <field name="act_window_id" ref="timesheet_action_from_sales_order"/>
     </record>
 
+    <!-- Timesheets from Sales Order Item -->
+    <record id="timesheet_action_from_sales_order_item" model="ir.actions.act_window">
+        <field name="name">Timesheets</field>
+        <field name="res_model">account.analytic.line</field>
+        <field name="search_view_id" ref="hr_timesheet.hr_timesheet_line_search"/>
+        <field name="domain">[('project_id', '!=', False), ('so_line', '=', active_id)]</field>
+        <field name="context">{
+            'search_default_billable_timesheet': True,
+            'search_default_week': 1,
+            'default_so_line': active_id,
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No activities found. Let's start a new one!
+            </p>
+            <p>
+                Track your working hours by projects every day and invoice this time to your customers.
+            </p>
+        </field>
+    </record>
+
+    <record id="timesheet_action_from_sales_order_item_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="10"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="hr_timesheet.timesheet_view_tree_user"/>
+        <field name="act_window_id" ref="timesheet_action_from_sales_order_item"/>
+    </record>
+
+    <record id="timesheet_action_from_sales_order_item_kanban" model="ir.actions.act_window.view">
+        <field name="sequence" eval="20"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="hr_timesheet.view_kanban_account_analytic_line"/>
+        <field name="act_window_id" ref="timesheet_action_from_sales_order_item"/>
+    </record>
+
+    <record id="timesheet_action_from_sales_order_item_pivot" model="ir.actions.act_window.view">
+        <field name="sequence" eval="30"/>
+        <field name="view_mode">pivot</field>
+        <field name="view_id" ref="sale_timesheet.view_hr_timesheet_line_pivot_billing_rate"/>
+        <field name="act_window_id" ref="timesheet_action_from_sales_order_item"/>
+    </record>
+
+    <record id="timesheet_action_from_sales_order_item_graph" model="ir.actions.act_window.view">
+        <field name="sequence" eval="40"/>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="hr_timesheet.view_hr_timesheet_line_graph_all"/>
+        <field name="act_window_id" ref="timesheet_action_from_sales_order_item"/>
+    </record>
+
+    <record id="timesheet_action_from_sales_order_item_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="50"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="hr_timesheet.timesheet_view_form_user"/>
+        <field name="act_window_id" ref="timesheet_action_from_sales_order_item"/>
+    </record>
+
     <!--
         Reporting
     -->
@@ -106,18 +174,6 @@
             <p>Review your timesheets by billing type and make sure your time is billable.</p>
         </field>
         <field name="search_view_id" ref="hr_timesheet.hr_timesheet_line_search"/>
-    </record>
-
-    <record id="view_hr_timesheet_line_pivot_billing_rate" model="ir.ui.view">
-        <field name="name">account.analytic.line.pivot.billing.rate</field>
-        <field name="model">account.analytic.line</field>
-        <field name="arch" type="xml">
-            <pivot string="Timesheets" sample="1">
-                <field name="timesheet_invoice_type" type="col"/>
-                <field name="unit_amount" type="measure" widget="timesheet_uom"/>
-                <field name="amount" string="Timesheet Costs"/>
-            </pivot>
-        </field>
     </record>
 
     <record id="timesheet_action_view_report_by_billing_rate_form" model="ir.actions.act_window.view">

@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
+
 from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.osv import expression
 from odoo.exceptions import ValidationError, UserError
-from odoo.tools import format_amount, float_is_zero, formatLang
 
 # YTI PLEASE SPLIT ME
 class Project(models.Model):
@@ -314,46 +315,8 @@ class Project(models.Model):
         return {
             **panel_data,
             'analytic_account_id': self.analytic_account_id.id,
-            'sold_items': self._get_sold_items(),
             'profitability_items': self._get_profitability_items(),
         }
-
-    def _get_sale_order_lines(self):
-        sale_orders = self._get_sale_orders()
-        return self.env['sale.order.line'].search([('order_id', 'in', sale_orders.ids), ('is_service', '=', True), ('is_downpayment', '=', False)], order='id asc')
-
-    def _get_sold_items(self):
-        sols = self._get_sale_order_lines()
-        number_sale_orders = len(sols.order_id)
-        sold_items = {
-            'allow_billable': self.allow_billable,
-            'data': [],
-            'number_sols': len(sols),
-            'total_sold': 0,
-            'effective_sold': 0,
-            'company_unit_name': self.env.company.timesheet_encode_uom_id.name
-        }
-        product_uom_unit = self.env.ref('uom.product_uom_unit')
-        for sol in sols:
-            name = [x[1] for x in sol.name_get()] if number_sale_orders > 1 else sol.name
-            qty_delivered = sol.product_uom._compute_quantity(sol.qty_delivered, self.env.company.timesheet_encode_uom_id, raise_if_failure=False)
-            product_uom_qty = sol.product_uom._compute_quantity(sol.product_uom_qty, self.env.company.timesheet_encode_uom_id, raise_if_failure=False)
-            if qty_delivered > 0 or product_uom_qty > 0:
-                sold_items['data'].append({
-                    'name': name,
-                    'value': '%s / %s %s' % (formatLang(self.env, qty_delivered, 1), formatLang(self.env, product_uom_qty, 1), sol.product_uom.name if sol.product_uom == product_uom_unit else self.env.company.timesheet_encode_uom_id.name),
-                    'color': 'red' if qty_delivered > product_uom_qty else 'black'
-                })
-                #We only want to consider hours and days for this calculation, and eventually units if the service policy is not based on milestones
-                if sol.product_uom.category_id == self.env.company.timesheet_encode_uom_id.category_id or (sol.product_uom == product_uom_unit and sol.product_id.service_policy != 'delivered_manual'):
-                    sold_items['total_sold'] += product_uom_qty
-                    sold_items['effective_sold'] += qty_delivered
-        remaining = sold_items['total_sold'] - sold_items['effective_sold']
-        sold_items['remaining'] = {
-            'value': remaining,
-            'color': 'red' if remaining < 0 else 'black',
-        }
-        return sold_items
 
     def _get_sale_order_items_query(self, domain_per_model=None):
         if domain_per_model is None:
@@ -406,6 +369,7 @@ class Project(models.Model):
         }
 
     def _get_profitability_common(self):
+        # FIXME: used in project update model
         self.ensure_one()
         result = {
             'costs': 0.0,

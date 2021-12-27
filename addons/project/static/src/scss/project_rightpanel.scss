@@ -47,6 +47,17 @@ html .o_web_client > .o_action_manager > .o_action > .o_content > .o_controller_
             padding-top: 0px;
         }
 
+        .o_rightpanel_button {
+            cursor: pointer;
+            font-size: small;
+            color: $o-brand-primary;
+
+            &:hover {
+                color: #001d1f;
+                text-decoration: none;
+            }
+        }
+
         .o_rightpanel_header {
             padding: $o-rightpanel-p-tiny 0 $o-rightpanel-p-small 0;
 
@@ -58,10 +69,7 @@ html .o_web_client > .o_action_manager > .o_action > .o_content > .o_controller_
             }
 
             .o_rightpanel_button {
-                cursor: pointer;
                 font-weight: bold;
-                font-size: small;
-                color: $o-brand-primary;
                 float: right;
                 padding-top: $o-rightpanel-p-tiny;
             }
@@ -155,7 +163,7 @@ html .o_web_client > .o_action_manager > .o_action > .o_content > .o_controller_
                     margin-top: -4px;
                     margin-bottom: 0px;
                 }
-                
+
                 .oe_stat_button {
                     flex-basis: 33.333333%;
                     border-width: 1px;
@@ -175,7 +183,7 @@ html .o_web_client > .o_action_manager > .o_action > .o_content > .o_controller_
                 @media screen and (max-width: 1600px) {
                     .oe_stat_button {
                         flex-basis: 50%;
-                    
+
                         &:nth-child(2n){
                             border-right-width: 0px;
                         }

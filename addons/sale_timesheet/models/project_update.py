@@ -29,7 +29,12 @@ class ProjectUpdate(models.Model):
             return {}
         services = []
         total_sold, total_effective, total_remaining = 0, 0, 0
-        sols = project._get_sale_order_lines()
+        sols = self.env['sale.order.line'].search(
+            project._get_sale_items_domain([
+                ('is_service', '=', True),
+                ('is_downpayment', '=', False),
+            ]),
+        )
         name_by_sol = dict(sols.name_get())
         product_uom_unit = self.env.ref('uom.product_uom_unit')
         for sol in sols:
