@@ -40,24 +40,6 @@ class Project(models.Model):
         buttons = super(Project, self)._get_stat_buttons()
         if self.user_has_groups('mrp.group_mrp_user'):
             buttons.extend([{
-                'icon': 'wrench',
-                'text': _lt('Manufacturing Orders'),
-                'number': self.production_count,
-                'action_type': 'object',
-                'action': 'action_view_mrp_production',
-                'show': self.production_count > 0,
-                'sequence': 39,
-            },
-            {
-                'icon': 'cog',
-                'text': _lt('Work Orders'),
-                'number': self.workorder_count,
-                'action_type': 'object',
-                'action': 'action_view_workorder',
-                'show': self.workorder_count > 0,
-                'sequence': 42,
-            },
-            {
                 'icon': 'flask',
                 'text': _lt('Bills of Materials'),
                 'number': self.bom_count,

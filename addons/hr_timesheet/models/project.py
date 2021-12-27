@@ -3,7 +3,7 @@
 
 from collections import defaultdict
 
-from odoo import models, fields, api, _, _lt
+from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
 
 
@@ -243,24 +243,6 @@ class Project(models.Model):
         uom_from = self.company_id.project_time_mode_id
         uom_to = self.env.company.timesheet_encode_uom_id
         return round(uom_from._compute_quantity(time, uom_to, raise_if_failure=False), 2)
-
-    # ----------------------------
-    #  Project Updates
-    # ----------------------------
-
-    def _get_stat_buttons(self):
-        buttons = super(Project, self)._get_stat_buttons()
-        if self.user_has_groups('hr_timesheet.group_hr_timesheet_user'):
-            buttons.append({
-                'icon': 'clock-o',
-                'text': _lt('Recorded'),
-                'number': '%s %s' % (self.total_timesheet_time, self.env.company.timesheet_encode_uom_id.name),
-                'action_type': 'object',
-                'action': 'action_show_timesheets_by_employee_invoice_type',
-                'show': self.allow_timesheets,
-                'sequence': 6,
-            })
-        return buttons
 
 
 class Task(models.Model):

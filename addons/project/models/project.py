@@ -10,7 +10,6 @@ from random import randint
 
 from odoo import api, Command, fields, models, tools, SUPERUSER_ID, _, _lt
 from odoo.exceptions import UserError, ValidationError, AccessError
-from odoo.tools import format_amount
 from odoo.osv.expression import OR, AND
 from odoo.tools.misc import get_lang
 
@@ -787,16 +786,6 @@ class Project(models.Model):
                 }),
                 'show': True,
                 'sequence': 66,
-            })
-        if self.user_has_groups('analytic.group_analytic_accounting'):
-            buttons.append({
-                'icon': 'usd',
-                'text': _lt('Gross Margin'),
-                'number': format_amount(self.env, self.analytic_account_balance, self.company_id.currency_id),
-                'action_type': 'object',
-                'action': 'action_view_analytic_account_entries',
-                'show': bool(self.analytic_account_id),
-                'sequence': 24,
             })
         return buttons
 

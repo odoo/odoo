@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _, _lt
+from odoo import api, fields, models, _
 
 class Project(models.Model):
     _inherit = 'project.project'
@@ -39,21 +39,3 @@ class Project(models.Model):
             action["views"] = [[False, 'form']]
             action["res_id"] = expenses.id
         return action
-
-    # ----------------------------
-    #  Project Updates
-    # ----------------------------
-
-    def _get_stat_buttons(self):
-        buttons = super(Project, self)._get_stat_buttons()
-        if self.user_has_groups('hr_expense.group_hr_expense_team_approver'):
-            buttons.append({
-                'icon': 'money',
-                'text': _lt('Expenses'),
-                'number': self.expenses_count,
-                'action_type': 'object',
-                'action': 'action_open_project_expenses',
-                'show': self.expenses_count > 0,
-                'sequence': 33,
-            })
-        return buttons
