@@ -26,7 +26,6 @@ from pickle import load
 from time import time
 
 from werkzeug.datastructures import CallbackDict
-from werkzeug.posixemulation import rename
 
 _sha1_re = re.compile(r"^[a-f0-9]{40}$")
 
@@ -198,7 +197,7 @@ class FilesystemSessionStore(SessionStore):
         finally:
             f.close()
         try:
-            rename(tmp, fn)
+            os.rename(tmp, fn)
             os.chmod(fn, self.mode)
         except (IOError, OSError):
             pass
