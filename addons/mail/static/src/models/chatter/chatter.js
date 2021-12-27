@@ -118,10 +118,10 @@ registerModel({
          * @param {Event} ev
          */
         onScrollScrollPanel(ev) {
-            if (!this.threadView || !this.threadView.component) {
+            if (!this.threadView || !this.threadView.messageListComponent) {
                 return;
             }
-            this.threadView.component.onScroll(ev);
+            this.threadView.messageListComponent.onScroll(ev);
         },
         async refresh() {
             if (this.hasActivities) {

@@ -78,7 +78,7 @@ export class ChatWindow extends Component {
         if (
             !this.chatWindow ||
             !this.chatWindow.threadView ||
-            !this.chatWindow.threadView.component ||
+            !this.chatWindow.threadView.messageListComponent ||
             !this.chatWindow.threadViewer
         ) {
             return;
@@ -92,10 +92,10 @@ export class ChatWindow extends Component {
             return;
         }
         this.chatWindow.threadViewer.saveThreadCacheScrollHeightAsInitial(
-            this.chatWindow.threadView.component.getScrollHeight()
+            this.chatWindow.threadView.messageListComponent.getScrollHeight()
         );
         this.chatWindow.threadViewer.saveThreadCacheScrollPositionsAsInitial(
-            this.chatWindow.threadView.component.getScrollTop()
+            this.chatWindow.threadView.messageListComponent.getScrollTop()
         );
     }
 

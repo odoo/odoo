@@ -4,7 +4,6 @@ import { useComponentToModel } from '@mail/component_hooks/use_component_to_mode
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
 
 const { Component } = owl;
-const { useRef } = owl.hooks;
 
 export class ThreadView extends Component {
 
@@ -14,50 +13,11 @@ export class ThreadView extends Component {
     setup() {
         super.setup();
         useComponentToModel({ fieldName: 'component', modelName: 'ThreadView', propNameAsRecordLocalId: 'threadViewLocalId' });
-        /**
-         * Reference of the message list. Useful to determine scroll positions.
-         */
-        this._messageListRef = useRef('messageList');
     }
 
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
-
-    /**
-     * Get the scroll height in the message list.
-     *
-     * @returns {integer|undefined}
-     */
-    getScrollHeight() {
-        if (!this._messageListRef.comp) {
-            return undefined;
-        }
-        return this._messageListRef.comp.getScrollHeight();
-    }
-
-    /**
-     * Get the scroll position in the message list.
-     *
-     * @returns {integer|undefined}
-     */
-    getScrollTop() {
-        if (!this._messageListRef.comp) {
-            return undefined;
-        }
-        return this._messageListRef.comp.getScrollTop();
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    onScroll(ev) {
-        if (!this._messageListRef.comp) {
-            return;
-        }
-        this._messageListRef.comp.onScroll(ev);
-    }
 
     /**
      * @returns {ThreadView}

@@ -405,6 +405,10 @@ registerModel({
          * current partner in the currently displayed thread cache.
          */
         lastVisibleMessage: many2one('Message'),
+        /**
+         * States the OWL MessageList component of this thread view
+         */
+        messageListComponent: attr(),
         messages: many2many('Message', {
             related: 'threadCache.messages',
         }),
