@@ -24,14 +24,16 @@
                             <p t-field="o.package_type_id.name"/>
                         </div>
                     </div>
-                    <table class="table table-sm" style="border-bottom: 0px solid white !important;">
+                    <table class="table table-sm table-striped" style="border-bottom: 0px solid white !important;">
                         <t t-set="has_serial_number" t-value="o.quant_ids.mapped('lot_id')" />
+                        <t t-set="has_ean_barcode" t-value="env['ir.actions.report'].datamatrix_available() and any(valid_ean for valid_ean in o.quant_ids.product_id.mapped('valid_ean'))" />
                         <thead>
                             <tr>
                                 <th>Product</th>
                                 <th name="th_quantity" class="text-right">Quantity</th>
                                 <th name="th_uom" groups="uom.group_uom"/>
                                 <th name="th_serial" class="text-right" t-if="has_serial_number">Lot/Serial Number</th>
+                                <th name="th_barcode" class="text-right" t-if="has_ean_barcode"/>
                             </tr>
                         </thead>
                         <tbody>
@@ -47,6 +49,15 @@
                                 </td>
                                 <td class="text-right" t-if="has_serial_number">
                                     <t t-if="l.lot_id"><span t-field="l.lot_id.name"/></t>
+                                </td>
+                                <td class="text-right" t-if="has_ean_barcode">
+                                    <t t-if="l.product_id.valid_ean">
+                                        <t t-set="product_barcode" t-value="'01' + '0' * (14 - len(l.product_id.barcode)) + l.product_id.barcode"/>
+                                        <!-- TODO: lot/sn ALWAYS has to be last part of barcode since left padding '0's = different sn/lot name match when scanning => fix when FNC1 can be used,  -->
+                                        <t name="product_barcode_lot_datamatrix" t-if="l.product_id.tracking == 'lot' and l.lot_id" t-set="product_barcode" t-value="product_barcode + '10' + l.lot_id.name"/>
+                                        <t t-elif="l.product_id.tracking == 'serial' and l.lot_id" t-set="product_barcode" t-value="product_barcode + '21' +  l.lot_id.name"/>
+                                        <span t-out="product_barcode" t-options="{'widget': 'barcode', 'symbology': 'DataMatrix', 'width': 45, 'height': 45}"/>
+                                    </t>
                                 </td>
                             </tr>
                         </tbody>

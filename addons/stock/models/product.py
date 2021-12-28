@@ -101,11 +101,19 @@ class Product(models.Model):
     storage_category_capacity_ids = fields.One2many('stock.storage.category.capacity', 'product_id', 'Storage Category Capacity')
     show_on_hand_qty_status_button = fields.Boolean(compute='_compute_show_qty_status_button')
     show_forecasted_qty_status_button = fields.Boolean(compute='_compute_show_qty_status_button')
+    valid_ean = fields.Boolean('Barcode is valid EAN', compute='_compute_valid_ean')
 
     def _compute_show_qty_status_button(self):
         for product in self:
             product.show_on_hand_qty_status_button = product.product_tmpl_id.show_on_hand_qty_status_button
             product.show_forecasted_qty_status_button = product.product_tmpl_id.show_forecasted_qty_status_button
+
+    @api.depends('barcode')
+    def _compute_valid_ean(self):
+        self.valid_ean = False
+        for product in self:
+            if product.barcode:
+                product.valid_ean = self.env['barcode.nomenclature'].check_encoding(product.barcode.rjust(14, '0'), 'gtin14')
 
     @api.depends('stock_move_ids.product_qty', 'stock_move_ids.state')
     @api.depends_context(
