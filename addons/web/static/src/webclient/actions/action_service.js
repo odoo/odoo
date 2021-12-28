@@ -14,7 +14,7 @@ import { View } from "@web/views/view";
 import { ActionDialog } from "./action_dialog";
 import { CallbackRecorder } from "./action_hook";
 
-const { Component, useRef, useSubEnv, xml } = owl;
+const { Component, useSubEnv, xml } = owl;
 
 const actionHandlersRegistry = registry.category("action_handlers");
 const actionRegistry = registry.category("actions");
@@ -73,9 +73,7 @@ export class InvalidButtonParamsError extends Error {}
 const CTX_KEY_REGEX = /^(?:(?:default_|search_default_|show_).+|.+_view_ref|group_by|group_by_no_leaf|active_id|active_ids|orderedBy)$/;
 
 // only register this template once for all dynamic classes ControllerComponent
-const ControllerComponentTemplate = xml`<t t-component="Component" t-props="props"
-    t-ref="component"
-/>`;
+const ControllerComponentTemplate = xml`<t t-component="Component" t-props="props"/>`;
 
 function makeActionManager(env) {
     const keepLast = new KeepLast();
@@ -551,7 +549,6 @@ function makeActionManager(env) {
         class ControllerComponent extends Component {
             setup() {
                 this.Component = controller.Component;
-                this.componentRef = useRef("component");
                 this.titleService = useService("title");
                 useDebugCategory("action", { action });
                 useSubEnv({ config: controller.config });
