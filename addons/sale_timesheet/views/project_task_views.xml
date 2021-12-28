@@ -153,7 +153,7 @@
                     <field name="so_line" readonly="1" attrs="{'column_invisible': [('parent.allow_billable', '=', False)]}" context="{'with_remaining_hours': True}" optional="hide"/>
                 </xpath>
                 <xpath expr="//field[@name='timesheet_ids']/tree" position="inside">
-                    <field name="non_allow_billable" attrs="{'column_invisible': ['|', '&amp;', '&amp;', '|', ('parent.bill_type', '!=', 'customer_project'), ('parent.pricing_type', '!=', 'employee_rate'), ('parent.timesheet_product_id', '=', False), ('parent.sale_line_id', '=', False), '&amp;', ('parent.bill_type', '=', 'customer_project'), ('parent.pricing_type', '=', 'employee_rate')]}" invisible="1"/>
+                    <field name="non_allow_billable" invisible="1"/>
                 </xpath>
                 <xpath expr="//field[@name='remaining_hours']" position="after">
                     <field name="remaining_hours_available" invisible="1"/>
