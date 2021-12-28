@@ -188,7 +188,7 @@ class ProductionLot(models.Model):
             })
         return action
 
-    def _find_delivery_ids_by_lot(self, lot_path=None):
+    def _find_delivery_ids_by_lot(self, lot_path=None, delivery_by_lot=None):
         if lot_path is None:
             lot_path = set()
 
@@ -198,7 +198,8 @@ class ProductionLot(models.Model):
             '|', ('picking_code', '=', 'outgoing'), ('produce_line_ids', '!=', False)
         ]
         move_lines = self.env['stock.move.line'].search(domain)
-        delivery_by_lot = dict()
+        if delivery_by_lot is None:
+            delivery_by_lot = dict()
         for lot in self:
             delivery_ids = set()
             if lot.id in lot_path:
@@ -208,7 +209,7 @@ class ProductionLot(models.Model):
                     # Do the same process for lot_id contained in produce_line_ids,
                     # to fetch the end product deliveries
                     lot_path.add(lot.id)
-                    for delivery_ids_set in line.produce_line_ids.lot_id._find_delivery_ids_by_lot(lot_path=lot_path).values():
+                    for delivery_ids_set in line.produce_line_ids.lot_id._find_delivery_ids_by_lot(lot_path=lot_path, delivery_by_lot=delivery_by_lot).values():
                         delivery_ids.update(delivery_ids_set)
                 else:
                     delivery_ids.add(line.picking_id.id)
