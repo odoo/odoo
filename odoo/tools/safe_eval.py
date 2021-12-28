@@ -70,6 +70,8 @@ _CONST_OPCODES = set(opmap[x] for x in [
     # until Python 3.5, literal maps are compiled to creating an empty map
     # (pre-sized) then filling it key by key
     'STORE_MAP',
+    # 3.9
+    'LIST_EXTEND', 'SET_UPDATE',
 ] if x in opmap)
 
 # operations on literal values
@@ -88,6 +90,9 @@ _EXPR_OPCODES = _CONST_OPCODES.union(set(opmap[x] for x in [
     # comprehensions
     'LIST_APPEND', 'MAP_ADD', 'SET_ADD',
     'COMPARE_OP',
+    # specialised comparisons
+    'IS_OP', 'CONTAINS_OP',
+    'DICT_MERGE', 'DICT_UPDATE',
 ] if x in opmap))
 
 _SAFE_OPCODES = _EXPR_OPCODES.union(set(opmap[x] for x in [
@@ -111,6 +116,7 @@ _SAFE_OPCODES = _EXPR_OPCODES.union(set(opmap[x] for x in [
     'RAISE_VARARGS', 'LOAD_NAME', 'STORE_NAME', 'DELETE_NAME', 'LOAD_ATTR',
     'LOAD_FAST', 'STORE_FAST', 'DELETE_FAST', 'UNPACK_SEQUENCE',
     'LOAD_GLOBAL', # Only allows access to restricted globals
+    'RERAISE', 'JUMP_IF_NOT_EXC_MATCH',
 ] if x in opmap))
 
 _logger = logging.getLogger(__name__)
