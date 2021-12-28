@@ -129,7 +129,7 @@
                             <td t-esc="line['receipt_date'] or ''"
                                 t-attf-class="#{line['is_late'] and 'o_grid_warning'}"/>
                             <td t-if="docs['multiple_product']" t-esc="line['product']['display_name']"/>
-                            <td class="text-right"><t t-if="not line['replenishment_filled']">- </t><t t-esc="line['quantity']"/></td>
+                            <td class="text-right"><t t-if="not line['replenishment_filled']">- </t><t t-esc="line['quantity']" t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'/></td>
                             <td t-esc="line['uom_id'].name" groups="uom.group_uom"/>
                             <td t-attf-class="#{not line['replenishment_filled'] and 'o_grid_warning'}">
                                 <a t-if="line['document_out']"
