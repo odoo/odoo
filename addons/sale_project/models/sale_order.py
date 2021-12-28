@@ -356,7 +356,7 @@ class SaleOrderLine(models.Model):
             to this sale order line, or the analytic account of the project which uses this sale order line, if it exists.
         """
         values = super(SaleOrderLine, self)._prepare_invoice_line(**optional_values)
-        if not values['analytic_account_id']:
+        if not values.get('analytic_account_id'):
             if self.task_id.analytic_account_id:
                 values['analytic_account_id'] = self.task_id._get_task_analytic_account_id().id
             elif self.project_id.analytic_account_id:

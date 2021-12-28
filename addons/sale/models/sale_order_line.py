@@ -546,10 +546,11 @@ class SaleOrderLine(models.Model):
             'discount': self.discount,
             'price_unit': self.price_unit,
             'tax_ids': [(6, 0, self.tax_id.ids)],
-            'analytic_account_id': self.order_id.analytic_account_id.id,
             'analytic_tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
             'sale_line_ids': [(4, self.id)],
         }
+        if self.order_id.analytic_account_id:
+            res['analytic_account_id'] = self.order_id.analytic_account_id.id
         if optional_values:
             res.update(optional_values)
         if self.display_type:
