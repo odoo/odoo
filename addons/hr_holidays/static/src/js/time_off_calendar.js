@@ -96,6 +96,7 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
                     context: {
                         'default_date_from': moment().format('YYYY-MM-DD'),
                         'default_date_to': moment().add(1, 'days').format('YYYY-MM-DD'),
+                        'lang': self.context.lang,
                     },
                     title: _t("New time off"),
                     disable_multiple_selection: true,
@@ -125,6 +126,7 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
                     view_id: ids,
                     context: {
                         'default_state': 'confirm',
+                        'lang': self.context.lang,
                     },
                     title: _t("New Allocation"),
                     disable_multiple_selection: true,
