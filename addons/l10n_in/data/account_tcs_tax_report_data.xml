@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="tcs_report" model="account.tax.report">
+        <field name="name">TCS Report</field>
+        <field name="country_id" ref="base.in"/>
+        <field name="root_line_ids">
+            <record id="tcs_report_category_section_206c_1" model="account.tax.report.line">
+                <field name="name">Section 206C(1)</field>
+                <field name="sequence">1</field>
+                <field name="children_line_ids">
+                    <record id="tcs_report_line_section_206c_1_alfhc" model="account.tax.report.line">
+                        <field name="name">Alcoholic Liquor for human consumption</field>
+                        <field name="tag_name">206C(1) Alcoholic Liquor</field>
+                        <field name="sequence">1</field>
+                    </record>
+                    <record id="tcs_report_line_section_206c_1_tl" model="account.tax.report.line">
+                        <field name="name">Tendu leaves</field>
+                        <field name="tag_name">206C(1) Tendu leaves</field>
+                        <field name="sequence">2</field>
+                    </record>
+                    <record id="tcs_report_line_section_206c_1_touafl" model="account.tax.report.line">
+                        <field name="name">Timber obtained under a forest lease</field>
+                        <field name="tag_name">206C(1) Timber (forest lease)</field>
+                        <field name="sequence">3</field>
+                    </record>
+                    <record id="tcs_report_line_section_206c_1_tobaotuafl" model="account.tax.report.line">
+                        <field name="name">Timber obtained by any mode other than under a forest lease</field>
+                        <field name="tag_name">206C(1) Timber (other than under a forest lease)</field>
+                        <field name="sequence">4</field>
+                    </record>
+                    <record id="tcs_report_line_section_206c_1_aofpnbtotl" model="account.tax.report.line">
+                        <field name="name">Any other forest produce not being timber or tendu leaves</field>
+                        <field name="tag_name">206C(1) other forest produce</field>
+                        <field name="sequence">5</field>
+                    </record>
+                    <record id="tcs_report_line_section_206c_1_s" model="account.tax.report.line">
+                        <field name="name">Scrap</field>
+                        <field name="tag_name">206C(1) Scrap</field>
+                        <field name="sequence">6</field>
+                    </record>
+                    <record id="tcs_report_line_section_206c_1_mbcoloio" model="account.tax.report.line">
+                        <field name="name">Minrals, being coal or lignite or iron ore</field>
+                        <field name="tag_name">206C(1) Minrals</field>
+                        <field name="sequence">7</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tcs_report_category_section_206c_1c" model="account.tax.report.line">
+                <field name="name">Section 206C(1C)</field>
+                <field name="sequence">2</field>
+                <field name="children_line_ids">
+                    <record id="tcs_report_line_section_206c_1c_pl" model="account.tax.report.line">
+                        <field name="name">Parking lot</field>
+                        <field name="tag_name">206C(1C) Parking lot</field>
+                        <field name="sequence">8</field>
+                    </record>
+                    <record id="tcs_report_line_section_206c_1c_tp" model="account.tax.report.line">
+                        <field name="name">Toll plaza</field>
+                        <field name="tag_name">206C(1C) Toll plaza</field>
+                        <field name="sequence">9</field>
+                    </record>
+                    <record id="tcs_report_line_section_206c_1c_maq" model="account.tax.report.line">
+                        <field name="name">Mining and quarrying</field>
+                        <field name="tag_name">206C(1C) Mining and quarrying</field>
+                        <field name="sequence">10</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tcs_report_category_section_206c_1f" model="account.tax.report.line">
+                <field name="name">Section 206C(1F)</field>
+                <field name="sequence">3</field>
+                <field name="children_line_ids">
+                    <record id="tcs_report_line_section_206c_1f_mv" model="account.tax.report.line">
+                        <field name="name">Motor Vehicle</field>
+                        <field name="tag_name">206C(1F)</field>
+                        <field name="sequence">11</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tcs_report_category_section_206c_1g" model="account.tax.report.line">
+                <field name="name">Section 206C(1G)</field>
+                <field name="sequence">4</field>
+                <field name="children_line_ids">
+                    <record id="tcs_report_line_section_206c_1g_som" model="account.tax.report.line">
+                        <field name="name">Sum of money (above 7 lakhs) for remittance out of India</field>
+                        <field name="tag_name">206C(1G) remittance out of India</field>
+                        <field name="sequence">12</field>
+                    </record>
+                    <record id="tcs_report_line_section_206c_1g_soaotpp" model="account.tax.report.line">
+                        <field name="name">Seller of an overseas tour program package</field>
+                        <field name="tag_name">206C(1G) overseas tour program</field>
+                        <field name="sequence">13</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tcs_report_category_section_206c_1h" model="account.tax.report.line">
+                <field name="name">Section 206C(1H)</field>
+                <field name="sequence">5</field>
+                <field name="children_line_ids">
+                    <record id="tcs_report_line_section_206c_1h_sog" model="account.tax.report.line">
+                        <field name="name">Sale of Goods</field>
+                        <field name="tag_name">206C(1H)</field>
+                        <field name="sequence">14</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>
