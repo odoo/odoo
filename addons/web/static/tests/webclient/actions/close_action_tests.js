@@ -1,8 +1,15 @@
 /** @odoo-module **/
 
 import testUtils from "web.test_utils";
-import { click, legacyExtraNextTick, nextTick } from "../../helpers/utils";
+import { click, legacyExtraNextTick, nextTick, patchWithCleanup } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData } from "./../helpers";
+import FormController from "web.FormController";
+import { makeFakeUserService } from "@web/../tests/helpers/mock_services";
+import ListController from "web.ListController";
+import { PivotView } from "@web/views/pivot/pivot_view";
+import { registry } from "@web/core/registry";
+
+const serviceRegistry = registry.category("services");
 
 let serverData;
 
@@ -94,6 +101,13 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("history back calls on_close handler of dialog action", async function (assert) {
         assert.expect(4);
+        let controller;
+        patchWithCleanup(FormController.prototype, {
+            init() {
+                this._super(...arguments);
+                controller = this;
+            },
+        });
         const webClient = await createWebClient({ serverData });
         function onClose() {
             assert.step("on_close");
@@ -101,8 +115,7 @@ QUnit.module("ActionManager", (hooks) => {
         // open a new dialog form
         await doAction(webClient, 5, { onClose });
         assert.containsOnce(webClient.el, ".modal");
-        const ev = new Event("history-back", { bubbles: true, cancelable: true });
-        webClient.el.querySelector(".o_view_controller").dispatchEvent(ev);
+        controller.trigger_up("history_back");
         assert.verifySteps(["on_close"], "should have called the on_close handler");
         await nextTick();
         assert.containsNone(webClient.el, ".modal");
@@ -110,6 +123,13 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("history back called within on_close", async function (assert) {
         assert.expect(7);
+        let controller;
+        patchWithCleanup(ListController.prototype, {
+            init() {
+                this._super(...arguments);
+                controller = this;
+            },
+        });
         const webClient = await createWebClient({ serverData });
 
         await doAction(webClient, 1);
@@ -118,8 +138,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(webClient, ".o_list_view");
 
         function onClose() {
-            const ev = new Event("history-back", { bubbles: true, cancelable: true });
-            webClient.el.querySelector(".o_view_controller").dispatchEvent(ev);
+            controller.trigger_up("history_back");
             assert.step("on_close");
         }
         // open a new dialog form
@@ -138,6 +157,13 @@ QUnit.module("ActionManager", (hooks) => {
         "history back calls on_close handler of dialog action with 2 breadcrumbs",
         async function (assert) {
             assert.expect(7);
+            let controller;
+            patchWithCleanup(ListController.prototype, {
+                init() {
+                    this._super(...arguments);
+                    controller = this;
+                },
+            });
             const webClient = await createWebClient({ serverData });
             await doAction(webClient, 1); // kanban
             await doAction(webClient, 3); // list
@@ -149,12 +175,51 @@ QUnit.module("ActionManager", (hooks) => {
             await doAction(webClient, 5, { onClose });
             assert.containsOnce(webClient.el, ".modal");
             assert.containsOnce(webClient.el, ".o_list_view");
-            const ev = new Event("history-back", { bubbles: true, cancelable: true });
-            webClient.el.querySelector(".o_view_controller").dispatchEvent(ev);
+            controller.trigger_up("history_back");
             assert.verifySteps(["on_close"], "should have called the on_close handler");
             await nextTick();
             await legacyExtraNextTick();
             assert.containsOnce(webClient.el, ".o_list_view");
+            assert.containsNone(webClient.el, ".modal");
+        }
+    );
+
+    QUnit.test(
+        "history back calls on_close handler of dialog action with 2 breadcrumbs (2)",
+        async function (assert) {
+            assert.expect(7);
+            let pivot;
+            patchWithCleanup(PivotView.prototype, {
+                setup() {
+                    this._super(...arguments);
+                    pivot = this;
+                },
+            });
+            serverData.views["partner,false,pivot"] = "<pivot/>";
+            serviceRegistry.add("user", makeFakeUserService());
+            const webClient = await createWebClient({ serverData });
+            await doAction(webClient, 1); // kanban
+            await doAction(webClient, {
+                id: 3,
+                xml_id: "action_3",
+                name: "Partners",
+                res_model: "partner",
+                type: "ir.actions.act_window",
+                views: [[false, "pivot"]],
+            }); // pivot
+            assert.containsOnce(webClient.el, ".o_pivot_view");
+            function onClose() {
+                assert.step("on_close");
+            }
+            // open a new dialog form
+            await doAction(webClient, 5, { onClose });
+            assert.containsOnce(webClient.el, ".modal");
+            assert.containsOnce(webClient.el, ".o_pivot_view");
+            pivot.env.config.historyBack();
+            assert.verifySteps(["on_close"], "should have called the on_close handler");
+            await nextTick();
+            await legacyExtraNextTick();
+            assert.containsOnce(webClient.el, ".o_pivot_view");
             assert.containsNone(webClient.el, ".modal");
         }
     );
