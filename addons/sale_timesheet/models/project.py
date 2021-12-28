@@ -175,9 +175,8 @@ class Project(models.Model):
             project.sale_line_id = sol or project.sale_line_employee_ids.sale_line_id[:1]  # get the first SOL containing in the employee mappings if no sol found in the search
 
     def _get_all_sales_orders(self):
-        if self.allow_billable:
-            return super()._get_all_sales_orders() | self.sale_line_employee_ids.sale_line_id.order_id
-        return self.env['sale.order']
+        # TODO: Remove me in master
+        return super()._get_all_sales_orders()
 
     @api.depends('sale_line_employee_ids.sale_line_id', 'allow_billable')
     def _compute_sale_order_count(self):
@@ -304,7 +303,7 @@ class Project(models.Model):
         }
 
     def _get_sale_order_lines(self):
-        sale_orders = self.sale_order_id | self.tasks.sale_order_id
+        sale_orders = self._get_sale_orders()
         return self.env['sale.order.line'].search([('order_id', 'in', sale_orders.ids), ('is_service', '=', True), ('is_downpayment', '=', False)], order='id asc')
 
     def _get_sold_items(self):
@@ -339,6 +338,38 @@ class Project(models.Model):
             'color': 'red' if remaining < 0 else 'black',
         }
         return sold_items
+
+    def _get_sale_order_items_query(self, domain_per_model=None):
+        billable_project_domain = [('allow_billable', '=', True)]
+        if domain_per_model is None:
+            domain_per_model = {'project.project': billable_project_domain, 'project.task': billable_project_domain}
+        else:
+            domain_per_model['project.project'] = expression.AND([
+                domain_per_model.get('project.project', []),
+                billable_project_domain,
+            ])
+            domain_per_model['project.task'] = expression.AND([
+                domain_per_model.get('project.task', []),
+                billable_project_domain,
+            ])
+        query = super()._get_sale_order_items_query(domain_per_model)
+
+        EmployeeMapping = self.env['project.sale.line.employee.map']
+        employee_mapping_domain = [('project_id', 'in', self.ids), ('project_id.allow_billable', '=', True), ('sale_line_id', '!=', False)]
+        if EmployeeMapping._name in domain_per_model:
+            employee_mapping_domain = expression.AND([employee_mapping_domain, domain_per_model[EmployeeMapping._name]])
+        employee_mapping_query = EmployeeMapping._where_calc(employee_mapping_domain)
+        EmployeeMapping._apply_ir_rules(employee_mapping_query, 'read')
+        employee_mapping_query_str, employee_mapping_params = employee_mapping_query.select(
+            f'{EmployeeMapping._table}.project_id AS id',
+            f'{EmployeeMapping._table}.sale_line_id',
+        )
+        query._tables['project_sale_order_item'] = ' UNION '.join([
+            query._tables['project_sale_order_item'],
+            employee_mapping_query_str,
+        ])
+        query._where_params += employee_mapping_params
+        return query
 
     def _get_profitability_items(self):
         if not self.user_has_groups('project.group_project_manager'):
