@@ -185,12 +185,14 @@ export const TimeOffCalendarController = CalendarController.extend({
         return {
             'default_date_from': moment().format('YYYY-MM-DD'),
             'default_date_to': moment().add(1, 'days').format('YYYY-MM-DD'),
+            'lang': this.context.lang,
         };
     },
 
     _getAllocationContext() {
         return {
             'default_state': 'confirm',
+            'lang': this.context.lang,
         };
     },
 
