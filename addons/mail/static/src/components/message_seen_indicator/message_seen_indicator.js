@@ -21,9 +21,12 @@ export class MessageSeenIndicator extends Component {
             return this.env._t("Seen by Everyone");
         }
         if (this.messageSeenIndicator.hasSomeoneSeen) {
-            const partnersThatHaveSeen = this.messageSeenIndicator.partnersThatHaveSeen.map(
-                partner => partner.name
-            );
+            const partnersThatHaveSeen = this.messageSeenIndicator.partnersThatHaveSeen.map(partner => {
+                if (this.message.originThread) {
+                    return this.message.originThread.getMemberName(partner);
+                }
+                return partner.nameOrDisplayName;
+            });
             if (partnersThatHaveSeen.length === 1) {
                 return _.str.sprintf(
                     this.env._t("Seen by %s"),
@@ -47,9 +50,12 @@ export class MessageSeenIndicator extends Component {
             return this.env._t("Received by Everyone");
         }
         if (this.messageSeenIndicator.hasSomeoneFetched) {
-            const partnersThatHaveFetched = this.messageSeenIndicator.partnersThatHaveFetched.map(
-                partner => partner.name
-            );
+            const partnersThatHaveFetched = this.messageSeenIndicator.partnersThatHaveFetched.map(partner => {
+                if (this.message.originThread) {
+                    return this.message.originThread.getMemberName(partner);
+                }
+                return partner.nameOrDisplayName;
+            });
             if (partnersThatHaveFetched.length === 1) {
                 return _.str.sprintf(
                     this.env._t("Received by %s"),
