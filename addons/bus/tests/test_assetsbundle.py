@@ -47,6 +47,5 @@ class BusWebTests(odoo.tests.HttpCase):
         )
         for (channel, message) in sendones:
             self.assertEqual(channel, 'broadcast')
-            self.assertEqual(len(message), 2)
-            self.assertIn(message.get('name'), bundle_xml_ids)
-            self.assertTrue(isinstance(message.get('name'), str))
+            self.assertEqual(len(message), 1)
+            self.assertTrue(isinstance(message.get('server_version'), str))
