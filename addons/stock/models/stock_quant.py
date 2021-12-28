@@ -1061,6 +1061,8 @@ class QuantPackage(models.Model):
         ], string='Package Use', default='disposable', required=True,
         help="""Reusable boxes are used for batch picking and emptied afterwards to be reused. In the barcode application, scanning a reusable box will add the products in this box.
         Disposable boxes aren't reused, when scanning a disposable box in the barcode application, the contained products are added to the transfer.""")
+    valid_sscc = fields.Boolean('Package name is valid SSCC', compute='_compute_valid_sscc')
+    pack_date = fields.Date('Pack Date', default=fields.Date.today)
 
     @api.depends('quant_ids.package_id', 'quant_ids.location_id', 'quant_ids.company_id', 'quant_ids.owner_id', 'quant_ids.quantity', 'quant_ids.reserved_quantity')
     def _compute_package_info(self):
@@ -1075,6 +1077,13 @@ class QuantPackage(models.Model):
             package.location_id = values['location_id']
             package.company_id = values.get('company_id')
             package.owner_id = values['owner_id']
+
+    @api.depends('name')
+    def _compute_valid_sscc(self):
+        self.valid_sscc = False
+        for package in self:
+            if package.name:
+                package.valid_sscc = self.env['barcode.nomenclature'].check_encoding(package.name, 'sscc')
 
     def _search_owner(self, operator, value):
         if value:
