@@ -1164,6 +1164,7 @@ const InputUserValueWidget = UnitUserValueWidget.extend({
     events: {
         'input input': '_onInputInput',
         'blur input': '_onInputBlur',
+        'change input': '_onUserValueChange',
         'keydown input': '_onInputKeydown',
     },
 
@@ -1215,33 +1216,15 @@ const InputUserValueWidget = UnitUserValueWidget.extend({
         this._onUserValuePreview(ev);
     },
     /**
-     * @private
-     * @param {Event} ev
+     * TODO remove in master
      */
-    _onInputBlur: function (ev) {
-        // Sometimes, an input is focusout for internal reason (like an undo
-        // recording) then focused again manually in the same JS stack
-        // execution. In that case, the blur should not trigger an option
-        // selection as the user did not leave the input. We thus defer the blur
-        // handling to then check that the target is indeed still blurred before
-        // executing the actual option selection.
-        setTimeout(() => {
-            if (ev.currentTarget === document.activeElement) {
-                return;
-            }
-            this._onUserValueChange(ev);
-        });
-    },
+    _onInputBlur: function (ev) {},
     /**
      * @private
      * @param {Event} ev
      */
     _onInputKeydown: function (ev) {
         switch (ev.which) {
-            case $.ui.keyCode.ENTER: {
-                this._onUserValueChange(ev);
-                break;
-            }
             case $.ui.keyCode.UP:
             case $.ui.keyCode.DOWN: {
                 const input = ev.currentTarget;
