@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.tools import html_escape
 
 class ChannelPartner(models.Model):
     _inherit = 'mail.channel.partner'
@@ -148,7 +149,7 @@ class MailChannel(models.Model):
     def _send_history_message(self, pid, page_history):
         message_body = _('No history found')
         if page_history:
-            html_links = ['<li><a href="%s" target="_blank">%s</a></li>' % (page, page) for page in page_history]
+            html_links = ['<li><a href="%s" target="_blank">%s</a></li>' % (html_escape(page), html_escape(page)) for page in page_history]
             message_body = '<span class="o_mail_notification"><ul>%s</ul></span>' % (''.join(html_links))
         self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', pid), {
             'body': message_body,

@@ -151,7 +151,7 @@ class TestTermCount(common.TransactionCase):
     def test_import_from_po_file(self):
         """Test the import from a single po file works"""
         with file_open('test_translation_import/i18n/tlh.po', 'rb') as f:
-            po_file = base64.encodestring(f.read())
+            po_file = base64.encodebytes(f.read())
 
         import_tlh = self.env["base.language.import"].create({
             'name': 'Klingon',
@@ -174,7 +174,7 @@ class TestTermCount(common.TransactionCase):
     def test_lazy_translation(self):
         """Test the import from a single po file works"""
         with file_open('test_translation_import/i18n/tlh.po', 'rb') as f:
-            po_file = base64.encodestring(f.read())
+            po_file = base64.encodebytes(f.read())
 
         import_tlh = self.env["base.language.import"].create({
             'name': 'Klingon',
@@ -204,7 +204,7 @@ class TestTermCount(common.TransactionCase):
     def test_import_from_csv_file(self):
         """Test the import from a single CSV file works"""
         with file_open('test_translation_import/i18n/dot.csv', 'rb') as f:
-            po_file = base64.encodestring(f.read())
+            po_file = base64.encodebytes(f.read())
 
         import_tlh = self.env["base.language.import"].create({
             'name': 'Dothraki',

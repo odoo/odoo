@@ -14,7 +14,7 @@ except ImportError:
     slugify_lib = None
 
 import odoo
-from odoo import api, models, registry, exceptions
+from odoo import api, models, registry, exceptions, http
 from odoo.addons.base.models.ir_http import RequestUID, ModelConverter
 from odoo.addons.base.models.qweb import QWebException
 from odoo.http import request
@@ -187,8 +187,7 @@ def url_for(url_from, lang_code=None, no_rewrite=False):
     # avoid useless check for 1 char URL '/', '#', ... and absolute URL
     if not no_rewrite and url_from and (len(url_from) > 1 or not url_from.startswith('http')):
         path, _, qs = url_from.partition('?')
-        req = request.httprequest
-        router = req.app.get_db_router(request.db).bind('')
+        router = http.root.get_db_router(request.db).bind('')
         try:
             _ = router.match(path, method='POST')
         except werkzeug.exceptions.MethodNotAllowed as e:
@@ -224,7 +223,7 @@ def is_multilang_url(local_url, lang_url_codes=None):
     url = local_url.partition('#')[0].split('?')
     path = url[0]
     query_string = url[1] if len(url) > 1 else None
-    router = request.httprequest.app.get_db_router(request.db).bind('')
+    router = http.root.get_db_router(request.db).bind('')
 
     def is_multilang_func(func):
         return (func and func.routing.get('website', False) and
