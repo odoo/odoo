@@ -180,7 +180,9 @@ class SaleOrder(models.Model):
     user_id = fields.Many2one(
         'res.users', string='Salesperson', index=True, tracking=2,
         compute='_compute_user_id', store=True, readonly=False, precompute=True,
-        domain=lambda self: [('groups_id', 'in', self.env.ref('sales_team.group_sale_salesman').id)])
+        domain=lambda self: "[('groups_id', '=', {}), ('share', '=', False), ('company_ids', '=', company_id)]".format(
+            self.env.ref("sales_team.group_sale_salesman").id
+        ),)
     partner_id = fields.Many2one(
         'res.partner', string='Customer', readonly=False,
         states=READONLY_FIELD_STATES,
