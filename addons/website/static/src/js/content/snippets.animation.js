@@ -824,10 +824,12 @@ registry.backgroundVideo = publicWidget.Widget.extend({
         // YouTube does not allow to auto-play video in mobile devices, so we
         // have to play the video manually.
         if (this.isMobileEnv && this.isYoutubeVideo) {
-            new window.YT.Player(this.iframeID, {
-                events: {
-                    onReady: ev => ev.target.playVideo(),
-                }
+            window.YT.ready(() => {
+                new window.YT.Player(this.iframeID, {
+                    events: {
+                        onReady: ev => ev.target.playVideo(),
+                    }
+                });
             });
         }
     },
