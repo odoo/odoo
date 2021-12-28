@@ -262,3 +262,40 @@ class TestPurchaseOrder(AccountingTestCase):
         picking.move_line_ids.write({'qty_done': 3.66})
         picking.button_validate()
         self.assertEqual(po.order_line.mapped('qty_received'), [4.0], 'Purchase: no conversion error on receipt in different uom"')
+
+    def test_pol_description(self):
+        """
+        Suppose a product with several sellers, all with the same partner. On the purchase order, the product
+        description should be based on the correct seller
+        """
+
+        product = self.env['product.product'].create({
+            'name': 'Super Product',
+            'seller_ids': [(0, 0, {
+                'name': self.partner_id.id,
+                'min_qty': 1,
+                'price': 10,
+                'product_code': 'C01',
+                'product_name': 'Name01',
+                'sequence': 1,
+            }), (0, 0, {
+                'name': self.partner_id.id,
+                'min_qty': 20,
+                'price': 2,
+                'product_code': 'C02',
+                'product_name': 'Name02',
+                'sequence': 2,
+            })]
+        })
+
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_id
+        with po_form.order_line.new() as line:
+            line.product_id = product
+        po = po_form.save()
+        self.assertEqual(po.order_line.name, "[C01] Name01")
+
+        with Form(po) as po_form:
+            with po_form.order_line.edit(0) as pol_form:
+                pol_form.product_qty = 25
+        self.assertEqual(po.order_line.name, "[C02] Name02")
