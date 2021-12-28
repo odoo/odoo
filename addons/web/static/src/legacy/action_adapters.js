@@ -31,6 +31,9 @@ class ActionAdapter extends ComponentAdapter {
         let originalUpdateControlPanel;
         useEffect(
             () => {
+                if (this.wowlEnv.setLegacyControllerWidget) {
+                    this.wowlEnv.setLegacyControllerWidget(this.widget);
+                }
                 const query = this.widget.getState();
                 Object.assign(query, this.tempQuery);
                 this.tempQuery = null;
