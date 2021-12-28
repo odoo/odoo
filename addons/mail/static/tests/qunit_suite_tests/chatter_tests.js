@@ -252,6 +252,100 @@ QUnit.test('list activity exception widget with activity', async function (asser
         "there is an exception on a record");
 });
 
+QUnit.test('list activity widget: done the activity with "ENTER" keyboard shortcut', async function (assert) {
+    assert.expect(1);
+
+    const pyEnv = await startServer();
+    const mailActivityTypeId1 = pyEnv['mail.activity.type'].create();
+    const mailActivityId1 = pyEnv['mail.activity'].create([
+        {
+            display_name: "Call with Al",
+            date_deadline: moment().format("YYYY-MM-DD"), // now
+            can_write: true,
+            state: "today",
+            user_id: pyEnv.currentUserId,
+            create_uid: pyEnv.currentUserId,
+            activity_type_id: mailActivityTypeId1,
+        }
+    ]);
+    pyEnv['res.users'].write([pyEnv.currentUserId], {
+        activity_ids: [mailActivityId1],
+        activity_state: 'today',
+        activity_summary: 'Call with Al',
+        activity_type_id: mailActivityTypeId1,
+    });
+
+    const { target: list } = await start({
+        hasView: true,
+        View: ListView,
+        model: 'res.users',
+        arch: `
+            <list>
+                <field name="activity_ids" widget="list_activity"/>
+            </list>`,
+    });
+
+    await testUtils.dom.click(list.querySelector('.o_activity_btn span'));
+    await testUtils.dom.click(list.querySelector('.o_mark_as_done'));
+    pyEnv['res.users'].write([pyEnv.currentUserId], {
+        activity_state: '',
+    });
+    await testUtils.dom.triggerEvent(
+        document.querySelector('.o_activity_popover_done'),
+        'keydown',
+        { key: 'Enter' },
+    );
+
+    assert.containsOnce(list, '.o_mail_activity .o_activity_color_default');
+});
+
+QUnit.test('list activity widget: done and schedule the next activity with "ENTER" keyboard shortcut', async function (assert) {
+    assert.expect(1);
+
+    const pyEnv = await startServer();
+    const mailActivityTypeId1 = pyEnv['mail.activity.type'].create();
+    const mailActivityId1 = pyEnv['mail.activity'].create([
+        {
+            display_name: "Call with Al",
+            date_deadline: moment().format("YYYY-MM-DD"), // now
+            can_write: true,
+            state: "today",
+            user_id: pyEnv.currentUserId,
+            create_uid: pyEnv.currentUserId,
+            activity_type_id: mailActivityTypeId1,
+        }
+    ]);
+    pyEnv['res.users'].write([pyEnv.currentUserId], {
+        activity_ids: [mailActivityId1],
+        activity_state: 'today',
+        activity_summary: 'Call with Al',
+        activity_type_id: mailActivityTypeId1,
+    });
+
+    const { target: list } = await start({
+        hasView: true,
+        View: ListView,
+        model: 'res.users',
+        arch: `
+            <list>
+                <field name="activity_ids" widget="list_activity"/>
+            </list>`,
+        intercepts: {
+            do_action: function (ev) {
+                assert.strictEqual(ev.data.action.name, "Schedule an Activity", 'should do a do_action with correct parameters');
+            },
+        },
+    });
+
+    await testUtils.dom.click(list.querySelector('.o_activity_btn span'));
+    await testUtils.dom.click(list.querySelector('.o_mark_as_done'));
+    await testUtils.dom.triggerEvent(
+        document.querySelector('.o_activity_popover_done_next'),
+        'keydown',
+        { key: 'Enter' },
+    );
+});
+
 QUnit.module('FieldMany2ManyTagsEmail');
 
 QUnit.test('fieldmany2many tags email (edition)', async function (assert) {

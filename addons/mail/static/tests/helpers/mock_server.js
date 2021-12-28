@@ -154,6 +154,14 @@ MockServer.include({
             return;
         }
         // mail.activity methods
+        if (args.model === 'mail.activity' && args.method === 'action_feedback') {
+            const ids = args.args[0];
+            return this._mockMailActivityActionFeedback(ids);
+        }
+        if (args.model === 'mail.activity' && args.method === 'action_feedback_schedule_next') {
+            const ids = args.args[0];
+            return this._mockMailActivityActionFeedbackScheduleNext(ids);
+        }
         if (args.model === 'mail.activity' && args.method === 'activity_format') {
             const ids = args.args[0];
             return this._mockMailActivityActivityFormat(ids);
@@ -634,6 +642,47 @@ MockServer.include({
             }
             return res;
         });
+    },
+    /**
+     * Simulates `_action_done` on `mail.activity`.
+     *
+     * @private
+     * @param {string} model
+     * @param {integer[]} ids
+     * @returns {Object}
+     */
+    _mockMailActivityActionDone(ids) {
+        const activities = this.getRecords('mail.activity', [['id', 'in', ids]]);
+        this._mockUnlink('mail.activity', [activities.map(activity => activity.id)]);
+    },
+    /**
+     * Simulates `action_feedback` on `mail.activity`.
+     *
+     * @private
+     * @param {string} model
+     * @param {integer[]} ids
+     * @returns {Object}
+     */
+    _mockMailActivityActionFeedback(ids) {
+        this._mockMailActivityActionDone(ids);
+    },
+    /**
+     * Simulates `action_feedback_schedule_next` on `mail.activity`.
+     *
+     * @private
+     * @param {string} model
+     * @param {integer[]} ids
+     * @returns {Object}
+     */
+    _mockMailActivityActionFeedbackScheduleNext(ids) {
+        this._mockMailActivityActionDone(ids);
+        return {
+            name: 'Schedule an Activity',
+            view_mode: 'form',
+            res_model: 'mail.activity',
+            views: [[false, 'form']],
+            type: 'ir.actions.act_window',
+        }
     },
     /**
      * Simulates `get_activity_data` on `mail.activity`.
