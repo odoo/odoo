@@ -320,8 +320,28 @@ class Project(models.Model):
 
     def _get_sale_order_items_query(self, domain_per_model=None):
         if domain_per_model is None:
-            domain_per_model = {}
+            domain_per_model = {'project.task': [('allow_billable', '=', True)]}
+        else:
+            domain_per_model['project.task'] = expression.AND([
+                domain_per_model.get('project.task', []),
+                [('allow_billable', '=', True)],
+            ])
         query = super()._get_sale_order_items_query(domain_per_model)
+
+        Timesheet = self.env['account.analytic.line']
+        timesheet_domain = [('project_id', 'in', self.ids), ('so_line', '!=', False), ('project_id.allow_billable', '=', True)]
+        if Timesheet._name in domain_per_model:
+            timesheet_domain = expression.AND([
+                domain_per_model.get(Timesheet._name, []),
+                timesheet_domain,
+            ])
+        timesheet_query = Timesheet._where_calc(timesheet_domain)
+        Timesheet._apply_ir_rules(timesheet_query, 'read')
+        timesheet_query_str, timesheet_params = timesheet_query.select(
+            f'{Timesheet._table}.project_id AS id',
+            f'{Timesheet._table}.so_line AS sale_line_id',
+        )
+
         EmployeeMapping = self.env['project.sale.line.employee.map']
         employee_mapping_domain = [('project_id', 'in', self.ids), ('project_id.allow_billable', '=', True), ('sale_line_id', '!=', False)]
         if EmployeeMapping._name in domain_per_model:
@@ -335,11 +355,13 @@ class Project(models.Model):
             f'{EmployeeMapping._table}.project_id AS id',
             f'{EmployeeMapping._table}.sale_line_id',
         )
+
         query._tables['project_sale_order_item'] = ' UNION '.join([
             query._tables['project_sale_order_item'],
+            timesheet_query_str,
             employee_mapping_query_str,
         ])
-        query._where_params += employee_mapping_params
+        query._where_params += timesheet_params + employee_mapping_params
         return query
 
     def _get_profitability_items(self):

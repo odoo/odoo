@@ -77,10 +77,6 @@ class Project(models.Model):
         project_to_invoice.has_any_so_to_invoice = True
         (self - project_to_invoice).has_any_so_to_invoice = False
 
-    def _get_all_sales_orders(self):
-        self.ensure_one()
-        return self._fetch_sale_order_items({'project.task': [('is_closed', '=', False)]}).order_id
-
     @api.depends('sale_order_id', 'task_ids.sale_order_id')
     def _compute_sale_order_count(self):
         sale_order_items_per_project_id = self._fetch_sale_order_items_per_project_id({'project.task': [('is_closed', '=', False)]})
@@ -89,7 +85,7 @@ class Project(models.Model):
 
     def action_view_sos(self):
         self.ensure_one()
-        all_sale_orders = self._get_all_sales_orders()
+        all_sale_orders = self._fetch_sale_order_items({'project.task': [('is_closed', '=', False)]}).order_id
         action_window = {
             "type": "ir.actions.act_window",
             "res_model": "sale.order",
@@ -191,13 +187,13 @@ class Project(models.Model):
     def _get_sale_order_items_query(self, domain_per_model=None):
         if domain_per_model is None:
             domain_per_model = {}
-        billable_project = [('allow_billable', '=', True)]
+        billable_project_domain = [('allow_billable', '=', True)]
         project_domain = [('id', 'in', self.ids), ('sale_line_id', '!=', False)]
         if 'project.project' in domain_per_model:
             project_domain = expression.AND([
                 domain_per_model['project.project'],
                 project_domain,
-                billable_project,
+                billable_project_domain,
             ])
         project_query = self.env['project.project']._where_calc(project_domain)
         self._apply_ir_rules(project_query, 'read')
@@ -209,19 +205,18 @@ class Project(models.Model):
             task_domain = expression.AND([
                 domain_per_model[Task._name],
                 task_domain,
-                billable_project,
             ])
         task_query = Task._where_calc(task_domain)
         Task._apply_ir_rules(task_query, 'read')
         task_query_str, task_params = task_query.select(f'{Task._table}.project_id AS id', f'{Task._table}.sale_line_id')
 
         ProjectMilestone = self.env['project.milestone']
-        milestone_domain = [('project_id', 'in', self.ids), ('allow_billable', '=', True)]
+        milestone_domain = [('project_id', 'in', self.ids), ('allow_billable', '=', True), ('sale_line_id', '!=', False)]
         if ProjectMilestone._name in domain_per_model:
             milestone_domain = expression.AND([
                 domain_per_model[ProjectMilestone._name],
                 milestone_domain,
-                billable_project,
+                billable_project_domain,
             ])
         milestone_query = ProjectMilestone._where_calc(milestone_domain)
         ProjectMilestone._apply_ir_rules(milestone_query)
@@ -263,7 +258,7 @@ class Project(models.Model):
         } for sol_read in sols.read(['display_name', 'product_uom_qty', 'qty_delivered', 'qty_invoiced', 'product_uom'])]
 
     def _get_sale_items_domain(self, additional_domain=None):
-        sale_orders = self._get_all_sales_orders()
+        sale_orders = self._get_sale_order_items().sudo().order_id
         domain = [('order_id', 'in', sale_orders.ids), ('is_downpayment', '=', False), ('state', 'in', ['sale', 'done'])]
         if additional_domain:
             domain = expression.AND([domain, additional_domain])
