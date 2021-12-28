@@ -63,6 +63,7 @@ class BarcodeNomenclature(models.Model):
         barcode_sizes = {
             'ean8': 8,
             'ean13': 13,
+            'gtin14': 14,
             'upca': 12,
         }
         barcode_size = barcode_sizes[encoding]
