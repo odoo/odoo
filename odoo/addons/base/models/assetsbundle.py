@@ -26,6 +26,7 @@ from odoo.modules.module import get_resource_path
 from odoo.tools import func, misc, transpile_javascript, is_odoo_module, SourceMapGenerator, profiler
 from odoo.tools.misc import file_open, html_escape as escape
 from odoo.tools.pycompat import to_text
+from odoo.release import version as server_version
 
 _logger = logging.getLogger(__name__)
 
@@ -343,8 +344,7 @@ class AssetsBundle(object):
         # to invite the user to refresh their browser
         if self.env and 'bus.bus' in self.env and self.name in self.TRACKED_BUNDLES:
             self.env['bus.bus']._sendone('broadcast', 'bundle_changed', {
-                'name': self.name,
-                'version': self.version,
+                'server_version': server_version
             })
             _logger.debug('Asset Changed: bundle: %s -- version: %s', self.name, self.version)
 
