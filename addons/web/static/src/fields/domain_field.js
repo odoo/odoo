@@ -8,29 +8,68 @@ import { CharField } from "./char_field";
 import { standardFieldProps } from "./standard_field_props";
 
 const { Component } = owl;
+const { onWillStart, onWillUpdateProps, useState } = owl.hooks;
 
 export class DomainField extends Component {
     setup() {
         this.orm = useService("orm");
-        this.recordCount = null;
-    }
-    async willStart() {
-        this.recordCount = await this.orm.call(this.resModel, "search_count", [
-            this.getDomain(this.props.value).toList(),
-        ]);
-    }
-    async willUpdateProps(nextProps) {
-        this.recordCount = await this.orm.call(this.resModel, "search_count", [
-            this.getDomain(nextProps.value).toList(),
-        ]);
+        this.state = useState({
+            recordCount: null,
+            isValid: true,
+        });
+
+        onWillStart(() => {
+            this.loadCount(this.props);
+        });
+        onWillUpdateProps((nextProps) => {
+            this.loadCount(nextProps);
+        });
     }
 
-    get resModel() {
-        return this.props.options.model || this.props.record.resModel;
+    get isValidDomain() {
+        try {
+            this.getDomain(this.props.value).toList();
+            return true;
+        } catch (e) {
+            return false;
+        }
     }
 
+    getResModel(props) {
+        if (props.record.fieldNames.includes(props.options.model)) {
+            return props.record.data[props.options.model];
+        }
+        return props.options.model;
+    }
     getDomain(value) {
         return new Domain(value || "[]");
+    }
+    async loadCount(props) {
+        if (!this.getResModel(props)) {
+            Object.assign(this.state, {
+                recordCount: 0,
+                isValid: true,
+            });
+        }
+
+        try {
+            this.state.recordCount = null;
+            const context = props.record.getFieldContext(props.name);
+            Object.assign(this.state, {
+                recordCount: await this.orm.silent.call(
+                    this.getResModel(props),
+                    "search_count",
+                    [this.getDomain(props.value).toList(context)],
+                    { context }
+                ),
+                isValid: true,
+            });
+        } catch (e) {
+            Object.assign(this.state, {
+                recordCount: 0,
+                isValid: false,
+            });
+        }
     }
 }
 
@@ -45,6 +84,10 @@ Object.assign(DomainField, {
     },
 
     supportedTypes: ["char"],
+
+    isEmpty() {
+        return false;
+    },
 });
 
 registry.category("fields").add("domain", DomainField);

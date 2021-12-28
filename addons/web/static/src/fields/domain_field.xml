@@ -2,25 +2,22 @@
 <templates xml:space="preserve">
 
     <t t-name="web.DomainField" owl="1">
-        <div t-att-class="{
-            o_read_mode: props.readonly,
-            o_edit_mode: !props.readonly,
-            o_inline_mode: !env.inDialog,
-        }">
-            <t t-if="resModel">
+        <div t-att-class="{ o_inline_mode: !env.inDialog }">
+            <t t-if="getResModel(props)">
                 <DomainSelector
-                    resModel="resModel"
+                    resModel="getResModel(props)"
                     value="getDomain(props.value).toString()"
                     readonly="props.readonly"
                     update="(newDomain) => props.update(newDomain)"
                     isDebugMode="!!env.debug"
+                    t-att-class="props.readonly ? 'o_read_mode' : 'o_edit_mode'"
                 />
                 <div class="o_field_domain_panel">
-                    <t t-if="recordCount !== null">
+                    <t t-if="state.recordCount !== null">
                         <i class="fa fa-arrow-right" role="img" aria-label="Domain" title="Domain" />
-                        <t t-if="true">
+                        <t t-if="state.isValid and isValidDomain">
                             <button class="btn btn-sm btn-secondary o_domain_show_selection_button" type="button">
-                                <t t-esc="recordCount" /> record(s)
+                                <t t-esc="state.recordCount" /> record(s)
                             </button>
                         </t>
                         <t t-else="">

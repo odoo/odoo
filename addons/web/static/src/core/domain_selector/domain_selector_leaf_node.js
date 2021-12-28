@@ -1,17 +1,11 @@
 /** @odoo-module **/
 
 import { DatePicker, DateTimePicker } from "@web/core/datepicker/datepicker";
-import {
-    formatDate,
-    formatDateTime,
-    parseDate,
-    parseDateTime,
-    serializeDate,
-    serializeDateTime,
-} from "@web/core/l10n/dates";
+import { parseDate, parseDateTime, serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { _lt } from "@web/core/l10n/translation";
 import { useModelField } from "@web/core/model_field_selector/model_field_hook";
 import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
+import { registry } from "@web/core/registry";
 import { DomainSelectorControlPanel } from "./domain_selector_control_panel";
 
 const { Component } = owl;
@@ -232,7 +226,11 @@ export class DomainSelectorLeafNode extends Component {
         this.props.node.update(changes);
     }
     onValueChange(ev) {
-        this.props.node.update({ value: ev.target.value });
+        let value = ev.target.value;
+        if (["integer", "float", "monetary"].includes(this.fieldInfo.type)) {
+            value = registry.category("parsers").get(this.fieldInfo.type)(value);
+        }
+        this.props.node.update({ value });
     }
     onValueSelected(ev) {
         let value = ev.target.value;

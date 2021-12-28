@@ -30,12 +30,10 @@ export class ModelFieldSelector extends Component {
         this.chain = [];
     }
     async willStart() {
-        this.chain = await this.loadChain(this.props.fieldName);
+        this.chain = await this.loadChain(this.props.resModel, this.props.fieldName);
     }
     async willUpdateProps(nextProps) {
-        if (this.props.fieldName !== nextProps.fieldName) {
-            this.chain = await this.loadChain(nextProps.fieldName);
-        }
+        this.chain = await this.loadChain(nextProps.resModel, nextProps.fieldName);
     }
 
     get fieldNameChain() {
@@ -46,13 +44,13 @@ export class ModelFieldSelector extends Component {
         return fieldName.length ? fieldName.split(".") : [];
     }
 
-    async loadChain(fieldName) {
+    async loadChain(resModel, fieldName) {
         if ("01".includes(fieldName)) {
-            return [{ resModel: this.props.resModel, field: { string: fieldName } }];
+            return [{ resModel, field: { string: fieldName } }];
         }
         const fieldNameChain = this.getFieldNameChain(fieldName);
         let currentNode = {
-            resModel: this.props.resModel,
+            resModel,
             field: null,
         };
         const chain = [currentNode];

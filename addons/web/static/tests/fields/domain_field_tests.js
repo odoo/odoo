@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
-import { setupViewRegistries } from "../views/helpers";
+import { makeView, setupViewRegistries } from "../views/helpers";
+import { click, makeDeferred, nextTick, patchWithCleanup, triggerEvent } from "../helpers/utils";
 
 let serverData;
 
@@ -198,319 +199,311 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("DomainField");
 
-    QUnit.skip(
+    QUnit.test(
         "The domain editor should not crash the view when given a dynamic filter",
         async function (assert) {
             //dynamic filters (containing variables, such as uid, parent or today)
             //are not handled by the domain editor, but it shouldn't crash the view
             assert.expect(1);
 
-            this.data.partner.records[0].foo = '[["int_field", "=", uid]]';
+            serverData.models.partner.records[0].foo = `[("int_field", "=", uid)]`;
 
-            var form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
-                arch:
-                    "<form>" +
-                    '<field name="foo" widget="domain" options="{\'model\': \'partner\'}"/>' +
-                    '<field name="int_field" invisible="1"/>' +
-                    "</form>",
-                res_id: 1,
-                session: {
-                    user_context: { uid: 14 },
-                },
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
+                    <form>
+                        <field name="foo" widget="domain" options="{'model': 'partner'}" />
+                        <field name="int_field" invisible="1" />
+                    </form>
+                `,
             });
 
             assert.strictEqual(
-                form.$(".o_read_mode").text(),
+                form.el.querySelector(".o_read_mode").textContent,
                 "This domain is not supported.",
                 "The widget should not crash the view, but gracefully admit its failure."
             );
-            form.destroy();
         }
     );
 
-    QUnit.skip("basic domain field usage is ok", async function (assert) {
+    QUnit.test("basic domain field usage is ok", async function (assert) {
         assert.expect(7);
 
-        this.data.partner.records[0].foo = "[]";
+        serverData.models.partner.records[0].foo = "[]";
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                "<form>" +
-                "<sheet>" +
-                "<group>" +
-                '<field name="foo" widget="domain" options="{\'model\': \'partner_type\'}"/>' +
-                "</group>" +
-                "</sheet>" +
-                "</form>",
-            res_id: 1,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="foo" widget="domain" options="{'model': 'partner_type'}" />
+                        </group>
+                    </sheet>
+                </form>
+            `,
         });
-        await testUtils.form.clickEdit(form);
+        await click(form.el, ".o_form_button_edit");
 
         // As the domain is empty, there should be a button to add the first
         // domain part
-        var $domain = form.$(".o_field_domain");
-        var $domainAddFirstNodeButton = $domain.find(".o_domain_add_first_node_button");
-        assert.equal(
-            $domainAddFirstNodeButton.length,
-            1,
+        assert.containsOnce(
+            form.el,
+            ".o_domain_add_first_node_button",
             "there should be a button to create first domain element"
         );
 
         // Clicking on the button should add the [["id", "=", "1"]] domain, so
         // there should be a field selector in the DOM
-        await testUtils.dom.click($domainAddFirstNodeButton);
-        var $fieldSelector = $domain.find(".o_field_selector");
-        assert.equal($fieldSelector.length, 1, "there should be a field selector");
+        await click(form.el, ".o_domain_add_first_node_button");
+        assert.containsOnce(form.el, ".o_field_selector", "there should be a field selector");
 
         // Focusing the field selector input should open the field selector
         // popover
-        await testUtils.dom.triggerEvents($fieldSelector, "focus");
-        var $fieldSelectorPopover = $fieldSelector.find(".o_field_selector_popover");
-        assert.ok($fieldSelectorPopover.is(":visible"), "field selector popover should be visible");
-
+        await click(form.el, ".o_field_selector");
         assert.containsOnce(
-            $fieldSelectorPopover,
+            document.body,
+            ".o_field_selector_popover",
+            "field selector popover should be visible"
+        );
+        assert.containsOnce(
+            document.body,
             ".o_field_selector_search input",
             "field selector popover should contain a search input"
         );
 
         // The popover should contain the list of partner_type fields and so
         // there should be the "Color index" field
-        var $lis = $fieldSelectorPopover.find("li");
-        var $colorIndex = $();
-        $lis.each(function () {
-            var $li = $(this);
-            if ($li.html().indexOf("Color index") >= 0) {
-                $colorIndex = $li;
-            }
-        });
-        assert.equal(
-            $colorIndex.length,
-            1,
+        assert.strictEqual(
+            document.body.querySelector(".o_field_selector_item").textContent,
+            "Color index",
             "field selector popover should contain 'Color index' field"
         );
 
         // Clicking on this field should close the popover, then changing the
         // associated value should reveal one matched record
-        await testUtils.dom.click($colorIndex);
-        await testUtils.fields.editAndTrigger($(".o_domain_leaf_value_input"), 2, ["change"]);
-        assert.equal(
-            $domain.find(".o_domain_show_selection_button").text().trim().substr(0, 2),
+        await click(document.body.querySelector(".o_field_selector_item"));
+
+        const input = form.el.querySelector(".o_domain_leaf_value_input");
+        input.value = 2;
+        await triggerEvent(input, null, "change");
+
+        assert.strictEqual(
+            form.el
+                .querySelector(".o_domain_show_selection_button")
+                .textContent.trim()
+                .substr(0, 2),
             "1 ",
             "changing color value to 2 should reveal only one record"
         );
 
         // Saving the form view should show a readonly domain containing the
         // "color" field
-        await testUtils.form.clickSave(form);
-        $domain = form.$(".o_field_domain");
+        await click(form.el, ".o_form_button_save");
         assert.ok(
-            $domain.html().indexOf("Color index") >= 0,
+            form.el.querySelector(".o_field_domain").textContent.includes("Color index"),
             "field selector readonly value should now contain 'Color index'"
         );
-        form.destroy();
     });
 
-    QUnit.skip("domain field is correctly reset on every view change", async function (assert) {
+    QUnit.test("domain field is correctly reset on every view change", async function (assert) {
         assert.expect(7);
 
-        this.data.partner.records[0].foo = '[["id","=",1]]';
-        this.data.partner.fields.bar.type = "char";
-        this.data.partner.records[0].bar = "product";
+        serverData.models.partner.records[0].foo = `[("id", "=", 1)]`;
+        serverData.models.partner.fields.bar.type = "char";
+        serverData.models.partner.records[0].bar = "product";
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                "<form>" +
-                "<sheet>" +
-                "<group>" +
-                '<field name="bar"/>' +
-                '<field name="foo" widget="domain" options="{\'model\': \'bar\'}"/>' +
-                "</group>" +
-                "</sheet>" +
-                "</form>",
-            res_id: 1,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="bar" />
+                            <field name="foo" widget="domain" options="{'model': 'bar'}" />
+                        </group>
+                    </sheet>
+                </form>
+            `,
         });
-        await testUtils.form.clickEdit(form);
+        await click(form.el, ".o_form_button_edit");
 
         // As the domain is equal to [["id", "=", 1]] there should be a field
         // selector to change this
-        var $domain = form.$(".o_field_domain");
-        var $fieldSelector = $domain.find(".o_field_selector");
-        assert.equal($fieldSelector.length, 1, "there should be a field selector");
+        assert.containsOnce(
+            form.el,
+            ".o_field_domain .o_field_selector",
+            "there should be a field selector"
+        );
 
         // Focusing its input should open the field selector popover
-        await testUtils.dom.triggerEvents($fieldSelector, "focus");
-        var $fieldSelectorPopover = $fieldSelector.find(".o_field_selector_popover");
-        assert.ok($fieldSelectorPopover.is(":visible"), "field selector popover should be visible");
+        await click(form.el.querySelector(".o_field_selector"));
+        assert.containsOnce(
+            document.body,
+            ".o_field_selector_popover",
+            "field selector popover should be visible"
+        );
 
         // As the value of the "bar" field is "product", the field selector
         // popover should contain the list of "product" fields
-        var $lis = $fieldSelectorPopover.find("li");
-        var $sampleLi = $();
-        $lis.each(function () {
-            var $li = $(this);
-            if ($li.html().indexOf("Product Name") >= 0) {
-                $sampleLi = $li;
-            }
-        });
-        assert.strictEqual($lis.length, 1, "field selector popover should contain only one field");
+        assert.containsOnce(
+            document.body,
+            ".o_field_selector_item",
+            "field selector popover should contain only one field"
+        );
         assert.strictEqual(
-            $sampleLi.length,
-            1,
+            document.body.querySelector(".o_field_selector_item").textContent,
+            "Product Name",
             "field selector popover should contain 'Product Name' field"
         );
 
         // Now change the value of the "bar" field to "partner_type"
-        await testUtils.dom.click(form.$("input.o_field_widget"));
-        await testUtils.fields.editInput(form.$("input.o_field_widget"), "partner_type");
+        const input = form.el.querySelector(".o_field_widget[name='bar'] input");
+        await click(input);
+        input.value = "partner_type";
+        await triggerEvent(input, null, "change");
 
         // Refocusing the field selector input should open the popover again
-        $fieldSelector = form.$(".o_field_selector");
-        $fieldSelector.trigger("focusin");
-        $fieldSelectorPopover = $fieldSelector.find(".o_field_selector_popover");
-        assert.ok($fieldSelectorPopover.is(":visible"), "field selector popover should be visible");
+        await click(form.el.querySelector(".o_field_selector"));
+        assert.containsOnce(
+            document.body,
+            ".o_field_selector_popover",
+            "field selector popover should be visible"
+        );
 
         // Now the list of fields should be the ones of the "partner_type" model
-        $lis = $fieldSelectorPopover.find("li");
-        $sampleLi = $();
-        $lis.each(function () {
-            var $li = $(this);
-            if ($li.html().indexOf("Color index") >= 0) {
-                $sampleLi = $li;
-            }
-        });
-        assert.strictEqual($lis.length, 2, "field selector popover should contain two fields");
+        assert.containsN(
+            document.body,
+            ".o_field_selector_item",
+            2,
+            "field selector popover should contain two fields"
+        );
         assert.strictEqual(
-            $sampleLi.length,
-            1,
+            document.body.querySelector(".o_field_selector_item").textContent,
+            "Color index",
             "field selector popover should contain 'Color index' field"
         );
-        form.destroy();
     });
 
-    QUnit.skip(
+    QUnit.test(
         "domain field can be reset with a new domain (from onchange)",
         async function (assert) {
             assert.expect(2);
 
-            this.data.partner.records[0].foo = "[]";
-            this.data.partner.onchanges = {
-                display_name: function (obj) {
-                    obj.foo = '[["id", "=", 1]]';
+            serverData.models.partner.records[0].foo = "[]";
+            serverData.models.partner.onchanges = {
+                display_name(obj) {
+                    obj.foo = `[("id", "=", 1)]`;
                 },
             };
 
-            var form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
-                arch:
-                    "<form>" +
-                    '<field name="display_name"/>' +
-                    '<field name="foo" widget="domain" options="{\'model\': \'partner\'}"/>' +
-                    "</form>",
-                res_id: 1,
-                viewOptions: {
-                    mode: "edit",
-                },
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
+                    <form>
+                        <field name="display_name" />
+                        <field name="foo" widget="domain" options="{'model': 'partner'}" />
+                    </form>
+                `,
             });
+            await click(form.el, ".o_form_button_edit");
 
-            assert.equal(
-                form.$(".o_domain_show_selection_button").text().trim(),
+            assert.strictEqual(
+                form.el.querySelector(".o_domain_show_selection_button").textContent.trim(),
                 "5 record(s)",
                 "the domain being empty, there should be 5 records"
             );
 
             // update display_name to trigger the onchange and reset foo
-            await testUtils.fields.editInput(
-                form.$(".o_field_widget[name=display_name]"),
-                "new value"
-            );
+            const input = form.el.querySelector(".o_field_widget[name='display_name'] input");
+            input.value = "new value";
+            await triggerEvent(input, null, "change");
 
-            assert.equal(
-                form.$(".o_domain_show_selection_button").text().trim(),
+            assert.strictEqual(
+                form.el.querySelector(".o_domain_show_selection_button").textContent.trim(),
                 "1 record(s)",
                 "the domain has changed, there should be only 1 record"
             );
-
-            form.destroy();
         }
     );
 
-    QUnit.skip("domain field: handle false domain as []", async function (assert) {
+    QUnit.test("domain field: handle false domain as []", async function (assert) {
         assert.expect(4);
 
-        this.data.partner.records[0].foo = false;
-        this.data.partner.fields.bar.type = "char";
-        this.data.partner.records[0].bar = "product";
+        serverData.models.partner.records[0].foo = false;
+        serverData.models.partner.fields.bar.type = "char";
+        serverData.models.partner.records[0].bar = "product";
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                "<form>" +
-                "<sheet>" +
-                "<group>" +
-                '<field name="bar"/>' +
-                '<field name="foo" widget="domain" options="{\'model\': \'bar\'}"/>' +
-                "</group>" +
-                "</sheet>" +
-                "</form>",
-            mockRPC: function (route, args) {
-                if (args.method === "search_count") {
-                    assert.deepEqual(args.args[0], [], "should send a valid domain");
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="bar" />
+                            <field name="foo" widget="domain" options="{'model': 'bar'}" />
+                        </group>
+                    </sheet>
+                </form>
+            `,
+            mockRPC(route, { args, method }) {
+                if (method === "search_count") {
+                    assert.deepEqual(args[0], [], "should send a valid domain");
                 }
-                return this._super.apply(this, arguments);
             },
-            res_id: 1,
         });
-
-        assert.strictEqual(
-            form.$(".o_field_widget[name=foo]:not(.o_field_empty)").length,
-            1,
+        assert.containsOnce(
+            form.el,
+            ".o_field_widget[name='foo']:not(.o_field_empty)",
             "there should be a domain field, not considered empty"
         );
 
-        await testUtils.form.clickEdit(form);
-
-        var $warning = form.$(".o_field_widget[name=foo] .text-warning");
-        assert.strictEqual($warning.length, 0, "should not display that the domain is invalid");
-
-        form.destroy();
+        await click(form.el, ".o_form_button_edit");
+        assert.containsNone(
+            form.el,
+            ".o_field_widget[name='foo'] .text-warning",
+            "should not display that the domain is invalid"
+        );
     });
 
     QUnit.skip("basic domain field: show the selection", async function (assert) {
         assert.expect(2);
 
-        this.data.partner.records[0].foo = "[]";
+        serverData.models.partner.records[0].foo = "[]";
+        serverData.views = {
+            "partner_type,false,list": `<tree><field name="display_name" /></tree>`,
+            "partner_type,false,search": `<search><field name="name" string="Name" /></search>`,
+        };
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
-            arch:
-                "<form>" +
-                "<sheet>" +
-                "<group>" +
-                '<field name="foo" widget="domain" options="{\'model\': \'partner_type\'}"/>' +
-                "</group>" +
-                "</sheet>" +
-                "</form>",
-            archs: {
-                "partner_type,false,list": '<tree><field name="display_name"/></tree>',
-                "partner_type,false,search": '<search><field name="name" string="Name"/></search>',
-            },
-            res_id: 1,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="foo" widget="domain" options="{'model': 'partner_type'}" />
+                        </group>
+                    </sheet>
+                </form>
+            `,
         });
 
         assert.equal(
@@ -531,73 +524,65 @@ QUnit.module("Fields", (hooks) => {
         // we don't actually check that it doesn't open the record because even
         // if it tries to, it will crash as we don't define an arch in this test
         await testUtils.dom.click($(".modal .o_list_view .o_data_row:first .o_data_cell"));
-
-        form.destroy();
     });
 
     QUnit.skip("field context is propagated when opening selection", async function (assert) {
         assert.expect(1);
 
-        this.data.partner.records[0].foo = "[]";
+        serverData.models.partner.records[0].foo = "[]";
+        serverData.views = {
+            "partner_type,false,list": `<tree><field name="display_name" /></tree>`,
+            "partner_type,3,list": `<tree><field name="id" /></tree>`,
+            "partner_type,false,search": `<search><field name="name" string="Name" /></search>`,
+        };
 
-        var form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
             arch: `
                 <form>
                     <field name="foo" widget="domain" options="{'model': 'partner_type'}" context="{'tree_view_ref': 3}"/>
                 </form>
             `,
-            archs: {
-                "partner_type,false,list": '<tree><field name="display_name"/></tree>',
-                "partner_type,3,list": '<tree><field name="id"/></tree>',
-                "partner_type,false,search": '<search><field name="name" string="Name"/></search>',
-            },
-            res_id: 1,
         });
 
-        await testUtils.dom.click(form.$(".o_domain_show_selection_button"));
-
+        await click(form.el, ".o_domain_show_selection_button");
         assert.strictEqual(
             $(".modal .o_data_row").text(),
             "1214",
             "should have picked the correct list view"
         );
-
-        form.destroy();
     });
 
     QUnit.skip("domain field: manually edit domain with textarea", async function (assert) {
         assert.expect(9);
 
-        const originalDebug = odoo.debug;
-        odoo.debug = true;
+        patchWithCleanup(odoo, { debug: true });
 
-        this.data.partner.records[0].foo = false;
-        this.data.partner.fields.bar.type = "char";
-        this.data.partner.records[0].bar = "product";
+        serverData.models.partner.records[0].foo = false;
+        serverData.models.partner.fields.bar.type = "char";
+        serverData.models.partner.records[0].bar = "product";
 
-        const form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
             arch: `
                 <form>
                     <field name="bar"/>
                     <field name="foo" widget="domain" options="{'model': 'bar'}"/>
-                </form>`,
-            mockRPC(route, args) {
-                if (args.method === "search_count") {
-                    assert.step(JSON.stringify(args.args[0]));
+                </form>
+            `,
+            mockRPC(route, { method, args }) {
+                if (method === "search_count") {
+                    assert.step(JSON.stringify(args[0]));
                 }
-                return this._super.apply(this, arguments);
             },
-            viewOptions: {
-                mode: "edit",
-            },
-            res_id: 1,
         });
+        await click(form.el, ".o_form_button_edit");
 
         assert.strictEqual(form.$(".o_domain_show_selection_button").text().trim(), "2 record(s)");
         assert.verifySteps(["[]"]);
@@ -611,15 +596,12 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(form.$(".o_domain_show_selection_button").text().trim(), "2 record(s)");
         assert.verifySteps([]);
 
-        await testUtils.form.clickSave(form);
+        await click(form.el, ".o_form_button_save");
         assert.strictEqual(form.$(".o_domain_show_selection_button").text().trim(), "1 record(s)");
         assert.verifySteps([
             '[["id","<",40]]', // to validate the domain, before saving
             '[["id","<",40]]', // to render in readonly once it has been saved
         ]);
-
-        form.destroy();
-        odoo.debug = originalDebug;
     });
 
     QUnit.skip(
@@ -627,36 +609,33 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(9);
 
-            const originalDebug = odoo.debug;
-            odoo.debug = true;
+            patchWithCleanup(odoo, { debug: true });
 
-            this.data.partner.records[0].foo = false;
-            this.data.partner.fields.bar.type = "char";
-            this.data.partner.records[0].bar = "product";
+            serverData.models.partner.records[0].foo = false;
+            serverData.models.partner.fields.bar.type = "char";
+            serverData.models.partner.records[0].bar = "product";
 
-            const form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
                 arch: `
-                <form>
-                    <field name="bar"/>
-                    <field name="foo" widget="domain" options="{'model': 'bar'}"/>
-                </form>`,
-                mockRPC(route, args) {
-                    if (args.method === "search_count") {
-                        assert.step(JSON.stringify(args.args[0]));
+                    <form>
+                        <field name="bar"/>
+                        <field name="foo" widget="domain" options="{'model': 'bar'}"/>
+                    </form>
+                `,
+                mockRPC(route, { method, args }) {
+                    if (method === "search_count") {
+                        assert.step(JSON.stringify(args[0]));
                     }
-                    if (args.method === "write") {
+                    if (method === "write") {
                         throw new Error("should not save");
                     }
-                    return this._super.apply(this, arguments);
                 },
-                viewOptions: {
-                    mode: "edit",
-                },
-                res_id: 1,
             });
+            await click(form.el, ".o_form_button_edit");
 
             assert.strictEqual(
                 form.$(".o_domain_show_selection_button").text().trim(),
@@ -674,7 +653,7 @@ QUnit.module("Fields", (hooks) => {
             );
             assert.verifySteps([]);
 
-            await testUtils.form.clickSave(form);
+            await click(form.el, ".o_form_button_save");
             assert.hasClass(
                 form.$(".o_field_domain"),
                 "o_field_invalid",
@@ -686,9 +665,6 @@ QUnit.module("Fields", (hooks) => {
                 "the view is still in edit mode"
             );
             assert.verifySteps(['[["abc"]]']);
-
-            form.destroy();
-            odoo.debug = originalDebug;
         }
     );
 
@@ -697,33 +673,30 @@ QUnit.module("Fields", (hooks) => {
         async function (assert) {
             assert.expect(7);
 
-            const originalDebug = odoo.debug;
-            odoo.debug = true;
+            patchWithCleanup(odoo, { debug: true });
 
-            this.data.partner.records[0].foo = "[]";
-            this.data.partner.fields.bar.type = "char";
-            this.data.partner.records[0].bar = "product";
+            serverData.models.partner.records[0].foo = "[]";
+            serverData.models.partner.fields.bar.type = "char";
+            serverData.models.partner.records[0].bar = "product";
 
-            const form = await createView({
-                View: FormView,
-                model: "partner",
-                data: this.data,
+            const form = await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
                 arch: `
-                <form>
-                    <field name="bar"/>
-                    <field name="foo" widget="domain" options="{'model': 'bar'}"/>
-                </form>`,
-                async mockRPC(route, args) {
-                    if (args.method === "search_count") {
-                        assert.step(JSON.stringify(args.args[0]));
+                    <form>
+                        <field name="bar"/>
+                        <field name="foo" widget="domain" options="{'model': 'bar'}"/>
+                    </form>
+                `,
+                mockRPC(route, { method, args }) {
+                    if (method === "search_count") {
+                        assert.step(JSON.stringify(args[0]));
                     }
-                    return this._super.apply(this, arguments);
                 },
-                viewOptions: {
-                    mode: "edit",
-                },
-                res_id: 1,
             });
+            await click(form.el, ".o_form_button_edit");
 
             assert.strictEqual(
                 form.$(".o_domain_show_selection_button").text().trim(),
@@ -749,86 +722,83 @@ QUnit.module("Fields", (hooks) => {
                 "1 record(s)"
             );
             assert.verifySteps(['[["id","<",40]]']);
-
-            form.destroy();
-            odoo.debug = originalDebug;
         }
     );
 
-    QUnit.skip("domain field: does not wait for the count to render", async function (assert) {
+    QUnit.test("domain field: does not wait for the count to render", async function (assert) {
         assert.expect(5);
 
-        this.data.partner.records[0].foo = "[]";
-        this.data.partner.fields.bar.type = "char";
-        this.data.partner.records[0].bar = "product";
+        serverData.models.partner.records[0].foo = "[]";
+        serverData.models.partner.fields.bar.type = "char";
+        serverData.models.partner.records[0].bar = "product";
 
-        const def = testUtils.makeTestPromise();
-        const form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        const def = makeDeferred();
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
             arch: `
                 <form>
                     <field name="bar"/>
                     <field name="foo" widget="domain" options="{'model': 'bar'}"/>
-                </form>`,
-            async mockRPC(route, args) {
-                const result = this._super.apply(this, arguments);
-                if (args.method === "search_count") {
+                </form>
+            `,
+            async mockRPC(route, { method }, performRPC) {
+                const result = performRPC(...arguments);
+                if (method === "search_count") {
                     await def;
                 }
                 return result;
             },
-            res_id: 1,
         });
 
-        assert.containsOnce(form, ".o_field_domain_panel .fa-circle-o-notch.fa-spin");
-        assert.containsNone(form, ".o_field_domain_panel .o_domain_show_selection_button");
+        assert.containsOnce(form.el, ".o_field_domain_panel .fa-circle-o-notch.fa-spin");
+        assert.containsNone(form.el, ".o_field_domain_panel .o_domain_show_selection_button");
 
         def.resolve();
-        await testUtils.nextTick();
+        await nextTick();
 
-        assert.containsNone(form, ".o_field_domain_panel .fa-circle-o-notch .fa-spin");
-        assert.containsOnce(form, ".o_field_domain_panel .o_domain_show_selection_button");
-        assert.strictEqual(form.$(".o_domain_show_selection_button").text().trim(), "2 record(s)");
-
-        form.destroy();
+        assert.containsNone(form.el, ".o_field_domain_panel .fa-circle-o-notch .fa-spin");
+        assert.containsOnce(form.el, ".o_field_domain_panel .o_domain_show_selection_button");
+        assert.strictEqual(
+            form.el.querySelector(".o_domain_show_selection_button").textContent.trim(),
+            "2 record(s)"
+        );
     });
 
     QUnit.skip("domain field: edit domain with dynamic content", async function (assert) {
         assert.expect(2);
 
-        const originalDebug = odoo.debug;
-        odoo.debug = true;
+        patchWithCleanup(odoo, { debug: true });
+
         let rawDomain = `
             [
                 ["date", ">=", datetime.datetime.combine(context_today() + relativedelta(days = -365), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")]
             ]
         `;
-        this.data.partner.records[0].foo = rawDomain;
-        this.data.partner.fields.bar.type = "char";
-        this.data.partner.records[0].bar = "partner";
+        serverData.models.partner.records[0].foo = rawDomain;
+        serverData.models.partner.fields.bar.type = "char";
+        serverData.models.partner.records[0].bar = "partner";
 
-        const form = await createView({
-            View: FormView,
-            model: "partner",
-            data: this.data,
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
             arch: `
                 <form>
                     <field name="bar"/>
                     <field name="foo" widget="domain" options="{'model': 'bar'}"/>
-                </form>`,
-            async mockRPC(route, args) {
-                if (args.method === "write") {
-                    assert.strictEqual(args.args[1].foo, rawDomain);
+                </form>
+            `,
+            mockRPC(route, { method, args }) {
+                if (method === "write") {
+                    assert.strictEqual(args[1].foo, rawDomain);
                 }
-                return this._super.apply(this, arguments);
-            },
-            res_id: 1,
-            viewOptions: {
-                mode: "edit",
             },
         });
+        await click(form.el, ".o_form_button_edit");
 
         assert.strictEqual(form.$(".o_domain_debug_input").val(), rawDomain);
 
@@ -840,9 +810,6 @@ QUnit.module("Fields", (hooks) => {
         await testUtils.fields.editAndTrigger(form.$(".o_domain_debug_input"), rawDomain, [
             "change",
         ]);
-        await testUtils.form.clickSave(form);
-
-        form.destroy();
-        odoo.debug = originalDebug;
+        await click(form.el, ".o_form_button_save");
     });
 });

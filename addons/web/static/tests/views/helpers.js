@@ -17,6 +17,7 @@ import {
     makeFakeUserService,
 } from "../helpers/mock_services";
 import { dialogService } from "@web/core/dialog/dialog_service";
+import { popoverService } from "@web/core/popover/popover_service";
 
 const serviceRegistry = registry.category("services");
 
@@ -101,4 +102,5 @@ export function setupViewRegistries() {
     serviceRegistry.add("router", makeFakeRouterService(), { force: true });
     serviceRegistry.add("localization", makeFakeLocalizationService()), { force: true };
     serviceRegistry.add("dialog", dialogService), { force: true };
+    serviceRegistry.add("popover", popoverService), { force: true };
 }
