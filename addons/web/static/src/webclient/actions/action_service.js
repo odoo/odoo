@@ -75,7 +75,7 @@ const CTX_KEY_REGEX = /^(?:(?:default_|search_default_|show_).+|.+_view_ref|grou
 // only register this template once for all dynamic classes ControllerComponent
 const ControllerComponentTemplate = xml`<t t-component="Component" t-props="props"
     t-ref="component"
-    t-on-history-back="onHistoryBack"/>`;
+/>`;
 
 function makeActionManager(env) {
     const keepLast = new KeepLast();
@@ -539,6 +539,14 @@ function makeActionManager(env) {
                 env.services.title.setParts({ action: controller.displayName });
             }
         };
+        controller.config.historyBack = () => {
+            const previousController = controllerStack[controllerStack.length - 2];
+            if (previousController && !dialog) {
+                restore(previousController.jsId);
+            } else {
+                _executeCloseAction();
+            }
+        };
 
         class ControllerComponent extends Component {
             setup() {
@@ -650,14 +658,6 @@ function makeActionManager(env) {
             willUnmount() {
                 if (action.target === "new" && dialogCloseResolve) {
                     dialogCloseResolve();
-                }
-            }
-            onHistoryBack() {
-                const previousController = controllerStack[controllerStack.length - 2];
-                if (previousController && !dialog) {
-                    restore(previousController.jsId);
-                } else {
-                    _executeCloseAction();
                 }
             }
         }
