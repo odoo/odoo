@@ -8,3 +8,6 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_01_project_tour(self):
         self.start_tour("/web", 'project_tour', login="admin")
+
+    def test_02_project_test_tour(self):
+        self.start_tour("/web", 'project_test_tour', login="admin")
