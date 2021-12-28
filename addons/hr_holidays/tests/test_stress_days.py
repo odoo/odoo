@@ -4,7 +4,7 @@
 from datetime import datetime
 from freezegun import freeze_time
 
-from odoo import tests
+from odoo import Command, tests
 from odoo.tests import new_test_user
 from odoo.tests.common import Form, TransactionCase
 from odoo.exceptions import ValidationError
@@ -53,7 +53,7 @@ class TestHrLeaveStressDays(TransactionCase):
             'start_date': datetime(2021, 11, 2),
             'end_date': datetime(2021, 11, 2),
             'color': 1,
-            'resource_calendar_id': cls.default_calendar.id,
+            'resource_calendar_ids': [[Command.SET, False, [cls.default_calendar.id]]],
         })
         cls.stress_week = cls.env['hr.leave.stress.day'].create({
             'name': 'Super Event End Of Week',
@@ -61,7 +61,7 @@ class TestHrLeaveStressDays(TransactionCase):
             'start_date': datetime(2021, 11, 8),
             'end_date': datetime(2021, 11, 12),
             'color': 2,
-            'resource_calendar_id': cls.default_calendar.id,
+            'resource_calendar_ids': [[Command.SET, False, [cls.default_calendar.id]]],
         })
 
     @freeze_time('2021-10-15')

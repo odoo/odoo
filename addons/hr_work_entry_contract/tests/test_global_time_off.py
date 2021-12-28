@@ -5,6 +5,7 @@ from .common import TestWorkEntryBase
 
 from datetime import datetime
 
+from odoo import Command
 from odoo.tests import tagged
 
 @tagged('-at_install', 'post_install')
@@ -21,7 +22,7 @@ class TestGlobalTimeOff(TestWorkEntryBase):
         leave = self.env['resource.calendar.leaves'].create({
             'date_from': start,
             'date_to': end,
-            'calendar_id': other_calendar.id,
+            'calendar_ids': [[Command.SET, False, [other_calendar.id]]],
             'work_entry_type_id': self.work_entry_type_leave.id,
         })
         contract = self.richard_emp.contract_ids
@@ -33,6 +34,6 @@ class TestGlobalTimeOff(TestWorkEntryBase):
         work_entries.unlink()
         contract.date_generated_from = start
         contract.date_generated_to = start
-        leave.calendar_id = contract.resource_calendar_id
+        leave.calendar_ids = [[Command.SET, False, [contract.resource_calendar_id.id]]]
         work_entries = contract._generate_work_entries(start, end)
         self.assertEqual(work_entries.work_entry_type_id, leave.work_entry_type_id)

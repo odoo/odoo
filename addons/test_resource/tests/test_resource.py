@@ -4,7 +4,7 @@
 from datetime import date, datetime
 from pytz import timezone, utc
 
-from odoo import fields
+from odoo import Command, fields
 from odoo.exceptions import ValidationError
 from odoo.addons.resource.models.resource import Intervals, sum_intervals
 from odoo.addons.test_resource.tests.common import TestResourceCommon
@@ -102,7 +102,7 @@ class TestErrors(TestResourceCommon):
             self.env['resource.calendar.leaves'].create({
                 'name': 'error cannot return in the past',
                 'resource_id': False,
-                'calendar_id': self.calendar_jean.id,
+                'calendar_ids': [[Command.SET, False, [self.calendar_jean.id]]],
                 'date_from': datetime_str(2018, 4, 3, 20, 0, 0, tzinfo=self.jean.tz),
                 'date_to': datetime_str(2018, 4, 3, 0, 0, 0, tzinfo=self.jean.tz),
             })
@@ -111,7 +111,7 @@ class TestErrors(TestResourceCommon):
             self.env['resource.calendar.leaves'].create({
                 'name': 'error caused by timezones',
                 'resource_id': False,
-                'calendar_id': self.calendar_jean.id,
+                'calendar_ids': [[Command.SET, False, [self.calendar_jean.id]]],
                 'date_from': datetime_str(2018, 4, 3, 10, 0, 0, tzinfo='UTC'),
                 'date_to': datetime_str(2018, 4, 3, 12, 0, 0, tzinfo='Etc/GMT-6')
             })
@@ -125,14 +125,14 @@ class TestCalendar(TestResourceCommon):
         self.env['resource.calendar.leaves'].create({
             'name': 'Global Leave',
             'resource_id': False,
-            'calendar_id': self.calendar_jean.id,
+            'calendar_ids': [[Command.SET, False, [self.calendar_jean.id]]],
             'date_from': datetime_str(2018, 4, 3, 0, 0, 0, tzinfo=self.jean.tz),
             'date_to': datetime_str(2018, 4, 3, 23, 59, 59, tzinfo=self.jean.tz),
         })
 
         self.env['resource.calendar.leaves'].create({
             'name': 'leave for Jean',
-            'calendar_id': self.calendar_jean.id,
+            'calendar_ids': [[Command.SET, False, [self.calendar_jean.id]]],
             'resource_id': self.jean.resource_id.id,
             'date_from': datetime_str(2018, 4, 5, 0, 0, 0, tzinfo=self.jean.tz),
             'date_to': datetime_str(2018, 4, 5, 23, 59, 59, tzinfo=self.jean.tz),
@@ -154,7 +154,7 @@ class TestCalendar(TestResourceCommon):
         # leave of size 0
         self.env['resource.calendar.leaves'].create({
             'name': 'zero_length',
-            'calendar_id': self.calendar_patel.id,
+            'calendar_ids': [[Command.SET, False, [self.calendar_patel.id]]],
             'resource_id': False,
             'date_from': datetime_str(2018, 4, 3, 0, 0, 0, tzinfo=self.patel.tz),
             'date_to': datetime_str(2018, 4, 3, 0, 0, 0, tzinfo=self.patel.tz),
@@ -169,7 +169,7 @@ class TestCalendar(TestResourceCommon):
         # leave of medium size
         leave = self.env['resource.calendar.leaves'].create({
             'name': 'zero_length',
-            'calendar_id': self.calendar_patel.id,
+            'calendar_ids': [[Command.SET, False, [self.calendar_patel.id]]],
             'resource_id': False,
             'date_from': datetime_str(2018, 4, 3, 9, 0, 0, tzinfo=self.patel.tz),
             'date_to': datetime_str(2018, 4, 3, 12, 0, 0, tzinfo=self.patel.tz),
@@ -186,7 +186,7 @@ class TestCalendar(TestResourceCommon):
         # leave of very small size
         leave = self.env['resource.calendar.leaves'].create({
             'name': 'zero_length',
-            'calendar_id': self.calendar_patel.id,
+            'calendar_ids': [[Command.SET, False, [self.calendar_patel.id]]],
             'resource_id': False,
             'date_from': datetime_str(2018, 4, 3, 0, 0, 0, tzinfo=self.patel.tz),
             'date_to': datetime_str(2018, 4, 3, 0, 0, 10, tzinfo=self.patel.tz),
@@ -204,7 +204,7 @@ class TestCalendar(TestResourceCommon):
         # Should equal to a leave between 2018/04/03 10:00:00 and 2018/04/04 10:00:00
         leave = self.env['resource.calendar.leaves'].create({
             'name': 'no timezone',
-            'calendar_id': self.calendar_patel.id,
+            'calendar_ids': [[Command.SET, False, [self.calendar_patel.id]]],
             'resource_id': False,
             'date_from': datetime_str(2018, 4, 3, 4, 0, 0),
             'date_to': datetime_str(2018, 4, 4, 4, 0, 0),
@@ -248,7 +248,7 @@ class TestCalendar(TestResourceCommon):
         # 2 weeks calendar week 2, leave during a day where he doesn't work this week
         leave = self.env['resource.calendar.leaves'].create({
             'name': 'Leave Jules week 2',
-            'calendar_id': self.calendar_jules.id,
+            'calendar_ids': [[Command.SET, False, [self.calendar_jules.id]]],
             'resource_id': False,
             'date_from': datetime_str(2018, 4, 11, 4, 0, 0, tzinfo=self.jules.tz),
             'date_to': datetime_str(2018, 4, 13, 4, 0, 0, tzinfo=self.jules.tz),
@@ -265,7 +265,7 @@ class TestCalendar(TestResourceCommon):
         # 2 weeks calendar week 2, leave during a day where he works this week
         leave = self.env['resource.calendar.leaves'].create({
             'name': 'Leave Jules week 2',
-            'calendar_id': self.calendar_jules.id,
+            'calendar_ids': [[Command.SET, False, [self.calendar_jules.id]]],
             'resource_id': False,
             'date_from': datetime_str(2018, 4, 9, 0, 0, 0, tzinfo=self.jules.tz),
             'date_to': datetime_str(2018, 4, 9, 23, 59, 0, tzinfo=self.jules.tz),
@@ -319,7 +319,7 @@ class TestCalendar(TestResourceCommon):
     def test_plan_hours(self):
         self.env['resource.calendar.leaves'].create({
             'name': 'global',
-            'calendar_id': self.calendar_jean.id,
+            'calendar_ids': [[Command.SET, False, [self.calendar_jean.id]]],
             'resource_id': False,
             'date_from': datetime_str(2018, 4, 11, 0, 0, 0, tzinfo=self.jean.tz),
             'date_to': datetime_str(2018, 4, 11, 23, 59, 59, tzinfo=self.jean.tz),
@@ -355,7 +355,7 @@ class TestCalendar(TestResourceCommon):
     def test_plan_days(self):
         self.env['resource.calendar.leaves'].create({
             'name': 'global',
-            'calendar_id': self.calendar_jean.id,
+            'calendar_ids': [[Command.SET, False, [self.calendar_jean.id]]],
             'resource_id': False,
             'date_from': datetime_str(2018, 4, 11, 0, 0, 0, tzinfo=self.jean.tz),
             'date_to': datetime_str(2018, 4, 11, 23, 59, 59, tzinfo=self.jean.tz),
@@ -626,7 +626,7 @@ class TestResMixin(TestResourceCommon):
         # half days
         leave = self.env['resource.calendar.leaves'].create({
             'name': 'half',
-            'calendar_id': self.calendar_jean.id,
+            'calendar_ids': [[Command.SET, False, [self.calendar_jean.id]]],
             'resource_id': self.jean.resource_id.id,
             'date_from': datetime_str(2018, 4, 2, 10, 0, 0, tzinfo=self.jean.tz),
             'date_to': datetime_str(2018, 4, 2, 14, 0, 0, tzinfo=self.jean.tz),
@@ -651,7 +651,7 @@ class TestResMixin(TestResourceCommon):
         # leave size 0
         leave = self.env['resource.calendar.leaves'].create({
             'name': 'zero',
-            'calendar_id': self.calendar_jean.id,
+            'calendar_ids': [[Command.SET, False, [self.calendar_jean.id]]],
             'resource_id': False,
             'date_from': datetime_str(2018, 4, 2, 10, 0, 0, tzinfo=self.jean.tz),
             'date_to': datetime_str(2018, 4, 2, 10, 0, 0, tzinfo=self.jean.tz),
@@ -668,7 +668,7 @@ class TestResMixin(TestResourceCommon):
         # leave very small size
         leave = self.env['resource.calendar.leaves'].create({
             'name': 'small',
-            'calendar_id': self.calendar_jean.id,
+            'calendar_ids': [[Command.SET, False, [self.calendar_jean.id]]],
             'resource_id': False,
             'date_from': datetime_str(2018, 4, 2, 10, 0, 0, tzinfo=self.jean.tz),
             'date_to': datetime_str(2018, 4, 2, 10, 0, 1, tzinfo=self.jean.tz),
@@ -685,7 +685,7 @@ class TestResMixin(TestResourceCommon):
         # Jean takes a leave
         self.env['resource.calendar.leaves'].create({
             'name': 'Jean is visiting India',
-            'calendar_id': self.jean.resource_calendar_id.id,
+            'calendar_ids': [[Command.SET, False, [self.jean.resource_calendar_id.id]]],
             'resource_id': self.jean.resource_id.id,
             'date_from': datetime_str(2018, 4, 10, 8, 0, 0, tzinfo=self.jean.tz),
             'date_to': datetime_str(2018, 4, 10, 16, 0, 0, tzinfo=self.jean.tz),
@@ -694,7 +694,7 @@ class TestResMixin(TestResourceCommon):
         # John takes a leave for Jean
         self.env['resource.calendar.leaves'].create({
             'name': 'Jean is comming in USA',
-            'calendar_id': self.jean.resource_calendar_id.id,
+            'calendar_ids': [[Command.SET, False, [self.jean.resource_calendar_id.id]]],
             'resource_id': self.jean.resource_id.id,
             'date_from': datetime_str(2018, 4, 12, 8, 0, 0, tzinfo=self.john.tz),
             'date_to': datetime_str(2018, 4, 12, 16, 0, 0, tzinfo=self.john.tz),
@@ -730,7 +730,7 @@ class TestResMixin(TestResourceCommon):
         # Gives 3 hours (3/8 of a day)
         self.env['resource.calendar.leaves'].create({
             'name': 'John is sick',
-            'calendar_id': self.john.resource_calendar_id.id,
+            'calendar_ids': [[Command.SET, False, [self.john.resource_calendar_id.id]]],
             'resource_id': self.john.resource_id.id,
             'date_from': datetime_str(2018, 4, 10, 0, 0, 0, tzinfo=self.jean.tz),
             'date_to': datetime_str(2018, 4, 10, 20, 0, 0, tzinfo=self.jean.tz),
@@ -740,7 +740,7 @@ class TestResMixin(TestResourceCommon):
         # Gives all day (12 hours)
         self.env['resource.calendar.leaves'].create({
             'name': 'John goes to holywood',
-            'calendar_id': self.john.resource_calendar_id.id,
+            'calendar_ids': [[Command.SET, False, [self.john.resource_calendar_id.id]]],
             'resource_id': self.john.resource_id.id,
             'date_from': datetime_str(2018, 4, 13, 7, 0, 0, tzinfo=self.john.tz),
             'date_to': datetime_str(2018, 4, 13, 18, 0, 0, tzinfo=self.john.tz),
@@ -757,7 +757,7 @@ class TestResMixin(TestResourceCommon):
         # half days
         leave = self.env['resource.calendar.leaves'].create({
             'name': 'half',
-            'calendar_id': self.calendar_jean.id,
+            'calendar_ids': [[Command.SET, False, [self.calendar_jean.id]]],
             'resource_id': self.jean.resource_id.id,
             'date_from': datetime_str(2018, 4, 2, 10, 0, 0, tzinfo=self.jean.tz),
             'date_to': datetime_str(2018, 4, 2, 14, 0, 0, tzinfo=self.jean.tz),
@@ -774,7 +774,7 @@ class TestResMixin(TestResourceCommon):
         # leave size 0
         leave = self.env['resource.calendar.leaves'].create({
             'name': 'zero',
-            'calendar_id': self.calendar_jean.id,
+            'calendar_ids': [[Command.SET, False, [self.calendar_jean.id]]],
             'resource_id': False,
             'date_from': datetime_str(2018, 4, 2, 10, 0, 0, tzinfo=self.jean.tz),
             'date_to': datetime_str(2018, 4, 2, 10, 0, 0, tzinfo=self.jean.tz),
@@ -791,7 +791,7 @@ class TestResMixin(TestResourceCommon):
         # leave very small size
         leave = self.env['resource.calendar.leaves'].create({
             'name': 'small',
-            'calendar_id': self.calendar_jean.id,
+            'calendar_ids': [[Command.SET, False, [self.calendar_jean.id]]],
             'resource_id': False,
             'date_from': datetime_str(2018, 4, 2, 10, 0, 0, tzinfo=self.jean.tz),
             'date_to': datetime_str(2018, 4, 2, 10, 0, 1, tzinfo=self.jean.tz),
@@ -809,7 +809,7 @@ class TestResMixin(TestResourceCommon):
     def test_list_leaves(self):
         jean_leave = self.env['resource.calendar.leaves'].create({
             'name': "Jean's son is sick",
-            'calendar_id': self.jean.resource_calendar_id.id,
+            'calendar_ids': [[Command.SET, False, [self.jean.resource_calendar_id.id]]],
             'resource_id': False,
             'date_from': datetime_str(2018, 4, 10, 0, 0, 0, tzinfo=self.jean.tz),
             'date_to': datetime_str(2018, 4, 10, 23, 59, 59, tzinfo=self.jean.tz),
@@ -824,7 +824,7 @@ class TestResMixin(TestResourceCommon):
         # half days
         leave = self.env['resource.calendar.leaves'].create({
             'name': 'half',
-            'calendar_id': self.jean.resource_calendar_id.id,
+            'calendar_ids': [[Command.SET, False, [self.jean.resource_calendar_id.id]]],
             'resource_id': self.jean.resource_id.id,
             'date_from': datetime_str(2018, 4, 2, 10, 0, 0, tzinfo=self.jean.tz),
             'date_to': datetime_str(2018, 4, 2, 14, 0, 0, tzinfo=self.jean.tz),
@@ -841,7 +841,7 @@ class TestResMixin(TestResourceCommon):
         # very small size
         leave = self.env['resource.calendar.leaves'].create({
             'name': 'small',
-            'calendar_id': self.jean.resource_calendar_id.id,
+            'calendar_ids': [[Command.SET, False, [self.jean.resource_calendar_id.id]]],
             'resource_id': self.jean.resource_id.id,
             'date_from': datetime_str(2018, 4, 2, 10, 0, 0, tzinfo=self.jean.tz),
             'date_to': datetime_str(2018, 4, 2, 10, 0, 1, tzinfo=self.jean.tz),
@@ -861,7 +861,7 @@ class TestResMixin(TestResourceCommon):
         # size 0
         leave = self.env['resource.calendar.leaves'].create({
             'name': 'zero',
-            'calendar_id': self.jean.resource_calendar_id.id,
+            'calendar_ids': [[Command.SET, False, [self.jean.resource_calendar_id.id]]],
             'resource_id': self.jean.resource_id.id,
             'date_from': datetime_str(2018, 4, 2, 10, 0, 0, tzinfo=self.jean.tz),
             'date_to': datetime_str(2018, 4, 2, 10, 0, 0, tzinfo=self.jean.tz),
@@ -901,7 +901,7 @@ class TestResMixin(TestResourceCommon):
         # half days
         leave = self.env['resource.calendar.leaves'].create({
             'name': 'small',
-            'calendar_id': self.jean.resource_calendar_id.id,
+            'calendar_ids': [[Command.SET, False, [self.jean.resource_calendar_id.id]]],
             'resource_id': self.jean.resource_id.id,
             'date_from': datetime_str(2018, 4, 2, 10, 0, 0, tzinfo=self.jean.tz),
             'date_to': datetime_str(2018, 4, 2, 14, 0, 0, tzinfo=self.jean.tz),
@@ -924,7 +924,7 @@ class TestResMixin(TestResourceCommon):
         # very small size
         leave = self.env['resource.calendar.leaves'].create({
             'name': 'small',
-            'calendar_id': self.jean.resource_calendar_id.id,
+            'calendar_ids': [[Command.SET, False, [self.jean.resource_calendar_id.id]]],
             'resource_id': self.jean.resource_id.id,
             'date_from': datetime_str(2018, 4, 2, 10, 0, 0, tzinfo=self.jean.tz),
             'date_to': datetime_str(2018, 4, 2, 10, 0, 1, tzinfo=self.jean.tz),
@@ -943,7 +943,7 @@ class TestResMixin(TestResourceCommon):
         # size 0
         leave = self.env['resource.calendar.leaves'].create({
             'name': 'zero',
-            'calendar_id': self.jean.resource_calendar_id.id,
+            'calendar_ids': [[Command.SET, False, [self.jean.resource_calendar_id.id]]],
             'resource_id': self.jean.resource_id.id,
             'date_from': datetime_str(2018, 4, 2, 10, 0, 0, tzinfo=self.jean.tz),
             'date_to': datetime_str(2018, 4, 2, 10, 0, 0, tzinfo=self.jean.tz),
@@ -1070,7 +1070,7 @@ class TestTimezones(TestResourceCommon):
     def test_leave_data(self):
         self.env['resource.calendar.leaves'].create({
             'name': '',
-            'calendar_id': self.jean.resource_calendar_id.id,
+            'calendar_ids': [[Command.SET, False, [self.jean.resource_calendar_id.id]]],
             'resource_id': self.jean.resource_id.id,
             'date_from': datetime_str(2018, 4, 9, 8, 0, 0, tzinfo=self.tz2),
             'date_to': datetime_str(2018, 4, 9, 14, 0, 0, tzinfo=self.tz2),
@@ -1100,7 +1100,7 @@ class TestTimezones(TestResourceCommon):
     def test_leaves(self):
         leave = self.env['resource.calendar.leaves'].create({
             'name': '',
-            'calendar_id': self.jean.resource_calendar_id.id,
+            'calendar_ids': [[Command.SET, False, [self.jean.resource_calendar_id.id]]],
             'resource_id': self.jean.resource_id.id,
             'date_from': datetime_str(2018, 4, 9, 8, 0, 0, tzinfo=self.tz2),
             'date_to': datetime_str(2018, 4, 9, 14, 0, 0, tzinfo=self.tz2),

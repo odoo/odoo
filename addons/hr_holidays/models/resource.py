@@ -10,7 +10,7 @@ class CalendarLeaves(models.Model):
 
     holiday_id = fields.Many2one("hr.leave", string='Leave Request')
 
-    @api.constrains('date_from', 'date_to', 'calendar_id')
+    @api.constrains('date_from', 'date_to', 'calendar_ids')
     def _check_compare_dates(self):
         all_existing_leaves = self.env['resource.calendar.leaves'].search([
             ('resource_id', '=', False),
@@ -25,8 +25,8 @@ class CalendarLeaves(models.Model):
                         and record['company_id'] == leave['company_id']
                         and record['date_from'] <= leave['date_to']
                         and record['date_to'] >= leave['date_from'])
-                if record.calendar_id:
-                    existing_leaves = existing_leaves.filtered(lambda l: not l.calendar_id or l.calendar_id == record.calendar_id)
+                if record.calendar_ids:
+                    existing_leaves = existing_leaves.filtered(lambda l: not l.calendar_ids or l.calendar_ids in record.calendar_ids)
                 if existing_leaves:
                     raise ValidationError(_('Two public holidays cannot overlap each other for the same working hours.'))
 
@@ -38,10 +38,10 @@ class ResourceCalendar(models.Model):
     def _compute_associated_leaves_count(self):
         leaves_read_group = self.env['resource.calendar.leaves'].read_group(
             [('resource_id', '=', False)],
-            ['calendar_id'],
-            ['calendar_id']
+            ['calendar_ids'],
+            ['calendar_ids']
         )
-        result = dict((data['calendar_id'][0] if data['calendar_id'] else 'global', data['calendar_id_count']) for data in leaves_read_group)
+        result = dict((data['calendar_ids'][0] if data['calendar_ids'] else 'global', data['calendar_ids_count']) for data in leaves_read_group)
         global_leave_count = result.get('global', 0)
         for calendar in self:
             calendar.associated_leaves_count = result.get(calendar.id, 0) + global_leave_count

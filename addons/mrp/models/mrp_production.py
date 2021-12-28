@@ -1278,7 +1278,7 @@ class MrpProduction(models.Model):
             # Create leave on chosen workcenter calendar
             leave = self.env['resource.calendar.leaves'].create({
                 'name': workorder.display_name,
-                'calendar_id': best_workcenter.resource_calendar_id.id,
+                'calendar_ids': [[Command.SET, False, [best_workcenter.resource_calendar_id.id]]],
                 'date_from': best_start_date,
                 'date_to': best_finished_date,
                 'resource_id': best_workcenter.resource_id.id,

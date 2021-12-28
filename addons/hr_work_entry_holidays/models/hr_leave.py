@@ -4,7 +4,7 @@
 from collections import defaultdict
 from datetime import datetime, date
 
-from odoo import api, fields, models, _
+from odoo import api, Command, fields, models, _
 from odoo.exceptions import ValidationError
 
 
@@ -41,7 +41,7 @@ class HrLeave(models.Model):
                     'time_type': leave.holiday_status_id.time_type,
                     'date_from': max(leave.date_from, datetime.combine(contract.date_start, datetime.min.time())),
                     'date_to': min(leave.date_to, datetime.combine(contract.date_end or date.max, datetime.max.time())),
-                    'calendar_id': contract.resource_calendar_id.id,
+                    'calendar_ids': [[Command.SET, False, [contract.resource_calendar_id.id]]],
                 }]
 
         return resource_leaves | self.env['resource.calendar.leaves'].create(resource_leave_values)

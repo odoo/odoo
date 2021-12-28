@@ -64,7 +64,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
 
         global_time_off = self.env['resource.calendar.leaves'].create({
             'name': 'Test',
-            'calendar_id': self.test_company.resource_calendar_id.id,
+            'calendar_ids': [[Command.SET, False, [self.test_company.resource_calendar_id.id]]],
             'date_from': leave_start_datetime,
             'date_to': leave_end_datetime,
         })
@@ -97,7 +97,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
 
         self.env['resource.calendar.leaves'].create({
             'name': 'Test',
-            'calendar_id': self.part_time_calendar.id,
+            'calendar_ids': [[Command.SET, False, [self.part_time_calendar.id]]],
             'date_from': leave_start_datetime,
             'date_to': leave_end_datetime,
         })

@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import date
+from odoo import Command
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 from odoo.exceptions import ValidationError
 
@@ -55,7 +56,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             'name': 'Global Leave',
             'date_from': date(2022, 3, 8),
             'date_to': date(2022, 3, 8),
-            'calendar_id': cls.calendar_1.id,
+            'calendar_ids': [[Command.SET, False, [cls.calendar_1.id]]],
         })
 
     def test_leave_on_global_leave(self):
@@ -64,7 +65,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
                 'name': 'Wrong Leave',
                 'date_from': date(2022, 3, 7),
                 'date_to': date(2022, 3, 7),
-                'calendar_id': self.calendar_1.id,
+                'calendar_ids': [[Command.SET, False, [self.calendar_1.id]]],
             })
 
         with self.assertRaises(ValidationError):
@@ -79,7 +80,7 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
                 'name': 'Correct Leave',
                 'date_from': date(2022, 3, 8),
                 'date_to': date(2022, 3, 8),
-                'calendar_id': self.calendar_2.id,
+                'calendar_ids': [[Command.SET, False, [self.calendar_2.id]]],
             })
 
         with self.assertRaises(ValidationError):
@@ -94,5 +95,5 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
                 'name': 'Wrong Leave',
                 'date_from': date(2022, 3, 8),
                 'date_to': date(2022, 3, 8),
-                'calendar_id': self.calendar_1.id,
+                'calendar_ids': [[Command.SET, False, [self.calendar_1.id]]],
             })

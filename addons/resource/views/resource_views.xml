@@ -97,7 +97,7 @@
                 <field name="name"/>
                 <field name="resource_id"/>
                 <field name="company_id" groups="base.group_multi_company"/>
-                <field name="calendar_id"/>
+                <field name="calendar_ids"/>
                 <filter name="filter_date" date="date_from" default_period="this_year" string="Period"/>
                 <group expand="0" string="Group By">
                     <filter string="Resource" name="resource" domain="[]" context="{'group_by':'resource_id'}"/>
@@ -129,8 +129,8 @@
                 <group>
                     <group name="leave_details">
                         <field name="name" string="Reason"/>
-                        <field name="calendar_id"/>
-                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" attrs="{'invisible':[('calendar_id','=',False)]}"/>
+                        <field name="calendar_ids"/>
+                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" attrs="{'invisible':[('calendar_ids','=',False)]}"/>
                         <field name="resource_id"/>
                     </group>
                     <group name="leave_dates">
@@ -152,7 +152,7 @@
                 <field name="name" string="Reason"/>
                 <field name="resource_id" />
                 <field name="company_id" groups="base.group_multi_company"/>
-                <field name="calendar_id"/>
+                <field name="calendar_ids" widget="many2many_tags"/>
                 <field name="date_from" />
                 <field name="date_to" />
             </tree>

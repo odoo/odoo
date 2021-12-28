@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import datetime
 
-from odoo import fields, models
+from odoo import Command, fields, models
 from odoo.osv.expression import AND
 
 
@@ -19,13 +19,13 @@ class ResourceCalendar(models.Model):
         """
         from_date = from_date or fields.Datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
         domain = [
-            ('calendar_id', 'in', self.ids),
+            ('calendar_ids', 'in', self.ids),
             ('date_from', '>=', from_date),
         ]
         domain = AND([domain, [('resource_id', 'in', resources.ids)]]) if resources else domain
 
         self.env['resource.calendar.leaves'].search(domain).write({
-            'calendar_id': other_calendar.id,
+            'calendar_ids': [[Command.SET, False, [other_calendar.id]]],
         })
 
     def _compute_contracts_count(self):

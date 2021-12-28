@@ -544,8 +544,8 @@ class HolidaysRequest(models.Model):
                 ('start_date', '<=', date_to.date()),
                 ('end_date', '>=', date_from.date()),
                 '|',
-                    ('resource_calendar_id', '=', False),
-                    ('resource_calendar_id', 'in', resource_calendar_id.ids),
+                    ('resource_calendar_ids', '=', False),
+                    ('resource_calendar_ids', 'in', resource_calendar_id.ids),
             ])
 
             for leave in self:
@@ -553,8 +553,8 @@ class HolidaysRequest(models.Model):
                     ('start_date', '<=', leave.date_to.date()),
                     ('end_date', '>=', leave.date_from.date()),
                     '|',
-                        ('resource_calendar_id', '=', False),
-                        ('resource_calendar_id', '=', (leave.employee_id.resource_calendar_id or self.env.company.resource_calendar_id).id)
+                        ('resource_calendar_ids', '=', False),
+                        ('resource_calendar_ids', '=', (leave.employee_id.resource_calendar_id or self.env.company.resource_calendar_id).id)
                 ]
 
                 if leave.holiday_status_id.company_id:
@@ -1099,7 +1099,7 @@ class HolidaysRequest(models.Model):
             'holiday_id': leave.id,
             'date_to': leave.date_to,
             'resource_id': leave.employee_id.resource_id.id,
-            'calendar_id': leave.employee_id.resource_calendar_id.id,
+            'calendar_ids': [[Command.SET, False, [leave.employee_id.resource_calendar_id.id]]],
             'time_type': leave.holiday_status_id.time_type,
         } for leave in self]
 

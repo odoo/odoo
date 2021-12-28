@@ -203,13 +203,8 @@ class ResourceCalendar(models.Model):
     attendance_ids = fields.One2many(
         'resource.calendar.attendance', 'calendar_id', 'Working Time',
         compute='_compute_attendance_ids', store=True, readonly=False, copy=True)
-    leave_ids = fields.One2many(
-        'resource.calendar.leaves', 'calendar_id', 'Time Off')
-    global_leave_ids = fields.One2many(
-        'resource.calendar.leaves', 'calendar_id', 'Global Time Off',
-        compute='_compute_global_leave_ids', store=True, readonly=False,
-        domain=[('resource_id', '=', False)], copy=True,
-    )
+    leave_ids = fields.Many2many(
+        'resource.calendar.leaves', string='Time Off')
     hours_per_day = fields.Float("Average Hour per Day", default=HOURS_PER_DAY,
                                  help="Average hours per day a resource is supposed to work with this calendar.")
     tz = fields.Selection(
@@ -230,14 +225,6 @@ class ResourceCalendar(models.Model):
                 'tz': company_calendar.tz,
                 'attendance_ids': [(5, 0, 0)] + [
                     (0, 0, attendance._copy_attendance_vals()) for attendance in company_calendar.attendance_ids if not attendance.resource_id]
-            })
-
-    @api.depends('company_id')
-    def _compute_global_leave_ids(self):
-        for calendar in self.filtered(lambda c: not c._origin or c._origin.company_id != c.company_id):
-            calendar.write({
-                'global_leave_ids': [(5, 0, 0)] + [
-                    (0, 0, leave._copy_leave_vals()) for leave in calendar.company_id.resource_calendar_id.global_leave_ids]
             })
 
     @api.depends('tz')
@@ -493,7 +480,9 @@ class ResourceCalendar(models.Model):
             domain = [('time_type', '=', 'leave')]
         # for the computation, express all datetimes in UTC
         domain = domain + [
-            ('calendar_id', 'in', [False, self.id]),
+            '|',
+            ('calendar_ids', '=', False),
+            ('calendar_ids', 'in', [self.id]),
             ('resource_id', 'in', resource_ids),
             ('date_from', '<=', datetime_to_string(end_dt)),
             ('date_to', '>=', datetime_to_string(start_dt)),
@@ -1112,8 +1101,8 @@ class ResourceCalendarLeaves(models.Model):
     name = fields.Char('Reason')
     company_id = fields.Many2one(
         'res.company', string="Company", readonly=True, store=True,
-        default=lambda self: self.env.company, compute='_compute_company_id')
-    calendar_id = fields.Many2one('resource.calendar', 'Working Hours', domain="[('company_id', '=', company_id)]", index=True)
+        default=lambda self: self.env.company)
+    calendar_ids = fields.Many2many('resource.calendar', string='Working Hours', domain="[('company_id', '=', company_id)]", index=True)
     date_from = fields.Datetime('Start Date', required=True)
     date_to = fields.Datetime('End Date', required=True)
     resource_id = fields.Many2one(
@@ -1122,10 +1111,26 @@ class ResourceCalendarLeaves(models.Model):
     time_type = fields.Selection([('leave', 'Time Off'), ('other', 'Other')], default='leave',
                                  help="Whether this should be computed as a time off or as work time (eg: formation)")
 
-    @api.depends('calendar_id')
-    def _compute_company_id(self):
-        for leave in self:
-            leave.company_id = leave.calendar_id.company_id or self.env.company
+    def _get_calendar_ids(self, vals, company_id):
+        if vals['calendar_ids'][0][0] == fields.Command.SET and not vals['calendar_ids'][0][2]:
+            resource_calendars = self.env['resource.calendar'].search_read([('company_id', '=', company_id)], ['id'])
+            return [r['id'] for r in resource_calendars]
+        else:
+            return vals['calendar_ids'][0][2]
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('calendar_ids'):
+                vals['calendar_ids'][0][2] = self._get_calendar_ids(vals, self.env.company.id)
+        res = super().create(vals_list)
+        return res
+
+    def write(self, values):
+        if values.get('calendar_ids'):
+            values['calendar_ids'][0][2] = self._get_calendar_ids(values, self.company_id.id)
+        res = super().write(values)
+        return res
 
     @api.constrains('date_from', 'date_to')
     def check_dates(self):

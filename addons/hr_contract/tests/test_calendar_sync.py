@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.fields import Datetime, Date
 from odoo.addons.hr_contract.tests.common import TestContractCommon
 
@@ -40,7 +41,7 @@ class TestContractCalendars(TestContractCommon):
                 'date_from': start,
                 'date_to': end,
                 'resource_id': resource.id if resource else None,
-                'calendar_id': self.employee.resource_calendar_id.id,
+                'calendar_ids': [[Command.SET, False, [self.employee.resource_calendar_id.id]]],
                 'time_type': 'leave',
             })
 
@@ -59,11 +60,11 @@ class TestContractCalendars(TestContractCommon):
 
         self.calendar_richard.transfer_leaves_to(self.calendar_35h, resources=self.employee.resource_id, from_date=Date.to_date('2015-11-21'))
 
-        self.assertEqual(leave1.calendar_id, self.calendar_richard, "It should stay in Richard's calendar")
-        self.assertEqual(leave3.calendar_id, self.calendar_richard, "Global leave should stay in original calendar")
-        self.assertEqual(leave2.calendar_id, self.calendar_35h, "It should be transfered to the other calendar")
+        self.assertEqual(leave1.calendar_ids, self.calendar_richard, "It should stay in Richard's calendar")
+        self.assertEqual(leave3.calendar_ids, self.calendar_richard, "Global leave should stay in original calendar")
+        self.assertEqual(leave2.calendar_ids, self.calendar_35h, "It should be transfered to the other calendar")
 
         # Transfer global leaves
         self.calendar_richard.transfer_leaves_to(self.calendar_35h, resources=None, from_date=Date.to_date('2015-11-21'))
 
-        self.assertEqual(leave3.calendar_id, self.calendar_35h, "Global leave should be transfered")
+        self.assertEqual(leave3.calendar_ids, self.calendar_35h, "Global leave should be transfered")

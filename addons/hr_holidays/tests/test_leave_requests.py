@@ -380,7 +380,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 (0, 0, {'name': 'Friday Morning', 'dayofweek': '4', 'hour_from': 8, 'hour_to': 12, 'day_period': 'morning'}),
                 (0, 0, {'name': 'Friday Afternoon', 'dayofweek': '4', 'hour_from': 13, 'hour_to': 17, 'day_period': 'afternoon'})
             ],
-            'global_leave_ids': [(0, 0, {
+            'leave_ids': [(0, 0, {
                 'name': 'Christmas Leave',
                 'date_from': fields.Datetime.from_string('2019-12-25 00:00:00'),
                 'date_to': fields.Datetime.from_string('2019-12-26 23:59:59'),

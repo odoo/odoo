@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 from collections import defaultdict
 import json
 
-from odoo import api, fields, models, _, SUPERUSER_ID
+from odoo import api, Command, fields, models, _, SUPERUSER_ID
 from odoo.exceptions import UserError
 from odoo.tools import float_compare, float_round, format_datetime
 
@@ -578,7 +578,7 @@ class MrpWorkorder(models.Model):
         if not self.leave_id:
             leave = self.env['resource.calendar.leaves'].create({
                 'name': self.display_name,
-                'calendar_id': self.workcenter_id.resource_calendar_id.id,
+                'calendar_ids': [[Command.SET, False, [self.workcenter_id.resource_calendar_id.id]]],
                 'date_from': start_date,
                 'date_to': start_date + relativedelta(minutes=self.duration_expected),
                 'resource_id': self.workcenter_id.resource_id.id,

@@ -20,16 +20,16 @@ class Employee(models.Model):
         today = fields.Datetime.today()
         lines_vals = []
         for employee in employees:
-            global_leaves = employee.resource_calendar_id.global_leave_ids.filtered(lambda l: l.date_from >= today)
+            global_leaves = employee.resource_calendar_id.leave_ids.filtered(lambda l: l.date_from >= today)
             work_hours_data = global_leaves._work_time_per_day()
 
             for global_time_off in global_leaves:
-                for index, (day_date, work_hours_count) in enumerate(work_hours_data[global_time_off.id]):
+                for index, (day_date, work_hours_count) in enumerate(work_hours_data[global_time_off.id][employee.resource_calendar_id.id]):
                     lines_vals.append(
                         global_time_off._timesheet_prepare_line_values(
                             index,
                             employee,
-                            work_hours_data[global_time_off.id],
+                            work_hours_data[global_time_off.id][employee.resource_calendar_id.id],
                             day_date,
                             work_hours_count
                         )

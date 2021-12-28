@@ -39,7 +39,7 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//field[@name='date_to']" position="after">
-                <xpath expr="//field[@name='calendar_id']" position="move"/>
+                <xpath expr="//field[@name='calendar_ids']" position="move"/>
             </xpath>
         </field>
     </record>
@@ -86,5 +86,16 @@
         <field name="view_id" ref="resource_calendar_leaves_tree_inherit"/>
         <field name="context">{
             'search_default_filter_date': True}</field>
+    </record>
+
+    <record model="ir.actions.server" id="action_resource_calendar_leaves_duplicate">
+        <field name="name">Duplicate</field>
+        <field name="model_id" ref="model_resource_calendar_leaves"/>
+        <field name="binding_model_id" ref="model_resource_calendar_leaves" />
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                records.copy()
+        </field>
     </record>
 </odoo>

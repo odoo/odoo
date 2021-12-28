@@ -72,7 +72,7 @@ class HrContract(models.Model):
         # Complete override, compare over holiday_id.employee_id instead of calendar_id
         return [
             ('time_type', '=', 'leave'),
-            '|', ('calendar_id', 'in', [False] + self.resource_calendar_id.ids),
+            '|', '|', ('calendar_ids', '=', False), ('calendar_ids', 'in', self.resource_calendar_id.ids),
                  ('holiday_id.employee_id', 'in', self.employee_id.ids), # see https://github.com/odoo/enterprise/pull/15091
             ('resource_id', 'in', [False] + self.employee_id.resource_id.ids),
             ('date_from', '<=', end_dt),
