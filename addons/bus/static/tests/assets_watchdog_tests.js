@@ -48,10 +48,7 @@ QUnit.module("Bus Assets WatchDog", (hooks) => {
                 return [{
                     message: {
                         type: 'bundle_changed',
-                        payload: {
-                            name: 'web.assets_backend',
-                            version: 'newHash',
-                        },
+                        payload: { server_version: "NEW_MAJOR_VERSION" },
                     },
                 }];
             }
