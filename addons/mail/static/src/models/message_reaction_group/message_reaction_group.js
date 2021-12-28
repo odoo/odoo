@@ -69,7 +69,12 @@ function factory(dependencies) {
                 1: secondUser,
                 2: thirdUser,
             } = [
-                ...this.partners.map(partner => partner.nameOrDisplayName),
+                ...this.partners.map(partner => {
+                    if (this.message.originThread) {
+                        return this.message.originThread.getMemberName(partner);
+                    }
+                    return partner.nameOrDisplayName;
+                }),
                 ...this.guests.map(guest => guest.name),
             ];
             switch (length) {

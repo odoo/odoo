@@ -58,7 +58,12 @@
                             <div class="o_Message_header ml-2">
                                 <t t-if="messageView.message.author">
                                     <div class="o_Message_authorName o_Message_authorRedirect o_redirect text-truncate" t-on-click="_onClickAuthorName" title="Open profile">
-                                        <t t-esc="messageView.message.author.nameOrDisplayName"/>
+                                        <t t-if="messageView.message.originThread">
+                                            <t t-esc="messageView.message.originThread.getMemberName(messageView.message.author)"/>
+                                        </t>
+                                        <t t-else="">
+                                            <t t-esc="messageView.message.author.nameOrDisplayName"/>
+                                        </t>
                                     </div>
                                 </t>
                                 <t t-elif="messageView.message.guestAuthor">
