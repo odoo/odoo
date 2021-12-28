@@ -21,6 +21,7 @@ import {
     setupWebClientRegistries,
 } from "./../helpers";
 import * as cpHelpers from "@web/../tests/search/helpers";
+import ListController from "web.ListController";
 
 let serverData;
 // legacy stuff
@@ -456,13 +457,18 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test('handles "history_back" event', async function (assert) {
         assert.expect(3);
+        let controller;
+        patchWithCleanup(ListController.prototype, {
+            init() {
+                this._super(...arguments);
+                controller = this;
+            },
+        });
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 4);
         await doAction(webClient, 3);
         assert.containsN(webClient, ".o_control_panel .breadcrumb-item", 2);
-        // simulate an "history-back" event
-        const ev = new Event("history-back", { bubbles: true, cancelable: true });
-        webClient.el.querySelector(".o_view_controller").dispatchEvent(ev);
+        controller.trigger_up("history_back");
         await testUtils.nextTick();
         await legacyExtraNextTick();
         assert.containsOnce(webClient, ".o_control_panel .breadcrumb-item");
