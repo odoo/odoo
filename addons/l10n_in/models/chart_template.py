@@ -17,6 +17,13 @@ class AccountChartTemplate(models.Model):
                     journal['name'] = _('Tax Invoices')
         return res
 
+    def _load(self, company):
+        res = super(AccountChartTemplate, self)._load(company)
+        if self == self.env.ref("l10n_in.indian_chart_template_standard"):
+            company.write({'fiscalyear_last_month': '3'})
+        return res
+
+
 class AccountTaxTemplate(models.Model):
     _inherit = 'account.tax.template'
 
