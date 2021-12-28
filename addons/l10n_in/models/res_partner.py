@@ -16,6 +16,7 @@ class ResPartner(models.Model):
             ('special_economic_zone', 'Special Economic Zone'),
             ('deemed_export', 'Deemed Export'),
         ], string="GST Treatment")
+    l10n_in_pan = fields.Char(string="PAN")
 
     @api.onchange('company_type')
     def onchange_company_type(self):
@@ -43,4 +44,4 @@ class ResPartner(models.Model):
     @api.model
     def _commercial_fields(self):
         res = super()._commercial_fields()
-        return res + ['l10n_in_gst_treatment']
+        return res + ['l10n_in_gst_treatment', 'l10n_in_pan']
