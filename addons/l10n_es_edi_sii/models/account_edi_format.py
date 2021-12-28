@@ -228,7 +228,7 @@ class AccountEdiFormat(models.Model):
         if (not partner.country_id or partner.country_id.code == 'ES') and partner.vat:
             # ES partner with VAT.
             partner_info['NIF'] = partner.vat[2:] if partner.vat.startswith('ES') else partner.vat
-        elif partner.country_id.code in eu_country_codes:
+        elif partner.country_id.code in eu_country_codes and partner.vat:
             # European partner.
             partner_info['IDOtro'] = {'IDType': '02', 'ID': IDOtro_ID}
         else:
@@ -599,8 +599,6 @@ class AccountEdiFormat(models.Model):
 
         if not move.company_id.vat:
             res.append(_("VAT number is missing on company %s", move.company_id.display_name))
-        if not move.partner_id.vat:
-            res.append(_("VAT number needs to be configured on the partner %s", move.partner_id.display_name))
         for line in move.invoice_line_ids.filtered(lambda line: not line.display_type):
             taxes = line.tax_ids.flatten_taxes_hierarchy()
             recargo_count = taxes.mapped('l10n_es_type').count('recargo')

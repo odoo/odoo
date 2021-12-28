@@ -106,10 +106,8 @@ function factory(dependencies) {
         async _handleNotificationChannel(channelId, data) {
             const {
                 info,
-                is_typing,
                 last_message_id,
                 partner_id,
-                partner_name,
             } = data;
             switch (info) {
                 case 'channel_fetched':
@@ -123,11 +121,7 @@ function factory(dependencies) {
                         partner_id,
                     });
                 case 'typing_status':
-                    return this._handleNotificationChannelTypingStatus(channelId, {
-                        is_typing,
-                        partner_id,
-                        partner_name,
-                    });
+                    return this._handleNotificationChannelTypingStatus(channelId, data);
                 default:
                     return this._handleNotificationChannelMessage(channelId, data);
             }
