@@ -56,6 +56,15 @@ patchRecordMethods('mail.thread', {
     /**
      * @override
      */
+    getMemberName(partner) {
+        if (this.channel_type === 'livechat' && partner.livechat_username) {
+            return partner.livechat_username;
+        }
+        return this._super(partner);
+    },
+    /**
+     * @override
+     */
     _computeCorrespondent() {
         if (this.channel_type === 'livechat') {
             // livechat correspondent never change: always the public member.

@@ -32,7 +32,7 @@
         <td style="padding: 0 50px;">
             <div style="font-size: 13px; padding: 10px 0;">
                 <span>Hello,</span><br />Here's a copy of your conversation with
-                <span t-field="channel.livechat_operator_id.name"/>, on the
+                <span t-esc="channel.livechat_operator_id.user_livechat_username or channel.livechat_operator_id.name"/>, on the
                 <span t-field="channel.livechat_channel_id.create_date"/>
             </div>
             <table cellspacing="0" cellpadding="0" style="width:100%; border-collapse: collapse;">
