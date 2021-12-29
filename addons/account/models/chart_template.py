@@ -275,6 +275,11 @@ class AccountChartTemplate(models.Model):
                 except ValueError:
                     pass
 
+<<<<<<< HEAD
+=======
+        # If the floats for sale/purchase rates have been filled, create templates from them
+        self._create_tax_templates_from_rates(company.id, sale_tax_rate, purchase_tax_rate)
+>>>>>>> a12314e62ff... temp
         # Set the fiscal country before generating taxes in case the company does not have a country_id set yet
         if self.country_id:
             # If this CoA is made for only one country, set it as the fiscal country of the company.
