@@ -464,15 +464,15 @@ class TestProfiling(TransactionCase):
             'key': 'root',
             'arch_db': '''<t t-name="root">
                 <t t-foreach="{'a': 3, 'b': 2, 'c': 1}" t-as="item">
-                    [<t t-esc="item_index"/>: <t t-call="base.dummy" t-set-record="item"/> <t t-esc="item_value"/>]
-                    <b t-esc="add_one_query()"/></t>
+                    [<t t-out="item_index"/>: <t t-set="record" t-value="item"/><t t-call="base.dummy"/> <t t-out="item_value"/>]
+                    <b t-out="add_one_query()"/></t>
             </t>'''
         })
         child_template = self.env['ir.ui.view'].create({
             'name': 'test',
             'type': 'qweb',
             'key': 'dummy',
-            'arch_db': '<t t-name="dummy"><span t-attf-class="myclass"><t t-esc="record"/> <t t-esc="add_one_query()"/></span></t>'
+            'arch_db': '<t t-name="dummy"><span t-attf-class="myclass"><t t-out="record"/> <t t-out="add_one_query()"/></span></t>'
         })
         self.env.cr.execute("INSERT INTO ir_model_data(name, model, res_id, module)"
                             "VALUES ('dummy', 'ir.ui.view', %s, 'base')", [child_template.id])
@@ -518,33 +518,33 @@ class TestProfiling(TransactionCase):
             # first template and first directive
             {'view_id': template.id,       'xpath': '/t/t',         'directive': """t-foreach="{'a': 3, 'b': 2, 'c': 1}" t-as='item'""", 'query': 0},
             # first pass in the loop
-            {'view_id': template.id,       'xpath': '/t/t/t[1]',    'directive': "t-esc='item_index'", 'query': 0},
-            {'view_id': template.id,       'xpath': '/t/t/t[2]',    'directive': "t-call='base.dummy'", 'query': 0}, # 0 because the template is in ir.ui.view cache
-            {'view_id': template.id,       'xpath': '/t/t/t[2]',    'directive': "t-set-record='item'", 'query': 0}, # t-set it's consumed by t-call
+            {'view_id': template.id,       'xpath': '/t/t/t[1]',    'directive': "t-out='item_index'", 'query': 0},
+            {'view_id': template.id,       'xpath': '/t/t/t[2]',    'directive': "t-set='record' t-value='item'", 'query': 0},
+            {'view_id': template.id,       'xpath': '/t/t/t[3]',    'directive': "t-call='base.dummy'", 'query': 0}, # 0 because the template is in ir.ui.view cache
             # first pass in the loop: content of the child template
             {'view_id': child_template.id, 'xpath': '/t/span',      'directive': "t-attf-class='myclass'", 'query': 0},
-            {'view_id': child_template.id, 'xpath': '/t/span/t[1]', 'directive': "t-esc='record'", 'query': 0},
-            {'view_id': child_template.id, 'xpath': '/t/span/t[2]', 'directive': "t-esc='add_one_query()'", 'query': 1},
-            {'view_id': template.id,       'xpath': '/t/t/t[3]',    'directive': "t-esc='item_value'", 'query': 0},
-            {'view_id': template.id,       'xpath': '/t/t/b',       'directive': "t-esc='add_one_query()'", 'query':1},
+            {'view_id': child_template.id, 'xpath': '/t/span/t[1]', 'directive': "t-out='record'", 'query': 0},
+            {'view_id': child_template.id, 'xpath': '/t/span/t[2]', 'directive': "t-out='add_one_query()'", 'query': 1},
+            {'view_id': template.id,       'xpath': '/t/t/t[4]',    'directive': "t-out='item_value'", 'query': 0},
+            {'view_id': template.id,       'xpath': '/t/t/b',       'directive': "t-out='add_one_query()'", 'query':1},
             # second pass in the loop
-            {'view_id': template.id,       'xpath': '/t/t/t[1]',    'directive': "t-esc='item_index'", 'query': 0},
-            {'view_id': template.id,       'xpath': '/t/t/t[2]',    'directive': "t-call='base.dummy'", 'query': 0},
-            {'view_id': template.id,       'xpath': '/t/t/t[2]',    'directive': "t-set-record='item'", 'query': 0},
+            {'view_id': template.id,       'xpath': '/t/t/t[1]',    'directive': "t-out='item_index'", 'query': 0},
+            {'view_id': template.id,       'xpath': '/t/t/t[2]',    'directive': "t-set='record' t-value='item'", 'query': 0},
+            {'view_id': template.id,       'xpath': '/t/t/t[3]',    'directive': "t-call='base.dummy'", 'query': 0},
             {'view_id': child_template.id, 'xpath': '/t/span',      'directive': "t-attf-class='myclass'", 'query': 0},
-            {'view_id': child_template.id, 'xpath': '/t/span/t[1]', 'directive': "t-esc='record'", 'query': 0},
-            {'view_id': child_template.id, 'xpath': '/t/span/t[2]', 'directive': "t-esc='add_one_query()'", 'query': 1},
-            {'view_id': template.id,       'xpath': '/t/t/t[3]',    'directive': "t-esc='item_value'", 'query': 0},
-            {'view_id': template.id,       'xpath': '/t/t/b',       'directive': "t-esc='add_one_query()'", 'query':1},
+            {'view_id': child_template.id, 'xpath': '/t/span/t[1]', 'directive': "t-out='record'", 'query': 0},
+            {'view_id': child_template.id, 'xpath': '/t/span/t[2]', 'directive': "t-out='add_one_query()'", 'query': 1},
+            {'view_id': template.id,       'xpath': '/t/t/t[4]',    'directive': "t-out='item_value'", 'query': 0},
+            {'view_id': template.id,       'xpath': '/t/t/b',       'directive': "t-out='add_one_query()'", 'query':1},
             # third pass in the loop
-            {'view_id': template.id,       'xpath': '/t/t/t[1]',    'directive': "t-esc='item_index'", 'query': 0},
-            {'view_id': template.id,       'xpath': '/t/t/t[2]',    'directive': "t-call='base.dummy'", 'query': 0},
-            {'view_id': template.id,       'xpath': '/t/t/t[2]',    'directive': "t-set-record='item'", 'query': 0},
+            {'view_id': template.id,       'xpath': '/t/t/t[1]',    'directive': "t-out='item_index'", 'query': 0},
+            {'view_id': template.id,       'xpath': '/t/t/t[2]',    'directive': "t-set='record' t-value='item'", 'query': 0},
+            {'view_id': template.id,       'xpath': '/t/t/t[3]',    'directive': "t-call='base.dummy'", 'query': 0},
             {'view_id': child_template.id, 'xpath': '/t/span',      'directive': "t-attf-class='myclass'", 'query': 0},
-            {'view_id': child_template.id, 'xpath': '/t/span/t[1]', 'directive': "t-esc='record'", 'query': 0},
-            {'view_id': child_template.id, 'xpath': '/t/span/t[2]', 'directive': "t-esc='add_one_query()'", 'query': 1},
-            {'view_id': template.id,       'xpath': '/t/t/t[3]',    'directive': "t-esc='item_value'", 'query': 0},
-            {'view_id': template.id,       'xpath': '/t/t/b',       'directive': "t-esc='add_one_query()'", 'query':1},
+            {'view_id': child_template.id, 'xpath': '/t/span/t[1]', 'directive': "t-out='record'", 'query': 0},
+            {'view_id': child_template.id, 'xpath': '/t/span/t[2]', 'directive': "t-out='add_one_query()'", 'query': 1},
+            {'view_id': template.id,       'xpath': '/t/t/t[4]',    'directive': "t-out='item_value'", 'query': 0},
+            {'view_id': template.id,       'xpath': '/t/t/b',       'directive': "t-out='add_one_query()'", 'query':1},
         ]
         self.assertEqual(data, expected)
 
