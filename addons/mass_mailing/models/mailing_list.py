@@ -160,6 +160,8 @@ class MassMailingList(models.Model):
             'context': {
                 **self.env.context,
                 'default_contact_list_ids': self.ids,
+                'default_mailing_type': 'mail',
+                'default_model_id': self.env['ir.model']._get_id('mailing.list'),
             },
             'target': 'current',
             'view_type': 'form',
