@@ -13,7 +13,7 @@ class ReplenishmentReport(models.AbstractModel):
         res = super()._compute_draft_quantity_count(product_template_ids, product_variant_ids, wh_location_ids)
         domain = self._product_domain(product_template_ids, product_variant_ids)
         company = self.env['stock.location'].browse(wh_location_ids).mapped('company_id')
-        svl = self.env['stock.valuation.layer'].search(domain + [('company_id', '=', company.id)])
+        svl = self.env['stock.valuation.layer'].sudo().search(domain + [('company_id', '=', company.id)])
         currency = svl.currency_id or self.env.company.currency_id
         total_quantity = sum(svl.mapped('quantity'))
         # Because we can have negative quantities, `total_quantity` may be equal to zero even if the warehouse's `quantity` is positive.
