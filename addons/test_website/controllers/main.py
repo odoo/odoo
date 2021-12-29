@@ -138,3 +138,7 @@ class WebsiteTest(Home):
     @http.route(['/test_website/200/<model("test.model"):rec>'], type='http', auth="public", website=True, sitemap=False)
     def test_model_converter_seoname(self, rec, **kw):
         return request.make_response('ok')
+
+    @http.route(['/test_website/test_redirect_view_qs'], type='http', auth="public", website=True, sitemap=False)
+    def test_redirect_view_qs(self, **kw):
+        return request.render('test_website.test_redirect_view_qs')
