@@ -9,6 +9,7 @@ the ORM does, in fact.
 """
 
 from contextlib import contextmanager
+from datetime import timedelta, datetime
 import itertools
 import logging
 import os
@@ -17,7 +18,6 @@ import threading
 import uuid
 import warnings
 
-from datetime import timedelta, datetime
 from inspect import currentframe
 import psycopg2
 import psycopg2.extras

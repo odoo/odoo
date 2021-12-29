@@ -296,17 +296,22 @@ class QwebTracker():
             if not self.env.context.get('profile'):
                 return method_compile(self, template)
 
-            render_template = method_compile(self, template)
-            def profiled_method_compile(self, values, gen0=None):
-                ref = render_template.options.get('ref')
-                ref_xml = render_template.options.get('ref_xml')
+            template_functions, def_name = method_compile(self, template)
+            render_template = template_functions[def_name]
+
+            def profiled_method_compile(self, values):
+                options = template_functions['options']
+                ref = options.get('ref')
+                ref_xml = options.get('ref_xml')
                 qweb_tracker = QwebTracker(ref, ref_xml, self.env.cr)
                 self = self.with_context(qweb_tracker=qweb_tracker)
                 if qweb_tracker.execution_context_enabled:
                     with ExecutionContext(template=ref):
-                        return render_template(self, values, gen0)
-                return render_template(self, values, gen0)
-            return profiled_method_compile
+                        return render_template(self, values)
+                return render_template(self, values)
+            template_functions[def_name] = profiled_method_compile
+
+            return (template_functions, def_name)
         return _tracked_compile
 
     @classmethod
@@ -315,7 +320,7 @@ class QwebTracker():
         def _tracked_compile_directive(self, el, options, directive, level):
             if not options.get('profile') or directive in ('inner-content', 'tag-open', 'tag-close'):
                 return method_compile_directive(self, el, options, directive, level)
-            enter = f"{' ' * 4 * level}self.env.context['qweb_tracker'].enter_directive({directive!r}, {el.attrib!r}, {options['last_path_node']!r})"
+            enter = f"{' ' * 4 * level}self.env.context['qweb_tracker'].enter_directive({directive!r}, {el.attrib!r}, {options['_qweb_error_path_xml'][0]!r})"
             leave = f"{' ' * 4 * level}self.env.context['qweb_tracker'].leave_directive()"
             code_directive = method_compile_directive(self, el, options, directive, level)
             return [enter, *code_directive, leave] if code_directive else []
