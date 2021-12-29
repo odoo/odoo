@@ -2096,7 +2096,9 @@ class AccountMove(models.Model):
             amls = record.line_ids
             impacted_countries = amls.tax_ids.country_id | amls.tax_line_id.country_id | amls.tax_tag_ids.country_id
             if impacted_countries and impacted_countries != record.tax_country_id:
-                raise ValidationError(_("This entry contains some tax from an unallowed country. Please check its fiscal position and your tax configuration."))
+                if record.fiscal_position_id and impacted_countries != record.fiscal_position_id.country_id:
+                    raise ValidationError(_("This entry contains taxes that are not compatible with your fiscal position. Check the country set in fiscal position and in your tax configuration."))
+                raise ValidationError(_("This entry contains one or more taxes that are incompatible with your fiscal country. Check company fiscal country in the settings and tax country in taxes configuration."))
 
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS
