@@ -159,7 +159,6 @@ if tax &gt; result:result=tax</field>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),             (0,0, {                 'factor_percent': 100,                 'repartition_type': 'base',                 'plus_report_line_ids': [ref('tax_report_line_nil_rated')],              }),             (0,0, {                 'factor_percent': 100,                 'repartition_type': 'tax',              }),         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),             (0,0, {                 'factor_percent': 100,                 'repartition_type': 'base',                 'minus_report_line_ids': [ref('tax_report_line_nil_rated')],             }),             (0,0, {                 'factor_percent': 100,                 'repartition_type': 'tax',              }),         ]"/>
     </record>
-
     <record id="non_gst_supplies_sale" model="account.tax.template">
         <field name="name">Non GST Supplies</field>
         <field name="description">Non GST Supplies</field>
