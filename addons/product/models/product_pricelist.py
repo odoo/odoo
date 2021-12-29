@@ -188,29 +188,8 @@ class Pricelist(models.Model):
 
             price_uom = self.env['uom.uom'].browse([qty_uom_id])
             for rule in items:
-                if rule.min_quantity and qty_in_product_uom < rule.min_quantity:
+                if not rule._is_applicable_for(product, qty_in_product_uom):
                     continue
-                if is_product_template:
-                    if rule.product_tmpl_id and product.id != rule.product_tmpl_id.id:
-                        continue
-                    if rule.product_id and not (product.product_variant_count == 1 and product.product_variant_id.id == rule.product_id.id):
-                        # product rule acceptable on template if has only one variant
-                        continue
-                else:
-                    if rule.product_tmpl_id and product.product_tmpl_id.id != rule.product_tmpl_id.id:
-                        continue
-                    if rule.product_id and product.id != rule.product_id.id:
-                        continue
-
-                if rule.categ_id:
-                    cat = product.categ_id
-                    while cat:
-                        if cat.id == rule.categ_id.id:
-                            break
-                        cat = cat.parent_id
-                    if not cat:
-                        continue
-
                 if rule.base == 'pricelist' and rule.base_pricelist_id:
                     price_tmp = rule.base_pricelist_id._compute_price_rule([(product, qty, partner)], date, uom_id)[product.id][0]  # TDE: 0 = price, 1 = rule
                     price = rule.base_pricelist_id.currency_id._convert(price_tmp, self.currency_id, self.env.company, date, round=False)
@@ -628,6 +607,50 @@ class PricelistItem(models.Model):
         # to be invalided and recomputed.
         self.flush()
         self.invalidate_cache()
+        return res
+
+    def _is_applicable_for(self, product, qty_in_product_uom):
+        """Check whether the current rule is valid for the given product & qty.
+        Note: self.ensure_one()
+        :param product: product record (product.product/product.template)
+        :param float qty_in_product_uom: quantity, expressed in product UoM
+        :returns: Whether rules is valid or not
+        :rtype: bool
+        """
+        self.ensure_one()
+        product.ensure_one()
+        res = True
+
+        is_product_template = product._name == 'product.template'
+        if self.min_quantity and qty_in_product_uom < self.min_quantity:
+            res = False
+
+        elif self.categ_id:
+            # Applied on a specific category
+            cat = product.categ_id
+            while cat:
+                if cat.id == self.categ_id.id:
+                    break
+                cat = cat.parent_id
+            if not cat:
+                res = False
+        else:
+            # Applied on a specific product template/variant
+            if is_product_template:
+                if self.product_tmpl_id and product.id != self.product_tmpl_id.id:
+                    res = False
+                elif self.product_id and not (
+                    product.product_variant_count == 1
+                    and product.product_variant_id.id == self.product_id.id
+                ):
+                    # product self acceptable on template if has only one variant
+                    res = False
+            else:
+                if self.product_tmpl_id and product.product_tmpl_id.id != self.product_tmpl_id.id:
+                    res = False
+                elif self.product_id and product.id != self.product_id.id:
+                    res = False
+
         return res
 
     def _compute_price(self, price, price_uom, product, quantity=1.0, partner=False):
