@@ -124,6 +124,7 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
         related='company_id.account_cash_basis_base_account_id',
         domain=[('deprecated', '=', False)])
+    account_fiscal_country_id = fields.Many2one(string="Fiscal Country Code", related="company_id.account_fiscal_country_id", readonly=False, store=False)
 
     qr_code = fields.Boolean(string='Display SEPA QR-code', related='company_id.qr_code', readonly=False)
     invoice_is_print = fields.Boolean(string='Print', related='company_id.invoice_is_print', readonly=False)
