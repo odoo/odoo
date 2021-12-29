@@ -280,6 +280,12 @@ class AccountChartTemplate(models.Model):
 
         # If the floats for sale/purchase rates have been filled, create templates from them
         self._create_tax_templates_from_rates(company.id, sale_tax_rate, purchase_tax_rate)
+        # Set the fiscal country before generating taxes in case the company does not have a country_id set yet
+        if self.country_id:
+            # If this CoA is made for only one country, set it as the fiscal country of the company.
+            company.account_fiscal_country_id = self.country_id
+        elif not company.account_fiscal_country_id:
+            company.account_fiscal_country_id = self.env.ref('base.us')
 
         # Install all the templates objects and generate the real objects
         acc_template_ref, taxes_ref = self._install_template(company, code_digits=self.code_digits)
@@ -338,10 +344,6 @@ class AccountChartTemplate(models.Model):
         # set the default taxes on the company
         company.account_sale_tax_id = self.env['account.tax'].search([('type_tax_use', 'in', ('sale', 'all')), ('company_id', '=', company.id)], limit=1).id
         company.account_purchase_tax_id = self.env['account.tax'].search([('type_tax_use', 'in', ('purchase', 'all')), ('company_id', '=', company.id)], limit=1).id
-
-        if self.country_id:
-            # If this CoA is made for only one country, set it as the fiscal country of the company.
-            company.account_fiscal_country_id = self.country_id
 
         return {}
 
