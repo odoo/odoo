@@ -261,3 +261,14 @@ class ProductProduct(models.Model):
             if not any(ptav in self.product_template_attribute_value_ids for ptav in iter_ptav):
                 return False
         return True
+
+    def _count_returned_sn_products(self, sn_lot):
+        res = self.env['stock.move.line'].search_count([
+            ('lot_id', '=', sn_lot.id),
+            ('qty_done', '=', 1),
+            ('state', '=', 'done'),
+            ('production_id', '=', False),
+            ('location_id.usage', '=', 'production'),
+            ('move_id.unbuild_id', '!=', False),
+        ])
+        return super()._count_returned_sn_products(sn_lot) + res
