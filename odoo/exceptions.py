@@ -130,8 +130,3 @@ class Warning(UserError):
     def __init__(self, *args, **kwargs):
         warnings.warn("Warning is a deprecated alias to UserError.", DeprecationWarning)
         super().__init__(*args, **kwargs)
-
-class QWebException(Exception):
-    def __init__(self, *args, **kwargs):
-        warnings.warn("qweb.QWebException is the exception you are looking for.", DeprecationWarning)
-        super().__init__(*args, **kwargs)

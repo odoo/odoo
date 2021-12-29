@@ -884,36 +884,6 @@ class TestQWebBasic(TransactionCase):
             'name': 'test',
             'type': 'qweb',
             'arch_db': '''<t t-name="set">
-                <t t-set-a="'abc %s' % 1"/>
-                <div t-out="a"/>
-            </t>'''
-        })
-        result = """
-                <div>abc 1</div>
-            """
-        rendered = self.env['ir.qweb']._render(t.id)
-        self.assertEqual(rendered.strip(), result.strip())
-
-    def test_set_4(self):
-        t = self.env['ir.ui.view'].create({
-            'name': 'test',
-            'type': 'qweb',
-            'arch_db': '''<t t-name="set">
-                <t t-setf-a="abc {{1}}"/>
-                <div t-out="a"/>
-            </t>'''
-        })
-        result = """
-                <div>abc 1</div>
-            """
-        rendered = self.env['ir.qweb']._render(t.id)
-        self.assertEqual(rendered.strip(), result.strip())
-
-    def test_set_5(self):
-        t = self.env['ir.ui.view'].create({
-            'name': 'test',
-            'type': 'qweb',
-            'arch_db': '''<t t-name="set">
                 <t t-set='{"a": "abc %s" % 1,
                     "b": 2}'/>
                 <div t-out="a"/>
@@ -1288,101 +1258,41 @@ class TestQWebBasic(TransactionCase):
 
     def test_error_message_5(self):
         # Error not found a first rendering.
-        t = self.env['ir.ui.view'].create({
-            'name': 'test',
-            'type': 'qweb',
-            'arch_db': '''<t t-name="test">
-                <section>
-                    <div t-esc="abc + def + (">
-                        <span>content</span>
-                    </div>
-                </section>
-            </t>'''
-        })
-
-        def load(ref_alias):
-            raise ValueError(f'Not Found: {ref_alias}')
-
-        with self.assertRaises(ValueError, msg=f"Not Found: {t.id}"):
-            self.env['ir.qweb']._render(t.id, load=load)
+        with self.assertRaises(MissingError, msg="Not Found"):
+            self.env['ir.qweb']._render(-9999)
 
     @mute_logger('odoo.addons.base.models.ir_qweb') # warning for template not found
     def test_error_message_6(self):
         # Error not found a second rendering (first rendering with option hide this error).
-        t = self.env['ir.ui.view'].create({
-            'name': 'test',
-            'type': 'qweb',
-            'arch_db': '''<t t-name="test">
-                <section>
-                    <div t-esc="abc + def + (">
-                        <span>content</span>
-                    </div>
-                </section>
-            </t>'''
-        })
-
-        def load(ref_alias):
-            raise ValueError(f'Not Found: {ref_alias}')
-
-        html = self.env['ir.qweb']._render(t.id, load=load, raise_if_not_found=False)
+        html = self.env['ir.qweb']._render(-9999, raise_if_not_found=False)
         self.assertEqual('', html)
 
         # re try this rendering without any error (use cached method)
-        html = self.env['ir.qweb']._render(t.id, load=load, raise_if_not_found=False)
+        html = self.env['ir.qweb']._render(-9999, raise_if_not_found=False)
         self.assertEqual('', html)
 
         # re try this rendering but raise (use cached method)
-        with self.assertRaises(ValueError, msg=f"Not Found: {t.id}"):
-            self.env['ir.qweb']._render(t.id, load=load)
+        with self.assertRaises(MissingError, msg="Not Found"):
+            self.env['ir.qweb']._render(-9999)
 
     def test_error_message_7(self):
         # UserError not found a first rendering.
-        t = self.env['ir.ui.view'].create({
-            'name': 'test',
-            'type': 'qweb',
-            'arch_db': '''<t t-name="test">
-                <section>
-                    <div t-esc="abc + def + (">
-                        <span>content</span>
-                    </div>
-                </section>
-            </t>'''
-        })
-
-        def load(ref_alias):
-            raise ValidationError(f'Not Found: {ref_alias}')
-
-        with self.assertRaises(UserError, msg=f"Not Found: {t.id}"):
-            self.env['ir.qweb']._render(t.id, load=load)
+        with self.assertRaises(UserError, msg="Not Found"):
+            self.env['ir.qweb']._render(-9999)
 
     @mute_logger('odoo.addons.base.models.ir_qweb') # warning for template not found
     def test_error_message_8(self):
         # UserError not found a second rendering (first rendering with option hide this error).
-        t = self.env['ir.ui.view'].create({
-            'name': 'test',
-            'type': 'qweb',
-            'arch_db': '''<t t-name="test">
-                <section>
-                    <div t-esc="abc + def + (">
-                        <span>content</span>
-                    </div>
-                </section>
-            </t>'''
-        })
-
-        def load(ref_alias):
-            raise ValidationError(f'Not Found: {ref_alias}')
-
-        html = self.env['ir.qweb']._render(t.id, load=load, raise_if_not_found=False)
+        html = self.env['ir.qweb']._render(-9999, raise_if_not_found=False)
         self.assertEqual('', html)
 
         # re try this rendering without any error (use cached method)
-        html = self.env['ir.qweb']._render(t.id, load=load, raise_if_not_found=False)
+        html = self.env['ir.qweb']._render(-9999, raise_if_not_found=False)
         self.assertEqual('', html)
 
         # re try this rendering but raise (use cached method)
-        with self.assertRaises(UserError, msg=f"Not Found: {t.id}"):
-            self.env['ir.qweb']._render(t.id, load=load)
+        with self.assertRaises(UserError, msg="Not Found"):
+            self.env['ir.qweb']._render(-9999)
 
     def test_call_set(self):
         view0 = self.env['ir.ui.view'].create({
@@ -1428,82 +1338,6 @@ class TestQWebBasic(TransactionCase):
                 <span>1</span>
             </div>
         """), 'render t-call use lexical scoping, t-call content use independant scoping')
-
-    def test_call_arg(self):
-        view0 = self.env['ir.ui.view'].create({
-            'name': "dummy",
-            'type': 'qweb',
-            'arch': """
-                <t t-name="base.dummy">
-                    <table>
-                        <tr><td t-out="a"/></tr>
-                        <tr><td t-out="b"/></tr>
-                    </table>
-                </t>
-            """
-        })
-        self.env.cr.execute("INSERT INTO ir_model_data(name, model, res_id, module)"
-                            "VALUES ('dummy', 'ir.ui.view', %s, 'base')", [view0.id])
-
-        view1 = self.env['ir.ui.view'].create({
-            'name': "other",
-            'type': 'qweb',
-            'arch': """
-                <t t-name="base.other">
-                    <div>
-                        <t t-call="base.dummy" t-set-a="1" t-set-b="2"/>
-                    </div>
-                </t>
-            """
-        })
-
-        result = self.env['ir.qweb']._render(view1.id, {})
-        self.assertEqual(etree.fromstring(result), etree.fromstring("""
-            <div>
-                <table>
-                    <tr><td>1</td></tr>
-                    <tr><td>2</td></tr>
-                </table>
-            </div>
-        """), 'render t-call with t-set attributes')
-
-    def test_call_arg_error(self):
-        view0 = self.env['ir.ui.view'].create({
-            'name': "dummy",
-            'type': 'qweb',
-            'arch': """
-                <t t-name="base.dummy">
-                    <table>
-                        <tr><td t-out="a-2"/></tr>
-                        <tr><td t-out="b-2"/></tr>
-                    </table>
-                </t>
-            """
-        })
-        self.env.cr.execute("INSERT INTO ir_model_data(name, model, res_id, module)"
-                            "VALUES ('dummy', 'ir.ui.view', %s, 'base')", [view0.id])
-
-        view1 = self.env['ir.ui.view'].create({
-            'name': "other",
-            'type': 'qweb',
-            'arch': """
-                <t t-name="base.other">
-                    <div>
-                        <t t-call="base.dummy" t-set-a-2="1" t-set-b-2="2"/>
-                    </div>
-                </t>
-            """
-        })
-
-        with self.assertRaises(QWebException):
-            self.env['ir.qweb']._render(view1.id)
-
-        try:
-            self.env['ir.qweb']._render(view1.id)
-        except QWebException as e:
-            error = str(e)
-            self.assertIn("The varname 'a-2' can only contain alphanumeric characters and underscores", error)
-            self.assertIn('<t t-call="base.dummy" t-set-a-2="1" t-set-b-2="2"/>', error)
 
     def test_call_error(self):
         view1 = self.env['ir.ui.view'].create({
@@ -1804,6 +1638,1284 @@ class TestQWebBasic(TransactionCase):
         rendered = self.env['ir.qweb']._render(view.id)
         self.assertEqual(str(rendered), result)
 
+class TestQwebCache(TransactionCase):
+    def test_render_xml_cache_base(self):
+        view1 = self.env['ir.ui.view'].create({
+            'name': "dummy",
+            'type': 'qweb',
+            'arch': """
+                <t t-name="base.dummy">
+                    <div t-cache="cache_id" class="toto">
+                        <table>
+                            <tr><td><span t-esc="value[0]"/></td></tr>
+                            <tr><td><span t-esc="value[1]"/></td></tr>
+                            <tr><td><span t-esc="value[2]"/></td></tr>
+                        </table>
+                    </div>
+                </t>
+            """
+        })
+        expected_result = etree.fromstring("""
+            <div class="toto">
+                <table>
+                    <tr><td><span>1</span></td></tr>
+                    <tr><td><span>2</span></td></tr>
+                    <tr><td><span>3</span></td></tr>
+                </table>
+            </div>
+        """)
+
+        IrQweb = self.env['ir.qweb'].with_context(is_t_cache_disabled=False)
+
+        result = etree.fromstring(IrQweb._render(view1.id, {'cache_id': 1, 'value': [1, 2, 3]}))
+        self.assertEqual(result, expected_result, 'First rendering (add in cache)')
+
+        result = etree.fromstring(IrQweb._render(view1.id, {'cache_id': 1, 'value': [10, 20, 30]}))
+        self.assertEqual(result, expected_result, 'Next rendering use cache')
+
+    def test_render_xml_cache_different(self):
+        view1 = self.env['ir.ui.view'].create({
+            'name': "dummy",
+            'type': 'qweb',
+            'arch': """
+                <t t-name="base.dummy">
+                    <div class="toto">
+                        <table t-cache="cache_id">
+                            <tr><td><span t-esc="value[0]"/></td></tr>
+                            <tr><td><span t-esc="value[1]"/></td></tr>
+                            <tr><td><span t-esc="value[2]"/></td></tr>
+                        </table>
+                        <table t-cache="cache_id2">
+                            <tr><td><span t-esc="value2[0]"/></td></tr>
+                            <tr><td><span t-esc="value2[1]"/></td></tr>
+                            <tr><td><span t-esc="value2[2]"/></td></tr>
+                        </table>
+                    </div>
+                </t>
+            """
+        })
+        IrQweb = self.env['ir.qweb'].with_context(is_t_cache_disabled=False)
+
+        # use same cache id, display the same content
+        result = etree.fromstring(IrQweb._render(view1.id, {
+            'cache_id': (1,),
+            'cache_id2': (1,),
+            'value': [1, 2, 3],
+            'value2': [10, 20, 30]
+        }))
+        self.assertEqual(result, etree.fromstring("""
+            <div class="toto">
+                <table>
+                    <tr><td><span>1</span></td></tr>
+                    <tr><td><span>2</span></td></tr>
+                    <tr><td><span>3</span></td></tr>
+                </table>
+                <table>
+                    <tr><td><span>10</span></td></tr>
+                    <tr><td><span>20</span></td></tr>
+                    <tr><td><span>30</span></td></tr>
+                </table>
+            </div>
+        """), 'First rendering (add in cache with different cache)')
+
+        result = etree.fromstring(IrQweb._render(view1.id, {
+            'cache_id': (2, 5, 6),
+            'cache_id2': (2, 5, 5),
+            'value': [41, 42, 43],
+            'value2': [51, 52, 53]
+        }))
+        self.assertEqual(result, etree.fromstring("""
+            <div class="toto">
+                <table>
+                    <tr><td><span>41</span></td></tr>
+                    <tr><td><span>42</span></td></tr>
+                    <tr><td><span>43</span></td></tr>
+                </table>
+                <table>
+                    <tr><td><span>51</span></td></tr>
+                    <tr><td><span>52</span></td></tr>
+                    <tr><td><span>53</span></td></tr>
+                </table>
+            </div>
+        """), 'Use different cache id')
+
+    def test_render_xml_cache_contains_nocache(self):
+        view1 = self.env['ir.ui.view'].create({
+            'name': "dummy",
+            'type': 'qweb',
+            'arch': """
+                <t t-name="base.dummy">
+                    <div t-cache="cache_id" class="toto">
+                        <table>
+                            <tr><td><span t-esc="value[0]"/></td></tr>
+                            <tr t-nocache=""><td><span t-esc="value[1]"/></td></tr>
+                            <tr><td><span t-esc="value[2]"/></td></tr>
+                        </table>
+                    </div>
+                </t>
+            """
+        })
+        IrQweb = self.env['ir.qweb'].with_context(is_t_cache_disabled=False)
+
+        result = etree.fromstring(IrQweb._render(view1.id, {'cache_id': 1, 'value': [1, 2, 3]}))
+        self.assertEqual(result, etree.fromstring("""
+            <div class="toto">
+                <table>
+                    <tr><td><span>1</span></td></tr>
+                    <tr><td><span>2</span></td></tr>
+                    <tr><td><span>3</span></td></tr>
+                </table>
+            </div>
+        """), 'First rendering add compiled values in cache')
+
+        result = etree.fromstring(IrQweb._render(view1.id, {'cache_id': 1, 'value': [10, 20, 30]}))
+        self.assertEqual(result, etree.fromstring("""
+            <div class="toto">
+                <table>
+                    <tr><td><span>1</span></td></tr>
+                    <tr><td><span>20</span></td></tr>
+                    <tr><td><span>3</span></td></tr>
+                </table>
+            </div>
+        """), 'Next rendering use cache exept for t-nocache=""')
+
+    def test_render_xml_cache_nocache_cache(self):
+        view1 = self.env['ir.ui.view'].create({
+            'name': "dummy",
+            'type': 'qweb',
+            'arch': """
+                <t t-name="base.dummy">
+                    <div class="toto">
+                        <table t-cache="cache_id">
+                            <tr><td><t t-esc="value[0]"/></td></tr>
+                            <tr>
+                                <td>
+                                    <table t-nocache="The content is not used, we can put documentation in it." t-cache="cache_id2">
+                                        <tr><td><t t-esc="value2[0]"/></td></tr>
+                                        <tr><td><t t-esc="value2[1]"/></td></tr>
+                                        <tr><td><t t-esc="value2[2]"/></td></tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr><td><t t-esc="value[2]"/></td></tr>
+                        </table>
+                    </div>
+                </t>
+            """
+        })
+
+        IrQweb = self.env['ir.qweb'].with_context(is_t_cache_disabled=False)
+
+        # use same cache id, display the same content
+        result = etree.fromstring(IrQweb._render(view1.id, {
+            'cache_id': (1, 0),
+            'cache_id2': (2, 0),
+            'value': [1, 2, 3],
+            'value2': [10, 20, 30]
+        }))
+        self.assertEqual(result, etree.fromstring("""
+            <div class="toto">
+                <table>
+                    <tr><td>1</td></tr>
+                    <tr>
+                        <td>
+                            <table>
+                                <tr><td>10</td></tr>
+                                <tr><td>20</td></tr>
+                                <tr><td>30</td></tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr><td>3</td></tr>
+                </table>
+            </div>
+        """), 'First rendering (add in cache)')
+
+        result = etree.fromstring(IrQweb._render(view1.id, {
+            'cache_id': (1, 0),
+            'cache_id2': (2, 1),
+            'value': [41, 42, 43],
+            'value2': [51, 52, 53]
+        }))
+        self.assertEqual(result, etree.fromstring("""
+            <div class="toto">
+                <table>
+                    <tr><td>1</td></tr>
+                    <tr>
+                        <td>
+                            <table>
+                                <tr><td>51</td></tr>
+                                <tr><td>52</td></tr>
+                                <tr><td>53</td></tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr><td>3</td></tr>
+                </table>
+            </div>
+        """), 'Second rendering (change inside cache id)')
+
+        result = etree.fromstring(IrQweb._render(view1.id, {
+            'cache_id': (1, 1),
+            'cache_id2': (2, 0),
+            'value': [31, 32, 33],
+            'value2': [51, 52, 53]
+        }))
+        self.assertEqual(result, etree.fromstring("""
+            <div class="toto">
+                <table>
+                    <tr><td>31</td></tr>
+                    <tr>
+                        <td>
+                            <table>
+                                <tr><td>10</td></tr>
+                                <tr><td>20</td></tr>
+                                <tr><td>30</td></tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr><td>33</td></tr>
+                </table>
+            </div>
+        """), 'Third rendering (change main cache id, old cache inside)')
+
+    def test_render_xml_cache_nocache_cache_on_same_tag(self):
+        view1 = self.env['ir.ui.view'].create({
+            'name': "dummy",
+            'type': 'qweb',
+            'arch': """
+                <t t-name="base.dummy">
+                    <div class="toto">
+                        <table t-cache="cache_id">
+                            <tr><td><t t-esc="value[0]"/></td></tr>
+                            <tr t-nocache="">
+                                <td>
+                                    <table t-cache="cache_id2">
+                                        <tr><td><t t-esc="value2[0]"/></td></tr>
+                                        <tr><td><t t-esc="value2[1]"/></td></tr>
+                                        <tr><td><t t-esc="value2[2]"/></td></tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr><td><t t-esc="value[2]"/></td></tr>
+                        </table>
+                    </div>
+                </t>
+            """
+        })
+
+        IrQweb = self.env['ir.qweb'].with_context(is_t_cache_disabled=False)
+
+        # use same cache id, display the same content
+        result = etree.fromstring(IrQweb._render(view1.id, {
+            'cache_id': (1, 0),
+            'cache_id2': (2, 0),
+            'value': [1, 2, 3],
+            'value2': [10, 20, 30]
+        }))
+        self.assertEqual(result, etree.fromstring("""
+            <div class="toto">
+                <table>
+                    <tr><td>1</td></tr>
+                    <tr>
+                        <td>
+                            <table>
+                                <tr><td>10</td></tr>
+                                <tr><td>20</td></tr>
+                                <tr><td>30</td></tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr><td>3</td></tr>
+                </table>
+            </div>
+        """), 'First rendering (add in cache)')
+
+        result = etree.fromstring(IrQweb._render(view1.id, {
+            'cache_id': (1, 0),
+            'cache_id2': (2, 1),
+            'value': [41, 42, 43],
+            'value2': [51, 52, 53]
+        }))
+        self.assertEqual(result, etree.fromstring("""
+            <div class="toto">
+                <table>
+                    <tr><td>1</td></tr>
+                    <tr>
+                        <td>
+                            <table>
+                                <tr><td>51</td></tr>
+                                <tr><td>52</td></tr>
+                                <tr><td>53</td></tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr><td>3</td></tr>
+                </table>
+            </div>
+        """), 'Second rendering (change inside cache id)')
+
+        result = etree.fromstring(IrQweb._render(view1.id, {
+            'cache_id': (1, 1),
+            'cache_id2': (2, 0),
+            'value': [31, 32, 33],
+            'value2': [51, 52, 53]
+        }))
+        self.assertEqual(result, etree.fromstring("""
+            <div class="toto">
+                <table>
+                    <tr><td>31</td></tr>
+                    <tr>
+                        <td>
+                            <table>
+                                <tr><td>10</td></tr>
+                                <tr><td>20</td></tr>
+                                <tr><td>30</td></tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr><td>33</td></tr>
+                </table>
+            </div>
+        """), 'Third rendering (change main cache id, old cache inside)')
+
+    def test_render_xml_dont_use_cache_base(self):
+        view1 = self.env['ir.ui.view'].create({
+            'name': "dummy",
+            'type': 'qweb',
+            'arch': """
+                <t t-name="base.dummy">
+                    <div t-cache="cache_id" class="toto">
+                        <table>
+                            <tr><td><span t-esc="value[0]"/></td></tr>
+                            <tr><td><span t-esc="value[1]"/></td></tr>
+                            <tr><td><span t-esc="value[2]"/></td></tr>
+                        </table>
+                    </div>
+                </t>
+            """
+        })
+        IrQweb = self.env['ir.qweb'].with_context(is_t_cache_disabled=True)
+
+        result = etree.fromstring(IrQweb._render(view1.id, {'cache_id': 1, 'value': [1, 2, 3]}))
+        self.assertEqual(result, etree.fromstring("""
+            <div class="toto">
+                <table>
+                    <tr><td><span>1</span></td></tr>
+                    <tr><td><span>2</span></td></tr>
+                    <tr><td><span>3</span></td></tr>
+                </table>
+            </div>
+        """), 'First rendering')
+
+        result = etree.fromstring(IrQweb._render(view1.id, {'cache_id': 1, 'value': [10, 20, 30]}))
+        self.assertEqual(result, etree.fromstring("""
+            <div class="toto">
+                <table>
+                    <tr><td><span>10</span></td></tr>
+                    <tr><td><span>20</span></td></tr>
+                    <tr><td><span>30</span></td></tr>
+                </table>
+            </div>
+        """), 'Next rendering cannot cache (use_qweb_t_cache is False)')
+
+    def test_render_xml_dont_use_cache_different(self):
+        view1 = self.env['ir.ui.view'].create({
+            'name': "dummy",
+            'type': 'qweb',
+            'arch': """
+                <t t-name="base.dummy">
+                    <div class="toto">
+                        <table t-cache="cache_id">
+                            <tr><td><span t-esc="value[0]"/></td></tr>
+                            <tr><td><span t-esc="value[1]"/></td></tr>
+                            <tr><td><span t-esc="value[2]"/></td></tr>
+                        </table>
+                        <table t-cache="cache_id2">
+                            <tr><td><span t-esc="value2[0]"/></td></tr>
+                            <tr><td><span t-esc="value2[1]"/></td></tr>
+                            <tr><td><span t-esc="value2[2]"/></td></tr>
+                        </table>
+                    </div>
+                </t>
+            """
+        })
+        IrQweb = self.env['ir.qweb'].with_context(is_t_cache_disabled=True)
+
+        # use same cache id, display the same content
+        result = etree.fromstring(IrQweb._render(view1.id, {
+            'cache_id': 1,
+            'cache_id2': 1,
+            'value': [1, 2, 3],
+            'value2': [10, 20, 30]
+        }))
+        self.assertEqual(result, etree.fromstring("""
+            <div class="toto">
+                <table>
+                    <tr><td><span>1</span></td></tr>
+                    <tr><td><span>2</span></td></tr>
+                    <tr><td><span>3</span></td></tr>
+                </table>
+                <table>
+                    <tr><td><span>10</span></td></tr>
+                    <tr><td><span>20</span></td></tr>
+                    <tr><td><span>30</span></td></tr>
+                </table>
+            </div>
+        """), 'First rendering')
+
+        result = etree.fromstring(IrQweb._render(view1.id, {
+            'cache_id': (2, 5, 6),
+            'cache_id2': (2, 5, 5),
+            'value': [41, 42, 43],
+            'value2': [51, 52, 53]
+        }))
+        self.assertEqual(result, etree.fromstring("""
+            <div class="toto">
+                <table>
+                    <tr><td><span>41</span></td></tr>
+                    <tr><td><span>42</span></td></tr>
+                    <tr><td><span>43</span></td></tr>
+                </table>
+                <table>
+                    <tr><td><span>51</span></td></tr>
+                    <tr><td><span>52</span></td></tr>
+                    <tr><td><span>53</span></td></tr>
+                </table>
+            </div>
+        """), 'Use different cache id')
+
+    def test_render_xml_dont_use_cache_contains_nocache(self):
+        view1 = self.env['ir.ui.view'].create({
+            'name': "dummy",
+            'type': 'qweb',
+            'arch': """
+                <t t-name="base.dummy">
+                    <div t-cache="cache_id" class="toto">
+                        <table>
+                            <tr><td><span t-esc="value[0]"/></td></tr>
+                            <tr t-nocache=""><td><span t-esc="value[1]"/></td></tr>
+                            <tr><td><span t-esc="value[2]"/></td></tr>
+                        </table>
+                    </div>
+                </t>
+            """
+        })
+        IrQweb = self.env['ir.qweb'].with_context(is_t_cache_disabled=True)
+
+        result = etree.fromstring(IrQweb._render(view1.id, {'cache_id': 1, 'value': [1, 2, 3]}))
+        self.assertEqual(result, etree.fromstring("""
+            <div class="toto">
+                <table>
+                    <tr><td><span>1</span></td></tr>
+                    <tr><td><span>2</span></td></tr>
+                    <tr><td><span>3</span></td></tr>
+                </table>
+            </div>
+        """), 'First rendering')
+
+        result = etree.fromstring(IrQweb._render(view1.id, {'cache_id': 1, 'value': [10, 20, 30]}))
+        self.assertEqual(result, etree.fromstring("""
+            <div class="toto">
+                <table>
+                    <tr><td><span>10</span></td></tr>
+                    <tr><td><span>20</span></td></tr>
+                    <tr><td><span>30</span></td></tr>
+                </table>
+            </div>
+        """), 'Next rendering cannot use cache (use_qweb_t_cache is False)')
+
+    def test_render_xml_dont_use_cache_recursive(self):
+        view1 = self.env['ir.ui.view'].create({
+            'name': "dummy",
+            'type': 'qweb',
+            'arch': """
+                <t t-name="base.dummy">
+                    <div class="toto">
+                        <table t-cache="cache_id">
+                            <tr><td><t t-esc="value[0]"/></td></tr>
+                            <tr>
+                                <td>
+                                    <table t-nocache="" t-cache="cache_id2">
+                                        <tr><td><t t-esc="value2[0]"/></td></tr>
+                                        <tr><td><t t-esc="value2[1]"/></td></tr>
+                                        <tr><td><t t-esc="value2[2]"/></td></tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr><td><t t-esc="value[2]"/></td></tr>
+                        </table>
+                    </div>
+                </t>
+            """
+        })
+        IrQweb = self.env['ir.qweb'].with_context(is_t_cache_disabled=True)
+
+        # use same cache id, display the same content
+        result = etree.fromstring(IrQweb._render(view1.id, {
+            'cache_id': (1, 0),
+            'cache_id2': (2, 0),
+            'value': [1, 2, 3],
+            'value2': [10, 20, 30]
+        }))
+        self.assertEqual(result, etree.fromstring("""
+            <div class="toto">
+                <table>
+                    <tr><td>1</td></tr>
+                    <tr>
+                        <td>
+                            <table>
+                                <tr><td>10</td></tr>
+                                <tr><td>20</td></tr>
+                                <tr><td>30</td></tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr><td>3</td></tr>
+                </table>
+            </div>
+        """), 'First rendering')
+
+        result = etree.fromstring(IrQweb._render(view1.id, {
+            'cache_id': (1, 0),
+            'cache_id2': (2, 1),
+            'value': [41, 42, 43],
+            'value2': [51, 52, 53]
+        }))
+        self.assertEqual(result, etree.fromstring("""
+            <div class="toto">
+                <table>
+                    <tr><td>41</td></tr>
+                    <tr>
+                        <td>
+                            <table>
+                                <tr><td>51</td></tr>
+                                <tr><td>52</td></tr>
+                                <tr><td>53</td></tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr><td>43</td></tr>
+                </table>
+            </div>
+        """), 'Next rendering cannot use cache (use_qweb_t_cache is False)')
+
+        result = etree.fromstring(IrQweb._render(view1.id, {
+            'cache_id': (1, 1),
+            'cache_id2': (2, 0),
+            'value': [31, 32, 33],
+            'value2': [51, 52, 53]
+        }))
+        self.assertEqual(result, etree.fromstring("""
+            <div class="toto">
+                <table>
+                    <tr><td>31</td></tr>
+                    <tr>
+                        <td>
+                            <table>
+                                <tr><td>51</td></tr>
+                                <tr><td>52</td></tr>
+                                <tr><td>53</td></tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr><td>33</td></tr>
+                </table>
+            </div>
+        """), 'Third rendering cannot use cache (use_qweb_t_cache is False)')
+
+    def test_render_xml_dont_use_cache_false_recursive(self):
+        view1 = self.env['ir.ui.view'].create({
+            'name': "dummy",
+            'type': 'qweb',
+            'arch': """
+                <t t-name="base.dummy">
+                    <div class="toto">
+                        <table t-cache="cache_id">
+                            <tr><td><t t-esc="value[0]"/></td></tr>
+                            <tr t-nocache="">
+                                <td>
+                                    <table t-cache="cache_id2">
+                                        <tr><td><t t-esc="value2[0]"/></td></tr>
+                                        <tr><td><t t-esc="value2[1]"/></td></tr>
+                                        <tr><td><t t-esc="value2[2]"/></td></tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr><td><t t-esc="value[2]"/></td></tr>
+                        </table>
+                    </div>
+                </t>
+            """
+        })
+        IrQweb = self.env['ir.qweb'].with_context(is_t_cache_disabled=True)
+
+        # use same cache id, display the same content
+        result = etree.fromstring(IrQweb._render(view1.id, {
+            'cache_id': (1, 0),
+            'cache_id2': (2, 0),
+            'value': [1, 2, 3],
+            'value2': [10, 20, 30]
+        }))
+        self.assertEqual(result, etree.fromstring("""
+            <div class="toto">
+                <table>
+                    <tr><td>1</td></tr>
+                    <tr>
+                        <td>
+                            <table>
+                                <tr><td>10</td></tr>
+                                <tr><td>20</td></tr>
+                                <tr><td>30</td></tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr><td>3</td></tr>
+                </table>
+            </div>
+        """), 'First rendering')
+
+        result = etree.fromstring(self.env['ir.qweb']._render(view1.id, {
+            'cache_id': (1, 0),
+            'cache_id2': (2, 1),
+            'value': [41, 42, 43],
+            'value2': [51, 52, 53]
+        }))
+        self.assertEqual(result, etree.fromstring("""
+            <div class="toto">
+                <table>
+                    <tr><td>41</td></tr>
+                    <tr>
+                        <td>
+                            <table>
+                                <tr><td>51</td></tr>
+                                <tr><td>52</td></tr>
+                                <tr><td>53</td></tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr><td>43</td></tr>
+                </table>
+            </div>
+        """), 'Next rendering cannot use cache (use_qweb_t_cache is False)')
+
+        result = etree.fromstring(self.env['ir.qweb']._render(view1.id, {
+            'cache_id': (1, 1),
+            'cache_id2': (2, 0),
+            'value': [31, 32, 33],
+            'value2': [51, 52, 53]
+        }))
+        self.assertEqual(result, etree.fromstring("""
+            <div class="toto">
+                <table>
+                    <tr><td>31</td></tr>
+                    <tr>
+                        <td>
+                            <table>
+                                <tr><td>51</td></tr>
+                                <tr><td>52</td></tr>
+                                <tr><td>53</td></tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr><td>33</td></tr>
+                </table>
+            </div>
+        """), 'Third rendering cannot use cache (use_qweb_t_cache is False)')
+
+    def test_render_xml_nocache_use_the_root_values(self):
+        template_page = self.env['ir.ui.view'].create({
+            'name': "template_page",
+            'type': 'qweb',
+            'arch': """
+                <t t-name="template_page">
+                    <section t-cache="cache_id">
+                        <t t-set="counter" t-value="counter + 100"/>
+                        <article t-nocache=""><t t-out="counter"/></article>
+                        <div>cache: <t t-out="counter"/></div>
+                    </section>
+                </t>
+            """
+        })
+
+        IrQweb = self.env['ir.qweb'].with_context(is_t_cache_disabled=False)
+
+        render = IrQweb._render(template_page.id, {
+            'cache_id': 1,
+            'counter': 1,
+        })
+        result = """
+            <section>
+                <article>1</article>
+                <div>cache: 101</div>
+            </section>
+        """
+        self.assertEqual(etree.fromstring(render), etree.fromstring(result), 'rendering 1 (101 != 1: cached t-set should never be applied on root rendering)')
+
+        render = IrQweb._render(template_page.id, {
+            'cache_id': 1,
+            'counter': 2,
+        })
+        result = """
+            <section>
+                <article>2</article>
+                <div>cache: 101</div>
+            </section>
+        """
+        self.assertEqual(etree.fromstring(render), etree.fromstring(result), 'rendering 2 (102 != 2: cached t-set should never be applied on root rendering)')
+
+        render = IrQweb._render(template_page.id, {
+            'cache_id': 3,
+            'counter': 3,
+        })
+        result = """
+            <section>
+                <article>3</article>
+                <div>cache: 103</div>
+            </section>
+        """
+        self.assertEqual(etree.fromstring(render), etree.fromstring(result), 'rendering 3 (103 != 3: cached t-set should never be applied on root rendering)')
+
+    def test_render_xml_nocache_use_the_root_values_and_cached_values(self):
+        template_page = self.env['ir.ui.view'].create({
+            'name': "template_page",
+            'type': 'qweb',
+            'arch': """
+                <t t-name="template_page">
+                    <section t-cache="cache_id">
+                        <t t-set="counter" t-value="counter + 100"/>
+                        <article t-nocache="" t-nocache-counter="counter"><t t-out="counter"/></article>
+                        <div>cache: <t t-out="counter"/></div>
+                    </section>
+                </t>
+            """
+        })
+
+        IrQweb = self.env['ir.qweb'].with_context(is_t_cache_disabled=False)
+
+        render = IrQweb._render(template_page.id, {
+            'cache_id': 1,
+            'counter': 1,
+        })
+        result = """
+            <section>
+                <article>101</article>
+                <div>cache: 101</div>
+            </section>
+        """
+        self.assertEqual(etree.fromstring(render), etree.fromstring(result), 'rendering 1 (1 != 101: new cached values should be add to the root rendering)')
+
+        render = IrQweb._render(template_page.id, {
+            'cache_id': 1,
+            'counter': 2,
+        })
+        result = """
+            <section>
+                <article>101</article>
+                <div>cache: 101</div>
+            </section>
+        """
+        self.assertEqual(etree.fromstring(render), etree.fromstring(result), 'rendering 2 (102 != 2: cached values should be used)')
+
+        render = IrQweb._render(template_page.id, {
+            'cache_id': 3,
+            'counter': 3,
+        })
+        result = """
+            <section>
+                <article>103</article>
+                <div>cache: 103</div>
+            </section>
+        """
+        self.assertEqual(etree.fromstring(render), etree.fromstring(result), 'rendering 3 (3 != 103: new cached values should be add to the root rendering)')
+
+    def test_render_xml_nocache_use_the_root_values_and_cached_values_error(self):
+        template_page = self.env['ir.ui.view'].create({
+            'name': "template_page",
+            'type': 'qweb',
+            'arch': """
+                <t t-name="template_page">
+                    <section t-cache="cache_id">
+                        <article t-nocache="" t-nocache-record="view_record"><t t-out="view_record"/></article>
+                    </section>
+                </t>
+            """
+        })
+
+        with self.assertRaisesRegex(QWebException, "The value type of 't-nocache-record' cannot be cached"):
+            self.env['ir.qweb'].with_context(is_t_cache_disabled=False)._render(template_page.id, {
+                'cache_id': 1,
+                'view_record': self.env['ir.ui.view'].search([], limit=1),
+            })
+
+    def test_render_xml_cache_with_t_set_out_of_cache(self):
+        template_page = self.env['ir.ui.view'].create({
+            'name': "template_page",
+            'type': 'qweb',
+            'arch': """
+                <t t-name="template_page">
+                    <root>
+                        <t t-set="counter" t-value="counter + 100"/>
+                        <section t-cache="cache_id">
+                            <article t-nocache=""><t t-out="counter"/></article>
+                            <div>cache: <t t-out="counter"/></div>
+                        </section>
+                    </root>
+                </t>
+            """
+        })
+
+        IrQweb = self.env['ir.qweb'].with_context(is_t_cache_disabled=False)
+
+        render = IrQweb._render(template_page.id, {
+            'cache_id': 1,
+            'counter': 1,
+        })
+        result = """
+            <root>
+                <section>
+                    <article>1</article>
+                    <div>cache: 101</div>
+                </section>
+            </root>
+        """
+        self.assertEqual(etree.fromstring(render), etree.fromstring(result), 'rendering 1 (1 != 101: cached t-set should is applied on first rendering)')
+
+        render = IrQweb._render(template_page.id, {
+            'cache_id': 1,
+            'counter': 2,
+        })
+        result = """
+            <root>
+                <section>
+                    <article>2</article>
+                    <div>cache: 101</div>
+                </section>
+            </root>
+        """
+        self.assertEqual(etree.fromstring(render), etree.fromstring(result), 'rendering 2 (2 != 102: cached t-set should be applied the template part are rendered every time)')
+
+        render = IrQweb._render(template_page.id, {
+            'cache_id': 3,
+            'counter': 3,
+        })
+        result = """
+            <root>
+                <section>
+                    <article>3</article>
+                    <div>cache: 103</div>
+                </section>
+            </root>
+        """
+        self.assertEqual(etree.fromstring(render), etree.fromstring(result), 'rendering 3 (3 != 103: cached t-set should applied because the new cache key is created)')
+
+    def test_render_xml_cache_with_t_set_in_cache(self):
+        template_page = self.env['ir.ui.view'].create({
+            'name': "template_page",
+            'type': 'qweb',
+            'arch': """
+                <t t-name="template_page">
+                    <root>
+                        <section t-cache="cache_id">
+                            <t t-set="counter" t-value="counter + 100"/>
+                            <article t-nocache=""><t t-out="counter"/></article>
+                            <div>cache: <t t-out="counter"/></div>
+                        </section>
+                        <div>out of cache: <t t-out="counter"/></div>
+                    </root>
+                </t>
+            """
+        })
+        IrQweb = self.env['ir.qweb'].with_context(is_t_cache_disabled=False)
+
+        render = IrQweb._render(template_page.id, {
+            'cache_id': 1,
+            'counter': 1,
+        })
+        result = """
+            <root>
+                <section>
+                    <article>1</article>
+                    <div>cache: 101</div>
+                </section>
+                <div>out of cache: 1</div>
+            </root>
+        """
+        self.assertEqual(etree.fromstring(render), etree.fromstring(result), 'rendering 1')
+
+        render = IrQweb._render(template_page.id, {
+            'cache_id': 1,
+            'counter': 2,
+        })
+        result = """
+            <root>
+                <section>
+                    <article>2</article>
+                    <div>cache: 101</div>
+                </section>
+                <div>out of cache: 2</div>
+            </root>
+        """
+        self.assertEqual(etree.fromstring(render), etree.fromstring(result), 'rendering 2')
+
+        render = IrQweb._render(template_page.id, {
+            'cache_id': 3,
+            'counter': 3,
+        })
+        result = """
+            <root>
+                <section>
+                    <article>3</article>
+                    <div>cache: 103</div>
+                </section>
+                <div>out of cache: 3</div>
+            </root>
+        """
+        self.assertEqual(etree.fromstring(render), etree.fromstring(result), 'rendering 3')
+
+    def test_render_xml_cache_with_t_set_wrap_t_cache(self):
+        template_page = self.env['ir.ui.view'].create({
+            'name': "template_page",
+            'type': 'qweb',
+            'arch': """
+                <t t-name="template_page">
+                    <root t-cache="cache_1">
+                        <t t-set="a">
+                            <section t-cache="cache_2">
+                                <t t-set="counter" t-value="counter + 100"/>
+                                <article t-nocache="" class="no_cache"><t t-out="counter"/></article>
+                                <div>cache: <t t-out="counter"/></div>
+                            </section>
+                            <footer t-nocache="" class="no_cache"><t t-out="counter * 10"/></footer>
+                        </t>
+                        <div>
+                            <t t-out="a"/>
+                        </div>
+                    </root>
+                </t>
+            """
+        })
+        IrQweb = self.env['ir.qweb'].with_context(is_t_cache_disabled=False)
+
+        render = IrQweb._render(template_page.id, {
+            'cache_1': 1,
+            'cache_2': 1,
+            'counter': 1,
+        })
+        result = """
+            <root>
+                <div>
+                    <section>
+                        <article class="no_cache">1</article>
+                        <div>cache: 101</div>
+                    </section>
+                    <footer class="no_cache">10</footer>
+                </div>
+            </root>
+        """
+        self.assertEqual(etree.fromstring(render), etree.fromstring(result), 'rendering 1')
+
+        render = IrQweb._render(template_page.id, {
+            'cache_1': 2,
+            'cache_2': 1,
+            'counter': 2,
+        })
+        result = """
+            <root>
+                <div>
+                    <section>
+                        <article class="no_cache">2</article>
+                        <div>cache: 101</div>
+                    </section>
+                    <footer class="no_cache">20</footer>
+                </div>
+            </root>
+        """
+        self.assertEqual(etree.fromstring(render), etree.fromstring(result), 'rendering 2')
+
+        render = IrQweb._render(template_page.id, {
+            'cache_1': 2,
+            'cache_2': 3,
+            'counter': 3,
+        })
+        result = """
+            <root>
+                <div>
+                    <section>
+                        <article class="no_cache">2</article>
+                        <div>cache: 101</div>
+                    </section>
+                    <footer class="no_cache">20</footer>
+                </div>
+            </root>
+        """
+        self.assertEqual(etree.fromstring(render), etree.fromstring(result), 'rendering 3')
+
+        render = IrQweb._render(template_page.id, {
+            'cache_1': 3,
+            'cache_2': 3,
+            'counter': 3,
+        })
+        result = """
+            <root>
+                <div>
+                    <section>
+                        <article class="no_cache">3</article>
+                        <div>cache: 103</div>
+                    </section>
+                    <footer class="no_cache">30</footer>
+                </div>
+            </root>
+        """
+        self.assertEqual(etree.fromstring(render), etree.fromstring(result), 'rendering 4')
+
+    def test_render_xml_t_set_wrap_t_cache(self):
+        template_page = self.env['ir.ui.view'].create({
+            'name': "template_page",
+            'type': 'qweb',
+            'arch': """
+                <t t-name="template_page">
+                    <root>
+                        <t t-set="a">
+                            <section t-cache="cache_id">
+                                <t t-set="counter" t-value="counter + 100"/>
+                                <article t-nocache="" class="no_cache"><t t-out="counter"/></article>
+                                <div>cache: <t t-out="counter"/></div>
+                            </section>
+                            <footer t-nocache="" class="no_cache"><t t-out="counter * 10"/></footer>
+                        </t>
+                        <div>
+                            <t t-out="a"/>
+                        </div>
+                    </root>
+                </t>
+            """
+        })
+        IrQweb = self.env['ir.qweb'].with_context(is_t_cache_disabled=False)
+
+        render = IrQweb._render(template_page.id, {
+            'cache_id': 1,
+            'counter': 1,
+        })
+        result = """
+            <root>
+                <div>
+                    <section>
+                        <article class="no_cache">1</article>
+                        <div>cache: 101</div>
+                    </section>
+                    <footer class="no_cache">10</footer>
+                </div>
+            </root>
+        """
+        self.assertEqual(etree.fromstring(render), etree.fromstring(result), 'rendering 1')
+
+        render = IrQweb._render(template_page.id, {
+            'cache_id': 1,
+            'counter': 2,
+        })
+        result = """
+            <root>
+                <div>
+                    <section>
+                        <article class="no_cache">2</article>
+                        <div>cache: 101</div>
+                    </section>
+                    <footer class="no_cache">20</footer>
+                </div>
+            </root>
+        """
+        self.assertEqual(etree.fromstring(render), etree.fromstring(result), 'rendering 2')
+
+        render = IrQweb._render(template_page.id, {
+            'cache_id': 3,
+            'counter': 3,
+        })
+        result = """
+            <root>
+                <div>
+                    <section>
+                        <article class="no_cache">3</article>
+                        <div>cache: 103</div>
+                    </section>
+                    <footer class="no_cache">30</footer>
+                </div>
+            </root>
+        """
+        self.assertEqual(etree.fromstring(render), etree.fromstring(result), 'rendering 3')
+
+    def test_render_xml_nocache_in_cache_in_cache(self):
+        template_page = self.env['ir.ui.view'].create({
+            'name': "template_page",
+            'type': 'qweb',
+            'arch': """
+                <t t-name="template_page">
+                    <root>
+                        <section t-cache="key1">
+                            <span t-out="val"/>
+                            <article t-cache="key2">
+                                <span t-nocache="" t-out="val"/>
+                            </article>
+                        </section>
+                    </root>
+                </t>
+            """
+        })
+
+        IrQweb = self.env['ir.qweb'].with_context(is_t_cache_disabled=False)
+
+        render = IrQweb._render(template_page.id, {
+            'key1': (1,),
+            'key2': (1,),
+            'val': 1,
+        })
+        result = """
+            <root>
+                <section>
+                    <span>1</span>
+                    <article>
+                        <span>1</span>
+                    </article>
+                </section>
+            </root>
+        """
+        self.assertEqual(etree.fromstring(render), etree.fromstring(result), 'rendering 1')
+
+        render = IrQweb._render(template_page.id, {
+            'key1': (1,),
+            'key2': (1,),
+            'val': 2,
+        })
+        result = """
+            <root>
+                <section>
+                    <span>1</span>
+                    <article>
+                        <span>2</span>
+                    </article>
+                </section>
+            </root>
+        """
+        self.assertEqual(etree.fromstring(render), etree.fromstring(result), 'rendering 2')
+
+        render = IrQweb._render(template_page.id, {
+            'key1': (1,),
+            'key2': (2,),
+            'val': 3,
+        })
+        result = """
+            <root>
+                <section>
+                    <span>1</span>
+                    <article>
+                        <span>3</span>
+                    </article>
+                </section>
+            </root>
+        """
+        self.assertEqual(etree.fromstring(render), etree.fromstring(result), 'rendering 3')
+
+    def test_render_xml_conditional_cache(self):
+        view1 = self.env['ir.ui.view'].create({
+            'name': "dummy",
+            'type': 'qweb',
+            'arch': """
+                <t t-name="base.dummy">
+                    <div t-cache="cache_id if condition else None" class="toto">
+                        <table>
+                            <tr><td><span t-esc="value[0]"/></td></tr>
+                            <tr><td><span t-esc="value[1]"/></td></tr>
+                            <tr><td><span t-esc="value[2]"/></td></tr>
+                        </table>
+                    </div>
+                </t>
+            """
+        })
+        expected_result = etree.fromstring("""
+            <div class="toto">
+                <table>
+                    <tr><td><span>1</span></td></tr>
+                    <tr><td><span>2</span></td></tr>
+                    <tr><td><span>3</span></td></tr>
+                </table>
+            </div>
+        """)
+
+        IrQweb = self.env['ir.qweb'].with_context(is_t_cache_disabled=False)
+
+        result = etree.fromstring(IrQweb._render(view1.id, {'cache_id': 1, 'condition': True, 'value': [1, 2, 3]}))
+        self.assertEqual(result, expected_result, 'First rendering (add in cache)')
+
+        result = etree.fromstring(IrQweb._render(view1.id, {'cache_id': 1, 'condition': True, 'value': [10, 20, 30]}))
+        self.assertEqual(result, expected_result, 'Next rendering use cache')
+
+
+        expected_result = etree.fromstring("""
+            <div class="toto">
+                <table>
+                    <tr><td><span>10</span></td></tr>
+                    <tr><td><span>20</span></td></tr>
+                    <tr><td><span>30</span></td></tr>
+                </table>
+            </div>
+        """)
+        result = etree.fromstring(IrQweb._render(view1.id, {'cache_id': 1, 'value': [10, 20, 30]}))
+        self.assertEqual(result, expected_result, 'Next rendering use cache')
+
+    def test_render_xml_cache_and_inherit_view(self):
+        view1 = self.env['ir.ui.view'].create({
+            'name': "dummy",
+            'type': 'qweb',
+            'arch': """
+                <t t-name="base.dummy">
+                    <div t-cache="True" class="toto">
+                        <table>
+                            <tr><td><span t-esc="value[0]"/></td></tr>
+                            <tr><td><span t-esc="value[1]"/></td></tr>
+                            <tr><td><span t-esc="value[2]"/></td></tr>
+                        </table>
+                    </div>
+                </t>
+            """
+        })
+        # t-cache value can be an interable then we can add value as a tuple (without parenthesis)
+        view2 = self.env['ir.ui.view'].create({
+            'name': 'Child View',
+            'mode': 'extension',
+            'inherit_id': view1.id,
+            'arch': '''
+                <xpath expr="//div[@t-cache]" position="attributes">
+                    <attribute name="t-cache" add="company,value[0]" remove="True," separator=","/>
+                </xpath>
+            ''',
+        })
+
+        IrQweb = self.env['ir.qweb'].with_context(use_qweb_t_cache=True)
+
+        expected_result = etree.fromstring("""
+            <div class="toto">
+                <table>
+                    <tr><td><span>1</span></td></tr>
+                    <tr><td><span>2</span></td></tr>
+                    <tr><td><span>3</span></td></tr>
+                </table>
+            </div>
+        """)
+        result = etree.fromstring(IrQweb._render(view2.id, {'value': [1, 2, 3]}))
+        self.assertEqual(result, expected_result, 'First rendering create cache from company and the value 1')
+
+        expected_result = etree.fromstring("""
+            <div class="toto">
+                <table>
+                    <tr><td><span>10</span></td></tr>
+                    <tr><td><span>20</span></td></tr>
+                    <tr><td><span>30</span></td></tr>
+                </table>
+            </div>
+        """)
+        result = etree.fromstring(IrQweb._render(view2.id, {'value': [10, 20, 30]}))
+        self.assertEqual(result, expected_result, 'Next rendering create cache from company and the value 10')
+
 class FileSystemLoader(object):
     def __init__(self, path):
         # TODO: support multiple files #add_file() + add cache
@@ -1906,13 +3018,9 @@ class TestQWebStaticXml(TransactionCase):
                 return re.compile(r'\>[ \n\t]*\<').sub('><', text.strip())
 
             result = remove_space(doc.find('result[@id="{}"]'.format(template)).text or u'').replace('&quot;', '&#34;')
-            rendering = remove_space(self.env['ir.qweb']._render(template, values=params, load=loader))
 
-            self.assertEqual(rendering, result, template)
-
-            rendering_static = None
             try:
-                rendering_static = remove_space(render(template, params, loader))
+                rendering_static = remove_space(render(template, values=params, load=loader))
                 self.assertEqual(rendering_static, result, "%s (static rendering)" % template)
             except QWebException as e:
                 if not isinstance(e.__cause__, NotImplementedError) and "Please use \"env['ir.qweb']._render\" method" in str(e):
