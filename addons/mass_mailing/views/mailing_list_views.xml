@@ -39,6 +39,10 @@
         <field name="model">mailing.list</field>
         <field name="arch" type="xml">
             <form string="Contact List">
+                <header>
+                    <button name="action_send_mailing" string="Send Mailing"
+                        type="object" class="btn btn-primary"/>
+                </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button name="action_view_contacts"

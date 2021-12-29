@@ -27,6 +27,22 @@ class MailingList(models.Model):
         action['context'] = dict(action.get('context', {}), search_default_filter_valid_sms_recipient=1)
         return action
 
+    def action_send_mailing_sms(self):
+        view = self.env.ref('mass_mailing_sms.mailing_mailing_view_form_sms')
+        action = self.env["ir.actions.actions"]._for_xml_id('mass_mailing_sms.mailing_mailing_action_sms')
+        action.update({
+            'context': {
+                'default_contact_list_ids': self.ids,
+                'default_model_id': self.env['ir.model']._get_id('mailing.list'),
+                'default_mailing_type': 'sms',
+            },
+            'target': 'current',
+            'view_type': 'form',
+            'views': [(view.id, 'form')],
+        })
+
+        return action
+
     def _get_contact_statistics_fields(self):
         """ See super method docstring for more info.
         Adds:
