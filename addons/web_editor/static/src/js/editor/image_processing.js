@@ -14,6 +14,7 @@ const modifierFields = [
     'resizeWidth',
     'aspectRatio',
 ];
+const isGif = (mimetype) => mimetype === 'image/gif';
 
 // webgl color filters
 const _applyAll = (result, filter, filters) => {
@@ -202,6 +203,7 @@ async function applyModifications(img, dataOptions = {}) {
         glFilter: '',
         filter: '#0000',
         quality: '75',
+        forceModification: false,
     }, img.dataset, dataOptions);
     let {
         width,
@@ -213,9 +215,15 @@ async function applyModifications(img, dataOptions = {}) {
         originalSrc,
         glFilter,
         filterOptions,
+        forceModification,
     } = data;
     [width, height, resizeWidth] = [width, height, resizeWidth].map(s => parseFloat(s));
     quality = parseInt(quality);
+
+    // Skip modifications (required to add shapes on animated GIFs).
+    if (isGif(mimetype) && !forceModification) {
+        return await _loadImageDataURL(originalSrc);
+    }
 
     // Crop
     const container = document.createElement('div');
@@ -277,6 +285,44 @@ function loadImage(src, img = new Image()) {
 // and filter, we create a local cache of the images using object URLs.
 const imageCache = new Map();
 /**
+ * Loads image object URL into cache if not already set and returns it.
+ *
+ * @param {String} src
+ * @returns {Promise}
+ */
+function _loadImageObjectURL(src) {
+    return _updateImageData(src);
+}
+/**
+ * Gets image dataURL from cache in the same way as object URL.
+ *
+ * @param {String} src
+ * @returns {Promise}
+ */
+function _loadImageDataURL(src) {
+    return _updateImageData(src, 'dataURL');
+}
+/**
+ * @param {String} src used as a key on the image cache map.
+ * @param {String} [key='objectURL'] specifies the image data to update/return.
+ * @returns {Promise<String>} resolves with either dataURL/objectURL value.
+ */
+async function _updateImageData(src, key = 'objectURL') {
+    const currentImageData = imageCache.get(src);
+    if (currentImageData && currentImageData[key]) {
+        return currentImageData[key];
+    }
+    let value = '';
+    const blob = await fetch(src).then(res => res.blob());
+    if (key === 'dataURL') {
+        value = await createDataURL(blob);
+    } else {
+        value = URL.createObjectURL(blob);
+    }
+    imageCache.set(src, Object.assign(currentImageData || {}, {[key]: value}));
+    return value;
+}
+/**
  * Activates the cropper on a given image.
  *
  * @param {jQuery} $image the image on which to activate the cropper
@@ -284,12 +330,7 @@ const imageCache = new Map();
  * @param {DOMStringMap} dataset dataset containing the cropperDataFields
  */
 async function activateCropper(image, aspectRatio, dataset) {
-    const src = image.getAttribute('src');
-    if (!imageCache.has(src)) {
-        const res = await fetch(src);
-        imageCache.set(src, URL.createObjectURL(await res.blob()));
-    }
-    image.src = imageCache.get(src);
+    image.src = await _loadImageObjectURL(image.getAttribute('src'));
     $(image).cropper({
         viewMode: 2,
         dragMode: 'move',
@@ -333,10 +374,29 @@ async function loadImageInfo(img, rpc, attachmentSrc = '') {
 
 /**
  * @param {String} mimetype
+ * @param {Boolean} [strict=false] if true, even partially supported images (GIFs)
+ *     won't be accepted.
  * @returns {Boolean}
  */
-function isImageSupportedForProcessing(mimetype) {
+function isImageSupportedForProcessing(mimetype, strict = false) {
+    if (isGif(mimetype)) {
+        return !strict;
+    }
     return ['image/jpeg', 'image/png'].includes(mimetype);
+}
+
+/**
+ * @param {Blob} blob
+ * @returns {Promise}
+ */
+function createDataURL(blob) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.addEventListener('load', () => resolve(reader.result));
+        reader.addEventListener('abort', reject);
+        reader.addEventListener('error', reject);
+        reader.readAsDataURL(blob);
+    });
 }
 
 return {
@@ -347,5 +407,7 @@ return {
     loadImage,
     removeOnImageChangeAttrs: [...cropperDataFields, ...modifierFields, 'aspectRatio'],
     isImageSupportedForProcessing,
+    createDataURL,
+    isGif,
 };
 });
