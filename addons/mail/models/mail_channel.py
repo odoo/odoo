@@ -771,7 +771,7 @@ class Channel(models.Model):
                 # avoid sending potentially a lot of members for big channels
                 # exclude chat and other small channels from this optimization because they are
                 # assumed to be smaller and it's important to know the member list for them
-                info['members'] = sorted(list(partner_format_by_partner[member.partner_id] for member in members_by_channel[channel] if member.partner_id), key=lambda p: p['id'])
+                info['members'] = sorted(list(channel._channel_info_format_member(member.partner_id, partner_format_by_partner[member.partner_id]) for member in members_by_channel[channel] if member.partner_id), key=lambda p: p['id'])
                 info['seen_partners_info'] = sorted([{
                     'id': cp.id,
                     'partner_id': cp.partner_id.id,
@@ -788,6 +788,11 @@ class Channel(models.Model):
 
             channel_infos.append(info)
         return channel_infos
+
+    def _channel_info_format_member(self, partner, partner_info):
+        """Returns member information in the context of self channel."""
+        self.ensure_one()
+        return partner_info
 
     def _channel_fetch_message(self, last_id=False, limit=20):
         """ Return message values of the current channel.
@@ -1002,15 +1007,21 @@ class Channel(models.Model):
         """
         notifications = []
         for channel in self:
-            data = {
+            data = dict({
                 'channel_id': channel.id,
                 'is_typing': is_typing,
-                'partner_id': self.env.user.partner_id.id,
-                'partner_name': self.env.user.partner_id.name,
-            }
+            }, **channel._notify_typing_partner_data())
             notifications.append([channel, 'mail.channel.partner/typing_status', data])  # notify backend users
             notifications.append([channel.uuid, 'mail.channel.partner/typing_status', data])  # notify frontend users
         self.env['bus.bus']._sendmany(notifications)
+
+    def _notify_typing_partner_data(self):
+        """Returns typing partner data for self channel."""
+        self.ensure_one()
+        return {
+            'partner_id': self.env.user.partner_id.id,
+            'partner_name': self.env.user.partner_id.name,
+        }
 
     @api.model
     def channel_search_to_join(self, name=None, domain=None):
