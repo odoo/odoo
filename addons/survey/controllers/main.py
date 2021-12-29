@@ -223,10 +223,11 @@ class Survey(http.Controller):
 
         access_data = self._get_access_data(survey_token, answer_token, ensure_token=False)
 
-        if answer_from_cookie and access_data['validity_code'] == 'answer_wrong_user':
-            # The cookie had been generated for another user; ignore this answer and redo the check.
-            answer_token = None
-            access_data = self._get_access_data(survey_token, answer_token, ensure_token=False)
+        if answer_from_cookie and access_data['validity_code'] in ('answer_wrong_user', 'token_wrong'):
+            # If the cookie had been generated for another user or does not correspond to any existing answer object
+            # (probably because it has been deleted), ignore it and redo the check.
+            # The cookie will be replaced by a legit value when resolving the URL, so we don't clean it further here.
+            access_data = self._get_access_data(survey_token, None, ensure_token=False)
 
         if access_data['validity_code'] is not True:
             return self._redirect_with_error(access_data, access_data['validity_code'])
