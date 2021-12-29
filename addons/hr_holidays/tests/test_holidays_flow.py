@@ -99,7 +99,6 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
                 'employee_id': self.employee_emp_id,
                 'state': 'validate',
                 'date_from': time.strftime('%Y-%m-01'),
-                'date_to': time.strftime('%Y-12-31'),
             }, {
                 'name': 'Paid Time off for David',
                 'holiday_status_id': holiday_status_paid_time_off.id,
@@ -107,7 +106,6 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
                 'employee_id': self.ref('hr.employee_admin'),
                 'state': 'validate',
                 'date_from': time.strftime('%Y-%m-01'),
-                'date_to': time.strftime('%Y-12-31'),
             }
         ])
 
@@ -145,7 +143,6 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             'number_of_days': 2,
             'state': 'confirm',
             'date_from': time.strftime('%Y-%m-01'),
-            'date_to': time.strftime('%Y-12-31'),
         })
         # HrUser validates the first step
 
