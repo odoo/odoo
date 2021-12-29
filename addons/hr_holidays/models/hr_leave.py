@@ -201,8 +201,8 @@ class HolidaysRequest(models.Model):
     # To display in form view
     supported_attachment_ids = fields.Many2many(
         'ir.attachment', string="Attach File", compute='_compute_supported_attachment_ids',
-        inverse='_inverse_supported_attachment_ids')
-    supported_attachment_ids_count = fields.Integer(compute='_compute_supported_attachment_ids')
+        inverse='_inverse_supported_attachment_ids', compute_sudo=True)
+    supported_attachment_ids_count = fields.Integer(compute='_compute_supported_attachment_ids', compute_sudo=True)
     # UX fields
     all_employee_ids = fields.Many2many('hr.employee', compute='_compute_all_employees')
     leave_type_request_unit = fields.Selection(related='holiday_status_id.request_unit', readonly=True)
@@ -641,7 +641,7 @@ class HolidaysRequest(models.Model):
 
     def _inverse_supported_attachment_ids(self):
         for holiday in self:
-            holiday.attachment_ids = holiday.supported_attachment_ids
+            holiday.sudo().attachment_ids = holiday.supported_attachment_ids
 
     @api.constrains('date_from', 'date_to', 'employee_id')
     def _check_date(self):
