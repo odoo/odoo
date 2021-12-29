@@ -175,33 +175,52 @@ class DescriptionScreen extends Component {
     }
 
     /**
-     * Called each time the autocomplete input's value changes. Only industries containing
-     * the input value are kept. Industries starting with the input value are put in first
-     * position then the order is the alphabetical one. The result size is limited to 15.
+     * Called each time the autocomplete input's value changes. Only industries
+     * having a label or a synonym containing all terms of the input value are
+     * kept.
+     * The order received from IAP is kept (expected to be on descending hit
+     * count) unless there are 7 or less matches in which case the results are
+     * sorted alphabetically.
+     * The result size is limited to 15.
      *
-     * @param {Object} request object with a single 'term' property which is the input current value
-     * @param {function} response callback which takes the data to suggest as argument
+     * @param {Object} request object with a single 'term' property which is the
+     *      input current value
+     * @param {function} response callback which takes the data to suggest as
+     *      argument
      */
     _autocompleteSearch(request, response) {
-        const lcTerm = request.term.toLowerCase();
+        const terms = request.term.toLowerCase().split(/[|,\n]+/);
         const limit = 15;
-        const matches = this.state.industries.filter((val) => {
-            return val.label.startsWith(lcTerm);
+        const sortLimit = 7;
+        // `this.state.industries` is already sorted by hit count (from IAP).
+        // That order should be kept after manipulating the recordset.
+        let matches = this.state.industries.filter((val, index) => {
+            // To match, every term should be contained in either the label or a
+            // synonym
+            for (const candidate of [val.label, ...(val.synonyms || '').split(/[|,\n]+/)]) {
+                if (terms.every(term => candidate.includes(term))) {
+                    return true;
+                }
+            }
         });
-        let results = matches.slice(0, limit);
-        this.labelToId = {};
-        let labels = results.map((val) => val.label);
-        if (labels.length < limit) {
-            let relaxedMatches = this.state.industries.filter((val) => {
-                return val.label.includes(lcTerm) && !labels.includes(val.label);
-            });
-            relaxedMatches = relaxedMatches.slice(0, limit - labels.length);
-            results = results.concat(relaxedMatches);
+        if (matches.length > limit) {
+            // Keep matches with the least number of words so that e.g.
+            // "restaurant" remains available even if there are 15 specific
+            // sub-types that have a higher hit count.
+            matches = matches.sort((x, y) => x.wordCount - y.wordCount)
+                             .slice(0, limit)
+                             .sort((x, y) => x.hitCountOrder - y.hitCountOrder);
         }
-        this.autocompleteHasResults = !!results.length;
+        this.labelToId = {};
+        let labels;
+        this.autocompleteHasResults = !!matches.length;
         if (this.autocompleteHasResults) {
-            labels = results.map((val) => val.label);
-            results.forEach((r) => {
+            if (matches.length <= sortLimit) {
+                // Sort results by ascending label if few of them.
+                matches.sort((x, y) => x.label < y.label ? -1 : x.label > y.label ? 1 : 0);
+            }
+            labels = matches.map(val => val.label);
+            matches.forEach(r => {
                 this.labelToId[r.label] = r.id;
             });
         } else {
@@ -563,6 +582,11 @@ async function getInitialState(services) {
         industries: results.industries,
         logo: results.logo ? 'data:image/png;base64,' + results.logo : false,
     };
+    r.industries = r.industries.map((industry, index) => ({
+        ...industry,
+        wordCount: industry.label.split(" ").length,
+        hitCountOrder: index,
+    }));
 
     // Load palettes from the current CSS
     const palettes = {};
