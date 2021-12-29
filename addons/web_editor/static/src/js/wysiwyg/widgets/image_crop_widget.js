@@ -19,7 +19,7 @@ const ImageCropWidget = Widget.extend({
     /**
      * @constructor
      */
-    init(parent, media) {
+    init(parent, media, options = {}) {
         this._super(...arguments);
         this.media = media;
         this.$media = $(media);
@@ -37,7 +37,8 @@ const ImageCropWidget = Widget.extend({
         const data = Object.assign({}, media.dataset);
         this.initialSrc = src;
         this.aspectRatio = data.aspectRatio || "0/0";
-        this.mimetype = data.mimetype || src.endsWith('.png') ? 'image/png' : 'image/jpeg';
+        const mimetype = data.mimetype || src.endsWith('.png') ? 'image/png' : 'image/jpeg';
+        this.mimetype = options.mimetype || mimetype;
     },
     /**
      * @override
@@ -145,7 +146,7 @@ const ImageCropWidget = Widget.extend({
             }
         });
         delete this.media.dataset.resizeWidth;
-        this.initialSrc = await applyModifications(this.media);
+        this.initialSrc = await applyModifications(this.media, {forceModification: true, mimetype: this.mimetype});
         this.media.classList.toggle('o_we_image_cropped', cropped);
         this.$media.trigger('image_cropped');
         this.destroy();
