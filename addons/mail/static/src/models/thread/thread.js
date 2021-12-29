@@ -793,6 +793,15 @@ registerModel({
             }
         },
         /**
+         * Returns the name of the given partner in the context of this thread.
+         *
+         * @param {mail.partner} partner
+         * @returns {string}
+         */
+        getMemberName(partner) {
+            return partner.nameOrDisplayName;
+        },
+        /**
          * Returns the text that identifies this thread in a mention.
          *
          * @returns {string}
@@ -1679,20 +1688,20 @@ registerModel({
             if (this.orderedOtherTypingMembers.length === 1) {
                 return _.str.sprintf(
                     this.env._t("%s is typing..."),
-                    this.orderedOtherTypingMembers[0].nameOrDisplayName
+                    this.getMemberName(this.orderedOtherTypingMembers[0])
                 );
             }
             if (this.orderedOtherTypingMembers.length === 2) {
                 return _.str.sprintf(
                     this.env._t("%s and %s are typing..."),
-                    this.orderedOtherTypingMembers[0].nameOrDisplayName,
-                    this.orderedOtherTypingMembers[1].nameOrDisplayName
+                    this.getMemberName(this.orderedOtherTypingMembers[0]),
+                    this.getMemberName(this.orderedOtherTypingMembers[1])
                 );
             }
             return _.str.sprintf(
                 this.env._t("%s, %s and more are typing..."),
-                this.orderedOtherTypingMembers[0].nameOrDisplayName,
-                this.orderedOtherTypingMembers[1].nameOrDisplayName
+                this.getMemberName(this.orderedOtherTypingMembers[0]),
+                this.getMemberName(this.orderedOtherTypingMembers[1])
             );
         },
         /**
