@@ -2,11 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import account_move
-from . import base_unit
 from . import crm_team
 from . import digest
 from . import ir_http
-from . import payment
+from . import payment_acquirer
 from . import product_attribute
 from . import product_image
 from . import product_pricelist
@@ -21,6 +20,7 @@ from . import res_partner
 from . import sale_order
 from . import sale_order_line
 from . import website
+from . import website_base_unit
 from . import website_page
 from . import website_snippet_filter
 from . import website_visitor
