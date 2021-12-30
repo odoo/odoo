@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, tools, _
+from odoo import fields, models, tools, Command, _
 from odoo.tools.misc import clean_context
 
 
@@ -63,7 +63,10 @@ class MailingContactImport(models.TransientModel):
             if email not in existing_contacts:
                 unique_contacts[email] = {
                     'name': name,
-                    'list_ids': self.mailing_list_ids.ids,
+                    'subscription_ids': [
+                        Command.create({'list_id': mailing_list_id.id})
+                        for mailing_list_id in self.mailing_list_ids
+                    ],
                 }
 
         if not unique_contacts:
