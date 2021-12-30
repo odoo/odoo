@@ -393,6 +393,7 @@ class Http(models.AbstractModel):
             'is_website_user': request.env.user.id == request.website.user_id.id,
             'geoip_country_code': geoip_country_code,
             'geoip_phone_code': geoip_phone_code,
+            'lang_url_code': request.lang._get_cached('url_code'),
         })
         if request.env.user.has_group('website.group_website_restricted_editor'):
             session_info.update({

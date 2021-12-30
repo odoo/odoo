@@ -14,7 +14,6 @@ import core from "web.core";
 import dom from "web.dom";
 import mixins from "web.mixins";
 import publicWidget from "web.public.widget";
-import utils from "web.utils";
 import wUtils from "website.utils";
 
 var qweb = core.qweb;
@@ -1015,9 +1014,11 @@ registry.anchorSlide = publicWidget.Widget.extend({
             });
             return;
         }
-        if (!utils.isValidAnchor(hash)) {
+        if (!hash.length) {
             return;
         }
+        // Escape special characters to make the jQuery selector to work.
+        hash = '#' + $.escapeSelector(hash.substring(1));
         var $anchor = $(hash);
         const scrollValue = $anchor.attr('data-anchor');
         if (!$anchor.length || !scrollValue) {
