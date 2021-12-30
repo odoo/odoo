@@ -19,3 +19,4 @@ from . import test_multicompany
 from . import test_personal_stages
 from . import test_task_dependencies
 from . import test_task_follow
+from . import test_task_tracking
