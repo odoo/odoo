@@ -527,7 +527,7 @@ class Repair(models.Model):
 
             moves = self.env['stock.move']
             for operation in repair.operations:
-                move = Move.create({
+                move = Move.with_context(default_lot_id=None).create({
                     'name': repair.name,
                     'product_id': operation.product_id.id,
                     'product_uom_qty': operation.product_uom_qty,
