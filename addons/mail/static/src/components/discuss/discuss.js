@@ -29,7 +29,7 @@ export class Discuss extends Component {
         this.discuss.update({ isOpen: true });
         if (this.discuss.thread) {
             this.trigger('o-push-state-action-manager');
-        } else if (!this._activeThreadCache && this.discuss.messaging.isInitialized) {
+        } else if (!this._activeThreadCache && this.messaging.isInitialized) {
             this.discuss.openInitThread();
         }
         if (
@@ -155,4 +155,15 @@ Object.assign(Discuss, {
     template: 'mail.Discuss',
 });
 
-registerMessagingComponent(Discuss);
+registerMessagingComponent(Discuss, {
+    extraCacheList: [
+        'discuss.initActiveId',
+        'discuss.messaging.device.isMobile',
+        'discuss.messaging.models',
+        'discuss.modelManager',
+        'discuss.openInitThread',
+        'discuss.thread.counter',
+        'discuss.threadView.threadCache.localId',
+        'discuss.update',
+    ],
+});

@@ -225,7 +225,7 @@ export class ModelField {
     computeRelated(record) {
         const [relationName, relatedFieldName] = this.related.split('.');
         const Model = record.constructor;
-        const relationField = Model.__fieldMap[relationName];
+        const relationField = Model.__fieldMap.get(relationName);
         if (['one2many', 'many2many'].includes(relationField.relationType)) {
             const newVal = [];
             for (const otherRecord of record[relationName]) {
@@ -462,17 +462,19 @@ export class ModelField {
      */
     _convertX2ManyValue(newValue, { hasToVerify = true } = {}) {
         if (typeof newValue[Symbol.iterator] === 'function') {
+            const records = [...newValue].map(record => record.__originalRecord || record);
             if (hasToVerify) {
-                for (const value of newValue) {
-                    this._verifyRelationalValue(value);
+                for (const record of records) {
+                    this._verifyRelationalValue(record);
                 }
             }
-            return newValue;
+            return records;
         }
+        const record = newValue.__originalRecord || newValue;
         if (hasToVerify) {
-            this._verifyRelationalValue(newValue);
+            this._verifyRelationalValue(record);
         }
-        return [newValue];
+        return [record];
     }
 
     /**
@@ -639,6 +641,7 @@ export class ModelField {
      * @returns {boolean} whether the value changed for the current field
      */
     _setRelationLinkX2One(record, recordToLink, { hasToUpdateInverse = true } = {}) {
+        recordToLink = recordToLink.__originalRecord || recordToLink;
         if (record.modelManager.isDebug) {
             this._verifyRelationalValue(recordToLink);
         }

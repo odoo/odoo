@@ -419,4 +419,8 @@ Object.assign(ComposerTextInput, {
     template: 'mail.ComposerTextInput',
 });
 
-registerMessagingComponent(ComposerTextInput);
+registerMessagingComponent(ComposerTextInput, {
+    extraCacheList: [
+        'messaging.device.isMobile',
+    ],
+});

@@ -16,8 +16,13 @@ const componentRegistry = {};
  *
  * @param {Component} ComponentClass the constructor of the component to be
  *      registered. Its name will be used as its key in the registry.
+ * @param {Object} [param={}]
+ * @param {string[]} [param.extraCacheList]
+ * @param {string} [param.modelName]
+ * @param {string} [param.propNameAsRecordLocalId]
+ * @param {string} [param.recordName]
  */
-export function registerMessagingComponent(ComponentClass) {
+export function registerMessagingComponent(ComponentClass, { extraCacheList, modelName, propNameAsRecordLocalId, recordName } = {}) {
     const { defaultProps, components, name, props } = ComponentClass;
     if (componentRegistry[name]) {
         throw new Error(`There already is a registered component with the name "${name}"`);
@@ -28,7 +33,7 @@ export function registerMessagingComponent(ComponentClass) {
     const MessagingClass = { [decoratedName]: class extends ComponentClass {
         setup() {
             this.root = useRef('root');
-            useModels();
+            useModels({ extraCacheList, modelName, propNameAsRecordLocalId, recordName });
             useShouldUpdateBasedOnProps();
             super.setup();
         }

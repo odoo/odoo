@@ -197,6 +197,7 @@ export class ModelManager {
      * @param {Model} record
      */
     delete(record) {
+        record = record.__originalRecord || record; // TODO this should be removed, but here for now to see the rest of the problems
         this._delete(record);
         this._flushUpdateCycle();
     }
@@ -209,6 +210,7 @@ export class ModelManager {
      * @returns {boolean}
      */
     exists(Model, record) {
+        record = record.__originalRecord || record; // TODO this should be removed, but here for now to see the rest of the problems
         const existingRecord = Model.__records[record.localId];
         return Boolean(existingRecord && existingRecord === record);
     }
@@ -295,6 +297,49 @@ export class ModelManager {
             }
         }
         return;
+    }
+
+    /**
+     * @see `get()`, but the returned record is immutable.
+     * @param {Model} Model class
+     * @param {string} localId
+     * @returns {Model|undefined} record, if exists
+     */
+    getImmutable(Model, localId) {
+        const modelManager = this;
+        const record = modelManager.get(Model, localId);
+        if (!record) {
+            return;
+        }
+        const cache = new Map();
+        let isLocked = false;
+        Promise.resolve().then(() => isLocked = true);
+        return new Proxy(record, {
+            get: function getFromImmutableProxy(record, prop) {
+                if (prop === '__originalRecord') {
+                    return record;
+                }
+                if (cache.has(prop)) {
+                    return cache.get(prop);
+                }
+                const field = Model.__fieldMap.get(prop);
+                if (isLocked && field) { // TODO ideally this condition should apply even for non-field
+                    debugger;
+                    throw new Error(`Cannot access "${prop}" after asynchronous code on immutable "${record}". Immutable records are cached and all accesses must be done synchronously at least once.`);
+                }
+                let value;
+                if (!field || !field.to) {
+                    value = record[prop];
+                } else if (['many2one', 'one2one'].includes(field.relationType)) {
+                    const otherRecord = record[prop];
+                    value = otherRecord && otherRecord.getImmutable();
+                } else if (['many2many', 'one2many'].includes(field.relationType)) {
+                    value = record[prop].map(otherRecord => otherRecord.getImmutable());
+                }
+                cache.set(prop, value);
+                return value;
+            },
+        });
     }
 
     /**
@@ -399,6 +444,7 @@ export class ModelManager {
      * @returns {boolean} whether any value changed for the current record
      */
     update(record, data) {
+        record = record.__originalRecord || record; // TODO this should be removed, but here for now to see the rest of the problems
         const res = this._update(record, data);
         this._flushUpdateCycle();
         return res;
@@ -437,6 +483,12 @@ export class ModelManager {
         const definition = registry.get(Model.name);
         Object.assign(Model, Object.fromEntries(definition.get('modelMethods')));
         Object.assign(Model.prototype, Object.fromEntries(definition.get('recordMethods')));
+        // for (const [recordMethodName, recordMethod] of definition.get('recordMethods')) {
+        //     Model.prototype[recordMethodName] = function (...args) {
+        //         // TODO this shouldn't be necessary
+        //         return recordMethod.call(this.__originalRecord || this, ...args);
+        //     };
+        // }
         for (const [getterName, getter] of definition.get('modelGetters')) {
             Object.defineProperty(Model, getterName, { get: getter });
         }
@@ -618,7 +670,7 @@ export class ModelManager {
                 if (!RelatedModel) {
                     throw new Error(`${field} on ${Model} defines a relation to model(${field.to}), but there is no model registered with this name.`);
                 }
-                const inverseField = RelatedModel.__fieldMap[field.inverse];
+                const inverseField = RelatedModel.__fieldMap.get(field.inverse);
                 if (!inverseField) {
                     throw new Error(`${field} on ${Model} defines its inverse as field(${field.inverse}) on ${RelatedModel}, but it does not exist.`);
                 }
@@ -638,7 +690,7 @@ export class ModelManager {
                 }
             }
             for (const identifyingField of Model.__identifyingFieldsFlattened) {
-                const field = Model.__fieldMap[identifyingField];
+                const field = Model.__fieldMap.get(identifyingField);
                 if (!field) {
                     throw new Error(`Identifying field "${identifyingField}" is not a field on ${Model}.`);
                 }
@@ -650,7 +702,7 @@ export class ModelManager {
                         throw new Error(`Identifying field "${identifyingField}" on ${Model} has a relation of type "${field.relationType}" but identifying field is only supported for "one2one" and "many2one".`);
                     }
                     const RelatedModel = this.models[field.to];
-                    const inverseField = RelatedModel.__fieldMap[field.inverse];
+                    const inverseField = RelatedModel.__fieldMap.get(field.inverse);
                     if (!inverseField.isCausal) {
                         throw new Error(`Identifying field "${identifyingField}" on ${Model} has an inverse "${field.inverse}" not declared as "isCausal" on ${RelatedModel}.`);
                     }
@@ -683,8 +735,8 @@ export class ModelManager {
         const record = !this.isDebug ? nonProxyRecord : new Proxy(nonProxyRecord, {
             get: function getFromProxy(record, prop) {
                 if (
-                    !Model.__fieldMap[prop] &&
-                    !['_super', 'then'].includes(prop) &&
+                    !Model.__fieldMap.get(prop) &&
+                    !['_super', 'then', '__originalRecord'].includes(prop) &&
                     typeof prop !== 'symbol' &&
                     !(prop in record)
                 ) {
@@ -992,7 +1044,7 @@ export class ModelManager {
                 : identifyingElement.reduce((fieldName, currentFieldName) => {
                     const fieldValue = data[currentFieldName] !== undefined
                         ? data[currentFieldName]
-                        : Model.__fieldMap[currentFieldName].default;
+                        : Model.__fieldMap.get(currentFieldName).default;
                     if (fieldValue === undefined) {
                         return fieldName;
                     }
@@ -1006,11 +1058,11 @@ export class ModelManager {
             }
             const fieldValue = data[fieldName] !== undefined
                 ? data[fieldName]
-                : Model.__fieldMap[fieldName].default;
+                : Model.__fieldMap.get(fieldName).default;
             if (fieldValue === undefined) {
                 throw new Error(`Identifying field "${fieldName}" on ${Model} is lacking a value.`);
             }
-            const relationTo = Model.__fieldMap[fieldName].to;
+            const relationTo = Model.__fieldMap.get(fieldName).to;
             if (!relationTo) {
                 return `${fieldName}: ${fieldValue}`;
             }
@@ -1250,10 +1302,10 @@ export class ModelManager {
          * without calling update (which is necessary to process update cycle).
          */
         for (const Model of Object.values(this.models)) {
-            // Object with fieldName/field as key/value pair, for quick access.
-            Model.__fieldMap = Model.__combinedFields;
+            // Map with fieldName/field as key/value pair, for quick access.
+            Model.__fieldMap = new Map(Object.entries(Model.__combinedFields));
             // List of all fields, for iterating.
-            Model.__fieldList = Object.values(Model.__fieldMap);
+            Model.__fieldList = [...Model.__fieldMap.values()];
             Model.__requiredFieldsList = Model.__fieldList.filter(
                 field => field.required
             );
@@ -1329,7 +1381,7 @@ export class ModelManager {
                 // `undefined` should have the same effect as not passing the field
                 continue;
             }
-            const field = Model.__fieldMap[fieldName];
+            const field = Model.__fieldMap.get(fieldName);
             if (!field) {
                 throw new Error(`Cannot create/update record with data unrelated to a field. (record: "${record.localId}", non-field attempted update: "${fieldName}")`);
             }

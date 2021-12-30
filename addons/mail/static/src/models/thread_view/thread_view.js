@@ -404,6 +404,9 @@ registerModel({
          * current partner in the currently displayed thread cache.
          */
         lastVisibleMessage: many2one('Message'),
+        lastMessageView: one2one('MessageView', {
+            compute: '_computeLastMessageView',
+        }),
         messages: many2many('Message', {
             related: 'threadCache.messages',
         }),

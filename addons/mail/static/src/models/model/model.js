@@ -111,6 +111,9 @@ registerModel({
         get(localId, { isCheckingInheritance } = {}) {
             return this.modelManager.get(this, localId, { isCheckingInheritance });
         },
+        getImmutable(localId) {
+            return this.modelManager.getImmutable(this, localId);
+        },
         /**
          * This method creates a record or updates one, depending on provided
          * data. This is the only way to create a record: instantiation must
@@ -202,6 +205,9 @@ registerModel({
          */
         exists() {
             return this.modelManager.exists(this.constructor, this);
+        },
+        getImmutable() {
+            return this.modelManager.getImmutable(this.constructor, this.localId);
         },
         /**
          * Returns a string representation of this record.

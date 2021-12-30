@@ -218,12 +218,6 @@ export class Message extends Component {
     }
 
     /**
-     * @returns {MessageView}
-     */
-    get messageView() {
-        return this.messaging && this.messaging.models['MessageView'].get(this.props.localId);
-    }
-    /**
      * @returns {string}
      */
     get OPEN_CHAT() {
@@ -569,4 +563,16 @@ Object.assign(Message, {
     template: 'mail.Message',
 });
 
-registerMessagingComponent(Message);
+registerMessagingComponent(Message, {
+    extraCacheList: [
+        'messageView.message.date',
+        'messageView.message.prettyBody',
+        'messageView.message.refreshDateFromNow',
+        'messageView.message.update',
+        'messaging.currentGuest',
+        'messaging.messagingBus',
+    ],
+    modelName: 'MessageView',
+    propNameAsRecordLocalId: 'localId',
+    recordName: 'messageView',
+});
