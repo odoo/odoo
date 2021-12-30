@@ -27,9 +27,9 @@ This module contains all the common features of Sales Management and eCommerce.
         'data/sale_data.xml',
 
         'wizard/account_accrued_orders_wizard_views.xml',
+        'wizard/payment_link_wizard_views.xml',
         'wizard/sale_make_invoice_advance_views.xml',
         'wizard/sale_order_cancel_views.xml',
-        'wizard/sale_payment_link_views.xml',
 
         # Define sale order views before their references
         'views/sale_order_views.xml',
