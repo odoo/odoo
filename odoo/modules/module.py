@@ -12,7 +12,7 @@ import pkg_resources
 import re
 import sys
 import warnings
-from os.path import join as opj, realpath
+from os.path import join as opj, normpath
 
 import odoo
 import odoo.tools as tools
@@ -386,7 +386,7 @@ def load_manifest(module, mod_path=None):
         manifest['auto_install'] = set(manifest['depends'])
 
     manifest['version'] = adapt_version(manifest['version'])
-    manifest['addons_path'] = realpath(opj(mod_path, os.pardir))
+    manifest['addons_path'] = normpath(opj(mod_path, os.pardir))
 
     return manifest
 
