@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { Domain } from "@web/core/domain";
+import { deepCopy } from "../utils/objects";
 import { DomainSelectorRootNode } from "./domain_selector_root_node";
 
 const { Component } = owl;

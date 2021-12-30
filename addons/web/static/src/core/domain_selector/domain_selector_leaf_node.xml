@@ -2,83 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-name="web.DomainSelectorLeafNode" owl="1">
-        <div
-            class="o_domain_node o_domain_leaf o_domain_selector_row"
-            t-att-class="props.readonly ? 'o_read_mode' : 'o_edit_mode'"
-        >
-            <t t-if="!props.readonly">
-                <DomainSelectorControlPanel node="props.node" />
-                <div class="o_domain_leaf_edition">
-                    <ModelFieldSelector fieldName="props.node.operands[0]" resModel="props.resModel" readonly="props.readonly" update="(name) => onFieldChange(name)" isDebugMode="props.isDebugMode" />
-                    <div>
-                        <select class="o_domain_leaf_operator_select o_input" t-on-change="onOperatorChange">
-                            <t t-foreach="getOperators()" t-as="operator" t-key="operator">
-                                <option
-                                    t-att-value="operator"
-                                    t-att-selected="isSelectedOperator(operator)"
-                                    t-esc="operator_value"
-                                />
-                            </t>
-                        </select>
-                    </div>
-                    <t t-if="!isSetOperator">
-                        <div class="o_ds_value_cell">
-                            <t t-if="hasSelectionValues">
-                                <select class="o_domain_leaf_value_input o_input" t-on-change="onValueSelected">
-                                    <t t-foreach="selectionValues" t-as="value" t-key="value[0]">
-                                        <option
-                                            t-att-value="value[0]"
-                                            t-att-selected="isSelectedValue(value[0])"
-                                            t-esc="value[1]"
-                                        />
-                                    </t>
-                                </select>
-                            </t>
-                            <t t-elif="['in', 'not in'].includes(props.node.operator)">
-                                <div class="o_domain_leaf_value_input">
-                                    <t t-foreach="props.node.operands[1]" t-as="value" t-key="value_index">
-                                        <span class="badge badge-pill">
-                                            <t t-esc="value" />
-                                            <i
-                                                class="o_domain_leaf_value_remove_tag_button fa fa-times"
-                                                t-att-data-value="value"
-                                                role="img"
-                                                aria-label="Remove tag"
-                                                title="Remove tag"
-                                                t-on-click="onRemoveTagBtnClick(value_index)"
-                                            />
-                                        </span>
-                                    </t>
-                                </div>
-                                <div class="o_domain_leaf_value_tags">
-                                    <input placeholder="Add new value" type="text" class="o_input" t-ref="input" />
-                                    <button
-                                        class="btn btn-sm btn-primary fa fa-plus o_domain_leaf_value_add_tag_button"
-                                        aria-label="Add tag"
-                                        title="Add tag"
-                                        t-on-click="onAddTagBtnClick"
-                                    />
-                                </div>
-                            </t>
-                            <t t-elif="fieldInfo.type === 'date'">
-                                <DatePicker date="dateValue" onDateTimeChanged="(value) => this.onDateValueChange(value)" />
-                            </t>
-                            <t t-elif="fieldInfo.type === 'datetime'">
-                                <DateTimePicker date="dateTimeValue" onDateTimeChanged="(value) => this.onDateValueChange(value)" />
-                            </t>
-                            <t t-else="">
-                                <input
-                                    type="text"
-                                    class="o_domain_leaf_value_input o_input"
-                                    t-att-value="displayedValue"
-                                    t-on-change="onValueChange"
-                                />
-                            </t>
-                        </div>
-                    </t>
-                </div>
-            </t>
-            <t t-else="">
+        <div class="o_domain_node o_domain_leaf o_domain_selector_row">
+            <t t-if="props.readonly">
                 <div class="o_domain_leaf_info">
                     <ModelFieldSelector fieldName="props.node.operands[0]" resModel="props.resModel" readonly="props.readonly" isDebugMode="props.isDebugMode" />
                     <t t-if="typeof props.node.operands[1] === 'string'">
@@ -101,6 +26,41 @@
                         <t t-foreach="props.node.operands[1]" t-as="value" t-key="value_index">
                             <span class="o_domain_leaf_value text-primary"> "<t t-esc="value"/>"</span>
                             <t t-if="!value_last"> or </t>
+                        </t>
+                    </t>
+                </div>
+            </t>
+            <t t-else="">
+                <DomainSelectorControlPanel
+                    node="props.node"
+                    onHoverDeleteNodeBtn="(hovering) => this.onHoverDeleteNodeBtn(hovering)"
+                    onHoverInsertLeafNodeBtn="(hovering) => this.onHoverInsertLeafNodeBtn(hovering)"
+                    onHoverInsertBranchNodeBtn="(hovering) => this.onHoverInsertBranchNodeBtn(hovering)"
+                />
+                <div class="o_domain_leaf_edition">
+                    <ModelFieldSelector fieldName="props.node.operands[0]" resModel="props.resModel" readonly="props.readonly" update="(name) => this.onFieldChange(name)" isDebugMode="props.isDebugMode" />
+                    <t t-set="field" t-value="getFieldComponent(fieldInfo.type)" />
+                    <t t-if="field">
+                        <div>
+                            <select class="o_domain_leaf_operator_select o_input" t-on-change="onOperatorChange">
+                                <t t-foreach="field.getOperators()" t-as="operator" t-key="operator">
+                                    <option
+                                        t-att-value="operator_index"
+                                        t-att-selected="operator.matches({ fieldInfo, operator: props.node.operator, value: props.node.operands[1] })"
+                                        t-esc="operator.label"
+                                    />
+                                </t>
+                            </select>
+                        </div>
+                        <t t-if="!isValueHidden">
+                            <t
+                                t-component="field"
+                                t-key="fieldInfo.type"
+                                field="fieldInfo"
+                                operator="getOperatorInfo(props.node.operator)"
+                                value="props.node.operands[1]"
+                                update="(changes) => props.node.update(changes)"
+                            />
                         </t>
                     </t>
                 </div>

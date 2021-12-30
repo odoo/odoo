@@ -5,7 +5,12 @@
         <div class="o_domain_node o_domain_tree">
             <div class="o_domain_tree_header o_domain_selector_row">
                 <t t-if="!props.readonly">
-                    <DomainSelectorControlPanel node="props.node" />
+                    <DomainSelectorControlPanel
+                        node="props.node"
+                        onHoverDeleteNodeBtn="(hovering) => this.onHoverDeleteNodeBtn(hovering)"
+                        onHoverInsertLeafNodeBtn="(hovering) => this.onHoverInsertLeafNodeBtn(hovering)"
+                        onHoverInsertBranchNodeBtn="(hovering) => this.onHoverInsertBranchNodeBtn(hovering)"
+                    />
                 </t>
                 <DomainSelectorBranchOperator node="props.node" readonly="props.readonly" />
                 <span class="ml4">of:</span>

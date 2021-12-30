@@ -8,6 +8,8 @@
                 title="Delete node"
                 aria-label="Delete node"
                 t-on-click="deleteNode"
+                t-on-mouseenter="onEnterDeleteNodeBtn"
+                t-on-mouseleave="onLeaveDeleteNodeBtn"
             >
                 <i class="fa fa-times"/>
             </button>
@@ -16,6 +18,8 @@
                 title="Add node"
                 aria-label="Add node"
                 t-on-click="insertNode('leaf')"
+                t-on-mouseenter="onEnterInsertLeafNodeBtn"
+                t-on-mouseleave="onLeaveInsertLeafNodeBtn"
             >
                 <i class="fa fa-plus-circle"/>
             </button>
@@ -25,6 +29,8 @@
                 aria-label="Add branch"
                 data-branch="1"
                 t-on-click="insertNode('branch')"
+                t-on-mouseenter="onEnterInsertBranchNodeBtn"
+                t-on-mouseleave="onLeaveInsertBranchNodeBtn"
             >
                 <i class="fa fa-ellipsis-h"/>
             </button>
