@@ -91,6 +91,9 @@ const ReplenishReport = clientAction.extend({
         const graphController = await graphPromise;
         const iframeDoc = this.iframe.contentDocument;
         const reportGraphDiv = iframeDoc.querySelector(".o_report_graph");
+        if (!reportGraphDiv) {
+            return;
+        }
         dom.append(reportGraphDiv, graphController.el, {
             in_DOM: true,
             callbacks: [{ widget: graphController }],
