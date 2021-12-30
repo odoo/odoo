@@ -160,7 +160,7 @@ class AccruedExpenseRevenue(models.TransientModel):
                     lambda l: fields.Float.compare(
                         l.qty_to_invoice,
                         0,
-                        precision_digits=l.product_uom.rounding,
+                        precision_rounding=l.product_uom.rounding,
                     ) == 1
                 )
                 for order_line in lines:
