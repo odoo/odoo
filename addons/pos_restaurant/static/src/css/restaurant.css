@@ -13,7 +13,7 @@
 
 /* ------ FLOOR SELECTOR ------- */
 
-.floor-selector { 
+.floor-selector {
     line-height: 48px;
     font-size: 18px;
     display: -webkit-flex;
@@ -217,7 +217,8 @@
     border-radius: 24px;
     background: white;
     box-shadow: 0px 2px 3px rgba(0,0,0,0.2);
-    cursor: grab;
+    /* See o-grab-cursor mixin */
+    cursor: url(/web/static/src/img/openhand.cur), grab;
     transition: all 150ms linear;
     z-index: 100;
     transform: translate(-50%, -50%);
