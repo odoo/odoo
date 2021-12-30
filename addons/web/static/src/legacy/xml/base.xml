@@ -1346,7 +1346,7 @@
             <t t-set="fileupload_action" t-translation="off">/web/binary/upload_attachment</t>
             <t t-set="multi_upload" t-value="true"/>
             <input type="hidden" name="model" t-att-value="widget.model"/>
-            <input type="hidden" name="id" value="0"/>
+            <input type="hidden" name="id" t-att-value="widget.res_id or 0"/>
         </t>
     </div>
 </div>
