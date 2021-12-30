@@ -2628,8 +2628,7 @@ options.registry.anchor = options.Class.extend({
         this.$button = this.$el.find('we-button');
         const clipboard = new ClipboardJS(this.$button[0], {text: () => this._getAnchorLink()});
         clipboard.on('success', () => {
-            const anchor = decodeURIComponent(this._getAnchorLink());
-            const message = sprintf(Markup(_t("Anchor copied to clipboard<br>Link: %s")), anchor);
+            const message = sprintf(Markup(_t("Anchor copied to clipboard<br>Link: %s")), this._getAnchorLink());
             this.displayNotification({
               type: 'success',
               message: message,
