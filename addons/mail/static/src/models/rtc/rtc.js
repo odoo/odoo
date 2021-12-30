@@ -97,6 +97,7 @@ registerModel({
     recordMethods: {
         async deafen() {
             await this._setDeafState(true);
+            this.messaging.soundEffects.deafen.play();
         },
         /**
          * Removes and disconnects all the peerConnections that are not current members of the call.
@@ -200,6 +201,7 @@ registerModel({
         },
         async mute() {
             await this._setMuteState(true);
+            this.messaging.soundEffects.mute.play();
         },
         /**
          * Resets the state of the model and cleanly ends all connections and
@@ -259,6 +261,7 @@ registerModel({
         },
         async undeafen() {
             await this._setDeafState(false);
+            this.messaging.soundEffects.undeafen.play();
         },
         async unmute() {
             if (this.audioTrack) {
@@ -267,6 +270,7 @@ registerModel({
                 // if we don't have an audioTrack, we try to request it again
                 await this.updateLocalAudioTrack(true);
             }
+            this.messaging.soundEffects.unmute.play();
         },
         /**
          * @param {Boolean} audio
@@ -1164,7 +1168,7 @@ registerModel({
                 browser.clearTimeout(this._pushToTalkTimeoutId);
             }
             if (!this.currentRtcSession.isTalking) {
-                this.messaging.soundEffects.pushToTalk.play({ volume: 0.3 });
+                this.messaging.soundEffects.pushToTalkOn.play();
                 this._setSoundBroadcast(true);
             }
         },
@@ -1183,7 +1187,7 @@ registerModel({
                 return;
             }
             if (!this.currentRtcSession.isMute) {
-                this.messaging.soundEffects.pushToTalk.play({ volume: 0.3 });
+                this.messaging.soundEffects.pushToTalkOff.play();
             }
             this._pushToTalkTimeoutId = browser.setTimeout(
                 () => {
