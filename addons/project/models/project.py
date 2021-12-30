@@ -918,7 +918,7 @@ class Task(models.Model):
         help="Sum of the time planned of all the sub-tasks linked to this task. Usually less than or equal to the initially planned time of this task.")
     # Tracking of this field is done in the write function
     user_ids = fields.Many2many('res.users', relation='project_task_user_rel', column1='task_id', column2='user_id',
-        string='Assignees', default=lambda self: self.env.user, context={'active_test': False})
+        string='Assignees', default=lambda self: self.env.user, context={'active_test': False}, tracking=True)
     # User names displayed in project sharing views
     portal_user_names = fields.Char(compute='_compute_portal_user_names', compute_sudo=True, search='_search_portal_user_names')
     # Second Many2many containing the actual personal stage for the current user
@@ -983,7 +983,7 @@ class Task(models.Model):
     allow_task_dependencies = fields.Boolean(related='project_id.allow_task_dependencies')
     # Tracking of this field is done in the write function
     depend_on_ids = fields.Many2many('project.task', relation="task_dependencies_rel", column1="task_id",
-                                     column2="depends_on_id", string="Blocked By",
+                                     column2="depends_on_id", string="Blocked By", tracking=True,
                                      domain="[('allow_task_dependencies', '=', True), ('id', '!=', id)]")
     dependent_ids = fields.Many2many('project.task', relation="task_dependencies_rel", column1="depends_on_id",
                                      column2="task_id", string="Block",
@@ -1719,41 +1719,7 @@ class Task(models.Model):
         # Track user_ids to send assignment notifications
         old_user_ids = {t: t.user_ids for t in self}
 
-        # X2Many Field Tracking
-        # Extract to a separate function if necessary
-        x2m_tracked_fields = {'user_ids', 'depend_on_ids'}
-        x2m_vals_common_fields = vals.keys() & x2m_tracked_fields
-        x2m_tracking_values = dict()
-        # Structured like so
-        # {
-        #     task: {
-        #         field_name: (value, display_value)
-        #     }
-        # }
-        if not self._context.get('mail_notrack') and x2m_vals_common_fields:
-            # Compute the value before the changes
-            for task in self:
-                task_values = x2m_tracking_values.setdefault(task, {})
-                for field in x2m_vals_common_fields:
-                    task_values[field] = (task[field], ', '.join(record.display_name for record in task[field]))
-
         result = super(Task, tasks).write(vals)
-        if x2m_tracking_values:
-            for task, tracking_values in x2m_tracking_values.items():
-                # Compile the different changes
-                MailTracking = self.env['mail.tracking.value']
-                tracking_value_ids = []
-                # Use mail.tracking.value to track our changes, this is to use the same format as the default tracking one
-                #  we just hack the record to think it is a text field and compile the data ourself beforehand
-                for field in tracking_values:
-                    if task[field] != tracking_values[field][0]:
-                        field_desc = task._fields[field]._description_string(self.env)
-                        old_value = tracking_values[field][1]
-                        new_value = ', '.join(record.display_name for record in task[field])
-                        tracking_value_ids.append((0, 0, MailTracking.create_tracking_values(
-                            old_value, new_value, field, {'type': 'char', 'string': field_desc}, 100, self._name)))
-                if tracking_value_ids:
-                    task._message_log(tracking_value_ids=tracking_value_ids)
 
         self._task_message_auto_subscribe_notify({task: task.user_ids - old_user_ids[task] - self.env.user for task in self})
 
@@ -1859,8 +1825,21 @@ class Task(models.Model):
         return new_followers
 
     def _mail_track(self, tracked_fields, initial_values):
-        result = super()._mail_track(tracked_fields, initial_values)
-        changes, tracking_value_ids = result
+        changes, tracking_value_ids  = super()._mail_track(tracked_fields, initial_values)
+        # Many2many tracking
+        if len(changes) > len(tracking_value_ids):
+            for changed_field in changes:
+                if tracked_fields[changed_field]['type'] in ['one2many', 'many2many']:
+                    field = self.env['ir.model.fields']._get(self._name, changed_field)
+                    vals = {
+                        'field': field.id,
+                        'field_desc': field.field_description,
+                        'field_type': field.ttype,
+                        'tracking_sequence': field.tracking,
+                        'old_value_char': ', '.join(initial_values[changed_field].mapped('name')),
+                        'new_value_char': ', '.join(self[changed_field].mapped('name')),
+                    }
+                    tracking_value_ids.append(Command.create(vals))
         # Track changes on depending tasks
         depends_tracked_fields = self._get_depends_tracked_fields()
         depends_changes = changes & depends_tracked_fields
@@ -1886,7 +1865,7 @@ class Task(models.Model):
                 })
                 for p in parent_ids:
                     p.message_post(body=body, subtype_id=subtype, tracking_value_ids=depends_tracking_value_ids)
-        return result
+        return changes, tracking_value_ids
 
     def _track_template(self, changes):
         res = super(Task, self)._track_template(changes)
