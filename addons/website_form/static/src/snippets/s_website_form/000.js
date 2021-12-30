@@ -7,6 +7,7 @@ odoo.define('website_form.s_website_form', function (require) {
     var ajax = require('web.ajax');
     var publicWidget = require('web.public.widget');
     const dom = require('web.dom');
+    const session = require('web.session');
 
     var _t = core._t;
     var qweb = core.qweb;
@@ -192,17 +193,35 @@ odoo.define('website_form.s_website_form', function (require) {
                         successMode = successPage ? 'redirect' : 'nothing';
                     }
                     switch (successMode) {
-                        case 'redirect':
-                            successPage = successPage.startsWith("/#") ? successPage.slice(1) : successPage;
+                        case 'redirect': {
+                            const hashIndex = successPage.indexOf("#");
+                            if (hashIndex > 0) {
+                                // URL containing an anchor detected: extract
+                                // the anchor from the URL if the URL is the
+                                // same as the current page URL so we can scroll
+                                // directly to the element (if found) later
+                                // instead of redirecting.
+                                let currentUrlPath = window.location.pathname;
+                                if (!currentUrlPath.endsWith("/")) {
+                                    currentUrlPath = currentUrlPath + "/";
+                                }
+                                if ([successPage, "/" + session.lang_url_code + successPage].some(link => link.startsWith(currentUrlPath + '#'))) {
+                                    successPage = successPage.substring(hashIndex);
+                                }
+                            }
                             if (successPage.charAt(0) === "#") {
-                                dom.scrollTo($(successPage)[0], {
-                                    duration: 500,
-                                    extraOffset: 0,
-                                });
+                                const successAnchorEl = document.getElementById(successPage.substring(1));
+                                if (successAnchorEl) {
+                                    dom.scrollTo(successAnchorEl, {
+                                        duration: 500,
+                                        extraOffset: 0,
+                                    });
+                                }
                             } else {
                                 $(window.location).attr('href', successPage);
                             }
                             break;
+                        }
                         case 'message':
                             self.$target[0].classList.add('d-none');
                             self.$target[0].parentElement.querySelector('.s_website_form_end_message').classList.remove('d-none');
