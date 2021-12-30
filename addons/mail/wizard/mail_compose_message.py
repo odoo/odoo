@@ -551,6 +551,10 @@ class MailComposer(models.TransientModel):
             # be done further in the posting process, allowing to clean database if email not send
             attachment_ids = []
             Attachment = self.env['ir.attachment']
+            for attachment_id in values.pop('attachment_ids', []):
+                attachment_ids.append(Attachment.browse(attachment_id).sudo().copy(
+                    {'res_model': 'mail.compose.message', 'res_id': 0}
+                ).id)
             for attach_fname, attach_datas in values.pop('attachments', []):
                 data_attach = {
                     'name': attach_fname,
@@ -560,8 +564,8 @@ class MailComposer(models.TransientModel):
                     'type': 'binary',  # override default_type from context, possibly meant for another model!
                 }
                 attachment_ids.append(Attachment.create(data_attach).id)
-            if values.get('attachment_ids', []) or attachment_ids:
-                values['attachment_ids'] = [Command.set(values.get('attachment_ids', []) + attachment_ids)]
+            if attachment_ids:
+                values['attachment_ids'] = [Command.set(attachment_ids)]
         else:
             default_values = self.with_context(default_composition_mode=composition_mode, default_model=model, default_res_id=res_id).default_get(['composition_mode', 'model', 'res_id', 'parent_id', 'partner_ids', 'subject', 'body', 'email_from', 'reply_to', 'attachment_ids', 'mail_server_id'])
             values = dict((key, default_values[key]) for key in ['subject', 'body', 'partner_ids', 'email_from', 'reply_to', 'attachment_ids', 'mail_server_id'] if key in default_values)
