@@ -10,8 +10,10 @@ from . import mail_compose_message
 from . import payment
 from . import product_attribute
 from . import product_image
-from . import product_misc
+from . import product_pricelist
 from . import product_product
+from . import product_public_category
+from . import product_ribbon
 from . import product_template
 from . import res_company
 from . import res_config_settings
