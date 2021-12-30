@@ -3,6 +3,7 @@
 
 from . import account
 from . import account_invoice
+from . import account_payment
 from . import chart_template
 from . import product_template
 from . import port_code
