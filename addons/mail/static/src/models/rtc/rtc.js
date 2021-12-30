@@ -112,6 +112,7 @@ function factory(dependencies) {
 
         async deafen() {
             await this._setDeafState(true);
+            this.messaging.soundEffects.deafen.play();
         }
 
         /**
@@ -221,6 +222,7 @@ function factory(dependencies) {
         async mute() {
             this.currentRtcSession.updateAndBroadcast({ isMuted: true });
             await this._updateLocalAudioTrackEnabledState();
+            this.messaging.soundEffects.mute.play();
         }
 
         /**
@@ -273,6 +275,7 @@ function factory(dependencies) {
 
         async unDeafen() {
             await this._setDeafState(false);
+            this.messaging.soundEffects.unDeafen.play();
         }
 
         async unMute() {
@@ -903,6 +906,7 @@ function factory(dependencies) {
                 session.audioElement.muted = deafen;
             }
             await this._updateLocalAudioTrackEnabledState();
+            this.messaging.soundEffects.unMute.play();
         }
 
         /**
@@ -1215,7 +1219,7 @@ function factory(dependencies) {
                 browser.clearTimeout(this._pushToTalkTimeoutId);
             }
             if (!this.currentRtcSession.isTalking) {
-                this.messaging.soundEffects.pushToTalk.play({ volume: 0.3 });
+                this.messaging.soundEffects.pushToTalkOn.play();
                 this._setSoundBroadcast(true);
             }
         }
@@ -1235,7 +1239,7 @@ function factory(dependencies) {
                 return;
             }
             if (!this.currentRtcSession.isMuteOrDeaf) {
-                this.messaging.soundEffects.pushToTalk.play({ volume: 0.3 });
+                this.messaging.soundEffects.pushToTalkOff.play();
             }
             this._pushToTalkTimeoutId = browser.setTimeout(
                 () => {
