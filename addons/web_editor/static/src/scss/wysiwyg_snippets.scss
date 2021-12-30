@@ -119,10 +119,7 @@ body.editor_enable.editor_has_snippets {
                 box-shadow: none;
                 background-color: transparent;
                 user-select: none;
-
-                cursor: pointer;
-                cursor: copy;
-                cursor: grab;
+                @include o-grab-cursor;
 
                 .oe_snippet_thumbnail {
                     .oe_snippet_thumbnail_img {
