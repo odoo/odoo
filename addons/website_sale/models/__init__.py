@@ -6,7 +6,6 @@ from . import base_unit
 from . import crm_team
 from . import digest
 from . import ir_http
-from . import mail_compose_message
 from . import payment
 from . import product_attribute
 from . import product_image
