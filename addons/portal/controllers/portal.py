@@ -213,7 +213,8 @@ class CustomerPortal(Controller):
         })
 
         response = request.render("portal.portal_my_details", values)
-        response.headers['X-Frame-Options'] = 'DENY'
+        response.headers['X-Frame-Options'] = 'SAMEORIGIN'
+        response.headers['Content-Security-Policy'] = "frame-ancestors 'self'"
         return response
 
     def on_account_update(self, values, partner):
@@ -233,7 +234,8 @@ class CustomerPortal(Controller):
             ))
 
         return request.render('portal.portal_my_security', values, headers={
-            'X-Frame-Options': 'DENY'
+            'X-Frame-Options': 'SAMEORIGIN',
+            'Content-Security-Policy': "frame-ancestors 'self'"
         })
 
     def _update_password(self, old, new1, new2):

@@ -255,6 +255,10 @@ function sendRequest(route, params) {
     let form = document.createElement('form');
     form.setAttribute('action', route);
     form.setAttribute('method', params.method || 'POST');
+    const isInIframe = window.frameElement && window.frameElement.classList.contains('o_iframe');
+    if (isInIframe) {
+        form.setAttribute('target', '_top');
+    }
 
     if (core.csrf_token) {
         _addInput(form, 'csrf_token', core.csrf_token);
