@@ -49,7 +49,7 @@ class TestChannelInternals(MailCommon):
                             'id': channel_partner.rtc_session_ids.id + 1,
                             'isCameraOn': False,
                             'isDeaf': False,
-                            'isMuted': False,
+                            'isSelfMuted': False,
                             'isScreenSharingOn': False,
                             'partner': [('insert', {
                                 'id': self.user_employee.partner_id.id,
@@ -68,7 +68,7 @@ class TestChannelInternals(MailCommon):
                     'id': channel_partner.rtc_session_ids.id,
                     'isCameraOn': False,
                     'isDeaf': False,
-                    'isMuted': False,
+                    'isSelfMuted': False,
                     'isScreenSharingOn': False,
                     'partner': [('insert', {
                         'id': self.user_employee.partner_id.id,
@@ -109,7 +109,7 @@ class TestChannelInternals(MailCommon):
                             'id': last_rtc_session_id + 1,
                             'isCameraOn': False,
                             'isDeaf': False,
-                            'isMuted': False,
+                            'isSelfMuted': False,
                             'isScreenSharingOn': False,
                             'partner': [('insert', {
                                 'id': self.user_employee.partner_id.id,
@@ -164,7 +164,7 @@ class TestChannelInternals(MailCommon):
                             'id': last_rtc_session_id + 1,
                             'isCameraOn': False,
                             'isDeaf': False,
-                            'isMuted': False,
+                            'isSelfMuted': False,
                             'isScreenSharingOn': False,
                             'partner': [('insert', {
                                 'id': self.user_employee.partner_id.id,
@@ -181,7 +181,7 @@ class TestChannelInternals(MailCommon):
                             'id': last_rtc_session_id + 1,
                             'isCameraOn': False,
                             'isDeaf': False,
-                            'isMuted': False,
+                            'isSelfMuted': False,
                             'isScreenSharingOn': False,
                             'partner': [('insert', {
                                 'id': self.user_employee.partner_id.id,
@@ -248,7 +248,7 @@ class TestChannelInternals(MailCommon):
                                 'id': channel_partner.rtc_session_ids.id + 1,
                                 'isCameraOn': False,
                                 'isDeaf': False,
-                                'isMuted': False,
+                                'isSelfMuted': False,
                                 'isScreenSharingOn': False,
                                 'partner': [('insert', {
                                     'id': test_user.partner_id.id,
@@ -294,7 +294,7 @@ class TestChannelInternals(MailCommon):
                                 'id': channel_partner.rtc_session_ids.id + 2,
                                 'isCameraOn': False,
                                 'isDeaf': False,
-                                'isMuted': False,
+                                'isSelfMuted': False,
                                 'isScreenSharingOn': False,
                                 'guest': [('insert', {
                                     'id': test_guest.id,
@@ -461,7 +461,7 @@ class TestChannelInternals(MailCommon):
                             'id': channel_partner.rtc_session_ids.id,
                             'isCameraOn': False,
                             'isDeaf': False,
-                            'isMuted': False,
+                            'isSelfMuted': False,
                             'isScreenSharingOn': False,
                             'partner': [('insert', {
                                 'id': self.user_employee.partner_id.id,
@@ -478,7 +478,7 @@ class TestChannelInternals(MailCommon):
                             'id': channel_partner.rtc_session_ids.id,
                             'isCameraOn': False,
                             'isDeaf': False,
-                            'isMuted': False,
+                            'isSelfMuted': False,
                             'isScreenSharingOn': False,
                             'partner': [('insert', {
                                 'id': self.user_employee.partner_id.id,

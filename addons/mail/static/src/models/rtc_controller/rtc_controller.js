@@ -48,8 +48,8 @@ function factory(dependencies) {
          * @param {MouseEvent} ev
          */
         onClickMicrophone(ev) {
-            if (this.messaging.rtc.currentRtcSession.isMuteOrDeaf) {
-                if (this.messaging.rtc.currentRtcSession.isMuted) {
+            if (this.messaging.rtc.currentRtcSession.isMute) {
+                if (this.messaging.rtc.currentRtcSession.isSelfMuted) {
                     this.messaging.rtc.unmute();
                 }
                 if (this.messaging.rtc.currentRtcSession.isDeaf) {

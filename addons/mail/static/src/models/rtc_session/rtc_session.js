@@ -60,10 +60,10 @@ function factory(dependencies) {
         /**
          * @param {Object} param0
          * @param {MediaStream} param0.audioStream
-         * @param {boolean} param0.isMuted
+         * @param {boolean} param0.isSelfMuted
          * @param {boolean} param0.isTalking
          */
-        async setAudio({ audioStream, isMuted, isTalking }) {
+        async setAudio({ audioStream, isSelfMuted, isTalking }) {
             const audioElement = this.audioElement || new window.Audio();
             try {
                 audioElement.srcObject = audioStream;
@@ -86,7 +86,7 @@ function factory(dependencies) {
             this.update({
                 audioElement,
                 audioStream,
-                isMuted,
+                isSelfMuted,
                 isTalking,
             });
             try {
@@ -177,7 +177,7 @@ function factory(dependencies) {
                                 values: {
                                     is_camera_on: this.isCameraOn,
                                     is_deaf: this.isDeaf,
-                                    is_muted: this.isMuted,
+                                    is_muted: this.isSelfMuted,
                                     is_screen_sharing_on: this.isScreenSharingOn,
                                 },
                             },
@@ -212,8 +212,8 @@ function factory(dependencies) {
          * @private
          * @returns {boolean}
          */
-        _computeIsMuteOrDeaf() {
-            return this.isMuted || this.isDeaf;
+        _computeIsMute() {
+            return this.isSelfMuted || this.isDeaf;
         }
 
         /**
@@ -376,14 +376,14 @@ function factory(dependencies) {
          * means that they cannot send sound regardless of the push to talk or
          * voice activation (isTalking) state.
          */
-        isMuted: attr({
+        isSelfMuted: attr({
             default: false,
         }),
         /**
-         * Determine whether current session is either muted or deaf.
+         * Determine whether current session is unable to speak.
          */
-        isMuteOrDeaf: attr({
-            compute: '_computeIsMuteOrDeaf',
+        isMute: attr({
+            compute: '_computeIsMute',
             default: false,
         }),
         /**
