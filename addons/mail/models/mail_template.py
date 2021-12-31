@@ -79,6 +79,15 @@ class MailTemplate(models.Model):
     # CRUD
     # ------------------------------------------------------------
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        templates = super().create(vals_list)
+        # fix attachment ownership
+        for template in templates:
+            if template.attachment_ids:
+                template.attachment_ids.write({'res_model': self._name, 'res_id': template.id})
+        return templates
+
     def unlink(self):
         self.unlink_action()
         return super(MailTemplate, self).unlink()
