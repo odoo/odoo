@@ -270,7 +270,13 @@ class MassMailing(models.Model):
             values['name'] = "%s %s" % (values['subject'], datetime.strftime(fields.datetime.now(), tools.DEFAULT_SERVER_DATETIME_FORMAT))
         if values.get('body_html'):
             values['body_html'] = self._convert_inline_images_to_urls(values['body_html'])
-        return super(MassMailing, self).create(values)
+        result = super().create(values)
+
+        # fix attachment ownership
+        if result.attachment_ids:
+            result.attachment_ids.write({'res_model': self._name, 'res_id': result.id})
+
+        return result
 
     def write(self, values):
         if values.get('body_html'):

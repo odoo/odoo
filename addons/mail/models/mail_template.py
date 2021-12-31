@@ -67,6 +67,16 @@ class MailTemplate(models.Model):
                                         help="Sidebar action to make this template available on records "
                                              "of the related document model")
 
+    @api.model
+    def create(self, values):
+        result = super().create(values)
+
+        # fix attachment ownership
+        if result.attachment_ids:
+            result.attachment_ids.write({'res_model': self._name, 'res_id': result.id})
+
+        return result
+
     def unlink(self):
         self.unlink_action()
         return super(MailTemplate, self).unlink()
