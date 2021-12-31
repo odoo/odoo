@@ -256,13 +256,14 @@ class HolidaysAllocation(models.Model):
 
     @api.depends('holiday_type')
     def _compute_from_holiday_type(self):
+        default_employee_ids = self.env['hr.employee'].browse(self.env.context.get('default_employee_id')) or self.env.user.employee_id
         for allocation in self:
             if allocation.holiday_type == 'employee':
                 if not allocation.employee_ids:
                     allocation.employee_ids = self.env.user.employee_id
                 allocation.mode_company_id = False
                 allocation.category_id = False
-            if allocation.holiday_type == 'company':
+            elif allocation.holiday_type == 'company':
                 allocation.employee_ids = False
                 if not allocation.mode_company_id:
                     allocation.mode_company_id = self.env.company
@@ -275,8 +276,7 @@ class HolidaysAllocation(models.Model):
                 allocation.employee_ids = False
                 allocation.mode_company_id = False
             else:
-                employee_ids = self.env.context.get('default_employee_id', self.env.user.employee_id)
-                allocation.employee_ids = [employee_ids] if isinstance(employee_ids, int) else employee_ids
+                allocation.employee_ids = default_employee_ids
 
     @api.depends('holiday_type', 'employee_id')
     def _compute_department_id(self):
