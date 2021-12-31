@@ -1040,6 +1040,14 @@ class Meeting(models.Model):
             for attendee in meeting.attendee_ids:
                 attendee_add = event.add('attendee')
                 attendee_add.value = u'MAILTO:' + (attendee.email or u'')
+
+            # Add "organizer" field if email available
+            if meeting.partner_id.email:
+                organizer = event.add('organizer')
+                organizer.value = u'MAILTO:' + meeting.partner_id.email
+                if meeting.partner_id.name:
+                    organizer.params['CN'] = [meeting.partner_id.display_name.replace('\"', '\'')]
+
             result[meeting.id] = cal.serialize().encode('utf-8')
 
         return result
