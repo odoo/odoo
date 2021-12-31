@@ -3,7 +3,7 @@
 import { registry } from '@web/core/registry';
 import { useService } from '@web/core/utils/hooks';
 
-const { Component, onWillStart, useRef } = owl;
+const { Component, onWillStart, useRef, useEffect } = owl;
 
 export class WebsitePreview extends Component {
     setup() {
@@ -19,10 +19,21 @@ export class WebsitePreview extends Component {
             const encodedPath = encodeURIComponent(this.path);
             this.initialUrl = `/website/force/${this.websiteId}?path=${encodedPath}`;
         });
+
+        useEffect(() => {
+            this.websiteService.currentWebsiteId = this.websiteId;
+            return () => this.websiteService.currentWebsiteId = null;
+        }, () => [this.props.action.context.params]);
     }
 
     get websiteId() {
         let websiteId = this.props.action.context.params && this.props.action.context.params.website_id;
+        // When no parameter is passed to the client action, the current
+        // website from the website service is taken. By default, it will be
+        // the one from the session.
+        if (!websiteId) {
+            websiteId = this.websiteService.currentWebsite && this.websiteService.currentWebsite.id;
+        }
         if (!websiteId) {
             websiteId = this.websiteService.websites[0].id;
         }

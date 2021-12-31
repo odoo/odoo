@@ -174,6 +174,7 @@
             'website/static/src/client_actions/*/*.js',
             'website/static/src/client_actions/*/*.scss',
             'website/static/src/services/website_service.js',
+            'website/static/src/components/navbar/navbar.js',
         ],
         'web.qunit_suite_tests': [
             'website/static/tests/dashboard_tests.js',
