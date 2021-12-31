@@ -7,6 +7,7 @@
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_search"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='task_id']" position="after">
+                    <field name="order_id" string="Sales Order" groups="sales_team.group_sale_salesman"/>
                     <field name="so_line" groups="sales_team.group_sale_salesman"/>
                 </xpath>
                 <xpath expr="//filter[@name='month']" position="before">
@@ -16,6 +17,7 @@
                     <separator/>
                 </xpath>
                 <xpath expr="//filter[@name='groupby_employee']" position="after">
+                    <filter string="Sales Order" name="groupby_sale_order" domain="[]" context="{'group_by': 'order_id'}" groups="sales_team.group_sale_salesman"/>
                     <filter string="Sales Order Item" name="groupby_sale_order_item" domain="[]" context="{'group_by': 'so_line'}" groups="sales_team.group_sale_salesman"/>
                     <filter string="Invoice" name="groupby_invoice" domain="[]" context="{'group_by': 'timesheet_invoice_id'}"/>
                     <filter string="Billable Type" name="groupby_timesheet_invoice_type" domain="[]" context="{'group_by': 'timesheet_invoice_type'}"/>
@@ -29,7 +31,7 @@
         <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
         <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
         <field name="arch" type="xml">
-            <xpath expr="//tree/field[@name='unit_amount']" position="before">
+            <xpath expr="//tree/field[@name='name']" position="after">
                 <field name="commercial_partner_id" invisible="1"/>
                 <field name="is_so_line_edited" invisible="1"/>
                 <field name="so_line" widget="so_line_many2one" optional="hide" options="{'no_create': True}" context="{'create': False, 'edit': False, 'delete': False}"/>
@@ -183,10 +185,12 @@
             'pivot_row_groupby': ['date:month'],
         }</field>
         <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
+            <p class="o_view_nocontent_empty_folder">
                 No data yet!
+            </p><p>
+                Analyze the projects and tasks on which your employees spend their time.<br/>
+                Evaluate which part is billable and what costs it represents.
             </p>
-            <p>Review your timesheets by billing type and make sure your time is billable.</p>
         </field>
         <field name="search_view_id" ref="hr_timesheet.hr_timesheet_line_search"/>
     </record>
