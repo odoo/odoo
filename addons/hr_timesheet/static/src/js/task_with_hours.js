@@ -29,8 +29,10 @@ const TaskWithHours = FieldMany2One.extend({
             this.additionalContext
         );
         // We don't want to quick create if no project is set in the timesheet
+        const canCreate = 'default_project_id' in context && context.default_project_id;
         this.nodeOptions.no_quick_create =
-            this.nodeOptions.no_quick_create || (!('default_project_id' in context) || !context.default_project_id);
+            this.nodeOptions.no_quick_create || !canCreate;
+        this.can_create = this.can_create && canCreate;
         this._super.apply(this, arguments);
     },
     /**
